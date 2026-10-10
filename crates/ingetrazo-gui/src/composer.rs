@@ -332,17 +332,20 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
                 ui.separator();
 
-                ui.menu_button(tr("Paper border"), |ui| {
+                let border_menu=ui.menu_button(tr("Paper border"), |ui| {
                     let mut border=sheet.effective_source_border();
-                    let mut changed=ui.checkbox(&mut border.on,tr("Show border")).changed();
-                    changed|=ui.add(egui::DragValue::new(&mut border.mm).speed(0.05).range(0.0..=100.0).suffix(" mm")).changed();
-                    changed|=ui.text_edit_singleline(&mut border.color).changed();
-                    changed|=ui.add(egui::DragValue::new(&mut border.radius_mm).speed(0.5).range(0.0..=1000.0).suffix(" mm radius")).changed();
+                    let toggle=ui.checkbox(&mut border.on,tr("Show border"));
+                    let mut changed=toggle.changed();
+                    changed|=ui.add(egui::DragValue::new(&mut border.mm).speed(0.1).range(0.1..=3.0).suffix(" mm")).changed();
+                    let color=ui.text_edit_singleline(&mut border.color);changed|=color.changed();
+                    changed|=ui.add(egui::DragValue::new(&mut border.radius_mm).speed(0.5).range(0.0..=30.0).suffix(" mm radius")).changed();
                     egui::ComboBox::from_id_salt("paper_border_style").selected_text(&border.style).show_ui(ui,|ui| {
-                        for style in ["single","double"] {changed|=ui.selectable_value(&mut border.style,style.into(),style).changed();}
+                        for style in ["single","double","dashed"] {changed|=ui.selectable_value(&mut border.style,style.into(),style).changed();}
                     });
+                    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-controls"),(toggle.rect,color.rect)));}
                     if changed && sheet.set_source_border(border).is_ok(){bump_needed=true;}
                 });
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
 
                 // Add Items Menu
                 ui.menu_button(tr("+ Shape"),|ui|{
