@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json,copy,sys
 from pathlib import Path
-MOVE={'selected','implicit','locked_implicit','locked_selected','hidden_selected','cancel','copy','fractional'}
+MOVE={'selected','implicit','locked_implicit','locked_selected','hidden_selected','cancel','copy','fractional','fractional_refusal'}
 MOD={f'{kind}_{state}'for kind in ['Face','Edge','Group']for state in ['selected','unselected']}
 def read(p):
  d=json.loads(Path(p).read_text());return d.get('cases',d)
@@ -18,5 +18,5 @@ def main():
  try:check(a,{},MOVE)
  except AssertionError:pass
  else:raise AssertionError('Empty accepted')
- print('PASS eight operative Move families and six geometry remove-modifier controls; five negatives')
+ print('PASS nine operative Move families and six geometry remove-modifier controls; five negatives')
 if __name__=='__main__':main()
