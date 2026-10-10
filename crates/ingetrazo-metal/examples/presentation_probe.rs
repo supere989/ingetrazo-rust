@@ -16,6 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         automatic: bool,
         started: std::time::Instant,
         resized: bool,
+        resized_display_baseline: u64,
+        requested_extent: Option<winit::dpi::PhysicalSize<u32>>,
         resize_requested: bool,
         diagnostics_at: std::time::Instant,
     }
@@ -61,7 +63,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Ok(())
                 }
                 WindowEvent::Resized(size) => {
-                    if self.resize_requested {
+                    if self.resize_requested && self.requested_extent == Some(size) {
                         self.resized = true;
                     }
                     gpu.resize(
@@ -75,10 +77,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     gpu.resize(s.width, s.height, scale_factor)
                 }
                 WindowEvent::RedrawRequested => {
-                    gpu.present_clear([0.08, 0.2, 0.35, 1.]).map(|submitted| {
-                        if submitted {
-                            self.frames += 1;
+                    let target = if self.resized {
+                        self.resized_display_baseline + 4
+                    } else {
+                        2
+                    };
+                    gpu.poll().and_then(|_| {
+                        if self.automatic
+                            && (gpu.presentation_counters().0 >= target
+                                || (self.resize_requested && !self.resized))
+                        {
+                            return Ok(());
                         }
+                        gpu.present_clear([0.08, 0.2, 0.35, 1.]).map(|submitted| {
+                            if submitted {
+                                self.frames += 1;
+                            }
+                        })
                     })
                 }
                 _ => Ok(()),
@@ -109,18 +124,28 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     return;
                 }
                 if let Some(gpu) = self.gpu.as_ref() {
-                    let (_, retired, pending) = gpu.counters();
-                    if retired >= 2 && !self.resize_requested {
+                    let (_, _, pending) = gpu.counters();
+                    let (displayed, skipped) = gpu.presentation_counters();
+                    if displayed >= 2 && pending == 0 && !self.resize_requested {
                         self.resize_requested = true;
+                        self.resized_display_baseline = displayed;
+                        self.requested_extent = Some(
+                            winit::dpi::LogicalSize::new(640., 480.)
+                                .to_physical(self.window.as_ref().unwrap().scale_factor()),
+                        );
                         let _ = self
                             .window
                             .as_ref()
                             .unwrap()
                             .request_inner_size(winit::dpi::LogicalSize::new(640., 480.));
                     }
-                    if self.resized && retired >= 6 && pending == 0 {
+                    if self.resized
+                        && displayed >= self.resized_display_baseline + 4
+                        && displayed >= 6
+                        && pending == 0
+                    {
                         eprintln!(
-                            "PASS actual CAMetalLayer presented retirement and resize {:?}",
+                            "PASS actual CAMetalLayer displayed={displayed} skipped={skipped} and exact requested resize {:?}",
                             gpu.counters()
                         );
                         ev.exit();
@@ -133,7 +158,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 std::time::Instant::now() + std::time::Duration::from_millis(16),
             ));
             if let Some(w) = self.window.as_ref() {
-                if !self.automatic || self.frames < if self.resized { 6 } else { 2 } {
+                let target = if self.resized {
+                    self.resized_display_baseline + 4
+                } else {
+                    2
+                };
+                let displayed = self
+                    .gpu
+                    .as_ref()
+                    .map_or(0, |gpu| gpu.presentation_counters().0);
+                if !self.automatic
+                    || (displayed < target && !(self.resize_requested && !self.resized))
+                {
                     w.request_redraw();
                 }
             }
@@ -152,6 +188,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         automatic: std::env::args().any(|s| s == "--automatic"),
         started: std::time::Instant::now(),
         resized: false,
+        resized_display_baseline: 0,
+        requested_extent: None,
         resize_requested: false,
         diagnostics_at: std::time::Instant::now(),
     };
