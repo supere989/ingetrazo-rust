@@ -1,0 +1,6 @@
+{
+  "source_revision": "98ced42137bd44171fc90a4a09fe1d4f7040f6a8",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "c4e6534a18ab24602f91cc5649cabae774493a1965c40c39208a1985bbb9a566",
+  "boundary": "Controlled actual source Move controller + History; native production GUI dispatch VCB + Undo/Redo, no rendered pointer"
+}
