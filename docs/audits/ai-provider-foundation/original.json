@@ -1,0 +1,1521 @@
+{
+  "compact": [
+    {
+      "messages": [
+        {
+          "role": "assistant",
+          "text": "intent ```python\nprint(1)\n``` done"
+        },
+        {
+          "role": "user",
+          "text": "feedback"
+        },
+        {
+          "role": "assistant",
+          "text": "```py\nprint(2)\n```"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(3)\n```"
+        }
+      ],
+      "keep": 0,
+      "output": [
+        {
+          "role": "assistant",
+          "text": "intent [receta ya ejecutada \u2014 c\u00f3digo omitido] done"
+        },
+        {
+          "role": "user",
+          "text": "feedback"
+        },
+        {
+          "role": "assistant",
+          "text": "[receta ya ejecutada \u2014 c\u00f3digo omitido]"
+        },
+        {
+          "role": "assistant",
+          "text": "[receta ya ejecutada \u2014 c\u00f3digo omitido]"
+        }
+      ]
+    },
+    {
+      "messages": [
+        {
+          "role": "assistant",
+          "text": "intent ```python\nprint(1)\n``` done"
+        },
+        {
+          "role": "user",
+          "text": "feedback"
+        },
+        {
+          "role": "assistant",
+          "text": "```py\nprint(2)\n```"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(3)\n```"
+        }
+      ],
+      "keep": 1,
+      "output": [
+        {
+          "role": "assistant",
+          "text": "intent [receta ya ejecutada \u2014 c\u00f3digo omitido] done"
+        },
+        {
+          "role": "user",
+          "text": "feedback"
+        },
+        {
+          "role": "assistant",
+          "text": "[receta ya ejecutada \u2014 c\u00f3digo omitido]"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(3)\n```"
+        }
+      ]
+    },
+    {
+      "messages": [
+        {
+          "role": "assistant",
+          "text": "intent ```python\nprint(1)\n``` done"
+        },
+        {
+          "role": "user",
+          "text": "feedback"
+        },
+        {
+          "role": "assistant",
+          "text": "```py\nprint(2)\n```"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(3)\n```"
+        }
+      ],
+      "keep": 2,
+      "output": [
+        {
+          "role": "assistant",
+          "text": "intent [receta ya ejecutada \u2014 c\u00f3digo omitido] done"
+        },
+        {
+          "role": "user",
+          "text": "feedback"
+        },
+        {
+          "role": "assistant",
+          "text": "```py\nprint(2)\n```"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(3)\n```"
+        }
+      ]
+    }
+  ],
+  "thoughts": [
+    [
+      "before <think>hidden</think> after",
+      "before  after"
+    ],
+    [
+      "start <thinking>unclosed",
+      "start"
+    ],
+    [
+      "stray</thought>answer",
+      "answer"
+    ],
+    [
+      "<thought>a</thought><think>b</think>c",
+      "c"
+    ],
+    [
+      "no tags",
+      "no tags"
+    ]
+  ],
+  "requests": [
+    {
+      "provider": "groq",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "openai/gpt-oss-120b",
+      "url": "https://api.groq.com/openai/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "openai/gpt-oss-120b",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "groq",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "openai/gpt-oss-120b",
+      "url": "https://api.groq.com/openai/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "openai/gpt-oss-120b",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": "reference"
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": "latest"
+          }
+        ]
+      }
+    },
+    {
+      "provider": "anthropic",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "claude-sonnet-5",
+      "url": "https://api.anthropic.com/v1/messages",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "x-api-key": "synthetic-test-key",
+        "anthropic-version": "2023-06-01"
+      },
+      "payload": {
+        "model": "claude-sonnet-5",
+        "max_tokens": 8192,
+        "system": "SYS",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/jpeg",
+                  "data": "QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "```python\nprint(1)\n```"
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "old shot"
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/jpeg",
+                  "data": "/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "anthropic",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "claude-sonnet-5",
+      "url": "https://api.anthropic.com/v1/messages",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "x-api-key": "synthetic-test-key",
+        "anthropic-version": "2023-06-01"
+      },
+      "payload": {
+        "model": "claude-sonnet-5",
+        "max_tokens": 8192,
+        "system": "SYS",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "```python\nprint(1)\n```"
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "old shot"
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "openai",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "gpt-4o",
+      "url": "https://api.openai.com/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "gpt-4o",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "openai",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "gpt-4o",
+      "url": "https://api.openai.com/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "gpt-4o",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": "reference"
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": "latest"
+          }
+        ]
+      }
+    },
+    {
+      "provider": "gemini",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "gemini-2.5-flash",
+      "url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "gemini-2.5-flash",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "gemini",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "gemini-2.5-flash",
+      "url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "gemini-2.5-flash",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": "reference"
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": "latest"
+          }
+        ]
+      }
+    },
+    {
+      "provider": "openrouter",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "anthropic/claude-sonnet-5",
+      "url": "https://openrouter.ai/api/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "anthropic/claude-sonnet-5",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "openrouter",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "anthropic/claude-sonnet-5",
+      "url": "https://openrouter.ai/api/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "anthropic/claude-sonnet-5",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": "reference"
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": "latest"
+          }
+        ]
+      }
+    },
+    {
+      "provider": "deepseek",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "deepseek-chat",
+      "url": "https://api.deepseek.com/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "deepseek-chat",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "deepseek",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "deepseek-chat",
+      "url": "https://api.deepseek.com/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "deepseek-chat",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": "reference"
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": "latest"
+          }
+        ]
+      }
+    },
+    {
+      "provider": "ollama",
+      "vision": true,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "model": "llama3.2",
+      "url": "http://localhost:1234/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "llama3.2",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "reference"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,/9j/QUJD"
+                }
+              },
+              {
+                "type": "text",
+                "text": "latest"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "provider": "ollama",
+      "vision": false,
+      "messages": [
+        {
+          "role": "user",
+          "text": "reference",
+          "image_b64": "QUJD",
+          "image_mime": "image/jpeg"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot",
+          "image_png_b64": "QUJD"
+        },
+        {
+          "role": "user",
+          "text": "latest",
+          "image_png_b64": "/9j/QUJD"
+        }
+      ],
+      "slim": [
+        {
+          "role": "user",
+          "text": "reference"
+        },
+        {
+          "role": "assistant",
+          "text": "```python\nprint(1)\n```"
+        },
+        {
+          "role": "user",
+          "text": "old shot"
+        },
+        {
+          "role": "user",
+          "text": "latest"
+        }
+      ],
+      "model": "llama3.2",
+      "url": "http://localhost:1234/v1/chat/completions",
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "IngeTrazo/0.5.7 (+https://ingetrazo.com)",
+        "Authorization": "Bearer synthetic-test-key"
+      },
+      "payload": {
+        "model": "llama3.2",
+        "max_tokens": 8192,
+        "messages": [
+          {
+            "role": "system",
+            "content": "SYS"
+          },
+          {
+            "role": "user",
+            "content": "reference"
+          },
+          {
+            "role": "assistant",
+            "content": "```python\nprint(1)\n```"
+          },
+          {
+            "role": "user",
+            "content": "old shot"
+          },
+          {
+            "role": "user",
+            "content": "latest"
+          }
+        ]
+      }
+    }
+  ],
+  "detect": [
+    [
+      "",
+      "ollama"
+    ],
+    [
+      "gsk_test",
+      "groq"
+    ],
+    [
+      "sk-ant-test",
+      "anthropic"
+    ],
+    [
+      "AIzaTEST",
+      "gemini"
+    ],
+    [
+      "sk-or-test",
+      "openrouter"
+    ],
+    [
+      "sk-test",
+      "openai"
+    ],
+    [
+      "other",
+      "anthropic"
+    ],
+    [
+      " GSK_test",
+      "anthropic"
+    ]
+  ],
+  "vision": [
+    [
+      "groq",
+      "llama-4-scout",
+      true
+    ],
+    [
+      "groq",
+      "openai/gpt-oss-120b",
+      false
+    ],
+    [
+      "ollama",
+      "qwen-vl",
+      true
+    ],
+    [
+      "ollama",
+      "llama3.2",
+      false
+    ],
+    [
+      "deepseek",
+      "GEMMA-3",
+      true
+    ],
+    [
+      "anthropic",
+      "",
+      true
+    ]
+  ],
+  "code": [
+    {
+      "text": "no code",
+      "extract": null,
+      "truncated": false
+    },
+    {
+      "text": "```py\na=1\n```",
+      "extract": "a=1",
+      "truncated": false
+    },
+    {
+      "text": "```python\nprint(1)",
+      "extract": null,
+      "truncated": true
+    },
+    {
+      "text": "```py\nfirst\n``` then ```python\nsecond\n```",
+      "extract": "second",
+      "truncated": false
+    },
+    {
+      "text": "```python\n\n```",
+      "extract": null,
+      "truncated": false
+    }
+  ]
+}

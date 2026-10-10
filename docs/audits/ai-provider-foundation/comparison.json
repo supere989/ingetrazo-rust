@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "cases": 41,
+  "negative_sections_rejected": [
+    "compact",
+    "thoughts",
+    "requests",
+    "detect",
+    "vision",
+    "code"
+  ],
+  "scope": "Offline pinned source provider wire; no network/executor/MCP behavior"
+}

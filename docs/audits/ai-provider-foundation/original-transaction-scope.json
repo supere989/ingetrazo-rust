@@ -1,0 +1,28 @@
+{
+  "mesh_and_inspect": {
+    "changed": true,
+    "inspect": {
+      "stdout": "42\n",
+      "stderr": "",
+      "error": null,
+      "changed": false
+    },
+    "redo_preserved": true
+  },
+  "supported_rollback": {
+    "changed": false,
+    "error_present": true,
+    "groups": 0,
+    "edges": 0
+  },
+  "partial_failure_defect": {
+    "changed": false,
+    "error_present": true,
+    "existing_group_name": "changed-existing",
+    "material_survives": true
+  },
+  "unchanged_detection_defect": {
+    "changed": false,
+    "existing_group_name": "untracked-success"
+  }
+}
