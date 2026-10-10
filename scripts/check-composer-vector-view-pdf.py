@@ -11,7 +11,7 @@ run([sys.executable,"scripts/probe-python-sheet-view-pdf.py"])
 run([sys.executable,"scripts/probe-python-paper-boundary.py"])
 run([sys.executable,"scripts/probe-qt-paper-numerals.py",root])
 run(["cargo","build","--locked","-p","ingetrazo-gui","--example","sheet_view_pdf_fixture"])
-run(["cargo","build","--locked","-p","ingetrazo-render-worker"])
+run(["cargo","build","--locked","-p","ingetrazo-render","--bin","ingetrazo-render-worker"])
 target=Path(os.environ.get("CARGO_TARGET_DIR","target"));binary=target/"debug/examples/sheet_view_pdf_fixture";worker=target/"debug/ingetrazo-render-worker"
 run([binary,root,worker])
 run(["cargo","run","--locked","-p","ingetrazo-render","--example","paper_boundary_fixture","--",root])
