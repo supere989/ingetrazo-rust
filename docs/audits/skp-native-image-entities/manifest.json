@@ -1,0 +1,21 @@
+{
+  "parser_pin": "291700bc213655a00461838de71e5f206311e619",
+  "schema_scope": "pinned writer CImage; SketchUp calibration explicitly unverified",
+  "cases": [
+    {
+      "name": "opaque",
+      "sha256": "fe44950a751ccd763486d44474b3613f44ca112a575a03f41cd4cd9ebd5eb599",
+      "billboard": false
+    },
+    {
+      "name": "cutout",
+      "sha256": "980c8e0aa4d51ee02e88a2c3f73c119f9505442be8f5d9cd84ce8a5e90c1d322",
+      "billboard": true
+    },
+    {
+      "name": "translucent",
+      "sha256": "8e51c672b75f0f00bf0e12c9d087fb8fd38bc582250418fe29c19c9c0cf88d59",
+      "billboard": false
+    }
+  ]
+}

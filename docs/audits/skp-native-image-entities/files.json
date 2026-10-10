@@ -1,0 +1,19 @@
+{
+  "opaque.png": "3260dd7603d660e927a4107035866b8a73cc6c1c98c522aa136d7c6f20b924f2",
+  "opaque.skp": "fe44950a751ccd763486d44474b3613f44ca112a575a03f41cd4cd9ebd5eb599",
+  "cutout.png": "3474209cc667067424e3b50e999eeb7b009d04e86d69bb4377ff0a637ff700ad",
+  "cutout.skp": "980c8e0aa4d51ee02e88a2c3f73c119f9505442be8f5d9cd84ce8a5e90c1d322",
+  "translucent.png": "6809e0a765da0b73b22291c5f1597af112d4eb4ee961e60241a577b6432c992c",
+  "translucent.skp": "8e51c672b75f0f00bf0e12c9d087fb8fd38bc582250418fe29c19c9c0cf88d59",
+  "manifest.json": "f61c6f73e8f2b4a834d28c8f8c7af513eff6dfe8c9a8244b76d3a8b066a823a2",
+  "opaque.log": "0c2dd1d9887decf5624f8a6cf9d2fe7985a4fb27a8dbae8cd805fd88fe868f68",
+  "opaque-comparison.json.gz": "9582c57feb4390a2e8185e13b324b83a5d2ca0a0a1514621c06111c515360689",
+  "cutout.log": "0c2dd1d9887decf5624f8a6cf9d2fe7985a4fb27a8dbae8cd805fd88fe868f68",
+  "cutout-comparison.json.gz": "bef69cb7ab68e839a32567471eafaf13015f359841147be069a37b0604c11dee",
+  "translucent.log": "0c2dd1d9887decf5624f8a6cf9d2fe7985a4fb27a8dbae8cd805fd88fe868f68",
+  "translucent-comparison.json.gz": "95f78be441bbf4384da2abf148d98b23276c54154693c846cec15f723715c050",
+  "report.json": "d748debd1f7cc26d82156e983c8c6c9e469d281a4c736d66be70766e200cc459",
+  "focused-tests.log": "c84545fb8513b86297616c1883b74d82c00410ae66cf6ca84b5d8b8034f0ac14",
+  "README.md": "5827a2235a391e5e10176b1bb06eff4186ce722cad786899e64c0d7ea96ae725",
+  "retained-before-image-map/opaque-comparison.json.gz": "9e44a9af4ba8d7d07004058521760376390727270c02bd6cf7ae52daa76511a1"
+}
