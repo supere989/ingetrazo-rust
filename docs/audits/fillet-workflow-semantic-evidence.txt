@@ -1,0 +1,12 @@
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-tools)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running tests/fillet_acceptance.rs (target/debug/deps/fillet_acceptance-ac8d9ff7dccbfc7b)
+
+running 4 tests
+test invalid_radii_are_refused_atomically ... ok
+test original_cursor_sizing_and_typed_segment_workflow ... ok
+test radius_and_segments_create_tangent_cylinder_geometry ... ok
+test rim_and_spherical_joins_form_closed_oriented_boundaries ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
