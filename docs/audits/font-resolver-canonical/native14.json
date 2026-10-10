@@ -1,0 +1,106 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "latin",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "accents",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "bold",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "italic",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "underline",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "wrap",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "newlines",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "center",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "right",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "serif",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "mono",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "arabic",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "hebrew",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    },
+    {
+      "case": "cjk",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "face_index": 0,
+      "hinting": "FtPolicy { hinting: Vertical, force_auto_hint: false }",
+      "warm_no_match_or_load": true
+    }
+  ],
+  "scope": "Linux native Fontconfig family/style/index/hint-policy against nineteen retained actual helper records. No paragraph fallback segmentation or Mac/Windows provider claim.",
+  "negative": "NUL family refuses without cache mutation",
+  "refresh": "Explicit epoch reset keeps outstanding font owner valid"
+}
