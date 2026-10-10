@@ -340,6 +340,47 @@ mod tests {
         };
         let closed = count(&scene);
         assert_eq!(closed, 20736); // 144px mask; original 2.5px contours leave 142px magenta interior.
+        let mut cavity = scene.clone();
+        let inner = [
+            (0.25, 0.25, 0.25),
+            (0.75, 0.25, 0.25),
+            (0.75, 0.75, 0.25),
+            (0.25, 0.75, 0.25),
+            (0.25, 0.25, 1.75),
+            (0.75, 0.25, 1.75),
+            (0.75, 0.75, 1.75),
+            (0.25, 0.75, 1.75),
+        ]
+        .map(|(x, y, z)| cavity.mesh.add_vertex(DVec3::new(x, y, z)));
+        for ring in [
+            [0, 3, 2, 1],
+            [4, 5, 6, 7],
+            [0, 1, 5, 4],
+            [1, 2, 6, 5],
+            [2, 3, 7, 6],
+            [3, 0, 4, 7],
+        ] {
+            let mut vertices = ring.map(|i| inner[i]).to_vec();
+            vertices.reverse();
+            cavity.mesh.add_face(vertices, vec![]);
+        }
+        assert_eq!(
+            count(&cavity),
+            20736 - 5184,
+            "front-facing cavity surface must suppress fill in the void"
+        );
+        for visual in [
+            crate::style::VisualStyle::Wireframe,
+            crate::style::VisualStyle::XRay,
+        ] {
+            let mut disabled = style.clone();
+            disabled.visual_style = visual;
+            assert!(
+                crate::pipeline::build_scene_render_data(&scene, &camera, &disabled, None)
+                    .section_stencil
+                    .is_none()
+            );
+        }
         let mut duplicate = scene.clone();
         duplicate.mesh.faces.extend(scene.mesh.faces.clone());
         assert_eq!(count(&duplicate), closed);
@@ -353,7 +394,11 @@ mod tests {
         scene.mesh.add_face(slab.to_vec(), vec![]);
         assert_eq!(count(&scene), 0);
         scene.mesh.faces.last_mut().unwrap().vertices.reverse();
-        assert_eq!(count(&scene),closed,"reversed slab exposes back surface in geometric stencil; original source may render oriented paired interiors differently");
+        assert_eq!(
+            count(&scene),
+            closed,
+            "reversing the actual slab loop restores the original back-face stencil fill"
+        );
         for face in &mut duplicate.mesh.faces {
             face.attrs.insert("opacity".into(), serde_json::json!(0.5));
         }
