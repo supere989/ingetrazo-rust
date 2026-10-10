@@ -2,8 +2,8 @@
   "passed": true,
   "scope": "Original actual Move.on_click, snap_excluded, Viewport._current_work_plane/_world_from_pixel/_snap_scene and compute_snap; Rust real Move targets/policy inference. Controller recipes, not GUI events.",
   "source_root": "/work/ingetrazo",
-  "fixture_sha256": "9802d312b220d80371d8a1c58800cd8d525e64762df630b98b7a5454edff3483",
-  "native_executable_sha256": "ea23f3d49d091f6ea4f0bbfaa45aafe64dea588c908543b9a18e9fb6f9fc731f",
+  "fixture_sha256": "9a751c053e938d2f5be32f266863b3a4a9c62b8b897e630363c7b24d78c3276a",
+  "native_executable_sha256": "ba28c6728efb6a054e5052a58b05e5ff7b5d284aa444972c261e3d0f4cf9aefe",
   "inputs": [
     {
       "name": "short-self-excluded",

@@ -1,0 +1,25 @@
+    Blocking waiting for file lock on build directory
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-move-integration/crates/ingetrazo-core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 16.03s
+perspective-ray-edge [True]
+perspective-endpoint-within-9px [True]
+perspective-midpoint [True]
+perspective-crossing [True]
+perspective-skew-crossing [True]
+eye-depth-0.01 [True]
+eye-depth-0.05 [True]
+eye-depth-0.2 [True]
+curve-center-radius-1.2 [True, True, True, True, True]
+curve-center-radius-0.01 [True, True, True]
+malformed-circle-spur [True, True]
+Retained failures: []
+Held-out eye depth controls 6/6 PASS

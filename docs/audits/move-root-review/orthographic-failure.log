@@ -1,0 +1,16 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-move-integration/crates/ingetrazo-core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-move-integration/scripts/check-python-screen-snap.py", line 30, in <module>
+    assert matches(original,rust),(case,original,rust)
+           ~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ({'name': 'occluded-endpoint', 'occluded': True, 'edges': [[[3, 4, 0], [3.5, 4.5, 0]]], 'candidate': [3.02, 4.02, 0]}, {'kind': 'none', 'point': [3.0199999809265137, 4.019999980926514, 0.0]}, {'kind': 'on_face', 'name': 'occluded-endpoint', 'point': [3.02, 4.02, 0.0]})
