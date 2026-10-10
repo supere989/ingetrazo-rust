@@ -1482,12 +1482,20 @@ mod document_camera_tests {
         assert_eq!(reopened.camera.distance, 42.0);
         assert_eq!(reopened.camera.yaw, 0.6);
         assert!(!reopened.camera.perspective);
-        app.new_document();
-        assert_eq!(app.camera, OrbitCamera::new());
+        app.save_undo_state();
+        app.scene.mesh.add_vertex(DVec3::X);
+        app.camera.target=DVec3::new(8.,9.,10.);
         app.undo();
-        assert_eq!(app.camera.target, DVec3::new(3.0,4.0,5.0));
+        assert_eq!(app.camera.target,DVec3::new(3.,4.,5.));
         app.redo();
+        assert_eq!(app.camera.target,DVec3::new(8.,9.,10.));
+        // Original views/main_window.py clears history at a document boundary.
+        app.new_document();
+        assert!(app.document_session.confirm_unsaved);
+        app.discard_document_action();
         assert_eq!(app.camera, OrbitCamera::new());
+        assert!(app.undo_stack.is_empty());
+        assert!(app.redo_stack.is_empty());
         std::fs::remove_file(path).unwrap();
     }
 }
