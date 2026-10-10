@@ -216,7 +216,11 @@ fn overlay(original: &serde_json::Value, baseline: &serde_json::Value,
     let mut result = original.clone();
     for (key, value) in current.as_object().unwrap() {
         if baseline.get(key) != Some(value) {
-            result[key] = merge_changed(result.get(key), baseline.get(key), value);
+            // Geometry metadata is carried by MeshEdge/Face identity. Overlaying
+            // by array position would transfer deleted entities' attrs to new ones.
+            result[key] = if key == "edges" || key == "faces" {
+                value.clone()
+            } else { merge_changed(result.get(key), baseline.get(key), value) };
 
         }
     }

@@ -133,3 +133,16 @@ fn unsupported_composer_edits_fail_before_touching_destination() {
     assert_eq!(std::fs::read(&dst).unwrap(),b"retain existing document");
     std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
 }
+
+
+#[test]
+fn replacement_face_does_not_inherit_deleted_face_metadata() {
+    let src=temp("replace-source.igz");
+    let doc=json!({"edges":[],"faces":[{"vertices":[[0,0,0],[1,0,0],[0,1,0]],"opaque_deleted":99}]});
+    write_plain(&doc,&src); let mut scene=load_igz(&src).unwrap();
+    scene.mesh.faces.clear();
+    let ids=[DVec3::new(0.,0.,5.),DVec3::new(1.,0.,5.),DVec3::new(0.,1.,5.)].map(|p|scene.mesh.add_vertex(p));
+    scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();
+    assert!(scene_to_igz_document(&scene)["faces"][0].get("opaque_deleted").is_none());
+    std::fs::remove_file(src).unwrap();
+}
