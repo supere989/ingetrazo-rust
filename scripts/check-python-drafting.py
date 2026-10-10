@@ -47,6 +47,7 @@ def main():
   return c
  cases.extend([angled(cases[i])for i in [0,3,9,10,11]])
  cases.extend([case("holed-outside-void-chord",holed,ops=[op([[0,.5,0],[4,.5,0]])]),case("two-hole-chord-locality",[{"vertices":[[0,0,0],[8,0,0],[8,8,0],[0,8,0]],"holes":[hole,[[5,5,0],[5,7,0],[7,7,0],[7,5,0]]],"attrs":paint}],ops=[op([[0,2,0],[8,2,0]])])])
+ cases.extend([angled(cases[-2]),case("holed-sequential-chords",holed,ops=[op([[0,2,0],[4,2,0]]),op([[0,.5,0],[4,.5,0]])]),case("old-curve-holed-chord",holed,es=[{"points":[[10,0,0],[11,0,0]],"curve":71},{"points":[[11,0,0],[11,1,0]],"curve":71}],ops=[op([[0,2,0],[4,2,0]])])])
  Path("docs/audits/drafting-expanded-corpus.json").write_text(json.dumps(cases,indent=2)+"\n")
  rows=[];failures=[];frozen=[]
  with tempfile.TemporaryDirectory()as d:
