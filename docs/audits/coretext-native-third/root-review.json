@@ -1,0 +1,103 @@
+{
+  "run": 38085609658,
+  "job": 114311348126,
+  "source": "0464623b",
+  "artifact_sha256": "acb3d704210ec6a2beeba73f6c7c542b6829855c56e09a23144ec5a0d097d745",
+  "independent_decoded_comparisons": [
+    {
+      "dpi": 72,
+      "case": "arabic",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 72,
+      "case": "cjk",
+      "different_pixels": 67
+    },
+    {
+      "dpi": 72,
+      "case": "helvetica",
+      "different_pixels": 19
+    },
+    {
+      "dpi": 72,
+      "case": "helvetica-bold",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 72,
+      "case": "helvetica-italic",
+      "different_pixels": 23
+    },
+    {
+      "dpi": 72,
+      "case": "times-bold-italic",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 150,
+      "case": "arabic",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 150,
+      "case": "cjk",
+      "different_pixels": 5
+    },
+    {
+      "dpi": 150,
+      "case": "helvetica",
+      "different_pixels": 82
+    },
+    {
+      "dpi": 150,
+      "case": "helvetica-bold",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 150,
+      "case": "helvetica-italic",
+      "different_pixels": 82
+    },
+    {
+      "dpi": 150,
+      "case": "times-bold-italic",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 300,
+      "case": "arabic",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 300,
+      "case": "cjk",
+      "different_pixels": 350
+    },
+    {
+      "dpi": 300,
+      "case": "helvetica",
+      "different_pixels": 207
+    },
+    {
+      "dpi": 300,
+      "case": "helvetica-bold",
+      "different_pixels": 0
+    },
+    {
+      "dpi": 300,
+      "case": "helvetica-italic",
+      "different_pixels": 204
+    },
+    {
+      "dpi": 300,
+      "case": "times-bold-italic",
+      "different_pixels": 0
+    }
+  ],
+  "exact_pages": 9,
+  "full_parity": false,
+  "font_identity": "5/6 strict match; Times resource acquisition now succeeds but requested style gate fails",
+  "canvas": "Presentation deadline; positive presentedTime/callback absent; diagnostic window content is not presentation retirement proof",
+  "synthesis_followup": "a1911c0f is local only and not part of this evidence"
+}
