@@ -1,0 +1,46 @@
+{
+  "walk_anchor": null,
+  "measurement": "1.68 m",
+  "measurement_rect": [
+    1098.0,
+    779.637451171875,
+    1176.0,
+    797.9999389648438
+  ],
+  "status": "Walk \u2014 drag; Ctrl run, Shift rise/strafe, Alt through walls",
+  "endpoint_pixel": [
+    839.5642700195312,
+    549.812744140625
+  ],
+  "snap_kind": null,
+  "frames": 28,
+  "eye": [
+    6.123233995736766e-16,
+    0.0,
+    1.68
+  ],
+  "forward": [
+    -6.123233995736766e-17,
+    1.0,
+    0.0
+  ],
+  "yaw": -1.5707963267948966,
+  "pitch": -0.0,
+  "mode": "Some(Walk)",
+  "preview": null,
+  "preview_pixels": null,
+  "viewport": [
+    50.0,
+    30.0,
+    1272.0,
+    769.6375122070312
+  ],
+  "undo": 0,
+  "version": 0,
+  "faces": 0,
+  "focused": true,
+  "pointer": [
+    751.0,
+    445.0
+  ]
+}

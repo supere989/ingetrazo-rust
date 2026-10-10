@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "name": "source-no-control",
+      "eye": [
+        6.111109780379282e-16,
+        0.019800186157226562,
+        1.6799999475479126
+      ],
+      "forward": [
+        -6.123234262925839e-17,
+        1.0,
+        0.0
+      ],
+      "remembered_control": false,
+      "global_control": false,
+      "undo": 0
+    },
+    {
+      "name": "source-control-released-after-motion",
+      "eye": [
+        6.086861874077352e-16,
+        0.05939960479736328,
+        1.6799999475479126
+      ],
+      "forward": [
+        -6.123234262925839e-17,
+        1.0,
+        0.0
+      ],
+      "remembered_control": true,
+      "global_control": false,
+      "undo": 0
+    }
+  ],
+  "scope": "actual frozen Viewport mouse/key event handlers, one actual Walk timer slot; controlled source events, not XTEST"
+}

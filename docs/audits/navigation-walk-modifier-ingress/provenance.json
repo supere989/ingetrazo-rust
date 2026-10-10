@@ -1,0 +1,29 @@
+{
+  "source_revision": "b8934e38d1d26f03d6e482fc2d845ae6ff9175c6",
+  "frozen_original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binaries": {
+    "walk_native_modifier_ingress": "cd1c58b1966777866e5dfcab669f8e8184ad5e4160f333ae4474ff570d3d486a",
+    "position_navigation_native_fixture": "1dd25389bbea04cf952606a3aad6d71b8e18074fe8d3843a4bfcbbf27e12fa96"
+  },
+  "dependency": "egui-winit0.30.0 ModifiersChanged only changes final RawInput.modifiers, CursorMoved emits no modifier snapshot",
+  "scope": "2 actual original QMouse/QKey handlers +one source slot /2 controlled nativeWindow egui-winit ingress cases; compiledfinalstateonly path negative; fresh actual XTESTWalk8cross+8ring release;155GUI PASS1ignored",
+  "storage": "One cold Arc/Mutex handle;two retained motion sample Vec buffers max4096each;100warm cycles preserve pointers/capacity;no cloned event lists;overflow/identityrefusal unit controls",
+  "locks": "ctx.data retrieved before ui.input, context data lock released before timeline/input locks; ingress converter runs before timeline lock",
+  "open": "Same-frame realOS coalescing capture;nativeMetal/defaultGlow snapshot wiring;fullnavigation/fullrenderer parity",
+  "verified_terminal_duplicates_removed": [
+    "/tmp/navigation-ingress-build.log",
+    "/tmp/navigation-ingress-native.json",
+    "/tmp/navigation-ingress-runtime.log",
+    "/tmp/navigation-ingress-source.log",
+    "/tmp/navigation-ingress-source.json",
+    "/tmp/navigation-ingress-ready-build.log",
+    "/tmp/navigation-ingress-ready.json",
+    "/tmp/navigation-ingress-ready-runtime.log",
+    "/tmp/navigation-ingress-render-native.log",
+    "/tmp/navigation-ingress-render-native",
+    "/tmp/navigation-ingress-gui-tests.log",
+    "/tmp/navigation-ingress-check.json",
+    "/tmp/navigation-modifier-api-tests.log"
+  ],
+  "active_handles": []
+}
