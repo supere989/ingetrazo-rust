@@ -25,6 +25,7 @@ for directory in ["/System/Library/Fonts","/Library/Fonts",str(Path.home()/"Libr
  for p in Path(directory).rglob("*"):
   if p.suffix.lower() in (".ttf",".otf",".ttc",".otc") and p.is_file():files.append(p)
 identities={}
+inventory_errors=[]
 for path in sorted(set(files)):
  try:
   if path.suffix.lower() in (".ttc",".otc"):
@@ -35,7 +36,7 @@ for path in sorted(set(files)):
    key=(hashlib.sha256(font.getTableData("head")).hexdigest(),hashlib.sha256(font.getTableData("name")).hexdigest())
    identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
   owner.close()
- except Exception:continue
+ except Exception as error:inventory_errors.append({"path":str(path),"error":repr(error)})
 rows=[]
 class Observe(QPainter):
  def drawText(self,rect,flags,text):
@@ -49,8 +50,8 @@ class Observe(QPainter):
   for run in layout.glyphRuns():
    raw=run.rawFont();key=tuple(hashlib.sha256(bytes(raw.fontTable(tag))).hexdigest()for tag in ["head","name"])
    physical=identities.get(key,[])
-   assert physical,"Actual Qt face missing from physical font inventory"
-   runs.append({"family":raw.familyName(),"style":raw.styleName(),"glyphs":list(run.glyphIndexes()),"positions":[[v.x(),v.y()]for v in run.positions()],"physical_faces":physical,"table_hashes":key})
+   # Retain missing identities and subsequent cases; fail only after writing the report.
+   runs.append({"family":raw.familyName(),"style":raw.styleName(),"glyphs":list(run.glyphIndexes()),"positions":[[v.x(),v.y()]for v in run.positions()],"physical_faces":physical,"table_hashes":key,"raw_head_hex":bytes(raw.fontTable("head")).hex()})
   self.observed.append({"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"supplementary_qtextlayout_runs":runs})
   return super().drawText(rect,flags,text)
 for name,family,bold,italic,text in cases:
@@ -60,6 +61,8 @@ for name,family,bold,italic,text in cases:
  image.save(str(out/(name+".png")))
  rows.append({"name":name,"family":family,"bold":bold,"italic":italic,"text":text,"observations":painter.observed,"png_sha256":hashlib.sha256((out/(name+".png")).read_bytes()).hexdigest()})
 assert len(rows)==6 and all(r["observations"] for r in rows)
-report={"source_pin":pin,"qt":qVersion(),"platform":platform.platform(),"machine":platform.machine(),"script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),"cases":rows,"scope":"Actual original paint_text_mm QImage pixels; supplementary Qt glyph-run matching is not the operative painter placement or native Canvas parity"}
+report={"source_pin":pin,"qt":qVersion(),"platform":platform.platform(),"machine":platform.machine(),"script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),"cases":rows,"inventory_errors":inventory_errors,"scope":"Actual original paint_text_mm QImage pixels; supplementary Qt glyph-run matching is not the operative painter placement or native Canvas parity"}
 (out/"original-macos-fonts.json").write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n")
-print("Captured six actual macOS source painters; native matching/pixel comparison pending")
+missing=[r["name"] for r in rows if any(not run["physical_faces"] for call in r["observations"] for run in call["supplementary_qtextlayout_runs"])]
+print(json.dumps({"captured":len(rows),"unmapped_cases":missing}))
+if missing:raise SystemExit(1)
