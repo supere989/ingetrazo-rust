@@ -1,0 +1,10 @@
+{
+  "source_revision": "286bde5a2d951380b37372e64bbd1b52ae135973",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "dependency": {
+    "name": "unicode-linebreak",
+    "version": "0.1.5",
+    "license": "Apache-2.0"
+  },
+  "source_sha256": "1fad52013da8033038b5f66f465d666f19b196f76f6451b53060fb98b6aab26b"
+}
