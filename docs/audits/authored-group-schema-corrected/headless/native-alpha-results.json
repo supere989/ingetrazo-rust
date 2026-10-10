@@ -1,0 +1,325 @@
+{
+  "cases": [
+    {
+      "case": "authored-legacy-absent",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.869811, compact_preprocess_ms: 0.0, warm_cache_ms: 0.006232, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-legacy-null",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.838475, compact_preprocess_ms: 0.0, warm_cache_ms: 0.004529, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-legacy-null-nullxform",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.571792, compact_preprocess_ms: 0.0, warm_cache_ms: 0.003126, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-legacy-null-component-true",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.595697, compact_preprocess_ms: 0.0, warm_cache_ms: 0.002865, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-proto-zero-true",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.468998, compact_preprocess_ms: 0.0, warm_cache_ms: 0.002765, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-proto-zero-false",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.4312270000000002, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0025050000000000003, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-nested-numeric-adopt",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.507772, compact_preprocess_ms: 0.0, warm_cache_ms: 0.002725, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "authored-nested-null-adopt",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.9934879999999997, compact_preprocess_ms: 0.0, warm_cache_ms: 0.004028, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          true
+        ],
+        [
+          6,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          2,
+          0.30000001192092896,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"
+}
