@@ -1,0 +1,1 @@
+{"cases": 24, "visible_segments": 95, "exact_projected_endpoints": true, "negative_controls": 3, "scope": "Original MVP and source-visible border segments. Native camera MVP construction, hidden/rejected segment admission and actual GPU outline pixels remain separate requirements."}

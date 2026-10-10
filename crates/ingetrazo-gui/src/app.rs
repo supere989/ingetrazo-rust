@@ -42,6 +42,7 @@ pub struct GeometryClipboard {
 pub struct IngeTrazoApp {
     /// Runtime-only native GPU viewport state; never serialized into the document.
     pub native_composer:crate::composer_cad::NativeComposer,
+    pub image_outlines:crate::image_outlines::ImageOutlineCache,
     pub native_gpu_viewport_enabled: bool,
     pub native_gpu_viewport_rect: Option<egui::Rect>,
     pub native_gpu_viewport_texture: Option<egui::TextureId>,
@@ -144,7 +145,7 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
-            native_composer:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
+            native_composer:Default::default(),image_outlines:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
             component_edit_stack: Vec::new(),
             scene,
             camera,
@@ -1632,7 +1633,8 @@ mod released_history_chord_tests {
     #[test]
     fn released_ctrl_chords_use_key_event_modifiers_and_route_sheet_history() {
         let mut app=IngeTrazoApp::new();app.scene.sheets=vec![ingetrazo_core::composition::Sheet::default()];app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
-        let before=app.scene.sheets.clone();app.begin_composer_edit();let mut border=app.scene.sheets[0].effective_source_border();border.color="#ffffff".into();app.scene.sheets[0].set_source_border(border).unwrap();app.finish_composer_edit();let after=app.scene.sheets.clone();
+        app.scene.sheets[0].items.clear();app.scene.sheets[0].items.push(ingetrazo_core::composition::SheetItem::Text(ingetrazo_core::composition::TextItem{id:uuid::Uuid::new_v4(),pos:(20.,30.),text:"History".into(),font_size_pt:14.,bold:false}));
+        let before=app.scene.sheets.clone();app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(33.,44.);app.finish_composer_edit();let after=app.scene.sheets.clone();
         let ctx=egui::Context::default();
         let frame=|app:&mut IngeTrazoApp,key,modifiers|{let _=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1600.,1000.))),modifiers:egui::Modifiers::NONE,events:vec![egui::Event::Key{key,physical_key:None,pressed:true,repeat:false,modifiers},egui::Event::Key{key,physical_key:None,pressed:false,repeat:false,modifiers:egui::Modifiers::NONE}],..Default::default()},|ctx|app.update_ui(ctx));};
         frame(&mut app,egui::Key::Z,egui::Modifiers::CTRL);assert_eq!(app.scene.sheets,before);

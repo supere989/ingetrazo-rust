@@ -31,7 +31,9 @@ pub fn main()->Result<(),Box<dyn std::error::Error>>{
    assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);
    assert_eq!(resources.stats.upload_calls,count as u64);
    assert_eq!(resources.stats.staging_allocations,if batch{1}else{count as u64});
-   assert_eq!(resources.stats.transfer_fence_creations,if batch{1}else{count as u64});
+   // Both paths reuse the resource owner's transfer pair.
+   assert_eq!(resources.stats.transfer_fence_creations,1);
+   assert_eq!(resources.stats.transfer_command_allocations,1);
    rows.push(serde_json::json!({"case":name,"batch":batch,"repeat":repeat,"logical_bytes":bytes*count,"upload_ms":upload_ms,"retirement_ms":retirement_ms,"charged_retained_after_upload":retained,"upload_stats":upload_stats,"stats_including_readback":resources.stats,"final_ledger":0}));
   }}
  }

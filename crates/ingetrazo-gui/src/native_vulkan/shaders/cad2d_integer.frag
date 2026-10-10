@@ -8,6 +8,8 @@ void main(){
  uint coverage=uint(floor(clamp(edge_coverage,0,1)*255.0+0.5));
  uvec4 color=uvec4(floor(clamp(push.rgba,0,1)*255.0+0.5));
  uvec4 src=byte_mul(color,coverage);
+ // Opaque source never reads destination; admission validates every vertex/palette.
+ if(src.a==255u){output_color=vec4(src)/255.0;return;}
  uvec4 dst=uvec4(floor(clamp(subpassLoad(destination),0,1)*255.0+0.5));
  output_color=vec4(min(src+byte_mul(dst,255u-src.a),uvec4(255u)))/255.0;
 }

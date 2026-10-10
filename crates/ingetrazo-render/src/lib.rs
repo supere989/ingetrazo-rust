@@ -145,3 +145,9 @@ pub mod texture_layout;
 pub mod native_textures;
 
 pub mod cad_callback;
+
+pub mod qt_selected_line;
+
+pub mod image_outline;
+
+pub mod qt_gl_image_line;

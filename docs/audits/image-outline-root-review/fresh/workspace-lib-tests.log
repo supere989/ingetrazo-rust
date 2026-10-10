@@ -1,0 +1,988 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)
+   Compiling ingetrazo-cli v0.3.15 (/tmp/ingetrazo-image-outline-root/crates/ingetrazo-cli)
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-image-outline-root/crates/ingetrazo-gui)
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-image-outline-root/crates/ingetrazo-metal)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-image-outline-root/crates/ingetrazo-render)
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:420:16
+    |
+420 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 4.01s
+     Running unittests src/main.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo-4cb333bd68123afd)
+
+running 2 tests
+test tests::test_cli_self_check ... ok
+test tests::test_cli_convert_headless ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_core-4fc703f1dbeed1bd)
+
+running 151 tests
+test camera::original_perspective_tests::perspective_near_plane_follows_close_eye_original_distance_rule ... ok
+test camera::original_ortho_tests::orthographic_depth_matches_original_symmetric_range_even_inside_model ... ok
+test camera::original_perspective_tests::two_point_levels_verticals_centres_target_and_falls_back_when_steep ... ok
+test camera::straight_standard_view_tests::top_bottom_collapse_vertical_edge_and_keep_finite_basis ... ok
+test camera::tests::test_camera_orbit_and_view ... ok
+test camera::tests::test_compare_lookat ... ok
+test circle_inference::tests::fits_circle_and_arc_but_rejects_bent_polyline ... ok
+test components::tests::nested_unique_preserves_placements_and_detaches_entire_tree ... ok
+test components::tests::recursive_replacements_and_missing_ids_are_atomic ... ok
+test circle_inference::tests::bare_circle_and_hole_runs_have_centers_not_quad_or_non_circular_ring ... ok
+test components::tests::linked_updates_preserve_placements_and_unique_instances_detach ... ok
+test components::tests::unique_leaf_refits_texture_covectors_under_affine_transform ... ok
+test composition::native_paint_order_tests::equal_z_uses_original_all_items_category_order ... ok
+test composition::native_paint_order_tests::hidden_items_are_excluded_and_equal_z_keeps_document_order ... ok
+test composition::tests::test_paper_dimensions ... ok
+test composition::tests::test_sacred_equation_cube_at_scale ... ok
+test composition::tests::test_sheet_creation_and_bounds ... ok
+test composition::tests::test_scale_formatting_and_parsing ... ok
+test composition::source_paper_border_tests::disabled_runtime_properties_survive_recovery_and_refusal_is_atomic ... ok
+test dimensions::tests::cursor_placement_matches_linear_side_above_and_aligned_corridor ... ok
+test containers::tests::empty_selection_and_invalid_transform_do_not_mutate_scene ... ok
+test dimension_anchors::tests::anchors_follow_uid_through_movement_grouping_transform_explode_and_deletion ... ok
+test dimensions::tests::test_dimension_deserialize_ab_format ... ok
+test containers::tests::grouping_and_explosion_preserve_holes_attrs_and_rebuild_topology ... ok
+test containers::tests::multi_explode_lifts_children_and_bakes_all_transforms_without_index_skips ... ok
+test drafting::tests::nonfinite_batch_is_atomic ... ok
+test drafting::tests::drawing_elsewhere_does_not_resurrect_deleted_region ... ok
+test drafting::tests::faceless_diagonal_closes_both_sides ... ok
+test drafting_earcut::tests::ordinary_void_is_not_covered_by_compatibility_triangles ... ok
+test drafting::tests::diagonal_splits_painted_mother_into_two_halves ... ok
+test georef::conversion_tests::projected_crossing_at_different_elevations_remains_two_wires ... ok
+test drafting::tests::original_old_disconnected_curve_rebuilds_deleted_flat_region ... ok
+test drafting::tests::authored_rectangle_band_inherits_paint_but_not_mother_metadata ... ok
+test georef::tests::test_utm_forward_inverse_round_trip ... ok
+test georef::tests::test_round_trip_under_1mm_city_scale ... ok
+test georef::tests::test_survey_point_csv_parsing ... ok
+test georef::conversion_tests::zero_signed_area_bowtie_detects_two_real_cells ... ok
+test georef::tests::test_zone_for_lon ... ok
+test drafting::tests::chord_outside_a_hole_matches_source_auto_face_carve_and_coverage ... ok
+test georef::conversion_tests::multiple_planes_and_invalid_selected_paths_are_atomic ... ok
+test gpu_memory::global_limit_regression::global_limit_includes_other_heaps_reservations_and_retired_allocations ... ok
+test gpu_memory::tests::actual_aligned_requirements_rollback_and_fence_delayed_free ... ok
+test gpu_memory::tests::compressed_odd_dimensions_layers_and_tiny_mips_use_complete_blocks ... ok
+test gpu_memory::tests::invalid_requests_do_not_change_accounting ... ok
+test drafting::tests::curve_contours_break_at_hard_edge_junctions_but_keep_plain_stations ... ok
+test gpu_memory::tests::live_driver_usage_not_double_counted_and_external_pressure_blocks ... ok
+test georef::tests::test_datum_derives_zone_and_hemisphere ... ok
+test georef::tests::test_geopath_area_and_length ... ok
+test geometry::tests::test_edge_length_and_closest_point ... ok
+test georef::tests::test_north_angle_rotation ... ok
+test georef::conversion_tests::selected_footprint_bakes_welded_face_and_open_trace_keeps_existing_geometry ... ok
+test drafting_earcut::tests::degenerate_inputs_do_not_generate_coverage ... ok
+test drafting::tests::line_authors_touched_hole_cells_and_leaves_unrelated_void_empty ... ok
+test history::tests::test_add_and_delete_face_command ... ok
+test heal::tests::disconnected_free_partition_and_interior_only_edges_are_not_solid ... ok
+test georef::tests::test_profile_sampling ... ok
+test drafting::tests::rectangle_crossing_mother_hole_does_not_claim_paint_only_containment ... ok
+test history::tests::test_composite_transaction ... ok
+test history::tests::test_geopath_command_undo_redo ... ok
+test heal::tests::changing_a_partition_into_an_external_sheet_clears_derived_state_without_flipping ... ok
+test history::tests::test_geopoints_command_undo_redo ... ok
+test image_plane::picking_tests::image_modes_preserve_last_tie_locks_and_literal_default_layer ... ok
+test math::tests::test_newell_normal_and_area ... ok
+test mesh::tests::test_mesh_vertex_welding ... ok
+test mesh::tests::test_mesh_cube_volume ... ok
+test georef::conversion_tests::crossing_trace_splits_both_wires_and_preserves_source_identity ... ok
+test history::tests::test_move_command_undo_redo ... ok
+test offset::tests::open_chain_mitre_bevel_and_plane_guard ... ok
+test parts::tests::cut_list_merges_size_material_and_sorts_names_naturally ... ok
+test parts::tests::part_principal_box_matches_splayed_leg_but_retains_stepped_carcass_model_axes ... ok
+test heal::tests::reversed_faces_and_nested_holes_preserve_the_actual_ring ... ok
+test parts::tests::nested_material_matches_original_root_fallback_and_explicit_face_override ... ok
+test parts::tests::surface_majority_material_uses_explicit_paint_then_inherited_container ... ok
+test image_plane::picking_tests::source_degenerate_and_sheared_projection_is_not_replaced_by_polygon_pick ... ok
+test image_plane::publication_revision_tests::pose_publication_is_immediate_noop_stable_and_membership_independent ... ok
+test offset::tests::surviving_dimension_anchors_and_curve_tags_follow_the_offset ... ok
+test geometry::tests::test_face_normal_and_area ... ok
+test math::tests::test_point_key_welding ... ok
+test heal::tests::mother_removed_small_island_holed_and_3d_partial_gated ... ok
+test render_blender::tests::test_command_building ... ok
+test planar::tests::loose_closed_wire_reconstructs_missing_face_and_preserves_edge_metadata ... ok
+test render_blender::tests::test_kelvin_to_rgb_values ... ok
+test presentation::tests::defaults_and_validation_preserve_source_recipe ... ok
+test intersect::tests::crossing_holes_coplanar_and_split_are_real ... ok
+test offset::tests::original_region_collapse_split_and_reported_downward_plaza ... ok
+test render_blender::tests::test_progress_parsing ... ok
+test planar::tests::dimension_anchor_survives_move_rebuild_and_another_move ... ok
+test screen_pick::snap_projection_boundary_tests::snapping_accepts_before_near_and_rejects_behind_without_changing_render_clip ... ok
+test presentation::tests::full_source_tuple_and_nonstring_name_survive_unrelated_edit_and_runtime_serde ... ok
+test planar::tests::overlapping_squares_rebuild_into_three_regions_retaining_attributes ... ok
+test offset::tests::painted_holes_tile_without_overlap_and_invalid_inputs_are_atomic ... ok
+test screen_pick::tests::nested_group_edges_use_world_placement_and_loose_ties_win ... ok
+test screen_pick::tests::pixel_threshold_is_zoom_invariant_and_respects_each_projection_volume ... ok
+test section::frame_tests::section_frame_matches_original_projected_bounds_margin ... ok
+test section::tests::test_section_clipping ... ok
+test screen_pick::tests::face_reference_respects_holes_and_mirrored_placement ... ok
+test pieces::tests::open_corner_patch_joins_one_solid_and_disjoint_sheet_stays_separate ... ok
+test section::tests::test_section_symbols ... ok
+test screen_pick::snap_projection_boundary_tests::ordinary_projection_retains_tiny_positive_w_rejection ... ok
+test planar::tests::dangling_lines_and_hole_bridges_do_not_enter_face_rings ... ok
+test planar::tests::selected_plane_leaves_other_planes_and_nested_holes_intact ... ok
+test pieces::tests::touching_boards_are_three_closed_pieces_without_neighbours_edges ... ok
+test sheet_shape::placement_tests::invalid_placement_refuses_without_partial_shape ... ok
+test sheet_shape::tests::hidden_and_invalid_shapes_do_not_create_unbounded_work ... ok
+test sheet_color::tests::original_named_palette_and_hex_channel_order ... ok
+test sheet_shape::tests::terrain_hangs_down_for_both_diagonals_and_keeps_clip ... ok
+test sheet_shape::tests::original_schema_preserves_unknown_fields_and_polygon_limits ... ok
+test simplify::annular_coverage_tests::already_holed_source_remains_one_face_with_its_void ... ok
+test heal::tests::orient_marks_shared_partition_and_keeps_nested_shells_independent ... ok
+test snap_screen::tests::center_reference_refreshes_with_same_scene_version_and_retires_after_deletion ... ok
+test snap::tests::nested_group_snap_uses_world_placement_and_active_cut ... ok
+test snap::tests::hidden_face_boundaries_are_not_endpoint_midpoint_or_edge_snap_targets ... ok
+test snap::tests::section_hides_nearest_endpoint_and_reveals_next_candidate ... ok
+test simplify::tests::pinned_cpython_numeric_hash_and_resize_iteration_controls ... ok
+test snap::tests::test_encouraged_point_tracking_guide ... ok
+test sheet_shape::placement_tests::actual_original_placement_geometry_and_style ... ok
+test simplify::annular_coverage_tests::eight_annular_triangles_merge_without_filling_the_void ... ok
+test simplify::tests::differing_embedded_texture_resources_never_merge ... ok
+test snap_screen::curve_dwell_priority_tests::curve_rim_encourages_center_but_face_corner_keeps_priority ... ok
+test snap::tests::test_snap_endpoints_and_midpoints ... ok
+test snap_screen::tests::dwell_acquires_after_250ms_only_and_keeps_two_source_points ... ok
+test snap_screen::shift_lock_tests::press_captures_once_release_preserves_arrow_and_no_late_capture ... ok
+test snap_screen::tests::lock_fetches_off_line_reference_height_without_breaking_axis ... ok
+test snap::tests::test_parallel_reference_inference ... ok
+test snap_screen::tests::locked_axis_still_snaps_endpoints_and_closure_in_both_directions ... ok
+test snap_screen::tests::memory_lines_yield_to_midpoint_and_preserve_wall_plane ... ok
+test snap_screen::tests::face_fallback_reports_surface_but_not_a_hole ... ok
+test snap_screen::tests::perspective_on_edge_is_camera_ray_projection_not_pixel_lerp ... ok
+test snap_screen::tests::transform_exclusions_leave_independent_endpoint_and_copy_restores_original ... ok
+test snap_screen::tests::priority_close_origin_midpoint_and_skew_crossings ... ok
+test snap_screen::tests::occluded_endpoint_does_not_win_and_axis_cue_does_not_move_candidate ... ok
+test snap_screen::tests::moving_curve_exclusion_keeps_source_center_and_dwell_reference ... ok
+test triangulate::tests::test_convex_quad_fan ... ok
+test snap::tests::test_two_point_crossing ... ok
+test snap_screen::tests::endpoint_threshold_uses_pixels_at_near_and_far_zooms ... ok
+test units::tests::test_parse_length_units ... ok
+test topology::tests::test_find_cycle ... ok
+test snap_screen::operation_reset_tests::reset_retires_references_and_preserves_configuration ... ok
+test triangulate::tests::test_holed_polygon ... ok
+test pieces::tests::child_fragments_join_names_and_flags_follow_correct_physical_parts ... ok
+test solids::tests::container_paint_is_baked_but_explicit_face_paint_wins ... ok
+test snap_screen::context_axes_source_acceptance::frozen_original_context_axes_and_shift_directions ... ok
+test solids::tests::test_solid_report_and_union ... ok
+test solids::tests::rejects_invalid_inputs_without_mutation ... ok
+test solids::tests::rotated_overlap_and_shared_face_union ... ok
+test solids::tests::group_transforms_trim_split_direction_and_provenance ... ok
+test simplify::tests::gentle_curvature_and_material_seams_are_preserved ... ok
+test solids::tests::overlap_containment_coincident_and_empty ... ok
+test simplify::tests::original_planar_grid_all_orientations_collapses_to_four_corners ... ok
+test drafting::tests::unrelated_spatial_vertices_do_not_supply_drafting_planes ... ok
+test sheet_color::tests::original_long_hex_all_channel_values ... ok
+
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/boolean_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/boolean_acceptance-a9477b664d0af660)
+
+running 2 tests
+test oracle_rejects_old_copy_and_concatenate_placeholders ... ok
+test overlapping_boxes_have_analytic_boolean_volumes_and_closed_boundaries ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/drawing_axes_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/drawing_axes_acceptance-02750a363fec37c2)
+
+running 2 tests
+test world_reset_and_reflected_skew_are_not_stale_or_normalized_storage ... ok
+test actual_original_reentry_frames_match_axes_without_reencoding ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mesh_share_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/mesh_share_acceptance-c3af2ab2d1c7797d)
+
+running 3 tests
+test equal_authored_geometry_does_not_create_identity_and_unique_detaches ... ok
+test tokenless_recovery_migration_links_only_definition_members_and_is_idempotent ... ok
+test prototype_publication_keeps_independent_lists_and_payloads ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_i18n.rs (/tmp/ingetrazo-root-review-target/debug/deps/test_i18n-394f00a7a1c1be3d)
+
+running 1 test
+test test_i18n_all_languages_and_fallbacks ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_formats-29c4bdd2824f23e8)
+
+running 35 tests
+test dae_import::image_binding_tests::direct_image_and_scoped_sampler_chains_reject_broken_binding ... ok
+test dae::tests::test_dae_export_basic_cube ... ok
+test dae_import::uv_affine_tests::translated_reflected_world_uv_and_original_non_affine_fit ... ok
+test dae_import::image_file_tests::escaped_local_image_bytes_are_exact_and_remote_and_malformed_uris_refused ... ok
+test dae_import::representative_image_tests::original_qt_opaque_fixed_point_and_alpha_weighted_controls ... ok
+test exchange::tests::nested_holes_reflections_and_hidden_containers_preserve_world_surface ... ok
+test dae_import::tests::geographic_asset_preserves_site_anchor ... ok
+test dae_import::tests::strided_accessors_instances_units_upaxis_and_reflection_are_composed ... ok
+test gltf::tests::hidden_parent_suppresses_descendants_and_empty_has_no_accessors ... ok
+test gltf::tests::reflected_instance_retains_outward_winding ... ok
+test gltf::tests::nested_world_geometry_is_exported ... ok
+test dae_import::tests::truncated_indices_accessors_and_node_cycles_fail_without_partial_scene ... ok
+test dxf::tests::linework_layers_bulges_and_invalid_entities_are_transactional ... ok
+test dae_import::tests::diffuse_effect_is_bound_by_primitive_symbol_not_global_material_order ... ok
+test ifc::tests::test_ifc_guid_length_and_validity ... ok
+test ifc::tests::test_ifc_export_basic_structure ... ok
+test obj::import_tests::bad_indices_or_nonfinite_vertices_never_partially_modify_scene ... ok
+test obj::import_tests::named_objects_negative_indices_and_linework_are_retained ... ok
+test dae_import::tests::interleaved_texture_coordinates_keep_authored_indices_and_reject_truncation ... ok
+test igz::source_border_runtime_tests::dormant_authored_border_is_runtime_only_and_foreign_noop_is_retained ... ok
+test gltf::tests::textual_and_binary_containers_are_distinct ... ok
+test obj::asset_tests::missing_texture_fails_before_destination_or_sidecar_mutation ... ok
+test igz::sheet_shape_roundtrip_tests::shape_edit_preserves_native_unknowns_and_other_categories ... ok
+test dae_import::tests::textured_scene_assembly_keeps_bytes_and_world_uv_through_reflection ... ok
+test obj::asset_tests::material_texture_bytes_and_local_affine_uv_survive_nested_export ... ok
+test tests::test_stl_export_and_import ... ok
+test gltf_import::tests::external_buffer_nested_transform_material_texture_uv_and_title ... ok
+test tests::test_obj_export_and_import ... ok
+test tests::test_convert_file ... ok
+test tests::test_igz_save_and_load ... ok
+test dae_import::reference_threshold_tests::original_editable_threshold_and_reference_boundary_stations ... ok
+test dae_import::reference_threshold_tests::reference_instances_preserve_names_shared_definition_and_placements ... ok
+test paper_font_resolver::publication_tests::refused_request_preserves_published_fifo_and_owners ... ok
+test paper_text_layout::tests::mixed_fallback_keeps_primary_face_and_warm_ownership ... ok
+test paper_text_layout::paragraph_tests::warm_paragraph_resource_and_refresh_identity_are_bounded ... ok
+
+test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.96s
+
+     Running tests/image_plane_preservation.rs (/tmp/ingetrazo-root-review-target/debug/deps/image_plane_preservation-03db430336b2a9af)
+
+running 1 test
+test removing_first_plane_keeps_survivor_opaque_fields_and_resets_optional_defaults ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/native_preservation.rs (/tmp/ingetrazo-root-review-target/debug/deps/native_preservation-e0703b7e1a78412c)
+
+running 17 tests
+test replacement_face_does_not_inherit_deleted_face_metadata ... ok
+test fresh_rust_sheet_saves_in_python_composition_schema ... ok
+test renamed_and_reordered_views_and_sections_keep_identity_metadata ... ok
+test authored_f64_coordinates_survive_exact_native_document_reopen ... ok
+test survey_points_and_paths_preserve_metadata_through_rename_reorder_and_edit ... ok
+test native_camera_section_and_datum_edits_use_original_schema ... ok
+test dimensions_use_original_schema_and_keep_identity_on_reorder_edits ... ok
+test texture_files_with_same_basename_get_distinct_archive_entries ... ok
+test edited_vector_ink_controls_reopen_with_original_field_names ... ok
+test frame_camera_native_edit_preserves_opaque_metadata_and_reopens_lens ... ok
+test original_composer_edits_preserve_unsupported_items_and_title_rows ... ok
+test published_mesh_identity_includes_plain_placements_but_not_equal_prototypes ... ok
+test native_noop_preserves_every_nested_value_and_repeated_save ... ok
+test fresh_saved_view_references_exact_persisted_group_and_section_uids ... ok
+test edited_nested_instance_detaches_geometry_preserving_original_definition_and_metadata ... ok
+test zip_embedded_texture_and_survey_bytes_survive_without_disk_files ... ok
+test explicit_components_share_updates_while_plain_proto_groups_remain_independent ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/preservation_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/preservation_acceptance-6e5d38753f3cd2fa)
+
+running 3 tests
+test deleting_edge_does_not_strip_surviving_curve_metadata ... ok
+test renamed_material_retains_unknown_source_attributes ... ok
+test edited_geometry_material_layer_and_group_replace_raw_baseline ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/roundtrips.rs (/tmp/ingetrazo-root-review-target/debug/deps/roundtrips-27fe2b78a217f8e4)
+
+running 9 tests
+test test_glb_export ... ok
+test test_stl_binary_roundtrip ... ok
+test test_stl_auto_detect ... ok
+test test_dxf_export_and_import ... ok
+test test_stl_ascii_roundtrip ... ok
+test test_obj_export_and_import_roundtrip ... ok
+test test_igz_format1_roundtrip ... ok
+test test_igz_format2_zip_roundtrip ... ok
+test test_load_example_banca_pergola ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/sheet_pdf.rs (/tmp/ingetrazo-root-review-target/debug/deps/sheet_pdf-17d7b5c417960166)
+
+running 15 tests
+test empty_atlas_or_invalid_stroke_is_refused ... ok
+test invalid_export_preserves_existing_destination ... ok
+test invalid_qt_paper_export_preserves_destination_and_rejects_stroke_options ... ok
+test original_qt_paper_numerals_are_explicit_and_generic_precision_is_retained ... ok
+test shape_export_keeps_source_visibility_order_and_physical_origin ... ok
+test valid_physical_vector_page_contains_no_image_or_process ... ok
+test vector_coordinates_keep_authored_double_precision ... ok
+test source_device_outlines_refuse_wrong_policy_without_touching_destination ... ok
+test visible_unsupported_items_refuse_but_hidden_items_do_not ... ok
+test second_physical_clip_is_admitted_before_atomic_destination_write ... ok
+test failed_destination_rename_leaves_directory_and_removes_temporary ... ok
+test preparation_rejects_total_draws_across_individually_admitted_shapes ... ok
+test numeric_serialization_preserves_legacy_boundary_bytes ... ok
+test preparation_admits_aggregate_paths_before_returning_large_page ... ok
+test atlas_preparation_refuses_combined_draws_before_retaining_all_pages ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_gui-96d753789e541f65)
+
+running 149 tests
+test blender::tests::test_blender_state_initialization ... ok
+test blender::tests::test_resolution_presets ... ok
+test app::console_transaction_tests::console_refusals_and_inspection_preserve_model_and_redo ... ok
+test app::model_revision_regression::history_and_context_swaps_never_reuse_gpu_model_revision ... ok
+test app::console_transaction_tests::console_cube_is_one_reversible_transaction ... ok
+test clipboard::tests::copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture ... ok
+test app::tests::test_cad_clipboard_and_group_operations ... ok
+test clipboard::tests::malformed_mesh_and_recursive_definitions_leave_document_and_history_unchanged ... ok
+test clipboard::tests::system_clipboard_transfers_geometry_between_native_owners ... ignored, requires isolated X11 clipboard server
+test clipboard::tests::resource_allocator_reserves_incoming_names_and_leaves_opaque_fields ... ok
+test component_edit::tests::axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context ... ok
+test clipboard::tests::loose_copy_paste_preserves_holes_opaque_data_uvs_curves_and_one_history_step ... ok
+test clipboard::tests::overlap_paint_matches_original_first_covering_face_priority ... ok
+test clipboard::tests::same_document_paste_refreshes_mesh_without_replacing_independent_child_lists ... ok
+test clipboard::tests::foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo ... ok
+test clipboard::tests::preview_cancel_and_commit_are_one_atomic_stamp ... ok
+test clipboard::tests::foreign_component_material_and_asset_collisions_remap_with_shared_repeat_identity ... ok
+test clipboard::tests::overlap_stamp_rebuilds_regions_on_two_planes_with_one_undo ... ok
+test composer::frame_camera_tests::frame_bounds_matches_original_edge_and_group_vertex_semantics ... ok
+test component_edit::tests::paste_retains_link_but_creates_unique_instance_uids ... ok
+test component_edit::tests::cancel_and_fragment_save_preserve_document_and_history ... ok
+test component_edit::tests::component_edit_commits_all_instances_once_and_undo_redo_restores_registry ... ok
+test component_edit::tests::mixed_selection_component_creation_and_explosion_are_reversible ... ok
+test composer::frame_camera_tests::hidden_face_boundaries_and_contours_are_absent_from_sheet ... ok
+test app::ordered_solid_selection_tests::first_selected_group_is_cutter_even_when_scene_order_is_reversed ... ok
+test composer::frame_camera_tests::frame_overrides_roll_scale_and_perspective_have_original_camera_semantics ... ok
+test composer::frame_camera_tests::raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation ... ok
+test app::tests::solid_boolean_prepares_before_undo_and_restores_inputs ... ok
+test component_edit::tests::world_dimensions_commit_without_second_placement_transform_and_cancel_restore ... ok
+test composer::frame_camera_tests::saved_section_view_uses_original_camera_direction_without_mutating_live_state ... ok
+test composer::frame_camera_tests::model_history_preserves_later_sheet_edits_and_switch_retires_drag ... ok
+test composer::shape_authoring_tests::precise_palette_preserves_bytes_and_source_alpha_replacement ... ok
+test composer::live_composer_camera_tests::current_and_missing_saved_use_live_camera_while_bound_view_uses_snapshot ... ok
+test composer_cad::tests::bevel_orientation_and_invalid_contours ... ok
+test component_edit::tests::nested_component_edit_propagates_and_folds_into_one_outer_history_entry ... ok
+test composer::frame_camera_tests::sheet_gestures_have_scoped_undo_and_cancel_or_selection_has_no_history ... ok
+test composer::frame_camera_tests::frame_pixel_aspect_saved_lens_clamp_and_two_point_follow_original ... ok
+test composer::frame_camera_tests::source_direct_paper_properties_do_not_create_history_or_replay_with_items ... ok
+test composer::shape_authoring_tests::shape_placement_is_atomic_undoable_and_invalid_input_preserves_history ... ok
+test composer_text_fields::canvas_expansion_cache_tests::warm_strings_share_identity_and_file_date_content_binding_invalidate ... ok
+test component_edit::tests::shareback_retains_annotations_and_ordinary_annotation_history_stays_reversible ... ok
+test dimension_actions::tests::property_edit_delete_invalid_axis_and_undo_preserve_dimension_identity ... ok
+test composer_text_fields::tests::source_context_distinguishes_exact_large_metadata_integers ... ok
+test composer::frame_camera_tests::canvas_field_index_reuses_warm_context_and_invalidates_edit_history_replacement ... ok
+test composer::pdf::grid_tests::literal_original_grid_cutoff_and_perspective_controls ... ok
+test composer_text_fields::tests::inactive_border_runtime_distinguishes_authored_but_import_resets ... ok
+test composer_text_fields::tests::actual_original_contexts_and_general_scale_controls ... ok
+test document_presentation::tests::ui_changes_dirty_document_without_quantizing_untouched_storage ... ok
+test document_presentation::tests::presentation_only_leaf_finish_retains_exact_private_geometry_and_no_history ... ok
+test composer::section_frame_tests::bound_saved_scene_cut_clips_nested_edges_without_changing_live_document ... ok
+test document_session::tests::mesh_prototype_registry_changes_require_unsaved_close_confirmation ... ok
+test document_presentation::tests::complete_saved_view_recalls_precision_recipe_sky_and_time ... ok
+test composer_text_fields::tests::expanded_text_refusal_does_not_mutate_authored_items ... ok
+test composer_text_fields::canvas_expansion_cache_tests::refusal_keeps_previous_entries_and_calendar_is_validated ... ok
+test composer_text_fields::canvas_expansion_cache_tests::native_calendar_source_timestamp_protocol ... ok
+test clipboard::tests::foreign_mesh_identity_remaps_collisions_keeps_repeat_and_separates_equal_prototypes ... ok
+test history_terrain::tests::same_geometry_rebuild_is_different_runtime_owner_and_survives_unrelated_undo ... ok
+test history_layers::tests::nested_ordinary_layer_panel_state_survives_lifted_model_undo ... ok
+test history_layers::tests::registry_membership_is_not_ordinary_geometry_history ... ok
+test history_terrain::tests::visibility_is_nonhistory_and_noop_has_no_revision_or_copy ... ok
+test history_layers::tests::delete_selected_layer_reassigns_nested_mesh_and_keeps_other_layer ... ok
+test history_views::tests::imported_view_owner_survives_update_delete_and_redo_object_lifetime ... ok
+test geometry_actions::tests::menu_intersect_rebuild_and_failed_plane_have_single_atomic_history ... ok
+test history_views::tests::nonhistory_view_actions_do_not_hide_geometry_branch ... ok
+test image_plane_actions::tests::add_image_layer_redo_uses_current_name_and_rechecks_creation ... ok
+test geometry_actions::tests::simplify_and_path_conversion_commit_once_and_undo_exactly ... ok
+test image_plane_actions::tests::detached_metadata_is_rooted_by_redo_then_reclaimed_when_branch_dies ... ok
+test geometry_actions::tests::orient_partition_marking_flip_and_second_pass_noop_have_one_undo ... ok
+test native_vulkan::cad_input_usage_tests::unsupported_input_is_explicit_refusal ... ok
+test geometry_actions::tests::heal_menu_holes_overlap_and_undo_restores_both_faces ... ok
+test image_plane_actions::tests::delete_image_layer_is_global_and_survives_owned_frame_undo ... ok
+test native_vulkan::encoded_surface_tests::prefers_direct_encoded_attachment_and_refuses_semantic_fallback ... ok
+test native_vulkan::headless::tests::strict_hardware_request_never_substitutes_software_or_other_vendor ... ok
+test image_plane_actions::tests::relative_frame_undo_and_absolute_transform_capture_are_distinct ... ok
+test image_plane_actions::tests::reference_only_finish_keeps_precise_prototype_and_layer_owned_history ... ok
+test native_vulkan::queues::tests::no_present_or_graphics_is_rejected ... ok
+test image_plane_actions::tests::context_cancel_history_roots_detached_metadata_until_session_release ... ok
+test native_vulkan::queues::tests::combined_and_dedicated_compute_preferred ... ok
+test image_plane_actions::tests::unrelated_geometry_history_does_not_own_plane_and_bad_input_is_atomic ... ok
+test native_vulkan::queues::tests::sparse_split_graphics_present_preserve_real_indices ... ok
+test native_vulkan::resize::error_tests::typed_loss_refuses_but_memory_pressure_and_opaque_text_do_not ... ok
+test native_vulkan::resize::tests::cancellation_is_explicit_and_stage_specific ... ok
+test native_vulkan::texture_cache::source_orientation_tests::odd_height_preserves_center_and_rgba_channels_without_reallocation ... ok
+test native_vulkan::resize::tests::unused_owner_is_destroyed_and_published_owner_is_transferred ... ok
+test composer_text_fields::tests::source_caller_first_equal_sheet_and_different_position ... ok
+test native_vulkan::world::contour_chunk_regression::storage_chunks_fit_actual_range_and_preserve_complete_triangles ... ok
+test native_vulkan::world::sample_count_regression::format_support_limits_global_msaa_without_allocating_invalid_images ... ok
+test native_vulkan::texture_cache::tests::source_alpha_strict_threshold_and_sparse_coverage ... ok
+test outliner::tests::cut_list_controls_apply_precision_surface_filter_and_document_units ... ok
+test composer_text_fields::tests::opaque_archive_payload_is_not_copied_or_admitted_for_context ... ok
+test native_vulkan::texture_cache::tests::decode_budget_and_format_fail_before_pixel_admission ... ok
+test section_actions::prompt_tests::placement_prompt_cancel_rename_optout_and_undo_follow_original_history ... ok
+test outliner::tests::nested_selection_opens_correct_context_and_properties_roundtrip_with_undo ... ok
+test outliner::tests::all_visibility_is_one_undo_and_cut_list_and_cache_follow_changes ... ok
+test saved_view_actions::tests::selected_update_preserves_metadata_and_recalls_hidden_tree_section_style ... ok
+test native_vulkan::world::lifecycle_regression::failed_pipeline_batch_releases_every_partial_non_null_handle ... ok
+test geometry_actions::tests::placed_component_pieces_update_shared_definition_and_undo_once ... ok
+test session_state::tests::crash_writer_helper ... ok
+test image_outlines::tests::cached_overlay_preserves_identity_and_handles_public_selection_changes ... ok
+test section_actions::selection_identity_tests::deleting_earlier_plane_keeps_selection_on_same_persisted_identity ... ok
+test tests::test_app_camera_presets ... ok
+test tests::test_app_initialization ... ok
+test tests::test_app_tool_switching ... ok
+test tests::test_app_delete_and_select_all ... ok
+test section_actions::tests::sections_in_rotated_scaled_edit_context_keep_world_plane_and_outer_undo ... ok
+test tool_history::tests::cancel_invalid_vcb_and_selection_do_not_create_undo_commits ... ok
+test tests::test_app_undo_redo ... ok
+test tool_history::section_group_workflow::clipped_front_group_does_not_block_rear_group_select_and_double_click ... ok
+test tool_history::image_revision_tests::image_only_preview_invalidates_document_without_geometry_cache ... ok
+test tool_history::tests::failed_path_sweep_reports_error_without_document_or_history_mutation ... ok
+test tool_history::tests::click_and_vcb_pushpull_each_create_one_undo_commit ... ok
+test tool_history::tests::history_replacement_retires_move_targets_and_redo_preserves_original_geometry ... ok
+test tool_history::tests::freehand_preview_cancel_release_has_one_reversible_commit ... ok
+test tool_history::tests::move_live_preview_click_vcb_failure_cancel_and_tool_change_are_transactional ... ok
+test tool_history::tests::line_midchain_undo_rewinds_vcb_origin_without_consuming_prior_document_undo ... ok
+test viewport::drafting_plane_tests::locked_reference_still_offers_tilted_drawing_plane ... ok
+test viewport::drafting_plane_tests::standard_view_uses_model_center_oblique_uses_ground_and_line_can_rise ... ok
+test tool_history::tests::duplicate_line_undo_does_not_pop_unrelated_history_and_numeric_closure_stays_active ... ok
+test viewport::move_plane_tests::move_grab_uses_camera_heading_plane_and_top_view_fallback ... ok
+test viewport::move_plane_tests::move_second_point_yields_to_unselected_face_but_axis_and_selection_keep_grab_plane ... ok
+test tool_history::tests::followme_preview_cancel_and_drag_release_history_are_atomic ... ok
+test tool_history::tests::move_array_retyping_replaces_one_undo_and_document_replacement_closes_window ... ok
+test tool_history::tests::offset_preview_failure_cancel_and_success_have_transactional_history ... ok
+test tool_history::tests::source_move_live_preview_and_other_transform_previews_commit_undo_once ... ok
+
+running 1 test
+test tool_history::tests::nested_mirrored_component_drafting_commits_shared_definition_once ... ok
+test tool_history::tests::ctrl_pushpull_vcb_preserves_slab_and_commits_one_undo ... ok
+test document_session::tests::native_close_requests_offer_cancel_then_close_after_discard ... ok
+test composer::frame_camera_tests::subpixel_paper_hatch_keeps_original_two_row_coverage ... ok
+test composer_cad::tests::direct_geometry_separates_coverage_from_authored_alpha ... ok
+test tool_history::tests::fillet_sizing_preview_and_invalid_radius_do_not_create_history ... ok
+test composer_cad::tests::pose_palette_and_invalid_updates_preserve_cached_geometry ... ok
+test composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item ... ok
+test section_actions::native_close_tests::native_close_cancels_naming_then_enters_unsaved_guard ... ok
+test composer_cad::tests::exact_rectangle_phase_cache_and_admission_are_atomic ... ok
+test composer_cad::tests::round_caps_cache_actual_origin_and_refuse_degenerate ... ok
+test composer_cad::tests::closed_curve_offsets_refuse_degenerate_and_keep_warm_cache ... ok
+test app::document_camera_tests::visible_camera_is_saved_restored_and_reset_for_new_document ... ok
+test document_session::tests::foreign_mesh_import_cache_retires_only_after_document_replacement ... ok
+test session_state::tests::preferences_keep_unknown_settings_and_corrupt_source_is_never_overwritten ... ok
+test section_actions::color_tests::section_color_saved_view_and_isolated_restart_keep_rgb ... ok
+test app::released_history_chord_tests::released_ctrl_chords_use_key_event_modifiers_and_route_sheet_history ... ok
+test app::tests::test_group_3_colors ... ok
+test document_session::tests::camera_selection_do_not_dirty_and_preferences_restart_keeps_recent_files ... ok
+test app::tests::test_load_example_pergola ... ok
+test session_state::tests::slots_do_not_collide_across_paths_or_live_windows_and_retirement_keeps_recoverable_copy ... ok
+test session_state::tests::separate_process_crash_restart_recovers_latest_geometry_without_touching_original ... ok
+test document_session::tests::timer_skips_gestures_cleans_and_duplicates_then_discard_keeps_recovery ... ok
+test document_session::tests::naming_modal_keeps_document_autosave_timer_and_pending_prompt ... ok
+test document_session::tests::unsaved_actions_cancel_failed_save_and_successful_save_are_atomic ... ok
+
+test result: ok. 148 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/clipboard_transport_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/clipboard_transport_acceptance-3471b374f2d43ca4)
+
+running 1 test
+test native_clipboard_transport_rejects_foreign_text_and_malformed_payload_without_stale_cache ... ignored, requires disposable X11 clipboard server
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/component_global_history.rs (/tmp/ingetrazo-root-review-target/debug/deps/component_global_history-8b597d326195e18b)
+
+running 15 tests
+test stale_context_target_and_deleted_placement_refuse_without_stack_or_model_change ... ok
+test source_line_first_point_consumes_ctrl_z_before_unsafe_global_target ... ok
+test successful_finish_retires_live_preview_without_authoring_it ... ok
+test invalid_candidate_or_historical_mesh_refuses_finish_atomically ... ok
+test native_cancel_keeps_legitimate_ancestor_undo_and_redo_checkpoint ... ok
+test unchanged_shared_finish_validates_and_rebinds_pending_redo_instead_of_detaching ... ok
+test unsafe_reference_undo_preserves_even_live_preview ... ok
+test root_target_can_undo_while_nested_and_no_edit_redo_survives_both_exits ... ok
+test line_chain_then_pending_point_take_priority_over_make_unique_ancestor ... ok
+test unsafe_make_unique_active_undo_refuses_atomically_and_authored_face_survives ... ok
+test no_edit_entry_exit_preserves_global_redo_and_context_tags_are_runtime_only ... ok
+test nested_ordinary_targets_preserve_three_command_global_order ... ok
+test refused_finish_preserves_live_tool_preview_and_revision ... ok
+test source_prior_loose_undo_redo_targets_parked_mesh_without_exiting ... ok
+test source_local_commands_keep_global_order_and_finish_fold_only_sharing_leaf ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/composer_pdf_export.rs (/tmp/ingetrazo-root-review-target/debug/deps/composer_pdf_export-3d680ca7fbac2085)
+
+running 1 test
+test current_page_export_and_atlas_refusal_preserve_existing_destination ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/move_component_arrays.rs (/tmp/ingetrazo-root-review-target/debug/deps/move_component_arrays-5685966d260d4386)
+
+running 14 tests
+test refused_singular_context_keeps_live_preview_and_revision_until_user_cancel ... ok
+test entering_edit_context_retires_live_group_preview_before_camera_frame_capture ... ok
+test rotated_scaled_context_uses_restored_grab_placement_and_cancel_camera ... ok
+test linked_nested_group_spaced_arrays_keep_definitions_and_atomic_history ... ok
+test no_edit_container_bake_preserves_source_zero_history_and_clears_selection ... ok
+test local_component_group_move_retains_sibling_placement_and_undo_restores ... ok
+test crossing_and_exact_overlap_arrays_match_retained_original_segments ... ok
+test transformed_nonempty_container_own_mesh_detaches_source_prototype ... ok
+test root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces ... ok
+test container_finish_copy_array_delete_match_source_independent_lists ... ok
+test nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands ... ok
+test shared_child_mesh_refresh_and_native_reopen_retain_independent_placements ... ok
+test original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact ... ok
+test actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/offset_controller_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/offset_controller_acceptance-f4aefd201a70f844)
+
+running 2 tests
+test selected_chain_typed_radius_preserves_dragged_sign_and_undo ... ok
+test face_pick_perpendicular_preview_cancel_paint_partition_and_one_history ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/recovery_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/recovery_acceptance-f140e73a7ab9748e)
+
+running 2 tests
+test crash_helper ... ok
+
+running 1 test
+test crash_restart_retains_original_and_failed_close ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_metal-244c83f4f030354f)
+
+running 3 tests
+test span_plan::tests::ordered_overlap_not_deduplicated ... ok
+test span_plan::tests::malformed_fractional_and_excessive_refused ... ok
+test span_plan::tests::sparse_plan_matches_six_actual_qpainter_whole_images ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_render-52df0bac6a42d2a3)
+
+running 60 tests
+test cad2d::ordering_admission::partition_is_contiguous_bounded_and_complete ... ok
+test cad2d::shader_pose_bounds::physical_f64_bounds_do_not_hide_shader_intermediate_overflow ... ok
+test cad2d::immutable_order_proof::canonical_shared_boundaries_are_safe ... ok
+test cad2d::immutable_order_proof::rejects_same_draw_overlap_but_allows_source_ordered_barriers ... ok
+test cad2d::tests::immutable_geometry_identity_and_bounds_are_not_palette_keys ... ok
+test cad2d::tests::opaque_admission ... ok
+test cad2d::tests::original_bytes_survive_without_linear_premultiplication_loss ... ok
+test cad_callback::tests::frozen_owner_survives_edits_and_invalid_update_is_atomic ... ok
+test native_edges::tests::nested_reflection_transform_and_visibility_filter_endpoints ... ok
+test native_edges::tests::soft_hidden_layer_and_invalid_edges_do_not_emit_gpu_addresses ... ok
+test native_textures::tests::exact_twenty_byte_contract_front_prefix_and_back_uv_are_retained ... ok
+test native_textures::tests::malformed_spans_indices_and_nonfinite_uv_are_rejected ... ok
+test hlr::hard_coplanar_tests::hard_coplanar_division_remains_visible_while_soft_division_is_hidden ... ok
+test paper_scene::tests::saved_section_overrides_live_active_cut_and_off_state ... ok
+test pipeline::default_back_regression::opaque_defaults_merge_without_translucent_or_two_sided_overrides ... ok
+test paper_scene::tests::borrowed_visibility_matches_applied_layers_and_nested_objects_without_mutation ... ok
+test pipeline::container_paint_regression::inherited_paint_only_changes_schema_paint_keys_and_default_back ... ok
+test pipeline::native_surface_regression::prototype_shade_is_retained_but_classic_baked_geometry_shades_its_own_plane ... ok
+test pipeline::native_surface_regression::surface_upload_keeps_nested_transform_and_hidden_visibility_without_hlr ... ok
+test pipeline::native_texture_regression::opaque_front_exception_preserves_previous_glass_cull_span ... ok
+test pipeline::native_surface_regression::reflected_nested_placements_preserve_painted_front_and_uv_correspondence ... ok
+test pipeline::native_texture_regression::exact_source_opacity_and_opaque_textured_front_cull_exception_survive_preparation ... ok
+test pipeline::source_placement_regression::classic_legacy_and_component_flags_do_not_imply_instancing ... ok
+test pipeline::native_texture_regression::distinct_back_texture_preserves_local_uv_and_native_only_geometry ... ok
+test pipeline::source_placement_regression::adopted_parent_classifies_whole_inline_subtree_and_transparent_child_disables_gate ... ok
+test pipeline::native_texture_regression::prototype_uv_remains_local_after_reflected_scaled_translated_placement ... ok
+test qt_cosmetic::ordering_tests::only_overlap_flushes_and_order_is_unchanged ... ok
+test pipeline::native_texture_regression::texture_dictionary_first_occurrence_survives_interleaved_paths ... ok
+test qt_cosmetic::ordering_tests::disjoint_prefixes_cover_all_source_spans ... ok
+test qt_gray::tests::clipped_runs_use_source_byte_product_and_bound_output ... ok
+test qt_gray::tests::malformed_and_excessive_edges_refuse ... ok
+test qt_cosmetic::tests::thin_line_coalesces_and_refuses_work ... ok
+test qt_gray::tests::subpixel_rectangle_coalesces_and_admission_rejects ... ok
+test qt_gray::tests::cubic_path_admission_and_finite_controls ... ok
+test section_clip::tests::crossing_triangle_interpolates_uv_and_keeps_plane_boundary ... ok
+test snap_glyph::center_color_tests::center_glyph_retains_source_inference_color ... ok
+test tests::test_buffer_creation_and_append ... ok
+test section_clip::tests::contours_survive_styles_and_fill_toggle_without_mutating_geometry ... ok
+test tests::test_snap_marker_glyphs ... ok
+test tests::test_selection_buffers ... ok
+test tests::test_edge_classification_and_hlr ... ok
+test tests::test_visual_styles_presets ... ok
+test texture_layout::tests::bc_blocks_round_up_including_small_mip_tail ... ok
+test section_clip::tests::scene_cut_is_display_only_transforms_nested_geometry_and_respects_toggle ... ok
+test texture_layout::tests::rejects_empty_extra_levels_and_overflow_without_allocating ... ok
+test texture_layout::tests::source_rgba_non_power_of_two_chain_has_exact_offsets ... ok
+test triangle_index::tests::near_degenerate_triangle_is_never_culled ... ok
+test vector_hlr::tests::actual_triangle_occlusion_splits_rear_line_and_preserves_coplanar_front ... ok
+test vector_hlr::tests::projected_hidden_ink_deduplicates_depth_and_subtracts_solid_overlap ... ok
+test vector_hlr::tests::triangle_cut_runs_merge_but_depth_and_line_class_remain_distinct ... ok
+test vector_hlr::tests::face_hole_does_not_occlude_line_through_void ... ok
+test section_clip::raster_tests::triangle_crossing_near_plane_retains_visible_pixels ... ok
+test vector_hlr::tests::section_cap_occludes_internal_lines_and_cut_chords_remain_visible ... ok
+test triangle_index::tests::sparse_candidates_keep_source_order_and_barycentric_margin ... ok
+test vector_hlr::tests::paper_section_hollow_rings_follow_even_odd_without_reversed_winding ... ok
+test cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs ... ok
+test triangle_index::tests::indexed_occlusion_is_bit_exact_against_exhaustive_translated_scales ... ok
+test section_clip::tests::original_stencil_closed_partition_transparent_and_duplicate_controls ... ok
+test vector_hlr::tests::indexed_merge_preserves_source_order_and_exact_endpoints ... ok
+test vector_hlr::tests::cached_hidden_projections_preserve_growing_result_order_bit_exactly ... ok
+
+test result: ok. 60 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+     Running unittests src/bin/ingetrazo-render-worker.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_render_worker-fe8a24ee3b4da0ae)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_tools-216a6ee78cb02b97)
+
+running 86 tests
+test base::image_acquisition_tests::selected_hidden_locked_images_keep_source_target_ownership ... ok
+test base::section_pick_tests::crossing_edge_can_only_be_picked_on_visible_portion ... ok
+test arc::tests::test_3point_arc_tool ... ok
+test arc::tests::test_2point_arc_tool ... ok
+test base::section_pick_tests::hidden_front_face_does_not_mask_visible_rear_face ... ok
+test base::group_visibility_tests::hidden_or_attr_layer_faces_do_not_leave_pickable_group_boundaries ... ok
+test circle::tests::test_circle_tool_segments_and_vcb ... ok
+test base::section_entity_tests::plane_frame_select_move_rotate_preserve_uid_and_leave_mesh_untouched ... ok
+test eraser::tests::test_eraser_tool_erase_edge ... ok
+test eraser::tests::test_eraser_tool_soften_toggle ... ok
+test circle::tests::test_circle_tool_two_clicks ... ok
+test followme::tests::invalid_path_and_axis_crossing_are_atomic ... ok
+test followme::tests::path_ordering_rejects_branches_and_disconnected_chains ... ok
+test followme::tests::manual_paths_bridge_backtrack_and_start_at_plane_crossings ... ok
+test freehand::tests::test_rdp_simplification ... ok
+test line::tests::test_line_tool_draw_and_rubber_band ... ok
+test followme::tests::selected_face_perimeter_and_alt_hover_supply_closed_paths_without_mutation ... ok
+test line::tests::test_line_tool_vcb_input ... ok
+test move_tool::image_move_tests::preview_cancel_copy_and_relative_command_are_separate ... ok
+test freehand::tests::release_commits_one_curve_after_immutable_screen_preview ... ok
+test line::tests::test_line_tool_closing_cycle_creates_face ... ok
+test followme::tests::manual_hover_is_immutable_release_commits_and_escape_discards_preview ... ok
+test move_tool::tests::nonfinite_copy_is_atomic_and_actionable ... ok
+test move_tool::tests::test_move_tool_translation ... ok
+test move_tool::image_refusal_tests::refusal_restores_exact_accumulated_preview ... ok
+test move_tool::tests::control_press_toggles_once_release_keeps_mode_and_commit_consumes_it ... ok
+test move_tool::tests::placement_descriptor_is_borrowed_scoped_and_retires ... ok
+test move_tool::tests::copied_plain_edge_splits_existing_crossing_without_repainting_source ... ok
+test move_tool::tests::test_move_tool_array_repeat ... ok
+test offset::tests::selected_chain_preview_cancel_and_outward_positive_vcb ... ok
+test move_tool::tests::live_preview_uses_absolute_delta_control_reverts_and_cancel_restores_exactly ... ok
+test move_tool::tests::copy_holed_face_preserves_face_paint_uv_and_authors_fresh_boundaries ... ok
+test move_tool::tests::inference_excludes_incident_edges_and_nested_groups_but_copy_keeps_them ... ok
+test offset::tests::straight_run_reports_failure_without_mutating_and_drag_is_perpendicular ... ok
+test move_tool::tests::group_copy_retains_private_semantics_nested_metadata_and_fresh_placements ... ok
+test move_tool::tests::array_retyping_rebuilds_full_faces_and_groups_and_rejects_external_edits ... ok
+test followme::tests::straight_and_bent_paths_form_mitered_solids ... ok
+test move_tool::tests::test_move_tool_copy_mode ... ok
+test move_tool::tests::spaced_array_during_copy_and_retyping_units_stays_atomic ... ok
+test paint::tests::test_paint_tool_apply_and_sample ... ok
+test pushpull::tests::invalid_or_sub_weld_extrusion_is_atomic ... ok
+test offset::tests::test_offset_tool_inward ... ok
+test rectangle::tests::first_face_pick_locks_a_vertical_work_plane ... ok
+test pushpull::tests::test_pushpull_extrude_cube ... ok
+test pushpull::tests::test_pushpull_vcb_and_repeat ... ok
+test rotate_tool::tests::test_rotate_tool_90_degrees ... ok
+test rectangle::tests::center_typed_dimensions_are_whole_width_and_height ... ok
+test rotate_tool::tests::test_rotate_tool_vcb_degrees ... ok
+test scale_tool::tests::test_scale_tool_uniform ... ok
+test rectangle::tests::reference_plane_lock_prefers_caller_edge_and_survives_first_click ... ok
+test select::tests::image_is_last_selection_candidate_and_combined_modifier_removes_only ... ok
+test rectangle::tests::test_rectangle_tool_two_clicks ... ok
+test select::tests::test_select_tool_double_click ... ok
+test rectangle::tests::test_rectangle_tool_vcb_input ... ok
+test select::tests::test_select_tool_single_click ... ok
+test tape::tests::test_tape_tool_measurement_and_guides ... ok
+test tape::tests::test_tape_tool_vcb ... ok
+test rectangle::tests::test_rectangle_tool_xz_plane ... ok
+test rectangle::tests::control_toggles_center_persistently_without_pointer_motion ... ok
+test select::tests::test_select_tool_triple_click_all_connected ... ok
+test tests::test_create_tools ... ok
+test rectangle::tests::down_latches_only_inferred_square_without_model_mutation ... ok
+test fillet::tests::rounding_retains_uids_on_unchanged_vertices ... ok
+test rectangle::tests::nonprincipal_axes_project_world_x_and_square_inference_keeps_typed_sizes ... ok
+test rotate_tool::tests::factory_rotation_uses_source_default_z_axis ... ok
+test tests::test_line_tool_drawing ... ok
+test tests::test_polygon_tool ... ok
+test tests::test_section_plane_tool ... ok
+test fillet::tests::one_edge_creates_tangent_strip_caps_curves_and_analytic_volume ... ok
+test tests::test_dimension_tool ... ok
+test tests::test_rectangle_tool_drawing ... ok
+test fillet::tests::cursor_sizing_preview_and_second_click_commit_match_original_workflow ... ok
+test pushpull::tests::ctrl_copy_validates_its_body_and_retains_unrelated_open_geometry ... ok
+test fillet::tests::selected_rim_accepts_segments_and_typed_radius_without_preview_mutation ... ok
+test fillet::tests::concave_edge_adds_material_and_invalid_radius_is_atomic ... ok
+test pushpull::tests::repeated_ctrl_invalid_source_classification_is_rejected_atomically ... ok
+test pushpull::tests::repeated_cap_pushes_keep_whole_polygon_and_metadata ... ok
+test rectangle::tests::rectangle_band_splits_closed_body_and_remains_pushable ... ok
+test fillet::tests::transformed_solid_rounding_uses_world_radius ... ok
+test followme::tests::attached_cap_sweep_unions_closed_body_and_preserves_open_attachment ... ok
+test pushpull::tests::ctrl_cap_copy_retains_slab_belts_and_inward_material ... ok
+test followme::tests::holed_profile_and_closed_circular_path ... ok
+test fillet::tests::rim_and_all_edges_build_mitered_strips_and_spherical_corners ... ok
+test followme::tests::retained_equator_wires_soften_with_sphere_and_offset_profile_forms_torus ... ok
+test followme::tests::full_circles_revolve_once_into_closed_spheres_with_shared_poles ... ok
+test fillet::tests::squash_after_oblique_rotation_rounds_all_corners_in_varied_edge_orders ... ok
+
+test result: ok. 86 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+
+     Running tests/fillet_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/fillet_acceptance-245665904c026aa1)
+
+running 4 tests
+test invalid_radii_are_refused_atomically ... ok
+test original_cursor_sizing_and_typed_segment_workflow ... ok
+test radius_and_segments_create_tangent_cylinder_geometry ... ok
+test rim_and_spherical_joins_form_closed_oriented_boundaries ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/followme_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/followme_acceptance-e69837313ed91c9f)
+
+running 3 tests
+test branched_edge_network_is_rejected ... ok
+test malformed_paths_refuse_without_mutation ... ok
+test bent_path_has_corner_and_preserves_profile_material ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/followme_manual_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/followme_manual_acceptance-a2391d8194eb90fb)
+
+running 1 test
+test original_manual_drag_sequence_and_plane_crossing ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pushpull_acceptance.rs (/tmp/ingetrazo-root-review-target/debug/deps/pushpull_acceptance-11f02546d95e8861)
+
+running 6 tests
+test invalid_face_does_not_mutate_document ... ok
+test standalone_holed_profile_creates_caps_and_inner_walls ... ok
+test nonfinite_distance_is_rejected_atomically ... ok
+test attached_edit_preserves_unrelated_solid_and_loose_wire_metadata ... ok
+test existing_solid_cap_push_and_recess_preserve_single_closed_boundary ... ok
+test embedded_pocket_and_through_cut_have_analytic_removed_volume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/rectangle_context_axes.rs (/tmp/ingetrazo-root-review-target/debug/deps/rectangle_context_axes-748d4aa818d1f229)
+
+running 2 tests
+test actual_world_hover_plane_wins_while_context_red_controls_rectangle_heading ... ok
+test actual_original_reentry_rectangle_controller_frames_and_arrow_locks ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

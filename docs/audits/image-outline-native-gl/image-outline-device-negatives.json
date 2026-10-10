@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "negative_controls": [
+    {
+      "mutation": "pixel",
+      "rejected": true
+    },
+    {
+      "mutation": "missing-case",
+      "rejected": true
+    },
+    {
+      "mutation": "wrong-vendor",
+      "rejected": true
+    },
+    {
+      "mutation": "software-type",
+      "rejected": true
+    },
+    {
+      "mutation": "source-ablation",
+      "rejected": true
+    },
+    {
+      "mutation": "wrong-engine",
+      "rejected": true
+    }
+  ]
+}

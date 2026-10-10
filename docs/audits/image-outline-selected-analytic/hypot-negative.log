@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-document-global-contracts/scripts/check-qt-image-outline-dash.py", line 16, in <module>
+    check(n)
+    ~~~~~^^^
+  File "/tmp/ingetrazo-document-global-contracts/scripts/check-qt-image-outline-dash.py", line 15, in check
+    assert p==q,row["name"]
+           ^^^^
+AssertionError: sweep-22
