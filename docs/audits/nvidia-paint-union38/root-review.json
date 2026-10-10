@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "review_commit": "8201118c168807d91d341360f27b2e6642d8c9f4",
+  "tested_source_matches_reviewed_renderer": true,
+  "independent_root_rereads": [
+    {
+      "command": [
+        "scripts/check-native-paint-union.py",
+        "/tmp/ingetrazo-backpaint-review/docs/audits/nvidia-paint-union38/original",
+        "/tmp/ingetrazo-backpaint-review/docs/audits/nvidia-paint-union38/headless",
+        "/tmp/ingetrazo-backpaint-review/docs/audits/nvidia-paint-union38/window"
+      ],
+      "result": {
+        "passed": true,
+        "mandatory_cases": 38,
+        "negative_controls": 4,
+        "rgba_tolerance": 0,
+        "scope": "Same NVIDIA adapter, source OpenGL/headless Vulkan/actual owned-window Vulkan. No general texture/style/Metal acceptance."
+      }
+    },
+    {
+      "command": [
+        "scripts/check-native-backpaint-heldout.py",
+        "docs/audits/nvidia-backpaint-heldout/original",
+        "docs/audits/nvidia-backpaint-heldout/native-corrected"
+      ],
+      "result": {
+        "passed": true,
+        "literal_pixel_failures": [],
+        "source_reference": "viewport.py8035-8061 tp32 mirror triangle swap"
+      }
+    }
+  ],
+  "provenance_sha256": "012410d71a7078be9f11da9fc0c1d258dba7d77779ff9de63dd6d41fe186e578",
+  "boundary": "Exact bounded pixels/corpus and retained window evidence; not fresh root GPU execution, full style/texture/Metal or performance acceptance"
+}
