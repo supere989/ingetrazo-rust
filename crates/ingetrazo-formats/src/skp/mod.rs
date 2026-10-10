@@ -447,6 +447,15 @@ fn collect(
     Ok(())
 }
 /// Prepare privately and reject unsupported required data before any caller Scene mutation.
+fn annotation_point(p: [f64; 3]) -> Result<DVec3, SkpError> {
+    let point = DVec3::from_array(p).map(|v| ((v * 0.0254) as f32) as f64);
+    if !point.is_finite() {
+        return Err(SkpError::Invalid(
+            "Annotation exceeds finite float32 storage".into(),
+        ));
+    }
+    Ok(point)
+}
 pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
     textures::admit_assets(p)?;
     for d in std::iter::once(&p.root).chain(p.definitions.values()) {
@@ -558,9 +567,19 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
     }
     placements::append(p, &mut scene)?;
     for d in &p.legacy_dimensions {
-        let a = DVec3::from_array(d.a).map(|v| ((v * 0.0254) as f32) as f64);
-        let b = DVec3::from_array(d.b).map(|v| ((v * 0.0254) as f32) as f64);
+        if !d.offset.is_finite() || !((d.offset * 0.0254) as f32).is_finite() {
+            return Err(SkpError::Invalid(
+                "Annotation offset float32 overflow".into(),
+            ));
+        }
+        let a = annotation_point(d.a)?;
+        let b = annotation_point(d.b)?;
         let delta = (b - a).map(|v| (v as f32) as f64);
+        if !delta.is_finite() {
+            return Err(SkpError::Invalid(
+                "Annotation segment float32 overflow".into(),
+            ));
+        }
         if delta.length() < 1e-9 {
             continue;
         }
@@ -572,8 +591,18 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         let length = (perpendicular.x as f32)
             .hypot(perpendicular.y as f32)
             .hypot(perpendicular.z as f32);
+        if !length.is_finite() || length <= 0. {
+            return Err(SkpError::Invalid(
+                "Annotation normalization exceeds finite float32 arithmetic".into(),
+            ));
+        }
         let offset =
             perpendicular.map(|v| (((v as f32) / length) * ((d.offset * 0.0254) as f32)) as f64);
+        if !offset.is_finite() {
+            return Err(SkpError::Invalid(
+                "Annotation derived offset float32 overflow".into(),
+            ));
+        }
         scene
             .dimensions
             .push(ingetrazo_core::dimensions::Dimension::new(a, b, offset));
@@ -582,11 +611,13 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         if t.hidden || t.text.trim().is_empty() {
             continue;
         }
-        let a = DVec3::from_array(t.point).map(|v| ((v * 0.0254) as f32) as f64);
-        let label = t
-            .label
-            .map(|p| DVec3::from_array(p).map(|v| ((v * 0.0254) as f32) as f64))
-            .unwrap_or(a);
+        let a = annotation_point(t.point)?;
+        let label = t.label.map(annotation_point).transpose()?.unwrap_or(a);
+        if !(label - a).map(|v| (v as f32) as f64).is_finite() {
+            return Err(SkpError::Invalid(
+                "Annotation text offset float32 overflow".into(),
+            ));
+        }
         scene
             .text_labels
             .push(ingetrazo_core::textlabel::TextLabel::new(
@@ -624,6 +655,34 @@ pub fn replace_from_skp(destination: &mut Scene, path: &Path) -> Result<(), SkpE
 #[cfg(test)]
 mod import_weld_tests {
     use super::*;
+    #[test]
+    fn public_annotations_refuse_float32_overflow_before_publication() {
+        let base:Payload=serde_json::from_str(include_str!("../../../../docs/audits/skp-native-legacy/component-proof/vff35/hole-paint-layer-payload.json")).unwrap();
+        for (a, b, offset) in [
+            ([1e300, 0., 0.], [0., 0., 0.], 1.),
+            ([-1e40, 0., 0.], [1e40, 0., 0.], 1.),
+            ([0., 0., 0.], [1., 0., 0.], 1e300),
+            ([0., 0., 0.], [1., 0., 0.], f64::NAN),
+        ] {
+            let mut p = base.clone();
+            p.legacy_dimensions.push(LegacyDimension {
+                a,
+                b,
+                offset,
+                text: String::new(),
+            });
+            assert!(matches!(scene_from_payload(&p), Err(SkpError::Invalid(_))));
+        }
+        let mut p = base.clone();
+        p.legacy_texts.push(LegacyText {
+            point: [0., 0., 0.],
+            label: Some([1e300, 0., 0.]),
+            text: "label".into(),
+            hidden: false,
+        });
+        assert!(matches!(scene_from_payload(&p), Err(SkpError::Invalid(_))));
+        assert!(scene_from_payload(&base).is_ok());
+    }
     #[test]
     fn source_keys_neighbour_distance_and_wide_identity() {
         let mut mesh = Mesh::new();
