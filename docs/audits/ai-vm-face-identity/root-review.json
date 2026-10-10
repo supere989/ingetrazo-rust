@@ -1,0 +1,16 @@
+{
+  "source": "24e6915e",
+  "fresh_original_states": 8,
+  "retained_native_face_states_match": 5,
+  "remaining_group_states": 3,
+  "fresh_native_execution": false,
+  "source_sha256": "aa2b6abf637e2cefb0f0922e7d9919bb1aee39ffccaac0ebb11baaa504295baf",
+  "review": "Actual PyRef handles remain command-owned across history; caught staging admission aborts face transaction. Detached references are not rebound to reused ordinals. Scope observations read actual VM types, object identities and shared mutable values.",
+  "remaining": [
+    "full Mesh and Group adapter",
+    "native attribute projection",
+    "preexisting alias mutation rollback",
+    "compiler/native memory and deadline bounds",
+    "production integration"
+  ]
+}
