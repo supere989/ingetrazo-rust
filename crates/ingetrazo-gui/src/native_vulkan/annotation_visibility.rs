@@ -89,6 +89,24 @@ mod tests {
         assert!(nearest < ceil_f32(threshold));
     }
     #[test]
+    fn inverse_w_shader_literal_is_the_source_double_ceiling() {
+        let nearest = 1e-12_f64 as f32;
+        let boundary = ceil_f32(1e-12_f64);
+        assert_eq!(nearest.to_bits(), 0x2b8cbccc);
+        assert_eq!(boundary.to_bits(), 0x2b8cbccd);
+        for magnitude in [nearest.next_down(), nearest, boundary, boundary.next_up()] {
+            for w in [magnitude, -magnitude] {
+                assert_eq!(w.abs() < boundary, (w as f64).abs() < 1e-12_f64);
+            }
+        }
+        for shader in [
+            include_str!("shaders/annotation_visibility.comp"),
+            include_str!("shaders/annotation_visibility_single.comp"),
+        ] {
+            assert!(shader.contains("uintBitsToFloat(0x2b8cbccdu)"));
+        }
+    }
+    #[test]
     fn source_negative_fraction_is_admitted_but_whole_negative_pixel_is_not() {
         let m=glam::Mat4::IDENTITY.to_cols_array();
         let a=prepare_query(&m,[-1.1,0.,0.2],[0.;3],[0.,0.,1.],[5,5]).unwrap();
