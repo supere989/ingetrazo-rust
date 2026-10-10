@@ -1,0 +1,123 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-core)
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-tools)
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-formats)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-render)
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-metal)
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-gui)
+warning: struct `SpanPlan` is never constructed
+  --> crates/ingetrazo-metal/src/span_plan.rs:21:19
+   |
+21 | pub(crate) struct SpanPlan {
+   |                   ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `compile` is never used
+  --> crates/ingetrazo-metal/src/span_plan.rs:26:15
+   |
+26 | pub(crate) fn compile(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan, String> {
+   |               ^^^^^^^
+
+warning: `ingetrazo-metal` (lib) generated 2 warnings
+   Compiling ingetrazo-cli v0.3.15 (/tmp/ingetrazo-image-planes-root/crates/ingetrazo-cli)
+warning: unused import: `glam::DVec3`
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:2:9
+  |
+2 |     use glam::DVec3;
+  |         ^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `ViewFrame`
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:3:50
+  |
+3 |     use ingetrazo_core::composition::{SheetItem, ViewFrame};
+  |                                                  ^^^^^^^^^
+
+warning: unused import: `composer_compute::ComposerCompute`
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:4:44
+  |
+4 |     use ingetrazo_gui::{app::IngeTrazoApp, composer_compute::ComposerCompute};
+  |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `paint` is never used
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:5:12
+  |
+5 |     pub fn paint(a: &mut IngeTrazoApp, c: &egui::Context) {
+  |            ^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)
+warning: `ingetrazo-gui` (example "composer_native_cache") generated 4 warnings (run `cargo fix --example "composer_native_cache" -p ingetrazo-gui` to apply 3 suggestions)
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.53s
+     Running unittests src/main.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo-801a42f5b91c8bf9)
+     Running unittests src/lib.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_core-b31920b6563825d5)
+     Running tests/boolean_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/boolean_acceptance-9abb7026c34dc21f)
+     Running tests/drawing_axes_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/drawing_axes_acceptance-1a5db9dd3df1f63f)
+     Running tests/mesh_share_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/mesh_share_acceptance-2d180279fa7951c5)
+     Running tests/test_i18n.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/test_i18n-ac294eb5baf0d1dd)
+     Running unittests src/lib.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_formats-ee909fd9280c4e91)
+     Running tests/image_plane_preservation.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/image_plane_preservation-bb8ed3fa8b413d10)
+     Running tests/native_preservation.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/native_preservation-6b7de79b97bd6115)
+     Running tests/preservation_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/preservation_acceptance-9170179229cfcdfd)
+     Running tests/roundtrips.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/roundtrips-9e916e09bd79eaa6)
+     Running tests/sheet_pdf.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/sheet_pdf-57ccbccf6e4ed5db)
+     Running unittests src/lib.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_gui-4aa0eee49eb09503)
+     Running tests/clipboard_transport_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/clipboard_transport_acceptance-2d4ec6d8041984d1)
+     Running tests/component_global_history.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/component_global_history-48c5be69e06931ff)
+     Running tests/composer_pdf_export.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/composer_pdf_export-667fd1a743215cd2)
+     Running tests/move_component_arrays.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/move_component_arrays-e72f81fa36e6a835)
+     Running tests/offset_controller_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/offset_controller_acceptance-a6ff7e39b84f9a63)
+     Running tests/recovery_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/recovery_acceptance-4c6ab50d0dd677ef)
+     Running unittests src/lib.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_metal-cdf94e449847b7fa)
+     Running unittests src/lib.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_render-f57d9ee643b65b36)
+     Running unittests src/bin/ingetrazo-render-worker.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_render_worker-40d0f954709c9357)
+     Running unittests src/lib.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/ingetrazo_tools-e43acbe4c7a5dd88)
+     Running tests/fillet_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/fillet_acceptance-90481e663ac8f1f9)
+     Running tests/followme_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/followme_acceptance-30f378a95289b376)
+     Running tests/followme_manual_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/followme_manual_acceptance-1bf411f2eecaec5e)
+     Running tests/pushpull_acceptance.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/pushpull_acceptance-2e150cffe2abe43b)
+     Running tests/rectangle_context_axes.rs (/tmp/ingetrazo-image-planes-root-target/debug/deps/rectangle_context_axes-869039d573915440)
+   Doc-tests ingetrazo_core
+   Doc-tests ingetrazo_formats
+   Doc-tests ingetrazo_gui
+   Doc-tests ingetrazo_metal
+   Doc-tests ingetrazo_render
+   Doc-tests ingetrazo_tools
