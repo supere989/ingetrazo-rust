@@ -31,12 +31,28 @@ def main():
  from tests.test_rectangle_across_a_face import _step
  step,h=_step();initial=[{"vertices":[xyz(p)for p in f.vertices],"attrs":f.attrs}for f in step.faces]
  cases.append(case("rectangle-3d-step-band",initial,ops=[op([[1,0,2],[2,0,2],[2,2,2],[1,2,2],[1,0,2]],"rectangle")]))
+ hole=[[1,1,0],[1,3,0],[3,3,0],[3,1,0]]
+ holed=[{"vertices":sq,"holes":[hole],"attrs":paint}]
+ cases.extend([case("holed-line-chord",holed,ops=[op([[0,2,0],[4,2,0]])]),case("holed-rectangle-band",holed,ops=[op([[.5,0,0],[2,0,0],[2,4,0],[.5,4,0],[.5,0,0]],"rectangle")]),case("holed-freehand-chord",holed,ops=[op([[0,2,0],[2,2,0],[4,2,0]],"freehand")])])
+ def angled(c):
+  c=copy.deepcopy(c);c["name"]="angled-"+c["name"]
+  def transform(p):
+   x,y,z=p;return [x+.3*y,y+.2*x,z+.4*x+.7*y]
+  for f in c["faces"]:
+   f["vertices"]=[transform(p)for p in f["vertices"]];f["holes"]=[[transform(p)for p in h]for h in f.get("holes",[])]
+  for e in c["edges"]:e["points"]=[transform(p)for p in e["points"]]
+  for o in c["ops"]:
+   o["segments"]=[[transform(p)for p in e]for e in o["segments"]]
+   if o["explicit"]is not None:o["explicit"]=[transform(p)for p in o["explicit"]]
+  return c
+ cases.extend([angled(cases[i])for i in [0,3,9,10,11]])
+ Path("docs/audits/drafting-expanded-corpus.json").write_text(json.dumps(cases,indent=2)+"\n")
  rows=[];failures=[]
  with tempfile.TemporaryDirectory()as d:
   a,b=Path(d)/"cases.json",Path(d)/"results.json";a.write_text(json.dumps(cases));subprocess.run(["cargo","run","--locked","-p","ingetrazo-core","--example","drafting_acceptance_fixture","--",str(a),str(b)],check=True);results=json.loads(b.read_text())
   for c,r in zip(cases,results):
    s=Scene()
-   for f in c["faces"]:s.mesh.add_face([V(*p)for p in f["vertices"]]).attrs.update(f["attrs"])
+   for f in c["faces"]:s.mesh.add_face([V(*p)for p in f["vertices"]],hole_loops=[[V(*p)for p in h]for h in f.get("holes",[])]).attrs.update(f["attrs"])
    for e in c["edges"]:s.mesh.add_edge(V(*e["points"][0]),V(*e["points"][1])).curve=e["curve"]
    h=History(s)
    for o in c["ops"]:
@@ -53,6 +69,6 @@ def main():
  for name,index,field,value in [("lost-region",0,"faces",[]),("lost-curve-membership",5,"edges",[dict(e,curve=None)for e in results[5]["edges"]]),("lost-wire",1,"edges",[])]:
   changed=copy.deepcopy(results[index]);changed[field]=value;detected=faces(changed["faces"])!=faces(results[index]["faces"]) or edges(changed["edges"])!=edges(results[index]["edges"]) or curves(changed["edges"])!=curves(results[index]["edges"]);assert detected
   controls.append({"case":name,"detected":True})
- report={"negative_controls":controls,"provenance":context(),"passed":not failures,"cases":rows,"failures":failures,"scope":"Original actual Line single-edge, Rectangle explicit AddFace and Freehand commit_arc pipelines; exact oriented faces/holes/paint, wire topology and curve membership. Includes original global rebuild resurrection when any disconnected curve exists. Native input nonfinite refusal. Includes actual original stepped-solid band fixture; UI sampling, projection/undo controller acceptance separate."}
+ report={"negative_controls":controls,"provenance":context(),"passed":not failures,"cases":rows,"failures":failures,"scope":"Original actual Line single-edge, Rectangle explicit AddFace and Freehand commit_arc pipelines; exact oriented faces/holes/paint, wire topology and curve membership. Includes original global rebuild resurrection when any disconnected curve exists. Expanded holed and nonprincipal-plane source boundaries retained; Native input nonfinite refusal. Includes actual original stepped-solid band fixture; UI sampling, projection/undo controller acceptance separate."}
  Path("docs/audits/python-drafting-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(rows));assert not failures,[f["case"]for f in failures]
 if __name__=="__main__":main()
