@@ -1,0 +1,13 @@
+{
+  "source": "5f85e184",
+  "image_publication_source": "2acdf092",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "c1933b85c49711f482ef081b55c92dc47ee148e821fb6edd252d8097b39cd818",
+  "shader_hashes": {
+    "image_plane.vert": "2ba9ce7b931d2e8c5e81deec0322b3c1fce7c24d78fdf37d406edb067dd926ba",
+    "image_plane.frag": "2aef1195a24d07302b9f8ea689180663580e35a887a464ac24747c3e8abaf698",
+    "image_plane.vert.spv": "7c7962ef683ebd3a1f9f23f15d3a2494491f8ed5b45c623bbe266af50ddb0ea2",
+    "image_plane.frag.spv": "75964d9ea790b1094d150ec3feb9f6dd7ea24a09bc7d2f1a76ece196a1ef45d8"
+  },
+  "backend": "Actual original NVIDIA OpenGL and direct Vulkan RTX5090; read-only devbox CDI; owned new Qt clients"
+}
