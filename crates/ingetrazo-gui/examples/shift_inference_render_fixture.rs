@@ -15,7 +15,9 @@ impl eframe::App for Harness {
  let origin=DVec3::new(2.,3.,0.);
  let rows=serde_json::json!({"faces":self.app.scene.mesh.faces.len(),"edges":self.app.scene.mesh.edges.len(),"undo":self.app.undo_stack.len(),"preview":self.app.active_tool.rubber_band_lines().iter().map(|(a,b)|[a.to_array(),b.to_array()]).collect::<Vec<_>>(),"click":project(origin),"cue":project(DVec3::new(4.,3.03,0.)),"wander":project(DVec3::new(4.,4.,0.)),"axis":self.app.snap_engine.locked_axis});
  if self.app.scene.mesh.faces.len()==1&&!self.dir.join("committed.igz").exists(){ingetrazo_formats::igz::save_igz(&self.app.scene,&self.dir.join("committed.igz")).unwrap();}
- std::fs::write(self.dir.join("state.json"),serde_json::to_vec(&rows).unwrap()).unwrap();
+ let pending=self.dir.join("state.tmp");
+ std::fs::write(&pending,serde_json::to_vec(&rows).unwrap()).unwrap();
+ std::fs::rename(pending,self.dir.join("state.json")).unwrap();
  });
         if let Ok(name) = std::fs::read_to_string(self.dir.join("capture.txt")) {
             if name != self.capture {

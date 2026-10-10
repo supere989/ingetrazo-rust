@@ -17,7 +17,7 @@ from png_capture import valid_png
 
 def main():
  subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","shift_inference_render_fixture"],check=True)
- directory=Path("docs/audits/shift-inference-render");directory.mkdir(exist_ok=True)
+ directory=Path(os.environ.get("INGETRAZO_RENDER_AUDIT_DIR","docs/audits/shift-inference-render"));directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
   if p.name in ("state.json","capture.txt","before.png","locked.png","released.png","cancelled.png","committed.png","committed.igz"):p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-reference-x11-") as t:
@@ -77,7 +77,7 @@ def main():
     for value in (b"",b"\x89PNG\r\n\x1a\n",(directory/"cancelled.png").read_bytes()[:-1]):
      invalid.write_bytes(value);assert not valid_png(invalid),"Invalid PNG negative control accepted"
    report={"capture_validation":"Complete PNG signature/chunks/CRC/IEND and decompressed RGBA dimensions; empty/header-only/truncated controls rejected","provenance":context(),"passed":True,"cue":cue,"locked":locked,"released":released,"arrow_preserved":preserved,"cancelled":cancelled,"scope":"Actual production viewport XTEST Shift press/wander/release without mouse movement, arrow lock preservation and Escape atomic preview cancellation; existing software GL engineering backend, independent original controller evidence not implied."}
-   Path("docs/audits/shift-inference-render-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Native Shift gesture PASS")
+   Path(os.environ.get("INGETRAZO_RENDER_AUDIT_REPORT","docs/audits/shift-inference-render-evidence.json")).write_text(json.dumps(report,indent=2)+"\n");print("Native Shift gesture PASS")
   finally:
    if app:app.terminate();app.wait(timeout=5)
    server.terminate();server.communicate(timeout=5)
