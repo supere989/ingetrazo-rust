@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Direct physical-page vector output. Caller supplies validated item painters;
 //! no rendering process, raster screenshot, or intermediate image is required.
-use pdf_writer::{Name, Pdf, Rect, Ref};
+use pdf_writer::{
+    types::{CidFontType, FontFlags, SystemInfo},
+    Name, Pdf, Rect, Ref, Str,
+};
 use std::{io::Write, path::Path};
 #[derive(Clone, Debug)]
 pub enum PathOp {
@@ -20,8 +23,22 @@ pub struct StrokeOptions {
     pub dash: Vec<f64>,
 }
 #[derive(Clone, Debug)]
+pub struct TextGlyph {
+    pub glyph: u32,
+    pub position_px: [f64; 2],
+}
+#[derive(Clone, Debug)]
+pub struct TextDraw {
+    pub font: std::rc::Rc<crate::paper_font::CachedFont>,
+    /// Millimetres per source pixel100 layout unit.
+    pub scale_mm: f64,
+    pub italic: bool,
+    pub glyphs: Vec<TextGlyph>,
+}
+#[derive(Clone, Debug)]
 pub struct Draw {
     pub origin_mm: [f64; 2],
+    pub text: Option<TextDraw>,
     pub even_odd: bool,
     pub path: Vec<PathOp>,
     pub stroke: Option<([f32; 4], f64)>,
@@ -200,6 +217,9 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
     }
     let mut total = 0usize;
     let mut path_commands = 0usize;
+    let mut font_inputs: Vec<(std::rc::Rc<crate::paper_font::CachedFont>, Vec<u32>)> = Vec::new();
+    let mut font_indices: std::collections::HashMap<crate::paper_font::FontKey, usize> =
+        std::collections::HashMap::new();
     for page in pages {
         if page
             .device_dpi
@@ -231,6 +251,70 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             return Err("PDF draw budget exceeded".into());
         }
         for draw in &page.draws {
+            if let Some(text) = &draw.text {
+                if !draw.path.is_empty()
+                    || draw.stroke.is_some()
+                    || draw.fill.is_none()
+                    || draw.flatten_transform
+                {
+                    return Err("PDF text requires a separate fill-only text draw".into());
+                }
+                if !text.scale_mm.is_finite()
+                    || text.scale_mm <= 0.
+                    || text.scale_mm > 10_000.
+                    || text.glyphs.len() > crate::paper_text::MAX_GLYPHS
+                {
+                    return Err("Invalid physical PDF text scale/glyph count".into());
+                }
+                for glyph in &text.glyphs {
+                    if glyph.position_px.iter().enumerate().any(|(axis, v)| {
+                        !v.is_finite()
+                            || v.abs() > 1_000_000.
+                            || (*v * text.scale_mm + draw.origin_mm[axis]).abs() > 1_000_000.
+                    }) {
+                        return Err("Invalid physical PDF text position".into());
+                    }
+                }
+                path_commands = path_commands
+                    .checked_add(
+                        text.glyphs
+                            .len()
+                            .checked_mul(2)
+                            .ok_or("PDF glyph count overflow")?,
+                    )
+                    .ok_or("PDF glyph count overflow")?;
+                if path_commands > MAX_COMMANDS {
+                    return Err("PDF aggregate command budget exceeded".into());
+                }
+                let key = text.font.key();
+                let index = if let Some(index) = font_indices.get(&key).copied() {
+                    let old: &std::rc::Rc<crate::paper_font::CachedFont> = &font_inputs[index].0;
+                    if !std::rc::Rc::ptr_eq(old, &text.font)
+                        && old.shared_bytes().as_ref() != text.font.shared_bytes().as_ref()
+                    {
+                        return Err("PDF font resource identity collision".into());
+                    }
+                    index
+                } else {
+                    if font_inputs.len() >= 64 {
+                        return Err("PDF font resource count exceeded".into());
+                    }
+                    font_indices
+                        .try_reserve(1)
+                        .map_err(|_| "PDF font resource allocation failed")?;
+                    font_inputs
+                        .try_reserve(1)
+                        .map_err(|_| "PDF font resource allocation failed")?;
+                    let index = font_inputs.len();
+                    font_inputs.push((text.font.clone(), Vec::new()));
+                    font_indices.insert(key, index);
+                    index
+                };
+                let ids = &mut font_inputs[index].1;
+                ids.try_reserve(text.glyphs.len())
+                    .map_err(|_| "PDF glyph identity allocation failed")?;
+                ids.extend(text.glyphs.iter().map(|g| g.glyph));
+            }
             if draw.flatten_transform
                 && (!original_qt || page.device_dpi.is_none() || draw.stroke.is_some())
             {
@@ -289,10 +373,63 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             }
         }
     }
+    // All page geometry is admitted before any cold font program work or destination I/O.
+    let mut fonts = Vec::new();
+    fonts
+        .try_reserve_exact(font_inputs.len())
+        .map_err(|_| "PDF font resource allocation failed")?;
+    let mut font_bytes = 0usize;
+    for (font, ids) in &font_inputs {
+        let resource = font.subset(ids)?;
+        font_bytes = font_bytes
+            .checked_add(resource.program_bytes())
+            .ok_or("PDF font byte count overflow")?;
+        if font_bytes > 64 * 1024 * 1024 {
+            return Err("PDF aggregate font byte budget exceeded".into());
+        }
+        fonts.push(resource);
+    }
+    for page in pages {
+        for draw in &page.draws {
+            if let Some(text) = &draw.text {
+                let resource = &fonts[font_indices[&text.font.key()]];
+                let shear = text.font.synthetic_italic_shear(text.italic);
+                for glyph in &text.glyphs {
+                    let cid = resource
+                        .cid(glyph.glyph)
+                        .ok_or("PDF glyph absent from prepared font resource")?;
+                    let b = resource.bounds_px[cid as usize];
+                    for x in [b[0], b[2]] {
+                        for y in [b[1], b[3]] {
+                            let px = draw.origin_mm[0]
+                                + (glyph.position_px[0] + x + shear * y) * text.scale_mm;
+                            let py = draw.origin_mm[1] + (glyph.position_px[1] - y) * text.scale_mm;
+                            if !px.is_finite()
+                                || !py.is_finite()
+                                || px.abs() > 1_000_000.
+                                || py.abs() > 1_000_000.
+                            {
+                                return Err(
+                                    "PDF transformed glyph extent exceeds physical domain".into()
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     let mut pdf = Pdf::new();
     let catalog = Ref::new(1);
     let tree = Ref::new(2);
     let mut next = 3i32;
+    let mut font_refs = Vec::new();
+    for font in &fonts {
+        let font_ref = Ref::new(next);
+        write_font(&mut pdf, font_ref, font)?;
+        font_refs.push(font_ref);
+        next += 5;
+    }
     let mut ids = Vec::new();
     pdf.catalog(catalog).pages(tree);
     for page in pages {
@@ -329,6 +466,64 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
         )
         .unwrap();
         for (i, draw) in page.draws.iter().enumerate() {
+            if let Some(text) = &draw.text {
+                let index = font_indices[&text.font.key()];
+                let resource = &fonts[index];
+                writeln!(content, "q\n/{} gs", names[i]).unwrap();
+                // Clip in source logical device coordinates before the composed pixel100 text transform.
+                for clip in [&draw.clip, &draw.clip_intersection].into_iter().flatten() {
+                    path(
+                        &mut content,
+                        clip,
+                        original_qt,
+                        Some((draw.origin_mm, local_scale)),
+                    );
+                    content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
+                }
+                let scale = local_scale * text.scale_mm;
+                writeln!(
+                    content,
+                    "{} 0 0 {} {} {} cm",
+                    number(scale),
+                    number(scale),
+                    number(draw.origin_mm[0] * local_scale),
+                    number(draw.origin_mm[1] * local_scale)
+                )
+                .unwrap();
+                let c = draw.fill.unwrap();
+                writeln!(
+                    content,
+                    "{} {} {} rg\nBT\n/F{} 100 Tf 1 0 {} -1 0 0 Tm",
+                    number(c[0] as f64),
+                    number(c[1] as f64),
+                    number(c[2] as f64),
+                    index,
+                    number(text.font.synthetic_italic_shear(text.italic))
+                )
+                .unwrap();
+                let shear = text.font.synthetic_italic_shear(text.italic);
+                let mut previous = [0., 0.];
+                for glyph in &text.glyphs {
+                    let desired = [
+                        glyph.position_px[0] + shear * glyph.position_px[1],
+                        -glyph.position_px[1],
+                    ];
+                    let cid = resource
+                        .cid(glyph.glyph)
+                        .ok_or("PDF glyph absent from prepared font resource")?;
+                    writeln!(
+                        content,
+                        "{} {} Td <{:04X}> Tj",
+                        number(desired[0] - previous[0]),
+                        number(desired[1] - previous[1]),
+                        cid
+                    )
+                    .unwrap();
+                    previous = desired;
+                }
+                content.extend_from_slice(b"ET\nQ\n");
+                continue;
+            }
             let flatten = draw.flatten_transform && original_qt;
             let transform = flatten.then_some((draw.origin_mm, local_scale));
             writeln!(
@@ -424,9 +619,76 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
         for (i, id) in alpha_ids.iter().enumerate() {
             states.pair(Name(names[i].as_bytes()), *id);
         }
+        drop(states);
+        if page.draws.iter().any(|d| d.text.is_some()) {
+            let mut font_resources = resources.fonts();
+            for (index, font_ref) in font_refs.iter().enumerate() {
+                font_resources.pair(Name(format!("F{index}").as_bytes()), *font_ref);
+            }
+        }
     }
     pdf.pages(tree).kids(ids).count(pages.len() as i32);
     Ok(pdf.finish())
+}
+fn write_font(pdf: &mut Pdf, id: Ref, font: &crate::paper_font::PdfFont) -> Result<(), String> {
+    let raw = id.get();
+    let descendant = Ref::new(raw + 1);
+    let descriptor = Ref::new(raw + 2);
+    let program = Ref::new(raw + 3);
+    let unicode = Ref::new(raw + 4);
+    let name = Name(&font.metadata.name);
+    pdf.type0_font(id)
+        .base_font(name)
+        .encoding_predefined(Name(b"Identity-H"))
+        .descendant_font(descendant)
+        .to_unicode(unicode);
+    {
+        let mut writer = pdf.cid_font(descendant);
+        writer
+            .subtype(CidFontType::Type2)
+            .base_font(name)
+            .system_info(SystemInfo {
+                registry: Str(b"Adobe"),
+                ordering: Str(b"Identity"),
+                supplement: 0,
+            })
+            .font_descriptor(descriptor)
+            .cid_to_gid_map_predefined(Name(b"Identity"));
+        writer.widths().consecutive(0, font.widths.iter().copied());
+    }
+    let m = &font.metadata;
+    pdf.font_descriptor(descriptor)
+        .name(name)
+        .flags(FontFlags::SYMBOLIC)
+        .bbox(Rect::new(m.bbox[0], m.bbox[1], m.bbox[2], m.bbox[3]))
+        .italic_angle(m.italic)
+        .ascent(m.ascent)
+        .descent(m.descent)
+        .cap_height(m.ascent)
+        .stem_v(m.stem)
+        .font_file2(program);
+    pdf.stream(program, &font.program)
+        .insert(Name(b"Length1"))
+        .primitive(font.program.len() as i32);
+    // Literal source reverse cmap policy, including source glyph0 -> Unicode0.
+    let mut cmap = Vec::new();
+    cmap.extend_from_slice(b"/CIDInit /ProcSet findresource begin\n12 dict begin\nbegincmap\n/CIDSystemInfo << /Registry (Adobe) /Ordering (UCS) /Supplement 0 >> def\n/CMapName /Adobe-Identity-UCS def\n/CMapType 2 def\n1 begincodespacerange\n<0000> <FFFF>\nendcodespacerange\n");
+    let mappings = font
+        .unicode
+        .iter()
+        .enumerate()
+        .filter_map(|(i, c)| c.map(|c| (i, c)))
+        .collect::<Vec<_>>();
+    for group in mappings.chunks(100) {
+        writeln!(cmap, "{} beginbfchar", group.len()).unwrap();
+        for (cid, scalar) in group {
+            writeln!(cmap, "<{:04X}> <{:04X}>", cid, scalar).unwrap();
+        }
+        cmap.extend_from_slice(b"endbfchar\n");
+    }
+    cmap.extend_from_slice(b"endcmap\nCMapName currentdict /CMap defineresource pop\nend\nend\n");
+    pdf.stream(unicode, &cmap);
+    Ok(())
 }
 /// Same-directory atomic replacement; invalid input never touches destination.
 pub fn save(path: &Path, pages: &[Page]) -> Result<(), String> {

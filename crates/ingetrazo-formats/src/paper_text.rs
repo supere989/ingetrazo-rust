@@ -68,13 +68,13 @@ unsafe extern "C" fn horizontal_extents(
     1
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Hinting {
     None,
     Vertical,
     Full,
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct FtPolicy {
     pub hinting: Hinting,
     pub force_auto_hint: bool,
