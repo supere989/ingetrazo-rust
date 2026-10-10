@@ -146,13 +146,21 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   // Own the button that began mouse-look, and consume motion before its
   // release even when both arrive in this frame. Relative events supersede
   // matching absolute cursor updates to avoid applying one move twice.
-  let has_relative=ui.input(|i|i.events.iter().any(|event|matches!(event,egui::Event::MouseMoved(_))));
+  // Only relative events inside the initiating button's owned segment
+  // supersede absolute positions. Raw events before press/after release
+  // must not suppress a later, independent cursor move. Each segment is
+  // scanned at most twice, without cloning the input event list.
+  fn relative_in_segment(events:&[egui::Event],button:egui::PointerButton)->bool{
+   events.iter().take_while(|event|!matches!(event,egui::Event::PointerButton{button:b,pressed:false,..} if *b==button)).any(|event|matches!(event,egui::Event::MouseMoved(_)))
+  }
   let rate=app.document_session.preferences.look_sensitivity as f64/500.;
-  ui.input(|i|for event in &i.events{
+  ui.input(|i|{
+   let mut has_relative=app.navigation.look_button.is_some_and(|button|relative_in_segment(&i.events,button));
+   for (index,event) in i.events.iter().enumerate(){
    match event{
     egui::Event::PointerButton{pos,button,pressed,..} if matches!(button,egui::PointerButton::Primary|egui::PointerButton::Secondary)=>{
      if *pressed{
-      if app.navigation.look_button.is_none()&&rect.contains(*pos){app.navigation.look_button=Some(*button);app.navigation.look_cursor=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round());app.navigation.mouse_captured=true;}
+      if app.navigation.look_button.is_none()&&rect.contains(*pos){app.navigation.look_button=Some(*button);app.navigation.look_cursor=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round());app.navigation.mouse_captured=true;has_relative=relative_in_segment(&i.events[index+1..],*button);}
      }else if app.navigation.look_button==Some(*button){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
     },
     egui::Event::PointerMoved(pos) if app.navigation.mouse_captured=>{
@@ -162,6 +170,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
     },
     egui::Event::MouseMoved(delta) if app.navigation.mouse_captured=>{app.camera.turn(delta.x as f64*rate,-delta.y as f64*rate);},
     _=>{},
+   }
    }
   });
   if !pointer.primary_down()&&!pointer.secondary_down(){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}

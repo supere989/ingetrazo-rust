@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QApplication
 from views.main_window import MainWindow
 app=QApplication([]);app.setOrganizationName('FirstPersonLookIndependent');app.setApplicationName('isolated');QSettings.setDefaultFormat(QSettings.IniFormat);QSettings.setPath(QSettings.IniFormat,QSettings.UserScope,tempfile.mkdtemp());QSettings().setValue("walk/look_sensitivity",25)
 rows=[]
-for name in ['left-move-release','left-press-move-release','right-move-release','right-press-move-release','left-relative-move-release','right-relative-move-release','unrelated-release-retains-left','left-release-ends-with-right-held']:
+for name in ['left-move-release','left-press-move-release','right-move-release','right-press-move-release','left-relative-move-release','right-relative-move-release','unrelated-release-retains-left','left-release-ends-with-right-held','unowned-relative-before-press']:
  w=MainWindow();vp=w.viewport;vp.resize(800,600);vp.camera.distance=10;vp.camera.look_from(QVector3D(0,0,1.68),QVector3D(0,1,0));vp.camera.perspective=True;w._activate_tool('first_person');held=Qt.NoButton
  def event(kind,button=Qt.NoButton,pos=QPointF(400,300)):
   global held
@@ -19,7 +19,9 @@ for name in ['left-move-release','left-press-move-release','right-move-release',
   elif kind==QEvent.MouseButtonRelease:vp.mouseReleaseEvent(e)
   else:vp.mouseMoveEvent(e)
  button=Qt.RightButton if name.startswith('right')else Qt.LeftButton
- before=vp.camera.eye();event(QEvent.MouseButtonPress,button)
+ before=vp.camera.eye()
+ if name=='unowned-relative-before-press':event(QEvent.MouseMove,pos=QPointF(200,200))
+ event(QEvent.MouseButtonPress,button)
  if name=='unrelated-release-retains-left':event(QEvent.MouseButtonRelease,Qt.RightButton)
  if name=='left-release-ends-with-right-held':event(QEvent.MouseButtonPress,Qt.RightButton);event(QEvent.MouseButtonRelease,Qt.LeftButton)
  event(QEvent.MouseMove,pos=QPointF(440,260));event(QEvent.MouseButtonRelease,button)
