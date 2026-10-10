@@ -1,0 +1,1577 @@
+[
+  {
+    "faces": 64,
+    "grain": 32,
+    "pids": [
+      960980
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.370452,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2180
+        ],
+        "descriptor_bytes": 231,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.037265,
+        "parent_rss_kib": 3708,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 1.4654049999999998
+      },
+      {
+        "child_rss_kib": [
+          2180
+        ],
+        "descriptor_bytes": 231,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.36416,
+        "parent_rss_kib": 3708,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 0.719602
+      },
+      {
+        "child_rss_kib": [
+          2180
+        ],
+        "descriptor_bytes": 231,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.31838299999999997,
+        "parent_rss_kib": 3724,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 0.6708810000000001
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 64,
+    "grain": 256,
+    "pids": [
+      960982
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.385009,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2376
+        ],
+        "descriptor_bytes": 91,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.111545,
+        "parent_rss_kib": 3924,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 1.549855
+      },
+      {
+        "child_rss_kib": [
+          2376
+        ],
+        "descriptor_bytes": 91,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.381192,
+        "parent_rss_kib": 3924,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.740112
+      },
+      {
+        "child_rss_kib": [
+          2376
+        ],
+        "descriptor_bytes": 91,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.324575,
+        "parent_rss_kib": 3940,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.684256
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 64,
+    "grain": 1024,
+    "pids": [
+      960984
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.304948,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2252
+        ],
+        "descriptor_bytes": 91,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.22478,
+        "parent_rss_kib": 3940,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 1.5860130000000001
+      },
+      {
+        "child_rss_kib": [
+          2252
+        ],
+        "descriptor_bytes": 91,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.306681,
+        "parent_rss_kib": 3956,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.648057
+      },
+      {
+        "child_rss_kib": [
+          2252
+        ],
+        "descriptor_bytes": 91,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.298796,
+        "parent_rss_kib": 3956,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.614203
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 64,
+    "grain": 32,
+    "pids": [
+      960986,
+      960988
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.56533,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2204,
+          2208
+        ],
+        "descriptor_bytes": 302,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.2425030000000001,
+        "parent_rss_kib": 4044,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 1.620168
+      },
+      {
+        "child_rss_kib": [
+          2204,
+          2208
+        ],
+        "descriptor_bytes": 302,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.262648,
+        "parent_rss_kib": 4056,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 0.619663
+      },
+      {
+        "child_rss_kib": [
+          2204,
+          2208
+        ],
+        "descriptor_bytes": 302,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.26438,
+        "parent_rss_kib": 4056,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 0.5984729999999999
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 64,
+    "grain": 256,
+    "pids": [
+      960990,
+      960992
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.677203,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2328,
+          2332
+        ],
+        "descriptor_bytes": 162,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.155759,
+        "parent_rss_kib": 3992,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 1.579752
+      },
+      {
+        "child_rss_kib": [
+          2328,
+          2336
+        ],
+        "descriptor_bytes": 162,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.48988799999999993,
+        "parent_rss_kib": 4004,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.8726419999999999
+      },
+      {
+        "child_rss_kib": [
+          2328,
+          2336
+        ],
+        "descriptor_bytes": 162,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.36636399999999997,
+        "parent_rss_kib": 4004,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.722237
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 64,
+    "grain": 1024,
+    "pids": [
+      960994,
+      960996
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.587502,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2268,
+          2328
+        ],
+        "descriptor_bytes": 162,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.941412,
+        "parent_rss_kib": 4004,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 1.297978
+      },
+      {
+        "child_rss_kib": [
+          2268,
+          2332
+        ],
+        "descriptor_bytes": 162,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.421037,
+        "parent_rss_kib": 4004,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.796598
+      },
+      {
+        "child_rss_kib": [
+          2268,
+          2332
+        ],
+        "descriptor_bytes": 162,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.40257200000000004,
+        "parent_rss_kib": 4016,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.8025
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 64,
+    "grain": 32,
+    "pids": [
+      960998,
+      961000,
+      961002,
+      961004
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 0.9701770000000001,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2204,
+          2208,
+          2252,
+          2240
+        ],
+        "descriptor_bytes": 444,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.616762,
+        "parent_rss_kib": 4240,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 1.9688489999999998
+      },
+      {
+        "child_rss_kib": [
+          2204,
+          2208,
+          2252,
+          2244
+        ],
+        "descriptor_bytes": 444,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.371915,
+        "parent_rss_kib": 4252,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 0.75509
+      },
+      {
+        "child_rss_kib": [
+          2204,
+          2208,
+          2252,
+          2244
+        ],
+        "descriptor_bytes": 444,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.277957,
+        "parent_rss_kib": 4252,
+        "result_bytes": 2048,
+        "tasks": 8,
+        "total_ms": 0.625354
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 64,
+    "grain": 256,
+    "pids": [
+      961006,
+      961008,
+      961010,
+      961012
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 1.078392,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2304,
+          2308,
+          2196,
+          2324
+        ],
+        "descriptor_bytes": 304,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.978313,
+        "parent_rss_kib": 4064,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 1.365116
+      },
+      {
+        "child_rss_kib": [
+          2304,
+          2312,
+          2200,
+          2328
+        ],
+        "descriptor_bytes": 304,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.48776400000000003,
+        "parent_rss_kib": 4076,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.849669
+      },
+      {
+        "child_rss_kib": [
+          2304,
+          2312,
+          2200,
+          2328
+        ],
+        "descriptor_bytes": 304,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.431757,
+        "parent_rss_kib": 4076,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.818691
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 64,
+    "grain": 1024,
+    "pids": [
+      961014,
+      961016,
+      961018,
+      961020
+    ],
+    "serial_total_ms": 0.54377,
+    "serial_trials_ms": [
+      0.642958,
+      0.54377,
+      0.524644
+    ],
+    "startup_ms": 1.0293999999999999,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2304,
+          2236,
+          2332,
+          2188
+        ],
+        "descriptor_bytes": 304,
+        "geometry_bytes": 21536,
+        "kernel_ms": 1.0826500000000001,
+        "parent_rss_kib": 4076,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 1.507275
+      },
+      {
+        "child_rss_kib": [
+          2304,
+          2240,
+          2336,
+          2192
+        ],
+        "descriptor_bytes": 304,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.49353400000000003,
+        "parent_rss_kib": 4076,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.8717010000000001
+      },
+      {
+        "child_rss_kib": [
+          2304,
+          2240,
+          2336,
+          2192
+        ],
+        "descriptor_bytes": 304,
+        "geometry_bytes": 21536,
+        "kernel_ms": 0.407101,
+        "parent_rss_kib": 4076,
+        "result_bytes": 2048,
+        "tasks": 1,
+        "total_ms": 0.771041
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 256,
+    "grain": 32,
+    "pids": [
+      961023
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 0.436697,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2308
+        ],
+        "descriptor_bytes": 736,
+        "geometry_bytes": 86048,
+        "kernel_ms": 2.659747,
+        "parent_rss_kib": 4660,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 4.546631
+      },
+      {
+        "child_rss_kib": [
+          2308
+        ],
+        "descriptor_bytes": 736,
+        "geometry_bytes": 86048,
+        "kernel_ms": 2.024104,
+        "parent_rss_kib": 4660,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 3.9056170000000003
+      },
+      {
+        "child_rss_kib": [
+          2308
+        ],
+        "descriptor_bytes": 736,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.8378400000000001,
+        "parent_rss_kib": 4660,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 3.674839
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 256,
+    "grain": 256,
+    "pids": [
+      961025
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 0.407872,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2340
+        ],
+        "descriptor_bytes": 159,
+        "geometry_bytes": 86048,
+        "kernel_ms": 2.4047449999999997,
+        "parent_rss_kib": 4672,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 4.272762
+      },
+      {
+        "child_rss_kib": [
+          2340
+        ],
+        "descriptor_bytes": 159,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.679351,
+        "parent_rss_kib": 4688,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 3.43743
+      },
+      {
+        "child_rss_kib": [
+          2340
+        ],
+        "descriptor_bytes": 159,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.670263,
+        "parent_rss_kib": 4688,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 3.5086649999999997
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 256,
+    "grain": 1024,
+    "pids": [
+      961028
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 0.293516,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2284
+        ],
+        "descriptor_bytes": 93,
+        "geometry_bytes": 86048,
+        "kernel_ms": 2.205727,
+        "parent_rss_kib": 4688,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 3.960661
+      },
+      {
+        "child_rss_kib": [
+          2284
+        ],
+        "descriptor_bytes": 93,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.697384,
+        "parent_rss_kib": 4688,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 3.511099
+      },
+      {
+        "child_rss_kib": [
+          2284
+        ],
+        "descriptor_bytes": 93,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.656878,
+        "parent_rss_kib": 4688,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 3.470993
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 256,
+    "grain": 32,
+    "pids": [
+      961030,
+      961032
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 0.56512,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2304,
+          2248
+        ],
+        "descriptor_bytes": 809,
+        "geometry_bytes": 86048,
+        "kernel_ms": 2.02747,
+        "parent_rss_kib": 4768,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 3.856683
+      },
+      {
+        "child_rss_kib": [
+          2304,
+          2248
+        ],
+        "descriptor_bytes": 809,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.36739,
+        "parent_rss_kib": 4764,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 3.2257800000000003
+      },
+      {
+        "child_rss_kib": [
+          2304,
+          2248
+        ],
+        "descriptor_bytes": 809,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.301134,
+        "parent_rss_kib": 4764,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 3.103527
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 256,
+    "grain": 256,
+    "pids": [
+      961034,
+      961036
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 0.6559619999999999,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2272,
+          2248
+        ],
+        "descriptor_bytes": 231,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.945203,
+        "parent_rss_kib": 4764,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 3.74357
+      },
+      {
+        "child_rss_kib": [
+          2272,
+          2248
+        ],
+        "descriptor_bytes": 231,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.049147,
+        "parent_rss_kib": 4780,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 2.833245
+      },
+      {
+        "child_rss_kib": [
+          2272,
+          2248
+        ],
+        "descriptor_bytes": 231,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.4169740000000002,
+        "parent_rss_kib": 4780,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 3.271146
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 256,
+    "grain": 1024,
+    "pids": [
+      961038,
+      961040
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 0.5721940000000001,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2232,
+          2220
+        ],
+        "descriptor_bytes": 165,
+        "geometry_bytes": 86048,
+        "kernel_ms": 2.3453720000000002,
+        "parent_rss_kib": 4704,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 4.143206
+      },
+      {
+        "child_rss_kib": [
+          2232,
+          2228
+        ],
+        "descriptor_bytes": 165,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.8149570000000002,
+        "parent_rss_kib": 4736,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 3.5769539999999997
+      },
+      {
+        "child_rss_kib": [
+          2232,
+          2228
+        ],
+        "descriptor_bytes": 165,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.7068619999999999,
+        "parent_rss_kib": 4736,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 3.503545
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 256,
+    "grain": 32,
+    "pids": [
+      961042,
+      961044,
+      961046,
+      961048
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 1.3732309999999999,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2292,
+          2284,
+          2228,
+          2212
+        ],
+        "descriptor_bytes": 953,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.834304,
+        "parent_rss_kib": 4944,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 3.725295
+      },
+      {
+        "child_rss_kib": [
+          2292,
+          2284,
+          2228,
+          2212
+        ],
+        "descriptor_bytes": 953,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.112437,
+        "parent_rss_kib": 4944,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 2.950297
+      },
+      {
+        "child_rss_kib": [
+          2292,
+          2284,
+          2228,
+          2212
+        ],
+        "descriptor_bytes": 953,
+        "geometry_bytes": 86048,
+        "kernel_ms": 0.950861,
+        "parent_rss_kib": 4960,
+        "result_bytes": 8192,
+        "tasks": 32,
+        "total_ms": 2.83562
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 256,
+    "grain": 256,
+    "pids": [
+      961050,
+      961052,
+      961054,
+      961056
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 1.371518,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2276,
+          2284,
+          2232,
+          2300
+        ],
+        "descriptor_bytes": 375,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.7711350000000001,
+        "parent_rss_kib": 4960,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 3.613925
+      },
+      {
+        "child_rss_kib": [
+          2276,
+          2284,
+          2232,
+          2300
+        ],
+        "descriptor_bytes": 375,
+        "geometry_bytes": 86048,
+        "kernel_ms": 0.891638,
+        "parent_rss_kib": 4960,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 3.019167
+      },
+      {
+        "child_rss_kib": [
+          2276,
+          2284,
+          2232,
+          2300
+        ],
+        "descriptor_bytes": 375,
+        "geometry_bytes": 86048,
+        "kernel_ms": 1.775974,
+        "parent_rss_kib": 4960,
+        "result_bytes": 8192,
+        "tasks": 4,
+        "total_ms": 4.029792
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 256,
+    "grain": 1024,
+    "pids": [
+      961089,
+      961091,
+      961093,
+      961095
+    ],
+    "serial_total_ms": 5.016891,
+    "serial_trials_ms": [
+      5.016891,
+      5.10088,
+      4.841509
+    ],
+    "startup_ms": 3.557979,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2276,
+          2328,
+          2220,
+          2240
+        ],
+        "descriptor_bytes": 309,
+        "geometry_bytes": 86048,
+        "kernel_ms": 5.430685,
+        "parent_rss_kib": 4768,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 9.46251
+      },
+      {
+        "child_rss_kib": [
+          2276,
+          2336,
+          2228,
+          2248
+        ],
+        "descriptor_bytes": 309,
+        "geometry_bytes": 86048,
+        "kernel_ms": 4.56201,
+        "parent_rss_kib": 4768,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 8.757114
+      },
+      {
+        "child_rss_kib": [
+          2276,
+          2336,
+          2228,
+          2248
+        ],
+        "descriptor_bytes": 309,
+        "geometry_bytes": 86048,
+        "kernel_ms": 4.485014,
+        "parent_rss_kib": 4768,
+        "result_bytes": 8192,
+        "tasks": 1,
+        "total_ms": 7.692959
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 1024,
+    "grain": 32,
+    "pids": [
+      961116
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 0.363078,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2340
+        ],
+        "descriptor_bytes": 3105,
+        "geometry_bytes": 344096,
+        "kernel_ms": 25.746309,
+        "parent_rss_kib": 8480,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 44.226957
+      },
+      {
+        "child_rss_kib": [
+          2340
+        ],
+        "descriptor_bytes": 3105,
+        "geometry_bytes": 344096,
+        "kernel_ms": 24.80166,
+        "parent_rss_kib": 8496,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 42.914081
+      },
+      {
+        "child_rss_kib": [
+          2340
+        ],
+        "descriptor_bytes": 3105,
+        "geometry_bytes": 344096,
+        "kernel_ms": 24.186715,
+        "parent_rss_kib": 8968,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 42.032391000000004
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 1024,
+    "grain": 256,
+    "pids": [
+      961118
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 0.37032200000000004,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2564
+        ],
+        "descriptor_bytes": 467,
+        "geometry_bytes": 344096,
+        "kernel_ms": 23.39743,
+        "parent_rss_kib": 9420,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 41.412337
+      },
+      {
+        "child_rss_kib": [
+          2564
+        ],
+        "descriptor_bytes": 467,
+        "geometry_bytes": 344096,
+        "kernel_ms": 23.195718,
+        "parent_rss_kib": 9668,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 42.018735
+      },
+      {
+        "child_rss_kib": [
+          2564
+        ],
+        "descriptor_bytes": 467,
+        "geometry_bytes": 344096,
+        "kernel_ms": 23.152586,
+        "parent_rss_kib": 9180,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 40.83385
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 1024,
+    "grain": 1024,
+    "pids": [
+      961120
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 0.437368,
+    "trials": [
+      {
+        "child_rss_kib": [
+          3104
+        ],
+        "descriptor_bytes": 171,
+        "geometry_bytes": 344096,
+        "kernel_ms": 23.149491,
+        "parent_rss_kib": 9692,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 41.589502
+      },
+      {
+        "child_rss_kib": [
+          3104
+        ],
+        "descriptor_bytes": 171,
+        "geometry_bytes": 344096,
+        "kernel_ms": 22.422293,
+        "parent_rss_kib": 9468,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 40.802281
+      },
+      {
+        "child_rss_kib": [
+          3104
+        ],
+        "descriptor_bytes": 171,
+        "geometry_bytes": 344096,
+        "kernel_ms": 22.251519000000002,
+        "parent_rss_kib": 9468,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 39.858934
+      }
+    ],
+    "workers": 1
+  },
+  {
+    "faces": 1024,
+    "grain": 32,
+    "pids": [
+      961122,
+      961124
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 0.6813210000000001,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2464,
+          2352
+        ],
+        "descriptor_bytes": 3177,
+        "geometry_bytes": 344096,
+        "kernel_ms": 14.016373999999999,
+        "parent_rss_kib": 8820,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 31.692729000000003
+      },
+      {
+        "child_rss_kib": [
+          2464,
+          2352
+        ],
+        "descriptor_bytes": 3177,
+        "geometry_bytes": 344096,
+        "kernel_ms": 13.131478,
+        "parent_rss_kib": 9048,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 30.749152
+      },
+      {
+        "child_rss_kib": [
+          2464,
+          2352
+        ],
+        "descriptor_bytes": 3177,
+        "geometry_bytes": 344096,
+        "kernel_ms": 12.985673,
+        "parent_rss_kib": 9048,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 30.72106
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 1024,
+    "grain": 256,
+    "pids": [
+      961126,
+      961128
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 0.546114,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2560,
+          2536
+        ],
+        "descriptor_bytes": 539,
+        "geometry_bytes": 344096,
+        "kernel_ms": 13.617248,
+        "parent_rss_kib": 9256,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 32.383797
+      },
+      {
+        "child_rss_kib": [
+          2560,
+          2536
+        ],
+        "descriptor_bytes": 539,
+        "geometry_bytes": 344096,
+        "kernel_ms": 12.907985,
+        "parent_rss_kib": 9484,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 31.323901000000003
+      },
+      {
+        "child_rss_kib": [
+          2560,
+          2536
+        ],
+        "descriptor_bytes": 539,
+        "geometry_bytes": 344096,
+        "kernel_ms": 13.381101,
+        "parent_rss_kib": 9484,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 31.141175
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 1024,
+    "grain": 1024,
+    "pids": [
+      961130,
+      961132
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 0.559851,
+    "trials": [
+      {
+        "child_rss_kib": [
+          3144,
+          2888
+        ],
+        "descriptor_bytes": 243,
+        "geometry_bytes": 344096,
+        "kernel_ms": 12.778668999999999,
+        "parent_rss_kib": 10132,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 30.355667
+      },
+      {
+        "child_rss_kib": [
+          3144,
+          2888
+        ],
+        "descriptor_bytes": 243,
+        "geometry_bytes": 344096,
+        "kernel_ms": 12.125083,
+        "parent_rss_kib": 11008,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 30.122576000000002
+      },
+      {
+        "child_rss_kib": [
+          3144,
+          2888
+        ],
+        "descriptor_bytes": 243,
+        "geometry_bytes": 344096,
+        "kernel_ms": 12.854011999999999,
+        "parent_rss_kib": 10924,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 30.442551
+      }
+    ],
+    "workers": 2
+  },
+  {
+    "faces": 1024,
+    "grain": 32,
+    "pids": [
+      961134,
+      961136,
+      961138,
+      961140
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 1.402796,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2468,
+          2348,
+          2408,
+          2344
+        ],
+        "descriptor_bytes": 3321,
+        "geometry_bytes": 344096,
+        "kernel_ms": 9.641248,
+        "parent_rss_kib": 9768,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 27.292466
+      },
+      {
+        "child_rss_kib": [
+          2468,
+          2348,
+          2408,
+          2344
+        ],
+        "descriptor_bytes": 3321,
+        "geometry_bytes": 344096,
+        "kernel_ms": 8.501069,
+        "parent_rss_kib": 10368,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 26.144061
+      },
+      {
+        "child_rss_kib": [
+          2468,
+          2348,
+          2408,
+          2344
+        ],
+        "descriptor_bytes": 3321,
+        "geometry_bytes": 344096,
+        "kernel_ms": 8.629662999999999,
+        "parent_rss_kib": 10900,
+        "result_bytes": 1604080,
+        "tasks": 128,
+        "total_ms": 26.969815
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 1024,
+    "grain": 256,
+    "pids": [
+      961142,
+      961144,
+      961146,
+      961148
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 1.778619,
+    "trials": [
+      {
+        "child_rss_kib": [
+          2576,
+          2608,
+          2620,
+          2516
+        ],
+        "descriptor_bytes": 683,
+        "geometry_bytes": 344096,
+        "kernel_ms": 10.947092,
+        "parent_rss_kib": 11560,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 29.726766
+      },
+      {
+        "child_rss_kib": [
+          2576,
+          2608,
+          2620,
+          2516
+        ],
+        "descriptor_bytes": 683,
+        "geometry_bytes": 344096,
+        "kernel_ms": 9.090596,
+        "parent_rss_kib": 11904,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 27.61634
+      },
+      {
+        "child_rss_kib": [
+          2576,
+          2608,
+          2620,
+          2516
+        ],
+        "descriptor_bytes": 683,
+        "geometry_bytes": 344096,
+        "kernel_ms": 8.070143,
+        "parent_rss_kib": 11904,
+        "result_bytes": 1604080,
+        "tasks": 16,
+        "total_ms": 25.97956
+      }
+    ],
+    "workers": 4
+  },
+  {
+    "faces": 1024,
+    "grain": 1024,
+    "pids": [
+      961150,
+      961152,
+      961154,
+      961156
+    ],
+    "serial_total_ms": 70.203752,
+    "serial_trials_ms": [
+      79.14520399999999,
+      68.50773000000001,
+      70.203752
+    ],
+    "startup_ms": 1.1243189999999998,
+    "trials": [
+      {
+        "child_rss_kib": [
+          3128,
+          2964,
+          2676,
+          2396
+        ],
+        "descriptor_bytes": 387,
+        "geometry_bytes": 344096,
+        "kernel_ms": 9.464975,
+        "parent_rss_kib": 12856,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 27.61674
+      },
+      {
+        "child_rss_kib": [
+          3128,
+          2964,
+          2676,
+          2396
+        ],
+        "descriptor_bytes": 387,
+        "geometry_bytes": 344096,
+        "kernel_ms": 8.006392,
+        "parent_rss_kib": 12964,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 25.73669
+      },
+      {
+        "child_rss_kib": [
+          3128,
+          2964,
+          2676,
+          2396
+        ],
+        "descriptor_bytes": 387,
+        "geometry_bytes": 344096,
+        "kernel_ms": 7.466079,
+        "parent_rss_kib": 12964,
+        "result_bytes": 1604080,
+        "tasks": 4,
+        "total_ms": 25.194022
+      }
+    ],
+    "workers": 4
+  }
+]

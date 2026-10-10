@@ -1,0 +1,11 @@
+{
+  "source": "ae41d62cfee80e06054f2bd6cf1d0576ed550373",
+  "production_candidate": "8939054",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": {
+    "examples/process_hlr_independent": "e8b718c925c1a555ebb23e686d89b1a1d288a38cf06617f8dc228bc03ebc1136",
+    "ingetrazo-render-worker": "c22d9cb71cd64815fa1babedc1aa781a0c56bd3e5e0101c7016e3acd1f4ab184"
+  },
+  "scope": "27 configurations,81 calls,3 warmed serial trials per configuration,exact ordered serial/process coordinates/classes,persistent PIDs;post-call RSS not peak/PSS;software concurrent development host not isolated performance lab",
+  "comparison": "Prior optimized indexed/projection cached benchmark f897e37 retained; cross-run timings do not isolate thermal/concurrency noise"
+}
