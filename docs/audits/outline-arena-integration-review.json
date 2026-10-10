@@ -17,5 +17,11 @@
     "Draw and prepare still inspect published slots; no whole-frame O(k) or measured end-to-end performance claim.",
     "Actual failed-publication hardware output and restored-source results still require final handoff review."
   ],
-  "tests_rerun": false
+  "tests_rerun": false,
+  "integration": {
+    "commit": "c71e67e8f765a4bd0ad5134732ce2450e7c6e24f",
+    "reviewed_arena_and_resource_blobs_unchanged": true,
+    "system_merge_review": "Only native pointer modifier handle installation, ingress capture and frame swap differ from arena source.",
+    "combined_acceptance": "pending final resource-owner follow-up and retained arena handoff"
+  }
 }
