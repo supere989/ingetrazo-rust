@@ -165,5 +165,6 @@ mod image_plane_actions;
 
 pub mod image_outlines;
 pub mod image_outline_chunks;
+pub mod image_outline_arena;
 pub mod navigation;
 pub mod navigation_ray;

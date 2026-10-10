@@ -1,0 +1,3 @@
+# Arena planner only
+
+Standalone rustc --edition=2021 --test -C debuginfo=0 crates/ingetrazo-gui/src/image_outline_arena.rs: two tests pass. No GPU consumer activated and no resources files changed. Tests prove source metadata ownership: submitted ranges unavailable before acknowledged serial, retired ranges cannot rollback/draw, stale tickets refused, failed later reservation rolls back candidate only, alignment/coalescing and existing publication preserved. Actual upload/fence/whole-image acceptance requires the root-owned fresh-range API and subsequent native consumer stage; simulated serial tests do not establish actual GPU completion. Terminal binary/log removed after committing evidence.
