@@ -39,7 +39,16 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    let Some(color)=color else{continue;};
    let width=command.stroke.as_ref().map(|(_,w)|*w as f32).unwrap_or(0.);
    let mut shapes=vec![egui::epaint::ClippedShape{clip_rect:egui::Rect::EVERYTHING,shape:egui::epaint::PathShape{points:points.clone(),closed,fill:if fill{Color32::WHITE}else{Color32::TRANSPARENT},stroke:if fill{Stroke::NONE}else{Stroke::new(width,Color32::WHITE)}.into()}.into()}];
-   if !fill&&!closed&&width>0.{for point in &points{shapes.push(egui::epaint::ClippedShape{clip_rect:egui::Rect::EVERYTHING,shape:egui::Shape::circle_filled(*point,width/2.,Color32::WHITE)});}}
+   // A round-capped stroke is one covered region. Separate endpoint circles
+   // would blend their overlap with the segment twice for translucent paint.
+   if !fill&&!closed&&width>0.&&points.len()==2{
+    let delta=points[1]-points[0];let angle=delta.y.atan2(delta.x);let radius=width/2.;
+    let mut outline=Vec::with_capacity(66);
+    for(center,start)in[(points[1],angle-std::f32::consts::FRAC_PI_2),(points[0],angle+std::f32::consts::FRAC_PI_2)]{
+     for i in 0..=32{let a=start+std::f32::consts::PI*i as f32/32.;outline.push(center+egui::vec2(a.cos(),a.sin())*radius);}
+    }
+    shapes=vec![egui::epaint::ClippedShape{clip_rect:egui::Rect::EVERYTHING,shape:egui::epaint::PathShape{points:outline,closed:true,fill:Color32::WHITE,stroke:Stroke::NONE.into()}.into()}];
+   }
    let first=u32::try_from(indices.len()).map_err(|_|"Composer CAD index overflow")?;
    for primitive in ctx.tessellate(shapes,density){
     let egui::epaint::Primitive::Mesh(mesh)=primitive.primitive else{return Err("Unexpected callback in composer CAD tessellation".into());};
