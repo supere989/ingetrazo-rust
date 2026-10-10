@@ -1,0 +1,9 @@
+{
+  "reviewed_root": "4177c9ab",
+  "candidate": "Uncommitted geometry worktree composer_text_ordered.rs observed during source review",
+  "finding": "Producer emits glyph-wide ordered draw ranges and run-wide palette batches. Vulkan ordinary exact admission rejects batch endpoints inside ranges; draw only emits ranges wholly contained in each batch. Metal compute source plan accepts per-run batches.",
+  "consequence": "CPU producer tests and Metal planning do not establish compatibility with production Vulkan. Shared activation must await correction.",
+  "requested_fix": "Coordinate producer/consumer layout, preserving draw order and minimizing barriers; validate actual multi-run glyph on Vulkan.",
+  "additional_review": "runs*128 is not demonstrated conservative peak allocation with Vec excess capacity and handle/backend-owned palettes; accounting must identify its true scope.",
+  "status": "OPEN; assigned to geometry and validation owners; no full parity acceptance"
+}
