@@ -287,6 +287,51 @@ fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
     Ok(loops)
 }
 
+/// Resolve an authored local image URI without fetching remote resources.
+fn image_bytes(image: Node<'_, '_>, base: &std::path::Path) -> Result<(String, Vec<u8>)> {
+    let reference = child(image, "init_from")
+        .and_then(|n| n.text())
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .ok_or_else(|| invalid("missing image URI"))?;
+    if reference.contains("://") || reference.starts_with("data:") {
+        return Err(invalid("COLLADA image must reference a local file"));
+    }
+    let input = reference.as_bytes();
+    let mut bytes = Vec::new();
+    let mut i = 0;
+    while i < input.len() {
+        if input[i] == b'%' {
+            if i + 2 >= input.len() {
+                return Err(invalid("truncated image URI escape"));
+            }
+            let hex = std::str::from_utf8(&input[i + 1..i + 3])
+                .map_err(|_| invalid("invalid image URI escape"))?;
+            bytes.push(
+                u8::from_str_radix(hex, 16).map_err(|_| invalid("invalid image URI escape"))?,
+            );
+            i += 3;
+        } else {
+            bytes.push(input[i]);
+            i += 1;
+        }
+    }
+    let decoded = String::from_utf8(bytes).map_err(|_| invalid("image URI is not UTF-8"))?;
+    if decoded.contains('\0') {
+        return Err(invalid("image URI contains NUL"));
+    }
+    let path = base.join(decoded);
+    let bytes = std::fs::read(&path)?;
+    let extension = path
+        .extension()
+        .and_then(|s| s.to_str())
+        .unwrap_or("bin")
+        .to_ascii_lowercase();
+    Ok((
+        format!("textures/dae-{}.{}", uuid::Uuid::new_v4(), extension),
+        bytes,
+    ))
+}
 /// Resolve exporter-specific direct image and sampler/surface chains within one effect.
 fn diffuse_image<'a, 'i>(
     effect: Node<'a, 'i>,
@@ -725,5 +770,37 @@ mod image_binding_tests {
             .find(|n| n.tag_name().name() == "texture")
             .unwrap();
         assert!(diffuse_image(effect, texture, &ids).is_err());
+    }
+}
+
+#[cfg(test)]
+mod image_file_tests {
+    use super::*;
+    #[test]
+    fn escaped_local_image_bytes_are_exact_and_remote_and_malformed_uris_refused() {
+        let folder =
+            std::env::temp_dir().join(format!("ingetrazo-dae-image-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&folder).unwrap();
+        let payload = [0, 1, 128, 255, 42];
+        std::fs::write(folder.join("paint blue.png"), payload).unwrap();
+        let xml = "<image><init_from>paint%20blue.png</init_from></image>";
+        let doc = roxmltree::Document::parse(xml).unwrap();
+        let (key, bytes) = image_bytes(doc.root_element(), &folder).unwrap();
+        assert!(key.starts_with("textures/dae-"));
+        assert!(key.ends_with(".png"));
+        assert_eq!(bytes, payload);
+        for uri in [
+            "https://example.test/image.png",
+            "data:image/png;base64,abc",
+            "paint%2.png",
+            "paint%GG.png",
+            "paint%00.png",
+            "missing.png",
+        ] {
+            let xml = format!("<image><init_from>{uri}</init_from></image>");
+            let doc = roxmltree::Document::parse(&xml).unwrap();
+            assert!(image_bytes(doc.root_element(), &folder).is_err());
+        }
+        std::fs::remove_dir_all(folder).unwrap();
     }
 }
