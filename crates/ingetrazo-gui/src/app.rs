@@ -341,10 +341,13 @@ impl IngeTrazoApp {
         self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
+        let mut reclaim_images = !self.redo_stack.is_empty();
         self.redo_stack.clear();
         if self.undo_stack.len() > self.document_session.preferences.undo_steps {
             self.undo_stack.remove(0);
+            reclaim_images = true;
         }
+        if reclaim_images { self.collect_image_metadata(); }
     }
 
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{

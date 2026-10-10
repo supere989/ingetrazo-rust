@@ -90,6 +90,25 @@ pub(crate) fn restore(current: &Scene, target: &mut Scene) -> Option<ImageDelta>
     delta.map(|d| d.inverse())
 }
 impl IngeTrazoApp {
+    /// Cold branch/limit maintenance. A command-owned image is a root even
+    /// while detached; coordinates never decide ownership or reattachment.
+    pub fn collect_image_metadata(&mut self) -> usize {
+        fn roots(scene:&Scene, ids:&mut std::collections::HashSet<uuid::Uuid>) {
+            ids.extend(scene.image_planes.iter().map(|p|p.id));
+            if let Some(d)=&scene.history_images.0 {
+                ids.extend(d.added.iter().chain(&d.removed).map(|(_,p)|p.id));
+                ids.extend(d.changed.iter().flat_map(|(a,b)|[a.id,b.id]));
+            }
+        }
+        let mut ids=std::collections::HashSet::new();roots(&self.scene,&mut ids);
+        for scene in self.undo_stack.iter().chain(&self.redo_stack) {roots(scene,&mut ids);}
+        for session in &self.component_edit_stack {
+            roots(&session.original_scene,&mut ids);roots(&session.cancel_scene,&mut ids);
+            for scene in session.original_undo.iter().chain(&session.original_redo) {roots(scene,&mut ids);}
+        }
+        self.scene.image_objects.retain_ids(&ids)
+    }
+
     pub(crate) fn seal_image_history(&mut self) {
         self.scene.image_objects.publish(&self.scene.image_planes);
         if let Some(before) = self.undo_stack.last_mut() {
@@ -234,6 +253,30 @@ mod tests {
     use super::*;
     use glam::{DMat4, DVec3};
     use ingetrazo_core::{groups::Group, mesh::Mesh, scene::SelectionItem};
+    #[test]
+    fn detached_metadata_is_rooted_by_redo_then_reclaimed_when_branch_dies() {
+        let mut a=IngeTrazoApp::new();a.system_clipboard=None;
+        let p=ImagePlane::new("old",DVec3::ZERO,DVec3::X,DVec3::Y);let id=p.id;
+        a.add_image_plane(p);a.undo();
+        assert_eq!(a.collect_image_metadata(),0);
+        assert!(a.scene.image_objects.0.lock().unwrap().contains_key(&id));
+        a.add_image_plane(ImagePlane::new("new",DVec3::ZERO,DVec3::X,DVec3::Y));
+        assert!(!a.scene.image_objects.0.lock().unwrap().contains_key(&id));
+        assert_eq!(a.scene.image_objects.metadata_count(),1);
+    }
+    #[test]
+    fn context_cancel_history_roots_detached_metadata_until_session_release() {
+        let mut a=IngeTrazoApp::new();a.system_clipboard=None;
+        let p=ImagePlane::new("old",DVec3::ZERO,DVec3::X,DVec3::Y);let id=p.id;
+        a.add_image_plane(p);a.undo();
+        let mut g=Group::new("Leaf");g.mesh.add_vertex(DVec3::ZERO);a.scene.groups.push(g);
+        a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
+        a.add_image_plane(ImagePlane::new("new",DVec3::ZERO,DVec3::X,DVec3::Y));
+        assert!(a.scene.image_objects.0.lock().unwrap().contains_key(&id));
+        a.cancel_component_edit();a.redo();assert_eq!(a.scene.image_planes[0].id,id);
+        let encoded=serde_json::to_value(&a.scene).unwrap();
+        assert!(encoded.get("image_objects").is_none());
+    }
     #[test]
     fn add_image_layer_redo_uses_current_name_and_rechecks_creation() {
         let mut a = IngeTrazoApp::new();

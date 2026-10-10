@@ -161,6 +161,11 @@ impl ImageObjects {
             objects.insert(p.id, p.clone());
         }
     }
+    pub fn metadata_count(&self) -> usize { self.0.lock().unwrap().len() }
+    pub fn retain_ids(&self, ids: &std::collections::HashSet<uuid::Uuid>) -> usize {
+        let mut objects=self.0.lock().unwrap();let before=objects.len();
+        objects.retain(|id,_|ids.contains(id));before-objects.len()
+    }
     fn held(&self, p: &ImagePlane) -> ImagePlane {
         self.0
             .lock()
