@@ -394,7 +394,7 @@ impl IngeTrazoApp {
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
-            candidate.tile_layer=scene.tile_layer.clone();
+        edit.tile_layer=self.scene.tile_layer.clone();
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
         edit.image_planes=self.scene.image_planes.clone();edit.image_objects=self.scene.image_objects.clone();edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
