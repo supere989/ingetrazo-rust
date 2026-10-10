@@ -38,6 +38,7 @@ pub struct TextDraw {
     /// Millimetres per source pixel100 layout unit.
     pub scale_mm: f64,
     pub italic: bool,
+    pub bold: bool,
     pub glyphs: Vec<TextGlyph>,
     pub decorations: Vec<TextDecoration>,
 }
@@ -285,7 +286,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     .checked_add(
                         text.glyphs
                             .len()
-                            .checked_mul(2)
+                            .checked_mul(if text.bold { 4 } else { 2 })
                             .ok_or("PDF glyph count overflow")?,
                     )
                     .ok_or("PDF glyph count overflow")?;
@@ -431,7 +432,8 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                         .cid(glyph.glyph)
                         .ok_or("PDF glyph absent from prepared font resource")?;
                     let b = resource.bounds_px[cid as usize];
-                    for x in [b[0], b[2]] {
+                    let bold_offset = text.font.synthetic_bold_offset_px(text.bold)?;
+                    for x in [b[0] - bold_offset, b[2]] {
                         for y in [b[1], b[3]] {
                             let px = draw.origin_mm[0]
                                 + (glyph.position_px[0] + x + shear * y) * text.scale_mm;
@@ -552,6 +554,18 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     )
                     .unwrap();
                     previous = desired;
+                }
+                let bold_offset = text.font.synthetic_bold_offset_px(text.bold)?;
+                if bold_offset > 0. && !text.glyphs.is_empty() {
+                    writeln!(content, "1 0 {} -1 0 0 Tm\n/Span << /ActualText <> >> BDC", number(shear)).unwrap();
+                    let mut previous = [bold_offset, 0.];
+                    for glyph in &text.glyphs {
+                        let desired = [glyph.position_px[0] + shear * glyph.position_px[1], -glyph.position_px[1]];
+                        let cid = resource.cid(glyph.glyph).ok_or("PDF glyph absent from prepared font resource")?;
+                        writeln!(content, "{} {} Td <{:04X}> Tj", number(desired[0]-previous[0]), number(desired[1]-previous[1]), cid).unwrap();
+                        previous = desired;
+                    }
+                    content.extend_from_slice(b"EMC\n");
                 }
                 content.extend_from_slice(b"ET\n");
                 for d in &text.decorations {

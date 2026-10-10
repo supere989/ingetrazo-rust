@@ -10,6 +10,8 @@ from PySide6.QtCore import QSize
 app=QApplication([]);original=Path(sys.argv[1]);out=Path(sys.argv[2]);dpi=int(sys.argv[3]);names=['accents','arabic','arabic_run','bold','center','cjk','combining','hebrew','hebrew_run','italic','kerns','latin','mono','newlines','right','serif','serif_bold','underline','wrap'];rows=[]
 if os.environ.get('INGETRAZO_TEXT_PARAGRAPHS')=='1':
  names=sorted(names+['mixed_latin_cjk','mixed_cjk_rtl','mixed_scripts','spaces','tabs','nbsp','empty_paragraphs','long_word','mixed_wrapped','rtl_wrapped','fallback_underline','fallback_bold'])
+if os.environ.get('INGETRAZO_TEXT_FONT_RUNS')=='1':
+ names=['fallback_bold','mixed_cjk_rtl','mixed_latin_cjk','mixed_scripts']
 assert sorted(p.name.removesuffix('.native.pdf')for p in out.glob('*.native.pdf'))==names
 for name in names:
  images=[];sizes=[]

@@ -71,6 +71,7 @@ fn main() {
         let draw = Draw {
             origin_mm: [20., 30.],
             text: Some(TextDraw {
+                bold: false,
                 font: font.clone(),
                 scale_mm: 14. * 25.4 / 72. / 100. * 0.75,
                 italic: call["font"]["italic"].as_bool().unwrap(),
