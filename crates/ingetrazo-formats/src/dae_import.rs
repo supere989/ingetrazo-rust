@@ -503,10 +503,28 @@ fn transform(node: Node<'_, '_>) -> Result<glam::DMat4> {
 }
 pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> {
     let xml = std::fs::read_to_string(path)?;
-    scene_from_xml_at(
+    let mut scene = scene_from_xml_at(
         &xml,
         Some(path.parent().unwrap_or_else(|| std::path::Path::new("."))),
-    )
+    )?;
+    let count: usize = scene.groups.iter().map(|g| g.mesh.faces.len()).sum();
+    if count <= 400 {
+        let mut mesh = ingetrazo_core::mesh::Mesh::new();
+        for group in &scene.groups {
+            for face in &group.mesh.faces {
+                let outer=face.vertices.iter().map(|&v|mesh.add_vertex(group.mesh.vertices[v].position)).collect();
+                let holes=face.holes.iter().map(|ring|ring.iter().map(|&v|mesh.add_vertex(group.mesh.vertices[v].position)).collect()).collect();
+                let id=mesh.add_face(outer,holes).ok_or_else(||invalid("invalid editable COLLADA face"))?;
+                mesh.faces[id].attrs=face.attrs.clone();mesh.faces[id].layer=face.layer.clone();
+            }
+        }
+        let (mesh, _) =
+            ingetrazo_core::simplify::simplify_mesh(&mesh, 0., false).map_err(invalid)?;
+        scene.mesh = ingetrazo_core::heal::orient_faces(&mesh).map_err(invalid)?;
+        scene.groups.clear();
+        scene.bump_version();
+    }
+    Ok(scene)
 }
 pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
     scene_from_xml_at(xml, None)
@@ -709,7 +727,7 @@ mod tests {
         let xml=document().replace("<vertices id=\"v\">",r##"<source id="uv"><float_array count="6">0 0 1 0 0 1</float_array><technique_common><accessor count="3" stride="2"/></technique_common></source><vertices id="v">"##).replace("semantic=\"NORMAL\" offset=\"0\"","semantic=\"TEXCOORD\" offset=\"0\" source=\"#uv\"").replace("<p>0 0 0 1 0 2</p>","<p>0 0 1 1 2 2</p>").replace("<triangles count=\"1\">","<triangles count=\"1\" material=\"paint\">").replace("<library_nodes>",r##"<image id="image"><init_from>paint.png</init_from></image><effect id="fx"><profile_COMMON><technique><lambert><diffuse><texture texture="image"/></diffuse></lambert></technique></profile_COMMON></effect><material id="mat"><instance_effect url="#fx"/></material><library_nodes>"##).replace("<instance_geometry url=\"#g\"/>",r##"<instance_geometry url="#g"><bind_material><technique_common><instance_material symbol="paint" target="#mat"/></technique_common></bind_material></instance_geometry>"##);
         std::fs::write(folder.join("model.dae"), &xml).unwrap();
         let scene = crate::load_file(&folder.join("model.dae")).unwrap();
-        let texture = &scene.groups[0].mesh.faces[0].attrs["texture"];
+        let texture = &scene.mesh.faces[0].attrs["texture"];
         assert_eq!(
             scene.embedded_textures[texture["embed"].as_str().unwrap()],
             [1, 2, 3, 255]
