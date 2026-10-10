@@ -1,0 +1,93 @@
+{
+  "run": 38079339677,
+  "job": 114292846131,
+  "artifact": 11680580449,
+  "zip_sha256": "2def756a2bc76ee0d0d68f6d99398c790a93ea9e767bc846176ded9b6fddcef2",
+  "source": "ed56063a31f23aef991639e4de38f72fc060e5bd",
+  "provider": [
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "ABC",
+      "path": "/System/Library/Fonts/Helvetica.ttc",
+      "index": 0,
+      "warm_same_owner": true,
+      "chosen_bold": false,
+      "chosen_italic": false,
+      "coverage": true,
+      "postscript": "Helvetica"
+    },
+    {
+      "family": "Helvetica",
+      "bold": true,
+      "italic": false,
+      "text": "ABC",
+      "path": "/System/Library/Fonts/Helvetica.ttc",
+      "index": 1,
+      "warm_same_owner": true,
+      "chosen_bold": true,
+      "chosen_italic": false,
+      "coverage": true,
+      "postscript": "Helvetica-Bold"
+    },
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": true,
+      "text": "ABC",
+      "path": "/System/Library/Fonts/Helvetica.ttc",
+      "index": 2,
+      "warm_same_owner": true,
+      "chosen_bold": false,
+      "chosen_italic": true,
+      "coverage": true,
+      "postscript": "Helvetica-Oblique"
+    },
+    {
+      "family": "Times",
+      "bold": true,
+      "italic": true,
+      "text": "ABC",
+      "error": "CoreText selected \"Times-BoldItalic\" at /System/Library/Fonts/Times.ttc face 3: requested bold=true italic=true, file bold=false italic=true, OS/2 present=true, italic_angle=-15; synthetic or variable traits remain unsupported"
+    },
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "\u6f22\u5b57",
+      "error": "CoreText font file budget exceeded"
+    },
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      "path": "/System/Library/Fonts/GeezaPro.ttc",
+      "index": 0,
+      "warm_same_owner": true,
+      "chosen_bold": false,
+      "chosen_italic": false,
+      "coverage": true,
+      "postscript": "GeezaPro"
+    }
+  ],
+  "canvas": {
+    "passed": false,
+    "choice": "canvas",
+    "phase": 0,
+    "close_events": 0,
+    "moves": 0,
+    "presses": 0,
+    "releases": 0,
+    "cancel_verified": false,
+    "modal_submission": null,
+    "displayed": 315,
+    "skipped": 1,
+    "pending": 2,
+    "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=315",
+    "physical_input_claim": false,
+    "physical_mac_claim": false
+  },
+  "scope": "Intel repeats ARM provider and original inventory failures; no full Canvas presentation acceptance"
+}

@@ -72,7 +72,7 @@ pub(super) fn match_font(request:&Request)->Result<(PathBuf,i32,FtPolicy,Option<
  let postscript=Owned::new(CTFontCopyPostScriptName(selected.0))?;
  let postscript=text(postscript.0)?;
  let metadata=std::fs::metadata(&path).map_err(|e|format!("CoreText font file unavailable: {e}"))?;
- if !metadata.is_file()||metadata.len()>crate::paper_text::MAX_FONT_BYTES as u64{return Err("CoreText font file budget exceeded".into())}
+ if !metadata.is_file()||metadata.len()>crate::paper_text::MAX_FONT_BYTES as u64{return Err(format!("CoreText font file budget exceeded: selected {postscript:?} at {}, file_bytes={}, limit={}",path.display(),metadata.len(),crate::paper_text::MAX_FONT_BYTES))}
  // The collection's actual SFNT identity decides the index; never assume face zero.
  use std::io::Read;
  let mut bytes=Vec::new();bytes.try_reserve_exact(metadata.len() as usize).map_err(|_|"CoreText font file allocation failed")?;
