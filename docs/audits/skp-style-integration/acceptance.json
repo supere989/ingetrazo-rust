@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "binary_source": "12b7518235c0f22a0b7c455ebdf95d2ff6c8c342",
+  "reuse_basis": "Unchanged production importer; intervening changes are tests, evidence and isolated scripting proof",
+  "scope": "Fresh two-style original/native adopted back-color and unchanged DocumentStyle comparison",
+  "purged_transports": [
+    {
+      "name": "native.igz",
+      "sha256": "d1e28c0ce970d1471d98a58142338f6b7e78d5f19e2c869925c3169a54b1272c"
+    },
+    {
+      "name": "payload.json",
+      "sha256": "7df62936d820f9f49388387dc7b01fd0a9aff189729ef88a9ab7313675d92f25"
+    }
+  ]
+}

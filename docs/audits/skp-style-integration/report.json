@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "first_back_color": [
+    0.2,
+    0.30196078431372547,
+    0.4
+  ],
+  "source_style_override": {
+    "name": "Default",
+    "face_mode": "textures",
+    "edges": true,
+    "profiles": true,
+    "back_edges": false,
+    "edge_color": [
+      0.13,
+      0.17,
+      0.23
+    ],
+    "front_color": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "back_color": null,
+    "background": [
+      0.9,
+      0.91,
+      0.92
+    ],
+    "sky": true,
+    "sky_color": [
+      0.925,
+      0.935,
+      0.945
+    ],
+    "ground_color": [
+      0.815,
+      0.82,
+      0.815
+    ],
+    "section_fill": true,
+    "section_fill_color": [
+      0.35,
+      0.37,
+      0.41
+    ]
+  },
+  "native_style_override": {
+    "name": "Default",
+    "face_mode": "textures",
+    "edges": true,
+    "profiles": true,
+    "back_edges": false,
+    "edge_color": [
+      0.13,
+      0.17,
+      0.23
+    ],
+    "front_color": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "back_color": null,
+    "background": [
+      0.9,
+      0.91,
+      0.92
+    ],
+    "sky": true,
+    "sky_color": [
+      0.925,
+      0.935,
+      0.945
+    ],
+    "ground_color": [
+      0.815,
+      0.82,
+      0.815
+    ],
+    "section_fill": true,
+    "section_fill_color": [
+      0.35,
+      0.37,
+      0.41
+    ]
+  },
+  "input_sha256": "c5887008930edcdd7e4a5e96203e2c10e16287cf381a22ade128ac0d9e5adf7d",
+  "parent_input_sha256": "382d66f54c59f82a176d10c535b0731653bf3949a3057121cb32bac3799c7aff",
+  "binary_sha256": "29779f203107366f6dd03196d6fff70b4700b906e5e91406247a6cb37a03326f",
+  "negative": "second-style precedence rejected"
+}
