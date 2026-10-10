@@ -38,14 +38,14 @@ def caps_match(loops,triangles):
    if original!=native:return False
  return True
 def main():
- p=argparse.ArgumentParser();p.add_argument("corpus",type=Path);p.add_argument("--native-revision",required=True);p.add_argument("--require-caps",action="store_true");p.add_argument("--output",type=Path,default=Path("docs/audits/composer-hlr-endpoint-evidence.json"));a=p.parse_args();rows=[]
+ p=argparse.ArgumentParser();p.add_argument("corpus",type=Path);p.add_argument("--native-revision",required=True);p.add_argument("--require-caps",action="store_true");p.add_argument("--expected-cases",type=int,default=8);p.add_argument("--output",type=Path,default=Path("docs/audits/composer-hlr-endpoint-evidence.json"));a=p.parse_args();rows=[]
  for source in sorted(a.corpus.glob("*.reference.json")):
   ref=json.loads(source.read_text());name=ref["name"]
   for hidden in ["false","true"]:
    native=json.loads((a.corpus/(name+"."+hidden+".rust.json")).read_text());original=ref["drawings"][hidden];same=matches(original,native)
    if a.require_caps:same=same and caps_match(original["loops"],native["cap_triangles"])
    rows.append({"case":name,"hidden":hidden,"match":same,"original":original,"native":native,"original_revision":ref["source_commit"]})
- assert len(rows)==16,"Missing fixture: eight cases and both visibility settings required"
+ assert len(rows)==a.expected_cases*2,"Missing fixture: expected cases and both visibility settings required"
  baseline=rows[0]["original"];controls=[]
  for name in ["moved-endpoint","reclassified-line","deleted-segment"]:
   changed=copy.deepcopy(baseline)
