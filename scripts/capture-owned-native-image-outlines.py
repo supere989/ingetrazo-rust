@@ -53,6 +53,7 @@ def capture_owned(w):
 binary=Path(sys.argv[1]);inputs=Path(sys.argv[2]);out=Path(sys.argv[3]);out.mkdir(parents=True,exist_ok=True)
 original=json.loads((inputs/"original-alpha-results.json").read_text());rows=[]
 required={"image-"+v for v in ["quadrants","alpha","cutout","opacity-0999","opacity-below","reversed","wireframe","hidden-line","xray","hidden-layer","overlap","opaque-behind","faded-behind","threshold-behind","below-threshold-behind","coplanar-trace","oblique","perspective","uv-asymmetric","uv-asymmetric-perspective","uv-negative-v","offscreen-clip","near-clipped","tinted-alpha"]}
+if "--selected" in sys.argv[4:]:required|={"image-selected","image-selected-oblique","image-selected-perspective","image-selected-offscreen","image-selected-near-clipped"}
 assert {r["case"]for r in original["cases"]}==required
 (out/"native-ui-results.json").write_text(json.dumps({"passed":False,"cases":[],"status":"starting"}))
 
