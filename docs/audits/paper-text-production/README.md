@@ -1,0 +1,7 @@
+Production cached paper-font direct writer stage
+
+Source commit 45fd3787 promotes the previously proven single-run shaping/subset geometry into typed resources and the direct sheet PDF writer. Fonts remain native glyph programs in the PDF; no outline rendering fallback, font subprocess, or Scene clone. Installed font bytes are caller-provided Arc storage. Thread-confined FT records are Rc; immutable prepared subsets are Arc data.
+
+Resource ownership and admission: 16 cached fonts/32 MiB, each glyph cache 4096 glyphs/256k points and subset cache 8 entries/2 MiB. Capacity evicts or emits an uncached valid resource. A font program admits 16 MiB, document programs 64 MiB/64 fonts; existing global 500k commands and physical domain admission apply. These admission boundaries are not proof of all source-supported huge fonts/documents. Font source replacement must use a new resource identity; collisions reject. Warm counters demonstrate work reuse only, not end-to-end performance.
+
+Replay: cargo run -p ingetrazo-formats --example paper_text_production_fixture -- <original font-observations.json> <newdir>; check-paper-text-pages.py <actual-original-directory> <newdir> 72 (repeat144/300); check-paper-text-unicode.py same directories. The original corpus and previous failures remain in paper-text-subset-prototype and paper-text-embedded-baseline. This stage does not yet resolve app fonts or lay out paragraphs.
