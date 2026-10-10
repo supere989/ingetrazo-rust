@@ -13,7 +13,7 @@
     "preview_changed_pixels": 2480,
     "cancel_changed_pixels": 0,
     "committed_added_dark_pixels": 2639,
-    "negative_control": "pending independent review",
+    "negative_control": "Independent six actual eframe runs: fixed normal/interleaved/empty pass; old interleaved loses request A, old empty reproduces CI Unknown-format panic. Root source hash verified.",
     "full_suite_rerun": false
   }
 }
