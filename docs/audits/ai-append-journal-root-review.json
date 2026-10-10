@@ -1,11 +1,13 @@
 {
   "source": "7a849ec026a27e92439f84d86fdd527b20401c22",
   "independent_observation": "Eight retained cases match names, topology, stdout, failure and change flags. This is not full document equality.",
-  "integration": "Standalone prototype held pending source-compatible welding and guaranteed publication IDs.",
+  "integration": "Standalone prototype integrated for review only; not production scripting.",
   "required": [
-    "Preflight ID mapping so mesh.add_vertex cannot change planned indices during publication. Duplicate/imported base data must refuse or preserve exact topology without partial writes.",
+    "Allocation and spatial-index publication still require bounded atomic ownership; prepared IDs now avoid native add_vertex redirection.",
     "Source half-grid/neighbor-cell welding controls; do not generalize integer fixtures.",
-    "Allocation/output/deadline bounds, complete mutation journal and actual undo/redo ownership."
+    "Allocation/output/deadline bounds, complete mutation journal and actual undo/redo ownership.",
+    "Replace repeated adjacency contains scans with linear validation for high-degree geometry."
   ],
-  "scope": "No production interpreter adoption; full traceback bytes remain different."
+  "scope": "No production interpreter adoption; full traceback bytes remain different.",
+  "reviewed_correction": "c66fa549 prepares guaranteed IDs and adjacency, validates base before publication and retains stale-index/duplicate-point refusal controls."
 }
