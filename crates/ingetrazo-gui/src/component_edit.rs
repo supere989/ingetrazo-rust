@@ -90,6 +90,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
         let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
             || candidate.materials!=scene.materials || candidate.layers!=scene.layers
             || candidate.embedded_textures!=scene.embedded_textures
+            || candidate.unit!=scene.unit || candidate.guides!=scene.guides || candidate.text_labels!=scene.text_labels || candidate.geo_datum!=scene.geo_datum || candidate.geo_points!=scene.geo_points || candidate.geo_paths!=scene.geo_paths || candidate.terrain!=scene.terrain || candidate.sheets!=scene.sheets || candidate.active_sheet_index!=scene.active_sheet_index || candidate.saved_views!=scene.saved_views
             || session.definitions_baseline!=scene.component_definitions
             || session.mesh_share_baseline!=scene.mesh_shares
             || scene.dimensions!=session.dimension_baseline || scene.section_planes!=session.section_baseline
@@ -156,6 +157,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             // images remain available after Finish and through mesh shareback
             // Undo/Redo, just as the source extracted-file texture cache does.
             candidate.embedded_textures=scene.embedded_textures.clone();
+            candidate.unit=scene.unit;candidate.guides=scene.guides.clone();candidate.text_labels=scene.text_labels.clone();candidate.geo_datum=scene.geo_datum.clone();candidate.geo_points=scene.geo_points.clone();candidate.geo_paths=scene.geo_paths.clone();candidate.terrain=scene.terrain.clone();candidate.sheets=scene.sheets.clone();candidate.active_sheet_index=scene.active_sheet_index;candidate.saved_views=scene.saved_views.clone();
             if scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.dimension_frame.inverse();
                 candidate.dimensions=scene.dimensions.clone();
@@ -381,6 +383,9 @@ impl IngeTrazoApp {
         edit.history_context=self.scene.history_context.clone();edit.history_context.push(group.id);
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
+        // Original begin_group_edit swaps mesh and placements only; these are
+        // document-global entities in the same world frame.
+        edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
         edit.mesh_shares=self.scene.mesh_shares.clone();
         // Original Scene.begin_group_edit exposes WORLD geometry and leaves
@@ -398,14 +403,6 @@ impl IngeTrazoApp {
 
     pub fn finish_component_edit(&mut self) {
         if self.component_edit_stack.is_empty() {self.status_message="No group edit is active".into();return;}
-        // A group schema currently has mesh and child containers, not document
-        // annotations. Refuse unsupported new local annotations instead of losing them.
-        if !self.scene.guides.is_empty() || !self.scene.text_labels.is_empty()
-            || !self.scene.geo_points.is_empty() || !self.scene.geo_paths.is_empty()
-            || self.scene.geo_datum.is_some() || self.scene.terrain.is_some() || !self.scene.sheets.is_empty()
-            || !self.scene.saved_views.is_empty() {
-            self.status_message="Group annotations are not supported; remove them or cancel the edit".into();return;
-        }
         // Validate the model after retiring transient preview without changing
         // the live tool, Scene, inference state, or history on refusal.
         let mut finishing_scene=self.scene.clone();
