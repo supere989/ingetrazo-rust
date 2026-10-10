@@ -1,0 +1,8 @@
+     |            ^^^^^^^
+
+warning: `ingetrazo-ai-interpreter-proof` (bin "vm_mixed_history") generated 23 warnings (run `cargo fix --bin "vm_mixed_history" -p ingetrazo-ai-interpreter-proof` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized] target(s) in 22.33s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/vm_mixed_history`
+Traceback (most recent call last):
+  File "<ai>", line 3, in <module>
+ValueError: mixed rollback

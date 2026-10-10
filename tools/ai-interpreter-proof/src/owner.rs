@@ -52,6 +52,38 @@ impl Transaction {
         result
     }
 }
+struct MixedPosition {
+    id: usize,
+    before: DVec3,
+    after: DVec3,
+}
+struct MixedLoop {
+    id: usize,
+    parked: (Vec<usize>, Vec<Vec<usize>>),
+}
+struct MixedFields {
+    positions: Vec<MixedPosition>,
+    loops: Vec<MixedLoop>,
+    _charge: Lease,
+}
+impl MixedFields {
+    fn apply(&mut self, mesh: &mut Mesh, forward: bool) {
+        for p in &self.positions {
+            mesh.vertices[p.id].position = if forward { p.after } else { p.before };
+        }
+        for f in &mut self.loops {
+            std::mem::swap(&mut mesh.faces[f.id].vertices, &mut f.parked.0);
+            std::mem::swap(&mut mesh.faces[f.id].holes, &mut f.parked.1);
+        }
+    }
+    fn positions(&self, mesh: &Mesh, forward: bool) -> Result<Vec<DVec3>, String> {
+        let mut out = positions(&mesh.vertices, 0)?;
+        for p in &self.positions {
+            out[p.id] = if forward { p.after } else { p.before };
+        }
+        Ok(out)
+    }
+}
 struct Delta {
     before: Uuid,
     after: Uuid,
@@ -62,6 +94,7 @@ struct Delta {
     bytes: usize,
     charge: Lease,
     spatial: PreparedSpatialDelta,
+    mixed: Option<MixedFields>,
 }
 pub struct JournalOwner {
     mesh: Mesh,
@@ -92,22 +125,144 @@ pub struct PreparedAppend<'a> {
     after: Uuid,
     next_version: u64,
     projected: usize,
+    final_spatial: Option<PreparedSpatialIndex>,
+    _mixed_preparation: Option<Lease>,
     _preparation: Lease,
     _staging: Lease,
 }
 impl<'a> PreparedAppend<'a> {
+    /// Prepare all existing-field changes before the append ticket publishes.
+    /// Raw loop edits intentionally do not rebuild the source radial graph.
+    pub fn with_existing_fields(
+        mut self,
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+    ) -> Result<Self, String> {
+        if positions.len() != self.base_vertices || loops.len() != self.owner.mesh.faces.len() {
+            return Err("Mixed base membership mismatch".into());
+        }
+        for (outer, holes) in &loops {
+            if outer
+                .iter()
+                .chain(holes.iter().flatten())
+                .any(|&id| id >= self.base_vertices)
+            {
+                return Err(
+                    "Mixed existing loop references appended vertex not yet supported".into(),
+                );
+            }
+        }
+        let total = self
+            .base_vertices
+            .checked_add(self.vertices.len())
+            .ok_or("Mixed extent overflow")?;
+        let preparation = self
+            .owner
+            .budget
+            .reserve(Kind::Preparation, preparation_bound(total, 0)?)?;
+        let npos = positions
+            .iter()
+            .zip(&self.owner.mesh.vertices)
+            .filter(|(p, v)| **p != v.position)
+            .count();
+        let nloop = loops
+            .iter()
+            .zip(&self.owner.mesh.faces)
+            .filter(|((o, h), f)| *o != f.vertices || *h != f.holes)
+            .count();
+        let mut bytes = sized(npos, std::mem::size_of::<MixedPosition>())?
+            .checked_add(sized(nloop, std::mem::size_of::<MixedLoop>())?)
+            .ok_or("Mixed history overflow")?;
+        for ((outer, holes), face) in loops.iter().zip(&self.owner.mesh.faces) {
+            if *outer != face.vertices || *holes != face.holes {
+                for ring in std::iter::once(outer).chain(holes) {
+                    bytes = add(bytes, sized(ring.capacity(), std::mem::size_of::<usize>())?)?;
+                }
+                for ring in std::iter::once(&face.vertices).chain(&face.holes) {
+                    bytes = add(bytes, sized(ring.capacity(), std::mem::size_of::<usize>())?)?;
+                }
+                bytes = add(
+                    bytes,
+                    sized(
+                        holes.capacity() + face.holes.capacity(),
+                        std::mem::size_of::<Vec<usize>>(),
+                    )?,
+                )?;
+            }
+        }
+        let charge = self.owner.budget.reserve(Kind::History, bytes)?;
+        let mut patch = Vec::new();
+        patch
+            .try_reserve_exact(npos)
+            .map_err(|_| "Mixed position history refused")?;
+        for (id, (p, v)) in positions.iter().zip(&self.owner.mesh.vertices).enumerate() {
+            if *p != v.position {
+                patch.push(MixedPosition {
+                    id,
+                    before: v.position,
+                    after: *p,
+                });
+            }
+        }
+        let mut fields = Vec::new();
+        fields
+            .try_reserve_exact(nloop)
+            .map_err(|_| "Mixed loop history refused")?;
+        for (id, ((outer, holes), face)) in
+            loops.into_iter().zip(&self.owner.mesh.faces).enumerate()
+        {
+            if outer != face.vertices || holes != face.holes {
+                fields.push(MixedLoop {
+                    id,
+                    parked: (outer, holes),
+                });
+            }
+        }
+        let registry = self.owner.registry.prepare_append_positions(
+            &self.vertices,
+            &self.edges,
+            &positions,
+        )?;
+        let mut final_positions = positions;
+        final_positions
+            .try_reserve_exact(self.vertices.len())
+            .map_err(|_| "Mixed final position preparation refused")?;
+        final_positions.extend(self.vertices.iter().map(|v| v.position));
+        let index = self.owner.index(&final_positions)?;
+        let projected = add(self.projected, bytes)?;
+        if self
+            .owner
+            .history_byte_limit
+            .is_some_and(|limit| projected > limit)
+        {
+            return Err("Mixed history payload admission denied".into());
+        }
+        self.delta.bytes = add(self.delta.bytes, bytes)?;
+        self.delta.mixed = Some(MixedFields {
+            positions: patch,
+            loops: fields,
+            _charge: charge,
+        });
+        self.projected = projected;
+        self.registry_change = registry;
+        self.final_spatial = Some(index);
+        self._mixed_preparation = Some(preparation);
+        Ok(self)
+    }
     pub fn apply(self) -> &'a mut JournalOwner {
         let Self {
             owner,
             vertices,
             edges,
             additions,
-            delta,
+            mut delta,
             registry_change,
             base_vertices,
             after,
             next_version,
             projected,
+            final_spatial,
+            _mixed_preparation,
             _preparation,
             _staging,
         } = self;
@@ -118,10 +273,20 @@ impl<'a> PreparedAppend<'a> {
                 owner.mesh.vertices[id].edges.extend(ids);
             }
         }
-        owner
-            .mesh
-            .install_spatial_append(&delta.spatial)
-            .expect("exclusive prepared append positions");
+        if let Some(fields) = &mut delta.mixed {
+            fields.apply(&mut owner.mesh, true);
+        }
+        if let Some(index) = final_spatial {
+            owner
+                .mesh
+                .install_prepared_spatial_index(index)
+                .expect("exclusive mixed final positions");
+        } else {
+            owner
+                .mesh
+                .install_spatial_append(&delta.spatial)
+                .expect("exclusive prepared append positions");
+        }
         owner.state = after;
         owner.version = next_version;
         registry_change
@@ -396,6 +561,7 @@ impl JournalOwner {
             bytes,
             charge: history_charge,
             spatial,
+            mixed: None,
         };
         self.undo
             .try_reserve(1)
@@ -428,6 +594,8 @@ impl JournalOwner {
             after,
             next_version,
             projected,
+            final_spatial: None,
+            _mixed_preparation: None,
             _preparation,
             _staging,
         }))
@@ -469,15 +637,55 @@ impl JournalOwner {
                 }
             }
         }
-        let registry_change =
-            self.registry
-                .prepare_truncate(d.base_vertices, d.base_edges, &d.vertices, &d.edges)?;
-        self.mesh
-            .restore_spatial_append(&d.spatial)
-            .map_err(str::to_owned)?;
-        let d = self.undo.pop().unwrap();
+        let mixed_preparation = if d.mixed.is_some() {
+            Some(self.budget.reserve(
+                Kind::Preparation,
+                preparation_bound(self.mesh.vertices.len(), 0)?,
+            )?)
+        } else {
+            None
+        };
+        let (registry_change, index) = if let Some(fields) = &d.mixed {
+            let positions = fields.positions(&self.mesh, false)?;
+            let index = self.index(&positions[..d.base_vertices])?;
+            (
+                self.registry.prepare_truncate_positions(
+                    d.base_vertices,
+                    d.base_edges,
+                    &d.vertices,
+                    &d.edges,
+                    &positions,
+                )?,
+                Some(index),
+            )
+        } else {
+            (
+                self.registry.prepare_truncate(
+                    d.base_vertices,
+                    d.base_edges,
+                    &d.vertices,
+                    &d.edges,
+                )?,
+                None,
+            )
+        };
+        if index.is_none() {
+            self.mesh
+                .restore_spatial_append(&d.spatial)
+                .map_err(str::to_owned)?;
+        }
+        let mut d = self.undo.pop().unwrap();
         self.mesh.edges.truncate(d.base_edges);
         self.mesh.vertices.truncate(d.base_vertices);
+        if let Some(fields) = &mut d.mixed {
+            fields.apply(&mut self.mesh, false);
+        }
+        if let Some(index) = index {
+            self.mesh
+                .install_prepared_spatial_index(index)
+                .expect("prepared mixed Undo positions");
+        }
+        drop(mixed_preparation);
         for id in touched {
             self.mesh.vertices[id].edges.retain(|&e| e < d.base_edges);
         }
@@ -515,9 +723,11 @@ impl JournalOwner {
         if self.index_entry_limit.is_some_and(|n| total > n) {
             return Err("Prepared-index entry admission denied".into());
         }
-        self.mesh
-            .reserve_spatial_append(&d.spatial)
-            .map_err(str::to_owned)?;
+        if d.mixed.is_none() {
+            self.mesh
+                .reserve_spatial_append(&d.spatial)
+                .map_err(str::to_owned)?;
+        }
         let vertices = copy_vertices(&d.vertices)?;
         let edges = copy_append_edges(&d.edges)?;
         let mut additions = HashMap::<usize, Vec<usize>>::new();
@@ -563,16 +773,46 @@ impl JournalOwner {
                 .try_reserve(ids.len())
                 .map_err(|_| "Redo adjacency admission refused")?;
         }
-        let registry_change = self.registry.prepare_append(&vertices, &edges)?;
-        let d = self.redo.pop().unwrap();
+        let mixed_preparation = if d.mixed.is_some() {
+            Some(
+                self.budget
+                    .reserve(Kind::Preparation, preparation_bound(total, 0)?)?,
+            )
+        } else {
+            None
+        };
+        let (registry_change, index) = if let Some(fields) = &d.mixed {
+            let mut positions = fields.positions(&self.mesh, true)?;
+            let registry = self
+                .registry
+                .prepare_append_positions(&vertices, &edges, &positions)?;
+            positions
+                .try_reserve_exact(vertices.len())
+                .map_err(|_| "Mixed Redo positions refused")?;
+            positions.extend(vertices.iter().map(|v| v.position));
+            (registry, Some(self.index(&positions)?))
+        } else {
+            (self.registry.prepare_append(&vertices, &edges)?, None)
+        };
+        let mut d = self.redo.pop().unwrap();
         self.mesh.vertices.extend(vertices);
         self.mesh.edges.extend(edges);
         for (id, ids) in additions {
             self.mesh.vertices[id].edges.extend(ids);
         }
-        self.mesh
-            .install_spatial_append(&d.spatial)
-            .expect("private prepared redo positions");
+        if let Some(fields) = &mut d.mixed {
+            fields.apply(&mut self.mesh, true);
+        }
+        if let Some(index) = index {
+            self.mesh
+                .install_prepared_spatial_index(index)
+                .expect("prepared mixed Redo positions");
+        } else {
+            self.mesh
+                .install_spatial_append(&d.spatial)
+                .expect("private prepared redo positions");
+        }
+        drop(mixed_preparation);
         self.state = d.after;
         self.version = next_version;
         registry_change
@@ -1266,5 +1506,78 @@ impl PreparedFields<'_> {
         registry.apply(after, next);
         owner.state = after;
         owner.version = next;
+    }
+}
+
+#[cfg(test)]
+mod mixed_append_tests {
+    use super::*;
+    #[test]
+    fn held_mixed_index_preparation_remains_charged_until_discard() {
+        let mut mesh = Mesh::new();
+        mesh.add_vertex(DVec3::ZERO);
+        let budget = OwnerBudget::new(None);
+        let mut owner = JournalOwner::new_with_budget(mesh, budget.clone()).unwrap();
+        let baseline = budget.snapshot();
+        let mut tx = owner.try_begin().unwrap();
+        tx.add_edge(DVec3::ZERO, DVec3::Y).unwrap();
+        let ticket = owner.prepare(tx).unwrap().unwrap();
+        let append = budget.snapshot();
+        let ticket = ticket.with_existing_fields(vec![DVec3::X], vec![]).unwrap();
+        let mixed = budget.snapshot();
+        assert!(mixed.preparation >= append.preparation + preparation_bound(2, 0).unwrap());
+        budget.set_limit(Some(mixed.total()));
+        assert!(budget.reserve(Kind::Preparation, 1).is_err());
+        drop(ticket);
+        budget.set_limit(None);
+        assert_eq!(budget.snapshot().total(), baseline.total());
+        assert_eq!(owner.mesh.vertices[0].position, DVec3::ZERO);
+        assert!(owner.undo.is_empty());
+    }
+    #[test]
+    fn raw_position_and_append_share_one_reversible_owner_command() {
+        let mut mesh = Mesh::new();
+        mesh.add_vertex(DVec3::ZERO);
+        let mut owner = JournalOwner::new(mesh).unwrap();
+        let before = owner.state;
+        let stale = owner.try_begin().unwrap();
+        let mut tx = owner.try_begin().unwrap();
+        tx.add_edge(DVec3::ZERO, DVec3::Y).unwrap();
+        owner
+            .prepare(tx)
+            .unwrap()
+            .unwrap()
+            .with_existing_fields(vec![DVec3::X], vec![])
+            .unwrap()
+            .apply();
+        assert!(owner.prepare(stale).is_err());
+        assert_eq!(owner.registry.metrics().position_rows, 1);
+        assert_eq!(owner.mesh.vertices[0].position, DVec3::X);
+        assert_eq!(owner.mesh.vertices.len(), 2);
+        assert_eq!(owner.mesh.edges.len(), 1);
+        assert_eq!(
+            owner
+                .registry
+                .view()
+                .vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),
+            Some(0)
+        );
+        assert!(owner.undo().unwrap());
+        assert_eq!(owner.state, before);
+        assert_eq!(owner.mesh.vertices.len(), 1);
+        assert_eq!(owner.mesh.vertices[0].position, DVec3::ZERO);
+        assert!(owner.redo().unwrap());
+        assert_eq!(owner.mesh.vertices[0].position, DVec3::X);
+        assert_eq!(owner.mesh.vertices.len(), 2);
+        let budget = owner.budget.clone();
+        let charge = budget.snapshot().total();
+        budget.set_limit(Some(charge));
+        assert!(owner.undo().is_err());
+        assert_eq!(owner.mesh.vertices[0].position, DVec3::X);
+        assert_eq!(owner.mesh.vertices.len(), 2);
+        assert_eq!(budget.snapshot().total(), charge);
+        budget.set_limit(None);
+        assert!(owner.undo().unwrap());
+        assert!(owner.redo().unwrap());
     }
 }

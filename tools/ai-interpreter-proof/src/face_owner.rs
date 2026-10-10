@@ -49,6 +49,14 @@ pub struct PreparedFaces<'a> {
     _radial_charge: Lease,
 }
 impl PreparedFaces<'_> {
+    pub fn with_existing_fields(
+        mut self,
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+    ) -> Result<Self, String> {
+        self.edge = self.edge.with_existing_fields(positions, loops)?;
+        Ok(self)
+    }
     pub fn apply(self) {
         let Self {
             edge,

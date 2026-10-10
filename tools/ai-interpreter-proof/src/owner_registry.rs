@@ -4,7 +4,7 @@ use ingetrazo_core::mesh::{Mesh,MeshVertex,MeshEdge};
 use glam::DVec3;
 use uuid::Uuid;
 use std::{cell::RefCell,collections::HashMap,rc::Rc};
-#[derive(Clone,Copy,Debug)]pub struct Metrics{pub cold_vertex_rows:usize,pub cold_edge_rows:usize,pub lookup_calls:usize,pub publication_rows:usize}
+#[derive(Clone,Copy,Debug)]pub struct Metrics{pub cold_vertex_rows:usize,pub cold_edge_rows:usize,pub lookup_calls:usize,pub publication_rows:usize,pub position_rows:usize}
 struct State{document:Uuid,state:Uuid,version:u64,valid:bool,positions:Vec<DVec3>,edge_extent:usize,vertices:HashMap<SourceKey,usize>,edges:HashMap<(usize,usize),(usize,usize,usize)>,charge:Lease,budget:OwnerBudget,metrics:Metrics}
 pub struct Registry(Rc<RefCell<State>>);
 #[derive(Clone)]pub struct View{inner:Rc<RefCell<State>>,document:Uuid,state:Uuid,version:u64}
@@ -17,7 +17,7 @@ impl Registry{
   for (id,v) in mesh.vertices.iter().enumerate(){positions.push(v.position);if v.position.is_finite()&&(v.position*10000.).is_finite(){vertices.insert(SourceKey::new(v.position),id);}}
   let mut edges=HashMap::new();edges.try_reserve(mesh.edges.len()).map_err(|_|"Registry edges refused")?;
   for (id,e) in mesh.edges.iter().enumerate(){edges.insert(ordered(e.v0,e.v1),(id,e.v0,e.v1));}
-  Ok(Self(Rc::new(RefCell::new(State{document,state,version,valid:true,positions,edge_extent:mesh.edges.len(),vertices,edges,charge,budget,metrics:Metrics{cold_vertex_rows:mesh.vertices.len(),cold_edge_rows:mesh.edges.len(),lookup_calls:0,publication_rows:0}}))))
+  Ok(Self(Rc::new(RefCell::new(State{document,state,version,valid:true,positions,edge_extent:mesh.edges.len(),vertices,edges,charge,budget,metrics:Metrics{cold_vertex_rows:mesh.vertices.len(),cold_edge_rows:mesh.edges.len(),lookup_calls:0,publication_rows:0,position_rows:0}}))))
  }
  pub fn view(&self)->View{let s=self.0.borrow();View{inner:self.0.clone(),document:s.document,state:s.state,version:s.version}}
  pub fn invalidate(&self){self.0.borrow_mut().valid=false;}
@@ -49,6 +49,13 @@ impl Registry{
   // Keep this charge with the prepared change until publication/discard.
   change.position_charge=Some(charge);
   Ok(change)
+ }
+ pub fn prepare_truncate_positions(&self,vertex_extent:usize,edge_extent:usize,vertices:&[MeshVertex],edges:&[MeshEdge],positions:&[DVec3])->Result<Change,String>{
+  let mut change=self.prepare_truncate(vertex_extent,edge_extent,vertices,edges)?;
+  let s=self.0.borrow();if positions.len()!=s.positions.len(){return Err("Mixed truncate position extent mismatch".into());}
+  let charge=s.budget.reserve(Kind::Preparation,positions.len().checked_mul(std::mem::size_of::<DVec3>()).ok_or("Mixed truncate position extent overflow")?)?;
+  let mut prepared=Vec::new();prepared.try_reserve_exact(positions.len()).map_err(|_|"Mixed truncate positions refused")?;prepared.extend_from_slice(positions);
+  change.positions=Some(prepared);change.position_charge=Some(charge);Ok(change)
  }
  pub fn prepare_truncate(&self,vertex_extent:usize,edge_extent:usize,vertices:&[MeshVertex],edges:&[MeshEdge])->Result<Change,String>{
   let s=self.0.borrow();let bytes=s.charge.bytes();let grow=s.budget.reserve(Kind::Registry,0)?;
@@ -88,7 +95,7 @@ impl Change{
  pub fn apply(self,state:Uuid,version:u64)->Result<(),String>{
   let mut s=self.inner.borrow_mut();if !s.valid||s.document!=self.document||s.state!=self.state||s.version!=self.version{return Err("Stale prepared registry change".into());}
   let touched=self.vertices.len().checked_add(self.edges.len()).ok_or("Registry metrics extent overflow")?;
-  if let Some(positions)=self.positions{if positions.len()!=s.positions.len(){return Err("Mixed registry publication extent mismatch".into());}s.positions.copy_from_slice(&positions);}
+  if let Some(positions)=self.positions{if positions.len()!=s.positions.len(){return Err("Mixed registry publication extent mismatch".into());}s.positions.copy_from_slice(&positions);s.metrics.position_rows=s.metrics.position_rows.saturating_add(positions.len());}
   if self.truncate{for (key,_,_) in self.vertices{s.vertices.remove(&key);}for (key,_) in self.edges{s.edges.remove(&key);}s.positions.truncate(self.vertex_extent);}
   else{for (key,id,p) in self.vertices{s.vertices.insert(key,id);s.positions.push(p);}for (key,value) in self.edges{s.edges.insert(key,value);}}
   s.charge.merge(self.grow).expect("private same-ledger registry lease");s.charge.resize(self.bytes).expect("already reserved registry payload");s.edge_extent=self.edge_extent;s.state=state;s.version=version;s.metrics.publication_rows=s.metrics.publication_rows.saturating_add(touched);Ok(())

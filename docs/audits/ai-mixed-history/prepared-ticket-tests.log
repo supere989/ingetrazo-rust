@@ -1,0 +1,10 @@
+warning: `ingetrazo-ai-interpreter-proof` (bin "face_history" test) generated 15 warnings (run `cargo fix --bin "face_history" -p ingetrazo-ai-interpreter-proof --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized] target(s) in 0.47s
+     Running unittests src/bin/face_history.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/face_history-2d633adacb502a3a)
+
+running 2 tests
+test owner::mixed_append_tests::held_mixed_index_preparation_remains_charged_until_discard ... ok
+test owner::mixed_append_tests::raw_position_and_append_share_one_reversible_owner_command ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.00s
+

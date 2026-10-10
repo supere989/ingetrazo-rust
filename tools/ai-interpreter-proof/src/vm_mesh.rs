@@ -488,12 +488,23 @@ impl Projection {
         mesh: &PyRef<editable_mesh::Mesh>,
         budget: &OwnerBudget,
     ) -> Result<Option<Self>, String> {
+        Self::prepare_prefix(mesh, budget, false)
+    }
+    fn prepare_prefix(
+        mesh: &PyRef<editable_mesh::Mesh>,
+        budget: &OwnerBudget,
+        append: bool,
+    ) -> Result<Option<Self>, String> {
         use rustpython_vm::AsObject;
         let owner = mesh.owner.read();
         let native = owner.mesh();
         let vertices = mesh.vertices.borrow_vec();
         let faces = mesh.faces.borrow_vec();
-        if vertices.len() != native.vertices.len() || faces.len() != native.faces.len() {
+        if (!append
+            && (vertices.len() != native.vertices.len() || faces.len() != native.faces.len()))
+            || vertices.len() < native.vertices.len()
+            || faces.len() < native.faces.len()
+        {
             return Err("Existing field projection requires unchanged membership".into());
         }
         let slots = vertices
@@ -510,7 +521,7 @@ impl Projection {
             .try_reserve_exact(vertices.len())
             .map_err(|_| "Projection positions refused")?;
         let mut changed = false;
-        for (id, value) in vertices.iter().enumerate() {
+        for (id, value) in vertices.iter().take(native.vertices.len()).enumerate() {
             let v = value
                 .downcast_ref::<editable_mesh::Vertex>()
                 .ok_or("Projection vertex requires Vertex")?;
@@ -527,7 +538,7 @@ impl Projection {
             .try_reserve_exact(faces.len())
             .map_err(|_| "Projection face slots refused")?;
         let mut bytes = slots;
-        for (id, value) in faces.iter().enumerate() {
+        for (id, value) in faces.iter().take(native.faces.len()).enumerate() {
             let f = value
                 .downcast_ref::<editable_mesh::Face>()
                 .ok_or("Projection face requires Face")?;
@@ -1194,10 +1205,10 @@ impl Controller {
                 panic!("Engineering unwind after VM mutation");
             }
             let mut stage = STAGED.with(|s| s.borrow_mut().take().unwrap());
-            let mut history_after=None;
-            let mut history_capacity=None;
-            let mut history_changed=false;
-            let mut history_append=false;
+            let mut history_after = None;
+            let mut history_capacity = None;
+            let mut history_changed = false;
+            let mut history_append = false;
             let result = if let Err(error) = executed {
                 vm.print_exception(&error);
                 vm.host_budget_abort();
@@ -1214,22 +1225,42 @@ impl Controller {
                     .map_err(|_| "Publication entries refused")?;
                 entries.extend(stage.entries.drain().map(|(_, e)| e));
                 let publish = (|| {
-                    for entry in &entries {entry.validate_created()?;}
-                    if let Some(before)=&baseline {
-                        let changed=before.validate_live(!entries.is_empty())?;
-                        if changed&&!entries.is_empty(){return Err("Combined raw existing-field edit and append publication not yet supported".into());}
+                    for entry in &entries {
+                        entry.validate_created()?;
+                    }
+                    if let Some(before) = &baseline {
+                        let changed = before.validate_live(!entries.is_empty())?;
+                        let _ = changed;
                     }
                     if self.history_enabled {
-                        let before=baseline.as_ref().ok_or("History requires existing root Mesh")?;
-                        if entries.iter().any(|e| !rustpython_vm::AsObject::is(&e.mesh,&before.mesh)) {return Err("Command history currently requires root-only managed publication".into());}
-                        let mut after=RootRestore::prepare(before.mesh.clone(),&self.budget,vm)?;
-                        after.armed=false;
-                        history_changed=!before.equivalent(&after).map_err(|_|"History state equality refused")?;
-                        if after.validate_live(false)?{return Err("History equality changed geometry after snapshot preparation".into());}
+                        let before = baseline
+                            .as_ref()
+                            .ok_or("History requires existing root Mesh")?;
+                        if entries
+                            .iter()
+                            .any(|e| !rustpython_vm::AsObject::is(&e.mesh, &before.mesh))
+                        {
+                            return Err(
+                                "Command history currently requires root-only managed publication"
+                                    .into(),
+                            );
+                        }
+                        let mut after =
+                            RootRestore::prepare(before.mesh.clone(), &self.budget, vm)?;
+                        after.armed = false;
+                        history_changed = !before
+                            .equivalent(&after)
+                            .map_err(|_| "History state equality refused")?;
+                        if after.validate_live(false)? {
+                            return Err(
+                                "History equality changed geometry after snapshot preparation"
+                                    .into(),
+                            );
+                        }
                         if history_changed {
-                            history_capacity=HistoryCapacity::prepare(&self.undo,&self.budget)?;
-                            history_append=!entries.is_empty();
-                            history_after=Some(after.freeze());
+                            history_capacity = HistoryCapacity::prepare(&self.undo, &self.budget)?;
+                            history_append = !entries.is_empty();
+                            history_after = Some(after.freeze());
                         }
                     }
                     if entries.is_empty() {
@@ -1253,6 +1284,17 @@ impl Controller {
                     for entry in &mut entries {
                         transactions.push(entry.transaction.take().unwrap());
                     }
+                    let mut projections = Vec::new();
+                    projections
+                        .try_reserve_exact(entries.len())
+                        .map_err(|_| "Mixed projection tickets refused")?;
+                    for entry in &entries {
+                        projections.push(Projection::prepare_prefix(
+                            &entry.mesh,
+                            &self.budget,
+                            true,
+                        )?);
+                    }
                     let mut locks = Vec::new();
                     locks
                         .try_reserve_exact(entries.len())
@@ -1264,8 +1306,20 @@ impl Controller {
                     prepared
                         .try_reserve_exact(entries.len())
                         .map_err(|_| "Publication tickets refused")?;
-                    for (owner, transaction) in locks.iter_mut().zip(transactions) {
-                        prepared.push(owner.prepare(transaction)?);
+                    for ((owner, transaction), projection) in
+                        locks.iter_mut().zip(transactions).zip(projections)
+                    {
+                        let ticket = owner.prepare(transaction)?;
+                        let ticket = match (ticket, projection) {
+                            (Some(ticket), Some(p)) => {
+                                Some(ticket.with_existing_fields(p.positions, p.loops)?)
+                            }
+                            (ticket, None) => ticket,
+                            (None, Some(_)) => {
+                                return Err("Mixed publication missing append ticket".into())
+                            }
+                        };
+                        prepared.push(ticket);
                         self.last_prepared += 1;
                         if self.pressure_after == Some(self.last_prepared) {
                             self.budget.set_limit(Some(self.budget.snapshot().total()));
@@ -1289,18 +1343,31 @@ impl Controller {
                 }
                 publish
             };
-            if let Some(before)=baseline.take() {
-                if result.is_err(){before.restore();}
-                else if self.history_enabled&&history_changed {
-                    let mut after=history_after.take().expect("Prepared after snapshot");
-                    after.native_state=after.mesh.owner.read().state_token();
-                    if let Some(capacity)=history_capacity.take(){capacity.apply(&mut self.undo,&mut self.undo_slots);}
+            if let Some(before) = baseline.take() {
+                if result.is_err() {
+                    before.restore();
+                } else if self.history_enabled && history_changed {
+                    let mut after = history_after.take().expect("Prepared after snapshot");
+                    after.native_state = after.mesh.owner.read().state_token();
+                    if let Some(capacity) = history_capacity.take() {
+                        capacity.apply(&mut self.undo, &mut self.undo_slots);
+                    }
                     vm.host_budget_abort();
                     self.redo.clear();
-                    self.undo.push(HistoryCommand{before:before.freeze(),after,append:history_append});
-                } else {before.dismiss();}
+                    self.undo.push(HistoryCommand {
+                        before: before.freeze(),
+                        after,
+                        append: history_append,
+                    });
+                } else {
+                    before.dismiss();
+                }
             }
-            let result=if result.is_ok()&&self.history_enabled{Ok(history_changed)}else{result};
+            let result = if result.is_ok() && self.history_enabled {
+                Ok(history_changed)
+            } else {
+                result
+            };
             vm.host_budget_reset_after_discard();
             result
         });
