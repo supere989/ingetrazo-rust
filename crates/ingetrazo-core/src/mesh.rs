@@ -84,6 +84,10 @@ impl MeshEdge {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MeshFace {
+    /// Runtime partition classification. The original native file does not
+    /// persist this derived orientation state.
+    #[serde(skip)]
+    pub interior: bool,
     pub vertices: Vec<VertexId>,
     pub holes: Vec<Vec<VertexId>>,
     pub attrs: HashMap<String, serde_json::Value>,
@@ -93,6 +97,7 @@ pub struct MeshFace {
 impl MeshFace {
     pub fn new(vertices: Vec<VertexId>) -> Self {
         Self {
+            interior: false,
             vertices,
             holes: Vec::new(),
             attrs: HashMap::new(),
@@ -224,6 +229,7 @@ impl Mesh {
 
         let face_id = self.faces.len();
         self.faces.push(MeshFace {
+            interior: false,
             vertices: loop_verts,
             holes,
             attrs: HashMap::new(),
@@ -306,11 +312,11 @@ impl Mesh {
     /// - Every edge borders exactly two faces
     /// - At least 4 faces
     pub fn is_manifold_solid(&self) -> bool {
-        if self.faces.len() < 4 || self.edges.is_empty() {
+        if self.faces.iter().filter(|f| !f.interior).count() < 4 || self.edges.is_empty() {
             return false;
         }
         for e in &self.edges {
-            if e.faces.len() != 2 {
+            if e.faces.iter().filter(|&&i| i < self.faces.len() && !self.faces[i].interior).count() != 2 {
                 return false;
             }
         }
@@ -324,6 +330,7 @@ impl Mesh {
         }
         let mut total_vol = 0.0;
         for face_id in 0..self.faces.len() {
+            if self.faces[face_id].interior { continue; }
             let tris = self.triangulate_face(face_id);
             for (p0, p1, p2) in tris {
                 // Signed tetrahedron volume: (p0 . (p1 x p2)) / 6.0

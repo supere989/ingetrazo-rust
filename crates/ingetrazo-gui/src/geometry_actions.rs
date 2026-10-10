@@ -335,4 +335,17 @@ mod tests {
         app.undo();
         assert_eq!(app.scene.mesh, before);
     }
+    #[test]
+    fn orient_partition_marking_flip_and_second_pass_noop_have_one_undo() {
+        let mut app=IngeTrazoApp::new();app.scene.mesh.clear();
+        for x in [0.,1.] {
+            let p=[DVec3::new(x,0.,0.),DVec3::new(x+1.,0.,0.),DVec3::new(x+1.,1.,0.),DVec3::new(x,1.,0.),DVec3::new(x,0.,1.),DVec3::new(x+1.,0.,1.),DVec3::new(x+1.,1.,1.),DVec3::new(x,1.,1.)];
+            for (k,f) in [[0,3,2,1],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]].into_iter().enumerate(){if x==1.&&k==5{continue;}face(&mut app,&f.map(|i|p[i]));}
+        }
+        app.scene.mesh.faces[0].vertices.reverse();let before=app.scene.mesh.clone();
+        app.orient_faces();assert_eq!(app.undo_stack.len(),1);assert_eq!(app.scene.mesh.faces.iter().filter(|f|f.interior).count(),1);let after=app.scene.mesh.clone();
+        app.orient_faces();assert_eq!(app.undo_stack.len(),1);assert_eq!(app.scene.mesh,after);
+        app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,after);
+    }
+
 }

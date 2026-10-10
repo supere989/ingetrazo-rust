@@ -121,6 +121,7 @@ fn kernel(mesh: &Mesh, sources: &mut Sources) -> Result<Manifold, String> {
         .collect();
     let mut signed_volume = 0.0;
     for fid in 0..mesh.faces.len() {
+        if mesh.faces[fid].interior { continue; }
         let triangles = mesh.triangulate_face(fid);
         if triangles.is_empty() {
             return Err("Solid has an untriangulatable face".into());

@@ -79,6 +79,9 @@ pub fn heal_faces(
             }
         }
         clean.faces[i].holes = keep;
+        if flat {
+            clean.faces[i].interior = false;
+        }
         if flat && clean.face_normal(i).dot(main.normal) < 0. {
             clean.faces[i].vertices.reverse();
             for hole in &mut clean.faces[i].holes {
@@ -201,6 +204,7 @@ pub fn orient_faces(mesh: &Mesh) -> Result<Mesh, String> {
     let frame = Frame::new(&planar::rings(mesh, &mesh.faces[dominant])[0])?;
     if mesh.vertices.iter().all(|v| frame.on_plane(v.position)) {
         for i in 0..out.faces.len() {
+            out.faces[i].interior = false;
             if out.face_normal(i).dot(frame.normal) < 0. {
                 out.faces[i].vertices.reverse();
                 for h in &mut out.faces[i].holes {
@@ -215,76 +219,171 @@ pub fn orient_faces(mesh: &Mesh) -> Result<Mesh, String> {
 }
 
 fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
-    let mut orientation = vec![None; mesh.faces.len()];
-    let mut components = vec![];
+    use glam::DVec3;
+    use std::collections::{BTreeMap, VecDeque};
+    let triangles: Vec<_> = (0..mesh.faces.len())
+        .map(|i| mesh.triangulate_face(i))
+        .collect();
+    let mut incident = BTreeMap::<(usize, usize), Vec<usize>>::new();
+    for (id, face) in mesh.faces.iter().enumerate() {
+        for ring in std::iter::once(&face.vertices).chain(&face.holes) {
+            for i in 0..ring.len() {
+                let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
+                incident.entry((a.min(b), a.max(b))).or_default().push(id);
+            }
+        }
+    }
+    let mut component = vec![usize::MAX; mesh.faces.len()];
+    let mut groups = vec![];
     for start in 0..mesh.faces.len() {
-        if orientation[start].is_some() {
+        if component[start] != usize::MAX {
             continue;
         }
-        orientation[start] = Some(false);
-        let mut queue = std::collections::VecDeque::from([start]);
-        let mut component = vec![];
-        let mut closed = true;
+        let id = groups.len();
+        let mut faces = vec![];
+        let mut queue = VecDeque::from([start]);
+        component[start] = id;
         while let Some(f) = queue.pop_front() {
-            component.push(f);
-            for ring in std::iter::once(&mesh.faces[f].vertices).chain(&mesh.faces[f].holes) {
+            faces.push(f);
+            let face = &mesh.faces[f];
+            for ring in std::iter::once(&face.vertices).chain(&face.holes) {
                 for i in 0..ring.len() {
                     let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
-                    let Some(edge) = mesh.find_edge(a, b) else {
-                        closed = false;
-                        continue;
-                    };
-                    let e = &mesh.edges[edge];
-                    if e.faces.len() != 2 {
-                        closed = false;
-                        continue;
-                    }
-                    let Some(&g) = e.faces.iter().find(|&&g| g != f) else {
-                        closed = false;
-                        continue;
-                    };
-                    let same = std::iter::once(&mesh.faces[g].vertices)
-                        .chain(&mesh.faces[g].holes)
-                        .any(|r| (0..r.len()).any(|i| r[i] == a && r[(i + 1) % r.len()] == b));
-                    let wanted = orientation[f].unwrap() ^ same;
-                    if let Some(old) = orientation[g] {
-                        if old != wanted {
-                            return Err("Non-orientable face network".into());
+                    for &other in &incident[&(a.min(b), a.max(b))] {
+                        if component[other] == usize::MAX {
+                            component[other] = id;
+                            queue.push_back(other);
                         }
-                    } else {
-                        orientation[g] = Some(wanted);
-                        queue.push_back(g);
                     }
                 }
             }
         }
-        if closed {
-            components.push(component);
+        groups.push(faces);
+    }
+    let probes: Vec<_> = (0..mesh.faces.len())
+        .map(|i| {
+            let face = &mesh.faces[i];
+            let frame = Frame::new(&planar::rings(mesh, face)[0])?;
+            let average = mesh.face_centroid(i);
+            if face.holes.is_empty()
+                && planar::inside_ring(
+                    frame.project(average),
+                    &face
+                        .vertices
+                        .iter()
+                        .map(|&v| frame.project(mesh.vertices[v].position))
+                        .collect::<Vec<_>>(),
+                )
+            {
+                return Ok((average, mesh.face_normal(i)));
+            }
+            let probe = triangles[i]
+                .iter()
+                .max_by(|(a, b, c), (x, y, z)| {
+                    (b - a)
+                        .cross(*c - *a)
+                        .length_squared()
+                        .total_cmp(&(y - x).cross(*z - *x).length_squared())
+                })
+                .map(|&(a, b, c)| (a + b + c) / 3.)
+                .ok_or("Cannot probe a degenerate orientation face")?;
+            Ok((probe, mesh.face_normal(i)))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    fn outside(
+        origin: DVec3,
+        normal: DVec3,
+        faces: &[usize],
+        tris: &[Vec<(DVec3, DVec3, DVec3)>],
+        boundary: &[bool],
+        exclude: usize,
+    ) -> bool {
+        let n = normal.normalize();
+        let u = n
+            .cross(if n.z.abs() < 0.8 { DVec3::Z } else { DVec3::Y })
+            .normalize();
+        let v = n.cross(u);
+        // Seven small deterministic jitter rays, including the exact normal.
+        // Jitter is bounded to the original 3e-4 angular cone.
+        let jitter = [
+            (0., 0.),
+            (0.73, 0.31),
+            (-0.41, 0.89),
+            (0.19, -0.67),
+            (-0.83, -0.23),
+            (0.47, -0.91),
+            (-0.59, 0.53),
+        ];
+        let votes = jitter
+            .into_iter()
+            .filter(|&(x, y)| {
+                let direction = (n + u * (x * 3e-4) + v * (y * 3e-4)).normalize();
+                let mut count = 0;
+                for &id in faces {
+                    if id == exclude || !boundary[id] {
+                        continue;
+                    }
+                    for &(a, b, c) in &tris[id] {
+                        let e1 = b - a;
+                        let e2 = c - a;
+                        let p = direction.cross(e2);
+                        let det = e1.dot(p);
+                        if det.abs() < 1e-7 {
+                            continue;
+                        }
+                        let rel = origin - a;
+                        let inv = 1. / det;
+                        let uu = rel.dot(p) * inv;
+                        if uu < -1e-7 || uu > 1. + 1e-7 {
+                            continue;
+                        }
+                        let q = rel.cross(e1);
+                        let vv = direction.dot(q) * inv;
+                        if vv < -1e-7 || uu + vv > 1. + 1e-7 {
+                            continue;
+                        }
+                        if e2.dot(q) * inv > 1e-6 {
+                            count += 1;
+                        }
+                    }
+                }
+                count % 2 == 0
+            })
+            .count();
+        votes >= 4
+    }
+    let state = |id: usize, boundary: &[bool]| {
+        let (p, n) = probes[id];
+        let faces = &groups[component[id]];
+        if outside(p, n, faces, &triangles, boundary, id) {
+            0
+        } else if outside(p, -n, faces, &triangles, boundary, id) {
+            1
         } else {
-            for f in component {
-                orientation[f] = Some(false);
-            }
+            2
         }
-    }
-    for (i, flip) in orientation.into_iter().enumerate() {
-        if flip == Some(true) {
-            mesh.faces[i].vertices.reverse();
-            for h in &mut mesh.faces[i].holes {
-                h.reverse();
-            }
+    };
+    let mut boundary = vec![true; mesh.faces.len()];
+    for _ in 0..4 {
+        let next: Vec<_> = (0..mesh.faces.len())
+            .map(|i| state(i, &boundary) != 2)
+            .collect();
+        if next == boundary {
+            break;
         }
+        boundary = next;
     }
-    for component in components {
-        let signed: f64 = component
-            .iter()
-            .flat_map(|&i| mesh.triangulate_face(i))
-            .map(|(a, b, c)| a.dot(b.cross(c)) / 6.)
-            .sum();
-        if signed < 0. {
-            for i in component {
+    let closed = incident.values().all(|faces| faces.len() >= 2)
+        && mesh.edges.iter().all(|e| !e.faces.is_empty());
+    for i in 0..mesh.faces.len() {
+        mesh.faces[i].interior = !boundary[i];
+    }
+    if closed {
+        for i in 0..mesh.faces.len() {
+            if boundary[i] && state(i, &boundary) == 1 {
                 mesh.faces[i].vertices.reverse();
-                for h in &mut mesh.faces[i].holes {
-                    h.reverse();
+                for hole in &mut mesh.faces[i].holes {
+                    hole.reverse();
                 }
             }
         }
@@ -307,6 +406,75 @@ mod tests {
         .collect();
         mesh.add_face(ids, vec![]).unwrap()
     }
+    fn box_at(mesh: &mut Mesh, x: f64, size: f64) {
+        let v: Vec<_> = [
+            (0., 0., 0.),
+            (1., 0., 0.),
+            (1., 1., 0.),
+            (0., 1., 0.),
+            (0., 0., 1.),
+            (1., 0., 1.),
+            (1., 1., 1.),
+            (0., 1., 1.),
+        ]
+        .into_iter()
+        .map(|(a, b, c)| mesh.add_vertex(DVec3::new(x + a * size, b * size, c * size)))
+        .collect();
+        for f in [
+            [0, 3, 2, 1],
+            [4, 5, 6, 7],
+            [0, 1, 5, 4],
+            [1, 2, 6, 5],
+            [2, 3, 7, 6],
+            [3, 0, 4, 7],
+        ] {
+            mesh.add_face(f.into_iter().map(|i| v[i]).collect(), vec![]);
+        }
+    }
+    #[test]
+    fn orient_marks_shared_partition_and_keeps_nested_shells_independent() {
+        let mut m = Mesh::new();
+        box_at(&mut m, 0., 1.);
+        box_at(&mut m, 1., 1.);
+        // Two adjacent boxes share a single retained wall; remove duplicate.
+        let mut faces = m.faces.clone();
+        faces.remove(11);
+        let mut network = Mesh::new();
+        for face in &faces {
+            planar::add_face(&mut network, &planar::rings(&m, face), face).unwrap();
+        }
+        network.faces[0].vertices.reverse();
+        network.faces[7].vertices.reverse();
+        assert!(!network.is_manifold_solid());
+        let out = orient_faces(&network).unwrap();
+        crate::solids::validate_solid_mesh(&out).unwrap();
+        assert_eq!(out.faces.iter().filter(|f| f.interior).count(), 1);
+        assert!(out.is_manifold_solid());
+        assert!((out.volume().unwrap() - 2.).abs() < 1e-8);
+        let again = orient_faces(&out).unwrap();
+        assert_eq!(out, again);
+        assert!(!serde_json::to_string(&out).unwrap().contains("interior"));
+        // Original component-local parity treats the inner shell as its own
+        // outward object, rather than reversing it as a global cavity.
+        let mut nested = Mesh::new();
+        box_at(&mut nested, 0., 4.);
+        let mut inner = Mesh::new();
+        box_at(&mut inner, 1., 1.);
+        for v in &mut inner.vertices {
+            v.position.y += 1.;
+            v.position.z += 1.;
+        }
+        for face in &mut inner.faces {
+            face.vertices.reverse();
+        }
+        for face in &inner.faces {
+            planar::add_face(&mut nested, &planar::rings(&inner, face), face).unwrap();
+        }
+        let out = orient_faces(&nested).unwrap();
+        assert!(out.faces.iter().all(|f| !f.interior));
+        assert!((out.volume().unwrap() - 65.).abs() < 1e-8);
+    }
+
     #[test]
     fn mother_removed_small_island_holed_and_3d_partial_gated() {
         let mut m = Mesh::new();

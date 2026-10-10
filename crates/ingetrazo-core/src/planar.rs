@@ -690,6 +690,7 @@ pub fn equivalent(a: &Mesh, b: &Mesh) -> bool {
         let Some(id) = b.faces.iter().enumerate().position(|(i, g)| {
             !used[i]
                 && f.attrs == g.attrs
+                && f.interior == g.interior
                 && f.layer == g.layer
                 && outer == cycle(b, &g.vertices)
                 && {
