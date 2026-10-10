@@ -1,0 +1,38 @@
+{
+  "push_dependencies": [
+    ".github/workflows/metal-compute-consumer.yml",
+    ".cargo/**",
+    "Cargo.toml",
+    "Cargo.lock",
+    "rust-toolchain*",
+    "vendor/**",
+    "crates/ingetrazo-metal/**",
+    "crates/ingetrazo-render/**",
+    "crates/ingetrazo-core/**",
+    "docs/audits/metal-cad2d-offscreen/original/**",
+    "docs/audits/metal-compute-callback/source/**",
+    "scripts/reference-metal-*.py",
+    "scripts/check-metal-*.py"
+  ],
+  "required_path_controls": [
+    "crates/ingetrazo-metal/src/compute_canvas.rs",
+    "crates/ingetrazo-render/src/cad2d.rs",
+    "crates/ingetrazo-core/Cargo.toml",
+    "Cargo.lock",
+    "docs/audits/metal-compute-callback/source/mixed-ui-cad.rgba",
+    "docs/audits/metal-cad2d-offscreen/original/alpha-0.rgba",
+    "scripts/check-metal-compute-callback.py",
+    "scripts/reference-metal-compute-order.py",
+    ".cargo/config.toml",
+    ".github/workflows/metal-compute-consumer.yml"
+  ],
+  "unrelated_push_controls": [
+    "docs/PARITY_PROGRESS.md",
+    "crates/ingetrazo-gui/examples/native_vulkan_shared_image_probe.rs",
+    "crates/ingetrazo-gui/src/navigation.rs"
+  ],
+  "pull_request": "unfiltered",
+  "workflow_dispatch": true,
+  "basis": "Metal Cargo dependencies on core/render, workspace dependency and toolchain configuration, vendored dependencies, embedded include_bytes references, and workflow scripts inspected.",
+  "runtime_tests_repeated": false
+}

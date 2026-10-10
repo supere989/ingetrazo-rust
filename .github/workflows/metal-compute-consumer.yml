@@ -1,5 +1,22 @@
 name: Isolated native Metal ordered compute consumer
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '.github/workflows/metal-compute-consumer.yml'
+      - '.cargo/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'rust-toolchain*'
+      - 'vendor/**'
+      - 'crates/ingetrazo-metal/**'
+      - 'crates/ingetrazo-render/**'
+      - 'crates/ingetrazo-core/**'
+      - 'docs/audits/metal-cad2d-offscreen/original/**'
+      - 'docs/audits/metal-compute-callback/source/**'
+      - 'scripts/reference-metal-*.py'
+      - 'scripts/check-metal-*.py'
+  pull_request:
+  workflow_dispatch:
 jobs:
   native-compute-consumer:
     name: Actual ordered UI and CAD compute (${{ matrix.runner }})
