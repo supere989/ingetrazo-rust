@@ -28,6 +28,8 @@ pub struct Draw {
     pub stroke_options: Option<StrokeOptions>,
     pub fill: Option<[f32; 4]>,
     pub clip: Option<Vec<PathOp>>,
+    /// Second clip intersects the first in physical paper space (e.g. hatch ring and frame).
+    pub clip_intersection: Option<Vec<PathOp>>,
 }
 pub struct Page {
     /// Source logical-device frame; paths remain physical mm. No rasterization.
@@ -223,6 +225,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             path_commands = path_commands
                 .checked_add(draw.path.len())
                 .and_then(|n| n.checked_add(draw.clip.as_ref().map_or(0, Vec::len)))
+                .and_then(|n| n.checked_add(draw.clip_intersection.as_ref().map_or(0, Vec::len)))
                 .ok_or("PDF command count overflow")?;
             if path_commands > MAX_COMMANDS {
                 return Err("PDF aggregate command budget exceeded".into());
@@ -236,6 +239,9 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             }
             validate_path(&draw.path)?;
             if let Some(clip) = &draw.clip {
+                validate_path(clip)?;
+            }
+            if let Some(clip) = &draw.clip_intersection {
                 validate_path(clip)?;
             }
             for color in draw.fill.iter().chain(draw.stroke.iter().map(|(c, _)| c)) {
@@ -317,6 +323,10 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             )
             .unwrap();
             if let Some(clip) = &draw.clip {
+                path(&mut content, clip, original_qt);
+                content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
+            }
+            if let Some(clip) = &draw.clip_intersection {
                 path(&mut content, clip, original_qt);
                 content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
             }

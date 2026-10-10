@@ -1,0 +1,18 @@
+{
+  "valid_pdf_exit": 1,
+  "rejected_pages": [
+    {
+      "case": "hollow_cap",
+      "hidden": false,
+      "different_pixels": 9789,
+      "passed": false
+    },
+    {
+      "case": "hollow_cap",
+      "hidden": true,
+      "different_pixels": 9170,
+      "passed": false
+    }
+  ],
+  "source_coordinate_exit": 101
+}

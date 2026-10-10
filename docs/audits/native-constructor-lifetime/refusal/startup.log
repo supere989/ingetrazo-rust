@@ -1,0 +1,2 @@
+STARTUP_ACTUAL_ADAPTER_REFUSAL_PASS audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1}}
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }

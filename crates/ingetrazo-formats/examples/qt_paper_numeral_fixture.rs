@@ -17,6 +17,7 @@ fn main() {
                 stroke_options: None,
                 fill: None,
                 clip: None,
+                clip_intersection: None,
             }],
         };
         let expected = format!("{} 20 m", row["encoded"].as_str().unwrap());

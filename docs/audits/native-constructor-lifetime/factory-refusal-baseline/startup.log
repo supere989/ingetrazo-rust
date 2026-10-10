@@ -1,0 +1,5 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+
+thread 'main' (1) panicked at crates/ingetrazo-gui/src/native_vulkan/mod.rs:110:14:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

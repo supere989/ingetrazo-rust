@@ -1,0 +1,2 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Error: "No suitable Vulkan adapter (or override did not match)"

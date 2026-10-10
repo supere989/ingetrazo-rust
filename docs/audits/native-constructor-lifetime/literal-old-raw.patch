@@ -1,0 +1,12 @@
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/mod.rs b/crates/ingetrazo-gui/src/native_vulkan/mod.rs
+index 357416d..13c7d35 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/mod.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/mod.rs
+@@ -192,6 +192,7 @@ impl System {
+         let mut retired=false;
+         let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+         let mut pending_swapchain=Swapchain::build(&vulkan_context,integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
++        if control.cancel==Some(resize::Stage::StartupSwapchain) { pending_swapchain.value.take(); } // Literal old raw owner without Drop
+         control.checkpoint(resize::Stage::StartupSwapchain)?;
+         let swapchain=pending_swapchain.value.as_ref().unwrap();
+ 

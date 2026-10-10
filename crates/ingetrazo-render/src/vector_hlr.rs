@@ -218,7 +218,9 @@ fn cap_triangles(
     let mut result = vec![];
     for id in 0..regions.faces.len() {
         let triangles = regions.triangulate_face(id);
-        let Some(&(a, b, c)) = triangles.first() else {
+        // A convex fan may begin with a collinear boundary chord. Probe a
+        // nondegenerate triangle, never a point on the cut boundary itself.
+        let Some(&(a, b, c)) = triangles.iter().find(|&&(a,b,c)| (b-a).cross(c-a)!=DVec3::ZERO) else {
             continue;
         };
         let p = (a + b + c) / 3.;
@@ -544,7 +546,7 @@ fn original_qt_paper_geometry(
         matrix: DMat4,
         bulk: bool,
         basis: &OriginalQtPaperBasis,
-        surfaces: &mut crate::buffer::MeshRenderBuffer,
+        _surfaces: &mut crate::buffer::MeshRenderBuffer,
         edges: &mut Vec<VectorSegment>,
         triangles: &mut Vec<[DVec3; 3]>,
     ) {
@@ -558,7 +560,6 @@ fn original_qt_paper_geometry(
                 continue;
             }
             for (a, b, c) in mesh.triangulate_face(id) {
-                let base = surfaces.vertices.len() as u32;
                 let m = DMat4::from_cols_array(&matrix.to_cols_array().map(|v| v as f32 as f64));
                 let a = a.as_vec3().as_dvec3();
                 let b = b.as_vec3().as_dvec3();
@@ -569,17 +570,7 @@ fn original_qt_paper_geometry(
                     origin + m.transform_vector3(b - a),
                     origin + m.transform_vector3(c - a),
                 ]);
-                if scene.active_section().is_some() {
-                    for p in [a, b, c] {
-                        surfaces.vertices.push(crate::buffer::Vertex::from_dvec3(
-                            original_qt_paper_point(matrix, p, bulk),
-                            DVec3::ZERO,
-                            [1.; 4],
-                            [0.; 2],
-                        ));
-                    }
-                    surfaces.indices.extend([base, base + 1, base + 2]);
-                }
+
             }
         }
         let normal = |id: usize| {
@@ -716,6 +707,7 @@ pub fn parallel_original_qt_paper_with_pool(scene:&Scene,camera:&OrbitCamera,pro
 pub struct OriginalQtPaperDrawing {
     pub segments: Vec<VectorSegment>,
     pub section_material: Vec<[DVec3; 3]>,
+    pub section_loops: Vec<Vec<DVec3>>,
 }
 pub fn original_qt_paper_drawing_with_pool(
     scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool,
@@ -731,57 +723,59 @@ pub fn original_qt_paper_drawing_for_view_with_pool(
     let basis = OriginalQtPaperBasis::from_camera(camera);
     let (surfaces, edges, triangles) = original_qt_paper_geometry(scene, &basis);
     let mut section_material = Vec::new();
+    let mut section_loops = Vec::new();
     let segments = segments_projected(scene, &basis, profiles, hidden, Some(pool),
-        surfaces, edges, triangles, true, Some(&mut section_material))?;
-    Ok(OriginalQtPaperDrawing { segments, section_material })
+        surfaces, edges, triangles, true, Some(&mut section_material), Some(&mut section_loops))?;
+    Ok(OriginalQtPaperDrawing { segments, section_material, section_loops })
 }
 fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,original_qt:bool)->std::io::Result<Vec<VectorSegment>> {
     let view = crate::paper_scene::PaperSceneView::new(scene, None);
     if original_qt {
         let basis=OriginalQtPaperBasis::from_camera(camera);
         let(surfaces,edges,triangles)=original_qt_paper_geometry(&view,&basis);
-        segments_projected(&view,&basis,profiles,hidden,pool,surfaces,edges,triangles,true,None)
+        segments_projected(&view,&basis,profiles,hidden,pool,surfaces,edges,triangles,true,None,None)
     }else{
-        segments_projected(&view,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false,None)
+        segments_projected(&view,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false,None,None)
     }
 }
-fn segments_projected(scene:&crate::paper_scene::PaperSceneView<'_>,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool,section_material:Option<&mut Vec<[DVec3;3]>>)->std::io::Result<Vec<VectorSegment>>{
+fn segments_projected(scene:&crate::paper_scene::PaperSceneView<'_>,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool,section_material:Option<&mut Vec<[DVec3;3]>>,section_loops:Option<&mut Vec<Vec<DVec3>>>)->std::io::Result<Vec<VectorSegment>>{
     let mut edges=edges;
     let mut caps = vec![];
+    let mut original_triangles=original_triangles;
+    let mut loops=Vec::new();
     if let Some(plane) = scene.active_section() {
-        let cuts = crate::section_clip::cap_segments(std::iter::once(surfaces.clone()), plane);
-        caps = cap_triangles(&cuts, plane);
-        for (a, b) in cuts {
-            edges.push(VectorSegment {
-                a,
-                b,
-                kind: LineKind::Cut,
-            });
-        }
-        crate::section_clip::mesh(&mut surfaces, plane);
+        let cuts = if original_qt {
+            let (kept,cuts)=crate::paper_section::clip_triangles(original_triangles,plane);
+            original_triangles=kept;
+            loops=crate::paper_section::closed_loops(&cuts);
+            cuts
+        } else {
+            let cuts=crate::section_clip::cap_segments(std::iter::once(surfaces.clone()),plane);
+            crate::section_clip::mesh(&mut surfaces,plane);
+            cuts
+        };
+        caps=cap_triangles(&cuts,plane);
+        for (a,b) in cuts {edges.push(VectorSegment {a,b,kind:LineKind::Cut});}
     }
-    if let Some(material)=section_material { material.extend_from_slice(&caps); }
-    let triangles = if original_qt&&scene.active_section().is_none() {original_triangles.into_iter().map(|t|t.map(|p|project(p,camera))).collect::<Vec<_>>()} else {surfaces
-        .indices
-        .chunks_exact(3)
-        .map(|ids| {
-            ids.iter()
-                .map(|&i| {
-                    project(
-                        DVec3::from_array(surfaces.vertices[i as usize].position.map(f64::from)),
-                        camera,
-                    )
-                })
-                .collect::<Vec<_>>()
-        })
-        .map(|v| [v[0], v[1], v[2]])
-        .collect::<Vec<_>>()};
+    if let Some(material)=section_material {material.extend_from_slice(&caps);}
+    if let Some(output)=section_loops {output.extend(loops.iter().cloned());}
+    let triangles = if original_qt {
+        original_triangles.into_iter().map(|t|t.map(|p|project(p,camera))).collect::<Vec<_>>()
+    } else {
+        surfaces.indices.chunks_exact(3).map(|ids| std::array::from_fn(|i| project(DVec3::from_array(surfaces.vertices[ids[i] as usize].position.map(f64::from)),camera))).collect::<Vec<_>>()
+    };
     let triangle_index=crate::triangle_index::TriangleIndex::new(triangles.iter().copied());
-    let boundary = cap_boundary(&caps, camera);
-    let cap_plane = caps
-        .iter()
-        .map(|tri| tri.map(|p| project(p, camera)))
-        .find(|&t| bary(DVec2::ZERO, t).is_some());
+    let boundary = if original_qt {
+        loops.iter().flat_map(|ring| (0..ring.len()).map(|i|
+            (project(ring[i],camera),project(ring[(i+1)%ring.len()],camera)))).collect()
+    } else {cap_boundary(&caps,camera)};
+    let cap_plane = if original_qt {
+        scene.active_section().filter(|_|!loops.is_empty()).map(|plane|
+            crate::paper_section::depth_triangle(plane).map(|p|project(p,camera)))
+            .filter(|t|((t[1].x-t[0].x)*(t[2].y-t[0].y)
+                -(t[1].y-t[0].y)*(t[2].x-t[0].x)).abs()>=1e-9)
+    } else {caps.iter().map(|tri|tri.map(|p|project(p,camera)))
+        .find(|&t|bary(DVec2::ZERO,t).is_some())};
     let min = triangles
         .iter()
         .flatten()

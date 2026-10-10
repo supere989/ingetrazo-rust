@@ -72,16 +72,20 @@ impl<'a> PaperSceneView<'a> {
         let Some(plane) = self.active_section() else {
             return Some((a, b));
         };
-        let da = plane.signed_distance(a);
-        let db = plane.signed_distance(b);
-        if da > 1e-7 && db > 1e-7 {
+        let normal = plane.normal.as_vec3().as_dvec3();
+        let point = plane.point.as_vec3().as_dvec3();
+        let c = normal.x * point.x + normal.y * point.y + normal.z * point.z;
+        let distance = |p: DVec3| p.x * normal.x + p.y * normal.y + p.z * normal.z - c;
+        let da = distance(a);
+        let db = distance(b);
+        if da > 1e-9 && db > 1e-9 {
             return None;
         }
-        if da <= 1e-7 && db <= 1e-7 {
+        if da <= 1e-9 && db <= 1e-9 {
             return Some((a, b));
         }
         let cut = a.lerp(b, da / (da - db));
-        Some(if da > 1e-7 { (cut, b) } else { (a, cut) })
+        Some(if da > 1e-9 { (cut, b) } else { (a, cut) })
     }
 }
 impl std::ops::Deref for PaperSceneView<'_> {

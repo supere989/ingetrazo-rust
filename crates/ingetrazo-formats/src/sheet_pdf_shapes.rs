@@ -102,6 +102,7 @@ fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
         fill,
         stroke_options: None,
         clip: command.clip.as_ref().map(|p| polygon(p, offset)),
+        clip_intersection: None,
     })
 }
 /// Partial painter integration: all visible unsupported content fails closed.
@@ -168,6 +169,7 @@ where
                     path_commands = path_commands
                         .checked_add(next.path.len())
                         .and_then(|n| n.checked_add(next.clip.as_ref().map_or(0, Vec::len)))
+                        .and_then(|n| n.checked_add(next.clip_intersection.as_ref().map_or(0, Vec::len)))
                         .ok_or("PDF command count overflow")?;
                     if path_commands > crate::sheet_pdf::MAX_COMMANDS {
                         return Err("PDF aggregate command budget exceeded".into());
@@ -183,6 +185,7 @@ where
                     path_commands = path_commands
                         .checked_add(next.path.len())
                         .and_then(|n| n.checked_add(next.clip.as_ref().map_or(0, Vec::len)))
+                        .and_then(|n| n.checked_add(next.clip_intersection.as_ref().map_or(0, Vec::len)))
                         .ok_or("PDF command count overflow")?;
                     if path_commands > crate::sheet_pdf::MAX_COMMANDS {
                         return Err("PDF aggregate command budget exceeded".into());
@@ -235,6 +238,7 @@ where
             commands = commands
                 .checked_add(draw.path.len())
                 .and_then(|n| n.checked_add(draw.clip.as_ref().map_or(0, Vec::len)))
+                .and_then(|n| n.checked_add(draw.clip_intersection.as_ref().map_or(0, Vec::len)))
                 .ok_or("PDF command count overflow")?;
         }
         if commands > crate::sheet_pdf::MAX_COMMANDS {

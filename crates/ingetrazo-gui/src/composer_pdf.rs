@@ -115,9 +115,6 @@ pub(super) fn view_draws(
         frame.profiles,
         frame.hidden_lines,
     )?;
-    if frame.cut_fill != "none" && !drawing.section_material.is_empty() {
-        return Err("PDF section fill painter remains unavailable".into());
-    }
     let ink = &drawing.segments;
     if ink.is_empty() {
         return Err("PDF empty view placeholder text painter remains unavailable".into());
@@ -171,7 +168,11 @@ pub(super) fn view_draws(
         stroke_options: None,
         fill: Some([1.; 4]),
         clip: None,
+        clip_intersection: None,
     }];
+    if let Some(fill) = section_fill(frame, &drawing.section_loops, &point)? {
+        draws.push(fill);
+    }
     for (index, path) in paths.into_iter().enumerate() {
         if path.is_empty() {
             continue;
@@ -199,6 +200,7 @@ pub(super) fn view_draws(
             }),
             fill: None,
             clip: Some(rect(frame.rect.w, frame.rect.h)),
+            clip_intersection: None,
         });
     }
     if frame.border {
@@ -225,7 +227,113 @@ pub(super) fn view_draws(
             }),
             fill: None,
             clip: None,
+            clip_intersection: None,
         });
     }
     Ok(draws)
+}
+
+/// Source _paint_cut_fills_mm: one even-odd compound path, filled below ink;
+/// hatch phase is local to the frame and clipped by both material and frame.
+fn section_fill(
+    frame: &ViewFrame,
+    loops: &[Vec<glam::DVec3>],
+    point: &impl Fn(glam::DVec3) -> [f64; 2],
+) -> Result<Option<Draw>, String> {
+    if loops.is_empty() || frame.cut_fill == "none" {
+        return Ok(None);
+    }
+    let mut path = Vec::new();
+    let mut lo = [f64::INFINITY; 2];
+    let mut hi = [f64::NEG_INFINITY; 2];
+    for ring in loops {
+        if ring.len() < 3 {
+            continue;
+        }
+        for (i, p) in ring.iter().enumerate() {
+            let p = point(*p);
+            if p.iter().any(|v| !v.is_finite() || v.abs() > 1_000_000.) {
+                return Err("Invalid projected PDF section loop".into());
+            }
+            for axis in 0..2 {
+                lo[axis] = lo[axis].min(p[axis]);
+                hi[axis] = hi[axis].max(p[axis]);
+            }
+            path.push(if i == 0 {
+                PathOp::Move(p)
+            } else {
+                PathOp::Line(p)
+            });
+            if path.len() > MAX_COMMANDS - 25 {
+                return Err("PDF section loop command budget exceeded".into());
+            }
+        }
+        path.push(PathOp::Close);
+    }
+    if path.is_empty() {
+        return Ok(None);
+    }
+    let color =
+        ingetrazo_core::sheet_color::parse_sheet_color(if frame.cut_fill_color.is_empty() {
+            "#595e69"
+        } else {
+            &frame.cut_fill_color
+        })?
+        .map(|v| v as f32 / 255.);
+    let mut draw = Draw {
+        origin_mm: [frame.rect.x, frame.rect.y],
+        even_odd: true,
+        path,
+        stroke: None,
+        stroke_options: None,
+        fill: Some(color),
+        clip: Some(rect(frame.rect.w, frame.rect.h)),
+        clip_intersection: None,
+    };
+    if frame.cut_fill == "hatch" {
+        if !frame.cut_hatch_mm.is_finite() {
+            return Err("Invalid physical PDF hatch step".into());
+        }
+        let step = if frame.cut_hatch_mm == 0. {
+            1.5
+        } else {
+            frame.cut_hatch_mm
+        }
+        .max(0.3);
+        let mut c = ((lo[0] + lo[1]) / step).floor() * step;
+        let end = hi[0] + hi[1];
+        let count = ((end - c) / step).floor() + 1.;
+        if !count.is_finite() || count > (MAX_COMMANDS / 2) as f64 {
+            return Err("PDF hatch command budget exceeded".into());
+        }
+        let mut hatch = Vec::new();
+        while c <= end {
+            let a = lo[0].max(c - hi[1]);
+            let b = hi[0].min(c - lo[1]);
+            if b > a {
+                hatch.push(PathOp::Move([a, c - a]));
+                hatch.push(PathOp::Line([b, c - b]));
+            }
+            let next = c + step;
+            if next <= c {
+                return Err("PDF hatch phase cannot advance".into());
+            }
+            c = next;
+        }
+        draw.clip_intersection = Some(std::mem::replace(&mut draw.path, hatch));
+        draw.fill = None;
+        let width = if frame.pen_edge_mm == 0. {
+            0.18
+        } else {
+            frame.pen_edge_mm
+        }
+        .max(0.05);
+        draw.stroke = Some((color, width));
+        draw.stroke_options = Some(StrokeOptions {
+            cap: 2,
+            join: 2,
+            dash: Vec::new(),
+        });
+    }
+    Ok(Some(draw))
 }

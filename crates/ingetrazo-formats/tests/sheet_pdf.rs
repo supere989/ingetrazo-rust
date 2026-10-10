@@ -19,6 +19,7 @@ fn page() -> Page {
             fill: Some([37. / 255., 147. / 255., 93. / 255., 1.]),
             stroke_options: None,
             clip: None,
+            clip_intersection: None,
         }],
     }
 }
@@ -280,4 +281,21 @@ fn invalid_qt_paper_export_preserves_destination_and_rejects_stroke_options() {
         assert_eq!(std::fs::read(&dest).unwrap(), b"original");
     }
     std::fs::remove_file(dest).unwrap();
+}
+
+#[test]
+fn second_physical_clip_is_admitted_before_atomic_destination_write() {
+    let destination =
+        std::env::temp_dir().join(format!("clip-admission-{}.pdf", uuid::Uuid::new_v4()));
+    std::fs::write(&destination, b"sentinel").unwrap();
+    for clip in [
+        vec![PathOp::Move([f64::NAN, 0.])],
+        vec![PathOp::Move([0., 0.]); sheet_pdf::MAX_COMMANDS],
+    ] {
+        let mut p = page();
+        p.draws[0].clip_intersection = Some(clip);
+        assert!(sheet_pdf::save_original_qt_paper(&destination, &[p]).is_err());
+        assert_eq!(std::fs::read(&destination).unwrap(), b"sentinel");
+    }
+    std::fs::remove_file(destination).unwrap();
 }
