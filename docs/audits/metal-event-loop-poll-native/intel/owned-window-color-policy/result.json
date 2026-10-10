@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "presentation_passed": true,
+  "physical_mac_claim": false,
+  "source_revision": "4062d4d30c1286a3d71d7f02b1bcb5d7b146a567",
+  "binary_sha256": "6839b894172797dcfa5f5bdb12f0b09e4d6ed8fdf2d87505733edd7585938aa9",
+  "presentation_command": [
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/target/debug/examples/presentation_probe",
+    "--automatic",
+    "--owned-window-id=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-window-color-policy/own-window.json",
+    "--owned-window-ack=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-window-color-policy/capture-finished",
+    "--diagnostic-drawable-readback",
+    "--diagnostic-window-colorspace"
+  ],
+  "native_snapshot": {
+    "window_id": 61,
+    "submitted": 6,
+    "retired": 4,
+    "pending": 2,
+    "displayed": 0,
+    "skipped": 4,
+    "completed_inflight": 1,
+    "actual_drawable_center": {
+      "submission": 5,
+      "rgba": [
+        20,
+        51,
+        89,
+        255
+      ]
+    }
+  },
+  "capture_command": [
+    "/usr/sbin/screencapture",
+    "-x",
+    "-o",
+    "-l61",
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-window-color-policy/own-window.png"
+  ],
+  "capture_returncode": 0,
+  "capture": {
+    "width": 800,
+    "height": 628,
+    "points": [
+      [
+        400,
+        314
+      ],
+      [
+        200,
+        314
+      ],
+      [
+        600,
+        314
+      ],
+      [
+        400,
+        471
+      ]
+    ],
+    "rgb": [
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ]
+    ],
+    "visible_clear": true
+  },
+  "image_sha256": "d4c87c98c18966124110df19a129cfd11e72418dd15d71e72b7faa8fadef626b",
+  "capture_acknowledged": true,
+  "presentation_returncode": 0,
+  "elapsed_seconds": 2.7164261660000193
+}

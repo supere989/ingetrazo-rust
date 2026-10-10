@@ -1,0 +1,80 @@
+{
+  "cancel_verified": false,
+  "choice": "discard",
+  "close_events": 1,
+  "confirm_unsaved": true,
+  "current_output_has_modal": true,
+  "current_submission_floor": 10,
+  "deadline_presentation_diagnostics": "color_metadata=window_color_space=\"Unknown Display colorspace\"; layer_color_space=\"kCGColorSpaceSRGB\"; layer_contents_format=\"RGBA8\"; extent=(1280, 800); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; hidden=false; drawable_size=CGSize { width: 1280.0, height: 800.0 }; presentsWithTransaction=false; displaySyncEnabled=true; submitted=11; retired=8; displayed=3; skipped=5; frames=[submission=9 id=8 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=878.9182713690001 gpuEnd=878.919914219 callback_seen=false callback_time=0; submission=10 id=9 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=879.978691399 gpuEnd=879.980335447 callback_seen=false callback_time=0; submission=11 id=10 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=881.026511507 gpuEnd=881.028124096 callback_seen=false callback_time=0]",
+  "deadline_window_visible": true,
+  "displayed": 3,
+  "error": "Bounded Cocoa lifecycle deadline phase=1 close=1 move=0 press=0 release=0 displayed=3",
+  "last_modal_center": [
+    615.5,
+    424.6820068359375
+  ],
+  "modal_candidates": [
+    [
+      5,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ],
+    [
+      6,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ],
+    [
+      7,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ],
+    [
+      8,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ],
+    [
+      9,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ],
+    [
+      10,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ],
+    [
+      11,
+      [
+        615.5,
+        424.6820068359375
+      ]
+    ]
+  ],
+  "modal_label": "discard",
+  "modal_submission": null,
+  "moves": 0,
+  "passed": false,
+  "pending": 3,
+  "phase": 1,
+  "physical_input_claim": false,
+  "physical_mac_claim": false,
+  "presentation_diagnostics": "color_metadata=window_color_space=\"Unknown Display colorspace\"; layer_color_space=\"kCGColorSpaceSRGB\"; layer_contents_format=\"RGBA8\"; extent=(1280, 800); visible=Some(false); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; hidden=false; drawable_size=CGSize { width: 1280.0, height: 800.0 }; presentsWithTransaction=false; displaySyncEnabled=true; submitted=11; retired=8; displayed=3; skipped=5; frames=[submission=9 id=8 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=878.9182713690001 gpuEnd=878.919914219 callback_seen=false callback_time=0; submission=10 id=9 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=879.978691399 gpuEnd=879.980335447 callback_seen=false callback_time=0; submission=11 id=10 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=881.026511507 gpuEnd=881.028124096 callback_seen=false callback_time=0]",
+  "presses": 0,
+  "releases": 0,
+  "skipped": 5,
+  "ui_turns": 11
+}

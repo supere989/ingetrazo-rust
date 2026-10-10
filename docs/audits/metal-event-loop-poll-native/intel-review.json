@@ -1,0 +1,15 @@
+{
+  "source": "4062d4d30c1286a3d71d7f02b1bcb5d7b146a567",
+  "run": 38064941727,
+  "job": 114250570131,
+  "job_name": "Native Metal framework link (macos-15-intel)",
+  "artifact": 11674572019,
+  "archive_sha256": "167e3b1f13cf63e797885ab8f3fc6d42190962bd874e49f9172b6e2e1c692ccd",
+  "displayed": 10,
+  "skipped": 1,
+  "submitted": 11,
+  "retired": 11,
+  "pending": 0,
+  "diagnostic_passed": true,
+  "overall_job_passed": false
+}

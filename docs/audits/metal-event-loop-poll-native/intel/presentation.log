@@ -1,0 +1,10 @@
+Native Metal WSI: device=Apple Paravirtual device; unified=false; FOUNDATION ONLY
+Metal presentation source color space: sRGB
+Metal native display synchronization: true
+Metal layer-hosting order: backed-off-then-custom-layer-before-wantsLayer; prior_wantsLayer=true; actual_wantsLayer=true; view_layer_matches=true
+Metal WSI attachment: view_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; layer_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; layer_hidden=false; window_visible=Some(true); drawable_size=CGSize { width: 0.0, height: 0.0 }
+WSI actual Focused(false)
+WSI actual Occluded(false)
+WSI actual Focused(true)
+WSI observation: color_metadata=window_color_space="Unknown Display colorspace"; layer_color_space="kCGColorSpaceSRGB"; layer_contents_format="RGBA8"; extent=(800, 600); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; hidden=false; drawable_size=CGSize { width: 800.0, height: 600.0 }; presentsWithTransaction=false; displaySyncEnabled=true; submitted=2; retired=1; displayed=1; skipped=0; frames=[submission=2 id=1 command=MTLCommandBufferStatus(2) presentedTime=0 gpuStart=0 gpuEnd=0 callback_seen=false callback_time=0]
+PASS actual CAMetalLayer displayed=11 skipped=4 and exact requested resize (15, 15, 0)

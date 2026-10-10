@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "presentation_claim": false,
+  "physical_mac_claim": false,
+  "native_window_color_space": "Unknown Display colorspace",
+  "native_qnsview_effective_color_space": "Unknown Display colorspace",
+  "qt_surface_color_space_valid": true,
+  "qt_surface_color_space_description": "Display",
+  "native_view_layer_class": "QContainerLayer",
+  "native_view_layer_contents_format": "RGBA8",
+  "qt": "6.12.0",
+  "owned_nswindow_id": 36,
+  "owned_nsview_class": "NSKVONotifying_QNSView",
+  "actual_QPainter": true,
+  "paint_events": 3,
+  "raw_source_rgba": [
+    20,
+    51,
+    89,
+    255
+  ],
+  "raw_source_sha256": "24af2d358196b706bd889e2458001783d2d0d8134d40e4bb48db1c295325e28a",
+  "capture_command": [
+    "/usr/sbin/screencapture",
+    "-x",
+    "-l",
+    "36",
+    "docs/audits/metal-native-link-ci/qt-owned-clear/own-window.png"
+  ],
+  "capture_status": 0,
+  "capture": {
+    "width": 912,
+    "height": 740,
+    "points": [
+      [
+        456,
+        370
+      ],
+      [
+        228,
+        370
+      ],
+      [
+        684,
+        370
+      ],
+      [
+        456,
+        555
+      ]
+    ],
+    "rgb": [
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ]
+    ],
+    "visible_clear": true
+  },
+  "png_sha256": "87a14270aa5e44767f215302f002c5dee40322340d5e99dea0019ebbdb0c7604",
+  "png_color_metadata": [
+    {
+      "chunk": "iCCP",
+      "bytes": 2740,
+      "sha256": "80c7019d38bb282221a036e4d068bdecb0d1249c60d6a56f79e3bef50de983c2"
+    }
+  ],
+  "capture_matches_raw_source_bytes": true,
+  "elapsed_seconds": 3.120359413000074
+}
