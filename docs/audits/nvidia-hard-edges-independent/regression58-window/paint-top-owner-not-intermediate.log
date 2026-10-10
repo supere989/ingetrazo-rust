@@ -1,0 +1,9 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Contour metrics: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.239116, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+GPU allocation budget: 21004632 committed bytes; peakcommitted 63930712; peakadmitted 63930712; globalcap None; heaps [HeapBudget { capacity: 34190917632, limit: 27352734104, live_budget: Some(26624891286), live_usage: 62521344, reserved: 0, committed: 21004528 }, HeapBudget { capacity: 99445232640, limit: 79556186112, live_budget: Some(89500709376), live_usage: 4251648, reserved: 0, committed: 104 }]
+Native world GPU surface uploads: 1

@@ -1,0 +1,12 @@
+{
+  "source_commit": "49d7c53a55a08ac605a3b652d9ccaa346901e9a4",
+  "source_candidate": "25a7e7b plus prior53/203/2afa/655/38/774/ab",
+  "binary_sha256": {
+    "native_vulkan_transparent_probe": "9ba64cc14aceb84c71cbd58e1a07825c3db93a42f34f548f08ee576a6b3fbb00",
+    "native_vulkan_transparent_fixture": "937fcd613dced192b646e40c1357adf89a031402d296144e279730663d383f3e",
+    "native_vulkan_contour_chunks_probe": "f9de93bc769f642e5e21726261eb648d8850b00bcfea391f236aabae8a99fb08"
+  },
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "backend": "Actual NVIDIA RTX5090 originalQt/OpenGL vsfixed/manualGPUclip/headless andowned-window Vulkan",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c"
+}

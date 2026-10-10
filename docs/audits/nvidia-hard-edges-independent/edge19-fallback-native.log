@@ -1,0 +1,585 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=false; unsupported/forced fallback is direct GPU endpoint clipping
+{
+  "cases": [
+    {
+      "case": "red-half-white",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.717306, compact_preprocess_ms: 0.0, warm_cache_ms: 0.00552, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "red-half-black",
+      "center_rgba": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.312335, compact_preprocess_ms: 0.0, warm_cache_ms: 0.012594, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "opacity-bucket-order",
+      "center_rgba": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.856461, compact_preprocess_ms: 0.0, warm_cache_ms: 0.005540000000000001, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "opaque-front",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 2, cold_build_ms: 4.6272839999999995, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0066229999999999995, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 288,
+      "hard_edge_endpoint_count": 24,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "opaque-back",
+      "center_rgba": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 2, cold_build_ms: 3.9565779999999995, compact_preprocess_ms: 0.0, warm_cache_ms: 0.006412, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 288,
+      "hard_edge_endpoint_count": 24,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "equal-opacity-forward",
+      "center_rgba": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.405788, compact_preprocess_ms: 0.0, warm_cache_ms: 0.006051, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "center_rgba": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.356137, compact_preprocess_ms: 0.0, warm_cache_ms: 0.004949, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "opacity-995",
+      "center_rgba": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.303337, compact_preprocess_ms: 0.0, warm_cache_ms: 0.005941, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.9950000047683716,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.9950000047683716,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "opacity-zero",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.901043, compact_preprocess_ms: 0.0, warm_cache_ms: 0.007204, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.0,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "section-clipped",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.905844, compact_preprocess_ms: 0.0, warm_cache_ms: 0.005751, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.4745940000000002, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000441, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.409099, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000511, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.089689, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000521, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.040397, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000521, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.039273999999999996, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000561, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.04772, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000671, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.506213, compact_preprocess_ms: 0.0, warm_cache_ms: 0.085552, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.091385, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000701, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 120,
+      "hard_edge_endpoint_count": 10,
+      "opacity_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.173831, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000491, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 120,
+      "hard_edge_endpoint_count": 10,
+      "opacity_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [],
+      "surface_bytes": 0
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"
+}

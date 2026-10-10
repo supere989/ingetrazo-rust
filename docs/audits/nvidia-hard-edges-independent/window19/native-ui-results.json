@@ -1,0 +1,348 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "red-half-white",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "red-half-white.log"
+    },
+    {
+      "case": "red-half-black",
+      "center_rgba": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "red-half-black.log"
+    },
+    {
+      "case": "opacity-bucket-order",
+      "center_rgba": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-bucket-order.log"
+    },
+    {
+      "case": "opaque-front",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opaque-front.log"
+    },
+    {
+      "case": "opaque-back",
+      "center_rgba": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opaque-back.log"
+    },
+    {
+      "case": "equal-opacity-forward",
+      "center_rgba": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "passed": true,
+      "backend_log": "equal-opacity-forward.log"
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "center_rgba": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "passed": true,
+      "backend_log": "equal-opacity-reversed.log"
+    },
+    {
+      "case": "opacity-995",
+      "center_rgba": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-995.log"
+    },
+    {
+      "case": "opacity-zero",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-zero.log"
+    },
+    {
+      "case": "section-clipped",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "section-clipped.log"
+    },
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-asymmetric-line.log"
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-reflected-line.log"
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-hidden-group.log"
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-hidden-edge.log"
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-hidden-layer.log"
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-soft-line.log"
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-clipped-line.log"
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-hidden_line-occluded-line.log"
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-xray-occluded-line.log"
+    }
+  ],
+  "scope": "Actual NVIDIA Vulkan swapchain plus production World and encoded egui adapter; capture strictly newly created own named client window, clean own WM close. No desktop/root image capture."
+}

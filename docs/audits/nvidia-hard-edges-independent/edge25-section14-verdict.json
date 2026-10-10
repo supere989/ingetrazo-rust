@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "closed",
+      "native": 20164,
+      "original": 20164,
+      "passed": true
+    },
+    {
+      "case": "shared-slab",
+      "native": 0,
+      "original": 0,
+      "passed": true
+    },
+    {
+      "case": "shared-slab-reversed",
+      "native": 20164,
+      "original": 20164,
+      "passed": true
+    },
+    {
+      "case": "transparent",
+      "native": 0,
+      "original": 0,
+      "passed": true
+    },
+    {
+      "case": "duplicate",
+      "native": 20164,
+      "original": 20164,
+      "passed": true
+    },
+    {
+      "case": "coplanar-backface",
+      "native": 0,
+      "original": 0,
+      "passed": true
+    },
+    {
+      "case": "closed-iso",
+      "native": 9924,
+      "original": 9925,
+      "passed": true
+    },
+    {
+      "case": "shared-slab-iso",
+      "native": 8518,
+      "original": 8519,
+      "passed": true
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "native": 9924,
+      "original": 9925,
+      "passed": true
+    },
+    {
+      "case": "closed-front",
+      "native": 0,
+      "original": 0,
+      "passed": true
+    },
+    {
+      "case": "hollow",
+      "native": 14400,
+      "original": 14400,
+      "passed": true
+    },
+    {
+      "case": "hollow-iso",
+      "native": 6951,
+      "original": 6970,
+      "passed": true
+    },
+    {
+      "case": "transparent-hollow",
+      "native": 0,
+      "original": 0,
+      "passed": true
+    },
+    {
+      "case": "hollow-seam",
+      "native": 15260,
+      "original": 15552,
+      "passed": true
+    }
+  ],
+  "scope": "Previously frozen original GL corpus exactzero/5%positive boundedcoverage, not wholepixel equality"
+}

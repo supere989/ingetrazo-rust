@@ -1,0 +1,18 @@
+[
+  {
+    "negative": "missing-case",
+    "rejected": true
+  },
+  {
+    "negative": "duplicate-case",
+    "rejected": true
+  },
+  {
+    "negative": "wrong-rgba",
+    "rejected": true
+  },
+  {
+    "negative": "blank-visible-edge",
+    "rejected": true
+  }
+]

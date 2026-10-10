@@ -1,0 +1,128 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial1: 0.015136ms
+Corpus closed-front limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 4.257786, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial2: 0.012224ms
+Corpus closed-front limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.543425999999999, compact_preprocess_ms: 0.005580999999999997, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ closed-front: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial3: 0.011648ms
+Corpus closed-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.284078, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial4: 0.011616ms
+Corpus closed-iso limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.777938, compact_preprocess_ms: 0.004618999999999999, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ closed-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial5: 0.015232ms
+Corpus closed limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.078039, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial6: 0.011552ms
+Corpus closed limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.520423, compact_preprocess_ms: 0.00443, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ closed: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial7: 0.011296ms
+Corpus coplanar-backface limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.990294, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial8: 0.011168ms
+Corpus coplanar-backface limitSome(36): ContourMetrics { additional_position_bytes: 72, batches: 2, cold_build_ms: 3.603262, compact_preprocess_ms: 0.002113, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ coplanar-backface: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial9: 0.013536ms
+Corpus duplicate limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.380531, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial10: 0.014016ms
+Corpus duplicate limitSome(36): ContourMetrics { additional_position_bytes: 1440, batches: 40, cold_build_ms: 5.502837, compact_preprocess_ms: 0.007242999999999997, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ duplicate: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial11: 0.014016ms
+Corpus shared-slab-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.5386990000000003, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial12: 0.015360ms
+Corpus shared-slab-iso limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 6.178472, compact_preprocess_ms: 0.005560999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial13: 0.015296ms
+Corpus shared-slab-reversed-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 7.359171, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial14: 0.015520ms
+Corpus shared-slab-reversed-iso limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 4.8234840000000005, compact_preprocess_ms: 0.0054179999999999975, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab-reversed-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial15: 0.013760ms
+Corpus shared-slab-reversed limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.234275, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial16: 0.016384ms
+Corpus shared-slab-reversed limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 5.3295, compact_preprocess_ms: 0.006479999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab-reversed: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial17: 0.015072ms
+Corpus shared-slab limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 14.503466, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial18: 0.011520ms
+Corpus shared-slab limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 5.093545, compact_preprocess_ms: 0.007404999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial19: 0.010048ms
+Corpus transparent limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.938767, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial20: 0.012800ms
+Corpus transparent limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.800241000000001, compact_preprocess_ms: 0.006181999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ transparent: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial21: 0.014080ms
+Corpus hollow-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.768162, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial22: 0.013216ms
+Corpus hollow-iso limitSome(36): ContourMetrics { additional_position_bytes: 1152, batches: 32, cold_build_ms: 5.675523, compact_preprocess_ms: 0.007883999999999997, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ hollow-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial23: 0.012416ms
+Corpus hollow-seam limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.544971, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial24: 0.014304ms
+Corpus hollow-seam limitSome(36): ContourMetrics { additional_position_bytes: 1728, batches: 48, cold_build_ms: 6.385793, compact_preprocess_ms: 0.007831999999999993, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ hollow-seam: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial25: 0.012608ms
+Corpus hollow limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.40121, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial26: 0.011840ms
+Corpus hollow limitSome(36): ContourMetrics { additional_position_bytes: 1152, batches: 32, cold_build_ms: 5.350248000000001, compact_preprocess_ms: 0.005670999999999997, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ hollow: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial27: 0.009920ms
+Corpus transparent-hollow limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.6327, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial28: 0.010944ms
+Corpus transparent-hollow limitSome(36): ContourMetrics { additional_position_bytes: 1152, batches: 32, cold_build_ms: 4.560218000000001, compact_preprocess_ms: 0.005338999999999999, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ transparent-hollow: normal/36-byte GPU chunks exact whole-image equality
