@@ -1,0 +1,101 @@
+{
+  "provenance": {
+    "rust_commit": "ed79c9a8ca706d8c20c2d1fc13c62b64cf467c6e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "closed",
+      "magenta_fill_pixels": 20164,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "shared-slab",
+      "magenta_fill_pixels": 0,
+      "faces": 11,
+      "interior_flags": 1,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "shared-slab-reversed",
+      "magenta_fill_pixels": 20164,
+      "faces": 11,
+      "interior_flags": 1,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "transparent",
+      "magenta_fill_pixels": 0,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "duplicate",
+      "magenta_fill_pixels": 20164,
+      "faces": 20,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "coplanar-backface",
+      "magenta_fill_pixels": 0,
+      "faces": 1,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "closed-iso",
+      "magenta_fill_pixels": 9925,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "shared-slab-iso",
+      "magenta_fill_pixels": 8519,
+      "faces": 11,
+      "interior_flags": 1,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "magenta_fill_pixels": 9925,
+      "faces": 11,
+      "interior_flags": 1,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "closed-front",
+      "magenta_fill_pixels": 0,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    }
+  ],
+  "scope": "Original Qt OpenGL on Linux X11 Mesa; shared interior slab suppresses cap although closed control fills. A physical correction that excludes the slab is an intentional divergence. These are literal pixel classification controls, not broad rendering parity."
+}

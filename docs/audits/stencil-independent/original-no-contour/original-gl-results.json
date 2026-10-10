@@ -1,0 +1,20 @@
+{
+  "provenance": {
+    "rust_commit": "ed79c9a8ca706d8c20c2d1fc13c62b64cf467c6e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "closed",
+      "magenta_fill_pixels": 20736,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    }
+  ],
+  "scope": "CONTROL original cut-contour draw disabled at runtime only; shared interior slab suppresses cap although closed control fills. A physical correction that excludes the slab is an intentional divergence. These are literal pixel classification controls, not broad rendering parity."
+}
