@@ -650,6 +650,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             ui.separator();
 
+            ui.menu_button(tr("Sections"),|ui|crate::section_actions::render_section_controls(app,ui));
             if ui.button(tr("Section Plane")).clicked() {
                 app.set_tool(ToolType::SectionPlane);
                 ui.close_menu();

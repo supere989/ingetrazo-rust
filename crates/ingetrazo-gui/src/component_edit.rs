@@ -10,6 +10,7 @@ pub struct ComponentEditSession {
     original_redo: Vec<Scene>,
     group_id: uuid::Uuid,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
+    section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
 
 impl IngeTrazoApp {
@@ -59,7 +60,7 @@ impl IngeTrazoApp {
         let mut session=ComponentEditSession{
             original_scene:self.scene.clone(),original_camera:self.camera.clone(),
             original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
-            group_id:group.id,dimension_baseline:vec![],
+            group_id:group.id,dimension_baseline:vec![],section_baseline:vec![],
         };
         let mut edit=Scene::new();
         edit.mesh=group.mesh;edit.groups=group.children;
@@ -70,6 +71,7 @@ impl IngeTrazoApp {
         edit.dimensions=self.scene.dimensions.clone();
         let inverse=group.transform.inverse();
         for dimension in &mut edit.dimensions{dimension.start=inverse.transform_point3(dimension.start);dimension.end=inverse.transform_point3(dimension.end);dimension.offset=inverse.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;}
+        edit.section_planes=self.scene.section_planes.clone();edit.show_section_cuts=self.scene.show_section_cuts;edit.show_section_planes=self.scene.show_section_planes;edit.show_section_fill=self.scene.show_section_fill;for plane in &mut edit.section_planes{plane.point=inverse.transform_point3(plane.point);plane.normal=group.transform.transpose().transform_vector3(plane.normal).normalize();}session.section_baseline=edit.section_planes.clone();
         edit.bind_dimensions();session.dimension_baseline=edit.dimensions.clone();
         self.camera.target=group.transform.inverse().transform_point3(self.camera.target);
         edit.camera=self.camera.clone();
@@ -82,7 +84,7 @@ impl IngeTrazoApp {
         // A group schema currently has mesh and child containers, not document
         // annotations. Refuse unsupported new local annotations instead of losing them.
         if !self.scene.guides.is_empty() || !self.scene.text_labels.is_empty()
-            || !self.scene.section_planes.is_empty() || !self.scene.geo_points.is_empty() || !self.scene.geo_paths.is_empty()
+            || !self.scene.geo_points.is_empty() || !self.scene.geo_paths.is_empty()
             || self.scene.geo_datum.is_some() || self.scene.terrain.is_some() || !self.scene.sheets.is_empty()
             || !self.scene.saved_views.is_empty() {
             self.status_message="Group annotations are not supported; remove them or cancel the edit".into();return;
@@ -97,7 +99,8 @@ impl IngeTrazoApp {
         let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
             || candidate.component_definitions!=self.scene.component_definitions
-            || self.scene.dimensions!=session.dimension_baseline;
+            || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
+            || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed {
             let replacement=ComponentDefinition{mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
             let updates:Vec<_>=self.scene.component_definitions.iter().filter(|(id,def)|
@@ -122,6 +125,8 @@ impl IngeTrazoApp {
                 }
                 candidate.bind_dimensions();
             }
+            if self.scene.section_planes!=session.section_baseline{let transform=candidate.groups[group_index].transform;candidate.section_planes=self.scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
+            candidate.show_section_cuts=self.scene.show_section_cuts;candidate.show_section_planes=self.scene.show_section_planes;candidate.show_section_fill=self.scene.show_section_fill;
             candidate.refresh_dimensions();
         }
         let session=self.component_edit_stack.pop().unwrap();

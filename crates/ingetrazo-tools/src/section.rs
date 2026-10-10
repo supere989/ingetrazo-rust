@@ -46,6 +46,7 @@ impl Tool for SectionPlaneTool {
         let name = format!("Section {}", count);
 
         let plane = SectionPlane::new(ctx.world, self.hover_normal, name, sym);
+        for existing in &mut scene.section_planes{existing.active=false;}
         scene.section_planes.push(plane);
         scene.show_section_cuts = true;
         scene.show_section_planes = true;

@@ -131,3 +131,5 @@ pub mod outliner;
 
 mod geometry_actions;
 pub mod dimension_actions;
+
+pub mod section_actions;
