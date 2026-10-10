@@ -1,0 +1,89 @@
+{
+  "passed": false,
+  "presentation_passed": true,
+  "physical_mac_claim": false,
+  "source_revision": "685c6ab5e49ba656c80646d211684ce8e6030f72",
+  "binary_sha256": "3c311b2e525242aa1c1e0576445451e5884605263613ff471720e72b641726cc",
+  "presentation_command": [
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/target/debug/examples/presentation_probe",
+    "--automatic",
+    "--owned-window-id=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-drawable-readback/own-window.json",
+    "--owned-window-ack=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-drawable-readback/capture-finished",
+    "--diagnostic-drawable-readback"
+  ],
+  "native_snapshot": {
+    "window_id": 53,
+    "submitted": 5,
+    "retired": 3,
+    "pending": 2,
+    "displayed": 3,
+    "skipped": 0,
+    "completed_inflight": 1,
+    "actual_drawable_center": {
+      "submission": 4,
+      "rgba": [
+        20,
+        51,
+        89,
+        255
+      ]
+    }
+  },
+  "capture_command": [
+    "/usr/sbin/screencapture",
+    "-x",
+    "-o",
+    "-l53",
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-drawable-readback/own-window.png"
+  ],
+  "capture_returncode": 0,
+  "capture": {
+    "width": 640,
+    "height": 508,
+    "points": [
+      [
+        320,
+        254
+      ],
+      [
+        160,
+        254
+      ],
+      [
+        480,
+        254
+      ],
+      [
+        320,
+        381
+      ]
+    ],
+    "rgb": [
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ]
+    ],
+    "visible_clear": false
+  },
+  "image_sha256": "f9df49458aaa4785079c1385c185d5d74224532e430ef23e5716cb1a24b69083",
+  "capture_acknowledged": true,
+  "presentation_returncode": 0,
+  "elapsed_seconds": 2.021552434
+}
