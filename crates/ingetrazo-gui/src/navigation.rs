@@ -109,6 +109,26 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  let Some(mode)=app.navigation.mode else{return None};
  let pointer=ui.input(|i|i.pointer.clone());
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
+ // Pointer final state is already released when move+release share one frame.
+ // Consume original event order so the last motion, and a complete short drag,
+ // cannot disappear. Qt uses QPoint cursor coordinates for these handlers.
+ if mode==Mode::Look{
+  ui.input(|i|for event in &i.events{
+   match event{
+    egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed,..}=>{
+     if *pressed{if rect.contains(*pos){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();app.navigation.press=Some((p,DVec3::ZERO));app.navigation.last=Some(p);}}
+     else{app.navigation.cancel();}
+    },
+    egui::Event::PointerMoved(pos)=>{
+     if let Some(last)=app.navigation.last{
+      let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();let d=p-last;
+      app.camera.turn(d.x*180./rect.width().max(1.)as f64,-d.y*90./rect.height().max(1.)as f64);app.navigation.last=Some(p);
+     }
+    },
+    _=>{},
+   }
+  });return None;
+ }
  if matches!(mode,Mode::Position|Mode::Walk|Mode::FirstPerson){app.navigation.prepare_collision(&app.scene,app.model_revision);}
  if mode==Mode::FirstPerson {
   if ui.ctx().wants_keyboard_input(){app.navigation.held=[false;6];}
@@ -365,4 +385,16 @@ pub(crate) fn first_point_bounds_center(scene:&ingetrazo_core::scene::Scene)->DV
  }
  #[test]fn cancel_restarts_timer_without_catching_old_deadline(){let mut n=Navigation::default();assert!(!n.tick_due(0.,0.016));n.cancel();assert!(!n.tick_due(2.,0.016));assert!(n.tick_due(2.016,0.016));}
  #[test]fn nonfinite_clock_does_not_move_or_poison_later_dispatch(){let mut n=Navigation::default();assert!(!n.tick_due(f64::NAN,0.016));assert!(!n.tick_due(1.,0.016));assert!(n.tick_due(1.016,0.016));}
+}
+
+#[cfg(test)]mod look_order_tests{
+ use super::*;
+ fn frame(app:&mut crate::IngeTrazoApp,ctx:&egui::Context,time:f64,events:Vec<egui::Event>){let _=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.))),time:Some(time),focused:true,events,..Default::default()},|ctx|{egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|{let rect=ui.available_rect_before_wrap();let response=ui.allocate_rect(rect,egui::Sense::click_and_drag());input(app,ui,rect,&response);});});}
+ fn button(pos:egui::Pos2,pressed:bool)->egui::Event{egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed,modifiers:egui::Modifiers::NONE}}
+ #[test]fn outside_press_is_not_owned_and_release_retires_last_motion(){
+  let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;app.activate_navigation(Mode::Look);let ctx=egui::Context::default();frame(&mut app,&ctx,0.,vec![]);let original=app.camera.clone();
+  frame(&mut app,&ctx,0.01,vec![button(egui::pos2(-10.,-10.),true),egui::Event::PointerMoved(egui::pos2(400.,300.)),button(egui::pos2(400.,300.),false)]);assert_eq!(app.camera,original);
+  frame(&mut app,&ctx,0.02,vec![button(egui::pos2(400.,300.),true),egui::Event::PointerMoved(egui::pos2(440.,260.)),button(egui::pos2(440.,260.),false)]);assert_ne!(app.camera,original);let turned=app.camera.clone();
+  frame(&mut app,&ctx,0.03,vec![egui::Event::PointerMoved(egui::pos2(500.,200.))]);assert_eq!(app.camera,turned);assert!(app.undo_stack.is_empty());assert!(app.navigation.press.is_none());
+ }
 }
