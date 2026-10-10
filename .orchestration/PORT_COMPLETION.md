@@ -47,3 +47,5 @@ Resource/systemclipboard integratedc71e261; fullworkspacePASS plus actualisolate
 Partsindependent91a2c58 integrated d652a09. Original ft/in formatting corrected(noquote-space,max6decimals); rerun leaves repeated-eigenvalue PCAextent mismatch only. Retainedbaseline untouched, notCIcompletiongate. Offsetsourcef91e02a readyreview; independentcases underway.
 
 Offsetca21984 integrated; fullworkspacePASS;9 original orderedregion/chain cases and2negativecontrols PASS canonical3427942. CI38013592441 nowpassedrenderstartup, installingoriginalruntime (verifiedlive). Clipboardcollisionremapffd3b40 andoverlapadapterpendingreview.
+
+CI38013592441 SUCCESS verified publishedb01dbcf. Local84e7d72 clipboardremap integrated243RusttestsPASS; reviewed multiincomingaliasallocation/opaque metadata problems pendingworkerfix, notpublishuntilreviewed. AttachedFollowMe original17caseoraclePASS combined83bab02. Offsetcontroller195865c readyreview.

@@ -18,3 +18,5 @@ Published third milestone CI passed: [run38012356527](https://github.com/supere9
 No full feature row is Verified. All release gates in the tracker remain open.
 
 Cloud run38013336872 failed the virtual-display smoke at the fixed five-second capture: retained [black screenshot](ci-milestone-04-render-baseline.png), empty startup log and still-live app process. Rust tests/build passed; later semantic CI steps were skipped. A bounded45-second rendered-frame readiness wait replaces fixed delay, retaining process liveness and the same nonempty-image criterion. Local readiness smoke passes; cloud correction is unverified until rerun.
+
+Corrected published source `b01dbcf` [cloud run38013592441](https://github.com/supere989/ingetrazo-rust/actions/runs/38013592441) completed successfully, including rendered startup and all mandatory original-runtime checks. Later local stage5 changes are not covered by that run.
