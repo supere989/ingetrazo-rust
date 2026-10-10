@@ -4,6 +4,8 @@ Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_An
 
 CI correction (2026-10-10): reviewed component acceptance fixture now follows actual original cleared-selection and advancing-revision ownership. Root fresh complete component oracle passes; historical Scene-equality failure retained in docs/audits/component-ci-history-presentation. This changes fixture expectations only and does not close full history or release CI gates.
 
+Reviewed layer ownership correction (2026-10-10): fresh root4cases/13states and four corruptions establish panel edits across model History, name-based Assign-created ownership, held Purge/Import object lifetime. Combined542 workspace tests/two ignored and complete component replay pass in isolated review; canonical replay also542PASS/twoignored. Evidence docs/audits/layer-history-root-review. Full parked-context global deletion, annotation command families, shared-definition attribute behavior and rendered tray workflows remain OPEN; no complete row promoted.
+
 ## Outcome and evidence
 
 Reviewed terrain runtime visibility and command-owned clear/rebuild history match six fresh source states; stale visibility and literal wrong-Redo negatives reject. **539 workspace tests pass, two ignored**. Full StraightenModel, terrain serialization/rendering and broader presentation history remain OPEN. [Independent terrain review](audits/terrain-history-root-review/README.md).
