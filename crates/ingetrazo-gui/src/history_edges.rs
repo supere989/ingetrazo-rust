@@ -5,20 +5,27 @@ impl IngeTrazoApp {
     pub fn add_edge_command(&mut self, a:DVec3, b:DVec3, soft:Option<bool>, curve:Option<usize>) -> Result<(),String> {
         let a=a.as_vec3().as_dvec3(); let b=b.as_vec3().as_dvec3();
         if !a.is_finite() || !b.is_finite() {return Err("Edge endpoints must be finite Qt coordinates".into());}
-        let mut candidate=self.scene.mesh.clone();
-        let v0=candidate.add_vertex(a);let v1=candidate.add_vertex(b);
-        if v0==v1 {return Err("Edge endpoints weld to the same vertex".into());}
-        let existing=candidate.find_edge(v0,v1);
-        // The command owns neither welded endpoint. Preserve those exact UIDs
-        // through Undo, including endpoints newly interned by this command.
-        let mut undo_mesh=candidate.clone();
-        let id=candidate.add_edge(v0,v1).ok_or("Invalid edge endpoints")?;
-        if let Some(soft)=soft {candidate.edges[id].soft=soft;}
-        if let Some(curve)=curve {candidate.edges[id].curve_id=Some(curve);}
-        if existing.is_some() {undo_mesh=candidate.clone();}
+        if ingetrazo_core::math::PointKey::from_vec3(a)==ingetrazo_core::math::PointKey::from_vec3(b) {
+            return Err("Edge endpoints weld to the same vertex".into());
+        }
+        // Admission is complete before any publication. Native add_vertex/add_edge
+        // cannot refuse distinct validated keys. Only the existing history Scene
+        // snapshot is copied, not additional whole-mesh candidates per endpoint.
         self.save_undo_state();
-        self.undo_stack.last_mut().expect("saved command snapshot").mesh=undo_mesh;
-        self.scene.mesh=candidate;self.scene.bump_version();
+        let old_edges=self.scene.mesh.edges.len();
+        let v0=self.scene.mesh.add_vertex(a);let v1=self.scene.mesh.add_vertex(b);
+        let before=&mut self.undo_stack.last_mut().expect("saved command snapshot").mesh;
+        for vertex in [v0,v1] {
+            let actual=&self.scene.mesh.vertices[vertex];
+            let id=before.add_vertex(actual.position);
+            before.vertices[id].uid=actual.uid;
+        }
+        let id=self.scene.mesh.add_edge(v0,v1).expect("distinct admitted vertex keys");
+        if let Some(soft)=soft {self.scene.mesh.edges[id].soft=soft;}
+        if let Some(curve)=curve {self.scene.mesh.edges[id].curve_id=Some(curve);}
+        // A reused edge is not command-owned, including its optional flag stamp.
+        if id<old_edges {before.edges[id]=self.scene.mesh.edges[id].clone();}
+        self.scene.bump_version();
         Ok(())
     }
 }

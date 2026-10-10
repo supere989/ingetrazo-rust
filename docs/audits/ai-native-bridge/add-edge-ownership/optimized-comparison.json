@@ -1,0 +1,14 @@
+{
+  "full_equal": true,
+  "bounded_equal": true,
+  "bounded_cases": 9,
+  "bounded_states": 21,
+  "full_mismatches": [],
+  "negative_rejections": [
+    "local-groups-only",
+    "hidden-edge-excluded",
+    "wrong-instance-count",
+    "wrong-history-outcome",
+    "missing-case"
+  ]
+}
