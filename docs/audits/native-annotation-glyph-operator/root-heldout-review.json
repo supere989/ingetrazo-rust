@@ -1,0 +1,18 @@
+{
+  "method": "Independent retained GPU image decoding against freshly regenerated root Qt colored references",
+  "rows": [
+    {
+      "case": "glyph-light",
+      "different_pixels": 0
+    },
+    {
+      "case": "glyph-dark",
+      "different_pixels": 0
+    },
+    {
+      "case": "dim-mm-axis-byte-negative",
+      "different_pixels": 9
+    }
+  ],
+  "scope": "Opaque RGBA8888 target and recorded operation path; source viewport and RTX remain open"
+}
