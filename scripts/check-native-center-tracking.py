@@ -30,7 +30,7 @@ def main():
  evidence.unlink(missing_ok=True)
  (directory/"failure.json").unlink(missing_ok=True)
  for p in directory.iterdir():
-  if p.name=="state.json" or p.suffix==".png":p.unlink()
+  if p.name=="state.json" or p.name.endswith("-state.json") or p.suffix==".png":p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-reference-x11-") as t:
   server=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1200x900x24","-nolisten","tcp"],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
   app=None
