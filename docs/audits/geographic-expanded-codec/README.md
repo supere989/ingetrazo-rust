@@ -1,3 +1,5 @@
 Actual pinned original IGZ loader expanded23cases against current native candidate. Retained eight accepted source representations differ: nonstring custom provider metadata, Python integer/float string grammar and iterable patch forms. This is a required codec gap; no narrowed acceptance or full parity claim. Existing prior12ordinary cases remain separate.
 
 Corrective candidate96925efb passes23actual loader cases and23actual Python reopens; fullworkspace542PASS/twoignored on older isolatedbase. Earlier eightfailures remain retained. Currentmainintegration, broader numeric/nonfinite/largeinteger grammar and fullproviderfetch/cache/UI/GPU remain requiredOPEN.
+
+Canonical b709 baseline merged:559 workspace tests pass/twoignored. Fresh source23/native23/actual source reopens23 exact; four strict checker negatives rejected. Merge compile error and linker resource failure retained; entry now preserves tile and image globals together. CI fresh source gate added; broad numeric/provider/fetch/cache/UI/GPU remains OPEN.
