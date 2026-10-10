@@ -1,6 +1,6 @@
 {
   "reviewed_source": "d8ff8bb1e350f9d4ccbf816131e4bcd7e0c87ef4",
-  "decision": "Hold texture integration pending asset admission review",
+  "decision": "Accept reviewed texture stage into integration; combined build acceptance pending",
   "findings": [
     {
       "location": "crates/ingetrazo-formats/src/skp/textures.rs:admit_assets",
@@ -14,5 +14,13 @@
     }
   ],
   "unchanged_evidence": "24 retained bounded comparisons remain useful; no full SKP parity claim. No broad test repeated for this review.",
-  "owner": "validation"
+  "owner": "validation",
+  "resolved_by": "92103cf4bb43b38c61b8650708adcfc5a08f87d0",
+  "independent_review": {
+    "complete_recursive_comparisons": 23,
+    "stored_and_raw_digests_verified": 23,
+    "missing_image_refusal_cases": 1,
+    "corrupt_image_behavior": "Original publishes a material whose QImage is null; Rust refuses invalid pixels. Explicit integrity correction, not malformed-image parity.",
+    "memory": "256MiB total retained raw bytes including per-material copies; header and decode checked once per equal embedded identity. Cold duplication remains, no zero-copy claim."
+  }
 }
