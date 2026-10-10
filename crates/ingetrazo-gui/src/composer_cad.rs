@@ -217,10 +217,10 @@ impl Cache{
 }
 #[cfg(any(target_os="linux",target_os="windows"))]
 #[derive(Default)]pub struct NativeComposer{
- pub factory:Option<crate::native_vulkan::cad2d::Factory>,
- entries:std::collections::HashMap<uuid::Uuid,(Cache,Option<crate::native_vulkan::cad2d::Handle>)>,
+ pub factory:Option<crate::composer_backend::Factory>,
+ entries:std::collections::HashMap<uuid::Uuid,(Cache,Option<crate::composer_backend::Handle>)>,
  active:std::collections::HashSet<uuid::Uuid>,
- preview:(Cache,Option<crate::native_vulkan::cad2d::Handle>),
+ preview:(Cache,Option<crate::composer_backend::Handle>),
 }
 #[cfg(any(target_os="linux",target_os="windows"))]
 impl NativeComposer{

@@ -3,7 +3,7 @@ use ingetrazo_core::composition::Sheet;
 struct Fixture{app:IngeTrazoApp,dir:std::path::PathBuf,stats:serde_json::Value}
 impl App for Fixture{
  fn title()->&'static str{"Independent composer direct preview"}
- fn new(system:&mut System,_:Option<std::path::PathBuf>)->Self{let mut app=IngeTrazoApp::new();app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory());let mut sheet=Sheet::default();sheet.items.clear();app.scene.sheets=vec![sheet];app.scene.active_sheet_index=Some(0);app.composer_state.zoom=2.;Self{app,dir:std::env::var("INGETRAZO_PREVIEW_OUT").unwrap().into(),stats:serde_json::Value::Null}}
+ fn new(system:&mut System,_:Option<std::path::PathBuf>)->Self{let mut app=IngeTrazoApp::new();app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory().into());let mut sheet=Sheet::default();sheet.items.clear();app.scene.sheets=vec![sheet];app.scene.active_sheet_index=Some(0);app.composer_state.zoom=2.;Self{app,dir:std::env::var("INGETRAZO_PREVIEW_OUT").unwrap().into(),stats:serde_json::Value::Null}}
  fn prepare_gpu(&mut self,system:&mut System,_:bool){let s=system.enable_cad2d().unwrap().stats();self.stats=serde_json::json!({"uploads":s.uploads,"cache_hits":s.cache_hits,"draws":s.draws,"cached_bytes":s.cached_bytes});}
  fn build_ui(&mut self,ctx:&egui::Context){
  if ctx.input(|i|i.modifiers.ctrl&&i.key_pressed(egui::Key::Z)){self.app.undo();}if ctx.input(|i|i.modifiers.ctrl&&i.key_pressed(egui::Key::Y)){self.app.redo();}
