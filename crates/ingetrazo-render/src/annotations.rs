@@ -138,6 +138,31 @@ impl<P: FnMut(Vec3) -> Option<[f64; 2]>> Builder<P> {
         Ok(id)
     }
     fn emit(&mut self, primitive: Primitive, gate: Gate) -> Result<(), String> {
+        let point = |p: &[f64; 2]| p.iter().all(|v| v.is_finite());
+        let valid = match &primitive {
+            Primitive::Line { a, b, width, .. } => {
+                point(a) && point(b) && width.is_finite() && *width >= 0.
+            }
+            Primitive::Polygon { points, .. } => points.iter().all(point),
+            Primitive::Ellipse {
+                center,
+                radius,
+                width,
+                ..
+            } => {
+                point(center)
+                    && point(radius)
+                    && radius.iter().all(|v| *v >= 0.)
+                    && width.is_finite()
+                    && *width >= 0.
+            }
+            Primitive::Text {
+                position, size_pt, ..
+            } => point(position) && *size_pt > 0,
+        };
+        if !valid {
+            return Err("Nonfinite or invalid final annotation primitive".into());
+        }
         if self.plan.operations.len() >= self.limits.operations {
             return Err("Annotation operation admission failed".into());
         }
@@ -831,5 +856,27 @@ mod tests {
         assert!(builder.finish().is_err());
         assert!(format_length(f64::MAX, "mm", 2).is_err());
         assert!(format_length(f64::MAX / 100., "in-frac", 4).is_err());
+    }
+    #[test]
+    fn derived_leader_position_overflow_refuses_entire_plan() {
+        let mut builder = Builder::new(
+            |p: Vec3| Some([if p.x == 0. { f64::MAX } else { -f64::MAX }, 0.]),
+            Limits {
+                queries: 1024,
+                operations: 1024,
+                text_bytes: 128,
+            },
+        );
+        let input = LeaderInput {
+            anchor: Vec3::ZERO,
+            offset: Vec3::X,
+            text: "A",
+            highlighted: false,
+            hidden: false,
+        };
+        assert!(builder
+            .leader(input, &Style::default(), 18., |_| Ok(f64::MAX))
+            .is_err());
+        assert!(builder.finish().is_err());
     }
 }
