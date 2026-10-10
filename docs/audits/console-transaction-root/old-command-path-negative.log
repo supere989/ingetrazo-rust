@@ -1,0 +1,244 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-paper-font-root/crates/ingetrazo-gui)
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.09s
+     Running unittests src/lib.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/ingetrazo_gui-c7228600e916c148)
+
+running 2 tests
+test app::console_transaction_tests::console_cube_is_one_reversible_transaction ... FAILED
+test app::console_transaction_tests::console_refusals_and_inspection_preserve_model_and_redo ... FAILED
+
+failures:
+
+---- app::console_transaction_tests::console_cube_is_one_reversible_transaction stdout ----
+
+thread 'app::console_transaction_tests::console_cube_is_one_reversible_transaction' (427030) panicked at crates/ingetrazo-gui/src/app.rs:1584:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- app::console_transaction_tests::console_refusals_and_inspection_preserve_model_and_redo stdout ----
+
+thread 'app::console_transaction_tests::console_refusals_and_inspection_preserve_model_and_redo' (427031) panicked at crates/ingetrazo-gui/src/app.rs:1605:13:
+assertion `left == right` failed
+  left: Scene { image_planes: ImagePlaneList { planes: [], epoch: 2 }, image_objects: ImageObjects(Mutex { data: {}, poisoned: false, .. }), history_images: ImageHistory(None), display_style: DocumentStyle { name: "Default", face_mode: Textures, edges: true, profiles: true, back_edges: false, edge_color: [0.13, 0.17, 0.23], front_color: [1.0, 1.0, 1.0], back_color: None, background: [0.9, 0.91, 0.92], sky: true, sky_color: [0.925, 0.935, 0.945], ground_color: [0.815, 0.82, 0.815], section_fill: true, section_fill_color: [0.35, 0.37, 0.41], source_values: {}, source_baseline: {} }, shadows: ShadowSettings { enabled: false, month: 3, day: 21, hour: 12, minute: 0, darkness: 0.55, utc_offset: None, source_utc_offset: None }, dimension_frame: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }, drawing_frame: None, history_context: [], history_shareback: None, history_views: ViewHistory(None), history_terrain: TerrainHistory(None), history_layers: LayerHistory(None), component_definitions: {}, mesh_shares: {}, native_document: Null, native_baseline: Null, mesh: Mesh { vertices: [MeshVertex { uid: 3eb6a71e-6460-41bd-871e-6c38cde56ea6, position: DVec3(0.0, 0.0, 0.0), edges: [0, 3, 9] }, MeshVertex { uid: 3f4116c5-6636-444c-99ff-0644487393cf, position: DVec3(1.0, 0.0, 0.0), edges: [2, 3, 8] }, MeshVertex { uid: cb233032-21e2-4d46-ba23-992f57017318, position: DVec3(1.0, 1.0, 0.0), edges: [1, 2, 10] }, MeshVertex { uid: 747f1be7-35a8-45c8-b7fe-2b8a04ee8b6f, position: DVec3(0.0, 1.0, 0.0), edges: [0, 1, 11] }, MeshVertex { uid: 3ced2b5f-e271-4f11-a4e6-a2eedf3210f6, position: DVec3(0.0, 0.0, 1.0), edges: [4, 7, 9] }, MeshVertex { uid: da23f8b2-dfdd-4f4b-8462-83b2f55d9847, position: DVec3(1.0, 0.0, 1.0), edges: [4, 5, 8] }, MeshVertex { uid: aa011c08-6bd5-4560-9f3b-3b520bcbb616, position: DVec3(1.0, 1.0, 1.0), edges: [5, 6, 10] }, MeshVertex { uid: 4e0ca81b-fbf0-423c-916f-621129bc4020, position: DVec3(0.0, 1.0, 1.0), edges: [6, 7, 11] }], edges: [MeshEdge { attrs: {}, v0: 0, v1: 3, faces: [0, 5, 6, 11], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 3, v1: 2, faces: [0, 4, 6, 10], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 1, faces: [0, 3, 6, 9], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 0, faces: [0, 2, 6, 8], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 4, v1: 5, faces: [1, 2, 7, 8], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 5, v1: 6, faces: [1, 3, 7, 9], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 6, v1: 7, faces: [1, 4, 7, 10], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 7, v1: 4, faces: [1, 5, 7, 11], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 5, faces: [2, 3, 8, 9], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 4, v1: 0, faces: [2, 5, 8, 11], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 6, faces: [3, 4, 9, 10], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 3, v1: 7, faces: [4, 5, 10, 11], soft: false, curve_id: None, layer: None, hidden: false }], faces: [MeshFace { interior: false, vertices: [0, 3, 2, 1], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [4, 5, 6, 7], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [0, 1, 5, 4], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [1, 2, 6, 5], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [2, 3, 7, 6], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [3, 0, 4, 7], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [0, 3, 2, 1], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [4, 5, 6, 7], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [0, 1, 5, 4], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [1, 2, 6, 5], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [2, 3, 7, 6], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [3, 0, 4, 7], holes: [], attrs: {}, layer: None }], spatial_index: {PointKey(10000, 0, 10000): 5, PointKey(10000, 0, 0): 1, PointKey(10000, 10000, 0): 2, PointKey(0, 10000, 0): 3, PointKey(0, 10000, 10000): 7, PointKey(10000, 10000, 10000): 6, PointKey(0, 0, 0): 0, PointKey(0, 0, 10000): 4} }, selection: {}, selection_order: [], version: 2, view_version: 0, groups: [], dimensions: [], guides: [], layers: [Layer { history_id: e96ca4f8-3c81-4bef-8861-7663d9c5e9d0, name: "Layer0", visible: true, locked: false, color: None }], materials: {}, saved_views: [], camera: OrbitCamera { target: DVec3(0.0, 0.0, 0.0), distance: 20.0, yaw: -0.7853981633974483, pitch: 0.5235987755982988, up: DVec3(0.0, 0.0, 1.0), fov_deg: 45.0, aspect: 1.0, znear: 0.1, zfar: 10000.0, perspective: true, two_point: false }, unit: Meters, embedded_textures: {}, text_labels: [], section_planes: [], show_section_cuts: true, show_section_planes: true, show_section_fill: true, geo_datum: None, geo_points: [], geo_paths: [], tile_layer: None, terrain: None, sheets: [Sheet { native_document: Null, native_baseline: Null, native_items: {}, native_item_baselines: {}, id: a942415a-7578-4e50-a465-052a9675572c, name: "Sheet 1", paper_size: A3, orientation: Landscape, margin_mm: 10.0, items: [ViewFrame(ViewFrame { id: 3a2a4d5b-1824-4fe0-a65e-32cadf067505, rect: RectMm { x: 20.0, y: 20.0, w: 380.0, h: 207.0 }, scale_n: 100.0, view_key: "std:top", style: "technical", show_title: true, title_text: "Top Plan (1:100)", border: true, perspective: false, pen_cut_mm: 0.5, pen_profile_mm: 0.35, pen_edge_mm: 0.18, profiles: true, paper_bg: false, hidden_lines: false, cut_fill: "solid", cut_fill_color: "#595e69", cut_hatch_mm: 1.5, cam_target: None, cam_yaw: None, cam_pitch: None, cam_distance: None, cam_fov: None, rot_deg: 0.0, annotations: true, section_marks: true }), TitleBlock(TitleBlock { id: 4744f95c-80d2-4e64-afa7-151cc2814a49, rect: RectMm { x: 270.0, y: 237.0, w: 140.0, h: 50.0 }, project_name: "Active-iQ Architecture", drawing_title: "General Plan", author: "IngeTrazo Cad Engine", date: "2026-10-07", sheet_number: "A-01", scale_text: "1:100" })], selected_item: None }], active_sheet_index: None }
+ right: Scene { image_planes: ImagePlaneList { planes: [], epoch: 5 }, image_objects: ImageObjects(Mutex { data: {}, poisoned: false, .. }), history_images: ImageHistory(None), display_style: DocumentStyle { name: "Default", face_mode: Textures, edges: true, profiles: true, back_edges: false, edge_color: [0.13, 0.17, 0.23], front_color: [1.0, 1.0, 1.0], back_color: None, background: [0.9, 0.91, 0.92], sky: true, sky_color: [0.925, 0.935, 0.945], ground_color: [0.815, 0.82, 0.815], section_fill: true, section_fill_color: [0.35, 0.37, 0.41], source_values: {}, source_baseline: {} }, shadows: ShadowSettings { enabled: false, month: 3, day: 21, hour: 12, minute: 0, darkness: 0.55, utc_offset: None, source_utc_offset: None }, dimension_frame: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }, drawing_frame: None, history_context: [], history_shareback: None, history_views: ViewHistory(None), history_terrain: TerrainHistory(None), history_layers: LayerHistory(None), component_definitions: {}, mesh_shares: {}, native_document: Null, native_baseline: Null, mesh: Mesh { vertices: [MeshVertex { uid: 3eb6a71e-6460-41bd-871e-6c38cde56ea6, position: DVec3(0.0, 0.0, 0.0), edges: [0, 3, 9] }, MeshVertex { uid: 3f4116c5-6636-444c-99ff-0644487393cf, position: DVec3(1.0, 0.0, 0.0), edges: [2, 3, 8] }, MeshVertex { uid: cb233032-21e2-4d46-ba23-992f57017318, position: DVec3(1.0, 1.0, 0.0), edges: [1, 2, 10] }, MeshVertex { uid: 747f1be7-35a8-45c8-b7fe-2b8a04ee8b6f, position: DVec3(0.0, 1.0, 0.0), edges: [0, 1, 11] }, MeshVertex { uid: 3ced2b5f-e271-4f11-a4e6-a2eedf3210f6, position: DVec3(0.0, 0.0, 1.0), edges: [4, 7, 9] }, MeshVertex { uid: da23f8b2-dfdd-4f4b-8462-83b2f55d9847, position: DVec3(1.0, 0.0, 1.0), edges: [4, 5, 8] }, MeshVertex { uid: aa011c08-6bd5-4560-9f3b-3b520bcbb616, position: DVec3(1.0, 1.0, 1.0), edges: [5, 6, 10] }, MeshVertex { uid: 4e0ca81b-fbf0-423c-916f-621129bc4020, position: DVec3(0.0, 1.0, 1.0), edges: [6, 7, 11] }], edges: [MeshEdge { attrs: {}, v0: 0, v1: 3, faces: [0, 5], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 3, v1: 2, faces: [0, 4], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 1, faces: [0, 3], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 0, faces: [0, 2], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 4, v1: 5, faces: [1, 2], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 5, v1: 6, faces: [1, 3], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 6, v1: 7, faces: [1, 4], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 7, v1: 4, faces: [1, 5], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 5, faces: [2, 3], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 4, v1: 0, faces: [2, 5], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 6, faces: [3, 4], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 3, v1: 7, faces: [4, 5], soft: false, curve_id: None, layer: None, hidden: false }], faces: [MeshFace { interior: false, vertices: [0, 3, 2, 1], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [4, 5, 6, 7], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [0, 1, 5, 4], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [1, 2, 6, 5], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [2, 3, 7, 6], holes: [], attrs: {}, layer: None }, MeshFace { interior: false, vertices: [3, 0, 4, 7], holes: [], attrs: {}, layer: None }], spatial_index: {PointKey(10000, 0, 10000): 5, PointKey(10000, 0, 0): 1, PointKey(10000, 10000, 0): 2, PointKey(0, 10000, 0): 3, PointKey(0, 10000, 10000): 7, PointKey(10000, 10000, 10000): 6, PointKey(0, 0, 0): 0, PointKey(0, 0, 10000): 4} }, selection: {}, selection_order: [], version: 1, view_version: 0, groups: [], dimensions: [], guides: [], layers: [Layer { history_id: e96ca4f8-3c81-4bef-8861-7663d9c5e9d0, name: "Layer0", visible: true, locked: false, color: None }], materials: {}, saved_views: [], camera: OrbitCamera { target: DVec3(0.0, 0.0, 0.0), distance: 20.0, yaw: -0.7853981633974483, pitch: 0.5235987755982988, up: DVec3(0.0, 0.0, 1.0), fov_deg: 45.0, aspect: 1.0, znear: 0.1, zfar: 10000.0, perspective: true, two_point: false }, unit: Meters, embedded_textures: {}, text_labels: [], section_planes: [], show_section_cuts: true, show_section_planes: true, show_section_fill: true, geo_datum: None, geo_points: [], geo_paths: [], tile_layer: None, terrain: None, sheets: [Sheet { native_document: Null, native_baseline: Null, native_items: {}, native_item_baselines: {}, id: a942415a-7578-4e50-a465-052a9675572c, name: "Sheet 1", paper_size: A3, orientation: Landscape, margin_mm: 10.0, items: [ViewFrame(ViewFrame { id: 3a2a4d5b-1824-4fe0-a65e-32cadf067505, rect: RectMm { x: 20.0, y: 20.0, w: 380.0, h: 207.0 }, scale_n: 100.0, view_key: "std:top", style: "technical", show_title: true, title_text: "Top Plan (1:100)", border: true, perspective: false, pen_cut_mm: 0.5, pen_profile_mm: 0.35, pen_edge_mm: 0.18, profiles: true, paper_bg: false, hidden_lines: false, cut_fill: "solid", cut_fill_color: "#595e69", cut_hatch_mm: 1.5, cam_target: None, cam_yaw: None, cam_pitch: None, cam_distance: None, cam_fov: None, rot_deg: 0.0, annotations: true, section_marks: true }), TitleBlock(TitleBlock { id: 4744f95c-80d2-4e64-afa7-151cc2814a49, rect: RectMm { x: 270.0, y: 237.0, w: 140.0, h: 50.0 }, project_name: "Active-iQ Architecture", drawing_title: "General Plan", author: "IngeTrazo Cad Engine", date: "2026-10-07", sheet_number: "A-01", scale_text: "1:100" })], selected_item: None }], active_sheet_index: None }
+
+
+failures:
+    app::console_transaction_tests::console_cube_is_one_reversible_transaction
+    app::console_transaction_tests::console_refusals_and_inspection_preserve_model_and_redo
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 132 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p ingetrazo-gui --lib`

@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "shy_12",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_14",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_16",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_20",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_24",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_32",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_prefix_13",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_prefix_14",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_prefix_15",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "shy_prefix_16",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    }
+  ],
+  "invalid_style_preserves_destination": true,
+  "scope": "Production composer export controller, not OS dialog or rendered pointer proof"
+}

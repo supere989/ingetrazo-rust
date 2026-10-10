@@ -240,6 +240,18 @@ impl ImageObjects {
         }
     }
     /// Update a tool-held detached object's frame without copying live lists.
+    pub fn held_frame(&self, image: &ImagePlane) -> [DVec3; 3] {
+        let objects = self.0.lock().unwrap();
+        let p = objects.get(&image.id).unwrap_or(image);
+        [p.origin, p.u, p.v]
+    }
+    pub fn set_held_frame(&self, image: &ImagePlane, [origin, u, v]: [DVec3; 3]) {
+        let mut objects = self.0.lock().unwrap();
+        let p = objects.entry(image.id).or_insert_with(|| image.clone());
+        p.origin = origin;
+        p.u = u;
+        p.v = v;
+    }
     pub fn set_held_origin(&self, image:&ImagePlane, origin:DVec3) {
         let mut objects=self.0.lock().unwrap();
         objects.entry(image.id).or_insert_with(||image.clone()).origin=origin;
@@ -609,5 +621,26 @@ mod picking_tests {
         let ray=Ray::new(DVec3::new(100.,100.,10.),-DVec3::Z);assert_eq!(p.ray_hit(&ray),Some(10.));
         p.u=DVec3::X*2.;p.v=DVec3::new(1.,2.,0.);
         assert!(p.ray_hit(&Ray::new(DVec3::new(2.25,0.5,10.),-DVec3::Z)).is_none());
+    }
+}
+
+impl ImagePlane {
+    /// Source QMatrix4x4 frame pose without allocating a document or history.
+    pub fn rotated_frame(&self, centre: DVec3, axis: DVec3, degrees: f64) -> [DVec3; 3] {
+        ImageRotation::new(centre, axis, degrees).frame(self)
+    }
+}
+/// One source Qt-f32 matrix shared by all images in a Rotate preview.
+pub struct ImageRotation(ImageFrameMatrix);
+impl ImageRotation {
+    pub fn new(centre: DVec3, axis: DVec3, degrees: f64) -> Self {
+        Self(ImageFrameMatrix::rotate(centre, axis, degrees))
+    }
+    pub fn frame(&self, image: &ImagePlane) -> [DVec3; 3] {
+        [
+            self.0.map(image.origin, true),
+            self.0.map(image.u, false),
+            self.0.map(image.v, false),
+        ]
     }
 }

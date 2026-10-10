@@ -1,0 +1,7 @@
+{
+  "source": "b45b89d764253dc0a5ee529293ac01952e215313",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "ee514d01da736f67e9785465b08d7bea71b550dbcaf0e7556f71ba67982ab6d8",
+  "python": "/tmp/ingetrazo-parity-python/bin/python",
+  "platform": "Qt offscreen; native actual app dispatch, no GPU image proof"
+}
