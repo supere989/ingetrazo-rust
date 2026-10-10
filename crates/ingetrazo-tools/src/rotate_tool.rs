@@ -25,6 +25,8 @@ pub struct RotateTool {
     image_snapshot_taken: bool,
     image_epoch: u64,
     image_indices: HashMap<u128, usize>,
+    pub image_membership_rebuilds: u64,
+    pub image_membership_scanned: u64,
     original_version: u64,
     preview_version: u64,
     control_down: bool,
@@ -48,6 +50,8 @@ impl Default for RotateTool {
             image_snapshot_taken: false,
             image_epoch: 0,
             image_indices: HashMap::new(),
+            image_membership_rebuilds: 0,
+            image_membership_scanned: 0,
             original_version: 0,
             preview_version: 0,
             control_down: false,
@@ -240,6 +244,8 @@ impl RotateTool {
             return;
         }
         self.image_epoch = scene.image_planes.membership_epoch();
+        self.image_membership_rebuilds += 1;
+        self.image_membership_scanned += scene.image_planes.len() as u64;
         self.image_indices.clear();
         self.image_indices.extend(
             scene
@@ -249,7 +255,7 @@ impl RotateTool {
                 .map(|(i, p)| (p.id.as_u128(), i)),
         );
     }
-    fn restore_images(&self, scene: &mut Scene) {
+    fn restore_images_cold(&self, scene: &mut Scene) {
         if !self.image_snapshot_taken {
             return;
         }
@@ -267,6 +273,16 @@ impl RotateTool {
             } else {
                 scene.image_objects.set_held_frame(image, frame);
             }
+        }
+    }
+    fn restore_images(&mut self, scene: &mut Scene) {
+        if !self.image_snapshot_taken { return; }
+        self.refresh_image_membership(scene);
+        for (_, image) in &self.original_images {
+            let frame = [image.origin,image.u,image.v];
+            if let Some(&index) = self.image_indices.get(&image.id.as_u128()) {
+                scene.image_planes.pose_mut(index).unwrap().set_frame(frame);
+            } else { scene.image_objects.set_held_frame(image,frame); }
         }
     }
     fn pose_images(&mut self, scene: &mut Scene, point: DVec3) {
@@ -332,7 +348,7 @@ impl Tool for RotateTool {
     }
     fn restore_transient_model(&self, scene: &mut Scene) {
         if self.center.is_some() {
-            self.restore_images(scene);
+            self.restore_images_cold(scene);
             scene.version = self.original_version;
         }
     }
@@ -376,7 +392,9 @@ impl Tool for RotateTool {
         self.control_down = held;
     }
     fn on_control_state(&mut self, scene: &mut Scene, held: bool) {
+        let was_copy = self.is_copy_mode;
         self.note_control_state(held);
+        if was_copy == self.is_copy_mode { return; }
         if self.is_copy_mode {
             self.restore_images(scene);
         } else if let Some(hover) = self.hover_point {
