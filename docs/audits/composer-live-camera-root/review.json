@@ -1,0 +1,7 @@
+{
+  "passed": 97,
+  "ignored": 2,
+  "original_contract": "Frozen views/composer.py _with_frame_camera uses vp.camera; applies existing saved view, restores live state. model_view_drawing and render_frame both call it.",
+  "scope": "Candidate GUI camera policy and fresh52 independent DXF reader cases. Actual rendered live-camera preview acceptance pending.",
+  "fresh_dxf_cases_passed": 52
+}

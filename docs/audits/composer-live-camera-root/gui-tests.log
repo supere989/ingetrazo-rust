@@ -1,0 +1,379 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling cfg-if v1.0.5
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.2
+   Compiling smallvec v1.16.2
+   Compiling once_cell v1.21.4
+   Compiling libc v0.2.190
+   Compiling pkg-config v0.3.34
+   Compiling memchr v2.8.3
+   Compiling rustix v1.1.5
+   Compiling linux-raw-sys v0.12.1
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.14
+   Compiling autocfg v1.5.1
+   Compiling downcast-rs v1.2.1
+   Compiling scoped-tls v1.0.1
+   Compiling wayland-client v0.31.15
+   Compiling stable_deref_trait v1.2.1
+   Compiling thiserror v2.0.21
+   Compiling zerocopy v0.8.60
+   Compiling khronos_api v3.1.0
+   Compiling version_check v0.9.5
+   Compiling getrandom v0.3.4
+   Compiling ttf-parser v0.25.1
+   Compiling serde_core v1.0.229
+   Compiling ab_glyph_rasterizer v0.1.10
+   Compiling parking_lot_core v0.9.12
+   Compiling simd-adler32 v0.3.10
+   Compiling cfg_aliases v0.2.2
+   Compiling writeable v0.6.4
+   Compiling libloading v0.8.9
+   Compiling crc32fast v1.5.2
+   Compiling rustix v0.38.44
+   Compiling scopeguard v1.2.0
+   Compiling thiserror v1.0.69
+   Compiling cc v1.6.0
+   Compiling xml-rs v0.8.29
+   Compiling litemap v0.8.3
+   Compiling lock_api v0.4.14
+   Compiling serde v1.0.229
+   Compiling dlib v0.5.3
+   Compiling pin-project-lite v0.2.17
+   Compiling xcursor v0.3.11
+   Compiling linux-raw-sys v0.4.15
+   Compiling adler2 v2.0.1
+   Compiling rustversion v1.0.23
+   Compiling cursor-icon v1.2.0
+   Compiling icu_properties_data v2.3.0
+   Compiling tracing-core v0.1.36
+   Compiling icu_normalizer_data v2.3.0
+   Compiling xkeysym v0.2.1
+   Compiling utf8_iter v1.0.4
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling slab v0.4.12
+   Compiling ahash v0.8.12
+   Compiling dashu-int v0.5.1
+   Compiling percent-encoding v2.3.2
+   Compiling static_assertions v1.1.0
+   Compiling miniz_oxide v0.9.1
+   Compiling num-traits v0.2.19
+   Compiling smithay-client-toolkit v0.19.2
+   Compiling getrandom v0.4.3
+   Compiling profiling v1.0.18
+   Compiling dashu-base v0.5.1
+   Compiling strict-num v0.1.1
+   Compiling epaint_default_fonts v0.30.0
+   Compiling itoa v1.0.18
+   Compiling nohash-hasher v0.2.0
+   Compiling arrayref v0.3.9
+   Compiling num-modular v0.6.6
+   Compiling quick-xml v0.41.0
+   Compiling wayland-sys v0.31.11
+   Compiling x11-dl v2.21.0
+   Compiling raw-window-handle v0.6.2
+   Compiling arrayvec v0.7.8
+   Compiling x11rb-protocol v0.13.2
+   Compiling either v1.18.0
+   Compiling as-raw-xcb-connection v1.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+   Compiling winit v0.30.13
+   Compiling smithay-client-toolkit v0.20.0
+   Compiling tracing v0.1.44
+   Compiling zune-core v0.5.3
+   Compiling rustc-hash v2.1.3
+   Compiling pxfm v0.1.30
+   Compiling form_urlencoded v1.2.2
+   Compiling itertools v0.14.0
+   Compiling gl_generator v0.14.0
+   Compiling memoffset v0.9.1
+   Compiling glutin v0.32.3
+   Compiling flate2 v1.1.10
+   Compiling zune-jpeg v0.5.15
+   Compiling byteorder-lite v0.1.0
+   Compiling inflections v1.1.1
+   Compiling dpi v0.1.2
+   Compiling smol_str v0.2.2
+   Compiling ash v0.38.0+1.3.281
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling xkbcommon-dl v0.4.2
+   Compiling glutin-winit v0.5.0
+   Compiling bumpalo v3.20.3
+   Compiling equivalent v1.0.2
+   Compiling zip v2.4.2
+   Compiling hashbrown v0.17.1
+   Compiling lazy_static v1.5.1
+   Compiling base64 v0.13.1
+   Compiling web-time v1.1.0
+   Compiling glow v0.16.0
+   Compiling urlencoding v2.1.3
+   Compiling byteorder v1.5.0
+   Compiling png v0.18.1
+   Compiling litrs v1.0.0
+   Compiling base64 v0.22.1
+   Compiling roxmltree v0.20.0
+   Compiling zopfli v0.8.3
+   Compiling clipper2-rust v1.2.0
+   Compiling glutin_glx_sys v0.6.1
+   Compiling glutin_egl_sys v0.7.1
+   Compiling wayland-scanner v0.31.11
+   Compiling document-features v0.2.12
+   Compiling wayland-backend v0.3.17
+   Compiling memmap2 v0.9.11
+   Compiling indexmap v2.14.2
+   Compiling parking_lot v0.12.5
+   Compiling earcutr v0.5.0
+   Compiling owned_ttf_parser v0.25.1
+   Compiling ab_glyph v0.2.32
+   Compiling uuid v1.27.0
+   Compiling thiserror-impl v1.0.69
+   Compiling gltf-derive v1.4.1
+   Compiling synstructure v0.14.0
+   Compiling moxcms v0.8.1
+   Compiling bytemuck_derive v1.12.1
+   Compiling displaydoc v0.2.7
+   Compiling zerovec-derive v0.11.6
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerofrom v0.1.8
+   Compiling dashu-ratio v0.5.1
+   Compiling yoke v0.8.3
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling bytemuck v1.25.2
+   Compiling emath v0.30.0
+   Compiling tiny-skia-path v0.11.4
+   Compiling manifold-rust v0.16.0
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.3.0
+   Compiling ecolor v0.30.0
+   Compiling icu_locale_core v2.3.0
+   Compiling epaint v0.30.0
+   Compiling tiny-skia v0.11.4
+   Compiling icu_provider v2.3.1
+   Compiling polling v3.11.0
+   Compiling gethostname v1.1.0
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling calloop v0.13.0
+   Compiling egui v0.30.0
+   Compiling calloop v0.14.5
+   Compiling glam v0.29.3
+   Compiling gltf-json v1.4.1
+   Compiling wayland-csd-frame v0.3.0
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling image v0.25.10
+   Compiling url v2.5.8
+   Compiling webbrowser v1.2.4
+   Compiling wayland-protocols v0.32.13
+   Compiling wayland-cursor v0.31.14
+   Compiling calloop-wayland-source v0.3.0
+   Compiling calloop-wayland-source v0.4.1
+   Compiling gltf v1.4.1
+   Compiling egui_glow v0.30.0
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-core)
+   Compiling x11rb v0.13.2
+   Compiling arboard v3.6.1
+   Compiling wayland-protocols-wlr v0.3.12
+   Compiling wayland-protocols-misc v0.3.12
+   Compiling wayland-protocols-experimental v20250721.0.1
+   Compiling wayland-protocols-plasma v0.3.12
+   Compiling egui-ash-renderer v0.7.0 (/tmp/ingetrazo-composer-camera-review/vendor/egui-ash-renderer)
+   Compiling ash-window v0.13.0
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling sctk-adwaita v0.10.1
+   Compiling smithay-clipboard v0.7.3
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-tools)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-render)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling egui-winit v0.30.0
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling eframe v0.30.0
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-gui)
+warning: unused import: `glam::DVec3`
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:2:9
+  |
+2 |     use glam::DVec3;
+  |         ^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `ViewFrame`
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:3:50
+  |
+3 |     use ingetrazo_core::composition::{SheetItem, ViewFrame};
+  |                                                  ^^^^^^^^^
+
+warning: unused import: `composer_compute::ComposerCompute`
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:4:44
+  |
+4 |     use ingetrazo_gui::{app::IngeTrazoApp, composer_compute::ComposerCompute};
+  |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `paint` is never used
+ --> crates/ingetrazo-gui/examples/composer_native_cache.rs:5:12
+  |
+5 |     pub fn paint(a: &mut IngeTrazoApp, c: &egui::Context) {
+  |            ^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (example "composer_native_cache") generated 4 warnings (run `cargo fix --example "composer_native_cache" -p ingetrazo-gui` to apply 3 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.56s
+     Running unittests src/lib.rs (/tmp/ingetrazo-composer-camera-target/debug/deps/ingetrazo_gui-a854ae3c483f924d)
+
+running 94 tests
+test blender::tests::test_resolution_presets ... ok
+test blender::tests::test_blender_state_initialization ... ok
+test app::model_revision_regression::history_and_context_swaps_never_reuse_gpu_model_revision ... ok
+test clipboard::tests::malformed_mesh_and_recursive_definitions_leave_document_and_history_unchanged ... ok
+test clipboard::tests::system_clipboard_transfers_geometry_between_native_owners ... ignored, requires isolated X11 clipboard server
+test clipboard::tests::copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture ... ok
+test clipboard::tests::resource_allocator_reserves_incoming_names_and_leaves_opaque_fields ... ok
+test clipboard::tests::preview_cancel_and_commit_are_one_atomic_stamp ... ok
+test component_edit::tests::axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context ... ok
+test clipboard::tests::foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo ... ok
+test clipboard::tests::overlap_paint_matches_original_first_covering_face_priority ... ok
+test component_edit::tests::cancel_and_fragment_save_preserve_document_and_history ... ok
+test clipboard::tests::loose_copy_paste_preserves_holes_opaque_data_uvs_curves_and_one_history_step ... ok
+test component_edit::tests::component_edit_commits_all_instances_once_and_undo_redo_restores_registry ... ok
+test app::tests::test_cad_clipboard_and_group_operations ... ok
+test component_edit::tests::local_dimensions_commit_to_parent_coordinates_and_cancel_restore ... ok
+test composer::frame_camera_tests::frame_bounds_matches_original_edge_and_group_vertex_semantics ... ok
+test clipboard::tests::foreign_component_material_and_asset_collisions_remap_with_shared_repeat_identity ... ok
+test component_edit::tests::mixed_selection_component_creation_and_explosion_are_reversible ... ok
+test composer::frame_camera_tests::frame_overrides_roll_scale_and_perspective_have_original_camera_semantics ... ok
+test component_edit::tests::nested_component_edit_propagates_and_folds_into_one_outer_history_entry ... ok
+test composer::frame_camera_tests::frame_pixel_aspect_saved_lens_clamp_and_two_point_follow_original ... ok
+test component_edit::tests::paste_retains_link_but_creates_unique_instance_uids ... ok
+test composer::frame_camera_tests::hidden_face_boundaries_and_contours_are_absent_from_sheet ... ok
+test clipboard::tests::overlap_stamp_rebuilds_regions_on_two_planes_with_one_undo ... ok
+test composer::frame_camera_tests::raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation ... ok
+test composer::frame_camera_tests::saved_section_view_uses_original_camera_direction_without_mutating_live_state ... ok
+test composer::frame_camera_tests::model_history_preserves_later_sheet_edits_and_switch_retires_drag ... ok
+test composer::live_composer_camera_tests::current_and_missing_saved_use_live_camera_while_bound_view_uses_snapshot ... ok
+test composer::frame_camera_tests::sheet_gestures_have_scoped_undo_and_cancel_or_selection_has_no_history ... ok
+test composer::section_frame_tests::bound_saved_scene_cut_clips_nested_edges_without_changing_live_document ... ok
+test dimension_actions::tests::property_edit_delete_invalid_axis_and_undo_preserve_dimension_identity ... ok
+test gpu_memory::global_limit_regression::global_limit_includes_other_heaps_reservations_and_retired_allocations ... ok
+test gpu_memory::tests::invalid_requests_do_not_change_accounting ... ok
+test native_vulkan::headless::tests::strict_hardware_request_never_substitutes_software_or_other_vendor ... ok
+test native_vulkan::queues::tests::no_present_or_graphics_is_rejected ... ok
+test gpu_memory::tests::actual_aligned_requirements_rollback_and_fence_delayed_free ... ok
+test gpu_memory::tests::compressed_odd_dimensions_layers_and_tiny_mips_use_complete_blocks ... ok
+test gpu_memory::tests::live_driver_usage_not_double_counted_and_external_pressure_blocks ... ok
+test native_vulkan::world::sample_count_regression::format_support_limits_global_msaa_without_allocating_invalid_images ... ok
+test geometry_actions::tests::menu_intersect_rebuild_and_failed_plane_have_single_atomic_history ... ok
+test outliner::tests::all_visibility_is_one_undo_and_cut_list_and_cache_follow_changes ... ok
+test section_actions::prompt_tests::placement_prompt_cancel_rename_optout_and_undo_follow_original_history ... ok
+test native_vulkan::queues::tests::combined_and_dedicated_compute_preferred ... ok
+test section_actions::tests::sections_in_rotated_scaled_edit_context_keep_world_plane_and_outer_undo ... ok
+test app::ordered_solid_selection_tests::first_selected_group_is_cutter_even_when_scene_order_is_reversed ... ok
+test outliner::tests::nested_selection_opens_correct_context_and_properties_roundtrip_with_undo ... ok
+test native_vulkan::world::contour_chunk_regression::storage_chunks_fit_actual_range_and_preserve_complete_triangles ... ok
+test native_vulkan::world::lifecycle_regression::failed_pipeline_batch_releases_every_partial_non_null_handle ... ok
+test geometry_actions::tests::heal_menu_holes_overlap_and_undo_restores_both_faces ... ok
+test geometry_actions::tests::simplify_and_path_conversion_commit_once_and_undo_exactly ... ok
+test saved_view_actions::tests::selected_update_preserves_metadata_and_recalls_hidden_tree_section_style ... ok
+test session_state::tests::crash_writer_helper ... ok
+test tests::test_app_camera_presets ... ok
+test native_vulkan::queues::tests::sparse_split_graphics_present_preserve_real_indices ... ok
+test section_actions::selection_identity_tests::deleting_earlier_plane_keeps_selection_on_same_persisted_identity ... ok
+test outliner::tests::cut_list_controls_apply_precision_surface_filter_and_document_units ... ok
+test geometry_actions::tests::orient_partition_marking_flip_and_second_pass_noop_have_one_undo ... ok
+test tests::test_app_initialization ... ok
+test tests::test_app_delete_and_select_all ... ok
+test tests::test_app_tool_switching ... ok
+test tests::test_app_undo_redo ... ok
+test tool_history::section_group_workflow::clipped_front_group_does_not_block_rear_group_select_and_double_click ... ok
+test app::tests::solid_boolean_prepares_before_undo_and_restores_inputs ... ok
+test tool_history::tests::cancel_invalid_vcb_and_selection_do_not_create_undo_commits ... ok
+test tool_history::tests::failed_path_sweep_reports_error_without_document_or_history_mutation ... ok
+test tool_history::tests::line_midchain_undo_rewinds_vcb_origin_without_consuming_prior_document_undo ... ok
+test viewport::drafting_plane_tests::standard_view_uses_model_center_oblique_uses_ground_and_line_can_rise ... ok
+test viewport::move_plane_tests::move_grab_uses_camera_heading_plane_and_top_view_fallback ... ok
+test tool_history::tests::freehand_preview_cancel_release_has_one_reversible_commit ... ok
+test viewport::move_plane_tests::move_second_point_yields_to_unselected_face_but_axis_and_selection_keep_grab_plane ... ok
+test app::document_camera_tests::visible_camera_is_saved_restored_and_reset_for_new_document ... ok
+test tool_history::tests::transform_previews_are_inert_and_vcb_commits_undo_once ... ok
+test geometry_actions::tests::placed_component_pieces_update_shared_definition_and_undo_once ... ok
+test tool_history::tests::offset_preview_failure_cancel_and_success_have_transactional_history ... ok
+test tool_history::tests::duplicate_line_undo_does_not_pop_unrelated_history_and_numeric_closure_stays_active ... ok
+test tool_history::tests::click_and_vcb_pushpull_each_create_one_undo_commit ... ok
+
+running 1 test
+test tool_history::tests::followme_preview_cancel_and_drag_release_history_are_atomic ... ok
+test session_state::tests::preferences_keep_unknown_settings_and_corrupt_source_is_never_overwritten ... ok
+test tool_history::tests::nested_mirrored_component_drafting_commits_shared_definition_once ... ok
+test section_actions::color_tests::section_color_saved_view_and_isolated_restart_keep_rgb ... ok
+test document_session::tests::camera_selection_do_not_dirty_and_preferences_restart_keeps_recent_files ... ok
+test tool_history::tests::ctrl_pushpull_vcb_preserves_slab_and_commits_one_undo ... ok
+test document_session::tests::timer_skips_gestures_cleans_and_duplicates_then_discard_keeps_recovery ... ok
+test tool_history::tests::fillet_sizing_preview_and_invalid_radius_do_not_create_history ... ok
+test session_state::tests::slots_do_not_collide_across_paths_or_live_windows_and_retirement_keeps_recoverable_copy ... ok
+test document_session::tests::native_close_requests_offer_cancel_then_close_after_discard ... ok
+test session_state::tests::separate_process_crash_restart_recovers_latest_geometry_without_touching_original ... ok
+test section_actions::native_close_tests::native_close_cancels_naming_then_enters_unsaved_guard ... ok
+test document_session::tests::unsaved_actions_cancel_failed_save_and_successful_save_are_atomic ... ok
+test composer::frame_camera_tests::subpixel_paper_hatch_keeps_original_two_row_coverage ... ok
+test document_session::tests::naming_modal_keeps_document_autosave_timer_and_pending_prompt ... ok
+test app::tests::test_group_3_colors ... ok
+test app::tests::test_load_example_pergola ... ok
+
+test result: ok. 93 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/clipboard_transport_acceptance.rs (/tmp/ingetrazo-composer-camera-target/debug/deps/clipboard_transport_acceptance-7058d74af30799c2)
+
+running 1 test
+test native_clipboard_transport_rejects_foreign_text_and_malformed_payload_without_stale_cache ... ignored, requires disposable X11 clipboard server
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/offset_controller_acceptance.rs (/tmp/ingetrazo-composer-camera-target/debug/deps/offset_controller_acceptance-c1b06db246d4ffbd)
+
+running 2 tests
+test selected_chain_typed_radius_preserves_dragged_sign_and_undo ... ok
+test face_pick_perpendicular_preview_cancel_paint_partition_and_one_history ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/recovery_acceptance.rs (/tmp/ingetrazo-composer-camera-target/debug/deps/recovery_acceptance-9d8bcbf82cfd80d0)
+
+running 2 tests
+test crash_helper ... ok
+
+running 1 test
+test crash_restart_retains_original_and_failed_close ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests ingetrazo_gui
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
