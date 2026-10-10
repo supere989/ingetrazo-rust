@@ -1395,7 +1395,12 @@ impl App for crate::IngeTrazoApp {
             world.set_display_scale(system.egui_ctx.pixels_per_point());
             world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)
         })();
-        if let Err(error)=result {self.gpu_error(&error);return;}
+        if let Err(error)=result {
+            // The collected overlay may still reference the prior target/scene.
+            // Refuse submission of the entire candidate frame on World failure.
+            system.annotation_prepare_error=Some(error.clone());self.gpu_error(&error);return;
+        }
+        system.annotation_prepare_error=None;
         if let Some(sample)=system.annotation_sample{
             let result=(||{
                 let factory=system.annotation_factory()?;
