@@ -1,0 +1,18 @@
+{
+  "source_revision": "32197c4",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "backend": "NVIDIA RTX 5090 native Vulkan owned Xwayland client",
+  "original_qt": "6.12.0",
+  "shader_sha256": {
+    "cad2d_integer.frag": "46a6d81e20f77896ba0b220b3a685d49fc6f39ec0ed23579daece547727db610",
+    "cad2d_integer.frag.spv": "0ca4a504f2f2dbf84290acf0d617fc86d977642621e944c4e14d5269c5fe9770"
+  },
+  "compiler": "shaderc 0.8.3",
+  "compiler_sha256": "172e2101c8e055fa6e4e4f8a397b7a077466706d93a1fdb5c415d45a58e6fcae",
+  "recompile_command": [
+    "/tmp/ingetrazo-shader-build/target/debug/ingetrazo-shader-build",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d_integer.frag",
+    "/tmp/cad2d-integer-final-recompiled.spv"
+  ],
+  "recompile_byte_identical": true
+}

@@ -1,0 +1,51 @@
+{
+  "passed": false,
+  "scope": "Fresh actual original QPainter vs owned NVIDIA native Vulkan whole600x500 RGBA, strict pixels",
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 4,
+      "passed": false
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 10,
+      "passed": false
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 5,
+      "passed": false
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 0,
+      "passed": true
+    }
+  ]
+}
