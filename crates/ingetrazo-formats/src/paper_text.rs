@@ -384,6 +384,11 @@ impl PaperFont {
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
         &self.bytes
     }
+    /// Native nominal character coverage without a shaping allocation or font-byte copy.
+    pub fn covers_character(&self, ch: char) -> bool {
+        let mut glyph = 0;
+        unsafe { hb::hb_font_get_nominal_glyph(self.font.ptr.as_ptr(), ch as u32, &mut glyph) != 0 }
+    }
     /// A single script/direction run. Paragraph bidi and line wrapping must not
     /// be inferred from this API; they remain separate source-layout contracts.
     pub fn shape_run(&self, text: &str, right_to_left: Option<bool>) -> Result<Vec<Glyph>, String> {
