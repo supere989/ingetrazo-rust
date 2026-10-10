@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "source_checkpoint": "09004fd",
+  "workspace_passed": 412,
+  "workspace_ignored": 2,
+  "raw_log_sha256": "4e7ec516d74003bdb381a0e2e2a4500760c3d1d2f3cf2915688087dbbaae72fe",
+  "retained_log_sha256": "79871265bb2702dadde2bacf5f3296466d020f003286d0f91afc8275e7468b3a",
+  "renderer_matches_hardware_source": "469d956",
+  "boundary": "Combined current Move and renderer source; exact38 plus heldout4 hardware evidence retained independently; textures/styles/Metal/fullperf open"
+}
