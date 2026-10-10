@@ -1,0 +1,26 @@
+{
+  "cases": {
+    "color-back-tex-front": true,
+    "color-back-tex-reversed": true,
+    "tex-back-color-front": true,
+    "tex-back-color-reversed": true,
+    "tex-back-opaque-color-reversed": true,
+    "tex-group-reflected": true,
+    "tex-group-slanted": true,
+    "tex-hole": true,
+    "tex-mixed-backcolor-phase": false,
+    "tex-mixed-order-color-first": true,
+    "tex-mixed-order-tex-first": true,
+    "tex-shaded-average": false,
+    "tex-trans-back-color-front": true,
+    "tex-trans-back-color-reversed": true,
+    "tex-xray": false
+  },
+  "passing": 12,
+  "failed": [
+    "tex-mixed-backcolor-phase",
+    "tex-shaded-average",
+    "tex-xray"
+  ],
+  "negative_controls": 2
+}

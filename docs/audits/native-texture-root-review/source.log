@@ -1,0 +1,360 @@
+{
+  "cases": [
+    {
+      "case": "texture-quadrants",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          176,
+          43,
+          43,
+          255
+        ],
+        [
+          69,
+          206,
+          43,
+          255
+        ],
+        [
+          69,
+          43,
+          206,
+          255
+        ],
+        [
+          179,
+          206,
+          206,
+          255
+        ],
+        [
+          124,
+          124,
+          124,
+          255
+        ]
+      ],
+      "gl_info": {
+        "vendor": "Mesa",
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4",
+        "software": true,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "81ee362ade79a3800293635ec1984cd3231fe47386c0edb67154773855ccd2fa"
+    },
+    {
+      "case": "texture-repeat",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          182,
+          208,
+          208,
+          255
+        ],
+        [
+          67,
+          42,
+          208,
+          255
+        ],
+        [
+          67,
+          208,
+          42,
+          255
+        ],
+        [
+          178,
+          42,
+          42,
+          255
+        ],
+        [
+          124,
+          123,
+          123,
+          255
+        ]
+      ],
+      "gl_info": {
+        "vendor": "Mesa",
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4",
+        "software": true,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "fc08cd3b2513a9fe2bda2ff50d0c821908c1533377471f08e9e0ec09274e8b88"
+    },
+    {
+      "case": "texture-alpha",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ]
+      ],
+      "gl_info": {
+        "vendor": "Mesa",
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4",
+        "software": true,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "0ce3c921506195157e7ceb88294211f662a3e9373f44a4a38a1b775ccc1440ab"
+    },
+    {
+      "case": "texture-cutout",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          199,
+          104,
+          104,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          200,
+          219,
+          219,
+          255
+        ],
+        [
+          189,
+          189,
+          189,
+          255
+        ]
+      ],
+      "gl_info": {
+        "vendor": "Mesa",
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4",
+        "software": true,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "a757a67b0d485d59e866dac10651f1526fcf01d78967870eebe3b8cc7a1913a2"
+    },
+    {
+      "case": "texture-back",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ]
+      ],
+      "gl_info": {
+        "vendor": "Mesa",
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4",
+        "software": true,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "ba301c2081e8cb12e8c96c2423d91b9601451e36aca2d8fbb6ad8f2b51fdc002"
+    }
+  ],
+  "scope": "Actual original QOpenGLWidget five initial literal texture controls; source repeat/UV/alpha/back/cutout samples, not full texture parity"
+}

@@ -2,6 +2,7 @@ pub mod cad2d;
 pub mod headless;
 pub mod world;
 pub mod resources;
+pub mod texture_cache;
 mod queues;
 pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
@@ -1141,3 +1142,5 @@ fn select_encoded_surface_format(formats:&[vk::SurfaceFormatKHR])->Option<vk::Su
   assert_eq!(select_encoded_surface_format(&[vk::SurfaceFormatKHR{format:vk::Format::UNDEFINED,..srgb}]).unwrap().format,vk::Format::B8G8R8A8_UNORM);
  }
 }
+
+pub mod textures;

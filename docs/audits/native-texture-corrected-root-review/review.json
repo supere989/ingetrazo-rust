@@ -1,0 +1,9 @@
+{
+  "workspace_passed": 443,
+  "workspace_ignored": 2,
+  "heldout_exact": 14,
+  "heldout_total": 15,
+  "retained_failure": "tex-shaded-average",
+  "review": "Source views/viewport.py blended color front/back precedes texture front/back; XRay opaque texture opacity .6 with depth writes disabled. Native matches reviewed source ordering. Average experiment excluded.",
+  "scope": "Fresh workspace tests and independent retained actual NVIDIA output checker rerun; no fresh root hardware execution of updated binary."
+}

@@ -1,0 +1,14 @@
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Texture replacement pressure refused: Texture image admission: A error occured when using the allocator: GPU allocation 512 exceeds global application budget 17280840; old sampled image and ledger preserved; replacement retry and fenced image retirement passed
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
