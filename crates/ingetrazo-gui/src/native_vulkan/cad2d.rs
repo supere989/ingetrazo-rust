@@ -287,6 +287,15 @@ impl VulkanPaint for AnnotationPaint{
   self.0.paint(info,device,command)
  }
 }
+struct AnnotationAdmission {
+ geometry:Arc<Geometry>,batches:Arc<[Batch]>,gates:Arc<[ingetrazo_render::annotations::Gate]>,count:u32,opaque:bool,
+}
+impl AnnotationAdmission{
+ fn matches(&self,state:&State,count:u32)->bool{
+  Arc::ptr_eq(&self.geometry,&state.geometry)&&Arc::ptr_eq(&self.batches,&state.batches)
+   &&state.gates.as_ref().is_some_and(|gates|Arc::ptr_eq(&self.gates,gates))&&self.count==count
+ }
+}
 struct Cached {
     vertex: BufferId,
     index: BufferId,
@@ -320,6 +329,7 @@ pub struct Renderer {
     arena:arena::Gpu,
     annotation_buffers:Option<(u64,Cached)>,
     annotation_owner:Option<std::sync::Weak<NativePaint>>,
+    annotation_admission:Option<AnnotationAdmission>,
     cache: HashMap<u64, Cached>,
     active: HashSet<u64>,
     pending: HashMap<u64, Cached>,
@@ -373,7 +383,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             arena:Default::default(),
-            annotation_buffers:None,annotation_owner:None,
+            annotation_buffers:None,annotation_owner:None,annotation_admission:None,
             cache: HashMap::new(),
             active: HashSet::new(),
             pending: HashMap::new(),
@@ -407,19 +417,30 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             Some(old.state.lock().map_err(|_|"Previous annotation state poisoned")?)
         }else{None};
         let mut state=handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?;
-        state.geometry.validate_batches(&state.batches)?;state.pose.validate()?;
-        admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
-        if !state.geometry.is_opaque(&state.batches){
-            state.geometry.validate_ordered_pose(state.pose,pixels_per_point)?;
-            let ranges=state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;
-            let mut end=0;
-            for batch in state.batches.iter().filter(|batch|batch.count>0){
-                if batch.first!=end{return Err("Annotation batches do not partition geometry".into());}
-                end=batch.first+batch.count;
-                if !ranges.iter().any(|range|range.end==end){return Err("Annotation palette splits ordered draw".into());}
+        state.pose.validate()?;
+        state.geometry.validate_ordered_pose(state.pose,pixels_per_point)?;
+        state.geometry.source_spans().ok_or("Annotation immutable spans absent")?.translation(state.pose,pixels_per_point)?;
+        let already_admitted=self.annotation_admission.as_ref().is_some_and(|key|key.matches(&state,count));
+        let opaque=if already_admitted{self.annotation_admission.as_ref().unwrap().opaque}else{
+            state.geometry.validate_batches(&state.batches)?;
+            admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
+            let opaque=state.geometry.is_opaque(&state.batches);
+            if !opaque{
+                let ranges=state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;
+                let mut range_index=0;let mut end=0;
+                for batch in state.batches.iter().filter(|batch|batch.count>0){
+                    if batch.first!=end{return Err("Annotation batches do not partition geometry".into());}
+                    end=batch.first+batch.count;
+                    while range_index<ranges.len()&&ranges[range_index].end<end{range_index+=1;}
+                    if range_index==ranges.len()||ranges[range_index].end!=end{return Err("Annotation palette splits ordered draw".into());}
+                    range_index+=1;
+                }
+                if end as usize!=state.geometry.indices().len(){return Err("Annotation palette does not cover geometry".into());}
             }
-            if end as usize!=state.geometry.indices().len(){return Err("Annotation palette does not cover geometry".into());}
-        }
+            opaque
+        };
+        let admitted=AnnotationAdmission{geometry:state.geometry.clone(),batches:state.batches.clone(),
+            gates:state.gates.clone().expect("admitted annotation gates"),count,opaque};
         let id=state.geometry.id();
         let warm=self.annotation_buffers.as_ref().is_some_and(|(old,_)|*old==id);
         let mut fresh=None;
@@ -449,7 +470,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
                 Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,
                     batches:state.batches.clone(),premultiplied:state.premultiplied.clone(),pose:state.pose,
-                    ordered_draws:state.geometry.ordered_draws(),opaque:state.geometry.is_opaque(&state.batches)})
+                    ordered_draws:state.geometry.ordered_draws(),opaque})
             }else{None};
             Ok((proof,ready))
         })();
@@ -474,8 +495,24 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             if let Some((_,buffers))=&self.annotation_buffers{self.uploads+=1;self.upload_bytes+=buffers.bytes;}
         }else{self.cache_hits+=1;}
         if let Some(old)=old_state.as_mut(){old.ready=None;}
-        state.ready=ready;self.annotation_owner=Some(Arc::downgrade(&handle.inner));
+        state.ready=ready;self.annotation_owner=Some(Arc::downgrade(&handle.inner));self.annotation_admission=Some(admitted);
         Ok(())
+    }
+    pub(crate) fn clear_annotation(&mut self,context:&VulkanContext,
+        queries:Option<super::annotation_visibility_gpu::PreparedVisibility<'_>>,
+        fence:vk::Fence,completed:u64)->Result<(),String>{
+        let old=self.annotation_buffers.as_ref().map(|(_,buffers)|[buffers.vertex,buffers.index]);
+        let proof=self.resources.publication_preflight(context,fence,completed,
+            old.as_ref().map_or(&[][..],|ids|ids.as_slice()),&[])?;
+        let mut pipeline=self.pipeline.lock().map_err(|_|"Annotation pipeline poisoned")?;
+        if !pipeline.annotations{return Err("Ordinary CAD cannot clear annotation state".into());}
+        let owner=self.annotation_owner.as_ref().and_then(std::sync::Weak::upgrade);
+        let mut state=owner.as_ref().map(|owner|owner.state.lock().map_err(|_|"Annotation state poisoned")).transpose()?;
+        if let Some(queries)=queries{queries.commit();}
+        pipeline.visibility=None;
+        if let Some(state)=state.as_mut(){state.ready=None;}
+        self.resources.retire_completed(proof);self.annotation_buffers=None;
+        self.annotation_owner=None;self.annotation_admission=None;Ok(())
     }
     pub(crate) fn bind_annotation_visibility(&mut self,context:&VulkanContext,buffer:vk::Buffer,count:u32,identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<(),String>{
         self.resources.publication_preflight(context,fence,completed,&[],&[])?;

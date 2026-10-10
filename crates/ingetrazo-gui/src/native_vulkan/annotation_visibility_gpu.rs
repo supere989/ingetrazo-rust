@@ -59,7 +59,7 @@ impl Evaluator {
   if queries.is_empty()||queries.len()>u32::MAX as usize||queries.len().div_ceil(64)>limits.max_compute_work_group_count[0] as usize||bytes.len()>max{return Err("Annotation query storage admission failed".into());}
   self.resources.publication_preflight(context,fence,completed,&[],&[])?;
   if Arc::ptr_eq(&self.cached_queries,&queries) {
-   return Ok(PreparedVisibility{owner:self,depth,depth_identity:depth_identity.clone(),candidate:None,fence,completed});
+   return Ok(PreparedVisibility{owner:self,depth,depth_identity:depth_identity.clone(),candidate:None,clear:None,fence,completed});
   }
   if self.query.is_some()!=self.output.is_some(){return Err("Inconsistent annotation buffer owner".into());}
   let old_ids=self.query.zip(self.output).map(|(q,o)|[q,o]);
@@ -71,7 +71,15 @@ impl Evaluator {
   let cached=queries;
   let query_buffer=self.resources.buffer(query).expect("preflight admitted query buffer");
   let output_buffer=self.resources.buffer(output).expect("preflight admitted output buffer");
-  Ok(PreparedVisibility{owner:self,depth,depth_identity:depth_identity.clone(),candidate:Some(StagedBuffers{query,output,query_buffer,output_buffer,cached,identity,proof}),fence,completed})
+  Ok(PreparedVisibility{owner:self,depth,depth_identity:depth_identity.clone(),candidate:Some(StagedBuffers{query,output,query_buffer,output_buffer,cached,identity,proof}),clear:None,fence,completed})
+ }
+ pub(crate) fn stage_clear<'a>(&'a mut self,context:&VulkanContext,fence:vk::Fence,completed:u64)->Result<PreparedVisibility<'a>,String>{
+  if self.query.is_some()!=self.output.is_some(){return Err("Inconsistent annotation owner on clear".into());}
+  let ids=self.query.zip(self.output).map(|(query,output)|[query,output]);
+  let proof=self.resources.publication_preflight(context,fence,completed,ids.as_ref().map_or(&[][..],|ids|ids.as_slice()),&[])?;
+  let empty=Arc::from([]);
+  Ok(PreparedVisibility{owner:self,depth:vk::ImageView::null(),depth_identity:Arc::new(()),
+   candidate:None,clear:Some((proof,empty)),fence,completed})
  }
  pub(crate) fn record(&mut self,command:vk::CommandBuffer,serial:u64,mut p:Parameters,samples:u32)->Result<(),String>{
   if p.extent_count_sample[0]==0||p.extent_count_sample[1]==0||samples==0||p.extent_count_sample[3]>=samples||self.multisampled!=(samples>1){return Err("Annotation depth sample policy/extent mismatch".into());}
@@ -106,10 +114,11 @@ struct StagedBuffers {
 /// ownership and leaves the old descriptor set, identities and counters intact.
 pub(crate) struct PreparedVisibility<'a> {
  owner:&'a mut Evaluator,depth:vk::ImageView,depth_identity:Arc<()>,
- candidate:Option<StagedBuffers>,fence:vk::Fence,completed:u64,
+ candidate:Option<StagedBuffers>,clear:Option<(CompletedRetirement,Arc<[Query]>)>,fence:vk::Fence,completed:u64,
 }
 impl PreparedVisibility<'_> {
  pub(crate) fn output(&self)->Result<(vk::Buffer,u32,&Arc<()>),String>{
+  if self.clear.is_some(){return Err("Cleared annotation output cannot bind".into());}
   if let Some(c)=&self.candidate{return Ok((c.output_buffer,c.cached.len() as u32,&c.identity));}
   let id=self.owner.output.ok_or("Annotation output not prepared")?;
   Ok((self.owner.resources.buffer(id).ok_or("Retained annotation output missing")?,self.owner.count,&self.owner.output_identity))
@@ -117,6 +126,11 @@ impl PreparedVisibility<'_> {
  /// Infallible publication after both query and geometry admission. Caller must
  /// not publish a mesh that can still fail before calling this method.
  pub(crate) fn commit(mut self){
+  if let Some((proof,empty))=self.clear.take(){
+   self.owner.resources.retire_completed(proof);
+   self.owner.query=None;self.owner.output=None;self.owner.count=0;
+   self.owner.cached_queries=empty;self.owner.depth_identity=None;return;
+  }
   let image=[vk::DescriptorImageInfo::default().image_view(self.depth).image_layout(vk::ImageLayout::DEPTH_STENCIL_READ_ONLY_OPTIMAL)];
   if let Some(c)=self.candidate.take(){
    let input=[vk::DescriptorBufferInfo::default().buffer(c.query_buffer).range(c.cached.len() as u64*std::mem::size_of::<Query>() as u64)];

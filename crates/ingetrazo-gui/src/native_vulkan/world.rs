@@ -202,6 +202,12 @@ impl World {
   renderer.prepare_annotation(context,handle,staged,fence,completed,next,density)?;
   self.annotation_depth_binding=Some(target.identity.clone());self.annotation_parameters=Some(parameters);Ok(())
  }
+ pub(crate) fn clear_annotation_overlay(&mut self,renderer:&mut super::cad2d::Renderer,context:&VulkanContext,fence:vk::Fence,completed:u64)->Result<(),String>{
+  self.resources.publication_preflight(context,fence,completed,&[],&[])?;
+  let staged=self.annotation_visibility.as_mut().map(|evaluator|evaluator.stage_clear(context,fence,completed)).transpose()?;
+  renderer.clear_annotation(context,staged,fence,completed)?;
+  self.annotation_parameters=None;self.annotation_depth_binding=None;Ok(())
+ }
  pub(crate) fn record_annotations_if_prepared(&mut self,command:vk::CommandBuffer,serial:u64)->Result<(),String>{
   if self.annotation_parameters.is_some(){self.record_annotation_queries_for_probe(command,serial)}else{Ok(())}
  }

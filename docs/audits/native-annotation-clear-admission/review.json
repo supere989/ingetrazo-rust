@@ -1,0 +1,16 @@
+{
+  "scope": "Source-only immutable annotation admission caching and coordinated empty-overlay retirement; actual GPU deletion, failed-replacement images and application dispatch remain required.",
+  "focused_tests": 13,
+  "gpu_acceptance": false,
+  "warm_key": [
+    "geometry Arc",
+    "batch Arc",
+    "gate Arc",
+    "query count"
+  ],
+  "per_frame_admission": [
+    "pose",
+    "physical span density and translation"
+  ],
+  "clear": "Prepared query and mesh retirement proofs plus owner locks before publication; no descriptor write to freed output; World clears parameters so compute dispatch stops."
+}
