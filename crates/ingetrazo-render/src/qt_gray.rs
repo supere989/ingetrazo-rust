@@ -84,11 +84,11 @@ fn fixed(p:[f64;2])->Result<[i64;2],String>{
 }
 // QBezier::addToPolygon adaptation, Copyright (C) 2016 The Qt Company Ltd.
 // Used under GPL-3.0-only; repository LICENSE.
-fn flatten_cubic(a:[f64;2],c1:[f64;2],c2:[f64;2],b:[f64;2])->Vec<[f64;2]>{
+fn flatten_cubic(a:[f64;2],c1:[f64;2],c2:[f64;2],b:[f64;2],threshold:f64)->Vec<[f64;2]>{
  let mut stack=vec![([a,c1,c2,b],9usize)];let mut out=Vec::new();
  while let Some((q,level))=stack.pop(){let dx=q[3][0]-q[0][0];let dy=q[3][1]-q[0][1];let mut length=dx.abs()+dy.abs();
   let deviation=if length>1.{(dx*(q[0][1]-q[1][1])-dy*(q[0][0]-q[1][0])).abs()+(dx*(q[0][1]-q[2][1])-dy*(q[0][0]-q[2][0])).abs()}else{length=1.;(q[0][0]-q[1][0]).abs()+(q[0][1]-q[1][1]).abs()+(q[0][0]-q[2][0]).abs()+(q[0][1]-q[2][1]).abs()};
-  if deviation<0.25*length||level==0{out.push(q[3]);continue;}
+  if deviation<threshold*length||level==0{out.push(q[3]);continue;}
   let midpoint=|a:[f64;2],b:[f64;2]|[(a[0]+b[0])*0.5,(a[1]+b[1])*0.5];
   let ab=midpoint(q[0],q[1]);let bc=midpoint(q[1],q[2]);let cd=midpoint(q[2],q[3]);let abc=midpoint(ab,bc);let bcd=midpoint(bc,cd);let middle=midpoint(abc,bcd);
   stack.push(([middle,bcd,cd,q[3]],level-1));stack.push(([q[0],ab,abc,middle],level-1));
@@ -100,8 +100,16 @@ pub fn rasterize_paths(paths:&[PathContour],max_cells:usize,max_runs:usize)->Res
  let count=paths.iter().try_fold(0usize,|n,p|n.checked_add(p.segments.len()+1)).ok_or("Gray path count overflow")?;
  if count>max_cells{return Err("Gray path admission exceeded".into());}
  let mut cells=Cells{map:BTreeMap::new(),limit:max_cells,steps:0};
- for path in paths{let start=fixed(path.start)?;let mut current=start;let mut current_float=path.start;for segment in &path.segments{match segment{Segment::Line(to)=>{let next=fixed(*to)?;cells.line(current,next)?;current=next;current_float=*to;},Segment::Cubic{control1,control2,to}=>{let next=fixed(*to)?;fixed(*control1)?;fixed(*control2)?;for point in flatten_cubic(current_float,*control1,*control2,*to){let point=fixed(point)?;cells.line(current,point)?;current=point;}current=next;current_float=*to;}}}cells.line(current,start)?;}
+ for path in paths{let start=fixed(path.start)?;let mut current=start;let mut current_float=path.start;for segment in &path.segments{match segment{Segment::Line(to)=>{let next=fixed(*to)?;cells.line(current,next)?;current=next;current_float=*to;},Segment::Cubic{control1,control2,to}=>{let next=fixed(*to)?;fixed(*control1)?;fixed(*control2)?;for point in flatten_cubic(current_float,*control1,*control2,*to,0.25){let point=fixed(point)?;cells.line(current,point)?;current=point;}current=next;current_float=*to;}}}cells.line(current,start)?;}
  finish(cells,max_runs)
+}
+/// Source outline mapper flattens in local coordinates before uniform transform.
+pub fn rasterize_transformed_paths(paths:&[PathContour],scale:f64,translation:[f64;2],max_cells:usize,max_runs:usize)->Result<Vec<Span>,String>{
+ if !scale.is_finite()||scale<=0.||translation.iter().any(|x|!x.is_finite()){return Err("Invalid gray path transform".into());}
+ let transform=|p:[f64;2]|[p[0]*scale+translation[0],p[1]*scale+translation[1]];
+ let mut contours=Vec::new();let mut count=0usize;
+ for path in paths{fixed(path.start)?;let mut current=path.start;let mut contour=vec![transform(current)];for segment in &path.segments{let points=match segment{Segment::Line(to)=>{fixed(*to)?;vec![*to]},Segment::Cubic{control1,control2,to}=>{fixed(*control1)?;fixed(*control2)?;fixed(*to)?;flatten_cubic(current,*control1,*control2,*to,0.25/scale)}};count=count.checked_add(points.len()).ok_or("Gray flattened path count overflow")?;if count>max_cells{return Err("Gray flattened path admission exceeded".into());}current=*points.last().unwrap();contour.extend(points.into_iter().map(transform));}contours.push(contour);}
+ rasterize(&contours,max_cells,max_runs)
 }
 #[cfg(test)]mod tests {
  use super::*;
