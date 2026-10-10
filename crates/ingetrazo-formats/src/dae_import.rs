@@ -854,7 +854,11 @@ pub(crate) fn scene_from_xml_at(
                         start,
                         end: scene.groups.len(),
                         key: target.id(),
-                        name: name.to_owned(),
+                        name: el
+                            .attribute("name")
+                            .or(el.attribute("id"))
+                            .unwrap_or(name)
+                            .to_owned(),
                         placement: world * basis.inverse(),
                     });
                 }
