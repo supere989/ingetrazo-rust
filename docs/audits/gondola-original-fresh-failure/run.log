@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-next-integration/scripts/reference-gondola-samples.py", line 24, in <module>
+    image=vp.grabFramebuffer();assert image.save(str(out/'fresh.png'));a=pixels(image);expected=pixels(QImage(str(original/'gondola_v20-iso-source.png')));assert np.array_equal(a,expected),'Fresh source does not match retained reference'
+                                                                                                                                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Fresh source does not match retained reference
+Fontconfig error: Cannot load default config file: No such file: (null)

@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""Inspect actual original renderer MSAA samples; no altered acceptance images."""
+import ctypes,json,sys,time,subprocess
+from pathlib import Path
+import numpy as np
+root=Path(__file__).resolve().parents[1];out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
+source=root/'ingetrazo';assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True).strip()=='6be29fe437a7cd992d4e079f71720821b25216b9'
+sys.path.insert(0,str(source))
+from PySide6.QtGui import QSurfaceFormat,QVector3D,QImage
+from PySide6.QtWidgets import QApplication
+from PySide6.QtOpenGL import QOpenGLFramebufferObject,QOpenGLShaderProgram,QOpenGLShader,QOpenGLVertexArrayObject
+fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CoreProfile);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8);fmt.setSamples(4);QSurfaceFormat.setDefaultFormat(fmt)
+app=QApplication([])
+from core.scene import Scene
+from core.style import Style
+from formats.igz import load_into
+from views.viewport import Viewport
+original=root/'docs/audits/skp-real-model-nvidia-failure/original';protocol=json.loads((original/'protocol.json').read_text())['cases'][0];c=protocol['camera'];scene=Scene();load_into(scene,original/'gondola_v20.igz')
+vp=Viewport();vp.resize(800,600);vp.scene=scene;vp.style_override=Style(face_mode='shaded',sky=False,edges=True,profiles=False,background=(1.,1.,1.));vp.camera.target=QVector3D(*c['target']);vp.camera.distance=c['distance'];vp.camera.yaw=c['yaw'];vp.camera.pitch=c['pitch'];vp.camera.fov_deg=45.;vp.camera.perspective=False;vp.show()
+deadline=time.monotonic()+3
+while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
+def pixels(image):
+ im=image.convertToFormat(QImage.Format_RGBA8888);return np.frombuffer(im.constBits(),np.uint8).reshape(im.height(),im.bytesPerLine())[:,:im.width()*4].reshape(im.height(),im.width(),4).copy()
+image=vp.grabFramebuffer();assert image.save(str(out/'fresh.png'));a=pixels(image);expected=pixels(QImage(str(original/'gondola_v20-iso-source.png')));assert np.array_equal(a,expected),'Fresh source does not match retained reference'
+vp.makeCurrent();gl=vp._gl;assert vp._scene_fbo.format().samples()==4
+lib=ctypes.CDLL('libGL.so.1')
+def call(name,types,*args):
+ fn=getattr(lib,name);fn.argtypes=types;fn.restype=None;fn(*args)
+U=ctypes.c_uint;I=ctypes.c_int;B=ctypes.c_ubyte;tex=U();fbo=U()
+call('glGenTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));call('glBindTexture',[U,U],0x9100,tex.value);call('glTexImage2DMultisample',[U,I,U,I,I,B],0x9100,4,0x8058,800,600,1)
+call('glGenFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glBindFramebuffer',[U,U],0x8CA9,fbo.value);call('glFramebufferTexture2D',[U,U,U,U,I],0x8CA9,0x8CE0,0x9100,tex.value,0)
+call('glBindFramebuffer',[U,U],0x8CA8,vp._scene_fbo.handle());call('glBlitFramebuffer',[I,I,I,I,I,I,I,I,U,U],0,0,800,600,0,0,800,600,0x4000,0x2600);assert gl.glGetError()==0,'MSAA-preserving copy failed'
+program=QOpenGLShaderProgram();assert program.addShaderFromSourceCode(QOpenGLShader.Vertex,'#version 330 core\nvoid main(){vec2 p[3]=vec2[3](vec2(-1,-1),vec2(3,-1),vec2(-1,3));gl_Position=vec4(p[gl_VertexID],0,1);}')
+assert program.addShaderFromSourceCode(QOpenGLShader.Fragment,'#version 330 core\nuniform sampler2DMS image;uniform int sample_index;out vec4 color;void main(){color=texelFetch(image,ivec2(gl_FragCoord.xy),sample_index);}')
+assert program.link(),program.log();assert program.bind();vao=QOpenGLVertexArrayObject();assert vao.create();vao.bind();target=QOpenGLFramebufferObject(800,600);assert target.isValid()
+for capability in [0x0B71,0x0BE2,0x0B90,0x0B44,0x3000,0x8E51]:gl.glDisable(capability)
+gl.glViewport(0,0,800,600);gl.glActiveTexture(0x84C0);call('glBindTexture',[U,U],0x9100,tex.value);gl.glUniform1i(program.uniformLocation('image'),0)
+samples=[]
+for i in range(4):
+ assert target.bind();gl.glUniform1i(program.uniformLocation('sample_index'),i);gl.glDrawArrays(0x0004,0,3);assert gl.glGetError()==0
+ im=target.toImage();assert im.save(str(out/f'sample-{i}.png'));samples.append(pixels(im))
+reconstructed=((sum(x.astype(np.uint16) for x in samples)+1)//4).astype(np.uint8);different=int(np.any(reconstructed!=a,axis=2).sum())
+report={'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':True,'reconstructed_resolve_different_pixels':different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Actual original renderer sample-color inspection after exact retained full-image match. No Rust per-sample comparison yet.'}
+(out/'review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
+vao.release();program.release();del target;del vao;del program;call('glDeleteFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glDeleteTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()

@@ -1,0 +1,232 @@
+{
+  "passed": false,
+  "stage": "Fresh original renderer reproducibility gate; sample extraction not reached",
+  "different_pixels": 12,
+  "bounds": [
+    588,
+    360,
+    588,
+    371
+  ],
+  "differences": [
+    {
+      "xy": [
+        588,
+        360
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        361
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        362
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        363
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        364
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        365
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        366
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        367
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        368
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        369
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        370
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    },
+    {
+      "xy": [
+        588,
+        371
+      ],
+      "retained": [
+        51,
+        59,
+        71,
+        255
+      ],
+      "fresh": [
+        52,
+        59,
+        71,
+        255
+      ]
+    }
+  ],
+  "fresh_sha256": "c841f13bd938aea2a44892e578ea465d6002aed6ea927133c98edf9e5e5ae72b",
+  "reference_sha256": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7",
+  "scope": "Pinned Python renderer, retained native IGZ, frozen camera. The retained source and IGZ images previously matched. This mismatch does not prove its cause or Rust parity; strict gate preserved."
+}
