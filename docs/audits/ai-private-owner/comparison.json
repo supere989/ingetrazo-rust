@@ -1,0 +1,12 @@
+{
+  "source_history_states": 12,
+  "history_depth": 96,
+  "observed_growth_bytes": 64220,
+  "negative_rejections": [
+    "base-per-command",
+    "quadratic-memory-growth",
+    "history-not-reclaimed"
+  ],
+  "allocation_scope": "live Rust allocator request bytes, not RSS",
+  "production": false
+}

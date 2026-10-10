@@ -115,6 +115,10 @@ pub struct Mesh {
     spatial_index: HashMap<PointKey, VertexId>,
 }
 
+/// Prepared replacement lookup. All allocation occurs before publication;
+/// coordinates bind this index to the exact ordered vertex positions.
+pub struct PreparedSpatialIndex { positions:Vec<DVec3>, index:HashMap<PointKey,VertexId> }
+
 impl Default for Mesh {
     fn default() -> Self {
         Self::new()
@@ -144,6 +148,21 @@ impl Mesh {
         self.edges.clear();
         self.faces.clear();
         self.spatial_index.clear();
+    }
+
+    pub fn prepare_spatial_index(positions:&[DVec3])->Result<PreparedSpatialIndex,&'static str>{
+        if positions.iter().any(|p|!p.is_finite()){return Err("Nonfinite prepared index coordinate");}
+        let mut ordered=Vec::new();ordered.try_reserve_exact(positions.len()).map_err(|_|"Prepared coordinate allocation refused")?;
+        ordered.extend_from_slice(positions);
+        let mut index=HashMap::new();index.try_reserve(positions.len()).map_err(|_|"Prepared index allocation refused")?;
+        for (id,&position) in positions.iter().enumerate(){index.insert(PointKey::from_vec3(position),id);}
+        Ok(PreparedSpatialIndex{positions:ordered,index})
+    }
+    /// Allocation-free validation and swap; a foreign/stale preparation cannot
+    /// replace the lookup. Duplicate native keys retain last-vertex semantics.
+    pub fn install_prepared_spatial_index(&mut self,prepared:PreparedSpatialIndex)->Result<(),&'static str>{
+        if self.vertices.len()!=prepared.positions.len()||self.vertices.iter().zip(&prepared.positions).any(|(v,p)|v.position!=*p){return Err("Prepared index does not match vertices");}
+        self.spatial_index=prepared.index;Ok(())
     }
 
     /// Rebuild the spatial lookup table (e.g. after deserialization).

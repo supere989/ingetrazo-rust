@@ -116,7 +116,7 @@ impl AppendUndo{
   m.rebuild_spatial_index();self.applied=true;Ok(())
  }
 }
-fn validate_base(mesh:&Mesh)->Result<(),String>{
+pub(crate) fn validate_base(mesh:&Mesh)->Result<(),String>{
  let mut incidence=vec![0u8;mesh.edges.len()];
  for (id,v) in mesh.vertices.iter().enumerate(){
   if !v.position.is_finite(){return Err("Malformed base vertex".into());}
