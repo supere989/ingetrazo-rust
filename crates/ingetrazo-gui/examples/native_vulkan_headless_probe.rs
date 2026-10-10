@@ -27,6 +27,8 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  eprintln!("PASS ordinary GPU buffer rejects undeclared readback before staging allocation");
  let expected=(0..17*1024*1024).map(|i|(i%251)as u8).collect::<Vec<_>>();let started=Instant::now();
  let buffer=resources.upload(&context,&expected,vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC,true)?;
+ assert_eq!(resources.stats.transfer_command_allocations,1,"Repeated buffer upload recreated command buffer");
+ assert_eq!(resources.stats.transfer_fence_creations,1,"Repeated buffer upload recreated transfer fence");
  let upload_ms=started.elapsed().as_secs_f64()*1000.;let started=Instant::now();let copied=resources.readback_buffer(&context,buffer)?;
  assert_eq!(copied,expected,"Actual GPU-to-host copy differs; device-local mapping is not used");
  let readback_ms=started.elapsed().as_secs_f64()*1000.;assert!(resources.stats.staging_peak<=8*1024*1024&&resources.stats.readback_staging_peak<=8*1024*1024);
