@@ -37,17 +37,33 @@ struct Key {
 pub struct PaperDrawing {
     pub segments: Arc<Vec<VectorSegment>>,
     pub section_material: Vec<[glam::DVec3; 3]>,
+    pub section_loops: Vec<Vec<glam::DVec3>>,
 }
 impl PaperDrawing {
     fn bytes(&self) -> usize {
-        self.segments
+        let loops = self
+            .section_loops
             .capacity()
-            .saturating_mul(std::mem::size_of::<VectorSegment>())
+            .saturating_mul(std::mem::size_of::<Vec<glam::DVec3>>())
             .saturating_add(
-                self.section_material
-                    .capacity()
-                    .saturating_mul(std::mem::size_of::<[glam::DVec3; 3]>()),
-            )
+                self.section_loops
+                    .iter()
+                    .map(|r| {
+                        r.capacity()
+                            .saturating_mul(std::mem::size_of::<glam::DVec3>())
+                    })
+                    .sum::<usize>(),
+            );
+        loops.saturating_add(
+            self.segments
+                .capacity()
+                .saturating_mul(std::mem::size_of::<VectorSegment>())
+                .saturating_add(
+                    self.section_material
+                        .capacity()
+                        .saturating_mul(std::mem::size_of::<[glam::DVec3; 3]>()),
+                ),
+        )
     }
 }
 pub struct ComposerCompute {
@@ -273,6 +289,7 @@ impl ComposerCompute {
             .map(|segments| PaperDrawing {
                 segments: Arc::new(segments),
                 section_material: Vec::new(),
+                section_loops: Vec::new(),
             }),
             InkPolicy::OriginalQtPaperV1 => original_qt_paper_drawing_for_view_with_pool(
                 &ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved),
@@ -284,6 +301,7 @@ impl ComposerCompute {
             .map(|drawing| PaperDrawing {
                 segments: Arc::new(drawing.segments),
                 section_material: drawing.section_material,
+                section_loops: drawing.section_loops,
             }),
         };
         let ink = match result {
