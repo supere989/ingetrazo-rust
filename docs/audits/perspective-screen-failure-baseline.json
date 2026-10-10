@@ -1,0 +1,493 @@
+{
+  "context": {
+    "rust_commit": "343a9744f31956bd21ab4bf12258495ec85f790d",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "name": "perspective-ray-edge",
+      "original": [
+        {
+          "kind": "on_edge",
+          "point": [
+            2.0500051975250244,
+            2.350001811981201,
+            1.0500051975250244
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "on_edge",
+          "point": [
+            2.0499998509831787,
+            2.3499999503277262,
+            1.049999850983179
+          ]
+        }
+      ],
+      "matches": [
+        true
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "perspective-endpoint-within-9px",
+      "original": [
+        {
+          "kind": "endpoint",
+          "point": [
+            1.0,
+            2.0,
+            0.0
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "endpoint",
+          "point": [
+            1.0,
+            2.0,
+            0.0
+          ]
+        }
+      ],
+      "matches": [
+        true
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "perspective-midpoint",
+      "original": [
+        {
+          "kind": "midpoint",
+          "point": [
+            2.5,
+            2.5,
+            1.5
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "midpoint",
+          "point": [
+            2.5,
+            2.5,
+            1.5
+          ]
+        }
+      ],
+      "matches": [
+        true
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "perspective-crossing",
+      "original": [
+        {
+          "kind": "intersection",
+          "point": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "intersection",
+          "point": [
+            2.0,
+            3.0,
+            0.0
+          ]
+        }
+      ],
+      "matches": [
+        true
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "perspective-skew-crossing",
+      "original": [
+        {
+          "kind": "on_edge",
+          "point": [
+            2.0035476684570312,
+            3.0,
+            0.0
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "on_edge",
+          "point": [
+            2.0035504015156764,
+            3.0,
+            0.0
+          ]
+        }
+      ],
+      "matches": [
+        true
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "eye-depth-0.01",
+      "original": [
+        {
+          "kind": "endpoint",
+          "point": [
+            2.0,
+            -5.651594161987305,
+            4.994999885559082
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "none",
+          "point": [
+            2.0,
+            3.0000061988830566,
+            0.0
+          ]
+        }
+      ],
+      "matches": [
+        false
+      ],
+      "clip_probe": true
+    },
+    {
+      "name": "eye-depth-0.05",
+      "original": [
+        {
+          "kind": "endpoint",
+          "point": [
+            2.0,
+            -5.616953372955322,
+            4.974999904632568
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "none",
+          "point": [
+            2.0,
+            2.999919891357422,
+            0.0
+          ]
+        }
+      ],
+      "matches": [
+        false
+      ],
+      "clip_probe": true
+    },
+    {
+      "name": "eye-depth-0.2",
+      "original": [
+        {
+          "kind": "endpoint",
+          "point": [
+            2.0,
+            -5.487049579620361,
+            4.900000095367432
+          ],
+          "encouraged": []
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "endpoint",
+          "point": [
+            2.0,
+            -5.487049579620361,
+            4.900000095367432
+          ]
+        }
+      ],
+      "matches": [
+        true
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "curve-center-radius-1.2",
+      "original": [
+        {
+          "kind": "endpoint",
+          "point": [
+            3.200000047683716,
+            3.0,
+            1.0
+          ],
+          "encouraged": []
+        },
+        {
+          "kind": "endpoint",
+          "point": [
+            3.200000047683716,
+            3.0,
+            1.0
+          ],
+          "encouraged": [
+            [
+              2.0,
+              3.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "kind": "center",
+          "point": [
+            2.0,
+            3.0,
+            1.0
+          ],
+          "encouraged": [
+            [
+              2.0,
+              3.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "kind": "center",
+          "point": [
+            3.0,
+            3.0,
+            1.0
+          ],
+          "encouraged": [
+            [
+              2.0,
+              3.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "kind": "none",
+          "point": [
+            3.25,
+            5.165067195892334,
+            0.0
+          ],
+          "encouraged": [
+            [
+              2.0,
+              3.0,
+              1.0
+            ]
+          ]
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "endpoint",
+          "point": [
+            3.200000047683716,
+            3.0,
+            1.0
+          ]
+        },
+        {
+          "encouraged": [
+            [
+              3.200000047683716,
+              3.0,
+              1.0
+            ]
+          ],
+          "kind": "endpoint",
+          "point": [
+            3.200000047683716,
+            3.0,
+            1.0
+          ]
+        },
+        {
+          "encouraged": [
+            [
+              3.200000047683716,
+              3.0,
+              1.0
+            ]
+          ],
+          "kind": "center",
+          "point": [
+            2.0,
+            3.0,
+            1.0
+          ]
+        },
+        {
+          "encouraged": [
+            [
+              3.200000047683716,
+              3.0,
+              1.0
+            ]
+          ],
+          "kind": "center",
+          "point": [
+            3.0,
+            3.0,
+            1.0
+          ]
+        },
+        {
+          "encouraged": [
+            [
+              3.200000047683716,
+              3.0,
+              1.0
+            ]
+          ],
+          "kind": "none",
+          "point": [
+            3.25,
+            5.165067195892334,
+            0.0
+          ]
+        }
+      ],
+      "matches": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "clip_probe": false
+    },
+    {
+      "name": "curve-center-radius-0.01",
+      "original": [
+        {
+          "kind": "endpoint",
+          "point": [
+            2.009999990463257,
+            3.0,
+            1.0
+          ],
+          "encouraged": []
+        },
+        {
+          "kind": "endpoint",
+          "point": [
+            2.009999990463257,
+            3.0,
+            1.0
+          ],
+          "encouraged": [
+            [
+              2.0,
+              3.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "kind": "endpoint",
+          "point": [
+            2.0025882720947266,
+            3.0096592903137207,
+            1.0
+          ],
+          "encouraged": [
+            [
+              2.0,
+              3.0,
+              1.0
+            ]
+          ]
+        }
+      ],
+      "native": [
+        {
+          "encouraged": [],
+          "kind": "endpoint",
+          "point": [
+            2.009999990463257,
+            3.0,
+            1.0
+          ]
+        },
+        {
+          "encouraged": [
+            [
+              2.009999990463257,
+              3.0,
+              1.0
+            ]
+          ],
+          "kind": "endpoint",
+          "point": [
+            2.009999990463257,
+            3.0,
+            1.0
+          ]
+        },
+        {
+          "encouraged": [
+            [
+              2.009999990463257,
+              3.0,
+              1.0
+            ]
+          ],
+          "kind": "endpoint",
+          "point": [
+            2.0025882720947266,
+            3.0096592903137207,
+            1.0
+          ]
+        }
+      ],
+      "matches": [
+        true,
+        false,
+        false
+      ],
+      "clip_probe": false
+    }
+  ],
+  "failed": [
+    "eye-depth-0.01",
+    "eye-depth-0.05",
+    "curve-center-radius-1.2",
+    "curve-center-radius-0.01"
+  ],
+  "scope": "Actual original Qt perspective camera projection/ray/lock-line functions; center actual mesh curve fit/cache/hint, caller acquisition explicit recipe, timer modeled250ms; own-worker protocol, independent UI picking and wallclock validation pending"
+}

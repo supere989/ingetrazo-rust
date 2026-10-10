@@ -1,0 +1,171 @@
+{
+  "validator": "29c3cb937cac89cea86acfad2da100af5cbf4712",
+  "production_source": "33cc734 (1761401/76b9051/476bda9)",
+  "overall_acceptance": false,
+  "default_exit_code": 1,
+  "passing_cases": 9,
+  "failed_cases": [
+    "eye-depth-0.01",
+    "eye-depth-0.05"
+  ],
+  "curve_center_moved_then_deleted": {
+    "name": "curve-center-radius-1.2",
+    "original": [
+      {
+        "kind": "endpoint",
+        "point": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "encouraged": []
+      },
+      {
+        "kind": "endpoint",
+        "point": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "kind": "center",
+        "point": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "kind": "center",
+        "point": [
+          3.0,
+          3.0,
+          1.0
+        ],
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "kind": "none",
+        "point": [
+          3.25,
+          5.165067195892334,
+          0.0
+        ],
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ]
+      }
+    ],
+    "native": [
+      {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ]
+      },
+      {
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "kind": "endpoint",
+        "point": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ]
+      },
+      {
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "kind": "center",
+        "point": [
+          2.0,
+          3.0,
+          1.0
+        ]
+      },
+      {
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "kind": "center",
+        "point": [
+          3.0,
+          3.0,
+          1.0
+        ]
+      },
+      {
+        "encouraged": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "kind": "none",
+        "point": [
+          3.25,
+          5.165067195892334,
+          0.0
+        ]
+      }
+    ],
+    "matches": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "clip_probe": false
+  },
+  "scope": "Actual bound Qt perspective projection/ray/line-projection and occlusion helpers; explicit curve acquisition recipe, modeled250ms dwell, moved/deleted version invalidation. No rendered UI center-acquisition proof.",
+  "limits": [
+    "two native before-near endpoints reject source w>0 targets",
+    "modeled dwell does not prove wallclock timing",
+    "single perspective camera not broad camera suite"
+  ],
+  "native_sha256": "ed2fe66e12cc5d8a59aad80a44be3e6ac408a4ba36c2c6d53c26f7db758c6e51"
+}

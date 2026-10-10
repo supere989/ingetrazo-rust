@@ -463,11 +463,16 @@ impl SnapEngine {
                 | SnapKind::Intersection
                 | SnapKind::Close
         );
-        let point = if definite {
+        // Original viewport encourages the centre of a hovered loose curve
+        // even when its rim vertex is a definite endpoint snap. Face arcs
+        // retain the real corner's precedence.
+        let curve_center = self.hovered_center.filter(|_| self.center_reference.as_ref()
+            .is_some_and(|r| matches!(r.key,CenterKey::Curve {..})));
+        let point = curve_center.or_else(|| if definite {
             Some(result.point)
         } else {
             self.hovered_center
-        };
+        });
         let Some(point) = point else {
             self.screen_dwell = None;
             return;
@@ -1057,5 +1062,28 @@ mod shift_lock_tests {
         engine.note_inference_result(&inferred);
         engine.update_shift_state(true,None);
         assert!(engine.shift_lock.is_none(),"source requires an active start point");
+    }
+}
+
+#[cfg(test)]
+mod curve_dwell_priority_tests {
+    use super::*;
+    #[test]
+    fn curve_rim_encourages_center_but_face_corner_keeps_priority() {
+        let center=DVec3::new(2.,3.,1.);
+        let corner=center+DVec3::X;
+        let endpoint=result(corner,SnapKind::Endpoint,COLOR_ENDPOINT,"Endpoint");
+        let mut engine=SnapEngine::default();
+        engine.hovered_center=Some(center);
+        engine.center_reference=Some(CenterReference{path:vec![],key:CenterKey::Curve{curve:71,ends:[uuid::Uuid::new_v4(),uuid::Uuid::new_v4()]},point:center,radius:1.,version:0});
+        engine.note_screen_result(&endpoint,false,0.);
+        engine.note_screen_result(&endpoint,false,0.3);
+        assert_eq!(engine.encouraged_points,vec![center]);
+        engine.reset_operation_state();
+        engine.hovered_center=Some(center);
+        engine.center_reference=Some(CenterReference{path:vec![],key:CenterKey::Face{outer:vec![],run:(0,0)},point:center,radius:1.,version:0});
+        engine.note_screen_result(&endpoint,false,1.);
+        engine.note_screen_result(&endpoint,false,1.3);
+        assert_eq!(engine.encouraged_points,vec![corner]);
     }
 }
