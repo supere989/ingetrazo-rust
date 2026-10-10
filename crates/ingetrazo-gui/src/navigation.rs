@@ -82,6 +82,9 @@ impl crate::IngeTrazoApp {
   }
   Ok(())
  }
+ pub fn navigation_measurement(&self)->Option<String>{
+  self.navigation.mode.map(|mode|ingetrazo_core::units::format_length(if mode==Mode::Position{self.navigation.eye_height}else{self.camera.eye().z},self.scene.unit,2))
+ }
  pub fn activate_navigation(&mut self,mode:Mode){
   self.set_tool(ingetrazo_tools::base::ToolType::Select);
   self.navigation.activate(mode);self.vcb_text.clear();
@@ -166,7 +169,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  if pointer.button_released(egui::PointerButton::Primary){
   if mode==Mode::Position {if let Some((_,base))=app.navigation.press{
    let look=if app.navigation.dragged{app.navigation.look_at}else{None};
-   if app.navigation.place(&mut app.camera,base,look){app.navigation.mode=Some(Mode::Look);}
+   if app.navigation.place(&mut app.camera,base,look){app.navigation.mode=Some(Mode::Look);app.status_message=Mode::Look.hint().into();app.vcb_text.clear();}
   }}
   app.navigation.cancel();
  }
@@ -307,7 +310,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   let p=egui::pos2(rect.min.x+pixel.x as f32+3.,rect.min.y+pixel.y as f32);
   frame(&mut app,&ctx,0.016,true,vec![egui::Event::PointerMoved(p),egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:true,modifiers:egui::Modifiers::NONE}]);
   frame(&mut app,&ctx,0.032,true,vec![egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:false,modifiers:egui::Modifiers::NONE}]);
-  assert_eq!(app.navigation.mode,Some(Mode::Look));assert!(app.camera.eye().distance(endpoint+DVec3::Z*1.68)<1e-10);assert!(app.camera.perspective);assert!(app.undo_stack.is_empty());
+  assert_eq!(app.navigation.mode,Some(Mode::Look));assert_eq!(app.status_message,Mode::Look.hint());assert_eq!(app.navigation_measurement().as_deref(),Some("1.68 m"));assert!(app.camera.eye().distance(endpoint+DVec3::Z*1.68)<1e-10);assert!(app.camera.perspective);assert!(app.undo_stack.is_empty());
  }
 
 }
@@ -334,4 +337,10 @@ pub(crate) fn first_point_bounds_center(scene:&ingetrazo_core::scene::Scene)->DV
 #[cfg(test)]mod bounds_cache_tests{
  use super::*;
  #[test]fn model_visibility_rebuilds_position_center_but_unchanged_hover_reuses_it(){let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;let a=app.scene.mesh.add_vertex(DVec3::new(5.,4.,0.));let b=app.scene.mesh.add_vertex(DVec3::new(6.,4.,1.));let edge=app.scene.mesh.add_edge(a,b).unwrap();app.scene.mesh.edges[edge].layer=Some("visible".into());let layer=ingetrazo_core::layers::Layer::new("visible");app.scene.layers.push(layer);app.scene.mesh.add_vertex(DVec3::splat(1000.));app.navigation.prepare_collision(&app.scene,app.model_revision);assert_eq!(app.navigation.bounds_center,DVec3::new(5.5,4.,0.5));let key=app.navigation.collision_key;app.navigation.prepare_collision(&app.scene,app.model_revision);assert_eq!(app.navigation.collision_key,key);assert!(app.set_layer_visibility(app.scene.layers.len()-1,false));app.navigation.prepare_collision(&app.scene,app.model_revision);assert_eq!(app.navigation.bounds_center,DVec3::ZERO);assert_ne!(app.navigation.collision_key,key);}
+}
+
+#[cfg(test)]mod measurement_display_tests{
+ use super::*;
+ fn visible_text(shape:&egui::Shape,expected:&str)->bool{match shape{egui::Shape::Text(text)=>text.galley.job.text==expected,egui::Shape::Vec(shapes)=>shapes.iter().any(|shape|visible_text(shape,expected)),_=>false}}
+ #[test]fn actual_statusbar_submits_navigation_readout_without_mutating_input_or_history(){let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;app.show_tray=false;app.show_toolbar=false;app.activate_navigation(Mode::Position);let ctx=egui::Context::default();let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),..Default::default()},|ctx|app.update_ui(ctx));assert!(output.shapes.iter().any(|shape|visible_text(&shape.shape,"1.68 m")));assert!(app.vcb_text.is_empty());assert!(app.undo_stack.is_empty());app.navigation.mode=Some(Mode::Look);app.camera.look_from(DVec3::new(0.,0.,3.25),DVec3::Y);let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),..Default::default()},|ctx|app.update_ui(ctx));assert!(output.shapes.iter().any(|shape|visible_text(&shape.shape,"3.25 m")));assert!(app.vcb_text.is_empty());app.vcb_text="275cm".into();let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),..Default::default()},|ctx|app.update_ui(ctx));assert!(output.shapes.iter().any(|shape|visible_text(&shape.shape,"275cm")));assert_eq!(app.vcb_text,"275cm");assert!(app.undo_stack.is_empty());}
 }

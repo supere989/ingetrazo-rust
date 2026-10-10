@@ -4,7 +4,7 @@ import ctypes as C,ctypes.util,json,os,select,subprocess,sys,tempfile,time,hashl
 from pathlib import Path
 from PySide6.QtGui import QImage
 from png_capture import valid_png
-original=os.environ.get('INGETRAZO_POSITION_ORIGINAL')=='1';cancel=os.environ.get('INGETRAZO_POSITION_CANCEL')=='1'
+original=os.environ.get('INGETRAZO_POSITION_ORIGINAL')=='1';cancel=os.environ.get('INGETRAZO_POSITION_CANCEL')=='1';typed=os.environ.get('INGETRAZO_POSITION_TYPED_HEIGHT')=='1'
 directory=Path(sys.argv[1]).resolve();directory.mkdir(parents=True,exist_ok=True)
 assert not (directory/'report.json').exists() and not(directory/'state.json').exists(),'fresh evidence directory required'
 binary=(Path(os.environ['CARGO_TARGET_DIR'])/'debug/examples/position_navigation_native_fixture').resolve()
@@ -51,7 +51,22 @@ with tempfile.TemporaryDirectory(prefix='position-render-') as runtime:
    def move(p):x.XWarpPointer(d,0,window,0,0,0,0,*map(round,p));x.XFlush(d);wait(lambda:state()if state().get('pointer')and max(abs(v-w)for v,w in zip(state()['pointer'],map(round,p)))<=1 else None)
    def capture(label):
     dest=directory/(label+'.png');subprocess.run(['import','-display',display,'-window',str(window),'-define','png:color-type=6',str(dest)],check=True,timeout=10);assert valid_png(dest);(directory/(label+'-state.json')).write_text(json.dumps(state(),indent=2)+'\n');return QImage(str(dest))
-   rect=initial['viewport'];p=[(rect[0]+rect[2])/2+90,(rect[1]+rect[3])/2+45];end=[p[0]+65,p[1]-40];move(p);baseline=capture('before')
+   rect=initial['viewport'];p=[(rect[0]+rect[2])/2+90,(rect[1]+rect[3])/2+45];end=[p[0]+65,p[1]-40];move(p)
+   typed_state=None
+   if typed:
+    wait(lambda:state()if state().get('measurement')=='1.68 m'else None)
+    if not original:
+     box=state()['measurement_rect'];move([(box[0]+box[2])/2,(box[1]+box[3])/2]);assert xt.XTestFakeButtonEvent(d,1,1,0);x.XFlush(d);time.sleep(.05);assert xt.XTestFakeButtonEvent(d,1,0,0);x.XFlush(d);time.sleep(.08)
+    def key(symbol):
+     code=x.XKeysymToKeycode(d,symbol);assert xt.XTestFakeKeyEvent(d,code,1,0);x.XFlush(d);time.sleep(.03);assert xt.XTestFakeKeyEvent(d,code,0,0);x.XFlush(d);time.sleep(.03)
+    if not original:
+     control=x.XKeysymToKeycode(d,0xffe3);assert xt.XTestFakeKeyEvent(d,control,1,0);x.XFlush(d);time.sleep(.03);key(ord('a'));assert xt.XTestFakeKeyEvent(d,control,0,0);x.XFlush(d);time.sleep(.03)
+    for char in '2.5':key(ord(char))
+    key(0xff0d)
+    if original:
+     accepted=wait(lambda:state()if state().get('eye_height')==2.5 else None);move([p[0]+1,p[1]])
+    typed_state=wait(lambda:state()if state().get('measurement')=='2.50 m'else None);assert typed_state['eye']==initial['eye']and typed_state['undo']==0,'typed height before placement mutated camera/history';move(p)
+   baseline=capture('before')
    endpoint=state()['endpoint_pixel'];move(endpoint);glyph_state=wait(lambda:state()if str(state().get('snap_kind')).lower()=='endpoint'else None);time.sleep(.08);glyph=capture('endpoint-glyph')
    def green(image):
     cx,cy=map(round,endpoint);colors=[image.pixelColor(x,y)for x in range(cx-8,cx+9)for y in range(cy-8,cy+9)];return sum(c.green()>80 and c.green()>c.red()+30 and c.green()>c.blue()+20 for c in colors)
@@ -69,7 +84,9 @@ with tempfile.TemporaryDirectory(prefix='position-render-') as runtime:
    assert xt.XTestFakeButtonEvent(d,1,0,0);x.XFlush(d)
    final=wait(lambda:state()if state()['preview']is None and(cancel or 'Look' in state()['mode'])else None);time.sleep(.08);capture('cancelled'if cancel else'committed')
    assert final['undo']==0 and final['version']==initial['version'];assert (final['eye']==initial['eye'])==cancel
-   report=dict(passed=True,source_revision=source_revision,script_sha256=script_sha256,implementation='original-Qt-OpenGL-llvmpipe'if original else'native-Vulkan-llvmpipe',cancel=cancel,coverage=coverage,glyph_green=glyph_green,glyph_state=glyph_state,negatives=negative+['missing-endpoint-glyph'],initial=initial,preview=preview,final=final,command=command,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest()if not original else None,scope='actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim')
+   if typed and not cancel:assert abs(final['eye'][2]-2.5)<2e-5 and final['measurement']=='2.50 m',final
+   if not original and not cancel:assert final['status'].startswith('Look Around'),final
+   report=dict(passed=True,source_revision=source_revision,script_sha256=script_sha256,implementation='original-Qt-OpenGL-llvmpipe'if original else'native-Vulkan-llvmpipe',cancel=cancel,typed_height=typed,typed_state=typed_state,coverage=coverage,glyph_green=glyph_green,glyph_state=glyph_state,negatives=negative+['missing-endpoint-glyph'],initial=initial,preview=preview,final=final,command=command,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest()if not original else None,scope='actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim')
    if not original:assert 'Native Vulkan adapter: \"llvmpipe' in (directory/'runtime.log').read_text(),'actual Vulkan adapter not observed'
    (directory/'report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'passed':True,'coverage':coverage,'cancel':cancel}))
  except BaseException as error:

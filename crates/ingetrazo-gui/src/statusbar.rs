@@ -97,9 +97,11 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             let vcb_label = match app.navigation.mode {Some(crate::navigation::Mode::Position)=>"Height offset",Some(_)=>"Eye height",None=>app.active_tool.vcb_label()};
             let prompt = if !vcb_label.is_empty() { tr(vcb_label) } else { tr("Measurements") };
 
+            let measurement=app.navigation_measurement().unwrap_or_else(||"0.00".into());
             let edit_resp = ui.add(
                 egui::TextEdit::singleline(&mut app.vcb_text)
-                    .hint_text("0.00")
+                    .id(egui::Id::new("measurements_vcb"))
+                    .hint_text(measurement)
                     .desired_width(70.0),
             );
 
