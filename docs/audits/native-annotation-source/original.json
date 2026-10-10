@@ -1,6 +1,11 @@
 {
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "viewport_sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+  "screen": {
+    "logical_dpi": 96.0,
+    "physical_dpi": 100.0,
+    "device_pixel_ratio": 1.0
+  },
   "scope": "Actual source annotation methods and entities; controlled projection/occlusion, not GPU or interactive viewport acceptance",
   "cases": [
     {
@@ -4456,6 +4461,19 @@
               "text": "Second line",
               "value": 98
             }
+          ],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
           ]
         }
       ],
@@ -4921,6 +4939,19 @@
               "text": "Second line",
               "value": 98
             }
+          ],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
           ]
         }
       ],
@@ -5247,6 +5278,19 @@
               "text": "Second line",
               "value": 98
             }
+          ],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
           ]
         }
       ],
@@ -5289,7 +5333,20 @@
           "height": 18,
           "ascent": 14,
           "descent": 4,
-          "advances": []
+          "advances": [],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
+          ]
         }
       ],
       "image_sha256": "368bd85152f71f06455b22c734840a72d9feb2e810312fdafb03dac366fdf8fd"
@@ -5708,6 +5765,19 @@
               "text": "",
               "value": 0
             }
+          ],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
           ]
         }
       ],
@@ -9261,6 +9331,19 @@
               "text": "Second line",
               "value": 98
             }
+          ],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
           ]
         }
       ],
@@ -9772,6 +9855,19 @@
               "text": "C",
               "value": 11
             }
+          ],
+          "font_info": {
+            "family": "DejaVu Sans",
+            "pixel_size": 15,
+            "point_size": 11.25,
+            "style": 0,
+            "style_name": "Bold",
+            "weight": 700,
+            "exact_match": false
+          },
+          "paint_device_dpi": [
+            96,
+            96
           ]
         }
       ],

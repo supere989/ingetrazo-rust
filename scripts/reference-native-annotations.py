@@ -7,7 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import Qt, QPointF
-from PySide6.QtGui import QColor, QFont, QImage, QPainter, QPen, QPolygonF, QVector3D
+from PySide6.QtGui import QColor, QFont, QFontInfo, QImage, QPainter, QPen, QPolygonF, QVector3D
 from PySide6.QtWidgets import QApplication
 source, output = map(Path, sys.argv[1:3])
 assert subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip() == "6be29fe437a7cd992d4e079f71720821b25216b9"
@@ -30,7 +30,8 @@ class Painter(QPainter):
         super().__init__(image); self.ops=[]; self.metrics=[]
     def fontMetrics(self):
         actual = super().fontMetrics()
-        row = dict(height=actual.height(), ascent=actual.ascent(), descent=actual.descent(), advances=[])
+        info = QFontInfo(self.font())
+        row = dict(height=actual.height(), ascent=actual.ascent(), descent=actual.descent(), advances=[], font_info=dict(family=info.family(), pixel_size=info.pixelSize(), point_size=info.pointSizeF(), style=info.style().value, style_name=info.styleName(), weight=info.weight(), exact_match=info.exactMatch()), paint_device_dpi=[self.device().logicalDpiX(), self.device().logicalDpiY()])
         self.metrics.append(row)
         class RecordedMetrics:
             def horizontalAdvance(self, text):
@@ -95,5 +96,5 @@ assert all(o["pen"][:3]==[243,115,41] for o in rows[10]["operations"] if o["kind
 assert any(o["kind"]=="text" and "3000 mm" in o["text"] for o in rows[11]["operations"])
 assert any(o["kind"]=="text" and "'" in o["text"] for o in rows[12]["operations"])
 assert [o["text"] for o in rows[14]["operations"] if o["kind"]=="text"]==["A","A","B","B","C","C"]
-(output/"original.json").write_text(json.dumps(dict(source_pin="6be29fe437a7cd992d4e079f71720821b25216b9",viewport_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),scope="Actual source annotation methods and entities; controlled projection/occlusion, not GPU or interactive viewport acceptance",cases=rows),indent=2)+"\n")
+(output/"original.json").write_text(json.dumps(dict(source_pin="6be29fe437a7cd992d4e079f71720821b25216b9",viewport_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),screen=dict(logical_dpi=app.primaryScreen().logicalDotsPerInch(), physical_dpi=app.primaryScreen().physicalDotsPerInch(), device_pixel_ratio=app.primaryScreen().devicePixelRatio()),scope="Actual source annotation methods and entities; controlled projection/occlusion, not GPU or interactive viewport acceptance",cases=rows),indent=2)+"\n")
 print(json.dumps({"cases":len(rows),"operations":[len(r["operations"]) for r in rows]}))
