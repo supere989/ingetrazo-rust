@@ -72,6 +72,30 @@ window.show();window.activateWindow();vp.setFocus();app.processEvents()
 QTest.keyClick(vp,Qt.Key_Z,Qt.ControlModifier);app.processEvents()
 assert len(vp.history.undo_stack)==0 and len(parked.faces)==0 and vp.scene.mesh is active and vp.scene.edit_group is g
 rows.append({"name":"actual-qt-ctrl-z-prior-loose-command-active-context","state":state(g,peer,parked),"key_event":"Ctrl+Z to real Viewport widget","pixel_acceptance":False})
-Path("docs/audits/component-active-history-source.json").write_text(json.dumps({"provenance":context(),"scope":"Actual original MainWindow constructor QAction Ctrl+Z/Redo connections, QAction.trigger through operative handlers, actual Viewport entry/exit and History commands. Qt offscreen; one real Qt Ctrl+Z key event plus eight deterministic QAction controls; no physical input or rendered gesture acceptance. Nine distinct history controls retain original face-loss counterexample.","undo_shortcut":window._undo_action.shortcut().toString(),"cases":rows},indent=2)+"\n")
-print("Actual original QAction active-context history nine controls PASS; unsafe source face-loss retained")
+for reflected in (False,True):
+ vp.scene=Scene();vp.history=History(vp.scene);vp.active_tool=SelectTool()
+ child_mesh=Mesh();child_mesh.add_face([V(0,0,0),V(1,0,0),V(0,1,0)])
+ child=Group(child_mesh,name="nested component");child.component=True;child.xform=QMatrix4x4()
+ peer=copy_group(child,V(3,0,0));parent=Group(name="parent");parent.component=True;parent.children=[child,peer]
+ parent.xform=QMatrix4x4(-2.,.6,0.,9.,0.,3.,.4,3.,0.,0.,1.,2.,0.,0.,0.,1.) if reflected else QMatrix4x4()
+ frame=list(parent.xform.data());vp.scene.groups=[parent];parked=vp.scene.mesh
+ vp.begin_group_edit(parent);vp.begin_group_edit(child);add(0);vp.end_one_group_edit();vp.end_one_group_edit()
+ assert len(vp.history.undo_stack)==1;window._undo_action.trigger()
+ assert len(child.mesh.faces)==len(peer.mesh.faces)==1
+ assert list(parent.xform.data())==list(QMatrix4x4().data()) and list(parent.axes.data())==frame
+ rows.append({"name":"nested-parent-bake-survives-undo-"+str(reflected),"before_parent_frame":frame,"after_undo_parent_frame":list(parent.xform.data()),"after_undo_parent_axes":list(parent.axes.data()),"after_undo_child_frames":[list(c.xform.data()) for c in parent.children],"after_undo_child_faces":[len(c.mesh.faces) for c in parent.children],"undo_commands":[type(c).__name__ for c in vp.history.undo_stack]})
+g,peer,parked=reset("container");add(0);vp.begin_group_edit(g);vp.begin_group_edit(g.children[0]);window._undo_action.trigger();vp.end_one_group_edit();vp.end_one_group_edit()
+baked=list(g.xform.data());axes=list(g.axes.data());children=[list(c.xform.data()) for c in g.children]
+window._redo_action.trigger();assert len(parked.faces)==1 and list(g.xform.data())==baked and list(g.axes.data())==axes and [list(c.xform.data()) for c in g.children]==children
+rows.append({"name":"root-loose-redo-after-nested-exit-retains-bake","after_redo_parent_frame":baked,"after_redo_parent_axes":axes,"after_redo_child_frames":children,"parked_faces":len(parked.faces)})
+g,peer,parked=reset("container");add(0);vp.begin_group_edit(g);add(3);child=g.children[0];vp.begin_group_edit(child);add(6);vp.end_one_group_edit();vp.end_one_group_edit()
+assert len(vp.history.undo_stack)==3;commands=[type(c).__name__ for c in vp.history.undo_stack];undo_states=[]
+for _ in range(3):
+ window._undo_action.trigger();undo_states.append({"loose":len(parked.faces),"parent":len(g.mesh.faces),"child":len(child.mesh.faces)})
+assert undo_states==[{"loose":1,"parent":2,"child":1},{"loose":1,"parent":1,"child":1},{"loose":0,"parent":1,"child":1}]
+for _ in range(3):window._redo_action.trigger()
+assert len(parked.faces)==1 and len(g.mesh.faces)==len(child.mesh.faces)==2
+rows.append({"name":"nested-ordinary-global-three-command-order","commands":commands,"undo_states":undo_states,"redo_state":{"loose":len(parked.faces),"parent":len(g.mesh.faces),"child":len(child.mesh.faces)}})
+Path("docs/audits/component-active-history-source.json").write_text(json.dumps({"provenance":context(),"scope":"Actual original MainWindow constructor QAction Ctrl+Z/Redo connections, QAction.trigger through operative handlers, actual Viewport entry/exit and History commands. Qt offscreen; one real Qt Ctrl+Z key event plus eight deterministic QAction controls; no physical input or rendered gesture acceptance. Thirteen distinct history controls retain original face-loss counterexample.","undo_shortcut":window._undo_action.shortcut().toString(),"cases":rows},indent=2)+"\n")
+print("Actual original QAction active-context history thirteen controls PASS; unsafe source face-loss retained")
 window.deleteLater()

@@ -351,9 +351,11 @@ impl IngeTrazoApp {
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
+        if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
+        if self.refuse_component_history_step(false){return;}
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
-        if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
+        if self.component_history_step(false).is_some(){return;}
         if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.redo_stack.push(self.scene.clone());
@@ -368,8 +370,10 @@ impl IngeTrazoApp {
     pub fn redo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return;}
         self.finish_composer_edit();
+        if self.refuse_component_history_step(true){return;}
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
+        if self.component_history_step(true).is_some(){return;}
         if let Some(mut next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());

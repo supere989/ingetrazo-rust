@@ -1,11 +1,11 @@
 {
   "provenance": {
-    "rust_commit": "bc86676ff98a8d996c94b06e1dd971f71e621fe8",
+    "rust_commit": "6afb3c1a9e2d9b86c955f5a5c7797fbce729c1c0",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "scope": "Actual original MainWindow constructor QAction Ctrl+Z/Redo connections, QAction.trigger through operative handlers, actual Viewport entry/exit and History commands. Qt offscreen; one real Qt Ctrl+Z key event plus eight deterministic QAction controls; no physical input or rendered gesture acceptance. Nine distinct history controls retain original face-loss counterexample.",
+  "scope": "Actual original MainWindow constructor QAction Ctrl+Z/Redo connections, QAction.trigger through operative handlers, actual Viewport entry/exit and History commands. Qt offscreen; one real Qt Ctrl+Z key event plus eight deterministic QAction controls; no physical input or rendered gesture acceptance. Thirteen distinct history controls retain original face-loss counterexample.",
   "undo_shortcut": "Ctrl+Z",
   "cases": [
     {
@@ -474,6 +474,296 @@
       },
       "key_event": "Ctrl+Z to real Viewport widget",
       "pixel_acceptance": false
+    },
+    {
+      "name": "nested-parent-bake-survives-undo-False",
+      "before_parent_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "after_undo_parent_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "after_undo_parent_axes": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "after_undo_child_frames": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          3.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "after_undo_child_faces": [
+        1,
+        1
+      ],
+      "undo_commands": []
+    },
+    {
+      "name": "nested-parent-bake-survives-undo-True",
+      "before_parent_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.0,
+        0.0,
+        9.0,
+        3.0,
+        2.0,
+        1.0
+      ],
+      "after_undo_parent_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "after_undo_parent_axes": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.0,
+        0.0,
+        9.0,
+        3.0,
+        2.0,
+        1.0
+      ],
+      "after_undo_child_frames": [
+        [
+          -2.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6000000238418579,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.4000000059604645,
+          1.0,
+          0.0,
+          9.0,
+          3.0,
+          2.0,
+          1.0
+        ],
+        [
+          -2.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6000000238418579,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.4000000059604645,
+          1.0,
+          0.0,
+          3.0,
+          3.0,
+          2.0,
+          1.0
+        ]
+      ],
+      "after_undo_child_faces": [
+        1,
+        1
+      ],
+      "undo_commands": []
+    },
+    {
+      "name": "root-loose-redo-after-nested-exit-retains-bake",
+      "after_redo_parent_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "after_redo_parent_axes": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        3.0,
+        2.0,
+        1.0,
+        1.0
+      ],
+      "after_redo_child_frames": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          3.0,
+          2.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "parked_faces": 1
+    },
+    {
+      "name": "nested-ordinary-global-three-command-order",
+      "commands": [
+        "AddFaceCommand",
+        "AddFaceCommand",
+        "ReshareInstanceCommand"
+      ],
+      "undo_states": [
+        {
+          "loose": 1,
+          "parent": 2,
+          "child": 1
+        },
+        {
+          "loose": 1,
+          "parent": 1,
+          "child": 1
+        },
+        {
+          "loose": 0,
+          "parent": 1,
+          "child": 1
+        }
+      ],
+      "redo_state": {
+        "loose": 1,
+        "parent": 2,
+        "child": 2
+      }
     }
   ]
 }

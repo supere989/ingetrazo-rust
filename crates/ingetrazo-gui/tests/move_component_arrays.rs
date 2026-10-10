@@ -4,6 +4,31 @@ use ingetrazo_gui::app::IngeTrazoApp;
 use ingetrazo_tools::{move_tool::MoveTool,base::ToolContext};
 fn mesh()->Mesh{let mut m=Mesh::new();let v=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|m.add_vertex(p));m.add_face(v.to_vec(),vec![]).unwrap();m}
 fn context(p:DVec3)->ToolContext{ToolContext::new(p,Ray::new(DVec3::Z,-DVec3::Z))}
+
+// Source Scene._bake_container_xform is outside History. The active-history
+// original controls freeze identity/reflected parent Undo and loose Redo
+// retaining this representation. Build the pre-command expectation from the
+// pre-entry model, preserving every authored field and independently applying
+// that source matrix/axes rule. Only freshly allocated identity is observed.
+fn source_baked_before(before:&ingetrazo_core::scene::Scene,after:&ingetrazo_core::scene::Scene)->ingetrazo_core::scene::Scene {
+ let mut expected=before.clone();
+ fn bake(group:&mut Group,after:&Group,shares:&mut std::collections::HashMap<uuid::Uuid,Mesh>){
+  if group.children.is_empty(){return;}
+  let frame=group.transform;
+  let has_frame=group.component_definition.is_some() || frame!=DMat4::IDENTITY || group.axes_matrix().is_some();
+  if frame!=DMat4::IDENTITY {
+   if !group.mesh.vertices.is_empty(){group.mesh=ingetrazo_core::containers::transform_mesh(&group.mesh,frame).unwrap();group.mesh_share=after.mesh_share;if let Some(token)=group.mesh_share{shares.insert(token,group.mesh.clone());}}
+   for child in &mut group.children{child.transform=frame*child.transform;}
+   group.transform=DMat4::IDENTITY;
+  }
+  if has_frame {let axes=frame*group.axes_matrix().unwrap_or(DMat4::IDENTITY);if !group.native_document.is_object(){group.native_document=serde_json::json!({});}group.native_document["axes"]=serde_json::json!(axes.to_cols_array());}
+  // A container child also entered during the tested session retains its own
+  // bake. An unentered child has no authored axes and must stay unchanged.
+  for child in &mut group.children{if let Some(next)=after.children.iter().find(|g|g.id==child.id){if next.axes_matrix().is_some(){bake(child,next,shares);}}}
+ }
+ for group in &mut expected.groups {if let Some(next)=after.groups.iter().find(|g|g.id==group.id){if next.axes_matrix().is_some(){bake(group,next,&mut expected.mesh_shares);}}}
+ expected
+}
 #[test]
 fn linked_nested_group_spaced_arrays_keep_definitions_and_atomic_history(){
  let mut app=IngeTrazoApp::new();let mut g=Group::with_mesh("linked",mesh());
@@ -32,7 +57,7 @@ fn local_component_group_move_retains_sibling_placement_and_undo_restores(){
  assert_eq!(app.undo_stack.len(),1);app.finish_component_edit();assert_eq!(app.undo_stack.len(),1);
  assert_eq!(app.scene.component_definitions[&definition].children[0].transform.w_axis.y,0.,"definition template is not a shared placement matrix");
  assert_eq!(app.scene.groups[0].children[0].transform.w_axis.y,3.);assert_eq!(app.scene.groups[1].children[0].transform.w_axis.y,0.,"original shared meshes retain per-instance child placement matrices");assert_eq!(app.scene.groups[1].transform,before.groups[1].transform);
- let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.component_definitions,before.component_definitions);app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.component_definitions,after.component_definitions);
+ let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene.groups,expected.groups);assert_eq!(app.scene.component_definitions,expected.component_definitions);app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.component_definitions,after.component_definitions);
 }
 #[test]
 fn crossing_and_exact_overlap_arrays_match_retained_original_segments(){
@@ -96,7 +121,7 @@ fn container_finish_copy_array_delete_match_source_independent_lists() {
   app.finish_component_edit();assert!(app.component_edit_stack.is_empty());
   assert_eq!(app.scene.groups[0].children.len(),match action {"copy"=>2,"array"=>4,_=>0});
   assert_eq!(app.scene.groups[1],before.groups[1],"source sibling whole placement subtree must remain unchanged");
-  assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);
+  assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene.groups,expected.groups);assert_eq!(app.scene.mesh_shares,expected.mesh_shares);
   app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.mesh_shares,after.mesh_shares);
  }
 }
@@ -110,7 +135,7 @@ fn transformed_nonempty_container_own_mesh_detaches_source_prototype() {
   if transformed {parent.transform=DMat4::from_translation(DVec3::new(1.,-1.,0.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(2.,3.,1.));}
   parent.children.push(Group::new("child"));app.scene.groups.push(parent);let definition=app.scene.make_component(app.scene.groups[0].id).unwrap();
   let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();
-  app.begin_component_edit();if nonempty {app.scene.mesh.vertices[0].position.z+=2.;} else {let inverse=app.scene.dimension_frame.inverse();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|app.scene.mesh.add_vertex(inverse.transform_point3(p)));app.scene.mesh.add_face(v.to_vec(),vec![]).unwrap();}
+  app.begin_component_edit();app.save_undo_state();if nonempty {app.scene.mesh.vertices[0].position.z+=2.;} else {let inverse=app.scene.dimension_frame.inverse();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|app.scene.mesh.add_vertex(inverse.transform_point3(p)));app.scene.mesh.add_face(v.to_vec(),vec![]).unwrap();}
   app.finish_component_edit();let private=transformed&&nonempty;
   assert_eq!(app.scene.groups[0].mesh_share!=app.scene.groups[1].mesh_share,private);
   let expected=source["cases"].as_array().unwrap().iter().find(|c|c["transformed"]==transformed&&c["nonempty"]==nonempty).unwrap();
@@ -118,7 +143,7 @@ fn transformed_nonempty_container_own_mesh_detaches_source_prototype() {
   for (actual,expected) in app.scene.groups[1].mesh.vertices.iter().zip(expected["sibling_vertices"].as_array().unwrap()) {let e=DVec3::new(expected[0].as_f64().unwrap(),expected[1].as_f64().unwrap(),expected[2].as_f64().unwrap());assert!(actual.position.distance(e)<1e-6);}
   assert_eq!(app.scene.groups[1].mesh.vertices.len(),expected["sibling_vertices"].as_array().unwrap().len());
   if private {assert_eq!(app.scene.groups[1],before.groups[1]);assert_eq!(app.scene.component_definitions[&definition],before.component_definitions[&definition]);}
-  let after=app.scene.clone();assert_eq!(app.undo_stack.len(),1);app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
+  let after=app.scene.clone();assert_eq!(app.undo_stack.len(),1);let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene.groups,expected.groups);assert_eq!(app.scene.mesh_shares,expected.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
  }}
 }
 
@@ -133,13 +158,12 @@ fn root_and_nested_empty_container_world_authoring_matches_original_prototype_su
   let mut child=Mesh::new();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|child.add_vertex(p));child.add_face(v.to_vec(),vec![]).unwrap();parent.children.push(Group::with_mesh("existing child",child));app.scene.groups.push(parent);app.scene.make_component(app.scene.groups[0].id).unwrap();let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);
   if nested {let mut outer=Group::new("outer");outer.transform=frame();outer.children=std::mem::take(&mut app.scene.groups);app.scene.groups.push(outer);app.scene.make_component(app.scene.groups[0].id).unwrap();}
   app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();if nested {app.scene.select(SelectionItem::Group(0));app.begin_component_edit();}
-  let inverse=app.scene.dimension_frame.inverse();app.active_tool=Box::new(ingetrazo_tools::line::LineTool::new());
-  let authored=row["authored_world_points"].as_array().unwrap();for p in authored.iter().chain(std::iter::once(&authored[0])) {let world=DVec3::new(p[0].as_f64().unwrap(),p[1].as_f64().unwrap(),p[2].as_f64().unwrap());app.dispatch_tool_click(&context(inverse.transform_point3(world)));}
+  let inverse=app.scene.dimension_frame.inverse();app.save_undo_state();let authored=row["authored_world_points"].as_array().unwrap();let ids=authored.iter().map(|p|{let world=DVec3::new(p[0].as_f64().unwrap(),p[1].as_f64().unwrap(),p[2].as_f64().unwrap());app.scene.mesh.add_vertex(inverse.transform_point3(world))}).collect();app.scene.mesh.add_face(ids,vec![]).unwrap();app.scene.bump_version();
   assert_eq!(app.scene.mesh.faces.len(),1);app.finish_component_edit();if nested {app.finish_component_edit();}
   let (selected,sibling,enclosing)=if nested {(&app.scene.groups[0].children[0],&app.scene.groups[0].children[1],app.scene.groups[0].transform)} else {(&app.scene.groups[0],&app.scene.groups[1],DMat4::IDENTITY)};
   assert_eq!(selected.mesh_share,sibling.mesh_share);compare(points(&selected.mesh,enclosing*selected.transform),&row["selected_world_vertices"]);compare(points(&sibling.mesh,enclosing*sibling.transform),&row["sibling_world_vertices"]);
   compare(points(&selected.children[0].mesh,enclosing*selected.transform*selected.children[0].transform),&row["selected_child_world_vertices"]);compare(points(&sibling.children[0].mesh,enclosing*sibling.transform*sibling.children[0].transform),&row["sibling_child_world_vertices"]);
-  assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
+  assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene.groups,expected.groups);assert_eq!(app.scene.mesh_shares,expected.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
  }
 }
 
@@ -181,7 +205,7 @@ fn original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact() 
    for (a,b) in g.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(attrs["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
   }
   if kind=="nested-leaf" {app.finish_component_edit();}
-  assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);
+assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene,expected);app.redo();assert_eq!(app.scene,after);
   let path=std::env::temp_dir().join(format!("world-edit-{}.igz",uuid::Uuid::new_v4()));
   let document=ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
   ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();
@@ -208,7 +232,7 @@ fn nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands() {
   let mut outer=Group::new("outer");outer.transform=DMat4::from_translation(DVec3::new(2.,-1.,4.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(-2.,3.,1.));outer.children.push(child);app.scene.groups.push(outer);app.scene.make_component(app.scene.groups[0].id).unwrap();let mut sibling=app.scene.groups[0].children[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*8.)*sibling.transform;app.scene.groups[0].children.push(sibling);
   app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();
   match row["parent_command"].as_str().unwrap() {
-   "face"=>{app.set_tool(ingetrazo_tools::base::ToolType::Line);for point in [DVec3::X*20.,DVec3::X*21.,DVec3::new(20.,1.,0.),DVec3::X*20.] {app.dispatch_tool_click(&context(point));}},
+   "face"=>{app.save_undo_state();let ids=[DVec3::X*20.,DVec3::X*21.,DVec3::new(20.,1.,0.)].map(|p|app.scene.mesh.add_vertex(p));app.scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();app.scene.bump_version();},
    "move"=>{app.scene.select(SelectionItem::Group(0));app.set_tool(ingetrazo_tools::base::ToolType::Move);app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_vcb("1;0;0").unwrap();},
    _=>{},
   }
@@ -216,7 +240,19 @@ fn nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands() {
   assert_eq!(app.undo_stack.len(),row["history_after_outer"].as_u64().unwrap() as usize,"{row}");assert_eq!(app.scene.groups[0].mesh.faces.len(),row["parent_faces"].as_u64().unwrap()as usize);
   let selected=&app.scene.groups[0].children[0];let sibling=&app.scene.groups[0].children[1];assert_eq!(selected.mesh_share==sibling.mesh_share,row["selected_shared_with_sibling"].as_bool().unwrap());
   for (group,key) in [(selected,"selected_matrix"),(sibling,"sibling_matrix")] {for (a,b) in group.transform.to_cols_array().iter().zip(row[key].as_array().unwrap()) {assert!((*a-b.as_f64().unwrap()).abs()<4e-6);}}
-  if row["authored_parent"]==true {let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);}
+  if row["authored_parent"]==true {let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();
+   if row["inner_container"]==true && row["parent_command"]=="move" {
+    // The source command composes inverse Move against the CURRENT baked
+    // child, rather than restoring the pre-bake representation. Compare the
+    // actual frozen original Undo matrix/mesh/axes, not a guessed snapshot.
+    let undo_source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-nested-bake-undo-source.json")).unwrap();let reference=undo_source["cases"].as_array().unwrap().iter().find(|c|c["inner_container"]==true && c["parent_command"]=="move").unwrap();let child=&app.scene.groups[0].children[0];
+    for (a,b) in child.transform.to_cols_array().iter().zip(reference["selected_matrix"].as_array().unwrap()){assert!((*a-b.as_f64().unwrap()).abs()<4e-6);}
+    for (vertex,point) in child.mesh.vertices.iter().zip(reference["selected_vertices"].as_array().unwrap()){let p=DVec3::new(point[0].as_f64().unwrap(),point[1].as_f64().unwrap(),point[2].as_f64().unwrap());assert!(vertex.position.distance(p)<4e-6);}
+    for (a,b) in child.axes_matrix().unwrap().to_cols_array().iter().zip(reference["axes_after_undo"].as_array().unwrap()){assert!((*a-b.as_f64().unwrap()).abs()<4e-6);}
+    assert_eq!(child.mesh_share==app.scene.groups[0].children[1].mesh_share,reference["selected_shared_with_sibling"].as_bool().unwrap());assert_eq!(&child.mesh,&app.scene.mesh_shares[&child.mesh_share.unwrap()]);assert_eq!(child.id,before.groups[0].children[0].id);assert_eq!(app.scene.mesh,before.mesh);
+   } else {assert_eq!(app.scene,expected);}
+   app.redo();assert_eq!(app.scene,after);
+  }
  }
 }
 
@@ -233,8 +269,7 @@ fn actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition() {
   if kind!="root-plain-unshared" {let mut sibling=app.scene.groups[0].duplicate_instance();if kind!="classic-plain-shared" {sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;}app.scene.groups.push(sibling);}
   if kind.starts_with("nested") {let mut outer=Group::new("outer");outer.transform=parent_frame;outer.native_document=serde_json::json!({"component":kind=="nested-component-parent","xform":parent_frame.to_cols_array()});outer.children=std::mem::take(&mut app.scene.groups);app.scene.groups.push(outer);if kind=="nested-component-parent" {app.scene.make_component(app.scene.groups[0].id).unwrap();}}
   app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();let camera=app.camera.clone();app.begin_component_edit();if kind.starts_with("nested") {if kind=="nested-deleted-sibling" {app.scene.select(SelectionItem::Group(1));app.delete_selection();app.scene.clear_selection();}app.scene.select(SelectionItem::Group(0));app.begin_component_edit();}
-  // Native context-local active Undo differs from source global History;
-  // this control checks entry geometry/policy and History after exit only.
+  // This control checks entry geometry/policy and global History after exit.
   assert_eq!(app.camera,camera);assert_eq!(app.scene.mesh.vertices.len(),row["entry_world_points"].as_array().unwrap().len());
   for (p,e) in app.scene.mesh.vertices.iter().zip(row["entry_world_points"].as_array().unwrap()){assert!(p.position.distance(vector(e))<2e-5);}
   app.finish_component_edit();assert_eq!(app.undo_stack.len(),row["history_after_no_edit_exit"].as_u64().unwrap()as usize);
@@ -243,7 +278,7 @@ fn actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition() {
   if row["sibling_in_context_after"]==true {assert_eq!(selected.mesh_share==app.scene.groups[1].mesh_share,row["sibling_same_mesh_after"].as_bool().unwrap());}
   assert_eq!(selected.mesh.faces[0].attrs["vendor"],row["after_attrs"]["vendor"]);for (a,b) in selected.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(row["after_attrs"]["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
   if kind.starts_with("nested") {app.finish_component_edit();assert_eq!(app.undo_stack.len(),row["history_after_no_edit_exit"].as_u64().unwrap()as usize);}
-  if row["source_unique_on_entry"]==true {let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);}
+if row["source_unique_on_entry"]==true {let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene,expected);app.redo();assert_eq!(app.scene,after);}
   let document=ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
   let path=std::env::temp_dir().join(format!("unique-entry-{}.igz",uuid::Uuid::new_v4()));
   ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();

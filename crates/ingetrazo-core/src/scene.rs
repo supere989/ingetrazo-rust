@@ -37,6 +37,10 @@ pub struct Scene {
     /// active mesh coordinate map in dimension_frame.
     #[serde(skip)]
     pub drawing_frame: Option<glam::DMat4>,
+    /// Runtime command mesh identity. Empty targets the document; each stable
+    /// placement ID identifies an active nested edit view. Never persisted.
+    #[serde(skip)]
+    pub history_context: Vec<uuid::Uuid>,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
     /// Authoritative shared Mesh prototypes; placement topology is independent.
@@ -92,6 +96,7 @@ impl Scene {
         Self {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
+            history_context:vec![],
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
