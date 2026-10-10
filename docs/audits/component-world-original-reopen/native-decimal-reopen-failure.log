@@ -1,0 +1,42 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
+     Running tests/move_component_arrays.rs (/tmp/ingetrazo-mesh-share-codec-target/debug/deps/move_component_arrays-95dce6883792475d)
+
+running 1 test
+test original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact ... FAILED
+
+failures:
+
+---- original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact stdout ----
+
+thread 'original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact' (1953489) panicked at crates/ingetrazo-gui/tests/move_component_arrays.rs:189:3:
+assertion `left == right` failed
+  left: Object {"active_sheet_index": Null, "camera": Object {"distance": Number(20.0), "fov_deg": Number(45.0), "perspective": Bool(true), "pitch": Number(0.5235987755982988), "target": Array [Number(0.0), Number(0.0), Number(0.0)], "yaw": Number(-0.7853981633974483)}, "compositions": Array [], "dimensions": Array [], "edges": Array [], "faces": Array [], "geo_paths": Array [], "geo_points": Array [], "georef": Object {"datum": Null}, "groups": Array [Object {"billboard": Bool(false), "children": Array [], "component": Bool(true), "hidden": Bool(false), "ifc": Null, "layer": Null, "name": String("leaf"), "proto": Number(0), "uid": String("8041495b884d48958dfaf8d9525f7cb9"), "xform": Array [Number(-2.0), Number(0.0), Number(0.0), Number(0.0), Number(0.6), Number(3.0), Number(0.0), Number(0.0), Number(0.0), Number(0.4), Number(1.5), Number(0.0), Number(3.0), Number(-2.0), Number(1.0), Number(1.0)]}, Object {"billboard": Bool(false), "children": Array [], "component": Bool(true), "hidden": Bool(false), "ifc": Null, "layer": Null, "name": String("leaf"), "proto": Number(0), "uid": String("ddeb24ff9daa4cfd9ac4a355d92ee3d0"), "xform": Array [Number(-2.0), Number(0.0), Number(0.0), Number(0.0), Number(0.6), Number(3.0), Number(0.0), Number(0.0), Number(0.0), Number(0.4), Number(1.5), Number(0.0), Number(13.0), Number(-2.0), Number(1.0), Number(1.0)]}], "guides": Array [], "layers": Array [Object {"color": Null, "locked": Bool(false), "name": String("Layer0"), "visible": Bool(true)}], "materials": Array [], "protos": Array [Object {"edges": Array [Object {"a": Array [Number(0.19999999999999996), Number(0.6666666666666666), Number(0.0)], "b": Array [Number(1.2), Number(0.6666666666666666), Number(0.0)]}, Object {"a": Array [Number(1.2), Number(0.6666666666666666), Number(0.0)], "b": Array [Number(0.19999999999999996), Number(1.6666666666666663), Number(0.0)]}, Object {"a": Array [Number(0.19999999999999996), Number(1.6666666666666663), Number(0.0)], "b": Array [Number(0.19999999999999996), Number(0.6666666666666666), Number(0.0)]}], "faces": Array [Object {"texture": Object {"uvw": Array [Number(1.0), Number(0.0), Number(0.0), Number(3.0), Number(0.0), Number(1.0), Number(0.0), Number(4.0)]}, "vendor": Number(71), "vertices": Array [Array [Number(0.19999999999999996), Number(0.6666666666666666), Number(0.0)], Array [Number(1.2), Number(0.6666666666666666), Number(0.0)], Array [Number(0.19999999999999996), Number(1.6666666666666663), Number(0.0)]]}]}], "saved_views": Array [], "section_planes": Array [], "section_view": Object {"cuts_hidden": Bool(false), "fill_hidden": Bool(false), "planes_hidden": Bool(false)}, "terrain": Null, "text_labels": Array [], "units": Object {"length": String("m"), "precision": Number(2)}}
+ right: Object {"active_sheet_index": Null, "camera": Object {"distance": Number(20.0), "fov_deg": Number(45.0), "perspective": Bool(true), "pitch": Number(0.5235987755982988), "target": Array [Number(0.0), Number(0.0), Number(0.0)], "yaw": Number(-0.7853981633974483)}, "compositions": Array [], "dimensions": Array [], "edges": Array [], "faces": Array [], "geo_paths": Array [], "geo_points": Array [], "georef": Object {"datum": Null}, "groups": Array [Object {"billboard": Bool(false), "children": Array [], "component": Bool(true), "hidden": Bool(false), "ifc": Null, "layer": Null, "name": String("leaf"), "proto": Number(0), "uid": String("8041495b884d48958dfaf8d9525f7cb9"), "xform": Array [Number(-2.0), Number(0.0), Number(0.0), Number(0.0), Number(0.6), Number(3.0), Number(0.0), Number(0.0), Number(0.0), Number(0.4), Number(1.5), Number(0.0), Number(3.0), Number(-2.0), Number(1.0), Number(1.0)]}, Object {"billboard": Bool(false), "children": Array [], "component": Bool(true), "hidden": Bool(false), "ifc": Null, "layer": Null, "name": String("leaf"), "proto": Number(0), "uid": String("ddeb24ff9daa4cfd9ac4a355d92ee3d0"), "xform": Array [Number(-2.0), Number(0.0), Number(0.0), Number(0.0), Number(0.6), Number(3.0), Number(0.0), Number(0.0), Number(0.0), Number(0.4), Number(1.5), Number(0.0), Number(13.0), Number(-2.0), Number(1.0), Number(1.0)]}], "guides": Array [], "layers": Array [Object {"color": Null, "locked": Bool(false), "name": String("Layer0"), "visible": Bool(true)}], "materials": Array [], "protos": Array [Object {"edges": Array [Object {"a": Array [Number(0.19999999999999996), Number(0.6666666666666666), Number(0.0)], "b": Array [Number(1.2), Number(0.6666666666666666), Number(0.0)]}, Object {"a": Array [Number(1.2), Number(0.6666666666666666), Number(0.0)], "b": Array [Number(0.19999999999999996), Number(1.6666666666666665), Number(0.0)]}, Object {"a": Array [Number(0.19999999999999996), Number(1.6666666666666665), Number(0.0)], "b": Array [Number(0.19999999999999996), Number(0.6666666666666666), Number(0.0)]}], "faces": Array [Object {"texture": Object {"uvw": Array [Number(1.0), Number(0.0), Number(0.0), Number(3.0), Number(0.0), Number(1.0), Number(0.0), Number(4.0)]}, "vendor": Number(71), "vertices": Array [Array [Number(0.19999999999999996), Number(0.6666666666666666), Number(0.0)], Array [Number(1.2), Number(0.6666666666666666), Number(0.0)], Array [Number(0.19999999999999996), Number(1.6666666666666665), Number(0.0)]]}]}], "saved_views": Array [], "section_planes": Array [], "section_view": Object {"cuts_hidden": Bool(false), "fill_hidden": Bool(false), "planes_hidden": Bool(false)}, "terrain": Null, "text_labels": Array [], "units": Object {"length": String("m"), "precision": Number(2)}}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p ingetrazo-gui --test move_component_arrays`

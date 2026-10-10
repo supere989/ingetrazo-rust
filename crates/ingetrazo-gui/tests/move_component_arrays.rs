@@ -182,6 +182,20 @@ fn original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact() 
   }
   if kind=="nested-leaf" {app.finish_component_edit();}
   assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);
+  let path=std::env::temp_dir().join(format!("world-edit-{}.igz",uuid::Uuid::new_v4()));
+  let document=ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
+  ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();
+  let reopened=ingetrazo_formats::igz::load_igz(&path).unwrap();
+  assert_eq!(ingetrazo_formats::igz::scene_to_igz_document(&reopened),document);
+  let groups=if kind=="nested-leaf" {&reopened.groups[0].children} else {&reopened.groups};
+  compare(&groups[0].mesh,&row["selected_prototype_after"]);compare(&groups[1].mesh,&row["sibling_prototype_after"]);
+  assert_eq!(groups[0].mesh_share==groups[1].mesh_share,row["shared_after"].as_bool().unwrap());
+  if let Some(directory)=std::env::var_os("INGETRAZO_WORLD_EDIT_REOPEN_DIR") {
+   let directory=std::path::PathBuf::from(directory);std::fs::create_dir_all(&directory).unwrap();
+   std::fs::copy(&path,directory.join(format!("{}-{}.igz",kind,row["mode"].as_str().unwrap()))).unwrap();
+  }
+  std::fs::remove_file(path).unwrap();
+
  }
 }
 

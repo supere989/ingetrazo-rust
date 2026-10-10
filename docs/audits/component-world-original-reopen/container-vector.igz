@@ -1,0 +1,361 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 20.0,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 0.5235987755982988,
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": -0.7853981633974483
+    },
+    "compositions": [],
+    "dimensions": [],
+    "edges": [],
+    "faces": [],
+    "geo_paths": [],
+    "geo_points": [],
+    "georef": {
+      "datum": null
+    },
+    "groups": [
+      {
+        "axes": [
+          -2.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.4,
+          1.5,
+          0.0,
+          3.0,
+          -2.0,
+          1.0,
+          1.0
+        ],
+        "billboard": false,
+        "children": [
+          {
+            "billboard": false,
+            "children": [],
+            "component": false,
+            "hidden": false,
+            "ifc": null,
+            "layer": null,
+            "name": "child",
+            "proto": 1,
+            "uid": "ec811f59a385475f97fc005bf6833a83",
+            "xform": [
+              -2.0,
+              0.0,
+              0.0,
+              0.0,
+              0.6,
+              3.0,
+              0.0,
+              0.0,
+              0.0,
+              0.4,
+              1.5,
+              0.0,
+              3.0,
+              -2.0,
+              1.0,
+              1.0
+            ]
+          }
+        ],
+        "component": true,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "container",
+        "proto": 0,
+        "uid": "4f4421d7367d4190b23b47ec13f86c3b",
+        "xform": [
+          1.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          1.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          1.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      {
+        "billboard": false,
+        "children": [
+          {
+            "billboard": false,
+            "children": [],
+            "component": false,
+            "hidden": false,
+            "ifc": null,
+            "layer": null,
+            "name": "child",
+            "proto": 1,
+            "uid": "939aa99ab7fe45f3ba07470cd26e1c5e",
+            "xform": [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ],
+        "component": true,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "container",
+        "proto": 2,
+        "uid": "ed392b52b344464ea48c090d0cdb76fc",
+        "xform": [
+          -2.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.4,
+          1.5,
+          0.0,
+          13.0,
+          -2.0,
+          1.0,
+          1.0
+        ]
+      }
+    ],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "protos": [
+      {
+        "axes": [
+          -2.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.4,
+          1.5,
+          0.0,
+          3.0,
+          -2.0,
+          1.0,
+          1.0
+        ],
+        "edges": [
+          {
+            "a": [
+              4.0,
+              -4.0,
+              1.5
+            ],
+            "b": [
+              2.0,
+              -4.0,
+              1.5
+            ]
+          },
+          {
+            "a": [
+              2.0,
+              -4.0,
+              1.5
+            ],
+            "b": [
+              4.6,
+              -1.0,
+              1.5
+            ]
+          },
+          {
+            "a": [
+              4.6,
+              -1.0,
+              1.5
+            ],
+            "b": [
+              4.0,
+              -4.0,
+              1.5
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "texture": {
+              "uvw": [
+                -0.5,
+                0.09999999999999998,
+                -0.026666666666666665,
+                4.726666666666667,
+                0.0,
+                0.3333333333333333,
+                -0.08888888888888889,
+                4.7555555555555555
+              ]
+            },
+            "vendor": 71,
+            "vertices": [
+              [
+                4.0,
+                -4.0,
+                1.5
+              ],
+              [
+                2.0,
+                -4.0,
+                1.5
+              ],
+              [
+                4.6,
+                -1.0,
+                1.5
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "edges": [],
+        "faces": []
+      },
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "texture": {
+              "uvw": [
+                1.0,
+                0.0,
+                0.0,
+                3.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0
+              ]
+            },
+            "vendor": 71,
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}

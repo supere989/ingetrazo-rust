@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "75959bed6e02928eef9f34e39fc77c066cac1c0e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "leaf-scalar",
+      "passed": true,
+      "sha256": "d0ad4b98d856b5dc0197426cc5b5a31d435d81f3d11941e3a59705d3511659c8"
+    },
+    {
+      "case": "leaf-vector",
+      "passed": true,
+      "sha256": "c0dbe2461133d196f14466927752bac8cb8063b12ab4fc7712550397fcf4ce4e"
+    },
+    {
+      "case": "container-scalar",
+      "passed": true,
+      "sha256": "462395296ec54650ef73c538b86db0ce98f2c6991f77f441cbf1071ab207cd69"
+    },
+    {
+      "case": "container-vector",
+      "passed": true,
+      "sha256": "fb6a0534911009d77206317a69e0c869db6e2d684e02c4538235782696744f6d"
+    },
+    {
+      "case": "nested-leaf-scalar",
+      "passed": true,
+      "sha256": "837547d12908271a924eacf0bd437350d3cde4d23a99b3da60baa7c4c1edf7bb"
+    },
+    {
+      "case": "nested-leaf-vector",
+      "passed": true,
+      "sha256": "605bd456e3811de28434e58d4243c4b1a62794c1b1417fc6d6b3141c08ebe5d3"
+    }
+  ],
+  "scope": "Actual original loader after native world-space authored Move scalar/vector and Finish: prototype points, UV, transforms and Mesh object identity. No pointer/pixel or active Undo claim."
+}
