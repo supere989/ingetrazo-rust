@@ -26,14 +26,15 @@ impl Default for Pose {fn default()->Self{Self{scale:[1.;2],translation:[0.;2]}}
 impl Pose {pub fn validate(self)->Result<(),String>{if self.scale.iter().chain(&self.translation).all(|v|v.is_finite()){Ok(())}else{Err("CAD2D pose must be finite".into())}}}
 /// ID is allocated once for this immutable allocation. Changing palette/pose
 /// retains ID; changing geometry constructs a fresh ID, preventing stale cache.
-#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>}
+#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2]}
 impl Geometry {
  pub fn new(vertices:Vec<Vertex>,indices:Vec<u32>)->Result<Arc<Self>,String>{
   if vertices.len()>u32::MAX as usize||indices.len()>u32::MAX as usize{return Err("CAD2D geometry exceeds index domain".into());}
   if indices.len()%3!=0||indices.iter().any(|&i|i as usize>=vertices.len()){return Err("CAD2D triangle index bounds invalid".into());}
   if vertices.iter().any(|v|!v.position.iter().all(|p|p.is_finite())||!v.coverage.is_finite()||!(0. ..=1.).contains(&v.coverage)){return Err("CAD2D vertex position/coverage invalid".into());}
+  let mut bounds=[[0.;2];2];if let Some(first)=vertices.first(){bounds=[first.position;2];for v in &vertices{for axis in 0..2{bounds[0][axis]=bounds[0][axis].min(v.position[axis]);bounds[1][axis]=bounds[1][axis].max(v.position[axis]);}}}
   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
-  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None}))
+  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds}))
  }
  /// Pixel-aligned source span producer declares nonoverlapping ordered draw ranges.
  /// Metadata partitions all indices; a caller must not use this for arbitrary
@@ -42,7 +43,14 @@ impl Geometry {
   if ranges.len()>4096{return Err("CAD2D ordered draws exceed4096 admission".into());}
   let mut end=0;for range in &ranges{if range.start!=end||range.end<=range.start||range.start%3!=0||range.end%3!=0{return Err("Invalid CAD2D ordered draw partition".into());}end=range.end;}
   if end as usize!=indices.len(){return Err("CAD2D ordered draws do not cover indices".into());}
-  let mut g=Self::new(vertices,indices)?;Arc::get_mut(&mut g).unwrap().ordered_draws=Some(ranges.into());Ok(g)
+  let mut g=Self::new(vertices,indices)?;verify_disjoint_span_draws(&g,&ranges)?;Arc::get_mut(&mut g).unwrap().ordered_draws=Some(ranges.into());Ok(g)
+ }
+ /// Diagonal scale/translation preserves disjointness and shared boundaries.
+ /// Refuse overflow before allocation/recording; source physical coordinates
+ /// are bounded to the same million-pixel domain as the rasterizer.
+ pub fn validate_ordered_pose(&self,pose:Pose,ppp:f32)->Result<(),String>{
+  pose.validate()?;if !ppp.is_finite()||ppp<=0.{return Err("Invalid CAD2D physical density".into());}
+  if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
  }
  pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
@@ -61,4 +69,35 @@ impl Geometry {
 
 #[cfg(test)]mod ordering_admission{use super::*;
  #[test]fn partition_is_contiguous_bounded_and_complete(){let v=Vertex{position:[0.,0.],coverage:1.};let vertices=vec![v;3];let indices=vec![0,1,2,0,1,2];let g=Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),vec![0..3,3..6]).unwrap();assert_eq!(&*g.ordered_draws().unwrap(),&[0..3,3..6]);for ranges in [vec![0..3],vec![0..6,3..6],vec![3..6],vec![0..4,4..6],vec![0..0,0..6]]{assert!(Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),ranges).is_err());}}
+}
+
+fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Result<(),String>{
+ use std::collections::BTreeMap;
+ if g.indices.len()>600_000{return Err("CAD2D span proof exceeds100000 quad admission".into());}
+ let key=|v:f32|{let bits=if v==0.{0}else{v.to_bits()};if bits>>31!=0{!bits}else{bits^(1<<31)}};
+ for range in ranges{
+  let indices=&g.indices[range.start as usize..range.end as usize];
+  if indices.len()==3{continue;} // A single triangle cannot overlap itself.
+  if indices.len()%6!=0{return Err("CAD2D draw requires canonical source span quads".into());}
+  let mut rows=BTreeMap::<u32,(f32,BTreeMap<u32,f32>)>::new();
+  for q in indices.chunks_exact(6){
+   if q[0]!=q[3]||q[2]!=q[4]{return Err("CAD2D span triangulation is not canonical".into());}
+   let [a,b,c,d]=[q[0],q[1],q[2],q[5]].map(|i|g.vertices[i as usize]);
+   let [x0,y0]=a.position;let [x1,y1]=c.position;
+   if !(x0<x1&&y0<y1)||b.position!=[x1,y0]||d.position!=[x0,y1]||[b,c,d].iter().any(|v|v.coverage!=a.coverage){return Err("CAD2D draw is not constant-coverage axis-aligned spans".into());}
+   let ykey=key(y0);
+   if !rows.contains_key(&ykey){
+    if rows.range(..ykey).next_back().is_some_and(|(_,row)|row.0>y0)||rows.range(ykey..).next().is_some_and(|(next,_)|*next<key(y1)){return Err("CAD2D ordered draw has overlapping rows".into());}
+    rows.insert(ykey,(y1,BTreeMap::new()));
+   }
+   let row=rows.get_mut(&ykey).unwrap();if row.0!=y1{return Err("CAD2D source row heights disagree".into());}
+   let xkey=key(x0);if row.1.range(..=xkey).next_back().is_some_and(|(_,end)|*end>x0)||row.1.range(xkey..).next().is_some_and(|(start,_)|*start<key(x1)){return Err("CAD2D ordered draw contains overlapping spans".into());}
+   row.1.insert(xkey,x1);
+  }
+ }Ok(())
+}
+#[cfg(test)]mod immutable_order_proof{use super::*;
+ fn quad(x:f32)->[Vertex;4]{[[x,0.],[x+2.,0.],[x+2.,1.],[x,1.]].map(|position|Vertex{position,coverage:0.5})}
+ #[test]fn rejects_same_draw_overlap_but_allows_source_ordered_barriers(){let vertices=quad(0.).into_iter().chain(quad(1.)).collect::<Vec<_>>();let indices=vec![0,1,2,0,2,3,4,5,6,4,6,7];assert!(Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),vec![0..12]).unwrap_err().contains("overlapping spans"));let g=Geometry::new_with_ordered_draws(vertices,indices,vec![0..6,6..12]).unwrap();assert!(g.validate_ordered_pose(Pose{scale:[-2.,0.75],translation:[0.25,0.3]},1.25).is_ok());assert!(g.validate_ordered_pose(Pose{scale:[f32::MAX;2],..Default::default()},2.).is_err());}
+ #[test]fn canonical_shared_boundaries_are_safe(){let vertices=quad(0.).into_iter().chain(quad(2.)).collect::<Vec<_>>();let indices=vec![0,1,2,0,2,3,4,5,6,4,6,7];assert!(Geometry::new_with_ordered_draws(vertices,indices,vec![0..12]).is_ok());let v=Vertex{position:[0.,0.],coverage:1.};assert!(Geometry::new_with_ordered_draws(vec![v;3],vec![0,1,2,0,1,2],vec![0..6]).is_err());}
 }

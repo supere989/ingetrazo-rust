@@ -317,7 +317,7 @@ impl System {
         let clipped_primitives = self.egui_ctx.tessellate(shapes, pixels_per_point);
 
         if let Some(cad)=&mut self.cad2d {
-            if let Err(error)=cad.prepare(&self.vulkan_context,&clipped_primitives,self.fence,self.draw_serial,self.draw_serial+1){
+            if let Err(error)=cad.prepare(&self.vulkan_context,&clipped_primitives,self.fence,self.draw_serial,self.draw_serial+1,pixels_per_point){
                 egui_app.gpu_error(&error);
                 self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
                 // Old ready paint remains valid; continue presentation under pressure.

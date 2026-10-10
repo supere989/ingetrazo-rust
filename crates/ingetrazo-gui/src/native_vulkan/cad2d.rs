@@ -296,6 +296,7 @@ impl Renderer {
         fence: vk::Fence,
         completed: u64,
         next: u64,
+        pixels_per_point:f32,
     ) -> Result<(), String> {
         self.resources.collect(fence, completed)?;
         self.active.clear();
@@ -321,6 +322,7 @@ impl Renderer {
                     self.active.insert(r.id);
                 }
                 if self.pipeline.lock().unwrap().integer{
+                    s.geometry.validate_ordered_pose(s.pose,pixels_per_point)?;
                     let ranges=s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
                     let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;if !ranges.iter().any(|r|r.end==end){return Err("Exact integer CAD2D palette boundary splits a disjoint draw".into());}}
                     if end as usize!=s.geometry.indices().len(){return Err("Exact integer CAD2D palette does not cover ordered geometry".into());}
@@ -483,7 +485,7 @@ impl Renderer {
             std::slice::from_ref(&primitive),
             fence,
             completed,
-            completed,
+            completed,1.,
         )?;
         let before = self.budget.ledger.lock().unwrap().total_committed();
         let old = handle.inner.state.lock().unwrap().ready.clone().unwrap();
@@ -496,7 +498,7 @@ impl Renderer {
             std::slice::from_ref(&primitive),
             fence,
             completed,
-            completed,
+            completed,1.,
         );
         if result.is_ok() {
             return Err("CAD2D real pressure unexpectedly admitted index allocation".into());
@@ -518,7 +520,7 @@ impl Renderer {
             std::slice::from_ref(&primitive),
             fence,
             completed,
-            completed,
+            completed,1.,
         )?;
         if handle
             .inner
@@ -533,7 +535,7 @@ impl Renderer {
         {
             return Err("CAD2D retry did not install replacement".into());
         }
-        self.prepare(context, &[], fence, completed, completed)?;
+        self.prepare(context, &[], fence, completed, completed,1.)?;
         eprintln!("PASS CAD2D actual vertex allocation/index budget denial/prior drawable/rollback/retry: {:?}",self.stats());
         Ok(())
     }
