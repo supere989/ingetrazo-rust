@@ -1,0 +1,7 @@
+Tracked membership with guarded pose edits
+
+ImagePlaneList replaces the untracked public Vec while preserving transparent list serialization and fieldwise model equality. Every structural operation, cloned list owner, decoded owner and conservatively unrestricted mutable borrow gets a fresh scalar epoch. The Move tool rebuilds ID lookup only when that epoch changes. Single pose_mut guards record object UUID and invalidate on ID/whole-object replacement on release; normal pose-only updates remain warm. IndexMut/poses_mut/iter_mut conservatively invalidate before exposing identity-capable access. Atomic epoch retains Send/Sync.
+
+Actual production tool probe with50000images and varying x deltas records1000live hovers and1000detached hovers, zero membership scans and zero actual allocator calls in both warm windows. First detach inserts held metadata before the measured detached window. Reorder/delete/reinsert/whole-list-clone invalidation and allthree identity-capable borrow guards are asserted. Timing is a bounded CPU/debug measurement, not end-to-end GPU frame performance.
+
+Fresh actual Python six cases/36states, mixed15/105 and prior pure65 remain exact. Existing literal-old failures and checker mutation controls remain required. Full workspace passes; count and binary hashes in provenance. Full renderer still rebuilds geometry on model revision, and broader copy/group/section transforms, Rotate/Scale and direct GPU reference image drawing remain required.

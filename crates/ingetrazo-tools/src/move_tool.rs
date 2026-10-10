@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
 
-use std::collections::HashSet;
+use std::collections::{HashSet,HashMap};
 use glam::{DMat4, DVec3};
 use ingetrazo_core::scene::{Scene, SelectionItem};
 
@@ -28,6 +28,10 @@ pub struct MoveTool {
     pub target_images:Vec<usize>,
     original_images:Vec<(usize,ingetrazo_core::image_plane::ImagePlane)>,
     preview_images:Vec<(usize,DVec3)>,
+    image_membership_epoch:u64,
+    pub image_membership_rebuilds:u64,
+    pub image_membership_scanned:u64,
+    image_indices:HashMap<u128,usize>,
     image_command:Option<ingetrazo_core::image_plane::ImageFrameCommand>,
     pub last_targets: Vec<usize>,
     pub last_delta: Option<DVec3>,
@@ -43,8 +47,18 @@ pub struct MoveTool {
     original_groups:Vec<(usize,DMat4)>,
     original_planes:Vec<(usize,DVec3)>,
     preview_delta:DVec3,
+    detached_vertices:bool,
     original_version:u64,
     preview_version:u64,
+}
+
+/// Equality representation of original mesh._key: Qt float32 input, Python
+/// ties-even integer rounding, and no narrowing integer cast. None is the
+/// original nonfinite key refusal, not a coordinate eligible for welding.
+#[doc(hidden)]
+pub fn source_move_position_key(p:DVec3)->Option<[f64;3]>{
+    let p=p.as_vec3().as_dvec3();
+    p.is_finite().then(||p.to_array().map(|x|{let n=(x*10_000.).round_ties_even();if n==0.{0.}else{n}}))
 }
 
 impl MoveTool {
@@ -59,7 +73,7 @@ impl MoveTool {
         self.exclusions=Default::default();
         self.target_vertices.clear();
         self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.original_images.clear();self.preview_images.clear();
-        self.original_positions.clear();self.original_groups.clear();self.original_planes.clear();self.preview_delta=DVec3::ZERO;
+        self.detached_vertices=false;self.original_positions.clear();self.original_groups.clear();self.original_planes.clear();self.preview_delta=DVec3::ZERO;
     }
 
     /// Resolve targets from selection or mouse click.
@@ -148,33 +162,62 @@ impl MoveTool {
         self.original_planes=self.target_planes.iter().filter_map(|&id|scene.section_planes.get(id).map(|p|(id,p.point))).collect();
     }
 
+    fn refresh_image_membership(&mut self,scene:&Scene){
+        if self.image_membership_epoch==scene.image_planes.membership_epoch(){return;}
+        self.image_membership_epoch=scene.image_planes.membership_epoch();self.image_indices.clear();self.image_membership_rebuilds+=1;self.image_membership_scanned+=scene.image_planes.len()as u64;
+        for(index,p)in scene.image_planes.iter().enumerate(){self.image_indices.insert(p.id.as_u128(),index);}
+    }
+    fn image_index(scene:&Scene, preferred:usize, image:&ingetrazo_core::image_plane::ImagePlane)->Option<usize>{
+        if scene.image_planes.get(preferred).is_some_and(|p|p.id==image.id){Some(preferred)}else{scene.image_planes.iter().position(|p|p.id==image.id)}
+    }
     fn restore_positions(&self,scene:&mut Scene){
-        for (id,image) in &self.original_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=image.origin;}}
-        for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point;}}
+        for (id,image) in &self.original_images{if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().set_origin(image.origin);}}
+        if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point;}}
     }
     fn apply_preview(&mut self,scene:&mut Scene,delta:DVec3){
         if !delta.is_finite()||delta==self.preview_delta{return;}
-        for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+delta;}}
+        self.refresh_image_membership(scene);
+        if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+delta;}}
         // Qt applies each preview increment in float32, including accumulated rounding.
-        for (id,_) in &self.original_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=(live.origin.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();}}
-        for(id,origin)in &mut self.preview_images{if let Some(live)=scene.image_planes.get(*id){*origin=live.origin;}}
+        for ((preferred,image),(_,origin)) in self.original_images.iter_mut().zip(&mut self.preview_images){
+            let index=self.image_indices.get(&image.id.as_u128()).copied();
+            let current=index.map(|i|scene.image_planes[i].origin).unwrap_or(*origin);
+            *origin=(current.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();
+            if let Some(index)=index{*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}else{scene.image_objects.set_held_origin(image,*origin);}
+        }
         self.preview_delta=delta;scene.bump_version();self.preview_version=scene.version;
     }
     fn revert_preview(&mut self,scene:&mut Scene){
         if self.preview_delta!=DVec3::ZERO{
-            let image_origins=self.original_images.iter().filter_map(|(id,_)|scene.image_planes.get(*id).map(|p|(*id,(p.origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
-            self.restore_positions(scene);for(id,origin)in image_origins{scene.image_planes[id].origin=origin;}
-            for(id,origin)in &mut self.preview_images{if let Some(live)=scene.image_planes.get(*id){*origin=live.origin;}}self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
+            self.refresh_image_membership(scene);
+            let image_origins=self.original_images.iter().zip(&self.preview_images).map(|((_preferred,image),(_,origin))|{
+                let current=self.image_indices.get(&image.id.as_u128()).map(|i|scene.image_planes[*i].origin).unwrap_or(*origin);
+                (current.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()
+            }).collect::<Vec<_>>();
+            self.restore_positions(scene);
+            for (((preferred,image),(_,origin)),current) in self.original_images.iter_mut().zip(&mut self.preview_images).zip(image_origins){
+                *origin=current;
+                if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(current);}else{scene.image_objects.set_held_origin(image,current);}
+            }
+            self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
     }
     /// Execute translation or copy.
     pub fn execute_move(&mut self, delta: DVec3, scene: &mut Scene) {
         self.last_error=None;
         if !delta.is_finite(){self.last_error=Some("Move displacement must be finite".into());return;}
         self.revert_preview(scene);
+        if self.detached_vertices {
+            // Source MoveVerticesCommand resolves grabbed positions against the
+            // current loose mesh. The published group is not a replacement for
+            // the detached working vertex objects held by the active tool.
+            let Some(positions)=self.original_positions.iter().map(|(_,p)|source_move_position_key(*p).map(|k|k.map(f64::to_bits))).collect::<Option<HashSet<_>>>() else {self.last_error=Some("Move source coordinates are not finite".into());return;};
+            if scene.mesh.vertices.iter().any(|v|!v.position.as_vec3().is_finite()){self.last_error=Some("Move mesh coordinates are not finite".into());return;}
+            self.target_vertices=scene.mesh.vertices.iter().enumerate().filter_map(|(id,v)|positions.contains(&source_move_position_key(v.position).unwrap().map(f64::to_bits)).then_some(id)).collect();
+        }
         if self.is_copy_mode&&self.target_vertices.is_empty()&&self.target_groups.is_empty(){return;}
         if delta.length_squared() < 1e-12 && (self.target_images.is_empty() || delta.as_vec3().length() <= 1e-9) {
             return;
@@ -210,7 +253,7 @@ impl MoveTool {
             let command=ingetrazo_core::image_plane::ImageFrameCommand{images:self.original_images.iter().map(|(_,image)|image.clone()).collect(),operation:ingetrazo_core::image_plane::ImageFrameOperation::Move(delta)};
             // Publish grab baseline rather than live preview into held identity.
             scene.image_objects.publish(&scene.image_planes);
-            command.apply(&mut scene.image_planes,&scene.image_objects,true);self.image_command=Some(command);
+            command.apply(scene.image_planes.poses_mut(),&scene.image_objects,true);self.image_command=Some(command);
         }
         // Original copy builders stamp geometry only; section planes stay put.
         if !self.is_copy_mode{for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point+=delta;}}}
@@ -223,7 +266,8 @@ impl MoveTool {
 
 impl Tool for MoveTool {
     fn visit_image_metadata_roots(&self,visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){for(_,image)in &self.original_images{visit(image);}}
-    fn preserves_global_preview_on_context_exit(&self)->bool{self.start_point.is_some()&&!self.is_copy_mode&&!self.target_images.is_empty()&&self.target_vertices.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()}
+    fn preserves_global_preview_on_context_exit(&self)->bool{self.start_point.is_some()&&!self.is_copy_mode&&!self.target_images.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()}
+    fn detach_context_preview(&mut self){self.detached_vertices=true;}
     fn take_image_frame_command(&mut self)->Option<ingetrazo_core::image_plane::ImageFrameCommand>{self.image_command.take()}
     fn placement_preview(&self)->Option<crate::base::PlacementPreview<'_>> {
         if self.start_point.is_none() || self.is_copy_mode || self.original_groups.is_empty()
@@ -245,16 +289,16 @@ impl Tool for MoveTool {
     fn prepare_undo(&mut self,_available:bool)->bool{self.array_base=None;false}
 
     fn restore_transient_model(&self,scene:&mut Scene){if self.start_point.is_some(){
-        let origins=self.original_images.iter().filter_map(|(id,_)|scene.image_planes.get(*id).map(|p|(*id,(p.origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
-        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes[id].origin=origin;}scene.version=self.original_version;
+        let origins=self.original_images.iter().filter_map(|(id,image)|Self::image_index(scene,*id,image).map(|index|(index,(scene.image_planes[index].origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
+        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes.pose_mut(id).unwrap().set_origin(origin);}scene.version=self.original_version;
     }}
     fn end_transient_before_history(&mut self,scene:&mut Scene){if self.start_point.is_some(){self.on_cancel(scene);}}
     fn restore_current_preview_model(&self,scene:&mut Scene){
         if self.start_point.is_none(){return;}
         scene.version=self.preview_version;
         // The exact accumulated float32 pose cannot be reconstructed from its inverse.
-        for(id,origin)in &self.preview_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=*origin;}}
-        for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}
+        for((id,image),(_,origin))in self.original_images.iter().zip(&self.preview_images){if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}}
+        if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(self.preview_delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+self.preview_delta;}}
     }
@@ -623,7 +667,7 @@ mod tests {
   let ctx=|p|ToolContext::new(p,Ray::new(DVec3::new(0.5,0.5,1.),-DVec3::Z));tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_move(&mut scene,&ctx(DVec3::X*2.));assert_eq!(scene.image_planes[0].origin,DVec3::X*2.);assert!(tool.placement_preview().is_none());
   tool.on_cancel(&mut scene);assert_eq!(scene.image_planes[0].origin,DVec3::ZERO);assert!(tool.take_image_frame_command().is_none());
   tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_move(&mut scene,&ctx(DVec3::X));tool.on_control_state(&mut scene,true);assert_eq!(scene.image_planes[0].origin,DVec3::ZERO);let mut end=ctx(DVec3::X*3.);end.ctrl_held=true;tool.on_click(&mut scene,&end);assert_eq!(scene.image_planes.len(),1);assert!(tool.take_image_frame_command().is_none());
-  tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_click(&mut scene,&ctx(DVec3::Y*2.));let command=tool.take_image_frame_command().unwrap();scene.image_planes[0].origin+=DVec3::X*10.;scene.image_objects.publish(&scene.image_planes);command.apply(&mut scene.image_planes,&scene.image_objects,false);assert_eq!(scene.image_planes[0].origin,DVec3::X*10.);
+  tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_click(&mut scene,&ctx(DVec3::Y*2.));let command=tool.take_image_frame_command().unwrap();scene.image_planes[0].origin+=DVec3::X*10.;scene.image_objects.publish(&scene.image_planes);command.apply(scene.image_planes.poses_mut(),&scene.image_objects,false);assert_eq!(scene.image_planes[0].origin,DVec3::X*10.);
  }
 }
 

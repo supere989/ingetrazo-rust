@@ -1,0 +1,443 @@
+{
+  "bare": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "transparent_zero": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "missing_texture": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "own_locked": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": null,
+    "locked_context": "Scan",
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": null
+  },
+  "layer_locked": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": null,
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": null
+  },
+  "layer_hidden": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "locked_and_layer_hidden": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "unknown_layer": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "default_hidden": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "tie_last": {
+    "selected_before_click": [],
+    "inference": "Later",
+    "selectable": "Later",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Later"
+    ],
+    "pick": "Later"
+  },
+  "nearest_not_last": {
+    "selected_before_click": [],
+    "inference": "Near",
+    "selectable": "Near",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 2.0
+    },
+    "selected": [
+      "Near"
+    ],
+    "pick": "Near"
+  },
+  "outside": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "edge_inclusive": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "parallel": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "behind": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "back_side": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "vertical": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "sheared_source_projection": {
+    "selected_before_click": [],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "degenerate_source": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "geometry_wins": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Face"
+    ],
+    "pick": "Face"
+  },
+  "shift_toggle": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": "Scan"
+  },
+  "ctrl_add": {
+    "selected_before_click": [
+      "Two"
+    ],
+    "inference": "One",
+    "selectable": "One",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 1.0
+    },
+    "selected": [
+      "One",
+      "Two"
+    ],
+    "pick": "One"
+  },
+  "shift_ctrl_remove": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": "Scan"
+  },
+  "shift_ctrl_existing_remove": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": "Scan"
+  },
+  "default_alias_is_unknown": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "empty_alias_is_unknown": {
+    "selected_before_click": [],
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "panel_hidden_prune": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "panel_locked_prune": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "inference": "Scan",
+    "selectable": null,
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": null
+  },
+  "panel_default_locked_prune": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "inference": "Scan",
+    "selectable": null,
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": null
+  }
+}
