@@ -1,0 +1,1414 @@
+[
+  {
+    "name": "bare",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "transparent_zero",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 0
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "missing_texture",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "own_locked",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": true,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "layer_locked",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": true
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "layer_hidden",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": false,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "locked_and_layer_hidden",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": true,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": false,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "unknown_layer",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Absent",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "default_hidden",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": null,
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Layer 0",
+        "visible": false,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "tie_last",
+    "images": [
+      {
+        "name": "Earlier",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      },
+      {
+        "name": "Later",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "nearest_not_last",
+    "images": [
+      {
+        "name": "Near",
+        "origin": [
+          0,
+          0,
+          2
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      },
+      {
+        "name": "Far",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "outside",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      3,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "edge_inclusive",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      2,
+      2,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "parallel",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      1
+    ],
+    "ray_dir": [
+      1,
+      0,
+      0
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "behind",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      -1
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "back_side",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      -1
+    ],
+    "ray_dir": [
+      0,
+      0,
+      1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "vertical",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          2
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      -2,
+      1
+    ],
+    "ray_dir": [
+      0,
+      1,
+      0
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "sheared_source_projection",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          1,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      2.25,
+      0.5,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "degenerate_source",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      100,
+      100,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "geometry_wins",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      0.5,
+      0.5,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": true,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "shift_toggle",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "shift",
+    "selected": [
+      0
+    ]
+  },
+  {
+    "name": "ctrl_add",
+    "images": [
+      {
+        "name": "One",
+        "origin": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      },
+      {
+        "name": "Two",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "ctrl",
+    "selected": [
+      1
+    ]
+  },
+  {
+    "name": "shift_ctrl_remove",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "shift_ctrl",
+    "selected": []
+  },
+  {
+    "name": "shift_ctrl_existing_remove",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "shift_ctrl",
+    "selected": [
+      0
+    ]
+  },
+  {
+    "name": "default_alias_is_unknown",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": null,
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Layer0",
+        "visible": false,
+        "locked": true
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "empty_alias_is_unknown",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Layer0",
+        "visible": false,
+        "locked": true
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": []
+  },
+  {
+    "name": "panel_hidden_prune",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": [
+      0
+    ],
+    "panel": "hide"
+  },
+  {
+    "name": "panel_locked_prune",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": "Images",
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Images",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": [
+      0
+    ],
+    "panel": "lock"
+  },
+  {
+    "name": "panel_default_locked_prune",
+    "images": [
+      {
+        "name": "Scan",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          2,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          2,
+          0
+        ],
+        "layer": null,
+        "locked": false,
+        "opacity": 1
+      }
+    ],
+    "ray_origin": [
+      1,
+      1,
+      10
+    ],
+    "ray_dir": [
+      0,
+      0,
+      -1
+    ],
+    "layers": [
+      {
+        "name": "Layer 0",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "face": false,
+    "modifiers": "",
+    "selected": [
+      0
+    ],
+    "panel": "lock"
+  }
+]
