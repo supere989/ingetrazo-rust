@@ -34,7 +34,7 @@ pub(super)fn render(app:&mut IngeTrazoApp,ui:&mut egui::Ui,_painter:&egui::Paint
   if response.clicked(){if let Some(pos)=response.interact_pointer_pos().filter(|p|paper.contains(*p)&&!toolbar.contains(*p)){if let Err(e)=app.place_composer_text(index,(f64::from((pos.x-paper.min.x)/zoom),f64::from((pos.y-paper.min.y)/zoom))){app.status_message=e;}}}return true;
  }
  if app.composer_state.inline_text.is_none()&&(response.double_clicked()||response.triple_clicked()){if let Some(pos)=response.interact_pointer_pos(){
-  let sheet=&app.scene.sheets[index];let target=sheet.visible_item_indices().into_iter().rev().find_map(|n|if let SheetItem::Text(t)=&sheet.items[n]{let r=t_rect(sheet,t);egui::Rect::from_min_size(paper.min+egui::vec2(r.0 as f32,r.1 as f32)*zoom,egui::vec2(r.2 as f32,r.3 as f32)*zoom).contains(pos).then_some(t.id)}else{None});
+  let sheet=&app.scene.sheets[index];let point=(f64::from((pos.x-paper.min.x)/zoom),f64::from((pos.y-paper.min.y)/zoom));let target=topmost_text(sheet,point);
   if let Some(id)=target{if let Err(e)=app.begin_composer_text_edit(index,id){app.status_message=e;}}
  }}
  // Operative ComposerCanvasView handles Escape before InlineTextEditor:
@@ -55,3 +55,21 @@ pub(super)fn render(app:&mut IngeTrazoApp,ui:&mut egui::Ui,_painter:&egui::Paint
  if cancel||enter||outside{if let Err(e)=app.finish_composer_text_edit(!cancel){app.status_message=e;}}true
 }
 fn t_rect(sheet:&ingetrazo_core::composition::Sheet,t:&TextItem)->(f64,f64,f64,f64){let w=sheet.native_items.get(&t.id).and_then(|v|v.get("w_mm")).and_then(|v|v.as_f64()).unwrap_or(80.);(t.pos.0,t.pos.1,w,(t.font_size_pt*25.4/72.*1.4*(t.text.matches('\n').count()+1)as f64).max(6.))}
+
+// QGraphicsScene delivers the event to the highest mouse-accepting item,
+// including non-Text blockers; locked items accept NoButton in the source.
+fn topmost_text(sheet:&ingetrazo_core::composition::Sheet,point:(f64,f64))->Option<uuid::Uuid>{
+ for n in sheet.visible_item_indices().into_iter().rev(){let item=&sheet.items[n];if matches!(item,SheetItem::Shape(s) if s.shape.locked)||sheet.native_items.get(&item.id()).and_then(|v|v.get("locked")).and_then(|v|v.as_bool()).unwrap_or(false){continue;}
+ let (x,y,w,h)=match item{SheetItem::Text(t)=>{let(x,y,w,h)=t_rect(sheet,t);let bg=sheet.native_items.get(&t.id).and_then(|v|v.get("bg_color")).and_then(|v|v.as_str()).is_some_and(|s|!s.is_empty());let p=if bg{1.}else{0.};(x-0.5-p,y-0.5-p,w+3.5+2.*p,h+3.5+2.*p)},_=>{let r=item.rect();(r.x-0.5,r.y-0.5,r.w+3.5,r.h+3.5)}};
+ if point.0>=x&&point.1>=y&&point.0<=x+w&&point.1<=y+h{return if let SheetItem::Text(t)=item{Some(t.id)}else{None};}
+ }None
+}
+
+#[cfg(test)]mod tests{
+ use super::*;use ingetrazo_core::composition::Sheet;
+ #[test]fn source_text_hit_padding_and_topmost_view(){let mut sheet=Sheet::default();let mut view=sheet.items.remove(0);if let SheetItem::ViewFrame(v)=&mut view{v.rect=ingetrazo_core::composition::RectMm::new(20.,30.,80.,20.);}else{panic!("default view");}sheet.items.clear();let text=TextItem{id:uuid::Uuid::new_v4(),pos:(20.,30.),text:"many words ".repeat(40),font_size_pt:14.,bold:false};let id=text.id;sheet.items.push(SheetItem::Text(text));assert_eq!(topmost_text(&sheet,(19.6,30.)),Some(id));assert_eq!(topmost_text(&sheet,(102.9,30.)),Some(id));assert_eq!(topmost_text(&sheet,(103.1,30.)),None);sheet.native_items.insert(id,serde_json::json!({"bg_color":"#ffffff"}));assert_eq!(topmost_text(&sheet,(18.6,30.)),Some(id));assert_eq!(topmost_text(&sheet,(18.4,30.)),None);let vid=view.id();sheet.native_items.insert(vid,serde_json::json!({"z":2}));sheet.items.push(view);assert_eq!(topmost_text(&sheet,(25.,35.)),None);sheet.native_items.get_mut(&vid).unwrap()["locked"]=serde_json::json!(true);assert_eq!(topmost_text(&sheet,(25.,35.)),Some(id));}
+}
+
+#[cfg(test)]mod active_lock_tests{use super::*;
+ #[test]fn source_lock_during_draft_commits_and_undo_keeps_lock(){let mut app=IngeTrazoApp::new();app.scene.sheets=vec![ingetrazo_core::composition::Sheet::default()];app.scene.sheets[0].items.clear();app.scene.active_sheet_index=Some(0);let id=app.place_composer_text(0,(20.,30.)).unwrap();app.begin_composer_text_edit(0,id).unwrap();app.composer_state.inline_text.as_mut().unwrap().draft="locked draft".into();app.scene.sheets[0].native_items.get_mut(&id).unwrap()["locked"]=serde_json::json!(true);app.finish_composer_text_edit(true).unwrap();assert!(matches!(&app.scene.sheets[0].items[0],SheetItem::Text(t) if t.text=="locked draft"));app.undo_composer_edit();assert!(matches!(&app.scene.sheets[0].items[0],SheetItem::Text(t) if t.text=="Text"));assert_eq!(app.scene.sheets[0].native_items[&id]["locked"],true);}
+}

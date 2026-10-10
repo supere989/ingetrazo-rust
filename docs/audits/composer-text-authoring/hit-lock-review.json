@@ -1,0 +1,19 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_probe_sha256": "56cedd0dbfd8e3655a042bf8768751592eab855c2cdc295be1188df06d2dd1ac",
+  "native_test_binary_sha256": "a4c9a306a54b83a080ff7d1b12aa87301ad7927e1e01809a2f88fda2f2470407",
+  "focused_tests": [
+    "source_text_hit_padding_and_topmost_view:1 passed",
+    "source_lock_during_draft_commits_and_undo_keeps_lock:1 passed"
+  ],
+  "scope": "Genuine original scene item acceptance/bounds + original inline commit/history; native actual render helper hit policy and app commit/history. No extra rendered GUI proof claimed.",
+  "retained_failures": [
+    "First Rust followup compile rejected shorthand -.5 literal; corrected to -0.5.",
+    "First test filter matched zero tests; corrected exact function filter, 1 passed."
+  ],
+  "remaining": [
+    "Original/native local Undo chunk granularity discrepancy (hello newline vs Text) remains a parity gap.",
+    "View title outside-frame hit extents, ground-shape extended bounds and currently untyped source Image item overlap remain open.",
+    "Editor typography and wrap/selection/caret interaction remain open."
+  ]
+}

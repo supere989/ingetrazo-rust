@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "scope": "Exact model text/history at 11 actual gesture phases; local undo chunk granularity and placement pixel rounding retained separately; no editor pixel equality",
+  "scope": "Exact model text/history at 10 actual gesture phases; local undo chunk granularity and placement pixel rounding retained separately; no editor pixel equality",
   "phases": [
     {
       "phase": "placed",
