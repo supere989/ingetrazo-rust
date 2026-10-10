@@ -18,6 +18,7 @@ pub mod obj;
 pub mod stl;
 
 pub use dae::export_dae;
+pub use dae_import::{load_dae,DaeError};
 pub use dxf::{export_dxf, import_dxf, DxfError};
 pub use gltf_import::load_gltf;
 pub use gltf::{export_glb, export_gltf, GltfError, GLTF_MAGIC};
@@ -35,6 +36,8 @@ use ingetrazo_core::scene::Scene;
 
 #[derive(thiserror::Error, Debug)]
 pub enum FormatError {
+    #[error("COLLADA format error: {0}")]
+    Dae(#[from] DaeError),
     #[error("IGZ format error: {0}")]
     Igz(#[from] IgzError),
     #[error("OBJ format error: {0}")]
@@ -61,6 +64,7 @@ pub fn load_file(path: &Path) -> Result<Scene, FormatError> {
 
     match ext.as_str() {
         "igz" => Ok(load_igz(path)?),
+        "dae" => Ok(load_dae(path)?),
         "gltf" | "glb" => Ok(load_gltf(path)?),
         "obj" => Ok(load_obj(path)?),
         "stl" => Ok(load_stl(path)?),
