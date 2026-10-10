@@ -1,4 +1,8 @@
 {
+  "negative_controls": {
+    "one_pixel_rejected": true,
+    "missing_duplicate_reordered_rejected": true
+  },
   "passed": true,
   "cases": [
     {
