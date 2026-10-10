@@ -1,0 +1,13 @@
+{
+  "candidate": "03b5a7d2ba1daf8cd3c1812db41c9908268b9f4b",
+  "integrated_review_commit": "55ea2050",
+  "review": "source inspection",
+  "findings": [
+    "Literal premultiplied bytes validated with RGB <= alpha; no straight-color reconstruction.",
+    "Palette caches include immutable geometry identity for exact palettes; legacy palettes retain previous cache identity.",
+    "Actual ordered Canvas producer and native GPU pixel acceptance remain required.",
+    "Geometry logical_bytes reports vertex/index payload only; new palette and other CPU metadata require separate owner accounting."
+  ],
+  "acceptance": "prerequisite only; no full parity row or release gate promoted",
+  "tests_rerun": false
+}
