@@ -1,0 +1,1363 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "inventory_kind": "static original AST, not operative adapter proof",
+  "production_enabled": false,
+  "files": {
+    "core/ai.py": {
+      "sha256": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+      "classes": {},
+      "module_functions": [
+        {
+          "name": "build_scope",
+          "line": 41,
+          "arguments": "viewport, scope: dict | None=None"
+        },
+        {
+          "name": "_recipe_helpers",
+          "line": 58,
+          "arguments": "scene"
+        },
+        {
+          "name": "run_transactional",
+          "line": 349,
+          "arguments": "viewport, code: str, scope: dict"
+        },
+        {
+          "name": "supports_vision",
+          "line": 437,
+          "arguments": "provider: str, model: str"
+        },
+        {
+          "name": "slim_messages",
+          "line": 448,
+          "arguments": "messages: list, vision: bool=True"
+        },
+        {
+          "name": "detect_provider",
+          "line": 474,
+          "arguments": "api_key: str"
+        },
+        {
+          "name": "_message_image",
+          "line": 491,
+          "arguments": "m: dict"
+        },
+        {
+          "name": "build_request",
+          "line": 505,
+          "arguments": "provider: str, model: str, api_key: str, system: str, messages: list, ollama_url: str='http://localhost:11434', max_tokens: int=4096"
+        },
+        {
+          "name": "parse_reply",
+          "line": 558,
+          "arguments": "provider: str, raw: bytes"
+        },
+        {
+          "name": "_urlopen",
+          "line": 575,
+          "arguments": "url: str, headers: dict, payload: bytes | None=None, timeout: float=180.0, retries: int=0, on_retry=None, sleep=time.sleep"
+        },
+        {
+          "name": "chat",
+          "line": 618,
+          "arguments": "provider: str, model: str, api_key: str, system: str, messages: list, ollama_url: str='http://localhost:11434', timeout: float=180.0, max_tokens: int=4096, retries: int=4, on_retry=None"
+        },
+        {
+          "name": "list_models",
+          "line": 641,
+          "arguments": "provider: str, api_key: str, ollama_url: str='http://localhost:11434', timeout: float=20.0"
+        },
+        {
+          "name": "probar_conexion",
+          "line": 687,
+          "arguments": "provider: str, model: str, api_key: str, ollama_url: str='http://localhost:11434'"
+        },
+        {
+          "name": "extract_code",
+          "line": 700,
+          "arguments": "text: str"
+        },
+        {
+          "name": "compact_messages",
+          "line": 722,
+          "arguments": "messages: list, keep_last: int=2"
+        },
+        {
+          "name": "strip_thoughts",
+          "line": 752,
+          "arguments": "text: str"
+        },
+        {
+          "name": "truncated_code",
+          "line": 772,
+          "arguments": "text: str"
+        }
+      ],
+      "scope_bindings": [
+        "viewport",
+        "scene",
+        "model",
+        "mesh",
+        "selection",
+        "groups",
+        "layers",
+        "bim",
+        "QVector3D",
+        "Mesh",
+        "Group",
+        "Vertex",
+        "Edge",
+        "Face"
+      ],
+      "recipe_helpers": [
+        {
+          "name": "revolve",
+          "arguments": "profile, segments=32, scallop=None, closed=False, name=None, color=None"
+        },
+        {
+          "name": "extrude",
+          "arguments": "outline, z0, z1, name=None, color=None"
+        },
+        {
+          "name": "prism",
+          "arguments": "loop, vec, holes=None, name=None, color=None"
+        },
+        {
+          "name": "wall",
+          "arguments": "a, b, height=3.0, thickness=0.2, openings=(), z0=0.0, peak=None, name=None, color=None"
+        },
+        {
+          "name": "house",
+          "arguments": "width=6.0, depth=4.0, wall_height=3.0, thickness=0.2, roof='gable', ridge_height=None, overhang=0.4, ridge='x', doors=(), windows=(), origin=(0.0, 0.0), name='Casa', wall_color=(0.9, 0.87, 0.8, 1.0), roof_color=(0.55, 0.27, 0.2, 1.0), door_color=(0.45, 0.28, 0.15, 1.0), glass_color=(0.6, 0.8, 0.95, 1.0)"
+        }
+      ]
+    },
+    "core/mesh.py": {
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "classes": {
+        "Vertex": {
+          "line": 60,
+          "defined_methods": [
+            {
+              "name": "__init__",
+              "line": 70,
+              "arguments": "self, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "faces",
+              "line": 74,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "__repr__",
+              "line": 81,
+              "arguments": "self",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "edges",
+            "out",
+            "position"
+          ]
+        },
+        "Edge": {
+          "line": 86,
+          "defined_methods": [
+            {
+              "name": "__init__",
+              "line": 97,
+              "arguments": "self, v0: Vertex, v1: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "a",
+              "line": 119,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "b",
+              "line": 123,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "other",
+              "line": 126,
+              "arguments": "self, v: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "has",
+              "line": 130,
+              "arguments": "self, v: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "length",
+              "line": 133,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "__repr__",
+              "line": 136,
+              "arguments": "self",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "curve",
+            "faces",
+            "hidden",
+            "layer",
+            "soft",
+            "v0",
+            "v1"
+          ]
+        },
+        "Face": {
+          "line": 178,
+          "defined_methods": [
+            {
+              "name": "__init__",
+              "line": 191,
+              "arguments": "self, loop: list[Vertex], hole_loops: Optional[list[list[Vertex]]]=None",
+              "decorators": []
+            },
+            {
+              "name": "vertices",
+              "line": 211,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "holes",
+              "line": 215,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "_newell",
+              "line": 219,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "normal",
+              "line": 244,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "area",
+              "line": 263,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "centroid",
+              "line": 268,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "triangulate",
+              "line": 277,
+              "arguments": "self, normal: QVector3D | None=None",
+              "decorators": []
+            },
+            {
+              "name": "__repr__",
+              "line": 286,
+              "arguments": "self",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "attrs",
+            "hole_loops",
+            "interior",
+            "loop"
+          ]
+        },
+        "Mesh": {
+          "line": 290,
+          "defined_methods": [
+            {
+              "name": "__init__",
+              "line": 295,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "_lookup",
+              "line": 310,
+              "arguments": "self, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "_probe_neighbours",
+              "line": 323,
+              "arguments": "self, k, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "vertex",
+              "line": 340,
+              "arguments": "self, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "vertex_at",
+              "line": 353,
+              "arguments": "self, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "find_edge",
+              "line": 358,
+              "arguments": "self, v0: Vertex, v1: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "next_curve_id",
+              "line": 369,
+              "arguments": "",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "tag_curve",
+              "line": 377,
+              "arguments": "self, loop_points, closed: bool=True",
+              "decorators": []
+            },
+            {
+              "name": "curve_edges",
+              "line": 409,
+              "arguments": "self, edge",
+              "decorators": []
+            },
+            {
+              "name": "resplit_curves",
+              "line": 416,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "_link_edge",
+              "line": 470,
+              "arguments": "self, v0: Vertex, v1: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "add_edge",
+              "line": 482,
+              "arguments": "self, a: QVector3D, b: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "remove_edge",
+              "line": 491,
+              "arguments": "self, e: Edge",
+              "decorators": []
+            },
+            {
+              "name": "prune_orphan_vertices",
+              "line": 501,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "bulk_weld",
+              "line": 538,
+              "arguments": "self, pos",
+              "decorators": []
+            },
+            {
+              "name": "add_edges_welded",
+              "line": 680,
+              "arguments": "self, vobjs, ia, ib, flags=None",
+              "decorators": []
+            },
+            {
+              "name": "add_faces_welded",
+              "line": 721,
+              "arguments": "self, vobjs, inverse, ring_sizes, face_ring_counts, attrs=None, edge_map=None",
+              "decorators": []
+            },
+            {
+              "name": "add_faces_bulk",
+              "line": 822,
+              "arguments": "self, pos, ring_sizes, face_ring_counts, attrs=None",
+              "decorators": []
+            },
+            {
+              "name": "add_face",
+              "line": 829,
+              "arguments": "self, loop_positions: Iterable[QVector3D], hole_loops: Optional[Iterable[Iterable[QVector3D]]]=None",
+              "decorators": []
+            },
+            {
+              "name": "surface_of",
+              "line": 863,
+              "arguments": "self, face: 'Face'",
+              "decorators": []
+            },
+            {
+              "name": "remove_face",
+              "line": 885,
+              "arguments": "self, face: Face",
+              "decorators": []
+            },
+            {
+              "name": "relink_edge",
+              "line": 900,
+              "arguments": "self, edge: Edge",
+              "decorators": []
+            },
+            {
+              "name": "relink_face",
+              "line": 911,
+              "arguments": "self, face: Face",
+              "decorators": []
+            },
+            {
+              "name": "add_hole",
+              "line": 925,
+              "arguments": "self, face: Face, loop_positions: Iterable[QVector3D]",
+              "decorators": []
+            },
+            {
+              "name": "remove_hole",
+              "line": 938,
+              "arguments": "self, face: Face, loop: list[Vertex]",
+              "decorators": []
+            },
+            {
+              "name": "capture_state",
+              "line": 948,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "restore_state",
+              "line": 972,
+              "arguments": "self, snap: dict",
+              "decorators": []
+            },
+            {
+              "name": "clear",
+              "line": 1004,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "edges_at",
+              "line": 1013,
+              "arguments": "self, v: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "faces_at",
+              "line": 1016,
+              "arguments": "self, v: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "move_vertex",
+              "line": 1020,
+              "arguments": "self, v: Vertex, delta: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "place_vertex",
+              "line": 1040,
+              "arguments": "self, v: Vertex, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "split_edge",
+              "line": 1056,
+              "arguments": "self, edge: Edge, position: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "_insert_into_face_loops",
+              "line": 1085,
+              "arguments": "face: Face, v0: Vertex, v1: Vertex, mid: Vertex",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "weld_coincident",
+              "line": 1101,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "dedupe_faces",
+              "line": 1160,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "_weld_into",
+              "line": 1191,
+              "arguments": "self, keep: Vertex, dup: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "interior_vertex_on",
+              "line": 1221,
+              "arguments": "self, edge: Edge",
+              "decorators": []
+            },
+            {
+              "name": "split_edge_at",
+              "line": 1242,
+              "arguments": "self, edge: Edge, mid: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "collapsible_vertex",
+              "line": 1272,
+              "arguments": "self, v: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "collapse_vertex",
+              "line": 1288,
+              "arguments": "self, v: Vertex",
+              "decorators": []
+            },
+            {
+              "name": "dissolve_edge_recorded",
+              "line": 1313,
+              "arguments": "self, edge: Edge",
+              "decorators": []
+            },
+            {
+              "name": "dissolve_coplanar_pair",
+              "line": 1337,
+              "arguments": "self, face_a: 'Face', face_b: 'Face'",
+              "decorators": []
+            },
+            {
+              "name": "dissolve_coplanar_region",
+              "line": 1391,
+              "arguments": "self, faces: Iterable['Face']",
+              "decorators": []
+            },
+            {
+              "name": "revert_stitch",
+              "line": 1452,
+              "arguments": "self, rec: dict",
+              "decorators": []
+            },
+            {
+              "name": "dissolve_edge",
+              "line": 1505,
+              "arguments": "self, edge: Edge",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "_chunk_dirty",
+            "_mut_serial",
+            "_registry",
+            "by_id",
+            "chains",
+            "counts",
+            "edges",
+            "emap",
+            "eobjs",
+            "faces",
+            "groups",
+            "outline",
+            "seen",
+            "vertices",
+            "vindex",
+            "vobjs"
+          ]
+        }
+      },
+      "module_functions": [
+        {
+          "name": "_key",
+          "line": 49,
+          "arguments": "p: QVector3D"
+        },
+        {
+          "name": "edge_flags",
+          "line": 161,
+          "arguments": "edge"
+        },
+        {
+          "name": "edge_is_plain",
+          "line": 167,
+          "arguments": "edge"
+        },
+        {
+          "name": "stamp_edge_flags",
+          "line": 172,
+          "arguments": "edge, flags"
+        },
+        {
+          "name": "turn_face_over",
+          "line": 1547,
+          "arguments": "face"
+        },
+        {
+          "name": "_dominant_attrs",
+          "line": 1583,
+          "arguments": "faces"
+        },
+        {
+          "name": "_shared_edge_index",
+          "line": 1595,
+          "arguments": "loop: list[Vertex], v0: Vertex, v1: Vertex"
+        },
+        {
+          "name": "_splice_loops",
+          "line": 1605,
+          "arguments": "loop_a: list[Vertex], loop_b: list[Vertex], v0: Vertex, v1: Vertex"
+        },
+        {
+          "name": "_trace_loops",
+          "line": 1631,
+          "arguments": "outline: list[tuple[Vertex, Vertex]]"
+        },
+        {
+          "name": "_loop_area",
+          "line": 1666,
+          "arguments": "loop: list[Vertex]"
+        }
+      ]
+    },
+    "core/group.py": {
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "classes": {
+        "Group": {
+          "line": 45,
+          "defined_methods": [
+            {
+              "name": "__init__",
+              "line": 51,
+              "arguments": "self, mesh: Mesh | None=None, name: str | None=None",
+              "decorators": []
+            },
+            {
+              "name": "is_component",
+              "line": 140,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "adopt",
+              "line": 145,
+              "arguments": "self, children",
+              "decorators": []
+            },
+            {
+              "name": "is_instance",
+              "line": 159,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "materialize",
+              "line": 162,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "make_unique",
+              "line": 179,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "__repr__",
+              "line": 195,
+              "arguments": "self",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "axes",
+            "billboard",
+            "children",
+            "component",
+            "context",
+            "explode_offset",
+            "exploded",
+            "ext",
+            "hidden",
+            "ifc",
+            "layer",
+            "material",
+            "mesh",
+            "name",
+            "owner",
+            "text3d",
+            "uid",
+            "xform"
+          ]
+        }
+      },
+      "module_functions": [
+        {
+          "name": "new_uid",
+          "line": 23,
+          "arguments": ""
+        },
+        {
+          "name": "reserve_group_names",
+          "line": 30,
+          "arguments": "names"
+        },
+        {
+          "name": "carry_axes",
+          "line": 203,
+          "arguments": "group, m"
+        },
+        {
+          "name": "group_frame",
+          "line": 214,
+          "arguments": "group"
+        },
+        {
+          "name": "frame_axes",
+          "line": 229,
+          "arguments": "m"
+        },
+        {
+          "name": "make_billboard_group",
+          "line": 255,
+          "arguments": "image_path: str, height: float, name: str, aspect: float, position=None"
+        },
+        {
+          "name": "_remap_uvws",
+          "line": 273,
+          "arguments": "mesh, m"
+        },
+        {
+          "name": "world_mesh",
+          "line": 297,
+          "arguments": "group"
+        },
+        {
+          "name": "_merged_placements",
+          "line": 316,
+          "arguments": "group"
+        },
+        {
+          "name": "iter_placements",
+          "line": 393,
+          "arguments": "group, base=None"
+        },
+        {
+          "name": "_copy_mesh",
+          "line": 413,
+          "arguments": "mesh"
+        },
+        {
+          "name": "_append_mesh",
+          "line": 418,
+          "arguments": "dst, src"
+        },
+        {
+          "name": "np_affine",
+          "line": 432,
+          "arguments": "m"
+        },
+        {
+          "name": "transformed_mesh",
+          "line": 443,
+          "arguments": "src: Mesh, m"
+        },
+        {
+          "name": "_transformed_mesh_walk",
+          "line": 494,
+          "arguments": "src: Mesh, m"
+        },
+        {
+          "name": "transformed_attrs",
+          "line": 526,
+          "arguments": "attrs, m"
+        },
+        {
+          "name": "translated_attrs",
+          "line": 552,
+          "arguments": "attrs, delta"
+        },
+        {
+          "name": "copy_group",
+          "line": 570,
+          "arguments": "group, delta=None, _in_definition=False"
+        },
+        {
+          "name": "_independent_copy",
+          "line": 624,
+          "arguments": "group"
+        },
+        {
+          "name": "_hull_2d",
+          "line": 637,
+          "arguments": "pts"
+        },
+        {
+          "name": "frame_from_points",
+          "line": 709,
+          "arguments": "positions"
+        },
+        {
+          "name": "placement_points",
+          "line": 756,
+          "arguments": "group, cache=None"
+        },
+        {
+          "name": "oriented_bounds",
+          "line": 792,
+          "arguments": "mesh, frame=None, points=None"
+        },
+        {
+          "name": "oriented_box_corners",
+          "line": 821,
+          "arguments": "frame, lo, hi"
+        },
+        {
+          "name": "effective_material",
+          "line": 833,
+          "arguments": "group"
+        }
+      ]
+    },
+    "core/scene.py": {
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "classes": {
+        "Scene": {
+          "line": 35,
+          "defined_methods": [
+            {
+              "name": "edges",
+              "line": 178,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "faces",
+              "line": 182,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "layer",
+              "line": 186,
+              "arguments": "self, name: str",
+              "decorators": []
+            },
+            {
+              "name": "_layer_state",
+              "line": 192,
+              "arguments": "self, entity",
+              "decorators": []
+            },
+            {
+              "name": "_object_hidden",
+              "line": 202,
+              "arguments": "entity",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_face_hidden",
+              "line": 211,
+              "arguments": "entity",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "entity_hidden",
+              "line": 216,
+              "arguments": "self, entity",
+              "decorators": []
+            },
+            {
+              "name": "entity_visible",
+              "line": 221,
+              "arguments": "self, entity",
+              "decorators": []
+            },
+            {
+              "name": "entity_selectable",
+              "line": 230,
+              "arguments": "self, entity",
+              "decorators": []
+            },
+            {
+              "name": "groups_by_uid",
+              "line": 238,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "active_section",
+              "line": 244,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "set_active_section",
+              "line": 251,
+              "arguments": "self, plane",
+              "decorators": []
+            },
+            {
+              "name": "begin_group_edit",
+              "line": 258,
+              "arguments": "self, group",
+              "decorators": []
+            },
+            {
+              "name": "_bake_container_xform",
+              "line": 318,
+              "arguments": "group",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "end_one_group_edit",
+              "line": 348,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "end_group_edit",
+              "line": 353,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "_leave_level",
+              "line": 360,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "take_edit_share",
+              "line": 383,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "restore_sharing",
+              "line": 401,
+              "arguments": "group, proto, xform",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "share_back",
+              "line": 407,
+              "arguments": "group, proto, xform, edited",
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "drawing_frame",
+              "line": 419,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "loose_mesh",
+              "line": 429,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "placements",
+              "line": 434,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "render_edges",
+              "line": 453,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "render_faces",
+              "line": 460,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "add_edge",
+              "line": 468,
+              "arguments": "self, a: QVector3D, b: QVector3D",
+              "decorators": []
+            },
+            {
+              "name": "select",
+              "line": 473,
+              "arguments": "self, edges: Iterable, additive: bool=False, mode: str | None=None",
+              "decorators": []
+            },
+            {
+              "name": "clear_selection",
+              "line": 496,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "bump_view",
+              "line": 501,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "content_version",
+              "line": 508,
+              "arguments": "self",
+              "decorators": [
+                "property"
+              ]
+            },
+            {
+              "name": "invert_selection",
+              "line": 513,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "delete_selection",
+              "line": 537,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "clear",
+              "line": 548,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "iter_world_faces",
+              "line": 590,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "selection_bounds",
+              "line": 602,
+              "arguments": "self",
+              "decorators": []
+            },
+            {
+              "name": "bounds",
+              "line": 649,
+              "arguments": "self",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "_bounds_cache",
+            "_edit_share",
+            "_edit_stack",
+            "_loose_mesh",
+            "active_ifc",
+            "back_face_color",
+            "camera_home",
+            "compositions",
+            "custom_scales",
+            "dimension_style",
+            "dimensions",
+            "display_style",
+            "edit_group",
+            "geo_paths",
+            "geo_points",
+            "georef",
+            "groups",
+            "guides",
+            "image_planes",
+            "layers",
+            "materials",
+            "mesh",
+            "per_mesh",
+            "photo_mesh",
+            "plugin_data",
+            "pts",
+            "saved_views",
+            "section_planes",
+            "selection",
+            "shadows",
+            "show_hidden_geometry",
+            "show_hidden_objects",
+            "show_section_cuts",
+            "show_section_planes",
+            "terrain",
+            "text_labels",
+            "tile_layer",
+            "units",
+            "version",
+            "view_version"
+          ]
+        }
+      },
+      "module_functions": [
+        {
+          "name": "_make_style",
+          "line": 24,
+          "arguments": ""
+        },
+        {
+          "name": "_make_shadows",
+          "line": 29,
+          "arguments": ""
+        }
+      ]
+    },
+    "core/bim.py": {
+      "sha256": "22d77af4887c87b87f19e900f3fb7726075d8351b6014678e6ef396faaad01e9",
+      "classes": {},
+      "module_functions": [
+        {
+          "name": "next_object_id",
+          "line": 36,
+          "arguments": "scene"
+        },
+        {
+          "name": "tag_faces",
+          "line": 46,
+          "arguments": "faces, ifc_class: str, name: str, obj_id: int"
+        },
+        {
+          "name": "untag_faces",
+          "line": 51,
+          "arguments": "faces"
+        },
+        {
+          "name": "tag_group",
+          "line": 56,
+          "arguments": "group, ifc_class: str, name: str"
+        },
+        {
+          "name": "untag_group",
+          "line": 60,
+          "arguments": "group"
+        },
+        {
+          "name": "face_set_area",
+          "line": 64,
+          "arguments": "faces"
+        },
+        {
+          "name": "_loop_area",
+          "line": 68,
+          "arguments": "loop"
+        },
+        {
+          "name": "face_net_area",
+          "line": 83,
+          "arguments": "f"
+        },
+        {
+          "name": "face_set_volume",
+          "line": 91,
+          "arguments": "faces"
+        },
+        {
+          "name": "collect_objects",
+          "line": 116,
+          "arguments": "scene"
+        },
+        {
+          "name": "_extents",
+          "line": 190,
+          "arguments": "faces"
+        },
+        {
+          "name": "_upward_net_area",
+          "line": 203,
+          "arguments": "faces, closed: bool"
+        },
+        {
+          "name": "_face_width_height",
+          "line": 215,
+          "arguments": "f"
+        },
+        {
+          "name": "class_quantities",
+          "line": 230,
+          "arguments": "ifc_class: str, faces"
+        },
+        {
+          "name": "quantities_csv",
+          "line": 342,
+          "arguments": "scene"
+        }
+      ]
+    },
+    "core/history.py": {
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "classes": {
+        "SnapshotImport": {
+          "line": 2640,
+          "defined_methods": [
+            {
+              "name": "__init__",
+              "line": 2646,
+              "arguments": "self, mutate",
+              "decorators": []
+            },
+            {
+              "name": "do",
+              "line": 2656,
+              "arguments": "self, scene",
+              "decorators": []
+            },
+            {
+              "name": "undo",
+              "line": 2713,
+              "arguments": "self, scene",
+              "decorators": []
+            }
+          ],
+          "statically_assigned_fields": [
+            "added_dims",
+            "added_groups",
+            "added_layers",
+            "added_texts",
+            "added_views",
+            "after",
+            "before",
+            "mutate"
+          ]
+        }
+      },
+      "module_functions": [
+        {
+          "name": "_plog",
+          "line": 31,
+          "arguments": "tag: str, ms: float, extra: str='', floor: float=100.0"
+        },
+        {
+          "name": "_find_face_by_loop",
+          "line": 75,
+          "arguments": "mesh, loop_positions"
+        },
+        {
+          "name": "_inherit_paint",
+          "line": 505,
+          "arguments": "face, mother"
+        },
+        {
+          "name": "_dirty_group_chunks",
+          "line": 666,
+          "arguments": "scene"
+        },
+        {
+          "name": "_is_hidden",
+          "line": 754,
+          "arguments": "entity"
+        },
+        {
+          "name": "_set_hidden",
+          "line": 761,
+          "arguments": "entity, hidden: bool"
+        },
+        {
+          "name": "translate_points",
+          "line": 1937,
+          "arguments": "scene, keys: set, delta: QVector3D"
+        },
+        {
+          "name": "rotation_matrix",
+          "line": 1985,
+          "arguments": "center: QVector3D, axis: QVector3D, degrees: float"
+        },
+        {
+          "name": "rotate_points",
+          "line": 1995,
+          "arguments": "scene, keys: set, matrix"
+        },
+        {
+          "name": "mirror_matrix",
+          "line": 2005,
+          "arguments": "centre: QVector3D, axis: QVector3D"
+        },
+        {
+          "name": "scale_matrix",
+          "line": 2176,
+          "arguments": "center: QVector3D, factor, axes=None"
+        },
+        {
+          "name": "invert_scale_factor",
+          "line": 2208,
+          "arguments": "factor"
+        },
+        {
+          "name": "run_stitch",
+          "line": 2416,
+          "arguments": "mesh, seedkeys: set, new_faces: Optional[set]=None, coplanar_merge: bool=True, dedupe: bool=True"
+        },
+        {
+          "name": "_coplanar_component",
+          "line": 2510,
+          "arguments": "mesh, f0, seedkeys: set, ncache: Optional[dict]=None, scache: Optional[dict]=None"
+        },
+        {
+          "name": "placement_is_identity",
+          "line": 3523,
+          "arguments": "xform, tol: float=1e-06"
+        },
+        {
+          "name": "placement_rotation_deg",
+          "line": 3534,
+          "arguments": "xform"
+        },
+        {
+          "name": "group_owner_list",
+          "line": 3687,
+          "arguments": "scene, group"
+        },
+        {
+          "name": "_point_in_tri",
+          "line": 3757,
+          "arguments": "p: QVector3D, t0: QVector3D, t1: QVector3D, t2: QVector3D"
+        }
+      ]
+    }
+  }
+}
