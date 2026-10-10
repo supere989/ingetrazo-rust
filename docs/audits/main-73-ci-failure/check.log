@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-skp-legacy.py", line 13, in <module>
+    from openskp import legacy
+  File "/home/runner/work/_temp/ingetrazo-openskp-oracle/packages/python/src/openskp/__init__.py", line 22, in <module>
+    from .codegen import to_python_code
+  File "/home/runner/work/_temp/ingetrazo-openskp-oracle/packages/python/src/openskp/codegen.py", line 47, in <module>
+    from ._face_groups import compute_face_uv, face_uv_basis, reconstruct_loop_vertices
+  File "/home/runner/work/_temp/ingetrazo-openskp-oracle/packages/python/src/openskp/_face_groups.py", line 28, in <module>
+    from . import _core
+  File "/home/runner/work/_temp/ingetrazo-openskp-oracle/packages/python/src/openskp/_core.py", line 26, in <module>
+    import defusedxml.ElementTree as ET
+ModuleNotFoundError: No module named 'defusedxml'
