@@ -1,0 +1,13 @@
+{
+  "integrated_revision": "4eb00f63",
+  "fresh_vector_source_cases": 10,
+  "fresh_original_matches_retained": true,
+  "review": "Prepared append and face values retain exclusive mutable owner borrows through application. Fallible reserves and registry admission precede geometry publication. Existing commit wrappers use the same prepared path. Focused worker allocation/refusal/history evidence retained; no separate merged native replay yet.",
+  "remaining": [
+    "VM Mesh routing",
+    "Preexisting object mutation rollback",
+    "Atomic multi-owner Undo",
+    "Physical VM and native memory accounting",
+    "Production integration"
+  ]
+}
