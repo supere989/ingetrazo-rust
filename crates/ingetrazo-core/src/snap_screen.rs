@@ -100,7 +100,9 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext) -> Vec<Edge> {
             return;
         };
         let (distance, _) = pixel_segment_distance(ctx.cursor, pa, pb);
-        if distance >= if group { 48. } else { 64. } {
+        if (group && distance >= 48.)
+            || (!group && !guide && scene.mesh.edges.len() > 3000 && distance >= 64.)
+        {
             return;
         }
         let edge = Edge {
@@ -293,6 +295,198 @@ fn memory_snap(
     best
 }
 
+#[derive(Debug, Clone)]
+enum CenterKey {
+    Curve {
+        curve: usize,
+        ends: [uuid::Uuid; 2],
+    },
+    Face {
+        outer: Vec<uuid::Uuid>,
+        run: (usize, usize),
+    },
+}
+#[derive(Debug, Clone)]
+pub(crate) struct CenterReference {
+    path: Vec<uuid::Uuid>,
+    key: CenterKey,
+    point: DVec3,
+    radius: f64,
+    version: u64,
+}
+fn curve_center(
+    mesh: &crate::mesh::Mesh,
+    curve: usize,
+    world: glam::DMat4,
+) -> Option<(DVec3, f64)> {
+    let mut ids = vec![];
+    let mut seen = std::collections::HashSet::new();
+    for e in &mesh.edges {
+        if e.curve_id == Some(curve) {
+            for id in [e.v0, e.v1] {
+                if seen.insert(id) {
+                    ids.push(id);
+                }
+            }
+        }
+    }
+    let points = ids
+        .iter()
+        .map(|&id| mesh.vertices[id].position)
+        .collect::<Vec<_>>();
+    let (center, radius) = crate::circle_inference::fit_circle(&points)?;
+    Some((world.transform_point3(center), radius))
+}
+impl SnapEngine {
+    fn update_center(&mut self, scene: &Scene, ray: &Ray, ctx: &ScreenSnapContext) {
+        use crate::screen_pick::{hover_edge_placement, hover_face_placement, visit_placements};
+        self.hovered_center = None;
+        if self
+            .center_reference
+            .as_ref()
+            .is_some_and(|r| r.version != scene.version)
+        {
+            let reference = self.center_reference.take().unwrap();
+            let mut fresh = None;
+            visit_placements(scene, |mesh, world, path| {
+                if path == reference.path {
+                    let value = match &reference.key {
+                        CenterKey::Curve { curve, ends } => mesh
+                            .edges
+                            .iter()
+                            .find(|e| {
+                                e.curve_id == Some(*curve)
+                                    && [mesh.vertices[e.v0].uid, mesh.vertices[e.v1].uid] == *ends
+                            })
+                            .and_then(|_| curve_center(mesh, *curve, world)),
+                        CenterKey::Face { outer, run } => mesh
+                            .faces
+                            .iter()
+                            .position(|f| {
+                                f.vertices
+                                    .iter()
+                                    .map(|&v| mesh.vertices[v].uid)
+                                    .eq(outer.iter().copied())
+                            })
+                            .and_then(|id| {
+                                crate::circle_inference::face_centers(mesh, id, world)
+                                    .into_iter()
+                                    .find(|(_, _, key)| key == run)
+                                    .map(|(c, r, _)| (c, r))
+                            }),
+                    };
+                    if let Some((point, radius)) = value {
+                        fresh = Some(CenterReference {
+                            point,
+                            radius,
+                            version: scene.version,
+                            ..reference.clone()
+                        });
+                    }
+                }
+            });
+            self.center_reference = fresh;
+        }
+        let mut found = None;
+        if let Some(hit) = hover_edge_placement(scene, &ctx.viewport, ctx.cursor, 8.) {
+            let edge = &hit.mesh.edges[hit.edge];
+            if let Some(curve) = edge.curve_id {
+                if let Some((point, radius)) = curve_center(hit.mesh, curve, hit.world) {
+                    found = Some(CenterReference {
+                        path: hit.group_path,
+                        key: CenterKey::Curve {
+                            curve,
+                            ends: [
+                                hit.mesh.vertices[edge.v0].uid,
+                                hit.mesh.vertices[edge.v1].uid,
+                            ],
+                        },
+                        point,
+                        radius,
+                        version: scene.version,
+                    });
+                }
+            }
+        }
+        if found.is_none() {
+            if let Some(hit) = hover_face_placement(scene, ray) {
+                let mut centers =
+                    crate::circle_inference::face_centers(hit.mesh, hit.face, hit.world);
+                centers.sort_by(|(a, _, _), (b, _, _)| {
+                    let d = |p| {
+                        ctx.viewport
+                            .project(p)
+                            .map(|p| p.distance(ctx.cursor))
+                            .unwrap_or(f64::INFINITY)
+                    };
+                    d(*a).total_cmp(&d(*b))
+                });
+                if let Some((point, radius, run)) = centers.first().copied() {
+                    found = Some(CenterReference {
+                        path: hit.group_path,
+                        key: CenterKey::Face {
+                            outer: hit.mesh.faces[hit.face]
+                                .vertices
+                                .iter()
+                                .map(|&id| hit.mesh.vertices[id].uid)
+                                .collect(),
+                            run,
+                        },
+                        point,
+                        radius,
+                        version: scene.version,
+                    });
+                }
+            }
+        }
+        if let Some(reference) = found {
+            self.hovered_center = Some(reference.point);
+            self.center_reference = Some(reference);
+        }
+    }
+    /// Viewport supplies its monotonic frame time. A 250ms dwell acquires two
+    /// source tracking points; drawing over a vertex acquires it instantly.
+    pub fn note_screen_result(&mut self, result: &SnapResult, drawing: bool, now: f64) {
+        if !now.is_finite() {
+            return;
+        }
+        if drawing && result.kind == SnapKind::Endpoint {
+            self.acquired_point = Some(result.point);
+        }
+        let definite = matches!(
+            result.kind,
+            SnapKind::Endpoint
+                | SnapKind::Midpoint
+                | SnapKind::Center
+                | SnapKind::Origin
+                | SnapKind::Intersection
+                | SnapKind::Close
+        );
+        let point = if definite {
+            Some(result.point)
+        } else {
+            self.hovered_center
+        };
+        let Some(point) = point else {
+            self.screen_dwell = None;
+            return;
+        };
+        if let Some((old, since)) = self.screen_dwell {
+            if old.distance(point) < 1e-6 && now >= since {
+                if now - since >= 0.250 {
+                    self.encouraged_points.retain(|p| p.distance(point) > 1e-6);
+                    self.encouraged_points.push(point);
+                    let excess = self.encouraged_points.len().saturating_sub(2);
+                    self.encouraged_points.drain(..excess);
+                    self.acquired_point = Some(point);
+                }
+                return;
+            }
+        }
+        self.screen_dwell = Some((point, now));
+    }
+}
+
 impl SnapEngine {
     /// Viewport fast path. World-only `snap` remains available to headless callers.
     pub fn snap_screen(
@@ -303,6 +497,7 @@ impl SnapEngine {
         close: Option<DVec3>,
         ctx: &ScreenSnapContext,
     ) -> SnapResult {
+        self.update_center(scene, ray, ctx);
         let edges = edges(scene, ctx);
         let pixels = |p: DVec3| {
             ctx.viewport
@@ -330,7 +525,28 @@ impl SnapEngine {
             return result(p, SnapKind::Close, COLOR_CLOSE, "Close Loop");
         }
         // Stable half-pixel buckets preserve source loose-context tie precedence.
-        let mut points = vec![(pixels(DVec3::ZERO), DVec3::ZERO, SnapKind::Origin, false)];
+        let mut points = vec![];
+        if let Some(reference) = &self.center_reference {
+            if let Some(pixel) = ctx.viewport.project(reference.point) {
+                let radius_px = [DVec3::X, DVec3::Y]
+                    .into_iter()
+                    .filter_map(|axis| {
+                        ctx.viewport
+                            .project(reference.point + axis * reference.radius)
+                    })
+                    .map(|p| p.distance(pixel))
+                    .fold(0., f64::max);
+                if radius_px >= 12. && pixels(reference.point) <= 40_f64.min(radius_px * 0.5) {
+                    points.push((
+                        pixels(reference.point),
+                        reference.point,
+                        SnapKind::Center,
+                        false,
+                    ));
+                }
+            }
+        }
+        points.push((pixels(DVec3::ZERO), DVec3::ZERO, SnapKind::Origin, false));
         for e in &edges {
             if !e.guide {
                 for p in [e.a, e.b] {
@@ -350,19 +566,20 @@ impl SnapEngine {
         });
         for (_, p, kind, _) in points {
             if visible(scene, ctx, p) {
-                if kind == SnapKind::Endpoint {
-                    self.encourage_point(p);
-                }
                 return result(
                     p,
                     kind,
                     if kind == SnapKind::Origin {
                         COLOR_ORIGIN
+                    } else if kind == SnapKind::Center {
+                        COLOR_ENDPOINT
                     } else {
                         COLOR_ENDPOINT
                     },
                     if kind == SnapKind::Origin {
                         "Origin"
+                    } else if kind == SnapKind::Center {
+                        "Center"
                     } else {
                         "Endpoint"
                     },
@@ -390,7 +607,8 @@ impl SnapEngine {
                 scene,
                 ctx,
                 &edges,
-                self.encouraged_points.last().copied(),
+                self.acquired_point
+                    .or_else(|| self.encouraged_points.last().copied()),
                 origin,
                 dir,
                 true,
@@ -416,7 +634,8 @@ impl SnapEngine {
                     scene,
                     ctx,
                     &edges,
-                    self.encouraged_points.last().copied(),
+                    self.acquired_point
+                        .or_else(|| self.encouraged_points.last().copied()),
                     start,
                     dir,
                     false,
@@ -457,7 +676,6 @@ impl SnapEngine {
         });
         for (_, p, _) in midpoints {
             if visible(scene, ctx, p) {
-                self.encourage_point(p);
                 return result(p, SnapKind::Midpoint, COLOR_MIDPOINT, "Midpoint");
             }
         }
@@ -668,6 +886,64 @@ mod tests {
         assert_eq!(r.kind, SnapKind::AxisInference);
         assert_eq!(r.point, candidate);
     }
+    #[test]
+    fn center_reference_moves_with_source_and_retires_after_deletion() {
+        let c = camera(10.);
+        let mut scene = Scene::new();
+        let center = DVec3::new(3., 2., 0.);
+        let ids = (0..24)
+            .map(|i| {
+                let a = std::f64::consts::TAU * i as f64 / 24.;
+                scene
+                    .mesh
+                    .add_vertex(center + DVec3::new(a.cos(), a.sin(), 0.))
+            })
+            .collect::<Vec<_>>();
+        scene.mesh.add_face(ids, vec![]);
+        let before = scene.clone();
+        let mut engine = SnapEngine::default();
+        let (ray, ctx) = context(&c, center, DVec2::ZERO);
+        let r = engine.snap_screen(&ray, &scene, None, None, &ctx);
+        assert_eq!(r.kind, SnapKind::Center);
+        assert!(r.point.distance(center) < 1e-6);
+        assert_eq!(scene, before);
+        for vertex in &mut scene.mesh.vertices {
+            vertex.position += DVec3::X;
+        }
+        scene.bump_version();
+        let (ray, ctx) = context(&c, center + DVec3::X, DVec2::ZERO);
+        let r = engine.snap_screen(&ray, &scene, None, None, &ctx);
+        assert_eq!(r.kind, SnapKind::Center);
+        assert!(r.point.distance(center + DVec3::X) < 1e-6);
+        scene.mesh.clear();
+        scene.bump_version();
+        assert_ne!(
+            engine.snap_screen(&ray, &scene, None, None, &ctx).kind,
+            SnapKind::Center
+        );
+        assert!(engine.center_reference.is_none());
+    }
+    #[test]
+    fn dwell_acquires_after_250ms_only_and_keeps_two_source_points() {
+        let mut engine = SnapEngine::default();
+        let p = DVec3::new(2., 3., 0.);
+        let r = result(p, SnapKind::Endpoint, COLOR_ENDPOINT, "Endpoint");
+        engine.note_screen_result(&r, false, 0.);
+        engine.note_screen_result(&r, false, 0.249);
+        assert!(engine.encouraged_points.is_empty());
+        engine.note_screen_result(&r, false, 0.250);
+        assert_eq!(engine.encouraged_points, vec![p]);
+        for (i, p) in [DVec3::X, DVec3::Y].into_iter().enumerate() {
+            let r = result(p, SnapKind::Midpoint, COLOR_MIDPOINT, "Midpoint");
+            let t = 1. + i as f64;
+            engine.note_screen_result(&r, false, t);
+            engine.note_screen_result(&r, false, t + 0.250);
+        }
+        assert_eq!(engine.encouraged_points, vec![DVec3::X, DVec3::Y]);
+        engine.note_screen_result(&r, true, 3.);
+        assert_eq!(engine.acquired_point, Some(p));
+    }
+
     #[test]
     fn memory_lines_yield_to_midpoint_and_preserve_wall_plane() {
         let c = camera(10.);

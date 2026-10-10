@@ -98,6 +98,10 @@ pub struct SnapEngine {
     pub reference_edge: Option<(DVec3, DVec3)>,
     pub locked_axis: Option<char>,
     pub locked_line: Option<(DVec3, DVec3)>,
+    pub(crate) center_reference: Option<crate::snap_screen::CenterReference>,
+    pub(crate) hovered_center: Option<DVec3>,
+    pub(crate) screen_dwell: Option<(DVec3,f64)>,
+    pub(crate) acquired_point: Option<DVec3>,
 }
 
 impl Default for SnapEngine {
@@ -109,6 +113,10 @@ impl Default for SnapEngine {
             reference_edge: None,
             locked_axis: None,
             locked_line: None,
+            center_reference: None,
+            hovered_center: None,
+            screen_dwell: None,
+            acquired_point: None,
         }
     }
 }
