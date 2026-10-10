@@ -1,0 +1,191 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "front-empty",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "right-empty",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 0.0,
+        "before_eye": 0.0
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "top-empty",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 3.8743019104003906e-07,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "iso-ground",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 5.245208734017126e-08,
+        "after_forward": 1.2101617152815436e-08,
+        "before_eye": 1.0364386149319671e-07
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "front-locked-image",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "face-before-image",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "position-drag",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.9206275953264083e-06,
+        "after_forward": 2.9894647823880405e-07,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 1,
+      "undo": 0
+    },
+    {
+      "name": "position-cancel",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.491276972875189e-25,
+        "after_forward": 2.6718907323636308e-24,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 1,
+      "undo": 0
+    },
+    {
+      "name": "position-six-pixels",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 3.8743019104003906e-07,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "loose-orphan",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "visible-edge-bounds",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "draw-hidden-edge-bounds",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "hidden-layer-bounds",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "hidden-group-bounds",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "group-orphan-bounds",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    },
+    {
+      "name": "hidden-nested-descendant-bounds",
+      "point_exact": true,
+      "camera_errors": {
+        "after_eye": 2.2649764952475948e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "preview": 0,
+      "undo": 0
+    }
+  ],
+  "exact_ray_cases": 72,
+  "rejected_negatives": [
+    "missing-case",
+    "wrong-point",
+    "missing-preview",
+    "premature-history",
+    "wrong-handoff",
+    "altered-ray"
+  ],
+  "scope": "actual frozen Qt handlers and controlled egui input; rendered input and image visibility separately required"
+}
