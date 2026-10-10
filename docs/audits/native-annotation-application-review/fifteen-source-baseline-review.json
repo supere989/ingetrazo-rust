@@ -1,0 +1,83 @@
+{
+  "source": "08516d60992292298aa31458ba8ee04311f1ddd3",
+  "binary_sha256": "b0205e9697b5527cd4f31f70457bbb7d81413df44c8d8f7879926f2702a54dc6",
+  "evidence_commit": "0b7fb4a8",
+  "independent_decoded_rows": [
+    {
+      "name": "arrow",
+      "source_domain_differences": 217,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "tick-selected",
+      "source_domain_differences": 269,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "none",
+      "source_domain_differences": 244,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "partial-occlusion",
+      "source_domain_differences": 101,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "hidden",
+      "source_domain_differences": 0,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-right",
+      "source_domain_differences": 283,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-left-selected",
+      "source_domain_differences": 247,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-anchor-unprojectable",
+      "source_domain_differences": 183,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-hidden",
+      "source_domain_differences": 0,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-empty",
+      "source_domain_differences": 283,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "dim-hover",
+      "source_domain_differences": 212,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "dim-mm-axis",
+      "source_domain_differences": 219,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "dim-feet-fractional",
+      "source_domain_differences": 244,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-hover",
+      "source_domain_differences": 265,
+      "extra_nonwhite_pixels": 0
+    },
+    {
+      "name": "leader-splitlines",
+      "source_domain_differences": 283,
+      "extra_nonwhite_pixels": 0
+    }
+  ],
+  "scope": "Root independently checks640x400 source domain and all exterior pixels of exact800x600 native capture. Recorded source-operation replay only; actual source projection/depth acquisition separate. Thirteen nonempty controls fail; no threshold relaxation."
+}
