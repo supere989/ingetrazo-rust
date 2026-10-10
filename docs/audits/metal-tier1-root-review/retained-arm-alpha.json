@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "scope": "six actual previous ARM alpha images only; mixedUI and ownership not proved",
+  "images": [
+    {
+      "file": "alpha-0.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "file": "alpha-1.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "file": "alpha-127.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "file": "alpha-128.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "file": "alpha-254.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "file": "alpha-255.rgba",
+      "bytes": 16384,
+      "exact": true
+    }
+  ]
+}
