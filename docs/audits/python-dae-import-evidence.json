@@ -14,14 +14,14 @@
     }
   ],
   "provenance": {
-    "rust_commit": "568b52708fd898477a42475408bfd07834965adc",
+    "rust_commit": "b01d8a468219c7ffbd6df0da4d9f5ab8732a0fd0",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
-  "native_fixture_sha256": "b19cd97ff0edef0a336601be02c12dd54a855e9cb608388002d211194ebe317b",
-  "native_source_revision": "39db6e8",
+  "native_fixture": "target/debug/examples/dae_import_acceptance_fixture",
+  "native_fixture_sha256": "74469b98dea6b27fea91289b7ba3985ebea8b1d7590be82d75e4a6af68bbb172",
+  "native_source_revision": "b01d8a468219c7ffbd6df0da4d9f5ab8732a0fd0",
   "cases": [
     {
       "case": "painted-rectangle",
@@ -613,8 +613,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -623,8 +623,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -725,7 +725,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "textured-missing-uv",
@@ -1227,8 +1227,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -1237,8 +1237,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -1305,7 +1305,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "textured-missing-uv-gradient5x3",

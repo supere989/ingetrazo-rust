@@ -1,7 +1,7 @@
 <ns0:COLLADA xmlns:ns0="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
 <ns0:asset>
 <ns0:contributor><ns0:authoring_tool>IngeTrazo</ns0:authoring_tool></ns0:contributor>
-<ns0:created>2026-10-10T02:33:21+00:00</ns0:created><ns0:modified>2026-10-10T02:33:21+00:00</ns0:modified>
+<ns0:created>2026-10-10T02:34:52+00:00</ns0:created><ns0:modified>2026-10-10T02:34:52+00:00</ns0:modified>
 <ns0:unit name="meter" meter="1" />
 <ns0:up_axis>Z_UP</ns0:up_axis>
 </ns0:asset>
