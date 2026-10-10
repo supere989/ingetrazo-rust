@@ -125,3 +125,5 @@ pub mod document_session;
 pub mod clipboard;
 
 pub mod saved_view_actions;
+
+pub mod outliner;

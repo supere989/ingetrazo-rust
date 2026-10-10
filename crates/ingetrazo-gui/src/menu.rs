@@ -728,6 +728,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.menu_button(tr("Panels"), |ui| {
                 ui.checkbox(&mut app.show_tray, tr("Side Tray (all panels)"));
                 ui.separator();
+                if ui.button("Outliner / Parts").clicked(){app.show_tray=true;app.active_tray_tab=crate::app::TrayTab::Inspector;ui.close_menu();}
                 if ui.button(tr("Entity info")).clicked() {
                     app.show_tray = true;
                     app.active_tray_tab = crate::app::TrayTab::Inspector;
