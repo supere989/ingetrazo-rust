@@ -1,0 +1,9 @@
+# Temporary managed incidence publication guard
+
+Focused `vm_incidence_refusal` genuine RustPython controller execution passed. Existing root set insertion plus vector edit refuses before publication and restores native position/new empty incidence set; held external old set retains its actual Edge. Nonset replacement refuses/restores. Newly appended Vertex incidence refuses before native publication. History counts remain, Undo/Redo works, final logical owner charge zero. Edge object's standalone semantics are unchanged.
+
+Actual frozen original `scripts/reference-ai-incidence-admission.py` accepts this command and preserves incidence through Undo/Redo (four states retained). **The temporary refusal is explicitly not source incidence parity.** It prevents silently committing unjournaled state while genuine Mesh.edges/object-graph publication and complete incidence/Edge history are implemented. Managed roots currently expose empty unpopulated incidence only. Nonempty baseline refuses admission; full generated incidence remains required.
+
+Compiled literal ad16c7cf preguard controller with corrected fixture exits101 at first required refusal: old code silently succeeds after `v.edges.add(e)` and moved-vector native publication. Corrected source restored. Positive proof binary frozen before literal negative; target binary after this check is negative and must not be used as positive. No broad tests/repeated renderer captures.
+
+Root restoration releases discarded payloads after locks, with host poison set. Arbitrary native callbacks/reentry/finalizers and full custom slot projection remain open. A bare empty set is VM heap allocation excluded from logical owner budget; `.elements()` temporary vectors/native VM heap are not a total memory cap. No production scripting promotion.

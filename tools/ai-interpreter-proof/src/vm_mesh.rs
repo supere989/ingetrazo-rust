@@ -56,6 +56,15 @@ impl Entry {
             return Err("Staged membership modification unsupported".into());
         }
         for (i, v) in self.vertices_created.iter().enumerate() {
+            let incidence = v
+                .edges
+                .read()
+                .clone()
+                .downcast::<rustpython_vm::builtins::PySet>()
+                .map_err(|_| "Staged incidence edit requires Edge graph journal")?;
+            if !incidence.elements().is_empty() {
+                return Err("Staged incidence edit requires Edge graph journal".into());
+            }
             if !vertices[self.vertices + i].is(v) {
                 return Err("Staged Vertex identity/order modification unsupported".into());
             }
@@ -830,6 +839,9 @@ impl Projection {
 struct VertexRestore {
     vertex: PyRef<editable_mesh::Vertex>,
     position: PyRef<crate::vm_groups::native_groups::QVector3D>,
+    // Temporary safety boundary until real generated Edge graph is journaled.
+    // Managed roots currently have empty incidence; never silently publish edits.
+    edges: rustpython_vm::PyObjectRef,
 }
 struct FaceRestore {
     face: PyRef<editable_mesh::Face>,
@@ -899,7 +911,21 @@ impl<'a> RootRestore<'a> {
             let p = vertex.position.read().coordinates();
             let position =
                 crate::vm_groups::native_groups::QVector3D::from_coordinates(p).into_ref(&vm.ctx);
-            positions.push(VertexRestore { vertex, position });
+            let incidence = vertex.edges.read().clone();
+            let incidence = incidence
+                .downcast::<rustpython_vm::builtins::PySet>()
+                .map_err(|_| "Managed incidence requires set until Edge graph publication")?;
+            if !incidence.elements().is_empty() {
+                return Err("Managed nonempty incidence requires Edge graph journal".into());
+            }
+            let edges = rustpython_vm::builtins::PySet::default()
+                .into_ref(&vm.ctx)
+                .into();
+            positions.push(VertexRestore {
+                vertex,
+                position,
+                edges,
+            });
         }
         let mut face_fields = Vec::new();
         face_fields
@@ -1021,6 +1047,13 @@ impl<'a> RootRestore<'a> {
         }
         let mut changed = reordered;
         for record in &self.positions {
+            let incidence = record.vertex.edges.read().clone();
+            let incidence = incidence
+                .downcast::<rustpython_vm::builtins::PySet>()
+                .map_err(|_| "Managed incidence edit requires Edge graph journal")?;
+            if !incidence.elements().is_empty() {
+                return Err("Managed incidence edit requires Edge graph journal".into());
+            }
             changed |= record.vertex.position.read().coordinates() != record.position.coordinates();
         }
         for record in &self.face_fields {
@@ -1060,6 +1093,8 @@ impl<'a> RootRestore<'a> {
         drop(old);
         for record in self.positions.drain(..) {
             let old = std::mem::replace(&mut *record.vertex.position.write(), record.position);
+            drop(old);
+            let old = std::mem::replace(&mut *record.vertex.edges.write(), record.edges);
             drop(old);
         }
         for record in self.face_fields.drain(..) {
@@ -1180,6 +1215,9 @@ impl RootSnapshot {
                     p.position.coordinates(),
                 )
                 .into_ref(&vm.ctx),
+                edges: rustpython_vm::builtins::PySet::default()
+                    .into_ref(&vm.ctx)
+                    .into(),
             });
         }
         let copy=|list:&rustpython_vm::builtins::PyListRef|->Result<rustpython_vm::builtins::PyListRef,String>{let list=list.borrow_vec();let mut values=Vec::new();values.try_reserve_exact(list.len()).map_err(|_|"History loop references refused")?;values.extend(list.iter().cloned());Ok(vm.ctx.new_list(values))};

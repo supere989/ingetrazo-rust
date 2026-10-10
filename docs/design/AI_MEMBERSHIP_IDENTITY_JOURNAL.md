@@ -24,3 +24,17 @@ The standalone constructor/incidence proof in `docs/audits/ai-edge-objects` prov
 Actual Scene.bounds has TWO different authorities (source scene.py649–704): loose bounds traverse visible Edge endpoints/Face positions; Group bounds use current public mesh.vertices membership. A registry-only detached Vertex can be reached for loose drawing yet must not pad Group membership bounds. Packed topology indices must therefore be separate from public memberships and must not implicitly determine every bounds query.
 
 Deletion/replacement requires a genuine identity graph with persistent public Vertex/Edge/Face lists, registry-held actual Vertex refs, explicit edge endpoints and Face loops, and an identity-to-packed projection. Script external refs and history own detached nodes until released. Numeric registry IDs cannot be interpreted as public-list offsets after membership edits. Shared native index allocation and reversible ownership must remain staged/fallible; broad root snapshots remain temporary O(root×history), not optimized production architecture.
+
+
+### Publication guard before the full incidence graph
+
+`vm_incidence_refusal` is an explicit safety prerequisite, not Python behavior equivalence. Managed root vertices currently have no populated native Edge wrapper incidence, so admission refuses a nonempty/ill-typed baseline and publication refuses any inserted incidence. Root restoration and field history replace the set wrapper with a newly prepared empty set; external aliases to the discarded set retain their actual contents. Newly staged vertex incidence is validated before native publication too. This prevents silently committing fields that have no native/history counterpart while the true graph is being wired. Full source accepts these edits and remains required.
+
+Next integration sequence:
+
+1. Prepare actual Edge objects from FaceTransaction endpoint/radial identities, including reused base-edge wrappers; reserve persistent Mesh.edges member capacity and per-endpoint incidence/radial changes before any native apply.
+2. Extend root history templates with real Edge refs and source member-only snapshots of Vertex.edges and Edge fields, with poison/unlock-before-drop. Replace the temporary empty-incidence refusal only when this command ownership is complete.
+3. Decouple source registry vertex identities from public Vertex-list ordinals, using stable identity-owned graph nodes and separate packed projection. Public membership removal/replacement must preserve nodes reachable from endpoints, face loops, registry, script aliases and parked command deltas.
+4. Prepare packed changed geometry/index and reversible identity mappings before publication; no coordinate reattachment or full Scene clone. Unknown native completion and VM/native callback boundaries remain separate required gates.
+
+Constructor/incidence objects are VM heap allocations outside OwnerBudget's logical native accounting. Snapshot preparation is still O(root×history); persistent mutation tracking and delta history remain required before production.

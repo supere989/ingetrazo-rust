@@ -1,0 +1,62 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "incidence_count": 2,
+      "new_edge_in_incidence": false,
+      "old_set_same": true,
+      "old_set_has_new": false,
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "accepted-incidence",
+      "position": [
+        9.0,
+        0.0,
+        0.0
+      ],
+      "incidence_count": 3,
+      "new_edge_in_incidence": true,
+      "old_set_same": true,
+      "old_set_has_new": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "undone",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "incidence_count": 2,
+      "new_edge_in_incidence": false,
+      "old_set_same": false,
+      "old_set_has_new": true,
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "redone",
+      "position": [
+        9.0,
+        0.0,
+        0.0
+      ],
+      "incidence_count": 3,
+      "new_edge_in_incidence": true,
+      "old_set_same": false,
+      "old_set_has_new": true,
+      "undo": 2,
+      "redo": 0
+    }
+  ],
+  "source_accepts_incidence": true,
+  "native_temporary_refusal_is_parity": false
+}
