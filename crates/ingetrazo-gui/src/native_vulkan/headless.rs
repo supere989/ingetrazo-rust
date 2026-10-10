@@ -45,7 +45,7 @@ impl VulkanContext {
   })();
   let (physical,graphics,device,pool,queue)=match result {Ok(values)=>values,Err(e)=>{unsafe {instance.destroy_instance(None)};return Err(e);}};
   let debug_utils=debug_utils::Instance::new(&entry,&instance);let surface=surface::Instance::new(&entry,&instance);
-  Ok(Self{lifetime:std::sync::Arc::new(super::lifetime::Lifetime::new(device.clone(),queue)),_entry:Some(entry),instance,debug_utils,debug_utils_messenger:vk::DebugUtilsMessengerEXT::null(),surface,surface_khr:vk::SurfaceKHR::null(),physical_device:physical,graphics_q_index:graphics,present_q_index:graphics,device,graphics_queue:queue,present_queue:queue,command_pool:pool,transfer_timeout_ns:5_000_000_000,diagnostic_fail_fast:true})
+  Ok(Self{lifetime:std::sync::Arc::new(super::lifetime::Lifetime::new(device.clone(),queue)),_entry:Some(entry),instance,debug_utils,debug_utils_messenger:vk::DebugUtilsMessengerEXT::null(),surface,surface_khr:vk::SurfaceKHR::null(),physical_device:physical,graphics_q_index:graphics,present_q_index:graphics,device,graphics_queue:queue,present_queue:queue,command_pool:pool,present_fences_enabled:false,transfer_timeout_ns:5_000_000_000,diagnostic_fail_fast:true})
  }
 }
 #[cfg(test)]mod tests {

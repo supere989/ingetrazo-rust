@@ -12,6 +12,12 @@ impl Lifetime {
  pub fn uncertain(&self)->bool{self.uncertain.load(Ordering::Acquire)}
  pub fn quarantine(&self){self.uncertain.store(true,Ordering::Release);}
  pub fn check(&self)->Result<(),String>{if self.uncertain(){Err("GPU completion unknown; resources quarantined, device recreation required".into())}else{Ok(())}}
+ pub fn wait_many(&self,fences:&[vk::Fence],timeout:u64)->Result<(),vk::Result>{
+  if fences.is_empty(){return Ok(());}
+  if self.uncertain(){return Err(vk::Result::ERROR_UNKNOWN);}
+  let result=unsafe{self.device.wait_for_fences(fences,true,timeout.min(WAIT_NS))};
+  if result.is_err(){self.quarantine();}result
+ }
  pub fn wait(&self,fence:vk::Fence,timeout:u64)->Result<(),vk::Result>{
   if self.uncertain(){return Err(vk::Result::ERROR_UNKNOWN);}
   let result=unsafe{self.device.wait_for_fences(&[fence],true,timeout.min(WAIT_NS))};
