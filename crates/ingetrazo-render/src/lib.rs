@@ -151,3 +151,5 @@ pub mod qt_selected_line;
 pub mod image_outline;
 
 pub mod qt_gl_image_line;
+
+pub mod source_texture_average;
