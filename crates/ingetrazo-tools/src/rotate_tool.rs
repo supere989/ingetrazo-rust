@@ -74,7 +74,7 @@ impl RotateTool {
                         group_set.insert(*gid);
                     }
                     SelectionItem::SectionPlane(id)=>{plane_set.insert(*id);},
-                    SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) => {}
+                    SelectionItem::ImagePlane(_) | SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) => {}
                 }
             }
         }else if let Some(id)=crate::base::pick_section_plane(scene,&ctx.ray,0.2){plane_set.insert(id);} else if let Some(vid) = crate::base::pick_scene_vertex(scene, &ctx.ray, 0.2) {

@@ -1,6 +1,4 @@
-   Compiling gltf-json v1.4.1
    Compiling ingetrazo-core v0.3.15 (/work/crates/ingetrazo-core)
-   Compiling gltf v1.4.1
 warning: function `visit_meshes` is never used
    --> crates/ingetrazo-core/src/screen_pick.rs:120:15
     |
@@ -20,5 +18,5 @@ warning: function `scene_from_xml` is never used
 
 warning: `ingetrazo-core` (lib) generated 1 warning
 warning: `ingetrazo-formats` (lib) generated 1 warning
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.33s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.47s
      Running `target/debug/examples/presentation_file_codec docs/audits/document-presentation-ci/files`

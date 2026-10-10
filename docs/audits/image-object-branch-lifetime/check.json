@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "states": 3,
+  "literal_old_rejected": true,
+  "source_identity": "gc.is_tracked exact original class, id retained without owning reference; new identity proven distinct"
+}

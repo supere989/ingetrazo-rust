@@ -63,3 +63,5 @@ pub mod drawing_axes;
 pub mod gpu_memory;
 
 pub mod presentation;
+
+pub mod image_plane;

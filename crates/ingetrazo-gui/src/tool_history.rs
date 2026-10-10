@@ -5,7 +5,7 @@ use ingetrazo_core::scene::Scene;
 use ingetrazo_tools::base::ToolContext;
 
 fn changed_model(before: &Scene, after: &Scene) -> bool {
-    before.mesh != after.mesh
+    before.image_planes != after.image_planes || before.mesh != after.mesh
         || before.groups != after.groups
         || before.component_definitions != after.component_definitions
         || before.mesh_shares != after.mesh_shares
@@ -40,7 +40,7 @@ impl IngeTrazoApp {
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene);
         if committed {
-            self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);
+            self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);
             self.bump_model_revision();
             if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
             self.active_tool.note_history_revision(self.model_revision,true);

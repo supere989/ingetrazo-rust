@@ -307,6 +307,22 @@ jobs:
         run: python scripts/check-python-offset-display.py
       - name: Original and native presentation controllers contexts and IGZ adapters
         run: python scripts/check-presentation-runtime.py
+      - name: Original image plane ownership and native archive reopening
+        run: |
+          mkdir -p docs/audits/image-plane-ci
+          python scripts/probe-python-image-planes.py docs/audits/image-plane-ci/original
+          cargo run --locked -p ingetrazo-gui --example image_plane_acceptance_fixture -- docs/audits/image-plane-ci/original docs/audits/image-plane-ci/native
+          python scripts/check-image-plane-ownership.py docs/audits/image-plane-ci/original/original.json docs/audits/image-plane-ci/native/native.json docs/audits/image-plane-runtime-baseline/native.json
+          python scripts/reopen-python-image-planes.py docs/audits/image-plane-ci/original/original.json docs/audits/image-plane-ci/native docs/audits/image-plane-ci/original/scan.png
+      - name: Original image layer command ownership and branch lifetime
+        run: |
+          mkdir -p docs/audits/image-ownership-ci
+          python scripts/probe-python-image-layer-ownership.py docs/audits/image-ownership-ci/original-layers.json
+          cargo run --locked -p ingetrazo-gui --example image_layer_ownership > docs/audits/image-ownership-ci/native-layers.json
+          python scripts/check-image-layer-ownership.py docs/audits/image-ownership-ci/original-layers.json docs/audits/image-ownership-ci/native-layers.json docs/audits/image-layer-command-ownership/literal-old-native.json
+          python scripts/probe-python-image-object-lifetime.py docs/audits/image-ownership-ci/original-lifetime.json
+          cargo run --locked -p ingetrazo-gui --example image_object_lifetime > docs/audits/image-ownership-ci/native-lifetime.json
+          python scripts/check-image-object-lifetime.py docs/audits/image-ownership-ci/original-lifetime.json docs/audits/image-ownership-ci/native-lifetime.json docs/audits/image-object-branch-lifetime/literal-old-native.json
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
@@ -335,6 +351,8 @@ jobs:
         with:
           name: semantic-parity-evidence
           path: |
+            docs/audits/image-ownership-ci/
+            docs/audits/image-plane-ci/
             docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*
             docs/audits/python-*-evidence.json
