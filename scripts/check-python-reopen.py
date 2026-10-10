@@ -4,6 +4,7 @@ Use isolated Python environment with original runtime requirements installed.
 """
 import itertools,json,os,subprocess,sys,tempfile
 from pathlib import Path
+from acceptance_context import context
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
 from PySide6.QtWidgets import QApplication
@@ -41,7 +42,7 @@ def main():
             errors=checker.differences(original,rust)
             asset_errors=[n for n,h in original_assets.items() if rust_assets.get(n)!=h]
             rows.append({"name":name,"errors":errors,"asset_errors":asset_errors,"source_runtime_fields":sorted(original)})
-    report={"negative_controls_detected":controls+2,"passed":all(not r["errors"] and not r["asset_errors"] for r in rows),"fixtures":rows,"scope":"Both source and Rust roundtrip reopened and serialized by pinned original Python application. Differential original runtime semantics; no interactive workflow/render proof."}
+    report={"provenance":context(),"negative_controls_detected":controls+2,"passed":all(not r["errors"] and not r["asset_errors"] for r in rows),"fixtures":rows,"scope":"Both source and Rust roundtrip reopened and serialized by pinned original Python application. Differential original runtime semantics; no interactive workflow/render proof."}
     dest=Path("docs/audits/python-reopen-evidence.json");dest.write_text(json.dumps(report,indent=2)+"\n")
     print(json.dumps({"passed":report["passed"],"fixtures":[{"name":r["name"],"differences":len(r["errors"]),"asset_differences":len(r["asset_errors"])} for r in rows]},indent=2))
     return 0 if report["passed"] else 1

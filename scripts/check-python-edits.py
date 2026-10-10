@@ -2,6 +2,7 @@
 """Fresh and edited Rust IGZ docs actually opened by original Python runtime."""
 import json,os,subprocess,sys,tempfile
 from pathlib import Path
+from acceptance_context import context
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
 from PySide6.QtWidgets import QApplication
@@ -44,6 +45,6 @@ def main():
         sheet=fresh.compositions[0];assert sheet.name=="Rust composed sheet" and sheet.paper=="A4" and not sheet.landscape
         assert sheet.frames[0].scale_n==50 and sheet.frames[0].x_mm==31
         assert fresh.georef.lat==-16 and fresh.georef.lon==-71 and fresh.georef.alt==2400 and fresh.georef.north==12
-    report={"passed":True,"checks":["edited loose geometry","edited persistent instance identity/name/transform","unknown face/document metadata retained","fresh Rust transformed group original runtime reopen","fresh Rust saved view, section plane and geographic datum original runtime interpretation","fresh geographic point/path and sheet scale/layout original runtime interpretation","edited geographic points/paths and sheet frame scale/position persistent identity interpreted by original"],"scope":"Synthetic geometry/group/view/section/datum/geographic/sheet fields; actual Python runtime loader, no GUI editing/render proof."}
+    report={"provenance":context(),"passed":True,"checks":["edited loose geometry","edited persistent instance identity/name/transform","unknown face/document metadata retained","fresh Rust transformed group original runtime reopen","fresh Rust saved view, section plane and geographic datum original runtime interpretation","fresh geographic point/path and sheet scale/layout original runtime interpretation","edited geographic points/paths and sheet frame scale/position persistent identity interpreted by original"],"scope":"Synthetic geometry/group/view/section/datum/geographic/sheet fields; actual Python runtime loader, no GUI editing/render proof."}
     Path("docs/audits/python-edit-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()

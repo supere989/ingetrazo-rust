@@ -2,6 +2,7 @@
 """Differential shapes: original Python booleans versus Rust, symmetric difference."""
 import json,math,os,sys,subprocess,tempfile
 from pathlib import Path
+from acceptance_context import context
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
 from PySide6.QtWidgets import QApplication
@@ -39,6 +40,6 @@ def main():
                 rows.append({"scenario":scenario,"operation":name,"original_volume":reference.volume(),"rust_volume":rust.volume(),"symmetric_difference_volume":error})
         # Shape oracle must reject a copied input as intersection result.
         assert mismatch(manifold(cube(0)),reference)>.1
-    report={"passed":True,"negative_controls_detected":1,"operations":rows,"scope":"Overlapping, rotated and contained boxes; original Python shape oracle via independent native manifold3d. No arbitrary/degenerate/attribute/GUI parity claim."}
+    report={"provenance":context(),"passed":True,"negative_controls_detected":1,"operations":rows,"scope":"Overlapping, rotated and contained boxes; original Python shape oracle via independent native manifold3d. No arbitrary/degenerate/attribute/GUI parity claim."}
     Path("docs/audits/python-boolean-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()

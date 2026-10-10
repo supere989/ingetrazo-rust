@@ -5,6 +5,7 @@ Added Rust defaults are allowed; every original key/value must survive.
 """
 import argparse, copy, hashlib, json, math, subprocess, tempfile, zipfile
 from pathlib import Path
+from acceptance_context import context
 EXPECTED = ("arco-yanque.igz", "banca-pergola-yanque.igz", "luminaria-solar-yanque.igz", "pileta-fuente-yanque.igz")
 def read(path):
     if zipfile.is_zipfile(path):
@@ -44,7 +45,7 @@ def controls():
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument("--binary",default="target/debug/ingetrazo");parser.add_argument("--output",default="docs/audits/document-semantic-evidence.json");args=parser.parse_args()
-    report={"negative_controls_detected":controls(),"fixtures":[],"scope":"Untouched recursive source field and archive asset preservation. Does not prove editable prototype semantics, Python reopen or GUI workflows."}
+    report={"provenance":context(),"negative_controls_detected":controls(),"fixtures":[],"scope":"Untouched recursive source field and archive asset preservation. Does not prove editable prototype semantics, Python reopen or GUI workflows."}
     with tempfile.TemporaryDirectory() as tmp:
         for name in EXPECTED:
             source=Path("ingetrazo/examples")/name

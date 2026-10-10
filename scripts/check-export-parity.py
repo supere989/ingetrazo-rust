@@ -2,6 +2,7 @@
 """Decode Rust export buffers independently using only Python stdlib."""
 import base64,json,struct,subprocess,tempfile
 from pathlib import Path
+from acceptance_context import context
 
 def decode(path):
     raw=path.read_bytes()
@@ -40,6 +41,6 @@ def main():
     with tempfile.TemporaryDirectory() as temp:
         subprocess.run(["cargo","run","--locked","-p","ingetrazo-formats","--example","export_acceptance_fixture","--",temp],check=True)
         results=[decode(Path(temp)/("fixture"+suffix)) for suffix in (".gltf",".glb")]
-    output=Path("docs/audits/export-semantic-evidence.json");output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps({"passed":True,"results":results,"scope":"Single reflected nested triangle; no textures/material/hierarchy/full format acceptance."},indent=2)+"\n")
+    output=Path("docs/audits/export-semantic-evidence.json");output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps({"provenance":context(),"passed":True,"results":results,"scope":"Single reflected nested triangle; no textures/material/hierarchy/full format acceptance."},indent=2)+"\n")
     print("Independent textual glTF and GLB decoded geometry/winding acceptance passed")
 if __name__=="__main__":main()
