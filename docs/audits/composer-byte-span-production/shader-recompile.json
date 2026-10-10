@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "shaderc": "0.8.3",
+  "command": "/tmp/ingetrazo-shader-build/target/debug/ingetrazo-shader-build crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.frag /tmp/cad2d-byte-span-recompiled.spv",
+  "compiler_source": "scripts/compile-native-world-shaders.py temporarytool src/main.rs compiler.compile_into_spirv(source,ShaderKind::Fragment,input,\"main\",None)",
+  "compiler_sha256": "172e2101c8e055fa6e4e4f8a397b7a077466706d93a1fdb5c415d45a58e6fcae",
+  "glsl_sha256": "57528d0398047f15c809cb6d6c17641bdcf46ae77542279250abae99f62e0465",
+  "spirv_sha256": "061dede77bbe7439c4c647fa2d5587476a2ff143faefeb4493cf4f317d4886cb",
+  "byte_identical": true
+}
