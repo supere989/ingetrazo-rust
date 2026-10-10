@@ -42,9 +42,15 @@ impl MeshJournal {
   let ka=SourceKey::new(a);let kb=SourceKey::new(b);
   let v0=self.vertex(ka,a)?;let v1=self.vertex(kb,b)?;
   if v0==v1{return Err("degenerate edge: endpoints weld to one vertex".into());}
+  let endpoints=self.link_vertices(v0,v1)?;
+  Ok((endpoints.0,self.position(endpoints.1),self.position(endpoints.2)))
+ }
+ pub(crate) fn stage_vertex(&mut self,p:DVec3)->Result<usize,String>{if let Some(r)=&self.registry{r.check()?;}if self.admission_failed{return Err("Transaction staging previously refused".into());}let p=p.as_vec3().as_dvec3();if !p.is_finite(){return Err("Nonfinite face vertex".into());}self.vertex(SourceKey::new(p),p)}
+ pub(crate) fn link_vertices(&mut self,v0:usize,v1:usize)->Result<(usize,usize,usize),String>{
+  if v0==v1{return Err("Degenerate face boundary remains unsupported".into());}
   let key=ordered(v0,v1);
   let endpoints=if let Some(existing)=self.lookup_edge(&key){existing}else{let preparation=(||{if self.edge_limit.is_some_and(|n|self.added_edges.len()>=n){return Err("Append edge staging admission denied".into());}self.edges.try_reserve(1).map_err(|_|"Append edge lookup admission refused")?;self.added_edges.try_reserve(1).map_err(|_|"Append edge staging allocation refused")?;self.base_edges.checked_add(self.added_edges.len()).ok_or_else(||"Append edge extent overflow".into())})();let id=self.admission(preparation)?;self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
-  Ok((endpoints.0,self.position(endpoints.1),self.position(endpoints.2)))
+  Ok(endpoints)
  }
  fn position(&self,id:usize)->DVec3{if id<self.base_vertices{match &self.registry{Some(r)=>r.position(id),None=>self.base_positions[id]}}else{self.added_vertices[id-self.base_vertices]}}
  fn vertex(&mut self,key:SourceKey,p:DVec3)->Result<usize,String> {

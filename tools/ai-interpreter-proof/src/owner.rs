@@ -4,7 +4,7 @@ use crate::owner_budget::{OwnerBudget,Lease,Kind};
 use crate::owner_registry::Registry;
 use ingetrazo_core::mesh::{Mesh,MeshVertex,MeshEdge,PreparedSpatialIndex,PreparedSpatialDelta};
 use glam::DVec3;use uuid::Uuid;use std::collections::{HashMap,HashSet};
-pub struct Transaction{document:Uuid,state:Uuid,journal:MeshJournal,charge:Lease,admission_failed:bool}
+pub struct Transaction{pub(crate) force_command:bool,document:Uuid,state:Uuid,pub(crate) journal:MeshJournal,charge:Lease,admission_failed:bool}
 impl Transaction{pub fn registry_lookup_calls(&self)->usize{self.journal.registry.as_ref().unwrap().lookup_calls()} pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(),String>{
  if self.admission_failed{return Err("Transaction shared admission previously refused".into());}
  let next=staging_bound(0,0,self.journal.added_vertices.len().checked_add(2).ok_or("Staging extent overflow")?,self.journal.added_edges.len().checked_add(1).ok_or("Staging extent overflow")?)?;
@@ -21,6 +21,7 @@ impl JournalOwner{
  pub fn registry_identity(&self)->usize{self.registry.identity()}
  pub fn budget(&self)->OwnerBudget{self.budget.clone()}
  pub fn mesh(&self)->&Mesh{&self.mesh}
+ pub(crate) fn face_storage(&mut self)->(&mut Vec<ingetrazo_core::mesh::MeshFace>,&mut Vec<MeshEdge>){(&mut self.mesh.faces,&mut self.mesh.edges)}
  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
  pub fn retained_baseline_entries(&self)->usize{0}
  /// Engineering/host admission quota, not a simulated allocator error.
@@ -30,14 +31,14 @@ impl JournalOwner{
  pub fn history_payload_bytes(&self)->(usize,usize){(self.undo_bytes,self.redo_bytes)}
  pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.append_vertex_limit=vertices;self.append_edge_limit=edges;}
  pub fn begin(&self)->Transaction{self.try_begin().expect("legacy proof owner preparation")}
- pub fn try_begin(&self)->Result<Transaction,String>{let charge=self.budget.reserve(Kind::Staging,staging_bound(0,0,0,0)?)?;let mut journal=MeshJournal::from_registry(self.registry.view(),self.version)?;journal.set_append_limits(self.append_vertex_limit,self.append_edge_limit);Ok(Transaction{document:self.document,state:self.state,journal,charge,admission_failed:false})}
+ pub fn try_begin(&self)->Result<Transaction,String>{let charge=self.budget.reserve(Kind::Staging,staging_bound(0,0,0,0)?)?;let mut journal=MeshJournal::from_registry(self.registry.view(),self.version)?;journal.set_append_limits(self.append_vertex_limit,self.append_edge_limit);Ok(Transaction{force_command:false,document:self.document,state:self.state,journal,charge,admission_failed:false})}
  fn index(&self,positions:&[DVec3])->Result<PreparedSpatialIndex,String>{if self.index_entry_limit.is_some_and(|n|positions.len()>n){return Err("Prepared-index entry admission denied".into());}Mesh::prepare_spatial_index(positions).map_err(str::to_owned)}
  pub fn replace(&mut self,mut mesh:Mesh)->Result<(),String>{let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;validate_base(&mesh)?;let positions=positions(&mesh.vertices,0)?;let index=self.index(&positions)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;let document=Uuid::new_v4();let state=Uuid::new_v4();let registry=Registry::new(&mesh,self.budget.clone(),document,state,next_version)?;self.registry.invalidate();self.registry=registry;self.mesh=mesh;self.document=document;self.state=state;self.version=next_version;self.undo.clear();self.redo.clear();self.undo_bytes=0;self.redo_bytes=0;Ok(())}
  pub fn commit(&mut self,t:Transaction)->Result<bool,String>{
   if t.document!=self.document||t.state!=self.state||t.journal.base_version!=self.version{return Err("Stale owner transaction".into());}
   if t.admission_failed{return Err("Transaction shared staging admission failed".into());}
   let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;
-  let j=t.journal;let _staging=t.charge;if j.admission_failed{return Err("Transaction staging admission failed".into());}if j.added_vertices.is_empty()&&j.added_edges.is_empty(){return Ok(false);}
+  let force=t.force_command;let j=t.journal;let _staging=t.charge;if j.admission_failed{return Err("Transaction staging admission failed".into());}if !force&&j.added_vertices.is_empty()&&j.added_edges.is_empty(){return Ok(false);}
   let base_vertices=self.mesh.vertices.len();let base_edges=self.mesh.edges.len();
   let total=base_vertices.checked_add(j.added_vertices.len()).ok_or("Vertex extent overflow")?;
   let edge_total=base_edges.checked_add(j.added_edges.len()).ok_or("Edge extent overflow")?;
