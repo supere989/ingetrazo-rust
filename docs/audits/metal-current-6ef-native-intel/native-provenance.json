@@ -1,0 +1,17 @@
+{
+  "source": "6ef991dfdcc4b24c185d5f0742f4e4b9e5014a88",
+  "sdk_run": 38063277855,
+  "sdk_job": 114245699988,
+  "sdk_job_name": "Native Metal framework link (macos-15-intel)",
+  "sdk_artifact": 11674445646,
+  "compute_run": 38063277962,
+  "compute_job": 114245700392,
+  "compute_job_name": "Actual ordered UI and CAD compute (macos-15-intel)",
+  "compute_artifact": 11673789268,
+  "native_sdk_passed": true,
+  "gui_alltargets_checked": true,
+  "gui_examples_linked": true,
+  "font_tests": 32,
+  "presentation_claim": false,
+  "physical_mac_claim": false
+}

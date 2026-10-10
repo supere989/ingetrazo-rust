@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Actual inline production precise CAD2D with UI primitives before and after.
 use std::sync::Arc;
 use ingetrazo_render::cad2d::{Geometry,Vertex,Batch,EncodedRgba,Pose};
@@ -44,4 +46,15 @@ impl App for Fixture {
  if ctx.input(|i|i.viewport().close_requested()){ctx.send_viewport_cmd(egui::ViewportCommand::Close);}}
  fn gpu_error(&mut self,error:&str){if self.error.is_some(){eprintln!("EXPECTED callback error: {error}");}else{panic!("Precise CAD2D failed: {error}");}}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

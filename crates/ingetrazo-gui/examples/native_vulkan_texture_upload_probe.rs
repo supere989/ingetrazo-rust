@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Actual production optimal image upload/readback, bounded staging and reuse.
 use ash::vk;
 use ingetrazo_gui::native_vulkan::{
@@ -7,7 +9,7 @@ use ingetrazo_gui::native_vulkan::{
     VulkanContext,
 };
 use std::{sync::Arc, time::Instant};
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let request = if std::env::args().any(|s| s == "--software-fixture") {
         DeviceRequest::software_fixture()
     } else {
@@ -156,4 +158,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(resources.stats.upload_staging_maps,resources.stats.upload_staging_unmaps,"Retained staging mapping leaked");
     eprintln!("PASS17MiB optimal GPU texture/readback upload{upload_ms:.3}ms; constant7x5 mip chain; persistentstaging/command/fence; actualbudgetdenial oldimage preserved; ledgerzero; {:?}",resources.stats);
     Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

@@ -1,0 +1,102 @@
+{
+  "observed_at": "2026-10-10T17:55:30.322989+00:00",
+  "runs": [
+    {
+      "run": 38072795718,
+      "head_sha": "f03caba2295ae2900e43e04bf477f69da3f7008d",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38072795718",
+      "jobs": [
+        {
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "id": 114273515345,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "id": 114273515417,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "compilation-and-tests",
+          "id": 114273515473,
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "name": "Native Metal framework link (macos-15-intel)",
+          "id": 114273515480,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Native Metal framework link (macos-15)",
+          "id": 114273515521,
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 11677676880,
+          "name": "native-metal-link-macos-15-intel",
+          "digest": "sha256:9cf5135967a9889aa4863feb59072244dd551a86c427feeb97a1d4adcc373413",
+          "expired": false
+        },
+        {
+          "id": 11677286896,
+          "name": "native-metal-link-macos-15",
+          "digest": "sha256:405d6e7d82cccda750c3712df5b6e1f6a9b4e235258ac7bfe8cfe42e56ec7e16",
+          "expired": false
+        },
+        {
+          "id": 11677179391,
+          "name": "native-metal-compile-aarch64-apple-darwin",
+          "digest": "sha256:b20244f26a6a2ccf909282776d2fff6b82d4c1929c09c130daaf1af19da47137",
+          "expired": false
+        },
+        {
+          "id": 11676969688,
+          "name": "native-metal-compile-x86_64-apple-darwin",
+          "digest": "sha256:2dbd6ca781afd8790037108e05088227ed40cd21beeed8eb3d2983b183b9d9a1",
+          "expired": false
+        }
+      ]
+    },
+    {
+      "run": 38072795700,
+      "head_sha": "f03caba2295ae2900e43e04bf477f69da3f7008d",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38072795700",
+      "jobs": [
+        {
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "id": 114273515637,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "id": 114273515801,
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 11677476695,
+          "name": "metal-compute-consumer-macos-15-intel",
+          "digest": "sha256:c0fb445b9de0dfc6d40d4cdaaf719f5d4554809df59a9bf81177aa2c16be35f0",
+          "expired": false
+        },
+        {
+          "id": 11676989739,
+          "name": "metal-compute-consumer-macos-15",
+          "digest": "sha256:a9dd180bc83272a89620cd2d0bf0693187213d389bd573a713c193f967b585e3",
+          "expired": false
+        }
+      ]
+    }
+  ],
+  "scope": "CI status verified against full source SHA; artifact contents still require review; physical Mac viewport acceptance remains open"
+}

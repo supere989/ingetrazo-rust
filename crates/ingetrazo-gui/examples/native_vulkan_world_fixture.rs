@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Two crossing opaque faces: fragment depth must beat centroid painter ordering.
 use ingetrazo_gui::native_vulkan::{App,System};
 use glam::DVec3;
@@ -21,4 +23,15 @@ impl App for Fixture {
  fn prepare_gpu(&mut self,system:&mut System,resize:bool){App::prepare_gpu(&mut self.app,system,resize);}
  fn gpu_error(&mut self,error:&str){panic!("GPU fixture failed: {error}");}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

@@ -1,0 +1,4 @@
+
+thread 'main' (17651) panicked at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/epaint-0.30.0/src/mesh.rs:214:9:
+assertion failed: self.texture_id == TextureId::default()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

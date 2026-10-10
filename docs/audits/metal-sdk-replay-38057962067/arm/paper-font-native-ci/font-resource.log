@@ -1,0 +1,206 @@
+[1m[33mwarning[0m[1m: function `visit_meshes` is never used[0m
+   [1m[94m--> [0mcrates/ingetrazo-core/src/screen_pick.rs:120:15
+    [1m[94m|[0m
+[1m[94m120[0m [1m[94m|[0m pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    [1m[94m|[0m               [1m[33m^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m: `ingetrazo-core` (lib) generated 1 warning
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:132:5
+    [1m[94m|[0m
+[1m[94m128[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m132[0m [1m[94m|[0m     pub finalizer: FT_Generic_Finalizer,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    [1m[94m= [0m[1mnote[0m: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:804:5
+    [1m[94m|[0m
+[1m[94m795[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m804[0m [1m[94m|[0m     pub read: FT_Stream_IoFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:805:5
+    [1m[94m|[0m
+[1m[94m795[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m805[0m [1m[94m|[0m     pub close: FT_Stream_CloseFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:817:5
+    [1m[94m|[0m
+[1m[94m813[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m817[0m [1m[94m|[0m     pub alloc: FT_Alloc_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:818:5
+    [1m[94m|[0m
+[1m[94m813[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m818[0m [1m[94m|[0m     pub free: FT_Free_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:819:5
+    [1m[94m|[0m
+[1m[94m813[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m819[0m [1m[94m|[0m     pub realloc: FT_Realloc_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:881:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m880[0m [1m[94m|[0m pub struct FT_Outline_Funcs {
+[1m[94m881[0m [1m[94m|[0m     pub move_to: FT_Outline_MoveToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:882:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m882[0m [1m[94m|[0m     pub line_to: FT_Outline_LineToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:883:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m883[0m [1m[94m|[0m     pub conic_to: FT_Outline_ConicToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:884:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m884[0m [1m[94m|[0m     pub cubic_to: FT_Outline_CubicToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:896:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m896[0m [1m[94m|[0m     pub gray_spans: FT_SpanFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:897:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m897[0m [1m[94m|[0m     pub black_spans: FT_SpanFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:898:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m898[0m [1m[94m|[0m     pub bit_test: FT_Raster_BitTest_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:899:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m899[0m [1m[94m|[0m     pub bit_set: FT_Raster_BitSet_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m: `freetype-sys` (lib) generated 14 warnings
+[1m[92m   Compiling[0m ingetrazo-formats v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-formats)
+[1m[33mwarning[0m[1m: function `scene_from_xml` is never used[0m
+   [1m[94m--> [0mcrates/ingetrazo-formats/src/dae_import.rs:757:15
+    [1m[94m|[0m
+[1m[94m757[0m [1m[94m|[0m pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    [1m[94m|[0m               [1m[33m^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m: `ingetrazo-formats` (lib) generated 1 warning
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 5.04s
+[1m[92m     Running[0m `target/debug/examples/native_font_resource_probe /System/Library/Fonts/Supplemental/Arial.ttf`
+PASS actual native shaping/subset/warm cache/retained resource lifetime; no rendered source parity claim

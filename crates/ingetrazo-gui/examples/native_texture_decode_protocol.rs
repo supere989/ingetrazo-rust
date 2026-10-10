@@ -1,6 +1,8 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Production cold decoder protocol against original Qt literal files.
 use ingetrazo_gui::native_vulkan::texture_cache::decode_png_jpeg;
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     if args.len() != 2 {
         return Err("INPUT OUTPUT required".into());
@@ -25,4 +27,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         serde_json::to_vec_pretty(&result)?,
     )?;
     Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

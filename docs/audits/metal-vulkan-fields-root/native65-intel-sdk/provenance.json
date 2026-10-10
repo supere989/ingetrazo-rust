@@ -1,0 +1,10 @@
+{
+  "source": "65a01c65953398fd2d2f19d165ac0006a321d25e",
+  "run": 38070902856,
+  "artifact": 11677320825,
+  "job": 114267925916,
+  "sha256": "144802e1e53b34b52fcf6a55e1cbee6b17189b17d6d2efa6b763d923be43858c",
+  "archive_crc_verified": true,
+  "conclusion": "success",
+  "scope": "Intel native Apple SDK combined GUI build; cloud adapter not physical Mac presentation"
+}

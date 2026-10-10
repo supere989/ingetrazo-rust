@@ -1,0 +1,9 @@
+# Separate actual native failures
+
+Combined run38057068068 source156e26e834fa1942f2ef2e771aa82545878d3d8d ARM job114227609076 artifact11671222634: GUI library compiled, but native all-target GUI check fails unguarded Vulkan example imports. Native Vulkan is intentionally unavailable on macOS; correct diagnostic packaging rather than expose Vulkan as a Mac backend. Every Vulkan-only example now compiles its original entry only on Linux/Windows and explicitly refuses other platforms. Metal and backend-neutral examples remain checked.
+
+Hostmodal run38057000113 ARM job114227409562 artifact11672062995: actual shared application still phase0, no close/input actions. Readonly report visible=false; three commandCompleted owners lack callbacks and positive display proof; foursubmitted/oneterminalskipped. Native UI preparation succeeded. No compilation fix is claimed to resolve this distinct runtime/window/presentation failure. All deadlines/positive criteria unchanged.
+
+Validation: all31 original Linux/Windows bodies compared byte-for-byte after undoing only entry visibility. Full Linux GUI examples check passes. Both Mac targets each compile all31 platform-refusal stubs with rustc metadata. Full Mac GUI crosscheck in Linux devbox stops at libz-sys C compilation because no Apple SDK crossC compiler; failure log retained. This does not substitute actual Mac SDK all-target/check/link replay.
+
+Same-run Intel jobs now terminal FAILURE: combined114227608984 stops at unguarded native_texture_decode_protocol.rs import, confirming examples scheduled differently and broader packaging fix is needed. Hostmodal114227409461 Save phase0, visible=false, three submitted/Completed owners callbackfalse, no close/actions; all runtime controls still unaccepted. Complete Intel artifacts retained independently.

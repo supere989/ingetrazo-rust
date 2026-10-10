@@ -1,0 +1,17 @@
+[
+  {
+    "id": 11675332987,
+    "kind": "sdk-arm",
+    "sha": "46a7f32fd2bca7abb851cbeac0773ac7be9900ca4eac6739f92ac78c28c7b905"
+  },
+  {
+    "id": 11675841011,
+    "kind": "compute-arm",
+    "sha": "ed30e5f071364677a6a15ae15d854ba41a7db8a937dc63b77cb3a5b349a2a8f0"
+  },
+  {
+    "id": 11675827076,
+    "kind": "compute-intel",
+    "sha": "dd486b4323f5a4b1a4ec5f948b4bc7e504641a14fa74cafcf8fe2657977b9999"
+  }
+]

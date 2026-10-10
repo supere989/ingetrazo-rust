@@ -1,0 +1,6 @@
+Graphics backend: native Metal; device=Apple Paravirtual device; unified=true; opt-in egui host
+Metal layer-hosting order: backed-off-then-custom-layer-before-wantsLayer; prior_wantsLayer=true; actual_wantsLayer=true; view_layer_matches=true
+Metal WSI attachment: view_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; layer_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; layer_hidden=false; window_visible=Some(true); drawable_size=CGSize { width: 0.0, height: 0.0 }
+Metal egui stats PainterStats { geometry_uploads: 1, texture_uploads: 55, gpu_geometry_bytes: 118608, cpu_texture_bytes: 1021952, retained_cpu_texture_bytes: 1021952, encoded_source_pixels: 255488, copied_snapshot_bytes: 0, texture_uploaded_bytes: 1021952, mip_generation_submissions: 0, generated_mip_levels: 0, compressed_upload_submissions: 0, compressed_uploaded_bytes: 0 }; presentation (4, 1, 3)
+Metal presentation ownership retained: 3 unresolved frames
+Error: "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0"

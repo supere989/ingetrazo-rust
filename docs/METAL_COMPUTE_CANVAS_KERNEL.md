@@ -1,0 +1,20 @@
+# Exact Metal canvas composition foundation
+
+`cad_compute_painter` prepares immutable original source span plans and Qt byte palettes, then encodes source-ordered integer SourceOver into an existing private RGBA8Unorm canvas. Tier2 read/write texture support is required before preparation. The caller must supply ShaderRead|ShaderWrite usage, a bounded target/clip, and retain Prepared through GPU completion. This module does not submit, poll, sleep, read back, or copy images.
+
+Cold plans upload bounded source rows, sparse tiles and references once. Warm unchanged geometry/layout and palette retain buffers without plan generation or allocation. Palette changes preserve the geometry plan when batch first/count layout is unchanged. Cache publication follows successful validation, every budgeted native allocation, and pipeline creation. Earlier prepared owners retain evicted immutable buffers/palettes.
+
+One 8x8 threadgroup owns each sparse source tile. Each pixel is read once, composed in original batch/index order with separate BYTE_MUL source/destination terms, and written once. Tiles are unique, so invocations do not overlap. Dispatched work is bounded by the sparse source coverage, rather than dispatching the entire canvas for every callback.
+
+This is not yet activated in presentation. The required next stage supplies bounded persistent RGBA canvases, source-ordered generic UI render/compute encoder segmentation and one final BGRA drawable draw. Apple framebuffer fetch remains the shorter inline path. Generic non-span geometry remains required scope. Dual-Mac cross checks validate Rust API compilation only; actual MSL execution, integer pixels, rollback, frame ownership, resize, bytes and latency remain unverified until native probes execute.
+
+
+## Ordered canvas consumer candidate
+
+The isolated host now selects this mode only when precise CAD callbacks are explicitly enabled and Apple framebuffer-fetch support is absent. Generic UI uses an RGBA8 pipeline into the same canvas, preserving contiguous mesh segments. Each CAD callback ends that render encoder, dispatches exact source-ordered compute, then later UI resumes a Load render encoder. One final nonblended fullscreen read presents RGBA directly into the BGRA drawable. Apple mode is unchanged. No per-draw image copies, CPU image uploads, additional processes or waits are introduced.
+
+The canvas pool retains at most three native private images. Only idle owners may be reused; in-flight frames retain Lease plus immutable PreparedPaint through both actual GPU completion and the existing terminal drawable notification. Resize cannot overwrite an old active canvas. Unknown completion retains the entire existing device/queue/window/frames/pool owner. Actual allocatedSize is charged to the global budget; each canvas costs its actual allocation, with logical minimum4*width*height bytes. Upload metrics are cumulative traffic, not a substitute for live ledger accounting.
+
+`cad_compute_callback_probe --output=FRESH` requires actual native Tier2 support and plans six original Qt alpha images plus one actual source QPainter generic/CAD/generic ordered image. It encodes GPU whole-image comparisons, reversed source order and missing final UI negatives, five warm calls per color with zero new plan/palette uploads, exact integer pan, fractional phase refusal, admitted first-plan-buffer/second-buffer budget denial, immutable previous image replay, three-owner capacity/resize controls and final ledgerzero. The persistent diagnostic pool is reused; diagnostic GPU readback is not a production operation. Neither this probe nor a crosscheck is a WSI presentation proof.
+
+Native execution is still pending. Remaining required acceptance includes actual source-produced composer zoom/pan/DPI/fractional origins, rendered shared application, encoder/resize/cancel/error and unknown-completion controls, actual callbacks, throughput/memory measurement and physical Apple/Intel/AMD Mac hardware. Arbitrary non-span CAD geometry is explicitly refused, not omitted from full scope.

@@ -1,0 +1,56 @@
+name: Isolated native Metal ordered compute consumer
+on: [push, pull_request]
+jobs:
+  native-compute-consumer:
+    name: Actual ordered UI and CAD compute (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned diagnostic Qt reference
+        run: python -m pip install PySide6==6.12.0
+      - name: Generate fresh actual QPainter references
+        run: |
+          mkdir -p docs/audits/metal-compute-consumer-ci
+          python scripts/reference-metal-cad2d.py docs/audits/metal-compute-consumer-ci/reference/alpha > docs/audits/metal-compute-consumer-ci/qt-alpha.log 2>&1
+          python scripts/reference-metal-compute-order.py docs/audits/metal-compute-consumer-ci/reference/mixed > docs/audits/metal-compute-consumer-ci/qt-mixed.log 2>&1
+      - name: Build native compute consumer with source provenance
+        run: |
+          git rev-parse HEAD > docs/audits/metal-compute-consumer-ci/revision.txt
+          rustc -Vv > docs/audits/metal-compute-consumer-ci/toolchain.txt
+          cargo build --locked -p ingetrazo-metal --example cad_compute_callback_probe > docs/audits/metal-compute-consumer-ci/build.log 2>&1
+          shasum -a 256 target/debug/examples/cad_compute_callback_probe > docs/audits/metal-compute-consumer-ci/binary.sha256
+          otool -L target/debug/examples/cad_compute_callback_probe > docs/audits/metal-compute-consumer-ci/frameworks.txt
+      - name: Execute actual GPU consumer and strict seven-image controls
+        run: |
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          root=Path('docs/audits/metal-compute-consumer-ci')
+          cmd=['target/debug/examples/cad_compute_callback_probe','--output='+str(root/'native')]
+          with (root/'execution.log').open('w') as log:
+              try:
+                  run=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,timeout=90)
+              except subprocess.TimeoutExpired:
+                  log.write('\nExternal bounded GPU probe timeout; no acceptance claimed\n')
+                  raise
+          if run.returncode:raise SystemExit(run.returncode)
+          PY
+          python scripts/check-metal-compute-callback.py docs/audits/metal-compute-consumer-ci/native docs/audits/metal-compute-consumer-ci/reference > docs/audits/metal-compute-consumer-ci/strict-check.json
+      - name: Retain complete native evidence on every verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metal-compute-consumer-${{ matrix.runner }}
+          path: docs/audits/metal-compute-consumer-ci/
+          if-no-files-found: error

@@ -1,8 +1,10 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Actual upload/retirement churn, no automatic throughput claims.
 use ash::vk;
 use ingetrazo_gui::native_vulkan::{VulkanContext,headless::DeviceRequest,budget::VulkanBudget,resources::Resources};
 use std::{sync::Arc,time::Instant};
-fn main()->Result<(),Box<dyn std::error::Error>>{
+pub fn main()->Result<(),Box<dyn std::error::Error>>{
  let args=std::env::args().collect::<Vec<_>>();
  let request=if args.iter().any(|a|a=="--software-fixture"){DeviceRequest::software_fixture()}else{DeviceRequest::nvidia_hardware()};
  let context=VulkanContext::new_headless(&request)?;
@@ -58,4 +60,15 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
  budget.ledger.lock().unwrap().total_limit=Some(128*1024*1024);
  unsafe{context.device.destroy_fence(fence,None)};
  println!("{}",serde_json::to_string_pretty(&serde_json::json!({"passed":true,"illegal_transfer_before_allocation":true,"partial_two_destination_admission_rollback":true,"rows":rows,"scope":"Strict actual adapter; synchronous upload walltime excluding readback. No workers/graphics throughput claim; tiny vs packed buffers differ resource ownership."}))?);Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

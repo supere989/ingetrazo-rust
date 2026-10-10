@@ -106,6 +106,13 @@ fn main() {
         None
     };
 
+    // Explicit native Metal opt-in; default renderer is unchanged until actual
+    // macOS application/lifecycle/visual acceptance passes.
+    #[cfg(target_os="macos")]
+    if std::env::var("INGETRAZO_NATIVE_METAL").as_deref()==Ok("1") {
+        if let Err(error)=ingetrazo_gui::native_metal::run(initial_file){eprintln!("Native Metal host error: {error}");std::process::exit(1);}
+        return;
+    }
     // 4. Launch GUI Application
     if let Err(e) = ingetrazo_gui::run_gui(initial_file) {
         eprintln!("Error running IngeTrazo GUI: {e}");

@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Actual GPU normal/chunked equality, warm cache and live-quota rollback controls.
 use ash::vk;
 use glam::DVec3;
@@ -190,7 +192,7 @@ fn render(
     }
     world.readback(context)
 }
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().collect::<Vec<_>>();
     let context =
         VulkanContext::new_headless(&if args.iter().any(|a| a == "--software-fixture") {
@@ -573,4 +575,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         context.device.destroy_fence(fence, None);
     }
     Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

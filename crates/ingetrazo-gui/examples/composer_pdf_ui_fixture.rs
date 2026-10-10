@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 use std::hash::Hasher;
 use ingetrazo_gui::{app::IngeTrazoApp,native_vulkan::{App,System}};
 use ingetrazo_core::{composition::{Sheet,SheetItem,ShapeItem},sheet_shape::SheetShape};
@@ -33,4 +35,15 @@ impl App for Fixture {
  if let Some((a,b,current,all))=observation{self.current+=usize::from(current);self.all+=usize::from(all);let a=a.center();let b=b.center();let scene_bytes=serde_json::to_vec(&self.app.scene).unwrap();let mut scene_hash=std::collections::hash_map::DefaultHasher::new();scene_hash.write(&scene_bytes);let value=serde_json::json!({"current_button":[a.x,a.y],"all_button":[b.x,b.y],"current_clicks":self.current,"all_clicks":self.all,"status":self.app.status_message,"error_dialog":self.app.composer_state.pdf_export_error,"error_ok":ctx.data(|d|d.get_temp::<egui::Rect>(egui::Id::new("pdf-ui-error-ok"))).map(|r|[r.center().x,r.center().y]),"export_result":ctx.data(|d|d.get_temp::<String>(egui::Id::new("pdf-ui-result"))),"scene_signature":[scene_bytes.len()as u64,scene_hash.finish()],"paper_resources":self.app.composer_state.paper_text.borrow().stats(),"history_key_events":self.history_events,"active_sheet":self.app.scene.active_sheet_index,"sheet_tabs":ctx.data(|d|d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-sheet-tabs"))).map(|tabs|tabs.iter().map(|r|[r.center().x,r.center().y]).collect::<Vec<_>>()),"canvas_text_rects":ctx.data(|d|d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-canvas-text-rects"))).map(|rects|rects.iter().map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]).collect::<Vec<_>>()),"canvas_text":ctx.data(|d|d.get_temp::<Vec<String>>(egui::Id::new("pdf-ui-canvas-fields"))),"calendar_samples_per_frame":ctx.data(|d|d.get_temp::<u64>(egui::Id::new("pdf-ui-calendar-samples"))),"field_expansion_computations":ctx.data(|d|d.get_temp::<u64>(egui::Id::new("pdf-ui-field-expansion-computations"))),"field_index_computations":ctx.data(|d|d.get_temp::<u64>(egui::Id::new("pdf-ui-field-index-computations"))),"keys":self.keys,"sheets":self.app.scene.sheets.len(),"item_count":self.app.scene.sheets[0].items.len(),"add_north":ctx.data(|d|d.get_temp::<egui::Rect>(egui::Id::new("pdf-ui-add-north"))).map(|r|[r.center().x,r.center().y]),"border_menu":ctx.data(|d|d.get_temp::<egui::Rect>(egui::Id::new("pdf-ui-border-menu"))).map(|r|[r.center().x,r.center().y]),"border_controls":ctx.data(|d|d.get_temp::<(egui::Rect,egui::Rect)>(egui::Id::new("pdf-ui-border-controls"))).map(|(a,b)|[[a.center().x,a.center().y],[b.center().x,b.center().y]]),"border":self.app.scene.sheets[0].effective_source_border(),"sheet_history":self.app.composer_state.sheet_history.get(&self.app.scene.sheets[0].id).map(|(a,b)|[a.len(),b.len()]).unwrap_or([0,0]),"authored_text":self.app.scene.sheets[0].items.iter().find_map(|v|if let SheetItem::Text(t)=v{Some(&t.text)}else{None})});std::fs::write(self.dir.join("state.tmp"),value.to_string()).unwrap();std::fs::rename(self.dir.join("state.tmp"),self.dir.join("state.json")).unwrap();}
  ctx.request_repaint_after(std::time::Duration::from_millis(30));}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

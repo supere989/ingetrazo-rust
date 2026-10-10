@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Software regression reuses independent e2110fe contour geometry protocol and production World.
 use ash::vk;
 use glam::DVec3;
@@ -5,7 +7,7 @@ use ingetrazo_gui::native_vulkan::{
     budget::VulkanBudget, headless::DeviceRequest, world::World, VulkanContext,
 };
 use std::sync::Arc;
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     let input = std::path::Path::new(&args[0]);
     let output = std::path::Path::new(&args[1]);
@@ -92,4 +94,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         output.display()
     );
     Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

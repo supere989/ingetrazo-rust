@@ -1,0 +1,40 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-cad-host-target/debug/deps/ingetrazo_gui-55a891bebea850d9)
+
+running 6 tests
+test composer_cad::tests::bevel_orientation_and_invalid_contours ... ok
+test composer_cad::tests::pose_palette_and_invalid_updates_preserve_cached_geometry ... ok
+test composer_cad::tests::direct_geometry_separates_coverage_from_authored_alpha ... ok
+test composer_cad::tests::round_caps_cache_actual_origin_and_refuse_degenerate ... ok
+test composer_cad::tests::closed_curve_offsets_refuse_degenerate_and_keep_warm_cache ... ok
+test composer_cad::tests::exact_rectangle_phase_cache_and_admission_are_atomic ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 105 filtered out; finished in 0.02s
+

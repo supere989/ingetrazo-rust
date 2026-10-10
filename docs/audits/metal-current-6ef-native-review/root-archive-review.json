@@ -1,0 +1,26 @@
+[
+  {
+    "architecture": "arm",
+    "kind": "compute",
+    "sha256": "d068fd7e827a4802f956c43d06802f02894212c8d0abfe1a550197d19f406c44",
+    "zip_crc_pass": true
+  },
+  {
+    "architecture": "arm",
+    "kind": "sdk",
+    "sha256": "e4a0881680b9be6208b0802520ad20d1f2b24386cd3211e426cb962ba4cbef3f",
+    "zip_crc_pass": true
+  },
+  {
+    "architecture": "intel",
+    "kind": "compute",
+    "sha256": "2170f6c07731d5f5ef84dc1ed546b4a47baf63ca0f32612a4031722acb031c92",
+    "zip_crc_pass": true
+  },
+  {
+    "architecture": "intel",
+    "kind": "sdk",
+    "sha256": "06a6d8e9282631832525a27e79a05ef04784cfb705ad69629915aea502aaf402",
+    "zip_crc_pass": true
+  }
+]

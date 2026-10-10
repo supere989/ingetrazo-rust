@@ -1,0 +1,103 @@
+   Compiling syn v3.0.6
+   Compiling ahash v0.8.12
+   Compiling smallvec v1.16.2
+   Compiling ttf-parser v0.25.1
+   Compiling serde_derive v1.0.229
+   Compiling owned_ttf_parser v0.25.1
+   Compiling parking_lot_core v0.9.12
+   Compiling serde_json v1.0.151
+   Compiling once_cell v1.21.4
+   Compiling emath v0.30.0
+   Compiling ecolor v0.30.0
+   Compiling ab_glyph v0.2.32
+   Compiling parking_lot v0.12.5
+   Compiling thiserror-impl v2.0.21
+   Compiling serde v1.0.229
+   Compiling memchr v2.8.3
+   Compiling epaint v0.30.0
+   Compiling thiserror v2.0.21
+   Compiling glam v0.29.3
+   Compiling uuid v1.27.0
+   Compiling bytemuck_derive v1.12.1
+   Compiling bytemuck v1.25.2
+   Compiling egui v0.30.0
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-metal-compute-root/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-metal-compute-root/crates/ingetrazo-render)
+    Finished `test` profile [unoptimized] target(s) in 6.82s
+     Running unittests src/lib.rs (/tmp/ingetrazo-root-review-target/debug/deps/ingetrazo_render-f512ce7571b13033)
+
+running 62 tests
+test cad2d::ordering_admission::partition_is_contiguous_bounded_and_complete ... ok
+test cad2d::immutable_order_proof::canonical_shared_boundaries_are_safe ... ok
+test cad2d::original_span_admission::altered_metadata_is_rejected_without_rounding ... ok
+test cad2d::immutable_order_proof::rejects_same_draw_overlap_but_allows_source_ordered_barriers ... ok
+test cad2d::original_span_admission::exact_density_phase_and_original_bytes_are_immutable ... ok
+test cad2d::shader_pose_bounds::physical_f64_bounds_do_not_hide_shader_intermediate_overflow ... ok
+test cad2d::tests::immutable_geometry_identity_and_bounds_are_not_palette_keys ... ok
+test cad2d::tests::original_bytes_survive_without_linear_premultiplication_loss ... ok
+test cad2d::tests::opaque_admission ... ok
+test cad_callback::tests::frozen_owner_survives_edits_and_invalid_update_is_atomic ... ok
+test hlr::hard_coplanar_tests::hard_coplanar_division_remains_visible_while_soft_division_is_hidden ... ok
+test native_edges::tests::soft_hidden_layer_and_invalid_edges_do_not_emit_gpu_addresses ... ok
+test native_edges::tests::nested_reflection_transform_and_visibility_filter_endpoints ... ok
+test native_textures::tests::exact_twenty_byte_contract_front_prefix_and_back_uv_are_retained ... ok
+test native_textures::tests::malformed_spans_indices_and_nonfinite_uv_are_rejected ... ok
+test paper_scene::tests::borrowed_visibility_matches_applied_layers_and_nested_objects_without_mutation ... ok
+test pipeline::default_back_regression::opaque_defaults_merge_without_translucent_or_two_sided_overrides ... ok
+test paper_scene::tests::saved_section_overrides_live_active_cut_and_off_state ... ok
+test pipeline::container_paint_regression::inherited_paint_only_changes_schema_paint_keys_and_default_back ... ok
+test pipeline::native_surface_regression::prototype_shade_is_retained_but_classic_baked_geometry_shades_its_own_plane ... ok
+test pipeline::native_surface_regression::surface_upload_keeps_nested_transform_and_hidden_visibility_without_hlr ... ok
+test pipeline::native_texture_regression::opaque_front_exception_preserves_previous_glass_cull_span ... ok
+test pipeline::native_texture_regression::exact_source_opacity_and_opaque_textured_front_cull_exception_survive_preparation ... ok
+test pipeline::native_texture_regression::distinct_back_texture_preserves_local_uv_and_native_only_geometry ... ok
+test pipeline::native_surface_regression::reflected_nested_placements_preserve_painted_front_and_uv_correspondence ... ok
+test pipeline::native_texture_regression::texture_dictionary_first_occurrence_survives_interleaved_paths ... ok
+test pipeline::native_texture_regression::prototype_uv_remains_local_after_reflected_scaled_translated_placement ... ok
+test pipeline::source_placement_regression::classic_legacy_and_component_flags_do_not_imply_instancing ... ok
+test qt_cosmetic::ordering_tests::only_overlap_flushes_and_order_is_unchanged ... ok
+test pipeline::source_placement_regression::adopted_parent_classifies_whole_inline_subtree_and_transparent_child_disables_gate ... ok
+test qt_cosmetic::ordering_tests::disjoint_prefixes_cover_all_source_spans ... ok
+test qt_gray::tests::clipped_runs_use_source_byte_product_and_bound_output ... ok
+test qt_gray::tests::malformed_and_excessive_edges_refuse ... ok
+test qt_cosmetic::tests::thin_line_coalesces_and_refuses_work ... ok
+test qt_gray::tests::subpixel_rectangle_coalesces_and_admission_rejects ... ok
+test qt_gray::tests::cubic_path_admission_and_finite_controls ... ok
+test section_clip::tests::crossing_triangle_interpolates_uv_and_keeps_plane_boundary ... ok
+test section_clip::tests::contours_survive_styles_and_fill_toggle_without_mutating_geometry ... ok
+test snap_glyph::center_color_tests::center_glyph_retains_source_inference_color ... ok
+test tests::test_buffer_creation_and_append ... ok
+test section_clip::tests::scene_cut_is_display_only_transforms_nested_geometry_and_respects_toggle ... ok
+test tests::test_edge_classification_and_hlr ... ok
+test tests::test_snap_marker_glyphs ... ok
+test tests::test_visual_styles_presets ... ok
+test texture_layout::tests::bc_blocks_round_up_including_small_mip_tail ... ok
+test tests::test_selection_buffers ... ok
+test texture_layout::tests::rejects_empty_extra_levels_and_overflow_without_allocating ... ok
+test texture_layout::tests::source_rgba_non_power_of_two_chain_has_exact_offsets ... ok
+test triangle_index::tests::near_degenerate_triangle_is_never_culled ... ok
+test vector_hlr::tests::actual_triangle_occlusion_splits_rear_line_and_preserves_coplanar_front ... ok
+test vector_hlr::tests::triangle_cut_runs_merge_but_depth_and_line_class_remain_distinct ... ok
+test vector_hlr::tests::projected_hidden_ink_deduplicates_depth_and_subtracts_solid_overlap ... ok
+test vector_hlr::tests::face_hole_does_not_occlude_line_through_void ... ok
+test section_clip::raster_tests::triangle_crossing_near_plane_retains_visible_pixels ... ok
+test vector_hlr::tests::section_cap_occludes_internal_lines_and_cut_chords_remain_visible ... ok
+test triangle_index::tests::sparse_candidates_keep_source_order_and_barycentric_margin ... ok
+test vector_hlr::tests::paper_section_hollow_rings_follow_even_odd_without_reversed_winding ... ok
+test cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs ... ok
+test triangle_index::tests::indexed_occlusion_is_bit_exact_against_exhaustive_translated_scales ... ok
+test section_clip::tests::original_stencil_closed_partition_transparent_and_duplicate_controls ... ok
+test vector_hlr::tests::indexed_merge_preserves_source_order_and_exact_endpoints ... ok
+test vector_hlr::tests::cached_hidden_projections_preserve_growing_result_order_bit_exactly ... ok
+
+test result: ok. 62 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+
