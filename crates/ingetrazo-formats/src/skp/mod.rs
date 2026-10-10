@@ -390,13 +390,14 @@ fn collect(
         }
         let mut loops = Vec::new();
         for lp in &face.loops {
-            let mut vertices = ring(d, lp)?
+            let mut points = ring(d, lp)?;
+            if flip {
+                points.reverse();
+            }
+            let vertices = points
                 .into_iter()
                 .map(|v| weld.vertex(mesh, point(v, x)))
                 .collect::<Vec<_>>();
-            if flip {
-                vertices.reverse();
-            }
             if vertices.iter().copied().collect::<HashSet<_>>().len() < 3 {
                 return Err(SkpError::Invalid("Degenerate welded face".into()));
             }
