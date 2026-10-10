@@ -768,7 +768,7 @@ impl EguiPainter {
                 })
                 || !valid_clip(primitive.clip_rect)
             {
-                return Err(format!("Invalid egui mesh geometry/clip: vertices={} indices={} valid_indices={} clip={:?} first_invalid_vertex={:?}", mesh.vertices.len(), mesh.indices.len(), mesh.is_valid(), primitive.clip_rect, mesh.vertices.iter().position(|v| !v.pos.is_finite() || !v.uv.is_finite() || v.pos.x.abs() > 1e6 || v.pos.y.abs() > 1e6)));
+                return Err(format!("Invalid egui mesh geometry/clip: vertices={} indices={} valid_indices={} clip={:?} first_invalid_vertex={:?}", mesh.vertices.len(), mesh.indices.len(), mesh.is_valid(), primitive.clip_rect, mesh.vertices.iter().enumerate().find(|(_,v)| !v.pos.is_finite() || !v.uv.is_finite() || v.pos.x.abs() > 1e6 || v.pos.y.abs() > 1e6).map(|(index,v)|(index,v.pos,v.uv,!v.pos.is_finite(),!v.uv.is_finite(),v.pos.x.abs()>1e6||v.pos.y.abs()>1e6))));
             }
             let base = count;
             count = count
