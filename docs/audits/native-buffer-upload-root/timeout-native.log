@@ -1,0 +1,3 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+GPU diagnostic fence exceeded 5000000000ns; exiting without freeing potentially pending resources
