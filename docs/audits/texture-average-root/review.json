@@ -1,0 +1,13 @@
+{
+  "source": "efa428e7",
+  "fresh_qt_cases": 200,
+  "failures": 0,
+  "build": "Standalone rustc compiles actual production module; temporary binary purged. No full workspace rebuild.",
+  "review": "Sixteen output pixels only; decoded input byte length checked; corpus includes4x4andmixedscaleaxis dimensions. Production caller must bound decoded input and cold CPUwork.",
+  "not_proven": [
+    "Large real image mismatch stillunderagentinvestigation",
+    "ARM reciprocal/scaling source equivalence",
+    "Nativecache/drawrouting integration",
+    "Fullrenderedparity"
+  ]
+}
