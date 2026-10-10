@@ -1,0 +1,60 @@
+{
+  "provenance": {
+    "rust_commit": "6532a0e64b750c640a09443924f94d8799a963e8",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "mother",
+      "remaining_faces": 2,
+      "removed_original_faces": 1,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "island",
+      "remaining_faces": 2,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "clean",
+      "remaining_faces": 2,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "nested",
+      "remaining_faces": 2,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "ring",
+      "remaining_faces": 2,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "partial",
+      "remaining_faces": 2,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "3d",
+      "remaining_faces": 3,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    },
+    {
+      "case": "flipped",
+      "remaining_faces": 2,
+      "removed_original_faces": 0,
+      "original_rings_holes_winding_equal": true
+    }
+  ],
+  "scope": "Original mother coverage, island partial-off, clean subdivision, nested hole cleanup, legitimate ring, flat overlap punching, nonflat gate and reversed winding; exact face rings/holes/orientation plus surviving metadata. General complex arrangement healing remains open."
+}

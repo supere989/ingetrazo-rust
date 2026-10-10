@@ -42,6 +42,8 @@ jobs:
         run: python scripts/check-python-followme.py
       - name: Original Python shared component definition acceptance
         run: python scripts/check-python-components.py
+      - name: Original runtime planar healing
+        run: python scripts/check-python-heal.py
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
