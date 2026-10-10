@@ -1,0 +1,267 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "face_live": true,
+      "vertex_live": true,
+      "loop_original": true,
+      "position_original": true,
+      "attrs_original": true,
+      "shared_value": [],
+      "shared_identity": true,
+      "held_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "edited",
+      "positions": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          2,
+          1,
+          0
+        ]
+      ],
+      "face_live": true,
+      "vertex_live": true,
+      "loop_original": true,
+      "position_original": true,
+      "attrs_original": true,
+      "shared_value": [
+        "live"
+      ],
+      "shared_identity": true,
+      "held_position": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "face_live": true,
+      "vertex_live": true,
+      "loop_original": false,
+      "position_original": false,
+      "attrs_original": false,
+      "shared_value": [
+        "live"
+      ],
+      "shared_identity": true,
+      "held_position": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "redone",
+      "positions": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          2,
+          1,
+          0
+        ]
+      ],
+      "face_live": true,
+      "vertex_live": true,
+      "loop_original": false,
+      "position_original": false,
+      "attrs_original": false,
+      "shared_value": [
+        "live"
+      ],
+      "shared_identity": true,
+      "held_position": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "undone-again",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "face_live": true,
+      "vertex_live": true,
+      "loop_original": false,
+      "position_original": false,
+      "attrs_original": false,
+      "shared_value": [
+        "live"
+      ],
+      "shared_identity": true,
+      "held_position": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "redone-again",
+      "positions": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          2,
+          1,
+          0
+        ]
+      ],
+      "face_live": true,
+      "vertex_live": true,
+      "loop_original": false,
+      "position_original": false,
+      "attrs_original": false,
+      "shared_value": [
+        "live"
+      ],
+      "shared_identity": true,
+      "held_position": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "undo": 2,
+      "redo": 0
+    }
+  ],
+  "old_key_returns_moved_identity": true,
+  "new_key_creates_distinct_coincident_vertex": true,
+  "source_registry_rebuilt_on_vector_mutation": false,
+  "execution_refusal_retains_redo": true,
+  "no_op_retains_redo": true,
+  "chronological_append_field_history": true,
+  "branch_truncation_retains_new_command": true
+}

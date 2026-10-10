@@ -5,7 +5,7 @@ use crate::{
     session,
 };
 use rustpython_vm::{
-    Interpreter, InterpreterBuilder, PyRef, compiler::Mode, pymodule, scope::Scope,
+    compiler::Mode, pymodule, scope::Scope, Interpreter, InterpreterBuilder, PyRef,
 };
 use std::{cell::RefCell, collections::HashMap};
 // Drop removed arbitrary VM references only after releasing the membership lock.
@@ -128,12 +128,12 @@ pub mod editable_mesh {
     use super::*;
     use crate::vm_groups::native_groups::QVector3D;
     use rustpython_vm::{
-        AsObject, Py, PyObjectRef, PyPayload, PyResult, Traverse, VirtualMachine,
         builtins::{PyListRef, PyType},
         common::lock::PyRwLock,
         function::{OptionalArg, PosArgs},
         pyclass,
         types::Constructor,
+        AsObject, Py, PyObjectRef, PyPayload, PyResult, Traverse, VirtualMachine,
     };
     #[pyattr]
     #[pyclass(name = "Vertex", traverse)]
@@ -607,7 +607,8 @@ struct RootRestore<'a> {
     faces: Vec<rustpython_vm::PyObjectRef>,
     positions: Vec<VertexRestore>,
     face_fields: Vec<FaceRestore>,
-    _charge: Lease,
+    _charge: Option<Lease>,
+    native_state: uuid::Uuid,
     armed: bool,
 }
 impl<'a> RootRestore<'a> {
@@ -616,7 +617,7 @@ impl<'a> RootRestore<'a> {
         budget: &OwnerBudget,
         vm: &'a rustpython_vm::VirtualMachine,
     ) -> Result<Self, String> {
-        use rustpython_vm::{PyPayload, builtins::PyDict};
+        use rustpython_vm::{builtins::PyDict, PyPayload};
         fn copy(
             list: &rustpython_vm::builtins::PyListRef,
         ) -> Result<Vec<rustpython_vm::PyObjectRef>, String> {
@@ -743,6 +744,7 @@ impl<'a> RootRestore<'a> {
                 attrs,
             });
         }
+        let native_state = mesh.owner.read().state_token();
         Ok(Self {
             vm,
             mesh,
@@ -750,7 +752,8 @@ impl<'a> RootRestore<'a> {
             faces,
             positions,
             face_fields,
-            _charge: charge,
+            _charge: Some(charge),
+            native_state,
             armed: true,
         })
     }
@@ -840,7 +843,260 @@ impl Drop for RootRestore<'_> {
     }
 }
 
+struct RootSnapshot {
+    mesh: PyRef<editable_mesh::Mesh>,
+    vertices: Vec<rustpython_vm::PyObjectRef>,
+    faces: Vec<rustpython_vm::PyObjectRef>,
+    positions: Vec<VertexRestore>,
+    fields: Vec<FaceRestore>,
+    native_state: uuid::Uuid,
+    _charge: Lease,
+}
+struct HistoryCommand {
+    before: RootSnapshot,
+    after: RootSnapshot,
+    append: bool,
+}
+struct HistoryCapacity {
+    values: Vec<HistoryCommand>,
+    charge: Lease,
+}
+impl HistoryCapacity {
+    fn prepare(values: &Vec<HistoryCommand>, budget: &OwnerBudget) -> Result<Option<Self>, String> {
+        let needed = values
+            .len()
+            .checked_add(1)
+            .ok_or("History extent overflow")?;
+        if needed <= values.capacity() {
+            return Ok(None);
+        }
+        let capacity = values
+            .capacity()
+            .checked_mul(2)
+            .ok_or("History capacity overflow")?
+            .max(4)
+            .max(needed);
+        let mut charge = budget.reserve(
+            Kind::Preparation,
+            capacity
+                .checked_mul(std::mem::size_of::<HistoryCommand>())
+                .ok_or("History slot byte overflow")?,
+        )?;
+        let mut prepared = Vec::new();
+        prepared
+            .try_reserve_exact(capacity)
+            .map_err(|_| "History slot preparation refused")?;
+        charge.resize(
+            prepared
+                .capacity()
+                .checked_mul(std::mem::size_of::<HistoryCommand>())
+                .ok_or("History slot capacity overflow")?,
+        )?;
+        Ok(Some(Self {
+            values: prepared,
+            charge,
+        }))
+    }
+    fn apply(mut self, values: &mut Vec<HistoryCommand>, charge: &mut Lease) {
+        let mut old = std::mem::replace(values, self.values);
+        values.append(&mut old);
+        drop(old);
+        self.charge
+            .reclassify(Kind::History)
+            .expect("Admitted same-ledger slot transfer");
+        *charge = self.charge;
+    }
+}
+impl RootSnapshot {
+    fn thaw<'a>(
+        &self,
+        vm: &'a rustpython_vm::VirtualMachine,
+        budget: &OwnerBudget,
+    ) -> Result<RootRestore<'a>, String> {
+        use rustpython_vm::{builtins::PyDict, PyPayload};
+        let charge = budget.reserve(Kind::Preparation, self._charge.bytes())?;
+        let mut vertices = Vec::new();
+        vertices
+            .try_reserve_exact(self.vertices.len())
+            .map_err(|_| "History vertex references refused")?;
+        vertices.extend(self.vertices.iter().cloned());
+        let mut faces = Vec::new();
+        faces
+            .try_reserve_exact(self.faces.len())
+            .map_err(|_| "History face references refused")?;
+        faces.extend(self.faces.iter().cloned());
+        let mut positions = Vec::new();
+        positions
+            .try_reserve_exact(self.positions.len())
+            .map_err(|_| "History positions refused")?;
+        for p in &self.positions {
+            positions.push(VertexRestore {
+                vertex: p.vertex.clone(),
+                position: crate::vm_groups::native_groups::QVector3D::from_coordinates(
+                    p.position.coordinates(),
+                )
+                .into_ref(&vm.ctx),
+            });
+        }
+        let copy=|list:&rustpython_vm::builtins::PyListRef|->Result<rustpython_vm::builtins::PyListRef,String>{let list=list.borrow_vec();let mut values=Vec::new();values.try_reserve_exact(list.len()).map_err(|_|"History loop references refused")?;values.extend(list.iter().cloned());Ok(vm.ctx.new_list(values))};
+        let mut fields = Vec::new();
+        fields
+            .try_reserve_exact(self.fields.len())
+            .map_err(|_| "History face fields refused")?;
+        for f in &self.fields {
+            let outer = copy(&f.outer)?;
+            let holes = f.holes.borrow_vec();
+            let mut rings = Vec::new();
+            rings
+                .try_reserve_exact(holes.len())
+                .map_err(|_| "History holes refused")?;
+            for h in holes.iter() {
+                let h = h
+                    .clone()
+                    .downcast::<rustpython_vm::builtins::PyList>()
+                    .map_err(|_| "History hole requires list")?;
+                rings.push(copy(&h)?.into());
+            }
+            let attrs = f
+                .attrs
+                .clone()
+                .downcast::<PyDict>()
+                .map_err(|_| "History attrs require dict")?
+                .copy()
+                .into_ref(&vm.ctx)
+                .into();
+            fields.push(FaceRestore {
+                face: f.face.clone(),
+                outer,
+                holes: vm.ctx.new_list(rings),
+                attrs,
+            });
+        }
+        Ok(RootRestore {
+            vm,
+            mesh: self.mesh.clone(),
+            vertices,
+            faces,
+            positions,
+            face_fields: fields,
+            _charge: Some(charge),
+            native_state: self.native_state,
+            armed: false,
+        })
+    }
+    fn geometry(&self, budget: &OwnerBudget) -> Result<Projection, String> {
+        use rustpython_vm::AsObject;
+        let charge = budget.reserve(Kind::Preparation, self._charge.bytes())?;
+        let mut ids = HashMap::new();
+        ids.try_reserve(self.vertices.len())
+            .map_err(|_| "History identity map refused")?;
+        for (i, v) in self.vertices.iter().enumerate() {
+            if ids.insert(v.get_id(), i).is_some() {
+                return Err("History repeated membership unsupported".into());
+            }
+        }
+        let mut positions = Vec::new();
+        positions
+            .try_reserve_exact(self.positions.len())
+            .map_err(|_| "History projection positions refused")?;
+        for p in &self.positions {
+            let p = p.position.coordinates();
+            positions.push(glam::DVec3::new(p[0] as f64, p[1] as f64, p[2] as f64));
+        }
+        let copy = |ring: &rustpython_vm::builtins::PyListRef| -> Result<Vec<usize>, String> {
+            let ring = ring.borrow_vec();
+            let mut ids_out = Vec::new();
+            ids_out
+                .try_reserve_exact(ring.len())
+                .map_err(|_| "History projection loop refused")?;
+            for v in ring.iter() {
+                ids_out.push(
+                    *ids.get(&v.get_id())
+                        .ok_or("History Vertex identity outside membership")?,
+                );
+            }
+            Ok(ids_out)
+        };
+        let mut loops = Vec::new();
+        loops
+            .try_reserve_exact(self.fields.len())
+            .map_err(|_| "History projection faces refused")?;
+        for f in &self.fields {
+            let outer = copy(&f.outer)?;
+            let holes = f.holes.borrow_vec();
+            let mut rings = Vec::new();
+            rings
+                .try_reserve_exact(holes.len())
+                .map_err(|_| "History projection holes refused")?;
+            for h in holes.iter() {
+                rings.push(copy(
+                    &h.clone()
+                        .downcast::<rustpython_vm::builtins::PyList>()
+                        .map_err(|_| "History hole requires list")?,
+                )?);
+            }
+            loops.push((outer, rings));
+        }
+        Ok(Projection {
+            positions,
+            loops,
+            _charge: charge,
+        })
+    }
+}
+impl RootRestore<'_> {
+    fn freeze(mut self) -> RootSnapshot {
+        self.armed = false;
+        let mut charge = self._charge.take().expect("Exclusive history lease");
+        charge
+            .reclassify(Kind::History)
+            .expect("Same ledger history lease");
+        RootSnapshot {
+            mesh: self.mesh.clone(),
+            vertices: std::mem::take(&mut self.vertices),
+            faces: std::mem::take(&mut self.faces),
+            positions: std::mem::take(&mut self.positions),
+            fields: std::mem::take(&mut self.face_fields),
+            native_state: self.native_state,
+            _charge: charge,
+        }
+    }
+    fn equivalent(&self, other: &Self) -> rustpython_vm::PyResult<bool> {
+        use rustpython_vm::AsObject;
+        if self.vertices.len() != other.vertices.len()
+            || self.faces.len() != other.faces.len()
+            || self
+                .vertices
+                .iter()
+                .zip(&other.vertices)
+                .any(|(a, b)| !a.is(b))
+            || self.faces.iter().zip(&other.faces).any(|(a, b)| !a.is(b))
+        {
+            return Ok(false);
+        }
+        for (a, b) in self.positions.iter().zip(&other.positions) {
+            if a.position.coordinates() != b.position.coordinates() {
+                return Ok(false);
+            }
+        }
+        for (a, b) in self.face_fields.iter().zip(&other.face_fields) {
+            if !self.vm.bool_eq(a.outer.as_object(), b.outer.as_object())?
+                || !self.vm.bool_eq(a.holes.as_object(), b.holes.as_object())?
+                || !self.vm.bool_eq(a.attrs.as_object(), b.attrs.as_object())?
+            {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+}
+
 pub struct Controller {
+    history_enabled: bool,
+    undo: Vec<HistoryCommand>,
+    redo: Vec<HistoryCommand>,
+    undo_slots: Lease,
+    redo_slots: Lease,
     interpreter: Interpreter,
     scope: Scope,
     budget: OwnerBudget,
@@ -859,10 +1115,16 @@ impl Controller {
             .add_native_module(meshes)
             .interpreter();
         let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Face",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
+        let budget = OwnerBudget::new(None);
         let mut controller = Self {
+            undo_slots: budget.reserve(Kind::History, 0).unwrap(),
+            redo_slots: budget.reserve(Kind::History, 0).unwrap(),
+            history_enabled: false,
+            undo: Vec::new(),
+            redo: Vec::new(),
             interpreter,
             scope,
-            budget: OwnerBudget::new(None),
+            budget,
             tainted: false,
             pressure_after: None,
             last_prepared: 0,
@@ -917,7 +1179,7 @@ impl Controller {
             let _guard = Guard(vm);
             vm.host_budget_arm(100000)
                 .map_err(|_| "VM fuel admission refused")?;
-            let baseline = match self.scope.globals.get_item("mesh", vm) {
+            let mut baseline = match self.scope.globals.get_item("mesh", vm) {
                 Ok(value) => Some(RootRestore::prepare(
                     value
                         .downcast::<editable_mesh::Mesh>()
@@ -932,6 +1194,10 @@ impl Controller {
                 panic!("Engineering unwind after VM mutation");
             }
             let mut stage = STAGED.with(|s| s.borrow_mut().take().unwrap());
+            let mut history_after=None;
+            let mut history_capacity=None;
+            let mut history_changed=false;
+            let mut history_append=false;
             let result = if let Err(error) = executed {
                 vm.print_exception(&error);
                 vm.host_budget_abort();
@@ -952,6 +1218,19 @@ impl Controller {
                     if let Some(before)=&baseline {
                         let changed=before.validate_live(!entries.is_empty())?;
                         if changed&&!entries.is_empty(){return Err("Combined raw existing-field edit and append publication not yet supported".into());}
+                    }
+                    if self.history_enabled {
+                        let before=baseline.as_ref().ok_or("History requires existing root Mesh")?;
+                        if entries.iter().any(|e| !rustpython_vm::AsObject::is(&e.mesh,&before.mesh)) {return Err("Command history currently requires root-only managed publication".into());}
+                        let mut after=RootRestore::prepare(before.mesh.clone(),&self.budget,vm)?;
+                        after.armed=false;
+                        history_changed=!before.equivalent(&after).map_err(|_|"History state equality refused")?;
+                        if after.validate_live(false)?{return Err("History equality changed geometry after snapshot preparation".into());}
+                        if history_changed {
+                            history_capacity=HistoryCapacity::prepare(&self.undo,&self.budget)?;
+                            history_append=!entries.is_empty();
+                            history_after=Some(after.freeze());
+                        }
                     }
                     if entries.is_empty() {
                         if let Ok(value) = self.scope.globals.get_item("mesh", vm) {
@@ -1010,13 +1289,18 @@ impl Controller {
                 }
                 publish
             };
-            if let Some(baseline) = baseline {
-                if result.is_err() {
-                    baseline.restore();
-                } else {
-                    baseline.dismiss();
-                }
+            if let Some(before)=baseline.take() {
+                if result.is_err(){before.restore();}
+                else if self.history_enabled&&history_changed {
+                    let mut after=history_after.take().expect("Prepared after snapshot");
+                    after.native_state=after.mesh.owner.read().state_token();
+                    if let Some(capacity)=history_capacity.take(){capacity.apply(&mut self.undo,&mut self.undo_slots);}
+                    vm.host_budget_abort();
+                    self.redo.clear();
+                    self.undo.push(HistoryCommand{before:before.freeze(),after,append:history_append});
+                } else {before.dismiss();}
             }
+            let result=if result.is_ok()&&self.history_enabled{Ok(history_changed)}else{result};
             vm.host_budget_reset_after_discard();
             result
         });
@@ -1026,6 +1310,89 @@ impl Controller {
         self.tainted = false;
         result
     }
+    pub fn enable_history(&mut self) {
+        assert!(self.undo.is_empty() && self.redo.is_empty());
+        self.history_enabled = true;
+    }
+    pub fn history_counts(&self) -> (usize, usize) {
+        (self.undo.len(), self.redo.len())
+    }
+    pub fn undo(&mut self) -> Result<bool, String> {
+        self.restore_command(false)
+    }
+    pub fn redo(&mut self) -> Result<bool, String> {
+        self.restore_command(true)
+    }
+    fn restore_command(&mut self, redo: bool) -> Result<bool, String> {
+        if self.tainted || STAGED.with(|s| s.borrow().is_some()) {
+            return Err("History admission refused".into());
+        }
+        if !self.history_enabled {
+            return Err("Controller history disabled".into());
+        }
+        if (redo && self.redo.is_empty()) || (!redo && self.undo.is_empty()) {
+            return Ok(false);
+        }
+        let capacity =
+            HistoryCapacity::prepare(if redo { &self.undo } else { &self.redo }, &self.budget)?;
+        let command = if redo {
+            self.redo.last()
+        } else {
+            self.undo.last()
+        };
+        let Some(command) = command else {
+            return Ok(false);
+        };
+        let target = if redo {
+            &command.after
+        } else {
+            &command.before
+        };
+        let result = self.interpreter.enter(|vm| {
+            let restore = target.thaw(vm, &self.budget)?;
+            let projection = if command.append {
+                None
+            } else {
+                Some(target.geometry(&self.budget)?)
+            };
+            if let Some(p) = projection {
+                target
+                    .mesh
+                    .owner
+                    .write()
+                    .prepare_fields_as(p.positions, p.loops, target.native_state)?
+                    .apply();
+            } else {
+                let changed = if redo {
+                    target.mesh.owner.write().redo()?
+                } else {
+                    target.mesh.owner.write().undo()?
+                };
+                if !changed {
+                    return Err("Native append history missing".into());
+                }
+            }
+            restore.restore();
+            vm.host_budget_reset_after_discard();
+            Ok::<_, String>(true)
+        });
+        if result.is_ok() {
+            if redo {
+                if let Some(capacity) = capacity {
+                    capacity.apply(&mut self.undo, &mut self.undo_slots);
+                }
+                let c = self.redo.pop().unwrap();
+                self.undo.push(c);
+            } else {
+                if let Some(capacity) = capacity {
+                    capacity.apply(&mut self.redo, &mut self.redo_slots);
+                }
+                let c = self.undo.pop().unwrap();
+                self.redo.push(c);
+            }
+        }
+        result
+    }
     pub fn assert_script(&mut self, code: &str) {
         if let Err(e) = self.execute(code) {
             panic!("{e}")
@@ -1033,6 +1400,13 @@ impl Controller {
     }
     pub fn observe(&self, name: &str) -> serde_json::Value {
         self.interpreter.enter(|vm|{use rustpython_vm::AsObject;let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();let m=owner.mesh();let held=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let old_loop=self.scope.globals.get_item("loop",vm).unwrap();let attrs=self.scope.globals.get_item("heldattrs",vm).unwrap();let position=self.scope.globals.get_item("heldposition",vm).unwrap();let live=mesh.faces.borrow_vec();let first=held.r#loop.read().borrow_vec()[0].clone().downcast::<editable_mesh::Vertex>().unwrap();serde_json::json!({"name":name,"mesh":{"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":m.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"faces":m.faces.iter().map(|f|serde_json::json!({"vertices":f.vertices,"holes":f.holes})).collect::<Vec<_>>()},"persistent_faces":mesh.faces.is(&self.scope.globals.get_item("faces",vm).unwrap()),"persistent_vertices":mesh.vertices.is(&self.scope.globals.get_item("vertices",vm).unwrap()),"held_face_live":live.iter().any(|v|v.is(&held)),"face_loop_preserved":held.r#loop.read().is(&old_loop),"attrs_dict_preserved":held.attrs.read().is(&attrs),"vertex_position_preserved":first.position.read().is(&position)})})
+    }
+    pub fn observe_history(&self, name: &str) -> serde_json::Value {
+        self.interpreter.enter(|vm|{
+       use rustpython_vm::AsObject;
+       let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let f=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let v=self.scope.globals.get_item("v",vm).unwrap().downcast::<editable_mesh::Vertex>().unwrap();let oldloop=self.scope.globals.get_item("oldloop",vm).unwrap();let oldattrs=self.scope.globals.get_item("oldattrs",vm).unwrap();let oldposition=self.scope.globals.get_item("oldposition",vm).unwrap().downcast::<crate::vm_groups::native_groups::QVector3D>().unwrap();let shared=self.scope.globals.get_item("shared",vm).unwrap();let attrs=f.attrs.read().clone().downcast::<rustpython_vm::builtins::PyDict>().unwrap();let value=attrs.get_item("shared",vm).unwrap();let strings=value.downcast_ref::<rustpython_vm::builtins::PyList>().unwrap().borrow_vec().iter().map(|x|x.downcast_ref::<rustpython_vm::builtins::PyStr>().unwrap().as_utf8().unwrap().as_str().to_owned()).collect::<Vec<_>>();let owner=mesh.owner.read();let native=owner.mesh();let faces=mesh.faces.borrow_vec();let vertices=mesh.vertices.borrow_vec();
+       serde_json::json!({"name":name,"positions":native.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"faces":native.faces.iter().map(|f|f.vertices.clone()).collect::<Vec<_>>(),"face_live":faces.iter().any(|x|x.is(&f)),"vertex_live":vertices.iter().any(|x|x.is(&v)),"loop_original":f.r#loop.read().is(&oldloop),"position_original":v.position.read().is(&oldposition),"attrs_original":f.attrs.read().is(&oldattrs),"shared_value":strings,"shared_identity":value.is(&shared),"held_position":oldposition.coordinates(),"undo":self.undo.len(),"redo":self.redo.len()})
+      })
     }
     pub fn native_counts(&self, name: &str) -> (usize, usize, usize) {
         self.interpreter.enter(|vm| {
@@ -1057,6 +1431,10 @@ impl Drop for Controller {
     fn drop(&mut self) {
         self.interpreter.enter(|vm| {
             vm.host_budget_abort();
+            self.undo = Vec::new();
+            self.redo = Vec::new();
+            self.undo_slots.resize(0).expect("History slot release");
+            self.redo_slots.resize(0).expect("History slot release");
             self.scope.globals.clear();
             vm.state.gc.collect_force(2);
         });

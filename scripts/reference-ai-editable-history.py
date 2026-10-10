@@ -5,8 +5,9 @@ from core.scene import Scene
 from core.history import History
 from PySide6.QtGui import QVector3D
 s=Scene();h=History(s);scope={};vp=types.SimpleNamespace(scene=s,history=h,notify_scene_changed=lambda:None)
-def run(code):
- r=run_transactional(vp,code,scope);assert not r.get('error'),r
+def run(code,error=False):
+ r=run_transactional(vp,code,scope);assert bool(r.get('error')) is error,r
+ return r
 states=[]
 def record(name):
  m=scope['m'];f=scope['held'];v=scope['v'];ids={id(x):i for i,x in enumerate(m.vertices)}
@@ -19,5 +20,9 @@ assert h.undo();record('undone')
 assert h.redo();record('redone')
 assert h.undo();record('undone-again')
 assert h.redo();record('redone-again')
+assert h.undo();counts=(len(h.undo_stack),len(h.redo_stack));run("v.position.setZ(7)\nraise ValueError('restore history')",True);assert (len(h.undo_stack),len(h.redo_stack))==counts
+assert run("noop=42")['changed'] is False;assert (len(h.undo_stack),len(h.redo_stack))==counts;assert h.redo()
+assert h.undo();assert h.undo();assert len(s.mesh.faces)==0;assert h.redo();assert h.redo()
 old=s.mesh.vertex(QVector3D(0,0,0));new=s.mesh.vertex(QVector3D(2,0,0))
-print(json.dumps({'states':states,'old_key_returns_moved_identity':old is scope['v'],'new_key_creates_distinct_coincident_vertex':new is not scope['v'],'source_registry_rebuilt_on_vector_mutation':False},indent=2))
+assert h.undo();run("v.position.setY(5)");assert (len(h.undo_stack),len(h.redo_stack))==(2,0);assert h.redo() is False;assert h.undo();assert len(s.mesh.faces)==1;assert h.redo()
+print(json.dumps({'states':states,'old_key_returns_moved_identity':old is scope['v'],'new_key_creates_distinct_coincident_vertex':new is not scope['v'],'source_registry_rebuilt_on_vector_mutation':False,'execution_refusal_retains_redo':True,'no_op_retains_redo':True,'chronological_append_field_history':True,'branch_truncation_retains_new_command':True},indent=2))

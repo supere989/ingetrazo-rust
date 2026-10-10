@@ -1,0 +1,1 @@
+{"source_states_matched": 6, "negative_controls": ["position", "face_order", "position_identity", "loop_identity", "attrs_identity", "shared_alias", "shared_value", "redo", "charge", "quota", "branch", "empty_quota", "full_claim", "production"], "literal_old_missing_history_rejected": true, "full_scripting_acceptance": false, "production_enabled": false}

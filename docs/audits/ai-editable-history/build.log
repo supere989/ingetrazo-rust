@@ -1,0 +1,4 @@
+     Running `/tmp/ingetrazo-ai-registry-target/debug/vm_editable_history`
+Traceback (most recent call last):
+  File "<ai>", line 2, in <module>
+ValueError: restore history
