@@ -423,11 +423,16 @@ fn material_colors<'a, 'i>(
                     .attribute("symbol")
                     .ok_or_else(|| invalid("missing material symbol"))?;
                 let fallback = image::load_from_memory(&bytes).ok().map(|decoded| {
-                    let decoded = decoded.to_rgb8();
+                    let decoded = decoded.to_rgba8();
                     let mut sums = [0_u64; 3];
-                    for pixel in decoded.pixels() { for i in 0..3 { sums[i] += u64::from(pixel[i]); } }
-                    let count = u64::from(decoded.width()) * u64::from(decoded.height());
-                    sums.map(|sum| ((sum + count / 2) / count.max(1)) as f64 / 255.)
+                    let mut alpha = 0_u64;
+                    for pixel in decoded.pixels() {
+                        alpha += u64::from(pixel[3]);
+                        for i in 0..3 { sums[i] += u64::from(pixel[i]) * u64::from(pixel[3]); }
+                    }
+                    // Smooth image reduction averages premultiplied colors:
+                    // transparent RGB must not tint the material fallback.
+                    sums.map(|sum| ((sum + alpha / 2) / alpha.max(1)) as f64 / 255.)
                 });
                 assets.insert(key.clone(), bytes);
                 colors.insert(
