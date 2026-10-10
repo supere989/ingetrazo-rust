@@ -14,10 +14,11 @@ APPIMAGE="$DIST/IngeTrazo-$VERSION-$ARCH.AppImage"
 
 echo "==> Building IngeTrazo $VERSION (Rust Native)..."
 cd "$ROOT"
-cargo build --release -p ingetrazo-cli
+cargo build --locked --release -p ingetrazo-cli -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker
 
 BIN="$ROOT/target/release/ingetrazo"
-if [[ ! -f "$BIN" ]]; then
+WORKER_BIN="$ROOT/target/release/ingetrazo-render-worker"
+if [[ ! -f "$BIN" || ! -f "$WORKER_BIN" ]]; then
     echo "Error: Binary not found at $BIN"
     exit 1
 fi
@@ -29,6 +30,7 @@ echo "==> Packaging portable tarball..."
 TARDIR="$BUILD/IngeTrazo-$VERSION"
 mkdir -p "$TARDIR"
 cp "$BIN" "$TARDIR/ingetrazo"
+cp "$WORKER_BIN" "$TARDIR/ingetrazo-render-worker"
 cp "$ROOT/ingetrazo/resources/icons/ingetrazo_256.png" "$TARDIR/ingetrazo.png"
 cp "$ROOT/ingetrazo/packaging/ingetrazo.desktop" "$TARDIR/ingetrazo.desktop"
 
@@ -44,7 +46,7 @@ Run:
 
 Install to user applications:
   mkdir -p ~/.local/bin ~/.local/share/applications ~/.local/share/icons/hicolor/256x256/apps
-  cp ingetrazo ~/.local/bin/
+  cp ingetrazo ingetrazo-render-worker ~/.local/bin/
   cp ingetrazo.png ~/.local/share/icons/hicolor/256x256/apps/ingetrazo.png
   cp ingetrazo.desktop ~/.local/share/applications/
 EOF
@@ -58,6 +60,7 @@ mkdir -p "$APPDIR/usr/bin" \
          "$APPDIR/usr/share/icons/hicolor/256x256/apps"
 
 cp "$BIN" "$APPDIR/usr/bin/ingetrazo"
+cp "$WORKER_BIN" "$APPDIR/usr/bin/ingetrazo-render-worker"
 cp "$ROOT/ingetrazo/resources/icons/ingetrazo_256.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/ingetrazo.png"
 cp "$ROOT/ingetrazo/resources/icons/ingetrazo_256.png" "$APPDIR/ingetrazo.png"
 

@@ -15,7 +15,11 @@ fn main() {
         worker_main(std::path::Path::new(&args[2])).unwrap();
         return;
     }
-    let executable = std::env::current_exe().unwrap();
+    let self_executable = std::env::current_exe().unwrap();
+    let executable = args
+        .get(1)
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| self_executable.clone());
     let mut pool = HlrProcessPool::new(&executable, 2, 3, 4096).unwrap();
     let edges = vec![(DVec3::new(-2., 0., 2.), DVec3::new(2., 0., 2.)); 13];
     let triangles = vec![[
@@ -71,7 +75,7 @@ fn main() {
         std::env::set_var("INGETRAZO_TEST_HLR_STALL", mode);
         let started = std::time::Instant::now();
         let result = HlrProcessPool::new_with_timeout(
-            &executable,
+            &self_executable,
             1,
             3,
             4096,
