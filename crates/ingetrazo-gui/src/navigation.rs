@@ -219,7 +219,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,_resp
     if *pressed{if rect.contains(*pos){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64);app.navigation.press=Some((p,DVec3::ZERO));app.navigation.last=Some(p);app.navigation.walk_modifiers=*modifiers;app.navigation.next_tick=None;}}
     else{app.navigation.cancel();}
    },
-   egui::Event::PointerMoved(pos) if app.navigation.press.is_some()=>{app.navigation.last=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64));match motion_samples.as_ref().map(|samples|samples.modifiers(index,*pos)).transpose(){Ok(Some(Some(modifiers)))=>app.navigation.walk_modifiers=modifiers,Ok(_)=>app.navigation.walk_modifiers=i.modifiers,Err(error)=>{app.navigation.cancel();app.status_message=error.into();}}},_=>{},
+   egui::Event::PointerMoved(pos) if app.navigation.press.is_some()=>{app.navigation.last=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64));match motion_samples.as_ref().map(|samples|samples.modifiers(index,*pos)).transpose(){Ok(Some(Some(modifiers)))=>app.navigation.walk_modifiers=modifiers,Ok(None)=>app.navigation.walk_modifiers=i.modifiers,Ok(Some(None))=>{app.navigation.cancel();app.status_message="Native pointer modifier snapshot is missing".into();},Err(error)=>{app.navigation.cancel();app.status_message=error.into();}}},_=>{},
   }
  });
  if let(Some((anchor,_)),Some(p))=(app.navigation.press,app.navigation.last){
