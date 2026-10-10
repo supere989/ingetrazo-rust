@@ -15,13 +15,20 @@ from core.scene import Scene
 from core.style import Style
 from formats.igz import load_into
 from views.viewport import Viewport
-if '--flat-face-color' in sys.argv:
+if '--flat-face-color' in sys.argv or '--surface-path' in sys.argv or '--primitive-id' in sys.argv:
  class DiagnosticViewport(Viewport):
   def _compile_program(self):
    program=QOpenGLShaderProgram(self)
    for kind,name,old,new in [(QOpenGLShader.Vertex,'basic.vert','out vec3 v_color;','flat out vec3 v_color;'),(QOpenGLShader.Fragment,'basic.frag','in vec3 v_color;','flat in vec3 v_color;')]:
     shader=(source/'resources/shaders'/name).read_text();assert shader.count(old)==1
-    shader=shader.replace(old,new);(out/name).write_text(shader)
+    if '--flat-face-color' in sys.argv:shader=shader.replace(old,new)
+    if '--surface-path' in sys.argv and name=='basic.frag':
+     final='fragColor = vec4(mix(c.rgb, u_fade_color, u_fade), c.a);';assert shader.count(final)==1
+     shader=shader.replace(final,'fragColor = vec4(u_use_texture != 0 ? 1.0 : 0.0, u_use_vcolor != 0 ? 1.0 : 0.0, gl_FrontFacing ? 1.0 : 0.0, 1.0);')
+    if '--primitive-id' in sys.argv and name=='basic.frag':
+     final='fragColor = vec4(mix(c.rgb, u_fade_color, u_fade), c.a);';assert shader.count(final)==1
+     shader=shader.replace(final,'uint id = uint(gl_PrimitiveID); fragColor = vec4(vec3(id & 255u, (id >> 8u) & 255u, (id >> 16u) & 255u)/255.0, 1.0);')
+    (out/name).write_text(shader)
     assert program.addShaderFromSourceCode(kind,shader),program.log()
    assert program.link(),program.log()
    return program
@@ -68,7 +75,7 @@ for i in range(4):
 reconstructed=((sum(x.astype(np.uint16) for x in samples)+1)//4).astype(np.uint8);different=int(np.any(reconstructed!=scene_pixels,axis=2).sum());overlay_different=int(np.any(scene_pixels!=a,axis=2).sum())
 raw_sum=sum(x.astype(np.uint16) for x in raw_samples);raw_reconstructed=((raw_sum+1)//4).astype(np.uint8)
 raw_different=int(np.any(raw_reconstructed!=raw_resolved,axis=2).sum())
-report={'diagnostic_edges_disabled':'--no-edges' in sys.argv,'diagnostic_flat_face_color':'--flat-face-color' in sys.argv,'integer_half_down_is_acceptance_rule':False,'dither_before':dither_before,'dither_after':dither_after,'raw_reconstruction_different_pixels':raw_different,'raw_vs_qimage_scene_different_pixels':int(np.any(raw_resolved!=scene_pixels,axis=2).sum()),'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
+report={'diagnostic_primitive_id':'--primitive-id' in sys.argv,'diagnostic_surface_path':'--surface-path' in sys.argv,'diagnostic_edges_disabled':'--no-edges' in sys.argv,'diagnostic_flat_face_color':'--flat-face-color' in sys.argv,'integer_half_down_is_acceptance_rule':False,'dither_before':dither_before,'dither_after':dither_after,'raw_reconstruction_different_pixels':raw_different,'raw_vs_qimage_scene_different_pixels':int(np.any(raw_resolved!=scene_pixels,axis=2).sum()),'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
 (out/'review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 vao.release();program.release();del target;del resolved_target;del vao;del program;call('glDeleteFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glDeleteTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()
 
