@@ -8,6 +8,7 @@ fn changed_model(before: &Scene, after: &Scene) -> bool {
     before.mesh != after.mesh
         || before.groups != after.groups
         || before.component_definitions != after.component_definitions
+        || before.mesh_shares != after.mesh_shares
         || before.dimensions != after.dimensions
         || before.guides != after.guides
         || before.section_planes != after.section_planes

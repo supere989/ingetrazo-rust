@@ -13,6 +13,50 @@ pub struct ComponentDefinition {
 }
 
 impl Scene {
+    /// Register explicit source-prototype identity without changing component flags.
+    /// Codec callers assign the same token only for the same native proto identity.
+    pub fn register_mesh_share(&mut self, id:Uuid, mesh:Mesh)->Result<(),String> {
+        if let Some(existing)=self.mesh_shares.get(&id) {
+            if existing!=&mesh {return Err("mesh share token has conflicting geometry".into());}
+            return Ok(());
+        }
+        self.mesh_shares.insert(id,mesh);Ok(())
+    }
+
+    /// Publish one Mesh prototype, retaining every placement UID, transform,
+    /// child list and per-placement metadata. Candidate validation is atomic.
+    pub fn publish_mesh_share(&mut self,id:Uuid,mut mesh:Mesh)->Result<(),String> {
+        if !self.mesh_shares.contains_key(&id) {return Err("mesh share not found".into());}
+        if mesh.vertices.iter().any(|v|!v.position.is_finite()) {
+            return Err("shared mesh has non-finite vertex".into());
+        }
+        if mesh.edges.iter().any(|e|e.v0>=mesh.vertices.len()||e.v1>=mesh.vertices.len())
+            || mesh.faces.iter().any(|f|f.vertices.iter().chain(f.holes.iter().flatten()).any(|i|*i>=mesh.vertices.len())) {
+            return Err("shared mesh has invalid vertex references".into());
+        }
+        mesh.rebuild_spatial_index();
+        fn refresh(groups:&mut [Group],id:Uuid,mesh:&Mesh) {
+            for group in groups {
+                if group.mesh_share==Some(id) {group.mesh=mesh.clone();}
+                refresh(&mut group.children,id,mesh);
+            }
+        }
+        fn linked_definitions(groups:&[Group],id:Uuid,found:&mut HashSet<Uuid>) {
+            for group in groups {
+                if group.mesh_share==Some(id) {if let Some(def)=group.component_definition {found.insert(def);}}
+                linked_definitions(&group.children,id,found);
+            }
+        }
+        let mut linked=HashSet::new();linked_definitions(&self.groups,id,&mut linked);
+        for def in self.component_definitions.values() {linked_definitions(&def.children,id,&mut linked);}
+        refresh(&mut self.groups,id,&mesh);
+        for (definition_id,def) in &mut self.component_definitions {
+            if linked.contains(definition_id) {def.mesh=mesh.clone();}
+            refresh(&mut def.children,id,&mesh);
+        }
+        self.mesh_shares.insert(id,mesh);self.bump_version();Ok(())
+    }
+
     /// Convert a group into a new linked definition; unrelated plain groups
     /// never acquire linkage merely because their geometry matches.
     pub fn make_component(&mut self, group_id:Uuid) -> Result<Uuid,String> {
@@ -26,6 +70,12 @@ impl Scene {
         let group=find(&mut self.groups,group_id).ok_or("component instance not found")?;
         if let Some(id)=group.component_definition {return Ok(id);}
         let id=Uuid::new_v4();
+        fn register(group:&mut Group,shares:&mut std::collections::HashMap<Uuid,Mesh>) {
+            let token=*group.mesh_share.get_or_insert_with(Uuid::new_v4);
+            shares.entry(token).or_insert_with(||group.mesh.clone());
+            for child in &mut group.children {register(child,shares);}
+        }
+        register(group,&mut self.mesh_shares);
         for child in &mut group.children {child.definition_member=Some(child.id);}
         self.component_definitions.insert(id,ComponentDefinition {mesh:group.mesh.clone(),children:group.children.clone()});
         group.component_definition=Some(id);self.bump_version();Ok(id)
@@ -116,6 +166,7 @@ impl Scene {
         if group.component_definition.is_none() {return Err("group is not a component".into());}
         fn detach_children(group:&mut Group,defs:&mut std::collections::HashMap<Uuid,ComponentDefinition>) {
             for child in &mut group.children {
+                child.mesh_share=None;
                 detach_children(child,defs);
                 if child.component_definition.is_some() {
                     let id=Uuid::new_v4();
@@ -151,7 +202,7 @@ impl Scene {
             if !group.native_document.is_object() {group.native_document=serde_json::json!({});}
             group.native_document["axes"]=serde_json::json!(frame.to_cols_array());
         } else {detach_children(group,&mut candidate.component_definitions);}
-        group.component_definition=None;
+        group.component_definition=None;group.mesh_share=None;
         candidate.bump_version();*self=candidate;Ok(())
     }
 

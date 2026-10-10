@@ -35,6 +35,9 @@ pub struct Scene {
     pub dimension_frame:glam::DMat4,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
+    /// Authoritative shared Mesh prototypes; placement topology is independent.
+    #[serde(default)]
+    pub mesh_shares: HashMap<uuid::Uuid, Mesh>,
     /// Original native payload and modeled snapshot. Unchanged fields retain their
     /// source representation, including future/extension metadata.
     #[serde(default)]
@@ -85,6 +88,7 @@ impl Scene {
         Self {
             dimension_frame:glam::DMat4::IDENTITY,
             component_definitions: HashMap::new(),
+            mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             mesh: Mesh::new(),

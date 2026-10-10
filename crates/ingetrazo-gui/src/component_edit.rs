@@ -70,6 +70,7 @@ impl IngeTrazoApp {
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
+        edit.mesh_shares=self.scene.mesh_shares.clone();
         edit.dimension_frame=self.scene.dimension_frame*group.transform;
         edit.dimensions=self.scene.dimensions.clone();
         let inverse=group.transform.inverse();
@@ -102,6 +103,7 @@ impl IngeTrazoApp {
         let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
             || candidate.component_definitions!=self.scene.component_definitions
+            || candidate.mesh_shares!=self.scene.mesh_shares
             || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed {
