@@ -1,0 +1,166 @@
+{
+  "passed": true,
+  "dpi": 72,
+  "reader": "QtPdf/PDFium",
+  "strict_rgba": true,
+  "inventory_negatives_rejected": 4,
+  "cases": [
+    {
+      "case": "front_box",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "front_box",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hidden_layer_face",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hidden_layer_face",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hidden_layer_group",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hidden_layer_group",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hollow_cap",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hollow_cap",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "iso_box",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "iso_box",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "nested_reflected_box",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "nested_reflected_box",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "open_cut_chain",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "open_cut_chain",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "partial_rear_line",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "partial_rear_line",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "section_board",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "section_board",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "soft_cylinder_silhouette",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "soft_cylinder_silhouette",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "soft_reflected_silhouette",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "soft_reflected_silhouette",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "top_box",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "top_box",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "wall_hidden",
+      "hidden": false,
+      "different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "wall_hidden",
+      "hidden": true,
+      "different_pixels": 0,
+      "passed": true
+    }
+  ],
+  "scope": "Actual original ComposerWindow whole-page PDF versus native cached persistent HLR/direct vector writer, mixed shape/view item order, source caps/joins/hidden dashes/pen widths and clip. No font/raster style/UI parity claim."
+}
