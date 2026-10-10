@@ -91,6 +91,10 @@ pub struct TextureRecord {
 pub struct Payload {
     #[serde(default)]
     pub legacy_pages: Vec<LegacyPage>,
+    #[serde(default)]
+    pub legacy_dimensions: Vec<LegacyDimension>,
+    #[serde(default)]
+    pub legacy_texts: Vec<LegacyText>,
     pub name: String,
     pub version: String,
     pub root: Definition,
@@ -105,6 +109,20 @@ pub struct Payload {
 pub struct LegacyPage {
     pub name: String,
     pub hidden_layer_ids: Vec<u32>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LegacyDimension {
+    pub a: [f64; 3],
+    pub b: [f64; 3],
+    pub offset: f64,
+    pub text: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LegacyText {
+    pub point: [f64; 3],
+    pub label: Option<[f64; 3]>,
+    pub text: String,
+    pub hidden: bool,
 }
 /// No Python interpreter, converter, application mutation, or external file extraction.
 pub fn parse_skp_bytes(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
@@ -539,6 +557,44 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         scene.groups.push(Group::with_mesh(&p.name, mesh));
     }
     placements::append(p, &mut scene)?;
+    for d in &p.legacy_dimensions {
+        let a = DVec3::from_array(d.a).map(|v| ((v * 0.0254) as f32) as f64);
+        let b = DVec3::from_array(d.b).map(|v| ((v * 0.0254) as f32) as f64);
+        let delta = (b - a).map(|v| (v as f32) as f64);
+        if delta.length() < 1e-9 {
+            continue;
+        }
+        let mut perpendicular = DVec3::Z.cross(delta).map(|v| (v as f32) as f64);
+        if perpendicular.length() < 1e-9 {
+            perpendicular = DVec3::X.cross(delta).map(|v| (v as f32) as f64);
+        }
+        // QVector3D normalizes using its float32 hypot, then float32 division.
+        let length = (perpendicular.x as f32)
+            .hypot(perpendicular.y as f32)
+            .hypot(perpendicular.z as f32);
+        let offset =
+            perpendicular.map(|v| (((v as f32) / length) * ((d.offset * 0.0254) as f32)) as f64);
+        scene
+            .dimensions
+            .push(ingetrazo_core::dimensions::Dimension::new(a, b, offset));
+    }
+    for t in &p.legacy_texts {
+        if t.hidden || t.text.trim().is_empty() {
+            continue;
+        }
+        let a = DVec3::from_array(t.point).map(|v| ((v * 0.0254) as f32) as f64);
+        let label = t
+            .label
+            .map(|p| DVec3::from_array(p).map(|v| ((v * 0.0254) as f32) as f64))
+            .unwrap_or(a);
+        scene
+            .text_labels
+            .push(ingetrazo_core::textlabel::TextLabel::new(
+                a,
+                (label - a).map(|v| (v as f32) as f64),
+                t.text.trim(),
+            ));
+    }
     if scene.groups.is_empty() && !p.root.edges.is_empty() {
         return Err(SkpError::Unsupported("loose wire-only document".into()));
     }
@@ -552,6 +608,7 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             "verified empty document import semantics".into(),
         ));
     }
+    scene.bind_dimensions();
     Ok(scene)
 }
 pub fn load_skp(path: &Path) -> Result<Scene, SkpError> {

@@ -7,7 +7,146 @@ pub(super) struct DefinitionRecord {
     pub roots: Vec<u32>,
     pub billboard: bool,
 }
+#[derive(Clone)]
+pub(super) enum AnnotationRecord {
+    Dimension {
+        text: String,
+        a: Option<[f64; 3]>,
+        b: Option<[f64; 3]>,
+        connect: [u32; 2],
+        offset: f64,
+    },
+    Text {
+        text: String,
+        point: Option<[f64; 3]>,
+        label: Option<[f64; 3]>,
+        hidden: bool,
+    },
+}
 impl Archive<'_> {
+    pub(super) fn translate_reference(&self, id: u32) -> Option<u32> {
+        let mut offset = 0;
+        for &(start, width) in &self.burns {
+            if id < start {
+                break;
+            }
+            if id < start + width {
+                return None;
+            }
+            offset += width;
+        }
+        id.checked_sub(offset)
+    }
+    pub(super) fn font(&mut self) -> Result<(), SkpError> {
+        self.object(Some("CAttributeContainer"))?;
+        if self.ver >= 17 {
+            let mask = self.r.u8()?;
+            self.r.raw(mask.count_ones() as usize)?;
+        }
+        self.string()?;
+        self.r.raw(15)?;
+        Ok(())
+    }
+    fn triplet(bytes: &[u8], offset: usize) -> Result<[f64; 3], SkpError> {
+        let mut p = [0.; 3];
+        for (i, value) in p.iter_mut().enumerate() {
+            *value = f64::from_le_bytes(
+                bytes[offset + i * 8..offset + i * 8 + 8]
+                    .try_into()
+                    .unwrap(),
+            );
+            if !value.is_finite() {
+                return Err(SkpError::Invalid(
+                    "Nonfinite legacy annotation point".into(),
+                ));
+            }
+        }
+        Ok(p)
+    }
+    pub(super) fn dimension(&mut self) -> Result<AnnotationRecord, SkpError> {
+        self.preamble()?;
+        self.drawbase()?;
+        let text = self.string()?;
+        self.object(Some("CSkFont"))?;
+        let first = self.r.raw(37)?;
+        let a = if first[5..9] == 1u32.to_le_bytes() {
+            Some(Self::triplet(first, 13)?)
+        } else {
+            None
+        };
+        let c1 = self.entity_ref()?;
+        let second = self.r.raw(42)?;
+        let b = if second[10..14] == 1u32.to_le_bytes() {
+            Some(Self::triplet(second, 18)?)
+        } else {
+            None
+        };
+        let c2 = self.entity_ref()?;
+        let end = self.r.raw(82)?;
+        let offset = f64::from_le_bytes(end[62..70].try_into().unwrap());
+        if !offset.is_finite() {
+            return Err(SkpError::Invalid(
+                "Nonfinite legacy dimension offset".into(),
+            ));
+        }
+        Ok(AnnotationRecord::Dimension {
+            text,
+            a,
+            b,
+            connect: [c1, c2],
+            offset,
+        })
+    }
+    pub(super) fn text(&mut self) -> Result<AnnotationRecord, SkpError> {
+        self.preamble()?;
+        let db = self.drawbase()?;
+        self.object(Some("CSkFont"))?;
+        let start = self.r.pos;
+        let limit = self.r.bytes.len().min(start.saturating_add(512));
+        let at = (start..limit.saturating_sub(2))
+            .find(|&at| {
+                at >= 11
+                    && self.r.bytes[at..at + 3] == [255, 254, 255]
+                    && self.r.bytes[at - 11..at - 7] == [1, 0, 0, 0]
+                    && u32::from_le_bytes(self.r.bytes[at - 5..at - 1].try_into().unwrap()) <= 8
+                    && self.r.bytes[at - 1] == 1
+            })
+            .ok_or_else(|| SkpError::Invalid("Legacy text delimiter".into()))?;
+        let middle = &self.r.bytes[start..at];
+        let mut point = None;
+        let mut label = None;
+        if let Some(offset) = middle
+            .windows(8)
+            .position(|b| b == [1, 0, 0, 0, 4, 0, 0, 0])
+        {
+            if offset + 32 <= middle.len() {
+                point = Some(Self::triplet(middle, offset + 8)?);
+                let lo = offset + 44;
+                if lo + 24 <= middle.len() {
+                    let p = Self::triplet(middle, lo)?;
+                    if p.iter().any(|v| v.abs() > 1e-12) {
+                        label = Some(p);
+                    }
+                }
+            }
+        }
+        self.r.pos = at;
+        let text = self.string()?;
+        self.r.raw(5)?;
+        while self.r.peek(6).len() == 6 && self.r.peek(2) == [255, 127] {
+            let id = u32::from_le_bytes(self.r.peek(6)[2..6].try_into().unwrap());
+            if id & 0x80000000 != 0 {
+                break;
+            }
+            self.r.raw(6)?;
+        }
+        Ok(AnnotationRecord::Text {
+            text,
+            point,
+            label,
+            hidden: db.display & 1 != 0,
+        })
+    }
     fn string(&mut self) -> Result<String, SkpError> {
         let s = self.r.utf16()?;
         self.charge(s.capacity().saturating_add(64))?;
@@ -193,12 +332,16 @@ impl Archive<'_> {
             return Err(SkpError::Invalid("Legacy definition entities".into()));
         }
         let mut roots = Vec::new();
-        for _ in 0..count {
+        self.burn_credits.push(0);
+        let mut read = 0;
+        while read + self.burn_credits.last().copied().unwrap_or(0) < count {
+            read += 1;
             if let Some((id, _)) = self.object(None)? {
                 self.charge(16)?;
                 roots.push(id);
             }
         }
+        self.burn_credits.pop();
         let mut relationships = self.r.u32()?;
         if relationships > 100_000 {
             relationships = self

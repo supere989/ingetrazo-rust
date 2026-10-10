@@ -20,6 +20,7 @@ enum Object {
     Definition(records::DefinitionRecord),
     Instance(Instance),
     Auxiliary,
+    Annotation(records::AnnotationRecord),
     Curve(Option<[f64; 14]>),
     TextureCoordinates([f64; 9], [f64; 9], bool, bool),
     Premodel,
@@ -100,6 +101,10 @@ struct Archive<'a> {
     depth: usize,
     current_loop: Option<u32>,
     decoded_bytes: usize,
+    burns: Vec<(u32, u32)>,
+    burn_delta: u32,
+    annotation_watermark: Option<u32>,
+    burn_credits: Vec<u32>,
 }
 impl<'a> Archive<'a> {
     fn new(bytes: &'a [u8], ver: u32, start: usize, base: u32) -> Self {
@@ -115,6 +120,10 @@ impl<'a> Archive<'a> {
             depth: 0,
             current_loop: None,
             decoded_bytes: 0,
+            burns: Vec::new(),
+            burn_delta: 0,
+            annotation_watermark: None,
+            burn_credits: Vec::new(),
         }
     }
     fn charge(&mut self, bytes: usize) -> Result<(), SkpError> {
@@ -199,6 +208,9 @@ impl<'a> Archive<'a> {
             };
             return self.new_object(&name);
         }
+        let Some(reference) = self.translate_reference(reference) else {
+            return Ok(Some((reference, Arc::new(Object::Auxiliary))));
+        };
         match self.slots.get(&reference) {
             Some(Slot::Object(o)) => Ok(Some((reference, o.clone()))),
             Some(_) => Err(SkpError::Invalid(
@@ -383,10 +395,32 @@ impl<'a> Archive<'a> {
                 } else {
                     tag as u32
                 };
-                if self.current_loop != Some(parent) {
-                    return Err(SkpError::Invalid(
-                        "Legacy loop parent mismatch (annotation burns require next stage)".into(),
-                    ));
+                let expected = self
+                    .current_loop
+                    .and_then(|id| id.checked_add(self.burn_delta));
+                if expected != Some(parent) {
+                    let delta = expected
+                        .and_then(|id| parent.checked_sub(id))
+                        .filter(|&n| n > 0 && n <= 4096);
+                    if let (Some(delta), Some(watermark)) = (delta, self.annotation_watermark) {
+                        self.charge(32)?;
+                        self.burns.push((
+                            watermark
+                                .checked_add(self.burn_delta)
+                                .ok_or_else(|| SkpError::Invalid("Legacy burn overflow".into()))?,
+                            delta,
+                        ));
+                        self.burn_delta = self
+                            .burn_delta
+                            .checked_add(delta)
+                            .ok_or_else(|| SkpError::Invalid("Legacy burn overflow".into()))?;
+                        self.annotation_watermark = None;
+                        if let Some(credit) = self.burn_credits.last_mut() {
+                            *credit += 1;
+                        }
+                    } else {
+                        return Err(SkpError::Invalid("Legacy loop parent mismatch".into()));
+                    }
                 }
                 Object::EdgeUse(edge as u64, !reverse)
             }
@@ -566,6 +600,21 @@ impl<'a> Archive<'a> {
                 self.object(Some("CDib"))?;
                 Object::Auxiliary
             }
+            "CSkFont" => {
+                self.font()?;
+                Object::Auxiliary
+            }
+            "CDimensionLinear" => Object::Annotation(self.dimension()?),
+            "CText" => Object::Annotation(self.text()?),
+            "CConstructionPoint" => {
+                self.preamble()?;
+                self.drawbase()?;
+                for _ in 0..6 {
+                    self.r.f64()?;
+                }
+                self.r.u8()?;
+                Object::Auxiliary
+            }
             "CRelationship" => {
                 self.preamble()?;
                 self.entity_ref()?;
@@ -600,6 +649,9 @@ impl<'a> Archive<'a> {
         };
         let value = Arc::new(value);
         self.slots.insert(slot, Slot::Object(Arc::clone(&value)));
+        if matches!(name, "CDimensionLinear" | "CText") {
+            self.annotation_watermark = Some(self.next);
+        }
         Ok(Some((slot, value)))
     }
     fn prefix(
@@ -799,7 +851,10 @@ fn model(
     }
     let mut roots = Vec::new();
     let mut root_ids = HashSet::new();
-    for _ in 0..root {
+    ar.burn_credits.push(0);
+    let mut read = 0;
+    while read + ar.burn_credits.last().copied().unwrap_or(0) < root {
+        read += 1;
         if let Some(entity) = ar.object(None)? {
             if !root_ids.contains(&entity.0) {
                 ar.charge(64)?; // Vec capacity plus hash-table entry.
@@ -808,6 +863,7 @@ fn model(
             }
         }
     }
+    ar.burn_credits.pop();
     let legacy_pages = ar.scan_pages()?;
     ar.charge(ar.decoded_bytes)?; // Candidate output clones coexist with immutable archive.
     let mut p = Payload {
@@ -907,6 +963,60 @@ fn model(
         }
     }
     fill_definition(&mut p.root, &roots, &ar.slots, &mut ar.decoded_bytes)?;
+    for id in &roots {
+        let Some(Slot::Object(object)) = ar.slots.get(id) else {
+            continue;
+        };
+        if let Object::Annotation(annotation) = object.as_ref() {
+            match annotation {
+                records::AnnotationRecord::Dimension {
+                    text,
+                    a,
+                    b,
+                    connect,
+                    offset,
+                } => {
+                    let resolve = |point: Option<[f64; 3]>, reference: u32| -> Option<[f64; 3]> {
+                        point.or_else(|| {
+                            let id = ar.translate_reference(reference)?;
+                            let Slot::Object(value) = ar.slots.get(&id)? else {
+                                return None;
+                            };
+                            if let Object::Vertex(p) = value.as_ref() {
+                                Some(*p)
+                            } else {
+                                None
+                            }
+                        })
+                    };
+                    if let (Some(a), Some(b)) = (resolve(*a, connect[0]), resolve(*b, connect[1])) {
+                        charge_output(&mut ar.decoded_bytes, text.capacity() + 128)?;
+                        p.legacy_dimensions.push(LegacyDimension {
+                            a,
+                            b,
+                            offset: *offset,
+                            text: text.clone(),
+                        });
+                    }
+                }
+                records::AnnotationRecord::Text {
+                    text,
+                    point: Some(point),
+                    label,
+                    hidden,
+                } => {
+                    charge_output(&mut ar.decoded_bytes, text.capacity() + 128)?;
+                    p.legacy_texts.push(LegacyText {
+                        point: *point,
+                        label: *label,
+                        text: text.clone(),
+                        hidden: *hidden,
+                    });
+                }
+                _ => {}
+            }
+        }
+    }
     Ok(p)
 }
 
@@ -961,6 +1071,7 @@ fn fill_definition(
                 charge_output(decoded, instance.name.capacity().saturating_add(512))?;
                 def.instances.push(instance.clone());
             }
+            Object::Annotation(_) | Object::Auxiliary => {}
             Object::Curve(_) => {} // Analytic frame remains in archive; frontend imports polygon faces/soft edges.
             _ => return Err(SkpError::Unsupported("legacy root entity kind".into())),
         }
@@ -1003,6 +1114,31 @@ fn add_edge(
 mod tests {
     use super::*;
     use std::sync::Arc;
+    #[test]
+    fn annotation_bands_preserve_registered_ids_and_reserve_phantoms() {
+        let bytes = [8u8, 0, 10, 0];
+        let mut ar = Archive::new(&bytes, 17, 0, 1);
+        ar.burns = vec![(8, 2), (15, 3)];
+        ar.burn_delta = 5;
+        ar.slots
+            .insert(8, Slot::Object(Arc::new(Object::Vertex([1., 2., 3.]))));
+        assert_eq!(ar.translate_reference(7), Some(7));
+        assert_eq!(ar.translate_reference(8), None);
+        assert_eq!(ar.translate_reference(9), None);
+        assert_eq!(ar.translate_reference(10), Some(8));
+        assert_eq!(ar.translate_reference(17), None);
+        assert_eq!(ar.translate_reference(18), Some(13));
+        let (_, phantom) = ar.object(None).unwrap().unwrap();
+        assert!(matches!(phantom.as_ref(), Object::Auxiliary));
+        let (id, value) = ar.object(None).unwrap().unwrap();
+        assert_eq!(id, 8);
+        assert!(matches!(value.as_ref(), Object::Vertex(_)));
+    }
+    #[test]
+    fn annotation_entity_references_reject_class_tags() {
+        let mut ar = Archive::new(&[255, 127, 0, 0, 0, 128], 17, 0, 1);
+        assert!(matches!(ar.entity_ref(), Err(SkpError::Invalid(_))));
+    }
     #[test]
     fn repeated_archive_references_share_owner_and_budget_refuses() {
         let bytes = [1_u8, 0, 1, 0];
