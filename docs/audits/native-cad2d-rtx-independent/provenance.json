@@ -1,0 +1,11 @@
+{
+  "source_revision": "3d5f8be2521d2e9b1cab2c71fe6eac17a96af9e7",
+  "binary_sha256": "40b8e8ffddc36dcbc7287c71d2e024c4af20b17a1b36e24be4b1d529c5e03542",
+  "immutable_image": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "backend": "NVIDIA RTX5090 Vulkan WSI/GLX ICD, owned new client only",
+  "cases": 5,
+  "captures": 10,
+  "source_reference": "retained actual QPainter QColor37,93,157,128 overwhite; interior146,174,206,255",
+  "general_color32_alpha": "22/24 strict failure remains retained",
+  "limits": "Not complete shape AA, arbitrary texture/font proof, driver OOM or Metal."
+}
