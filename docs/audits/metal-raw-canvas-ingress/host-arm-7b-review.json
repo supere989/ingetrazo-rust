@@ -1,0 +1,11 @@
+{
+  "source": "7b0b196d391fc8f8acda828d73e16d82f32d1225",
+  "artifact_id": 11678611626,
+  "artifact_sha256": "acc5fbb43a7b032b812427a3a213c0dc51c917f74adb8c399cdd91f5573253b9",
+  "zip_integrity": "PASS",
+  "independent_expected_rgba": "32x8 white-background premultiplied blend; four width8 stripes",
+  "exact_pixels": 256,
+  "host_sdk_build": "PASS",
+  "device": "Apple Paravirtual device",
+  "scope": "Offscreen raw texture pixels and SDK host build; actual Canvas host and physical Mac acceptance remain OPEN"
+}

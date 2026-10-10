@@ -1,0 +1,228 @@
+{
+  "run": 38087821842,
+  "artifact": 11683545044,
+  "sha256": "738fd926e161e8436d7c6cbff3dc1dbe4156db35e6b7acf57eff7741cd266909",
+  "source": "f2d0820f797003af0b9ba7cb54adfaf9fa367535",
+  "pdf": [
+    {
+      "name": "arabic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "name": "arabic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "name": "arabic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "name": "cjk",
+      "dpi": 72,
+      "changed_pixels": 62
+    },
+    {
+      "name": "cjk",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "name": "cjk",
+      "dpi": 300,
+      "changed_pixels": 309
+    },
+    {
+      "name": "helvetica",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-bold",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-bold",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-bold",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "name": "times-bold-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "name": "times-bold-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "name": "times-bold-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    }
+  ],
+  "pdf_exact": 16,
+  "canvas_tiles": [
+    {
+      "name": "helvetica",
+      "changed_pixels": 179
+    },
+    {
+      "name": "helvetica-bold",
+      "changed_pixels": 174
+    },
+    {
+      "name": "helvetica-italic",
+      "changed_pixels": 181
+    },
+    {
+      "name": "times-bold-italic",
+      "changed_pixels": 159
+    },
+    {
+      "name": "cjk",
+      "changed_pixels": 214
+    },
+    {
+      "name": "arabic",
+      "changed_pixels": 158
+    }
+  ],
+  "physical_font_gate": {
+    "passed": true,
+    "matched": [
+      "helvetica",
+      "helvetica-bold",
+      "helvetica-italic",
+      "times-bold-italic",
+      "cjk",
+      "arabic"
+    ],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "cjk",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "errors": []
+      }
+    ],
+    "scope": "Actual Qt physical face/traits and requested PDF synthesis policy; pixel/layout gates independent; Canvas synthesized-bold still unsupported"
+  },
+  "canvas_host": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "c97ff67beceb71b73aea8d09081d27a9d95ee796d0ce0b029d56b6e4e3202348",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "diagnostic_capture": {
+      "sha256": "8f8fb9cbd6d382331fa1ceaf3f07ad208ac8842f042984f65853a34d9d1bbf4e",
+      "observation": {
+        "window_id": 24,
+        "displayed": 0,
+        "diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194)\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=4; retired=1; displayed=0; skipped=1; frames=[submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=492.26563375 gpuEnd=492.29868400000004 callback_seen=false callback_time=0; submission=3 id=2 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=492.29869237500003 gpuEnd=492.30200125000005 callback_seen=false callback_time=0; submission=4 id=3 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=492.3126412916667 gpuEnd=492.354846375 callback_seen=false callback_time=0]",
+        "acceptance_proof": false
+      },
+      "acceptance_proof": false
+    },
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 4,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 7,
+      "canvas_warm_frames": 6,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "Independent actual ARM artifact decoding; no new render and no diagnostic shifts in acceptance."
+}

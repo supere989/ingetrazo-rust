@@ -1,0 +1,15 @@
+{
+  "run": 38080304928,
+  "job": 114295669767,
+  "artifact": 11679858171,
+  "sha256": "e29fa36d6a97e64b788c3dd27925a3e04ab57ac0c339226e4ce20bea6810d22d",
+  "source": "64263f6886cf3b017b3b050ca64ab8c58a5b7bb6",
+  "findings": [
+    "Actual Qt Times request resolves .Times Fallback backed by TimesNewRomanPSMT regular; native Times-BoldItalic is a physical identity mismatch, not merely OS/2 style validation.",
+    "Native CJK selects PingFangSC-Regular in FontServices Reserved/PingFangUI.ttc (56102280 bytes), exceeding 16777216-byte limit. Oracle inventory did not scan this directory.",
+    "ARM Canvas records zero displayed frames; capture remains failed."
+  ],
+  "original_cases": 6,
+  "native_cases": 6,
+  "next": "Inventory exact discovered Reserved directory, investigate Qt alias/style synthesis and bounded selected-face ownership; no style or memory guard relaxation."
+}

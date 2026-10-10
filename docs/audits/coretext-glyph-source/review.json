@@ -1,0 +1,43 @@
+{
+  "source_commit": "33d9154d479c3779e418e2938eac2866079a48d7",
+  "baseline": "14efd891",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "upstream": {
+    "qcoretextfontdatabase.mm": {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/coretext/qcoretextfontdatabase.mm",
+      "sha256": "0d45c954db30f38d3f5c4312dd07f27cf30b73884915b0c6d49adad5e657f561"
+    },
+    "qfontengine_coretext.mm": {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/coretext/qfontengine_coretext.mm",
+      "sha256": "a11cdd716adbb09ad01e1e58bc02219aeaa37370073f613b8fd69a6798aa1a2e"
+    }
+  },
+  "sha256": {
+    "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs": "3ee9c169e377a7e84e208dab1ce79f59bcb78def2ea359a62ac45455b2e748c0",
+    "crates/ingetrazo-formats/src/lib.rs": "112050c304c8403d21bc7614baef81cc7b4ab638058ea456135690d9d7ebd18c",
+    "crates/ingetrazo-formats/src/paper_coretext_glyph.rs": "42b3486dc17239947065ac4ebee2f26ee899f5aebca4588e158c8f688e8b6f56",
+    "crates/ingetrazo-formats/src/paper_font.rs": "fa907d19e284ada1ec12a9431fbd8338426b667dbc0889b107060dc3a90f01b6",
+    "crates/ingetrazo-formats/src/paper_font_coretext.rs": "ac3dd34fe2493ecb4d245cd60918aee7fcf801e853ababd7e3ec59c6ab1a75d2",
+    "crates/ingetrazo-formats/src/paper_font_resolver.rs": "77c3dcbf1437ed99e34b6e768195195e827d94cd2c846d13d01a3b0469b77529",
+    "crates/ingetrazo-formats/src/paper_font_sfnt.rs": "b74483366e598cf54643e1e7a5596a932c0700c472a5a6fb63e2115598f6610d",
+    "crates/ingetrazo-formats/src/paper_font_subset.rs": "09ee0cc6cfbd3e43737c1a08bd96338a2c6b8cabff5d9119f37a4fac684bcd3f",
+    "crates/ingetrazo-formats/src/paper_text.rs": "b7d548beca3359f4592bcdc196407be6df39e58b5298252b4520014fafe1654a"
+  },
+  "checks": {
+    "linux_formats_lib": "pass",
+    "bounded_sfnt_identity_tests": {
+      "passed": 2,
+      "failed": 0
+    },
+    "existing_linux_glyph_refusal": {
+      "passed": 1,
+      "failed": 0
+    },
+    "native_rust_branch_host_metadata": "pass; temporary cfg branch selector and dylib declarations only, source restored; no SDK/runtime claim",
+    "aarch64_ffi_metadata": "pass; reduced wrapper checks native FFI Rust types, no execution or framework ABI validation"
+  },
+  "mac_sdk_runtime": "pending root coordinated CI",
+  "native_binary_sha256": null,
+  "old_six_face_checker": "unchanged; Times/CJK failures retained; no new acceptance yet"
+}

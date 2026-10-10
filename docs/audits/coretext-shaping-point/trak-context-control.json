@@ -1,0 +1,30 @@
+{
+  "scope": "Local synthetic valid trak table plus actual libharfbuzz API; not actual macOS font/provider proof",
+  "font_bytes": 759784,
+  "font_sha256": "42166c7df1a4d6e756ae9b60b0d8a3714aed968b867671d09476464d5db041ae",
+  "rows": [
+    {
+      "point": 0.0,
+      "advances": [
+        4378,
+        4391
+      ]
+    },
+    {
+      "point": 75.0,
+      "advances": [
+        4778,
+        4791
+      ]
+    },
+    {
+      "point": 100.0,
+      "advances": [
+        4378,
+        4391
+      ]
+    }
+  ],
+  "ptem_zero_negative_rejected": true,
+  "wrong100_context_rejected": true
+}

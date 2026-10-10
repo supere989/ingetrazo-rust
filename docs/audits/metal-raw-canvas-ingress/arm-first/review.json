@@ -1,0 +1,9 @@
+{
+  "run_id": 38076164547,
+  "job_id": 114283433813,
+  "artifact_id": 11678641202,
+  "sha256": "65bb2ba4a3cf55aae0159d919883edd66bc11c5c7711f274b86f678fa358dc80",
+  "failure": "Build cannot include pinned original translation and Blender resource files because checkout omitted submodules",
+  "gpu_execution": false,
+  "correction": "Enable recursive pinned submodule checkout; no production code change"
+}

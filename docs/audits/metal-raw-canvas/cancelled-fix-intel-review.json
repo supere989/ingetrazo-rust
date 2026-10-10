@@ -1,0 +1,70 @@
+{
+  "run": 38081610734,
+  "source": "158bef37c9c26d28dd032a2b12715c320cca3f77",
+  "sha256": "d20ad334b2a5d199306b7979b5c89b76b262e2e1e3cca99700e26fd097d9de9a",
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "47aa2a6ec1efadcd7c2a146c0f2d47c63eb295f579544426ae9b3508dad029f3",
+    "snapshot": {
+      "window_id": 27,
+      "submitted": 4,
+      "displayed": 2,
+      "completed_inflight": 0,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        2,
+        13024,
+        1
+      ],
+      "texture_uploads": 56,
+      "warm_frames": 3,
+      "cancelled_uploads": 1
+    },
+    "image_sha256": "1d85550c40a63dba1e5e2049e9bc0431d5a634c7f07e1c7608ec92bb12479d02",
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 1,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 13,
+      "skipped": 1,
+      "pending": 2,
+      "error": "Canvas display changed document",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        13024,
+        1
+      ],
+      "canvas_submission_observations": 16,
+      "canvas_warm_frames": 15,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          13024,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  }
+}

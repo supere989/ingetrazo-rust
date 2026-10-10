@@ -5,22 +5,28 @@ use egui::{Color32,Pos2,Rect,Vec2,TextureHandle};
 use ingetrazo_core::composition::{Sheet,TextItem};
 use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Painter,sheet_pdf::{Draw,PathOp}};
 #[derive(Clone)]struct Layout {text:String,draws:Arc<Vec<Draw>>,bytes:usize,fonts:Vec<(FontKey,usize)>}
-#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],italic:bool,color:[u8;4]}
+#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],bold:bool,italic:bool,color:[u8;4]}
 #[derive(Clone)]struct GlyphImage {pixels:Arc<Vec<u8>>,left:i32,top:i32,width:usize,height:usize,bytes:usize}
-#[derive(Clone)]struct Tile{draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
+#[path="composer_text_ordered.rs"] mod ordered;
+#[derive(Clone)]struct Tile{factory_identity:Option<(u8,usize)>,ordered:Option<ordered::Ordered>,draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
 #[derive(Clone,Default)]pub(super) struct CanvasPainter {
  context:Option<(u64,u64,uuid::Uuid)>,layouts:HashMap<uuid::Uuid,Layout>,layout_bytes:usize,layout_order:VecDeque<uuid::Uuid>,font_refs:HashMap<FontKey,(usize,usize)>,font_bytes:usize,
  glyphs:HashMap<GlyphKey,GlyphImage>,order:VecDeque<GlyphKey>,glyph_bytes:usize,
  tiles:HashMap<uuid::Uuid,Tile>,tile_order:VecDeque<uuid::Uuid>,tile_bytes:usize,pub tile_builds:u64,
+ // Explicit fixture opt-in; no runtime retention or warm-path capture.
+ sample_observation:Option<Vec<Sample>>,
+ ordered_builds:u64,ordered_items:usize,ordered_parts:usize,ordered_bytes:usize,
  frame_ops:usize,frame_textures:Vec<TextureHandle>,pub layout_builds:u64,pub raster_builds:u64,
 }
 impl std::fmt::Debug for CanvasPainter{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("CanvasPainter").field("stats",&self.stats()).finish()}}
 impl CanvasPainter {
  pub fn stats(&self)->[u64;5]{[self.layouts.len()as u64,self.glyphs.len()as u64,self.glyph_bytes as u64,self.layout_builds,self.raster_builds]}
+ pub fn ordered_stats(&self)->[u64;4]{[self.ordered_builds,self.ordered_items as u64,self.ordered_parts as u64,self.ordered_bytes as u64]}
+ fn retire_tile(&mut self,id:uuid::Uuid){if let Some(old)=self.tiles.remove(&id){self.tile_bytes-=old.bytes;if let Some(ordered)=old.ordered{self.ordered_items-=1;self.ordered_parts-=ordered.part_count();self.ordered_bytes-=ordered.bytes;}}}
  pub fn begin_frame(&mut self){self.frame_textures.clear();self.frame_ops=0;}
  fn prepare(&mut self,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,resources:&mut Painter)->Result<Arc<Vec<Draw>>,String>{
-  let context=(model,scene,sheet.id);if self.context!=Some(context){self.layouts.clear();self.layout_bytes=0;self.layout_order.clear();self.font_refs.clear();self.font_bytes=0;self.tiles.clear();self.tile_order.clear();self.tile_bytes=0;self.context=Some(context);}
+  let context=(model,scene,sheet.id);if self.context!=Some(context){self.layouts.clear();self.layout_bytes=0;self.layout_order.clear();self.font_refs.clear();self.font_bytes=0;self.tiles.clear();self.tile_order.clear();self.tile_bytes=0;self.ordered_items=0;self.ordered_parts=0;self.ordered_bytes=0;self.context=Some(context);}
   if let Some(entry)=self.layouts.get(&item.id){if entry.text==text{return Ok(entry.draws.clone());}}
   let expanded=TextItem{id:item.id,pos:item.pos,text:text.into(),font_size_pt:item.font_size_pt,bold:item.bold};let draws=super::pdf::text_draws(sheet,&expanded,resources,None)?;
   let bytes=draws.iter().try_fold(text.len(),|n,d|n.checked_add(d.path.len()*24+d.clip.as_ref().map_or(0,|p|p.len()*24)+d.text.as_ref().map_or(0,|t|t.glyphs.len()*24+t.decorations.len()*40))).ok_or("Canvas text layout size overflow")?;
@@ -35,10 +41,10 @@ impl CanvasPainter {
  }
  fn retire_layout(&mut self,id:uuid::Uuid){if let Some(layout)=self.layouts.remove(&id){self.layout_bytes-=layout.bytes;for (key,_)in layout.fonts{if let Some(entry)=self.font_refs.get_mut(&key){entry.0-=1;if entry.0==0{let (_,bytes)=self.font_refs.remove(&key).unwrap();self.font_bytes-=bytes;}}}}}
 
- fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],italic:bool,color:Color32)->Result<GlyphImage,String>{
-  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,italic,color:color.to_array()};
+ fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool,color:Color32)->Result<GlyphImage,String>{
+  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,bold,italic,color:color.to_array()};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
-  let bitmap=font.rasterize_glyph(glyph,scale,phase,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
+  let bitmap=font.rasterize_styled_glyph(glyph,scale,phase,bold,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
   if bytes>16*1024*1024{return Err("Canvas glyph texture budget exceeded".into());}
   self.glyphs.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;self.order.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;
   let mut pixels=Vec::new();pixels.try_reserve_exact(bytes).map_err(|_|"Canvas glyph coverage allocation failed")?;
@@ -48,47 +54,69 @@ impl CanvasPainter {
   while self.glyphs.len()>=4096||self.glyph_bytes+bytes>32*1024*1024{let old=self.order.pop_front().ok_or("Canvas glyph cache invariant failed")?;let retired=self.glyphs.remove(&old).ok_or("Canvas glyph cache identity failed")?;self.glyph_bytes-=retired.bytes;}
   let image=GlyphImage{pixels,left:bitmap.left,top:bitmap.top,width:bitmap.width,height:bitmap.height,bytes};self.glyphs.insert(key,image.clone());self.order.push_back(key);self.glyph_bytes+=bytes;self.raster_builds+=1;Ok(image)
  }
- fn tile(&mut self,painter:&egui::Painter,draws:&Arc<Vec<Draw>>,item:&TextItem,zoom:f32,origin:Pos2)->Result<Option<(TextureHandle,Rect)>,String>{
+ fn tile(&mut self,painter:&egui::Painter,draws:&Arc<Vec<Draw>>,item:&TextItem,zoom:f32,origin:Pos2,factory:Option<&crate::composer_backend::Factory>)->Result<Option<(TextureHandle,Rect)>,String>{
   let ppp=painter.ctx().pixels_per_point()as f64;let density=f64::from(zoom)*ppp;
   let base=origin+Vec2::new(item.pos.0 as f32*zoom,item.pos.1 as f32*zoom);let physical=[f64::from(base.x)*ppp,f64::from(base.y)*ppp];let anchor=[physical[0].floor()as i64,physical[1].floor()as i64];let phase=[physical[0].fract().to_bits(),physical[1].fract().to_bits()];
-  if let Some(tile)=self.tiles.get(&item.id){if tile.density==density.to_bits()&&tile.phase==phase&&tile.draws.upgrade().is_some_and(|old|Arc::ptr_eq(&old,draws)){return Ok(tile_image(tile,anchor,ppp));}}
+  if let Some(tile)=self.tiles.get(&item.id){if tile.factory_identity==factory.map(|f|f.cache_identity())&&tile.density==density.to_bits()&&tile.phase==phase&&tile.draws.upgrade().is_some_and(|old|Arc::ptr_eq(&old,draws)){return Ok(tile_image(tile,anchor,ppp));}}
   let mut samples=Vec::new();let count=draws.iter().map(|d|d.text.as_ref().map_or(0,|t|t.glyphs.len())).sum();samples.try_reserve(count).map_err(|_|"Canvas glyph sample allocation failed")?;let mut working_bytes=0usize;let mut extent:Option<[i64;4]>=None;
   for draw in draws.iter(){let pos=origin+Vec2::new(draw.origin_mm[0]as f32*zoom,draw.origin_mm[1]as f32*zoom);let scale=draw.text.as_ref().map_or(1.,|t|t.scale_mm)*density;let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
    let mut clip=[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2];if let Some(path)=&draw.clip{let mut min=[f64::INFINITY;2];let mut max=[f64::NEG_INFINITY;2];for op in path{if let PathOp::Move(p)|PathOp::Line(p)=op{for axis in 0..2{let value=if axis==0{f64::from(pos.x)}else{f64::from(pos.y)}*ppp+p[axis]*density;min[axis]=min[axis].min(value);max[axis]=max[axis].max(value);}}}clip=[min[0].floor()as i64,min[1].floor()as i64,max[0].ceil()as i64,max[1].ceil()as i64];}
    let Some(text)=&draw.text else{let mut rect=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in &draw.path{if let PathOp::Move(p)|PathOp::Line(p)=op{let point=[f64::from(pos.x)*ppp+p[0]*density,f64::from(pos.y)*ppp+p[1]*density];rect[0]=rect[0].min(point[0]);rect[1]=rect[1].min(point[1]);rect[2]=rect[2].max(point[0]);rect[3]=rect[3].max(point[1]);}}if let Some(sample)=rectangle_sample(rect,rgba,clip)?{include_sample(&mut samples,&mut extent,&mut working_bytes,sample)?;}continue;};
-   for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let(fx,fy,phase)=device_position((x*64.)as i64,(y*64.)as i64);let image=self.image(&text.font,glyph.glyph,scale,phase,text.italic,color)?;
+   for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let count=text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?;let(fx,fy,phase)=device_position_with_count((x*64.)as i64,(y*64.)as i64,count);let image=self.image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color)?;
     working_bytes=working_bytes.checked_add(image.bytes).filter(|&n|n<=32*1024*1024).ok_or("Canvas glyph working budget exceeded")?;
     let x=fx as i64+i64::from(image.left);let y=fy as i64-i64::from(image.top);let bounds=[x.max(clip[0]),y.max(clip[1]),(x+image.width as i64).min(clip[2]),(y+image.height as i64).min(clip[3])];if bounds[0]>=bounds[2]||bounds[1]>=bounds[3]{continue;}
     extent=Some(if let Some(old)=extent{[old[0].min(bounds[0]),old[1].min(bounds[1]),old[2].max(bounds[2]),old[3].max(bounds[3])]}else{bounds});samples.push(Sample{x,y,image,clip});
    }
    for decoration in &text.decorations{let [x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[f64::from(pos.x)*ppp+x0*scale,f64::from(pos.y)*ppp+y0*scale-half,f64::from(pos.x)*ppp+x1*scale,f64::from(pos.y)*ppp+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],f64::from(pos.y)*ppp+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working_bytes,sample)?;}}
   }
-  let (size,offset,pixels)=if let Some(extent)=extent{let width=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let height=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;let bytes=width.checked_mul(height).and_then(|n|n.checked_mul(4)).filter(|&n|n<=16*1024*1024).ok_or("Canvas tile coverage budget exceeded")?;if width>4096||height>4096{return Err("Canvas tile dimensions exceeded".into());}let mut pixels=Vec::new();pixels.try_reserve_exact(bytes).map_err(|_|"Canvas tile allocation failed")?;pixels.resize(bytes,0);
-   for sample in samples{for row in 0..sample.image.height{let y=sample.y+row as i64;if y<sample.clip[1]||y>=sample.clip[3]{continue;}for col in 0..sample.image.width{let x=sample.x+col as i64;if x<sample.clip[0]||x>=sample.clip[2]{continue;}let src=&sample.image.pixels[(row*sample.image.width+col)*4..][..4];let dst=&mut pixels[((y-extent[1])as usize*width+(x-extent[0])as usize)*4..][..4];source_over(dst,src);}}}
+  if let Some(observation)=&mut self.sample_observation{observation.clear();observation.try_reserve(samples.len()).map_err(|_|"Canvas sample observation allocation failed")?;observation.extend(samples.iter().cloned());}
+  if let Some(extent)=extent{let w=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let h=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;if w>4096||h>4096||w.checked_mul(h).and_then(|n|n.checked_mul(4)).is_none_or(|n|n>16*1024*1024){return Err("Canvas tile coverage budget exceeded".into());}}
+  let pose=ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[base.x,base.y]};
+  let ordered=if let Some(factory)=factory{Some(ordered::Ordered::build(&samples,anchor,[physical[0]-anchor[0]as f64,physical[1]-anchor[1]as f64],ppp as f32,factory,pose)?)}else{None};
+  let (size,offset,pixels)=if let Some(extent)=extent{let width=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let height=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;let bytes=width.checked_mul(height).and_then(|n|n.checked_mul(4)).filter(|&n|n<=16*1024*1024).ok_or("Canvas tile coverage budget exceeded")?;if width>4096||height>4096{return Err("Canvas tile dimensions exceeded".into());}let mut pixels=Vec::new();if ordered.is_none(){pixels.try_reserve_exact(bytes).map_err(|_|"Canvas tile allocation failed")?;pixels.resize(bytes,0);}
+   if ordered.is_none(){for sample in samples{for row in 0..sample.image.height{let y=sample.y+row as i64;if y<sample.clip[1]||y>=sample.clip[3]{continue;}for col in 0..sample.image.width{let x=sample.x+col as i64;if x<sample.clip[0]||x>=sample.clip[2]{continue;}let src=&sample.image.pixels[(row*sample.image.width+col)*4..][..4];let dst=&mut pixels[((y-extent[1])as usize*width+(x-extent[0])as usize)*4..][..4];source_over(dst,src);}}}}
    ([width,height],[extent[0]-anchor[0],extent[1]-anchor[1]],pixels)
   }else{([0,0],[0,0],Vec::new())};
   self.tiles.try_reserve(1).map_err(|_|"Canvas tile cache allocation failed")?;self.tile_order.try_reserve(1).map_err(|_|"Canvas tile order allocation failed")?;
-  let bytes=pixels.len();let texture=if bytes==0{None}else{Some(crate::paper_raw_texture::create(painter.ctx(),size,pixels)?)};
-  if let Some(old)=self.tiles.remove(&item.id){self.tile_bytes-=old.bytes;}self.tile_order.retain(|&id|id!=item.id);while self.tiles.len()>=10000||self.tile_bytes+bytes>32*1024*1024{let id=self.tile_order.pop_front().ok_or("Canvas tile cache invariant failed")?;if let Some(old)=self.tiles.remove(&id){self.tile_bytes-=old.bytes;}}
-  let tile=Tile{draws:Arc::downgrade(draws),density:density.to_bits(),phase,offset,size,texture,bytes};let result=tile_image(&tile,anchor,ppp);self.tiles.insert(item.id,tile);self.tile_order.push_back(item.id);self.tile_bytes+=bytes;self.tile_builds+=1;Ok(result)
+  let bytes=ordered.as_ref().map_or(pixels.len(),|p|p.bytes);let texture=if ordered.is_some()||pixels.is_empty(){None}else{Some(crate::paper_raw_texture::create(painter.ctx(),size,pixels)?)};
+  self.retire_tile(item.id);self.tile_order.retain(|&id|id!=item.id);while self.tiles.len()>=10000||self.tile_bytes+bytes>32*1024*1024{let id=self.tile_order.pop_front().ok_or("Canvas tile cache invariant failed")?;self.retire_tile(id);}
+  if let Some(ordered)=&ordered{self.ordered_builds+=1;self.ordered_items+=1;self.ordered_parts+=ordered.part_count();self.ordered_bytes+=ordered.bytes;}let tile=Tile{factory_identity:factory.map(|f|f.cache_identity()),ordered,draws:Arc::downgrade(draws),density:density.to_bits(),phase,offset,size,texture,bytes};let result=tile_image(&tile,anchor,ppp);self.tiles.insert(item.id,tile);self.tile_order.push_back(item.id);self.tile_bytes+=bytes;self.tile_builds+=1;Ok(result)
  }
- pub fn paint(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter)->Result<Rect,String>{
+ pub fn paint(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter)->Result<Rect,String>{self.paint_with_factory(painter,sheet,item,text,model,scene,zoom,origin,resources,None)}
+ pub fn paint_with_factory(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter,factory:Option<&crate::composer_backend::Factory>)->Result<Rect,String>{
   if !zoom.is_finite()||zoom<=0.||!origin.x.is_finite()||!origin.y.is_finite(){return Err("Invalid canvas text transform".into());}
   let draws=self.prepare(sheet,item,text,model,scene,resources)?;let count=draws.iter().map(|d|d.text.as_ref().map_or(usize::from(!d.path.is_empty()),|t|t.glyphs.len()+t.decorations.len())).sum::<usize>();if self.frame_ops.checked_add(count).is_none_or(|n|n>262144){return Err("Canvas glyph frame budget exceeded".into());}self.frame_textures.try_reserve(1).map_err(|_|"Canvas glyph lifetime allocation failed")?;
   let mut bounds=Rect::NOTHING;
-  for draw in draws.iter(){if let Some(text)=&draw.text{if text.font.synthetic_bold_offset_px(text.bold)?>0.{return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}}}
+  for draw in draws.iter(){if let Some(text)=&draw.text{if text.font.synthetic_bold_offset_px(text.bold)?>0. && !text.font.supports_synthetic_bold_rasterization(){return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}}}
   // Publish one complete cached item only after all source paints/resources validate.
-  if let Some((texture,rect))=self.tile(painter,&draws,item,zoom,origin)?{painter.image(texture.id(),rect,Rect::from_min_max(Pos2::ZERO,Pos2::new(1.,1.)),Color32::WHITE);self.frame_textures.push(texture);bounds=bounds.union(rect);}self.frame_ops+=count;Ok(bounds)
+  if let Some((texture,rect))=self.tile(painter,&draws,item,zoom,origin,factory)?{painter.image(texture.id(),rect,Rect::from_min_max(Pos2::ZERO,Pos2::new(1.,1.)),Color32::WHITE);self.frame_textures.push(texture);bounds=bounds.union(rect);}if let Some(tile)=self.tiles.get(&item.id){if let Some(ordered)=&tile.ordered{
+   let base=origin+Vec2::new(item.pos.0 as f32*zoom,item.pos.1 as f32*zoom);ordered.paint(painter,ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[base.x,base.y]})?;
+   let ppp=painter.ctx().pixels_per_point()as f64;let anchor=[(f64::from(base.x)*ppp).floor()as i64,(f64::from(base.y)*ppp).floor()as i64];
+   if tile.size[0]>0&&tile.size[1]>0{let min=Pos2::new(((anchor[0]+tile.offset[0])as f64/ppp)as f32,((anchor[1]+tile.offset[1])as f64/ppp)as f32);bounds=bounds.union(Rect::from_min_size(min,Vec2::new(tile.size[0]as f32/ppp as f32,tile.size[1]as f32/ppp as f32)));}
+  }}self.frame_ops+=count;Ok(bounds)
  }
 }
 
 // Qt 6.12 raster painter: horizontal four-phase FT cache; without the
 // VerticalSubpixelPositioning hint the baseline is rounded and y phase is zero.
-fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
- let phase=((x.rem_euclid(64)+1)/16)*16;
+#[cfg(test)]
+fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){device_position_with_count(x,y,4)}
+fn device_position_with_count(x:i64,y:i64,count:u8)->(f64,f64,[u8;2]){
+ // QFontEngine divides by QFixed(count), whose division rounds nearest.
+ // Integer division here incorrectly maps phase2/3 to42 instead of43.
+ let phase=if count<=1{0}else{let count=i64::from(count);let bucket=(x.rem_euclid(64)+1)*count/64;(bucket*128+count)/(count*2)};
  (x.div_euclid(64)as f64+(phase/64)as f64,(y+32).div_euclid(64)as f64,[(phase%64)as u8,0])
 }
 #[cfg(test)]mod device_position_tests{use super::*;
+ #[test]fn native_dynamic_phase_count_preserves_qfixed_fraction_and_negative_floor(){
+  assert_eq!(device_position_with_count(21,31,3),(0.,0.,[21,0]));
+  assert_eq!(device_position_with_count(59,31,3),(0.,0.,[43,0]));
+  assert_eq!(device_position_with_count(14,32,12),(0.,1.,[11,0]));
+  assert_eq!(device_position_with_count(-1,-33,3),(0.,-1.,[0,0]));
+  assert_eq!(device_position_with_count(63,0,3),(1.,0.,[0,0]));
+  assert_eq!(device_position_with_count(21,31,1),(0.,0.,[0,0]));
+  assert_ne!(device_position_with_count(21,31,3),device_position(21,31));
+ }
  #[test]fn source_quarter_phases_and_rounded_baselines(){
   assert_eq!(device_position(14,31),(0.,0.,[0,0]));assert_eq!(device_position(15,32),(0.,1.,[16,0]));
   assert_eq!(device_position(63,63),(1.,1.,[0,0]));assert_eq!(device_position(-1,-33),(0.,-1.,[0,0]));
@@ -104,7 +132,7 @@ fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
   let warm=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&warm));assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));
   let huge="X".repeat(20*1024);assert!(cache.prepare(&sheet,&item,&huge,1,1,&mut resources).is_err());assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));assert_eq!(cache.layout_order.iter().filter(|&&id|id==item.id).count(),1);
   let restored=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&restored));
-  let text=first.iter().find_map(|d|d.text.as_ref()).unwrap();let glyph=text.glyphs[0].glyph;let a=cache.image(&text.font,glyph,1.,[0,0],false,Color32::BLACK).unwrap();let b=cache.image(&text.font,glyph,1.+1e-7,[0,0],false,Color32::BLACK).unwrap();assert!(!Arc::ptr_eq(&a.pixels,&b.pixels));assert_eq!(cache.glyphs.len(),2);
+  let text=first.iter().find_map(|d|d.text.as_ref()).unwrap();let glyph=text.glyphs[0].glyph;let a=cache.image(&text.font,glyph,1.,[0,0],false,false,Color32::BLACK).unwrap();let b=cache.image(&text.font,glyph,1.+1e-7,[0,0],false,false,Color32::BLACK).unwrap();assert!(!Arc::ptr_eq(&a.pixels,&b.pixels));assert_eq!(cache.glyphs.len(),2);
   cache.retire_layout(item.id);assert_eq!((cache.layout_bytes,cache.font_bytes,cache.font_refs.len()),(0,0,0));
  }
 }
@@ -149,4 +177,11 @@ fn thin_line_sample(line:[f64;3],width:f64,color:[f32;4],clip:[i64;4])->Result<O
 
 #[cfg(test)]mod source_thin_line_tests{use super::*;
  #[test]fn actual_qt_thin_line_clip_branch_controls(){let data:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/paper-canvas-background-underline/qt-thin-line-controls.json")).unwrap();for case in data["cases"].as_array().unwrap(){let line=std::array::from_fn(|i|case["line"][i].as_f64().unwrap());let clip=if case["clipped"].as_bool().unwrap(){[0,0,8,8]}else{[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2]};let sample=thin_line_sample(line,case["width"].as_f64().unwrap(),[30./255.,36./255.,44./255.,1.],clip).unwrap().unwrap();let mut pixels=vec![0u8;8*8*4];for y in 0..sample.image.height{for x in 0..sample.image.width{let dst=((sample.y as usize+y)*8+sample.x as usize+x)*4;let src=(y*sample.image.width+x)*4;pixels[dst..dst+4].copy_from_slice(&sample.image.pixels[src..src+4]);}}let expected=case["pixels"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()as u8).collect::<Vec<_>>();assert_eq!(pixels,expected,"line {:?} width {} clipped {}",line,case["width"],case["clipped"]);}}
+}
+
+#[cfg(target_os="macos")]
+#[path="composer_text_canvas_probe.rs"] mod native_font_probe;
+#[cfg(target_os="macos")]
+pub(super) fn run_native_font_tiles(root: &std::path::Path) -> Result<(), String> {
+    native_font_probe::run(root)
 }

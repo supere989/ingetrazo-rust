@@ -1,0 +1,11 @@
+{
+  "reviewed_source": "dbe5275c20c9e05fca4c1f86f38e2dea2d7a7c49",
+  "original_registry_files_hash_verified": 512,
+  "modified_original_files": [
+    "harfbuzz/src/harfbuzz.cc",
+    "harfbuzz/src/hb-aat-layout-trak-table.hh",
+    "src/lib.rs"
+  ],
+  "review": "New policy checks explicit font user data; legacy branch remains unchanged. Application enables only positive point-size native CoreText paper context before immutable publication. Font cache identity includes policy version. Exact retained upstream tracking source reviewed; focused worker controls retained without redundant rerun.",
+  "remaining": "Actual native macOS shaping and whole Canvas/PDF replay required. No full parity acceptance."
+}

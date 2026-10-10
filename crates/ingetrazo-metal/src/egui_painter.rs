@@ -371,12 +371,41 @@ impl EguiPainter {
         metal: &NativeMetal,
         delta: &egui::TexturesDelta,
     ) -> Result<(), String> {
-        objc2::rc::autoreleasepool(|_| self.update_textures_inner(metal, delta))
+        self.update_textures_encoded(metal, delta, &[])
+    }
+    /// Encoded premultiplied RGBA8 replacements share the ordinary transactional
+    /// texture owner. No Color32 conversion or extra submission is introduced.
+    pub fn update_textures_encoded(
+        &mut self,
+        metal: &NativeMetal,
+        delta: &egui::TexturesDelta,
+        encoded: &[(TextureId, [usize; 2], &[u8])],
+    ) -> Result<(), String> {
+        let mut raw = HashMap::new();
+        raw.try_reserve(encoded.len()).map_err(|_| "Encoded Metal metadata allocation failed")?;
+        for (id, size, bytes) in encoded {
+            if raw.insert(*id, (*size, *bytes)).is_some() || size.contains(&0) || size.iter().any(|n| *n > 4096)
+                || size[0].checked_mul(size[1]).and_then(|n| n.checked_mul(4)) != Some(bytes.len()) {
+                return Err("Invalid or duplicate encoded Metal texture".into());
+            }
+        }
+        let mut matched = std::collections::HashSet::new();
+        matched.try_reserve(raw.len()).map_err(|_| "Encoded Metal identity allocation failed")?;
+        for (id, change) in &delta.set {
+            if raw.contains_key(id) && (!matched.insert(*id) || change.pos.is_some()) {
+                return Err("Encoded Metal texture requires one complete replacement".into());
+            }
+        }
+        if matched.len() != raw.len() {
+            return Err("Encoded Metal texture has no managed delta".into());
+        }
+        objc2::rc::autoreleasepool(|_| self.update_textures_inner(metal, delta, &raw))
     }
     fn update_textures_inner(
         &mut self,
         metal: &NativeMetal,
         delta: &egui::TexturesDelta,
+        encoded: &HashMap<TextureId, ([usize; 2], &[u8])>,
     ) -> Result<(), String> {
         self.poll_mip_jobs()?;
         if !delta.set.is_empty() && self.mip_jobs.len() >= 3 {
@@ -387,7 +416,8 @@ impl EguiPainter {
         let mut copied_bytes = 0u64;
         let mut uploaded_bytes = 0u64;
         for (id, change) in &delta.set {
-            let size = change.image.size();
+            let raw = encoded.get(id);
+            let size = raw.map_or_else(|| change.image.size(), |(size, _)| *size);
             if size.contains(&0) || size.iter().any(|x| *x > 4096) {
                 return Err("Metal egui texture extent exceeds4096".into());
             }
@@ -396,7 +426,7 @@ impl EguiPainter {
                 egui::ImageData::Color(c) => c.pixels.len(),
                 egui::ImageData::Font(f) => f.pixels.len(),
             };
-            if source_count != size[0] * size[1] {
+            if raw.is_none() && source_count != size[0] * size[1] {
                 return Err("Malformed egui texture pixel count".into());
             }
             let old = staged.get(id).or_else(|| self.textures.get(id));
@@ -424,6 +454,9 @@ impl EguiPainter {
                 copied_bytes += pixels.len() as u64;
             }
             let pos = change.pos.unwrap_or([0, 0]);
+            if let Some((_, bytes)) = raw {
+                pixels.bytes.copy_from_slice(bytes);
+            } else {
             let mut write = |index: usize, color: egui::Color32| {
                 let x = index % size[0];
                 let y = index / size[0];
@@ -441,6 +474,7 @@ impl EguiPainter {
                         write(i, color)
                     }
                 }
+            }
             }
             if let Some(old) = old {
                 cpu_bytes = cpu_bytes

@@ -1,0 +1,325 @@
+{
+  "run": 38080304928,
+  "job": 114295669561,
+  "artifact": 11680108158,
+  "sha256": "f7281fe2e1a3da16f3e688fc04b27621ed6a5ae23b9de51f30cb67ab888784b2",
+  "source": "64263f6886cf3b017b3b050ca64ab8c58a5b7bb6",
+  "font_cases": [
+    {
+      "name": "helvetica",
+      "observations": [
+        {
+          "actual_painter_font": "Helvetica",
+          "actual_painter_style": "Regular",
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": "Helvetica",
+              "style": "Regular",
+              "glyphs": [
+                36,
+                37,
+                38
+              ],
+              "positions": [
+                [
+                  0.0,
+                  77.0
+                ],
+                [
+                  66.6875,
+                  77.0
+                ],
+                [
+                  133.375,
+                  77.0
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/Fonts/Helvetica.ttc",
+                  "index": 0,
+                  "postscript": "Helvetica",
+                  "sha256": "25eceb458d4baf628ee0b6a135a9f8ac5ec7b2826646720834bd2bf00dfc825a"
+                }
+              ],
+              "table_hashes": [
+                "3e946e2b0dabe7088b2ed912076b38c5b61ed79aa0b4e8fd16e25c017f5e01d0",
+                "612ca903dcbd9e08b4c0ed48e09d8b6cb643837734897ef813d3efa848b598d7"
+              ],
+              "raw_head_hex": "00010000000000006178cd6a5f0f3cf500110800000000005f4d8f0000000000dee02ed6f865fc270b9108f900000009000100010000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "helvetica-bold",
+      "observations": [
+        {
+          "actual_painter_font": "Helvetica",
+          "actual_painter_style": "Bold",
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": "Helvetica",
+              "style": "Bold",
+              "glyphs": [
+                36,
+                37,
+                38
+              ],
+              "positions": [
+                [
+                  0.0,
+                  77.0
+                ],
+                [
+                  72.203125,
+                  77.0
+                ],
+                [
+                  144.40625,
+                  77.0
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/Fonts/Helvetica.ttc",
+                  "index": 1,
+                  "postscript": "Helvetica-Bold",
+                  "sha256": "25eceb458d4baf628ee0b6a135a9f8ac5ec7b2826646720834bd2bf00dfc825a"
+                }
+              ],
+              "table_hashes": [
+                "1c7d6d4fcc441bbd7cb52b1ee2b13424888177200caf29679f9641a38e5852d7",
+                "4e48554c1e836182936ded29bb84482b9255d29f582da625ca73dd9044456fa8"
+              ],
+              "raw_head_hex": "0001000000010000215bc72b5f0f3cf5001b080000000000a228800000000000dee02ed7f7dcfc270afa07b300010006000200010000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "helvetica-italic",
+      "observations": [
+        {
+          "actual_painter_font": "Helvetica",
+          "actual_painter_style": "Oblique",
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": "Helvetica",
+              "style": "Oblique",
+              "glyphs": [
+                36,
+                37,
+                38
+              ],
+              "positions": [
+                [
+                  0.0,
+                  77.0
+                ],
+                [
+                  66.6875,
+                  77.0
+                ],
+                [
+                  133.375,
+                  77.0
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/Fonts/Helvetica.ttc",
+                  "index": 2,
+                  "postscript": "Helvetica-Oblique",
+                  "sha256": "25eceb458d4baf628ee0b6a135a9f8ac5ec7b2826646720834bd2bf00dfc825a"
+                }
+              ],
+              "table_hashes": [
+                "abaab44406604ef8a3f2f39a1ac5f2bfcb6fec46edea751a2b84b386d9958575",
+                "398275f7364005b279bc41e575f4b5adee0333920e444fd84859f1219c3ffca5"
+              ],
+              "raw_head_hex": "00010000000000008fb4d2fc5f0f3cf500110800000000005f4d8f0000000000dee02ed7f88afc270c92091b00020009000100010000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "times-bold-italic",
+      "observations": [
+        {
+          "actual_painter_font": ".Times Fallback",
+          "actual_painter_style": "Regular",
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": ".Times Fallback",
+              "style": "Regular",
+              "glyphs": [
+                36,
+                37,
+                38
+              ],
+              "positions": [
+                [
+                  0.0,
+                  89.109375
+                ],
+                [
+                  72.203125,
+                  89.109375
+                ],
+                [
+                  138.890625,
+                  89.109375
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/Fonts/Supplemental/Times New Roman.ttf",
+                  "index": 0,
+                  "postscript": "TimesNewRomanPSMT",
+                  "sha256": "f3b4ffff71c2a0c7227d37497683b2498fb2d0a4e8beae26f022e3ccfcaabfa3"
+                }
+              ],
+              "table_hashes": [
+                "67aebcac8560c026f94d7d63f87e066cf54a2517e34b475f9bc7fadbae9dbb17",
+                "665211e1d36fb7a8c0633e4b54be374b5fc281e7d82288b0828d6509231e6916"
+              ],
+              "raw_head_hex": "000100000005028fd832d3e05f0f3cf50819080000000000a2e31dc200000000cfb4b9a9fb74fd8c1000080e00000009000100010000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cjk",
+      "observations": [
+        {
+          "actual_painter_font": "Helvetica",
+          "actual_painter_style": "Regular",
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": "PingFang SC",
+              "style": "Regular",
+              "glyphs": [
+                664,
+                895
+              ],
+              "positions": [
+                [
+                  0.0,
+                  105.984375
+                ],
+                [
+                  100.40625,
+                  105.984375
+                ]
+              ],
+              "physical_faces": [],
+              "table_hashes": [
+                "6e976b82bd0c2a57294dbc824bb060fdb6a52912439c008eefa656bf32940499",
+                "686705aea0f7ba2b4f8e26e63ea95ba39962c223c791ba35a4c1ce3317799b08"
+              ],
+              "raw_head_hex": "00010000000000002e7621905f0f3cf5000003e800000000e2c656f000000000e2c72496fff1ff1803ec038600000009000000010000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arabic",
+      "observations": [
+        {
+          "actual_painter_font": "Helvetica",
+          "actual_painter_style": "Regular",
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": "Geeza Pro",
+              "style": "Regular",
+              "glyphs": [
+                240,
+                341,
+                302,
+                273,
+                243,
+                364,
+                247
+              ],
+              "positions": [
+                [
+                  197.96875,
+                  89.5
+                ],
+                [
+                  174.6875,
+                  89.5
+                ],
+                [
+                  132.296875,
+                  89.5
+                ],
+                [
+                  91.53125,
+                  89.5
+                ],
+                [
+                  61.875,
+                  89.5
+                ],
+                [
+                  32.21875,
+                  89.5
+                ],
+                [
+                  0.0,
+                  89.5
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/Fonts/GeezaPro.ttc",
+                  "index": 0,
+                  "postscript": "GeezaPro",
+                  "sha256": "5b4309f8d596abee520c0826885a39483a16fb244489d2c313322575df4b04a2"
+                }
+              ],
+              "table_hashes": [
+                "23b7b9e52a62bcca03fc3020bd1ac8240c8c26683d1dc21bb72d50ab6676e85c",
+                "495a2d6caa5aa074e3afd61545ad74015fa974b3cc6601e2b7be7408ec2997a6"
+              ],
+              "raw_head_hex": "0001000000010000bc9ed4175f0f3cf5000b08a400000000b29dfa0000000000e31a3d1fff1bfaa4379b0a5400000009000200010000"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "de366e14ad3b6e6a6df7c8a2c2330a1fdb19dd6f13206eded6fe7afe64291c25",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 422,
+      "skipped": 2,
+      "pending": 2,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=422",
+      "physical_input_claim": false,
+      "physical_mac_claim": false
+    }
+  },
+  "scope": "Retained Intel original observations and failed Canvas capture; not parity acceptance"
+}

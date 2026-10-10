@@ -1,0 +1,2999 @@
+{
+  "integration_head": "17cfa94390235035706d92a3f97df88ae7d53e84",
+  "native_head": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+  "merge_base": "af9f7ef929a611a1107ad25b1759c79ac9159132",
+  "source_commit_order": [
+    {
+      "commit": "5cd7e4fb0ac5fa5f05c305d4f65198862d5c6514",
+      "subject": "Accept direct encoded RGBA replacements in Metal texture transactions",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/egui_painter.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "db89515484c7b18cbb246da7591dda518b965774",
+      "subject": "Add native Metal raw pixel and transactional ownership fixture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/examples/egui_raw_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "7b0b196d391fc8f8acda828d73e16d82f32d1225",
+      "subject": "Route native Metal Canvas bytes through transactional texture upload",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal.rs",
+        "crates/ingetrazo-gui/src/paper_raw_texture.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "acfce2907975b1c50898ee67081b49ef22ab5fd2",
+      "subject": "Require the intended Metal allocation refusal in GPU acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/examples/egui_raw_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "efbbcb50b6c5c0acba2a1bd06d7aadecd78a9c78",
+      "subject": "Exercise actual native Metal Canvas host with bounded own-window capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml",
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "470c2248fce4f1abfe34d8371882298d64dea0af",
+      "subject": "Require acknowledged Canvas textures and stable warm frames before capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal.rs",
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "4b5fd0da24897a1d53159a688a3516798a113242",
+      "subject": "Retain failed actual Canvas presentation and expose terminal frame diagnostics",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "df37af7ab53d8de2e652322ba17fc1d9258bc30b",
+      "subject": "Add scoped native CoreText paper font matching and collection identity",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_resolver.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "64c4ccb5a51276fde941e91da72bcebe91954556",
+      "subject": "Check actual CoreText file traits and native provider acceptance in CI",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "68cee8daf2534ceecdc6046b374104928fab3f78",
+      "subject": "Decode Macintosh PostScript identities and retain native provider failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_resolver.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "ed56063a31f23aef991639e4de38f72fc060e5bd",
+      "subject": "Retain every native font outcome and collect independent Canvas evidence",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "64263f6886cf3b017b3b050ca64ab8c58a5b7bb6",
+      "subject": "Retain Intel diagnostic failures and identify oversized native font selection",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8999204ebe487bec090480d6b12abb90d1f90636",
+      "subject": "Retain Canvas raw queue observations when capture readiness fails",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "c4d8fa5267cfc5fd70756f3e1e17348dd3e8b1a3",
+      "subject": "Include application text errors and sheet state in failed Canvas acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "2f69df234b53e712b3a299b0d916071446ccdd02",
+      "subject": "Preserve Macintosh PostScript identity in shared font cache metadata",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "e29a1c202a59d82b2794696f3497d1284f71515b",
+      "subject": "Account cancelled raw uploads when admitting stable Metal Canvas capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs",
+        "crates/ingetrazo-gui/src/paper_raw_texture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "64874b74c4b3d197831c413ba1ea65f8dc1fabf2",
+      "subject": "Observe live Metal visibility before lifecycle teardown",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "579087242d29bfb4b75ba1ca115fe01657f432c6",
+      "subject": "Establish Canvas fixture clean state through actual application save",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8898a61cfdae39be74d952d7d67381d51e47a401",
+      "subject": "Inspect AppKit occlusion alongside Metal display completion",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/presentation.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "76f391aa640463347663427a8f4fbc00c37e6a29",
+      "subject": "Route macOS paper glyphs through bounded retained CoreText owners",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/lib.rs",
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_resolver.rs",
+        "crates/ingetrazo-formats/src/paper_font_sfnt.rs",
+        "crates/ingetrazo-formats/src/paper_font_subset.rs",
+        "crates/ingetrazo-formats/src/paper_text.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "6ccc93cae38704edde179fe6a1ce6a91bdc2c5d8",
+      "subject": "Retain ARM font failures and capture unresolved presentation diagnostically",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "38a7b27bd371dad44cc7535bcf9e7e8cdb92cfc7",
+      "subject": "Resolve named native font instances through bounded physical metadata identity",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_sfnt.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "61dcff6b57912cacc67da93ebdbf99d2ba47c3a7",
+      "subject": "Reject duplicate font identity tags and retain name lookup admission failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_sfnt.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "64d2edfb9992d7e7daafa4e1bd90cd0bba112cc2",
+      "subject": "Prepare strict actual macOS production text PDF comparisons",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_pdf_fixture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-pages.py",
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "f5eea66ea800bf3d4b52077fe0cd93b4ab27c1a2",
+      "subject": "Resolve virtual CoreText physical resources through exact native metadata witnesses",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "a1911c0f3a9e80c90e432c4fc2e413bf00f454ea",
+      "subject": "Use source native CoreText italic synthesis and metric quantization order",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "1cbcabd4f073a62a8eeb86c4f847686430d7a77f",
+      "subject": "Keep PDF synthesis matrix while scoping CoreText shear to native raster",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "96505419824c7b6868a3ad868320dbd4e96528d9",
+      "subject": "Use source native horizontal metrics for CoreText PDF subsets",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font_subset.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "93485712fd023695acb11df521f01bab22210ba9",
+      "subject": "Compare source physical font traits separately from required PDF synthesis",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-matches.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "d53ae1119132f8d6556ed25b0d6fd115aa59d421",
+      "subject": "Require successful native PDF synthesis metric observation",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "7a944bd5b749e35d517b3afaf4e29c3f8c8a4ada",
+      "subject": "Supply source Qt paper point context to immutable native HarfBuzz fonts",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-formats/src/paper_text.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "29b081cb27dcab0c015e0e1b2b13184e7c495ad9",
+      "subject": "Observe actual native immutable HarfBuzz point size",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "46068820a1614427dc0e07f65fb42595f1514299",
+      "subject": "Match native Canvas bold draw and decode CoreGraphics ARGB coverage",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "17dafae9c7864e8720d05a55ed088059fce82286",
+      "subject": "Add strict production native Canvas font tile and warm cache observations",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/examples/native_paper_font_tiles.rs",
+        "crates/ingetrazo-gui/src/composer.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-tiles.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "ab536e525baed2d5c2bc880d8878f97018b56965",
+      "subject": "Match Qt negative fixed glyph placement and retain fifth native failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "2261f2885fed5a2433b7b784c88f40a2bd0925e3",
+      "subject": "Acquire native subpixel count from bounded cold raster samples",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "7e48fe1060d84ccf2cdeb4512727767d7af734f0",
+      "subject": "Observe native and original tracking table acquisition without changing shaping",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "9a3b6ec4a29ef2b69a427d52cc8f33cdc918c72d",
+      "subject": "fix(fonts): opt native paper fonts into source Qt tracking in HarfBuzz",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "Cargo.lock",
+        "Cargo.toml",
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_text.rs",
+        "vendor/harfbuzz-sys/Cargo.toml",
+        "vendor/harfbuzz-sys/Cargo.toml.orig",
+        "vendor/harfbuzz-sys/INGETRAZO-PROVENANCE.json",
+        "vendor/harfbuzz-sys/INGETRAZO.md",
+        "vendor/harfbuzz-sys/LICENSE-APACHE",
+        "vendor/harfbuzz-sys/LICENSE-MIT",
+        "vendor/harfbuzz-sys/README.md",
+        "vendor/harfbuzz-sys/build.rs",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/build-win32.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/build-win64.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/deploy-docs.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/publish_release_artifact.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements-fonttools.in",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements-fonttools.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements.in",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/win32-cross-file.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/win64-cross-file.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.circleci/config.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.clang-format",
+        "vendor/harfbuzz-sys/harfbuzz/.codecov.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.editorconfig",
+        "vendor/harfbuzz-sys/harfbuzz/.github/dependabot.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/arm-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/cifuzz.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/configs-build.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/coverity-scan.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/linux-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/macos-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/msvc-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/msys2-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/scorecard.yml",
+        "vendor/harfbuzz-sys/harfbuzz/AUTHORS",
+        "vendor/harfbuzz-sys/harfbuzz/BUILD.md",
+        "vendor/harfbuzz-sys/harfbuzz/CMakeLists.txt",
+        "vendor/harfbuzz-sys/harfbuzz/CONFIG.md",
+        "vendor/harfbuzz-sys/harfbuzz/COPYING",
+        "vendor/harfbuzz-sys/harfbuzz/Makefile.am",
+        "vendor/harfbuzz-sys/harfbuzz/NEWS",
+        "vendor/harfbuzz-sys/harfbuzz/README",
+        "vendor/harfbuzz-sys/harfbuzz/README.md",
+        "vendor/harfbuzz-sys/harfbuzz/README.mingw.md",
+        "vendor/harfbuzz-sys/harfbuzz/README.python.md",
+        "vendor/harfbuzz-sys/harfbuzz/RELEASING.md",
+        "vendor/harfbuzz-sys/harfbuzz/SECURITY.md",
+        "vendor/harfbuzz-sys/harfbuzz/TESTING.md",
+        "vendor/harfbuzz-sys/harfbuzz/THANKS",
+        "vendor/harfbuzz-sys/harfbuzz/autogen.sh",
+        "vendor/harfbuzz-sys/harfbuzz/configure.ac",
+        "vendor/harfbuzz-sys/harfbuzz/git.mk",
+        "vendor/harfbuzz-sys/harfbuzz/harfbuzz.doap",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_check_link_flag.m4",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_code_coverage.m4",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_cxx_compile_stdcxx.m4",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_pthread.m4",
+        "vendor/harfbuzz-sys/harfbuzz/meson.build",
+        "vendor/harfbuzz-sys/harfbuzz/meson_options.txt",
+        "vendor/harfbuzz-sys/harfbuzz/mingw-configure.sh",
+        "vendor/harfbuzz-sys/harfbuzz/replace-enum-strings.cmake",
+        "vendor/harfbuzz-sys/harfbuzz/src/ArabicPUASimplified.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/ArabicPUATraditional.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/Makefile.am",
+        "vendor/harfbuzz-sys/harfbuzz/src/Makefile.sources",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/CBDT/CBDT.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/COLR/COLR.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/COLR/colrv1-closure.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/CPAL/CPAL.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/sbix/sbix.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/svg/svg.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/Coverage.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/CoverageFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/CoverageFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/RangeRecord.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GDEF/GDEF.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/Anchor.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorFormat3.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorMatrix.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ChainContextPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/Common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ContextPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/CursivePos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/CursivePosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ExtensionPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/GPOS.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/LigatureArray.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkArray.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkBasePos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkBasePosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkLigPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkLigPosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkMarkPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkMarkPosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkRecord.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairPosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairPosFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairSet.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairValueRecord.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PosLookup.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PosLookupSubTable.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/SinglePos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/SinglePosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/SinglePosFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ValueFormat.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/AlternateSet.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/AlternateSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/AlternateSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ChainContextSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/Common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ContextSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ExtensionSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/GSUB.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/Ligature.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/LigatureSet.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/LigatureSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/LigatureSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/MultipleSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/MultipleSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ReverseChainSingleSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ReverseChainSingleSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/Sequence.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SingleSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SingleSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SingleSubstFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SubstLookup.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SubstLookupSubTable.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/types.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/CompositeGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/Glyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/GlyphHeader.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/SimpleGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/SubsetGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/VarCompositeGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/composite-iter.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/coord-setter.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/glyf-helpers.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/glyf.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/loca.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/path-builder.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/name/name.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/addTable.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-c-linkage-decls.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-externs.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-header-guards.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-includes.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-libstdc++.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-static-inits.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-symbols.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/failing-alloc.c",
+        "vendor/harfbuzz-sys/harfbuzz/src/fix_get_types.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-arabic-joining-list.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-arabic-pua.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-arabic-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-def.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-emoji-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-harfbuzzcc.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-hb-version.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-indic-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-os2-unicode-ranges.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-ragel-artifacts.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-tag-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-ucd-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-use-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-vowel-constraints.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/classdef-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/coverage-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/gsubgpos-context.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/gsubgpos-context.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/gsubgpos-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/markbasepos-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/pairpos-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/serialize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/split-helpers.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/test-classdef-graph.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-cairo.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-config.cmake.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-gobject.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-icu.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-subset.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-subset.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-ankr-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-bsln-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-feat-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-just-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-kerx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-morx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-opbd-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-trak-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-ltag-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-map.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-algs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-array.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-atomic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bimap.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bit-page.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bit-set-invertible.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bit-set.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-blob.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-blob.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-blob.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-json.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-json.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-glyphs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-glyphs.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-unicode.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-unicode.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-serialize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-verify.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cache.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo-utils.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo-utils.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff-interp-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff-interp-cs-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff-interp-dict-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff1-interp-cs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff2-interp-cs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-common.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-common.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-config.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-coretext.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-coretext.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cplusplus.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-debug.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-deprecated.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-directwrite.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-directwrite.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-dispatch.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-draw.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-draw.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-draw.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face-builder.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-fallback-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-features.h.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-font.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-font.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-font.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ft-colr.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ft.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ft.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gdi.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gdi.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-glib.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-glib.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-enums.cc.tmpl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-enums.h.tmpl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-structs.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-structs.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-graphite2.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-graphite2.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-icu.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-icu.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-iter.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-kern.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-limits.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-machinery.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-map.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-map.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-meta.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ms-feature-ranges.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-multimap.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-mutex.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-null.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number-parser.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number-parser.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-object.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-open-file.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-open-type.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff1-std-str.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff1-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff1-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff2-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff2-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cmap-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-color.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-color.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-deprecated.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-face-table-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-face.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-face.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-font.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-font.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-gasp-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-glyf-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-hdmx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-head-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-hhea-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-hmtx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-kern-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-base-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gdef-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gpos-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gsub-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gsubgpos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-jstf-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-map.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-math-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-math.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-math.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-maxp-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-meta-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-meta.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-meta.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-metrics.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-metrics.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-metrics.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name-language-static.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name-language.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-os2-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-os2-unicode-ranges.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-post-macroman.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-post-table-v2subset.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-post-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-fallback.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-fallback.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-normalize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-normalize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-fallback.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-joining-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-pua.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-win1256.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-default.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-hangul.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-hebrew.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-khmer-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-khmer-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-khmer.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-myanmar-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-myanmar-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-myanmar.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-syllabic.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-syllabic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-thai.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-vowel-constraints.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-vowel-constraints.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-stat-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-tag-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-tag.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-avar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-cvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-fvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-gvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-hvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-mvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-vorg-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-outline.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-outline.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint-extents.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint-extents.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-pool.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-priority-queue.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-repacker.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-sanitize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-serialize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set-digest.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape-plan.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape-plan.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape-plan.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper-impl.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-static.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-string-array.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-style.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-style.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-accelerator.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff-common.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff1.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff2.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-input.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-input.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-iup.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-iup.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-solver.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-solver.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-plan-member-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-plan.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-plan.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-repacker.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-repacker.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ucd-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ucd.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode-emoji-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-uniscribe.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-uniscribe.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-utf.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-vector.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-version.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-version.h.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-blob.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-buffer.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-face.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-font.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-shape.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/justify.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/main.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/meson.build",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/COPYING",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/IndicPositionalCategory-Additional.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/IndicShapingInvalidCluster.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/IndicSyllabicCategory-Additional.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/relative_to.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/sample.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-algs.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-array.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-bimap.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-buffer-serialize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-gpos-size-params.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-gsub-get-alternates.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-gsub-would-substitute.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-item-varstore.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-iter.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-machinery.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-multimap.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-number.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-ot-glyphname.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-ot-meta.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-ot-name.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-priority-queue.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-repacker.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-serialize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-set.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-subset-instancer-solver.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-tuple-varstore.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-unicode-ranges.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-use-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-vector.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/update-unicode-tables.make",
+        "vendor/harfbuzz-sys/harfbuzz/src/wasm/graphite/Makefile",
+        "vendor/harfbuzz-sys/harfbuzz/src/wasm/graphite/shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/xkcd.png",
+        "vendor/harfbuzz-sys/src/bindings.rs",
+        "vendor/harfbuzz-sys/src/coretext.rs",
+        "vendor/harfbuzz-sys/src/directwrite.rs",
+        "vendor/harfbuzz-sys/src/freetype.rs",
+        "vendor/harfbuzz-sys/src/lib.rs",
+        "vendor/harfbuzz-sys/src/qt_tracking_tests.rs",
+        "vendor/harfbuzz-sys/wrapper.h"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "38c249de8d759f2cfcc5186f8a7ab2254715dc93",
+      "subject": "fix(canvas): round native phase division exactly like source QFixed",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "26d1de22d5365826a005909db9bb4a0ee21bfa52",
+      "subject": "fix(fonts): match source opaque sRGB native glyph mask policy",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "7cd4543ee86e70034c6781afedea99e88cdf7cc7",
+      "subject": "diagnostics(metal): observe native screen refresh and layer device selection",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/presentation.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "3baeda0e2e0b408db3890df6f9d92d0c8da1d859",
+      "subject": "probe(fonts): retain actual ordered cached glyph masks and placements",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "55ea2050973225d545400ba248d7a8cc6b3b1f32",
+      "subject": "feat(cad): admit typed immutable premultiplied span palettes",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/cad2d.rs",
+        "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+        "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+        "crates/ingetrazo-render/src/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "70bee6ff66d5c0f73cdac717d6027ad4670460db",
+      "subject": "probe(metal): retain independent live and cancelled raw texture owners",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal.rs",
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "7612ff86bd35bfbc34a2825739557ea185ba6c1c",
+      "subject": "fix(vulkan): consume exact glyph palettes with ordered range intersections",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs",
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "785df7939bf50181e7e31ce58c20b296db712ca3",
+      "subject": "fix(canvas): retain ordered premultiplied glyph spans with bounded owners",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer.rs",
+        "crates/ingetrazo-gui/src/composer_backend.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-gui/src/composer_text_ordered.rs",
+        "crates/ingetrazo-render/src/cad2d.rs",
+        "crates/ingetrazo-render/src/cad_callback.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "d29372a0cfadf8d824ee045c48c419eb5f6d222e",
+      "subject": "test(canvas): observe ordered glyph records and held-out overlapping text",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-tiles.py",
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "1bfb39f23e01bfa0bcdc911f9e66da67da7c3edb",
+      "subject": "perf(vulkan): skip immutable warm palette batch admission",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "6c2843ad04b897049d727fc1eb36a4dd667661b1",
+      "subject": "feat(vulkan): expose retained pipeline identity for producer caches",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8d0368e92b58d611c20e42f078c0eaf415e90209",
+      "subject": "perf(canvas): reuse immutable admissions and distinguish retained factories",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_backend.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+        "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+        "crates/ingetrazo-render/src/cad_callback.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "de4a544de0cabbea1a3899db1e8b71c30020d1c9",
+      "subject": "test(metal): require actual ordered font GPU readback and warm admission proof",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs",
+        "crates/ingetrazo-gui/src/composer_text_ordered.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-tiles.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "c49ec6d0ae3bc86c9612c9767bac7cdb0a3b1722",
+      "subject": "Cache immutable ordinary CAD layout admission before warm rendering",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+      "subject": "metal: release application drawable owner after frame commit",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/presentation.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    }
+  ],
+  "full_reviewed_commit_order": [
+    {
+      "commit": "5cd7e4fb0ac5fa5f05c305d4f65198862d5c6514",
+      "subject": "Accept direct encoded RGBA replacements in Metal texture transactions",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/egui_painter.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "db89515484c7b18cbb246da7591dda518b965774",
+      "subject": "Add native Metal raw pixel and transactional ownership fixture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/examples/egui_raw_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "42a9f675d3dbbae10a8cae3a8f640c04bd9dee23",
+      "subject": "Run isolated native Metal raw texture acceptance without broad suite repeats",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        ".github/workflows/metal-compute-consumer.yml",
+        ".github/workflows/metal-raw-canvas.yml",
+        ".github/workflows/parity.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "0fd793735586f088f232f7085f2aae90b6cc9369",
+      "subject": "Initialize pinned runtime assets for isolated native Metal acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "843bac1a4616a5174bacb51ce9f811453c23254b",
+      "subject": "Independently verify actual Apple raw texture pixels and ownership",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "7b0b196d391fc8f8acda828d73e16d82f32d1225",
+      "subject": "Route native Metal Canvas bytes through transactional texture upload",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal.rs",
+        "crates/ingetrazo-gui/src/paper_raw_texture.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "acfce2907975b1c50898ee67081b49ef22ab5fd2",
+      "subject": "Require the intended Metal allocation refusal in GPU acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/examples/egui_raw_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "d0e84d59e419836401dc3438a520fa27c89b9724",
+      "subject": "Record native Metal host SDK and ordered compute acceptance scope",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "efbbcb50b6c5c0acba2a1bd06d7aadecd78a9c78",
+      "subject": "Exercise actual native Metal Canvas host with bounded own-window capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml",
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "470c2248fce4f1abfe34d8371882298d64dea0af",
+      "subject": "Require acknowledged Canvas textures and stable warm frames before capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal.rs",
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "f82ff2934f9ef499145030078792900e846ce21c",
+      "subject": "Record native font provider gap blocking Metal Canvas acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "d17490487b242981dcdd5b6e8991dc60509c6aea",
+      "subject": "Retain independently checked ARM raw pixels and host SDK artifact",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "4b5fd0da24897a1d53159a688a3516798a113242",
+      "subject": "Retain failed actual Canvas presentation and expose terminal frame diagnostics",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "df37af7ab53d8de2e652322ba17fc1d9258bc30b",
+      "subject": "Add scoped native CoreText paper font matching and collection identity",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_resolver.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "9ddf3c5df8ab58f716567c962430f1ea30cd0af5",
+      "subject": "Record CoreText matcher scope and pending native SDK acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "64c4ccb5a51276fde941e91da72bcebe91954556",
+      "subject": "Check actual CoreText file traits and native provider acceptance in CI",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "91d9fa6ede7a4d3896682a5871d55c13e86a7f6e",
+      "subject": "Prepare native macOS original font identity and painter pixel oracle",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-matches.py",
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "615eacf9002ee60059d83827391604ddf68f0ffe",
+      "subject": "Prepare actual macOS Qt font identity and painter reference checks",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "68cee8daf2534ceecdc6046b374104928fab3f78",
+      "subject": "Decode Macintosh PostScript identities and retain native provider failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_resolver.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "55fe457aed2f6330d1a5f01f93b8964ebcc1130c",
+      "subject": "Retain Intel native font identity failure independently",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "47b129f5bfcb20d0a9afc406d30cef5cf0a40649",
+      "subject": "Retain native Times style mismatch after font identity correction",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "ed56063a31f23aef991639e4de38f72fc060e5bd",
+      "subject": "Retain every native font outcome and collect independent Canvas evidence",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "9843254ab44f682a65f768110143734e6059cf0e",
+      "subject": "Confirm Intel reproduces native Times style mismatch",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "791d4e01be7c09fc7dcf5d21f8b8afc884ca7bfb",
+      "subject": "Record font style metadata hypothesis with primary specification boundary",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "2cfb4d4452b99e72b083489514f3c03d04bca4ba",
+      "subject": "Retain all original font observations and native presentation failure details",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "64263f6886cf3b017b3b050ca64ab8c58a5b7bb6",
+      "subject": "Retain Intel diagnostic failures and identify oversized native font selection",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "927cb33689428f3cb2b232ad760b6ee7aead2825",
+      "subject": "Distinguish Intel displayed frames from Canvas capture readiness failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "8999204ebe487bec090480d6b12abb90d1f90636",
+      "subject": "Retain Canvas raw queue observations when capture readiness fails",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "c4d8fa5267cfc5fd70756f3e1e17348dd3e8b1a3",
+      "subject": "Include application text errors and sheet state in failed Canvas acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "2f69df234b53e712b3a299b0d916071446ccdd02",
+      "subject": "Preserve Macintosh PostScript identity in shared font cache metadata",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "cfb58593397c5d7b46d749d45d0c263f1cdd7c05",
+      "subject": "Hash native font collections once and compare literal SFNT table bytes",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "6216ab255cd821a40b6193d12d1f59ea7ab491c2",
+      "subject": "Verify streamed font hashes and raw SFNT table access locally",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "52ef69f6c17234040cd23b4c216b580e8d04c567",
+      "subject": "Identify Qt Times fallback mismatch and inventory native PingFang collection",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "514e1e147a9330cb20b100e25f74243c5920fe70",
+      "subject": "Observe requested and resolved Qt font traits before alias correction",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "23a3506d9b772d5ac6f6411a14f1fac73f3fe53e",
+      "subject": "Retain Intel full font observations and displayed Canvas readiness failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "e29a1c202a59d82b2794696f3497d1284f71515b",
+      "subject": "Account cancelled raw uploads when admitting stable Metal Canvas capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs",
+        "crates/ingetrazo-gui/src/paper_raw_texture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "158bef37c9c26d28dd032a2b12715c320cca3f77",
+      "subject": "Measure selected font face tables before changing collection ownership",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "27ae26d39fa402e0c62e65f2525fc750214cc581",
+      "subject": "Retain Intel cancelled-upload readiness failure and artifact provenance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "7cd831d9efd2968ec084466b6042c8bb106bce84",
+      "subject": "Retain warm Canvas upload correction and remaining ARM presentation failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "31a0ce60b4d831e06a5f4f3cea4774e41191c6a0",
+      "subject": "Report every native font refusal and exact identity mismatch before failing",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-matches.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "64874b74c4b3d197831c413ba1ea65f8dc1fabf2",
+      "subject": "Observe live Metal visibility before lifecycle teardown",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8ae7043c5801ec3984f6f4976e54b2577c002fb5",
+      "subject": "Observe Qt alias style inventory and native font table formats",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "05a986d32d3f77e7c97a3f23d03a143eb4bb6753",
+      "subject": "Retain presented Intel Canvas capture and document dirty failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "579087242d29bfb4b75ba1ca115fe01657f432c6",
+      "subject": "Establish Canvas fixture clean state through actual application save",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "5b9283ba00c34be2d12f6efda08f26f0133a0e84",
+      "subject": "Retain live ARM visibility and stable upload evidence without presentation",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "14efd8914e9ca49a25eb8bc6cf27138ac59a9fa0",
+      "subject": "Retain source Mac font outline and fallback constraints",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "acac7b36c7fd3d5a66a217c40bd425c11ae27ff4",
+      "subject": "Retain Intel Canvas step success separate from failed font checks",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "c6d49db89f4347bfc3f33d1aa3b2575009b6f6ea",
+      "subject": "Verify Intel actual Canvas capture and lifecycle artifact",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "59f7dded812ad26f6a4c06870c32bbcc2eb000d0",
+      "subject": "Record visual inspection of actual Intel Canvas capture",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "8898a61cfdae39be74d952d7d67381d51e47a401",
+      "subject": "Inspect AppKit occlusion alongside Metal display completion",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/presentation.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "b3b7da23855220435c3919badda7a09e26d0f9c8",
+      "subject": "Flag native glyph metric admission before numeric conversion",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "76f391aa640463347663427a8f4fbc00c37e6a29",
+      "subject": "Route macOS paper glyphs through bounded retained CoreText owners",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs",
+        "crates/ingetrazo-formats/src/lib.rs",
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_resolver.rs",
+        "crates/ingetrazo-formats/src/paper_font_sfnt.rs",
+        "crates/ingetrazo-formats/src/paper_font_subset.rs",
+        "crates/ingetrazo-formats/src/paper_text.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "6c4d38cdf1d27e5532e3bb5d929033d48420df2f",
+      "subject": "Retain CoreText glyph backend source mapping and pre-SDK checks",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "3df1bf9c7d22ddbf36cf5c61369cb0625dceb725",
+      "subject": "Observe actual macOS Qt glyph metrics and physical versus effective traits",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "6ccc93cae38704edde179fe6a1ce6a91bdc2c5d8",
+      "subject": "Retain ARM font failures and capture unresolved presentation diagnostically",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "e2769744fff59ff89253539ae1ebbc2c1f1e603e",
+      "subject": "Record cross SDK limitation and purge terminal diagnostic target",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "38a7b27bd371dad44cc7535bcf9e7e8cdb92cfc7",
+      "subject": "Resolve named native font instances through bounded physical metadata identity",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_sfnt.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "61dcff6b57912cacc67da93ebdbf99d2ba47c3a7",
+      "subject": "Reject duplicate font identity tags and retain name lookup admission failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs",
+        "crates/ingetrazo-formats/src/paper_font_sfnt.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "e427d9bdb643cab56d8e4e7f0ad93df2c6592790",
+      "subject": "Verify integrated bounded font identity controls",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "64d2edfb9992d7e7daafa4e1bd90cd0bba112cc2",
+      "subject": "Prepare strict actual macOS production text PDF comparisons",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_pdf_fixture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-pages.py",
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "1f30a037340420f659da542ad4ed8bb8cb59854c",
+      "subject": "Retain all required Mac font PDF failures and exact pixel mutation controls",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-pages.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "5f78b3c652be7ec68794350aa9d9df2084646d43",
+      "subject": "Verify ARM window content and fifth native font identity without closing lifecycle gate",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "3911a1d17360e16647d86ce0783fbe75ba2edf90",
+      "subject": "Run complete native Mac text PDF comparisons at three resolutions",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "b8c778af685da167c8ccc796e2e8a2fc49957152",
+      "subject": "Record bounded Mac PDF workflow validation scope",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "f5eea66ea800bf3d4b52077fe0cd93b4ab27c1a2",
+      "subject": "Resolve virtual CoreText physical resources through exact native metadata witnesses",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font_coretext.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "0464623b28738418c9d86de3d2acf3d6065fd09b",
+      "subject": "Remove redundant Mac GUI check and retain Intel compile cancellation evidence",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "a1911c0f3a9e80c90e432c4fc2e413bf00f454ea",
+      "subject": "Use source native CoreText italic synthesis and metric quantization order",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "cf7a31537d124804f9eddaea4369d9521f3e197e",
+      "subject": "Independently verify eighteen native Mac PDF image comparisons",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "1cbcabd4f073a62a8eeb86c4f847686430d7a77f",
+      "subject": "Keep PDF synthesis matrix while scoping CoreText shear to native raster",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_font.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "725e1b936fecb98afdae9e6669d0614b4e017828",
+      "subject": "Verify narrowed native raster synthesis without changing PDF policy",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "02acdc19230e1ecd5c8d7bada2ec352bdf474090",
+      "subject": "Separate exact source raw glyph metrics from operative Mac pixel gates",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-metrics.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "f4ae675dfccd4b680ff8b7729db6440167f3732b",
+      "subject": "Retain exact native Mac glyph-position discrepancy and observe point-size context",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-metrics.py",
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "c7c6ee20bf9bcee24a5e3dcfe36c59cd5f7526ca",
+      "subject": "Reject incomplete glyph-position inventories and verify current native metrics",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-metrics.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "915d10031e5d516771601466ace89b226a9915af",
+      "subject": "Vectorize exact Mac PDF comparisons without changing acceptance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-pages.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "f9f7286ae00483979eb0a1b98776ae6f6638f731",
+      "subject": "Record native presentation call-path review without weakening display proof",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "dffdb2164470c9f23938abab74bccebd3667eb4f",
+      "subject": "Verify Intel native Canvas lifecycle and matching cross-platform PDF failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "6a9ca63629c59c7841bb1916d56ecd4f3e68dad5",
+      "subject": "Visually verify captured Intel native application Canvas content",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "96505419824c7b6868a3ad868320dbd4e96528d9",
+      "subject": "Use source native horizontal metrics for CoreText PDF subsets",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font_subset.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "dc11af7d179dd060d0b69a2b238f8f09c33ef2c5",
+      "subject": "Retain exact actual PDF bearing diagnosis and signed metric controls",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "93485712fd023695acb11df521f01bab22210ba9",
+      "subject": "Compare source physical font traits separately from required PDF synthesis",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-matches.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "384affd037c45b4c8e795a09feafb9f1ee1bd027",
+      "subject": "Verify physical-font gate refuses missing production synthesis observations",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "d53ae1119132f8d6556ed25b0d6fd115aa59d421",
+      "subject": "Require successful native PDF synthesis metric observation",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8e5a617201dcfb5a7f0059319a422e21ca082764",
+      "subject": "Verify fourth native ARM font pages and retain presentation failure",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "77671464094eb84d96bad288856695eeda66856d",
+      "subject": "Track actual ARM font progress and remaining presentation gap",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "7a944bd5b749e35d517b3afaf4e29c3f8c8a4ada",
+      "subject": "Supply source Qt paper point context to immutable native HarfBuzz fonts",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-formats/src/paper_text.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8ca4b71a0ab7f82308b5d69b927c09d72afdf7e2",
+      "subject": "Separate actual CJK PDF bearing and shaping-position discrepancies",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "29b081cb27dcab0c015e0e1b2b13184e7c495ad9",
+      "subject": "Observe actual native immutable HarfBuzz point size",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "240ff69a5b46fcb9a370acd46a4de61f8ca04c53",
+      "subject": "Independently verify native source shaping context observations",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "e00f53e40480d7ba181d02772e447fcda4d565d2",
+      "subject": "Require observed native shaping context in strict font gate",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-matches.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "144f73560a3a3ce10a4c12d75358a6da6a5844c3",
+      "subject": "Verify fourth Intel native font pages and Canvas lifecycle",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "495c935e8cd0dc0450f9aee24b9c92cc87a9cdb2",
+      "subject": "Retain completed fourth native Mac gate failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "46068820a1614427dc0e07f65fb42595f1514299",
+      "subject": "Match native Canvas bold draw and decode CoreGraphics ARGB coverage",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "17dafae9c7864e8720d05a55ed088059fce82286",
+      "subject": "Add strict production native Canvas font tile and warm cache observations",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/examples/native_paper_font_tiles.rs",
+        "crates/ingetrazo-gui/src/composer.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-tiles.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "f2d0820f797003af0b9ba7cb54adfaf9fa367535",
+      "subject": "Gate native Mac batch on actual production Canvas font tiles",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [
+        ".github/workflows/metal-raw-canvas.yml"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "e75a348bb4a8ce20f8abca90ddd2e349ee55208e",
+      "subject": "Independently retain fifth ARM font and Canvas pixel failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "ab536e525baed2d5c2bc880d8878f97018b56965",
+      "subject": "Match Qt negative fixed glyph placement and retain fifth native failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "d8f301cf092a7b9ff3bfb62d970b135f20b1093d",
+      "subject": "Retain independently decoded fifth Intel font and presentation outcomes",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "2261f2885fed5a2433b7b784c88f40a2bd0925e3",
+      "subject": "Acquire native subpixel count from bounded cold raster samples",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_font.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "7e48fe1060d84ccf2cdeb4512727767d7af734f0",
+      "subject": "Observe native and original tracking table acquisition without changing shaping",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "25feea0a49ce5b1fd38c6b03dcc026238b33cb32",
+      "subject": "Record independent Qt phase policy review and pending native replay",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "902ac728957f2d4d15d3536325e12c3c07bd63ba",
+      "subject": "Independently verify sixth ARM Canvas improvements and remaining failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "fb9da37a244bfb28c009acc97f3add59f8247aa7",
+      "subject": "audit(fonts): retain sixth Intel native pixel and presentation failures",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "9a3b6ec4a29ef2b69a427d52cc8f33cdc918c72d",
+      "subject": "fix(fonts): opt native paper fonts into source Qt tracking in HarfBuzz",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "Cargo.lock",
+        "Cargo.toml",
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+        "crates/ingetrazo-formats/src/paper_text.rs",
+        "vendor/harfbuzz-sys/Cargo.toml",
+        "vendor/harfbuzz-sys/Cargo.toml.orig",
+        "vendor/harfbuzz-sys/INGETRAZO-PROVENANCE.json",
+        "vendor/harfbuzz-sys/INGETRAZO.md",
+        "vendor/harfbuzz-sys/LICENSE-APACHE",
+        "vendor/harfbuzz-sys/LICENSE-MIT",
+        "vendor/harfbuzz-sys/README.md",
+        "vendor/harfbuzz-sys/build.rs",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/build-win32.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/build-win64.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/deploy-docs.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/publish_release_artifact.sh",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements-fonttools.in",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements-fonttools.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements.in",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/requirements.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/win32-cross-file.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.ci/win64-cross-file.txt",
+        "vendor/harfbuzz-sys/harfbuzz/.circleci/config.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.clang-format",
+        "vendor/harfbuzz-sys/harfbuzz/.codecov.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.editorconfig",
+        "vendor/harfbuzz-sys/harfbuzz/.github/dependabot.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/arm-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/cifuzz.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/configs-build.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/coverity-scan.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/linux-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/macos-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/msvc-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/msys2-ci.yml",
+        "vendor/harfbuzz-sys/harfbuzz/.github/workflows/scorecard.yml",
+        "vendor/harfbuzz-sys/harfbuzz/AUTHORS",
+        "vendor/harfbuzz-sys/harfbuzz/BUILD.md",
+        "vendor/harfbuzz-sys/harfbuzz/CMakeLists.txt",
+        "vendor/harfbuzz-sys/harfbuzz/CONFIG.md",
+        "vendor/harfbuzz-sys/harfbuzz/COPYING",
+        "vendor/harfbuzz-sys/harfbuzz/Makefile.am",
+        "vendor/harfbuzz-sys/harfbuzz/NEWS",
+        "vendor/harfbuzz-sys/harfbuzz/README",
+        "vendor/harfbuzz-sys/harfbuzz/README.md",
+        "vendor/harfbuzz-sys/harfbuzz/README.mingw.md",
+        "vendor/harfbuzz-sys/harfbuzz/README.python.md",
+        "vendor/harfbuzz-sys/harfbuzz/RELEASING.md",
+        "vendor/harfbuzz-sys/harfbuzz/SECURITY.md",
+        "vendor/harfbuzz-sys/harfbuzz/TESTING.md",
+        "vendor/harfbuzz-sys/harfbuzz/THANKS",
+        "vendor/harfbuzz-sys/harfbuzz/autogen.sh",
+        "vendor/harfbuzz-sys/harfbuzz/configure.ac",
+        "vendor/harfbuzz-sys/harfbuzz/git.mk",
+        "vendor/harfbuzz-sys/harfbuzz/harfbuzz.doap",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_check_link_flag.m4",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_code_coverage.m4",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_cxx_compile_stdcxx.m4",
+        "vendor/harfbuzz-sys/harfbuzz/m4/ax_pthread.m4",
+        "vendor/harfbuzz-sys/harfbuzz/meson.build",
+        "vendor/harfbuzz-sys/harfbuzz/meson_options.txt",
+        "vendor/harfbuzz-sys/harfbuzz/mingw-configure.sh",
+        "vendor/harfbuzz-sys/harfbuzz/replace-enum-strings.cmake",
+        "vendor/harfbuzz-sys/harfbuzz/src/ArabicPUASimplified.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/ArabicPUATraditional.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/Makefile.am",
+        "vendor/harfbuzz-sys/harfbuzz/src/Makefile.sources",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/CBDT/CBDT.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/COLR/COLR.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/COLR/colrv1-closure.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/CPAL/CPAL.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/sbix/sbix.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Color/svg/svg.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/Coverage.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/CoverageFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/CoverageFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/Common/RangeRecord.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GDEF/GDEF.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/Anchor.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorFormat3.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/AnchorMatrix.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ChainContextPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/Common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ContextPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/CursivePos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/CursivePosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ExtensionPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/GPOS.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/LigatureArray.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkArray.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkBasePos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkBasePosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkLigPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkLigPosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkMarkPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkMarkPosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/MarkRecord.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairPos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairPosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairPosFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairSet.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PairValueRecord.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PosLookup.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/PosLookupSubTable.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/SinglePos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/SinglePosFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/SinglePosFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GPOS/ValueFormat.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/AlternateSet.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/AlternateSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/AlternateSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ChainContextSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/Common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ContextSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ExtensionSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/GSUB.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/Ligature.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/LigatureSet.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/LigatureSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/LigatureSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/MultipleSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/MultipleSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ReverseChainSingleSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/ReverseChainSingleSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/Sequence.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SingleSubst.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SingleSubstFormat1.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SingleSubstFormat2.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SubstLookup.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/GSUB/SubstLookupSubTable.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/Layout/types.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/CompositeGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/Glyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/GlyphHeader.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/SimpleGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/SubsetGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/VarCompositeGlyph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/composite-iter.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/coord-setter.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/glyf-helpers.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/glyf.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/loca.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/glyf/path-builder.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/OT/name/name.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/addTable.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-c-linkage-decls.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-externs.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-header-guards.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-includes.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-libstdc++.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-static-inits.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/check-symbols.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/failing-alloc.c",
+        "vendor/harfbuzz-sys/harfbuzz/src/fix_get_types.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-arabic-joining-list.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-arabic-pua.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-arabic-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-def.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-emoji-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-harfbuzzcc.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-hb-version.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-indic-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-os2-unicode-ranges.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-ragel-artifacts.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-tag-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-ucd-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-use-table.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/gen-vowel-constraints.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/classdef-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/coverage-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/gsubgpos-context.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/gsubgpos-context.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/gsubgpos-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/markbasepos-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/pairpos-graph.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/serialize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/split-helpers.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/graph/test-classdef-graph.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-cairo.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-config.cmake.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-gobject.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-icu.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-subset.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz-subset.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/harfbuzz.pc.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-ankr-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-bsln-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-feat-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-just-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-kerx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-morx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-opbd-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout-trak-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-layout.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-ltag-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat-map.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-aat.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-algs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-array.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-atomic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bimap.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bit-page.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bit-set-invertible.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-bit-set.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-blob.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-blob.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-blob.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-json.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-json.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-glyphs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-glyphs.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-unicode.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-deserialize-text-unicode.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-serialize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer-verify.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-buffer.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cache.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo-utils.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo-utils.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cairo.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff-interp-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff-interp-cs-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff-interp-dict-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff1-interp-cs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cff2-interp-cs.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-common.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-common.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-config.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-coretext.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-coretext.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-cplusplus.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-debug.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-deprecated.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-directwrite.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-directwrite.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-dispatch.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-draw.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-draw.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-draw.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face-builder.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-face.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-fallback-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-features.h.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-font.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-font.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-font.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ft-colr.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ft.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ft.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gdi.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gdi.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-glib.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-glib.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-enums.cc.tmpl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-enums.h.tmpl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-structs.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject-structs.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-gobject.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-graphite2.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-graphite2.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-icu.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-icu.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-iter.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-kern.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-limits.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-machinery.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-map.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-map.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-meta.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ms-feature-ranges.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-multimap.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-mutex.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-null.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number-parser.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number-parser.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-number.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-object.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-open-file.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-open-type.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff1-std-str.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff1-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff1-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff2-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cff2-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-cmap-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-color.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-color.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-deprecated.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-face-table-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-face.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-face.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-font.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-font.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-gasp-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-glyf-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-hdmx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-head-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-hhea-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-hmtx-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-kern-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-base-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gdef-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gpos-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gsub-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-gsubgpos.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout-jstf-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-layout.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-map.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-math-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-math.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-math.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-maxp-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-meta-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-meta.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-meta.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-metrics.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-metrics.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-metrics.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name-language-static.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name-language.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-name.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-os2-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-os2-unicode-ranges.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-post-macroman.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-post-table-v2subset.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-post-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-fallback.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-fallback.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-normalize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape-normalize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shape.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-fallback.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-joining-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-pua.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic-win1256.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-arabic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-default.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-hangul.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-hebrew.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-indic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-khmer-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-khmer-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-khmer.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-myanmar-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-myanmar-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-myanmar.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-syllabic.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-syllabic.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-thai.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use-machine.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use-machine.rl",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-use.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-vowel-constraints.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper-vowel-constraints.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-shaper.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-stat-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-tag-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-tag.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-avar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-cvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-fvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-gvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-hvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var-mvar-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-var.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot-vorg-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ot.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-outline.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-outline.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint-extents.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint-extents.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-paint.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-pool.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-priority-queue.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-repacker.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-sanitize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-serialize.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set-digest.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-set.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape-plan.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape-plan.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape-plan.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shape.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper-impl.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-shaper.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-static.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-string-array.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-style.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-style.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-accelerator.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff-common.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff1.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-cff2.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-input.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-input.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-iup.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-iup.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-solver.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-instancer-solver.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-plan-member-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-plan.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-plan.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-repacker.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset-repacker.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-subset.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ucd-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-ucd.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode-emoji-table.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-unicode.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-uniscribe.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-uniscribe.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-utf.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-vector.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-version.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-version.h.in",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-blob.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-buffer.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-common.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-face.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-font.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-list.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api-shape.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-api.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb-wasm-shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb.h",
+        "vendor/harfbuzz-sys/harfbuzz/src/hb.hh",
+        "vendor/harfbuzz-sys/harfbuzz/src/justify.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/main.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/meson.build",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/COPYING",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/IndicPositionalCategory-Additional.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/IndicShapingInvalidCluster.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/ms-use/IndicSyllabicCategory-Additional.txt",
+        "vendor/harfbuzz-sys/harfbuzz/src/relative_to.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/sample.py",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-algs.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-array.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-bimap.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-buffer-serialize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-gpos-size-params.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-gsub-get-alternates.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-gsub-would-substitute.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-item-varstore.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-iter.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-machinery.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-map.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-multimap.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-number.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-ot-glyphname.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-ot-meta.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-ot-name.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-priority-queue.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-repacker.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-serialize.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-set.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-subset-instancer-solver.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-tuple-varstore.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-unicode-ranges.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-use-table.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test-vector.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/test.cc",
+        "vendor/harfbuzz-sys/harfbuzz/src/update-unicode-tables.make",
+        "vendor/harfbuzz-sys/harfbuzz/src/wasm/graphite/Makefile",
+        "vendor/harfbuzz-sys/harfbuzz/src/wasm/graphite/shape.cc",
+        "vendor/harfbuzz-sys/harfbuzz/xkcd.png",
+        "vendor/harfbuzz-sys/src/bindings.rs",
+        "vendor/harfbuzz-sys/src/coretext.rs",
+        "vendor/harfbuzz-sys/src/directwrite.rs",
+        "vendor/harfbuzz-sys/src/freetype.rs",
+        "vendor/harfbuzz-sys/src/lib.rs",
+        "vendor/harfbuzz-sys/src/qt_tracking_tests.rs",
+        "vendor/harfbuzz-sys/wrapper.h"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "f6e1d328025ff8942480e6471d6618badcaf59ff",
+      "subject": "audit(fonts): retain scoped HarfBuzz tracking controls and remaining native gates",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "ba0ce2eb2d2d4936737e6073c1fbddf313fac4a0",
+      "subject": "audit: independently verify scoped HarfBuzz source provenance",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "6995aab96912962f221942eb144488fafb1c83eb",
+      "subject": "audit: independently decode sixth Intel native font comparisons",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "38c249de8d759f2cfcc5186f8a7ab2254715dc93",
+      "subject": "fix(canvas): round native phase division exactly like source QFixed",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8395919af1acb345154e66216003059236e276c1",
+      "subject": "docs: record reviewed native font correction batch",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "a3ece321258137a3e531a5e6090ea45b50fcf85f",
+      "subject": "audit: independently verify eighteen exact native ARM font PDF pages",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "26d1de22d5365826a005909db9bb4a0ee21bfa52",
+      "subject": "fix(fonts): match source opaque sRGB native glyph mask policy",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-formats/src/paper_coretext_glyph.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "a0a320f6e6035443a1e5f9018a8ed0fea896167b",
+      "subject": "audit(fonts): retain operative Times coverage residuals",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "3603975c0dd49f5fd7d637af17e58e8974fa154e",
+      "subject": "audit(fonts): distinguish mask inversion sign from Times raster cause",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "9ad46ff3a41c3a1427c970b650940b6fc5d0f780",
+      "subject": "audit(metal): retain seventh Intel exact font and presentation replay",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "7cd4543ee86e70034c6781afedea99e88cdf7cc7",
+      "subject": "diagnostics(metal): observe native screen refresh and layer device selection",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/presentation.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "1f44d9d7075b17d0c70900631388526c55178c8d",
+      "subject": "audit(metal): verify observer Apple dependency feature availability",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "c9cd7f43057ebe4a6fbdcfecf5a92a85477f6f92",
+      "subject": "audit(metal): retain eighth ARM exact PDF and mask improvement evidence",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "37f83b465022ea6cdb6bf2759fb8da38340fe12d",
+      "subject": "audit(fonts): retain eighth Intel and actual Qt ordered blend controls",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "3baeda0e2e0b408db3890df6f9d92d0c8da1d859",
+      "subject": "probe(fonts): retain actual ordered cached glyph masks and placements",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "55ea2050973225d545400ba248d7a8cc6b3b1f32",
+      "subject": "feat(cad): admit typed immutable premultiplied span palettes",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/cad2d.rs",
+        "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+        "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+        "crates/ingetrazo-render/src/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "d379eafabb64cda6a6b30e36119a084c99a4816c",
+      "subject": "review: record exact palette ownership and acceptance boundary",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "70bee6ff66d5c0f73cdac717d6027ad4670460db",
+      "subject": "probe(metal): retain independent live and cancelled raw texture owners",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_metal.rs",
+        "crates/ingetrazo-gui/src/native_metal/lifecycle_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-metal-canvas-host.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "7612ff86bd35bfbc34a2825739557ea185ba6c1c",
+      "subject": "fix(vulkan): consume exact glyph palettes with ordered range intersections",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs",
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "785df7939bf50181e7e31ce58c20b296db712ca3",
+      "subject": "fix(canvas): retain ordered premultiplied glyph spans with bounded owners",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer.rs",
+        "crates/ingetrazo-gui/src/composer_backend.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-gui/src/composer_text_ordered.rs",
+        "crates/ingetrazo-render/src/cad2d.rs",
+        "crates/ingetrazo-render/src/cad_callback.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "d29372a0cfadf8d824ee045c48c419eb5f6d222e",
+      "subject": "test(canvas): observe ordered glyph records and held-out overlapping text",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-tiles.py",
+        "scripts/probe-original-macos-paper-fonts.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "b33d18eded622744323316e31bd423d7a2a01678",
+      "subject": "docs(canvas): retain focused ordered producer checks and open GPU gates",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "1bfb39f23e01bfa0bcdc911f9e66da67da7c3edb",
+      "subject": "perf(vulkan): skip immutable warm palette batch admission",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "6c2843ad04b897049d727fc1eb36a4dd667661b1",
+      "subject": "feat(vulkan): expose retained pipeline identity for producer caches",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "8d0368e92b58d611c20e42f078c0eaf415e90209",
+      "subject": "perf(canvas): reuse immutable admissions and distinguish retained factories",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_backend.rs",
+        "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+        "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+        "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+        "crates/ingetrazo-render/src/cad_callback.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "de4a544de0cabbea1a3899db1e8b71c30020d1c9",
+      "subject": "test(metal): require actual ordered font GPU readback and warm admission proof",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/composer_text_canvas_probe.rs",
+        "crates/ingetrazo-gui/src/composer_text_ordered.rs"
+      ],
+      "acceptance_paths": [
+        "scripts/check-macos-paper-font-tiles.py"
+      ],
+      "evidence_only": false
+    },
+    {
+      "commit": "d74058cd4ba4873a55489416b368395a90b5257a",
+      "subject": "review: record actual ordered Metal GPU fixture acceptance boundary",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "b6034f4a33344619f12675f95615c6de8d58b7de",
+      "subject": "docs(canvas): record warm correction and pending actual GPU corpus",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "eb0e25fe27c9c9aab3be5d2e2a9e105dc493c1f6",
+      "subject": "docs(metal): retain local Apple SDK crosscheck blocker",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "c49ec6d0ae3bc86c9612c9767bac7cdb0a3b1722",
+      "subject": "Cache immutable ordinary CAD layout admission before warm rendering",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    },
+    {
+      "commit": "5cba6600228c8651a848bf176dc0a8c95b16532c",
+      "subject": "docs(metal): retain ninth ARM exact GPU font proof and presentation failure",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "fb5c3a5e7ee506f5f8d754d89efa4d22562a3e07",
+      "subject": "audit: independently decode ninth ARM GPU Canvas images",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "f7adcf6f1b4ca6436e5bbbdfda6d840b9bddb038",
+      "subject": "audit: retain ninth Intel exact font and presentation evidence",
+      "patch_equivalent_already_integrated": true,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "5907cb0e685a043a2428ea79ce464110a153df59",
+      "subject": "review: bound drawable ownership correction to documented lifetime",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [],
+      "acceptance_paths": [],
+      "evidence_only": true
+    },
+    {
+      "commit": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+      "subject": "metal: release application drawable owner after frame commit",
+      "patch_equivalent_already_integrated": false,
+      "source_paths": [
+        "crates/ingetrazo-metal/src/presentation.rs"
+      ],
+      "acceptance_paths": [],
+      "evidence_only": false
+    }
+  ],
+  "conflicts": {
+    "Cargo.toml": "Union patch.crates-io entries: retain current zune-jpeg and freetype-sys/egui-ash-renderer; add vendored harfbuzz-sys. Do not replace the table wholesale. Cargo.lock auto-merged but must retain path dependency identity.",
+    "crates/ingetrazo-formats/src/lib.rs": "Retain annotation_font export; add cfg(macos) paper_coretext_glyph and cfg(any(macos,test)) paper_font_sfnt modules.",
+    "crates/ingetrazo-formats/src/paper_text.rs": "Union constructors through one implementation accepting pixels and optional point_size. Keep existing new_at_pixel_size public API/admission, FtGeometry pixels, fixed_size=pixels*64, HB scale/ppem and advances based on requested pixels. Existing paper new/new_with_outline_policy remain100px, no tracking. CoreText new_coretext uses100px and75point Qt shaping context, sets scoped Qt tracking marker before immutable font publication. Do not overwrite native annotation15px behavior with fixed6400/100.",
+    "crates/ingetrazo-gui/src/composer.rs": "Keep next-integration inline Text authoring, mutually exclusive tool-switch state, local history, topmost hit/selection semantics, outer-border and paper/shadow/margin painter. Add native probe entry and ordered stats; union Text canvas paint call with backend factory argument. Preserve current raw-provider capability selection and fallback on non-raw hosts; runtime installed-provider errors stay explicit.",
+    "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs": "Keep entire newer annotation visibility/gates/transaction/fence pipeline. Palette resolution, identity refresh, Factory identity, byte accessors, ordered batch-range intersections and Handle Arc warm bypass are already present. Verify ordinary Renderer cached admission/opacity stays, together with always-on pose/density validation. Do not replace with older ordinary-only file or blindly replay7612/1bfb/6c284/c49 patches.",
+    "crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs": "Keep current annotation/outline owner callers; exact palette resolver requires Geometry plus Batch slice. Preserve already integrated signature at each caller, no whole-file older replacement.",
+    "crates/ingetrazo-gui/src/paper_raw_texture.rs": "Preserve current HashSet-backed cold retirement and no quadratic ids.contains scan; add cancelled counter and Metal cancel_vec with exact same dead-ID policy. Keep same-frame set/use/free protection in host and callback-deferral semantics. Stats layout stays5values plus separate cancelled() observation.",
+    "crates/ingetrazo-render/src/cad2d.rs": "Typed PremultipliedRgba8/Geometry palette API is patch-equivalent already present. Union retained producer accounting/new spans changes without removing current geometry validation. Resolve color path differs only full validate_batches vs palette-count guard: current full validation is safe on cold preparation; warm cached consumer must never call it unchanged. Preserve literal bytes and geometry-qualified identity.",
+    "docs/PARITY_PROGRESS.md": "Reconcile evidence into current authoritative tracker; preserve full row scopes/open gates and current counts. Do not select historical Metal branch tracker wholesale."
+  },
+  "simulation": "git merge-tree --write-tree: exit1; nine content conflicts; no worktree/index mutation",
+  "platform_gate_state": "Ninth9GPU18PDF exact on both; ARM positive presentation remainsfailed. Tenthactive.",
+  "root_worktree_edits": false,
+  "builds": false,
+  "cloud_dispatch": false
+}

@@ -1,0 +1,38 @@
+{
+  "source_commit": "7cd90602",
+  "fixture_commit": "63bdfef7",
+  "ordinary_vulkan_adaptation": "1961018e",
+  "raw_swatch": "fe50d50d",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "unit_binary_sha256": "8f4d7741a518889a27b69a2c3f47e2744b1ae6660343719b4ff020a74fa39d72",
+  "checks": [
+    {
+      "command": "cargo test -j2 -p ingetrazo-gui --lib ordered::tests -- --nocapture",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "command": "cargo test -j2 -p ingetrazo-gui --lib palette_splits_draw_intersections -- --nocapture",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "command": "cargo check -j2 -p ingetrazo-gui --example native_paper_font_tiles",
+      "result": "PASS"
+    },
+    {
+      "command": "Python compile() of the two modified oracle scripts",
+      "result": "PASS"
+    }
+  ],
+  "scope": "Focused CPU production-record/source-rounding/ordering/cache and compilation checks only; not actual GPU pixel acceptance. First over-specific filter matched zero tests and is not counted.",
+  "memory_scope": "Cache charge includes actual Vec capacities, Part capacity, Geometry/SourceSpans records, backend owned records and resolved palettes. Fixed requested cold chunks plus Vec-to-Arc coexistence admitted before allocation. Allocator metadata, shared renderer/font/sample resources, transient validation scratch and independently budgeted GPU residency excluded; no total process peak claim.",
+  "remaining": [
+    "Actual Vulkan multi-run glyph with overlapping next glyph exact pixel proof",
+    "Actual Metal ordered Canvas and warm backend counters",
+    "ARM positive presentation",
+    "Full platform Canvas/PDF scope remains open"
+  ],
+  "cloud_launched": false
+}

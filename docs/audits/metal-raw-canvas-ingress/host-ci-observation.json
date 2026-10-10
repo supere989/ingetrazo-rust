@@ -1,0 +1,46 @@
+{
+  "observed_utc": "2026-10-10T18:46:57.428728+00:00",
+  "runs": [
+    {
+      "run": 38076778215,
+      "head_sha": "7b0b196d391fc8f8acda828d73e16d82f32d1225",
+      "status": "in_progress",
+      "conclusion": null,
+      "jobs": [
+        {
+          "id": 114285298916,
+          "name": "raw-texture (macos-15-intel)",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "id": 114285299176,
+          "name": "raw-texture (macos-15)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run": 38076274350,
+      "head_sha": "039a5b63d1160011faaa196bfb3cd69af4e5645c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114283755074,
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 114283755160,
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "scope": "ARM SDK successfully builds native Metal host and executes offscreen raw texture fixture. This does not prove host Canvas runtime or physical Mac presentation. Intel host acceptance remains pending at observation."
+}

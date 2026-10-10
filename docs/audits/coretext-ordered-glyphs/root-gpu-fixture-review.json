@@ -1,0 +1,17 @@
+{
+  "source": "de4a544d",
+  "scope": "Source review of coherent ordered glyph producer and real Metal GPU observation",
+  "findings": [
+    "Nine mandatory full800x300 source/CPU-record/GPU image comparisons including3additional overlap cases.",
+    "Actual EguiPainter compute consumer receives production callback handles and uses diagnostic completed readback.",
+    "Three warm renders require unchanged full pixels, deep admission count, plan/palette uploads and canvas pool allocations.",
+    "Diagnostic readback allocates target/readback resources; pool counters do not imply zero total diagnostic allocations.",
+    "Retained original metrics and PDF observations preserved during oracle merge."
+  ],
+  "remaining": [
+    "Apple cross compilation",
+    "Actual ARM/Intel GPU nine-case strict output",
+    "Application presentation and physical device acceptance"
+  ],
+  "parity_promotion": false
+}

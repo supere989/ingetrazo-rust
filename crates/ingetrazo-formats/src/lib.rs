@@ -234,3 +234,9 @@ pub mod paper_text_layout;
 pub mod paper_text_painter;
 
 pub mod annotation_font;
+
+#[cfg(target_os="macos")]
+mod paper_coretext_glyph;
+
+#[cfg(any(target_os="macos",test))]
+mod paper_font_sfnt;

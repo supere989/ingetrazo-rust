@@ -1,0 +1,114 @@
+{
+  "artifact": 11682348741,
+  "observations": [
+    {
+      "path": "/cases/0/observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "path": "/cases/0/pdf_observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "path": "/cases/1/observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "path": "/cases/1/pdf_observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "path": "/cases/2/observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "path": "/cases/2/pdf_observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "path": "/cases/3/observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "path": "/cases/3/pdf_observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "path": "/cases/4/observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "path": "/cases/4/pdf_observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "path": "/cases/5/observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "path": "/cases/5/pdf_observations/0/operative_call",
+      "point": 75.0,
+      "pixel": 100,
+      "dpi": [
+        300,
+        300
+      ]
+    }
+  ],
+  "claim": "Actual original effective context verified; new Rust production shaping still awaits native SDK replay."
+}

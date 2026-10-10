@@ -1,0 +1,11 @@
+{
+  "run_id": 38084381325,
+  "job_id": 114307675855,
+  "conclusion": "cancelled",
+  "artifact_id": 11681687025,
+  "artifact_sha256": "a1c72c538ee8f64d116198f5cedbc607b72523774952d5ea9fec3373780120bc",
+  "observed": "Raw probe build completed in 5m39s; GUI cargo check completed in 4m56s; GUI build log ends during dependency compilation. No runtime output exists.",
+  "cause_boundary": "Cancellation timing is consistent with the 15-minute job allowance; artifact alone does not establish cancellation cause.",
+  "change": "Remove redundant GUI check; build both GUI examples together; allow 30 minutes for complete job. Runtime deadlines and all strict acceptance criteria unchanged.",
+  "font_review": "Virtual font candidate retains original native font ownership; candidate resource requires exact head and name bytes, with bounded identities. Native validation remains pending."
+}

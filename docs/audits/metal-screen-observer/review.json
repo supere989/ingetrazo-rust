@@ -1,0 +1,21 @@
+{
+  "scope": "Cold read-only presentation diagnostics; no display/device setters or gate changes",
+  "base": "3603975c",
+  "observations": [
+    "NSScreen localizedName/backingScaleFactor/maximumFramesPerSecond/minimumRefreshInterval/maximumRefreshInterval/frame",
+    "CAMetalLayer displaySyncEnabled/preferredDevice",
+    "chosen and preferred MTLDevice registryID; preferred device name"
+  ],
+  "review": "Existing seventh ARM completed buffers include 8 retired skipped callbacks with timestamp0 and 3 unresolved owners. Intel same source has15 displayed/1 skipped/0pending. This does not prove a driver or VM limitation. Device selection uses MTLCreateSystemDefaultDevice in both. Layer async present ordering matches documented contract. New observer distinguishes screen refresh/device mismatch without changing default synchronization.",
+  "checks": {
+    "git_diff_check": "PASS",
+    "native_sdk": "Pending next coordinated native SDK batch; no Linux cross attempt repeated",
+    "warm_path": "No new reads/allocations in render or poll; additions confined existing diagnostic formatting"
+  },
+  "retained_artifacts": {
+    "intel_evidence_commit": "50f40341",
+    "intel_artifact_sha256": "b0e4d8b228021dcd118f77bba549ebd56d51f894d9b3b2e28bb9f801ae25a6a6",
+    "arm_artifact_sha256": "f8290636e74792605c406afc7321cfc414d73a71ccac9372c459ef82d24495a9"
+  },
+  "acceptance": "Positive presented timestamp remains mandatory; screenshot or completed GPU command is not substituted"
+}

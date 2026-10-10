@@ -1,0 +1,11 @@
+{
+  "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/coretext/qfontengine_coretext.mm",
+  "sha256": "a11cdd716adbb09ad01e1e58bc02219aeaa37370073f613b8fd69a6798aa1a2e",
+  "source_lines": {
+    "float_shear": 52,
+    "bounding_box": 347,
+    "scale_metrics": 521,
+    "native_raster": 703
+  },
+  "scope": "Native CoreText-only synthesis scalar policy; actual SDK/pixels pending"
+}

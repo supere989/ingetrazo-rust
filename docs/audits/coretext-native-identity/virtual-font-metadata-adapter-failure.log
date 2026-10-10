@@ -1,0 +1,75 @@
+error[E0716]: temporary value dropped while borrowed
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:98:16
+    |
+ 98 |       let head = face
+    |  ________________^
+ 99 | |         .raw_face()
+    | |___________________^ creates a temporary value which is freed while still in use
+100 |           .table(ttf_parser::Tag::from_bytes(b"head"))
+101 |           .ok_or("Virtual font head unavailable")?;
+    |                                                   - temporary value is freed at the end of this statement
+...
+106 |       if head.len() != 54 || names.len() > 256 * 1024 {
+    |          ---- borrow later used here
+    |
+help: consider using a `let` binding to create a longer lived value
+    |
+ 98 ~     let binding = face
+ 99 +         .raw_face();
+100 ~     let head = binding
+    |
+
+error[E0716]: temporary value dropped while borrowed
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:102:17
+    |
+102 |       let names = face
+    |  _________________^
+103 | |         .raw_face()
+    | |___________________^ creates a temporary value which is freed while still in use
+104 |           .table(ttf_parser::Tag::from_bytes(b"name"))
+105 |           .ok_or("Virtual font names unavailable")?;
+    |                                                    - temporary value is freed at the end of this statement
+106 |       if head.len() != 54 || names.len() > 256 * 1024 {
+    |                              ----- borrow later used here
+    |
+help: consider using a `let` binding to create a longer lived value
+    |
+102 ~     let binding = face
+103 +         .raw_face();
+104 ~     let names = binding
+    |
+
+error[E0716]: temporary value dropped while borrowed
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:383:28
+    |
+383 |                   let head = face
+    |  ____________________________^
+384 | |                     .raw_face()
+    | |_______________________________^ creates a temporary value which is freed while still in use
+385 |                       .table(ttf_parser::Tag::from_bytes(b"head"))
+386 |                       .ok_or("Missing native identity head")?;
+    |                                                              - temporary value is freed at the end of this statement
+...
+391 |                   crate::paper_font_sfnt::collection_index_by_tables(&mut file, head, name).map_err(
+    |                                                                                 ---- borrow later used here
+    |
+    = note: consider using a `let` binding to create a longer lived value
+
+error[E0716]: temporary value dropped while borrowed
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:387:28
+    |
+387 |                   let name = face
+    |  ____________________________^
+388 | |                     .raw_face()
+    | |_______________________________^ creates a temporary value which is freed while still in use
+389 |                       .table(ttf_parser::Tag::from_bytes(b"name"))
+390 |                       .ok_or("Missing native identity name")?;
+    |                                                              - temporary value is freed at the end of this statement
+391 |                   crate::paper_font_sfnt::collection_index_by_tables(&mut file, head, name).map_err(
+    |                                                                                       ---- borrow later used here
+    |
+    = note: consider using a `let` binding to create a longer lived value
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0716`.

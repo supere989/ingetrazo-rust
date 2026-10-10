@@ -1,0 +1,32 @@
+{
+  "integration_parent": "a751967f7b1a541f82a19c5104f0d6d8cb30b7b2",
+  "native_parent": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+  "resolved_conflicts": 9,
+  "preserved_source_identities": {
+    "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs": {
+      "identical_to_integration_parent": true,
+      "sha256": "18e52e5f17364de6ae85d74cf994ef0a957b9d9fc28bc9e9e34739126044ed8c"
+    },
+    "crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs": {
+      "identical_to_integration_parent": true,
+      "sha256": "c01574c3fad78114c25515e20d72ff68b78940b6405f6f56214ca3d1c5d16b77"
+    },
+    "crates/ingetrazo-render/src/cad2d.rs": {
+      "identical_to_integration_parent": true,
+      "sha256": "4a725ab585b781b39f7bb2ffcd77a99e08b647b244983531d9995fd56fa2c70a"
+    },
+    "docs/PARITY_PROGRESS.md": {
+      "identical_to_integration_parent": true,
+      "sha256": "7cd8af0ab5a9d6bdcc143a01ee648a6f58dcf6b361c9aa61593a1db30b9ea431"
+    }
+  },
+  "constructor_union": "One immutable font initializer accepts pixels plus optional point_size; existing annotation sized FT/HB path unchanged; native CoreText100px/75point enables scoped Qt tracking. No hardcoded100 replacement of annotation pixel metrics.",
+  "composer_union": "Only factory-aware Text dispatch, ordered counters and native probe are added; authored Text edit/history/selection/tool-switch and compound paper/border order preserved.",
+  "raw_union": "HashSet Vulkan retirement preserved; Metal cancel_vec plus cancelled counter added. Current-frame host protection untouched.",
+  "metadata": "Current integration tracker retained verbatim; native retained failures and proof files come from reviewed merge history. No promotion.",
+  "admission": "Shared resolve_batch_colors retains integration full cold validation; cached warm consumers do not invoke it for immutable identities. Metal warm deep admission correction retained from native parent.",
+  "source_checks": "Explicit constructor/string/preserved blob assertions and diff --check only; no runtime/compile claim.",
+  "builds": false,
+  "cloud_dispatch": false,
+  "root_worktree_edits": false
+}

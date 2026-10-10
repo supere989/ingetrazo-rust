@@ -1,0 +1,75 @@
+{
+  "run_id": 38082413345,
+  "source": "579087242d29bfb4b75ba1ca115fe01657f432c6",
+  "job": {
+    "id": 114301871062,
+    "name": "raw-texture (macos-15-intel)",
+    "status": "completed",
+    "conclusion": "cancelled",
+    "run_id": 38082413345,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Build and execute bounded native raw texture fixture",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Validate native CoreText face identity and warm ownership",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 5
+      },
+      {
+        "name": "Capture original macOS painter and compare native face identity",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 6
+      },
+      {
+        "name": "Capture actual application Canvas window",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17
+      }
+    ]
+  },
+  "scope": "Job conclusion cancelled, Canvas capture step success, both font steps failure. Artifact download still pending; no independent pixel/host result acceptance yet."
+}

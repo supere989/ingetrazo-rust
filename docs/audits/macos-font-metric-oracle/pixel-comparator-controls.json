@@ -1,0 +1,21 @@
+{
+  "exact": {
+    "passed": true,
+    "changed_pixels": 0,
+    "source_ink": 1,
+    "native_ink": 1
+  },
+  "one_pixel": {
+    "passed": false,
+    "changed_pixels": 1,
+    "source_ink": 1,
+    "native_ink": 2
+  },
+  "blank": {
+    "passed": false,
+    "changed_pixels": 1,
+    "source_ink": 1,
+    "native_ink": 0
+  },
+  "scope": "Actual QImage comparator unit controls only; actual macOS PDF pixels pending"
+}

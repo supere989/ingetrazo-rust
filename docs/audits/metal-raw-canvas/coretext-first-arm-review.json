@@ -1,0 +1,12 @@
+{
+  "run": 38078042002,
+  "job": 114289041150,
+  "artifact": 11679588893,
+  "revision": "64c4ccb5a51276fde941e91da72bcebe91954556",
+  "sha256": "0bb4db3c03b7c9ca99178b2ca3596f548578f87035b0a536dd3dc80649683713",
+  "zip_integrity": "PASS",
+  "native_build_and_offscreen_raw": "PASS",
+  "coretext_provider": "FAIL: physical PostScript identity cannot be mapped to collection",
+  "actual_canvas": "NOT RUN: preceding provider failure",
+  "investigation": "ttf-parser Name::to_string only decodes Unicode records; current matcher ignores Macintosh Roman PostScript names. Add exact ASCII identity decoding and request/path diagnostics. This is a source-supported candidate correction, not a verified diagnosis until native rerun."
+}

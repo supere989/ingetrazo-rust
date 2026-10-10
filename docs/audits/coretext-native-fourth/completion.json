@@ -1,0 +1,26 @@
+{
+  "run": 38086632034,
+  "source": "dc11af7d179dd060d0b69a2b238f8f09c33ef2c5",
+  "jobs": [
+    {
+      "name": "raw-texture (macos-15)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Capture original macOS painter and compare native face identity",
+        "Compare all required original and native font PDF pages",
+        "Capture actual application Canvas window"
+      ]
+    },
+    {
+      "name": "raw-texture (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Capture original macOS painter and compare native face identity",
+        "Compare all required original and native font PDF pages"
+      ]
+    }
+  ],
+  "next_batch": "Physical/synthesis matching, immutable shaping point-size policy and Canvas raster corrections; preserve exact page and positive presentation gates."
+}

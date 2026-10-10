@@ -1,0 +1,106 @@
+{
+  "source": "6c4d38cd",
+  "run": 38084381325,
+  "artifact": 11681589175,
+  "sha256": "93d7a9b767fb93bb9422680896b23a10331dc74a7bf12dba95d618d9357ff230",
+  "native_device": "Apple Paravirtual device",
+  "font_comparison": {
+    "passed": false,
+    "matched": [
+      "helvetica",
+      "helvetica-bold",
+      "helvetica-italic",
+      "arabic"
+    ],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": false,
+        "errors": [
+          "native refusal: CoreText resource unavailable",
+          "physical face mismatch"
+        ]
+      },
+      {
+        "name": "cjk",
+        "passed": false,
+        "errors": [
+          "native refusal: Native PostScript identity \"PingFangSC-Regular\" not found in collection",
+          "physical face mismatch"
+        ]
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "errors": []
+      }
+    ],
+    "scope": "Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"
+  },
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "bcc50a3d13dc9cf99edb40803b87b1f3c418b1739f04e5a4977967644b85a457",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 6,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 9,
+      "canvas_warm_frames": 8,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "live_window_diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194)\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=9; retired=6; displayed=0; skipped=6; frames=[submission=7 id=6 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=983.7432724166667 gpuEnd=983.7442684166667 callback_seen=false callback_time=0; submission=8 id=7 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=983.7515432916667 gpuEnd=983.7524165416668 callback_seen=false callback_time=0; submission=9 id=8 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=983.7591145 gpuEnd=983.7600980000001 callback_seen=false callback_time=0]",
+  "inference": "Window attachment/visibility alone does not explain missing presentation; diagnostic capture added without changing positive callback acceptance.",
+  "scope": "ARM cloud only; no physical Mac or full parity claim"
+}

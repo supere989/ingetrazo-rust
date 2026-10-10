@@ -1,0 +1,165 @@
+{
+  "run": 38086632034,
+  "artifact": 11681649618,
+  "sha256": "3b8e82a3ed39c6dbf713d66bfd33c165b2d080e1cd1f0378e0231a47478a734a",
+  "source": "dc11af7d179dd060d0b69a2b238f8f09c33ef2c5",
+  "comparisons": [
+    {
+      "case": "arabic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 72,
+      "changed_pixels": 62
+    },
+    {
+      "case": "cjk",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 300,
+      "changed_pixels": 309
+    },
+    {
+      "case": "helvetica",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    }
+  ],
+  "exact": 16,
+  "canvas": {
+    "passed": true,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "9ea716288bda660344a53cbc46ea03301cc4f8015c66b9f252876fed63bc6c66",
+    "snapshot": {
+      "window_id": 26,
+      "submitted": 4,
+      "displayed": 1,
+      "completed_inflight": 1,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "texture_uploads": 56,
+      "warm_frames": 3,
+      "cancelled_uploads": 1
+    },
+    "image_sha256": "bcb5abbba7bf6ffcadc36e9a8e692aa658fb4ce87ffc85635628df321bef3eae",
+    "exit_code": 0,
+    "host": {
+      "passed": true,
+      "choice": "canvas",
+      "phase": 4,
+      "close_events": 1,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 16,
+      "skipped": 1,
+      "pending": 0,
+      "error": null,
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 17,
+      "canvas_warm_frames": 16,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "Independent actual Intel artifact image decoding, not a fresh render or full platform proof."
+}

@@ -1,0 +1,6 @@
+{
+  "finding": "CachedFont metadata used Unicode-only Name::to_string while CoreText resolver already accepts exact ASCII Macintosh Roman PostScript names.",
+  "change": "Use the same sfnt_postscript_name helper when constructing cached font metadata.",
+  "validation": "Existing helper test covers Macintosh Roman ASCII, Unicode and rejection of unsupported legacy encodings; native font-cache output still requires macOS validation.",
+  "scope": "Physical font metadata correction; not evidence that Canvas readiness or Times style failures are fixed."
+}

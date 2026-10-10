@@ -39,7 +39,8 @@ fn terminal_proof(
 struct Frame {
     submission_id: u64,
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
-    drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
+    // Observation only; do not hold the application drawable until its callback.
+    drawable_id: usize,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
     _canvas:Option<std::sync::Arc<crate::compute_canvas::Lease>>,
     callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
@@ -193,7 +194,9 @@ impl MetalPresentation {
                     return Err(error);
                 }
             };
-            // Each immutable frame owns its drawable, command and paint.
+            // Each immutable frame retains its command, callback and paint.
+            // Metal owns scheduled presentation; the application drawable was
+            // released after commit, without weakening retirement proof.
             // A missing head callback cannot invalidate a later owner's actual
             // terminal proof. Never release the unresolved head by inference.
             if displayed {
@@ -287,12 +290,20 @@ impl MetalPresentation {
         unsafe {
             drawable.addPresentedHandler(block2::RcBlock::as_ptr(&callback));
         }
+        let drawable_id = drawable.drawableID();
         command.presentDrawable(ProtocolObject::from_ref(&*drawable));
         command.commit();
+        // Apple recommends releasing the application drawable immediately after
+        // CPU frame finalization. presentDrawable schedules presentation through
+        // the command buffer; no post-submit drawable queries require our own
+        // strong reference. Keep every command/callback/paint owner below until
+        // actual GPU completion AND terminal presentation callback.
+        // https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/Drawables.html
+        drop(drawable);
         self.owners.frames.push_back(Frame {
             submission_id: self.submitted + 1,
             command,
-            drawable,
+            drawable_id,
             callback_seen,
             callback_time,
             _callback: callback,
@@ -358,17 +369,32 @@ impl MetalPresentation {
     }
     /// Read-only native diagnostics. Completed is never substituted for displayed.
     pub fn diagnostics(&self) -> String {
+        // Visibility alone does not establish that the compositor can display
+        // this window. Inspect AppKit only on its owning main thread.
+        let appkit = MainThreadMarker::new().and_then(|_| {
+            let handle = self.owners._window.window_handle().ok()?;
+            let RawWindowHandle::AppKit(handle) = handle.as_raw() else { return None; };
+            let view = unsafe { handle.ns_view.cast::<NSView>().as_ref() };
+            let window = view.window()?;
+            // Observer only: these properties do not establish presentation.
+            let screen = window.screen().map(|screen| format!(
+                "name={} backing_scale={} max_fps={} refresh_min={} refresh_max={} frame={:?}",
+                screen.localizedName(), screen.backingScaleFactor(),
+                screen.maximumFramesPerSecond(), screen.minimumRefreshInterval(),
+                screen.maximumRefreshInterval(), screen.frame()));
+            Some(format!("number={} visible={} active_space={} occlusion={:?} screen={:?}",
+                window.windowNumber(), window.isVisible(), window.isOnActiveSpace(), window.occlusionState(), screen))
+        });
         let frames: Vec<_> = self
             .owners
             .frames
             .iter()
             .map(|f| {
                 format!(
-                    "submission={} id={} command={:?} presentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
+                    "submission={} id={} command={:?} drawable_owner=released_after_commit gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
                     f.submission_id,
-                    f.drawable.drawableID(),
+                    f.drawable_id,
                     f.command.status(),
-                    f.drawable.presentedTime(),
                     f.command.GPUStartTime(),
                     f.command.GPUEndTime(),
                     f.callback_seen.load(Ordering::Acquire),
@@ -377,7 +403,8 @@ impl MetalPresentation {
             })
             .collect();
         format!(
-            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            "appkit={:?}; extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; displaySyncEnabled={}; device_id={}; preferred_device={:?}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            appkit,
             self.extent,
             self.owners._window.is_visible(),
             self.owners.layer.frame(),
@@ -385,6 +412,10 @@ impl MetalPresentation {
             self.owners.layer.isHidden(),
             self.owners.layer.drawableSize(),
             self.owners.layer.presentsWithTransaction(),
+            self.owners.layer.displaySyncEnabled(),
+            self.owners.metal.device.registryID(),
+            self.owners.layer.preferredDevice().map(|device|
+                (device.registryID(), device.name().to_string())),
             self.submitted,
             self.retired,
             self.displayed,

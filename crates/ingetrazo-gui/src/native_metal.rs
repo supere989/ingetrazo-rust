@@ -103,7 +103,10 @@ impl Host {
                 .events
                 .push(egui::ViewportEvent::Close);
         }
-        let output = self.ctx.run(raw, |ctx| state.app.update_ui(ctx));
+        let output = self.ctx.run(raw, |ctx| {
+            state.app.update_ui(ctx);
+            if let Some(probe) = self.probe.as_ref() { probe.paint_raw_swatch(ctx); }
+        });
         if let Some(probe) = self.probe.as_mut() {
             probe.observe(&state.app, &output.shapes, state.gpu.counters().0);
         }
@@ -155,9 +158,27 @@ impl Host {
                 return Ok(false);
             }
             let primitives = self.ctx.tessellate(output.shapes, output.pixels_per_point);
-            state
-                .painter
-                .update_textures(state.gpu.metal(), &state.pending_textures)?;
+            // A freed ID used by this frame must still upload before prepare.
+            // Opaque callbacks conservatively retain their IDs until preparation.
+            if !state.pending_textures.free.is_empty()
+                && !primitives.iter().any(|p| matches!(p.primitive, egui::epaint::Primitive::Callback(_))) {
+                let used: std::collections::HashSet<_> = primitives.iter().filter_map(|p| match &p.primitive {
+                    egui::epaint::Primitive::Mesh(mesh) => Some(mesh.texture_id), _ => None,
+                }).collect();
+                let dead = state.pending_textures.free.iter().copied().filter(|id| !used.contains(id)).collect();
+                crate::paper_raw_texture::cancel_vec(&self.ctx, &dead, &mut state.pending_textures.set)?;
+            }
+            let mut images = Vec::new();
+            for (id, _) in &state.pending_textures.set {
+                if let Some(image) = crate::paper_raw_texture::peek(&self.ctx, *id)? {
+                    images.push((*id, image));
+                }
+            }
+            let encoded: Vec<_> = images.iter().map(|(id, image)| (*id, image.size, image.pixels.as_slice())).collect();
+            state.painter.update_textures_encoded(state.gpu.metal(), &state.pending_textures, &encoded)?;
+            // A failed transaction retains every payload/delta. ACK only after
+            // complete GPU owner publication; image clones only retain Arc bytes.
+            for (id, _) in &images { crate::paper_raw_texture::acknowledge(&self.ctx, *id)?; }
             state.pending_textures.set.clear();
             let paint =
                 state
@@ -171,6 +192,7 @@ impl Host {
             Ok(true) => {
                 if let Some(probe) = self.probe.as_mut() {
                     probe.submitted(&state.app, state.gpu.counters().0);
+                    probe.canvas_submitted(&self.ctx, &state.painter);
                 }
             }
             Ok(false) => {
@@ -235,6 +257,8 @@ impl ApplicationHandler for Host {
             if let Some(probe) = self.probe.as_mut() {
                 probe.setup(&mut app)?;
             }
+            crate::paper_raw_texture::install(&self.ctx);
+            if let Some(probe) = self.probe.as_mut() { probe.setup_raw_swatch(&self.ctx)?; }
             let pointer_modifiers = crate::pointer_modifiers::install(&self.ctx);
             Ok(State {
                 painter,

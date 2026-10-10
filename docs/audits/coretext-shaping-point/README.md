@@ -1,0 +1,7 @@
+# Native Qt paper shaping point context
+
+Fourth ARM actual source reports pixel100/effectivepoint75 for all6 cases, both QImage96DPI and QPdfWriter300DPI. Actual native pages now16/18 exact; remaining CJK62/0/309 changed pixels are exactly the bearing-corrected spacing defect diagnosed previously. Actual source PDF uses secondglyph100.406250, not native100. No DPI/tolerance/position adjustment is made.
+
+Qt qharfbuzzng explicitly supplies fontDef.pointSize to HB. Native paper constructor now supplies the source reference100px×72/96=75pt before immutable publication. General PaperFont/FreeType constructors preserve unspecified ptem; no shared mutable font or per-shape setter. Point policy enters native font instance/cache identity with qptm+exactfloatbits. Physical CTfont size remains100. Warm requests reuse owners/layouts; no extra fontbytes/copies/process/lookup are added. New getter permits an actual native fixture observation.
+
+Focused local actual HarfBuzz control constructs a valid synthetic trak table on unchanged DejaVu input in memory: track0 sizes12/75/100 have128/128/0 units. At scale6400/upem2048, ptem75 adds400 QFixed units; ptem0 and100 addzero and are explicit negatives. Result is mechanism evidence, not actual Mac font proof. No temporary font/binary/output files retained. Actual SDK batch must prove CJK exact metrics and all18 PDF pages; no full font/Canvas/PDF claim. Original failure records retained.

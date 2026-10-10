@@ -24,11 +24,17 @@ pub(super) struct Probe {
     releases: u64,
     cancel_verified: bool,
     event_baseline: (u64, u64, u64),
+    canvas_uploads: Option<([u64; 5], u64)>,
+    canvas_warm_frames: u64,
+    canvas_last_raw: Option<[u64; 5]>,
+    canvas_submission_observations: u64,
+    canvas_cancelled: u64,
+    canvas_raw_swatch: Option<egui::TextureHandle>,
 }
 impl Probe {
     pub fn new(root: PathBuf, choice: &str) -> Result<Self, String> {
-        if !matches!(choice, "save" | "discard" | "cancel") {
-            return Err("choice must be save|discard|cancel".into());
+        if !matches!(choice, "save" | "discard" | "cancel" | "canvas") {
+            return Err("choice must be save|discard|cancel|canvas".into());
         }
         std::fs::create_dir_all(&root).map_err(|e| e.to_string())?;
         if std::fs::read_dir(&root)
@@ -63,11 +69,41 @@ impl Probe {
             releases: 0,
             cancel_verified: false,
             event_baseline: (0, 0, 0),
+            canvas_uploads: None,
+            canvas_warm_frames: 0,
+            canvas_last_raw: None,
+            canvas_submission_observations: 0,
+            canvas_cancelled: 0,
+            canvas_raw_swatch: None,
         })
     }
     pub fn setup(&mut self, app: &mut IngeTrazoApp) -> Result<(), String> {
         if app.current_file.as_ref() != Some(&self.document) || app.document_dirty() {
             return Err("Native probe did not reopen clean IGZ".into());
+        }
+        if self.choice == "canvas" {
+            use ingetrazo_core::composition::{Sheet, SheetItem, TextItem};
+            let mut sheet = Sheet::default();
+            sheet.items.clear();
+            sheet.items.push(SheetItem::Text(TextItem {
+                id: uuid::Uuid::new_v4(), pos: (30., 35.),
+                text: "Native Metal Canvas 0123456789".into(),
+                font_size_pt: 24., bold: false,
+            }));
+            app.scene.sheets = vec![sheet];
+            app.scene.active_sheet_index = Some(0);
+            // Save through the application so the authored fixture becomes the
+            // clean baseline before guarded Open. A raw writer leaves it dirty
+            // and Open correctly queues an unsaved-document confirmation.
+            app.save_to_path(&self.document);
+            if app.document_dirty() { return Err("Canvas fixture save did not establish clean document".into()); }
+            self.initial_bytes = std::fs::read(&self.document).map_err(|e| e.to_string())?;
+            app.open_document(&self.document);
+            app.scene.active_sheet_index = Some(0);
+            if app.document_dirty() || app.document_session.pending.is_some() || app.document_session.confirm_unsaved {
+                return Err("Canvas fixture did not reopen cleanly".into());
+            }
+            return Ok(());
         }
         let ids = [
             glam::DVec3::new(123., 234., 345.),
@@ -83,6 +119,45 @@ impl Probe {
             return Err("Authored triangle did not dirty document".into());
         }
         Ok(())
+    }
+    // Retain an independent raw-texture owner fixture when Text uses ordered CAD.
+    // This diagnostic does not alter the strict source/native font corpus.
+    pub fn setup_raw_swatch(&mut self, ctx: &egui::Context) -> Result<(), String> {
+        if self.choice != "canvas" { return Ok(()); }
+        self.canvas_raw_swatch = Some(crate::paper_raw_texture::create(ctx, [2, 2],
+            vec![255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255])?);
+        let cancelled = crate::paper_raw_texture::create(ctx, [1, 1], vec![17, 31, 63, 255])?;
+        drop(cancelled);
+        Ok(())
+    }
+    pub fn paint_raw_swatch(&self, ctx: &egui::Context) {
+        if let Some(texture) = &self.canvas_raw_swatch {
+            ctx.layer_painter(egui::LayerId::new(egui::Order::Foreground,
+                egui::Id::new("metal-lifecycle-raw-swatch"))).image(texture.id(),
+                egui::Rect::from_min_size(egui::pos2(8., 8.), egui::vec2(16., 16.)),
+                egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1., 1.)), egui::Color32::WHITE);
+        }
+    }
+    /// Observe only successfully submitted application frames. No queue work is
+    /// added to ordinary host rendering when the diagnostic is absent.
+    pub fn canvas_submitted(&mut self, ctx: &egui::Context, painter: &EguiPainter) {
+        if self.choice != "canvas" { return; }
+        self.canvas_submission_observations += 1;
+        self.canvas_last_raw = crate::paper_raw_texture::stats(ctx);
+        let Some(raw) = self.canvas_last_raw else { return; };
+        self.canvas_cancelled = crate::paper_raw_texture::cancelled(ctx).unwrap_or(0);
+        let uploads = painter.stats().texture_uploads;
+        if self.canvas_raw_swatch.is_none() || self.canvas_cancelled == 0 || raw[0] != 0 || raw[1] != 0 || raw[4] == 0 || raw[2].checked_sub(self.canvas_cancelled) != Some(raw[4]) {
+            self.canvas_warm_frames = 0;
+            self.canvas_uploads = None;
+            return;
+        }
+        if self.canvas_uploads == Some((raw, uploads)) {
+            self.canvas_warm_frames += 1;
+        } else {
+            self.canvas_warm_frames = 0;
+        }
+        self.canvas_uploads = Some((raw, uploads));
     }
     pub fn native_event(&mut self, event: &WindowEvent) {
         match event {
@@ -159,6 +234,9 @@ impl Probe {
         window: &Window,
     ) -> Result<(), String> {
         if self.started.elapsed() > Duration::from_secs(15) {
+            // Capture live AppKit visibility before event-loop teardown changes it.
+            std::fs::write(self.root.join("presentation-before-exit.txt"), gpu.diagnostics())
+                .map_err(|e| e.to_string())?;
             return Err(format!(
                 "Bounded Cocoa lifecycle deadline phase={} close={} move={} press={} release={} displayed={}",
                 self.phase,
@@ -168,6 +246,40 @@ impl Probe {
                 self.releases,
                 gpu.presentation_counters().0
             ));
+        }
+        if self.choice == "canvas" {
+            // Diagnostic identity only: never substitutes for presentation proof.
+            if self.started.elapsed() > Duration::from_secs(2) && !self.root.join("diagnostic-window.json").exists() {
+                let snapshot = serde_json::json!({"window_id":gpu.native_window_id()?,"displayed":gpu.presentation_counters().0,"diagnostics":gpu.diagnostics(),"acceptance_proof":false});
+                let pending=self.root.join("diagnostic-window.pending");
+                std::fs::write(&pending,serde_json::to_vec_pretty(&snapshot).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+                std::fs::rename(pending,self.root.join("diagnostic-window.json")).map_err(|e|e.to_string())?;
+            }
+            if gpu.presentation_counters().0 > 0 && self.phase == 0 && self.canvas_warm_frames >= 3 {
+                let snapshot = serde_json::json!({
+                    "window_id": gpu.native_window_id()?,
+                    "submitted": gpu.counters().0,
+                    "displayed": gpu.presentation_counters().0,
+                    "completed_inflight": gpu.completed_inflight_for_probe(),
+                    "physical_mac_claim": false,
+                    "raw_uploads": self.canvas_uploads.map(|v|v.0),
+                    "texture_uploads": self.canvas_uploads.map(|v|v.1),
+                    "warm_frames": self.canvas_warm_frames,
+                    "cancelled_uploads": self.canvas_cancelled,
+                    "raw_owner_fixture": "live-2x2-swatch-and-cancelled-1x1"
+                });
+                let pending = self.root.join("own-window.pending");
+                std::fs::write(&pending, serde_json::to_vec_pretty(&snapshot).map_err(|e| e.to_string())?)
+                    .map_err(|e| e.to_string())?;
+                std::fs::rename(pending, self.root.join("own-window.json")).map_err(|e| e.to_string())?;
+                self.phase = 1;
+            }
+            if self.phase == 1 && self.root.join("capture-finished").is_file() {
+                if app.document_dirty() { return Err("Canvas display changed document".into()); }
+                request_close_for_probe(window)?;
+                self.phase = 4;
+            }
+            return Ok(());
         }
         match self.phase {
             0 if gpu.presentation_counters().0 > 0 => {
@@ -254,6 +366,15 @@ impl Probe {
             if let Some(error) = error {
                 return Err(error.into());
             }
+            if self.choice == "canvas" {
+                if self.phase != 4 || self.close_events == 0 || gpu.presentation_counters().0 == 0 || self.canvas_warm_frames < 3 {
+                    return Err("Missing completed Canvas presentation and native closure".into());
+                }
+                if app.document_dirty() || std::fs::read(&self.document).map_err(|e| e.to_string())? != self.initial_bytes {
+                    return Err("Canvas display modified document".into());
+                }
+                return Ok(());
+            }
             if self.phase != 4
                 || self.close_events == 0
                 || self.presses == 0
@@ -288,7 +409,8 @@ impl Probe {
             }
             Ok(())
         })();
-        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
+        std::fs::write(self.root.join("presentation-diagnostics.txt"), gpu.diagnostics()).map_err(|e| e.to_string())?;
+        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false,"canvas_cancelled":self.canvas_cancelled,"canvas_last_raw":self.canvas_last_raw,"canvas_submission_observations":self.canvas_submission_observations,"canvas_warm_frames":self.canvas_warm_frames,"canvas_last_stable_uploads":self.canvas_uploads,"application_status":app.status_message,"active_sheet_index":app.scene.active_sheet_index,"sheet_count":app.scene.sheets.len()});
         std::fs::write(
             self.root.join("result.json"),
             serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,

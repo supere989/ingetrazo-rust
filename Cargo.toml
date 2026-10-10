@@ -39,3 +39,4 @@ egui-ash-renderer = { path = "vendor/egui-ash-renderer" }
 freetype-sys = { path = "vendor/freetype-sys" }
 
 zune-jpeg = { path = "vendor/zune-jpeg" }
+harfbuzz-sys = { path = "vendor/harfbuzz-sys" }

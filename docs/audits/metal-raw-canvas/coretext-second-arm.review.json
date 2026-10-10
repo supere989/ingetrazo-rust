@@ -1,0 +1,12 @@
+{
+  "run": 38078797189,
+  "job": 114291251492,
+  "artifact": 11679755908,
+  "sha256": "a0399e987d52e47c2428e905b62fd295573de6be76602715dcb27be48c2d9bb6",
+  "revision": "68cee8daf2534ceecdc6046b374104928fab3f78",
+  "zip_integrity": "PASS",
+  "result": "Native build/raw fixture PASS; first three Helvetica provider cases progress, Times bold italic fails strict physical style check.",
+  "error": " crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs:9:68:\nnative face/style/coverage Request { family: \"Times\", bold: true, italic: true, required_chars: ['A', 'B', 'C'] }: CoreText style requires unsupported synthetic or variable face traits\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+  "canvas": "NOT RUN after font provider failure",
+  "next": "Inspect CoreText selected name and SFNT style flags; gather original native font evidence independently of provider gate."
+}
