@@ -1,0 +1,124 @@
+{
+  "cases": [
+    {
+      "name": "loose-face",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": 2.0,
+      "placements": 0
+    },
+    {
+      "name": "ordinary-group",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": 2.0,
+      "placements": 1
+    },
+    {
+      "name": "billboard-root",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": null,
+      "placements": 0
+    },
+    {
+      "name": "hidden-root",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": null,
+      "placements": 0
+    },
+    {
+      "name": "hidden-nested-visible-grandchild",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": null,
+      "placements": 2
+    },
+    {
+      "name": "billboard-nested-visible-grandchild",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": 2.0,
+      "placements": 2
+    },
+    {
+      "name": "billboard-nested-own-face",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": null,
+      "placements": 2
+    },
+    {
+      "name": "billboard-root-visible-child",
+      "origin": [
+        0,
+        0,
+        2
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distance": 2.0,
+      "placements": 0
+    }
+  ]
+}
