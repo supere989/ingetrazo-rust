@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse,json
+import argparse,json,hashlib
 from pathlib import Path
 from PySide6.QtGui import QImage
 BASE=['red-half-white','red-half-black','opacity-bucket-order','opaque-front','opaque-back','equal-opacity-forward','equal-opacity-reversed','opacity-995','opacity-zero','section-clipped']
@@ -10,6 +10,11 @@ def check(source,actual,window=False):
  for a,b in zip(s,n):
   assert 'NVIDIA'in a['gl_info']['renderer']and not a['gl_info']['software']
   assert a['center_rgba']==b['center_rgba']
+  native_input=source/(a['case']+'.igz')
+  assert native_input.is_file() and hashlib.sha256(native_input.read_bytes()).hexdigest()==a['native_input_sha256'],'Original input corpus hash mismatch'
+  if not window:
+   assert b['geometry_uploads']==1,'Warm fixture unexpectedly uploaded geometry'
+   assert b['hard_edge_bytes']==b['hard_edge_endpoint_count']*12,'Unexpected duplicate edge position storage'
   if window:assert b['passed']is True
  rows=[]
  for name in EDGE:

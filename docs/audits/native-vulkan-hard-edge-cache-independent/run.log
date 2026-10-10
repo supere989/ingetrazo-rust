@@ -1,0 +1,15 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial1: 0.017568ms
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Actual full World GPUdraw timestamp serial2: 0.011904ms
+Actual full World GPUdraw timestamp serial3: 0.011936ms
+Actual full World GPUdraw timestamp serial4: 0.012032ms
+EDGE_CACHE_PROOF cold_endpoints=48 cold_bytes=576 warm100_edge_uploads=0 failed_prepared_edge_bytes=600 attempted_edge_uploads=2 old_count_bytes_restored=true old_ledger_bytes=20487136
+Actual full World GPUdraw timestamp serial5: 0.011776ms
+Actual full World GPUdraw timestamp serial6: 0.012000ms
+PASS actual GPU hollow normal/chunked exact image equality; cold ContourMetrics { additional_position_bytes: 1152, batches: 16, cold_build_ms: 5.250414999999999, compact_preprocess_ms: 0.0056619999999999995, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }; warm100average0.000609ms; uniform cache, actualpartialquota rollback oldimage, opacity invalidation; final ContourMetrics { additional_position_bytes: 1152, batches: 16, cold_build_ms: 3.5824920000000002, compact_preprocess_ms: 0.0037759999999999985, warm_cache_ms: 0.88325, cache_hits: 102, failed_prepared_chunks: 2, rollbacks: 1, edge_buffer_uploads: 3, failed_prepared_edge_bytes: 600 }
+EDGE_CACHE_PROOF old_full_image_restored=true final_ledger_bytes=0
