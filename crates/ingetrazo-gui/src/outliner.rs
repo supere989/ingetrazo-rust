@@ -2,7 +2,18 @@
 use crate::IngeTrazoApp;use ingetrazo_core::{groups::Group,scene::SelectionItem};use uuid::Uuid;
 fn path(groups:&[Group],id:Uuid)->Option<Vec<usize>>{for(i,g)in groups.iter().enumerate(){if g.id==id{return Some(vec![i]);}if let Some(mut child)=path(&g.children,id){child.insert(0,i);return Some(child);}}None}
 fn group_mut(groups:&mut [Group],id:Uuid)->Option<&mut Group>{for g in groups{if g.id==id{return Some(g);}if let Some(found)=group_mut(&mut g.children,id){return Some(found);}}None}
+#[derive(Default)]pub struct PartsCache{key:Option<(u64,usize,Vec<Uuid>)>,pub rows:std::collections::HashMap<Uuid,ingetrazo_core::parts::PartSummary>}
 impl IngeTrazoApp {
+    pub fn refresh_parts_cache(&mut self){
+        let key=(self.scene.version,self.component_edit_stack.len(),self.scene.groups.iter().map(|g|g.id).collect());if self.parts_cache.key.as_ref()==Some(&key){return;}
+        fn rows(groups:&[Group],cache:&mut std::collections::HashMap<Uuid,ingetrazo_core::parts::PartSummary>){for g in groups{cache.insert(g.id,ingetrazo_core::parts::part_summary(g));rows(&g.children,cache);}}
+        self.parts_cache.rows.clear();rows(&self.scene.groups,&mut self.parts_cache.rows);self.parts_cache.key=Some(key);
+    }
+    pub fn all_outliner_parts_visible(&mut self,visible:bool){if self.scene.groups.iter().all(|g|g.hidden==!visible){return;}self.save_undo_state();for group in &mut self.scene.groups{group.hidden=!visible;}self.scene.bump_version();}
+    pub fn outliner_cut_list(&self)->String{
+        let selected=self.scene.selection.iter().filter_map(|s|if let SelectionItem::Group(i)=s{self.scene.groups.get(*i)}else{None}).collect::<Vec<_>>();
+        let groups=if selected.len()==1&&!selected[0].children.is_empty(){&selected[0].children}else{&self.scene.groups};let rows=groups.iter().map(ingetrazo_core::parts::part_summary).collect::<Vec<_>>();ingetrazo_core::parts::cut_list_text(&ingetrazo_core::parts::cut_list(&rows,1.,true))
+    }
     /// Nested rows open their ancestors, then select the actual child in that
     /// editing context. Geometry tools therefore operate on the named part.
     pub fn select_outliner_group(&mut self,id:Uuid,extend:bool)->bool {
@@ -22,11 +33,13 @@ impl IngeTrazoApp {
 }
 #[derive(Clone)]enum Action{Select(Uuid,bool),Edit(Uuid),Visibility(Uuid,bool),Rename(Uuid,String),Unique(Uuid),Explode(Uuid)}
 pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
-    fn rows(groups:&[Group],selected:&std::collections::HashSet<SelectionItem>,root:bool,ui:&mut egui::Ui,actions:&mut Vec<Action>){
+    app.refresh_parts_cache();
+    fn rows(groups:&[Group],selected:&std::collections::HashSet<SelectionItem>,root:bool,cache:&std::collections::HashMap<Uuid,ingetrazo_core::parts::PartSummary>,ui:&mut egui::Ui,actions:&mut Vec<Action>){
         for(i,group)in groups.iter().enumerate(){ui.push_id(group.id,|ui|{
             ui.horizontal(|ui|{
                 let mut shown=!group.hidden;if ui.checkbox(&mut shown,"").changed(){actions.push(Action::Visibility(group.id,shown));}
                 let label=if group.component_definition.is_some(){format!("◈ {}",group.name)}else{group.name.clone()};
+                if let Some(summary)=cache.get(&group.id){ui.label(egui::RichText::new(format!("{:.0} × {:.0} × {:.0} mm {}",summary.size[0]*1000.,summary.size[1]*1000.,summary.size[2]*1000.,summary.material)).small());}
                 let response=ui.selectable_label(root&&selected.contains(&SelectionItem::Group(i)),label);
                 if response.clicked(){actions.push(Action::Select(group.id,ui.input(|i|i.modifiers.ctrl||i.modifiers.command||i.modifiers.shift)));}
                 if response.double_clicked(){actions.push(Action::Edit(group.id));}
@@ -38,12 +51,13 @@ pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
                     if ui.button("Explode").clicked(){actions.push(Action::Explode(group.id));ui.close_menu();}
                 });
             });
-            if !group.children.is_empty(){egui::CollapsingHeader::new(format!("{} parts",group.children.len())).id_salt((group.id,"parts")).default_open(true).show(ui,|ui|rows(&group.children,selected,false,ui,actions));}
+            if !group.children.is_empty(){egui::CollapsingHeader::new(format!("{} parts",group.children.len())).id_salt((group.id,"parts")).default_open(true).show(ui,|ui|rows(&group.children,selected,false,cache,ui,actions));}
         });}
     }
     egui::CollapsingHeader::new("Outliner / Parts").default_open(true).show(ui,|ui|{
         if !app.component_edit_stack.is_empty(){ui.label(format!("Editing depth {}",app.component_edit_stack.len()));ui.horizontal(|ui|{if ui.button("Finish").clicked(){app.finish_component_edit();}if ui.button("Cancel edit").clicked(){app.cancel_component_edit();}});}
-        let mut actions=vec![];rows(&app.scene.groups,&app.scene.selection,true,ui,&mut actions);
+        ui.horizontal(|ui|{if ui.button("Show all parts").clicked(){app.all_outliner_parts_visible(true);}if ui.button("Hide all parts").clicked(){app.all_outliner_parts_visible(false);}if ui.button("Copy cut list").clicked(){ui.ctx().copy_text(app.outliner_cut_list());}});
+        let mut actions=vec![];rows(&app.scene.groups,&app.scene.selection,true,&app.parts_cache.rows,ui,&mut actions);
         for action in actions{match action{
             Action::Select(id,extend)=>{app.select_outliner_group(id,extend);},Action::Visibility(id,visible)=>app.set_outliner_visibility(id,visible),
             Action::Rename(id,name)=>app.outliner_rename=Some((id,name)),
@@ -55,6 +69,9 @@ pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
     });
 }
 #[cfg(test)]mod tests{use super::*;use glam::{DMat4,DVec3};use ingetrazo_core::mesh::Mesh;
+    #[test]fn all_visibility_is_one_undo_and_cut_list_and_cache_follow_changes(){
+        let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X);mesh.add_edge(a,b);let first=Group::with_mesh("Piece 10",mesh.clone());let second=Group::with_mesh("Piece 2",mesh);app.scene.groups=vec![first,second];let before=app.scene.clone();app.all_outliner_parts_visible(false);assert!(app.scene.groups.iter().all(|g|g.hidden));assert_eq!(app.undo_stack.len(),1);app.undo();assert_eq!(app.scene,before);assert!(app.outliner_cut_list().contains("2\tPiece 2, Piece 10"));app.refresh_parts_cache();let id=app.scene.groups[0].id;assert_eq!(app.parts_cache.rows[&id].size[0],1.);app.scene.groups[0].transform=DMat4::from_scale(DVec3::splat(2.));app.scene.bump_version();app.refresh_parts_cache();assert_eq!(app.parts_cache.rows[&id].size[0],2.);
+    }
     #[test]fn nested_selection_opens_correct_context_and_properties_roundtrip_with_undo(){
         let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();mesh.add_vertex(DVec3::new(1.,2.,3.));let leaf=Group::with_mesh("leaf",mesh);let id=leaf.id;
         let mut middle=Group::new("middle");middle.transform=DMat4::from_translation(DVec3::X);middle.children.push(leaf);
