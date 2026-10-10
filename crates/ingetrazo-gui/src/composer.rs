@@ -175,12 +175,12 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 // Render 3D model projection inside the view frame
                 let vector=matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective;
                 let ink=if vector{
-                    let snapshot=frame_scene(&app.scene,frame);let camera=frame_camera(&snapshot,frame);
+                    let snapshot=frame_scene(&app.scene,frame);let camera=frame_camera_live(&snapshot,frame,&app.camera);
                     match app.composer_compute.segments(&snapshot,&camera,app.clipboard_document,app.model_revision,&frame.view_key,frame.profiles,frame.hidden_lines){
                         Ok(ink)=>Some(ink),Err(error)=>{app.status_message=error;Some(std::sync::Arc::new(vec![]))}
                     }
                 }else{None};
-                render_model_projection_with_ink(&app.scene,&painter,fr,frame,&app.style,&app.textures.iter().map(|(k,v)|(k.clone(),v.id())).collect(),ink.as_deref().map(Vec::as_slice));
+                render_model_projection_with_ink(&app.scene,&painter,fr,frame,&app.style,&app.textures.iter().map(|(k,v)|(k.clone(),v.id())).collect(),ink.as_deref().map(Vec::as_slice),Some(&app.camera));
 
                 // View Frame border
                 if frame.border {
@@ -480,6 +480,10 @@ fn frame_bounds(scene:&Scene)->Option<(DVec3,DVec3)>{
 }
 /// Resolve a frame without changing the live document or visible camera.
 pub fn camera_for_frame(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{let snapshot=frame_scene(scene,frame);frame_camera(&snapshot,frame)}
+fn frame_camera_live(scene:&Scene,frame:&ViewFrame,live:&ingetrazo_core::camera::OrbitCamera)->ingetrazo_core::camera::OrbitCamera{
+ let bound=frame.view_key.strip_prefix("scene:").is_some_and(|name|scene.saved_views.iter().any(|view|view.name==name));
+ frame_camera_with_base(scene,frame,if bound{&scene.camera}else{live})
+}
 fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{
  frame_camera_with_base(scene,frame,&scene.camera)
 }
@@ -602,13 +606,13 @@ pub fn render_model_projection(
     render_model_projection_with_resources(scene,painter,frame_rect,frame,&ingetrazo_render::style::StyleConfig::default_shaded(),&std::collections::HashMap::new());
 }
 pub fn render_model_projection_with_resources(scene:&Scene,painter:&egui::Painter,frame_rect:Rect,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig,textures:&std::collections::HashMap<String,egui::TextureId>) {
-    render_model_projection_with_ink(scene,painter,frame_rect,frame,base,textures,None);
+    render_model_projection_with_ink(scene,painter,frame_rect,frame,base,textures,None,None);
 }
-fn render_model_projection_with_ink(scene:&Scene,painter:&egui::Painter,frame_rect:Rect,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig,textures:&std::collections::HashMap<String,egui::TextureId>,prepared:Option<&[ingetrazo_render::vector_hlr::VectorSegment]>) {
+fn render_model_projection_with_ink(scene:&Scene,painter:&egui::Painter,frame_rect:Rect,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig,textures:&std::collections::HashMap<String,egui::TextureId>,prepared:Option<&[ingetrazo_render::vector_hlr::VectorSegment]>,live_camera:Option<&ingetrazo_core::camera::OrbitCamera>) {
     let painter = painter.with_clip_rect(frame_rect);
     let snapshot=frame_scene(scene,frame);let scene=snapshot.as_ref();
 
-    let camera=frame_camera(scene,frame);
+    let camera=live_camera.map(|live|frame_camera_live(scene,frame,live)).unwrap_or_else(||frame_camera(scene,frame));
     let view_mat=camera.view_matrix();
 
     // Sacred scale equation: model_height_m = frame.rect.h * scale_n / 1000
@@ -891,8 +895,7 @@ impl IngeTrazoApp {
             _=>return Err(tr("Select a view frame to export")),
         };
         let snapshot=frame_scene(&self.scene,&frame);
-        let base=if frame.view_key.starts_with("scene:"){&snapshot.camera}else{&self.camera};
-        let camera=frame_camera_with_base(&snapshot,&frame,base);
+        let camera=frame_camera_live(&snapshot,&frame,&self.camera);
         let ink=self.composer_compute.segments(&snapshot,&camera,self.clipboard_document,self.model_revision,&frame.view_key,frame.profiles,frame.hidden_lines)?;
         let right=camera.right();let up=right.cross(camera.forward());let eye=camera.eye();
         let mut classes:[Vec<[f64;4]>;4]=Default::default();
@@ -910,4 +913,14 @@ impl IngeTrazoApp {
         let count=ingetrazo_formats::sheet_dxf::save_view_dxf(path,&groups).map_err(|e|e.to_string())?;
         Ok(count)
     }
+}
+
+#[cfg(test)] mod live_composer_camera_tests {
+ use super::*;
+ #[test] fn current_and_missing_saved_use_live_camera_while_bound_view_uses_snapshot(){
+ let mut scene=Scene::new();let mut live=scene.camera.clone();live.yaw=1.2;live.pitch=0.4;live.target=DVec3::new(4.,5.,6.);let before=scene.clone();let mut frame=ViewFrame::default();frame.view_key="__current__".into();
+ let current=frame_camera_live(&scene,&frame,&live);assert_eq!(current.target,live.target);assert!((current.forward()-live.forward()).length()<1e-12);assert_eq!(scene,before);
+ frame.view_key="scene:missing".into();assert_eq!(frame_camera_live(&scene,&frame,&live).target,live.target);
+ scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Saved",&scene,&scene.camera));frame.view_key="scene:Saved".into();let snapshot=frame_scene(&scene,&frame);assert_eq!(frame_camera_live(&snapshot,&frame,&live).target,scene.camera.target);
+ }
 }
