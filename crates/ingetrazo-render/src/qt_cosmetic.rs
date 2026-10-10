@@ -6,10 +6,11 @@ use std::collections::BTreeMap;
 use crate::qt_gray::{PathContour,Segment,Span};
 struct Writer{spans:Vec<Span>,limit:usize,work:usize,opacity:i64}
 impl Writer{
- fn line(&mut self,mut a:[f64;2],mut b:[f64;2],mut begin:bool,mut end:bool)->Result<(),String>{
+ fn line(&mut self,a:[f64;2],b:[f64;2],mut begin:bool,mut end:bool)->Result<(),String>{
   if a.iter().chain(b.iter()).any(|x|!x.is_finite()||x.abs()>1_000_000.){return Err("Cosmetic input outside finite bounded coordinates".into());}
-  let vertical=(b[0]-a[0]).abs()<(b[1]-a[1]).abs();if vertical{a.swap(0,1);b.swap(0,1);}
   let fixed=|x:f64|(x*64.)as i64;let(mut x1,mut y1,mut x2,mut y2)=(fixed(a[0]),fixed(a[1]),fixed(b[0]),fixed(b[1]));
+  // Qt selects the major axis after F26Dot6 conversion, including fixed-grid ties.
+  let vertical=(x2-x1).abs()<(y2-y1).abs();if vertical{std::mem::swap(&mut x1,&mut y1);std::mem::swap(&mut x2,&mut y2);}
   if x1==x2{return Ok(());}let inc=((y2-y1)*65536)/(x2-x1);
   if x1>x2{std::mem::swap(&mut x1,&mut x2);std::mem::swap(&mut y1,&mut y2);std::mem::swap(&mut begin,&mut end);}
   let mut minor=(y1-32)*1024-((((x1&63)-32)*inc)>>6);if begin{x1-=32;minor-=inc>>1;}if end{x2+=32;}

@@ -1,0 +1,3 @@
+# Fixed-point cosmetic axis investigation
+
+Isolated candidate follows actual Qt6.12 QCosmeticStroker drawLineAA major-axis selection after F26Dot6 coordinate conversion. Original source is frozen6be29fe, actual Qt6.12 reference painter regenerated at zoom2/origin12.25,12.5; candidate and unmodified combined branch use real ash software Vulkan with integer blending enabled. Both strict nine-case reports retain the same single rounded-shape failure: pixel(28,12), source RGBA114,118,124,255 versus native114,119,124,255. Eight other whole600x500 cases are exact. The axis correction does not resolve this failure and is not promoted to main. No tolerance or source modifications. Continuing color/order/kernel diagnosis required.
