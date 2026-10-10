@@ -1,0 +1,7 @@
+{
+  "scope": "Fixture opt-in actual production cold glyph Sample observation; no default runtime retention, warm capture, raster replacement or cloud run",
+  "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo check -p ingetrazo-gui --example native_paper_font_tiles --offline -j2",
+  "result": "PASS Linux compilation; actual CoreText execution pending next coordinated Mac SDK replay",
+  "log_sha256": "9a0b15250ed1e0813fe6e79e82a5877379d64fa19f8ccd628f6ada1bf743db21",
+  "observations": "Actual premultiplied masks, clipped device placement, source order, direct ordered-on-white output; existing aggregate native.png remains unchanged as negative/reference. This observation does not yet fix production rendering."
+}

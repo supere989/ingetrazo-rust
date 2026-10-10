@@ -38,6 +38,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 serde_json::json!({"family":family,"italic":italic,"color":"#1e242c","w_mm":80.}),
             );
             let mut cache = CanvasPainter::default();
+            cache.sample_observation=Some(Vec::new());
             cache.begin_frame();
             let input = || egui::RawInput {
                 screen_rect: Some(Rect::from_min_size(Pos2::ZERO, Vec2::new(800., 300.))),
@@ -91,6 +92,24 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 image::ColorType::Rgba8,
             )
             .map_err(|e| e.to_string())?;
+            // Observe the actual production cached masks and device placements,
+            // rather than generating substitute glyphs or inferred coverage.
+            let mut ordered=vec![255u8;800*300*4];let mut masks=Vec::new();
+            for (index,sample) in cache.sample_observation.as_ref().unwrap().iter().enumerate(){
+                let filename=format!("{name}.mask-{index}.png");
+                if sample.image.width>0&&sample.image.height>0{
+                    image::save_buffer(root.join(&filename),&sample.image.pixels,sample.image.width as u32,sample.image.height as u32,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
+                }
+                masks.push(serde_json::json!({"index":index,"position":[sample.x,sample.y],"size":[sample.image.width,sample.image.height],"clip":sample.clip,"mask":filename}));
+                for row in 0..sample.image.height{for col in 0..sample.image.width{
+                    let x=sample.x+col as i64;let y=sample.y+row as i64;
+                    if x>=0&&x<800&&y>=0&&y<300&&x>=sample.clip[0]&&x<sample.clip[2]&&y>=sample.clip[1]&&y<sample.clip[3]{
+                        source_over(&mut ordered[((y*800+x)as usize)*4..][..4],&sample.image.pixels[(row*sample.image.width+col)*4..][..4]);
+                    }
+                }}
+            }
+            image::save_buffer(root.join(format!("{name}.ordered.png")),&ordered,800,300,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
+            std::fs::write(root.join(format!("{name}.masks.json")),serde_json::to_vec_pretty(&masks).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
             let before = (
                 cache.stats(),
                 cache.tile_builds,

@@ -13,6 +13,8 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
  context:Option<(u64,u64,uuid::Uuid)>,layouts:HashMap<uuid::Uuid,Layout>,layout_bytes:usize,layout_order:VecDeque<uuid::Uuid>,font_refs:HashMap<FontKey,(usize,usize)>,font_bytes:usize,
  glyphs:HashMap<GlyphKey,GlyphImage>,order:VecDeque<GlyphKey>,glyph_bytes:usize,
  tiles:HashMap<uuid::Uuid,Tile>,tile_order:VecDeque<uuid::Uuid>,tile_bytes:usize,pub tile_builds:u64,
+ // Explicit fixture opt-in; no runtime retention or warm-path capture.
+ sample_observation:Option<Vec<Sample>>,
  frame_ops:usize,frame_textures:Vec<TextureHandle>,pub layout_builds:u64,pub raster_builds:u64,
 }
 impl std::fmt::Debug for CanvasPainter{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("CanvasPainter").field("stats",&self.stats()).finish()}}
@@ -63,6 +65,7 @@ impl CanvasPainter {
    }
    for decoration in &text.decorations{let [x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[f64::from(pos.x)*ppp+x0*scale,f64::from(pos.y)*ppp+y0*scale-half,f64::from(pos.x)*ppp+x1*scale,f64::from(pos.y)*ppp+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],f64::from(pos.y)*ppp+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working_bytes,sample)?;}}
   }
+  if let Some(observation)=&mut self.sample_observation{observation.clear();observation.try_reserve(samples.len()).map_err(|_|"Canvas sample observation allocation failed")?;observation.extend(samples.iter().cloned());}
   let (size,offset,pixels)=if let Some(extent)=extent{let width=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let height=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;let bytes=width.checked_mul(height).and_then(|n|n.checked_mul(4)).filter(|&n|n<=16*1024*1024).ok_or("Canvas tile coverage budget exceeded")?;if width>4096||height>4096{return Err("Canvas tile dimensions exceeded".into());}let mut pixels=Vec::new();pixels.try_reserve_exact(bytes).map_err(|_|"Canvas tile allocation failed")?;pixels.resize(bytes,0);
    for sample in samples{for row in 0..sample.image.height{let y=sample.y+row as i64;if y<sample.clip[1]||y>=sample.clip[3]{continue;}for col in 0..sample.image.width{let x=sample.x+col as i64;if x<sample.clip[0]||x>=sample.clip[2]{continue;}let src=&sample.image.pixels[(row*sample.image.width+col)*4..][..4];let dst=&mut pixels[((y-extent[1])as usize*width+(x-extent[0])as usize)*4..][..4];source_over(dst,src);}}}
    ([width,height],[extent[0]-anchor[0],extent[1]-anchor[1]],pixels)
