@@ -2,6 +2,8 @@
 
 Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_Angeles). Baseline Rust commit: `68368964fd5625f96ab5c705c43cdc13e402a6bd`. Original Python baseline: submodule `6be29fe437a7cd992d4e079f71720821b25216b9`, version 0.3.15. This compares the pinned original, not today's upstream HEAD.
 
+CI correction (2026-10-10): reviewed component acceptance fixture now follows actual original cleared-selection and advancing-revision ownership. Root fresh complete component oracle passes; historical Scene-equality failure retained in docs/audits/component-ci-history-presentation. This changes fixture expectations only and does not close full history or release CI gates.
+
 ## Outcome and evidence
 
 Reviewed terrain runtime visibility and command-owned clear/rebuild history match six fresh source states; stale visibility and literal wrong-Redo negatives reject. **539 workspace tests pass, two ignored**. Full StraightenModel, terrain serialization/rendering and broader presentation history remain OPEN. [Independent terrain review](audits/terrain-history-root-review/README.md).
