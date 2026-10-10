@@ -1,0 +1,14 @@
+{
+  "reviewed_source": "42b46cd266ce231281cf457d44635f7bdc1d1509",
+  "integrated_as": "fb872b03",
+  "confirmed": [
+    "Immutable plan identity fast path precedes query/operation scans.",
+    "Retained payload admission includes vertices, indices, spans, ranges, batches and gates.",
+    "FIFO eviction refuses removal of live glyph Arc owners."
+  ],
+  "remaining_findings": [
+    "Cold glyph insertion allocates removal scratch proportional to all cached keys and scans FIFO even when no eviction is needed; skip this work below budget.",
+    "Producer never retires unused sized font faces; DPI/point-size churn can permanently exhaust sized face count."
+  ],
+  "scope": "Source review only; integrated application GPU acceptance remains pending."
+}
