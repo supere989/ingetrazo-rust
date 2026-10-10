@@ -2,6 +2,7 @@
 """Strict actual native GPU whole-image proof; refuses missing/unsupported results."""
 import hashlib,json,pathlib,sys
 root=pathlib.Path(sys.argv[1]);repo=pathlib.Path(__file__).resolve().parents[1]
+fresh=pathlib.Path(sys.argv[2]) if len(sys.argv)>2 else None
 result=json.loads((root/"result.json").read_text())
 for key in ["passed","read_write_tier2","source_order_negative","phase_negative","partial_plan_budget_rollback","missing_ui_negative"]:
     if result.get(key)is not True:raise ValueError("missing successful control:"+key)
@@ -10,6 +11,10 @@ rows=[]
 for name in ["alpha-0","alpha-1","alpha-127","alpha-128","alpha-254","alpha-255","mixed-ui-cad"]:
     source=repo/"docs/audits"/("metal-compute-callback/source" if name=="mixed-ui-cad" else "metal-cad2d-offscreen/original")/(name+".rgba")
     actual=(root/(name+".rgba")).read_bytes();expected=source.read_bytes()
+    if fresh is not None:
+        regenerated=(fresh/("mixed" if name=="mixed-ui-cad" else "alpha")/(name+".rgba")).read_bytes()
+        if regenerated!=expected:raise ValueError("fresh actual Qt reference drift:"+name)
+        expected=regenerated
     if len(actual)!=16384 or actual!=expected:raise ValueError("strict complete Qt image mismatch:"+name)
     rows.append({"name":name,"sha256":hashlib.sha256(actual).hexdigest()})
 for name,reference in [("reversed-order","alpha-128"),("missing-final-ui","mixed-ui-cad")]:
