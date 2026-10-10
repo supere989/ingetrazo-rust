@@ -1,7 +1,7 @@
 {
-  "native_sha256": "ed2fe66e12cc5d8a59aad80a44be3e6ac408a4ba36c2c6d53c26f7db758c6e51",
+  "native_sha256": "d158b499c60362175e8b2e522fdb21d5c3054bcdcc308cbea4a5add9c0b675e3",
   "context": {
-    "rust_commit": "29c3cb937cac89cea86acfad2da100af5cbf4712",
+    "rust_commit": "d264b0e04c21dfbd728da852f393cee01aef98ab",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."

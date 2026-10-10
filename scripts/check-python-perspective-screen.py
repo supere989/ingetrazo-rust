@@ -5,7 +5,7 @@ Fresh independent original/native comparison; retained failures keep overall pas
 import sys,os,json,math,subprocess,hashlib
 from pathlib import Path
 from types import SimpleNamespace as N
-sys.path.insert(0,os.environ.get('INGETRAZO_PYTHON_SOURCE','/work/ingetrazo'))
+sys.path.insert(0,os.environ.get('INGETRAZO_PYTHON_SOURCE',str(Path(__file__).resolve().parents[1]/'ingetrazo')))
 from PySide6.QtGui import QVector3D as V
 from core.camera import OrbitCamera
 from core.mesh import Mesh
@@ -65,7 +65,8 @@ edges.append([arr(pts[0]),arr(center+V(3,0,0))])
 add('malformed-circle-spur',edges,[step(v,pts[0],acquire=True),step(v,center)],curve=True)
 Path('docs/audits/perspective-screen-inputs.json').write_text(json.dumps(cases,indent=2)+'\n')
 subprocess.run(['cargo','build','--locked','-p','ingetrazo-core','--example','perspective_screen_fixture'],check=True)
-native=json.loads(subprocess.check_output(['target/debug/examples/perspective_screen_fixture'],input=json.dumps(cases).encode()))
+native_binary=Path(os.environ.get('CARGO_TARGET_DIR','target'))/'debug/examples/perspective_screen_fixture'
+native=json.loads(subprocess.check_output([str(native_binary.resolve())],input=json.dumps(cases).encode()))
 assert len(native)==len(cases)==11,'Missing perspective native cases must fail'
 assert [n['name'] for n in native]==[c['name'] for c in cases],'Native case identity/order mismatch'
 rows=[];failures=[]
@@ -110,7 +111,7 @@ edge_case=rows[0]['native'][0];a,b=map(q,cases[0]['edges'][0]);pa,pb=map(v._worl
 assert (wrong-q(edge_case['point'])).length()>.02,'Screen-linear interpolation negative control did not separate perspective depth'
 assert rows[-1]['original'][-1]['kind']!='center' and rows[-1]['native'][-1]['kind']!='center'
 assert rows[-2]['original'][2]['kind']!='center' and rows[-2]['native'][2]['kind']!='center'
-report=dict(native_sha256=hashlib.sha256(Path('target/debug/examples/perspective_screen_fixture').read_bytes()).hexdigest(),context=context(),cases=rows,failed=failures,passed=not failures,negative_controls=dict(screen_linear_distance=(wrong-q(edge_case['point'])).length(),malformed_circle_rejected=True,tiny_center_quiet=True),scope='Actual original Qt perspective camera projection/ray/lock-line functions; center actual mesh curve fit/cache/hint, caller acquisition explicit recipe, timer modeled250ms; fresh independent rerun; complete case/step checks; UI center acquisition and wallclock dwell pending')
+report=dict(native_sha256=hashlib.sha256(native_binary.read_bytes()).hexdigest(),context=context(),cases=rows,failed=failures,passed=not failures,negative_controls=dict(screen_linear_distance=(wrong-q(edge_case['point'])).length(),malformed_circle_rejected=True,tiny_center_quiet=True),scope='Actual original Qt perspective camera projection/ray/lock-line functions; center actual mesh curve fit/cache/hint, caller acquisition explicit recipe, timer modeled250ms; fresh independent rerun; complete case/step checks; UI center acquisition and wallclock dwell pending')
 Path('docs/audits/python-perspective-screen-evidence.json').write_text(json.dumps(report,indent=2)+'\n')
 print('Retained failures:',failures)
 
