@@ -1,0 +1,7 @@
+{
+  "source": "e8bc2ee",
+  "workspace_passed": 392,
+  "ignored": 2,
+  "root_review": "Alignment, staging bound, mapped memory flush, per-region transfer barriers, completed-fence command reset, individual ownership, atomic allocation rollback and pressure-after-two production batching reviewed. Existing failed-wait device-idle cleanup bound remains open.",
+  "software_rows": 40
+}

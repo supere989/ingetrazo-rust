@@ -292,15 +292,23 @@ fn select_sample_count(global:vk::SampleCountFlags,color:vk::SampleCountFlags,de
 // normal, color, or UV data. Temporary CPU storage is bounded to one <=8 MiB chunk.
 fn upload_contour_chunks(context:&VulkanContext,resources:&mut Resources,mesh:&ingetrazo_render::buffer::MeshRenderBuffer,limit:u64,batches:&mut Vec<ContourBatch>,preprocess_ms:&mut f64,pressure_after:Option<usize>,budget:&Arc<VulkanBudget>)->Result<(),String>{
  let triangles=contour_chunk_triangles(limit)?;
- for chunk in mesh.indices.chunks(triangles*3){
-  let started=std::time::Instant::now();
-  let positions:Vec<[f32;3]>=chunk.iter().map(|&index|mesh.vertices[index as usize].position).collect();
-  *preprocess_ms+=started.elapsed().as_secs_f64()*1000.;
-  let _pressure=if pressure_after==Some(batches.iter().filter(|batch|batch.owned).count()){
-   let mut ledger=budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(ProbeBudgetRestore{budget:budget.clone(),previous})
-  }else{None};
-  let buffer=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;
-  batches.push(ContourBatch{vertices:buffer,indices:buffer,triangles:(chunk.len()/3)as u32,compact:true,owned:true});
+ let mut chunks=mesh.indices.chunks(triangles*3).peekable();
+ while chunks.peek().is_some(){
+  let owned=batches.iter().filter(|batch|batch.owned).count();
+  let mut positions=Vec::<Vec<[f32;3]>>::new();let mut bytes=0usize;
+  while let Some(chunk)=chunks.peek(){
+   let next=chunk.len()*12;
+   if !positions.is_empty()&&bytes+next>8*1024*1024{break;}
+   let started=std::time::Instant::now();let chunk=chunks.next().unwrap();
+   positions.push(chunk.iter().map(|&index|mesh.vertices[index as usize].position).collect());
+   *preprocess_ms+=started.elapsed().as_secs_f64()*1000.;bytes+=next;
+   // Preserve the explicit engineering admission boundary after N completed chunks.
+   if pressure_after==Some(owned+positions.len()){break;}
+  }
+  let inputs=positions.iter().map(|points|(bytemuck::cast_slice(points.as_slice()),vk::BufferUsageFlags::STORAGE_BUFFER)).collect::<Vec<_>>();
+  let _pressure=if pressure_after==Some(owned){let mut ledger=budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(ProbeBudgetRestore{budget:budget.clone(),previous})}else{None};
+  let ids=resources.upload_many(context,&inputs)?;
+  for (id,points) in ids.into_iter().zip(positions){batches.push(ContourBatch{vertices:id,indices:id,triangles:(points.len()/3)as u32,compact:true,owned:true});}
  }Ok(())
 }
 fn contour_chunk_triangles(limit:u64)->Result<usize,String>{

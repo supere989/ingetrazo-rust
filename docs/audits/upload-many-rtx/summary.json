@@ -1,0 +1,191 @@
+{
+  "source_revision": "9c1510b",
+  "build": "locked debug",
+  "upload_binary_sha256": "c7b917edaa96e757f454c27285e2ac65d959ed93f46eb7de333315cf983d5847",
+  "world_binary_sha256": "9d5dee432d86770d66d7731e7a1976777fbb0914fea3d648cbedf6504c214a1f",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "device": "strict NVIDIA RTX5090 API1.4.351 driver0x99d1c240",
+  "upload_cases": 40,
+  "same_destination_buffers": true,
+  "all_gpu_readback_bytes_verified": true,
+  "illegal_transfer_before_allocation": true,
+  "partial_two_destination_admission_rollback": true,
+  "final_ledger_zero": true,
+  "production_world_pressure_after2": true,
+  "production_world_corpus14_exact_prior_and_normal_images": true,
+  "cases": [
+    {
+      "case": "tiny32",
+      "legacy": {
+        "median_upload_ms": 22.5507,
+        "retained_bytes": 1536,
+        "stats": {
+          "allocation_bytes_total": 3072,
+          "buffer_allocations": 64,
+          "buffer_destructions": 32,
+          "bytes": 1152,
+          "chunks": 32,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 32,
+          "staging_peak": 48,
+          "transfer_command_allocations": 32,
+          "transfer_fence_creations": 32,
+          "transfer_submissions": 32,
+          "upload_calls": 32
+        }
+      },
+      "batch": {
+        "median_upload_ms": 2.068155,
+        "retained_bytes": 1536,
+        "stats": {
+          "allocation_bytes_total": 2688,
+          "buffer_allocations": 33,
+          "buffer_destructions": 1,
+          "bytes": 1152,
+          "chunks": 1,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 1,
+          "staging_peak": 1152,
+          "transfer_command_allocations": 1,
+          "transfer_fence_creations": 1,
+          "transfer_submissions": 1,
+          "upload_calls": 32
+        }
+      }
+    },
+    {
+      "case": "packed32",
+      "legacy": {
+        "median_upload_ms": 0.719969,
+        "retained_bytes": 1152,
+        "stats": {
+          "allocation_bytes_total": 2304,
+          "buffer_allocations": 2,
+          "buffer_destructions": 1,
+          "bytes": 1152,
+          "chunks": 1,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 1,
+          "staging_peak": 1152,
+          "transfer_command_allocations": 1,
+          "transfer_fence_creations": 1,
+          "transfer_submissions": 1,
+          "upload_calls": 1
+        }
+      },
+      "batch": {
+        "median_upload_ms": 0.6927180000000001,
+        "retained_bytes": 1152,
+        "stats": {
+          "allocation_bytes_total": 2304,
+          "buffer_allocations": 2,
+          "buffer_destructions": 1,
+          "bytes": 1152,
+          "chunks": 1,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 1,
+          "staging_peak": 1152,
+          "transfer_command_allocations": 1,
+          "transfer_fence_creations": 1,
+          "transfer_submissions": 1,
+          "upload_calls": 1
+        }
+      }
+    },
+    {
+      "case": "small32",
+      "legacy": {
+        "median_upload_ms": 21.212022,
+        "retained_bytes": 131072,
+        "stats": {
+          "allocation_bytes_total": 262144,
+          "buffer_allocations": 64,
+          "buffer_destructions": 32,
+          "bytes": 131072,
+          "chunks": 32,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 32,
+          "staging_peak": 4096,
+          "transfer_command_allocations": 32,
+          "transfer_fence_creations": 32,
+          "transfer_submissions": 32,
+          "upload_calls": 32
+        }
+      },
+      "batch": {
+        "median_upload_ms": 2.271589,
+        "retained_bytes": 131072,
+        "stats": {
+          "allocation_bytes_total": 262144,
+          "buffer_allocations": 33,
+          "buffer_destructions": 1,
+          "bytes": 131072,
+          "chunks": 1,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 1,
+          "staging_peak": 131072,
+          "transfer_command_allocations": 1,
+          "transfer_fence_creations": 1,
+          "transfer_submissions": 1,
+          "upload_calls": 32
+        }
+      }
+    },
+    {
+      "case": "large17MiB",
+      "legacy": {
+        "median_upload_ms": 4.801456,
+        "retained_bytes": 17825792,
+        "stats": {
+          "allocation_bytes_total": 26214400,
+          "buffer_allocations": 2,
+          "buffer_destructions": 1,
+          "bytes": 17825792,
+          "chunks": 3,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 1,
+          "staging_peak": 8388608,
+          "transfer_command_allocations": 1,
+          "transfer_fence_creations": 1,
+          "transfer_submissions": 3,
+          "upload_calls": 1
+        }
+      },
+      "batch": {
+        "median_upload_ms": 4.612259,
+        "retained_bytes": 17825792,
+        "stats": {
+          "allocation_bytes_total": 26214400,
+          "buffer_allocations": 2,
+          "buffer_destructions": 1,
+          "bytes": 17825792,
+          "chunks": 3,
+          "direct_mapped_bytes": 0,
+          "readback_bytes": 0,
+          "readback_staging_peak": 0,
+          "staging_allocations": 1,
+          "staging_peak": 8388608,
+          "transfer_command_allocations": 1,
+          "transfer_fence_creations": 1,
+          "transfer_submissions": 3,
+          "upload_calls": 1
+        }
+      }
+    }
+  ],
+  "scope": "Debug control measures synchronous transfers excluding readback; no release/globalrender throughput claim. Batchextra retainedstaging transient<=8MiB, logical resourceownership unchanged. Existing pixelresiduals/Metal/desktopRTX/driverOOM and asynchronous scheduling remain open."
+}
