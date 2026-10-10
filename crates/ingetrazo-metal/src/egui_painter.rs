@@ -12,6 +12,31 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+#[derive(Debug, Clone, Copy)]
+pub enum CompressedFormat {
+    Bc1Rgba,
+    Astc4x4Ldr,
+}
+impl CompressedFormat {
+    pub fn supported(self, metal: &NativeMetal) -> bool {
+        match self {
+            Self::Bc1Rgba => metal.device.supportsBCTextureCompression(),
+            Self::Astc4x4Ldr => metal.device.supportsFamily(MTLGPUFamily::Apple2),
+        }
+    }
+    fn pixel_format(self) -> MTLPixelFormat {
+        match self {
+            Self::Bc1Rgba => MTLPixelFormat::BC1_RGBA,
+            Self::Astc4x4Ldr => MTLPixelFormat::ASTC_4x4_LDR,
+        }
+    }
+    fn block_bytes(self) -> usize {
+        match self {
+            Self::Bc1Rgba => 8,
+            Self::Astc4x4Ldr => 16,
+        }
+    }
+}
 struct Image {
     raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
     budget: Arc<Mutex<MemoryBudget>>,
@@ -83,6 +108,7 @@ struct Texture {
 struct MipOwners {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     _textures: Vec<Arc<Texture>>,
+    _staging: Vec<Buffer>,
     poisoned: Arc<std::sync::atomic::AtomicBool>,
     _queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
     _device: Retained<ProtocolObject<dyn MTLDevice>>,
@@ -98,7 +124,7 @@ impl Drop for MipJob {
             self.owners
                 .poisoned
                 .store(true, std::sync::atomic::Ordering::Release);
-            eprintln!("Metal mip generation completion unknown: complete ownership retained");
+            eprintln!("Metal texture/mip upload completion unknown: complete ownership retained");
         }
     }
 }
@@ -209,6 +235,8 @@ pub struct PainterStats {
     pub texture_uploaded_bytes: u64,
     pub mip_generation_submissions: u64,
     pub generated_mip_levels: u64,
+    pub compressed_upload_submissions: u64,
+    pub compressed_uploaded_bytes: u64,
 }
 pub struct EguiPainter {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
@@ -305,6 +333,9 @@ impl EguiPainter {
             let target_size = if let Some(pos) = change.pos {
                 let old: &Arc<Texture> =
                     old.ok_or("Metal partial update has no existing texture")?;
+                if old.image.raw.pixelFormat() != MTLPixelFormat::RGBA8Unorm {
+                    return Err("RGBA partial update cannot patch compressed blocks".into());
+                }
                 if pos[0].checked_add(size[0]).is_none_or(|n| n > old.size[0])
                     || pos[1].checked_add(size[1]).is_none_or(|n| n > old.size[1])
                 {
@@ -414,6 +445,7 @@ impl EguiPainter {
                 owners: ManuallyDrop::new(MipOwners {
                     command: command.clone(),
                     _textures: textures,
+                    _staging: Vec::new(),
                     poisoned: metal.poisoned.clone(),
                     _queue: metal.queue.clone(),
                     _device: metal.device.clone(),
@@ -423,6 +455,174 @@ impl EguiPainter {
         }
         // Previous frame owns any texture that is still referenced by its draws.
         Ok(())
+    }
+    /// Immutable native compressed block upload. Container decoding and authored
+    /// compressed mip chains are not part of this bounded primitive.
+    pub fn upload_compressed_texture(
+        &mut self,
+        metal: &NativeMetal,
+        id: TextureId,
+        format: CompressedFormat,
+        size: [usize; 2],
+        blocks: &[u8],
+        options: TextureOptions,
+    ) -> Result<(), String> {
+        self.poll_mip_jobs()?;
+        if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
+            return Err("Metal admission poisoned".into());
+        }
+        if !format.supported(metal) {
+            return Err(format!(
+                "Native compressed format {format:?} unsupported on {}",
+                metal.info.name
+            ));
+        }
+        if self.mip_jobs.len() >= 3 {
+            return Err("Metal texture submission capacity reached".into());
+        }
+        if size.iter().any(|n| *n == 0 || *n > 4096 || n % 4 != 0) {
+            return Err("Compressed extent requires whole4x4 blocks and <=4096".into());
+        }
+        if options.mipmap_mode.is_some() {
+            return Err("Compressed authored mip chains unsupported; GPU mip generation cannot write compressed format".into());
+        }
+        let packed_row = size[0] / 4 * format.block_bytes();
+        let rows = size[1] / 4;
+        if blocks.len() != packed_row * rows {
+            return Err("Compressed block byte count mismatch".into());
+        }
+        let stride = (packed_row + 255) & !255;
+        let staging_bytes = stride * rows;
+        if staging_bytes > 8 * 1024 * 1024 {
+            return Err("Compressed upload staging exceeds8MiB bounded primitive".into());
+        }
+        let sampler = make_sampler(metal, options)?;
+        let mut pixels = CachedPixels::new(blocks.len(), &self.retained_cpu)?;
+        pixels.bytes.copy_from_slice(blocks);
+        let image = allocate_compressed_image(metal, size, format, blocks.len())?;
+        let mut staging = metal.buffer(staging_bytes, true)?;
+        // One directly mapped shared staging owner, no intermediate RGBA decode.
+        unsafe {
+            let dst = std::slice::from_raw_parts_mut(
+                staging.raw.contents().as_ptr().cast::<u8>(),
+                staging_bytes,
+            );
+            dst.fill(0);
+            for y in 0..rows {
+                dst[y * stride..y * stride + packed_row]
+                    .copy_from_slice(&blocks[y * packed_row..(y + 1) * packed_row]);
+            }
+        }
+        let texture = Arc::new(Texture {
+            image,
+            sampler,
+            size,
+            pixels,
+        });
+        let command = metal
+            .queue
+            .commandBuffer()
+            .ok_or("Compressed upload command allocation failed")?;
+        let blit = command
+            .blitCommandEncoder()
+            .ok_or("Compressed upload encoder allocation failed")?;
+        unsafe {
+            blit.copyFromBuffer_sourceOffset_sourceBytesPerRow_sourceBytesPerImage_sourceSize_toTexture_destinationSlice_destinationLevel_destinationOrigin(&staging.raw,0,stride,staging_bytes,MTLSize{width:size[0],height:size[1],depth:1},&texture.image.raw,0,0,MTLOrigin{x:0,y:0,z:0});
+        }
+        blit.endEncoding();
+        let old_bytes = self.textures.get(&id).map_or(0, |t| t.pixels.len());
+        self.stats.cpu_texture_bytes = self.stats.cpu_texture_bytes - old_bytes + blocks.len();
+        self.stats.texture_uploads += 1;
+        self.stats.compressed_upload_submissions += 1;
+        self.stats.compressed_uploaded_bytes += blocks.len() as u64;
+        self.mip_jobs.push_back(MipJob {
+            owners: ManuallyDrop::new(MipOwners {
+                command: command.clone(),
+                _textures: vec![texture.clone()],
+                _staging: vec![staging],
+                poisoned: metal.poisoned.clone(),
+                _queue: metal.queue.clone(),
+                _device: metal.device.clone(),
+            }),
+        });
+        self.textures.insert(id, texture);
+        command.commit();
+        Ok(())
+    }
+    /// Diagnostic GPU block readback, not a production sampling shortcut.
+    pub fn read_compressed_blocks_for_probe(
+        &mut self,
+        metal: &NativeMetal,
+        id: TextureId,
+        timeout: std::time::Duration,
+    ) -> Result<Vec<u8>, String> {
+        if timeout.is_zero() || timeout > std::time::Duration::from_secs(5) {
+            return Err("Compressed diagnostic deadline outside bounded domain".into());
+        }
+        if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
+            return Err("Metal admission poisoned".into());
+        }
+        let texture = self
+            .textures
+            .get(&id)
+            .cloned()
+            .ok_or("Missing compressed texture")?;
+        let block = match texture.image.raw.pixelFormat() {
+            MTLPixelFormat::BC1_RGBA => 8,
+            MTLPixelFormat::ASTC_4x4_LDR => 16,
+            _ => return Err("Diagnostic texture is not supported compressed format".into()),
+        };
+        let packed_row = texture.size[0] / 4 * block;
+        let rows = texture.size[1] / 4;
+        let stride = (packed_row + 255) & !255;
+        let bytes = stride * rows;
+        let readback = metal.buffer(bytes, true)?;
+        let command = metal
+            .queue
+            .commandBuffer()
+            .ok_or("Compressed readback command missing")?;
+        let blit = command
+            .blitCommandEncoder()
+            .ok_or("Compressed readback encoder missing")?;
+        unsafe {
+            blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(&texture.image.raw,0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width:texture.size[0],height:texture.size[1],depth:1},&readback.raw,0,stride,bytes);
+        }
+        blit.endEncoding();
+        let retained = MipReadback {
+            owners: ManuallyDrop::new(MipReadbackOwners {
+                command: command.clone(),
+                _texture: texture,
+                readback,
+                poisoned: metal.poisoned.clone(),
+                _queue: metal.queue.clone(),
+                _device: metal.device.clone(),
+            }),
+        };
+        command.commit();
+        let start = std::time::Instant::now();
+        while command.status() != MTLCommandBufferStatus::Completed {
+            if command.status() == MTLCommandBufferStatus::Error || start.elapsed() >= timeout {
+                return Err("Compressed GPU readback failed/unknown; ownership retained".into());
+            }
+            std::thread::sleep(std::time::Duration::from_millis(1));
+        }
+        let raw = unsafe {
+            std::slice::from_raw_parts(
+                retained
+                    .owners
+                    .readback
+                    .raw
+                    .contents()
+                    .as_ptr()
+                    .cast::<u8>(),
+                bytes,
+            )
+        };
+        let result = (0..rows)
+            .flat_map(|y| raw[y * stride..y * stride + packed_row].iter().copied())
+            .collect();
+        self.poll_mip_jobs()?;
+        Ok(result)
     }
     /// Engineering readback only. Production update/sampling never CPU-waits.
     pub fn read_texture_mips_for_probe(
@@ -442,6 +642,9 @@ impl EguiPainter {
             .get(&id)
             .cloned()
             .ok_or("Missing texture diagnostic")?;
+        if texture.image.raw.pixelFormat() != MTLPixelFormat::RGBA8Unorm {
+            return Err("RGBA mip readback cannot interpret compressed block layout".into());
+        }
         let levels = texture.image.raw.mipmapLevelCount();
         let mut layout = Vec::new();
         let mut total = 0;
@@ -697,6 +900,51 @@ impl Drop for EguiPainter {
     fn drop(&mut self) {
         let _ = self.poll_mip_jobs();
     }
+}
+fn allocate_compressed_image(
+    metal: &NativeMetal,
+    size: [usize; 2],
+    format: CompressedFormat,
+    block_bytes: usize,
+) -> Result<Image, String> {
+    let ticket = metal
+        .budget
+        .lock()
+        .map_err(|_| "Metal budget poisoned")?
+        .reserve(0, block_bytes as u64)?;
+    let descriptor = MTLTextureDescriptor::new();
+    descriptor.setTextureType(MTLTextureType::Type2D);
+    unsafe {
+        descriptor.setWidth(size[0]);
+        descriptor.setHeight(size[1]);
+    }
+    descriptor.setPixelFormat(format.pixel_format());
+    descriptor.setUsage(MTLTextureUsage::ShaderRead);
+    descriptor.setStorageMode(MTLStorageMode::Private);
+    let Some(raw) = metal.device.newTextureWithDescriptor(&descriptor) else {
+        metal
+            .budget
+            .lock()
+            .map_err(|_| "Metal budget poisoned")?
+            .cancel(ticket)?;
+        return Err("Supported compressed texture allocation failed".into());
+    };
+    let actual = MTLResource::allocatedSize(&*raw) as u64;
+    let handle = (&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>() as usize as u64;
+    let mut ledger = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
+    if actual != block_bytes as u64 {
+        ledger.cancel(ticket)?;
+        let replacement = ledger.reserve(0, actual)?;
+        ledger.commit(replacement, handle)?;
+    } else {
+        ledger.commit(ticket, handle)?;
+    }
+    drop(ledger);
+    Ok(Image {
+        raw: ManuallyDrop::new(raw),
+        budget: metal.budget.clone(),
+        handle,
+    })
 }
 fn allocate_image(
     metal: &NativeMetal,
