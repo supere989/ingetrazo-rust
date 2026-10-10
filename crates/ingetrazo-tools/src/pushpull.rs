@@ -395,6 +395,10 @@ impl PushPullTool {
         candidate.preserve_vertex_uids_from(mesh);
         // No partial mutation or version bump escapes a failed preparation.
         ingetrazo_core::heal::refresh_interior(&mut candidate)?;
+        if keep_base && was_solid {
+            ingetrazo_core::solids::validate_solid_mesh(&candidate)
+                .map_err(|e|format!("Ctrl copy would leave an invalid solid: {e}. Use a normal Push/Pull or a smaller copy."))?;
+        }
         scene.mesh = candidate;
         scene.clear_selection();
         scene.bump_version();
@@ -535,6 +539,43 @@ mod tests {
         let v3 = scene.mesh.add_vertex(DVec3::new(0.0, 1.0, 0.0));
         scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]);
         scene
+    }
+
+    #[test]
+    fn repeated_ctrl_invalid_source_classification_is_rejected_atomically() {
+        // Original accepts two slabs but its orient pass loses both interior
+        // flags (parity cancellation), leaving a nonsolid 16-face result.
+        // Retain the known source failure as an atomic refusal in Rust.
+        let mut scene = make_test_square_scene();
+        scene.mesh.faces[0]
+            .attrs
+            .insert("mat".into(), serde_json::json!("Stone"));
+        PushPullTool::extrude_face(&mut scene, 0, 3.).unwrap();
+        let top = scene
+            .mesh
+            .faces
+            .iter()
+            .position(|f| {
+                f.vertices
+                    .iter()
+                    .all(|&v| (scene.mesh.vertices[v].position.z - 3.).abs() < 1e-8)
+            })
+            .unwrap();
+        PushPullTool::extrude_face_with_options(&mut scene, top, 2., true).unwrap();
+        let before = scene.clone();
+        let top = scene
+            .mesh
+            .faces
+            .iter()
+            .position(|f| {
+                f.vertices
+                    .iter()
+                    .all(|&v| (scene.mesh.vertices[v].position.z - 5.).abs() < 1e-8)
+            })
+            .unwrap();
+        let error = PushPullTool::extrude_face_with_options(&mut scene, top, 2., true).unwrap_err();
+        assert!(error.contains("Ctrl copy would leave an invalid solid"));
+        assert_eq!(scene, before);
     }
 
     #[test]
