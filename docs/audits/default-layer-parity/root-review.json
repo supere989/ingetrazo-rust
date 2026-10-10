@@ -1,0 +1,14 @@
+{
+  "source_commits": [
+    "3e7004732f72816d54d9f844276daaff3737351d",
+    "83f2e5ab7b1d58991a72637c7800bf49be72055f"
+  ],
+  "independent_checks": [
+    "Pinned original core/layers.py DEFAULT_LAYER and entity_layer inspected",
+    "Seven codec cases and five assignment states complete retained JSON exact",
+    "Four actual source saved-view versus native paper visibility cases complete JSON exact",
+    "Five default-layer checker negatives reject"
+  ],
+  "resolved": "Authored Layer0/Capa 0 are no longer treated as the default in model or paper registry lookup.",
+  "remaining": "Empty entity-label strings use source default semantics; normalization followup pending. Full rendered layer and command coverage remain open."
+}
