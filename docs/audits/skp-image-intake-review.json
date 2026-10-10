@@ -1,0 +1,49 @@
+{
+  "source": "ccb8b501",
+  "status": "retained_artifacts_exact_fresh_merged_replay_pending",
+  "cases": [
+    {
+      "case": "opaque",
+      "billboards": [
+        [
+          "opaque",
+          false
+        ],
+        [
+          "Image0",
+          false
+        ]
+      ],
+      "exact": true
+    },
+    {
+      "case": "cutout",
+      "billboards": [
+        [
+          "cutout",
+          false
+        ],
+        [
+          "Image0",
+          "mesh"
+        ]
+      ],
+      "exact": true
+    },
+    {
+      "case": "translucent",
+      "billboards": [
+        [
+          "translucent",
+          false
+        ],
+        [
+          "Image0",
+          false
+        ]
+      ],
+      "exact": true
+    }
+  ],
+  "review": "Texture dimensions and immutable bytes admitted before cutout decode. Followup requested for empty-loop image input refusal and native rendered billboard behavior. Writer-produced archive corpus is not externally authored SketchUp schema calibration."
+}
