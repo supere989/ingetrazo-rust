@@ -1,0 +1,49 @@
+{
+  "source": "d24dae2b6a0e51219aa41391bb613196e9baf6f0",
+  "run": 38083575728,
+  "jobs": [
+    {
+      "id": 114305298625,
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 114305298766,
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 114305298789,
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 114305298797,
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 114305298812,
+      "name": "compilation-and-tests",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "name": "Native rendered Offset viewport gestures",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        }
+      ]
+    }
+  ],
+  "scope": "Both native Mac SDK jobs and cross-compiles pass; Linux fails at Offset capture harness. Later Linux acceptance steps skipped. Separate font/Canvas review run38084381325 remains in progress."
+}
