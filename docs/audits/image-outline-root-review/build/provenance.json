@@ -1,0 +1,15 @@
+{
+  "source": "ef88439cd054e326b181536ec00565a9bdf1ec56",
+  "package_cache_correction": "render/gui artifacts removed only after terminal stale API failure",
+  "debug_info": 0,
+  "binaries": {
+    "native_vulkan_image_outline_fixture": {
+      "sha256": "07c797a4ce7ad668181cad1b7a8b9372caf51064036cdba1bc8a46b7950d430f",
+      "bytes": 42674616
+    },
+    "native_vulkan_opaque_order_fixture": {
+      "sha256": "0d8a2d01f8283e95429c8d6d7e71c0a02f8c21f451b992f72a14e1877ae46e0f",
+      "bytes": 25095192
+    }
+  }
+}
