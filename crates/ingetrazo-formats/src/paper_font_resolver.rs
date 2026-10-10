@@ -109,7 +109,7 @@ pub struct Resolver {
     fonts: FontCache,
     requests: HashMap<Request, CachedMatch>,
     order: VecDeque<Request>,
-    identities: HashMap<(PathBuf, u32, FtPolicy), uuid::Uuid>,
+    namespace: uuid::Uuid,
     matches: u64,
 }
 impl Drop for Resolver {
@@ -128,7 +128,7 @@ impl Resolver {
             fonts: FontCache::default(),
             requests: HashMap::new(),
             order: VecDeque::new(),
-            identities: HashMap::new(),
+            namespace: uuid::Uuid::new_v4(),
             matches: 0,
         })
     }
@@ -140,9 +140,13 @@ impl Resolver {
         unsafe { (self.api.config_destroy)(old.as_ptr()) };
         self.requests.clear();
         self.order.clear();
-        self.identities.clear();
+        self.namespace = uuid::Uuid::new_v4();
         self.fonts.clear();
         Ok(())
+    }
+    /// Request cache ownership counters, including its bounded FIFO bookkeeping.
+    pub fn request_cache_entries(&self) -> (usize, usize) {
+        (self.requests.len(), self.order.len())
     }
     pub fn stats(&self) -> (usize, u64, (usize, usize, u64)) {
         (self.requests.len(), self.matches, self.fonts.stats())
@@ -254,25 +258,21 @@ impl Resolver {
             },
             force_auto_hint: autohint != 0,
         };
-        let identity_key = (path.clone(), index as u32, policy);
-        let identity = if let Some(id) = self.identities.get(&identity_key) {
-            *id
-        } else {
-            if self.identities.len() >= 128 {
-                let used = self
-                    .requests
-                    .values()
-                    .map(|m| (m.path.clone(), m.index, m.policy))
-                    .collect::<std::collections::HashSet<_>>();
-                self.identities.retain(|k, _| used.contains(k));
-            }
-            self.identities
-                .try_reserve(1)
-                .map_err(|_| "Paper font identity allocation failed")?;
-            let id = uuid::Uuid::new_v4();
-            self.identities.insert(identity_key, id);
-            id
-        };
+        // Stable physical identity across FIFO/font eviction and external retained owners.
+        // No geometry equality deduplication or growing historical identity map.
+        let mut identity_name = Vec::new();
+        identity_name
+            .try_reserve_exact(path.as_os_str().as_encoded_bytes().len() + 6)
+            .map_err(|_| "Paper font identity allocation failed")?;
+        identity_name.extend_from_slice(path.as_os_str().as_encoded_bytes());
+        identity_name.extend_from_slice(&(index as u32).to_be_bytes());
+        identity_name.push(match policy.hinting {
+            Hinting::None => 0,
+            Hinting::Vertical => 1,
+            Hinting::Full => 2,
+        });
+        identity_name.push(u8::from(policy.force_auto_hint));
+        let identity = uuid::Uuid::new_v5(&self.namespace, &identity_name);
         let key = FontKey {
             identity,
             face_index: index as u32,
@@ -304,7 +304,9 @@ impl Resolver {
             policy,
             font,
         };
-        if self.requests.len() >= 64 {
+        // Replace an expired request only after the complete cold match/load succeeds.
+        self.order.retain(|old| old != &request);
+        if self.requests.len() >= 64 && !self.requests.contains_key(&request) {
             if let Some(old) = self.order.pop_front() {
                 self.requests.remove(&old);
             }
