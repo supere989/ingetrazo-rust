@@ -4,6 +4,7 @@ import ctypes as C,ctypes.util,json,os,select,subprocess,sys,tempfile,time,hashl
 from pathlib import Path
 from PySide6.QtGui import QImage
 from png_capture import valid_png
+from navigation_child_cleanup import terminate_owned
 original=os.environ.get('INGETRAZO_POSITION_ORIGINAL')=='1';cancel=os.environ.get('INGETRAZO_POSITION_CANCEL')=='1';typed=os.environ.get('INGETRAZO_POSITION_TYPED_HEIGHT')=='1';look=os.environ.get('INGETRAZO_POSITION_LOOK_DRAG')=='1'
 directory=Path(sys.argv[1]).resolve();directory.mkdir(parents=True,exist_ok=True)
 assert not (directory/'report.json').exists() and not(directory/'state.json').exists(),'fresh evidence directory required'
@@ -104,12 +105,9 @@ with tempfile.TemporaryDirectory(prefix='position-render-') as runtime:
  except BaseException as error:
   (directory/'failure.json').write_text(json.dumps({'error':repr(error),'state':state()if app is not None and(directory/'state.json').exists()else None},indent=2)+'\n');raise
  finally:
-  if app is not None:
-   app.terminate()
-   try:app.wait(timeout=5)
-   except subprocess.TimeoutExpired:app.kill();app.wait(timeout=5)
+  cleanup={}
+  if app is not None:cleanup['app']=terminate_owned(app,5)
   if d:x.XCloseDisplay.argtypes=[C.c_void_p];x.XCloseDisplay(d)
-  if server is not None:
-   server.terminate()
-   try:server.wait(timeout=5)
-   except subprocess.TimeoutExpired:server.kill();server.wait(timeout=5)
+  if server is not None:cleanup['server']=terminate_owned(server,5)
+  (directory/'cleanup.json').write_text(json.dumps(cleanup,indent=2)+'\n')
+  assert not any(row['kill_timeout']for row in cleanup.values()),'owned cleanup deadline; see cleanup.json'

@@ -1,0 +1,15 @@
+{
+  "production_revision": "2ae14bdcd7c943605ba664b5252a94761372376b",
+  "old_source": "7acdc1e8",
+  "old_binary_sha256": "ead9d14bd3471354ffc4d485f6669510b9f8529b08c6b3e3afedcb7efa7aa266",
+  "binary_sha256": {
+    "position_event_acceptance": "b01f2daff41454f4327902e986786282419be713e554e7ffb666872e4f25ce07",
+    "position_first_point_acceptance": "ed5323352b65e4e43b06aba09ac7d9eebb1d5f08a57f713e71fc9433b8b30806",
+    "position_navigation_native_fixture": "4081db2e32b55d9a2020694c419ebf433d8fde742dc7b8f3c6a6dd0074f834c3"
+  },
+  "source_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_protocol": "Actual frozen _build_ctx and Position on_click/on_hover/on_release; event batching is native egui-only controlled input",
+  "prior_failure": "Native fixture initially omitted 800/600 camera aspect; raw mismatch preserved, corrected before source comparison",
+  "scope": "4 ordered position cases,2 compiled-old rejected,16 existing points exact,72 frozen rays unchanged,6 existing negatives,152 GUI tests/1 ignored,2 actual XTEST preview/commit original+native48/48 on llvmpipe",
+  "open": "Rendered event coalescing under real compositor stalls, whole overlay AA/hardware/full navigation parity"
+}
