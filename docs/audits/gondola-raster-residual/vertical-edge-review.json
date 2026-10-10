@@ -1,0 +1,88 @@
+{
+  "source_image_scope": "Retained texture publication actual RTX full-model images",
+  "common_residual_pixels": 64,
+  "x": 588,
+  "y_bounds": [
+    308,
+    371
+  ],
+  "source_rgba": [
+    51,
+    59,
+    71,
+    255
+  ],
+  "native_rgba": [
+    52,
+    59,
+    71,
+    255
+  ],
+  "source_row_y340_x586_through590": [
+    [
+      104,
+      104,
+      104,
+      255
+    ],
+    [
+      86,
+      89,
+      93,
+      255
+    ],
+    [
+      51,
+      59,
+      71,
+      255
+    ],
+    [
+      108,
+      108,
+      108,
+      255
+    ],
+    [
+      108,
+      108,
+      108,
+      255
+    ]
+  ],
+  "native_row_y340_x586_through590": [
+    [
+      104,
+      104,
+      104,
+      255
+    ],
+    [
+      86,
+      89,
+      93,
+      255
+    ],
+    [
+      52,
+      59,
+      71,
+      255
+    ],
+    [
+      108,
+      108,
+      108,
+      255
+    ],
+    [
+      108,
+      108,
+      108,
+      255
+    ]
+  ],
+  "resolve_check": "133 controlled actual Qt/Vulkan per-sample color inputs produce identical outputs; see ../native-color-resolve-root/review.json",
+  "next_required_evidence": "Determine actual per-sample colors and edge/face coverage at the vertical edge. Neighboring face colors agree; current images alone do not establish a coverage or input-color cause.",
+  "acceptance": "Still failing strict whole-image comparison; no production adjustment justified yet."
+}
