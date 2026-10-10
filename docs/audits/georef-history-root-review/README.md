@@ -1,0 +1,4 @@
+# Isolated geographic app history replay
+Fresh source datum projection/AddGeoPathCommand/History vs native app matches six polygon KMZ states and six GeoJSON line states: new and seeded rotated/elevated datum, import/Undo/Redo, untouched model vertex. Coordinates and datum values compare exactly. Initial ordinary float accumulation differs one datum bit and is retained; compensated Python summation correction passes unchanged strict checker.
+Dedicated import action/dialog replaces generic model open routing for georef menu only. Existing model retained; failures preflight before scene/history mutation. Missing datum persists through path Undo, as source. Projection narrows through float32 source QVector3D.
+Actual main-window handler/dialog gestures, base-map reference capture, broader multi-feature/group/history, malformed-resource refusal and exact camera framing remain open. Workspace verification running separately. Not integrated main; no P25/P27 promotion.

@@ -1,0 +1,21 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-georef-import-root/crates/ingetrazo-formats)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `/tmp/ingetrazo-georef-import-root-target/debug/examples/tile_capture_baseline docs/audits/tile-capture-loader-baseline docs/audits/tile-capture-loader-review/native-saves`

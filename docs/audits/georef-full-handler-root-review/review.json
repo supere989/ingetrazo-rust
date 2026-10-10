@@ -1,0 +1,10 @@
+{
+  "compound_handler_states_exact": 6,
+  "combined_workspace_passed": 542,
+  "combined_workspace_ignored": 2,
+  "seeded_kmz_camera_distance_exact": false,
+  "native_seeded_kmz_distance": 14359.751935279943,
+  "original_seeded_kmz_distance": 14359.75040282016,
+  "distant_source_probe": "terminated owned source process after measured RSS65498480KiB/99.2percentCPU/38seconds during tile enumeration",
+  "full_geographic_parity": false
+}

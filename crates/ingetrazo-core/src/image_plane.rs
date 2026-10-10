@@ -43,9 +43,9 @@ impl ImagePlane {
         Self {
             id: uuid::Uuid::new_v4(),
             path: path.into(),
-            origin,
-            u,
-            v,
+            origin:origin.as_vec3().as_dvec3(),
+            u:u.as_vec3().as_dvec3(),
+            v:v.as_vec3().as_dvec3(),
             aspect: 1.,
             name: String::new(),
             opacity: 1.,
@@ -55,13 +55,25 @@ impl ImagePlane {
             native_baseline: serde_json::Value::Null,
         }
     }
-    pub fn corners(&self) -> [DVec3; 4] {
-        [
-            self.origin,
-            self.origin + self.u,
-            self.origin + self.u + self.v,
-            self.origin + self.v,
-        ]
+    pub fn corners(&self) -> [DVec3;4] {
+        let (o,u,v)=(self.origin.as_vec3(),self.u.as_vec3(),self.v.as_vec3());
+        [o.as_dvec3(),(o+u).as_dvec3(),(o+u+v).as_dvec3(),(o+v).as_dvec3()]
+    }
+    pub fn center(&self)->DVec3 {(self.origin.as_vec3()+(self.u.as_vec3()+self.v.as_vec3())*0.5).as_dvec3()}
+    pub fn normal(&self)->DVec3 {
+        let a=self.u.as_vec3();let b=self.v.as_vec3();let n=glam::Vec3::new(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x);
+        let len=n.length();if len>1e-12{if (len-1.).abs()<=1e-5{n.as_dvec3()}else if len.abs()<=1e-5{DVec3::ZERO}else{(n/len).as_dvec3()}}else{DVec3::Z}
+    }
+    /// Source rectangular projection intentionally uses separate dot fractions,
+    /// including its non-orthogonal/degenerate frame behavior.
+    pub fn ray_hit(&self,ray:&crate::math::Ray)->Option<f64>{
+        fn dot(a:glam::Vec3,b:glam::Vec3)->f32{a.x*b.x+a.y*b.y+a.z*b.z}
+        let n=self.normal().as_vec3();let (origin,direction)=(ray.origin.as_vec3(),ray.dir.as_vec3());
+        let denom=dot(n,direction)as f64;if denom.abs()<1e-9{return None;}
+        let t=dot(n,self.center().as_vec3()-origin)as f64/denom;if t<0.||!t.is_finite(){return None;}
+        let d=origin+direction*(t as f32)-self.origin.as_vec3();let u=self.u.as_vec3();let v=self.v.as_vec3();let lu=dot(u,u)as f64;let lv=dot(v,v)as f64;
+        let fu=if lu>1e-18{dot(d,u)as f64/lu}else{0.};let fv=if lv>1e-18{dot(d,v)as f64/lv}else{0.};
+        (-1e-9..=1.+1e-9).contains(&fu).then_some(()).filter(|_|(-1e-9..=1.+1e-9).contains(&fv)).map(|_|t)
     }
     pub fn to_json(&self) -> serde_json::Value {
         let mut x = serde_json::json!({"texture":{"path":self.path},"origin":self.origin,"u":self.u,"v":self.v,"aspect":self.aspect});
@@ -478,5 +490,53 @@ impl ImageFrameMatrix {
         } else {
             Self::centered([[f[0], 0., 0.], [0., f[1], 0.], [0., 0., f[2]]], anchor, 0)
         }
+    }
+}
+
+#[derive(Debug,Clone,Copy)]
+pub enum ImagePickMode {Inference,Selectable,LockedContext}
+impl crate::scene::Scene {
+    pub fn image_layer_state(&self,image:&ImagePlane)->(bool,bool){
+        let layer=match image.layer.as_deref().filter(|s|!s.is_empty()) {
+            Some(name)=>self.layers.iter().find(|l|l.name==name),
+            None=>self.layers.iter().find(|l|l.name=="Layer 0"),
+        };
+        layer.map_or((true,false),|l|(l.visible,l.locked))
+    }
+    pub fn image_plane_hit(&self,ray:&crate::math::Ray,mode:ImagePickMode)->Option<(usize,f64)>{
+        let mut best=None;let mut best_t=f64::INFINITY;
+        for (i,image)in self.image_planes.iter().enumerate(){
+            let (visible,locked)=self.image_layer_state(image);if !visible{continue;}
+            match mode {ImagePickMode::Selectable if image.locked||locked=>continue,
+                ImagePickMode::LockedContext if !image.locked||locked=>continue,_=>{}}
+            if let Some(t)=image.ray_hit(ray){if t<=best_t{best=Some((i,t));best_t=t;}}
+        }best
+    }
+}
+
+#[cfg(test)]
+mod picking_tests {
+    use super::*;use crate::{scene::Scene,math::Ray,layers::Layer};
+    #[test]
+    fn image_modes_preserve_last_tie_locks_and_literal_default_layer() {
+        let mut s=Scene::new();s.layers=vec![Layer::new("Images")];
+        let a=ImagePlane::new("first",DVec3::ZERO,DVec3::X*2.,DVec3::Y*2.);let mut b=a.clone();b.id=uuid::Uuid::new_v4();b.locked=true;
+        s.image_planes=vec![a,b];let ray=Ray::new(DVec3::new(1.,1.,10.),-DVec3::Z);
+        assert_eq!(s.image_plane_hit(&ray,ImagePickMode::Inference).unwrap().0,1);
+        assert_eq!(s.image_plane_hit(&ray,ImagePickMode::Selectable).unwrap().0,0);
+        assert_eq!(s.image_plane_hit(&ray,ImagePickMode::LockedContext).unwrap().0,1);
+        s.layers[0].locked=true;assert!(s.image_plane_hit(&ray,ImagePickMode::Selectable).is_none());
+        assert_eq!(s.image_plane_hit(&ray,ImagePickMode::Inference).unwrap().0,1);
+        s.image_planes[0].layer=None;s.image_planes.truncate(1);
+        s.layers=vec![Layer::new("Layer0")];s.layers[0].visible=false;
+        assert!(s.image_plane_hit(&ray,ImagePickMode::Selectable).is_some());
+        s.layers[0].name="Layer 0".into();assert!(s.image_plane_hit(&ray,ImagePickMode::Inference).is_none());
+    }
+    #[test]
+    fn source_degenerate_and_sheared_projection_is_not_replaced_by_polygon_pick() {
+        let mut p=ImagePlane::new("scan",DVec3::ZERO,DVec3::ZERO,DVec3::ZERO);
+        let ray=Ray::new(DVec3::new(100.,100.,10.),-DVec3::Z);assert_eq!(p.ray_hit(&ray),Some(10.));
+        p.u=DVec3::X*2.;p.v=DVec3::new(1.,2.,0.);
+        assert!(p.ray_hit(&Ray::new(DVec3::new(2.25,0.5,10.),-DVec3::Z)).is_none());
     }
 }

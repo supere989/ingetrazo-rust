@@ -104,6 +104,7 @@ impl IngeTrazoApp {
             }
         }
         let mut ids = std::collections::HashSet::new();
+        self.active_tool.visit_image_metadata_roots(&mut |image|{ids.insert(image.id);});
         roots(&self.scene, &mut ids);
         for scene in self.undo_stack.iter().chain(&self.redo_stack) {
             roots(scene, &mut ids);

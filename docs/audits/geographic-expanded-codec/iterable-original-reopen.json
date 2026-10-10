@@ -1,0 +1,44 @@
+[
+  {
+    "case": 18,
+    "source_reopen_exact": true,
+    "tile_capture": {
+      "source": "custom",
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    }
+  },
+  {
+    "case": 19,
+    "source_reopen_exact": true,
+    "tile_capture": {
+      "source": "custom",
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          1.0,
+          2.0
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    }
+  }
+]

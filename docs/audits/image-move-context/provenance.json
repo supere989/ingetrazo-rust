@@ -1,0 +1,18 @@
+{
+  "source_commit": "3b0638aa9bc2fd0bba9934269ae1a99e9f51e9b1",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/base.rs": "2712ae7c54272a09557cf0c6f2d7d16bf94b7a6ec4092c920baa7d354991c113",
+    "crates/ingetrazo-tools/src/move_tool.rs": "da841fcafddcad67873c8af632384b7f80750b6d03ecb0912bf1b15e866d662d",
+    "crates/ingetrazo-gui/src/component_edit.rs": "3cedc5ccdb2d7dae636ee545b3d33f7ebcb8bfd1ddedc6041c422c01d30a6431",
+    "crates/ingetrazo-gui/src/image_plane_actions.rs": "31da2605814414ad7d91a7a89f837cfd43a2ad2ecd55b46869c7c524bd29abec"
+  },
+  "binary_sha256": {
+    "image_move_context": "df37f2dfed87d5e391ab3b419c8a61acd8e4fe6f4cecc6d6565d3dc2c84cea1c",
+    "image_tool_roots": "149f14d8740ec695006c5c88231d9428c413efe94570ad46e79aa2e2d9a0500b",
+    "image_move_tool": "687c2fe168242aac951e7bf76d44e4f1bac1af2596c04caab271949126042d40",
+    "image_plane_picking": "b19c0395d54e89e58ef531775a0cd2c31cc7996eade4493a2b33ff802a592279"
+  },
+  "workspace_passed": 564,
+  "workspace_ignored": 2
+}

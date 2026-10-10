@@ -1,0 +1,4 @@
+# Original geographic framing method replay
+Six fresh compound import/Undo/Redo states exactly match original MainWindow._frame_geo_paths: target, distance, yaw, pitch and perspective alongside datum, paths and retained model. Actual original method operates on native Qt camera, with update delivery stubbed; no rendered/UI event acceptance claim.
+Source fits the bounding sphere with margin1.3 and float32 QVector3D extent length; native import uses this directly instead of generic view-oriented fit_box. Source framing includes every current path, keeping localZ0 bounds. Missing datum and camera framing remain outside path history.
+Combined current-main workspace537PASS/twoignored. Base-map reference capture, full original main-window import handler, dialog gestures and expanded schema/resource corpus remain pending. Candidate stays isolated.
