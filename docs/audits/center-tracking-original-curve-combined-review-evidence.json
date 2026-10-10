@@ -1,0 +1,1224 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "975bdeeb688535ce9dd646bd804ec381baa7da8a",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "curve",
+  "centered": {
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129336.341359636,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        500.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "live_preview": {
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 1,
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129338.401085497,
+    "center": [
+      3.003628730773926,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      696.0010708255697,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      589.2674582363472,
+      272.97163030005703
+    ],
+    "move_target": [
+      784.9457605316002,
+      272.97163030005703
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.2036285400390625,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        696.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "control_states": [
+    {
+      "enabled": true,
+      "held": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": [
+          580.4651379015011,
+          232.46255492058089
+        ],
+        "copy_center": null,
+        "preview_lines": 25,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129338.581226722,
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          606.7336502342575,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          500.0,
+          272.97163030005703
+        ],
+        "move_target": [
+          695.6783022952529,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      },
+      "held_after_frames": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": [
+          580.4651379015011,
+          232.46255492058089
+        ],
+        "copy_center": null,
+        "preview_lines": 25,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129338.881218904,
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          606.7336502342575,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          500.0,
+          272.97163030005703
+        ],
+        "move_target": [
+          695.6783022952529,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      },
+      "released": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": [
+          580.4651379015011,
+          232.46255492058089
+        ],
+        "copy_center": null,
+        "preview_lines": 25,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129339.021403904,
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          606.7336502342575,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          500.0,
+          272.97163030005703
+        ],
+        "move_target": [
+          695.6783022952529,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "held": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": null,
+        "copy_center": null,
+        "preview_lines": 1,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129339.18134349,
+        "center": [
+          3.003628730773926,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          696.0010708255697,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          589.2674582363472,
+          272.97163030005703
+        ],
+        "move_target": [
+          784.9457605316002,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      },
+      "held_after_frames": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": null,
+        "copy_center": null,
+        "preview_lines": 1,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129339.480878542,
+        "center": [
+          3.003628730773926,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          696.0010708255697,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          589.2674582363472,
+          272.97163030005703
+        ],
+        "move_target": [
+          784.9457605316002,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      },
+      "released": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": null,
+        "copy_center": null,
+        "preview_lines": 1,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129339.621402739,
+        "center": [
+          3.003628730773926,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          696.0010708255697,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          589.2674582363472,
+          272.97163030005703
+        ],
+        "move_target": [
+          784.9457605316002,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      }
+    },
+    {
+      "enabled": true,
+      "held": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": [
+          580.4651379015011,
+          232.46255492058089
+        ],
+        "copy_center": null,
+        "preview_lines": 25,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129339.781089611,
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          606.7336502342575,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          500.0,
+          272.97163030005703
+        ],
+        "move_target": [
+          695.6783022952529,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      },
+      "held_after_frames": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": [
+          580.4651379015011,
+          232.46255492058089
+        ],
+        "copy_center": null,
+        "preview_lines": 25,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129340.081354546,
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          606.7336502342575,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          500.0,
+          272.97163030005703
+        ],
+        "move_target": [
+          695.6783022952529,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      },
+      "released": {
+        "mode": "curve",
+        "vertices": 24,
+        "unused_vertices": 0,
+        "copy_probe_pixel": [
+          580.4651379015011,
+          232.46255492058089
+        ],
+        "copy_center": null,
+        "preview_lines": 25,
+        "tool": "MoveTool",
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "time": 129340.221390841,
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "rim": [
+          606.7336502342575,
+          272.97163030005703
+        ],
+        "center_pixel": [
+          500.0,
+          272.97163030005703
+        ],
+        "move_target": [
+          695.6783022952529,
+          272.97163030005703
+        ],
+        "kind": "ThroughPoint",
+        "inference_point": [
+          4.2036285400390625,
+          3.0,
+          1.0
+        ],
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "edges": 24,
+        "faces": 0,
+        "undo": 0,
+        "anchor": [
+          3.200000047683716,
+          3.0,
+          1.0
+        ],
+        "center_hint_observation": {
+          "radius_px": 40.0,
+          "pointer": [
+            696.0,
+            273.0
+          ],
+          "allowed": false
+        }
+      }
+    }
+  ],
+  "copy_preview": {
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": [
+      580.4651379015011,
+      232.46255492058089
+    ],
+    "copy_center": null,
+    "preview_lines": 25,
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129340.221390841,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.2036285400390625,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        696.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "copied": {
+    "mode": "curve",
+    "vertices": 48,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": [
+      3.003628730773926,
+      2.999999761581421,
+      1.0
+    ],
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "time": 129340.640809083,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.2036285400390625,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 48,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        696.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "undone": {
+    "mode": "curve",
+    "vertices": 48,
+    "unused_vertices": 24,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129341.281616889,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.2036285400390625,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        696.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "ghost_patch_changed_pixels": 11,
+  "quiet_patch_changed_pixels": 0,
+  "original_registry_retained_unused_vertices": 24,
+  "complete_vertex_registry_parity": false,
+  "requested_copy_delta": [
+    1.0,
+    0,
+    0
+  ],
+  "actual_copy_delta": [
+    1.0036288499832153,
+    -2.384185791015625e-07,
+    0.0
+  ],
+  "scope": "Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select/Undo shortcuts wired to original public actions, software GL Xvfb. Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy and Undo; arrays/othercopytypes separate.",
+  "proof_boundary": "Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls.",
+  "checker_sha256": "750b3dd0f29303427d8e971fe903303dd7993b55f12fe885b3a70a55316c97dc",
+  "executable_sha256": "92bf3a0a1099168b8479320ca7ca5ed8c3f4250f1e36cdd89c358fd3d8a7c85a"
+}
