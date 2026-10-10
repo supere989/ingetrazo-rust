@@ -1,0 +1,6 @@
+{
+  "source_sha": "de5eedf7320c7cba13687f1c9f0bf399dba66c78",
+  "error": "TimeoutError('Annotation phase readiness timeout')",
+  "rows": [],
+  "last_state": null
+}

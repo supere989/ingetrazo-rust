@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-next-integration/scripts/check-native-annotation-application.py", line 51, in <module>
+    wait(lambda:state()and state()["viewport"]and state()["submitted_serial"]>1)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-next-integration/scripts/check-native-annotation-application.py", line 39, in wait
+    raise TimeoutError("Annotation phase readiness timeout")
+TimeoutError: Annotation phase readiness timeout

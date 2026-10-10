@@ -1,0 +1,9 @@
+{
+  "source": "de5eedf7",
+  "build_exit": 0,
+  "actual_application_exit": 0,
+  "passed": true,
+  "scope": "Actual IngeTrazoApp update_ui/render_viewport mid-UI add/delete/refusal/retry with new managed texture; source pixel/font/MSAA parity remains open",
+  "prior_failure": "Normal application lacks diagnostic control protocol; initial readiness timeout retained with cleanup. Corrected harness run passes; no production source change.",
+  "remaining": "Full source annotation corpus, nine-pixel dimension residual, RTX and full rendered parity remain open."
+}
