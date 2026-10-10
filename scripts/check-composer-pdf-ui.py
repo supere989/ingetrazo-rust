@@ -114,6 +114,7 @@ with tempfile.TemporaryDirectory() as runtime:
     for i in [1,2,0]:
      click(state()['sheet_tabs'][i]);observed=wait(lambda:state()if state()['active_sheet']==i and state()['canvas_text']==expected_canvas(text_cases[i])else None);capture('canvas-sheet-'+str(i+1));canvas_states.append(observed)
      count=observed['field_index_computations'];expansions=observed['field_expansion_computations'];assert observed['calendar_samples_per_frame']==1;time.sleep(.15);idle=state();assert idle['field_index_computations']==count and idle['field_expansion_computations']==expansions and idle['calendar_samples_per_frame']==1
+     assert idle['raw_texture_stats']==observed['raw_texture_stats'] and idle['canvas_paint_stats']==observed['canvas_paint_stats'];observed['warm_canvas_observation']={'raw_texture_stats':idle['raw_texture_stats'],'canvas_paint_stats':idle['canvas_paint_stats'],'no_new_uploads_or_raster_builds':True}
     redone=state()
    border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"item_add":added,"item_undo":item_undo,"item_redo":item_redo,"canvas_before":canvas_before,"canvas_states":canvas_states,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
   if os.environ.get("INGETRAZO_PDF_UI_CANVAS_ONLY")=="1":

@@ -5,7 +5,7 @@ use egui::{Color32,Pos2,Rect,Vec2,TextureHandle};
 use ingetrazo_core::composition::{Sheet,TextItem};
 use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Painter,sheet_pdf::{Draw,PathOp}};
 #[derive(Clone)]struct Layout {text:String,draws:Arc<Vec<Draw>>,bytes:usize,fonts:Vec<(FontKey,usize)>}
-#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:i64,phase:[u8;2],italic:bool,color:[u8;4]}
+#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],italic:bool,color:[u8;4]}
 #[derive(Clone)]struct GlyphImage {pixels:Arc<Vec<u8>>,left:i32,top:i32,width:usize,height:usize,bytes:usize}
 #[derive(Clone)]struct Tile{draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
@@ -37,7 +37,7 @@ impl CanvasPainter {
  fn retire_layout(&mut self,id:uuid::Uuid){if let Some(layout)=self.layouts.remove(&id){self.layout_bytes-=layout.bytes;for (key,_)in layout.fonts{if let Some(entry)=self.font_refs.get_mut(&key){entry.0-=1;if entry.0==0{let (_,bytes)=self.font_refs.remove(&key).unwrap();self.font_bytes-=bytes;}}}}}
 
  fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],italic:bool,color:Color32)->Result<GlyphImage,String>{
-  let key=GlyphKey{font:font.key(),glyph,scale:(scale*65536.)as i64,phase,italic,color:color.to_array()};
+  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,italic,color:color.to_array()};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
   let bitmap=font.rasterize_glyph(glyph,scale,phase,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
   if bytes>16*1024*1024{return Err("Canvas glyph texture budget exceeded".into());}
@@ -110,6 +110,7 @@ fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
   let warm=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&warm));assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));
   let huge="X".repeat(20*1024);assert!(cache.prepare(&sheet,&item,&huge,1,1,&mut resources).is_err());assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));assert_eq!(cache.layout_order.iter().filter(|&&id|id==item.id).count(),1);
   let restored=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&restored));
+  let text=first.iter().find_map(|d|d.text.as_ref()).unwrap();let glyph=text.glyphs[0].glyph;let a=cache.image(&text.font,glyph,1.,[0,0],false,Color32::BLACK).unwrap();let b=cache.image(&text.font,glyph,1.+1e-7,[0,0],false,Color32::BLACK).unwrap();assert!(!Arc::ptr_eq(&a.pixels,&b.pixels));assert_eq!(cache.glyphs.len(),2);
   cache.retire_layout(item.id);assert_eq!((cache.layout_bytes,cache.font_bytes,cache.font_refs.len()),(0,0,0));
  }
 }

@@ -369,7 +369,7 @@ impl System {
 
         self.pending_texture_updates.extend(textures_delta.set);
         while let Some(delta)=self.pending_texture_updates.front() {
-            let raw=crate::paper_raw_texture::peek(&self.egui_ctx,delta.0);
+            let raw=match crate::paper_raw_texture::peek(&self.egui_ctx,delta.0){Ok(raw)=>raw,Err(error)=>{egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}};
             let encoded=raw.as_ref().map(|image|(delta.0,egui_ash_renderer::EncodedRgbaImage{size:image.size,pixels:image.pixels.as_slice()}));
             let encoded=encoded.as_ref().map(std::slice::from_ref).unwrap_or(&[]);
             if let Err(error)=self.renderer.set_textures_with_encoded_images(self.vulkan_context.graphics_queue,self.vulkan_context.command_pool,std::slice::from_ref(delta),encoded) {
@@ -378,7 +378,7 @@ impl System {
                 self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
                 return; // Preserve document and last presented frame; pending deltas retry after pressure falls.
             }
-            crate::paper_raw_texture::acknowledge(&self.egui_ctx,delta.0);
+            if let Err(error)=crate::paper_raw_texture::acknowledge(&self.egui_ctx,delta.0){egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}
             self.pending_texture_updates.pop_front();self.last_gpu_error=None;
         }
 

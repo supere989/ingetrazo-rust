@@ -20,16 +20,19 @@ pub(crate)fn create(ctx:&Context,size:[usize;2],pixels:Vec<u8>)->Result<TextureH
  let texture=ctx.load_texture("source-paper-rgba8",egui::ColorImage::new([1,1],egui::Color32::TRANSPARENT),egui::TextureOptions::NEAREST);
  pending.images.insert(texture.id(),Image{size,pixels:Arc::new(pixels)});pending.bytes+=count;pending.published+=1;pending.published_bytes+=count as u64;Ok(texture)
 }
-pub(crate)fn peek(ctx:&Context,id:TextureId)->Option<Image>{provider(ctx).ok()?.0.lock().ok()?.images.get(&id).cloned()}
-pub(crate)fn acknowledge(ctx:&Context,id:TextureId){if let Ok(provider)=provider(ctx){if let Ok(mut pending)=provider.0.lock(){if let Some(image)=pending.images.remove(&id){pending.bytes-=image.pixels.len();pending.acknowledged+=1;}}}}
+pub(crate)fn peek(ctx:&Context,id:TextureId)->Result<Option<Image>,String>{let provider=provider(ctx)?;let pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;Ok(pending.images.get(&id).cloned())}
+pub(crate)fn acknowledge(ctx:&Context,id:TextureId)->Result<(),String>{let provider=provider(ctx)?;let mut pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;if let Some(image)=pending.images.remove(&id){pending.bytes-=image.pixels.len();pending.acknowledged+=1;}Ok(())}
 
 #[cfg(test)]mod tests{use super::*;
+ #[test]fn unavailable_queue_is_explicit_and_preserves_payload(){
+  let ctx=Context::default();assert!(peek(&ctx,TextureId::Managed(1)).is_err());install(&ctx);let handle=create(&ctx,[1,1],vec![0;4]).unwrap();let queue=provider(&ctx).unwrap();let poisoned=queue.clone();let _=std::thread::spawn(move||{let _guard=poisoned.0.lock().unwrap();panic!("test queue refusal");}).join();assert!(peek(&ctx,handle.id()).is_err());assert!(acknowledge(&ctx,handle.id()).is_err());let pending=queue.0.lock().err().unwrap().into_inner();assert_eq!(pending.bytes,4);assert_eq!(pending.images.len(),1);
+ }
  #[test]fn bytes_shared_until_success_and_refusal_does_not_register_texture(){
   let ctx=Context::default();assert!(create(&ctx,[1,1],vec![0,0,0,0]).is_err());install(&ctx);
   let allocated=ctx.tex_manager().read().num_allocated();let before=provider(&ctx).unwrap();
   assert!(create(&ctx,[2,2],vec![0;4]).is_err());assert_eq!(ctx.tex_manager().read().num_allocated(),allocated);assert!(before.0.lock().unwrap().images.is_empty());
-  let handle=create(&ctx,[1,1],vec![8,9,12,68]).unwrap();let first=peek(&ctx,handle.id()).unwrap();let second=peek(&ctx,handle.id()).unwrap();assert!(Arc::ptr_eq(&first.pixels,&second.pixels));assert_eq!(&**first.pixels,&[8,9,12,68]);assert_eq!(before.0.lock().unwrap().bytes,4);
-  acknowledge(&ctx,handle.id());assert!(peek(&ctx,handle.id()).is_none());assert_eq!(before.0.lock().unwrap().bytes,0);assert_eq!(&**first.pixels,&[8,9,12,68]);
+  let handle=create(&ctx,[1,1],vec![8,9,12,68]).unwrap();let first=peek(&ctx,handle.id()).unwrap().unwrap();let second=peek(&ctx,handle.id()).unwrap().unwrap();assert!(Arc::ptr_eq(&first.pixels,&second.pixels));assert_eq!(&**first.pixels,&[8,9,12,68]);assert_eq!(before.0.lock().unwrap().bytes,4);
+  acknowledge(&ctx,handle.id()).unwrap();assert!(peek(&ctx,handle.id()).unwrap().is_none());assert_eq!(before.0.lock().unwrap().bytes,0);assert_eq!(&**first.pixels,&[8,9,12,68]);
  }
 }
 
