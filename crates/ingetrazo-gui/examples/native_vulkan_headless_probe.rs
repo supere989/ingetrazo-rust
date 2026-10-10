@@ -32,6 +32,14 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  let upload_ms=started.elapsed().as_secs_f64()*1000.;let started=Instant::now();let copied=resources.readback_buffer(&context,buffer)?;
  assert_eq!(copied,expected,"Actual GPU-to-host copy differs; device-local mapping is not used");
  let readback_ms=started.elapsed().as_secs_f64()*1000.;assert!(resources.stats.staging_peak<=8*1024*1024&&resources.stats.readback_staging_peak<=8*1024*1024);
+ let batch_a=(0..1024).map(|i|(i%239)as u8).collect::<Vec<_>>();
+ let batch_b=(0..4096).map(|i|(i%197)as u8).collect::<Vec<_>>();
+ let batch=resources.upload_many(&context,&[(&batch_a,vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC),(&batch_b,vk::BufferUsageFlags::INDEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC)])?;
+ assert_eq!(resources.readback_buffer(&context,batch[0])?,batch_a);assert_eq!(resources.readback_buffer(&context,batch[1])?,batch_b);
+ assert_eq!(resources.stats.transfer_command_allocations,1,"Batch upload recreated command buffer");assert_eq!(resources.stats.transfer_fence_creations,1,"Batch upload recreated transfer fence");
+ let done=unsafe{context.device.create_fence(&vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED),None)}?;
+ for id in batch{resources.retire(id)?;}assert_eq!(resources.collect(done,0)?,2);unsafe{context.device.destroy_fence(done,None)};
+ eprintln!("PASS batched buffer exact readback shares single transfer owner");
  let device=&context.device;let fence=unsafe {device.create_fence(&vk::FenceCreateInfo::default(),None)}?;
  resources.mark_used(buffer,7)?;resources.retire(buffer)?;let charged=budget.ledger.lock().unwrap().total_committed();assert_eq!(resources.collect(fence,7)?,0);assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged);
  unsafe {device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default()],fence)?;}
