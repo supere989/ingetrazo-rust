@@ -1,0 +1,68 @@
+{
+  "states": {
+    "baseline": {
+      "counts": [
+        4
+      ],
+      "jobs": 1,
+      "model_revision": 0,
+      "phase": "baseline",
+      "pids": [
+        958457,
+        958459
+      ]
+    },
+    "edited": {
+      "counts": [
+        4
+      ],
+      "jobs": 2,
+      "model_revision": 1,
+      "phase": "edited",
+      "pids": [
+        958457,
+        958459
+      ]
+    },
+    "undo": {
+      "counts": [
+        4
+      ],
+      "jobs": 3,
+      "model_revision": 2,
+      "phase": "undo",
+      "pids": [
+        958457,
+        958459
+      ]
+    },
+    "context-cancel": {
+      "counts": [
+        4
+      ],
+      "jobs": 4,
+      "model_revision": 4,
+      "phase": "context-cancel",
+      "pids": [
+        958457,
+        958459
+      ]
+    },
+    "recovered": {
+      "counts": [
+        4
+      ],
+      "jobs": 5,
+      "model_revision": 5,
+      "phase": "recovered",
+      "pids": [
+        958457,
+        958459
+      ]
+    }
+  },
+  "native_binary_sha256": "b86416d5ab9021389ae6d338f2b0f0f2e7a5711989f0bdc5fb5a9002d8124570",
+  "worker_sha256": "7538bd67c267a9859ea8dec0c14821f811f8076aadaa212067ea8385581b6bbb",
+  "source": "3e36fbe20de9d406c136ee095cb05823cf24f91d",
+  "scope": "ash software Vulkan production update_ui + public edit/Undo/component cancel/recovery actions; pixel ROI and serial ink checks; no menu gesture claim"
+}

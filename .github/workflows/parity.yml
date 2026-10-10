@@ -38,6 +38,10 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Build production native composer cache fixture
+        run: cargo build --locked -p ingetrazo-gui --example composer_native_cache
+      - name: Native Vulkan composer cache edit history context and recovery
+        run: python scripts/check-native-composer-cache.py target/debug/examples/composer_native_cache target/debug/ingetrazo-render-worker docs/audits/native-composer-ci
       - name: Original OpenGL section stencil controls
         run: python scripts/check-original-section-gl.py
       - name: Native rendered section stencil comparison
@@ -133,3 +137,6 @@ jobs:
             docs/audits/offset-render/runtime.log
             docs/audits/native-vulkan-ci-host/*
             docs/audits/native-vulkan-ci-budget/*
+            docs/audits/native-composer-ci/*.png
+            docs/audits/native-composer-ci/native.log
+            docs/audits/native-composer-ci/result.json
