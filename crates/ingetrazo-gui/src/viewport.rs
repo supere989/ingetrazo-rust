@@ -34,9 +34,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     // Modifier release must retire the temporary lock even outside the canvas.
     app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
     app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor());
-    let model_version=app.scene.version;
-    app.active_tool.on_control_state(&mut app.scene,ui.input(|i| i.modifiers.ctrl));
-    if app.scene.version!=model_version{app.bump_model_revision();}
+    app.dispatch_tool_control_state(ui.input(|i| i.modifiers.ctrl));
 
     // Zoom on wheel
     if scroll_delta != 0.0 && response.hovered() {
@@ -215,8 +213,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         if app.paste_preview.is_some() {
             app.cancel_paste_preview();
         } else {
-            let version=app.scene.version;app.active_tool.on_cancel(&mut app.scene);
-            if app.scene.version!=version{app.bump_model_revision();}
+            app.dispatch_tool_cancel();
         }
         ui.ctx().data_mut(|data| {
             data.remove::<egui::Pos2>(response.id.with("followme_press"));

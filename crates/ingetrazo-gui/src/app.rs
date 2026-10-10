@@ -109,6 +109,7 @@ pub struct IngeTrazoApp {
     pub composer_state: crate::composer::ComposerState,
     pub composer_compute:crate::composer_compute::ComposerCompute,
     pub model_revision:u64,
+    pub native_geometry_revision:u64,
     pub blender_state: crate::blender::BlenderRenderState,
     pub show_render_dialog: bool,
 }
@@ -204,7 +205,7 @@ impl IngeTrazoApp {
             texture_opacity: 1.0,
             terrain_contour_interval: 1.0,
             composer_state: crate::composer::ComposerState::default(),
-            composer_compute:Default::default(),model_revision:0,
+            composer_compute:Default::default(),model_revision:0,native_geometry_revision:0,
             blender_state: crate::blender::BlenderRenderState::default(),
             show_render_dialog: false,
         };
@@ -235,8 +236,8 @@ impl IngeTrazoApp {
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
         self.paste_preview=None;
-        let version=self.scene.version;self.active_tool.on_deactivate(&mut self.scene);
-        if self.scene.version!=version{self.bump_model_revision();}
+        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
         self.active_tool = create_tool(tool_type);
@@ -360,7 +361,8 @@ impl IngeTrazoApp {
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
         self.change_layer_visibility(index,visible)
     }
-    pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
+    pub(crate) fn bump_model_revision(&mut self){self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
+    pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
@@ -972,6 +974,19 @@ impl IngeTrazoApp {
         ctx.send_viewport_cmd(egui::ViewportCommand::Title(title));
         self.blender_state.poll_events(ctx);
 
+        // A complete Ctrl chord can arrive in one frame; the final modifier
+        // snapshot is then released. Use the key event's captured modifiers.
+        let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
+            if let egui::Event::Key{key,pressed:true,modifiers,..}=event {
+                if modifiers.ctrl || modifiers.command {
+                    flags.0|=*key==egui::Key::Z;flags.1|=*key==egui::Key::Y;
+                }
+            }
+            flags
+        }));
+        if undo_pressed {self.undo();}
+        if redo_pressed {self.redo();}
+
         // Global Keyboard Shortcuts
         if ctx.input(|i| i.modifiers.command || i.modifiers.ctrl) {
             if ctx.input(|i| i.key_pressed(egui::Key::N)) {
@@ -982,12 +997,6 @@ impl IngeTrazoApp {
             }
             if ctx.input(|i| i.key_pressed(egui::Key::S)) {
                 self.save_document();
-            }
-            if ctx.input(|i| i.key_pressed(egui::Key::Z)) {
-                self.undo();
-            }
-            if ctx.input(|i| i.key_pressed(egui::Key::Y)) {
-                self.redo();
             }
             if ctx.input(|i| i.key_pressed(egui::Key::A)) {
                 self.select_all();
@@ -1614,5 +1623,24 @@ mod console_transaction_tests {
             assert_eq!(app.undo_stack.len(), undo);
             assert_eq!(app.redo_stack.len(), redo);
         }
+    }
+}
+
+#[cfg(test)]
+mod released_history_chord_tests {
+    use super::*;
+    #[test]
+    fn released_ctrl_chords_use_key_event_modifiers_and_route_sheet_history() {
+        let mut app=IngeTrazoApp::new();app.scene.sheets=vec![ingetrazo_core::composition::Sheet::default()];app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+        let before=app.scene.sheets.clone();app.begin_composer_edit();let mut border=app.scene.sheets[0].effective_source_border();border.color="#ffffff".into();app.scene.sheets[0].set_source_border(border).unwrap();app.finish_composer_edit();let after=app.scene.sheets.clone();
+        let ctx=egui::Context::default();
+        let frame=|app:&mut IngeTrazoApp,key,modifiers|{let _=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1600.,1000.))),modifiers:egui::Modifiers::NONE,events:vec![egui::Event::Key{key,physical_key:None,pressed:true,repeat:false,modifiers},egui::Event::Key{key,physical_key:None,pressed:false,repeat:false,modifiers:egui::Modifiers::NONE}],..Default::default()},|ctx|app.update_ui(ctx));};
+        frame(&mut app,egui::Key::Z,egui::Modifiers::CTRL);assert_eq!(app.scene.sheets,before);
+        frame(&mut app,egui::Key::Y,egui::Modifiers::CTRL);assert_eq!(app.scene.sheets,after);
+        frame(&mut app,egui::Key::Z,egui::Modifiers::NONE);assert_eq!(app.scene.sheets,after);
+        frame(&mut app,egui::Key::Z,egui::Modifiers::COMMAND);assert_eq!(app.scene.sheets,before);
+        frame(&mut app,egui::Key::Y,egui::Modifiers::NONE);assert_eq!(app.scene.sheets,before);
+        frame(&mut app,egui::Key::Y,egui::Modifiers::COMMAND);assert_eq!(app.scene.sheets,after);
+        assert!(app.undo_stack.is_empty());
     }
 }

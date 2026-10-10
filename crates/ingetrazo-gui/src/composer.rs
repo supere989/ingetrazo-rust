@@ -332,6 +332,21 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
                 ui.separator();
 
+                let border_menu=ui.menu_button(tr("Paper border"), |ui| {
+                    let mut border=sheet.effective_source_border();
+                    let toggle=ui.checkbox(&mut border.on,tr("Show border"));
+                    let mut changed=toggle.changed();
+                    changed|=ui.add(egui::DragValue::new(&mut border.mm).speed(0.1).range(0.1..=3.0).suffix(" mm")).changed();
+                    let color=ui.text_edit_singleline(&mut border.color);changed|=color.changed();
+                    changed|=ui.add(egui::DragValue::new(&mut border.radius_mm).speed(0.5).range(0.0..=30.0).suffix(" mm radius")).changed();
+                    egui::ComboBox::from_id_salt("paper_border_style").selected_text(&border.style).show_ui(ui,|ui| {
+                        for style in ["single","double","dashed"] {changed|=ui.selectable_value(&mut border.style,style.into(),style).changed();}
+                    });
+                    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-controls"),(toggle.rect,color.rect)));}
+                    if changed && sheet.set_source_border(border).is_ok(){bump_needed=true;}
+                });
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
+
                 // Add Items Menu
                 ui.menu_button(tr("+ Shape"),|ui|{
                     for (kind,label) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")] {
@@ -919,6 +934,16 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 
 #[cfg(test)]mod frame_camera_tests{
  use super::*;
+ #[test]fn dormant_border_edit_undo_redo_restores_runtime_and_metadata() {
+  let mut app=IngeTrazoApp::new();app.scene.sheets=vec![ingetrazo_core::composition::Sheet::default()];app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+  let before=app.scene.sheets.clone();app.begin_composer_edit();
+  let mut border=app.scene.sheets[0].effective_source_border();border.color="#ffffff".into();
+  app.scene.sheets[0].set_source_border(border).unwrap();app.finish_composer_edit();
+  let after=app.scene.sheets.clone();assert!(!after[0].effective_source_border().on);
+  app.undo();assert_eq!(app.scene.sheets,before);app.redo();assert_eq!(app.scene.sheets,after);
+  assert!(app.undo_stack.is_empty());
+ }
+
  #[test]fn subpixel_paper_hatch_keeps_original_two_row_coverage(){
   let ctx=egui::Context::default();ctx.begin_pass(Default::default());
   let painter=ctx.layer_painter(egui::LayerId::background());thin_paper_line(&painter,[Pos2::new(10.,30.),Pos2::new(30.,10.)],0.72,Color32::from_rgb(255,0,255));
@@ -1116,7 +1141,19 @@ impl IngeTrazoApp {
         let scene=&self.scene;let camera=&self.camera;let compute=&mut self.composer_compute;let document=self.clipboard_document;let revision=self.model_revision;
         let mut painter=|frame:&ViewFrame|pdf::view_draws(scene,camera,compute,document,revision,frame);
         let text_resources=&self.composer_state.paper_text;
-        let mut texts=|sheet:&ingetrazo_core::composition::Sheet,item:&ingetrazo_core::composition::TextItem|pdf::text_draws(sheet,item,&mut text_resources.borrow_mut());
+        if sheets.is_empty() || sheets.len()>10_000 {return Err("PDF requires 1..10000 pages".into());}
+        let needs_fields=sheets.iter().any(|s|s.items.iter().any(|v|matches!(v,SheetItem::Text(t) if t.text.contains('{'))));
+        // Source caller selects the first dataclass-equal sheet; reference identity remains unambiguous for this export.
+        let indices=if needs_fields{crate::composer_text_fields::source_indices(&scene.sheets,sheets)?}else{std::collections::HashMap::new()};
+        let current_file=self.current_file.as_deref();
+        let mut texts=|sheet:&ingetrazo_core::composition::Sheet,item:&ingetrazo_core::composition::TextItem|{
+            if item.text.contains('{'){
+                // Source field_values samples the native local date for each Text expansion.
+                let date=crate::composer_text_fields::today()?;
+                let fields=crate::composer_text_fields::Context{index:Some(*indices.get(&(sheet as *const _)).ok_or("Paper Text context no longer exists")?),total:scene.sheets.len(),path:current_file,date:&date};
+                pdf::text_draws(sheet,item,&mut text_resources.borrow_mut(),Some(&fields))
+            }else{pdf::text_draws(sheet,item,&mut text_resources.borrow_mut(),None)}
+        };
         let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_painters(sheets,&mut painter,&mut texts)?;
         let has_view=sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::ViewFrame(_))));
         if has_view || sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::Text(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())

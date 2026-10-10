@@ -90,8 +90,8 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     cache.publish(candidate)?;
     assert!(
-        cache.readback_for_probe(&context, &mut resources, id)? == pixels,
-        "Published sampled GPU image differs"
+        cache.readback_for_probe(&context, &mut resources, id)? == vec![0,0,255,255,255,255,255,0,255,0,0,255,0,255,0,255],
+        "Published sampled GPU image must use literal source bottom-up rows"
     );
     let uploads = cache.stats.uploads;
     let decodes = cache.stats.decodes;

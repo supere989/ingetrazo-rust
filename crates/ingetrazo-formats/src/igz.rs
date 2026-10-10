@@ -433,6 +433,70 @@ fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value 
     model
 }
 
+/// Project only pinned source paper context fields; never copy unrelated archive payloads.
+/// The caller supplies the fixed dataclass field/default policy, not a whole Scene.
+pub fn paper_context_sheet_record(sheet:&ingetrazo_core::composition::Sheet,classes:&serde_json::Value)->Result<serde_json::Value,String>{
+ use ingetrazo_core::composition::SheetItem;
+ use serde_json::{Map,Value};
+ struct Count(usize);
+ impl std::io::Write for Count {
+  fn write(&mut self,data:&[u8])->std::io::Result<usize>{self.0=self.0.checked_sub(data.len()).ok_or_else(||std::io::Error::other("Paper context record budget exceeded"))?;Ok(data.len())}
+  fn flush(&mut self)->std::io::Result<()>{Ok(())}
+ }
+ let mut count=Count(4*1024*1024);
+ fn project(raw:&Value,defaults:&Value,count:&mut Count)->Result<Value,String>{
+  let mut fields=Map::new();
+  for(key,default)in defaults.as_object().ok_or("Invalid paper context policy")?{
+   let value=raw.get(key).unwrap_or(default);
+   serde_json::to_writer(&mut *count,key).map_err(|_|"Paper context record budget exceeded")?;
+   serde_json::to_writer(&mut *count,value).map_err(|_|"Paper context record budget exceeded")?;
+   if let Some(value)=raw.get(key){fields.insert(key.clone(),value.clone());}
+  }
+  Ok(Value::Object(fields))
+ }
+ if sheet.items.len()>10000{return Err("Paper context item budget exceeded".into());}
+ serde_json::to_writer(&mut count,&(&sheet.name,&sheet.paper_size,sheet.margin_mm)).map_err(|_|"Paper context record budget exceeded")?;
+ let mut model=serde_json::json!({"name":sheet.name,"paper":sheet.paper_size,"landscape":sheet.orientation==ingetrazo_core::composition::Orientation::Landscape,"margin_mm":sheet.margin_mm,"frames":[],"texts":[],"nortes":[],"scalebars":[],"shapes":[],"cajetin":null});
+ serde_json::to_writer(&mut count,&model).map_err(|_|"Paper context record budget exceeded")?;
+ let empty=Value::Null;
+ for item in &sheet.items{
+  // Typed string admission precedes current-item materialization.
+  serde_json::to_writer(&mut count,item).map_err(|_|"Paper context record budget exceeded")?;
+  let(id,key,current)=sheet_item_model(item);let defaults=classes.get(key).ok_or("Invalid paper context category")?;
+  let original=project(sheet.native_items.get(&id).unwrap_or(&empty),defaults,&mut count)?;
+  let baseline=project(sheet.native_item_baselines.get(&id).unwrap_or(&empty),defaults,&mut count)?;
+  let mut value=overlay(&original,&baseline,current.clone());
+  if let SheetItem::TitleBlock(_)=item{
+   // Match the codec's operative row updates without carrying opaque outer metadata.
+   if let Some(rows)=original.get("campos").and_then(Value::as_array){
+    let mut rows=rows.clone();
+    for(label,field)in [("PROYECTO","proyecto"),("AUTOR","autor"),("FECHA","fecha"),("ESCALA","escala"),("LÁMINA","lamina"),("TÍTULO","drawing_title")]{
+     if baseline.get(field)!=current.get(field){
+      if let Some(row)=rows.iter_mut().find(|r|r.get(0).and_then(Value::as_str).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)){row[1]=current[field].clone();}
+      else{rows.push(serde_json::json!([label,current[field]]));}
+     }
+    }
+    value["campos"]=Value::Array(rows);
+   }else{value["campos"]=serde_json::json!([["PROYECTO",current["proyecto"]],["AUTOR",current["autor"]],["FECHA",current["fecha"]],["ESCALA",current["escala"]],["LÁMINA",current["lamina"]],["TÍTULO",current["drawing_title"]]]);}
+   model[key]=value;
+  }else{model[key].as_array_mut().unwrap().push(value);}
+ }
+ for(kind,defaults)in classes.as_object().ok_or("Invalid paper context policy")?{
+  if matches!(kind.as_str(),"frames"|"texts"|"nortes"|"scalebars"|"shapes"|"cajetin"){continue;}
+  let mut items=vec![];
+  if let Some(raw)=sheet.native_document.get(kind).and_then(Value::as_array){
+   if raw.len()>10000{return Err("Paper context item budget exceeded".into());}
+   for record in raw.iter().filter(|v|v.is_object()){items.try_reserve(1).map_err(|_|"Paper context item allocation failed")?;items.push(project(record,defaults,&mut count)?);}
+  }
+  model[kind]=Value::Array(items);
+ }
+ for(key,fields)in [("border",&["on","mm","color","radius_mm","style"][..]),("guides",&["v","h"][..])]{
+  if let Some(raw)=sheet.native_document.get(key){let mut selected=Map::new();for field in fields{if let Some(value)=raw.get(field){serde_json::to_writer(&mut count,value).map_err(|_|"Paper context record budget exceeded")?;selected.insert((*field).into(),value.clone());}}model[key]=Value::Object(selected);}
+ }
+ model["border"]=serde_json::to_value(sheet.effective_source_border()).map_err(|_|"Invalid paper border")?;
+ Ok(model)
+}
+
 fn sheet_to_json(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value {
     let current=sheet_model(sheet);
     let mut result=overlay(&sheet.native_document,&sheet.native_baseline,current.clone());
@@ -440,6 +504,14 @@ fn sheet_to_json(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Valu
     // stale array positions after deleting, moving or replacing an item.
     for key in ["frames","texts","nortes","scalebars","shapes","cajetin"] {
         if sheet.native_baseline.get(key)!=current.get(key) { result[key]=current[key].clone(); }
+    }
+    if let Some(border)=&sheet.source_border {
+        if sheet.source_border_baseline.as_ref()!=Some(border) {
+            if border.on {
+                if !result["border"].is_object(){result["border"]=serde_json::json!({});}
+                for (key,value) in serde_json::to_value(border).unwrap().as_object().unwrap(){result["border"][key]=value.clone();}
+            } else if let Some(object)=result.as_object_mut(){object.remove("border");}
+        }
     }
     result
 }
@@ -496,6 +568,7 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
             sheet.items.push(item);
         }
     }
+    sheet.source_border=Some(SourcePaperBorder::from_native(&raw["border"]));sheet.source_border_baseline=sheet.source_border.clone();
     sheet.native_document=raw.clone();sheet.native_baseline=sheet_model(&sheet);sheet
 }
 
@@ -1110,4 +1183,23 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
   let saved=sheet_to_json(&sheet);assert_eq!(saved["images"],raw["images"]);assert_eq!(saved["shapes"][0]["vendor"],raw["shapes"][0]["vendor"]);assert_eq!(saved["shapes"][0]["x_mm"],70.);assert_eq!(saved["shapes"][0]["hidden"],true);
   let restored=read_sheet(&saved);assert_eq!(sheet_to_json(&restored),saved);
  }
+}
+
+#[cfg(test)]
+mod source_border_runtime_tests {
+    use super::*;
+    #[test]
+    fn dormant_authored_border_is_runtime_only_and_foreign_noop_is_retained() {
+        let raw=serde_json::json!({"name":"Same","paper":"A4","landscape":false,"margin_mm":10.,"border":{"on":false,"color":"#ffffff","vendor":71}});
+        let imported=read_sheet(&raw);
+        assert_eq!(imported.effective_source_border().color,"#1e242c");
+        assert_eq!(sheet_to_json(&imported)["border"],raw["border"]);
+        let mut edited=imported.clone();let mut border=edited.effective_source_border();
+        border.on=true;border.color="#ffffff".into();edited.set_source_border(border.clone()).unwrap();
+        assert_eq!(sheet_to_json(&edited)["border"]["vendor"],71);
+        border.on=false;edited.set_source_border(border).unwrap();
+        assert!(sheet_to_json(&edited).get("border").is_none());
+        assert_eq!(edited.effective_source_border().color,"#ffffff");
+        assert_eq!(read_sheet(&sheet_to_json(&edited)).effective_source_border().color,"#1e242c");
+    }
 }

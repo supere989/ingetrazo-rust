@@ -189,7 +189,7 @@ impl MoveTool {
             *origin=(current.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();
             if let Some(index)=index{*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}else{scene.image_objects.set_held_origin(image,*origin);}
         }
-        self.preview_delta=delta;scene.bump_version();self.preview_version=scene.version;
+        self.preview_delta=delta;if (!self.detached_vertices&&!self.target_vertices.is_empty())||!self.target_groups.is_empty()||!self.target_planes.is_empty(){scene.bump_version();}self.preview_version=scene.version;
     }
     fn revert_preview(&mut self,scene:&mut Scene){
         if self.preview_delta!=DVec3::ZERO{
@@ -203,7 +203,7 @@ impl MoveTool {
                 *origin=current;
                 if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(current);}else{scene.image_objects.set_held_origin(image,current);}
             }
-            self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
+            self.preview_delta=DVec3::ZERO;if (!self.detached_vertices&&!self.target_vertices.is_empty())||!self.target_groups.is_empty()||!self.target_planes.is_empty(){scene.bump_version();}self.preview_version=scene.version;}
     }
     /// Execute translation or copy.
     pub fn execute_move(&mut self, delta: DVec3, scene: &mut Scene) {

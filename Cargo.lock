@@ -1501,6 +1501,7 @@ dependencies = [
  "ingetrazo-metal",
  "ingetrazo-render",
  "ingetrazo-tools",
+ "libc",
  "log",
  "raw-window-handle",
  "serde",

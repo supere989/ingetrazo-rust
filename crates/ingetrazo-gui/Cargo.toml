@@ -34,3 +34,6 @@ bytemuck.workspace = true
 
 [target.'cfg(target_os = "macos")'.dependencies]
 ingetrazo-metal = { path = "../ingetrazo-metal" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
