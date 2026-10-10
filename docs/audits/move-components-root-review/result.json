@@ -4,5 +4,10 @@
   "tools_suite_passed": true,
   "source_group_preview_and_arrays_fresh_passed": true,
   "source_crossing_overlap_fresh_passed": true,
-  "boundary": "Bounded controller and borrowed placement descriptor proof only. Renderer descriptor consumption, actual rendered group gestures, and GPU upload performance remain open."
+  "boundary": "Bounded controller and borrowed placement descriptor proof only. Renderer descriptor consumption, actual rendered group gestures, and GPU upload performance remain open.",
+  "workspace": {
+    "passed": 420,
+    "failed": 0,
+    "ignored": 2
+  }
 }
