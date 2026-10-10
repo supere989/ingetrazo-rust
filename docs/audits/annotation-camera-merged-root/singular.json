@@ -1,0 +1,6 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "inverse_ok": false,
+  "previous_depth_snapshot_retained": true,
+  "scope": "actual source AST with controlled GL calls; no GPU resolve proof"
+}

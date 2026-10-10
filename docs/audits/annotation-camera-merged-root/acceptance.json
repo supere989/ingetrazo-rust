@@ -1,0 +1,33 @@
+{
+  "source_revision": "2bebb69f4e8c7c82eb830fad629b62b290be47a5",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "fresh_original_and_merged_native": true,
+  "camera_result": {
+    "cases": 10,
+    "mvp_inverse_float32_bits_exact": true,
+    "all_values_exact": true,
+    "view_signed_zero_only": true,
+    "old_matrix_differences": [
+      9,
+      6,
+      12,
+      7,
+      15,
+      14,
+      6,
+      8,
+      4,
+      8
+    ],
+    "altered_matrix_rejected": true
+  },
+  "files": {
+    "build.log": "09087bdf5d718cb782c25f7e9cd9ea82b329e99d2930e51eb48b3c789373245d",
+    "tests.log": "a6209f83414902e5e24c2938e8c17c18d0189284c3c02fdec92da2bf154b355b",
+    "original.json": "8e8ebc02eda7ce9c609e3816ad1e46be8dd0f375e2ce9d6d30490fe9af245c5c",
+    "singular.json": "32f7569cd33026d8417bb7e1357b9c193142d4fdb7fba7549bc00edcd6605f96",
+    "native.json": "0b360360a263b95d9cfab54f5fd0f34d84243c5dde9fe69cde3c24ea9f6d8d04",
+    "result.json": "c3edff3e28c9b4c0f86ab5c36d70a45bee5303c363923dae1f0f452bf138ec1f"
+  },
+  "scope": "CPU camera arithmetic and navigation tests; actual full-scene projection/depth remains open"
+}
