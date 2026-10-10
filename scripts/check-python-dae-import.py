@@ -34,10 +34,14 @@ def signature(s):
  bounds=[[round(min(getattr(p,axis)() for p in pts),5),round(max(getattr(p,axis)() for p in pts),5)] for axis in ["x","y","z"]]
  return {"textures":textures,"area":round(area,5),"bounds":bounds,"color_area":{k:round(v,5) for k,v in sorted(colors.items())},"loose_faces":len(s.mesh.faces),"groups":len(s.groups),"world_faces":len(fs),"rings":[[list(p) for p in ring([[v.x(),v.y(),v.z()] for v in f.vertices])] for f in fs],"holes":[[[list(p) for p in ring([[v.x(),v.y(),v.z()] for v in h])] for h in f.holes] for f in fs],"georef":None if s.georef is None else [s.georef.lat,s.georef.lon,s.georef.alt,s.georef.north]}
 def main():
- app=QApplication([]);exe=os.environ.get("INGETRAZO_DAE_FIXTURE","/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture");rows=[]
+ app=QApplication([]);exe=os.environ.get("INGETRAZO_DAE_FIXTURE")
+ if exe is None:
+  subprocess.run(["cargo","build","--locked","-p","ingetrazo-formats","--example","dae_import_acceptance_fixture"],check=True)
+  exe=str(Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/dae_import_acceptance_fixture")
+ rows=[]
  with tempfile.TemporaryDirectory() as d:
   d=Path(d);snapshot=d/"native-decoder";shutil.copy2(exe,snapshot);native_hash=hashlib.sha256(snapshot.read_bytes()).hexdigest()
-  for name in ["painted-rectangle","holed-surface","nested-reflection","georeferenced","textured-uv","textured-missing-uv","textured-missing-uv-pattern","textured-missing-uv-alpha","closed-cube"]:
+  for name in ["painted-rectangle","holed-surface","nested-reflection","georeferenced","textured-uv","textured-missing-uv","textured-missing-uv-pattern","textured-missing-uv-alpha","textured-missing-uv-gradient3x3","textured-missing-uv-gradient3x5","textured-missing-uv-gradient5x3","closed-cube"]:
    s=Scene();m=Mesh();f=m.add_face([V(0,0,0),V(4,0,0),V(4,4,0),V(0,4,0)],[[V(1,1,0),V(3,1,0),V(3,3,0),V(1,3,0)]] if name=="holed-surface" else []);f.attrs["color"]=[.2,.4,.6]
    if name=="closed-cube":
     m=Mesh();pts=[V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0),V(0,0,1),V(1,0,1),V(1,1,1),V(0,1,1)]
@@ -46,9 +50,12 @@ def main():
     child=Group(m,"Child");child.xform=QMatrix4x4();child.xform.scale(-2,3,1);parent=Group(name="Parent");parent.xform=QMatrix4x4();parent.xform.translate(10,20,30);parent.children=[child];s.groups=[parent]
    else:s.mesh=m
    if name.startswith("textured"):
-    image=QImage(2,2,QImage.Format_RGBA8888);image.fill(QColor(203,71,29))
+    w,h=map(int,name.rsplit("gradient",1)[1].split("x")) if "gradient" in name else (2,2);image=QImage(w,h,QImage.Format_RGBA8888);image.fill(QColor(203,71,29))
     if name.endswith("pattern") or name.endswith("alpha"):
      for (x,y),rgba in zip([(0,0),(1,0),(0,1),(1,1)],[(255,0,0,255),(0,255,0,128 if name.endswith("alpha") else 255),(0,0,255,64 if name.endswith("alpha") else 255),(255,255,255,0 if name.endswith("alpha") else 255)]):image.setPixelColor(x,y,QColor(*rgba))
+    if "gradient" in name:
+     for x in range(w):
+      for y in range(h):image.setPixelColor(x,y,QColor((x*61+y*17+11)%256,(x*7+y*53+19)%256,(x*43+y*29+23)%256))
     image.save(str(d/"paint.png"));f.attrs["texture"]={"path":str(d/"paint.png"),"uvw":[.25,0,0,0,0,.25,0,0],"sw":4,"sh":4}
    if name=="georeferenced":s.georef=SceneDatum(51.5,-.1,32,17)
    inp=d/(name+".dae");out=d/(name+".igz");dae.save_dae(s,inp)
@@ -75,7 +82,7 @@ def main():
   original=next(r["original"] for r in rows if r["case"]==("textured-uv" if field=="textures" else "painted-rectangle"))
   changed=copy.deepcopy(original);changed[field]=value;assert changed[field]!=original[field]
   controls.append({"case":"corrupted-"+field,"detected":True})
- report={"negative_controls":controls,"provenance":context(),"native_fixture":exe,"native_fixture_sha256":native_hash,"native_source_revision":os.environ.get("INGETRAZO_DAE_SOURCE_REVISION","unverified: provide explicit executable build revision"),"cases":rows,"world_passed":all(r["world_match"] for r in rows),"schema_passed":all(r["editable_schema_match"] for r in rows),"scope":"Original authored COLLADA painted/holed/nested reflected/georeferenced documents, actual original load compared with separate-process native decode and actual original IGZ reopen. World surface area/bounds/color allocation distinct from editable loose-mesh fusion/group/georef schema. This corpus includes texture affine UV/image bytes and missing-UV fallback; does not cover FACEME, large reference threshold or arbitrary COLLADA. Original open-face winding is nondeterministic even with PYTHONHASHSEED=0 (retained separate evidence); editable open-ring topology compares both orientations explicitly while closed-cube winding remains strict."}
+ report={"negative_controls":controls,"provenance":context(),"native_fixture":exe,"native_fixture_sha256":native_hash,"native_source_revision":os.environ.get("INGETRAZO_DAE_SOURCE_REVISION",context()["rust_commit"] if "INGETRAZO_DAE_FIXTURE" not in os.environ else "unverified: provide explicit executable build revision"),"cases":rows,"world_passed":all(r["world_match"] for r in rows),"schema_passed":all(r["editable_schema_match"] for r in rows),"scope":"Original authored COLLADA painted/holed/nested reflected/georeferenced documents, actual original load compared with separate-process native decode and actual original IGZ reopen. World surface area/bounds/color allocation distinct from editable loose-mesh fusion/group/georef schema. This corpus includes texture affine UV/image bytes and missing-UV fallback; does not cover FACEME, large reference threshold or arbitrary COLLADA. Original open-face winding is nondeterministic even with PYTHONHASHSEED=0 (retained separate evidence); editable open-ring topology compares both orientations explicitly while closed-cube winding remains strict."}
  Path("docs/audits/python-dae-import-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
  if "--retain-failures" not in sys.argv:assert report["world_passed"] and report["schema_passed"],"DAE semantic acceptance failed; see retained evidence"
 if __name__=="__main__":main()

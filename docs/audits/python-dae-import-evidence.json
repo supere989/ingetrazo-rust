@@ -14,14 +14,14 @@
     }
   ],
   "provenance": {
-    "rust_commit": "a8e7daf5f1f8fa1a58326b37c4839ac6a073550b",
+    "rust_commit": "270cbe83b6d9299f9b3d95b8696cb1a87ca51418",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
-  "native_fixture_sha256": "4e566a46c9a610e3fe6da4b13b63c612b7b7aa2d6c7deed2e58ea2c93daa514a",
-  "native_source_revision": "4ab4945",
+  "native_fixture_sha256": "4bdbf6595914b318bb59d1a95e2db3df7c59ea2459e64089ceadc06884f78f8d",
+  "native_source_revision": "c38848a",
   "cases": [
     {
       "case": "painted-rectangle",
@@ -730,8 +730,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -740,8 +740,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -805,7 +805,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "textured-missing-uv-pattern",
@@ -840,8 +840,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -850,8 +850,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -879,7 +879,7 @@
           ]
         ],
         "color_area": {
-          "[0.50196, 0.50196, 0.50196]": 16.0
+          "[0.49804, 0.49804, 0.49804]": 16.0
         },
         "loose_faces": 1,
         "groups": 0,
@@ -913,9 +913,9 @@
         ],
         "georef": null
       },
-      "world_match": false,
-      "editable_schema_match": false,
-      "strict_oriented_rings_match": false
+      "world_match": true,
+      "editable_schema_match": true,
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-missing-uv-alpha",
@@ -989,7 +989,7 @@
           ]
         ],
         "color_area": {
-          "[0.50196, 0.50196, 0.50196]": 16.0
+          "[0.56863, 0.28627, 0.1451]": 16.0
         },
         "loose_faces": 1,
         "groups": 0,
@@ -1023,8 +1023,338 @@
         ],
         "georef": null
       },
-      "world_match": false,
-      "editable_schema_match": false,
+      "world_match": true,
+      "editable_schema_match": true,
+      "strict_oriented_rings_match": true
+    },
+    {
+      "case": "textured-missing-uv-gradient3x3",
+      "original": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.3451, 0.30588, 0.36863]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.3451, 0.30588, 0.36863]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": true,
+      "strict_oriented_rings_match": true
+    },
+    {
+      "case": "textured-missing-uv-gradient3x5",
+      "original": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.41176, 0.51373, 0.48235]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.41176, 0.51373, 0.48235]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": true,
+      "strict_oriented_rings_match": true
+    },
+    {
+      "case": "textured-missing-uv-gradient5x3",
+      "original": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.45098, 0.33333, 0.53725]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.45098, 0.33333, 0.53725]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": true,
       "strict_oriented_rings_match": true
     },
     {
@@ -1368,7 +1698,7 @@
       "strict_oriented_rings_match": true
     }
   ],
-  "world_passed": false,
-  "schema_passed": false,
+  "world_passed": true,
+  "schema_passed": true,
   "scope": "Original authored COLLADA painted/holed/nested reflected/georeferenced documents, actual original load compared with separate-process native decode and actual original IGZ reopen. World surface area/bounds/color allocation distinct from editable loose-mesh fusion/group/georef schema. This corpus includes texture affine UV/image bytes and missing-UV fallback; does not cover FACEME, large reference threshold or arbitrary COLLADA. Original open-face winding is nondeterministic even with PYTHONHASHSEED=0 (retained separate evidence); editable open-ring topology compares both orientations explicitly while closed-cube winding remains strict."
 }

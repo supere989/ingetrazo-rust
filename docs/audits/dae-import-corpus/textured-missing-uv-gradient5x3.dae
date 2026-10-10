@@ -1,0 +1,43 @@
+<ns0:COLLADA xmlns:ns0="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<ns0:asset>
+<ns0:contributor><ns0:authoring_tool>IngeTrazo</ns0:authoring_tool></ns0:contributor>
+<ns0:created>2026-10-10T02:23:30+00:00</ns0:created><ns0:modified>2026-10-10T02:23:30+00:00</ns0:modified>
+<ns0:unit name="meter" meter="1" />
+<ns0:up_axis>Z_UP</ns0:up_axis>
+</ns0:asset>
+<ns0:library_images>
+<ns0:image id="img0" name="img0"><ns0:init_from>paint.png</ns0:init_from></ns0:image>
+</ns0:library_images>
+<ns0:library_effects>
+<ns0:effect id="eff0"><ns0:profile_COMMON>
+<ns0:newparam sid="surf0"><ns0:surface type="2D"><ns0:init_from>img0</ns0:init_from></ns0:surface></ns0:newparam>
+<ns0:newparam sid="samp0"><ns0:sampler2D><ns0:source>surf0</ns0:source></ns0:sampler2D></ns0:newparam>
+<ns0:technique sid="common"><ns0:lambert><ns0:diffuse><ns0:texture texture="samp0" texcoord="UVSET0" /></ns0:diffuse></ns0:lambert></ns0:technique>
+</ns0:profile_COMMON></ns0:effect>
+</ns0:library_effects>
+<ns0:library_materials>
+<ns0:material id="mat0" name="mat0"><ns0:instance_effect url="#eff0" /></ns0:material>
+</ns0:library_materials>
+<ns0:library_geometries>
+<ns0:geometry id="geom0" name="IngeTrazo"><ns0:mesh>
+<ns0:source id="geom0-pos"><ns0:float_array id="geom0-pos-array" count="12">0.000000 0.000000 0.000000 4.000000 0.000000 0.000000 4.000000 4.000000 0.000000 0.000000 4.000000 0.000000</ns0:float_array><ns0:technique_common><ns0:accessor source="#geom0-pos-array" count="4" stride="3"><ns0:param name="X" type="float" /><ns0:param name="Y" type="float" /><ns0:param name="Z" type="float" /></ns0:accessor></ns0:technique_common></ns0:source>
+<ns0:source id="geom0-nrm"><ns0:float_array id="geom0-nrm-array" count="3">0.00000 0.00000 1.00000</ns0:float_array><ns0:technique_common><ns0:accessor source="#geom0-nrm-array" count="1" stride="3"><ns0:param name="X" type="float" /><ns0:param name="Y" type="float" /><ns0:param name="Z" type="float" /></ns0:accessor></ns0:technique_common></ns0:source>
+<ns0:source id="geom0-uv"><ns0:float_array id="geom0-uv-array" count="8">0.000000 0.000000 1.000000 0.000000 1.000000 1.000000 0.000000 1.000000</ns0:float_array><ns0:technique_common><ns0:accessor source="#geom0-uv-array" count="4" stride="2"><ns0:param name="S" type="float" /><ns0:param name="T" type="float" /></ns0:accessor></ns0:technique_common></ns0:source>
+<ns0:vertices id="geom0-vertices"><ns0:input semantic="POSITION" source="#geom0-pos" /></ns0:vertices>
+<ns0:triangles material="sym0" count="2">
+<ns0:input semantic="VERTEX" source="#geom0-vertices" offset="0" />
+<ns0:input semantic="NORMAL" source="#geom0-nrm" offset="1" />
+<ns0:p>0 0 1 0 2 0 0 0 2 0 3 0</ns0:p>
+</ns0:triangles>
+</ns0:mesh></ns0:geometry>
+</ns0:library_geometries>
+<ns0:library_visual_scenes>
+<ns0:visual_scene id="scene"><ns0:node id="model" name="IngeTrazo model">
+<ns0:instance_geometry url="#geom0"><ns0:bind_material><ns0:technique_common>
+<ns0:instance_material symbol="sym0" target="#mat0">
+<ns0:bind_vertex_input semantic="UVSET0" input_semantic="TEXCOORD" input_set="0" />
+</ns0:instance_material>
+</ns0:technique_common></ns0:bind_material></ns0:instance_geometry>
+</ns0:node></ns0:visual_scene></ns0:library_visual_scenes>
+<ns0:scene><ns0:instance_visual_scene url="#scene" /></ns0:scene>
+</ns0:COLLADA>
