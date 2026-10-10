@@ -1,0 +1,131 @@
+{
+  "icc_sha256": "3f783176c0dce53849311da3c123200322333fe8f71e8eb25bc2acd1c94613ea",
+  "tags": [
+    {
+      "tag": "desc",
+      "type": "desc",
+      "sha256": "39da5ae42f6a6a7f40c11c52c5b9ea9d7267c2a5636b770651515c1bc5606f07"
+    },
+    {
+      "tag": "dscm",
+      "type": "mluc",
+      "sha256": "36db3cbdb16070704baadd0282bd0b14d133b972c5205df7f703418b7afddd85",
+      "strings": [
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display",
+        "Unknown Display"
+      ]
+    },
+    {
+      "tag": "cprt",
+      "type": "text",
+      "sha256": "5aba2fc3c99a03049f4322899f987cc8d298a5ef9ee03dd325a9a6a6f587d280"
+    },
+    {
+      "tag": "wtpt",
+      "type": "XYZ ",
+      "sha256": "7fda3b1ba28a4d44ddd80d84f57f8d07596af6e557de50cd9a12f3929a3d625f"
+    },
+    {
+      "tag": "rXYZ",
+      "type": "XYZ ",
+      "sha256": "dc827ada50a570ef35914b86b326fe0582c4825ca21966a1608fb0ea8d3eeb58"
+    },
+    {
+      "tag": "gXYZ",
+      "type": "XYZ ",
+      "sha256": "710036ecc27c3b47e9754ab1e3a3c07cf918a061bb93ebb7598c16251d1780aa"
+    },
+    {
+      "tag": "bXYZ",
+      "type": "XYZ ",
+      "sha256": "b628751242274b62b9c4298881e5a9627dad6ac126c44aacdf9f9b46903a728b"
+    },
+    {
+      "tag": "rTRC",
+      "type": "curv",
+      "sha256": "0f5ec48cc8d86e2a4dc54351a865f35cef203fb138c52392e96ee5b500c97834"
+    },
+    {
+      "tag": "aarg",
+      "type": "para",
+      "sha256": "e94c46a5f3dd96ca3168af4700d0ccb5784d466528ea30b2ef39316af040f2d6"
+    },
+    {
+      "tag": "vcgt",
+      "type": "vcgt",
+      "sha256": "85d9255f5054ef795cd591c6a17cb41f1970643ce0a941d2650e73910e8de647"
+    },
+    {
+      "tag": "ndin",
+      "type": "ndin",
+      "sha256": "23cd5f64158ca8c5c8013e66f798108920f2a51bfdebb9e132e4c7a665ba6e8b"
+    },
+    {
+      "tag": "mmod",
+      "type": "mmod",
+      "sha256": "3db350a05b387db992300799b085fd18a99bde73a23a430f9b15358c35e14ef5"
+    },
+    {
+      "tag": "vcgp",
+      "type": "vcgp",
+      "sha256": "751c17db0682e541cb1fa22c408aec411558f6a17fd7a1cc0bbdc09d6ee7f00a"
+    },
+    {
+      "tag": "bTRC",
+      "type": "curv",
+      "sha256": "0f5ec48cc8d86e2a4dc54351a865f35cef203fb138c52392e96ee5b500c97834"
+    },
+    {
+      "tag": "gTRC",
+      "type": "curv",
+      "sha256": "0f5ec48cc8d86e2a4dc54351a865f35cef203fb138c52392e96ee5b500c97834"
+    },
+    {
+      "tag": "aabg",
+      "type": "para",
+      "sha256": "e94c46a5f3dd96ca3168af4700d0ccb5784d466528ea30b2ef39316af040f2d6"
+    },
+    {
+      "tag": "aagg",
+      "type": "para",
+      "sha256": "e94c46a5f3dd96ca3168af4700d0ccb5784d466528ea30b2ef39316af040f2d6"
+    }
+  ]
+}

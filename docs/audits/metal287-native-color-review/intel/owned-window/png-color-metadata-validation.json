@@ -1,0 +1,29 @@
+{
+  "chunks": [
+    {
+      "kind": "IHDR",
+      "bytes": 13
+    },
+    {
+      "kind": "iCCP",
+      "bytes": 2740,
+      "name": "ICC Profile",
+      "icc_bytes": 3368,
+      "icc_color_space": "RGB ",
+      "icc_PCS": "XYZ "
+    },
+    {
+      "kind": "eXIf",
+      "bytes": 56
+    },
+    {
+      "kind": "IDAT",
+      "bytes": 12536
+    },
+    {
+      "kind": "IEND",
+      "bytes": 0
+    }
+  ],
+  "strict_pixel_verdict_unchanged": true
+}

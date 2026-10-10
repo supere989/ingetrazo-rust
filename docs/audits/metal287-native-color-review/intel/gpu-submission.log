@@ -1,0 +1,2 @@
+Native Metal submission device Apple Paravirtual device; unified false; runner hardware must be classified separately
+PASS native Metal GPU fill/17MiB BLIT/readback every byte; actual completion retirement; partial admission rollback; zero-deadline unknown retention and poison; unknown Drop ledger retained. Zero-deadline control is not driver-stall proof. Rendering/physical hardware/RT remain OPEN

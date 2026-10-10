@@ -1,0 +1,119 @@
+{
+  "image_sha256": "5bcc4dfac1b5647ae70ae356d4e0359c123d934ccfc3897e9329b4aca41a35f9",
+  "chunks": [
+    {
+      "kind": "IHDR",
+      "bytes": 13
+    },
+    {
+      "kind": "iCCP",
+      "bytes": 2715
+    },
+    {
+      "kind": "eXIf",
+      "bytes": 56
+    },
+    {
+      "kind": "IDAT",
+      "bytes": 16222
+    },
+    {
+      "kind": "IEND",
+      "bytes": 0
+    }
+  ],
+  "icc": {
+    "name": "ICC Profile",
+    "bytes": 3312,
+    "sha256": "c345429b8e90712af703e5d26d6124310db9d95470800fe4d831410cb4da894c",
+    "color_space": "RGB ",
+    "PCS": "XYZ ",
+    "tags": [
+      {
+        "tag": "desc",
+        "type": "desc",
+        "sha256": "39da5ae42f6a6a7f40c11c52c5b9ea9d7267c2a5636b770651515c1bc5606f07"
+      },
+      {
+        "tag": "dscm",
+        "type": "mluc",
+        "sha256": "318a6252becc3f3c5354fa907240c948439205e0c8361d0f496a6591233254c9",
+        "descriptions": [
+          "Apple Virtual"
+        ]
+      },
+      {
+        "tag": "cprt",
+        "type": "text",
+        "sha256": "5aba2fc3c99a03049f4322899f987cc8d298a5ef9ee03dd325a9a6a6f587d280"
+      },
+      {
+        "tag": "wtpt",
+        "type": "XYZ ",
+        "sha256": "1e71f1c8abc06d2b50ca9e7ca94eb83ee90244285cd49456a964dd9ea769969e"
+      },
+      {
+        "tag": "rXYZ",
+        "type": "XYZ ",
+        "sha256": "3b654323909a8a5f475a602b53e548e047f7696e56017d922ce9aa8836c086a1"
+      },
+      {
+        "tag": "gXYZ",
+        "type": "XYZ ",
+        "sha256": "5d5a5e7fdfafcdca9e880fa6e144f37accf18d4ff02fcf34fd9a5257246ac48d"
+      },
+      {
+        "tag": "bXYZ",
+        "type": "XYZ ",
+        "sha256": "1b40979029b34353fa7c8575b4c6f3984081a8b996a67b63b3ac24966caf0557"
+      },
+      {
+        "tag": "rTRC",
+        "type": "curv",
+        "sha256": "0f5ec48cc8d86e2a4dc54351a865f35cef203fb138c52392e96ee5b500c97834"
+      },
+      {
+        "tag": "aarg",
+        "type": "para",
+        "sha256": "e94c46a5f3dd96ca3168af4700d0ccb5784d466528ea30b2ef39316af040f2d6"
+      },
+      {
+        "tag": "vcgt",
+        "type": "vcgt",
+        "sha256": "6eb528fc073e366eba7ecf01c4cd727aa6ae30a09a92b130ae01de8c6acc4d8e"
+      },
+      {
+        "tag": "ndin",
+        "type": "ndin",
+        "sha256": "ce845ef9eb813a94b4f222355d2b45b40bda4bfb4629d03c2d14135fdc1c763f"
+      },
+      {
+        "tag": "vcgp",
+        "type": "vcgp",
+        "sha256": "e67b6d2b3ab61f4b353aee57d6b24ce3da165611fa3c918b3050805da4187b90"
+      },
+      {
+        "tag": "bTRC",
+        "type": "curv",
+        "sha256": "0f5ec48cc8d86e2a4dc54351a865f35cef203fb138c52392e96ee5b500c97834"
+      },
+      {
+        "tag": "gTRC",
+        "type": "curv",
+        "sha256": "0f5ec48cc8d86e2a4dc54351a865f35cef203fb138c52392e96ee5b500c97834"
+      },
+      {
+        "tag": "aabg",
+        "type": "para",
+        "sha256": "e94c46a5f3dd96ca3168af4700d0ccb5784d466528ea30b2ef39316af040f2d6"
+      },
+      {
+        "tag": "aagg",
+        "type": "para",
+        "sha256": "e94c46a5f3dd96ca3168af4700d0ccb5784d466528ea30b2ef39316af040f2d6"
+      }
+    ]
+  },
+  "color_conversion_performed": false,
+  "strict_pixel_verdict_unchanged": true
+}
