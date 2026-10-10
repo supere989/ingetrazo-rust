@@ -1,0 +1,18 @@
+{
+  "source_hashes": {
+    "callback": "61b4a50ef2a59ee789ae080225d229254653871bb9f1b93ba71ec3757f6cd44f",
+    "event_loop": "c538c57419a311e335842f18e55d3e1ba4d493fa88c111d3e956ef81458f0c89",
+    "launch": "cb346eda09cfb7ddb4941fead441e3242eec0c64639a621e7f3116702531b7a4",
+    "observers": "c4b1a7e129237924d6f2f20eed2e66d1d9c111b267d2bf1556bec85accc509b4"
+  },
+  "callback_ABI": "objc2-metal0.3.2 MTLDrawablePresentedHandler is DynBlock Fn(NonNull ProtocolObject MTLDrawable), exactly both Rust blocks. Some actual ARM callbacks fired with zero time, not evidence of universal ABI failure. No actual native header mismatch identified.",
+  "queue_flush": "Both call presentDrawable before command.commit; Metal schedules presentation through command queue. Completed GPU command status proves submission executed; no evidence of missing explicit queue flush.",
+  "apple_links": [
+    "https://developer.apple.com/documentation/metal/mtldrawable/presentedtime",
+    "https://developer.apple.com/documentation/Metal/MTLCommandBuffer/present(_:)"
+  ],
+  "strict_contract": "Apple presentedTime0 means unpresented or dropped; preserve positive gate.",
+  "runloop": "winit event_loop.rs299 calls actual NSApplication.run. app_state.rs106..139 configures Regular activation for unbundled apps and activates. observer.rs before/after-wait observers/waker remain common to both controls. Framework830 draw callbacks prove runtime loop did run.",
+  "next_discriminating_boundary": "If further diagnostic authorized, remove winit ApplicationDelegate, CFRunLoop observers/waker and winit window creation together using native NSApplication/NSWindow/MTKView, same device and strict callback ownership. Merely calling NSApplication.run again does not discriminate. Record application activation,screen and callback states; no production fallback.",
+  "status": "No concrete shared source defect proven; no speculative production change or new cloud dispatch. ARM native positive presentation remains required."
+}

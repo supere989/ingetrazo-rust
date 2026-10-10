@@ -1,0 +1,69 @@
+{
+  "run_id": 38096096481,
+  "artifact_id": 11685084908,
+  "zip_sha256": "00a6c5ca58f6cc31529d36b3b21d3bdeabb1880ebdac29bb680247337d597379",
+  "independent_checks": "ZIP SHA, revision, report SHA,positive callback/error/pending/device verified",
+  "actual_execution": {
+    "scope": "Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback",
+    "controls": {
+      "custom_presenter_control": {
+        "source_revision": "8f8c342da3f02e777e6e778bcc76bb1efa474b14",
+        "binary_sha256": "834cec3474a997424f560261f26a61148394cd7672b5a41ef7dea1aabd9a419c",
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": true,
+        "exit_code": 0,
+        "elapsed_seconds": 5.262180304999674,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "d391e28269847187535f54c2b8ece4647e74a38719507616f32f1c2862b996fd",
+        "fixture": {
+          "passed": true,
+          "error": null,
+          "scope": "Production custom direct-clear presenter diagnostic only",
+          "device": "Apple Paravirtual device",
+          "device_registry_id": 4294968034,
+          "queue_device": 4294968034,
+          "submitted": 6,
+          "retired": 6,
+          "pending": 0,
+          "displayed": 4,
+          "skipped": 2,
+          "diagnostics": "appkit=Some(\"number=27 visible=true active_space=true occlusion=NSWindowOcclusionState(8194) screen=Some(\\\"name=Built-in Display backing_scale=1 max_fps=35 refresh_min=0.028305766 refresh_max=0.028305766 frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1920.0, height: 1080.0 } }\\\")\"); extent=(800, 600); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; hidden=false; drawable_size=CGSize { width: 800.0, height: 600.0 }; presentsWithTransaction=false; displaySyncEnabled=true; device_id=4294968034; preferred_device=Some((4294968034, \"Apple Paravirtual device\")); submitted=6; retired=6; displayed=4; skipped=2; frames=[]"
+        }
+      },
+      "metalkit_presenter_control": {
+        "source_revision": "8f8c342da3f02e777e6e778bcc76bb1efa474b14",
+        "binary_sha256": "f7676496926d60dd9df162d6b3e67fe02c27be8a28ef4f946af142042502c31e",
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": true,
+        "exit_code": 0,
+        "elapsed_seconds": 1.4448019950000344,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "cdd27445d82b1b670414d5f1c0d8172a7c374924c4d58fd8972d74216736c00f",
+        "fixture": {
+          "passed": true,
+          "scope": "Native MTKView hosting/timed delegate control; no production or physical-Mac acceptance",
+          "device": "Apple Paravirtual device",
+          "device_registry_id": 4294968034,
+          "queue_device": 4294968034,
+          "draw_calls": 4,
+          "submitted": 4,
+          "displayed": 3,
+          "skipped": 1,
+          "pending": 0,
+          "no_drawable": 0,
+          "error": null,
+          "framework_timed_updates": true,
+          "framework_current_drawable": true,
+          "window_visible": true,
+          "layer_device": 4294968034,
+          "frames": []
+        }
+      }
+    },
+    "same_device": true,
+    "passed": true
+  },
+  "classification": "Intel custom and framework controls PASS strict callbacks on same runner/session/device; ARM pair fails. Bounded cloud lifecycle proof only, not physical Mac/platform acceptance."
+}
