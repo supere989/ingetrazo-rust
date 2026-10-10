@@ -55,6 +55,9 @@ def main():
                 report['native_window_color_space']=object_description(send(native,'colorSpace',ctypes.c_void_p))
                 # Qt6.12 QCocoaBackingStore::colorSpace uses its QNSView's own colorSpace.
                 report['native_qnsview_effective_color_space']=object_description(send(view,'colorSpace',ctypes.c_void_p))
+                requested=widget.windowHandle().format().colorSpace()
+                report['qt_surface_color_space_valid']=requested.isValid()
+                report['qt_surface_color_space_description']=requested.description()
                 report['native_view_layer_class']=objc.object_getClassName(layer).decode() if layer else 'nil'
                 report['native_view_layer_contents_format']=object_description(send(layer,'contentsFormat',ctypes.c_void_p)) if layer else 'nil'
                 report.update(qt=qVersion(),owned_nswindow_id=number,owned_nsview_class=name,actual_QPainter=True,paint_events=widget.paints,raw_source_rgba=[20,51,89,255],raw_source_sha256=hashlib.sha256(raw).hexdigest())
