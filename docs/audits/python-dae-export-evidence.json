@@ -1,0 +1,23 @@
+{
+  "provenance": {
+    "rust_commit": "3816e3090afd5816fab7cc4d756775c1204acb60",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 1,
+  "xml_decoded": {
+    "area": 12.0,
+    "triangles": 8,
+    "negative_z_winding": 0,
+    "errors": []
+  },
+  "original_reopened": {
+    "area": 12.0,
+    "triangles": 8,
+    "negative_z_winding": 8,
+    "errors": []
+  },
+  "scope": "COLLADA Z-up metre accessor/index/normal integrity and nested reflected visible holed surface world geometry; original DAE load and OBJ spatial reopen. Original DAE loader flips this open planar surface to -Z during its orient pass; source XML independently retains +Z normals/winding, while original reopening checks spatial geometry. Materials/textures/geolocation and full DAE import remain open."
+}
