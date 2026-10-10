@@ -37,3 +37,27 @@ fn standalone_holed_profile_creates_caps_and_inner_walls() {
 fn nonfinite_distance_is_rejected_atomically() {
     for distance in [f64::NAN,f64::INFINITY,f64::NEG_INFINITY] {let mut scene=Scene::new();scene.mesh=cube();let before=serde_json::to_value(&scene).unwrap();assert!(PushPullTool::extrude_face(&mut scene,1,distance).is_err());assert_eq!(serde_json::to_value(&scene).unwrap(),before);}
 }
+#[test]
+fn embedded_pocket_and_through_cut_have_analytic_removed_volume() {
+    for (distance,expected) in [(-0.5,0.875),(-1.,0.75)] {
+        let mut scene=Scene::new();scene.mesh=cube();
+        let inside=[[0.25,0.25,1.],[0.75,0.25,1.],[0.75,0.75,1.],[0.25,0.75,1.]].map(|p|scene.mesh.add_vertex(DVec3::from_array(p)));
+        scene.mesh.faces[1].holes.push(inside.to_vec());scene.mesh.add_face(inside.to_vec(),vec![]).unwrap();
+        PushPullTool::extrude_face(&mut scene,6,distance).unwrap();
+        let ring_volume=|ring:&Vec<usize>| {let a=scene.mesh.vertices[ring[0]].position;(1..ring.len()-1).map(|i|a.dot(scene.mesh.vertices[ring[i]].position.cross(scene.mesh.vertices[ring[i+1]].position))/6.).sum::<f64>()};
+        let actual=scene.mesh.faces.iter().map(|f|{let v=ring_volume(&f.vertices);v-f.holes.iter().map(|h|v.signum()*ring_volume(h).abs()).sum::<f64>()}).sum::<f64>().abs();
+        assert!((actual-expected).abs()<1e-8,"expected pocket/through-cut volume {expected}, got {actual}");
+        // A through-cut must leave no cap anywhere inside its column.
+        if distance==-1. {assert!(!scene.mesh.faces.iter().any(|f|f.holes.is_empty() && f.vertices.iter().all(|&v|{let p=scene.mesh.vertices[v].position;p.x>=0.25&&p.x<=0.75&&p.y>=0.25&&p.y<=0.75&& (p.z.abs()<1e-8||(p.z-1.).abs()<1e-8)})),"through cut retained cap");}
+    }
+}
+#[test]
+fn attached_edit_preserves_unrelated_solid_and_loose_wire_metadata() {
+    let mut scene=Scene::new();scene.mesh=cube();
+    let wire_a=scene.mesh.add_vertex(DVec3::new(10.,0.,0.));let wire_b=scene.mesh.add_vertex(DVec3::new(11.,0.,0.));
+    let edge=scene.mesh.add_edge(wire_a,wire_b).unwrap();scene.mesh.edges[edge].attrs.insert("audit_wire".into(),serde_json::json!(37));
+    let unrelated=cube();for f in &unrelated.faces {let ids=f.vertices.iter().map(|&v|scene.mesh.add_vertex(unrelated.vertices[v].position+DVec3::new(20.,0.,0.))).collect();let face=scene.mesh.add_face(ids,vec![]).unwrap();scene.mesh.faces[face].attrs.insert("audit_other".into(),serde_json::json!(41));}
+    PushPullTool::extrude_face(&mut scene,1,-0.5).unwrap();
+    assert!(scene.mesh.edges.iter().any(|e|e.attrs.get("audit_wire")==Some(&serde_json::json!(37))&&scene.mesh.vertices[e.v0].position.x==10.&&scene.mesh.vertices[e.v1].position.x==11.),"unrelated wire disappeared");
+    assert_eq!(scene.mesh.faces.iter().filter(|f|f.attrs.get("audit_other")==Some(&serde_json::json!(41))).count(),6,"unrelated solid geometry/attributes changed");
+}
