@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
-
+//! Face partitions and selected/picked planar edge-run offsets.
+use crate::base::{pick_edge, pick_face, Tool, ToolContext, ToolType};
 use glam::DVec3;
-use ingetrazo_core::scene::Scene;
-
-use crate::base::{pick_face, Tool, ToolContext, ToolType};
-
-/// Interactive Offset tool for parallel offsets of face perimeters.
+use ingetrazo_core::{
+    math::newell_vector,
+    mesh::Mesh,
+    scene::{Scene, SelectionItem},
+};
 #[derive(Debug, Default, Clone)]
 pub struct OffsetTool {
     pub hovered_face: Option<usize>,
@@ -14,161 +14,301 @@ pub struct OffsetTool {
     pub start_point: Option<DVec3>,
     pub offset_distance: f64,
     pub is_dragging: bool,
+    hovered_edge: Option<usize>,
+    run: Vec<DVec3>,
+    normal: DVec3,
+    closed: bool,
+    armed: bool,
+    reference: Option<(DVec3, DVec3)>,
+    error: Option<String>,
 }
-
 impl OffsetTool {
     pub fn new() -> Self {
         Self::default()
     }
-
     pub fn reset(&mut self) {
-        self.hovered_face = None;
-        self.selected_face = None;
-        self.start_point = None;
-        self.offset_distance = 0.0;
-        self.is_dragging = false;
+        *self = Self::default();
     }
-
-    /// Parallel offset of a planar polygon loop by signed distance `dist` (positive = inward).
     pub fn offset_polygon(points: &[DVec3], normal: DVec3, dist: f64) -> Option<Vec<DVec3>> {
-        let n = points.len();
-        if n < 3 || dist.abs() < 1e-9 {
-            return None;
+        let regions = ingetrazo_core::offset::offset_regions(points, normal, dist).ok()?;
+        if regions.len() == 1 {
+            Some(regions[0].outer.clone())
+        } else {
+            None
         }
-
-        // Edge directions and in-plane inward normals
-        let mut edge_dirs = Vec::with_capacity(n);
-        let mut edge_inwards = Vec::with_capacity(n);
-
-        for i in 0..n {
-            let next_i = (i + 1) % n;
-            let dir = (points[next_i] - points[i]).normalize_or_zero();
-            let inward = normal.cross(dir).normalize_or_zero();
-            edge_dirs.push(dir);
-            edge_inwards.push(inward);
-        }
-
-        let mut offset_pts = Vec::with_capacity(n);
-
-        for i in 0..n {
-            let prev_i = (i + n - 1) % n;
-            // Shifted line 1: passes through p_prev_shifted with dir1
-            let p1 = points[prev_i] + edge_inwards[prev_i] * dist;
-            let d1 = edge_dirs[prev_i];
-
-            // Shifted line 2: passes through p2 with dir2
-            let p2 = points[i] + edge_inwards[i] * dist;
-            let d2 = edge_dirs[i];
-
-            // Intersect 2 lines in plane: p1 + s * d1 = p2 + t * d2
-            let perp2 = d2.cross(normal);
-            let denom = d1.dot(perp2);
-
-            if denom.abs() < 1e-6 {
-                offset_pts.push(points[i] + edge_inwards[i] * dist);
-            } else {
-                let s = (p2 - p1).dot(perp2) / denom;
-                offset_pts.push(p1 + d1 * s);
-            }
-        }
-
-        Some(offset_pts)
     }
-
-    /// Apply offset loop to the selected face in `scene`.
     pub fn apply_offset(scene: &mut Scene, face_id: usize, dist: f64) -> Result<(), String> {
         let result = ingetrazo_core::offset::offset_face(&scene.mesh, face_id, dist)?;
         scene.mesh = result;
         scene.bump_version();
         Ok(())
     }
+    fn take_run(&mut self, mesh: &Mesh, ids: &[usize]) -> Result<(), String> {
+        let (points, closed) = crate::followme::order_path_edges(mesh, ids)?;
+        let normal = newell_vector(&points).normalize_or_zero();
+        if normal.length_squared() < 0.5 {
+            return Err("Offset needs connected edges that are not in a straight line".into());
+        }
+        // Reuse the validated chain API for coplanarity even for closed runs.
+        ingetrazo_core::offset::offset_chain(&points, normal, 0.)?;
+        self.run = points;
+        self.normal = normal;
+        self.closed = closed;
+        self.selected_face = None;
+        Ok(())
+    }
+    fn picked_run(mesh: &Mesh, id: usize) -> Result<Vec<usize>, String> {
+        let seed = mesh.edges.get(id).ok_or("Invalid Offset edge")?;
+        let mut out = vec![id];
+        let mut seen = std::collections::HashSet::from([id]);
+        for start in [seed.v0, seed.v1] {
+            let mut v = start;
+            let mut previous = id;
+            loop {
+                let adjacent: Vec<_> = mesh
+                    .edges
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, e)| e.v0 == v || e.v1 == v)
+                    .map(|(i, _)| i)
+                    .collect();
+                if adjacent.len() != 2 {
+                    break;
+                }
+                let next = *adjacent.iter().find(|&&i| i != previous).unwrap();
+                if !seen.insert(next) {
+                    break;
+                }
+                out.push(next);
+                let e = &mesh.edges[next];
+                v = if e.v0 == v { e.v1 } else { e.v0 };
+                previous = next;
+            }
+        }
+        Ok(out)
+    }
+    fn start(&mut self, scene: &Scene, ctx: &ToolContext) -> Result<(), String> {
+        if self.armed {
+            self.armed = false;
+        } else if let Some(id) = self
+            .hovered_face
+            .or_else(|| pick_face(&scene.mesh, &ctx.ray).map(|p| p.0))
+        {
+            let face = &scene.mesh.faces[id];
+            self.run = face
+                .vertices
+                .iter()
+                .map(|&v| scene.mesh.vertices[v].position)
+                .collect();
+            self.normal = scene.mesh.face_normal(id);
+            self.closed = true;
+            self.selected_face = Some(id);
+        } else if let Some(id) = self
+            .hovered_edge
+            .or_else(|| pick_edge(&scene.mesh, &ctx.ray, 0.2))
+        {
+            self.take_run(&scene.mesh, &Self::picked_run(&scene.mesh, id)?)?;
+        } else {
+            return Err("Click a face or connected edges to offset".into());
+        }
+        let count = if self.closed {
+            self.run.len()
+        } else {
+            self.run.len() - 1
+        };
+        let closest = (0..count)
+            .map(|i| {
+                let a = self.run[i];
+                let b = self.run[(i + 1) % self.run.len()];
+                let dir = (b - a).normalize();
+                let t = (ctx.world - a).dot(dir).clamp(0., (b - a).length());
+                let p = a + dir * t;
+                (
+                    (ctx.world - p).length_squared(),
+                    p,
+                    self.normal.cross(dir).normalize(),
+                )
+            })
+            .min_by(|a, b| a.0.total_cmp(&b.0))
+            .ok_or("No offset boundary")?;
+        self.reference = Some((closest.1, closest.2));
+        self.start_point = Some(ctx.world);
+        self.offset_distance = 0.;
+        self.is_dragging = true;
+        self.error = None;
+        Ok(())
+    }
+    fn commit(&mut self, scene: &mut Scene) -> Result<(), String> {
+        if !self.offset_distance.is_finite() || self.offset_distance.abs() < 1e-9 {
+            return Err("Offset distance must be finite and nonzero".into());
+        }
+        if let Some(id) = self.selected_face {
+            Self::apply_offset(scene, id, self.offset_distance)?;
+        } else {
+            let runs: Vec<Vec<DVec3>> = if self.closed {
+                let regions = ingetrazo_core::offset::offset_regions(
+                    &self.run,
+                    self.normal,
+                    self.offset_distance,
+                )?;
+                if regions.is_empty() {
+                    return Err("This distance consumes the run; use a smaller offset".into());
+                }
+                regions.into_iter().map(|r| r.outer).collect()
+            } else {
+                vec![ingetrazo_core::offset::offset_chain(
+                    &self.run,
+                    self.normal,
+                    self.offset_distance,
+                )?]
+            };
+            let mut candidate = scene.mesh.clone();
+            for r in runs {
+                let count = if self.closed { r.len() } else { r.len() - 1 };
+                for i in 0..count {
+                    let a = candidate.add_vertex(r[i]);
+                    let b = candidate.add_vertex(r[(i + 1) % r.len()]);
+                    candidate
+                        .add_edge(a, b)
+                        .ok_or("Offset edge collapsed at document precision")?;
+                }
+            }
+            // Detect faces and split crossings only on this run's plane.
+            let selected: Vec<_> = candidate
+                .faces
+                .iter()
+                .enumerate()
+                .filter(|(_, f)| {
+                    f.vertices.iter().all(|&v| {
+                        (candidate.vertices[v].position - self.run[0])
+                            .dot(self.normal)
+                            .abs()
+                            < 1e-6
+                    })
+                })
+                .map(|(i, _)| i)
+                .collect();
+            if !selected.is_empty() || candidate.faces.is_empty() {
+                candidate = ingetrazo_core::planar::rebuild_faces(&candidate, &selected)?;
+            }
+            ingetrazo_core::planar::validate_mesh(&candidate)?;
+            scene.mesh = candidate;
+            scene.bump_version();
+        }
+        self.reset();
+        Ok(())
+    }
 }
-
 impl Tool for OffsetTool {
     fn tool_type(&self) -> ToolType {
         ToolType::Offset
     }
-
     fn name(&self) -> &'static str {
         "Offset"
     }
-
     fn shortcut(&self) -> Option<&'static str> {
         Some("F")
     }
-
     fn description(&self) -> &'static str {
-        "Draw a copy of a face's outline at an even distance inside or outside it."
+        "Offset a face boundary or connected planar edges."
     }
-
     fn vcb_label(&self) -> &'static str {
         "Offset"
     }
-
-    fn on_activate(&mut self, _scene: &mut Scene) {
+    fn error_message(&self) -> Option<&str> {
+        self.error.as_deref()
+    }
+    fn on_activate(&mut self, scene: &mut Scene) {
         self.reset();
-    }
-
-    fn on_deactivate(&mut self, _scene: &mut Scene) {
-        self.reset();
-    }
-
-    fn on_cancel(&mut self, _scene: &mut Scene) {
-        self.reset();
-    }
-
-    fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if !self.is_dragging {
-            self.hovered_face = pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id);
-        } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
-            let in_plane_delta = ctx.world - start;
-            let dist = in_plane_delta.length();
-            let centroid = scene.mesh.face_centroid(face_id);
-            let sign = if (ctx.world - centroid).length() < (start - centroid).length() {
-                1.0
-            } else {
-                -1.0
-            };
-            self.offset_distance = dist * sign;
-        }
-    }
-
-    fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if !self.is_dragging {
-            let face_pick = self
-                .hovered_face
-                .or_else(|| pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id));
-
-            if let Some(face_id) = face_pick {
-                self.selected_face = Some(face_id);
-                self.start_point = Some(ctx.world);
-                self.is_dragging = true;
-                self.offset_distance = 0.0;
+        let mut ids: Vec<_> = scene
+            .selection
+            .iter()
+            .filter_map(|s| {
+                if let SelectionItem::Edge(i) = s {
+                    Some(*i)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        ids.sort_unstable();
+        if ids.len() >= 2 && ids.len() == scene.selection.len() {
+            match self.take_run(&scene.mesh, &ids) {
+                Ok(()) => self.armed = true,
+                Err(e) => self.error = Some(e),
             }
-        } else if let Some(face_id) = self.selected_face {
-            let dist = self.offset_distance;
-            let _ = Self::apply_offset(scene, face_id, dist);
-            self.reset();
         }
     }
-
-    fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let dist: f64 = text.trim().parse().map_err(|e| format!("Invalid offset distance: {e}"))?;
-
-        if let Some(face_id) = self.selected_face {
-            Self::apply_offset(scene, face_id, dist)?;
-            self.reset();
-            Ok(())
-        } else if let Some(face_id) = self.hovered_face {
-            Self::apply_offset(scene, face_id, dist)?;
-            self.reset();
-            Ok(())
-        } else {
-            Err("No face selected for Offset".into())
+    fn on_deactivate(&mut self, _: &mut Scene) {
+        self.reset();
+    }
+    fn on_cancel(&mut self, _: &mut Scene) {
+        self.reset();
+    }
+    fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        if self.is_dragging {
+            if let Some((p, n)) = self.reference {
+                self.offset_distance = (ctx.world - p).dot(n);
+            }
+        } else if !self.armed {
+            self.hovered_face = pick_face(&scene.mesh, &ctx.ray).map(|p| p.0);
+            self.hovered_edge = if self.hovered_face.is_none() {
+                pick_edge(&scene.mesh, &ctx.ray, 0.2)
+            } else {
+                None
+            };
         }
+    }
+    fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        let result = if self.is_dragging {
+            self.commit(scene)
+        } else {
+            self.start(scene, ctx)
+        };
+        if let Err(e) = result {
+            self.error = Some(e);
+        }
+    }
+    fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
+        let d: f64 = text.trim().parse().map_err(|_| "Invalid Offset distance")?;
+        if !d.is_finite() || d <= 0. {
+            return Err("Enter a finite positive Offset distance".into());
+        }
+        if !self.is_dragging {
+            return Err("Click to start the offset before entering a distance".into());
+        }
+        self.offset_distance = if self.offset_distance < 0. { -d } else { d };
+        let result = self.commit(scene);
+        if let Err(e) = &result {
+            self.error = Some(e.clone());
+        }
+        result
+    }
+    fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
+        if !self.is_dragging || self.offset_distance.abs() < 1e-9 {
+            return vec![];
+        }
+        let loops = if self.closed {
+            ingetrazo_core::offset::offset_regions(&self.run, self.normal, self.offset_distance)
+                .map(|rs| rs.into_iter().map(|r| r.outer).collect::<Vec<_>>())
+        } else {
+            ingetrazo_core::offset::offset_chain(&self.run, self.normal, self.offset_distance)
+                .map(|r| vec![r])
+        };
+        loops
+            .unwrap_or_default()
+            .iter()
+            .flat_map(|r| {
+                let count = if self.closed {
+                    r.len()
+                } else {
+                    r.len().saturating_sub(1)
+                };
+                (0..count).map(move |i| (r[i], r[(i + 1) % r.len()]))
+            })
+            .collect()
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -199,5 +339,88 @@ mod tests {
         let inner_face_id = 1;
         let inner_area = scene.mesh.face_area(inner_face_id);
         assert!((inner_area - 64.0).abs() < 1e-4);
+    }
+    #[test]
+    fn selected_chain_preview_cancel_and_outward_positive_vcb() {
+        use ingetrazo_core::scene::SelectionItem;
+        let mut scene = Scene::new();
+        let ids: Vec<_> = [
+            DVec3::ZERO,
+            DVec3::new(10., 0., 0.),
+            DVec3::new(10., 10., 0.),
+        ]
+        .into_iter()
+        .map(|p| scene.mesh.add_vertex(p))
+        .collect();
+        for pair in ids.windows(2) {
+            let e = scene.mesh.add_edge(pair[0], pair[1]).unwrap();
+            scene.select(SelectionItem::Edge(e));
+        }
+        let before = scene.mesh.clone();
+        let mut tool = OffsetTool::new();
+        tool.on_activate(&mut scene);
+        assert!(tool.armed);
+        let ctx = ToolContext::new(
+            DVec3::new(5., 0., 0.),
+            Ray::new(DVec3::new(5., 0., 5.), -DVec3::Z),
+        );
+        tool.on_click(&mut scene, &ctx);
+        let moved = ToolContext::new(DVec3::new(7., -1., 0.), ctx.ray.clone());
+        tool.on_move(&mut scene, &moved);
+        assert_eq!(tool.offset_distance, -1.);
+        assert_eq!(tool.rubber_band_lines().len(), 2);
+        assert_eq!(scene.mesh, before);
+        tool.on_cancel(&mut scene);
+        assert_eq!(scene.mesh, before);
+        tool.on_activate(&mut scene);
+        tool.on_click(&mut scene, &ctx);
+        tool.on_move(&mut scene, &moved);
+        tool.on_vcb_input(&mut scene, "2").unwrap();
+        assert!(scene
+            .mesh
+            .vertices
+            .iter()
+            .any(|v| v.position.distance(DVec3::new(0., -2., 0.)) < 1e-8));
+        assert_eq!(scene.mesh.edges.len(), 4);
+        assert_eq!(scene.mesh.faces.len(), 0);
+    }
+    #[test]
+    fn straight_run_reports_failure_without_mutating_and_drag_is_perpendicular() {
+        let mut scene = Scene::new();
+        let a = scene.mesh.add_vertex(DVec3::ZERO);
+        let b = scene.mesh.add_vertex(DVec3::X);
+        let c = scene.mesh.add_vertex(DVec3::X * 2.);
+        for (a, b) in [(a, b), (b, c)] {
+            let e = scene.mesh.add_edge(a, b).unwrap();
+            scene.select(SelectionItem::Edge(e));
+        }
+        let before = scene.mesh.clone();
+        let mut tool = OffsetTool::new();
+        tool.on_activate(&mut scene);
+        assert!(tool.error_message().is_some());
+        assert_eq!(scene.mesh, before);
+        let mut scene = Scene::new();
+        let ids = [
+            DVec3::ZERO,
+            DVec3::X * 10.,
+            DVec3::new(10., 10., 0.),
+            DVec3::Y * 10.,
+        ]
+        .into_iter()
+        .map(|p| scene.mesh.add_vertex(p))
+        .collect();
+        scene.mesh.add_face(ids, vec![]);
+        let click = ToolContext::new(
+            DVec3::new(3., 0., 0.),
+            Ray::new(DVec3::new(3., 0., 5.), -DVec3::Z),
+        );
+        tool.reset();
+        tool.on_click(&mut scene, &click);
+        let moved = ToolContext::new(DVec3::new(8., 1., 0.), click.ray.clone());
+        tool.on_move(&mut scene, &moved);
+        assert_eq!(tool.offset_distance, 1.);
+        let before = scene.mesh.clone();
+        assert!(tool.on_vcb_input(&mut scene, "NaN").is_err());
+        assert_eq!(scene.mesh, before);
     }
 }

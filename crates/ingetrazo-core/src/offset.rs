@@ -227,7 +227,59 @@ pub fn offset_face(mesh: &Mesh, face_id: usize, d: f64) -> Result<Mesh, String> 
         planar::add_face(&mut out, &rings, source)?;
     }
     planar::preserve_edges(&mut out, mesh);
-    let out = planar::stitch(&out)?;
+    let mut out = planar::stitch(&out)?;
+    // One-to-one curve identity is mirrored only while every original corner
+    // survives, exactly the original tool's curve tagging boundary.
+    if regions.len() == 1 && regions[0].outer.len() == source_rings[0].len() {
+        let mut next = mesh
+            .edges
+            .iter()
+            .filter_map(|e| e.curve_id)
+            .max()
+            .map_or(0, |x| x + 1);
+        let mut curves = std::collections::BTreeMap::new();
+        for edge in &mut out.edges {
+            let a = out.vertices[edge.v0].position;
+            let b = out.vertices[edge.v1].position;
+            if !regions[0].outer.iter().any(|p| p.distance(a) < 1e-6)
+                || !regions[0].outer.iter().any(|p| p.distance(b) < 1e-6)
+            {
+                continue;
+            }
+            let dir = (b - a).normalize_or_zero();
+            for i in 0..source.vertices.len() {
+                let v0 = source.vertices[i];
+                let v1 = source.vertices[(i + 1) % source.vertices.len()];
+                let x = mesh.vertices[v0].position;
+                let y = mesh.vertices[v1].position;
+                let sd = (y - x).normalize_or_zero();
+                if dir.dot(sd).abs() < 0.999999 {
+                    continue;
+                }
+                let shift = f.normal.cross(sd) * d;
+                if (a - x - shift).cross(sd).length() > 1e-6
+                    || (b - x - shift).cross(sd).length() > 1e-6
+                {
+                    continue;
+                }
+                if let Some(old) = mesh.find_edge(v0, v1).map(|id| &mesh.edges[id]) {
+                    edge.soft = old.soft;
+                    edge.layer = old.layer.clone();
+                    edge.hidden = old.hidden;
+                    edge.attrs = old.attrs.clone();
+                    edge.curve_id = old.curve_id.map(|id| {
+                        *curves.entry(id).or_insert_with(|| {
+                            let n = next;
+                            next += 1;
+                            n
+                        })
+                    });
+                }
+                break;
+            }
+        }
+    }
+    out.preserve_vertex_uids_from(mesh);
     planar::validate_mesh(&out)?;
     Ok(out)
 }
@@ -320,5 +372,41 @@ mod tests {
         let mut off = p.clone();
         off[2].z = 1.;
         assert!(offset_chain(&off, DVec3::Z, 1.).is_err());
+    }
+    #[test]
+    fn surviving_dimension_anchors_and_curve_tags_follow_the_offset() {
+        use crate::{dimensions::Dimension, scene::Scene};
+        let mut scene = Scene::new();
+        let ps = points(&[(0., 0.), (10., 0.), (10., 10.), (0., 10.)]);
+        let ids = ps.iter().map(|&p| scene.mesh.add_vertex(p)).collect();
+        scene.mesh.add_face(ids, vec![]);
+        for e in &mut scene.mesh.edges {
+            e.curve_id = Some(7);
+            e.soft = true;
+            e.attrs.insert("arc".into(), serde_json::json!("source"));
+        }
+        scene
+            .dimensions
+            .push(Dimension::new(DVec3::ZERO, DVec3::X * 10., DVec3::Y));
+        scene.bind_dimensions();
+        let held = scene.mesh.vertices[0].uid;
+        scene.mesh = offset_face(&scene.mesh, 0, 1.).unwrap();
+        let v = scene
+            .mesh
+            .vertices
+            .iter_mut()
+            .find(|v| v.uid == held)
+            .unwrap();
+        v.position.x += 0.5;
+        scene.refresh_dimensions();
+        assert_eq!(scene.dimensions[0].start.x, 0.5);
+        let curve: Vec<_> = scene
+            .mesh
+            .edges
+            .iter()
+            .filter(|e| e.curve_id == Some(8))
+            .collect();
+        assert_eq!(curve.len(), 4);
+        assert!(curve.iter().all(|e| e.soft && e.attrs["arc"] == "source"));
     }
 }

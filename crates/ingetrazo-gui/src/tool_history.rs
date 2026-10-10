@@ -134,6 +134,17 @@ mod tests {
     }
 
     #[test]
+    fn offset_preview_failure_cancel_and_success_have_transactional_history() {
+        let mut app=app();app.active_tool=create_tool(ToolType::Offset);app.active_tool_type=ToolType::Offset;
+        let before=app.scene.mesh.clone();let click=context(0.);
+        app.dispatch_tool_click(&click);assert!(app.undo_stack.is_empty());
+        assert!(app.dispatch_tool_vcb("NaN").is_err());assert_eq!(app.scene.mesh,before);assert!(app.undo_stack.is_empty());
+        app.active_tool.on_cancel(&mut app.scene);assert_eq!(app.scene.mesh,before);
+        app.dispatch_tool_click(&click);app.dispatch_tool_vcb("0.2").unwrap();assert_eq!(app.undo_stack.len(),1);let after=app.scene.mesh.clone();
+        app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,after);
+    }
+
+    #[test]
     fn click_and_vcb_pushpull_each_create_one_undo_commit() {
         for vcb in [false, true] {
             let mut app = app();
