@@ -1467,6 +1467,7 @@ dependencies = [
  "harfbuzz-sys",
  "image",
  "ingetrazo-core",
+ "libloading",
  "log",
  "pdf-writer",
  "roxmltree",
