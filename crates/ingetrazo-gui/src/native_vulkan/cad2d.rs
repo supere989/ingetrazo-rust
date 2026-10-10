@@ -1,4 +1,5 @@
 //! Inline precise encoded CAD paint; immutable buffers uploaded only on cache misses.
+pub mod arena;
 use super::{
     budget::VulkanBudget,
     resources::{BufferId, Resources},
@@ -37,6 +38,8 @@ struct Ready {
     id: u64,
     vertex: vk::Buffer,
     index: vk::Buffer,
+    first_index:u32,
+    base_vertex:i32,
     batches: Arc<[Batch]>,
     premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
@@ -150,7 +153,12 @@ impl VulkanPaint for NativePaint {
         }
         let s = self.state.lock().unwrap();
         let Some(r) = &s.ready else { return Ok(()) };
-        let p = self.pipeline.lock().unwrap();
+        let p=self.pipeline.lock().unwrap();
+        record_ready(info,device,command,&p,&self.counters,r.pose,std::iter::once(r))
+    }
+}
+fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::CommandBuffer,p:&Pipeline,counters:&Counters,pose:Pose,ready:impl Iterator<Item=&'a Ready>)->RendererResult<()>{
+
         if p.pipeline == vk::Pipeline::null() {
             return Err(egui_ash_renderer::RendererError::Init(
                 "CAD2D renderer was retired".into(),
@@ -166,15 +174,15 @@ impl VulkanPaint for NativePaint {
         if max.x <= min.x || max.y <= min.y {
             return Ok(());
         }
-        self.counters.callbacks.fetch_add(1, Ordering::Relaxed);
-        self.counters.binds.fetch_add(1, Ordering::Relaxed);
+        counters.callbacks.fetch_add(1, Ordering::Relaxed);
+
         let screen=[info.screen_size_px[0] as f32 / scale,info.screen_size_px[1] as f32 / scale];
         if screen.iter().any(|v|!v.is_finite()||*v<=0.){return Err(egui_ash_renderer::RendererError::Init("CAD2D logical screen is outside finite shader domain".into()));}
         let push = [
-            r.pose.scale[0],
-            r.pose.scale[1],
-            r.pose.translation[0],
-            r.pose.translation[1],
+            pose.scale[0],
+            pose.scale[1],
+            pose.translation[0],
+            pose.translation[1],
             screen[0],
             screen[1],
             0.,
@@ -208,8 +216,7 @@ impl VulkanPaint for NativePaint {
                     },
                 }],
             );
-            device.cmd_bind_vertex_buffers(command, 0, &[r.vertex], &[0]);
-            device.cmd_bind_index_buffer(command, r.index, 0, vk::IndexType::UINT32);
+
             if p.integer{let set=p.active_set.ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D input image not selected".into()))?;device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,p.layout,0,&[set],&[]);}
             device.cmd_push_constants(
                 command,
@@ -218,6 +225,10 @@ impl VulkanPaint for NativePaint {
                 0,
                 bytemuck::cast_slice(&push),
             );
+        }
+        let mut bound=None;
+        for r in ready { unsafe {
+            if bound!=Some((r.vertex,r.index)) {device.cmd_bind_vertex_buffers(command,0,&[r.vertex],&[0]);device.cmd_bind_index_buffer(command,r.index,0,vk::IndexType::UINT32);bound=Some((r.vertex,r.index));counters.binds.fetch_add(1,Ordering::Relaxed);}
             for (batch,rgba) in r.batches.iter().zip(r.premultiplied.iter()).filter(|(b,_)| b.count > 0) {
                 device.cmd_push_constants(
                     command,
@@ -231,14 +242,14 @@ impl VulkanPaint for NativePaint {
                     for range in ranges.iter().filter(|range|range.start>=batch.first&&range.end<=batch.first+batch.count){
                         let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
                         device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);
-                        device.cmd_draw_indexed(command,range.end-range.start,1,range.start,0,0);self.counters.draws.fetch_add(1,Ordering::Relaxed);
+                        device.cmd_draw_indexed(command,range.end-range.start,1,r.first_index+range.start,r.base_vertex,0);counters.draws.fetch_add(1,Ordering::Relaxed);
                     }
-                }else{device.cmd_draw_indexed(command, batch.count, 1, batch.first, 0, 0);self.counters.draws.fetch_add(1, Ordering::Relaxed);}
+                }else{device.cmd_draw_indexed(command, batch.count, 1, r.first_index+batch.first, r.base_vertex, 0);counters.draws.fetch_add(1, Ordering::Relaxed);}
             }
-        }
+        }        }
         Ok(())
-    }
 }
+
 fn prepare_palette(batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{batches.iter().map(|b|b.color.qt_premultiplied8()).collect::<Result<Vec<_>,_>>().map(Arc::from)}
 struct Cached {
     vertex: BufferId,
@@ -262,6 +273,7 @@ pub struct Renderer {
     rolled_back_buffers: u64,
     pipeline: Arc<Mutex<Pipeline>>,
     resources: Resources,
+    arena:arena::Gpu,
     cache: HashMap<u64, Cached>,
     active: HashSet<u64>,
     pending: HashMap<u64, Cached>,
@@ -306,6 +318,7 @@ impl Renderer {
             rolled_back_buffers: 0,
             pipeline: Arc::new(Mutex::new(Pipeline { pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
+            arena:Default::default(),
             cache: HashMap::new(),
             active: HashSet::new(),
             pending: HashMap::new(),
@@ -354,6 +367,7 @@ impl Renderer {
         pixels_per_point:f32,
     ) -> Result<(), String> {
         self.resources.collect(fence, completed)?;
+        self.arena.prepare(context,&mut self.resources,&self.pipeline,primitives,completed,next)?;
         self.active.clear();
         self.pending.clear();
         let result = (|| {
@@ -470,6 +484,7 @@ impl Renderer {
                     id,
                     vertex: self.resources.buffer(c.vertex).unwrap(),
                     index: self.resources.buffer(c.index).unwrap(),
+                    first_index:0,base_vertex:0,
                     batches: s.batches.clone(),
                     premultiplied:s.premultiplied.clone(),
                     pose: s.pose,
@@ -595,6 +610,7 @@ impl Renderer {
         eprintln!("PASS CAD2D actual vertex allocation/index budget denial/prior drawable/rollback/retry: {:?}",self.stats());
         Ok(())
     }
+    pub fn outline_arena_stats(&self)->serde_json::Value{serde_json::json!({"arena":self.arena.metrics(),"transfers":self.resources.stats,"callbacks":self.counters.callbacks.load(Ordering::Relaxed),"binds":self.counters.binds.load(Ordering::Relaxed),"draws":self.counters.draws.load(Ordering::Relaxed)})}
     pub fn stats(&self) -> Stats {
         Stats {
             callbacks: self.counters.callbacks.load(Ordering::Relaxed),

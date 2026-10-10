@@ -11,11 +11,12 @@ struct Page{bytes:u64,free:BTreeMap<u64,u64>}
 #[derive(Debug,Default,PartialEq,Eq)]pub struct Metrics{pub page_bytes:u64,pub pending_bytes:u64,pub published_bytes:u64,pub retired_bytes:u64}
 impl Planner{
  pub fn add_page(&mut self,id:u64,bytes:u64)->Result<(),String>{if bytes==0||self.pages.contains_key(&id){return Err("Invalid or duplicate arena page".into());}self.pages.insert(id,Page{bytes,free:BTreeMap::from([(0,bytes)])});Ok(())}
+ pub fn remove_empty_page(&mut self,id:u64)->Result<(),String>{if self.allocations.values().any(|a|a.range.page==id){return Err("Arena page still owns ranges".into());}self.pages.remove(&id).ok_or("Unknown arena page")?;Ok(())}
  pub fn reserve(&mut self,bytes:u64,alignment:u64)->Result<Option<Ticket>,String>{
-  if bytes==0||!alignment.is_power_of_two(){return Err("Arena reservation needs nonzero size/power-of-two alignment".into());}
+  if bytes==0||alignment==0{return Err("Arena reservation needs nonzero size/alignment".into());}
   let id=self.next.checked_add(1).ok_or("Arena ticket exhausted")?;
   let mut candidate=None;
-  for(&page,p)in &self.pages{for(&offset,&extent)in &p.free{let Some(start)=offset.checked_add(alignment-1).map(|v|v&!(alignment-1))else{continue;};let Some(end)=start.checked_add(bytes)else{continue;};if end<=offset+extent{candidate=Some((page,offset,extent,start,end));break;}}if candidate.is_some(){break;}}
+  for(&page,p)in &self.pages{for(&offset,&extent)in &p.free{let Some(start)=offset.checked_add(alignment-1).map(|v|v/alignment*alignment)else{continue;};let Some(end)=start.checked_add(bytes)else{continue;};if end<=offset+extent{candidate=Some((page,offset,extent,start,end));break;}}if candidate.is_some(){break;}}
   let Some((page,offset,extent,start,end))=candidate else{return Ok(None);};let p=self.pages.get_mut(&page).unwrap();p.free.remove(&offset);if start>offset{p.free.insert(offset,start-offset);}if end<offset+extent{p.free.insert(end,offset+extent-end);}
   let range=Range{page,offset:start,bytes};self.allocations.insert(id,Allocation{range,owner:Owner::Pending});self.next=id;Ok(Some(Ticket{id,range}))
  }
@@ -32,5 +33,7 @@ impl Planner{
 }
 #[cfg(test)]mod tests{use super::*;
  #[test]fn submitted_ranges_are_not_reused_before_real_completion(){let mut p=Planner::default();p.add_page(1,64).unwrap();let a=p.reserve(32,16).unwrap().unwrap();p.publish(a).unwrap();p.mark_used(a,7).unwrap();p.retire(a).unwrap();let b=p.reserve(32,16).unwrap().unwrap();assert_eq!(b.range.offset,32);assert!(p.reserve(1,1).unwrap().is_none());assert!(p.rollback(a).is_err());assert_eq!(p.collect(6).unwrap(),0);assert!(p.reserve(1,1).unwrap().is_none());assert_eq!(p.collect(7).unwrap(),1);let c=p.reserve(32,16).unwrap().unwrap();assert_eq!(c.range,a.range);assert_ne!(c.id,a.id);assert!(p.publish(a).is_err());}
- #[test]fn failed_candidates_rollback_without_touching_published_ranges(){let mut p=Planner::default();p.add_page(1,96).unwrap();let old=p.reserve(16,16).unwrap().unwrap();p.publish(old).unwrap();p.mark_used(old,2).unwrap();let before=p.metrics();let a=p.reserve(17,32).unwrap().unwrap();assert_eq!(a.range.offset,32);let b=p.reserve(48,16).unwrap();assert!(b.is_none());p.rollback(a).unwrap();assert_eq!(p.metrics(),before);let all=p.reserve(80,16).unwrap().unwrap();assert_eq!(all.range.offset,16);assert!(p.mark_used(all,3).is_err());assert!(p.reserve(1,3).is_err());assert!(p.add_page(1,99).is_err());}
+ #[test]fn failed_candidates_rollback_without_touching_published_ranges(){let mut p=Planner::default();p.add_page(1,96).unwrap();let old=p.reserve(16,16).unwrap().unwrap();p.publish(old).unwrap();p.mark_used(old,2).unwrap();let before=p.metrics();let a=p.reserve(17,32).unwrap().unwrap();assert_eq!(a.range.offset,32);let b=p.reserve(48,16).unwrap();assert!(b.is_none());p.rollback(a).unwrap();assert_eq!(p.metrics(),before);let all=p.reserve(80,16).unwrap().unwrap();assert_eq!(all.range.offset,16);assert!(p.mark_used(all,3).is_err());assert!(p.reserve(1,0).is_err());assert!(p.add_page(1,99).is_err());}
+ #[test]fn packed_vertex_stride_reservations_are_exact(){let mut p=Planner::default();p.add_page(1,1024).unwrap();let a=p.reserve(96,12).unwrap().unwrap();let b=p.reserve(120,12).unwrap().unwrap();assert_eq!(a.range.offset%12,0);assert_eq!(b.range.offset%12,0);assert_eq!(b.range.offset,96);p.rollback(a).unwrap();p.rollback(b).unwrap();p.remove_empty_page(1).unwrap();assert_eq!(p.metrics().page_bytes,0);}
+
 }
