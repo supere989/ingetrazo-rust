@@ -8,7 +8,9 @@ assert all(not r['global_control']for r in s['cases'])and [r['remembered_control
 assert all(r['frame_final_ctrl']==False and r['emitted_egui_events']==4 for r in n['cases'])
 def same(a,b):
  assert a['undo']==b['undo']==0
- assert all(math.isfinite(y)and abs(x-y)<=1e-6 for k in ['eye','forward']for x,y in zip(a[k],b[k])),'unchanged single-step Qt/native bound'
+ for k in ['eye','forward']:
+  assert len(a[k])==len(b[k])==3,'complete three-dimensional vector required'
+  assert all(math.isfinite(x)and math.isfinite(y)and abs(x-y)<=1e-6 for x,y in zip(a[k],b[k])),'unchanged single-step Qt/native bound'
 same(s['cases'][0],n['cases'][0]);same(s['cases'][1],n['cases'][1])
 try:same(s['cases'][1],n['cases'][0])
 except AssertionError:pass

@@ -1,0 +1,12 @@
+{
+  "retained_source_native_check": {
+    "passed": true,
+    "source_handler_cases": 2,
+    "native_ingress_cases": 2,
+    "final_state_only_negative_rejected": true,
+    "scope": "actual original viewport QMouse/QKey handlers and actual egui-winit State native owned-window ingress with controlled events; no real coalescing/GPU/Metal/Glow parity claim"
+  },
+  "truncated_vector_rejected": true,
+  "application_rebuilt": false,
+  "scope": "Independent checker review of retained source and native evidence; combined build pending"
+}
