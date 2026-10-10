@@ -1,0 +1,13 @@
+{
+  "reviewed_source": "8726b2c602afda154b72295199cabde4b35940ac",
+  "shared_helpers_byte_identical_in_integration": true,
+  "helpers_sha256": "49c57c47da55b9ed334995131c07f2e5f8187a65f7b655d7b79405daa284a75d",
+  "positive_log_checked": true,
+  "compiled_mutation_rejections_checked": 2,
+  "ownership_gate": "Satisfied for managed mesh texture uploads and acknowledged retirement",
+  "remaining_scope": [
+    "Callback frames conservatively defer retirement",
+    "No previous-frame pixel comparison",
+    "Physical GPU cross-platform and full Canvas parity remain open"
+  ]
+}

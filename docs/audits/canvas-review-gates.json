@@ -2,10 +2,8 @@
   "candidate": "efd219dc",
   "adopted": false,
   "reviewed_success": "Independent reviewer decoded six retained QImage regions and checked three warm counter observations; no new render run",
-  "required_before_adoption": [
-    "Actual managed Vulkan GPU texture update/free under upload refusal and retry, including no orphan allocation after release"
-  ],
-  "scope": "Six white-background text regions do not prove full canvas or general draw order.",
+  "required_before_adoption": [],
+  "scope": "Managed mesh texture refusal/retry/free and same-frame paint pass actual software Vulkan controls. Opaque callbacks defer retirement; no physical-platform or full Canvas claim.",
   "integration_source": "a5d8c38c3363127ac558fc1d59b0368ad31a951c",
   "resolved_in_integration": [
     "Pending raw bytes and failed queued updates cancelled together at acknowledged next-frame retirement; same-frame set/use/free preserved",
@@ -14,5 +12,6 @@
   ],
   "combined_workspace": "647 PASS, 0 FAIL, 2 ignored",
   "non_raw_host_compatibility": "Hosts without installed raw provider retain preexisting egui text display. Installed-provider errors remain explicit. Native Metal exact source-text upload remains OPEN.",
-  "post_647_change": "Backend capability selection passed focused GUI compilation at ceff4de7; see canvas-host-compatibility/result.json"
+  "post_647_change": "Backend capability selection passed focused GUI compilation at ceff4de7; see canvas-host-compatibility/result.json",
+  "ownership_gate_evidence": "paper-canvas-gpu-lifetime/root-review.json"
 }

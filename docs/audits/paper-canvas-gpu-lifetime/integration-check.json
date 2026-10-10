@@ -1,0 +1,7 @@
+{
+  "source": "fce3c0a1fce3d48c598106628c6e633b6f1a1377",
+  "command": "cargo check --locked -p ingetrazo-gui --example native_vulkan_raw_lifetime_probe -j2",
+  "exit_code": 0,
+  "log_sha256": "ed7847c0a98abcc86294f34b83bc891d943e70cf303dfef6db278e721ec7e085",
+  "scope": "Focused combined build after reviewed uploader/retirement changes; prior647 workspace and85 formats results retained"
+}
