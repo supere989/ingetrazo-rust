@@ -22,6 +22,10 @@ pub fn add_segments(
     {
         return Err("Drawing coordinates must be finite".into());
     }
+    let paint_only=explicit.is_some_and(|ring|mesh.faces.iter().any(|face|{
+        let loops=planar::rings(mesh,face);let Ok(frame)=planar::Frame::new(&loops[0])else{return false;};
+        ring.iter().all(|&p|frame.on_plane(p)&&(planar::inside_rings(frame.project(p),&loops.iter().map(|r|r.iter().map(|&p|frame.project(p)).collect()).collect::<Vec<_>>())||loops.iter().any(|r|(0..r.len()).any(|i|on_segment(p,r[i],r[(i+1)%r.len()])))))
+    }));
     let mut out = mesh.clone();
     let mut targets = vec![];
     for &(a, b) in segments {
@@ -204,7 +208,14 @@ pub fn add_segments(
             });
             let full_curve = flat && out.edges.iter().any(|e| e.curve_id.is_some());
             if covered || touched && explicit.is_none() || full_curve {
-                planar::add_face(&mut result, &loops, f)?;
+                let mut source=f.clone();
+                if paint_only&&explicit.is_some_and(|ring|ring.iter().all(|p|(*p-point).dot(normal).abs()<1e-6)&&planar::inside_ring(frame.project(sample),&ring.iter().map(|&p|frame.project(p)).collect::<Vec<_>>())){
+                    // AddFaceCommand's newly authored rectangle inherits only
+                    // PAINT_KEYS. Opaque metadata belongs to the mother and
+                    // remains on her remainder pieces, unlike a chord split.
+                    source.attrs.retain(|key,_|matches!(key.as_str(),"color"|"mat"|"texture"|"opacity"));
+                }
+                planar::add_face(&mut result, &loops, &source)?;
             }
         }
         planar::preserve_edges(&mut result, &out);
@@ -243,6 +254,9 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+    }
+    #[test]fn authored_rectangle_band_inherits_paint_but_not_mother_metadata(){
+        let mut m=square();m.faces[0].attrs.insert("color".into(),serde_json::json!([1.,0.,0.]));m.faces[0].attrs.insert("vendor".into(),serde_json::json!(71));let ring=[DVec3::new(0.25,0.,0.),DVec3::new(0.5,0.,0.),DVec3::new(0.5,1.,0.),DVec3::new(0.25,1.,0.)];let segments=(0..4).map(|i|(ring[i],ring[(i+1)%4])).collect::<Vec<_>>();let out=add_segments(&m,&segments,Some(&ring),None).unwrap();assert_eq!(out.faces.len(),3);assert_eq!(out.faces.iter().filter(|f|f.attrs.contains_key("vendor")).count(),2);assert!(out.faces.iter().all(|f|f.attrs.get("color")==m.faces[0].attrs.get("color")));
     }
     #[test]
     fn faceless_diagonal_closes_both_sides() {
