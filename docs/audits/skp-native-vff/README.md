@@ -19,3 +19,8 @@ The placement planner follows reachable census, memoized subtree face totals, so
 The nested-v1 corpus requires the prior six cases plus ten literal added names. The checker traverses actual source/native children and verifies local/world geometry, layer groups, original axes, all mesh sharing clusters, material recipes and counts. Remaining full-feature gaps above still apply; no rendered import or legacy-era closure.
 
 Frozen nested source `ee142abeac35bc31cb246b483f710abf5103017c`, binary SHA256 `2af225fed5345136394b0960c6e30b1a5807fa4cb1601b89e5ea59416228395b`: all 17 strict rows pass, modified-point equality negative passes, five focused tests pass. Exact expanded JSON is gzip-retained with both raw and stored SHA256 digests; the earlier alias-sharing failure remains in its own directory. These are record-controlled inputs; real legacy-file and GUI workflow proof remain required.
+
+
+## Embedded default-texture stage
+
+The native reader now admits bounded embedded PNG/JPEG assets and preserves original material recipes, image bytes, tile-size fallback, and default local-plane UV mappings for small polygons, including inherited paint, holes and shared/nested placement. Neutral payload admission rejects invalid image headers and conflicting bytes under the same embedded identity before scene construction. The named texture corpus extends the nested corpus to 24 rows. Positioned/projected mapping, tinting, missing-image fallback and large textured polygon fit semantics remain required gaps; legacy eras, annotations, views and billboard/image extraction remain open. Earlier refusal evidence above describes its frozen historical source.

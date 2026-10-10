@@ -3,6 +3,7 @@
 //! VFF record interpretation ports the pinned MIT OpenSKP reader; see OPENSKP-LICENSE.
 mod placements;
 mod reader;
+mod textures;
 use glam::{DMat4, DVec3};
 use ingetrazo_core::{groups::Group, layers::Layer, materials::Material, mesh::Mesh, scene::Scene};
 use serde::{Deserialize, Serialize};
@@ -34,6 +35,8 @@ pub struct Edge {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Face {
+    #[serde(default)]
+    pub normal: Option<[f64; 3]>,
     pub loops: Vec<Vec<(u64, bool)>>,
     pub flags: EntityFlags,
     pub back_material: Option<u64>,
@@ -63,6 +66,15 @@ pub struct LayerRecord {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MaterialRecord {
     pub color: [f64; 4],
+    #[serde(default)]
+    pub texture: Option<TextureRecord>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TextureRecord {
+    pub archive_name: String,
+    pub bytes: Vec<u8>,
+    pub width: f64,
+    pub height: f64,
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Payload {
@@ -174,7 +186,15 @@ fn attrs(p: &Payload, id: Option<u64>) -> Result<HashMap<String, serde_json::Val
             .materials
             .get(name)
             .ok_or_else(|| SkpError::Invalid(format!("Material {name} lacks recipe")))?;
-        a.insert("color".into(), serde_json::json!(&mat.color[..3]));
+        if let Some(tex) = &mat.texture {
+            let (sw, sh) = textures::tile_size(tex.width, tex.height);
+            a.insert(
+                "texture".into(),
+                serde_json::json!({"embed":tex.archive_name,"sw":sw,"sh":sh}),
+            );
+        } else {
+            a.insert("color".into(), serde_json::json!(&mat.color[..3]));
+        }
         a.insert("mat".into(), serde_json::json!(name));
         if mat.color[3] < 0.999 {
             a.insert("opacity".into(), serde_json::json!(mat.color[3]));
@@ -257,6 +277,7 @@ fn collect(
             }
             loops.push(vertices);
         }
+        textures::bake(&mut a, face, d, &loops[0], mesh, flip)?;
         let holes = loops.split_off(1);
         let f = mesh
             .add_face(loops.remove(0), holes)
@@ -293,6 +314,7 @@ fn collect(
 }
 /// Prepare privately and reject unsupported required data before any caller Scene mutation.
 pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
+    textures::admit_assets(p)?;
     for d in std::iter::once(&p.root).chain(p.definitions.values()) {
         if d.vertices
             .values()
@@ -351,7 +373,20 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             .get(name)
             .ok_or_else(|| SkpError::Invalid("Material join missing recipe".into()))?;
         let mut material = Material::new(name, m.color.map(|c| c as f32));
-        material.native_document = serde_json::json!({"name":name,"color":&m.color[..3]});
+        if let Some(tex) = &m.texture {
+            material.color = [1., 1., 1., m.color[3] as f32];
+            material.texture_embed = Some(tex.archive_name.clone());
+            scene
+                .embedded_textures
+                .entry(tex.archive_name.clone())
+                .or_insert_with(|| tex.bytes.clone());
+        }
+        material.native_document = if let Some(tex) = &m.texture {
+            let (sw, sh) = textures::tile_size(tex.width, tex.height);
+            serde_json::json!({"name":name,"color":null,"texture":{"embed":tex.archive_name,"sw":sw,"sh":sh}})
+        } else {
+            serde_json::json!({"name":name,"color":&m.color[..3]})
+        };
         if m.color[3] < 0.999 {
             material.native_document["opacity"] = serde_json::json!(m.color[3]);
         }

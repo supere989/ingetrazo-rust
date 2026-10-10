@@ -258,6 +258,7 @@ fn geometry(n: &Node<'_>, d: &mut Definition) -> Result<(), SkpError> {
                 .insert(
                     id,
                     Face {
+                        normal: n.child([0xad, 0x0d]).map(|n| vec3(n.body)).transpose()?,
                         loops,
                         flags: flags(n)?,
                         back_material: child_uint(n, [0xaf, 0xd])?,
@@ -417,6 +418,15 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
     if zip.len() > 100_000 {
         return Err(SkpError::Invalid("SKP ZIP entry count exceeded".into()));
     }
+    let archive_names = zip.file_names().map(str::to_owned).collect::<Vec<_>>();
+    if archive_names
+        .iter()
+        .collect::<std::collections::HashSet<_>>()
+        .len()
+        != archive_names.len()
+    {
+        return Err(SkpError::Invalid("Duplicate archive identity".into()));
+    }
     let mut total = 0u64;
     let mut model = None;
     let mut p = Payload {
@@ -481,13 +491,105 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
             if !rgba[3].is_finite() {
                 return Err(SkpError::Invalid("Material alpha nonfinite".into()));
             }
-            let textured = m.descendants().any(|n| n.tag_name().name() == "texture");
-            if textured {
-                p.unsupported
-                    .insert("material textures (decode, UV and tint required)".into());
-            }
+            drop(entry);
+            let texture = if let Some(t) =
+                m.descendants().find(|n| n.tag_name().name() == "texture")
+            {
+                if m.attribute("type") == Some("2") {
+                    p.unsupported.insert("material tint/colorization".into());
+                    None
+                } else {
+                    let folder = filename.rsplit_once('/').map(|x| x.0).unwrap_or("");
+                    let filename = t.attribute("textureFilename").unwrap_or("");
+                    let exact = format!("{folder}/{filename}");
+                    let mut found = archive_names
+                        .iter()
+                        .find(|n| **n == exact && !filename.is_empty())
+                        .cloned();
+                    if found.is_none() {
+                        found = archive_names
+                            .iter()
+                            .find(|n| {
+                                n.starts_with(&format!("{folder}/"))
+                                    && !n.to_ascii_lowercase().ends_with(".xml")
+                            })
+                            .cloned();
+                    }
+                    if found.is_none() {
+                        if let Some(img) = t.descendants().find(|n| n.tag_name().name() == "image")
+                        {
+                            let path = img
+                                .attribute("path")
+                                .unwrap_or("")
+                                .trim_start_matches(['.', '/']);
+                            for candidate in [path.to_owned(), format!("{folder}/{path}")] {
+                                if archive_names.contains(&candidate) {
+                                    found = Some(candidate);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if let Some(asset) = found {
+                        let entry = zip
+                            .by_name(&asset)
+                            .map_err(|e| SkpError::Invalid(e.to_string()))?;
+                        if entry.size() > 16 * 1024 * 1024 {
+                            return Err(SkpError::Invalid(
+                                "Texture asset exceeds 16MiB admission".into(),
+                            ));
+                        }
+                        let mut data = Vec::new();
+                        entry.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
+                        if data.len() > 16 * 1024 * 1024 {
+                            return Err(SkpError::Invalid(
+                                "Texture expansion exceeds admission".into(),
+                            ));
+                        }
+                        match image::guess_format(&data) {
+                            Ok(image::ImageFormat::Png | image::ImageFormat::Jpeg) => {}
+                            _ => {
+                                return Err(SkpError::Unsupported(
+                                    "texture image codec beyond PNG/JPEG".into(),
+                                ))
+                            }
+                        }
+                        let reader = image::ImageReader::new(Cursor::new(&data))
+                            .with_guessed_format()
+                            .map_err(SkpError::Io)?;
+                        let (w, h) = reader
+                            .into_dimensions()
+                            .map_err(|e| SkpError::Invalid(e.to_string()))?;
+                        if w == 0 || h == 0 || w as u64 * h as u64 > 64 * 1024 * 1024 {
+                            return Err(SkpError::Invalid(
+                                "Texture dimensions exceed admission".into(),
+                            ));
+                        }
+                        let width = t.attribute("xScale").unwrap_or("0").parse().unwrap_or(0.);
+                        let height = t.attribute("yScale").unwrap_or("0").parse().unwrap_or(0.);
+                        Some(TextureRecord {
+                            archive_name: asset,
+                            bytes: data,
+                            width,
+                            height,
+                        })
+                    } else {
+                        p.unsupported
+                            .insert("material textures (missing image fallback required)".into());
+                        None
+                    }
+                }
+            } else {
+                None
+            };
             if p.materials
-                .insert(mat_name.clone(), MaterialRecord { color: rgba })
+                .insert(
+                    mat_name.clone(),
+                    MaterialRecord {
+                        color: rgba,
+                        texture,
+                    },
+                )
                 .is_some()
             {
                 return Err(SkpError::Invalid("Duplicate material recipe".into()));
