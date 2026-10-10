@@ -531,7 +531,7 @@ fn original_qt_matrix_product(a: DMat4, b: DMat4) -> DMat4 {
     DMat4::from_cols_array(&out)
 }
 fn original_qt_paper_geometry(
-    scene: &Scene,
+    scene: &crate::paper_scene::PaperSceneView<'_>,
     basis: &OriginalQtPaperBasis,
 ) -> (
     crate::buffer::MeshRenderBuffer,
@@ -539,7 +539,7 @@ fn original_qt_paper_geometry(
     Vec<[DVec3; 3]>,
 ) {
     fn add(
-        scene: &Scene,
+        scene: &crate::paper_scene::PaperSceneView<'_>,
         mesh: &Mesh,
         matrix: DMat4,
         bulk: bool,
@@ -638,7 +638,7 @@ fn original_qt_paper_geometry(
         }
     }
     fn group(
-        scene: &Scene,
+        scene: &crate::paper_scene::PaperSceneView<'_>,
         g: &Group,
         parent: DMat4,
         _in_container: bool,
@@ -647,7 +647,7 @@ fn original_qt_paper_geometry(
         e: &mut Vec<VectorSegment>,
         t: &mut Vec<[DVec3; 3]>,
     ) {
-        if g.hidden || !scene.is_layer_visible(g.layer.as_deref()) {
+        if !scene.group_visible(g) {
             return;
         }
         let matrix = original_qt_matrix_product(parent, g.transform);
@@ -691,7 +691,7 @@ pub fn original_qt_paper_observation(
     camera: &OrbitCamera,
 ) -> (Vec<[DVec3; 3]>, Vec<VectorSegment>) {
     let (_, edges, triangles) =
-        original_qt_paper_geometry(scene, &OriginalQtPaperBasis::from_camera(camera));
+        original_qt_paper_geometry(&crate::paper_scene::PaperSceneView::new(scene, None), &OriginalQtPaperBasis::from_camera(camera));
     (triangles, edges)
 }
 pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<VectorSegment> {
@@ -721,6 +721,13 @@ pub fn original_qt_paper_drawing_with_pool(
     scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool,
     pool: &mut crate::process_hlr::HlrProcessPool,
 ) -> std::io::Result<OriginalQtPaperDrawing> {
+    original_qt_paper_drawing_for_view_with_pool(
+        &crate::paper_scene::PaperSceneView::new(scene, None), camera, profiles, hidden, pool)
+}
+pub fn original_qt_paper_drawing_for_view_with_pool(
+    scene: &crate::paper_scene::PaperSceneView<'_>, camera: &OrbitCamera,
+    profiles: bool, hidden: bool, pool: &mut crate::process_hlr::HlrProcessPool,
+) -> std::io::Result<OriginalQtPaperDrawing> {
     let basis = OriginalQtPaperBasis::from_camera(camera);
     let (surfaces, edges, triangles) = original_qt_paper_geometry(scene, &basis);
     let mut section_material = Vec::new();
@@ -729,15 +736,16 @@ pub fn original_qt_paper_drawing_with_pool(
     Ok(OriginalQtPaperDrawing { segments, section_material })
 }
 fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,original_qt:bool)->std::io::Result<Vec<VectorSegment>> {
+    let view = crate::paper_scene::PaperSceneView::new(scene, None);
     if original_qt {
         let basis=OriginalQtPaperBasis::from_camera(camera);
-        let(surfaces,edges,triangles)=original_qt_paper_geometry(scene,&basis);
-        segments_projected(scene,&basis,profiles,hidden,pool,surfaces,edges,triangles,true,None)
+        let(surfaces,edges,triangles)=original_qt_paper_geometry(&view,&basis);
+        segments_projected(&view,&basis,profiles,hidden,pool,surfaces,edges,triangles,true,None)
     }else{
-        segments_projected(scene,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false,None)
+        segments_projected(&view,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false,None)
     }
 }
-fn segments_projected(scene:&Scene,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool,section_material:Option<&mut Vec<[DVec3;3]>>)->std::io::Result<Vec<VectorSegment>>{
+fn segments_projected(scene:&crate::paper_scene::PaperSceneView<'_>,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool,section_material:Option<&mut Vec<[DVec3;3]>>)->std::io::Result<Vec<VectorSegment>>{
     let mut edges=edges;
     let mut caps = vec![];
     if let Some(plane) = scene.active_section() {

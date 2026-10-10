@@ -4,8 +4,8 @@ use ingetrazo_core::{camera::OrbitCamera, scene::Scene};
 use ingetrazo_render::{
     process_hlr::{HlrProcessPool, ProcessMetrics},
     vector_hlr::{
-        original_qt_paper_drawing_with_pool, parallel_segments_with_pool, OriginalQtPaperBasis,
-        VectorSegment,
+        original_qt_paper_drawing_for_view_with_pool, parallel_segments_with_pool,
+        OriginalQtPaperBasis, VectorSegment,
     },
 };
 use std::{
@@ -32,6 +32,7 @@ struct Key {
     profiles: bool,
     hidden: bool,
     view_key: String,
+    paper_state: String,
 }
 pub struct PaperDrawing {
     pub segments: Arc<Vec<VectorSegment>>,
@@ -124,6 +125,7 @@ impl ComposerCompute {
             profiles,
             hidden,
             InkPolicy::NativeF64,
+            None,
         )
         .map(|drawing| drawing.segments.clone())
     }
@@ -146,6 +148,7 @@ impl ComposerCompute {
             profiles,
             hidden,
             InkPolicy::OriginalQtPaperV1,
+            None,
         )
         .map(|drawing| drawing.segments.clone())
     }
@@ -170,6 +173,29 @@ impl ComposerCompute {
             profiles,
             hidden,
             InkPolicy::OriginalQtPaperV1,
+            None,
+        )
+    }
+    pub fn original_qt_paper_drawing_for_view(
+        &mut self,
+        view: &ingetrazo_render::paper_scene::PaperSceneView<'_>,
+        camera: &OrbitCamera,
+        document: uuid::Uuid,
+        revision: u64,
+        view_key: &str,
+        profiles: bool,
+        hidden: bool,
+    ) -> Result<Arc<PaperDrawing>, String> {
+        self.segments_policy(
+            view.scene,
+            camera,
+            document,
+            revision,
+            view_key,
+            profiles,
+            hidden,
+            InkPolicy::OriginalQtPaperV1,
+            view.saved,
         )
     }
     fn segments_policy(
@@ -182,6 +208,7 @@ impl ComposerCompute {
         profiles: bool,
         hidden: bool,
         policy: InkPolicy,
+        saved: Option<&ingetrazo_core::saved_views::SavedView>,
     ) -> Result<Arc<PaperDrawing>, String> {
         let key = Key {
             policy,
@@ -205,6 +232,14 @@ impl ComposerCompute {
             profiles,
             hidden,
             view_key: view_key.into(),
+            // Only paper geometry state participates: ghost/selectability flags
+            // never make hidden entities visible in source paper output.
+            paper_state: saved
+                .map(|v| {
+                    serde_json::to_string(&(&v.hidden_layers, &v.hidden_objects, &v.section))
+                        .unwrap()
+                })
+                .unwrap_or_default(),
         };
         if let Some((_, ink)) = self.cache.iter().find(|(k, _)| *k == key) {
             return Ok(ink.clone());
@@ -239,8 +274,8 @@ impl ComposerCompute {
                 segments: Arc::new(segments),
                 section_material: Vec::new(),
             }),
-            InkPolicy::OriginalQtPaperV1 => original_qt_paper_drawing_with_pool(
-                scene,
+            InkPolicy::OriginalQtPaperV1 => original_qt_paper_drawing_for_view_with_pool(
+                &ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved),
                 camera,
                 profiles,
                 hidden,

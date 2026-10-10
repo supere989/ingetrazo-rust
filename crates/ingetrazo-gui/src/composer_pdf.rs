@@ -70,15 +70,19 @@ pub(super) fn view_draws(
     {
         return Err("Invalid physical PDF view frame".into());
     }
-    if frame
+    let saved = frame
         .view_key
         .strip_prefix("scene:")
-        .is_some_and(|name| scene.saved_views.iter().any(|v| v.name == name))
-    {
-        return Err("PDF saved-view visibility/section adapter remains unavailable".into());
-    }
+        .and_then(|name| scene.saved_views.iter().find(|v| v.name == name));
     let snapshot = scene;
-    let mut camera = super::frame_camera_live(&snapshot, frame, live);
+    let paper_view = ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved);
+    // Source SavedView.apply changes camera fields but inherits the live up
+    // vector. Applying to an empty layer slice avoids changing model visibility.
+    let mut base = live.clone();
+    if let Some(saved) = saved {
+        saved.apply(&mut base, &mut []);
+    }
+    let mut camera = super::frame_camera_with_base(snapshot, frame, &base);
     // Original roll_camera is a no-op at zero degrees; preserve the source up
     // vector instead of recomputing an equivalent f64 screen-up before Qt storage.
     if frame.rot_deg == 0. {
@@ -94,7 +98,7 @@ pub(super) fn view_draws(
         {
             glam::DVec3::Z
         } else if bound {
-            snapshot.camera.up
+            base.up
         } else {
             live.up
         };
@@ -102,8 +106,8 @@ pub(super) fn view_draws(
     if camera.perspective || !camera.view_matrix().is_finite() {
         return Err("Invalid orthographic PDF frame camera".into());
     }
-    let drawing = compute.original_qt_paper_drawing(
-        &snapshot,
+    let drawing = compute.original_qt_paper_drawing_for_view(
+        &paper_view,
         &camera,
         document,
         revision,
