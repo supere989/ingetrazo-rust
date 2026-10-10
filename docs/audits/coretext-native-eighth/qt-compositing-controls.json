@@ -1,0 +1,349 @@
+{
+  "qt": "6.12.0",
+  "scope": "Actual Qt6.12 QPainter ordered premultiplied image blend controls. Illustrates rounding nonassociativity; these constructed masks are not observed macOS glyph masks. No raster/font claim.",
+  "color": "#1e242c",
+  "cases": [
+    {
+      "coverage": [
+        41,
+        70
+      ],
+      "source_direct": [
+        167,
+        170,
+        172,
+        255
+      ],
+      "source_grouped": [
+        167,
+        169,
+        172,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        165,
+        62
+      ],
+      "source_direct": [
+        89,
+        95,
+        100,
+        255
+      ],
+      "source_grouped": [
+        89,
+        94,
+        100,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        223,
+        38
+      ],
+      "source_direct": [
+        53,
+        59,
+        67,
+        255
+      ],
+      "source_grouped": [
+        53,
+        58,
+        66,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        127,
+        11
+      ],
+      "source_direct": [
+        138,
+        142,
+        146,
+        255
+      ],
+      "source_grouped": [
+        137,
+        141,
+        145,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        18,
+        127
+      ],
+      "source_direct": [
+        135,
+        138,
+        142,
+        255
+      ],
+      "source_grouped": [
+        135,
+        139,
+        143,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        41,
+        194
+      ],
+      "source_direct": [
+        75,
+        80,
+        86,
+        255
+      ],
+      "source_grouped": [
+        75,
+        79,
+        86,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        21,
+        205
+      ],
+      "source_direct": [
+        70,
+        75,
+        82,
+        255
+      ],
+      "source_grouped": [
+        70,
+        76,
+        82,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        21,
+        217
+      ],
+      "source_direct": [
+        61,
+        66,
+        72,
+        255
+      ],
+      "source_grouped": [
+        61,
+        66,
+        73,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        18,
+        149
+      ],
+      "source_direct": [
+        117,
+        121,
+        126,
+        255
+      ],
+      "source_grouped": [
+        118,
+        121,
+        126,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        44,
+        166
+      ],
+      "source_direct": [
+        95,
+        99,
+        105,
+        255
+      ],
+      "source_grouped": [
+        96,
+        99,
+        106,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        56,
+        193
+      ],
+      "source_direct": [
+        73,
+        77,
+        84,
+        255
+      ],
+      "source_grouped": [
+        73,
+        77,
+        83,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        19,
+        185
+      ],
+      "source_direct": [
+        87,
+        92,
+        98,
+        255
+      ],
+      "source_grouped": [
+        88,
+        92,
+        98,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        63,
+        106
+      ],
+      "source_direct": [
+        128,
+        132,
+        137,
+        255
+      ],
+      "source_grouped": [
+        128,
+        132,
+        136,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        0,
+        255
+      ],
+      "source_direct": [
+        30,
+        36,
+        44,
+        255
+      ],
+      "source_grouped": [
+        30,
+        36,
+        44,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        255,
+        0
+      ],
+      "source_direct": [
+        30,
+        36,
+        44,
+        255
+      ],
+      "source_grouped": [
+        30,
+        36,
+        44,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        0,
+        0
+      ],
+      "source_direct": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "source_grouped": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        255,
+        255
+      ],
+      "source_direct": [
+        30,
+        36,
+        44,
+        255
+      ],
+      "source_grouped": [
+        30,
+        36,
+        44,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        1,
+        1
+      ],
+      "source_direct": [
+        253,
+        253,
+        253,
+        255
+      ],
+      "source_grouped": [
+        253,
+        253,
+        253,
+        255
+      ]
+    },
+    {
+      "coverage": [
+        128,
+        128
+      ],
+      "source_direct": [
+        86,
+        90,
+        96,
+        255
+      ],
+      "source_grouped": [
+        85,
+        90,
+        96,
+        255
+      ]
+    }
+  ]
+}
