@@ -314,6 +314,30 @@ fn complement(mut intervals: Vec<(f64, f64)>) -> Vec<(f64, f64)> {
 // projected hidden lines even if the corresponding world edges differ in depth.
 fn drop_hidden_under_visible(lines:Vec<VectorSegment>,camera:&OrbitCamera,tol:f64)->Vec<VectorSegment> {
     let mut result=lines.iter().filter(|e|e.kind!=LineKind::Hidden).cloned().collect::<Vec<_>>();
+    // Retain exact source projection arithmetic once per accepted segment.
+    let mut projected=result.iter().map(|e|(project(e.a,camera).truncate(),project(e.b,camera).truncate())).collect::<Vec<_>>();
+    for line in lines.iter().filter(|e|e.kind==LineKind::Hidden) {
+        let a=project(line.a,camera).truncate(); let b=project(line.b,camera).truncate();
+        let d=b-a; let length=d.length(); if length<tol {continue;}
+        let direction=d/length;
+        let mut blocked=vec![];
+        for &(other_a,other_b) in &projected {
+            let p=other_a-a;
+            let q=other_b-a;
+            if direction.perp_dot(p).abs()>tol || direction.perp_dot(q).abs()>tol {continue;}
+            let x=p.dot(direction)/length; let y=q.dot(direction)/length;
+            let lo=x.min(y).max(0.); let hi=x.max(y).min(1.);
+            if hi>lo {blocked.push((lo,hi));}
+        }
+        for (lo,hi) in complement(blocked) {
+            if (hi-lo)*length>tol {let segment=VectorSegment{a:line.a.lerp(line.b,lo),b:line.a.lerp(line.b,hi),kind:LineKind::Hidden};projected.push((project(segment.a,camera).truncate(),project(segment.b,camera).truncate()));result.push(segment);}
+        }
+    }
+    result
+}
+#[cfg(test)]
+fn exhaustive_hidden_ink_reference(lines:Vec<VectorSegment>,camera:&OrbitCamera,tol:f64)->Vec<VectorSegment> {
+    let mut result=lines.iter().filter(|e|e.kind!=LineKind::Hidden).cloned().collect::<Vec<_>>();
     for line in lines.iter().filter(|e|e.kind==LineKind::Hidden) {
         let a=project(line.a,camera).truncate(); let b=project(line.b,camera).truncate();
         let d=b-a; let length=d.length(); if length<tol {continue;}
@@ -510,6 +534,18 @@ fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn cached_hidden_projections_preserve_growing_result_order_bit_exactly(){
+        let mut camera=OrbitCamera::default();
+        let mut lines=vec![];
+        for depth in [0.,0.2,2.] {for i in 0..100{let x=i as f64*0.1;for kind in [LineKind::Edge,LineKind::Hidden]{lines.push(VectorSegment{a:DVec3::new(x,0.,depth),b:DVec3::new(x+0.15,0.,depth),kind});}}}
+        lines.push(VectorSegment{a:DVec3::ZERO,b:DVec3::ZERO,kind:LineKind::Hidden});
+        for yaw in [0.,0.7,1.2]{camera.yaw=yaw;for tol in [1e-9,1e-4,0.1]{
+            let original=exhaustive_hidden_ink_reference(lines.clone(),&camera,tol);
+            let cached=drop_hidden_under_visible(lines.clone(),&camera,tol);
+            assert_eq!(original.len(),cached.len());for(a,b)in original.iter().zip(cached){assert_eq!(a.a,b.a);assert_eq!(a.b,b.b);assert_eq!(a.kind,b.kind);}
+        }}
+    }
     #[test]
     fn projected_hidden_ink_deduplicates_depth_and_subtracts_solid_overlap() {
         let mut camera=OrbitCamera::default(); camera.yaw=-std::f64::consts::FRAC_PI_2; camera.pitch=0.;
