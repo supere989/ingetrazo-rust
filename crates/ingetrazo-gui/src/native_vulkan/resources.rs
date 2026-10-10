@@ -122,7 +122,7 @@ impl Resources {
     submitted=true;self.stats.transfer_submissions+=1;context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;self.stats.chunks+=1;
    }Ok(())
   })();
-  if submitted||self.lifetime.uncertain(){self.lifetime.quarantine();return result;}
+  if submitted||self.lifetime.uncertain(){self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
   unsafe{self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}result
  }
  fn transfer_chunks(&mut self,context:&super::VulkanContext,destination:BufferId,staging:BufferId,data:&[u8])->Result<(),String> {
@@ -155,7 +155,7 @@ impl Resources {
    Ok(())
   })();
   // A failed wait must not allow a staging resource to be freed while still in use.
-  if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();return result;}
+  if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
   unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
   result
  }
@@ -214,7 +214,7 @@ impl Resources {
    }
    self.stats.readback_bytes+=bytes;Ok(output)
   })();
-  if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();return result;}
+  if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
   unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
   self.destroy(staging);result
  }
@@ -236,4 +236,4 @@ impl Resources {
   let ready=self.buffers.iter().filter_map(|(&id,b)|b.retire_after.filter(|s|*s<=serial).map(|_|id)).collect::<Vec<_>>();let n=ready.len();for id in ready {self.destroy(id);}Ok(n)
  }
 }
-impl Drop for Resources {fn drop(&mut self){if !self.buffers.is_empty(){if !self.lifetime.drain_graphics(){eprintln!("Retaining quarantined GPU buffers and memory ledger");if let Some(transfer)=self.image_transfer.take(){std::mem::forget(transfer);}return;}let ids=self.buffers.keys().copied().collect::<Vec<_>>();for id in ids {self.destroy(id);}}}}
+impl Drop for Resources {fn drop(&mut self){if !self.buffers.is_empty(){if !self.lifetime.drain_graphics(){eprintln!("Retaining quarantined GPU buffers and memory ledger");self.lifetime.retain(self.budget.clone());self.lifetime.retain(std::mem::take(&mut self.buffers));if let Some(transfer)=self.image_transfer.take(){self.lifetime.retain(transfer);}return;}let ids=self.buffers.keys().copied().collect::<Vec<_>>();for id in ids {self.destroy(id);}}}}

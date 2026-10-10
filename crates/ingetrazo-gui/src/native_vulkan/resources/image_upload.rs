@@ -542,7 +542,7 @@ impl TextureImage {
             resources.upload_rgba8_image(context, image, extent, data, levels)
         })();
         if let Err(e) = result {
-            if context.lifetime.uncertain(){return Err(e);}
+            if context.lifetime.uncertain(){context.lifetime.retain(budget.clone());context.lifetime.retain((image,view,sampler,memory));return Err(e);}
             unsafe {
                 if sampler != vk::Sampler::null() {
                     device.destroy_sampler(sampler, None)
@@ -576,7 +576,7 @@ impl TextureImage {
 impl Drop for TextureImage {
     fn drop(&mut self) {
         use egui_ash_renderer::MemoryObserver;
-        if self.lifetime.uncertain(){return;}
+        if self.lifetime.uncertain(){self.lifetime.retain(self.budget.clone());self.lifetime.retain((self.image,self.view,self.sampler,self.memory));return;}
         unsafe {
             self.device.destroy_sampler(self.sampler, None);
             self.device.destroy_image_view(self.view, None);

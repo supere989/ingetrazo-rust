@@ -464,7 +464,7 @@ impl System {
     }
 }
 
-impl Drop for System {fn drop(&mut self){if self.vulkan_context.lifetime.drain_graphics(){unsafe{std::mem::ManuallyDrop::drop(&mut self.renderer)}}else{eprintln!("Retaining quarantined egui renderer resources");}}}
+impl Drop for System {fn drop(&mut self){if self.vulkan_context.lifetime.drain_graphics(){unsafe{std::mem::ManuallyDrop::drop(&mut self.renderer)}}else{eprintln!("Retaining quarantined egui renderer resources");self.vulkan_context.lifetime.retain(self.memory_budget.clone());self.vulkan_context.lifetime.retain(unsafe{std::mem::ManuallyDrop::take(&mut self.renderer)});}}}
 
 fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semaphore>,vk::Result> {
     let mut semaphores=Vec::with_capacity(count);

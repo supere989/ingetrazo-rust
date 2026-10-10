@@ -51,6 +51,11 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
   context.device.free_command_buffers(context.command_pool,&[command]);context.device.destroy_event(event,None);
  }
  assert!(context.lifetime.uncertain());assert_eq!(budget.ledger.lock().unwrap().total_committed(),retained);
- println!("PASS actual queued timeout: kind={} elapsed_ms={} retained_bytes={} before_bytes={} prior_buffer_destructions={} old_buffer_preserved=true new_admission_refused=true drop_frees_pending=false subsequent_real_completion=true automatic_recovery=false",kind,elapsed.as_millis(),retained,before,destroyed);
+ let weak_budget=std::sync::Arc::downgrade(&budget);drop(budget);
+ let kept_budget=weak_budget.upgrade().expect("Quarantine dropped the last memory ledger owner");
+ assert_eq!(kept_budget.ledger.lock().unwrap().total_committed(),retained);
+ assert!(context.lifetime.retained_owners()>=2);
+
+ println!("PASS actual queued timeout: kind={} elapsed_ms={} retained_bytes={} before_bytes={} prior_buffer_destructions={} old_buffer_preserved=true new_admission_refused=true drop_frees_pending=false subsequent_real_completion=true automatic_recovery=false last_external_ledger_drop_retained=true",kind,elapsed.as_millis(),retained,before,destroyed);
  Ok(())
 }

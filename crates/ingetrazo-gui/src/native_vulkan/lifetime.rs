@@ -4,9 +4,11 @@
 use ash::{vk,Device};
 use std::sync::atomic::{AtomicBool,Ordering};
 pub const WAIT_NS:u64=5_000_000_000;
-pub struct Lifetime {device:Device,queue:vk::Queue,uncertain:AtomicBool}
+pub struct Lifetime {device:Device,queue:vk::Queue,uncertain:AtomicBool,retained:std::sync::Mutex<Vec<Box<dyn std::any::Any+Send+Sync>>>}
 impl Lifetime {
- pub fn new(device:Device,queue:vk::Queue)->Self{Self{device,queue,uncertain:AtomicBool::new(false)}}
+ pub fn new(device:Device,queue:vk::Queue)->Self{Self{device,queue,uncertain:AtomicBool::new(false),retained:std::sync::Mutex::new(Vec::new())}}
+ pub fn retain<T:std::any::Any+Send+Sync>(&self,value:T){self.retained.lock().unwrap_or_else(|p|p.into_inner()).push(Box::new(value));}
+ pub fn retained_owners(&self)->usize{self.retained.lock().unwrap_or_else(|p|p.into_inner()).len()}
  pub fn uncertain(&self)->bool{self.uncertain.load(Ordering::Acquire)}
  pub fn quarantine(&self){self.uncertain.store(true,Ordering::Release);}
  pub fn check(&self)->Result<(),String>{if self.uncertain(){Err("GPU completion unknown; resources quarantined, device recreation required".into())}else{Ok(())}}
