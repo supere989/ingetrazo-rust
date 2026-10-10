@@ -35,6 +35,7 @@ def main():
    assert sorted(recipe(f) for f in a)==sorted(recipe(f) for f in b),(name,[recipe(f) for f in a],[recipe(f) for f in b])
    assert rust.groups[0].name=="Independent reference"
    for face in b:
+    a,bp,c=face.vertices;assert ((bp-a).x()*(c-a).y()-(bp-a).y()*(c-a).x())<0,"Reflection must retain the authored outward -Z normal"
     assert abs(face.attrs["opacity"]-.6)<1e-6
     assert all(abs(x-y)<1e-6 for x,y in zip(face.attrs["color"],(.2,.4,.8)))
     assert Path(face.attrs["texture"]["path"]).read_bytes()==PNG
