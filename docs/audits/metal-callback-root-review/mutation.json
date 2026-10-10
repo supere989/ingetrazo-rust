@@ -1,0 +1,6 @@
+{
+  "source_revision": "3564e61e50959c67f73f88d14747ee30d14eb992",
+  "mutant_returncode": 101,
+  "restored_returncode": 0,
+  "scope": "producer atomic publication only"
+}
