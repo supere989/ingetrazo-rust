@@ -1,0 +1,7 @@
+{
+  "path": "/tmp/ingetrazo-root-vm-budget-target",
+  "apparent_bytes_removed": 12851022328,
+  "active_process_references": [],
+  "published_commit": "d24dae2b",
+  "evidence": "Committed workspace and focused/UI/owner acceptance retained; all root build/runtime sessions terminal."
+}
