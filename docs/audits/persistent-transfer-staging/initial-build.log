@@ -1,0 +1,390 @@
+   Compiling cfg-if v1.0.5
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.2
+   Compiling smallvec v1.16.2
+   Compiling once_cell v1.21.4
+   Compiling libc v0.2.190
+   Compiling libloading v0.8.9
+   Compiling linux-raw-sys v0.12.1
+   Compiling dlib v0.5.3
+   Compiling wayland-sys v0.31.11
+   Compiling rustix v1.1.5
+   Compiling downcast-rs v1.2.1
+   Compiling scoped-tls v1.0.1
+   Compiling bytemuck v1.25.2
+   Compiling zerofrom v0.1.8
+   Compiling stable_deref_trait v1.2.1
+   Compiling yoke v0.8.3
+   Compiling zerovec v0.11.8
+   Compiling num-traits v0.2.19
+   Compiling ttf-parser v0.25.1
+   Compiling wayland-backend v0.3.17
+   Compiling polling v3.11.0
+   Compiling owned_ttf_parser v0.25.1
+   Compiling ab_glyph_rasterizer v0.1.10
+   Compiling wayland-client v0.31.15
+   Compiling simd-adler32 v0.3.10
+   Compiling ab_glyph v0.2.32
+   Compiling thiserror v2.0.21
+   Compiling zerocopy v0.8.60
+   Compiling wayland-protocols v0.32.13
+   Compiling serde_core v1.0.229
+   Compiling getrandom v0.3.4
+   Compiling tinystr v0.8.4
+   Compiling litemap v0.8.3
+   Compiling writeable v0.6.4
+   Compiling scopeguard v1.2.0
+   Compiling lock_api v0.4.14
+   Compiling icu_locale_core v2.3.0
+   Compiling ahash v0.8.12
+   Compiling parking_lot_core v0.9.12
+   Compiling potential_utf v0.1.6
+   Compiling zerotrie v0.2.5
+   Compiling memmap2 v0.9.11
+   Compiling xkeysym v0.2.1
+   Compiling xcursor v0.3.11
+   Compiling pin-project-lite v0.2.17
+   Compiling tracing-core v0.1.36
+   Compiling adler2 v2.0.1
+   Compiling utf8_iter v1.0.4
+   Compiling cursor-icon v1.2.0
+   Compiling equivalent v1.0.2
+   Compiling linux-raw-sys v0.4.15
+   Compiling hashbrown v0.17.1
+   Compiling rustix v0.38.44
+   Compiling indexmap v2.14.2
+   Compiling wayland-csd-frame v0.3.0
+   Compiling tracing v0.1.44
+   Compiling icu_collections v2.3.0
+   Compiling wayland-cursor v0.31.14
+   Compiling icu_provider v2.3.1
+   Compiling thiserror v1.0.69
+   Compiling parking_lot v0.12.5
+   Compiling wayland-protocols-wlr v0.3.12
+   Compiling crc32fast v1.5.2
+   Compiling emath v0.30.0
+   Compiling percent-encoding v2.3.2
+   Compiling slab v0.4.12
+   Compiling itoa v1.0.18
+   Compiling static_assertions v1.1.0
+   Compiling calloop v0.13.0
+   Compiling ecolor v0.30.0
+   Compiling serde v1.0.229
+   Compiling zmij v1.0.23
+   Compiling icu_properties_data v2.3.0
+   Compiling icu_normalizer_data v2.3.0
+   Compiling miniz_oxide v0.9.1
+   Compiling arrayvec v0.7.8
+   Compiling num-modular v0.6.6
+   Compiling strict-num v0.1.1
+   Compiling epaint_default_fonts v0.30.0
+   Compiling nohash-hasher v0.2.0
+   Compiling arrayref v0.3.9
+   Compiling dashu-base v0.5.1
+   Compiling profiling v1.0.18
+   Compiling epaint v0.30.0
+   Compiling dashu-int v0.5.1
+   Compiling tiny-skia-path v0.11.4
+   Compiling flate2 v1.1.10
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling serde_json v1.0.151
+   Compiling x11-dl v2.21.0
+   Compiling calloop-wayland-source v0.3.0
+   Compiling gethostname v1.1.0
+   Compiling as-raw-xcb-connection v1.0.1
+   Compiling either v1.18.0
+   Compiling x11rb-protocol v0.13.2
+   Compiling raw-window-handle v0.6.2
+   Compiling itertools v0.14.0
+   Compiling smithay-client-toolkit v0.19.2
+   Compiling idna_adapter v1.2.2
+   Compiling getrandom v0.4.3
+   Compiling tiny-skia v0.11.4
+   Compiling dashu-ratio v0.5.1
+   Compiling egui v0.30.0
+   Compiling x11rb v0.13.2
+   Compiling calloop v0.14.5
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+   Compiling clipper2-rust v1.2.0
+   Compiling zune-core v0.5.3
+   Compiling pxfm v0.1.30
+   Compiling rustc-hash v2.1.3
+   Compiling sha1_smol v1.0.1
+   Compiling uuid v1.27.0
+   Compiling manifold-rust v0.16.0
+   Compiling moxcms v0.8.1
+   Compiling zune-jpeg v0.5.15
+   Compiling png v0.18.1
+   Compiling calloop-wayland-source v0.4.1
+   Compiling sctk-adwaita v0.10.1
+   Compiling idna v1.1.0
+   Compiling earcutr v0.5.0
+   Compiling glam v0.29.3
+   Compiling form_urlencoded v1.2.2
+   Compiling xkbcommon-dl v0.4.2
+   Compiling wayland-protocols-experimental v20250721.0.1
+   Compiling wayland-protocols-plasma v0.3.12
+   Compiling wayland-protocols-misc v0.3.12
+   Compiling byteorder-lite v0.1.0
+   Compiling dpi v0.1.2
+   Compiling smol_str v0.2.2
+   Compiling smithay-client-toolkit v0.20.0
+   Compiling winit v0.30.13
+   Compiling image v0.25.10
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-persistent-transfer-staging/crates/ingetrazo-core)
+   Compiling url v2.5.8
+   Compiling glutin_glx_sys v0.6.1
+   Compiling glutin_egl_sys v0.7.1
+   Compiling bumpalo v3.20.3
+   Compiling zopfli v0.8.3
+   Compiling glutin v0.32.3
+   Compiling webbrowser v1.2.4
+   Compiling memoffset v0.9.1
+   Compiling gltf-json v1.4.1
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling smithay-clipboard v0.7.3
+   Compiling ash v0.38.0+1.3.281
+   Compiling libz-sys v1.1.29
+   Compiling arboard v3.6.1
+   Compiling base64 v0.13.1
+   Compiling glow v0.16.0
+   Compiling lazy_static v1.5.1
+   Compiling ryu v1.0.23
+   Compiling urlencoding v2.1.3
+   Compiling byteorder v1.5.0
+   Compiling web-time v1.1.0
+   Compiling egui-winit v0.30.0
+   Compiling gltf v1.4.1
+   Compiling pdf-writer v0.15.0
+   Compiling egui_glow v0.30.0
+   Compiling freetype-sys v0.23.0 (/tmp/ingetrazo-persistent-transfer-staging/vendor/freetype-sys)
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+   Compiling glutin-winit v0.5.0
+   Compiling harfbuzz-sys v0.8.0
+   Compiling zip v2.4.2
+   Compiling cpufeatures v0.3.1
+   Compiling roxmltree v0.20.0
+   Compiling constant_time_eq v0.4.2
+   Compiling unicode-linebreak v0.1.5
+   Compiling unicode-bidi v0.3.18
+   Compiling base64 v0.22.1
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-persistent-transfer-staging/crates/ingetrazo-formats)
+   Compiling ash-window v0.13.0
+   Compiling egui-ash-renderer v0.7.0 (/tmp/ingetrazo-persistent-transfer-staging/vendor/egui-ash-renderer)
+   Compiling blake3 v1.8.7
+   Compiling eframe v0.30.0
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-persistent-transfer-staging/crates/ingetrazo-tools)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-persistent-transfer-staging/crates/ingetrazo-render)
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-persistent-transfer-staging/crates/ingetrazo-gui)
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized] target(s) in 33.09s

@@ -1,0 +1,189 @@
+[
+  {
+    "case": "image-quadrants",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-alpha",
+    "differing_pixels": 1212,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-cutout",
+    "differing_pixels": 2437,
+    "central_150x150_differing": 216,
+    "max_channel_difference": 223,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-opacity-0999",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-opacity-below",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-reversed",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-wireframe",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-hidden-line",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-xray",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-hidden-layer",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-overlap",
+    "differing_pixels": 2500,
+    "central_150x150_differing": 220,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-opaque-behind",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-faded-behind",
+    "differing_pixels": 1212,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-threshold-behind",
+    "differing_pixels": 3004,
+    "central_150x150_differing": 304,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-below-threshold-behind",
+    "differing_pixels": 1212,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-coplanar-trace",
+    "differing_pixels": 1212,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  }
+]

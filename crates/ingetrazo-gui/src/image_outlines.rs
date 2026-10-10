@@ -5,6 +5,9 @@ use ingetrazo_core::{scene::{Scene,SelectionItem},camera::OrbitCamera};
 use ingetrazo_render::cad2d::{Batch,EncodedRgba,Geometry,Pose,Vertex};
 #[derive(Clone,PartialEq)]struct Key{publication:u64,view:u64,matrix:[u32;16],size:[u32;2],density:u32}
 #[derive(Default)]pub struct ImageOutlineCache{
+ pub chunks:crate::image_outline_chunks::OutlineChunkCache,
+ #[cfg(any(target_os="linux",target_os="windows"))]
+ arena_handle:Option<crate::native_vulkan::cad2d::arena::Handle>,
  key:Option<Key>,selected:Vec<usize>,geometry:Option<Arc<Geometry>>,batches:Option<Arc<[Batch]>>,
  handle:Option<crate::composer_backend::Handle>,pub cold_builds:u64,pub generated_spans:u64,
 }
@@ -47,6 +50,14 @@ impl ImageOutlineCache{
   let Some(factory)=factory else{return Ok(());};
   let density=painter.ctx().pixels_per_point();let size=[(rect.width()*density).round()as u32,(rect.height()*density).round()as u32];
   let matrix=(camera.projection_matrix()*camera.view_matrix()).as_mat4().to_cols_array();
+  #[cfg(any(target_os="linux",target_os="windows"))]
+  if let crate::composer_backend::Factory::Vulkan(factory)=factory{
+   let frame=self.chunks.prepare(scene,matrix,size,density)?;
+   let handle=self.arena_handle.get_or_insert_with(||factory.outline_arena());
+   handle.update(frame,Pose{scale:[1.;2],translation:[rect.min.x,rect.min.y]})?;
+   painter.add(handle.shape(rect));return Ok(());
+  }
+
   let Some((geometry,batches))=self.prepare(scene,matrix,size,density)?else{self.handle=None;return Ok(());};
   let pose=Pose{scale:[1.;2],translation:[rect.min.x,rect.min.y]};
   if let Some(handle)=&self.handle{handle.update(geometry,batches,pose)?;}else{self.handle=Some(factory.handle(geometry,batches,pose)?);}

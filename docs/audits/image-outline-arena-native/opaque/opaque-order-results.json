@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "case": "red-blue",
+      "differing_pixels": 0,
+      "total_pixels": 480000,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      },
+      "source_qt_version": "6.12.0"
+    },
+    {
+      "case": "blue-red",
+      "differing_pixels": 0,
+      "total_pixels": 480000,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      },
+      "source_qt_version": "6.12.0"
+    },
+    {
+      "case": "fractional-coverage",
+      "refused": true,
+      "exit_code": 101,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "fractional-alpha",
+      "refused": true,
+      "exit_code": 101,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    }
+  ],
+  "scope": "Actual native opaque batch order paired Qt RGB32 full images; actual unordered nonopaque admission refusal, no fake Vulkan errors"
+}

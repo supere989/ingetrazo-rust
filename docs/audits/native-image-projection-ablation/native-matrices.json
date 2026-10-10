@@ -1,0 +1,1850 @@
+{
+  "renderer_device": {
+    "name": "NVIDIA GeForce RTX 5090",
+    "vendor_id": 4318,
+    "device_id": 11141,
+    "device_type": "DISCRETE_GPU",
+    "software_fixture_requested": false
+  },
+  "cases": [
+    {
+      "case": "image-quadrants",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 2, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 1 }, TextureStats { hashes: 3, encoded_bytes_hashed: 311, decodes: 3, uploads: 2, hits: 0, retired: 1, hash_ms: 0.01611, decode_ms: 0.401259, upload_ms: 1.2490029999999999 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 2, pose_refreshes: 11, draws: 2, missing: 0 }",
+      "geometry_uploads": 2,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.519914, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0007120000000000001, cache_hits: 15, failed_prepared_chunks: 0, rollbacks: 1, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-alpha",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        200,
+        214,
+        230,
+        255
+      ],
+      "samples": [
+        [
+          200,
+          214,
+          230,
+          255
+        ],
+        [
+          200,
+          214,
+          230,
+          255
+        ],
+        [
+          200,
+          214,
+          230,
+          255
+        ],
+        [
+          200,
+          214,
+          230,
+          255
+        ],
+        [
+          200,
+          214,
+          230,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 98, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.003106, decode_ms: 0.106982, upload_ms: 0.7507510000000001 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.920041, compact_preprocess_ms: 0.0, warm_cache_ms: 0.007294, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-cutout",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        191,
+        192,
+        192,
+        255
+      ],
+      "samples": [
+        [
+          203,
+          104,
+          104,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          204,
+          225,
+          225,
+          255
+        ],
+        [
+          191,
+          192,
+          192,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 101, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004569, decode_ms: 0.126009, upload_ms: 0.7746460000000001 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.978261, compact_preprocess_ms: 0.0, warm_cache_ms: 0.005811, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-opacity-0999",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.0042780000000000006, decode_ms: 0.127922, upload_ms: 0.843737 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.039918, compact_preprocess_ms: 0.0, warm_cache_ms: 0.009007000000000001, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-opacity-below",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004789, decode_ms: 0.140065, upload_ms: 0.85039 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.0796029999999999, compact_preprocess_ms: 0.0, warm_cache_ms: 0.012092, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-reversed",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        127,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          72,
+          211,
+          44,
+          255
+        ],
+        [
+          183,
+          42,
+          44,
+          255
+        ],
+        [
+          183,
+          211,
+          213,
+          255
+        ],
+        [
+          70,
+          42,
+          213,
+          255
+        ],
+        [
+          127,
+          127,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.00503, decode_ms: 0.140756, upload_ms: 0.869947 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.096656, compact_preprocess_ms: 0.0, warm_cache_ms: 0.009067, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-wireframe",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004719, decode_ms: 0.13489500000000001, upload_ms: 0.830432 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.0460800000000001, compact_preprocess_ms: 0.0, warm_cache_ms: 0.013035, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-hidden-line",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.00539, decode_ms: 0.151647, upload_ms: 0.9355 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.197957, compact_preprocess_ms: 0.0, warm_cache_ms: 0.012964, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-xray",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.006692, decode_ms: 0.145205, upload_ms: 0.846832 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.110592, compact_preprocess_ms: 0.0, warm_cache_ms: 0.006071999999999999, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-hidden-layer",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "samples": [
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 0, encoded_bytes_hashed: 0, decodes: 0, uploads: 0, hits: 0, retired: 0, hash_ms: 0.0, decode_ms: 0.0, upload_ms: 0.0 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 0, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.053341000000000006, compact_preprocess_ms: 0.0, warm_cache_ms: 0.006102, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-overlap",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        152,
+        167,
+        183,
+        255
+      ],
+      "samples": [
+        [
+          173,
+          136,
+          152,
+          255
+        ],
+        [
+          132,
+          199,
+          152,
+          255
+        ],
+        [
+          132,
+          136,
+          215,
+          255
+        ],
+        [
+          174,
+          199,
+          215,
+          255
+        ],
+        [
+          152,
+          167,
+          183,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 2, encoded_bytes_hashed: 201, decodes: 2, uploads: 2, hits: 0, retired: 0, hash_ms: 0.006082, decode_ms: 0.21323299999999998, upload_ms: 0.956069 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 2, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [],
+      "consolidated_opaque_count": 0,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.254835, compact_preprocess_ms: 0.0, warm_cache_ms: 0.009138, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-opaque-behind",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004158, decode_ms: 0.13233, upload_ms: 0.445873 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "consolidated_opaque_count": 6,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.323079, compact_preprocess_ms: 0.0, warm_cache_ms: 0.00572, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-faded-behind",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "samples": [
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.0038469999999999997, decode_ms: 0.12719, upload_ms: 0.484898 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "consolidated_opaque_count": 6,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.821172, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0061519999999999995, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-threshold-behind",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "samples": [
+        [
+          183,
+          44,
+          44,
+          255
+        ],
+        [
+          72,
+          213,
+          44,
+          255
+        ],
+        [
+          72,
+          44,
+          213,
+          255
+        ],
+        [
+          185,
+          213,
+          213,
+          255
+        ],
+        [
+          127,
+          128,
+          128,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004358, decode_ms: 0.12539699999999998, upload_ms: 0.471843 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "consolidated_opaque_count": 6,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.702186, compact_preprocess_ms: 0.0, warm_cache_ms: 0.009839, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-below-threshold-behind",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "samples": [
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004619, decode_ms: 0.129906, upload_ms: 0.48169100000000004 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "consolidated_opaque_count": 6,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.324882, compact_preprocess_ms: 0.0, warm_cache_ms: 0.004118, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }"
+    },
+    {
+      "case": "image-coplanar-trace",
+      "native_mvp": [
+        0.4526650309562683,
+        -3.6956987165880984e-17,
+        -1.8746996850470558e-37,
+        0.0,
+        2.7717740374410738e-17,
+        0.6035534143447876,
+        3.0616169844444905e-21,
+        0.0,
+        0.0,
+        3.6956987165880984e-17,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5001999735832214,
+        1.0
+      ],
+      "native_projection": [
+        0.4526650309562683,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6035534143447876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00004999999873689376,
+        0.0,
+        -0.0,
+        -0.0,
+        0.5,
+        1.0
+      ],
+      "native_view": [
+        1.0,
+        -6.123234262925839e-17,
+        3.7493993930529855e-33,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        -6.123234262925839e-17,
+        0.0,
+        0.0,
+        6.123234262925839e-17,
+        1.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -4.0,
+        1.0
+      ],
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "samples": [
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ]
+      ],
+      "texture_stats": "(Stats { builds: 1, uploads: 0, vertex_bytes: 0, draws: 0, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004319, decode_ms: 0.12216099999999999, upload_ms: 0.450893 })",
+      "warm_pose_metrics": {
+        "pose_updates": 11,
+        "geometry_uploads": 0,
+        "image_uploads": 0,
+        "hashes": 0,
+        "decodes": 0
+      },
+      "reference_image_stats": "Stats { builds: 1, pose_refreshes: 11, draws: 1, missing: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "paint_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "consolidated_opaque_count": 6,
+      "surface_bytes": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.055182, compact_preprocess_ms: 0.0, warm_cache_ms: 0.004288, cache_hits: 13, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }"
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"
+}

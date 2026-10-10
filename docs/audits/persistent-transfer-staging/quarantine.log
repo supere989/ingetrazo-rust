@@ -1,0 +1,6 @@
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+Retaining quarantined GPU buffers and memory ledger
+PASS actual unsignaled-fence TIMEOUT; pooled transfer reuse refused; three resource owners retained; charged bytes8; no pending GPU command asserted
+Retaining quarantined Vulkan device, instance and loader; GPU completion unknown

@@ -168,13 +168,35 @@ pub struct ImagePlaneList {
     epoch:std::sync::atomic::AtomicU64,
     #[serde(skip,default="new_image_membership_epoch")]
     publication:std::sync::atomic::AtomicU64,
+    #[serde(skip)]
+    pose_journal:ImagePoseJournal,
 }
+/// Fixed bounded runtime journal. Inline storage keeps restricted setter edits
+/// allocation-free; it is neither native document data nor history identity.
+const IMAGE_POSE_JOURNAL_CAPACITY:usize=64;
+#[derive(Debug,Clone,Copy,Default)]struct ImagePoseChange{revision:u64,index:usize}
+#[derive(Debug)]struct ImagePoseJournal{entries:[ImagePoseChange;IMAGE_POSE_JOURNAL_CAPACITY],len:usize,next:usize,floor:u64}
+impl Default for ImagePoseJournal{fn default()->Self{Self{entries:[ImagePoseChange::default();IMAGE_POSE_JOURNAL_CAPACITY],len:0,next:0,floor:0}}}
+impl ImagePoseJournal{
+ fn reset(&mut self,revision:u64){self.len=0;self.next=0;self.floor=revision;}
+ fn record(&mut self,index:usize,revision:u64){
+  if self.len==IMAGE_POSE_JOURNAL_CAPACITY{self.floor=self.entries[self.next].revision;}else{self.len+=1;}
+  self.entries[self.next]=ImagePoseChange{revision,index};self.next=(self.next+1)%IMAGE_POSE_JOURNAL_CAPACITY;
+ }
+}
+/// Borrowed bounded delta iterator; the inspection counter exposes actual
+/// journal work independently of the number of dirty planes yielded.
+pub struct ImagePoseChanges<'a>{entries:&'a[ImagePoseChange],revision:u64,next:usize,examined:usize}
+impl ImagePoseChanges<'_>{pub fn records_examined(&self)->usize{self.examined}}
+impl Iterator for ImagePoseChanges<'_>{type Item=usize;fn next(&mut self)->Option<usize>{
+ while let Some(e)=self.entries.get(self.next){self.next+=1;self.examined+=1;if e.revision>self.revision{return Some(e.index);}}None
+}}
 fn next_image_membership_epoch()->u64{
     static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
     NEXT.fetch_add(1,std::sync::atomic::Ordering::Relaxed)
 }
 fn new_image_membership_epoch()->std::sync::atomic::AtomicU64{std::sync::atomic::AtomicU64::new(next_image_membership_epoch())}
-impl From<Vec<ImagePlane>> for ImagePlaneList{fn from(planes:Vec<ImagePlane>)->Self{Self{planes,epoch:new_image_membership_epoch(),publication:new_image_membership_epoch()}}}
+impl From<Vec<ImagePlane>> for ImagePlaneList{fn from(planes:Vec<ImagePlane>)->Self{{let publication=new_image_membership_epoch();let mut pose_journal=ImagePoseJournal::default();pose_journal.reset(publication.load(std::sync::atomic::Ordering::Relaxed));Self{planes,epoch:new_image_membership_epoch(),publication,pose_journal}}}}
 impl Default for ImagePlaneList{fn default()->Self{Vec::new().into()}}
 impl Clone for ImagePlaneList{fn clone(&self)->Self{self.planes.clone().into()}}
 impl PartialEq for ImagePlaneList{fn eq(&self,other:&Self)->bool{self.planes==other.planes}}
@@ -185,7 +207,13 @@ impl ImagePlaneList{
     pub fn membership_epoch(&self)->u64{self.epoch.load(std::sync::atomic::Ordering::Relaxed)}
     /// Runtime drawable state token; never persisted or compared as model state.
     pub fn publication_revision(&self)->u64{self.publication.load(std::sync::atomic::Ordering::Relaxed)}
-    fn changed(&self){self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);self.publication.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}
+    /// A stale owner, structural mutation, or overwritten event requires a cold
+    /// rebuild. Events may repeat an index; consumers deduplicate dirty slots.
+    pub fn pose_changes_since(&self,epoch:u64,revision:u64)->Option<ImagePoseChanges<'_>>{
+        if epoch!=self.membership_epoch()||revision>self.publication_revision()||revision<self.pose_journal.floor{return None;}
+        Some(ImagePoseChanges{entries:&self.pose_journal.entries[..self.pose_journal.len],revision,next:0,examined:0})
+    }
+    fn changed(&mut self){self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);let revision=next_image_membership_epoch();self.publication.store(revision,std::sync::atomic::Ordering::Relaxed);self.pose_journal.reset(revision);}
     pub fn push(&mut self,p:ImagePlane){self.planes.push(p);self.changed();}
     pub fn remove(&mut self,index:usize)->ImagePlane{let p=self.planes.remove(index);self.changed();p}
     pub fn insert(&mut self,index:usize,p:ImagePlane){self.planes.insert(index,p);self.changed();}
@@ -198,7 +226,7 @@ impl ImagePlaneList{
     /// Restricted frame mutation cannot change UUID or replace an object,
     /// even when the returned handle is forgotten instead of dropped.
     pub fn pose_mut(&mut self,index:usize)->Option<ImagePoseGuard<'_>>{
-        Some(ImagePoseGuard{plane:self.planes.get_mut(index)?,publication:&self.publication})
+        Some(ImagePoseGuard{plane:self.planes.get_mut(index)?,publication:&self.publication,journal:&mut self.pose_journal,index})
     }
     pub fn iter_mut(&mut self)->std::slice::IterMut<'_,ImagePlane>{self.changed();self.planes.iter_mut()}
 }
@@ -221,11 +249,11 @@ impl<'a> IntoIterator for &'a mut ImagePlaneList{type Item=&'a mut ImagePlane;ty
 /// let mut pose=planes.pose_mut(0).unwrap();
 /// *pose=replacement;
 /// ```
-pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane,publication:&'a std::sync::atomic::AtomicU64}
+pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane,publication:&'a std::sync::atomic::AtomicU64,journal:&'a mut ImagePoseJournal,index:usize}
 impl std::ops::Deref for ImagePoseGuard<'_>{type Target=ImagePlane;fn deref(&self)->&ImagePlane{self.plane}}
 impl ImagePoseGuard<'_>{
-    pub fn set_origin(&mut self,origin:DVec3){if self.plane.origin!=origin{self.plane.origin=origin;self.publication.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}}
-    pub fn set_frame(&mut self,[origin,u,v]:[DVec3;3]){if [self.plane.origin,self.plane.u,self.plane.v]!=[origin,u,v]{self.plane.origin=origin;self.plane.u=u;self.plane.v=v;self.publication.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}}
+    pub fn set_origin(&mut self,origin:DVec3){if self.plane.origin!=origin{self.plane.origin=origin;let revision=next_image_membership_epoch();self.publication.store(revision,std::sync::atomic::Ordering::Relaxed);self.journal.record(self.index,revision);}}
+    pub fn set_frame(&mut self,[origin,u,v]:[DVec3;3]){if [self.plane.origin,self.plane.u,self.plane.v]!=[origin,u,v]{self.plane.origin=origin;self.plane.u=u;self.plane.v=v;let revision=next_image_membership_epoch();self.publication.store(revision,std::sync::atomic::Ordering::Relaxed);self.journal.record(self.index,revision);}}
 }
 
 /// Mirrors original command-held object lifetime without coordinate matching.
@@ -661,5 +689,30 @@ impl ImageRotation {
   let clone=p.clone();assert_eq!(clone,p);assert_ne!(clone.publication_revision(),changed);
   let encoded=serde_json::to_value(&p).unwrap();assert!(encoded.is_array());let decoded:ImagePlaneList=serde_json::from_value(encoded).unwrap();assert_eq!(decoded,p);assert_ne!(decoded.publication_revision(),changed);
   p[0].opacity=0.5;assert_ne!(p.publication_revision(),changed);
+ }
+}
+
+#[cfg(test)]mod pose_journal_tests{
+ use super::*;
+ fn planes()->ImagePlaneList{vec![ImagePlane::new("missing",DVec3::ZERO,DVec3::X,DVec3::Y);2].into()}
+ #[test]fn restricted_changes_are_immediate_and_survive_forgotten_guard(){
+  let mut p=planes();let epoch=p.membership_epoch();let initial=p.publication_revision();
+  p.pose_mut(0).unwrap().set_origin(DVec3::ZERO);assert_eq!(p.publication_revision(),initial);assert_eq!(p.pose_changes_since(epoch,initial).unwrap().count(),0);
+  let mut pose=p.pose_mut(1).unwrap();pose.set_origin(DVec3::Z);std::mem::forget(pose);
+  assert_eq!(p.membership_epoch(),epoch);assert_eq!(p.pose_changes_since(epoch,initial).unwrap().collect::<Vec<_>>(),vec![1]);
+  let changed=p.publication_revision();p.pose_mut(0).unwrap().set_frame([DVec3::X,DVec3::Y,DVec3::Z]);
+  assert_eq!(p.pose_changes_since(epoch,changed).unwrap().collect::<Vec<_>>(),vec![0]);
+ }
+ #[test]fn overflow_and_every_structural_owner_change_refuse_stale_readers(){
+  let mut p=planes();let epoch=p.membership_epoch();let initial=p.publication_revision();
+  for i in 1..=IMAGE_POSE_JOURNAL_CAPACITY{p.pose_mut(0).unwrap().set_origin(DVec3::new(i as f64,0.,0.));}
+  assert_eq!(p.pose_changes_since(epoch,initial).unwrap().count(),IMAGE_POSE_JOURNAL_CAPACITY);
+  let before_overwrite=p.publication_revision();p.pose_mut(1).unwrap().set_origin(DVec3::Y);
+  assert!(p.pose_changes_since(epoch,initial).is_none());assert_eq!(p.pose_changes_since(epoch,before_overwrite).unwrap().collect::<Vec<_>>(),vec![1]);
+  let changed=p.publication_revision();p.reverse();assert!(p.pose_changes_since(epoch,changed).is_none());
+  let epoch=p.membership_epoch();let changed=p.publication_revision();p[0].id=uuid::Uuid::new_v4();assert!(p.pose_changes_since(epoch,changed).is_none());
+  let epoch=p.membership_epoch();let changed=p.publication_revision();let clone=p.clone();assert!(clone.pose_changes_since(epoch,changed).is_none());
+  let data=serde_json::to_value(&p).unwrap();assert!(data.is_array());let decoded:ImagePlaneList=serde_json::from_value(data).unwrap();assert_eq!(decoded,p);assert!(decoded.pose_changes_since(epoch,changed).is_none());
+  assert!(p.pose_changes_since(p.membership_epoch(),u64::MAX).is_none());
  }
 }

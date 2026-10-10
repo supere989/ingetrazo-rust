@@ -26,9 +26,13 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
    for id in ids{resources.retire(id)?;}
    assert_eq!(resources.collect(fence,0)?,count);
    let retirement_ms=retirement.elapsed().as_secs_f64()*1000.;
+   assert!(budget.ledger.lock().unwrap().total_committed()>0,"Retained staging lost its charge");
+   resources.release_image_staging();
    assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);
    assert_eq!(resources.stats.upload_calls,count as u64);
-   assert_eq!(resources.stats.staging_allocations,if batch{1}else{count as u64});
+   assert_eq!(resources.stats.staging_allocations,1);
+   assert_eq!(resources.stats.upload_staging_maps,1);
+   assert_eq!(resources.stats.upload_staging_unmaps,1);
    // Both paths reuse the resource owner's transfer pair.
    assert_eq!(resources.stats.transfer_fence_creations,1);
    assert_eq!(resources.stats.transfer_command_allocations,1);
@@ -43,11 +47,13 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
  assert!(resources.upload_many(&context,&[(&data[..35],vk::BufferUsageFlags::STORAGE_BUFFER)]).is_err());
  assert_eq!(resources.stats.buffer_allocations,before);
  let id=resources.upload(&context,&data,vk::BufferUsageFlags::STORAGE_BUFFER,true)?;
- let charged=budget.ledger.lock().unwrap().total_committed();resources.retire(id)?;resources.collect(fence,0)?;
+ let charged=resources.allocation_bytes(id).unwrap();resources.retire(id)?;resources.collect(fence,0)?;resources.release_image_staging();
  budget.ledger.lock().unwrap().total_limit=Some(charged*2);
  let before=resources.stats.buffer_allocations;
  assert!(resources.upload_many(&context,&vec![(data.as_slice(),vk::BufferUsageFlags::STORAGE_BUFFER);32]).is_err());
  assert_eq!(resources.stats.buffer_allocations-before,2);
+ assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);
+ drop(resources);
  assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);
  budget.ledger.lock().unwrap().total_limit=Some(128*1024*1024);
  unsafe{context.device.destroy_fence(fence,None)};
