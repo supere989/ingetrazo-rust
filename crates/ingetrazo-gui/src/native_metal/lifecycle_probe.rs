@@ -24,6 +24,8 @@ pub(super) struct Probe {
     releases: u64,
     cancel_verified: bool,
     event_baseline: (u64, u64, u64),
+    canvas_uploads: Option<([u64; 5], u64)>,
+    canvas_warm_frames: u64,
 }
 impl Probe {
     pub fn new(root: PathBuf, choice: &str) -> Result<Self, String> {
@@ -63,6 +65,8 @@ impl Probe {
             releases: 0,
             cancel_verified: false,
             event_baseline: (0, 0, 0),
+            canvas_uploads: None,
+            canvas_warm_frames: 0,
         })
     }
     pub fn setup(&mut self, app: &mut IngeTrazoApp) -> Result<(), String> {
@@ -101,6 +105,24 @@ impl Probe {
             return Err("Authored triangle did not dirty document".into());
         }
         Ok(())
+    }
+    /// Observe only successfully submitted application frames. No queue work is
+    /// added to ordinary host rendering when the diagnostic is absent.
+    pub fn canvas_submitted(&mut self, ctx: &egui::Context, painter: &EguiPainter) {
+        if self.choice != "canvas" { return; }
+        let Some(raw) = crate::paper_raw_texture::stats(ctx) else { return; };
+        let uploads = painter.stats().texture_uploads;
+        if raw[0] != 0 || raw[1] != 0 || raw[2] == 0 || raw[2] != raw[4] {
+            self.canvas_warm_frames = 0;
+            self.canvas_uploads = None;
+            return;
+        }
+        if self.canvas_uploads == Some((raw, uploads)) {
+            self.canvas_warm_frames += 1;
+        } else {
+            self.canvas_warm_frames = 0;
+        }
+        self.canvas_uploads = Some((raw, uploads));
     }
     pub fn native_event(&mut self, event: &WindowEvent) {
         match event {
@@ -188,13 +210,16 @@ impl Probe {
             ));
         }
         if self.choice == "canvas" {
-            if gpu.presentation_counters().0 > 0 && self.phase == 0 {
+            if gpu.presentation_counters().0 > 0 && self.phase == 0 && self.canvas_warm_frames >= 3 {
                 let snapshot = serde_json::json!({
                     "window_id": gpu.native_window_id()?,
                     "submitted": gpu.counters().0,
                     "displayed": gpu.presentation_counters().0,
                     "completed_inflight": gpu.completed_inflight_for_probe(),
-                    "physical_mac_claim": false
+                    "physical_mac_claim": false,
+                    "raw_uploads": self.canvas_uploads.map(|v|v.0),
+                    "texture_uploads": self.canvas_uploads.map(|v|v.1),
+                    "warm_frames": self.canvas_warm_frames
                 });
                 let pending = self.root.join("own-window.pending");
                 std::fs::write(&pending, serde_json::to_vec_pretty(&snapshot).map_err(|e| e.to_string())?)
@@ -295,7 +320,7 @@ impl Probe {
                 return Err(error.into());
             }
             if self.choice == "canvas" {
-                if self.phase != 4 || self.close_events == 0 || gpu.presentation_counters().0 == 0 {
+                if self.phase != 4 || self.close_events == 0 || gpu.presentation_counters().0 == 0 || self.canvas_warm_frames < 3 {
                     return Err("Missing completed Canvas presentation and native closure".into());
                 }
                 if app.document_dirty() || std::fs::read(&self.document).map_err(|e| e.to_string())? != self.initial_bytes {

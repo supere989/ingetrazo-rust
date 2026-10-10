@@ -189,6 +189,7 @@ impl Host {
             Ok(true) => {
                 if let Some(probe) = self.probe.as_mut() {
                     probe.submitted(&state.app, state.gpu.counters().0);
+                    probe.canvas_submitted(&self.ctx, &state.painter);
                 }
             }
             Ok(false) => {

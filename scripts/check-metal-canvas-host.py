@@ -24,6 +24,9 @@ with (a.output / "host.log").open("wb") as log:
         window = snapshot["window_id"]
         if type(window) is not int or not 0 < window < 2**32 or snapshot["displayed"] <= 0:
             raise RuntimeError("Invalid own-window presentation identity")
+        raw = snapshot.get("raw_uploads")
+        if not isinstance(raw, list) or len(raw) != 5 or raw[0:2] != [0, 0] or raw[2] <= 0 or raw[2] != raw[4] or snapshot.get("warm_frames", 0) < 3:
+            raise RuntimeError("Missing acknowledged Canvas texture and stable warm uploads")
         report["snapshot"] = snapshot
         image = a.output / "canvas.png"
         result = subprocess.run(["/usr/sbin/screencapture", "-x", "-o", "-l" + str(window), str(image.resolve())], capture_output=True, timeout=2)
