@@ -1,0 +1,108 @@
+{
+  "active_world_centers": [],
+  "anchor": [
+    3.2,
+    3.0,
+    1.0
+  ],
+  "center": [
+    2.053415123020104,
+    3.0,
+    1.0
+  ],
+  "center_pixel": [
+    665.816403598043,
+    336.72986048918267
+  ],
+  "committed_wire_segments": [],
+  "context_depth": 0,
+  "copy_center": null,
+  "copy_probe_pixel": null,
+  "curves": [
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71,
+    71
+  ],
+  "definitions": {},
+  "edges": 24,
+  "entry_pixel": null,
+  "faces": 0,
+  "group_centers": [],
+  "group_count": 0,
+  "group_definitions": [],
+  "group_ids": [],
+  "history_context": [],
+  "inference_point": [
+    3.2534151230201047,
+    3.0,
+    1.0
+  ],
+  "kind": "FromPoint",
+  "memory": [
+    [
+      2.0,
+      3.0,
+      1.0
+    ]
+  ],
+  "mode": "curve",
+  "move_target": [
+    778.5280132911963,
+    336.72986048918267
+  ],
+  "preview_lines": 1,
+  "preview_wire_segments": [
+    [
+      [
+        769.2031453054271,
+        336.72986048918267
+      ],
+      [
+        774.0195489034702,
+        336.72986048918267
+      ]
+    ]
+  ],
+  "redo": 0,
+  "revision": 2,
+  "rim": [
+    774.0195489034702,
+    336.72986048918267
+  ],
+  "root_child_counts": [],
+  "root_child_world_centers": [],
+  "root_ids": [],
+  "selection_count": 24,
+  "time": 3.099066676,
+  "tool": "Move",
+  "undo": 0,
+  "unused_vertices": 0,
+  "vertices": 24,
+  "viewport_rect": [
+    50.0,
+    60.0,
+    1222.0,
+    709.6375122070312
+  ]
+}

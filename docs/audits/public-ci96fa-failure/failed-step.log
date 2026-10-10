@@ -1,0 +1,13 @@
+2026-10-10T08:54:04.5786695Z Actual center gesture PASS curve native
+2026-10-10T08:54:29.0178908Z Traceback (most recent call last):
+2026-10-10T08:54:29.0213855Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-center-tracking.py", line 204, in <module>
+2026-10-10T08:54:29.0214503Z     if __name__=="__main__":main()
+2026-10-10T08:54:29.0214765Z                             ~~~~^^
+2026-10-10T08:54:29.0215334Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-center-tracking.py", line 156, in main
+2026-10-10T08:54:29.0216082Z     move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
+2026-10-10T08:54:29.0216676Z                                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-10T08:54:29.0217296Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-center-tracking.py", line 16, in wait
+2026-10-10T08:54:29.0217902Z     raise AssertionError("Timed out awaiting rendered event/state")
+2026-10-10T08:54:29.0218290Z AssertionError: Timed out awaiting rendered event/state
+2026-10-10T08:54:29.0365549Z ##[error]Process completed with exit code 1.
+2026-10-10T08:54:29.0577507Z 

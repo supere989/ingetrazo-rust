@@ -1,0 +1,1036 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "b86fe3bb7d38dbeaa0bba33062f9ce7d53ce8603",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "early": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      }
+    ],
+    "scene_version": 0,
+    "selection_count": 0,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141511.752600113,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": true,
+      "radius_px": 40.0,
+      "pointer": [
+        607.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "acquired": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      }
+    ],
+    "scene_version": 0,
+    "selection_count": 0,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141512.012642875,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": true,
+      "radius_px": 40.0,
+      "pointer": [
+        607.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "centered": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      },
+      {
+        "point": [
+          520.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.051404561
+      },
+      {
+        "point": [
+          500.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.238312502
+      }
+    ],
+    "scene_version": 0,
+    "selection_count": 0,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141512.372394259,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": true,
+      "radius_px": 40.0,
+      "pointer": [
+        500.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "anchor": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      },
+      {
+        "point": [
+          520.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.051404561
+      },
+      {
+        "point": [
+          500.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.238312502
+      }
+    ],
+    "scene_version": 0,
+    "selection_count": 0,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [
+      [
+        [
+          500.0,
+          272.97163030005703
+        ],
+        [
+          500.0,
+          272.97163030005703
+        ]
+      ]
+    ],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 1,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141512.752215082,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_hint_observation": {
+      "valid_reference": true,
+      "radius_px": 40.0,
+      "pointer": [
+        500.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "moved": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      },
+      {
+        "point": [
+          520.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.051404561
+      },
+      {
+        "point": [
+          500.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.238312502
+      },
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141513.971820286
+      },
+      {
+        "point": [
+          696.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141514.372488266
+      }
+    ],
+    "scene_version": 4,
+    "selection_count": 24,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141514.772823037,
+    "center": [
+      3.003628730773926,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      696.0010708255697,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      589.2674582363472,
+      272.97163030005703
+    ],
+    "move_target": [
+      784.9457605316002,
+      272.97163030005703
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.2036285400390625,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": true,
+      "radius_px": 40.0,
+      "pointer": [
+        696.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "moved_hint": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      },
+      {
+        "point": [
+          520.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.051404561
+      },
+      {
+        "point": [
+          500.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.238312502
+      },
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141513.971820286
+      },
+      {
+        "point": [
+          696.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141514.372488266
+      },
+      {
+        "point": [
+          716.0,
+          293.0
+        ],
+        "edges": 24,
+        "at": 141515.073729835
+      },
+      {
+        "point": [
+          696.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141515.124011698
+      },
+      {
+        "point": [
+          589.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141515.375051186
+      }
+    ],
+    "scene_version": 4,
+    "selection_count": 24,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141515.412830449,
+    "center": [
+      3.003628730773926,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      696.0010708255697,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      589.2674582363472,
+      272.97163030005703
+    ],
+    "move_target": [
+      784.9457605316002,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      3.0036284923553467,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        3.0036284923553467,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": true,
+      "radius_px": 40.0,
+      "pointer": [
+        589.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "deleted": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141511.723795113
+      },
+      {
+        "point": [
+          520.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.051404561
+      },
+      {
+        "point": [
+          500.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141512.238312502
+      },
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141513.971820286
+      },
+      {
+        "point": [
+          696.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141514.372488266
+      },
+      {
+        "point": [
+          716.0,
+          293.0
+        ],
+        "edges": 24,
+        "at": 141515.073729835
+      },
+      {
+        "point": [
+          696.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141515.124011698
+      },
+      {
+        "point": [
+          589.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141515.375051186
+      },
+      {
+        "point": [
+          609.0,
+          293.0
+        ],
+        "edges": 0,
+        "at": 141516.357427852
+      },
+      {
+        "point": [
+          589.0,
+          273.0
+        ],
+        "edges": 0,
+        "at": 141516.407662546
+      }
+    ],
+    "scene_version": 6,
+    "selection_count": 0,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [],
+    "time": 141516.451968554,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "None",
+    "inference_point": [
+      3.2506966590881348,
+      5.164129257202148,
+      0.0
+    ],
+    "memory": [
+      [
+        3.0036284923553467,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 0,
+    "faces": 0,
+    "undo": 2,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": false,
+      "radius_px": 0.0,
+      "pointer": [
+        589.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "requested_move_delta": [
+    1.0,
+    0,
+    0
+  ],
+  "actual_move_delta": [
+    1.0036288499832153,
+    0.0,
+    0.0
+  ],
+  "move_coordinate_parity": false,
+  "pointer_quantized_move_matches": true,
+  "approach_hint_metrics": {
+    "filled_center": true,
+    "core_green": 17,
+    "outer_green": 56,
+    "core_samples": 25,
+    "majority_threshold": 13
+  },
+  "approach_green_pixels": 56,
+  "approach_hint_visual_parity_open": false,
+  "elapsed_wall_seconds": 0.3009068050014321,
+  "scope": "Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select/Undo shortcuts wired to original public actions, software GL Xvfb. Move/Delete original geometry/history, center acquisition and invalidation; broader Move workflow separate.",
+  "checker_sha256": "7dcc8709bd491fc64b9c1f8bb2f3f5d8e5e122755ae96595ca1f13bc5754a9c9",
+  "executable_sha256": "2e20257e58104cf0bfabc20d2c68fd0017d0bdb02f1472ad38746c0ab693df96"
+}

@@ -55,6 +55,12 @@ def main():
    x.XWarpPointer.argtypes=[C.c_void_p,C.c_ulong,C.c_ulong,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_int,C.c_int];x.XFlush.argtypes=[C.c_void_p];x.XSetInputFocus.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_ulong];x.XSetInputFocus(d,window,1,0)
    def move(point,pause=.05):
     x.XWarpPointer(d,0,window,0,0,0,0,round(point[0]),round(point[1]));x.XFlush(d);time.sleep(pause)
+   def latest_mouse_at():
+    events=state().get("mouse_events",[]);return events[-1]["at"] if events else -1
+   def delivered_mouse(point,after):
+    current=state();events=current.get("mouse_events",[])
+    if events and events[-1]["at"]>after and sum((a-b)**2 for a,b in zip(events[-1]["point"],map(round,point)))<1:return current
+    return None
    xt=C.CDLL(ctypes.util.find_library("Xtst"));xt.XTestFakeButtonEvent.argtypes=[C.c_void_p,C.c_uint,C.c_int,C.c_ulong];xt.XTestFakeKeyEvent.argtypes=[C.c_void_p,C.c_uint,C.c_int,C.c_ulong]
    def event(kind,code,point,mask):
     if kind in (4,5):assert xt.XTestFakeButtonEvent(d,code,kind==4,0)
@@ -153,7 +159,24 @@ def main():
      key(0x6c)
      # Move ends at its new rim. Original hover is event-driven: create actual
      # pointer motion after switching tool rather than warping to the same pixel.
-     move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
+     observe("moved-line-tool")
+     away=[moved["rim"][0]+20,moved["rim"][1]+20]
+     if original and os.environ.get("INGETRAZO_MOVE_COALESCE_NEGATIVE")=="1":
+      import signal
+      os.kill(app.pid,signal.SIGSTOP)
+      try:move(away);move(moved["rim"])
+      finally:os.kill(app.pid,signal.SIGCONT)
+      observe("moved-coalesced-return")
+     else:
+      before=latest_mouse_at() if original else -1
+      move(away)
+      if original:wait(lambda:delivered_mouse(away,before))
+      observe("moved-rim-away")
+      before=latest_mouse_at() if original else -1
+      move(moved["rim"])
+      if original:wait(lambda:delivered_mouse(moved["rim"],before))
+      observe("moved-rim-return")
+     wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
      moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
      assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
      ctrl_key(0x61);observe("delete-selected");key(0xffff);observe("delete-key")

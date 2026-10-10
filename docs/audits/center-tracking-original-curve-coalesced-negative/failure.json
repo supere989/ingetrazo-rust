@@ -1,0 +1,153 @@
+{
+  "passed": false,
+  "error": "AssertionError('Timed out awaiting rendered event/state')",
+  "provenance": {
+    "rust_commit": "b38d92e47501658d39ab493f1c5d976b6eccd04b",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "curve",
+  "original": true,
+  "checker_sha256": "e9e84e9018a15fbade0d9583e4b0ff5d638df1e4edd4c6d360e3dd8036464ac2",
+  "last_state": {
+    "mouse_events": [
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141439.142809693
+      },
+      {
+        "point": [
+          520.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141439.471074881
+      },
+      {
+        "point": [
+          500.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141439.656425835
+      },
+      {
+        "point": [
+          607.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141441.389629404
+      },
+      {
+        "point": [
+          696.0,
+          273.0
+        ],
+        "edges": 24,
+        "at": 141441.790054107
+      }
+    ],
+    "scene_version": 4,
+    "selection_count": 24,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 141462.632274387,
+    "center": [
+      3.003628730773926,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      696.0010708255697,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      589.2674582363472,
+      272.97163030005703
+    ],
+    "move_target": [
+      784.9457605316002,
+      272.97163030005703
+    ],
+    "kind": null,
+    "inference_point": null,
+    "memory": [],
+    "edges": 24,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "valid_reference": false,
+      "radius_px": 0.0,
+      "pointer": [
+        696.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  }
+}

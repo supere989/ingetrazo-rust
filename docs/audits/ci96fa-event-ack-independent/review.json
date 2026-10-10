@@ -1,0 +1,43 @@
+{
+  "reviewed_commit": "252d290518fb0813ac9a49125c4cf2e5da337a14",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_python": "Python 3.13.13",
+  "source_only": true,
+  "positive_exit": 0,
+  "negative_expected_exit": 1,
+  "event_timeline": [
+    {
+      "point": [
+        696.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141593.200373491
+    },
+    {
+      "point": [
+        716.0,
+        293.0
+      ],
+      "edges": 24,
+      "at": 141593.901810374
+    },
+    {
+      "point": [
+        696.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141593.952184904
+    }
+  ],
+  "negative_no_post_switch_mouse_events": true,
+  "negative_tool": "LineTool",
+  "negative_undo": 1,
+  "negative_memory": [],
+  "sha256": {
+    "scripts/check-native-center-tracking.py": "7dcc8709bd491fc64b9c1f8bb2f3f5d8e5e122755ae96595ca1f13bc5754a9c9",
+    "scripts/original_center_ui_fixture.py": "2e20257e58104cf0bfabc20d2c68fd0017d0bdb02f1472ad38746c0ab693df96"
+  },
+  "scope": "Independent actual original Xvfb/XTEST pointer+frame-clock replay; no Rust application build or native feature validation."
+}
