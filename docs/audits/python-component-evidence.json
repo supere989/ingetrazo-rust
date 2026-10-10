@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "2da7c625db7648aafe2fe98de4ae7abb083c4bc7",
+    "rust_commit": "54975fdd730caeb5b2e4e87fbce6fbda310201da",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -14,8 +14,10 @@
     "instance UID and opaque attributes retained",
     "nested editor commit propagates and Python preserves shared child identity",
     "exact controller undo/redo and cancel preserve document; fragment save blocked",
-    "Make Unique edit and clipboard maintain intended linkage with distinct instance IDs",
-    "nested definition edit preserves distinct child UIDs and parent/child placement matrices"
+    "unique classic clipboard copy independent, linked component copy shared, distinct placement IDs",
+    "nested definition edit preserves distinct child UIDs and parent/child placement matrices",
+    "unique parent subtree resists later original shared-child edits while preserving placements and child identity",
+    "unique leaf and parent reopen as ordinary Python groups"
   ],
   "scope": "Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; no rendered UI gesture proof."
 }
