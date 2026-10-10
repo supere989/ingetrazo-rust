@@ -294,7 +294,8 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
         obj["proto"]=serde_json::json!(idx);obj["component"]=serde_json::json!(true);
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
-    } else if g.native_document.get("proto").is_some() && geometry_changed {
+    } else if g.native_document.get("proto").is_some() && (geometry_changed
+        || g.native_baseline.get("component").and_then(|v|v.as_bool())==Some(true)) {
         obj["proto"] = serde_json::json!(protos.len());
         let original_mesh = g.native_document.get("proto").and_then(|v| v.as_u64())
             .and_then(|i| protos.get(i as usize)).unwrap_or(&g.native_document);

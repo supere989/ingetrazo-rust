@@ -240,9 +240,9 @@ fn explicit_components_share_updates_while_plain_proto_groups_remain_independent
     save_igz(&scene,&dst).unwrap();let out=scene_to_igz_document(&scene);
     assert_eq!(out["groups"][0]["proto"],out["groups"][1]["proto"]);assert_ne!(out["groups"][0]["proto"],out["groups"][2]["proto"]);
     let reopened=load_igz(&dst).unwrap();assert_eq!(reopened.groups[0].component_definition,reopened.groups[1].component_definition);
-    let unique=scene.make_component_unique(scene.groups[1].id).unwrap();assert_ne!(unique,id);
+    scene.make_component_unique(scene.groups[1].id).unwrap();assert_eq!(scene.groups[1].component_definition,None);
     save_igz(&scene,&dst).unwrap();let reopened=load_igz(&dst).unwrap();
-    assert_ne!(reopened.groups[0].component_definition,reopened.groups[1].component_definition);
+    assert_eq!(reopened.groups[1].component_definition,None);
     std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
 

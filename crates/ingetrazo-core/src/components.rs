@@ -100,8 +100,10 @@ impl Scene {
         self.component_definitions.insert(id,definition);self.bump_version();Ok(())
     }
 
-    /// Breaking a link is local to that instance and reversible with Scene history.
-    pub fn make_component_unique(&mut self,group_id:Uuid)->Result<Uuid,String> {
+    /// Match the original Make Unique contract: a leaf bakes its placement
+    /// into a private classic mesh; a container keeps its transform/tree and
+    /// gets private definitions for every previously linked descendant.
+    pub fn make_component_unique(&mut self,group_id:Uuid)->Result<(),String> {
         fn find(groups:&mut [Group],id:Uuid)->Option<&mut Group> {
             for group in groups {
                 if group.id==id {return Some(group);}
@@ -109,12 +111,34 @@ impl Scene {
             }
             None
         }
-        let group=find(&mut self.groups,group_id).ok_or("component instance not found")?;
-        let old=group.component_definition.ok_or("group is not a component")?;
-        let definition=self.component_definitions.get(&old).cloned().ok_or("component definition not found")?;
-        let id=Uuid::new_v4();group.component_definition=Some(id);
-        self.component_definitions.insert(id,definition);self.bump_version();Ok(id)
+        let mut candidate=self.clone();
+        let group=find(&mut candidate.groups,group_id).ok_or("component instance not found")?;
+        if group.component_definition.is_none() {return Err("group is not a component".into());}
+        fn detach_children(group:&mut Group,defs:&mut std::collections::HashMap<Uuid,ComponentDefinition>) {
+            for child in &mut group.children {
+                detach_children(child,defs);
+                if child.component_definition.is_some() {
+                    let id=Uuid::new_v4();
+                    defs.insert(id,ComponentDefinition{mesh:child.mesh.clone(),children:child.children.clone()});
+                    child.component_definition=Some(id);
+                }
+            }
+        }
+        if group.children.is_empty() {
+            if !group.transform.is_finite() || group.transform.determinant().abs()<1e-12 {return Err("invalid component transform".into());}
+            let axes=group.native_document.get("axes").and_then(|v|v.as_array()).filter(|a|a.len()==16)
+                .and_then(|a|a.iter().map(|v|v.as_f64()).collect::<Option<Vec<_>>>())
+                .map(|v|{let mut a=[0.;16];a.copy_from_slice(&v);glam::DMat4::from_cols_array(&a)}).unwrap_or(glam::DMat4::IDENTITY);
+            let frame=group.transform*axes;
+            for vertex in &mut group.mesh.vertices {vertex.position=group.transform.transform_point3(vertex.position);}
+            group.mesh.rebuild_spatial_index();group.transform=glam::DMat4::IDENTITY;
+            if !group.native_document.is_object() {group.native_document=serde_json::json!({});}
+            group.native_document["axes"]=serde_json::json!(frame.to_cols_array());
+        } else {detach_children(group,&mut candidate.component_definitions);}
+        group.component_definition=None;
+        candidate.bump_version();*self=candidate;Ok(())
     }
+
 }
 
 #[cfg(test)]
@@ -135,11 +159,41 @@ mod tests {
         assert_eq!(scene.groups[0].mesh.vertices[0].position.z,7.);
         assert_eq!(scene.groups[1].mesh.vertices[0].position.z,7.);
         assert_eq!(scene.groups[1].transform.w_axis.z,4.);
-        let unique=scene.make_component_unique(scene.groups[1].id).unwrap();assert_ne!(unique,definition);
+        scene.make_component_unique(scene.groups[1].id).unwrap();assert_eq!(scene.groups[1].component_definition,None);
         let mut replacement=scene.component_definitions[&definition].clone();replacement.mesh.vertices[0].position.z=9.;
         scene.replace_component_definition(definition,replacement).unwrap();
-        assert_eq!(scene.groups[1].mesh.vertices[0].position.z,7.);
+        assert_eq!(scene.groups[1].mesh.vertices[0].position.z,11.);
         scene=before;assert_eq!(scene.groups[0].mesh.vertices[0].position.z,0.);
+    }
+    #[test]
+    fn nested_unique_preserves_placements_and_detaches_entire_tree() {
+        let mut scene=Scene::new();
+        let mut mesh=Mesh::new();mesh.add_vertex(DVec3::new(1.,2.,3.));
+        let leaf=Group::with_mesh("leaf",mesh);let leaf_id=leaf.id;scene.groups.push(leaf);
+        let leaf_def=scene.make_component(leaf_id).unwrap();
+        let mut middle=Group::new("middle");middle.children.push(scene.groups.remove(0));
+        middle.transform=DMat4::from_translation(DVec3::X);let middle_id=middle.id;scene.groups.push(middle);
+        let middle_def=scene.make_component(middle_id).unwrap();
+        let mut outer=Group::new("outer");outer.children.push(scene.groups.remove(0));
+        outer.transform=DMat4::from_translation(DVec3::Y);let outer_id=outer.id;scene.groups.push(outer);
+        let outer_def=scene.make_component(outer_id).unwrap();
+        scene.groups.push(scene.groups[0].duplicate_instance());
+        let original=scene.groups[0].clone();scene.make_component_unique(outer_id).unwrap();
+        let unique=&scene.groups[0];assert_eq!(unique.id,original.id);assert_eq!(unique.transform,original.transform);
+        assert_eq!(unique.component_definition,None);
+        let middle=&unique.children[0];assert_eq!(middle.id,middle_id);assert_eq!(middle.transform,original.children[0].transform);
+        assert_ne!(middle.component_definition,Some(middle_def));
+        let leaf=&middle.children[0];assert_eq!(leaf.id,leaf_id);assert_ne!(leaf.component_definition,Some(leaf_def));
+        let private_leaf=leaf.component_definition.unwrap();
+        let mut changed=scene.component_definitions[&leaf_def].clone();changed.mesh.vertices[0].position.z=99.;
+        scene.replace_component_definition(leaf_def,changed).unwrap();
+        assert_eq!(scene.groups[0].children[0].children[0].mesh.vertices[0].position.z,3.);
+        assert_eq!(scene.groups[1].children[0].children[0].mesh.vertices[0].position.z,99.);
+        let mut changed=scene.component_definitions[&private_leaf].clone();changed.mesh.vertices[0].position.z=17.;
+        scene.replace_component_definition(private_leaf,changed).unwrap();
+        assert_eq!(scene.groups[0].children[0].children[0].mesh.vertices[0].position.z,17.);
+        assert_eq!(scene.groups[1].children[0].children[0].mesh.vertices[0].position.z,99.);
+        assert_eq!(scene.groups[1].component_definition,Some(outer_def));
     }
     #[test]
     fn recursive_replacements_and_missing_ids_are_atomic() {
