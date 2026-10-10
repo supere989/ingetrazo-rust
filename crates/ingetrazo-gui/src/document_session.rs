@@ -74,7 +74,7 @@ impl IngeTrazoApp {
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
-                Ok(scene)=>{self.retire_current_recovery();self.scene=scene;self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
+                Ok(scene)=>{self.retire_current_recovery();self.scene=scene;self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
                     self.document_session.recovered_slot=Some(record.slot);self.document_session.clean=None;
                     self.document_session.show_recovery=false;self.status_message="Recovered unsaved copy; save it to a new file".into();},
                 Err(e)=>self.status_message=format!("Recovery failed: {e}"),
@@ -92,7 +92,9 @@ impl IngeTrazoApp {
         if state.store.is_none()||!state.preferences.autosave||gesture||!self.component_edit_stack.is_empty()
             ||now.saturating_duration_since(state.last_autosave)<Duration::from_secs(state.preferences.autosave_minutes as u64*60){return Ok(false);}
         if state.clean.as_ref().map(|s|same_model(&self.scene,s)).unwrap_or(false)||state.autosaved.as_ref().map(|s|same_model(&self.scene,s)).unwrap_or(false){self.document_session.last_autosave=now;return Ok(false);}
-        let store=state.store.as_ref().unwrap();store.autosave(&self.scene,self.current_file.as_deref())?;
+        let store=state.store.as_ref().unwrap();
+        let mut snapshot=self.scene.clone();snapshot.camera=self.camera.clone();
+        store.autosave(&snapshot,self.current_file.as_deref())?;
         self.document_session.autosaved=Some(self.scene.clone());self.document_session.last_autosave=now;Ok(true)
     }
     pub fn show_discarded_recovery(&mut self) {
@@ -158,12 +160,15 @@ mod tests {
         assert!(!app.autosave_if_due(now,false).unwrap());
         let now=now+Duration::from_secs(301);
         triangle(&mut app,DVec3::new(3.,2.,1.));
+        app.camera.target=DVec3::new(12.,13.,14.);app.camera.distance=37.;
         assert!(!app.autosave_if_due(now,true).unwrap());assert!(app.autosave_if_due(now,false).unwrap());
         let slot=app.document_session.store.as_ref().unwrap().slot_for(None).unwrap();assert!(slot.is_file());
         assert!(!app.autosave_if_due(now+Duration::from_secs(301),false).unwrap());
         app.new_document();app.discard_document_action();assert!(!slot.exists());assert!(!app.document_dirty());
         let records=app.document_session.store.as_ref().unwrap().recovery_candidates(true).unwrap();assert_eq!(records.len(),1);
+        app.camera.target=DVec3::ZERO;app.camera.distance=20.;
         app.request_document_action(DocumentAction::Recover(records[0].clone()));
+        assert_eq!(app.camera.target,DVec3::new(12.,13.,14.));assert_eq!(app.camera.distance,37.);
         assert!(app.current_file.is_none());assert!(app.document_dirty());assert_eq!(app.scene.mesh.vertices[0].position,DVec3::new(3.,2.,1.));
         std::fs::remove_dir_all(root).unwrap();
     }
