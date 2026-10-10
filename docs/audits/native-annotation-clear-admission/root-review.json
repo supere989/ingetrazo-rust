@@ -1,0 +1,15 @@
+{
+  "candidate": "c5409529ea15b9e147a60ba1d0ff62b163f0fd45",
+  "integrated": "ca226c30",
+  "review": "source inspection",
+  "findings": [
+    "Warm immutable admission key retains Arc identities for geometry, batches and gates plus query count.",
+    "Pose and density remain validated each frame; cold ordered range verification advances monotonically rather than rescanning ranges.",
+    "Empty overlay stages query and geometry retirement proofs before clearing readiness and World binding."
+  ],
+  "pending": [
+    "Actual GPU deletion and refused replacement preserving prior full frame.",
+    "Complete application activation and full image source equivalence."
+  ],
+  "full_parity": false
+}
