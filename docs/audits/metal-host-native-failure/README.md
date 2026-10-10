@@ -1,0 +1,3 @@
+# Retained actual native Metal host candidate failure
+Candidate530591d run38046424746, ARM job114196778479, artifact11667810590. Root downloaded original complete artifact. Actual AppleParavirtual GPU egui textured/font/scissor images and partial update checks passed: two complete64x64 images, five checker negatives and ten warm draws plus budget/ownership controls.
+Native CAMetalLayer automatic presentation failed its unchanged15-second deadline, with two unresolved frames retained. This fails WSI acceptance; command completion is not substituted for presented completion. No timeout/retry tolerance is widened. Host remains isolated, actual application and physical Mac proof open.

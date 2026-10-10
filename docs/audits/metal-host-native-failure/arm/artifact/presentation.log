@@ -1,0 +1,3 @@
+Native Metal WSI: device=Apple Paravirtual device; unified=true; FOUNDATION ONLY
+Metal presentation ownership retained: 2 unresolved frames
+Error: "bounded WSI probe missed presented completion"

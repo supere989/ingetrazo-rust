@@ -1,0 +1,10 @@
+{
+  "candidate": "530591d",
+  "run": 38046424746,
+  "job": 114196778479,
+  "artifact": 11667810590,
+  "gpu_draw_passed": true,
+  "wsi_passed": false,
+  "deadline_s": 15,
+  "unresolved_frames": 2
+}
