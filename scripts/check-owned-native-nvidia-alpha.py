@@ -56,7 +56,10 @@ base=["red-half-white","red-half-black","opacity-bucket-order","opaque-front","o
 rounding=["rgb-tie-even","rgb-tie-odd","opacity-round-5005","opacity-round-1255"]
 names=[r["case"]for r in original["cases"]]
 back=[f"back-{f}-{b}-{direction}" for f,b in [(0.5,0.3),(1.,0.3),(0.5,1.),(1.,1.)] for direction in ["front","reversed"]]+["back-gate-activated-front","back-gate-activated-reversed","back-order-translucent-opaque","back-order-opaque-translucent"]
-assert names in [base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back]
+instanced=["back-gate-instanced-only-front","back-gate-instanced-only-reversed"]
+shade=["group-rotated-prototype","group-nested-rotated-prototype","group-classic-baked-rotation"]
+paint=["paint-default-front","paint-default-reversed","paint-face-override","paint-explicit-back","paint-child-own","paint-top-owner-not-intermediate"]
+assert names in [base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint],names
 (out/"native-ui-results.json").write_text(json.dumps({"passed":False,"cases":[],"status":"starting"}))
 
 for row in original["cases"]:
