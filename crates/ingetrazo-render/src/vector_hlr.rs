@@ -15,6 +15,54 @@ pub struct VectorSegment {
     pub b: DVec3,
     pub kind: LineKind,
 }
+/// Paper-only precision boundary of the pinned original Qt HLR camera.
+/// This does not alter the Scene, viewport projection, or general f64 HLR API.
+/// Offset construction and target addition are separate QVector3D f32 boundaries;
+/// camera_basis then performs its cross products and normalization in f64.
+#[derive(Clone, Copy, Debug)]
+pub struct OriginalQtPaperBasis {
+    pub eye: DVec3,
+    pub right: DVec3,
+    pub up: DVec3,
+    pub forward: DVec3,
+}
+impl OriginalQtPaperBasis {
+    pub fn from_camera(camera: &OrbitCamera) -> Self {
+        let target = camera.target.as_vec3();
+        let offset = DVec3::new(
+            camera.distance * camera.pitch.cos() * camera.yaw.cos(),
+            camera.distance * camera.pitch.cos() * camera.yaw.sin(),
+            camera.distance * camera.pitch.sin(),
+        )
+        .as_vec3();
+        let eye = (target + offset).as_dvec3();
+        let delta = target.as_dvec3() - eye;
+        let forward = delta / delta.length().max(1e-12);
+        let qt_forward = (target - (target + offset)).normalize_or_zero();
+        let mut up = camera.up.as_vec3();
+        if qt_forward.dot(up).abs() >= 0.9999 {
+            let sign = if camera.pitch > 0. { -1. } else { 1. };
+            up = DVec3::new(sign * camera.yaw.cos(), sign * camera.yaw.sin(), 0.).as_vec3();
+        }
+        let right = forward.cross(up.as_dvec3());
+        let right = right / right.length().max(1e-12);
+        let up = right.cross(forward);
+        Self {
+            eye,
+            right,
+            up,
+            forward,
+        }
+    }
+    pub fn project(&self, point: DVec3) -> DVec3 {
+        let delta = point - self.eye;
+        DVec3::new(
+            delta.dot(self.right),
+            delta.dot(self.up),
+            delta.dot(self.forward),
+        )
+    }
+}
 fn project(p: DVec3, camera: &OrbitCamera) -> DVec3 {
     let p = p - camera.eye();
     DVec3::new(
