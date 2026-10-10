@@ -389,7 +389,8 @@ fn render_model_projection(
     let painter = painter.with_clip_rect(frame_rect);
     let snapshot=frame_scene(scene,frame);let scene=snapshot.as_ref();
 
-    let view_mat=frame_camera(scene,frame).view_matrix();
+    let camera=frame_camera(scene,frame);
+    let view_mat=camera.view_matrix();
 
     // Sacred scale equation: model_height_m = frame.rect.h * scale_n / 1000
     let model_h_m = model_height_for_frame(frame.rect.h, frame.scale_n);
@@ -400,8 +401,8 @@ fn render_model_projection(
         model_w_m * 0.5,
         -model_h_m * 0.5,
         model_h_m * 0.5,
-        0.1,
-        1000.0,
+        -camera.zfar,
+        camera.zfar,
     );
     let view_proj = proj_mat * view_mat;
 
