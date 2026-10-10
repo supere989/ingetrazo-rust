@@ -88,6 +88,15 @@ impl MetalPresentation {
         // install the supplied layer FIRST, then opt into layer hosting.
         // https://developer.apple.com/documentation/appkit/nsview/wantslayer
         let prior_wants_layer = view.wantsLayer();
+        // winit's content view can already be layer-backed. Establish the
+        // documented hosting transition explicitly before installing our layer;
+        // attachment precedes any GPU command/drawable ownership.
+        if prior_wants_layer {
+            view.setWantsLayer(false);
+            if view.wantsLayer() {
+                return Err("AppKit refused to leave prior layer-backed mode".into());
+            }
+        }
         view.setLayer(Some(&layer));
         view.setWantsLayer(true);
         let view_layer_matches = view.layer().is_some_and(|actual| {
@@ -98,7 +107,7 @@ impl MetalPresentation {
             return Err("AppKit did not retain the supplied Metal hosting layer".into());
         }
         eprintln!(
-            "Metal layer-hosting order: custom-layer-before-wantsLayer; prior_wantsLayer={prior_wants_layer}; actual_wantsLayer={}; view_layer_matches={view_layer_matches}",
+            "Metal layer-hosting order: backed-off-then-custom-layer-before-wantsLayer; prior_wantsLayer={prior_wants_layer}; actual_wantsLayer={}; view_layer_matches={view_layer_matches}",
             view.wantsLayer()
         );
         eprintln!(
