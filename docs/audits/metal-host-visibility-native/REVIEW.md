@@ -1,0 +1,5 @@
+# Initial visibility is actually positive
+
+Sourcec8506bedfabcf9fec1e8addc1f3094f14683f82d, run38058158860 ARMjob114230762497 artifact11672089818. All Save/Discard/Cancel traces show actual window visible=true at creation, layer attachment and application-ready. Native Focused(true)/Occluded(false) events also see visible=true; no Visible/Minimized viewport commands. This refutes an initialization-hidden hypothesis and provides no evidence to force an extra startup show.
+
+All three lifecycle probes still fail phase0/no positive display callback; example Save9submitted6retired/skipped3pending, all pendingGPUCompleted withoutcallbacks. Final is_visible=false is sampled in exiting after event-loop exit and cannot establish a live hidden-window cause. Next error-only snapshot captures diagnostics before ev.exit to remove that attribution ambiguity. Deadline15s, callback/positive modal/actions/retirement gates unchanged. Original source/runtime failure remains, no app or physicalGPU closure.

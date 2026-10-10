@@ -1,0 +1,14 @@
+[
+  {
+    "choice": "save",
+    "returncode": 1
+  },
+  {
+    "choice": "discard",
+    "returncode": 1
+  },
+  {
+    "choice": "cancel",
+    "returncode": 1
+  }
+]

@@ -1,0 +1,7 @@
+Native Metal compression device=Apple Paravirtual device; unified=true
+Metal texture/mip upload completion unknown: complete ownership retained
+PASS bc1: stalled compressed image+staging retained_bytes=32768; admission poisoned; real later completion observed
+PASS bc1: actual allocated_image_bytes=16384; block_bytes=8; warm_uploads0; pressure+rollback; finalledger0
+Metal texture/mip upload completion unknown: complete ownership retained
+PASS astc: stalled compressed image+staging retained_bytes=32768; admission poisoned; real later completion observed
+PASS astc: actual allocated_image_bytes=16384; block_bytes=16; warm_uploads0; pressure+rollback; finalledger0
