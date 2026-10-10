@@ -1,0 +1,27 @@
+{
+  "actual_charged_bytes": 36480288,
+  "additional_position_bytes": 3600000,
+  "cold_build_ms": 95.763728,
+  "compact_preprocessing_ms": 1.8961099999999997,
+  "contour_batches": 55,
+  "final_ledger_bytes": 0,
+  "forced_storage_limit": 65536,
+  "gpu_draw_ms_after_one_warmup": [
+    47.356413,
+    49.131332,
+    55.121898,
+    52.152464,
+    48.154308,
+    48.436551,
+    47.363515,
+    54.532525,
+    50.866096,
+    48.191849
+  ],
+  "peak_charged_bytes": 38400288,
+  "scope": "Bounded direct GPU world+contour command timestamps, 800x600/4x MSAA. Diagnostic GPU readback occurs after each timestamp interval; shader first use excluded by one warmup. Synthetic linear corpus, not representative application throughput.",
+  "transparent": false,
+  "triangles": 100000,
+  "warm_geometry_uploads": 0,
+  "warm_gpu_allocations": 0
+}

@@ -69,6 +69,7 @@ struct GpuTimer {
     pool: vk::QueryPool,
     bits: u32,
     period: f32,
+    last_ms: std::cell::Cell<Option<f64>>,
 }
 impl GpuTimer {
     fn new(context: &VulkanContext) -> Result<Option<Self>, vk::Result> {
@@ -86,6 +87,7 @@ impl GpuTimer {
                 pool,
                 bits,
                 period,
+                last_ms: std::cell::Cell::new(None),
             }))
         } else {
             Ok(None)
@@ -178,6 +180,9 @@ fn render(
             (1u64 << timer.bits) - 1
         };
         let elapsed = ticks[1].wrapping_sub(ticks[0]) & mask;
+        timer
+            .last_ms
+            .set(Some(elapsed as f64 * timer.period as f64 / 1e6));
         eprintln!(
             "Actual full World GPUdraw timestamp serial{serial}: {:.6}ms",
             elapsed as f64 * timer.period as f64 / 1e6
@@ -213,6 +218,109 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }?;
     let command = commands[0];
     let timer = GpuTimer::new(&context)?;
+    if let Some(count) = args
+        .windows(2)
+        .find(|a| a[0] == "--perf-triangles")
+        .map(|a| a[1].parse::<usize>())
+        .transpose()?
+    {
+        if count == 0 || count > 250000 {
+            return Err("Bounded performance fixture accepts 1..=250000 triangles".into());
+        }
+        let transparent = args.iter().any(|a| a == "--transparent");
+        let limit = args
+            .windows(2)
+            .find(|a| a[0] == "--storage-limit")
+            .map(|a| a[1].parse::<u64>())
+            .transpose()?;
+        // Linear fixture generation; bypass edge topology since this rendering probe owns no edits.
+        let mut scene = Scene::new();
+        let columns = (count as f64).sqrt().ceil() as usize;
+        let step = 1. / columns as f64;
+        for index in 0..count {
+            let x = (index % columns) as f64 * step;
+            let y = (index / columns) as f64 * step;
+            let first = scene.mesh.vertices.len();
+            for p in [
+                DVec3::new(x, y, 1.),
+                DVec3::new(x + step * 0.9, y, 2.),
+                DVec3::new(x, y + step * 0.9, 2.),
+            ] {
+                scene
+                    .mesh
+                    .vertices
+                    .push(ingetrazo_core::mesh::MeshVertex::new(p));
+            }
+            let mut face = ingetrazo_core::mesh::MeshFace::new(vec![first, first + 1, first + 2]);
+            if transparent {
+                face.attrs.insert("opacity".into(), serde_json::json!(0.5));
+            }
+            scene.mesh.faces.push(face);
+        }
+        scene.section_planes.push(SectionPlane::new(
+            DVec3::new(0., 0., 1.5),
+            DVec3::Z,
+            "A",
+            "A",
+        ));
+        scene.show_section_cuts = true;
+        scene.show_section_fill = true;
+        let mut camera = OrbitCamera::default();
+        camera.set_standard_view(StandardView::Top);
+        camera.target = DVec3::new(0.5, 0.5, 1.5);
+        camera.distance = 5.;
+        camera.perspective = false;
+        camera.aspect = 800. / 600.;
+        let style = ingetrazo_render::style::StyleConfig::default();
+        let mut world = World::new(&context, budget.clone())?;
+        if let Some(limit) = limit {
+            world.set_contour_storage_limit_for_probe(limit)?;
+        }
+        world.resize_offscreen(
+            &context,
+            vk::Extent2D {
+                width: 800,
+                height: 600,
+            },
+        )?;
+        world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
+        let cold = world.contour_metrics();
+        let charged = budget.ledger.lock().unwrap().total_committed();
+        let mut times = Vec::new();
+        for serial in 1..=11 {
+            world.set_scene(&context, &scene, &camera, &style, fence, serial - 1, 1)?;
+            let image = render(&context, timer.as_ref(), &mut world, fence, command, serial)?;
+            assert_eq!(image.len(), 800 * 600 * 4);
+            assert_eq!(world.uploads, 1);
+            assert_eq!(
+                budget.ledger.lock().unwrap().total_committed(),
+                charged,
+                "Warm frame allocated additional GPU memory"
+            );
+            if serial > 1 {
+                times.push(timer.as_ref().and_then(|t| t.last_ms.get()));
+            }
+        }
+        let peak = budget.ledger.lock().unwrap().peak_committed;
+        drop(world);
+        assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
+        let result = serde_json::json!({"triangles":count,"transparent":transparent,"forced_storage_limit":limit,"additional_position_bytes":cold.additional_position_bytes,"contour_batches":cold.batches,"cold_build_ms":cold.cold_build_ms,"compact_preprocessing_ms":cold.compact_preprocess_ms,"gpu_draw_ms_after_one_warmup":times,"actual_charged_bytes":charged,"peak_charged_bytes":peak,"warm_geometry_uploads":0,"warm_gpu_allocations":0,"final_ledger_bytes":0,"scope":"Bounded direct GPU world+contour command timestamps, 800x600/4x MSAA. Diagnostic GPU readback occurs after each timestamp interval; shader first use excluded by one warmup. Synthetic linear corpus, not representative application throughput."});
+        if let Some(output) = args
+            .windows(2)
+            .find(|a| a[0] == "--output")
+            .map(|a| std::path::Path::new(&a[1]))
+        {
+            std::fs::write(output, serde_json::to_vec_pretty(&result)?)?;
+        }
+        println!("{}", serde_json::to_string_pretty(&result)?);
+        unsafe {
+            context
+                .device
+                .free_command_buffers(context.command_pool, &commands);
+            context.device.destroy_fence(fence, None);
+        }
+        return Ok(());
+    }
     if let Some(root) = args
         .windows(2)
         .find(|a| a[0] == "--corpus-root")
