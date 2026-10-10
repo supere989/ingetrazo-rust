@@ -1,0 +1,12 @@
+{
+  "source": "fd8962675618db5a1775fa7c51abdf86f4705e58",
+  "command": "cargo test --workspace --locked --lib --tests --no-fail-fast -j2",
+  "exit_code": 101,
+  "passed": 660,
+  "failed": 1,
+  "ignored": 2,
+  "suite_summaries": 29,
+  "log_sha256": "5efcc4222796d56528c8ed88cbe8602c794cb18cd0e2e53608ab1ee2e7cd9870",
+  "rerun_reason": "First combined run stopped at stale positional layer test; corrected identity/default assertions. Cached build reused.",
+  "scope": "Combined SKP, Canvas border, default layers and MCP protocol; no Metal runtime claim."
+}

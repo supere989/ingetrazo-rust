@@ -2,8 +2,9 @@ use glam::DVec3;
 use ingetrazo_core::scene::{Scene, SelectionItem};
 use ingetrazo_formats::skp::{self, SkpError};
 const REAL: &[u8] = include_bytes!("../../../docs/audits/skp-native-vff/SU_File.skp");
-const TEXTURE: &[u8] =
-    include_bytes!("../../../docs/audits/skp-native-vff/controls/texture-refusal.skp");
+// Missing images now follow source color fallback; malformed pixels still refuse.
+const CORRUPT_TEXTURE: &[u8] =
+    include_bytes!("../../../docs/audits/skp-native-vff/texture-admission-proof/truncated.skp");
 #[test]
 fn actual_vff_geometry_and_shared_leaf_instances() {
     let p = skp::parse_skp_bytes(REAL, "SU_File").unwrap();
@@ -30,7 +31,7 @@ fn unsupported_and_malformed_import_preserve_destination() {
     let before = scene.clone();
     let path =
         std::env::temp_dir().join(format!("ingetrazo-skp-atomic-{}.skp", uuid::Uuid::new_v4()));
-    for data in [TEXTURE, &REAL[..REAL.len() / 2], b"not a skp".as_slice()] {
+    for data in [CORRUPT_TEXTURE, &REAL[..REAL.len() / 2], b"not a skp".as_slice()] {
         std::fs::write(&path, data).unwrap();
         assert!(skp::replace_from_skp(&mut scene, &path).is_err());
         assert_eq!(scene, before);
