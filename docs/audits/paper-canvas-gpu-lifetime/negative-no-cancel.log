@@ -1,0 +1,22 @@
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+Vulkan adapter 0 AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO): no suitable graphics/present queues
+Suitable Vulkan adapter 1: llvmpipe (LLVM 20.1.2, 256 bits); CPU; queues Queues { graphics: 0, present: 0, compute: Some(0) }
+Native Vulkan adapter: "llvmpipe (LLVM 20.1.2, 256 bits)"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 132593643520 bytes; DEVICE_LOCAL
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT | ATTACHMENT_FEEDBACK_LOOP_EXT
+RAW_LIFETIME refusal release=true error="A error occured when using the allocator: GPU allocation 16 exceeds global application budget 529104" committed=528848 frame=2
+
+thread 'main' (964219) panicked at crates/ingetrazo-gui/examples/native_vulkan_raw_lifetime_probe.rs:13:51:
+Actual raw GPU lifetime acceptance: "Released refusal uploaded orphan"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0

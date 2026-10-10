@@ -1,0 +1,18 @@
+{
+  "source_sha256": "8fcb291ec10ce398c9c3a73d955ee6a4c40ef36849bb1b7a5886be967a862c6d",
+  "mutations": [
+    {
+      "name": "negative-no-cancel",
+      "exit": 101,
+      "binary_sha256": "2be9f4c5a189cd2ce409fe823723d56c8ce705af3c7cb4d242846decd2011ffb",
+      "required_rejection": "Released refusal uploaded orphan"
+    },
+    {
+      "name": "negative-blanket-cancel",
+      "exit": 101,
+      "binary_sha256": "16d910ced9c163256f32c42fddbc490747e46108c0fe7d863086d56000f96f36",
+      "required_rejection": "Unexpected probe frame failure: Bad texture ID: Managed(3)"
+    }
+  ],
+  "restored_binary_sha256": "0727af314b3814a632c6ec21ec50d06260a4a65a9734f98b818c74c3dc5f2056"
+}

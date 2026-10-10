@@ -1,0 +1,27 @@
+{
+  "source_commit": "8726b2c602afda154b72295199cabde4b35940ac",
+  "binary_sha256": "fe296df8f595f8377b7c049f38c1b75da0e41d4ba8cccf33ef6d06b2135d1bdb",
+  "source_sha256": {
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs": "e89c149eb0c9b88a68d841caa0fd2e955512e2879f203ec8f45c8f67447072dc",
+    "crates/ingetrazo-gui/src/paper_raw_texture.rs": "082fbd64d1816e8e54f6409d37439911f9db8e21d2939e232325b867f39faa47",
+    "crates/ingetrazo-gui/examples/native_vulkan_raw_lifetime_probe.rs": "2e87f16a0dc71e2443bae67a4ffe7925dcf18a96a1c4b3a242f24aab3f3fbe0b",
+    "vendor/egui-ash-renderer/src/renderer/mod.rs": "f726bfa67429ed025149a96fd9ef601a6b96eb35fe3b801c8a23d68e1199c185"
+  },
+  "command": "timeout 30s xvfb-run -a -s \"-screen 0 800x600x24\" /tmp/ingetrazo-geometry-paper-canvas-target/debug/examples/native_vulkan_raw_lifetime_probe",
+  "build": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo build -j2 -p ingetrazo-gui --example native_vulkan_raw_lifetime_probe",
+  "adapter": "llvmpipe LLVM20.1.2 Vulkan1.4.318",
+  "exit": 0,
+  "scope": "Actual Vulkan managed texture resource ownership; mesh/no-callback early release and real same-frame mesh paint/presentation. No retained-frame PNG or general callback/GPU-platform parity claim.",
+  "checks": [
+    "exact 16-byte staging budget refusal after 256-byte image admission",
+    "refused image committed and reservation bytes rolled back",
+    "existing managed ID ownership and submitted-frame serial unchanged during refusal",
+    "released failed set/raw bytes canceled; actual retry cannot create orphan texture",
+    "held raw retry succeeds and ACK releases byte queue",
+    "raw free returns exact pre-raw ledger charge",
+    "ordinary managed partial update and free preserve baseline ID inventory",
+    "set/use/free real mesh frame3 presents then post-completion frees",
+    "final GPU cleanup committed bytes zero"
+  ],
+  "warm_policy": "Empty-free fast path allocates no retirement identity sets; nonempty mesh retirement O(frees+paint+pending sets). Opaque callbacks defer to acknowledged next-frame retirement."
+}
