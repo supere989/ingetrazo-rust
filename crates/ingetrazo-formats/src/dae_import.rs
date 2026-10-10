@@ -949,12 +949,27 @@ pub(crate) fn scene_from_xml_at(
                 .max_by_key(|i| i.end)
             {
                 if !prototypes.contains_key(&instance.key) {
-                    let world_mesh = combine_meshes(&groups[instance.start..instance.end])?;
-                    let mesh = ingetrazo_core::containers::transform_mesh(
-                        &world_mesh,
-                        instance.placement.inverse(),
-                    )
-                    .map_err(invalid)?;
+                    // Decode the shared prototype in its own Z-up coordinates.
+                    // Baking and then undoing instance scale changes texture
+                    // covector recipes and introduces roundoff before fusion.
+                    let target = root
+                        .descendants()
+                        .find(|n| n.id() == instance.key)
+                        .ok_or_else(|| invalid("missing reference prototype"))?;
+                    let mut local = Scene::default();
+                    local.embedded_textures = scene.embedded_textures.clone();
+                    walk(
+                        target,
+                        world,
+                        &ids,
+                        &mut vec![],
+                        &mut local,
+                        base,
+                        world,
+                        &mut vec![],
+                    )?;
+                    scene.embedded_textures.extend(local.embedded_textures);
+                    let mesh = combine_meshes(&local.groups)?;
                     prototypes.insert(instance.key, (uuid::Uuid::new_v4(), mesh));
                 }
                 let (definition, mesh) = &prototypes[&instance.key];
