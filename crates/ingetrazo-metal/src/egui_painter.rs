@@ -80,6 +80,51 @@ struct Texture {
     size: [usize; 2],
     pixels: CachedPixels,
 }
+struct MipOwners {
+    command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
+    _textures: Vec<Arc<Texture>>,
+    poisoned: Arc<std::sync::atomic::AtomicBool>,
+    _queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
+    _device: Retained<ProtocolObject<dyn MTLDevice>>,
+}
+struct MipJob {
+    owners: ManuallyDrop<MipOwners>,
+}
+impl Drop for MipJob {
+    fn drop(&mut self) {
+        if self.owners.command.status() == MTLCommandBufferStatus::Completed {
+            unsafe { ManuallyDrop::drop(&mut self.owners) }
+        } else {
+            self.owners
+                .poisoned
+                .store(true, std::sync::atomic::Ordering::Release);
+            eprintln!("Metal mip generation completion unknown: complete ownership retained");
+        }
+    }
+}
+struct MipReadbackOwners {
+    command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
+    _texture: Arc<Texture>,
+    readback: Buffer,
+    poisoned: Arc<std::sync::atomic::AtomicBool>,
+    _queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
+    _device: Retained<ProtocolObject<dyn MTLDevice>>,
+}
+struct MipReadback {
+    owners: ManuallyDrop<MipReadbackOwners>,
+}
+impl Drop for MipReadback {
+    fn drop(&mut self) {
+        if self.owners.command.status() == MTLCommandBufferStatus::Completed {
+            unsafe { ManuallyDrop::drop(&mut self.owners) }
+        } else {
+            self.owners
+                .poisoned
+                .store(true, std::sync::atomic::Ordering::Release);
+            eprintln!("Metal mip diagnostic readback completion unknown: complete owners retained");
+        }
+    }
+}
 struct Draw {
     first: usize,
     count: usize,
@@ -162,6 +207,8 @@ pub struct PainterStats {
     pub encoded_source_pixels: u64,
     pub copied_snapshot_bytes: u64,
     pub texture_uploaded_bytes: u64,
+    pub mip_generation_submissions: u64,
+    pub generated_mip_levels: u64,
 }
 pub struct EguiPainter {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
@@ -169,6 +216,7 @@ pub struct EguiPainter {
     mesh: Option<Arc<Mesh>>,
     stats: PainterStats,
     retained_cpu: Arc<std::sync::atomic::AtomicUsize>,
+    mip_jobs: std::collections::VecDeque<MipJob>,
 }
 impl EguiPainter {
     pub fn new(metal: &NativeMetal) -> Result<Self, String> {
@@ -206,6 +254,7 @@ impl EguiPainter {
                 mesh: None,
                 stats: PainterStats::default(),
                 retained_cpu: Arc::new(std::sync::atomic::AtomicUsize::new(0)),
+                mip_jobs: std::collections::VecDeque::new(),
             })
         })
     }
@@ -231,6 +280,10 @@ impl EguiPainter {
         metal: &NativeMetal,
         delta: &egui::TexturesDelta,
     ) -> Result<(), String> {
+        self.poll_mip_jobs()?;
+        if !delta.set.is_empty() && self.mip_jobs.len() >= 3 {
+            return Err("Metal mip submission capacity reached; delta preserved for retry".into());
+        }
         let mut staged = HashMap::new();
         let mut cpu_bytes = self.stats.cpu_texture_bytes;
         let mut copied_bytes = 0u64;
@@ -299,7 +352,12 @@ impl EguiPainter {
             if cpu_bytes > 256 * 1024 * 1024 {
                 return Err("Metal egui CPU texture cache exceeds256MiB".into());
             }
-            let image = allocate_image(metal, target_size, &pixels)?;
+            let image = allocate_image(
+                metal,
+                target_size,
+                &pixels,
+                change.options.mipmap_mode.is_some(),
+            )?;
             uploaded_bytes += pixels.len() as u64;
 
             staged.insert(
@@ -312,6 +370,29 @@ impl EguiPainter {
                 }),
             );
         }
+        // Encode only after the whole replacement transaction has passed CPU,
+        // sampler and actual GPU-allocation admission. No CPU completion wait.
+        let mipped: Vec<_> = staged
+            .values()
+            .filter(|t| t.image.raw.mipmapLevelCount() > 1)
+            .cloned()
+            .collect();
+        let generation = if mipped.is_empty() {
+            None
+        } else {
+            let command = metal
+                .queue
+                .commandBuffer()
+                .ok_or("Metal mip command allocation failed")?;
+            let encoder = command
+                .blitCommandEncoder()
+                .ok_or("Metal mip encoder allocation failed")?;
+            for texture in &mipped {
+                encoder.generateMipmapsForTexture(&texture.image.raw);
+            }
+            encoder.endEncoding();
+            Some((command, mipped))
+        };
         self.stats.texture_uploads += staged.len() as u64;
         self.stats.encoded_source_pixels += delta
             .set
@@ -322,8 +403,139 @@ impl EguiPainter {
         self.stats.texture_uploaded_bytes += uploaded_bytes;
         self.stats.cpu_texture_bytes = cpu_bytes;
         self.textures.extend(staged);
+        if let Some((command, textures)) = generation {
+            self.stats.generated_mip_levels += textures
+                .iter()
+                .map(|t| t.image.raw.mipmapLevelCount() as u64 - 1)
+                .sum::<u64>();
+            self.stats.mip_generation_submissions += 1;
+            // Publish the complete persistent owner before GPU submission.
+            self.mip_jobs.push_back(MipJob {
+                owners: ManuallyDrop::new(MipOwners {
+                    command: command.clone(),
+                    _textures: textures,
+                    poisoned: metal.poisoned.clone(),
+                    _queue: metal.queue.clone(),
+                    _device: metal.device.clone(),
+                }),
+            });
+            command.commit();
+        }
         // Previous frame owns any texture that is still referenced by its draws.
         Ok(())
+    }
+    /// Engineering readback only. Production update/sampling never CPU-waits.
+    pub fn read_texture_mips_for_probe(
+        &mut self,
+        metal: &NativeMetal,
+        id: TextureId,
+        timeout: std::time::Duration,
+    ) -> Result<Vec<Vec<u8>>, String> {
+        if timeout.is_zero() || timeout > std::time::Duration::from_secs(5) {
+            return Err("Mip readback timeout outside bounded diagnostic domain".into());
+        }
+        if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
+            return Err("Metal admission poisoned".into());
+        }
+        let texture = self
+            .textures
+            .get(&id)
+            .cloned()
+            .ok_or("Missing texture diagnostic")?;
+        let levels = texture.image.raw.mipmapLevelCount();
+        let mut layout = Vec::new();
+        let mut total = 0;
+        for level in 0..levels {
+            let width = (texture.size[0] >> level).max(1);
+            let height = (texture.size[1] >> level).max(1);
+            let row = (width * 4 + 255) & !255;
+            layout.push((level, width, height, row, total));
+            total += row * height;
+        }
+        let readback = metal.buffer(total, true)?;
+        let command = metal
+            .queue
+            .commandBuffer()
+            .ok_or("Metal mip readback command missing")?;
+        let blit = command
+            .blitCommandEncoder()
+            .ok_or("Metal mip readback encoder missing")?;
+        for &(level, width, height, row, offset) in &layout {
+            unsafe {
+                blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(&texture.image.raw,0,level,MTLOrigin{x:0,y:0,z:0},MTLSize{width,height,depth:1},&readback.raw,offset,row,row*height)
+            }
+        }
+        blit.endEncoding();
+        let retained = MipReadback {
+            owners: ManuallyDrop::new(MipReadbackOwners {
+                command: command.clone(),
+                _texture: texture,
+                readback,
+                poisoned: metal.poisoned.clone(),
+                _queue: metal.queue.clone(),
+                _device: metal.device.clone(),
+            }),
+        };
+        command.commit();
+        let start = std::time::Instant::now();
+        loop {
+            match command.status() {
+                MTLCommandBufferStatus::Completed => break,
+                MTLCommandBufferStatus::Error => {
+                    return Err("Metal mip readback failed; completion ownership retained".into());
+                }
+                _ => {}
+            }
+            if start.elapsed() >= timeout {
+                return Err("Metal mip readback bounded timeout; owners retained".into());
+            }
+            std::thread::sleep(std::time::Duration::from_millis(1));
+        }
+        let raw = unsafe {
+            std::slice::from_raw_parts(
+                retained
+                    .owners
+                    .readback
+                    .raw
+                    .contents()
+                    .as_ptr()
+                    .cast::<u8>(),
+                total,
+            )
+        };
+        let result = layout
+            .into_iter()
+            .map(|(_, width, height, row, offset)| {
+                (0..height)
+                    .flat_map(|y| {
+                        raw[offset + y * row..offset + y * row + width * 4]
+                            .iter()
+                            .copied()
+                    })
+                    .collect()
+            })
+            .collect();
+        self.poll_mip_jobs()?;
+        Ok(result)
+    }
+    pub fn poll_mip_jobs(&mut self) -> Result<usize, String> {
+        let mut retired = 0;
+        while let Some(job) = self.mip_jobs.front() {
+            match job.owners.command.status() {
+                MTLCommandBufferStatus::Completed => {
+                    self.mip_jobs.pop_front();
+                    retired += 1;
+                }
+                MTLCommandBufferStatus::Error => {
+                    job.owners
+                        .poisoned
+                        .store(true, std::sync::atomic::Ordering::Release);
+                    return Err("Metal mip generation failed; owners retained".into());
+                }
+                _ => break,
+            }
+        }
+        Ok(retired)
     }
     pub fn free_textures(&mut self, ids: &[TextureId]) {
         for id in ids {
@@ -338,6 +550,7 @@ impl EguiPainter {
         primitives: &[ClippedPrimitive],
         density: f32,
     ) -> Result<Arc<PreparedPaint>, String> {
+        self.poll_mip_jobs()?;
         if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
             return Err("Metal admission poisoned".into());
         }
@@ -480,11 +693,28 @@ fn shader_logical_size(
     }
     Ok(logical)
 }
-fn allocate_image(metal: &NativeMetal, size: [usize; 2], pixels: &[u8]) -> Result<Image, String> {
+impl Drop for EguiPainter {
+    fn drop(&mut self) {
+        let _ = self.poll_mip_jobs();
+    }
+}
+fn allocate_image(
+    metal: &NativeMetal,
+    size: [usize; 2],
+    pixels: &[u8],
+    mipped: bool,
+) -> Result<Image, String> {
     if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
         return Err("Metal admission poisoned".into());
     }
-    let request = pixels.len() as u64;
+    let levels = if mipped {
+        usize::BITS as usize - size[0].max(size[1]).leading_zeros() as usize
+    } else {
+        1
+    };
+    let request = (0..levels)
+        .map(|level| (size[0] >> level).max(1) as u64 * (size[1] >> level).max(1) as u64 * 4)
+        .sum::<u64>();
     let ticket = metal
         .budget
         .lock()
@@ -497,6 +727,7 @@ fn allocate_image(metal: &NativeMetal, size: [usize; 2], pixels: &[u8]) -> Resul
         descriptor.setHeight(size[1]);
     }
     descriptor.setPixelFormat(MTLPixelFormat::RGBA8Unorm);
+    unsafe { descriptor.setMipmapLevelCount(levels) };
     descriptor.setUsage(MTLTextureUsage::ShaderRead);
     descriptor.setStorageMode(if metal.info.unified_memory {
         MTLStorageMode::Shared
@@ -549,9 +780,6 @@ fn make_sampler(
     metal: &NativeMetal,
     options: TextureOptions,
 ) -> Result<Retained<ProtocolObject<dyn MTLSamplerState>>, String> {
-    if options.mipmap_mode.is_some() {
-        return Err("Metal egui mipmap filtering unsupported".into());
-    }
     let descriptor = MTLSamplerDescriptor::new();
     let filter = |f| {
         if f == TextureFilter::Nearest {
@@ -560,6 +788,11 @@ fn make_sampler(
             MTLSamplerMinMagFilter::Linear
         }
     };
+    descriptor.setMipFilter(match options.mipmap_mode {
+        Some(TextureFilter::Nearest) => MTLSamplerMipFilter::Nearest,
+        Some(TextureFilter::Linear) => MTLSamplerMipFilter::Linear,
+        None => MTLSamplerMipFilter::NotMipmapped,
+    });
     descriptor.setMinFilter(filter(options.minification));
     descriptor.setMagFilter(filter(options.magnification));
     let wrap = match options.wrap_mode {
