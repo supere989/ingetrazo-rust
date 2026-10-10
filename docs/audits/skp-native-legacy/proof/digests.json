@@ -1,0 +1,86 @@
+[
+  {
+    "file": "empty-native.log",
+    "sha256": "8635b412528f0e86a187a17fa937ed7bdc404c7e38feb3443c97de848869c313"
+  },
+  {
+    "file": "empty-payload.json",
+    "sha256": "74325cf4c5ab8efa5d7bcf27dd2e56edb0e887c85ef7348e1dc24df7d5f2e166"
+  },
+  {
+    "file": "legacy-v17-hidden-face-comparison.json",
+    "sha256": "70222dd5de5cb93872e33644e4c2789b8a001bc2de8cb38c8c95eaf5a485a108"
+  },
+  {
+    "file": "legacy-v17-hidden-face-payload.json",
+    "sha256": "1d41ec251910597ee2d9e15bbfe7f1478d2df3f691dd8d455a091b2e1bea1030"
+  },
+  {
+    "file": "legacy-v17-hidden-face.log",
+    "sha256": "9f2f2b9c18e4682426bc99742c9dd486cf2e0a394a0940ee6b5b2e1883eaa46f"
+  },
+  {
+    "file": "legacy-v17-null-list-item-comparison.json",
+    "sha256": "9d0f6ac50146bb6c9e4e623ddb8baa3d1e7b20adb795317250f5f583394f5245"
+  },
+  {
+    "file": "legacy-v17-null-list-item-payload.json",
+    "sha256": "2194da6c7831a5f04ebdd72f1e03d5c6811d6c6c35dc154bb0f69d660905fd33"
+  },
+  {
+    "file": "legacy-v17-null-list-item.log",
+    "sha256": "9fae4b72ee1f9e0d33a4a5a1a622c301672ecf06c45e4b8c10f374262308b10f"
+  },
+  {
+    "file": "legacy-v17-painted-hole-comparison.json",
+    "sha256": "730d35cae08e2f9b77bb60491d6b3599710fefa576e8974f5507ee03b90628b9"
+  },
+  {
+    "file": "legacy-v17-painted-hole-payload.json",
+    "sha256": "7db340ba3444f6b9944ed0408be23a8814e8a287314afa6a68014eb07175f322"
+  },
+  {
+    "file": "legacy-v17-painted-hole.log",
+    "sha256": "36c3c7ddf0f9a11a2d545c0f1c791347fac077b23c86ab8109e6ec1174118751"
+  },
+  {
+    "file": "legacy-v17-painted-quad-comparison.json",
+    "sha256": "4e139023ff514eb8eaa26687b2f1df047363e7519e44a0149d14b4936dc2e597"
+  },
+  {
+    "file": "legacy-v17-painted-quad-payload.json",
+    "sha256": "12ad0e271e1169a064abf130475e95692e0adfa64dbff5b2568f4155e2f56dde"
+  },
+  {
+    "file": "legacy-v17-painted-quad.log",
+    "sha256": "9fae4b72ee1f9e0d33a4a5a1a622c301672ecf06c45e4b8c10f374262308b10f"
+  },
+  {
+    "file": "legacy-v17-reversed-coedges-comparison.json",
+    "sha256": "73aa1ff29573dc90189fe84d53bc639070bde778863c0c501f8266803dcdd557"
+  },
+  {
+    "file": "legacy-v17-reversed-coedges-payload.json",
+    "sha256": "2b6e093c4f2e2aaa21556507bb22f6b4558bbb516817465971380e94ecf2729e"
+  },
+  {
+    "file": "legacy-v17-reversed-coedges.log",
+    "sha256": "9fae4b72ee1f9e0d33a4a5a1a622c301672ecf06c45e4b8c10f374262308b10f"
+  },
+  {
+    "file": "legacy-v17-two-faces-comparison.json",
+    "sha256": "8ba93047782bc64e6348fef3d074b70c5520db8ca84a6eefa01d95692518295d"
+  },
+  {
+    "file": "legacy-v17-two-faces-payload.json",
+    "sha256": "43b1c4436a96cffd1d1c96d16ef672a659261f797fc6cbbda504991c3d33b52c"
+  },
+  {
+    "file": "legacy-v17-two-faces.log",
+    "sha256": "9f2f2b9c18e4682426bc99742c9dd486cf2e0a394a0940ee6b5b2e1883eaa46f"
+  },
+  {
+    "file": "report.json",
+    "sha256": "49671addc9b3ecd7aa91337e7d88bb59887f3b50180d1d9490c69e68f6623963"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "source_parser": "291700bc213655a00461838de71e5f206311e619",
+  "source_app": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source": "b432700ba14dafbe2f9ee2358224b82484051f3d",
+  "binary_sha256": "c2009d1dd8afe80043333a4773c87237322cbafcea108fe01a1bfab5b286d6c0",
+  "cases": [
+    {
+      "name": "legacy-v17-painted-quad",
+      "passed": true,
+      "faces": 1
+    },
+    {
+      "name": "legacy-v17-painted-hole",
+      "passed": true,
+      "faces": 1
+    },
+    {
+      "name": "legacy-v17-two-faces",
+      "passed": true,
+      "faces": 2
+    },
+    {
+      "name": "legacy-v17-hidden-face",
+      "passed": true,
+      "faces": 2
+    },
+    {
+      "name": "legacy-v17-reversed-coedges",
+      "passed": true,
+      "faces": 1
+    },
+    {
+      "name": "legacy-v17-null-list-item",
+      "passed": true,
+      "faces": 1
+    }
+  ],
+  "empty_original_and_native_refusal": true,
+  "raw_empty_metadata": true,
+  "negative": "altered world coordinate rejected",
+  "scope": "Actual legacy MFC primitive controls + real empty v17 raw metadata/refusal, not real legacy geometry era coverage."
+}
