@@ -105,6 +105,7 @@ jobs:
       - name: Exact original Qt and production CAD color protocol
         run: |
           mkdir -p docs/audits/cad2d-color-ci
+          QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad-span-multiply.py > docs/audits/cad2d-color-ci/byte-span-law.json
           QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad2d-premultiply.py docs/audits/cad2d-color-ci/original
           cargo run --locked -p ingetrazo-render --example cad2d_premultiply_protocol -- docs/audits/cad2d-color-ci/native.bin
           QT_QPA_PLATFORM=offscreen python scripts/check-cad2d-premultiply.py docs/audits/cad2d-color-ci/original docs/audits/cad2d-color-ci/native.bin --output docs/audits/cad2d-color-ci/result.json
