@@ -1,5 +1,5 @@
 {
-  "status": "held_combined_component_regression_running",
+  "status": "held_pending_remaining_component_workflows",
   "formats_tests": "pass",
   "native_preservation": {
     "passed": 16,
@@ -29,5 +29,10 @@
     0,
     2
   ],
-  "combined_source": "schema/Finish7029293 reviewed with own mesh token aware native save guard and explicit definition root identity"
+  "combined_source": "schema/Finish7029293 reviewed with own mesh token aware native save guard and explicit definition root identity",
+  "combined_workspace_counts": [
+    432,
+    0,
+    2
+  ]
 }

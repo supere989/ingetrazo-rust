@@ -1,3 +1,4 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-core)
 warning: function `visit_meshes` is never used
    --> crates/ingetrazo-core/src/screen_pick.rs:120:15
     |
@@ -6,7 +7,7 @@ warning: function `visit_meshes` is never used
     |
     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
-warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-formats)
 warning: function `scene_from_xml` is never used
    --> crates/ingetrazo-formats/src/dae_import.rs:757:15
     |
@@ -15,14 +16,14 @@ warning: function `scene_from_xml` is never used
     |
     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
+warning: `ingetrazo-core` (lib) generated 1 warning
 warning: `ingetrazo-formats` (lib) generated 1 warning
-   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-formats)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.52s
      Running `/tmp/ingetrazo-mesh-share-codec-target/debug/examples/mesh_share_acceptance docs/audits/mesh-share-codec-review/original-reopen`
 {
   "passed": true,
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "candidate": "241d2a1d0411520788a44b381b517da6b6cf36ba",
+  "candidate": "8077703b5288b3d3b301664f70f9e324b731cbf2",
   "checks": [
     "original source actual object identity",
     "published component-false shared Mesh",
@@ -35,8 +36,8 @@ warning: `ingetrazo-formats` (lib) generated 1 warning
   ],
   "files": {
     "source.igz": "5bc9dfbbcfa7faf5d4498fc5326bca40a8ef5005505c3f7df72cfb93bd91ecd1",
-    "published.igz": "d85261745b5b70fc8d92cde99c148a5fbc8114ec55e340c8cbc954c2a22e598c",
-    "unique.igz": "24c372237a2bae744a9a242ca12e465745f94e93ba2eb54e80e8eaba004d7dff"
+    "published.igz": "a2a555330614e9ea9c79e1b5ab69c386fbbb606c2a2dcd80c90e7d5ffa8dff86",
+    "unique.igz": "75513a44e4a299940152af679d697961dd6286221a37a4dfbe1b322fcb31f7ce"
   },
   "scope": "Original actual loader and Mesh object identity; no rendered component Finish claim."
 }
