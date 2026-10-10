@@ -18,8 +18,6 @@
   ],
   "remaining": [
     "transformed-empty world authoring parity",
-    "clipboard import-cache bounded snapshot retention",
-    "full workspace after latestclipboard changes",
     "rendered Finish workflow acceptance"
   ],
   "canonical_promotion": false,
@@ -41,5 +39,11 @@
     0,
     1
   ],
-  "clipboard_lifecycle": "successful New/Open/Recover retire runtime imported identities; failed Open preserves current mappings"
+  "clipboard_lifecycle": "successful New/Open/Recover retire runtime imported identities; failed Open preserves current mappings",
+  "latest_world_combined_counts": [
+    439,
+    0,
+    2
+  ],
+  "private_container_codec": "originalPython actualobjectidentity PASS privatecomponent-marked ownMesh; children retainsharedMesh"
 }

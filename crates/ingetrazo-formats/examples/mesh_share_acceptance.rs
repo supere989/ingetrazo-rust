@@ -12,4 +12,11 @@ fn main(){
  save_igz(&scene,&dir.join("published.igz")).unwrap();
  scene.make_component_unique(scene.groups[0].id).unwrap();
  save_igz(&scene,&dir.join("unique.igz")).unwrap();
+ // A component-marked placement can have private own geometry while its
+ // definition and siblings retain their independently registered prototype.
+ let private=uuid::Uuid::new_v4();
+ let mesh=scene.groups[1].mesh.clone();
+ scene.register_mesh_share(private,mesh.clone()).unwrap();
+ scene.groups[3].mesh_share=Some(private);scene.groups[3].mesh=mesh;
+ save_igz(&scene,&dir.join("private-container.igz")).unwrap();
 }

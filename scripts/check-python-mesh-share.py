@@ -44,5 +44,12 @@ unique=load("unique")
 assert unique.groups[0].mesh is not unique.groups[1].mesh
 assert not unique.groups[0].component
 assert [g.mesh.vertices[0].position.z() for g in unique.groups[:3]]==[7,7,0]
-report={"passed":True,"source_pin":subprocess.check_output(["git","-C","ingetrazo","rev-parse","HEAD"],text=True).strip(),"candidate":subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),"checks":["original source actual object identity","published component-false shared Mesh","equal different prototypes independent","published vertices and flags","placement UID preservation","Make Unique object detachment","independent unequal parent child lists preserve shared child Mesh","internal codec comparison identities stripped"],"files":{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in a.glob("*.igz")},"scope":"Original actual loader and Mesh object identity; no rendered component Finish claim."}
+private=load("private-container")
+assert private.groups[3].component and private.groups[4].component
+assert private.groups[3].mesh is not private.groups[4].mesh
+assert len(private.groups[3].mesh.vertices)==3 and len(private.groups[4].mesh.vertices)==0
+assert private.groups[3].mesh is not private.groups[1].mesh
+assert private.groups[3].children[0].mesh is private.groups[1].mesh
+assert private.groups[4].children[0].mesh is private.groups[1].mesh
+report={"passed":True,"source_pin":subprocess.check_output(["git","-C","ingetrazo","rev-parse","HEAD"],text=True).strip(),"candidate":subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),"checks":["original source actual object identity","published component-false shared Mesh","equal different prototypes independent","published vertices and flags","placement UID preservation","Make Unique object detachment","independent unequal parent child lists preserve shared child Mesh","internal codec comparison identities stripped","component-marked private ownMesh saves independently without changing shared children"],"files":{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in a.glob("*.igz")},"scope":"Original actual loader and Mesh object identity; no rendered component Finish claim."}
 (a/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
