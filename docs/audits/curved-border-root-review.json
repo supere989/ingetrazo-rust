@@ -1,0 +1,61 @@
+{
+  "source": "9e69db96c1bb9d955e115ff68e76635e7221cf80",
+  "status": "Independent retained GPU pixel and warm-cache review PASS; frozen artifact handoff/integration pending",
+  "rows": [
+    {
+      "case": "native/production-curved-dash",
+      "changed": 0,
+      "source_sha256": "bbed6988c425f983a440be472fd3c5bf390ff30d80d1361a43ee21a7f4ed9e1c",
+      "native_sha256": "3a4f0b7ea034a512066eb269bc3368bc2061a3fb9eb56b9944b0877c520208b7"
+    },
+    {
+      "case": "native/production-clamped-dash",
+      "changed": 0,
+      "source_sha256": "cca58824ffa80e0d84343a0eb0c51bbd6824e6c75d2b87a82cdae6e786d53058",
+      "native_sha256": "ca63a6ea1731d7f77956583a763c30d90d1cde941c7c619b3d83ecaf07bba082"
+    },
+    {
+      "case": "native/production-thin-curved-dash",
+      "changed": 0,
+      "source_sha256": "a990404ac90c27e8684d97835c340b034980f02947948b98e4cd0761e9c654d0",
+      "native_sha256": "15449aafe7b44193529adab9269d8f4c39e501ee1cf13e1873c9c6d8c4b22f10"
+    },
+    {
+      "case": "native/production-carry-dash",
+      "changed": 0,
+      "source_sha256": "9c950d0fc368857595aa0574d93479bac198eb807572951d8d06aa97718a17fd",
+      "native_sha256": "1e0561f0528f6133fe5be33e5cd2f82f7bf65a6fd677c738da3251891c7d7d8c"
+    },
+    {
+      "case": "restored-native/production-curved-dash",
+      "changed": 0,
+      "source_sha256": "bbed6988c425f983a440be472fd3c5bf390ff30d80d1361a43ee21a7f4ed9e1c",
+      "native_sha256": "3a4f0b7ea034a512066eb269bc3368bc2061a3fb9eb56b9944b0877c520208b7"
+    },
+    {
+      "case": "unscaled-flatten-negative/production-curved-dash",
+      "changed": 1539,
+      "source_sha256": "bbed6988c425f983a440be472fd3c5bf390ff30d80d1361a43ee21a7f4ed9e1c",
+      "native_sha256": "53cbf30cc2c78bc24264b4c524cffe2c07a8aa851c9162004fd720fad028e14f"
+    },
+    {
+      "case": "unscaled-flatten-negative/production-clamped-dash",
+      "changed": 0,
+      "source_sha256": "cca58824ffa80e0d84343a0eb0c51bbd6824e6c75d2b87a82cdae6e786d53058",
+      "native_sha256": "ca63a6ea1731d7f77956583a763c30d90d1cde941c7c619b3d83ecaf07bba082"
+    },
+    {
+      "case": "unscaled-flatten-negative/production-thin-curved-dash",
+      "changed": 0,
+      "source_sha256": "a990404ac90c27e8684d97835c340b034980f02947948b98e4cd0761e9c654d0",
+      "native_sha256": "15449aafe7b44193529adab9269d8f4c39e501ee1cf13e1873c9c6d8c4b22f10"
+    },
+    {
+      "case": "unscaled-flatten-negative/production-carry-dash",
+      "changed": 0,
+      "source_sha256": "9c950d0fc368857595aa0574d93479bac198eb807572951d8d06aa97718a17fd",
+      "native_sha256": "1e0561f0528f6133fe5be33e5cd2f82f7bf65a6fd677c738da3251891c7d7d8c"
+    }
+  ],
+  "scope": "Four empty-item production page ROIs; single mutation sensitivity restricted to first rounded case. No full composer/Metal claim."
+}
