@@ -43,3 +43,18 @@ pub fn parse_geojson(text:&str)->Result<Vec<GeoFeature>,String>{
  }
  let mut out=vec![];walk(&data,"",&mut out)?;Ok(out)
 }
+
+pub fn load_features(path:&std::path::Path)->Result<Vec<GeoFeature>,String>{
+ use std::io::Read;
+ let ext=path.extension().and_then(|s|s.to_str()).unwrap_or("").to_ascii_lowercase();
+ let text=if ext=="kmz"{
+  let file=std::fs::File::open(path).map_err(|e|e.to_string())?;
+  let mut zip=zip::ZipArchive::new(file).map_err(|e|e.to_string())?;
+  let names:Vec<String>=zip.file_names().filter(|n|n.to_ascii_lowercase().ends_with(".kml")).map(str::to_owned).collect();
+  if names.is_empty(){return Ok(vec![])}
+  let name=if names.iter().any(|n|n=="doc.kml"){"doc.kml"}else{&names[0]};
+  let mut bytes=vec![];zip.by_name(name).map_err(|e|e.to_string())?.read_to_end(&mut bytes).map_err(|e|e.to_string())?;
+  return Ok(parse_kml(&String::from_utf8_lossy(&bytes)))
+ }else{String::from_utf8_lossy(&std::fs::read(path).map_err(|e|e.to_string())?).into_owned()};
+ if ext=="kml" || (ext!="geojson"&&ext!="json"&&text.trim_start().starts_with('<')){Ok(parse_kml(&text))}else{parse_geojson(&text)}
+}
