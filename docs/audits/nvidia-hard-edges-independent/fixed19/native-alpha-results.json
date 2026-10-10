@@ -1,0 +1,545 @@
+{
+  "cases": [
+    {
+      "case": "red-half-white",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.072379, compact_preprocess_ms: 0.0, warm_cache_ms: 0.003978, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "red-half-black",
+      "center_rgba": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.156991, compact_preprocess_ms: 0.0, warm_cache_ms: 0.004419, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "opacity-bucket-order",
+      "center_rgba": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.036253, compact_preprocess_ms: 0.0, warm_cache_ms: 0.003286, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "opaque-front",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 2, cold_build_ms: 3.32223, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0045390000000000005, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 288,
+      "hard_edge_endpoint_count": 24,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "opaque-back",
+      "center_rgba": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 2, cold_build_ms: 3.214147, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0038469999999999997, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 288,
+      "hard_edge_endpoint_count": 24,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "equal-opacity-forward",
+      "center_rgba": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.281767, compact_preprocess_ms: 0.0, warm_cache_ms: 0.002856, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "center_rgba": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 1.89146, compact_preprocess_ms: 0.0, warm_cache_ms: 0.002866, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.5,
+          0,
+          12
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "opacity-995",
+      "center_rgba": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 1.883425, compact_preprocess_ms: 0.0, warm_cache_ms: 0.002965, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.9950000047683716,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.9950000047683716,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "opacity-zero",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 1.990066, compact_preprocess_ms: 0.0, warm_cache_ms: 0.003126, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [
+        [
+          0.0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.0,
+          0,
+          6
+        ]
+      ],
+      "surface_bytes": 144
+    },
+    {
+      "case": "section-clipped",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.494919, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0034470000000000004, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 192,
+      "hard_edge_endpoint_count": 16,
+      "opacity_runs": [
+        [
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "ordinary_runs": [],
+      "paint_runs": [
+        [
+          0,
+          0.30000001192092896,
+          0,
+          6
+        ],
+        [
+          0,
+          0.5,
+          6,
+          6
+        ]
+      ],
+      "surface_bytes": 288
+    },
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.1364750000000001, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000501, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.421313, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000511, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.033263, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000491, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.027372, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000491, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.028343, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000541, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.022182, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000441, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.134652, compact_preprocess_ms: 0.0, warm_cache_ms: 0.049382999999999996, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.596521, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000531, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 120,
+      "hard_edge_endpoint_count": 10,
+      "opacity_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.026904, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000491, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 120,
+      "hard_edge_endpoint_count": 10,
+      "opacity_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [],
+      "surface_bytes": 0
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"
+}

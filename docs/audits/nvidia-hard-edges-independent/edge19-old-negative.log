@@ -1,0 +1,25 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+
+thread 'main' (1) panicked at crates/ingetrazo-gui/examples/native_vulkan_transparent_probe.rs:74:92:
+assertion `left == right` failed
+  left: 20480288
+ right: 20480000
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

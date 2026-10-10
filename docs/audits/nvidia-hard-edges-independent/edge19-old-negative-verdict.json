@@ -1,0 +1,15 @@
+{
+  "passed": false,
+  "complete_corpus": false,
+  "cases": [
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "old_differing_rgba_pixels": 380
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "old_differing_rgba_pixels": 417
+    }
+  ],
+  "scope": "Literal2oldmissingedgeimage negatives; oldprobe laterpressureassertfails and cannot claim9-case run"
+}
