@@ -1,0 +1,218 @@
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+{
+  "provenance": {
+    "rust_commit": "53997493521b169d6991e2f767ca805e090b7f39",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": {
+    "translated": {
+      "entered_vertices": [
+        [
+          10.0,
+          20.0,
+          30.0
+        ],
+        [
+          11.0,
+          20.0,
+          30.0
+        ]
+      ],
+      "local_vertex_negative_rejected": true,
+      "shareback_local_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "original_undo_redo_dimension_count": [
+        2,
+        2
+      ],
+      "source_annotation_not_folded_into_mesh_undo": true
+    },
+    "nested": {
+      "entered_vertices": [
+        [
+          111.0,
+          222.0,
+          333.0
+        ],
+        [
+          112.0,
+          222.0,
+          333.0
+        ]
+      ],
+      "container_bakes_survive_undo": true,
+      "undo_preserves_prior_rename": true,
+      "separate_rename_undo_redo": true,
+      "leaf_restored_placement": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        111.0,
+        222.0,
+        333.0,
+        1.0
+      ]
+    }
+  },
+  "scope": "Actual original Viewport begin/end and History commands, no rendered UI or key dispatch claim"
+}
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running `/tmp/ingetrazo-dimension-ci-target/debug/examples/dimension_anchor_acceptance_fixture /tmp/tmpa0km5m30`
+{
+  "provenance": {
+    "rust_commit": "53997493521b169d6991e2f767ca805e090b7f39",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "moved",
+      "original_runtime_endpoints": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "scaled",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          16,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "exploded",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          16,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "deleted",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          16,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "context",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          14,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "outliner",
+      "original_runtime_endpoints": [
+        [
+          111,
+          222,
+          333
+        ],
+        [
+          117,
+          222,
+          333
+        ]
+      ],
+      "passed": true
+    }
+  ],
+  "scope": "Stable anchors refreshed at GUI frame boundaries: movement/group/scale/explode/deletion with Rust atomic scene undo (original annotation shareback Undo divergence retained separately); original native reopen and original live vertex/group endpoint rebinding. Translated-context world dimension creation and three-level outliner actual selection/edit/rename+UID retention/undo. Nested nonuniform/reflected world-frame measurement and rendered inspector remain separate."
+}
