@@ -2,7 +2,7 @@
 use glam::{DMat4,DVec3};
 use ingetrazo_core::{scene::Scene,mesh::Mesh,groups::Group};
 
-pub(crate) struct Triangle { pub points:[DVec3;3], pub layer:String }
+pub(crate) struct Triangle { pub points:[DVec3;3], pub local_points:[DVec3;3], pub attrs:std::collections::HashMap<String,serde_json::Value>, pub layer:String }
 pub(crate) fn triangles(scene:&Scene)->Vec<Triangle> {
     fn visible(scene:&Scene,layer:Option<&str>)->bool {
         layer.and_then(|name|scene.layers.iter().find(|l|l.name==name)).map_or(true,|l|l.visible)
@@ -12,9 +12,10 @@ pub(crate) fn triangles(scene:&Scene)->Vec<Triangle> {
             let layer=face.layer.as_deref().or(inherited);
             if !visible(scene,layer) || face.attrs.get("hidden").and_then(|v|v.as_bool())==Some(true) {continue;}
             for (a,b,c) in mesh.triangulate_face(id) {
-                let mut points=[a,b,c].map(|p|world.transform_point3(p));
-                if world.determinant()<0. {points.swap(1,2);}
-                out.push(Triangle{points,layer:layer.unwrap_or("0").into()});
+                let mut local_points=[a,b,c];
+                let mut points=local_points.map(|p|world.transform_point3(p));
+                if world.determinant()<0. {points.swap(1,2);local_points.swap(1,2);}
+                out.push(Triangle{points,local_points,attrs:face.attrs.clone(),layer:layer.unwrap_or("0").into()});
             }
         }
     }
