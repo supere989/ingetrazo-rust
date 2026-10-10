@@ -1,0 +1,10 @@
+{
+  "run": 38070902856,
+  "source": "65a01c65953398fd2d2f19d165ac0006a321d25e",
+  "artifact": 11676354369,
+  "sha256": "4e9737e119525d5edfad2919f80c11766c971f62ddda79dfceb61404a3cec764",
+  "native_arm_sdk_job": 114267926042,
+  "conclusion": "success",
+  "archive_crc_verified": true,
+  "scope": "ARM SDK native combined GUI build; cloud Apple adapter, not physical Mac presentation"
+}
