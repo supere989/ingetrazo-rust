@@ -1,0 +1,18 @@
+{
+  "reviewed_candidate": "021a1584a4fd455d1a670a7d800cf922cee47cf9",
+  "integration_verdict": "held pending correction",
+  "method": "Source review only; no new build or runtime parity claim",
+  "findings": [
+    {
+      "location": "tools/ai-interpreter-proof/src/vm_mesh.rs RootRestore change detection",
+      "finding": "Candidate validates PySet type and empty elements, but does not compare current set identity against pre-execution identity. Replacing edges with another empty set passes this guard; native geometry change detection need not mark a command changed.",
+      "required_followup": "Retain original set reference and reject identity replacement while incidence is unjournaled, or implement complete source-backed publication/history. Add actual empty-set replacement control."
+    },
+    {
+      "location": "generated Vertex/Edge ownership graph",
+      "finding": "Planned Vertex.edges to Edge endpoints introduces strong reference cycles. A zero native logical owner charge alone does not establish VM object reclamation.",
+      "required_followup": "Verify actual cycle reclamation and detached externally held lifetime, with repeated graph creation/drop and genuine source identity semantics."
+    }
+  ],
+  "scope": "Temporary refusal guard is not Python parity; full generated incidence and history remain required."
+}
