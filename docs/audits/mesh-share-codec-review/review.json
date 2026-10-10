@@ -17,9 +17,9 @@
     "second-tests.log"
   ],
   "remaining": [
-    "combined workspace regression",
     "transformed-empty world authoring parity",
-    "clipboard token propagation",
+    "clipboard import-cache bounded snapshot retention",
+    "full workspace after latestclipboard changes",
     "rendered Finish workflow acceptance"
   ],
   "canonical_promotion": false,
@@ -35,5 +35,11 @@
     0,
     2
   ],
-  "document_lifecycle": "mesh registry included in dirty/autosave comparison; focused lifecycle suite passes"
+  "document_lifecycle": "mesh registry included in dirty/autosave comparison; focused lifecycle suite passes",
+  "clipboard_combined_gui_counts": [
+    100,
+    0,
+    1
+  ],
+  "clipboard_lifecycle": "successful New/Open/Recover retire runtime imported identities; failed Open preserves current mappings"
 }

@@ -77,7 +77,7 @@ impl IngeTrazoApp {
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
-                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
+                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
                     self.document_session.recovered_slot=Some(record.slot);self.document_session.clean=None;
                     self.document_session.show_recovery=false;self.status_message="Recovered unsaved copy; save it to a new file".into();},
                 Err(e)=>self.status_message=format!("Recovery failed: {e}"),
@@ -145,6 +145,25 @@ mod tests {
     use super::*;use glam::DVec3;
     fn root()->PathBuf {std::env::temp_dir().join(format!("ingetrazo-lifecycle-{}",uuid::Uuid::new_v4()))}
     fn triangle(app:&mut IngeTrazoApp,p:DVec3) {let ids=[p,p+DVec3::X,p+DVec3::Y].map(|v|app.scene.mesh.add_vertex(v));app.scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();}
+    #[test]
+    fn foreign_mesh_import_cache_retires_only_after_document_replacement() {
+        let mut app=IngeTrazoApp::default();
+        let key=(app.clipboard_document,uuid::Uuid::new_v4(),uuid::Uuid::new_v4(),7);
+        let imported=uuid::Uuid::new_v4();
+        app.clipboard_mesh_share_imports.insert(key,imported);
+        app.open_document_unchecked(&root().join("missing.igz"));
+        assert_eq!(app.clipboard_mesh_share_imports.get(&key),Some(&imported));
+        app.new_document_unchecked();
+        assert!(app.clipboard_mesh_share_imports.is_empty());
+        let directory=root();std::fs::create_dir_all(&directory).unwrap();
+        let file=directory.join("valid.igz");
+        ingetrazo_formats::igz::save_igz(&Scene::new(),&file).unwrap();
+        app.clipboard_mesh_share_imports.insert(key,imported);
+        app.open_document_unchecked(&file);
+        assert!(app.clipboard_mesh_share_imports.is_empty());
+        assert_eq!(app.current_file,Some(file));
+        std::fs::remove_dir_all(directory).unwrap();
+    }
     #[test]
     fn mesh_prototype_registry_changes_require_unsaved_close_confirmation() {
         let mut app=IngeTrazoApp::default();
