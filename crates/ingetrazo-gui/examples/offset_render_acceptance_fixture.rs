@@ -12,8 +12,8 @@ impl eframe::App for Harness{
  std::fs::write(&pending,serde_json::to_vec(&rows).unwrap()).unwrap();
  std::fs::rename(pending,self.dir.join("state.json")).unwrap();
   });
-  if let Ok(name)=std::fs::read_to_string(self.dir.join("capture.txt")){if name!=self.capture{self.capture=name;ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(egui::UserData::new(())));}}
-  for event in ctx.input(|i|i.events.clone()){if let egui::Event::Screenshot{image,..}=event{let pixels:Vec<u8>=image.pixels.iter().flat_map(|p|p.to_array()).collect();image::save_buffer(self.dir.join(format!("{}.png",self.capture)),&pixels,image.size[0]as u32,image.size[1]as u32,image::ColorType::Rgba8).unwrap();}}
+  if let Ok(name)=std::fs::read_to_string(self.dir.join("capture.txt")){if !name.is_empty() && name!=self.capture{self.capture=name.clone();ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(egui::UserData::new(name)));}}
+  for event in ctx.input(|i|i.events.clone()){if let egui::Event::Screenshot{image,user_data,..}=event{let data=user_data.data.expect("capture identity");let name=data.downcast_ref::<String>().expect("capture request name");let pixels:Vec<u8>=image.pixels.iter().flat_map(|p|p.to_array()).collect();image::save_buffer(self.dir.join(format!("{}.png",name)),&pixels,image.size[0]as u32,image.size[1]as u32,image::ColorType::Rgba8).unwrap();}}
   ctx.request_repaint_after(std::time::Duration::from_millis(30));
  }
 }

@@ -1,0 +1,19 @@
+{
+  "run": 38083575728,
+  "job": 114305298812,
+  "source": "d24dae2b",
+  "artifact": 11681223726,
+  "artifact_sha256": "8377868f89d5d8c646d6bcfef8b02ee98f754ca3b733207b54772ab1ca4dbec1",
+  "observed": "Offset semantic cancel checks passed; screenshot fixture panicked saving unknown image format.",
+  "diagnosis": "Nonatomic capture.txt truncation/write exposes empty request; callback names image using mutable current request instead of its own identity.",
+  "correction": "Atomic request rename, ignore empty requests, associate screenshot response with request UserData.",
+  "validation": {
+    "focused_build": "PASS",
+    "rendered_replay": true,
+    "preview_changed_pixels": 2480,
+    "cancel_changed_pixels": 0,
+    "committed_added_dark_pixels": 2639,
+    "negative_control": "pending independent review",
+    "full_suite_rerun": false
+  }
+}

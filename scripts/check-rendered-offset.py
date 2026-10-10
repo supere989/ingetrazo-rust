@@ -47,7 +47,9 @@ def main():
    def click(point):
     move(point);event(4,1,point,4);event(5,1,point,8)
    def capture(name):
-    (directory/"capture.txt").write_text(name);wait(lambda:(directory/(name+".png")).is_file())
+    request=directory/"capture.tmp"
+    request.write_text(name);request.replace(directory/"capture.txt")
+    wait(lambda:(directory/(name+".png")).is_file())
    capture("before")
    click(initial["click"]);move(initial["move"])
    preview=wait(lambda:state() if len(state()["preview"])==4 else None);assert preview["faces"]==1 and preview["undo"]==0
