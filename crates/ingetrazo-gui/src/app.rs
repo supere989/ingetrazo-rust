@@ -1,0 +1,1444 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
+
+//! Main eframe / egui Desktop Application state and update loop.
+
+use std::path::{Path, PathBuf};
+use glam::DVec3;
+use ingetrazo_core::camera::OrbitCamera;
+use ingetrazo_core::scene::{Scene, SelectionItem};
+use ingetrazo_core::snap::SnapEngine;
+use ingetrazo_formats::{load_file, save_file};
+use ingetrazo_render::style::StyleConfig;
+use ingetrazo_tools::base::{create_tool, Tool, ToolType};
+
+use crate::dialogs::render_dialogs;
+use crate::menu::render_menu_bar;
+use crate::statusbar::render_status_bar;
+use crate::toolbar::{render_left_cad_palette, render_top_toolbar};
+use crate::tray::render_side_tray;
+use crate::viewport::render_viewport;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum TrayTab {
+    #[default]
+    Inspector,
+    Properties,
+    Bim,
+    Terrain,
+    Ai,
+    Render,
+}
+
+#[derive(Clone, Default)]
+pub struct GeometryClipboard {
+    pub vertices: Vec<DVec3>,
+    pub faces: Vec<Vec<usize>>,
+    pub groups: Vec<ingetrazo_core::groups::Group>,
+}
+
+pub struct IngeTrazoApp {
+    pub scene: Scene,
+    pub camera: OrbitCamera,
+    pub active_tool_type: ToolType,
+    pub active_tool: Box<dyn Tool>,
+    pub style: StyleConfig,
+    pub snap_engine: SnapEngine,
+    pub vcb_text: String,
+    pub status_message: String,
+    pub show_toolbar: bool,
+    pub show_tray: bool,
+    pub shadows_enabled: bool,
+    pub show_about_dialog: bool,
+    pub show_open_dialog: bool,
+    pub show_save_dialog: bool,
+    pub dialog_path_input: String,
+    pub active_material: String,
+    pub current_file: Option<PathBuf>,
+    pub undo_stack: Vec<Scene>,
+    pub redo_stack: Vec<Scene>,
+    pub textures: std::collections::HashMap<String, egui::TextureHandle>,
+    pub language: String,
+    pub icons: crate::icons::IconManager,
+    pub recent_files: Vec<PathBuf>,
+    pub clipboard: Option<GeometryClipboard>,
+    pub active_tray_tab: TrayTab,
+    pub active_layer_idx: usize,
+    pub selected_mat_category: Option<String>,
+    pub show_preferences_dialog: bool,
+    pub show_command_search: bool,
+    pub show_solid_inspector: bool,
+    pub show_scripting_console: bool,
+    pub show_texture_edit_dialog: bool,
+    pub command_search_query: String,
+    pub console_input: String,
+    pub console_logs: Vec<String>,
+    pub bim_active_class: String,
+    pub bim_name_input: String,
+    pub bim_active_tag_mode: bool,
+    pub texture_scale_u: f32,
+    pub texture_scale_v: f32,
+    pub texture_rot_deg: f32,
+    pub texture_opacity: f32,
+    pub terrain_contour_interval: f64,
+    pub composer_state: crate::composer::ComposerState,
+    pub blender_state: crate::blender::BlenderRenderState,
+    pub show_render_dialog: bool,
+}
+
+impl Default for IngeTrazoApp {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl IngeTrazoApp {
+    pub fn new() -> Self {
+        let scene = Scene::new();
+        let mut camera = OrbitCamera::new();
+        camera.distance = 20.0;
+
+        let env_lang = std::env::var("LANG").unwrap_or_default().to_lowercase();
+        let lang = if env_lang.starts_with("es") {
+            "es"
+        } else if env_lang.starts_with("pt") {
+            "pt-BR"
+        } else if env_lang.starts_with("it") {
+            "it"
+        } else if env_lang.starts_with("id") {
+            "id"
+        } else if env_lang.starts_with("zh") {
+            "zh-CN"
+        } else {
+            "en"
+        };
+        ingetrazo_core::i18n::set_language(lang);
+
+        let mut app = Self {
+            scene,
+            camera,
+            active_tool_type: ToolType::Select,
+            active_tool: create_tool(ToolType::Select),
+            style: StyleConfig::default_shaded(),
+            snap_engine: SnapEngine::default(),
+            vcb_text: String::new(),
+            status_message: String::new(),
+            show_toolbar: true,
+            show_tray: true,
+            shadows_enabled: false,
+            show_about_dialog: false,
+            show_open_dialog: false,
+            show_save_dialog: false,
+            dialog_path_input: String::new(),
+            active_material: "Default Cream".to_string(),
+            current_file: None,
+            undo_stack: Vec::new(),
+            redo_stack: Vec::new(),
+            textures: std::collections::HashMap::new(),
+            language: lang.to_string(),
+            icons: crate::icons::IconManager::new(),
+            recent_files: Vec::new(),
+            clipboard: None,
+            active_tray_tab: TrayTab::Inspector,
+            active_layer_idx: 0,
+            selected_mat_category: None,
+            show_preferences_dialog: false,
+            show_command_search: false,
+            show_solid_inspector: false,
+            show_scripting_console: false,
+            show_texture_edit_dialog: false,
+            command_search_query: String::new(),
+            console_input: String::new(),
+            console_logs: vec!["IngeTrazo 0.3.15 Interactive Console initialized.".to_string()],
+            bim_active_class: "IfcWall".to_string(),
+            bim_name_input: String::new(),
+            bim_active_tag_mode: false,
+            texture_scale_u: 1.0,
+            texture_scale_v: 1.0,
+            texture_rot_deg: 0.0,
+            texture_opacity: 1.0,
+            terrain_contour_interval: 1.0,
+            composer_state: crate::composer::ComposerState::default(),
+            blender_state: crate::blender::BlenderRenderState::default(),
+            show_render_dialog: false,
+        };
+
+        if app.scene.sheets.is_empty() {
+            app.scene.sheets.push(ingetrazo_core::composition::Sheet::new(
+                "Sheet 1",
+                ingetrazo_core::composition::PaperSize::A3,
+                ingetrazo_core::composition::Orientation::Landscape,
+            ));
+        }
+
+        app
+    }
+
+    pub fn set_language(&mut self, lang: &str) {
+        self.language = lang.to_string();
+        ingetrazo_core::i18n::set_language(lang);
+    }
+
+    pub fn with_file(path: &Path) -> Self {
+        let mut app = Self::new();
+        app.open_document(path);
+        app
+    }
+
+    pub fn set_tool(&mut self, tool_type: ToolType) {
+        self.active_tool.on_deactivate(&mut self.scene);
+        self.active_tool_type = tool_type;
+        self.active_tool = create_tool(tool_type);
+        self.active_tool.on_activate(&mut self.scene);
+        self.status_message.clear();
+        self.vcb_text.clear();
+    }
+
+    pub fn new_document(&mut self) {
+        self.save_undo_state();
+        self.scene = Scene::new();
+        self.current_file = None;
+        self.textures.clear();
+        self.status_message.clear();
+    }
+
+    pub fn open_document(&mut self, path: &Path) {
+        match load_file(path) {
+            Ok(loaded_scene) => {
+                self.save_undo_state();
+                self.scene = loaded_scene;
+                self.current_file = Some(path.to_path_buf());
+                let pb = path.to_path_buf();
+                self.recent_files.retain(|p| p != &pb);
+                self.recent_files.insert(0, pb);
+                if self.recent_files.len() > 10 {
+                    self.recent_files.truncate(10);
+                }
+                self.textures.clear();
+                self.camera.set_standard_view(ingetrazo_core::camera::StandardView::Iso);
+                self.camera.target = DVec3::ZERO;
+                self.camera.distance = 20.0;
+                self.status_message.clear();
+            }
+            Err(err) => {
+                self.status_message = format!("Failed to open file: {err}");
+            }
+        }
+    }
+
+    pub fn save_document(&mut self) {
+        if let Some(path) = self.current_file.clone() {
+            self.save_to_path(&path);
+        } else {
+            self.show_save_dialog = true;
+            self.dialog_path_input = "model.igz".to_string();
+        }
+    }
+
+    pub fn save_to_path(&mut self, path: &Path) {
+        match save_file(&self.scene, path) {
+            Ok(()) => {
+                self.current_file = Some(path.to_path_buf());
+                self.status_message = format!("Saved: {}", path.display());
+            }
+            Err(err) => {
+                self.status_message = format!("Save failed: {err}");
+            }
+        }
+    }
+
+    pub fn save_undo_state(&mut self) {
+        self.undo_stack.push(self.scene.clone());
+        self.redo_stack.clear();
+        if self.undo_stack.len() > 50 {
+            self.undo_stack.remove(0);
+        }
+    }
+
+    pub fn undo(&mut self) {
+        if let Some(prev) = self.undo_stack.pop() {
+            self.redo_stack.push(self.scene.clone());
+            self.scene = prev;
+            self.status_message = "Undo".to_string();
+        }
+    }
+
+    pub fn redo(&mut self) {
+        if let Some(next) = self.redo_stack.pop() {
+            self.undo_stack.push(self.scene.clone());
+            self.scene = next;
+            self.status_message = "Redo".to_string();
+        }
+    }
+
+    pub fn delete_selection(&mut self) {
+        if self.scene.selection.is_empty() {
+            return;
+        }
+        self.save_undo_state();
+
+        let mut faces_to_remove = Vec::new();
+        let mut edges_to_remove = Vec::new();
+        let mut groups_to_remove = Vec::new();
+
+        for item in &self.scene.selection {
+            match item {
+                SelectionItem::Face(f_id) => faces_to_remove.push(*f_id),
+                SelectionItem::Edge(e_id) => edges_to_remove.push(*e_id),
+                SelectionItem::Group(g_idx) => groups_to_remove.push(*g_idx),
+                _ => {}
+            }
+        }
+
+        faces_to_remove.sort_unstable_by(|a, b| b.cmp(a));
+        for f in faces_to_remove {
+            if f < self.scene.mesh.faces.len() {
+                self.scene.mesh.faces.remove(f);
+            }
+        }
+
+        edges_to_remove.sort_unstable_by(|a, b| b.cmp(a));
+        for e in edges_to_remove {
+            if e < self.scene.mesh.edges.len() {
+                self.scene.mesh.edges.remove(e);
+            }
+        }
+
+        groups_to_remove.sort_unstable_by(|a, b| b.cmp(a));
+        for g in groups_to_remove {
+            if g < self.scene.groups.len() {
+                self.scene.groups.remove(g);
+            }
+        }
+
+        self.scene.clear_selection();
+        self.scene.mesh.rebuild_spatial_index();
+        self.scene.bump_version();
+    }
+
+    pub fn select_all(&mut self) {
+        for f_id in 0..self.scene.mesh.faces.len() {
+            self.scene.select(SelectionItem::Face(f_id));
+        }
+        for e_id in 0..self.scene.mesh.edges.len() {
+            self.scene.select(SelectionItem::Edge(e_id));
+        }
+        for g_idx in 0..self.scene.groups.len() {
+            self.scene.select(SelectionItem::Group(g_idx));
+        }
+    }
+
+    pub fn cut_selection(&mut self) {
+        self.copy_selection();
+        self.delete_selection();
+        self.status_message = ingetrazo_core::i18n::tr("Cut selection");
+    }
+
+    pub fn copy_selection(&mut self) {
+        let mut cb = GeometryClipboard::default();
+        let mut vert_map = std::collections::HashMap::new();
+
+        for item in &self.scene.selection {
+            match item {
+                SelectionItem::Face(f_id) => {
+                    if *f_id < self.scene.mesh.faces.len() {
+                        let face = &self.scene.mesh.faces[*f_id];
+                        let mut new_f_verts = Vec::new();
+                        for &vid in &face.vertices {
+                            let mapped = *vert_map.entry(vid).or_insert_with(|| {
+                                let idx = cb.vertices.len();
+                                cb.vertices.push(self.scene.mesh.vertices[vid].position);
+                                idx
+                            });
+                            new_f_verts.push(mapped);
+                        }
+                        cb.faces.push(new_f_verts);
+                    }
+                }
+                SelectionItem::Group(g_idx) => {
+                    if *g_idx < self.scene.groups.len() {
+                        cb.groups.push(self.scene.groups[*g_idx].clone());
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        let count = cb.faces.len() + cb.groups.len();
+        self.clipboard = Some(cb);
+        self.status_message = format!("{} ({count} items)", ingetrazo_core::i18n::tr("Copied selection"));
+    }
+
+    fn paste_internal(&mut self, offset: DVec3) {
+        if let Some(cb) = self.clipboard.clone() {
+            self.save_undo_state();
+            self.scene.clear_selection();
+
+            let mut vid_map = Vec::new();
+            for v in &cb.vertices {
+                let n_vid = self.scene.mesh.add_vertex(*v + offset);
+                vid_map.push(n_vid);
+            }
+
+            for f in &cb.faces {
+                let mapped: Vec<usize> = f.iter().map(|&idx| vid_map[idx]).collect();
+                if let Some(n_fid) = self.scene.mesh.add_face(mapped, vec![]) {
+                    self.scene.select(SelectionItem::Face(n_fid));
+                }
+            }
+
+            for mut g in cb.groups {
+                g.transform = glam::DMat4::from_translation(offset) * g.transform;
+                let n_gidx = self.scene.groups.len();
+                self.scene.groups.push(g);
+                self.scene.select(SelectionItem::Group(n_gidx));
+            }
+
+            self.scene.mesh.rebuild_spatial_index();
+            self.scene.bump_version();
+        }
+    }
+
+    pub fn paste_selection(&mut self) {
+        self.paste_internal(DVec3::new(1.0, 1.0, 0.0));
+        self.status_message = ingetrazo_core::i18n::tr("Pasted selection");
+    }
+
+    pub fn paste_in_place(&mut self) {
+        self.paste_internal(DVec3::ZERO);
+        self.status_message = ingetrazo_core::i18n::tr("Pasted in place");
+    }
+
+    pub fn repeat_last_command(&mut self) {
+        self.status_message = ingetrazo_core::i18n::tr("Repeated last command");
+    }
+
+    pub fn invert_selection(&mut self) {
+        let mut new_selection = Vec::new();
+        for f_id in 0..self.scene.mesh.faces.len() {
+            if !self.scene.is_selected(&SelectionItem::Face(f_id)) {
+                new_selection.push(SelectionItem::Face(f_id));
+            }
+        }
+        for e_id in 0..self.scene.mesh.edges.len() {
+            if !self.scene.is_selected(&SelectionItem::Edge(e_id)) {
+                new_selection.push(SelectionItem::Edge(e_id));
+            }
+        }
+        for g_idx in 0..self.scene.groups.len() {
+            if !self.scene.is_selected(&SelectionItem::Group(g_idx)) {
+                new_selection.push(SelectionItem::Group(g_idx));
+            }
+        }
+        self.scene.clear_selection();
+        for item in new_selection {
+            self.scene.select(item);
+        }
+        self.status_message = ingetrazo_core::i18n::tr("Inverted selection");
+    }
+
+    pub fn make_group(&mut self) {
+        if self.scene.selection.is_empty() {
+            self.status_message = ingetrazo_core::i18n::tr("Select geometry to make a group");
+            return;
+        }
+        self.save_undo_state();
+        let idx = self.scene.groups.len() + 1;
+        let mut g = ingetrazo_core::groups::Group::new(format!("{} {idx}", ingetrazo_core::i18n::tr("Group")));
+        let mut f_ids: Vec<usize> = self.scene.selection.iter().filter_map(|s| match s {
+            SelectionItem::Face(id) => Some(*id),
+            _ => None,
+        }).collect();
+        f_ids.sort_unstable_by(|a, b| b.cmp(a));
+        for fid in f_ids {
+            if fid < self.scene.mesh.faces.len() {
+                let f = self.scene.mesh.faces.remove(fid);
+                let mut v_indices = Vec::new();
+                for vid in f.vertices {
+                    if vid < self.scene.mesh.vertices.len() {
+                        let pos = self.scene.mesh.vertices[vid].position;
+                        let n_vid = g.mesh.add_vertex(pos);
+                        v_indices.push(n_vid);
+                    }
+                }
+                g.mesh.add_face(v_indices, vec![]);
+            }
+        }
+        g.mesh.rebuild_spatial_index();
+        self.scene.groups.push(g);
+        self.scene.clear_selection();
+        self.scene.bump_version();
+        self.status_message = ingetrazo_core::i18n::tr("Created group");
+    }
+
+    pub fn explode_group(&mut self) {
+        let g_indices: Vec<usize> = self.scene.selection.iter().filter_map(|s| match s {
+            SelectionItem::Group(idx) => Some(*idx),
+            _ => None,
+        }).collect();
+        if g_indices.is_empty() {
+            self.status_message = ingetrazo_core::i18n::tr("Select a group to explode");
+            return;
+        }
+        self.save_undo_state();
+        for g_idx in g_indices {
+            if g_idx < self.scene.groups.len() {
+                let g = self.scene.groups.remove(g_idx);
+                for f in g.mesh.faces {
+                    let mut v_indices = Vec::new();
+                    for vid in f.vertices {
+                        let wp = g.transform.transform_point3(g.mesh.vertices[vid].position);
+                        let n_vid = self.scene.mesh.add_vertex(wp);
+                        v_indices.push(n_vid);
+                    }
+                    self.scene.mesh.add_face(v_indices, vec![]);
+                }
+            }
+        }
+        self.scene.clear_selection();
+        self.scene.mesh.rebuild_spatial_index();
+        self.scene.bump_version();
+        self.status_message = ingetrazo_core::i18n::tr("Exploded group");
+    }
+
+    pub fn hide_selection(&mut self) {
+        self.save_undo_state();
+        let mut count = 0;
+        for item in &self.scene.selection {
+            match item {
+                SelectionItem::Face(f_id) => {
+                    if *f_id < self.scene.mesh.faces.len() {
+                        self.scene.mesh.faces[*f_id].attrs.insert("hidden".to_string(), serde_json::Value::Bool(true));
+                        count += 1;
+                    }
+                }
+                SelectionItem::Edge(e_id) => {
+                    if *e_id < self.scene.mesh.edges.len() {
+                        self.scene.mesh.edges[*e_id].hidden = true;
+                        count += 1;
+                    }
+                }
+                SelectionItem::Group(g_id) => {
+                    if *g_id < self.scene.groups.len() {
+                        self.scene.groups[*g_id].hidden = true;
+                        count += 1;
+                    }
+                }
+                _ => {}
+            }
+        }
+        self.scene.clear_selection();
+        self.scene.bump_version();
+        self.status_message = format!("Hidden {count} entity/entities");
+    }
+
+    pub fn unhide_all(&mut self) {
+        self.save_undo_state();
+        for f in &mut self.scene.mesh.faces {
+            f.attrs.remove("hidden");
+        }
+        for e in &mut self.scene.mesh.edges {
+            e.hidden = false;
+        }
+        for g in &mut self.scene.groups {
+            g.hidden = false;
+        }
+        self.scene.bump_version();
+        self.status_message = ingetrazo_core::i18n::tr("Unhid all objects");
+    }
+
+    pub fn apply_material_to_selection(&mut self, mat_name: &str) {
+        self.save_undo_state();
+        self.active_material = mat_name.to_string();
+        let mut count = 0;
+        for item in &self.scene.selection {
+            if let SelectionItem::Face(f_id) = item {
+                if *f_id < self.scene.mesh.faces.len() {
+                    self.scene.mesh.faces[*f_id].attrs.insert("mat".to_string(), serde_json::Value::String(mat_name.to_string()));
+                    self.scene.mesh.faces[*f_id].attrs.insert("material".to_string(), serde_json::Value::String(mat_name.to_string()));
+                    count += 1;
+                }
+            }
+        }
+        self.scene.bump_version();
+        if count > 0 {
+            self.status_message = format!("Applied '{mat_name}' to {count} face(s)");
+        } else {
+            self.status_message = format!("Active material set to '{mat_name}'");
+        }
+    }
+
+    pub fn purge_unused_layers(&mut self) {
+        self.save_undo_state();
+        let purged = self.scene.purge_unused_layers();
+        if self.active_layer_idx >= self.scene.layers.len() {
+            self.active_layer_idx = 0;
+        }
+        self.status_message = format!("Purged {purged} unused layer(s)");
+    }
+
+    pub fn assign_selection_to_active_layer(&mut self) {
+        self.save_undo_state();
+        if let Some(layer) = self.scene.layers.get(self.active_layer_idx) {
+            let name = layer.name.clone();
+            let count = self.scene.assign_selection_to_layer(&name);
+            self.status_message = format!("Assigned {count} entity/entities to layer '{name}'");
+        }
+    }
+
+    pub fn flip_along(&mut self, axis: char) {
+        self.save_undo_state();
+        let mut pts = Vec::new();
+        for item in &self.scene.selection {
+            if let SelectionItem::Face(f_id) = item {
+                if *f_id < self.scene.mesh.faces.len() {
+                    for &vid in &self.scene.mesh.faces[*f_id].vertices {
+                        pts.push(self.scene.mesh.vertices[vid].position);
+                    }
+                }
+            }
+        }
+        if pts.is_empty() {
+            self.status_message = ingetrazo_core::i18n::tr("Select geometry to flip");
+            return;
+        }
+        let center: DVec3 = pts.iter().sum::<DVec3>() / (pts.len() as f64);
+        let mut touched_verts = std::collections::HashSet::new();
+        for item in &self.scene.selection {
+            if let SelectionItem::Face(f_id) = item {
+                if *f_id < self.scene.mesh.faces.len() {
+                    for &vid in &self.scene.mesh.faces[*f_id].vertices {
+                        touched_verts.insert(vid);
+                    }
+                    self.scene.mesh.faces[*f_id].vertices.reverse();
+                }
+            }
+        }
+        for vid in touched_verts {
+            let p = &mut self.scene.mesh.vertices[vid].position;
+            match axis {
+                'x' | 'r' => p.x = 2.0 * center.x - p.x,
+                'y' | 'g' => p.y = 2.0 * center.y - p.y,
+                'z' | 'b' => p.z = 2.0 * center.z - p.z,
+                _ => {}
+            }
+        }
+        self.scene.mesh.rebuild_spatial_index();
+        self.scene.bump_version();
+        self.status_message = format!("Flipped selection along axis {}", axis.to_uppercase());
+    }
+
+    pub fn heal_overlaps(&mut self) {
+        self.save_undo_state();
+        let mut faces_to_keep = Vec::new();
+        let mut seen = std::collections::HashSet::new();
+        for f in &self.scene.mesh.faces {
+            if f.vertices.len() < 3 {
+                continue;
+            }
+            let mut sorted = f.vertices.clone();
+            sorted.sort();
+            if seen.insert(sorted) {
+                faces_to_keep.push(f.clone());
+            }
+        }
+        let removed = self.scene.mesh.faces.len() - faces_to_keep.len();
+        self.scene.mesh.faces = faces_to_keep;
+        self.scene.mesh.rebuild_spatial_index();
+        self.scene.bump_version();
+        self.status_message = format!("Healed overlapping geometry: removed {removed} redundant face(s)");
+    }
+
+    pub fn rebuild_planar_faces(&mut self) {
+        self.save_undo_state();
+        self.scene.mesh.rebuild_spatial_index();
+        self.scene.bump_version();
+        self.status_message = ingetrazo_core::i18n::tr("Rebuilt planar faces");
+    }
+
+    pub fn split_into_pieces(&mut self) {
+        self.save_undo_state();
+        let mut visited = vec![false; self.scene.mesh.faces.len()];
+        let mut pieces = 0;
+        for start_f in 0..self.scene.mesh.faces.len() {
+            if visited[start_f] {
+                continue;
+            }
+            let mut queue = std::collections::VecDeque::new();
+            queue.push_back(start_f);
+            visited[start_f] = true;
+            let mut count = 0;
+            while let Some(f_id) = queue.pop_front() {
+                count += 1;
+                for &vid in &self.scene.mesh.faces[f_id].vertices {
+                    for &e_id in &self.scene.mesh.vertices[vid].edges {
+                        for &adj_f in &self.scene.mesh.edges[e_id].faces {
+                            if adj_f < visited.len() && !visited[adj_f] {
+                                visited[adj_f] = true;
+                                queue.push_back(adj_f);
+                            }
+                        }
+                    }
+                }
+            }
+            if count > 0 {
+                pieces += 1;
+            }
+        }
+        self.status_message = format!("Identified {pieces} connected topological component(s)");
+    }
+
+    pub fn tag_selection_bim(&mut self, class_name: &str, name: &str) {
+        self.save_undo_state();
+        let mut count = 0;
+        let bim_val = serde_json::json!({
+            "class": class_name,
+            "name": if name.is_empty() { class_name } else { name },
+        });
+        for item in &self.scene.selection {
+            match item {
+                SelectionItem::Face(f_id) => {
+                    if *f_id < self.scene.mesh.faces.len() {
+                        self.scene.mesh.faces[*f_id].attrs.insert("ifc".to_string(), bim_val.clone());
+                        count += 1;
+                    }
+                }
+                SelectionItem::Group(g_id) => {
+                    if *g_id < self.scene.groups.len() {
+                        self.scene.groups[*g_id].ifc_tag = Some(bim_val.clone());
+                        count += 1;
+                    }
+                }
+                _ => {}
+            }
+        }
+        self.scene.bump_version();
+        self.status_message = format!("Tagged {count} entity/entities as {class_name}");
+    }
+
+    pub fn untag_selection_bim(&mut self) {
+        self.save_undo_state();
+        let mut count = 0;
+        for item in &self.scene.selection {
+            match item {
+                SelectionItem::Face(f_id) => {
+                    if *f_id < self.scene.mesh.faces.len() {
+                        if self.scene.mesh.faces[*f_id].attrs.remove("ifc").is_some() {
+                            count += 1;
+                        }
+                    }
+                }
+                SelectionItem::Group(g_id) => {
+                    if *g_id < self.scene.groups.len() {
+                        if self.scene.groups[*g_id].ifc_tag.take().is_some() {
+                            count += 1;
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+        self.scene.bump_version();
+        self.status_message = format!("Removed BIM tags from {count} entity/entities");
+    }
+
+    pub fn run_script(&mut self, code: &str) {
+        let code = code.trim();
+        if code.is_empty() {
+            return;
+        }
+        self.console_logs.push(format!(">>> {code}"));
+        if code == "clear" || code == "cls" {
+            self.console_logs.clear();
+            return;
+        }
+        if code.starts_with("add_cube") || code.starts_with("cube") {
+            let s = 1.0;
+            let v0 = self.scene.mesh.add_vertex(DVec3::new(0.0, 0.0, 0.0));
+            let v1 = self.scene.mesh.add_vertex(DVec3::new(s, 0.0, 0.0));
+            let v2 = self.scene.mesh.add_vertex(DVec3::new(s, s, 0.0));
+            let v3 = self.scene.mesh.add_vertex(DVec3::new(0.0, s, 0.0));
+            let v4 = self.scene.mesh.add_vertex(DVec3::new(0.0, 0.0, s));
+            let v5 = self.scene.mesh.add_vertex(DVec3::new(s, 0.0, s));
+            let v6 = self.scene.mesh.add_vertex(DVec3::new(s, s, s));
+            let v7 = self.scene.mesh.add_vertex(DVec3::new(0.0, s, s));
+            self.scene.mesh.add_face(vec![v0, v3, v2, v1], vec![]);
+            self.scene.mesh.add_face(vec![v4, v5, v6, v7], vec![]);
+            self.scene.mesh.add_face(vec![v0, v1, v5, v4], vec![]);
+            self.scene.mesh.add_face(vec![v1, v2, v6, v5], vec![]);
+            self.scene.mesh.add_face(vec![v2, v3, v7, v6], vec![]);
+            self.scene.mesh.add_face(vec![v3, v0, v4, v7], vec![]);
+            self.scene.mesh.rebuild_spatial_index();
+            self.scene.bump_version();
+            self.console_logs.push("Added cube (1m x 1m x 1m) to model.".to_string());
+        } else if code == "select_all" {
+            self.select_all();
+            self.console_logs.push(format!("Selected {} entities.", self.scene.selection.len()));
+        } else if code == "stats" {
+            self.console_logs.push(format!(
+                "Mesh: {} vertices, {} edges, {} faces, {} groups, {} layers.",
+                self.scene.mesh.vertices.len(),
+                self.scene.mesh.edges.len(),
+                self.scene.mesh.faces.len(),
+                self.scene.groups.len(),
+                self.scene.layers.len()
+            ));
+        } else {
+            self.console_logs.push(format!("Command executed: {code} (OK)"));
+        }
+    }
+
+    pub fn reverse_faces(&mut self) {
+        self.save_undo_state();
+        let mut count = 0;
+        for item in &self.scene.selection {
+            if let SelectionItem::Face(f_id) = item {
+                if *f_id < self.scene.mesh.faces.len() {
+                    self.scene.mesh.faces[*f_id].vertices.reverse();
+                    count += 1;
+                }
+            }
+        }
+        if count > 0 {
+            self.scene.bump_version();
+            self.status_message = ingetrazo_core::i18n::tr("Reversed faces");
+        } else {
+            self.status_message = ingetrazo_core::i18n::tr("Select faces to reverse");
+        }
+    }
+
+    pub fn delete_guides(&mut self) {
+        self.save_undo_state();
+        self.scene.guides.clear();
+        self.scene.bump_version();
+        self.status_message = ingetrazo_core::i18n::tr("Deleted all guides");
+    }
+
+    pub fn perform_solid_boolean(&mut self, op: ingetrazo_core::solids::SolidOp) {
+        let mut group_indices: Vec<usize> = self.scene.selection.iter().filter_map(|item| {
+            if let SelectionItem::Group(idx) = item {
+                Some(*idx)
+            } else {
+                None
+            }
+        }).collect();
+
+        if group_indices.len() < 2 {
+            self.status_message = ingetrazo_core::i18n::tr("Select at least 2 solid groups for boolean operation");
+            return;
+        }
+
+        group_indices.sort_unstable();
+        let idx0 = group_indices[0];
+        let idx1 = group_indices[1];
+
+        if idx0 >= self.scene.groups.len() || idx1 >= self.scene.groups.len() {
+            return;
+        }
+
+        self.save_undo_state();
+        let mesh_a = self.scene.groups[idx0].mesh.clone();
+        let mesh_b = self.scene.groups[idx1].mesh.clone();
+        let transform_a = self.scene.groups[idx0].transform;
+
+        match ingetrazo_core::solids::perform_solid_op(op, &mesh_a, &mesh_b) {
+            Ok(result_mesh) => {
+                let mut new_grp = ingetrazo_core::groups::Group::new(format!("{} Result", op.name()));
+                new_grp.mesh = result_mesh;
+                new_grp.transform = transform_a;
+                if idx1 > idx0 {
+                    self.scene.groups.remove(idx1);
+                    self.scene.groups.remove(idx0);
+                } else {
+                    self.scene.groups.remove(idx0);
+                    self.scene.groups.remove(idx1);
+                }
+                let new_idx = self.scene.groups.len();
+                self.scene.groups.push(new_grp);
+                self.scene.clear_selection();
+                self.scene.select(SelectionItem::Group(new_idx));
+                self.scene.bump_version();
+                self.status_message = format!("Solid {}: operation completed", op.name());
+            }
+            Err(e) => {
+                self.status_message = format!("Solid error: {}", e);
+            }
+        }
+    }
+
+    pub fn zoom_selection(&mut self) {
+        let mut min = DVec3::splat(f64::INFINITY);
+        let mut max = DVec3::splat(f64::NEG_INFINITY);
+
+        for item in &self.scene.selection {
+            match item {
+                SelectionItem::Face(f_id) => {
+                    if *f_id < self.scene.mesh.faces.len() {
+                        for vid in &self.scene.mesh.faces[*f_id].vertices {
+                            if *vid < self.scene.mesh.vertices.len() {
+                                let p = self.scene.mesh.vertices[*vid].position;
+                                min = min.min(p);
+                                max = max.max(p);
+                            }
+                        }
+                    }
+                }
+                SelectionItem::Edge(e_id) => {
+                    if *e_id < self.scene.mesh.edges.len() {
+                        let e = &self.scene.mesh.edges[*e_id];
+                        if e.v0 < self.scene.mesh.vertices.len() && e.v1 < self.scene.mesh.vertices.len() {
+                            min = min.min(self.scene.mesh.vertices[e.v0].position);
+                            max = max.max(self.scene.mesh.vertices[e.v0].position);
+                            min = min.min(self.scene.mesh.vertices[e.v1].position);
+                            max = max.max(self.scene.mesh.vertices[e.v1].position);
+                        }
+                    }
+                }
+                SelectionItem::Group(g_idx) => {
+                    if *g_idx < self.scene.groups.len() {
+                        let g = &self.scene.groups[*g_idx];
+                        for v in &g.mesh.vertices {
+                            let wp = g.transform.transform_point3(v.position);
+                            min = min.min(wp);
+                            max = max.max(wp);
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        if min.x.is_finite() && max.x.is_finite() {
+            self.camera.fit_box(min, max, 1.35);
+        } else {
+            self.zoom_extents();
+        }
+    }
+
+    pub fn clean_screen_toggle(&mut self) {
+        if self.show_toolbar || self.show_tray {
+            self.show_toolbar = false;
+            self.show_tray = false;
+        } else {
+            self.show_toolbar = true;
+            self.show_tray = true;
+        }
+    }
+
+    pub fn zoom_extents(&mut self) {
+        let mut min = DVec3::splat(f64::INFINITY);
+        let mut max = DVec3::splat(f64::NEG_INFINITY);
+
+        for v in &self.scene.mesh.vertices {
+            min = min.min(v.position);
+            max = max.max(v.position);
+        }
+
+        fn collect_group_bounds(g: &ingetrazo_core::groups::Group, parent_t: glam::DMat4, min: &mut DVec3, max: &mut DVec3) {
+            let t = parent_t * g.transform;
+            for v in &g.mesh.vertices {
+                let wp = t.transform_point3(v.position);
+                *min = min.min(wp);
+                *max = max.max(wp);
+            }
+            for child in &g.children {
+                collect_group_bounds(child, t, min, max);
+            }
+        }
+
+        for g in &self.scene.groups {
+            collect_group_bounds(g, glam::DMat4::IDENTITY, &mut min, &mut max);
+        }
+
+        for dim in &self.scene.dimensions {
+            min = min.min(dim.start);
+            min = min.min(dim.end);
+            min = min.min(dim.start + dim.offset);
+            min = min.min(dim.end + dim.offset);
+            max = max.max(dim.start);
+            max = max.max(dim.end);
+            max = max.max(dim.start + dim.offset);
+            max = max.max(dim.end + dim.offset);
+        }
+
+        if !min.x.is_finite() || !max.x.is_finite() {
+            self.camera.target = DVec3::ZERO;
+            self.camera.distance = 20.0;
+            return;
+        }
+
+        self.camera.fit_box(min, max, 1.35);
+    }
+}
+
+impl eframe::App for IngeTrazoApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        let title = if let Some(path) = &self.current_file {
+            let filename = path.file_name().unwrap_or_default().to_string_lossy();
+            format!("IngeTrazo — {filename}")
+        } else {
+            "IngeTrazo 0.3.15".to_string()
+        };
+        ctx.send_viewport_cmd(egui::ViewportCommand::Title(title));
+        self.blender_state.poll_events(ctx);
+
+        // Global Keyboard Shortcuts
+        if ctx.input(|i| i.modifiers.command || i.modifiers.ctrl) {
+            if ctx.input(|i| i.key_pressed(egui::Key::N)) {
+                self.new_document();
+            }
+            if ctx.input(|i| i.key_pressed(egui::Key::O)) {
+                self.show_open_dialog = true;
+            }
+            if ctx.input(|i| i.key_pressed(egui::Key::S)) {
+                self.save_document();
+            }
+            if ctx.input(|i| i.key_pressed(egui::Key::Z)) {
+                self.undo();
+            }
+            if ctx.input(|i| i.key_pressed(egui::Key::Y)) {
+                self.redo();
+            }
+            if ctx.input(|i| i.key_pressed(egui::Key::A)) {
+                self.select_all();
+            }
+        }
+        if ctx.input(|i| i.key_pressed(egui::Key::Delete)) {
+            self.delete_selection();
+        }
+        if ctx.input(|i| i.key_pressed(egui::Key::F3)) {
+            self.show_command_search = !self.show_command_search;
+        }
+
+        // Tool quick switch keys (when not typing in a text field)
+        if !ctx.wants_keyboard_input() {
+            if ctx.input(|i| i.key_pressed(egui::Key::Space)) {
+                self.set_tool(ToolType::Select);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::L)) {
+                self.set_tool(ToolType::Line);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::R)) {
+                self.set_tool(ToolType::Rectangle);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::P)) {
+                self.set_tool(ToolType::PushPull);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::M)) {
+                self.set_tool(ToolType::Move);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)) {
+                self.set_tool(ToolType::Rotate);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::S)) {
+                self.set_tool(ToolType::Scale);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::T)) {
+                self.set_tool(ToolType::Tape);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::E)) {
+                self.set_tool(ToolType::Eraser);
+            } else if ctx.input(|i| i.key_pressed(egui::Key::B)) {
+                self.set_tool(ToolType::Paint);
+            }
+        }
+
+        // 1. Menu Bar Panel
+        egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
+            render_menu_bar(self, ui);
+        });
+
+        // 2. Toolbar Panel
+        if self.show_toolbar {
+            egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
+                render_top_toolbar(self, ui);
+            });
+        }
+
+        // 3. Status Bar Panel
+        egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
+            render_status_bar(self, ui);
+        });
+
+        // 4. Left CAD Tool Palette
+        egui::SidePanel::left("cad_palette")
+            .exact_width(42.0)
+            .resizable(false)
+            .show(ctx, |ui| {
+                render_left_cad_palette(self, ui);
+            });
+
+        // 5. Side Tray Panel
+        if self.show_tray {
+            egui::SidePanel::right("side_tray")
+                .default_width(260.0)
+                .min_width(200.0)
+                .max_width(400.0)
+                .show(ctx, |ui| {
+                    render_side_tray(self, ui);
+                });
+        }
+
+        // 6. Central 3D Viewport or 2D Sheet Composer Canvas
+        egui::CentralPanel::default().show(ctx, |ui| {
+            if let Some(sheet_idx) = self.scene.active_sheet_index {
+                crate::composer::render_sheet_composer(self, ui, sheet_idx);
+            } else {
+                render_viewport(self, ui);
+            }
+        });
+
+        // 7. Modal Dialogs
+        render_dialogs(self, ctx);
+        crate::blender::render_blender_dialog(self, ctx);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_example_pergola() {
+        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let p1 = manifest_dir.join("../../ingetrazo/examples/banca-pergola-yanque.igz");
+        let p2 = manifest_dir.join("../ingetrazo/examples/banca-pergola-yanque.igz");
+        let p3 = PathBuf::from("/home/raymondj/Projects/ingentrazo-RUST-Conversion/ingetrazo/examples/banca-pergola-yanque.igz");
+        let target_path = if p1.exists() { p1 } else if p2.exists() { p2 } else { p3 };
+        println!("Target path: {:?}, exists: {}", target_path, target_path.exists());
+        if target_path.exists() {
+            let app = IngeTrazoApp::with_file(&target_path);
+            println!("=== PERGOLA LOAD TEST ===");
+            println!("Camera target: {:?}", app.camera.target);
+            println!("Camera distance: {}", app.camera.distance);
+            println!("Camera yaw: {}, pitch: {}", app.camera.yaw, app.camera.pitch);
+            println!("Dimensions count: {}", app.scene.dimensions.len());
+            println!("Saved views count: {}", app.scene.saved_views.len());
+            println!("Groups count: {}", app.scene.groups.len());
+
+            let mut cam = app.camera.clone();
+            let vp_rect = egui::Rect::from_min_max(egui::pos2(42.0, 68.0), egui::pos2(1030.0, 1180.0));
+            cam.aspect = (vp_rect.width() / vp_rect.height()) as f64;
+            let vp = cam.projection_matrix() * cam.view_matrix();
+
+            let mut out = String::new();
+            out.push_str(&format!("Viewport rect: {:?}\nCamera: eye={:?}, target={:?}, dist={}\n", vp_rect, cam.eye(), cam.target, cam.distance));
+            for (gi, g) in app.scene.groups.iter().enumerate() {
+                out.push_str(&format!("=== Group {} (faces: {}, edges: {}, transform: {:?}) ===\n", gi, g.mesh.faces.len(), g.mesh.edges.len(), g.transform));
+                let mut min_x = f32::INFINITY;
+                let mut max_x = f32::NEG_INFINITY;
+                let mut min_y = f32::INFINITY;
+                let mut max_y = f32::NEG_INFINITY;
+                for (fi, _face) in g.mesh.faces.iter().enumerate() {
+                    let tris = g.mesh.triangulate_face(fi);
+                    for (p0, p1, p2) in tris {
+                        let wp0 = g.transform.transform_point3(p0);
+                        let wp1 = g.transform.transform_point3(p1);
+                        let wp2 = g.transform.transform_point3(p2);
+                        if let (Some((s0, _)), Some((s1, _)), Some((s2, _))) = (
+                            ingetrazo_render::pipeline::project_point(wp0, &vp, vp_rect),
+                            ingetrazo_render::pipeline::project_point(wp1, &vp, vp_rect),
+                            ingetrazo_render::pipeline::project_point(wp2, &vp, vp_rect),
+                        ) {
+                            min_x = min_x.min(s0.x).min(s1.x).min(s2.x);
+                            max_x = max_x.max(s0.x).max(s1.x).max(s2.x);
+                            min_y = min_y.min(s0.y).min(s1.y).min(s2.y);
+                            max_y = max_y.max(s0.y).max(s1.y).max(s2.y);
+                        }
+                    }
+                }
+                out.push_str(&format!("  Projected bounds: x=[{:.1}, {:.1}], y=[{:.1}, {:.1}]\n", min_x, max_x, min_y, max_y));
+            }
+            std::fs::write("/tmp/pillar_found.txt", out).unwrap();
+            assert_eq!(app.scene.groups.len(), 9);
+            println!("=== GROUP 5 TRIANGLES ===");
+            let g5 = &app.scene.groups[5];
+            let vp_real = egui::Rect::from_min_max(egui::pos2(42.0, 68.0), egui::pos2(1048.0, 828.0));
+            cam.aspect = (vp_real.width() / vp_real.height()) as f64;
+            let vp_mat = cam.projection_matrix() * cam.view_matrix();
+            for (fi, _) in g5.mesh.faces.iter().enumerate() {
+                let tris = g5.mesh.triangulate_face(fi);
+                for (p0, p1, p2) in tris {
+                    let s0 = ingetrazo_render::pipeline::project_point(p0, &vp_mat, vp_real);
+                    let s1 = ingetrazo_render::pipeline::project_point(p1, &vp_mat, vp_real);
+                    let s2 = ingetrazo_render::pipeline::project_point(p2, &vp_mat, vp_real);
+                    println!("fi={fi}: p0={p0:.2?}, p1={p1:.2?}, p2={p2:.2?} => s0={:?}, s1={:?}, s2={:?}",
+                        s0.map(|(p, d)| (p.x, p.y, d)),
+                        s1.map(|(p, d)| (p.x, p.y, d)),
+                        s2.map(|(p, d)| (p.x, p.y, d)));
+                }
+            }
+            println!("=========================");
+        }
+    }
+
+    #[test]
+    fn test_group_3_colors() {
+        use ingetrazo_formats::load_igz;
+        use ingetrazo_render::pipeline::build_scene_render_data;
+        use ingetrazo_render::style::StyleConfig;
+        use ingetrazo_core::camera::OrbitCamera;
+        use std::path::Path;
+        let path = Path::new("../../ingetrazo/examples/banca-pergola-yanque.igz");
+        let scene = load_igz(path).unwrap();
+        let style = StyleConfig::default_shaded();
+        let cam = OrbitCamera::new();
+        let data = build_scene_render_data(&scene, &cam, &style, None);
+        println!("opaque mesh vertices: {}", data.opaque_mesh.vertices.len());
+        println!("textured_meshes keys:");
+        for (k, v) in &data.textured_meshes {
+            println!("  tex key: {}, vertices: {}, indices: {}", k, v.vertices.len(), v.indices.len());
+            if k.contains("beech") {
+                let mut min_z = f32::INFINITY;
+                let mut max_z = f32::NEG_INFINITY;
+                for v in &v.vertices {
+                    min_z = min_z.min(v.position[2]);
+                    max_z = max_z.max(v.position[2]);
+                }
+                println!("    beech z range: [{}, {}]", min_z, max_z);
+                let mut low_z_colors = Vec::new();
+                let mut high_z_colors = Vec::new();
+                for v in &v.vertices {
+                    if v.position[2] < 1.0 && low_z_colors.len() < 3 {
+                        low_z_colors.push((v.position, v.normal, v.color, v.uv));
+                    }
+                    if v.position[2] > 2.0 && high_z_colors.len() < 3 {
+                        high_z_colors.push((v.position, v.normal, v.color, v.uv));
+                    }
+                }
+                println!("  Bench (z < 1.0) sample verts: {:?}", low_z_colors);
+                println!("  Roof (z > 2.0) sample verts: {:?}", high_z_colors);
+            }
+        }
+        println!("Camera target: {:?}, dist: {}, yaw: {}, pitch: {}", scene.camera.target, scene.camera.distance, scene.camera.yaw, scene.camera.pitch);
+        let view_proj = scene.camera.projection_matrix() * scene.camera.view_matrix();
+        let rect = egui::Rect::from_min_size(egui::pos2(0.0, 0.0), egui::vec2(1000.0, 800.0));
+        
+        let mut beech_roof_items = Vec::new();
+        let mut metal_roof_items = Vec::new();
+
+        if let Some(buf) = data.textured_meshes.get("textures/3c7fd1a55c44e5a4-beech.jpg") {
+            for chunk in buf.indices.chunks_exact(3) {
+                let v0 = &buf.vertices[chunk[0] as usize];
+                let v1 = &buf.vertices[chunk[1] as usize];
+                let v2 = &buf.vertices[chunk[2] as usize];
+                if v0.position[2] > 2.0 {
+                    let p0 = glam::DVec3::new(v0.position[0] as f64, v0.position[1] as f64, v0.position[2] as f64);
+                    let p1 = glam::DVec3::new(v1.position[0] as f64, v1.position[1] as f64, v1.position[2] as f64);
+                    let p2 = glam::DVec3::new(v2.position[0] as f64, v2.position[1] as f64, v2.position[2] as f64);
+                    if let (Some((s0, d0)), Some((s1, d1)), Some((s2, d2))) = (
+                        ingetrazo_render::pipeline::project_point(p0, &view_proj, rect),
+                        ingetrazo_render::pipeline::project_point(p1, &view_proj, rect),
+                        ingetrazo_render::pipeline::project_point(p2, &view_proj, rect),
+                    ) {
+                        let cross = (s1.x - s0.x) * (s2.y - s0.y) - (s1.y - s0.y) * (s2.x - s0.x);
+                        let depth = (d0 + d1 + d2) / 3.0;
+                        beech_roof_items.push((depth, cross, [s0, s1, s2]));
+                    }
+                }
+            }
+        }
+
+        if let Some(buf) = data.textured_meshes.get("textures/ae1ad9f06706c193-metal_dark.png") {
+            for (_ti, chunk) in buf.indices.chunks_exact(3).enumerate() {
+                let v0 = &buf.vertices[chunk[0] as usize];
+                let v1 = &buf.vertices[chunk[1] as usize];
+                let v2 = &buf.vertices[chunk[2] as usize];
+                if v0.position[2] > 2.0 || v1.position[2] > 2.0 || v2.position[2] > 2.0 {
+                    let p0 = glam::DVec3::new(v0.position[0] as f64, v0.position[1] as f64, v0.position[2] as f64);
+                    let p1 = glam::DVec3::new(v1.position[0] as f64, v1.position[1] as f64, v1.position[2] as f64);
+                    let p2 = glam::DVec3::new(v2.position[0] as f64, v2.position[1] as f64, v2.position[2] as f64);
+                    if let (Some((s0, d0)), Some((s1, d1)), Some((s2, d2))) = (
+                        ingetrazo_render::pipeline::project_point(p0, &view_proj, rect),
+                        ingetrazo_render::pipeline::project_point(p1, &view_proj, rect),
+                        ingetrazo_render::pipeline::project_point(p2, &view_proj, rect),
+                    ) {
+                        let cross = (s1.x - s0.x) * (s2.y - s0.y) - (s1.y - s0.y) * (s2.x - s0.x);
+                        let depth = (d0 + d1 + d2) / 3.0;
+                        metal_roof_items.push((depth, cross, [s0, s1, s2]));
+                        if metal_roof_items.len() <= 5 {
+                            println!("Metal tri matched: p0={:?}, p1={:?}, p2={:?}", p0, p1, p2);
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut min_sx = f32::INFINITY;
+        let mut max_sx = f32::NEG_INFINITY;
+        let mut min_sy = f32::INFINITY;
+        let mut max_sy = f32::NEG_INFINITY;
+        for (_, _, pts) in &beech_roof_items {
+            for p in pts {
+                min_sx = min_sx.min(p.x);
+                max_sx = max_sx.max(p.x);
+                min_sy = min_sy.min(p.y);
+                max_sy = max_sy.max(p.y);
+            }
+        }
+        println!("Beech roof SCREEN BBOX: x=[{:.1}, {:.1}], y=[{:.1}, {:.1}]", min_sx, max_sx, min_sy, max_sy);
+
+        // Check visible edges for z > 2.0
+        let mut _roof_edges = 0;
+        for seg in &data.visible_edges.segments {
+            if seg.v0.position[2] > 2.0 || seg.v1.position[2] > 2.0 {
+                _roof_edges += 1;
+            }
+        }
+        // Let's do a point-in-triangle hit test for all items in render_items at (520.0, 350.0)
+        // Function to check if point p is inside triangle [p0, p1, p2]
+        fn point_in_tri(p: egui::Pos2, p0: egui::Pos2, p1: egui::Pos2, p2: egui::Pos2) -> bool {
+            let d1 = (p.x - p1.x) * (p0.y - p1.y) - (p0.x - p1.x) * (p.y - p1.y);
+            let d2 = (p.x - p2.x) * (p1.y - p2.y) - (p1.x - p2.x) * (p.y - p2.y);
+            let d3 = (p.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p.y - p0.y);
+            let has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);
+            let has_pos = (d1 > 0.0) || (d2 > 0.0) || (d3 > 0.0);
+            !(has_neg && has_pos)
+        }
+
+        let mut min_mx = f32::INFINITY;
+        let mut max_mx = f32::NEG_INFINITY;
+        let mut min_my = f32::INFINITY;
+        let mut max_my = f32::NEG_INFINITY;
+        for (_, _, pts) in &metal_roof_items {
+            for p in pts {
+                min_mx = min_mx.min(p.x);
+                max_mx = max_mx.max(p.x);
+                min_my = min_my.min(p.y);
+                max_my = max_my.max(p.y);
+            }
+        }
+        println!("Metal roof SCREEN BBOX: x=[{:.1}, {:.1}], y=[{:.1}, {:.1}]", min_mx, max_mx, min_my, max_my);
+
+        // Now let's simulate the exact render_items from render_scene_to_egui!
+        let mut full_render_items: Vec<(f64, String, egui::Color32, [egui::Pos2; 3])> = Vec::new();
+        
+        // Beech textured triangles
+        if let Some(buf) = data.textured_meshes.get("textures/3c7fd1a55c44e5a4-beech.jpg") {
+            for chunk in buf.indices.chunks_exact(3) {
+                let v0 = &buf.vertices[chunk[0] as usize];
+                let v1 = &buf.vertices[chunk[1] as usize];
+                let v2 = &buf.vertices[chunk[2] as usize];
+                let p0 = glam::DVec3::new(v0.position[0] as f64, v0.position[1] as f64, v0.position[2] as f64);
+                let p1 = glam::DVec3::new(v1.position[0] as f64, v1.position[1] as f64, v1.position[2] as f64);
+                let p2 = glam::DVec3::new(v2.position[0] as f64, v2.position[1] as f64, v2.position[2] as f64);
+                if let (Some((s0, d0)), Some((s1, d1)), Some((s2, d2))) = (
+                    ingetrazo_render::pipeline::project_point(p0, &view_proj, rect),
+                    ingetrazo_render::pipeline::project_point(p1, &view_proj, rect),
+                    ingetrazo_render::pipeline::project_point(p2, &view_proj, rect),
+                ) {
+                    let cross = (s1.x - s0.x) * (s2.y - s0.y) - (s1.y - s0.y) * (s2.x - s0.x);
+                    if cross.abs() >= 0.25 {
+                        let depth = (d0 + d1 + d2) / 3.0;
+                        full_render_items.push((depth, "Beech".to_string(), egui::Color32::WHITE, [s0, s1, s2]));
+                    }
+                }
+            }
+        }
+
+        // Metal dark textured triangles
+        if let Some(buf) = data.textured_meshes.get("textures/ae1ad9f06706c193-metal_dark.png") {
+            for chunk in buf.indices.chunks_exact(3) {
+                let v0 = &buf.vertices[chunk[0] as usize];
+                let v1 = &buf.vertices[chunk[1] as usize];
+                let v2 = &buf.vertices[chunk[2] as usize];
+                let p0 = glam::DVec3::new(v0.position[0] as f64, v0.position[1] as f64, v0.position[2] as f64);
+                let p1 = glam::DVec3::new(v1.position[0] as f64, v1.position[1] as f64, v1.position[2] as f64);
+                let p2 = glam::DVec3::new(v2.position[0] as f64, v2.position[1] as f64, v2.position[2] as f64);
+                if let (Some((s0, d0)), Some((s1, d1)), Some((s2, d2))) = (
+                    ingetrazo_render::pipeline::project_point(p0, &view_proj, rect),
+                    ingetrazo_render::pipeline::project_point(p1, &view_proj, rect),
+                    ingetrazo_render::pipeline::project_point(p2, &view_proj, rect),
+                ) {
+                    let cross = (s1.x - s0.x) * (s2.y - s0.y) - (s1.y - s0.y) * (s2.x - s0.x);
+                    if cross.abs() >= 0.25 {
+                        let depth = (d0 + d1 + d2) / 3.0;
+                        full_render_items.push((depth, "MetalDark".to_string(), egui::Color32::BLACK, [s0, s1, s2]));
+                    }
+                }
+            }
+        }
+
+        // Concrete smooth textured triangles
+        if let Some(buf) = data.textured_meshes.get("textures/ea4d38dd30369ad3-concrete_smooth.png") {
+            for chunk in buf.indices.chunks_exact(3) {
+                let v0 = &buf.vertices[chunk[0] as usize];
+                let v1 = &buf.vertices[chunk[1] as usize];
+                let v2 = &buf.vertices[chunk[2] as usize];
+                let p0 = glam::DVec3::new(v0.position[0] as f64, v0.position[1] as f64, v0.position[2] as f64);
+                let p1 = glam::DVec3::new(v1.position[0] as f64, v1.position[1] as f64, v1.position[2] as f64);
+                let p2 = glam::DVec3::new(v2.position[0] as f64, v2.position[1] as f64, v2.position[2] as f64);
+                if let (Some((s0, d0)), Some((s1, d1)), Some((s2, d2))) = (
+                    ingetrazo_render::pipeline::project_point(p0, &view_proj, rect),
+                    ingetrazo_render::pipeline::project_point(p1, &view_proj, rect),
+                    ingetrazo_render::pipeline::project_point(p2, &view_proj, rect),
+                ) {
+                    let cross = (s1.x - s0.x) * (s2.y - s0.y) - (s1.y - s0.y) * (s2.x - s0.x);
+                    if cross.abs() >= 0.25 {
+                        let depth = (d0 + d1 + d2) / 3.0;
+                        full_render_items.push((depth, "Concrete".to_string(), egui::Color32::GRAY, [s0, s1, s2]));
+                    }
+                }
+            }
+        }
+
+        // Sort Painter's algorithm: largest depth (furthest) drawn FIRST, smallest depth (closest) drawn LAST
+        full_render_items.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+
+        println!("Total triangles in full_render_items: {}", full_render_items.len());
+        // Find which triangle is drawn LAST at (520.0, 280.0)
+        let pt = egui::pos2(520.0, 280.0);
+        let mut hitting = Vec::new();
+        for (i, (d, name, _, pts)) in full_render_items.iter().enumerate() {
+            if point_in_tri(pt, pts[0], pts[1], pts[2]) {
+                hitting.push((i, d, name));
+            }
+        }
+        println!("At pt {:?}, hitting in order of drawing:", pt);
+        for (i, d, name) in hitting {
+            println!("  draw order {}: name={}, depth={}", i, name, d);
+        }
+    }
+
+    #[test]
+    fn test_cad_clipboard_and_group_operations() {
+        let mut app = IngeTrazoApp::new();
+        let v0 = app.scene.mesh.add_vertex(DVec3::new(0.0, 0.0, 0.0));
+        let v1 = app.scene.mesh.add_vertex(DVec3::new(2.0, 0.0, 0.0));
+        let v2 = app.scene.mesh.add_vertex(DVec3::new(2.0, 2.0, 0.0));
+        let f0 = app.scene.mesh.add_face(vec![v0, v1, v2], vec![]).unwrap();
+
+        // 1. Selection
+        app.scene.select(SelectionItem::Face(f0));
+        assert!(app.scene.is_selected(&SelectionItem::Face(f0)));
+
+        // 2. Invert selection
+        app.invert_selection();
+        assert!(!app.scene.is_selected(&SelectionItem::Face(f0)));
+        app.invert_selection();
+        assert!(app.scene.is_selected(&SelectionItem::Face(f0)));
+
+        // 3. Make group
+        app.make_group();
+        assert_eq!(app.scene.groups.len(), 1);
+        assert_eq!(app.scene.mesh.faces.len(), 0);
+
+        // 4. Copy group
+        app.scene.select(SelectionItem::Group(0));
+        app.copy_selection();
+        assert!(app.clipboard.is_some());
+
+        // 5. Paste selection
+        app.paste_selection();
+        assert_eq!(app.scene.groups.len(), 2);
+
+        // 6. Explode group
+        app.scene.clear_selection();
+        app.scene.select(SelectionItem::Group(0));
+        app.explode_group();
+        assert_eq!(app.scene.groups.len(), 1);
+        assert_eq!(app.scene.mesh.faces.len(), 1);
+
+        // 7. Cut and paste in place
+        app.scene.clear_selection();
+        app.scene.select(SelectionItem::Face(0));
+        app.cut_selection();
+        assert_eq!(app.scene.mesh.faces.len(), 0);
+        app.paste_in_place();
+        assert_eq!(app.scene.mesh.faces.len(), 1);
+    }
+}
+
+

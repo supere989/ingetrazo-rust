@@ -1,0 +1,360 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
+
+//! Shared-vertex, non-manifold connectivity mesh.
+//!
+//! Level B+C topology engine:
+//! - Vertices are shared and automatically welded by spatial hash key.
+//! - Edges maintain radial lists of incident faces (supporting non-manifold 0, 1, 2, or more incident faces).
+//! - Moving a vertex updates all incident edges and faces automatically.
+
+use std::collections::HashMap;
+use glam::DVec3;
+use serde::{Deserialize, Serialize};
+
+use crate::math::{newell_vector, PointKey, EPSILON};
+use crate::triangulate::{triangulate, Tri3};
+
+pub type VertexId = usize;
+pub type EdgeId = usize;
+pub type FaceId = usize;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MeshVertex {
+    pub position: DVec3,
+    pub edges: Vec<EdgeId>,
+}
+
+impl MeshVertex {
+    pub fn new(position: DVec3) -> Self {
+        Self {
+            position,
+            edges: Vec::new(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MeshEdge {
+    pub v0: VertexId,
+    pub v1: VertexId,
+    pub faces: Vec<FaceId>,
+    pub soft: bool,
+    pub curve_id: Option<usize>,
+    pub layer: Option<String>,
+    pub hidden: bool,
+}
+
+impl MeshEdge {
+    pub fn new(v0: VertexId, v1: VertexId) -> Self {
+        Self {
+            v0,
+            v1,
+            faces: Vec::new(),
+            soft: false,
+            curve_id: None,
+            layer: None,
+            hidden: false,
+        }
+    }
+
+    #[inline]
+    pub fn contains_vertex(&self, v: VertexId) -> bool {
+        self.v0 == v || self.v1 == v
+    }
+
+    #[inline]
+    pub fn other_vertex(&self, v: VertexId) -> Option<VertexId> {
+        if self.v0 == v {
+            Some(self.v1)
+        } else if self.v1 == v {
+            Some(self.v0)
+        } else {
+            None
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MeshFace {
+    pub vertices: Vec<VertexId>,
+    pub holes: Vec<Vec<VertexId>>,
+    pub attrs: HashMap<String, serde_json::Value>,
+    pub layer: Option<String>,
+}
+
+impl MeshFace {
+    pub fn new(vertices: Vec<VertexId>) -> Self {
+        Self {
+            vertices,
+            holes: Vec::new(),
+            attrs: HashMap::new(),
+            layer: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Mesh {
+    pub vertices: Vec<MeshVertex>,
+    pub edges: Vec<MeshEdge>,
+    pub faces: Vec<MeshFace>,
+    #[serde(skip)]
+    spatial_index: HashMap<PointKey, VertexId>,
+}
+
+impl Default for Mesh {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Mesh {
+    pub fn new() -> Self {
+        Self {
+            vertices: Vec::new(),
+            edges: Vec::new(),
+            faces: Vec::new(),
+            spatial_index: HashMap::new(),
+        }
+    }
+
+    pub fn clear(&mut self) {
+        self.vertices.clear();
+        self.edges.clear();
+        self.faces.clear();
+        self.spatial_index.clear();
+    }
+
+    /// Rebuild the spatial lookup table (e.g. after deserialization).
+    pub fn rebuild_spatial_index(&mut self) {
+        self.spatial_index.clear();
+        for (i, v) in self.vertices.iter().enumerate() {
+            let key = PointKey::from_vec3(v.position);
+            self.spatial_index.insert(key, i);
+        }
+    }
+
+    /// Add a 3D position to the mesh, automatically welding to any coincident vertex.
+    pub fn add_vertex(&mut self, p: DVec3) -> VertexId {
+        let key = PointKey::from_vec3(p);
+        if let Some(&existing) = self.spatial_index.get(&key) {
+            return existing;
+        }
+        let id = self.vertices.len();
+        self.vertices.push(MeshVertex::new(p));
+        self.spatial_index.insert(key, id);
+        id
+    }
+
+    /// Find an existing edge between vertices v0 and v1 regardless of order.
+    pub fn find_edge(&self, v0: VertexId, v1: VertexId) -> Option<EdgeId> {
+        if v0 == v1 || v0 >= self.vertices.len() {
+            return None;
+        }
+        for &e_id in &self.vertices[v0].edges {
+            let e = &self.edges[e_id];
+            if (e.v0 == v0 && e.v1 == v1) || (e.v0 == v1 && e.v1 == v0) {
+                return Some(e_id);
+            }
+        }
+        None
+    }
+
+    /// Add an edge between two vertices. Reuses existing edge if already present.
+    pub fn add_edge(&mut self, v0: VertexId, v1: VertexId) -> Option<EdgeId> {
+        if v0 == v1 || v0 >= self.vertices.len() || v1 >= self.vertices.len() {
+            return None;
+        }
+        if let Some(existing) = self.find_edge(v0, v1) {
+            return Some(existing);
+        }
+        let id = self.edges.len();
+        self.edges.push(MeshEdge::new(v0, v1));
+        self.vertices[v0].edges.push(id);
+        self.vertices[v1].edges.push(id);
+        Some(id)
+    }
+
+    /// Add a face defined by an ordered loop of vertex IDs and optional holes.
+    /// Also ensures all boundary and hole edges are added to the mesh.
+    pub fn add_face(&mut self, loop_verts: Vec<VertexId>, holes: Vec<Vec<VertexId>>) -> Option<FaceId> {
+        if loop_verts.len() < 3 {
+            return None;
+        }
+
+        // Add boundary edges
+        let n = loop_verts.len();
+        let mut boundary_edges = Vec::with_capacity(n);
+        for i in 0..n {
+            let v0 = loop_verts[i];
+            let v1 = loop_verts[(i + 1) % n];
+            if let Some(e) = self.add_edge(v0, v1) {
+                boundary_edges.push(e);
+            }
+        }
+
+        // Add hole edges
+        let mut hole_edges = Vec::new();
+        for h in &holes {
+            let hn = h.len();
+            for i in 0..hn {
+                let v0 = h[i];
+                let v1 = h[(i + 1) % hn];
+                if let Some(e) = self.add_edge(v0, v1) {
+                    hole_edges.push(e);
+                }
+            }
+        }
+
+        let face_id = self.faces.len();
+        self.faces.push(MeshFace {
+            vertices: loop_verts,
+            holes,
+            attrs: HashMap::new(),
+            layer: None,
+        });
+
+        // Register incident face on all boundary and hole edges
+        for e in boundary_edges.into_iter().chain(hole_edges) {
+            if !self.edges[e].faces.contains(&face_id) {
+                self.edges[e].faces.push(face_id);
+            }
+        }
+
+        Some(face_id)
+    }
+
+    /// Compute Newell normal of a face.
+    pub fn face_normal(&self, face_id: FaceId) -> DVec3 {
+        let f = &self.faces[face_id];
+        let positions: Vec<DVec3> = f
+            .vertices
+            .iter()
+            .map(|&v| self.vertices[v].position)
+            .collect();
+        let n = newell_vector(&positions);
+        if n.length_squared() < EPSILON {
+            DVec3::Z
+        } else {
+            n.normalize()
+        }
+    }
+
+    /// Compute outer area of a face.
+    pub fn face_area(&self, face_id: FaceId) -> f64 {
+        let f = &self.faces[face_id];
+        let positions: Vec<DVec3> = f
+            .vertices
+            .iter()
+            .map(|&v| self.vertices[v].position)
+            .collect();
+        0.5 * newell_vector(&positions).length()
+    }
+
+    /// Compute centroid of a face.
+    pub fn face_centroid(&self, face_id: FaceId) -> DVec3 {
+        let f = &self.faces[face_id];
+        if f.vertices.is_empty() {
+            return DVec3::ZERO;
+        }
+        let sum: DVec3 = f
+            .vertices
+            .iter()
+            .map(|&v| self.vertices[v].position)
+            .sum();
+        sum / (f.vertices.len() as f64)
+    }
+
+    /// Triangulate a face into 3D triangles.
+    pub fn triangulate_face(&self, face_id: FaceId) -> Vec<Tri3> {
+        let f = &self.faces[face_id];
+        let outer: Vec<DVec3> = f
+            .vertices
+            .iter()
+            .map(|&v| self.vertices[v].position)
+            .collect();
+        let holes: Vec<Vec<DVec3>> = f
+            .holes
+            .iter()
+            .map(|h| h.iter().map(|&v| self.vertices[v].position).collect())
+            .collect();
+        triangulate(&outer, &holes, Some(self.face_normal(face_id)))
+    }
+
+    /// Check if the mesh is manifold closed solid (watertight):
+    /// - Every edge borders exactly two faces
+    /// - At least 4 faces
+    pub fn is_manifold_solid(&self) -> bool {
+        if self.faces.len() < 4 || self.edges.is_empty() {
+            return false;
+        }
+        for e in &self.edges {
+            if e.faces.len() != 2 {
+                return false;
+            }
+        }
+        true
+    }
+
+    /// Compute volume enclosed by the mesh using signed tetrahedrons.
+    pub fn volume(&self) -> Option<f64> {
+        if !self.is_manifold_solid() {
+            return None;
+        }
+        let mut total_vol = 0.0;
+        for face_id in 0..self.faces.len() {
+            let tris = self.triangulate_face(face_id);
+            for (p0, p1, p2) in tris {
+                // Signed tetrahedron volume: (p0 . (p1 x p2)) / 6.0
+                total_vol += p0.dot(p1.cross(p2)) / 6.0;
+            }
+        }
+        let v = total_vol.abs();
+        if v > 1e-12 {
+            Some(v)
+        } else {
+            None
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_mesh_vertex_welding() {
+        let mut mesh = Mesh::new();
+        let v0 = mesh.add_vertex(DVec3::new(1.0, 2.0, 3.0));
+        let v1 = mesh.add_vertex(DVec3::new(1.00001, 2.00002, 3.00001));
+        assert_eq!(v0, v1);
+        assert_eq!(mesh.vertices.len(), 1);
+    }
+
+    #[test]
+    fn test_mesh_cube_volume() {
+        let mut mesh = Mesh::new();
+        // Cube corners [0, 1]
+        let v000 = mesh.add_vertex(DVec3::new(0.0, 0.0, 0.0));
+        let v100 = mesh.add_vertex(DVec3::new(1.0, 0.0, 0.0));
+        let v110 = mesh.add_vertex(DVec3::new(1.0, 1.0, 0.0));
+        let v010 = mesh.add_vertex(DVec3::new(0.0, 1.0, 0.0));
+        let v001 = mesh.add_vertex(DVec3::new(0.0, 0.0, 1.0));
+        let v101 = mesh.add_vertex(DVec3::new(1.0, 0.0, 1.0));
+        let v111 = mesh.add_vertex(DVec3::new(1.0, 1.0, 1.0));
+        let v011 = mesh.add_vertex(DVec3::new(0.0, 1.0, 1.0));
+
+        // 6 faces
+        mesh.add_face(vec![v000, v010, v110, v100], vec![]); // bottom (-Z)
+        mesh.add_face(vec![v001, v101, v111, v011], vec![]); // top (+Z)
+        mesh.add_face(vec![v000, v100, v101, v001], vec![]); // front (-Y)
+        mesh.add_face(vec![v100, v110, v111, v101], vec![]); // right (+X)
+        mesh.add_face(vec![v110, v010, v011, v111], vec![]); // back (+Y)
+        mesh.add_face(vec![v010, v000, v001, v011], vec![]); // left (-X)
+
+        assert!(mesh.is_manifold_solid());
+        let vol = mesh.volume().unwrap();
+        assert!((vol - 1.0).abs() < 1e-4);
+    }
+}

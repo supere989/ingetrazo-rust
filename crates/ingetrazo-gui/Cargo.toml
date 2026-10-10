@@ -1,0 +1,21 @@
+[package]
+name = "ingetrazo-gui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+ingetrazo-core = { path = "../ingetrazo-core" }
+ingetrazo-tools = { path = "../ingetrazo-tools" }
+ingetrazo-formats = { path = "../ingetrazo-formats" }
+ingetrazo-render = { path = "../ingetrazo-render" }
+glam.workspace = true
+egui.workspace = true
+eframe.workspace = true
+serde_json.workspace = true
+log.workspace = true
+image.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+

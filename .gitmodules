@@ -1,0 +1,3 @@
+[submodule "ingetrazo"]
+	path = ingetrazo
+	url = https://github.com/supere989/ingetrazo.git

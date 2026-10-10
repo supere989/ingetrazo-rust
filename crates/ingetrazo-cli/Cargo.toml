@@ -1,0 +1,19 @@
+[package]
+name = "ingetrazo-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "ingetrazo"
+path = "src/main.rs"
+
+[dependencies]
+ingetrazo-core = { path = "../ingetrazo-core" }
+ingetrazo-tools = { path = "../ingetrazo-tools" }
+ingetrazo-formats = { path = "../ingetrazo-formats" }
+ingetrazo-gui = { path = "../ingetrazo-gui" }
+glam.workspace = true
+env_logger.workspace = true
+log.workspace = true
