@@ -5,7 +5,7 @@ from pathlib import Path
 from acceptance_context import context
 spec=importlib.util.spec_from_file_location("dae_import",Path(__file__).with_name("check-python-dae-import.py"));oracle=importlib.util.module_from_spec(spec);spec.loader.exec_module(oracle)
 from PySide6.QtWidgets import QApplication
-from PySide6.QtGui import QVector3D as V
+from PySide6.QtGui import QVector3D as V,QImage,QColor
 from core.scene import Scene
 from core.mesh import Mesh
 from formats import dae,igz
@@ -19,11 +19,13 @@ def main():
  rows=[];root=Path("docs/audits/dae-reference-corpus");root.mkdir(exist_ok=True)
  with tempfile.TemporaryDirectory()as d:
   d=Path(d);binary=d/"decoder";shutil.copy2(exe,binary);digest=hashlib.sha256(binary.read_bytes()).hexdigest()
-  for name in ["threshold400","threshold401","structured512","bare512","shared-library512","painted512"]:
+  for name in ["threshold400","threshold401","structured512","bare512","shared-library512","painted512","shared-reflected-textured512"]:
    s=Scene();m=s.mesh;w,h=(20,10)if name.startswith("threshold")else(16,16)
    for x in range(w):
     for y in range(h):
      f=m.add_face([V(x,y,0),V(x+1,y,0),V(x+1,y+1,0),V(x,y+1,0)])
+     if name=="shared-reflected-textured512":
+      image=QImage(2,2,QImage.Format_RGBA8888);image.fill(QColor(203,71,29));image.save(str(d/"shared-paint.png"));f.attrs["color"]=[.2,.4,.6];f.attrs["texture"]={"path":str(d/"shared-paint.png"),"uvw":[.0625,0,0,0,0,.0625,0,0],"sw":16,"sh":16}
      if name=="painted512":f.attrs["color"]=[1,0,0]if x%2 else[0,1,0]
    if name=="threshold401":m.add_face([V(21,0,0),V(22,0,0),V(21,1,0)])
    inp=d/(name+".dae");out=d/(name+".igz");dae.save_dae(s,inp);tree=ET.parse(inp);r=tree.getroot()
@@ -31,11 +33,16 @@ def main():
     for tag in ["library_visual_scenes","scene"]:
      e=r.find(NS+tag)
      if e is not None:r.remove(e)
-   if name=="shared-library512":
+   if name.startswith("shared-"):
     vs=r.find(NS+"library_visual_scenes/"+NS+"visual_scene");node=vs.find(NS+"node");library=ET.SubElement(r,NS+"library_nodes");library_node=copy.deepcopy(node);library_node.set("id","SharedGrid");library.append(library_node);vs.clear();vs.set("id","Scene")
     for i in range(2):
-     parent=ET.SubElement(vs,NS+"node",id="Copy"+str(i),name="Assembly"+str(i));ET.SubElement(parent,NS+"translate").text=str(i*40)+" 0 0";ET.SubElement(parent,NS+"instance_node",url="#SharedGrid",name="Instance"+str(i))
-   tree.write(inp,encoding="unicode");shutil.copy2(inp,root/inp.name);original=Scene();dae.load_dae(original,inp);a=summary(original)
+     parent=ET.SubElement(vs,NS+"node",id="Copy"+str(i),name="Assembly"+str(i));ET.SubElement(parent,NS+"translate").text=str(i*40)+" 0 0"
+     if name=="shared-reflected-textured512":
+      ET.SubElement(parent,NS+"rotate").text="0 0 1 90";child=ET.SubElement(parent,NS+"node",id="Nested"+str(i),name="Nested"+str(i));ET.SubElement(child,NS+"translate").text="3 7 2";ET.SubElement(child,NS+"scale").text="-2 3 1";parent=child
+     ET.SubElement(parent,NS+"instance_node",url="#SharedGrid",name="Instance"+str(i))
+   tree.write(inp,encoding="unicode");shutil.copy2(inp,root/inp.name);
+   for asset in d.glob("*.png"):shutil.copy2(asset,root/asset.name)
+   original=Scene();dae.load_dae(original,inp);a=summary(original)
    process=subprocess.run([str(binary),str(inp),str(out)],capture_output=True,text=True)
    if process.returncode:rows.append({"case":name,"original":a,"rust_error":process.stderr,"world_match":False,"editable_schema_match":False});continue
    shutil.copy2(out,root/out.name);rust=Scene();igz.load_into(rust,out);b=summary(rust)
