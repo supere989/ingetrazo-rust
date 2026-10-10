@@ -10,7 +10,7 @@ cases=[("horizontal",[20.,40.],[140.,40.]),("horizontal-reversed",[140.,40.],[20
 cases += [("clip-left",[-80.125,40.5],[130.75,70.125]),("clip-left-reversed",[130.75,70.125],[-80.125,40.5]),("clip-right",[200.5,80.75],[390.125,180.5]),("clip-bottom",[50.125,100.5],[180.25,380.75]),("clip-corner",[-300.5,-150.125],[400.75,340.5]),("clip-outside",[-5.,20.],[-5.,150.]),("clip-short",[-4.,-.25],[4.,.25])]
 for name,a,b in cases:
  im=QImage(256,256,QImage.Format_ARGB32);im.fill(Qt.transparent)
- p=QPainter(im);p.setRenderHint(QPainter.Antialiasing,True);p.setPen(QPen(QColor(120,140,165),1,Qt.DashLine));p.drawLine(QPointF(*a),QPointF(*b));p.end()
+ p=QPainter(im);p.setRenderHint(QPainter.Antialiasing,True);p.setPen(QPen(QColor(243,115,41),2)if "--selected" in sys.argv[2:]else QPen(QColor(120,140,165),1,Qt.DashLine));p.drawLine(QPointF(*a),QPointF(*b));p.end()
  rgba=im.convertToFormat(QImage.Format_RGBA8888);v=np.frombuffer(rgba.constBits(),np.uint8).reshape(256,256,4)
  ys,xs=np.nonzero(v[:,:,3]);pixels=[[int(x),int(y),int(v[y,x,3])]for y,x in zip(ys,xs)]
  rows.append({"name":name,"a":a,"b":b,"pixels":pixels})
