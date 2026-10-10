@@ -1,0 +1,1 @@
+Canonical90f4750a locked workspace584PASS/twoignored after isolated fullworkspace and exact combined24-case RTX surface proof. QPainter outlines excluded; full renderer, Metal and representativeperformance remainOPEN.
