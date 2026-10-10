@@ -258,5 +258,10 @@
       "active_sheet_index": 0,
       "sheet_count": 1
     }
+  },
+  "visual_review": {
+    "image_sha256": "bcb5abbba7bf6ffcadc36e9a8e692aa658fb4ce87ffc85635628df321bef3eae",
+    "observed": "Actual application menus/toolbars/inspector, A3 landscape sheet with inset border and visible two-line Native Metal Canvas / 0123456789 text. No blank-sheet or missing-application-content failure observed.",
+    "boundary": "Visual inspection is not exact original/native Canvas pixel parity or physical input acceptance."
   }
 }
