@@ -38,6 +38,10 @@ jobs:
         run: python -m pytest -q ingetrazo/tests/test_pushpull_subtractive.py ingetrazo/tests/test_pushpull_orient.py
       - name: Original Python versus Rust PushPull shape acceptance
         run: python scripts/check-python-pushpull.py
+      - name: Original Python versus Rust connected sweep geometry
+        run: python scripts/check-python-followme.py
+      - name: Original Python shared component definition acceptance
+        run: python scripts/check-python-components.py
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4

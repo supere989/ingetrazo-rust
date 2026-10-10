@@ -1,0 +1,37 @@
+{
+  "provenance": {
+    "rust_commit": "e6133229698705690c374bc49b1e2c95734d5a4d",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 1,
+  "cases": [
+    {
+      "case": "straight",
+      "original_volume": 3.0,
+      "rust_volume": 3.0,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "bend",
+      "original_volume": 7.0,
+      "rust_volume": 7.0,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "tube",
+      "original_volume": 15.0,
+      "rust_volume": 15.0,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "closed-torus",
+      "original_volume": 27.000004677311495,
+      "rust_volume": 27.000004677311495,
+      "symmetric_difference_volume": 0.0
+    }
+  ],
+  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Axis-crossing revolution/clipped poles, arbitrary path and interactive workflow remain open."
+}

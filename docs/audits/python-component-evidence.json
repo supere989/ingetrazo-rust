@@ -1,0 +1,17 @@
+{
+  "provenance": {
+    "rust_commit": "e6133229698705690c374bc49b1e2c95734d5a4d",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "checks": [
+    "linked definitions reopen as same Python mesh identity",
+    "plain component=false stays independent",
+    "shared edit updates both linked instances",
+    "Make Unique detaches even identical geometry before later shared edit",
+    "instance UID and opaque attributes retained"
+  ],
+  "scope": "One shared triangle definition and plain group; no nested instance/editor/clipboard/undo proof."
+}

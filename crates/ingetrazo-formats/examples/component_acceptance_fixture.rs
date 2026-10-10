@@ -1,0 +1,4 @@
+use ingetrazo_formats::igz::{load_igz,save_igz};
+fn main(){let dir=std::path::PathBuf::from(std::env::args().nth(1).unwrap());let mut scene=load_igz(&dir.join("component-source.igz")).unwrap();let definition_id=scene.groups[0].component_definition.unwrap();assert_eq!(scene.groups[1].component_definition,Some(definition_id));assert_eq!(scene.groups[2].component_definition,None);
+ let mut definition=scene.component_definitions[&definition_id].clone();definition.mesh.vertices[0].position.z=2.;scene.replace_component_definition(definition_id,definition).unwrap();save_igz(&scene,&dir.join("linked.igz")).unwrap();
+ let instance_id=scene.groups[1].id;scene.make_component_unique(instance_id).unwrap();let mut definition=scene.component_definitions[&definition_id].clone();definition.mesh.vertices[0].position.z=3.;scene.replace_component_definition(definition_id,definition).unwrap();save_igz(&scene,&dir.join("unique.igz")).unwrap();}
