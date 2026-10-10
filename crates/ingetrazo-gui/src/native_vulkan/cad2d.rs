@@ -134,7 +134,7 @@ impl Handle {
             .state
             .lock()
             .map_err(|_| "CAD2D state poisoned")?;
-        if !Arc::ptr_eq(&s.batches,&batches){s.premultiplied=prepare_palette(&batches)?;}
+        if !Arc::ptr_eq(&s.batches,&batches) || s.geometry.palette_cache_identity()!=geometry.palette_cache_identity(){s.premultiplied=prepare_palette(&geometry,&batches)?;}
         s.geometry = geometry;
         s.batches = batches;
         s.pose = pose;
@@ -277,7 +277,7 @@ fn admit_gates(gates:Option<&[ingetrazo_render::annotations::Gate]>,batches:usiz
  for gate in gates{gate_ids(*gate,count)?;}
  Ok(())
 }
-fn prepare_palette(batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{batches.iter().map(|b|b.color.qt_premultiplied8()).collect::<Result<Vec<_>,_>>().map(Arc::from)}
+fn prepare_palette(geometry:&Geometry,batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{geometry.resolve_batch_colors(batches).map(Arc::from)}
 /// A distinct callback type prevents the ordinary CAD preparation cache from
 /// consuming or publishing annotation geometry.
 struct AnnotationPaint(Arc<NativePaint>);
@@ -297,7 +297,7 @@ struct Cached {
 impl Factory{
  pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
   geometry.validate_batches(&batches)?;pose.validate()?;
-  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,geometry,premultiplied:prepare_palette(&batches)?,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
+  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,premultiplied:prepare_palette(&geometry,&batches)?,geometry,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
   let callback=Arc::new(VulkanPaintCallback(inner.clone()));Ok(Handle{inner,callback})
  }
  pub(crate) fn annotation_handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<Handle,String>{
