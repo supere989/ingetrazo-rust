@@ -1,0 +1,5810 @@
+{
+  "passed": true,
+  "binary_sha256": "00058739aa111dc9b84bd8975378e51cd91775af30c2b44f7d25c18abee21c4a",
+  "original_fixture_sha256": null,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual normal Composer button/pointer/double-click/keyboard Text placement/edit/CtrlEnter/UndoRedo/Escape/outside through native Vulkan public update_ui; editor typography not pixel-compared",
+  "states": [
+    {
+      "label": "placed",
+      "state": {
+        "serial": 31,
+        "key_events": [],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": null,
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "draft",
+      "state": {
+        "serial": 77,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo-world",
+      "state": {
+        "serial": 94,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\n",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo-newline",
+      "state": {
+        "serial": 110,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo-replacement",
+      "state": {
+        "serial": 126,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "Text",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo-replacement",
+      "state": {
+        "serial": 142,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo-newline",
+      "state": {
+        "serial": 155,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\n",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo-world",
+      "state": {
+        "serial": 171,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-replacement",
+      "state": {
+        "serial": 185,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-replacement-undo",
+      "state": {
+        "serial": 201,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-replacement-redo",
+      "state": {
+        "serial": 217,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-cursor-insert",
+      "state": {
+        "serial": 233,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bexta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-cursor-undo",
+      "state": {
+        "serial": 249,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-cursor-redo",
+      "state": {
+        "serial": 265,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bexta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-backspace",
+      "state": {
+        "serial": 282,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "Enter",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-backspace-undo",
+      "state": {
+        "serial": 299,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "W",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-backspace-redo",
+      "state": {
+        "serial": 315,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "O",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.247051103,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-standard-undo",
+      "state": {
+        "serial": 330,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "R",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.247051103,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.349114391,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "ctrl-y-observed",
+      "state": {
+        "serial": 344,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.247051103,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.349114391,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.444019434,
+            "key": "Y",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "alt-undo-observed",
+      "state": {
+        "serial": 361,
+        "key_events": [
+          {
+            "at": 0.777490293,
+            "key": "D",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.247051103,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.349114391,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.444019434,
+            "key": "Y",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.543153232,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": true
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "alt-redo-observed",
+      "state": {
+        "serial": 377,
+        "key_events": [
+          {
+            "at": 0.874141293,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.247051103,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.349114391,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.444019434,
+            "key": "Y",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.543153232,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": true
+          },
+          {
+            "at": 2.639288247,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": true,
+            "alt": true
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-commit",
+      "state": {
+        "serial": 392,
+        "key_events": [
+          {
+            "at": 0.968587861,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.068731204,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.167961133,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.262505987,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.375597333,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "L",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "P",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "H",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "Space",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "B",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "E",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "T",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.472438943,
+            "key": "A",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.5750553539999999,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.672192061,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "ArrowLeft",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.769500382,
+            "key": "X",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.8608128640000001,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 1.961327858,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.057579885,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.152789875,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.247051103,
+            "key": "Z",
+            "ctrl": true,
+            "shift": true,
+            "alt": false
+          },
+          {
+            "at": 2.349114391,
+            "key": "Z",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.444019434,
+            "key": "Y",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          },
+          {
+            "at": 2.543153232,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": false,
+            "alt": true
+          },
+          {
+            "at": 2.639288247,
+            "key": "Backspace",
+            "ctrl": false,
+            "shift": true,
+            "alt": true
+          },
+          {
+            "at": 2.737522396,
+            "key": "Enter",
+            "ctrl": true,
+            "shift": false,
+            "alt": false
+          }
+        ],
+        "pointer_events": [
+          {
+            "at": 0.230563303,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.573840619,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.657036708,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          2,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "59c6888b-a55c-4f50-81a9-0cfb04fb47d2",
+            "text": "alpha beta",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

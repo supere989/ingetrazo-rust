@@ -1,0 +1,24 @@
+{
+  "source_commit": "0b125ae136449172463f7277a6921cb065245b78",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sha256": {
+    "scripts/check-composer-text-modes-ui.py": "dd758e76ba4925fe141349b295f3a2357d491fe81fc106361358d71e78b44ae6",
+    "scripts/check-composer-text-shortcut-observation-ui.py": "c00febae41ac9fccfd96d6ef087fcdf680d694191bd6564a8f29d949cc3a1cbe",
+    "scripts/composer-text-modes-original-ui.py": "ad4057545437bfea31725625786ad39b8819516576b51a9de6075bf939bbc733",
+    "scripts/composer-text-shortcuts-original-ui.py": "c6ae83fe69a3b6f8f69650e119f061769487bc6450ca4a574f09a44e5b8ad1d6",
+    "crates/ingetrazo-gui/src/composer.rs": "3a0372ad3ae06e64e9004f02956d4db0a6594e1f48c5f826bdcd3f4de9969ed4",
+    "crates/ingetrazo-gui/src/composer_text_authoring.rs": "fbc639b5b1b0356ebc9844f7a951aad4bdba0ef375fa01459fa7bf0a67852567",
+    "crates/ingetrazo-gui/examples/composer_text_authoring_native_fixture.rs": "3760b1cdd9b8eecbeee958b492eb58f43dc15d6ac4bd12c6ee84c5c9976601c2"
+  },
+  "binary_sha256": "00058739aa111dc9b84bd8975378e51cd91775af30c2b44f7d25c18abee21c4a",
+  "modes": 8,
+  "shortcuts": 22,
+  "exact_fields": [
+    "draft",
+    "authored_text",
+    "history",
+    "selection_presence",
+    "applicable_tool_and_shape_state"
+  ],
+  "scope": "actual XCB and Vulkan UI; no typography pixel or physical nonLinux claim"
+}
