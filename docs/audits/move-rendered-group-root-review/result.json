@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_commit": "4bbff2a",
+  "workspace_passed": 420,
+  "ignored": 2,
+  "original_rendered_gesture": true,
+  "native_rendered_gesture": true,
+  "boundary": "Ordinary placed group only; linked-component and nested-local gestures, alpha/depth parity and GPU upload performance remain separate."
+}
