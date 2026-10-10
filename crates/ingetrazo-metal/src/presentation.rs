@@ -17,10 +17,12 @@ struct Frame {
 struct Owners {
     frames: VecDeque<Frame>,
     layer: Retained<CAMetalLayer>,
+    // Keep winit/AppKit window/view/delegate lifetime through quarantined work.
+    _window: std::sync::Arc<Window>,
     // Device and persistent queue outlive all drawable/command owners.
     metal: NativeMetal,
 }
-/// Caller must keep the attached winit Window alive until this owner is dropped.
+/// Retains the attached winit Window, including when GPU ownership is quarantined.
 /// Unknown GPU OR presentation completion quarantines the complete owner.
 pub struct MetalPresentation {
     owners: ManuallyDrop<Owners>,
@@ -29,7 +31,7 @@ pub struct MetalPresentation {
     extent: (u32, u32),
 }
 impl MetalPresentation {
-    pub fn attach(window: &Window, metal: NativeMetal) -> Result<Self, String> {
+    pub fn attach(window: std::sync::Arc<Window>, metal: NativeMetal) -> Result<Self, String> {
         let mtm = MainThreadMarker::new().ok_or("Metal window attachment requires main thread")?;
         let RawWindowHandle::AppKit(handle) =
             window.window_handle().map_err(|e| e.to_string())?.as_raw()
@@ -55,6 +57,7 @@ impl MetalPresentation {
             owners: ManuallyDrop::new(Owners {
                 frames: VecDeque::new(),
                 layer,
+                _window: window.clone(),
                 metal,
             }),
             submitted: 0,
@@ -158,6 +161,15 @@ impl MetalPresentation {
         });
         self.submitted += 1;
         Ok(true)
+    }
+    /// Admission gate before any texture, mesh, or target preparation. Input
+    /// remains queued in the host while drawable capacity/extent is unavailable.
+    pub fn can_prepare(&mut self) -> Result<bool, String> {
+        self.poll()?;
+        if self.owners.metal.poisoned.load(Ordering::Acquire) {
+            return Err("Metal admission poisoned".into());
+        }
+        Ok(self.extent.0 > 0 && self.extent.1 > 0 && self.owners.frames.len() < 3)
     }
     pub fn metal(&self) -> &NativeMetal {
         &self.owners.metal

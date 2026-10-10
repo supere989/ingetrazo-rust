@@ -41,6 +41,7 @@ struct Mesh {
     vertices: Buffer,
     indices: Buffer,
     key: blake3::Hash,
+    bounds: [[f32; 2]; 2],
 }
 pub struct PreparedPaint {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
@@ -57,10 +58,15 @@ impl PreparedPaint {
         let Some(mesh) = self.mesh.as_ref() else {
             return Ok(());
         };
-        let logical = [
-            extent.0 as f32 / self.density,
-            extent.1 as f32 / self.density,
-        ];
+        let logical = shader_logical_size(mesh.bounds, self.density, extent)?;
+        // Reject actual f32 scissor multiplication overflow before encoding.
+        for draw in &self.draws {
+            for point in [draw.clip.min, draw.clip.max] {
+                if !(point * self.density).is_finite() {
+                    return Err("Metal scissor arithmetic overflow".into());
+                }
+            }
+        }
         encoder.setRenderPipelineState(&self.pipeline);
         unsafe {
             encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
@@ -255,6 +261,7 @@ impl EguiPainter {
         let mut indices = Vec::new();
         let mut draws = Vec::new();
         let mut count = 0usize;
+        let mut bounds = [[f32::INFINITY, f32::NEG_INFINITY]; 2];
         for primitive in primitives {
             let egui::epaint::Primitive::Mesh(mesh) = &primitive.primitive else {
                 return Err(
@@ -286,6 +293,10 @@ impl EguiPainter {
                 .cloned()
                 .ok_or("Metal egui texture unavailable")?;
             for v in &mesh.vertices {
+                for (axis, value) in [v.pos.x, v.pos.y].into_iter().enumerate() {
+                    bounds[axis][0] = bounds[axis][0].min(value);
+                    bounds[axis][1] = bounds[axis][1].max(value);
+                }
                 for f in [v.pos.x, v.pos.y, v.uv.x, v.uv.y] {
                     vertices.extend_from_slice(&f.to_le_bytes());
                 }
@@ -306,6 +317,19 @@ impl EguiPainter {
                 texture,
             });
         }
+        if !indices.is_empty() {
+            // Admit a domain safe at every supported physical extent, before
+            // allocating or publishing new immutable geometry.
+            shader_logical_size(bounds, density, (1, 1))?;
+            shader_logical_size(bounds, density, (16384, 16384))?;
+            for draw in &draws {
+                for point in [draw.clip.min, draw.clip.max] {
+                    if !(point * density).is_finite() {
+                        return Err("Metal scissor arithmetic overflow".into());
+                    }
+                }
+            }
+        }
         let mesh = if indices.is_empty() {
             None
         } else {
@@ -324,6 +348,7 @@ impl EguiPainter {
                     vertices: vb,
                     indices: ib,
                     key,
+                    bounds,
                 });
                 self.stats.geometry_uploads += 1;
                 self.stats.gpu_geometry_bytes = (vertices.len() + indices.len()) as u64;
@@ -338,6 +363,35 @@ impl EguiPainter {
             density,
         }))
     }
+}
+fn shader_logical_size(
+    bounds: [[f32; 2]; 2],
+    density: f32,
+    extent: (u32, u32),
+) -> Result<[f32; 2], String> {
+    if !density.is_finite()
+        || density <= 0.
+        || extent.0 == 0
+        || extent.1 == 0
+        || extent.0 > 16384
+        || extent.1 > 16384
+    {
+        return Err("Invalid Metal shader domain".into());
+    }
+    let logical = [extent.0 as f32 / density, extent.1 as f32 / density];
+    for axis in 0..2 {
+        if !logical[axis].is_finite() || logical[axis] <= 0. {
+            return Err("Metal logical extent arithmetic overflow".into());
+        }
+        for value in bounds[axis] {
+            let doubled = 2f32 * value;
+            let projected = doubled / logical[axis] - 1f32;
+            if !doubled.is_finite() || !projected.is_finite() {
+                return Err("Metal vertex shader arithmetic overflow".into());
+            }
+        }
+    }
+    Ok(logical)
 }
 fn allocate_image(metal: &NativeMetal, size: [usize; 2], pixels: &[u8]) -> Result<Image, String> {
     if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
@@ -460,6 +514,20 @@ fn encoded_pixel(c: egui::Color32, font: bool) -> [u8; 4] {
 mod tests {
     use super::*;
     #[test]
+    fn admits_real_shader_domain_and_refuses_finite_overflow_inputs() {
+        assert!(shader_logical_size([[0., 64.], [0., 64.]], 1., (64, 64)).is_ok());
+        assert!(shader_logical_size([[0., 64.], [0., 64.]], f32::MAX, (64, 64)).is_err());
+        assert!(
+            shader_logical_size(
+                [[0., 64.], [0., 64.]],
+                f32::MIN_POSITIVE / 1000.,
+                (16384, 16384)
+            )
+            .is_err()
+        );
+        assert!(shader_logical_size([[0., f32::MAX], [0., 64.]], 1., (64, 64)).is_err());
+    }
+    #[test]
     fn encoded_generic_alpha_does_not_gamma_premultiply_white_twice() {
         assert_eq!(
             encoded_pixel(
@@ -477,4 +545,211 @@ mod tests {
         let additive = egui::Color32::from_rgba_premultiplied(12, 34, 56, 0);
         assert_eq!(encoded_pixel(additive, false), [12, 34, 56, 0]);
     }
+}
+
+// This explicit engineering readback owner is not used by the application host.
+// Every production paint submits directly to the drawable without a readback.
+struct DiagnosticOwners {
+    command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
+    _paint: Arc<PreparedPaint>,
+    _target: Image,
+    readback: Buffer,
+    gate: Option<Retained<ProtocolObject<dyn MTLSharedEvent>>>,
+    width: usize,
+    height: usize,
+    row: usize,
+    poison: Arc<std::sync::atomic::AtomicBool>,
+    _queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
+    _device: Retained<ProtocolObject<dyn MTLDevice>>,
+}
+pub struct DiagnosticPaint {
+    owner: ManuallyDrop<DiagnosticOwners>,
+}
+impl DiagnosticPaint {
+    pub fn completed(&self) -> bool {
+        self.owner.command.status() == MTLCommandBufferStatus::Completed
+    }
+    pub fn probe_gate(&self) -> Option<Retained<ProtocolObject<dyn MTLSharedEvent>>> {
+        self.owner.gate.clone()
+    }
+    pub fn release_probe_gate(&self) {
+        if let Some(gate) = self.owner.gate.as_ref() {
+            gate.setSignaledValue(1);
+        }
+    }
+    /// Bounded diagnostic wait, never invoked by production presentation.
+    pub fn wait_readback(&mut self, timeout: std::time::Duration) -> Result<Vec<u8>, String> {
+        if timeout > std::time::Duration::from_secs(5) {
+            return Err("Metal diagnostic deadline exceeds5s".into());
+        }
+        let start = std::time::Instant::now();
+        loop {
+            if self.completed() {
+                break;
+            }
+            if self.owner.command.status() == MTLCommandBufferStatus::Error
+                || start.elapsed() >= timeout
+            {
+                self.owner
+                    .poison
+                    .store(true, std::sync::atomic::Ordering::Release);
+                return Err(
+                    "Metal diagnostic completion unknown; admission poisoned and owners retained"
+                        .into(),
+                );
+            }
+            std::thread::sleep(std::time::Duration::from_millis(1));
+        }
+        // Shared buffer is read only after actual Completed, not timeout elapsed.
+        let bytes = unsafe {
+            std::slice::from_raw_parts(
+                self.owner.readback.raw.contents().as_ptr().cast::<u8>(),
+                self.owner.row * self.owner.height,
+            )
+        };
+        let mut rgba = Vec::with_capacity(self.owner.width * self.owner.height * 4);
+        for y in 0..self.owner.height {
+            for pixel in
+                bytes[y * self.owner.row..y * self.owner.row + self.owner.width * 4].chunks_exact(4)
+            {
+                rgba.extend_from_slice(&[pixel[2], pixel[1], pixel[0], pixel[3]]);
+            }
+        }
+        Ok(rgba)
+    }
+}
+impl Drop for DiagnosticPaint {
+    fn drop(&mut self) {
+        if self.completed() {
+            unsafe {
+                ManuallyDrop::drop(&mut self.owner);
+            }
+        } else {
+            self.owner
+                .poison
+                .store(true, std::sync::atomic::Ordering::Release);
+            eprintln!("Metal diagnostic paint owner quarantined: unknown completion");
+        }
+    }
+}
+impl EguiPainter {
+    /// Actual native render+GPU BLIT to shared readback for independent probes.
+    /// A real shared-event gate may deliberately hold submitted work, exclusively
+    /// for timeout/ownership controls. No production host calls this method.
+    pub fn submit_diagnostic(
+        &self,
+        metal: &NativeMetal,
+        paint: Arc<PreparedPaint>,
+        width: usize,
+        height: usize,
+        blocked_for_probe: bool,
+    ) -> Result<DiagnosticPaint, String> {
+        objc2::rc::autoreleasepool(|_| {
+            if width == 0 || height == 0 || width > 4096 || height > 4096 {
+                return Err("Invalid diagnostic target extent".into());
+            }
+            if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
+                return Err("Metal admission poisoned".into());
+            }
+            let row = (width * 4 + 255) & !255;
+            let target = allocate_target(metal, [width, height])?;
+            let readback = metal.buffer(row * height, true)?;
+            let command = metal
+                .queue
+                .commandBuffer()
+                .ok_or("Diagnostic command creation failed")?;
+            let gate = if blocked_for_probe {
+                Some(
+                    metal
+                        .device
+                        .newSharedEvent()
+                        .ok_or("Metal shared-event gate unavailable")?,
+                )
+            } else {
+                None
+            };
+            if let Some(gate) = gate.as_ref() {
+                command.encodeWaitForEvent_value(ProtocolObject::from_ref(&**gate), 1);
+            }
+            let descriptor = MTLRenderPassDescriptor::new();
+            let color = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };
+            color.setTexture(Some(&target.raw));
+            color.setLoadAction(MTLLoadAction::Clear);
+            color.setStoreAction(MTLStoreAction::Store);
+            color.setClearColor(MTLClearColor {
+                red: 1.,
+                green: 1.,
+                blue: 1.,
+                alpha: 1.,
+            });
+            let encoder = command
+                .renderCommandEncoderWithDescriptor(&descriptor)
+                .ok_or("Diagnostic render encoder unavailable")?;
+            if let Err(error) = paint.encode(&encoder, (width as u32, height as u32)) {
+                encoder.endEncoding();
+                return Err(error);
+            }
+            encoder.endEncoding();
+            let blit = command
+                .blitCommandEncoder()
+                .ok_or("Diagnostic BLIT encoder unavailable")?;
+            unsafe {
+                blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(&target.raw,0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width,height,depth:1},&readback.raw,0,row,row*height);
+            }
+            blit.endEncoding();
+            let result = DiagnosticPaint {
+                owner: ManuallyDrop::new(DiagnosticOwners {
+                    command,
+                    _paint: paint,
+                    _target: target,
+                    readback,
+                    gate,
+                    width,
+                    height,
+                    row,
+                    poison: metal.poisoned.clone(),
+                    _queue: metal.queue.clone(),
+                    _device: metal.device.clone(),
+                }),
+            };
+            result.owner.command.commit();
+            Ok(result)
+        })
+    }
+}
+fn allocate_target(metal: &NativeMetal, size: [usize; 2]) -> Result<Image, String> {
+    let ticket = metal
+        .budget
+        .lock()
+        .map_err(|_| "Metal budget poisoned")?
+        .reserve(0, (size[0] * size[1] * 4) as u64)?;
+    let descriptor = MTLTextureDescriptor::new();
+    descriptor.setTextureType(MTLTextureType::Type2D);
+    unsafe {
+        descriptor.setWidth(size[0]);
+        descriptor.setHeight(size[1]);
+    }
+    descriptor.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
+    descriptor.setStorageMode(MTLStorageMode::Private);
+    descriptor.setUsage(MTLTextureUsage::RenderTarget);
+    let Some(raw) = metal.device.newTextureWithDescriptor(&descriptor) else {
+        metal
+            .budget
+            .lock()
+            .map_err(|_| "Metal budget poisoned")?
+            .cancel(ticket)?;
+        return Err("Metal diagnostic target allocation failed".into());
+    };
+    let actual = MTLResource::allocatedSize(&*raw) as u64;
+    let handle = (&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>() as usize as u64;
+    let mut ledger = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
+    ledger.cancel(ticket)?;
+    let admitted = ledger.reserve(0, actual)?;
+    ledger.commit(admitted, handle)?;
+    drop(ledger);
+    Ok(Image {
+        raw: ManuallyDrop::new(raw),
+        budget: metal.budget.clone(),
+        handle,
+    })
 }
