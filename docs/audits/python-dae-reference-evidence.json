@@ -22,14 +22,14 @@
     }
   ],
   "provenance": {
-    "rust_commit": "4a244624a731d7495ee739f8398de5a0ff1bfbe7",
+    "rust_commit": "50ed574194c0fbe4e077c47995507f92fc4b0ebc",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "native_source_revision": "df4cc62",
-  "native_fixture_sha256": "5e5804827836cd958825f6450083aeefb1753e5fda7d890a613439472a33fac8",
-  "passed": false,
+  "native_source_revision": "6bf3e22",
+  "native_fixture_sha256": "43347e04bfbc411b709650275210bbefb78cf2d8c0d6f90b8a89f95cf63ca420",
+  "passed": true,
   "cases": [
     {
       "case": "threshold400",
@@ -14565,8 +14565,8 @@
           ]
         ],
         "group_names": [
-          "IngeTrazo model",
-          "IngeTrazo model"
+          "Instance0",
+          "Instance1"
         ],
         "group_faces": [
           1,
@@ -14577,13 +14577,18 @@
           64
         ],
         "components": [
-          false,
-          false
+          true,
+          true
         ],
-        "shared_pairs": []
+        "shared_pairs": [
+          [
+            0,
+            1
+          ]
+        ]
       },
       "world_match": true,
-      "editable_schema_match": false
+      "editable_schema_match": true
     },
     {
       "case": "painted512",

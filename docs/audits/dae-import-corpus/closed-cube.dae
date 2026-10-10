@@ -2,7 +2,7 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
 <asset>
 <contributor><authoring_tool>IngeTrazo</authoring_tool></contributor>
-<created>2026-10-10T02:33:53+00:00</created><modified>2026-10-10T02:33:53+00:00</modified>
+<created>2026-10-10T02:46:15+00:00</created><modified>2026-10-10T02:46:15+00:00</modified>
 <unit name="meter" meter="1"/>
 <up_axis>Z_UP</up_axis>
 </asset>
