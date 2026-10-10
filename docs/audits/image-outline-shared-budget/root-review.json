@@ -1,0 +1,8 @@
+{
+  "retained_full_frame_equal": true,
+  "actual_device_verified": true,
+  "allocation_and_warm_counters_checked": true,
+  "production_unchanged_since_combined_635_test_run": true,
+  "runtime_repeated": false,
+  "scope": "Retained artifact review; large model throughput and physical Mac acceptance remain open"
+}
