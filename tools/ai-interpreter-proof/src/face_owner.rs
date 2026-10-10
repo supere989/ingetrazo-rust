@@ -93,3 +93,5 @@ fn face_payload(faces:&Vec<MeshFace>,radial:&Vec<(usize,Vec<usize>)>)->Result<us
  #[test]fn unsupported_attribute_depth_discards_whole_transaction(){let mut o=FaceOwner::new(Mesh::new()).unwrap();let mut t=o.begin().unwrap();triangle(&mut t);let mut v=serde_json::Value::Null;for _ in 0..66{v=serde_json::Value::Array(vec![v]);}let mut a=HashMap::new();a.insert("deep".into(),v);assert!(t.set_face_attributes(0,a).is_err());assert!(o.commit(t).is_err());assert!(o.mesh().faces.is_empty());assert_eq!(o.history_counts(),(0,0));}
 
 }
+
+impl FaceOwner {pub fn prepare_fields(&mut self,positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>)->Result<crate::owner::PreparedFields<'_>,String>{self.owner.prepare_fields(positions,loops)}}

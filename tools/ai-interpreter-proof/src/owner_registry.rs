@@ -47,6 +47,20 @@ impl Registry{
   Ok(Change{inner:self.0.clone(),document:s.document,state:s.state,version:s.version,vertex_extent,edge_extent,vertices:v,edges:e,grow,bytes,truncate:true})
  }
 }
+/// Raw vector edits update position observations but intentionally retain the
+/// frozen source registry's original weld-key ownership.
+pub struct PositionChange { inner:Rc<RefCell<State>>, document:Uuid, state:Uuid, version:u64, positions:Vec<DVec3>, _preparation:Lease }
+impl Registry {
+ pub fn prepare_positions(&self,positions:&[DVec3])->Result<PositionChange,String>{
+  let s=self.0.borrow(); if positions.len()!=s.positions.len(){return Err("Registry position extent mismatch".into());}
+  let charge=s.budget.reserve(Kind::Preparation,positions.len().checked_mul(std::mem::size_of::<DVec3>()).ok_or("Registry position extent overflow")?)?;
+  let mut prepared=Vec::new();prepared.try_reserve_exact(positions.len()).map_err(|_|"Registry position preparation refused")?;prepared.extend_from_slice(positions);
+  Ok(PositionChange{inner:self.0.clone(),document:s.document,state:s.state,version:s.version,positions:prepared,_preparation:charge})
+ }
+}
+impl PositionChange {
+ pub fn apply(self,state:Uuid,version:u64){let mut s=self.inner.borrow_mut();assert!(s.valid&&s.document==self.document&&s.state==self.state&&s.version==self.version,"Exclusive prepared raw position registry");s.positions=self.positions;s.state=state;s.version=version;}
+}
 impl View{pub fn lookup_calls(&self)->usize{self.inner.borrow().metrics.lookup_calls}
  pub fn check(&self)->Result<(),String>{let s=self.inner.borrow();if !s.valid||s.document!=self.document||s.state!=self.state||s.version!=self.version{return Err("Stale source registry view".into());}Ok(())}
  pub fn extents(&self)->(usize,usize){let s=self.inner.borrow();(s.positions.len(),s.edge_extent)}

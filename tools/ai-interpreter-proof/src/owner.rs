@@ -201,3 +201,21 @@ fn delta_bytes(vertices:&Vec<MeshVertex>,edges:&Vec<MeshEdge>)->Result<usize,Str
  #[test]fn prepared_index_refuses_stale_positions_without_lookup_change(){let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);let index=Mesh::prepare_spatial_index(&[DVec3::X]).unwrap();assert!(mesh.install_prepared_spatial_index(index).is_err());assert_eq!(mesh.add_vertex(DVec3::ZERO),0);assert_eq!(mesh.vertices.len(),1);}
  #[test]fn stale_transaction_after_replace_undo_redo_refuses(){let mut o=JournalOwner::new(Mesh::new()).unwrap();let mut stale=o.begin();stale.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.replace(Mesh::new()).unwrap();assert!(o.commit(stale).is_err());let mut t=o.begin();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.commit(t).unwrap();let stale=o.begin();o.undo().unwrap();assert!(o.commit(stale).is_err());let stale=o.begin();o.redo().unwrap();assert!(o.commit(stale).is_err());assert_eq!(o.history_counts(),(1,0));}
 }
+
+/// Existing-field publication prerequisite. A raw Face.loop edit does not heal
+/// radial records and a raw QVector edit does not re-key the source registry.
+/// Command history is owned by the future VM controller; this ticket does not
+/// impersonate append Undo and makes prior native append tokens stale.
+pub struct PreparedFields<'a>{owner:&'a mut JournalOwner,positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>,spatial:PreparedSpatialIndex,registry:crate::owner_registry::PositionChange,after:Uuid,next:u64,_charge:Lease}
+impl JournalOwner {
+ pub fn prepare_fields(&mut self,positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>)->Result<PreparedFields<'_>,String>{
+  if positions.len()!=self.mesh.vertices.len()||loops.len()!=self.mesh.faces.len(){return Err("Raw field projection requires unchanged membership".into());}
+  let next=self.version.checked_add(1).ok_or("Owner revision overflow")?;
+  for(outer,holes)in &loops{for &id in outer.iter().chain(holes.iter().flatten()){if id>=positions.len(){return Err("Raw field projection vertex identity outside membership".into());}}}
+  let charge=self.budget.reserve(Kind::Preparation,preparation_bound(positions.len(),0)?)?;
+  let spatial=self.index(&positions)?;
+  let registry=self.registry.prepare_positions(&positions)?;
+  Ok(PreparedFields{owner:self,positions,loops,spatial,registry,after:Uuid::new_v4(),next,_charge:charge})
+ }
+}
+impl PreparedFields<'_>{pub fn apply(self){let Self{owner,positions,loops,spatial,registry,after,next,_charge}=self;for(v,p)in owner.mesh.vertices.iter_mut().zip(positions){v.position=p;}for(f,(outer,holes))in owner.mesh.faces.iter_mut().zip(loops){f.vertices=outer;f.holes=holes;}owner.mesh.install_prepared_spatial_index(spatial).expect("Exclusive prepared raw field positions");registry.apply(after,next);owner.state=after;owner.version=next;}}

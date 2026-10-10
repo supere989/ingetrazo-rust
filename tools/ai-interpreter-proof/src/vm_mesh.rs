@@ -383,6 +383,118 @@ pub mod editable_mesh {
         }
     }
 }
+struct Projection {
+    positions: Vec<glam::DVec3>,
+    loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+    _charge: Lease,
+}
+impl Projection {
+    fn prepare(
+        mesh: &PyRef<editable_mesh::Mesh>,
+        budget: &OwnerBudget,
+    ) -> Result<Option<Self>, String> {
+        use rustpython_vm::AsObject;
+        let owner = mesh.owner.read();
+        let native = owner.mesh();
+        let vertices = mesh.vertices.borrow_vec();
+        let faces = mesh.faces.borrow_vec();
+        if vertices.len() != native.vertices.len() || faces.len() != native.faces.len() {
+            return Err("Existing field projection requires unchanged membership".into());
+        }
+        let slots = vertices
+            .len()
+            .checked_mul(128)
+            .and_then(|n| faces.len().checked_mul(128).and_then(|m| n.checked_add(m)))
+            .ok_or("Projection extent overflow")?;
+        let mut charge = budget.reserve(Kind::Preparation, slots)?;
+        let mut ids = HashMap::new();
+        ids.try_reserve(vertices.len())
+            .map_err(|_| "Projection identity map refused")?;
+        let mut positions = Vec::new();
+        positions
+            .try_reserve_exact(vertices.len())
+            .map_err(|_| "Projection positions refused")?;
+        let mut changed = false;
+        for (id, value) in vertices.iter().enumerate() {
+            let v = value
+                .downcast_ref::<editable_mesh::Vertex>()
+                .ok_or("Projection vertex requires Vertex")?;
+            if ids.insert(value.get_id(), id).is_some() {
+                return Err("Repeated Vertex membership projection unsupported".into());
+            }
+            let p = v.position.read().coordinates();
+            let p = glam::DVec3::new(p[0] as f64, p[1] as f64, p[2] as f64);
+            changed |= p != native.vertices[id].position;
+            positions.push(p);
+        }
+        let mut loops = Vec::new();
+        loops
+            .try_reserve_exact(faces.len())
+            .map_err(|_| "Projection face slots refused")?;
+        let mut bytes = slots;
+        for (id, value) in faces.iter().enumerate() {
+            let f = value
+                .downcast_ref::<editable_mesh::Face>()
+                .ok_or("Projection face requires Face")?;
+            let outer = f.r#loop.read().clone();
+            let outer = outer.borrow_vec();
+            let holes = f.hole_loops.read().clone();
+            let holes = holes.borrow_vec();
+            let mut members = outer
+                .len()
+                .checked_add(holes.len())
+                .ok_or("Projection member overflow")?;
+            for h in holes.iter() {
+                let h = h
+                    .downcast_ref::<rustpython_vm::builtins::PyList>()
+                    .ok_or("Projection hole requires list")?;
+                members = members
+                    .checked_add(h.borrow_vec().len())
+                    .ok_or("Projection hole overflow")?;
+            }
+            bytes = bytes
+                .checked_add(members.checked_mul(32).ok_or("Projection loop overflow")?)
+                .ok_or("Projection loop overflow")?;
+            charge.resize(bytes)?;
+            let map = |values: &[rustpython_vm::PyObjectRef]| -> Result<Vec<usize>, String> {
+                let mut ring = Vec::new();
+                ring.try_reserve_exact(values.len())
+                    .map_err(|_| "Projection ring refused")?;
+                for v in values {
+                    ring.push(
+                        *ids.get(&v.get_id())
+                            .ok_or("Face loop references Vertex outside membership")?,
+                    );
+                }
+                Ok(ring)
+            };
+            let outer = map(&outer)?;
+            let mut prepared_holes = Vec::new();
+            prepared_holes
+                .try_reserve_exact(holes.len())
+                .map_err(|_| "Projection hole slots refused")?;
+            for h in holes.iter() {
+                prepared_holes.push(map(&h
+                    .downcast_ref::<rustpython_vm::builtins::PyList>()
+                    .unwrap()
+                    .borrow_vec())?);
+            }
+            changed |=
+                outer != native.faces[id].vertices || prepared_holes != native.faces[id].holes;
+            loops.push((outer, prepared_holes));
+        }
+        if changed {
+            Ok(Some(Self {
+                positions,
+                loops,
+                _charge: charge,
+            }))
+        } else {
+            Ok(None)
+        }
+    }
+}
+
 struct VertexRestore {
     vertex: PyRef<editable_mesh::Vertex>,
     position: PyRef<crate::vm_groups::native_groups::QVector3D>,
@@ -692,6 +804,20 @@ impl Controller {
                     .map_err(|_| "Publication entries refused")?;
                 entries.extend(stage.entries.drain().map(|(_, e)| e));
                 let publish = (|| {
+                    if entries.is_empty() {
+                        if let Ok(value) = self.scope.globals.get_item("mesh", vm) {
+                            let mesh = value
+                                .downcast::<editable_mesh::Mesh>()
+                                .map_err(|_| "Root binding requires Mesh")?;
+                            if let Some(projection) = Projection::prepare(&mesh, &self.budget)? {
+                                let mut owner = mesh.owner.write();
+                                owner
+                                    .prepare_fields(projection.positions, projection.loops)?
+                                    .apply();
+                                return Ok(true);
+                            }
+                        }
+                    }
                     let mut transactions = Vec::new();
                     transactions
                         .try_reserve_exact(entries.len())
