@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-10T22:25:38.130166+00:00",
+  "run_id": 38089335853,
+  "jobs": [
+    {
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "head_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Native Metal framework link (macos-15)",
+      "head_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "compilation-and-tests",
+      "head_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Native Metal framework link (macos-15-intel)",
+      "head_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "head_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}
