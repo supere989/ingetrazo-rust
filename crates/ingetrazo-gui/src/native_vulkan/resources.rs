@@ -1,4 +1,6 @@
 //! Direct Vulkan buffers, bounded uploads and fence-retired destruction.
+mod image_upload;
+pub use image_upload::TextureImage;
 use ash::{vk,Device};
 use ash::vk::Handle;
 use egui_ash_renderer::MemoryObserver;
@@ -7,10 +9,10 @@ use super::budget::VulkanBudget;
 const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
 struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>}
-#[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64}
-pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats}
+#[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64,pub image_upload_calls:u64,pub image_bytes:u64,pub image_mips_generated:u64}
+pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
 impl Resources {
- pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default()}}
+ pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
  pub fn buffer(&self,id:BufferId)->Option<vk::Buffer> {self.buffers.get(&id).map(|b|b.handle)}
  pub fn logical_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.logical_bytes)}
  pub fn allocation_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.allocation_bytes)}
