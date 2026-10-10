@@ -729,9 +729,15 @@ mod import_weld_tests {
         clear_uids(&mut a);clear_uids(&mut b);
         for key in ["groups","protos","dimensions","text_labels","materials","layers","display_style"] {assert_eq!(a.get(key),b.get(key),"{key}");}
         assert_eq!(b["back_face_color"],serde_json::json!([0.2,0.3,0.4]));
+        let expected=serde_json::json!({"decimals":2,"units":"m","font_size":9,"color":[45,55,75],"norma":"iso","base_step_mm":8.0,"ends":"arrow"});
+        assert_eq!(a["dimension_style"],expected);
+        assert_eq!(b["dimension_style"],expected);
         let path=std::env::temp_dir().join(format!("skp-back-color-{}.igz",uuid::Uuid::new_v4()));
         crate::igz::save_igz_format1(&scene,&path).unwrap();let saved:serde_json::Value=serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();std::fs::remove_file(&path).unwrap();
         assert_eq!(saved["scene"]["back_face_color"],serde_json::json!([0.2,0.3,0.4]));
+        assert_eq!(saved["scene"]["dimension_style"],expected);
+        let mut edited=scene.clone();edited.native_baseline["terrain"]=serde_json::json!({"unexpected":"terrain"});
+        assert!(crate::igz::save_igz_format1(&edited,&path).is_err());assert!(!path.exists());
         let mut old=scene.clone();old.native_baseline=serde_json::Value::Null;assert!(crate::igz::save_igz_format1(&old,&path).is_err());assert!(!path.exists());
     }
     #[test]

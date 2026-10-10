@@ -1,0 +1,123 @@
+{
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "model": "gondola_v20",
+      "camera": {
+        "target": [
+          48.07872009277344,
+          5.732326507568359,
+          1.5701091289520264
+        ],
+        "distance": 10.354882521905513,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "igz_sha256": "c8b50fb781e7c1adcebea224c289dd924e94e13afb1c58f6a421fe1b9b5e238f"
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "model": "gondola_v20",
+      "camera": {
+        "target": [
+          48.07872009277344,
+          5.732326507568359,
+          1.5701091289520264
+        ],
+        "distance": 10.354882521905513,
+        "yaw": 0.4886921905584123,
+        "pitch": 0.4188790204786391,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "igz_sha256": "c8b50fb781e7c1adcebea224c289dd924e94e13afb1c58f6a421fe1b9b5e238f"
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "model": "capilla_quiroz_v17",
+      "camera": {
+        "target": [
+          5.813098430633545,
+          2.8220772743225098,
+          1.5564720630645752
+        ],
+        "distance": 43.65325497694099,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e",
+      "igz_sha256": "aa437e7aac06a8f7a8a694834a90b290b86e72a2a5c9c1aab402b45939650263"
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "model": "capilla_quiroz_v17",
+      "camera": {
+        "target": [
+          5.813098430633545,
+          2.8220772743225098,
+          1.5564720630645752
+        ],
+        "distance": 43.65325497694099,
+        "yaw": 0.4886921905584123,
+        "pitch": 0.4188790204786391,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e",
+      "igz_sha256": "aa437e7aac06a8f7a8a694834a90b290b86e72a2a5c9c1aab402b45939650263"
+    }
+  ],
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "parser_pin": "291700bc213655a00461838de71e5f206311e619",
+  "binary_sha256": "61cd0c51bd8c8b160bfa161cde27d85bbf6aabcc1d0a5a82b2ddbd9ef8548a19"
+}
