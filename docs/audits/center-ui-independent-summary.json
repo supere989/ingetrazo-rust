@@ -1,0 +1,64 @@
+{
+  "source_revision": "d937ac1fa57224447138d1c221f5988bce4459ce",
+  "private_target": "/tmp/ingetrazo-center-ui-independent-target",
+  "cases": [
+    {
+      "backend": "native",
+      "mode": "curve",
+      "passed": true,
+      "executable_sha256": "81fd5c3ece21d6eb8948c45b1755fdc5d853aaea627fccf66c17fe582d166b9a",
+      "actual_move_delta": [
+        0.9962495075927937,
+        0.0,
+        0.0
+      ],
+      "approach_green_pixels": 0
+    },
+    {
+      "backend": "native",
+      "mode": "tiny",
+      "passed": true,
+      "executable_sha256": "81fd5c3ece21d6eb8948c45b1755fdc5d853aaea627fccf66c17fe582d166b9a",
+      "actual_move_delta": null,
+      "approach_green_pixels": null
+    },
+    {
+      "backend": "native",
+      "mode": "malformed",
+      "passed": true,
+      "executable_sha256": "81fd5c3ece21d6eb8948c45b1755fdc5d853aaea627fccf66c17fe582d166b9a",
+      "actual_move_delta": null,
+      "approach_green_pixels": null
+    },
+    {
+      "backend": "original",
+      "mode": "curve",
+      "passed": true,
+      "executable_sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c",
+      "actual_move_delta": [
+        1.0036288499832153,
+        0.0,
+        0.0
+      ],
+      "approach_green_pixels": 112
+    },
+    {
+      "backend": "original",
+      "mode": "tiny",
+      "passed": true,
+      "executable_sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c",
+      "actual_move_delta": null,
+      "approach_green_pixels": null
+    },
+    {
+      "backend": "original",
+      "mode": "malformed",
+      "passed": true,
+      "executable_sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c",
+      "actual_move_delta": null,
+      "approach_green_pixels": null
+    }
+  ],
+  "scope": "Actual XTEST pointer, real250ms Qt/egui frame timer, source OpenGL and native ash Vulkan llvmpipe. Native movement/deletion cache passes; original postMove reacquisition not exercised. Move integerpixel error<=.01 only; native center approach hint still0 versus source112 and retained open. General self-snap exclusion/OnFace/nested-context behavior not validated.",
+  "passed": true
+}
