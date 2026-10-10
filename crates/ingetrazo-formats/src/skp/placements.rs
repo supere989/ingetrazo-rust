@@ -260,6 +260,7 @@ impl Planner<'_> {
             if !d.image && place.x != DMat4::IDENTITY {
                 g.native_document = serde_json::json!({"axes":place.x.to_cols_array()});
             }
+            super::preserve_baked_group(&mut g);
             scene.groups.push(g);
         }
         Ok(())
@@ -336,6 +337,8 @@ fn place_proto(
         if d.name.is_empty() { &p.name } else { &d.name },
         proto.mesh.clone(),
     );
+    g.native_document["component"] = serde_json::json!(true);
+    g.native_baseline["component"] = serde_json::json!(false);
     g.mesh_share = Some(proto.id);
     g.transform = place.x;
     g.layer = layer_name(p, place.layer)?;

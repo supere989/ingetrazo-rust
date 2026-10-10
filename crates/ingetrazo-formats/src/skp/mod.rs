@@ -333,6 +333,16 @@ impl ImportWeld {
         id
     }
 }
+// The frozen adapter's baked groups have no placement matrix. Preserve that
+// distinction at the native codec boundary: an identity placement would make
+// the original renderer choose its instanced pass instead of consolidated.
+pub(super) fn preserve_baked_group(g: &mut Group) {
+    g.native_document["xform"] = serde_json::Value::Null;
+    g.native_baseline["xform"] = serde_json::json!(g.transform.to_cols_array());
+    g.native_document["component"] = serde_json::json!(true);
+    g.native_baseline["component"] = serde_json::json!(false);
+}
+
 fn collect(
     p: &Payload,
     d: &Definition,
@@ -585,7 +595,9 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             0,
             &textures::projected_faces(p, &p.root)?,
         )?;
-        scene.groups.push(Group::with_mesh(&p.name, mesh));
+        let mut group=Group::with_mesh(&p.name, mesh);
+        preserve_baked_group(&mut group);
+        scene.groups.push(group);
     }
     placements::append(p, &mut scene)?;
     for d in &p.legacy_dimensions {

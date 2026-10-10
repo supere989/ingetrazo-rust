@@ -300,7 +300,10 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
             shared.insert(key,idx);idx
         };
         obj["proto"]=serde_json::json!(idx);
-        obj["component"]=serde_json::json!(g.component_definition.is_some());
+        // overlay already reconciles the raw source component flag with the
+        // typed current value and baseline. A mesh-share is not itself a user
+        // component definition; do not erase unchanged imported metadata.
+
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
     } else if g.native_document.get("proto").is_some() && (geometry_changed
