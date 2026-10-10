@@ -1,0 +1,148 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "3f89f99eee157ea97990a3781fe95ea6419084eb",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "curve",
+  "early": {
+    "mode": "curve",
+    "time": 125358.374726765,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "acquired": {
+    "mode": "curve",
+    "time": 125358.633985245,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "centered": {
+    "mode": "curve",
+    "time": 125359.013910759,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "anchor": {
+    "mode": "curve",
+    "time": 125359.394812917,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ]
+  },
+  "approach_green_pixels": 112,
+  "elapsed_wall_seconds": 0.30084322100447025,
+  "scope": "Actual original Qt/OpenGL Viewport XTEST pointer, real QTimer dwell and Line first-click anchor; movement/deletion not exercised.",
+  "executable_sha256": "1934d63d2c5523868b323c5f8aeaabb1e25947a32c27b864fc7a9675b9fcdb01"
+}

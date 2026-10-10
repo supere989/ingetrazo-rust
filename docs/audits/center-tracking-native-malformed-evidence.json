@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "3f89f99eee157ea97990a3781fe95ea6419084eb",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "malformed",
+  "early": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 25,
+    "faces": 0,
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [],
+    "mode": "malformed",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.117608219,
+    "tool": "Line",
+    "undo": 0
+  },
+  "acquired": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 25,
+    "faces": 0,
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        3.2,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "malformed",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.369193573,
+    "tool": "Line",
+    "undo": 0
+  },
+  "centered": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 25,
+    "faces": 0,
+    "inference_point": [
+      1.9999999999999583,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        3.2,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "malformed",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.566931519,
+    "tool": "Line",
+    "undo": 0
+  },
+  "elapsed_wall_seconds": 0.3013204620074248,
+  "scope": "Actual native Vulkan production UI pointer and frame clock; tiny dot quiet or malformed fit rejected, no geometry/undo mutation; llvmpipe Xvfb engineering backend.",
+  "executable_sha256": "73f4e25fb0314423cb921ff58c9bf0f72392a4d441f750b4892e48eebd08fcd5"
+}

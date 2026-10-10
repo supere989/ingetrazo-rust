@@ -17,3 +17,5 @@ docs/audits/drawing-reference-render/capture.txt
 docs/audits/drawing-reference-render/state.json
 docs/audits/shift-inference-render/capture.txt
 docs/audits/shift-inference-render/state.json
+
+/docs/audits/center-tracking-*/state.json

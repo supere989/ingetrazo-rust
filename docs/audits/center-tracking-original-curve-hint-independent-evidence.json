@@ -1,0 +1,346 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "b88078eb68b3ad58c9e669e136427aa25cb3afe0",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "early": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125875.861576266,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "acquired": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125876.121901418,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "centered": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125876.501020204,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "anchor": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125876.881508084,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ]
+  },
+  "moved": {
+    "mode": "curve",
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125878.880992115,
+    "center": [
+      3.003628730773926,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      696.0010708255697,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      589.2674582363472,
+      272.97163030005703
+    ],
+    "move_target": [
+      784.9457605316002,
+      272.97163030005703
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.2036285400390625,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null
+  },
+  "requested_move_delta": [
+    1,
+    0,
+    0
+  ],
+  "actual_move_delta": [
+    1.0036288499832153,
+    0.0,
+    0.0
+  ],
+  "pointer_quantized_move_matches": true,
+  "approach_green_pixels": 112,
+  "scope": "Actual original Qt/OpenGL Viewport Move first/second clicks via XTEST. Standalone selection/tool shortcuts invoke original public actions. Move-center reacquisition pending separately.",
+  "executable_sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c"
+}

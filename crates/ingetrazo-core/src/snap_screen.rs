@@ -448,6 +448,18 @@ impl SnapEngine {
             self.center_reference = Some(reference);
         }
     }
+    /// Original viewport center approach mark: an acquired curve/face reference
+    /// becomes visible inside min(40px, half its projected radius), but a
+    /// projected radius below 12px stays quiet. This is observational only;
+    /// snap_screen refreshes the reference from the current model beforehand.
+    pub fn center_hint_pixel(&self, viewport: &crate::screen_pick::PixelViewport, cursor: DVec2) -> Option<DVec2> {
+        let reference=self.center_reference.as_ref()?;
+        let pixel=viewport.project_for_snapping(reference.point)?;
+        let radius_px=[DVec3::X,DVec3::Y].into_iter()
+            .filter_map(|axis|viewport.project_for_snapping(reference.point+axis*reference.radius))
+            .map(|p|p.distance(pixel)).fold(0_f64,f64::max);
+        (radius_px>=12. && cursor.distance(pixel)<=40_f64.min(radius_px*0.5)).then_some(pixel)
+    }
     /// Viewport supplies its monotonic frame time. A 250ms dwell acquires two
     /// source tracking points; drawing over a vertex acquires it instantly.
     pub fn note_screen_result(&mut self, result: &SnapResult, drawing: bool, now: f64) {
@@ -536,24 +548,9 @@ impl SnapEngine {
         }
         // Stable half-pixel buckets preserve source loose-context tie precedence.
         let mut points = vec![];
-        if let Some(reference) = &self.center_reference {
-            if let Some(pixel) = ctx.viewport.project_for_snapping(reference.point) {
-                let radius_px = [DVec3::X, DVec3::Y]
-                    .into_iter()
-                    .filter_map(|axis| {
-                        ctx.viewport
-                            .project_for_snapping(reference.point + axis * reference.radius)
-                    })
-                    .map(|p| p.distance(pixel))
-                    .fold(0., f64::max);
-                if radius_px >= 12. && pixels(reference.point) <= 40_f64.min(radius_px * 0.5) {
-                    points.push((
-                        pixels(reference.point),
-                        reference.point,
-                        SnapKind::Center,
-                        false,
-                    ));
-                }
+        if self.center_hint_pixel(&ctx.viewport,ctx.cursor).is_some() {
+            if let Some(reference)=&self.center_reference {
+                points.push((pixels(reference.point),reference.point,SnapKind::Center,false));
             }
         }
         points.push((pixels(DVec3::ZERO), DVec3::ZERO, SnapKind::Origin, false));
@@ -917,6 +914,8 @@ mod tests {
         assert_eq!(r.kind, SnapKind::Center);
         assert!(r.point.distance(center) < 1e-6);
         assert_eq!(scene, before);
+        assert!(engine.center_hint_pixel(&ctx.viewport,ctx.cursor+DVec2::X*20.).is_some());
+        assert!(engine.center_hint_pixel(&ctx.viewport,ctx.cursor+DVec2::X*41.).is_none());
         for vertex in &mut scene.mesh.vertices {
             vertex.position += DVec3::X;
         }
@@ -932,6 +931,7 @@ mod tests {
             SnapKind::Center
         );
         assert!(engine.center_reference.is_none());
+        assert!(engine.center_hint_pixel(&ctx.viewport,ctx.cursor).is_none());
     }
     #[test]
     fn dwell_acquires_after_250ms_only_and_keeps_two_source_points() {

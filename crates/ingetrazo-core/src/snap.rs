@@ -169,6 +169,9 @@ impl SnapEngine {
         self.shift_held=held;
     }
 
+    /// Observational inference state for diagnostics and rendered acceptance.
+    pub fn current_inference(&self)->Option<&SnapResult> { self.last_inference.as_ref() }
+
     pub fn note_inference_result(&mut self, result: &SnapResult) {
         self.last_inference=Some(result.clone());
     }

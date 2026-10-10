@@ -1,0 +1,205 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "d937ac1fa57224447138d1c221f5988bce4459ce",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "malformed",
+  "early": {
+    "mode": "malformed",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125771.5461817,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 25,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "acquired": {
+    "mode": "malformed",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125771.806085071,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        3.200000047683716,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 25,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "centered": {
+    "mode": "malformed",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 125771.986260559,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "FromPoint",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        3.200000047683716,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 25,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "elapsed_wall_seconds": 0.3009279239922762,
+  "scope": "Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select shortcuts wired to original public actions, Move/Delete original geometry/history, software GL Xvfb.",
+  "executable_sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c"
+}

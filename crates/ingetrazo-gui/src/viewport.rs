@@ -63,6 +63,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     // 2. Cursor Raycasting & Snapping
     let mut active_snap_glyph = None;
+    let mut active_center_hint = None;
 
     if let Some(mouse_pos) = pointer.hover_pos() {
         if rect.contains(mouse_pos) {
@@ -131,7 +132,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .as_ref()
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
-            let screen_drawing=matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle);
+            let screen_drawing=matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Move);
             app.snap_engine.note_model_revision(app.model_revision);
             let snap_res=if screen_drawing{
                 let context=ingetrazo_core::snap_screen::ScreenSnapContext{
@@ -139,7 +140,11 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     cursor:glam::DVec2::new(rel_x,rel_y),candidate:cursor_world_pos,plane_normal,
                 };
                 let result=app.snap_engine.snap_screen(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context);
-                app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));result
+                app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));
+                if result.kind!=ingetrazo_core::snap::SnapKind::Center || app.native_gpu_viewport_enabled {
+                    active_center_hint=app.snap_engine.center_hint_pixel(&context.viewport,context.cursor);
+                }
+                result
             }else{app.snap_engine.snap(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close())};
             if app.active_tool_type!=ToolType::Freehand && snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
@@ -308,6 +313,17 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
+    // Source center approach marker is a UI overlay, shared by native Vulkan
+    // and the software viewport. Native world rendering has no snap glyph pass.
+    if let Some(pixel)=active_center_hint {
+        let pos=rect.min+egui::vec2(pixel.x as f32,pixel.y as f32);
+        let rgb=ingetrazo_core::snap::COLOR_ENDPOINT;
+        let green=egui::Color32::from_rgb((rgb[0]*255.) as u8,(rgb[1]*255.) as u8,(rgb[2]*255.) as u8);
+        painter.circle_filled(pos,4.,green);
+        painter.circle_stroke(pos,4.,egui::Stroke::new(3.,egui::Color32::from_white_alpha(230)));
+        painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
+    }
+
     // 4. Render Active Tool Rubber Band (if any)
     for (p0, p1) in app.active_tool.rubber_band_lines() {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
@@ -372,7 +388,16 @@ fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,D
     if let Some(paste)=&app.paste_preview{return (paste.reference,DVec3::Z);}
     let forward=app.camera.forward();let near_horizon=forward.z.abs()<15_f64.to_radians().sin();let vertical=if forward.x.abs()>=forward.y.abs(){DVec3::X}else{DVec3::Y};
     if let Some((point,normal))=app.active_tool.drawing_plane(){if app.active_tool_type==ToolType::Line&&normal.z.abs()>0.94&&near_horizon{return(point,vertical);}return(point,normal);}
-    if let Some(point)=app.active_tool.snap_anchor(){return(point,if near_horizon{vertical}else{DVec3::Z});}
+    if let Some(point)=app.active_tool.snap_anchor(){
+        if app.active_tool.prefers_vertical_drag(){
+            // Original viewport._start_point_plane: Move contains world Z and
+            // faces the camera heading, except within 15 degrees of top view.
+            let heading=DVec3::new(forward.x,forward.y,0.);
+            let normal=if heading.length()>=15_f64.to_radians().sin(){heading.normalize()}else{DVec3::Z};
+            return(point,normal);
+        }
+        return(point,if near_horizon{vertical}else{DVec3::Z});
+    }
     if let Some((point,normal,_))=ingetrazo_core::screen_pick::hover_face(&app.scene,ray){return(point,normal);}
     if forward.abs().max_element()>=0.97{
         let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
@@ -388,5 +413,24 @@ fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,D
  #[test]fn standard_view_uses_model_center_oblique_uses_ground_and_line_can_rise(){
   let mut app=IngeTrazoApp::new();app.scene=Scene::new();let a=app.scene.mesh.add_vertex(DVec3::new(10.,20.,30.));let b=app.scene.mesh.add_vertex(DVec3::new(14.,24.,34.));app.scene.mesh.add_edge(a,b);app.camera.pitch=0.;app.camera.yaw=0.;let ray=Ray::new(DVec3::new(-5.,-5.,-5.),DVec3::X);let (point,normal)=cursor_work_plane(&app,&ray);assert_eq!(point,DVec3::new(12.,22.,32.));assert_eq!(normal,-DVec3::X);
   app.camera.pitch=30_f64.to_radians();app.camera.yaw=45_f64.to_radians();assert_eq!(cursor_work_plane(&app,&ray),(DVec3::ZERO,DVec3::Z));app.set_tool(ToolType::Line);let ctx=ToolContext::new(DVec3::new(1.,2.,3.),ray);app.dispatch_tool_click(&ctx);app.camera.pitch=0.;app.camera.yaw=0.;assert_eq!(cursor_work_plane(&app,&ray),(ctx.world,DVec3::X));
+ }
+}
+
+#[cfg(test)]mod move_plane_tests{
+ use super::*;use ingetrazo_core::{math::Ray,scene::{Scene,SelectionItem}};
+ #[test]fn move_grab_uses_camera_heading_plane_and_top_view_fallback(){
+  let mut app=IngeTrazoApp::new();app.scene=Scene::new();
+  let point=DVec3::new(3.,4.,7.);let v=app.scene.mesh.add_vertex(point);
+  app.scene.select(SelectionItem::Vertex(v));app.set_tool(ToolType::Move);
+  let ray=Ray::new(DVec3::new(3.,4.,20.),-DVec3::Z);
+  app.dispatch_tool_click(&ToolContext::new(point,ray));
+  assert_eq!(app.active_tool.snap_anchor(),Some(point));
+  for yaw in [0_f64,37_f64,90_f64]{
+   app.camera.pitch=30_f64.to_radians();app.camera.yaw=yaw.to_radians();
+   let forward=app.camera.forward();let expected=DVec3::new(forward.x,forward.y,0.).normalize();
+   let (origin,normal)=cursor_work_plane(&app,&ray);assert_eq!(origin,point);assert!((normal-expected).length()<1e-12);assert_eq!(normal.z,0.);
+  }
+  app.camera.pitch=85_f64.to_radians();assert_eq!(cursor_work_plane(&app,&ray),(point,DVec3::Z));
+  app.active_tool.on_cancel(&mut app.scene);assert_eq!(app.active_tool.snap_anchor(),None);
  }
 }

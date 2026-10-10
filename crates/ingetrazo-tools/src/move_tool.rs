@@ -144,6 +144,12 @@ impl Tool for MoveTool {
         "Distance"
     }
 
+    fn snap_anchor(&self) -> Option<DVec3> {
+        self.start_point
+    }
+
+    fn prefers_vertical_drag(&self) -> bool { true }
+
     fn on_activate(&mut self, _scene: &mut Scene) {
         self.reset();
     }
