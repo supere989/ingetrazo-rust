@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-canvas-original-text.py", line 24, in <module>
+    assert corpus is not None and [c['name']for c in cases]==corpus['names'], 'Mandatory frozen recipe identities/hash changed'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Mandatory frozen recipe identities/hash changed

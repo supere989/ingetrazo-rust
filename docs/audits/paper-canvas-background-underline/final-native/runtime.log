@@ -1,0 +1,9 @@
+Suitable Vulkan adapter 0: llvmpipe (LLVM 20.1.2, 256 bits); CPU; queues Queues { graphics: 0, present: 0, compute: Some(0) }
+Native Vulkan adapter: "llvmpipe (LLVM 20.1.2, 256 bits)"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 132593643520 bytes; DEVICE_LOCAL
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT | ATTACHMENT_FEEDBACK_LOOP_EXT
+Paper thin line observation: line=[388.5, 242.45875268554687, 491.40175] width=0.2439541015625 clip=[-4611686018427387904, -4611686018427387904, 4611686018427387903, 4611686018427387903]
+Paper thin line observation: line=[388.5, 272.45875268554687, 462.8981875] width=0.2439541015625 clip=[-4611686018427387904, -4611686018427387904, 4611686018427387903, 4611686018427387903]
+Paper thin line observation: line=[388.5, 242.45875268554687, 489.846] width=0.2439541015625 clip=[-4611686018427387904, -4611686018427387904, 4611686018427387903, 4611686018427387903]
+Paper thin line observation: line=[388.5, 272.45875268554687, 462.8981875] width=0.2439541015625 clip=[-4611686018427387904, -4611686018427387904, 4611686018427387903, 4611686018427387903]
