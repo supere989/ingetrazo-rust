@@ -1,0 +1,54 @@
+{
+  "source": "158bef37c9c26d28dd032a2b12715c320cca3f77",
+  "run": 38081610734,
+  "artifact": 11681140363,
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "56336e9afc42ee1fa913d5dfd5eb4584270c39ea7fdb42edd7dddc9e36e73063",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 8,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        13024,
+        1
+      ],
+      "canvas_submission_observations": 11,
+      "canvas_warm_frames": 10,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          13024,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "Cancelled upload accounting now permits ten stable warm observations. ARM still has zero positive presentation; no Canvas acceptance."
+}
