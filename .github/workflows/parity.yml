@@ -94,3 +94,5 @@ jobs:
             docs/audits/render-startup.log
             docs/audits/exchange-*-evidence.json
             docs/audits/dxf-curve-evidence.json
+            docs/audits/offset-render/*.png
+            docs/audits/offset-render/runtime.log
