@@ -98,6 +98,15 @@ pub struct SnapEngine {
     pub reference_edge: Option<(DVec3, DVec3)>,
     pub locked_axis: Option<char>,
     pub locked_line: Option<(DVec3, DVec3)>,
+    pub(crate) center_reference: Option<crate::snap_screen::CenterReference>,
+    pub(crate) hovered_center: Option<DVec3>,
+    pub(crate) screen_dwell: Option<(DVec3,f64)>,
+    pub(crate) acquired_point: Option<DVec3>,
+    pub(crate) model_revision: Option<u64>,
+    pub(crate) center_cache_dirty: bool,
+    pub(crate) shift_lock: Option<(DVec3,DVec3)>,
+    shift_held: bool,
+    last_inference: Option<SnapResult>,
 }
 
 impl Default for SnapEngine {
@@ -109,11 +118,69 @@ impl Default for SnapEngine {
             reference_edge: None,
             locked_axis: None,
             locked_line: None,
+            center_reference: None,
+            hovered_center: None,
+            screen_dwell: None,
+            acquired_point: None,
+            model_revision: None,
+            center_cache_dirty: false,
+            shift_lock: None,
+            shift_held: false,
+            last_inference: None,
         }
     }
 }
 
 impl SnapEngine {
+    /// Retire operation references while retaining user snapping configuration.
+    pub fn reset_operation_state(&mut self) {
+        self.encouraged_points.clear();
+        self.reference_edge = None;
+        self.locked_axis = None;
+        self.locked_line = None;
+        self.center_reference = None;
+        self.hovered_center = None;
+        self.screen_dwell = None;
+        self.acquired_point = None;
+        self.shift_lock = None;
+        self.shift_held = false;
+        self.last_inference = None;
+    }
+
+    /// Source Shift captures only the inference active on the press edge.
+    /// Release clears this temporary direction independently of arrow locks.
+    pub fn update_shift_state(&mut self, held: bool, start: Option<DVec3>) {
+        if !held {
+            self.shift_lock = None;
+        } else if !self.shift_held {
+            self.shift_lock = None;
+            if let (Some(start),Some(snap)) = (start,self.last_inference.as_ref()) {
+                if matches!(snap.kind,SnapKind::AxisInference|SnapKind::AxisLock|SnapKind::Reference) {
+                    let mut delta = if let Some(axis) = snap.axis {
+                        match axis { 'x'|'X'=>DVec3::X, 'y'|'Y'=>DVec3::Y, _=>DVec3::Z }
+                    } else { snap.point-start };
+                    if snap.axis.is_some() && (snap.point-start).dot(delta)<0. { delta=-delta; }
+                    if delta.is_finite() && delta.length()>1e-6 {
+                        self.shift_lock=Some((start,start+delta.normalize()));
+                    }
+                }
+            }
+        }
+        self.shift_held=held;
+    }
+
+    pub fn note_inference_result(&mut self, result: &SnapResult) {
+        self.last_inference=Some(result.clone());
+    }
+
+    /// Application identity is monotonic even when restored Scene versions repeat.
+    /// Call before screen snapping after document replacement or model mutation.
+    pub fn note_model_revision(&mut self, revision: u64) {
+        if self.model_revision != Some(revision) {
+            self.model_revision = Some(revision);
+            self.center_cache_dirty = true;
+        }
+    }
     pub fn new(snap_distance: f64) -> Self {
         Self {
             snap_distance,
@@ -160,7 +227,7 @@ impl SnapEngine {
         close_point: Option<DVec3>,
     ) -> SnapResult {
         // 1. Explicit Line Lock or Axis Lock
-        if let Some((p0, p1)) = self.locked_line {
+        if let Some((p0, p1)) = self.locked_line.or_else(|| if self.locked_axis.is_none() { self.shift_lock } else { None }) {
             let dir = (p1 - p0).normalize_or_zero();
             if dir.length_squared() > EPSILON {
                 let pt = closest_point_ray_line(ray, p0, dir);

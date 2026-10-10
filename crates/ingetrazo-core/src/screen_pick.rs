@@ -29,6 +29,25 @@ impl PixelViewport {
             height,
         }
     }
+    pub fn ray(&self, cursor: DVec2) -> Option<Ray> {
+        if self.width <= 0. || self.height <= 0. {
+            return None;
+        }
+        let inv = self.matrix.inverse();
+        if !inv.is_finite() {
+            return None;
+        }
+        let x = 2. * cursor.x / self.width - 1.;
+        let y = 1. - 2. * cursor.y / self.height;
+        let a = inv * glam::DVec4::new(x, y, 0., 1.);
+        let b = inv * glam::DVec4::new(x, y, 1., 1.);
+        if a.w.abs() < 1e-12 || b.w.abs() < 1e-12 {
+            return None;
+        }
+        let a = a.truncate() / a.w;
+        let b = b.truncate() / b.w;
+        Some(Ray::new(a, (b - a).normalize_or_zero()))
+    }
     pub fn project(&self, point: DVec3) -> Option<DVec2> {
         if self.width <= 0. || self.height <= 0. || !point.is_finite() {
             return None;
@@ -58,24 +77,128 @@ pub struct HoverReference {
     pub kind: ReferenceKind,
 }
 
-pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
-    fn groups(
+pub(crate) fn visit_placements<'a>(
+    scene: &'a Scene,
+    mut visit: impl FnMut(&'a Mesh, DMat4, &[uuid::Uuid]),
+) {
+    fn groups<'a>(
         scene: &Scene,
-        gs: &[Group],
+        gs: &'a [Group],
         parent: DMat4,
-        visit: &mut impl FnMut(&Mesh, DMat4, bool),
+        path: &mut Vec<uuid::Uuid>,
+        visit: &mut impl FnMut(&'a Mesh, DMat4, &[uuid::Uuid]),
     ) {
         for g in gs {
             if g.hidden || !scene.is_layer_visible(g.layer.as_deref()) {
                 continue;
             }
             let world = parent * g.transform;
-            visit(&g.mesh, world, true);
-            groups(scene, &g.children, world, visit);
+            path.push(g.id);
+            visit(&g.mesh, world, path);
+            groups(scene, &g.children, world, path, visit);
+            path.pop();
         }
     }
-    visit(&scene.mesh, DMat4::IDENTITY, false);
-    groups(scene, &scene.groups, DMat4::IDENTITY, &mut visit);
+    visit(&scene.mesh, DMat4::IDENTITY, &[]);
+    groups(
+        scene,
+        &scene.groups,
+        DMat4::IDENTITY,
+        &mut vec![],
+        &mut visit,
+    );
+}
+pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    visit_placements(scene, |mesh, world, path| {
+        visit(mesh, world, !path.is_empty())
+    });
+}
+#[derive(Debug, Clone)]
+pub struct EdgePlacement<'a> {
+    pub mesh: &'a Mesh,
+    pub edge: usize,
+    pub world: DMat4,
+    pub group_path: Vec<uuid::Uuid>,
+}
+#[derive(Debug, Clone)]
+pub struct FacePlacement<'a> {
+    pub mesh: &'a Mesh,
+    pub face: usize,
+    pub world: DMat4,
+    pub group_path: Vec<uuid::Uuid>,
+    pub point: DVec3,
+    pub normal: DVec3,
+    pub depth: f64,
+}
+
+pub fn hover_edge_placement<'a>(
+    scene: &'a Scene,
+    viewport: &PixelViewport,
+    cursor: DVec2,
+    threshold: f64,
+) -> Option<EdgePlacement<'a>> {
+    let mut distance = threshold;
+    let mut result = None;
+    visit_placements(scene, |mesh, world, path| {
+        for (id, e) in mesh.edges.iter().enumerate() {
+            if !scene.mesh_edge_visible(mesh, id) || (!path.is_empty() && e.soft) {
+                continue;
+            }
+            let a = world.transform_point3(mesh.vertices[e.v0].position);
+            let b = world.transform_point3(mesh.vertices[e.v1].position);
+            let Some((a, b)) = scene.section_segment(a, b) else {
+                continue;
+            };
+            let (Some(pa), Some(pb)) = (viewport.project(a), viewport.project(b)) else {
+                continue;
+            };
+            let (d, _) = pixel_segment_distance(cursor, pa, pb);
+            if d < distance {
+                distance = d;
+                result = Some(EdgePlacement {
+                    mesh,
+                    edge: id,
+                    world,
+                    group_path: path.to_vec(),
+                });
+            }
+        }
+    });
+    result
+}
+pub fn hover_face_placement<'a>(scene: &'a Scene, ray: &Ray) -> Option<FacePlacement<'a>> {
+    let mut depth = f64::INFINITY;
+    let mut result = None;
+    visit_placements(scene, |mesh, world, path| {
+        for id in 0..mesh.faces.len() {
+            if !scene.mesh_face_visible(mesh, id) {
+                continue;
+            }
+            for (a, b, c) in mesh.triangulate_face(id) {
+                let a = world.transform_point3(a);
+                let b = world.transform_point3(b);
+                let c = world.transform_point3(c);
+                if let Some((t, p)) = ray_triangle_intersect(ray, a, b, c) {
+                    if t < depth && scene.section_point_visible(p) {
+                        let normal = (b - a).cross(c - a).normalize_or_zero();
+                        if normal.length_squared() > 0. {
+                            depth = t;
+                            result = Some(FacePlacement {
+                                mesh,
+                                face: id,
+                                world,
+                                group_path: path.to_vec(),
+                                point: p,
+                                normal,
+                                depth: t,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    });
+    result
 }
 
 pub fn pixel_segment_distance(cursor: DVec2, a: DVec2, b: DVec2) -> (f64, f64) {
@@ -97,59 +220,20 @@ pub fn hover_edge(
     cursor: DVec2,
     threshold: f64,
 ) -> Option<(DVec3, DVec3)> {
-    let mut best = threshold;
-    let mut result = None;
-    visit_meshes(scene, |mesh, world, group| {
-        for (id, e) in mesh.edges.iter().enumerate() {
-            if !scene.mesh_edge_visible(mesh, id) || (group && e.soft) {
-                continue;
-            }
-            let a = world.transform_point3(mesh.vertices[e.v0].position);
-            let b = world.transform_point3(mesh.vertices[e.v1].position);
-            let Some((a, b)) = scene.section_segment(a, b) else {
-                continue;
-            };
-            let (Some(pa), Some(pb)) = (viewport.project(a), viewport.project(b)) else {
-                continue;
-            };
-            let (d, _) = pixel_segment_distance(cursor, pa, pb);
-            if d < best {
-                best = d;
-                result = Some((a, b));
-            }
-        }
-    });
-    result
+    hover_edge_placement(scene, viewport, cursor, threshold).map(|hit| {
+        let e = &hit.mesh.edges[hit.edge];
+        (
+            hit.world.transform_point3(hit.mesh.vertices[e.v0].position),
+            hit.world.transform_point3(hit.mesh.vertices[e.v1].position),
+        )
+    })
 }
 
 /// Face placements are intersected in world space, including nested affine
 /// transforms; deriving the normal from transformed triangle positions also
 /// handles nonuniform and mirrored placements correctly.
 pub fn hover_face(scene: &Scene, ray: &Ray) -> Option<(DVec3, DVec3, f64)> {
-    let mut best = f64::INFINITY;
-    let mut result = None;
-    visit_meshes(scene, |mesh, world, _| {
-        for id in 0..mesh.faces.len() {
-            if !scene.mesh_face_visible(mesh, id) {
-                continue;
-            }
-            for (a, b, c) in mesh.triangulate_face(id) {
-                let a = world.transform_point3(a);
-                let b = world.transform_point3(b);
-                let c = world.transform_point3(c);
-                if let Some((t, p)) = ray_triangle_intersect(ray, a, b, c) {
-                    if t < best && scene.section_point_visible(p) {
-                        let normal = (b - a).cross(c - a).normalize_or_zero();
-                        if normal.length_squared() > 0. {
-                            best = t;
-                            result = Some((p, normal, t));
-                        }
-                    }
-                }
-            }
-        }
-    });
-    result
+    hover_face_placement(scene, ray).map(|hit| (hit.point, hit.normal, hit.depth))
 }
 
 pub fn hovered_reference(

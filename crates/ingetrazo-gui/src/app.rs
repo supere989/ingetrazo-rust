@@ -226,6 +226,7 @@ impl IngeTrazoApp {
     pub fn set_tool(&mut self, tool_type: ToolType) {
         self.paste_preview=None;
         self.active_tool.on_deactivate(&mut self.scene);
+        self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
         self.active_tool = create_tool(tool_type);
         self.active_tool.on_activate(&mut self.scene);

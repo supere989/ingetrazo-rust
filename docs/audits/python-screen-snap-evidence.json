@@ -1,0 +1,525 @@
+{
+  "context": {
+    "rust_commit": "1f55a6fcd5f15b324b478377f49082375f769ff4",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "input": {
+        "name": "midpoint",
+        "edges": [
+          [
+            [
+              2,
+              -1,
+              0
+            ],
+            [
+              6,
+              -1,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              -1,
+              0
+            ],
+            [
+              6,
+              3,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          6,
+          1,
+          0
+        ],
+        "start": [
+          0,
+          0,
+          0
+        ],
+        "shift": true
+      },
+      "original": {
+        "kind": "midpoint",
+        "point": [
+          6.0,
+          0.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "midpoint",
+        "name": "midpoint",
+        "point": [
+          6.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "crossing",
+        "edges": [
+          [
+            [
+              2,
+              -1,
+              0
+            ],
+            [
+              6,
+              -1,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              -1,
+              0
+            ],
+            [
+              6,
+              3,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          6,
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0,
+          0
+        ],
+        "shift": true
+      },
+      "original": {
+        "kind": "intersection",
+        "point": [
+          6.0,
+          0.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "intersection",
+        "name": "crossing",
+        "point": [
+          6.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "corner-foot",
+        "edges": [
+          [
+            [
+              2,
+              -1,
+              0
+            ],
+            [
+              6,
+              -1,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              -1,
+              0
+            ],
+            [
+              6,
+              3,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          6,
+          -1,
+          0
+        ],
+        "start": [
+          0,
+          0,
+          0
+        ],
+        "shift": true
+      },
+      "original": {
+        "kind": "from_point",
+        "point": [
+          6.0,
+          0.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "from_point",
+        "name": "corner-foot",
+        "point": [
+          6.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "endpoint",
+        "edges": [
+          [
+            [
+              4,
+              0,
+              0
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          4,
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0,
+          0
+        ],
+        "shift": true
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          4.0,
+          0.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "endpoint",
+        "name": "endpoint",
+        "point": [
+          4.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "empty",
+        "edges": [],
+        "candidate": [
+          9,
+          0.6,
+          0
+        ],
+        "start": [
+          0,
+          0,
+          0
+        ],
+        "shift": true
+      },
+      "original": {
+        "kind": "reference",
+        "point": [
+          9.0,
+          0.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "reference",
+        "name": "empty",
+        "point": [
+          9.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "backwards",
+        "edges": [
+          [
+            [
+              -6,
+              -1,
+              0
+            ],
+            [
+              -2,
+              -1,
+              0
+            ]
+          ],
+          [
+            [
+              -6,
+              -1,
+              0
+            ],
+            [
+              -6,
+              3,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          -6,
+          1,
+          0
+        ],
+        "start": [
+          0,
+          0,
+          0
+        ],
+        "shift": true
+      },
+      "original": {
+        "kind": "midpoint",
+        "point": [
+          -6.0,
+          0.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "midpoint",
+        "name": "backwards",
+        "point": [
+          -6.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "skew",
+        "edges": [
+          [
+            [
+              2,
+              4,
+              0
+            ],
+            [
+              5,
+              4,
+              0
+            ]
+          ],
+          [
+            [
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        ],
+        "candidate": [
+          3.02,
+          4.02,
+          0
+        ]
+      },
+      "original": {
+        "kind": "on_edge",
+        "point": [
+          3.0199999809265137,
+          4.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "on_edge",
+        "name": "skew",
+        "point": [
+          3.02,
+          4.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "cross-real",
+        "edges": [
+          [
+            [
+              2,
+              4,
+              0
+            ],
+            [
+              5,
+              4,
+              0
+            ]
+          ],
+          [
+            [
+              3,
+              3,
+              0
+            ],
+            [
+              3,
+              6,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          3.02,
+          4.02,
+          0
+        ]
+      },
+      "original": {
+        "kind": "intersection",
+        "point": [
+          3.0,
+          4.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "intersection",
+        "name": "cross-real",
+        "point": [
+          3.0,
+          4.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "nested-endpoint",
+        "nested": true,
+        "edges": [
+          [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          3.02,
+          4.02,
+          0
+        ]
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          3.0,
+          4.0,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "endpoint",
+        "name": "nested-endpoint",
+        "point": [
+          3.0,
+          4.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "occluded-endpoint",
+        "occluded": true,
+        "edges": [
+          [
+            [
+              3,
+              4,
+              0
+            ],
+            [
+              3.5,
+              4.5,
+              0
+            ]
+          ]
+        ],
+        "candidate": [
+          3.02,
+          4.02,
+          0
+        ]
+      },
+      "original": {
+        "kind": "none",
+        "point": [
+          3.0199999809265137,
+          4.019999980926514,
+          0.0
+        ]
+      },
+      "native": {
+        "kind": "none",
+        "name": "occluded-endpoint",
+        "point": [
+          3.02,
+          4.02,
+          0.0
+        ]
+      }
+    }
+  ],
+  "passed": 10,
+  "negative_controls": [
+    "kind mutation rejected",
+    "point mutation rejected",
+    "missing native fixture rejected"
+  ],
+  "native_sha256": "873bb2a8dddc90a48bf280037c65aa71e76a5da8494f99eae0686e56378131c7",
+  "scope": "10 orthographic source/native controls; nested uses source flattened world edge view, source occlusion analytic predicate; fresh independent rerun on merged production source; three retained negative controls; controller gesture pixels are separate"
+}
