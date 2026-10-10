@@ -53,6 +53,15 @@ impl MetalPresentation {
         layer.setContentsScale(window.scale_factor());
         view.setWantsLayer(true);
         view.setLayer(Some(&layer));
+        eprintln!(
+            "Metal WSI attachment: view_bounds={:?}; layer_frame={:?}; layer_bounds={:?}; layer_hidden={}; window_visible={:?}; drawable_size={:?}",
+            view.bounds(),
+            layer.frame(),
+            layer.bounds(),
+            layer.isHidden(),
+            window.is_visible(),
+            layer.drawableSize()
+        );
         let mut result = Self {
             owners: ManuallyDrop::new(Owners {
                 frames: VecDeque::new(),
@@ -184,6 +193,35 @@ impl MetalPresentation {
         paint: std::sync::Arc<crate::egui_painter::PreparedPaint>,
     ) -> Result<bool, String> {
         objc2::rc::autoreleasepool(|_| self.present_inner([0.06, 0.06, 0.06, 1.], Some(paint)))
+    }
+    /// Read-only native diagnostics. Completed is never substituted for displayed.
+    pub fn diagnostics(&self) -> String {
+        let frames: Vec<_> = self
+            .owners
+            .frames
+            .iter()
+            .map(|f| {
+                format!(
+                    "id={} command={:?} presentedTime={} gpuStart={} gpuEnd={}",
+                    f.drawable.drawableID(),
+                    f.command.status(),
+                    f.drawable.presentedTime(),
+                    f.command.GPUStartTime(),
+                    f.command.GPUEndTime()
+                )
+            })
+            .collect();
+        format!(
+            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; frames=[{}]",
+            self.extent,
+            self.owners._window.is_visible(),
+            self.owners.layer.frame(),
+            self.owners.layer.bounds(),
+            self.owners.layer.isHidden(),
+            self.owners.layer.drawableSize(),
+            self.owners.layer.presentsWithTransaction(),
+            frames.join("; ")
+        )
     }
     pub fn counters(&self) -> (u64, u64, usize) {
         (self.submitted, self.retired, self.owners.frames.len())

@@ -18,6 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         resized: bool,
         resize_requested: bool,
         resize_target: Option<winit::dpi::PhysicalSize<u32>>,
+        diagnostics_at: std::time::Instant,
     }
     impl ApplicationHandler for Probe {
         fn resumed(&mut self, ev: &ActiveEventLoop) {
@@ -47,6 +48,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         fn window_event(&mut self, ev: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
             let Some(gpu) = self.gpu.as_mut() else { return };
             let result = match event {
+                WindowEvent::Occluded(value) => {
+                    eprintln!("WSI actual Occluded({value})");
+                    Ok(())
+                }
+                WindowEvent::Focused(value) => {
+                    eprintln!("WSI actual Focused({value})");
+                    Ok(())
+                }
                 WindowEvent::CloseRequested => {
                     eprintln!("presentation counters {:?}", gpu.counters());
                     ev.exit();
@@ -55,10 +64,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 WindowEvent::Resized(size) => {
                     if self.resize_requested && Some(size) == self.resize_target { self.resized = true; }
                     gpu.resize(
-                    size.width,
-                    size.height,
-                    self.window.as_ref().unwrap().scale_factor(),
-                ) },
+                        size.width,
+                        size.height,
+                        self.window.as_ref().unwrap().scale_factor(),
+                    )
+                }
                 WindowEvent::ScaleFactorChanged { scale_factor, .. } => {
                     let s = self.window.as_ref().unwrap().inner_size();
                     gpu.resize(s.width, s.height, scale_factor)
@@ -86,6 +96,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             if self.automatic {
+                if self.diagnostics_at.elapsed() >= std::time::Duration::from_secs(1) {
+                    if let Some(gpu) = self.gpu.as_ref() {
+                        eprintln!("WSI observation: {}", gpu.diagnostics());
+                    }
+                    self.diagnostics_at = std::time::Instant::now();
+                }
                 if self.started.elapsed() > std::time::Duration::from_secs(15) {
                     self.error = Some("bounded WSI probe missed presented completion".into());
                     ev.exit();
@@ -101,7 +117,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let _ = window.request_inner_size(logical);
                     }
                     if self.resized && retired >= 6 && pending == 0 {
-                        eprintln!("PASS actual CAMetalLayer presented retirement and resize {:?}", gpu.counters());
+                        eprintln!(
+                            "PASS actual CAMetalLayer presented retirement and resize {:?}",
+                            gpu.counters()
+                        );
                         ev.exit();
                         return;
                     }
@@ -112,7 +131,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 std::time::Instant::now() + std::time::Duration::from_millis(16),
             ));
             if let Some(w) = self.window.as_ref() {
-                if !self.automatic || self.frames < if self.resized { 6 } else { 2 } { w.request_redraw(); }
+                if !self.automatic || self.frames < if self.resized { 6 } else { 2 } {
+                    w.request_redraw();
+                }
             }
         }
         fn exiting(&mut self, _: &ActiveEventLoop) {
@@ -131,6 +152,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         resized: false,
         resize_requested: false,
         resize_target: None,
+        diagnostics_at: std::time::Instant::now(),
     };
     event.run_app(&mut probe)?;
     if let Some(e) = probe.error {
