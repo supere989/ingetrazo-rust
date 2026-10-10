@@ -1,0 +1,833 @@
+{
+  "provenance": {
+    "rust_commit": "711baab7fedc3bc1c363bc98803b9b02ea717816",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "red-half-white",
+      "center_rgba": [
+        251,
+        127,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "4002a19f6c31b11d1f4480683329f8d9239b0d04a46f5051673f20766f497ac3",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "red-half-black",
+      "center_rgba": [
+        124,
+        0,
+        0,
+        255
+      ],
+      "background": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "4002a19f6c31b11d1f4480683329f8d9239b0d04a46f5051673f20766f497ac3",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opacity-bucket-order",
+      "center_rgba": [
+        213,
+        89,
+        126,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ]
+      ],
+      "native_input_sha256": "a44e7414a5c07d9e13d2bb8e3f81d564d1a0331e319cff8b560f3e1bc95b2e6f",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          0,
+          6
+        ],
+        [
+          0.5,
+          false,
+          6,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        12,
+        0
+      ],
+      "opaque_back_run": [
+        12,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opaque-front",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ],
+        [
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          1.0,
+          0.3
+        ]
+      ],
+      "native_input_sha256": "e0b4117e647b149b0ab301ea5c0b7952f1b12cdb5c6a057ae6467168214a0068",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          6,
+          6
+        ],
+        [
+          0.5,
+          false,
+          12,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 6,
+      "front_culled_opaque_run": [
+        18,
+        0
+      ],
+      "opaque_back_run": [
+        18,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opaque-back",
+      "center_rgba": [
+        124,
+        86,
+        37,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ],
+        [
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          1.0,
+          -0.3
+        ]
+      ],
+      "native_input_sha256": "154f7e6d4789f9d7fd3b4bdc161928845d33addd1f9dba3614f099ea4d4451f3",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          6,
+          6
+        ],
+        [
+          0.5,
+          false,
+          12,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 6,
+      "front_culled_opaque_run": [
+        18,
+        0
+      ],
+      "opaque_back_run": [
+        18,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "equal-opacity-forward",
+      "center_rgba": [
+        125,
+        63,
+        187,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.5,
+          0.2
+        ]
+      ],
+      "native_input_sha256": "902b08a5e68b495dbceafb142601b4decc360a4919b1267bb5218dbd6252dc16",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          12
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        12,
+        0
+      ],
+      "opaque_back_run": [
+        12,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "center_rgba": [
+        187,
+        63,
+        125,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.5,
+          0.2
+        ],
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "e167012aefba09cae6c8345681d37879b411b7c848d7b7b4cbf96b76402a01fe",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          12
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        12,
+        0
+      ],
+      "opaque_back_run": [
+        12,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opacity-995",
+      "center_rgba": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.995,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "1ad384b1f9a3a4254bb24ac91d80c4aa068771dbbbff97c2b05541492a9da638",
+      "cached_opacity_runs": [
+        [
+          0.995,
+          false,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opacity-zero",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.0,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "2148ef715dd0dacf10ee8e09be76f78dcc7dc90001a8820aa1d6caf0d2d9173d",
+      "cached_opacity_runs": [
+        [
+          0.0,
+          false,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "section-clipped",
+      "center_rgba": [
+        251,
+        127,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ]
+      ],
+      "native_input_sha256": "8a8378d7a8af694f8ce57c8a200a81134d31b47028d6591d2ab62cf80ca2d65e",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          0,
+          6
+        ],
+        [
+          0.5,
+          false,
+          6,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        12,
+        0
+      ],
+      "opaque_back_run": [
+        12,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "paint-default-front",
+      "center_rgba": [
+        127,
+        251,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "8a3fc7fe8c7bfea4f5f01def04846c5cc0201a49aec021648e0fe869547bce5f",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "paint-default-reversed",
+      "center_rgba": [
+        127,
+        251,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "4ca10c6e003f0b33810ed5802fab419cd55e711620dc5fdb5d6d6e9682bc34a2",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "paint-face-override",
+      "center_rgba": [
+        251,
+        127,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "80eee3b1616c8be6446a406665bbb1687eb711952298b3ced4d6a376f1f484dc",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "paint-explicit-back",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "783335ecbaab400861f1ce414d07e3b3d0e1e7ac18262c86433a81beaf2979ea",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          1,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [
+        [
+          0.3,
+          6,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "paint-child-own",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "4aa94d8bbb45906f2d847c3b4cfeb491e8ff74624b6dc489109140f730c62d60",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "paint-top-owner-not-intermediate",
+      "center_rgba": [
+        127,
+        251,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "6a6e7f25c9cccb2f61b56e0042949760d44a9b149a5e6534e28a5d080ad4dd72",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          0,
+          0,
+          6
+        ]
+      ],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "qt_image_format": "Format.Format_RGB32"
+    }
+  ],
+  "scope": "Actual original Qt OpenGL encoded-RGB blend, depth-write-off, cached opacity run order; colored untextured front surfaces only. Not texture/back-side/instancing/Xray coverage."
+}

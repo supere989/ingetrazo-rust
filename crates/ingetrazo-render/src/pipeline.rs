@@ -249,6 +249,7 @@ pub fn build_scene_render_data(
     for group in &scene.groups {
         build_group_buffers(
             group,
+            source_group_paint(group),
             &DMat4::IDENTITY,
             scene,
             camera,
@@ -314,7 +315,7 @@ pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)
     let mut data=SceneRenderData::default();
     if style.visual_style!=VisualStyle::Wireframe {
         build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes);
-        for group in &scene.groups {build_group_buffers(group,&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false);}
+        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false);}
     }
     data
 }
@@ -405,6 +406,7 @@ fn build_mesh_buffers(
 
 fn build_group_buffers(
     group: &ingetrazo_core::groups::Group,
+    owner_paint: Option<&serde_json::Value>,
     parent_transform: &DMat4,
     scene: &Scene,
     camera: &OrbitCamera,
@@ -425,6 +427,7 @@ fn build_group_buffers(
     // under reflected placements. Reorder local corners before UV evaluation.
     let reflected = world_t.determinant() < 0.0;
     let source_placement = source_group_has_placement(group);
+    let paint = source_group_paint(group).or(owner_paint);
 
     // Billboard / Face-Me cutout figures
     if group.billboard {
@@ -473,13 +476,14 @@ fn build_group_buffers(
             continue;
         }
 
+        let attrs=source_effective_face_attrs(&face.attrs,paint);
         let local_norm = group.mesh.face_normal(f_id);
         let world_norm = world_t.transform_vector3(local_norm).normalize_or_zero();
         // Original _instance_entry transforms position columns only: prototype
         // RGB is shaded in local coordinates and retained through placement.
         let shade = shade_factor(if source_placement {local_norm} else {world_norm});
-        let tex_val = get_face_texture(&face.attrs, scene);
-        let source_opacity = get_face_source_opacity(&face.attrs, scene);
+        let tex_val = get_face_texture(&attrs, scene);
+        let source_opacity = get_face_source_opacity(&attrs, scene);
 
         let is_xray = style.visual_style == VisualStyle::XRay;
         let source_final_opacity = if is_xray {style.xray_opacity as f64} else {source_opacity};
@@ -518,7 +522,7 @@ fn build_group_buffers(
                 textured_meshes.entry(tex_key.clone()).or_default().push_triangle(v0, v1, v2);
             }
         } else {
-            let base_color = get_face_base_color(&face.attrs, scene, style);
+            let base_color = get_face_base_color(&attrs, scene, style);
             let shaded_color = [
                 (base_color[0] * shade).clamp(0.0, 1.0),
                 (base_color[1] * shade).clamp(0.0, 1.0),
@@ -547,7 +551,7 @@ fn build_group_buffers(
             }
             let order=opaque.indices.len()+transparent.indices.len();
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
-            record_source_back_paint(target,first,order,&face.attrs,shade);
+            record_source_back_paint(target,first,order,&attrs,shade);
         }
     }
 
@@ -613,6 +617,7 @@ fn build_group_buffers(
     for child in &group.children {
         build_group_buffers(
             child,
+            owner_paint,
             &world_t,
             scene,
             camera,
@@ -1436,5 +1441,26 @@ fn source_group_has_placement(group:&ingetrazo_core::groups::Group)->bool {
   g.native_document=serde_json::json!({"proto":0});assert!(!source_group_has_placement(&g));
   g.native_document=serde_json::json!({"proto":0,"xform":DMat4::IDENTITY.to_cols_array(),"component":false});assert!(source_group_has_placement(&g));
   g.native_document=serde_json::json!({"faces":[]});g.children.push(Group::new("nested"));assert!(source_group_has_placement(&g));
+ }
+}
+
+fn source_group_paint(group:&ingetrazo_core::groups::Group)->Option<&serde_json::Value> {
+ group.native_document.get("material").filter(|v|v.as_object().is_some_and(|m|!m.is_empty()))
+}
+fn source_effective_face_attrs<'a>(attrs:&'a std::collections::HashMap<String,serde_json::Value>,paint:Option<&serde_json::Value>)->std::borrow::Cow<'a,std::collections::HashMap<String,serde_json::Value>> {
+ let Some(paint)=paint.and_then(|p|p.as_object()).filter(|p|!p.is_empty()) else{return std::borrow::Cow::Borrowed(attrs)};
+ if ["color","texture"].iter().any(|k|attrs.get(*k).is_some_and(|v|!v.is_null())){return std::borrow::Cow::Borrowed(attrs)}
+ let mut merged=attrs.clone();for key in ["color","texture","opacity","mat"]{if let Some(value)=paint.get(key).filter(|v|!v.is_null()){merged.insert(key.into(),value.clone());}}
+ if merged.get("back").is_none_or(|v|v.is_null()||v==false||v.as_f64()==Some(0.)||v.as_str()==Some("")||v.as_array().is_some_and(|a|a.is_empty())||v.as_object().is_some_and(|m|m.is_empty())){merged.insert("back".into(),serde_json::json!(true));}
+ std::borrow::Cow::Owned(merged)
+}
+
+#[cfg(test)]mod container_paint_regression {
+ use super::*;
+ #[test]fn inherited_paint_only_changes_schema_paint_keys_and_default_back(){
+  let attrs=std::collections::HashMap::from([("vendor".into(),serde_json::json!({"material":"opaque"})),("opacity".into(),serde_json::json!(0.2))]);let paint=serde_json::json!({"color":[0.,1.,0.],"opacity":0.5,"vendor":"must not leak"});
+  let inherited=source_effective_face_attrs(&attrs,Some(&paint));assert_eq!(inherited["opacity"],0.5);assert_eq!(inherited["back"],true);assert_eq!(inherited["vendor"],attrs["vendor"]);assert!(!attrs.contains_key("color"));
+  let mut own=attrs.clone();own.insert("color".into(),serde_json::json!([1.,0.,0.]));assert!(matches!(source_effective_face_attrs(&own,Some(&paint)),std::borrow::Cow::Borrowed(_)));assert_eq!(source_effective_face_attrs(&own,Some(&paint))["opacity"],0.2);
+  let mut explicit=attrs;explicit.insert("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.3}));assert_eq!(source_effective_face_attrs(&explicit,Some(&paint))["back"],explicit["back"]);
  }
 }

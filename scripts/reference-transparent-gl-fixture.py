@@ -35,6 +35,8 @@ if os.environ.get("INGETRAZO_ALPHA_INSTANCED_GATE")=="1":
  cases["back-gate-instanced-only-reversed"]=([(*glass[:4],True),([0.,1.,0.],1.,0.,{},False,10.)],[1.,1.,1.])
 if os.environ.get("INGETRAZO_ALPHA_GROUP_SHADE")=="1":
  for name in ["group-rotated-prototype","group-nested-rotated-prototype","group-classic-baked-rotation"]:cases[name]=([red],[1.,1.,1.])
+if os.environ.get("INGETRAZO_ALPHA_CONTAINER_PAINT")=="1":
+ for name in ["paint-default-front","paint-default-reversed","paint-face-override","paint-explicit-back","paint-child-own","paint-top-owner-not-intermediate"]:cases[name]=([red],[1.,1.,1.])
 for name,(faces,bg) in cases.items():
  vp=Viewport();vp.resize(800,600);mesh=Mesh()
  for spec in faces:
@@ -57,6 +59,21 @@ for name,(faces,bg) in cases.items():
   elif name=="group-nested-rotated-prototype":
    group.xform=xf;parent=Group(name="Parent");parent.adopt([group]);parent.xform.rotate(20.,0.,0.,1.);group=parent
   else:group.xform=xf
+  groups=[group];mesh=Mesh()
+ if name.startswith("paint-"):
+  from core.group import Group
+  face=mesh.faces[0]
+  if name!="paint-face-override":face.attrs.pop("color",None)
+  if name in ("paint-default-reversed","paint-explicit-back"):face.loop.reverse()
+  if name=="paint-explicit-back":face.attrs["back"]={"color":[0.,0.,1.],"opacity":.3}
+  group=Group(mesh,"Painted group");group.xform=QMatrix4x4();group.material={"color":[0.,1.,0.],"opacity":.5}
+  if name in ("paint-child-own","paint-top-owner-not-intermediate"):
+   group.material={"color":[0.,0.,1.],"opacity":.3} if name=="paint-child-own" else None
+   parent=Group(name="Top paint");parent.material={"color":[0.,1.,0.],"opacity":.5}
+   if name=="paint-top-owner-not-intermediate":
+    middle=Group(name="Intermediate paint");middle.material={"color":[0.,0.,1.],"opacity":.3};middle.adopt([group]);parent.adopt([middle])
+   else:parent.adopt([group])
+   group=parent
   groups=[group];mesh=Mesh()
  vp.scene=Scene(mesh=mesh,groups=groups)
  if name=="section-clipped":vp.scene.section_planes=[SectionPlane(QVector3D(0,0,.1),QVector3D(0,0,1),active=True)];vp.scene.show_section_cuts=True;vp.scene.show_section_planes=False
