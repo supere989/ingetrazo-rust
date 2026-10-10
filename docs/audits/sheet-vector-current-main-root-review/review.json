@@ -1,0 +1,8 @@
+{
+  "tested_commit": "a4a44b2",
+  "passed": 499,
+  "ignored": 2,
+  "merge_review": "Keep sheet_shape/sheet_color and drawing_axes/gpu_memory modules. Preserve composer Factory handle with new Qt premultiplied palette construction. Retain both evidence histories.",
+  "full_export_parity": "OPEN",
+  "fresh_pdf_replay": "pending"
+}
