@@ -1,6 +1,20 @@
 {
+  "negative_controls": [
+    {
+      "case": "changed-target",
+      "detected": true
+    },
+    {
+      "case": "changed-lens",
+      "detected": true
+    },
+    {
+      "case": "changed-roll-matrix",
+      "detected": true
+    }
+  ],
   "provenance": {
-    "rust_commit": "360b6c8dfa25bb2538a263b5322d9a27e1544480",
+    "rust_commit": "b4fca1fa1ec031c3023bf4a40b5ac99230791eed",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -10,52 +24,62 @@
     {
       "case": "std-top",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": true
     },
     {
       "case": "std-bottom-roll",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": true
     },
     {
       "case": "std-iso",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": true
     },
     {
       "case": "live-parallel",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": true
     },
     {
       "case": "saved-parallel",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": true
     },
     {
       "case": "saved-perspective",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": false
     },
     {
       "case": "lens-high-roll",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": false
     },
     {
       "case": "lens-low-distance",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": false
     },
     {
       "case": "fit-perspective",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": false
     },
     {
       "case": "pixel-aspect",
       "camera_match": true,
-      "native_fresh_fields_reopened": true
+      "native_fresh_fields_reopened": true,
+      "behind_eye_depth_visible": true
     }
   ],
   "failures": [],
