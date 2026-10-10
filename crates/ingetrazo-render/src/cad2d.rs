@@ -26,7 +26,7 @@ impl Default for Pose {fn default()->Self{Self{scale:[1.;2],translation:[0.;2]}}
 impl Pose {pub fn validate(self)->Result<(),String>{if self.scale.iter().chain(&self.translation).all(|v|v.is_finite()){Ok(())}else{Err("CAD2D pose must be finite".into())}}}
 /// ID is allocated once for this immutable allocation. Changing palette/pose
 /// retains ID; changing geometry constructs a fresh ID, preventing stale cache.
-#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2]}
+#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2],opaque_coverage:bool}
 impl Geometry {
  pub fn new(vertices:Vec<Vertex>,indices:Vec<u32>)->Result<Arc<Self>,String>{
   if vertices.len()>u32::MAX as usize||indices.len()>u32::MAX as usize{return Err("CAD2D geometry exceeds index domain".into());}
@@ -34,7 +34,8 @@ impl Geometry {
   if vertices.iter().any(|v|!v.position.iter().all(|p|p.is_finite())||!v.coverage.is_finite()||!(0. ..=1.).contains(&v.coverage)){return Err("CAD2D vertex position/coverage invalid".into());}
   let mut bounds=[[0.;2];2];if let Some(first)=vertices.first(){bounds=[first.position;2];for v in &vertices{for axis in 0..2{bounds[0][axis]=bounds[0][axis].min(v.position[axis]);bounds[1][axis]=bounds[1][axis].max(v.position[axis]);}}}
   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
-  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds}))
+  let opaque_coverage=vertices.iter().all(|v|v.coverage==1.);
+  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds,opaque_coverage}))
  }
  /// Pixel-aligned source span producer declares nonoverlapping ordered draw ranges.
  /// Metadata partitions all indices; a caller must not use this for arbitrary
@@ -53,12 +54,15 @@ impl Geometry {
   if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let product=v[axis]*pose.scale[axis];let sum=product+pose.translation[axis];if !product.is_finite()||!sum.is_finite()||!(sum*2.).is_finite(){return Err("CAD2D pose overflows shader f32 intermediates".into());}let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
  }
  pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
+ /// Derived from every vertex and palette, never a caller flag.
+ pub fn is_opaque(&self,batches:&[Batch])->bool{self.opaque_coverage&&batches.iter().all(|b|b.color.0[3]==1.)}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
  pub fn logical_bytes(&self)->u64{self.vertices.len()as u64*std::mem::size_of::<Vertex>()as u64+self.indices.len()as u64*4}
  pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{for b in batches{b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}}Ok(())}
 }
 #[cfg(test)]mod tests {
  use super::*;
+ #[test]fn opaque_admission(){let v=Vertex{position:[0.,0.],coverage:1.};let g=Geometry::new(vec![v;3],vec![0,1,2]).unwrap();let mut b=Batch{first:0,count:3,color:EncodedRgba([0.1,0.2,0.3,1.])};assert!(g.is_opaque(&[b]));b.color.0[3]=0.999999;assert!(!g.is_opaque(&[b]));b.color.0[3]=1.;assert!(!Geometry::new(vec![Vertex{coverage:0.999999,..v};3],vec![0,1,2]).unwrap().is_opaque(&[b]));}
  #[test]fn original_bytes_survive_without_linear_premultiplication_loss(){let rgba=EncodedRgba::from_bytes([37,94,156,128],1.).unwrap();assert_eq!(rgba.0,[37./255.,94./255.,156./255.,128./255.]);assert!(EncodedRgba::from_bytes([0,0,0,128],f32::NAN).is_err());}
  #[test]fn qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs(){
   for alpha in 0..=255u32{for channel in 0..=255u32{let c=EncodedRgba::from_bytes([channel as u8,channel as u8,channel as u8,alpha as u8],1.).unwrap();let p=c.qt_premultiplied8().unwrap();let expected=((channel*alpha+127)/255)as f32/255.;assert_eq!(p[..3],[expected;3],"channel={channel} alpha={alpha}");assert_eq!(p[3],alpha as f32/255.);}}
