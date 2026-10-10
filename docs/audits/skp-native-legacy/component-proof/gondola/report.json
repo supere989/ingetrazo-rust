@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "gondola_v20",
+      "passed": true,
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "groups": 55,
+      "materials": 24,
+      "comparison_raw_sha256": "6a19e50e3a517e70e68473da57ea12783ed3b3516952df7b5d6d82cc1098b16f",
+      "negative": "altered geometry rejected"
+    }
+  ],
+  "parser_pin": "291700bc213655a00461838de71e5f206311e619",
+  "app_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source": "1836c50d172032c77c1e7b436f9d278e862fc517",
+  "binary_sha256": "7e373a415c4dbe2db4e9f6bbeb7decc56e575a32084ff9b03545e8b033a4aaaf"
+}

@@ -1,0 +1,341 @@
+{
+  "legacy_pages": [],
+  "name": "nested-fractional-transform",
+  "version": "{25.0.575}",
+  "root": {
+    "face_order": [],
+    "name": "",
+    "vertices": {},
+    "edges": {},
+    "faces": {},
+    "instances": [
+      {
+        "definition": 6000,
+        "name": "instance-20000",
+        "matrix": [
+          1.5,
+          0.0,
+          0.0,
+          0.0,
+          0.75,
+          0.0,
+          0.0,
+          0.0,
+          2.0,
+          200.125,
+          0.25,
+          0.5
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        }
+      }
+    ],
+    "billboard": false,
+    "unsupported": []
+  },
+  "definitions": {
+    "5000": {
+      "face_order": [
+        1000
+      ],
+      "name": "Leaf",
+      "vertices": {
+        "10": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "11": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "12": [
+          10.0,
+          10.0,
+          0.0
+        ],
+        "13": [
+          0.0,
+          10.0,
+          0.0
+        ]
+      },
+      "edges": {
+        "100": {
+          "vertices": [
+            10,
+            11
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 30,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "101": {
+          "vertices": [
+            11,
+            12
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "102": {
+          "vertices": [
+            12,
+            13
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "103": {
+          "vertices": [
+            13,
+            10
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        }
+      },
+      "faces": {
+        "1000": {
+          "uv_projected": false,
+          "uv_projected_back": false,
+          "uv_transform": null,
+          "uv_transform_back": null,
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "loops": [
+            [
+              [
+                100,
+                true
+              ],
+              [
+                101,
+                true
+              ],
+              [
+                102,
+                true
+              ],
+              [
+                103,
+                true
+              ]
+            ]
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "back_material": null
+        }
+      },
+      "instances": [],
+      "billboard": false,
+      "unsupported": []
+    },
+    "6000": {
+      "face_order": [
+        1000
+      ],
+      "name": "Container",
+      "vertices": {
+        "10": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "11": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "12": [
+          10.0,
+          10.0,
+          0.0
+        ],
+        "13": [
+          0.0,
+          10.0,
+          0.0
+        ]
+      },
+      "edges": {
+        "100": {
+          "vertices": [
+            10,
+            11
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 30,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "101": {
+          "vertices": [
+            11,
+            12
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "102": {
+          "vertices": [
+            12,
+            13
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "103": {
+          "vertices": [
+            13,
+            10
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        }
+      },
+      "faces": {
+        "1000": {
+          "uv_projected": false,
+          "uv_projected_back": false,
+          "uv_transform": null,
+          "uv_transform_back": null,
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "loops": [
+            [
+              [
+                100,
+                true
+              ],
+              [
+                101,
+                true
+              ],
+              [
+                102,
+                true
+              ],
+              [
+                103,
+                true
+              ]
+            ]
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "back_material": null
+        }
+      },
+      "instances": [
+        {
+          "definition": 5000,
+          "name": "instance-10000",
+          "matrix": [
+            0.866025403784,
+            -0.5,
+            0.0,
+            0.5,
+            0.866025403784,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            20.25,
+            30.5,
+            40.75
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          }
+        }
+      ],
+      "billboard": false,
+      "unsupported": []
+    }
+  },
+  "layers": {
+    "1": {
+      "name": "Layer0",
+      "visible": true
+    }
+  },
+  "material_names": {},
+  "materials": {
+    "Layer_Layer0": {
+      "color": [
+        0.5333333333333333,
+        0.5333333333333333,
+        0.5333333333333333,
+        1.0
+      ],
+      "texture": null
+    }
+  },
+  "back_color": [
+    0.8156862745098039,
+    0.8196078431372549,
+    0.7411764705882353
+  ],
+  "unsupported": []
+}

@@ -1,0 +1,988 @@
+{
+  "legacy_pages": [],
+  "name": "positioned-seven-terrain",
+  "version": "{25.0.575}",
+  "root": {
+    "face_order": [
+      30000,
+      30001,
+      30002,
+      30003,
+      30004,
+      30005,
+      30006
+    ],
+    "name": "",
+    "vertices": {
+      "10000": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "10001": [
+        10.0,
+        0.0,
+        10.0
+      ],
+      "10002": [
+        10.0,
+        10.0,
+        10.0
+      ],
+      "10003": [
+        0.0,
+        10.0,
+        0.0
+      ],
+      "10004": [
+        10.0,
+        0.0,
+        10.0
+      ],
+      "10005": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "10006": [
+        20.0,
+        10.0,
+        0.0
+      ],
+      "10007": [
+        10.0,
+        10.0,
+        10.0
+      ],
+      "10008": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "10009": [
+        30.0,
+        0.0,
+        10.0
+      ],
+      "10010": [
+        30.0,
+        10.0,
+        10.0
+      ],
+      "10011": [
+        20.0,
+        10.0,
+        0.0
+      ],
+      "10012": [
+        30.0,
+        0.0,
+        10.0
+      ],
+      "10013": [
+        40.0,
+        0.0,
+        0.0
+      ],
+      "10014": [
+        40.0,
+        10.0,
+        0.0
+      ],
+      "10015": [
+        30.0,
+        10.0,
+        10.0
+      ],
+      "10016": [
+        40.0,
+        0.0,
+        0.0
+      ],
+      "10017": [
+        50.0,
+        0.0,
+        10.0
+      ],
+      "10018": [
+        50.0,
+        10.0,
+        10.0
+      ],
+      "10019": [
+        40.0,
+        10.0,
+        0.0
+      ],
+      "10020": [
+        50.0,
+        0.0,
+        10.0
+      ],
+      "10021": [
+        60.0,
+        0.0,
+        0.0
+      ],
+      "10022": [
+        60.0,
+        10.0,
+        0.0
+      ],
+      "10023": [
+        50.0,
+        10.0,
+        10.0
+      ],
+      "10024": [
+        60.0,
+        0.0,
+        0.0
+      ],
+      "10025": [
+        70.0,
+        0.0,
+        10.0
+      ],
+      "10026": [
+        70.0,
+        10.0,
+        10.0
+      ],
+      "10027": [
+        60.0,
+        10.0,
+        0.0
+      ]
+    },
+    "edges": {
+      "20000": {
+        "vertices": [
+          10000,
+          10001
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20001": {
+        "vertices": [
+          10001,
+          10002
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20002": {
+        "vertices": [
+          10002,
+          10003
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20003": {
+        "vertices": [
+          10003,
+          10000
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20004": {
+        "vertices": [
+          10004,
+          10005
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20005": {
+        "vertices": [
+          10005,
+          10006
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20006": {
+        "vertices": [
+          10006,
+          10007
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20007": {
+        "vertices": [
+          10007,
+          10004
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20008": {
+        "vertices": [
+          10008,
+          10009
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20009": {
+        "vertices": [
+          10009,
+          10010
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20010": {
+        "vertices": [
+          10010,
+          10011
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20011": {
+        "vertices": [
+          10011,
+          10008
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20012": {
+        "vertices": [
+          10012,
+          10013
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20013": {
+        "vertices": [
+          10013,
+          10014
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20014": {
+        "vertices": [
+          10014,
+          10015
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20015": {
+        "vertices": [
+          10015,
+          10012
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20016": {
+        "vertices": [
+          10016,
+          10017
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20017": {
+        "vertices": [
+          10017,
+          10018
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20018": {
+        "vertices": [
+          10018,
+          10019
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20019": {
+        "vertices": [
+          10019,
+          10016
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20020": {
+        "vertices": [
+          10020,
+          10021
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20021": {
+        "vertices": [
+          10021,
+          10022
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20022": {
+        "vertices": [
+          10022,
+          10023
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20023": {
+        "vertices": [
+          10023,
+          10020
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20024": {
+        "vertices": [
+          10024,
+          10025
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20025": {
+        "vertices": [
+          10025,
+          10026
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20026": {
+        "vertices": [
+          10026,
+          10027
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "20027": {
+        "vertices": [
+          10027,
+          10024
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      }
+    },
+    "faces": {
+      "30000": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          -1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20000,
+              true
+            ],
+            [
+              20001,
+              true
+            ],
+            [
+              20002,
+              true
+            ],
+            [
+              20003,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      },
+      "30001": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20004,
+              true
+            ],
+            [
+              20005,
+              true
+            ],
+            [
+              20006,
+              true
+            ],
+            [
+              20007,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      },
+      "30002": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          -1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20008,
+              true
+            ],
+            [
+              20009,
+              true
+            ],
+            [
+              20010,
+              true
+            ],
+            [
+              20011,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      },
+      "30003": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20012,
+              true
+            ],
+            [
+              20013,
+              true
+            ],
+            [
+              20014,
+              true
+            ],
+            [
+              20015,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      },
+      "30004": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          -1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20016,
+              true
+            ],
+            [
+              20017,
+              true
+            ],
+            [
+              20018,
+              true
+            ],
+            [
+              20019,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      },
+      "30005": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20020,
+              true
+            ],
+            [
+              20021,
+              true
+            ],
+            [
+              20022,
+              true
+            ],
+            [
+              20023,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      },
+      "30006": {
+        "uv_projected": false,
+        "uv_projected_back": false,
+        "uv_transform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "uv_transform_back": null,
+        "normal": [
+          -1.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20024,
+              true
+            ],
+            [
+              20025,
+              true
+            ],
+            [
+              20026,
+              true
+            ],
+            [
+              20027,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        },
+        "back_material": null
+      }
+    },
+    "instances": [],
+    "billboard": false,
+    "unsupported": []
+  },
+  "definitions": {},
+  "layers": {
+    "1": {
+      "name": "Layer0",
+      "visible": true
+    }
+  },
+  "material_names": {
+    "99": "Tile"
+  },
+  "materials": {
+    "Layer_Layer0": {
+      "color": [
+        0.5333333333333333,
+        0.5333333333333333,
+        0.5333333333333333,
+        1.0
+      ],
+      "texture": null
+    },
+    "Tile": {
+      "color": [
+        0.047058823529411764,
+        0.34901960784313724,
+        0.592156862745098,
+        0.75
+      ],
+      "texture": {
+        "archive_name": "materials/Tile/tile.png",
+        "bytes": [
+          137,
+          80,
+          78,
+          71,
+          13,
+          10,
+          26,
+          10,
+          0,
+          0,
+          0,
+          13,
+          73,
+          72,
+          68,
+          82,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          2,
+          8,
+          6,
+          0,
+          0,
+          0,
+          114,
+          182,
+          13,
+          36,
+          0,
+          0,
+          0,
+          23,
+          73,
+          68,
+          65,
+          84,
+          120,
+          156,
+          99,
+          224,
+          18,
+          217,
+          226,
+          192,
+          101,
+          180,
+          37,
+          131,
+          193,
+          8,
+          200,
+          48,
+          2,
+          50,
+          0,
+          41,
+          112,
+          5,
+          37,
+          42,
+          57,
+          221,
+          20,
+          0,
+          0,
+          0,
+          0,
+          73,
+          69,
+          78,
+          68,
+          174,
+          66,
+          96,
+          130
+        ],
+        "width": 10.0,
+        "height": 20.0
+      }
+    }
+  },
+  "back_color": [
+    0.8156862745098039,
+    0.8196078431372549,
+    0.7411764705882353
+  ],
+  "unsupported": []
+}

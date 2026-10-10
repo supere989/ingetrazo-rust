@@ -1,0 +1,349 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "SU_File",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 32
+    },
+    {
+      "name": "hole-paint-layer",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "single-definition",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "small-two-flat",
+      "passed": true,
+      "groups": 2,
+      "sharing_sizes": [
+        1,
+        1
+      ],
+      "faces": 2
+    },
+    {
+      "name": "shared-eight",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8
+      ],
+      "faces": 512
+    },
+    {
+      "name": "inherited-paint",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-refusal",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "nested-single-container",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 2
+    },
+    {
+      "name": "nested-shared-child",
+      "passed": true,
+      "groups": 9,
+      "sharing_sizes": [
+        1,
+        8
+      ],
+      "faces": 513
+    },
+    {
+      "name": "nested-shared-parent",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8
+      ],
+      "faces": 528
+    },
+    {
+      "name": "nested-proto-in-proto",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8,
+        8
+      ],
+      "faces": 520
+    },
+    {
+      "name": "nested-tagged-flat",
+      "passed": true,
+      "groups": 18,
+      "sharing_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "faces": 18
+    },
+    {
+      "name": "nested-tagged-shared",
+      "passed": true,
+      "groups": 18,
+      "sharing_sizes": [
+        1,
+        1,
+        16
+      ],
+      "faces": 1026
+    },
+    {
+      "name": "nested-inherited-paint",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8,
+        8
+      ],
+      "faces": 520
+    },
+    {
+      "name": "nested-reflected-scaled",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 2
+    },
+    {
+      "name": "nested-equal-paint-protos",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8
+      ],
+      "faces": 512
+    },
+    {
+      "name": "nested-fractional-transform",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 2
+    },
+    {
+      "name": "texture-default-hole",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-sentinel-size",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-default-size",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-sibling-fallback",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-shared-local",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8
+      ],
+      "faces": 512
+    },
+    {
+      "name": "texture-nested-transform",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-downward-basis",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "positioned-identity",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "positioned-rotated",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "positioned-perspective",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "positioned-singular",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "positioned-back-only",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "positioned-two-sides",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "projected-eight-terrain",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 8
+    },
+    {
+      "name": "positioned-seven-terrain",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 7
+    },
+    {
+      "name": "texture-missing-painted",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-missing-inherited",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-empty-painted",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    }
+  ],
+  "source_parser": "291700bc213655a00461838de71e5f206311e619",
+  "source_app": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source": "1836c50d172032c77c1e7b436f9d278e862fc517",
+  "binary_sha256": "7e373a415c4dbe2db4e9f6bbeb7decc56e575a32084ff9b03545e8b033a4aaaf",
+  "negative": "altered source world point rejected",
+  "scope": "Strict actual pinned OpenSKP/IngeTrazo comparison of a real SKP and record controls.\nPython is frozen reference only; imported application path is native Rust.\n"
+}
