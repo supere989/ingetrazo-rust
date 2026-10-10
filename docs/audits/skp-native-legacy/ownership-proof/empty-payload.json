@@ -1,0 +1,37 @@
+{
+  "name": "single_material_v17",
+  "version": "{17.0.1}",
+  "root": {
+    "face_order": [],
+    "name": "",
+    "vertices": {},
+    "edges": {},
+    "faces": {},
+    "instances": [],
+    "billboard": false,
+    "unsupported": []
+  },
+  "definitions": {},
+  "layers": {
+    "12": {
+      "name": "Layer0",
+      "visible": true
+    }
+  },
+  "material_names": {
+    "10": "RedMat"
+  },
+  "materials": {
+    "RedMat": {
+      "color": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "texture": null
+    }
+  },
+  "back_color": null,
+  "unsupported": []
+}

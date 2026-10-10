@@ -1,0 +1,150 @@
+{
+  "name": "legacy-v17-painted-quad",
+  "version": "{17.0.1}",
+  "root": {
+    "face_order": [
+      14
+    ],
+    "name": "",
+    "vertices": {
+      "22": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "23": [
+        10.0,
+        0.0,
+        0.0
+      ],
+      "26": [
+        10.0,
+        10.0,
+        0.0
+      ],
+      "29": [
+        0.0,
+        10.0,
+        0.0
+      ]
+    },
+    "edges": {
+      "20": {
+        "vertices": [
+          22,
+          23
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "25": {
+        "vertices": [
+          23,
+          26
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "28": {
+        "vertices": [
+          26,
+          29
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "31": {
+        "vertices": [
+          29,
+          22
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      }
+    },
+    "faces": {
+      "14": {
+        "uv_transform": null,
+        "uv_transform_back": null,
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              20,
+              true
+            ],
+            [
+              25,
+              true
+            ],
+            [
+              28,
+              true
+            ],
+            [
+              31,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 10
+        },
+        "back_material": null
+      }
+    },
+    "instances": [],
+    "billboard": false,
+    "unsupported": []
+  },
+  "definitions": {},
+  "layers": {
+    "12": {
+      "name": "Layer0",
+      "visible": true
+    }
+  },
+  "material_names": {
+    "10": "RedMat"
+  },
+  "materials": {
+    "RedMat": {
+      "color": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "texture": null
+    }
+  },
+  "back_color": null,
+  "unsupported": []
+}
