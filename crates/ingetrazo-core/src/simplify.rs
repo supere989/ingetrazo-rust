@@ -88,11 +88,16 @@ fn root(parent: &mut [usize], mut i: usize) -> usize {
     }
     i
 }
+// Compatibility target: 64-bit CPython 3.13 used by the retained original
+// oracle. Numeric hashes are stable there, but this is not a promise of the
+// same contour iteration on every Python version or word size.
 // CPython's numeric tuple/frozenset iteration determines where the source
 // boundary walk starts. Corner collapse is order-dependent on curved loops,
 // so retain that deterministic source order rather than substituting a new one.
 fn float_hash(x: f64) -> u64 {
-    let x = (x * 10000.).round() / 10000.;
+    // Python round(x,4) rounds the exact binary value at a decimal digit,
+    // ties to even; multiplying first can erase which side of a tie it was.
+    let x = format!("{x:.4}").parse::<f64>().unwrap_or(x);
     if x == 0. {
         return 0;
     }
@@ -530,6 +535,48 @@ mod tests {
             assert!(simplify_mesh(&m, d, false).is_err());
         }
     }
+    #[test]
+    fn pinned_cpython_numeric_hash_and_resize_iteration_controls() {
+        // Values independently queried from CPython 3.13, including true binary
+        // half-grid ties and decimal values just to either side of a tie.
+        for (x, expected) in [
+            (0.03125, 71942301887467248i64),
+            (-0.03125, -71942301887467248),
+            (0.09375, 216288074264244480),
+            (-0.09375, -216288074264244480),
+            (0.00005, 936979306793984537),
+            (-0.00005, -936979306793984537),
+            (0.00015, 936979306793984537),
+            (0.00025, 288922129054475852),
+        ] {
+            assert_eq!(float_hash(x) as i64, expected);
+        }
+        let a = DVec3::new(1.2345, -6.789, 2.);
+        let b = DVec3::new(-3.1416, 0., 8.7654);
+        assert_eq!(point_hash(a) as i64, -3642640755035674506);
+        assert_eq!(point_hash(b), 1390104798643358996);
+        assert_eq!(edge_hash(point_hash(a), point_hash(b)), 1462378670174784654);
+        let hashes: Vec<_> = (0..40)
+            .map(|i| {
+                let x = i as f64 / 10.;
+                edge_hash(
+                    point_hash(DVec3::new(x, 0., 0.)),
+                    point_hash(DVec3::new(x, 1., 0.)),
+                )
+            })
+            .collect();
+        let slots = source_set_slots(&hashes);
+        let mut order: Vec<_> = (0..40).collect();
+        order.sort_by_key(|&i| slots[i]);
+        assert_eq!(
+            order,
+            vec![
+                2, 18, 13, 35, 19, 26, 7, 8, 17, 27, 20, 1, 36, 16, 25, 28, 22, 31, 11, 21, 33, 10,
+                23, 5, 39, 6, 24, 32, 37, 4, 38, 0, 14, 15, 12, 34, 3, 30, 9, 29
+            ]
+        );
+    }
+
     #[test]
     fn differing_embedded_texture_resources_never_merge() {
         let mut m = Mesh::new();
