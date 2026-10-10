@@ -1,0 +1,58 @@
+{
+  "result": {
+    "passed": false,
+    "matched": [],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": false,
+        "errors": [
+          "missing/wrong PDF synthesis policy: bold",
+          "missing/wrong PDF synthesis policy: italic"
+        ]
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": false,
+        "errors": [
+          "missing/wrong PDF synthesis policy: bold",
+          "missing/wrong PDF synthesis policy: italic"
+        ]
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": false,
+        "errors": [
+          "missing/wrong PDF synthesis policy: bold",
+          "missing/wrong PDF synthesis policy: italic"
+        ]
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": false,
+        "errors": [
+          "missing/wrong PDF synthesis policy: bold",
+          "missing/wrong PDF synthesis policy: italic"
+        ]
+      },
+      {
+        "name": "cjk",
+        "passed": false,
+        "errors": [
+          "missing/wrong PDF synthesis policy: bold",
+          "missing/wrong PDF synthesis policy: italic"
+        ]
+      },
+      {
+        "name": "arabic",
+        "passed": false,
+        "errors": [
+          "missing/wrong PDF synthesis policy: bold",
+          "missing/wrong PDF synthesis policy: italic"
+        ]
+      }
+    ],
+    "scope": "Actual Qt physical face/traits and requested PDF synthesis policy; pixel/layout gates independent; Canvas synthesized-bold still unsupported"
+  },
+  "scope": "Actual old native artifact lacks new synthesis observations and correctly refuses. No fabricated production positive; new native producer replay required."
+}
