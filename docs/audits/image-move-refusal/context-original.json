@@ -1,0 +1,104 @@
+{
+  "provenance": {
+    "rust_commit": "0fe4cc69e1216d99cc285bcf8addbebad5444c45",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "finish_live": [
+      {
+        "origin": [
+          0.125,
+          -1.25,
+          2.5
+        ],
+        "active": false,
+        "editing": true,
+        "undo": 0
+      },
+      {
+        "origin": [
+          1.024999976158142,
+          -0.8500000238418579,
+          3.3000001907348633
+        ],
+        "active": true,
+        "editing": true,
+        "undo": 0
+      },
+      {
+        "origin": [
+          1.024999976158142,
+          -0.8500000238418579,
+          3.3000001907348633
+        ],
+        "active": true,
+        "editing": false,
+        "undo": 0
+      },
+      {
+        "origin": [
+          0.125,
+          -1.25,
+          2.500000238418579
+        ],
+        "active": false,
+        "editing": false,
+        "undo": 0
+      }
+    ],
+    "cancel_then_finish": [
+      {
+        "origin": [
+          0.125,
+          -1.25,
+          2.5
+        ],
+        "active": false,
+        "editing": true,
+        "undo": 0
+      },
+      {
+        "origin": [
+          1.024999976158142,
+          -0.8500000238418579,
+          3.3000001907348633
+        ],
+        "active": true,
+        "editing": true,
+        "undo": 0
+      },
+      {
+        "origin": [
+          0.125,
+          -1.25,
+          2.500000238418579
+        ],
+        "active": false,
+        "editing": true,
+        "undo": 0
+      },
+      {
+        "origin": [
+          0.125,
+          -1.25,
+          2.500000238418579
+        ],
+        "active": false,
+        "editing": false,
+        "undo": 0
+      },
+      {
+        "origin": [
+          0.125,
+          -1.25,
+          2.500000238418579
+        ],
+        "active": false,
+        "editing": false,
+        "undo": 0
+      }
+    ]
+  }
+}

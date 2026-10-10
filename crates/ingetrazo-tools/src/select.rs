@@ -245,11 +245,13 @@ impl Tool for SelectTool {
         } else if let Some(fid) = hit_face {
             Some(SelectionItem::Face(fid))
         } else {
-            None
+            scene.image_plane_hit(&ctx.ray,ingetrazo_core::image_plane::ImagePickMode::Selectable).map(|(i,_)|SelectionItem::ImagePlane(i))
         };
 
         if let Some(target) = item {
-            if ctx.shift_held {
+            if ctx.shift_held && ctx.ctrl_held {
+                scene.deselect(&target);
+            } else if ctx.shift_held {
                 // Toggle
                 if scene.is_selected(&target) {
                     scene.deselect(&target);
@@ -345,6 +347,15 @@ mod tests {
         scene
     }
 
+    #[test]
+    fn image_is_last_selection_candidate_and_combined_modifier_removes_only() {
+        let mut scene=Scene::new();scene.image_planes.push(ingetrazo_core::image_plane::ImagePlane::new("scan",DVec3::Z,DVec3::X*2.,DVec3::Y*2.));
+        let ray=Ray::new(DVec3::new(0.5,0.5,10.),-DVec3::Z);let mut tool=SelectTool::new();
+        tool.on_click(&mut scene,&ToolContext::with_modifiers(DVec3::ZERO,ray,true,true,false));assert!(scene.selection.is_empty());
+        tool.on_click(&mut scene,&ToolContext::new(DVec3::ZERO,ray));assert!(scene.is_selected(&SelectionItem::ImagePlane(0)));
+        scene.mesh.add_vertex(DVec3::ZERO);scene.mesh.add_vertex(DVec3::X*2.);scene.mesh.add_vertex(DVec3::Y*2.);scene.mesh.add_face(vec![0,1,2],vec![]);
+        tool.on_click(&mut scene,&ToolContext::new(DVec3::ZERO,ray));assert!(scene.is_selected(&SelectionItem::Face(0)));assert!(!scene.is_selected(&SelectionItem::ImagePlane(0)));
+    }
     #[test]
     fn test_select_tool_single_click() {
         let mut scene = make_test_cube();

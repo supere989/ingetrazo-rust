@@ -1,0 +1,96 @@
+{
+  "finish_live": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    }
+  ],
+  "cancel_then_finish": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    }
+  ]
+}

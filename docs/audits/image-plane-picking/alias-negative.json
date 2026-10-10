@@ -1,0 +1,345 @@
+{
+  "bare": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "transparent_zero": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "missing_texture": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "own_locked": {
+    "inference": "Scan",
+    "selectable": null,
+    "locked_context": "Scan",
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": null
+  },
+  "layer_locked": {
+    "inference": "Scan",
+    "selectable": null,
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": null
+  },
+  "layer_hidden": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "locked_and_layer_hidden": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "unknown_layer": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "default_hidden": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "tie_last": {
+    "inference": "Later",
+    "selectable": "Later",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Later"
+    ],
+    "pick": "Later"
+  },
+  "nearest_not_last": {
+    "inference": "Near",
+    "selectable": "Near",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 2.0
+    },
+    "selected": [
+      "Near"
+    ],
+    "pick": "Near"
+  },
+  "outside": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "edge_inclusive": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "parallel": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "behind": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "back_side": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "vertical": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "sheared_source_projection": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "degenerate_source": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Scan"
+    ],
+    "pick": "Scan"
+  },
+  "geometry_wins": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [
+      "Face"
+    ],
+    "pick": "Face"
+  },
+  "shift_toggle": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": "Scan"
+  },
+  "ctrl_add": {
+    "inference": "One",
+    "selectable": "One",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 1.0
+    },
+    "selected": [
+      "One",
+      "Two"
+    ],
+    "pick": "One"
+  },
+  "shift_ctrl_remove": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": "Scan"
+  },
+  "shift_ctrl_existing_remove": {
+    "inference": "Scan",
+    "selectable": "Scan",
+    "locked_context": null,
+    "workplane": {
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "constant": 0.0
+    },
+    "selected": [],
+    "pick": "Scan"
+  },
+  "default_alias_is_unknown": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  },
+  "empty_alias_is_unknown": {
+    "inference": null,
+    "selectable": null,
+    "locked_context": null,
+    "selected": [],
+    "pick": null
+  }
+}

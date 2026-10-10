@@ -1,0 +1,26 @@
+{
+  "Face_unselected": {
+    "selected": false,
+    "count": 0
+  },
+  "Face_selected": {
+    "selected": false,
+    "count": 0
+  },
+  "Edge_unselected": {
+    "selected": false,
+    "count": 0
+  },
+  "Edge_selected": {
+    "selected": false,
+    "count": 0
+  },
+  "Group_unselected": {
+    "selected": false,
+    "count": 0
+  },
+  "Group_selected": {
+    "selected": false,
+    "count": 0
+  }
+}
