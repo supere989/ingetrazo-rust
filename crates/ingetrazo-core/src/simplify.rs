@@ -232,16 +232,11 @@ pub fn simplify_mesh(
             }
         }
     }
-    let protected_start = out.faces.len();
     for face in &mesh.faces {
         if !face.holes.is_empty() || face.interior {
             planar::add_face(&mut out, &planar::rings(mesh, face), face)?;
         }
     }
-    let protected_flags: Vec<_> = out.faces[protected_start..]
-        .iter()
-        .map(|f| f.interior)
-        .collect();
     out = planar::stitch_boundaries(&out)?;
     // Original simplification rebuilds surfaces and drops orphan wire geometry.
     for edge in &mut out.edges {
@@ -273,12 +268,6 @@ pub fn simplify_mesh(
         }
     }
     out.preserve_vertex_uids_from(mesh);
-    crate::heal::refresh_interior(&mut out)?;
-    // Original Simplify preserves protected source partitions, including their
-    // deliberately authored runtime state, even in an otherwise flat drawing.
-    for (face, interior) in out.faces[protected_start..].iter_mut().zip(protected_flags) {
-        face.interior = interior;
-    }
     planar::validate_mesh(&out)?;
     let removed = mesh.faces.len().saturating_sub(out.faces.len());
     Ok((out, removed))
