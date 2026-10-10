@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-10T22:33:53.468859+00:00",
+  "run_id": 38091398188,
+  "jobs": [
+    {
+      "name": "raw-texture (macos-15-intel)",
+      "head_sha": "1f44d9d7075b17d0c70900631388526c55178c8d",
+      "status": "in_progress",
+      "conclusion": null,
+      "active_steps": [
+        "Build and execute bounded native raw texture fixture"
+      ]
+    },
+    {
+      "name": "raw-texture (macos-15)",
+      "head_sha": "1f44d9d7075b17d0c70900631388526c55178c8d",
+      "status": "completed",
+      "conclusion": "failure",
+      "active_steps": []
+    }
+  ]
+}

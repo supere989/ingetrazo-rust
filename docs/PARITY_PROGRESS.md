@@ -8,14 +8,14 @@ This section distinguishes published Rust code from isolated review work. Dated 
 | --- | --- | --- |
 | Published main | `c73fe993`; combined predecessor source passed 703 workspace tests, zero failures, two ignored; later change guards the Vulkan example on macOS | All five current main CI jobs passed; strict parity and release gates remain open |
 | Vulkan model rendering | Source texture decoding, average shading and failure-safe publication reviewed on RTX 5090 | All four strict full-model comparisons still differ: 78 / 351 / 4832 / 3723 pixels; annotations and remaining raster differences open |
-| Native annotations, review branch | Retained D24/MSAA4 depth evaluator passes actual RTX interior/resource controls; ordered planner matches 15 source operation inventories; fresh 4,360 unit-formatting comparisons match Python | Complete native font provider, GPU sample-policy equivalence, visible overlay integration and full-image comparisons |
+| Native annotations, review branch | Retained D24/MSAA4 depth evaluator passes actual RTX interior/resource controls; ordered planner matches 15 source operation inventories; fresh 4,360 unit-formatting comparisons match Python | Sized immutable font provider reviewed; finish coordinated mesh/query publication, cache review fixes, GPU sample-policy equivalence, visible overlay integration and full-image comparisons |
 | Scripting, review branch | Persistent Group/Mesh ownership, ten native vector source cases, and exclusive multi-owner prepare/apply prerequisites have scoped comparisons | Complete editable object semantics, mutation journal/rollback, VM/native resource bounds and production scene integration |
-| Native Metal, separate review branch | `8395919a` passes all 18 PDF comparisons on both ARM and Intel; Canvas residuals 0/0/1/43/0/12 on both; Intel presentation passes | Three remaining Canvas cases, ARM presentation and physical Mac acceptance |
+| Native Metal, separate review branch | Latest ARM source `1f44d9d7`: all 18 PDFs exact; Canvas residuals 0/0/1/0/0/12. Previous seventh Intel: all PDFs exact and presentation passes | Latest Intel replay running; two ARM Canvas cases, ARM presentation and physical Mac acceptance |
 | Release | 10 Implemented / 27 Partial / 0 Verified across 37 areas; all five release gates open | Full Python behavioral/rendered parity and representative platform/performance evidence |
 
-Current CI observations are [retained with exact source revisions](audits/current-ci-20261010.json). Main validation: [38089335853](https://github.com/supere989/ingetrazo-rust/actions/runs/38089335853). Metal review validation: [38090288328](https://github.com/supere989/ingetrazo-rust/actions/runs/38090288328). These observations are time-specific; active jobs are not acceptance.
+Current CI observations are [retained with exact source revisions](audits/current-ci-20261010.json). Main validation: [38089335853](https://github.com/supere989/ingetrazo-rust/actions/runs/38089335853). Latest Metal review validation: [38091398188](https://github.com/supere989/ingetrazo-rust/actions/runs/38091398188). These observations are time-specific; active jobs are not acceptance.
 
-Independent seventh ARM evidence: [all eighteen PDF pages exact; Canvas and presentation still fail](audits/coretext-native-seventh/arm-root-review.json).
+Independent latest ARM evidence: [all eighteen PDF pages exact; two Canvas cases and presentation still fail](audits/coretext-native-eighth/arm-root-review.json).
 
 ## Dated implementation and verification evidence
 
