@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/proof/driver.py", line 74, in <module>
+    window=wait(owned);x.XMapRaised(d,window);x.XResizeWindow(d,window,800,600);x.XFlush(d)
+  File "/proof/driver.py", line 35, in wait
+    value=fn()
+  File "/proof/driver.py", line 71, in owned
+    assert child.poll()is None,"Owned fixture exited early"
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: Owned fixture exited early
+Fontconfig error: Cannot load default config file: No such file: (null)

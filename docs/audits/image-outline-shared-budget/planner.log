@@ -1,0 +1,10 @@
+
+running 5 tests
+test capacity_tests::pending_fragmented_pages_never_reclaim ... ok
+test capacity_tests::large_shared_budget_pages_and_completed_reclamation ... ok
+test tests::failed_candidates_rollback_without_touching_published_ranges ... ok
+test tests::packed_vertex_stride_reservations_are_exact ... ok
+test tests::submitted_ranges_are_not_reused_before_real_completion ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
