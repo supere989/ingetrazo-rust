@@ -1,0 +1,447 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "camera": {
+      "distance": 9.0,
+      "fov_deg": 52.0,
+      "perspective": true,
+      "pitch": 0.35,
+      "target": [
+        2.0,
+        3.0,
+        4.0
+      ],
+      "yaw": -0.9
+    },
+    "compositions": [
+      {
+        "cajetin": null,
+        "frames": [
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": false,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "006001d59fb248fcb0b87de48d121ae0",
+            "view_key": "std:top",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": false,
+            "rot_deg": 90.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "fabae2ade8e84d6782ceb8955d89c5d0",
+            "view_key": "std:bottom",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": false,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "73647621da524f0db5debea4bc6d5b62",
+            "view_key": "std:iso",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": false,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "a03d9e923b3240a4988977246c3b53e5",
+            "view_key": "__current__",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": false,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "8d4325e4e7464427b5be8ee9937ab17c",
+            "view_key": "scene:Saved",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": true,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "9a795e7bdf704f4d9da75008e709b610",
+            "view_key": "scene:Saved",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": 7.0,
+            "cam_fov": 200.0,
+            "cam_pitch": 0.3,
+            "cam_target": [
+              4.0,
+              5.0,
+              6.0
+            ],
+            "cam_yaw": -1.2,
+            "h_mm": 150.0,
+            "perspective": true,
+            "rot_deg": 90.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "0b12bea4a7014b5fba506dbab03ff05d",
+            "view_key": "std:front",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": -1.0,
+            "cam_fov": 1.0,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": true,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "cd2fcf1e49f34e54b6ec4433af05935b",
+            "view_key": "__current__",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": true,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "5ab5a98951ba463fa2a316d5fb7130d9",
+            "view_key": "std:iso",
+            "w_mm": 150.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          },
+          {
+            "annotations": false,
+            "border": false,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "h_mm": 150.0,
+            "perspective": false,
+            "rot_deg": 0.0,
+            "scale_n": 20.0,
+            "section_marks": false,
+            "show_title": false,
+            "style": "sombreado",
+            "title_text": "",
+            "uid": "9da3f63cbb074319a91bbdc2f8cc4cca",
+            "view_key": "std:top",
+            "w_mm": 170.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          }
+        ],
+        "landscape": true,
+        "margin_mm": 10.0,
+        "name": "Sheet 1",
+        "nortes": [],
+        "paper": "A3",
+        "scalebars": [],
+        "texts": []
+      }
+    ],
+    "dimension_style": {
+      "base_step_mm": 8.0,
+      "color": [
+        45,
+        55,
+        75
+      ],
+      "decimals": 2,
+      "ends": "arrow",
+      "font_size": 9,
+      "norma": "iso",
+      "units": "m"
+    },
+    "edges": [],
+    "faces": [],
+    "groups": [
+      {
+        "children": [
+          {
+            "component": true,
+            "name": "Child",
+            "proto": 1,
+            "uid": "3e6a2a4bad32437e",
+            "xform": [
+              -2.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              3.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ],
+        "component": true,
+        "name": "Parent",
+        "proto": 0,
+        "uid": "d782c9fc3f8040ff",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          10.0,
+          20.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "component": true,
+        "hidden": true,
+        "name": "Hidden",
+        "proto": 1,
+        "uid": "79f2e1ad262b4a0f",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          1000.0,
+          1000.0,
+          1000.0,
+          1.0
+        ]
+      }
+    ],
+    "protos": [
+      {
+        "edges": [],
+        "faces": []
+      },
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              2.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              2.0,
+              4.0,
+              2.0
+            ]
+          },
+          {
+            "a": [
+              2.0,
+              4.0,
+              2.0
+            ],
+            "b": [
+              0.0,
+              4.0,
+              2.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              4.0,
+              2.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                2.0,
+                4.0,
+                2.0
+              ],
+              [
+                0.0,
+                4.0,
+                2.0
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "saved_views": [
+      {
+        "distance": 7.0,
+        "fov": 62.0,
+        "name": "Saved",
+        "pitch": 0.25,
+        "target": [
+          11,
+          22,
+          1
+        ],
+        "two_point": true,
+        "yaw": -1.2
+      }
+    ]
+  }
+}
