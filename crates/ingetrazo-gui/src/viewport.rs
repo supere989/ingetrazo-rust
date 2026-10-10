@@ -15,7 +15,8 @@ use ingetrazo_tools::base::{ToolContext, ToolType};
 use crate::app::IngeTrazoApp;
 
 pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
-    let (rect, response) = ui.allocate_exact_size(ui.available_size(), egui::Sense::click_and_drag());
+    let (rect, response) =
+        ui.allocate_exact_size(ui.available_size(), egui::Sense::click_and_drag());
 
     // Update camera aspect ratio
     if rect.width() > 1.0 && rect.height() > 1.0 {
@@ -41,7 +42,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     if response.dragged() {
         let drag_delta = response.drag_delta();
         let is_middle = pointer.middle_down();
-        let is_alt_left = alt_down && pointer.primary_down() && app.active_tool_type != ToolType::FollowMe;
+        let is_alt_left =
+            alt_down && pointer.primary_down() && app.active_tool_type != ToolType::FollowMe;
 
         if is_middle || is_alt_left {
             if shift_down {
@@ -64,10 +66,18 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             let rel_x = (mouse_pos.x - rect.min.x) as f64;
             let rel_y = (mouse_pos.y - rect.min.y) as f64;
 
-            let cursor_ray = app.camera.screen_to_ray(rel_x, rel_y, rect.width() as f64, rect.height() as f64);
+            let cursor_ray =
+                app.camera
+                    .screen_to_ray(rel_x, rel_y, rect.width() as f64, rect.height() as f64);
 
             // Default ground plane intersection
-            let ground_plane = Plane::new(app.paste_preview.as_ref().map(|p|p.reference).unwrap_or(DVec3::ZERO), DVec3::Z);
+            let ground_plane = Plane::new(
+                app.paste_preview
+                    .as_ref()
+                    .map(|p| p.reference)
+                    .unwrap_or(DVec3::ZERO),
+                DVec3::Z,
+            );
             let mut cursor_world_pos = if let Some(t) = ground_plane.intersect_ray(&cursor_ray) {
                 if t > 0.0 {
                     cursor_ray.at(t)
@@ -78,16 +88,27 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 cursor_ray.at(10.0)
             };
 
-
             // Arrow keys for explicit axis locks
             if ui.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
-                app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('x') { None } else { Some('x') };
+                app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('x') {
+                    None
+                } else {
+                    Some('x')
+                };
             }
             if ui.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
-                app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('y') { None } else { Some('y') };
+                app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('y') {
+                    None
+                } else {
+                    Some('y')
+                };
             }
             if ui.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
-                app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('z') { None } else { Some('z') };
+                app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('z') {
+                    None
+                } else {
+                    Some('z')
+                };
             }
             if ui.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
                 app.snap_engine.locked_axis = None;
@@ -95,14 +116,23 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             }
 
             // Run Snap Engine
-            let start_pt = app.paste_preview.as_ref().map(|p|p.reference).or_else(||app.active_tool.rubber_band().map(|(s, _)| s));
-            let snap_res = app.snap_engine.snap(&cursor_ray, &app.scene, start_pt, None);
+            let start_pt = app
+                .paste_preview
+                .as_ref()
+                .map(|p| p.reference)
+                .or_else(|| app.active_tool.rubber_band().map(|(s, _)| s));
+            let snap_res = app
+                .snap_engine
+                .snap(&cursor_ray, &app.scene, start_pt, None);
             if snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
                 active_snap_glyph = SnapGlyph::from_snap_result(&snap_res, start_pt);
 
                 // If Shift is held down and we have an active axis or guide, lock it
-                if shift_down && app.snap_engine.locked_axis.is_none() && app.snap_engine.locked_line.is_none() {
+                if shift_down
+                    && app.snap_engine.locked_axis.is_none()
+                    && app.snap_engine.locked_line.is_none()
+                {
                     if let Some(ax) = snap_res.axis {
                         app.snap_engine.locked_axis = Some(ax);
                     } else if let Some((g0, g1, _)) = snap_res.guides.first() {
@@ -124,15 +154,23 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             if app.paste_preview.is_some() {
                 app.update_paste_preview(cursor_world_pos);
-                if response.clicked() && !alt_down {app.commit_paste_preview();}
+                if response.clicked() && !alt_down {
+                    app.commit_paste_preview();
+                }
             } else {
                 let follow_me = app.active_tool_type == ToolType::FollowMe;
                 if follow_me && pointer.button_pressed(egui::PointerButton::Primary) {
-                    ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_press"), mouse_pos));
+                    ui.ctx().data_mut(|data| {
+                        data.insert_temp(response.id.with("followme_press"), mouse_pos)
+                    });
                     app.dispatch_tool_click(&tool_ctx);
                 }
                 app.active_tool.on_move(&mut app.scene, &tool_ctx);
-                if follow_me {ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_context"), tool_ctx.clone()));}
+                if follow_me {
+                    ui.ctx().data_mut(|data| {
+                        data.insert_temp(response.id.with("followme_context"), tool_ctx.clone())
+                    });
+                }
                 if !follow_me && response.double_clicked() && !alt_down {
                     app.dispatch_tool_double_click(&tool_ctx);
                 } else if !follow_me && response.clicked() && !alt_down {
@@ -142,11 +180,18 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
     // Observe release beyond the viewport, without committing a tool during paste.
-    if app.paste_preview.is_none() && app.active_tool_type == ToolType::FollowMe && pointer.button_released(egui::PointerButton::Primary) {
-        let origin=ui.ctx().data_mut(|data| data.remove_temp::<egui::Pos2>(response.id.with("followme_press")));
-        let context=ui.ctx().data(|data| data.get_temp::<ToolContext>(response.id.with("followme_context")));
-        if let (Some(origin),Some(context),Some(end))=(origin,context,pointer.hover_pos()) {
-            app.dispatch_tool_release(&context,origin.distance(end) as f64);
+    if app.paste_preview.is_none()
+        && app.active_tool_type == ToolType::FollowMe
+        && pointer.button_released(egui::PointerButton::Primary)
+    {
+        let origin = ui
+            .ctx()
+            .data_mut(|data| data.remove_temp::<egui::Pos2>(response.id.with("followme_press")));
+        let context = ui
+            .ctx()
+            .data(|data| data.get_temp::<ToolContext>(response.id.with("followme_context")));
+        if let (Some(origin), Some(context), Some(end)) = (origin, context, pointer.hover_pos()) {
+            app.dispatch_tool_release(&context, origin.distance(end) as f64);
         }
     }
 
@@ -155,8 +200,15 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         app.snap_engine.locked_axis = None;
         app.snap_engine.locked_line = None;
         app.snap_engine.clear_encouraged();
-        if app.paste_preview.is_some() {app.cancel_paste_preview();} else {app.active_tool.on_cancel(&mut app.scene);}
-        ui.ctx().data_mut(|data| { data.remove::<egui::Pos2>(response.id.with("followme_press")); data.remove::<ToolContext>(response.id.with("followme_context")); });
+        if app.paste_preview.is_some() {
+            app.cancel_paste_preview();
+        } else {
+            app.active_tool.on_cancel(&mut app.scene);
+        }
+        ui.ctx().data_mut(|data| {
+            data.remove::<egui::Pos2>(response.id.with("followme_press"));
+            data.remove::<ToolContext>(response.id.with("followme_context"));
+        });
     }
 
     // 3. Render 3D Scene
@@ -168,7 +220,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 let size = [rgba.width() as usize, rgba.height() as usize];
                 let pixels = rgba.into_raw();
                 let color_image = egui::ColorImage::from_rgba_unmultiplied(size, &pixels);
-                let handle = ui.ctx().load_texture(name, color_image, egui::TextureOptions::LINEAR_REPEAT);
+                let handle =
+                    ui.ctx()
+                        .load_texture(name, color_image, egui::TextureOptions::LINEAR_REPEAT);
                 app.textures.insert(name.clone(), handle);
             }
         }
@@ -192,32 +246,53 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         active_snap_glyph.as_ref(),
     );
 
-    render_scene_to_egui(&render_data, &app.camera, &painter, rect, &app.style, &tex_map);
+    render_scene_to_egui(
+        &render_data,
+        &app.camera,
+        &painter,
+        rect,
+        &app.style,
+        &tex_map,
+    );
 
-    if let Some(preview)=&app.paste_preview {
-        let mut camera=app.camera.clone();camera.target-=preview.offset;
-        let ghost=build_scene_render_data(&preview.scene,&camera,&app.style,None);
-        render_scene_to_egui(&ghost,&camera,&painter,rect,&app.style,&tex_map);
-    } else {
-    // Immutable sweep preview: no document versions or undo snapshots change.
-    if let Some(mesh) = app.active_tool.preview_mesh() {
+    if let Some(preview) = &app.paste_preview {
+        let mut camera = app.camera.clone();
+        camera.target -= preview.offset;
+        let ghost = build_scene_render_data(&preview.scene, &camera, &app.style, None);
+        render_scene_to_egui(&ghost, &camera, &painter, rect, &app.style, &tex_map);
+    } else if let Some(mesh) = app.active_tool.preview_mesh() {
+        // Immutable tool preview shares no document or history mutation.
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
         let mut overlay = egui::Mesh::default();
         for id in 0..mesh.faces.len() {
-            for (a,b,c) in mesh.triangulate_face(id) {
-                if let (Some((a,_)),Some((b,_)),Some((c,_))) = (project_point(a,&view_proj,rect),project_point(b,&view_proj,rect),project_point(c,&view_proj,rect)) {
-                    let start=overlay.vertices.len() as u32;
-                    for pos in [a,b,c] {overlay.colored_vertex(pos,egui::Color32::from_rgba_unmultiplied(255,180,60,45));}
-                    overlay.add_triangle(start,start+1,start+2);
+            for (a, b, c) in mesh.triangulate_face(id) {
+                if let (Some((a, _)), Some((b, _)), Some((c, _))) = (
+                    project_point(a, &view_proj, rect),
+                    project_point(b, &view_proj, rect),
+                    project_point(c, &view_proj, rect),
+                ) {
+                    let start = overlay.vertices.len() as u32;
+                    for pos in [a, b, c] {
+                        overlay.colored_vertex(
+                            pos,
+                            egui::Color32::from_rgba_unmultiplied(255, 180, 60, 45),
+                        );
+                    }
+                    overlay.add_triangle(start, start + 1, start + 2);
                 }
             }
         }
         painter.add(egui::Shape::mesh(overlay));
         for edge in &mesh.edges {
-            if let (Some((a,_)), Some((b,_))) = (
+            if let (Some((a, _)), Some((b, _))) = (
                 project_point(mesh.vertices[edge.v0].position, &view_proj, rect),
                 project_point(mesh.vertices[edge.v1].position, &view_proj, rect),
-            ) { painter.line_segment([a,b], egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,180,60,150))); }
+            ) {
+                painter.line_segment(
+                    [a, b],
+                    egui::Stroke::new(1., egui::Color32::from_rgba_unmultiplied(255, 180, 60, 150)),
+                );
+            }
         }
     }
 
@@ -235,10 +310,16 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    if let Some((label,point))=app.active_tool.value_label() {
-        let view_proj=app.camera.projection_matrix()*app.camera.view_matrix();
-        if let Some((position,_))=project_point(point,&view_proj,rect) {
-            painter.text(position+egui::vec2(8.,-8.),egui::Align2::LEFT_BOTTOM,label,egui::FontId::proportional(14.),egui::Color32::from_rgb(255,200,90));
+    if let Some((label, point)) = app.active_tool.value_label() {
+        let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
+        if let Some((position, _)) = project_point(point, &view_proj, rect) {
+            painter.text(
+                position + egui::vec2(8., -8.),
+                egui::Align2::LEFT_BOTTOM,
+                label,
+                egui::FontId::proportional(14.),
+                egui::Color32::from_rgb(255, 200, 90),
+            );
         }
     }
 
@@ -266,7 +347,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 for i in 0..4 {
                     painter.line_segment([screen_corners[i], screen_corners[(i + 1) % 4]], stroke);
                 }
-                if let Some((tag_sc, _)) = project_point(sp.point + v * (r + 0.3), &view_proj, rect) {
+                if let Some((tag_sc, _)) = project_point(sp.point + v * (r + 0.3), &view_proj, rect)
+                {
                     painter.text(
                         tag_sc,
                         egui::Align2::CENTER_CENTER,
