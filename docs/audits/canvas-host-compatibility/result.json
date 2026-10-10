@@ -1,0 +1,7 @@
+{
+  "source": "ceff4de772479893ba679ab40426267ed9228865",
+  "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo check --locked -p ingetrazo-gui -j2",
+  "exit_code": 0,
+  "log_sha256": "b41d11780ae6a8278e64300d2de1df48f980ab0ad13d31472968f558f62efba1",
+  "scope": "Focused compilation after restoring existing non-raw-host text display; no rendered parity claim"
+}

@@ -14,5 +14,5 @@
   ],
   "combined_workspace": "647 PASS, 0 FAIL, 2 ignored",
   "non_raw_host_compatibility": "Hosts without installed raw provider retain preexisting egui text display. Installed-provider errors remain explicit. Native Metal exact source-text upload remains OPEN.",
-  "post_647_change": "Backend capability selection requires focused GUI compilation before publication"
+  "post_647_change": "Backend capability selection passed focused GUI compilation at ceff4de7; see canvas-host-compatibility/result.json"
 }

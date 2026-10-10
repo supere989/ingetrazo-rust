@@ -1,0 +1,85 @@
+{
+  "source": "3e1f12468478f220ad3a2dc3a2a41e9f5e8484de",
+  "run_id": 38074730037,
+  "job_id": 114279211145,
+  "artifact_id": 11678153229,
+  "sha256": "0048e673c3836f903be0f53d96041d452ed5f94d372315bf8742cff1eb8f5bdc",
+  "independent_rgba_comparisons": [
+    {
+      "backend": "compute",
+      "case": "alpha-0.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "compute",
+      "case": "alpha-1.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "compute",
+      "case": "alpha-127.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "compute",
+      "case": "alpha-128.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "compute",
+      "case": "alpha-254.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "compute",
+      "case": "alpha-255.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "fetch",
+      "case": "alpha-0.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "fetch",
+      "case": "alpha-1.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "fetch",
+      "case": "alpha-127.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "fetch",
+      "case": "alpha-128.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "fetch",
+      "case": "alpha-254.rgba",
+      "bytes": 16384,
+      "exact": true
+    },
+    {
+      "backend": "fetch",
+      "case": "alpha-255.rgba",
+      "bytes": 16384,
+      "exact": true
+    }
+  ],
+  "negative_compute_differs": true,
+  "native_gui_check_build": "PASS",
+  "native_font_tests": 33,
+  "scope": "Apple Paravirtual runner; physical Mac and WSI not proven"
+}
