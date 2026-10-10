@@ -67,6 +67,7 @@ fn mesh_to_json(mesh: &Mesh) -> serde_json::Value {
                 obj[key] = value.clone();
             }
         }
+        if let Some(curve)=e.curve_id {obj["curve"]=serde_json::json!(curve);}
         edges_json.push(obj);
     }
 
@@ -131,6 +132,7 @@ fn json_to_mesh(val: &serde_json::Value) -> Mesh {
                                 }
                             }
                         }
+                        mesh.edges[edge_id].curve_id=e.get("curve").and_then(|v|v.as_u64()).and_then(|i|usize::try_from(i).ok());
                         if e.get("soft").and_then(|s| s.as_bool()).unwrap_or(false) {
                             mesh.edges[edge_id].soft = true;
                         }

@@ -52,6 +52,43 @@ fn append_subset(dst:&mut Mesh,src:&Mesh,faces:&HashSet<usize>,edges:&HashSet<us
     Ok(())
 }
 
+/// Copy selected loose geometry, including every selected face boundary.
+pub fn copy_selected_mesh(scene:&Scene)->Result<Mesh,String> {
+    let faces:HashSet<_>=scene.selection.iter().filter_map(|s|if let SelectionItem::Face(i)=s {Some(*i)}else{None}).collect();
+    let mut edges:HashSet<_>=scene.selection.iter().filter_map(|s|if let SelectionItem::Edge(i)=s {Some(*i)}else{None}).collect();
+    if faces.iter().any(|i|*i>=scene.mesh.faces.len())||edges.iter().any(|i|*i>=scene.mesh.edges.len()){return Err("invalid clipboard selection".into());}
+    let pairs=boundaries(&scene.mesh,&faces);
+    for (i,e) in scene.mesh.edges.iter().enumerate(){if pairs.contains(&pair(e.v0,e.v1)){edges.insert(i);}}
+    let mut mesh=Mesh::new();append_subset(&mut mesh,&scene.mesh,&faces,&edges,DMat4::IDENTITY,None,None,false)?;Ok(mesh)
+}
+/// Append a translated snapshot atomically; remap curve identities independently
+/// and keep attributes on pre-existing destination edges untouched.
+pub fn paste_mesh(destination:&Mesh,source:&Mesh,offset:glam::DVec3)->Result<(Mesh,Vec<usize>,Vec<usize>),String> {
+    if !offset.is_finite(){return Err("invalid clipboard offset".into());}
+    let mut mesh=destination.clone();let mut copy=source.clone();
+    let mut next=destination.edges.iter().filter_map(|e|e.curve_id.or_else(||e.attrs.get("curve").and_then(|v|v.as_u64()).map(|i|i as usize))).max().unwrap_or(0).checked_add(1).ok_or("curve identity exhausted")?;
+    let mut curves=HashMap::new();
+    for edge in &mut copy.edges {
+        if let Some(old)=edge.curve_id.or_else(||edge.attrs.get("curve").and_then(|v|v.as_u64()).map(|i|i as usize)) {
+            let fresh=if let Some(id)=curves.get(&old){*id}else{let id=next;next=next.checked_add(1).ok_or("curve identity exhausted")?;curves.insert(old,id);id};
+            edge.curve_id=Some(fresh);edge.attrs.insert("curve".into(),serde_json::json!(fresh));
+        }
+    }
+    for face in &mut copy.faces {
+        if let Some(texture)=face.attrs.get_mut("texture") {
+            if let Some(values)=texture.get("uvw").and_then(|v|v.as_array()).filter(|v|v.len()==8).and_then(|v|v.iter().map(|x|x.as_f64()).collect::<Option<Vec<_>>>()) {
+                let mut mapped=values.clone();for base in [0,4]{mapped[base+3]-=glam::DVec3::new(values[base],values[base+1],values[base+2]).dot(offset);}
+                texture["uvw"]=serde_json::json!(mapped);
+            }
+        }
+    }
+    let old_faces=mesh.faces.len();let old_edges=mesh.edges.len();
+    append_subset(&mut mesh,&copy,&(0..copy.faces.len()).collect(),&(0..copy.edges.len()).collect(),DMat4::from_translation(offset),None,None,false)?;
+    // add_edge welds by endpoints; copying must never repaint originals.
+    for (target,original) in mesh.edges.iter_mut().take(old_edges).zip(&destination.edges){let faces=target.faces.clone();*target=original.clone();target.faces=faces;}
+    let faces=(old_faces..mesh.faces.len()).collect();let edges=(old_edges..mesh.edges.len()).collect();mesh.rebuild_spatial_index();Ok((mesh,faces,edges))
+}
+
 impl Scene {
     /// Build the prospective meshes first, then move ownership atomically.
     pub fn group_selection(&mut self,name:impl Into<String>)->Result<usize,String> {

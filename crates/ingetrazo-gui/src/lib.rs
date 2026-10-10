@@ -121,3 +121,5 @@ pub mod component_edit;
 pub mod session_state;
 
 pub mod document_session;
+
+pub mod clipboard;

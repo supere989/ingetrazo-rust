@@ -32,8 +32,8 @@ pub enum TrayTab {
 
 #[derive(Clone, Default)]
 pub struct GeometryClipboard {
-    pub vertices: Vec<DVec3>,
-    pub faces: Vec<Vec<usize>>,
+    pub mesh: ingetrazo_core::mesh::Mesh,
+    pub reference: DVec3,
     pub groups: Vec<ingetrazo_core::groups::Group>,
 }
 
@@ -382,80 +382,24 @@ impl IngeTrazoApp {
     }
 
     pub fn copy_selection(&mut self) {
-        let mut cb = GeometryClipboard::default();
-        let mut vert_map = std::collections::HashMap::new();
-
-        for item in &self.scene.selection {
-            match item {
-                SelectionItem::Face(f_id) => {
-                    if *f_id < self.scene.mesh.faces.len() {
-                        let face = &self.scene.mesh.faces[*f_id];
-                        let mut new_f_verts = Vec::new();
-                        for &vid in &face.vertices {
-                            let mapped = *vert_map.entry(vid).or_insert_with(|| {
-                                let idx = cb.vertices.len();
-                                cb.vertices.push(self.scene.mesh.vertices[vid].position);
-                                idx
-                            });
-                            new_f_verts.push(mapped);
-                        }
-                        cb.faces.push(new_f_verts);
-                    }
-                }
-                SelectionItem::Group(g_idx) => {
-                    if *g_idx < self.scene.groups.len() {
-                        cb.groups.push(self.scene.groups[*g_idx].clone());
-                    }
-                }
-                _ => {}
-            }
-        }
-
-        let count = cb.faces.len() + cb.groups.len();
-        self.clipboard = Some(cb);
-        self.status_message = format!("{} ({count} items)", ingetrazo_core::i18n::tr("Copied selection"));
+        let mesh=match ingetrazo_core::containers::copy_selected_mesh(&self.scene){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
+        let groups=self.scene.groups.iter().enumerate().filter(|(i,_)|self.scene.selection.contains(&SelectionItem::Group(*i))).map(|(_,g)|g.clone()).collect::<Vec<_>>();
+        let reference=mesh.vertices.first().map(|v|v.position).or_else(||groups.first().map(|g|g.transform.w_axis.truncate())).unwrap_or(DVec3::ZERO);
+        let count=mesh.faces.len()+mesh.edges.len()+groups.len();
+        if count==0{self.status_message="Nothing selected to copy".into();return;}
+        self.clipboard=Some(GeometryClipboard{mesh,reference,groups});self.status_message=format!("Copied selection ({count} items)");
     }
-
-    fn paste_internal(&mut self, offset: DVec3) {
-        if let Some(cb) = self.clipboard.clone() {
-            self.save_undo_state();
-            self.scene.clear_selection();
-
-            let mut vid_map = Vec::new();
-            for v in &cb.vertices {
-                let n_vid = self.scene.mesh.add_vertex(*v + offset);
-                vid_map.push(n_vid);
-            }
-
-            for f in &cb.faces {
-                let mapped: Vec<usize> = f.iter().map(|&idx| vid_map[idx]).collect();
-                if let Some(n_fid) = self.scene.mesh.add_face(mapped, vec![]) {
-                    self.scene.select(SelectionItem::Face(n_fid));
-                }
-            }
-
-            for g in cb.groups {
-                let mut g = g.duplicate_instance();
-                g.transform = glam::DMat4::from_translation(offset) * g.transform;
-                let n_gidx = self.scene.groups.len();
-                self.scene.groups.push(g);
-                self.scene.select(SelectionItem::Group(n_gidx));
-            }
-
-            self.scene.mesh.rebuild_spatial_index();
-            self.scene.bump_version();
-        }
+    pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
+        let Some(cb)=self.clipboard.clone() else{return false;};
+        if cb.mesh.faces.is_empty()&&cb.mesh.edges.is_empty()&&cb.groups.is_empty(){return false;}
+        let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&cb.mesh,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};
+        self.save_undo_state();self.scene.mesh=mesh;self.scene.clear_selection();
+        for id in faces{self.scene.select(SelectionItem::Face(id));}for id in edges{self.scene.select(SelectionItem::Edge(id));}
+        for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*group.transform;let index=self.scene.groups.len();self.scene.groups.push(group);self.scene.select(SelectionItem::Group(index));}
+        self.scene.bump_version();true
     }
-
-    pub fn paste_selection(&mut self) {
-        self.paste_internal(DVec3::new(1.0, 1.0, 0.0));
-        self.status_message = ingetrazo_core::i18n::tr("Pasted selection");
-    }
-
-    pub fn paste_in_place(&mut self) {
-        self.paste_internal(DVec3::ZERO);
-        self.status_message = ingetrazo_core::i18n::tr("Pasted in place");
-    }
+    pub fn paste_selection(&mut self) {self.paste_internal(DVec3::new(1.,1.,0.));self.status_message="Pasted selection".into();}
+    pub fn paste_in_place(&mut self) {self.paste_internal(DVec3::ZERO);self.status_message="Pasted in place".into();}
 
     pub fn repeat_last_command(&mut self) {
         self.status_message = ingetrazo_core::i18n::tr("Repeated last command");
