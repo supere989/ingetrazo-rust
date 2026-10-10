@@ -11,6 +11,13 @@ use crate::mesh::Mesh;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Group {
+    /// Explicit linked-component identity; ordinary serialized prototypes remain
+    /// independent groups even when their initial mesh data is deduplicated.
+    #[serde(default)]
+    pub component_definition: Option<Uuid>,
+    /// Identity of this child slot inside its parent component definition.
+    #[serde(default)]
+    pub definition_member: Option<Uuid>,
     /// Original native payload and modeled snapshot. Unchanged fields retain their
     /// source representation, including future/extension metadata.
     #[serde(default)]
@@ -34,6 +41,8 @@ pub struct Group {
 impl Group {
     pub fn new(name: impl Into<String>) -> Self {
         Self {
+            component_definition: None,
+            definition_member: None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
@@ -51,6 +60,8 @@ impl Group {
 
     pub fn with_mesh(name: impl Into<String>, mesh: Mesh) -> Self {
         Self {
+            component_definition: None,
+            definition_member: None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
@@ -65,4 +76,16 @@ impl Group {
             hidden: false,
         }
     }
+    /// Copies placement identity while retaining component definition links.
+    pub fn duplicate_instance(&self) -> Self {
+        let mut copy=self.clone();
+        fn reset(group:&mut Group) {
+            group.definition_member=group.definition_member.or(Some(group.id));
+            group.id=Uuid::new_v4();
+            for child in &mut group.children { reset(child); }
+        }
+        reset(&mut copy);
+        copy
+    }
+
 }

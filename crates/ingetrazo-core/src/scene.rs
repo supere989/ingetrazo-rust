@@ -30,6 +30,8 @@ pub enum SelectionItem {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Scene {
+    #[serde(default)]
+    pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
     /// Original native payload and modeled snapshot. Unchanged fields retain their
     /// source representation, including future/extension metadata.
     #[serde(default)]
@@ -78,6 +80,7 @@ impl Scene {
         layers.push(Layer::default());
 
         Self {
+            component_definitions: HashMap::new(),
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             mesh: Mesh::new(),
