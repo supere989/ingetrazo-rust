@@ -173,6 +173,11 @@ impl ImageObjects {
             objects.insert(p.id, p.clone());
         }
     }
+    /// Update a tool-held detached object's frame without copying live lists.
+    pub fn set_held_origin(&self, image:&ImagePlane, origin:DVec3) {
+        let mut objects=self.0.lock().unwrap();
+        objects.entry(image.id).or_insert_with(||image.clone()).origin=origin;
+    }
     pub fn metadata_count(&self) -> usize {
         self.0.lock().unwrap().len()
     }
