@@ -19,7 +19,7 @@ for name in names:
 b=(out/'bg_basic.native.pdf').read_bytes();assert b.count(b'-0.500000000')==2
 bad=out/'bg_basic.background-mutated.pdf';bad.write_bytes(b.replace(b'-0.500000000',b'-1.500000000'))
 mut=QPdfDocument();assert mut.load(str(bad))==QPdfDocument.Error.None_ and mut.pageCount()==1
-original_image=QImage(str(out/('bg_basic.original.'+str(dpi)+'.png')));raw=mut.render(0,original_image.size());assert not raw.isNull()
+original_image=QImage(str(out/('bg_basic.original.'+str(dpi)+'.png'))).convertToFormat(QImage.Format.Format_RGBA8888);raw=mut.render(0,original_image.size());assert not raw.isNull()
 im=QImage(raw.size(),QImage.Format.Format_RGB32);im.fill(0xffffffff);p=QPainter(im);p.drawImage(0,0,raw);p.end();im=im.convertToFormat(QImage.Format.Format_RGBA8888)
 native_bytes=bytes(im.constBits());original_bytes=bytes(original_image.constBits());negative_changed=sum(native_bytes[i:i+4]!=original_bytes[i:i+4]for i in range(0,len(native_bytes),4));assert negative_changed>0
 report={'passed':all(r['passed']for r in rows),'dpi':dpi,'cases':rows,'valid_background_mutation_rejected_pixels':negative_changed,'scope':'Nine actual original Text background helper pages; production composer dispatch, not full Text UI/P29'};(out/('reader-'+str(dpi)+'.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report));sys.exit(0 if report['passed']else 1)
