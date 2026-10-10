@@ -1,0 +1,5 @@
+# Actual source detached Edge/incidence history
+
+Frozen original core.ai.run_transactional + Scene/History, pin6be29fe. `scripts/reference-ai-edge-incidence.py` executes ten full states for two faces sharing an edge, public Edge-list removal/reinsertion, radial-list reversal and endpoint incidence-set removal, repeated Undo/Redo. Output uses real object identity labels and wrapper references, never coordinate matching. **Native acceptance false.**
+
+Observable requirements: public Edge membership is separate from endpoint incidence reachability. Removing `e` from Mesh.edges does not remove it from Vertex.edges or alter radial Face references. Undo/Redo retains actual Edge/Vertex/Face objects and persistent top-level Mesh lists, while captured incidence sets and radial lists are replaced. Source captures edge fields only for edges in current Mesh.edges; detached references require explicit identity ownership, not packed-array truncation. Full Mesh-generated native object graph and command snapshot/delta integration are next required implementation.

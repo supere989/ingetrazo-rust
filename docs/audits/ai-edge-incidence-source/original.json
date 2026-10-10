@@ -1,0 +1,910 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": true,
+      "held_radial_original": true,
+      "held_edge_member": true,
+      "held_edge_reachable": true,
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "edge-list-detached",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": true,
+      "held_radial_original": true,
+      "held_edge_member": false,
+      "held_edge_reachable": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "detach-undone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": true,
+      "held_edge_reachable": true,
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "detach-redone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": false,
+      "held_edge_reachable": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "reinserted",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4,
+        0
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": true,
+      "held_edge_reachable": true,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "reinsert-undone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": false,
+      "held_edge_reachable": true,
+      "undo": 2,
+      "redo": 1
+    },
+    {
+      "name": "reinsert-redone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4,
+        0
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": true,
+      "held_edge_reachable": true,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "radial-incidence-edited",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4,
+        0
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": true,
+      "held_edge_reachable": false,
+      "undo": 4,
+      "redo": 0
+    },
+    {
+      "name": "fields-undone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4,
+        0
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": true,
+      "held_edge_reachable": true,
+      "undo": 3,
+      "redo": 1
+    },
+    {
+      "name": "fields-redone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        1,
+        2,
+        3,
+        4,
+        0
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "held_edge_member": true,
+      "held_edge_reachable": false,
+      "undo": 4,
+      "redo": 0
+    }
+  ],
+  "native_acceptance": false
+}
