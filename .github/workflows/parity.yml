@@ -29,6 +29,29 @@ jobs:
       - name: Execute Apple framebuffer-fetch rendering or explicit capability refusal
         run: |
           target/debug/examples/cad2d_probe --allow-unsupported --output=docs/audits/metal-native-link-ci/fetch > docs/audits/metal-native-link-ci/fetch-render.log 2>&1
+      - name: Reject literal old GPU byte multiplication
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ('cad2d.metal','cad2d_spans.metal'):
+              p=Path('crates/ingetrazo-metal/src/shaders')/name
+              s=p.read_text()
+              old='(t+(t>>8)+128)>>8'
+              assert s.count(old)==1
+              p.write_text(s.replace(old,'(t+128)>>8'))
+          PY
+          cargo build --locked -p ingetrazo-metal --example cad2d_probe > docs/audits/metal-native-link-ci/negative-build.log 2>&1
+          if target/debug/examples/cad2d_probe --compute --output=docs/audits/metal-native-link-ci/negative-compute > docs/audits/metal-native-link-ci/negative-compute.log 2>&1; then
+            echo "Old shader law unexpectedly passed"; exit 1
+          fi
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('docs/audits/metal-native-link-ci/negative-compute.log').read_text()
+          assert 'backend=exact source-ordered span compute' in s
+          assert 'Strict actualQPainter whole-image comparison failed' in s
+          assert 'different_pixels=' in s
+          assert 'Metal shader compile:' not in s
+          PY
       - name: Retain native linking evidence
         if: always()
         uses: actions/upload-artifact@v4
