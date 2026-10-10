@@ -223,7 +223,8 @@ impl SnapEngine {
         }
 
         // 3. Endpoint Snaps (Mesh Vertices, Groups, GeoPoints)
-        for v in &scene.mesh.vertices {
+        for(id,v)in scene.mesh.vertices.iter().enumerate(){
+            if !scene.mesh_vertex_visible(&scene.mesh,id){continue;}
             let d = (v.position - cursor_work).length();
             if d < best_dist && scene.section_point_visible(v.position) {
                 best_dist = d;
@@ -237,7 +238,7 @@ impl SnapEngine {
                 };
             }
         }
-        fn group_points(groups:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().map(|v|transform.transform_point3(v.position)));children(&group.children,transform,scene,points);}}
+        fn group_points(groups:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().enumerate().filter(|(id,_)|scene.mesh_vertex_visible(&group.mesh,*id)).map(|(_,v)|transform.transform_point3(v.position)));children(&group.children,transform,scene,points);}}
         fn children(children:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){group_points(children,parent,scene,points)}
         let mut group_vertices=vec![];group_points(&scene.groups,glam::DMat4::IDENTITY,scene,&mut group_vertices);
         for wp in group_vertices{let d=(wp-cursor_work).length();if d<best_dist&&scene.section_point_visible(wp){best_dist=d;best_result=SnapResult{point:wp,kind:SnapKind::Endpoint,color:COLOR_ENDPOINT,label:"Endpoint in Group".into(),axis:None,guides:vec![]};}}
@@ -268,7 +269,8 @@ impl SnapEngine {
 
         // 4. Intersection Snaps (where mesh edges or guides cross)
         let mut edges = Vec::new();
-        for e in &scene.mesh.edges {
+        for(id,e)in scene.mesh.edges.iter().enumerate(){
+            if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
             edges.push((scene.mesh.vertices[e.v0].position, scene.mesh.vertices[e.v1].position));
         }
         for g in &scene.guides {
@@ -306,7 +308,8 @@ impl SnapEngine {
         }
 
         // 5. Midpoint Snaps
-        for e in &scene.mesh.edges {
+        for(id,e)in scene.mesh.edges.iter().enumerate(){
+            if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
             let p0 = scene.mesh.vertices[e.v0].position;
             let p1 = scene.mesh.vertices[e.v1].position;
             let mid = (p0 + p1) * 0.5;
@@ -329,7 +332,8 @@ impl SnapEngine {
         }
 
         // 6. Arc / Circle Center Snaps
-        for f in &scene.mesh.faces {
+        for(id,f)in scene.mesh.faces.iter().enumerate(){
+            if !scene.mesh_face_visible(&scene.mesh,id){continue;}
             if f.vertices.len() >= 6 {
                 let pts: Vec<DVec3> = f.vertices.iter().map(|&v| scene.mesh.vertices[v].position).collect();
                 if let Some(center) = fit_circle_center(&pts) {
@@ -408,7 +412,8 @@ impl SnapEngine {
         }
 
         // 8. On Edge Snaps
-        for e in &scene.mesh.edges {
+        for(id,e)in scene.mesh.edges.iter().enumerate(){
+            if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
             let p0 = scene.mesh.vertices[e.v0].position;
             let p1 = scene.mesh.vertices[e.v1].position;
             let ab = p1 - p0;
@@ -736,5 +741,6 @@ mod tests {
         assert_eq!(res.guides.len(), 2);
     }    #[test]fn section_hides_nearest_endpoint_and_reveals_next_candidate(){let mut scene=Scene::new();scene.mesh.add_vertex(DVec3::new(0.02,0.,0.));scene.mesh.add_vertex(DVec3::new(-0.2,0.,0.));scene.section_planes.push(crate::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;let mut engine=SnapEngine::new(0.5);let ray=Ray::new(DVec3::new(0.02,0.,3.),-DVec3::Z);let snapped=engine.snap(&ray,&scene,None,None);assert_eq!(snapped.kind,SnapKind::Endpoint);assert_eq!(snapped.point,DVec3::new(-0.2,0.,0.));scene.show_section_cuts=false;assert_eq!(engine.snap(&ray,&scene,None,None).point,DVec3::new(0.02,0.,0.));}
     #[test]fn nested_group_snap_uses_world_placement_and_active_cut(){let mut scene=Scene::new();let mut mesh=crate::mesh::Mesh::new();mesh.add_vertex(DVec3::new(0.02,0.,0.));mesh.add_vertex(DVec3::new(-0.2,0.,0.));let mut child=crate::groups::Group::with_mesh("child",mesh);child.transform=glam::DMat4::from_translation(-DVec3::X);let mut parent=crate::groups::Group::new("parent");parent.transform=glam::DMat4::from_translation(DVec3::X);parent.children.push(child);scene.groups.push(parent);scene.section_planes.push(crate::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;let mut engine=SnapEngine::new(0.5);let ray=Ray::new(DVec3::new(0.02,0.,3.),-DVec3::Z);let result=engine.snap(&ray,&scene,None,None);assert_eq!(result.kind,SnapKind::Endpoint);assert!((result.point-DVec3::new(-0.2,0.,0.)).length()<1e-10);scene.groups[0].hidden=true;assert_ne!(engine.snap(&ray,&scene,None,None).kind,SnapKind::Endpoint);}
+    #[test]fn hidden_face_boundaries_are_not_endpoint_midpoint_or_edge_snap_targets(){let mut scene=Scene::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));let mut engine=SnapEngine::new(0.2);for point in[DVec3::ZERO,DVec3::X*0.5]{let result=engine.snap(&Ray::new(point+DVec3::Z*3.,-DVec3::Z),&scene,None,None);assert!(!matches!(result.kind,SnapKind::Endpoint|SnapKind::Midpoint|SnapKind::OnEdge|SnapKind::Intersection|SnapKind::Center));}scene.mesh.faces[0].attrs.remove("hidden");assert_eq!(engine.snap(&Ray::new(DVec3::Z*3.,-DVec3::Z),&scene,None,None).kind,SnapKind::Endpoint);}
 
 }

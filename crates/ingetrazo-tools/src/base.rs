@@ -169,6 +169,7 @@ pub fn pick_scene_face(scene: &Scene, ray: &Ray) -> Option<(usize, f64, DVec3)> 
     let mut closest = None;
     let mut min_t = f64::INFINITY;
     for id in 0..scene.mesh.faces.len() {
+        if !scene.mesh_face_visible(&scene.mesh,id){continue;}
         for (a, b, c) in scene.mesh.triangulate_face(id) {
             if let Some((t, p)) = ray_triangle_intersect(ray, a, b, c) {
                 if t < min_t && scene.section_point_visible(p) {
@@ -184,6 +185,7 @@ pub fn pick_scene_edge(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usize
     let mut closest = None;
     let mut min_dist = tolerance;
     for (id, edge) in scene.mesh.edges.iter().enumerate() {
+        if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
         let Some((a, b)) = scene.section_segment(
             scene.mesh.vertices[edge.v0].position,
             scene.mesh.vertices[edge.v1].position,
@@ -202,6 +204,7 @@ pub fn pick_scene_vertex(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usi
     let mut closest = None;
     let mut min_dist = tolerance;
     for (id, vertex) in scene.mesh.vertices.iter().enumerate() {
+        if !scene.mesh_vertex_visible(&scene.mesh,id){continue;}
         let p = vertex.position;
         if !scene.section_point_visible(p) {
             continue;

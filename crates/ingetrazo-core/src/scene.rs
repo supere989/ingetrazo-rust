@@ -250,3 +250,9 @@ impl Scene {
     }
 }
 
+
+impl Scene{
+ pub fn mesh_face_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.faces.get(id).is_some_and(|face|face.attrs.get("hidden").and_then(|v|v.as_bool())!=Some(true)&&self.is_layer_visible(face.layer.as_deref().or_else(||face.attrs.get("layer").and_then(|v|v.as_str()))))}
+ pub fn mesh_edge_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.edges.get(id).is_some_and(|edge|!edge.hidden&&self.is_layer_visible(edge.layer.as_deref())&&(edge.faces.is_empty()||edge.faces.iter().any(|&id|self.mesh_face_visible(mesh,id))))}
+ pub fn mesh_vertex_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.vertices.get(id).is_some_and(|vertex|vertex.edges.is_empty()||vertex.edges.iter().any(|&id|self.mesh_edge_visible(mesh,id)))}
+}
