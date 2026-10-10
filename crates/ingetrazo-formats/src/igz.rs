@@ -855,6 +855,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             let visible = l_val.get("visible").and_then(|v| v.as_bool()).unwrap_or(true);
             let locked = l_val.get("locked").and_then(|l| l.as_bool()).unwrap_or(false);
             scene.layers.push(Layer {
+                history_id:uuid::Uuid::new_v4(),
                 name,
                 visible,
                 locked,
