@@ -24,6 +24,22 @@ for view in ["top","iso","front"]:
  s=Scene();_box(s.mesh,0,0,0,1,1,1);cases.append((view+"_box",s,"std:"+view))
 s=Scene();s.mesh.add_face([QVector3D(-1,-1,2),QVector3D(1,-1,2),QVector3D(1,1,2),QVector3D(-1,1,2)]);s.mesh.add_edge(QVector3D(-2,0,1),QVector3D(2,0,1));cases.append(("partial_rear_line",s,"std:top"))
 s=Scene();s.mesh.add_face([QVector3D(0,0,0),QVector3D(2,0,0),QVector3D(2,0,3),QVector3D(0,0,3)]);sp=SectionPlane(QVector3D(0,0,1.5),QVector3D(0,0,1));s.section_planes.append(sp);s.set_active_section(sp);cases.append(("open_cut_chain",s,"std:top"))
+from core.group import Group
+from core.mesh import Mesh
+from core.layers import Layer
+from PySide6.QtGui import QMatrix4x4
+import math
+s=Scene();m=Mesh();_box(m,0,0,0,2,3,4);child=Group(m,"Child");child.xform=QMatrix4x4();child.xform.scale(-2,3,.5);parent=Group(name="Parent");parent.xform=QMatrix4x4();parent.xform.translate(7,11,2);parent.xform.rotate(27,QVector3D(0,0,1));parent.children=[child];s.groups=[parent];cases.append(("nested_reflected_box",s,"std:iso"))
+s=Scene();_box(s.mesh,0,0,0,2,3,4);s.layers.append(Layer("Hidden",visible=False));m=Mesh();_box(m,10,0,0,12,3,4);g=Group(m,"HiddenGroup");g.layer="Hidden";s.groups=[g];cases.append(("hidden_layer_group",s,"std:front"))
+s=Scene();_box(s.mesh,0,0,0,2,3,4);s.layers.append(Layer("Hidden",visible=False));f=s.mesh.add_face([QVector3D(10,0,0),QVector3D(12,0,0),QVector3D(12,0,4),QVector3D(10,0,4)]);f.attrs["layer"]="Hidden"
+for e in s.mesh.edges:
+ if e.a.x()>9 and e.b.x()>9:e.layer="Hidden"
+cases.append(("hidden_layer_face",s,"std:front"))
+s=Scene();n=16;bottom=[QVector3D(math.cos(i*2*math.pi/n),math.sin(i*2*math.pi/n),0)for i in range(n)];top=[QVector3D(p.x(),p.y(),3)for p in bottom];s.mesh.add_face(list(reversed(bottom)));s.mesh.add_face(top)
+for i in range(n):j=(i+1)%n;s.mesh.add_face([bottom[i],bottom[j],top[j],top[i]])
+for e in s.mesh.edges:
+ if abs(e.a.z()-e.b.z())>2:e.soft=True
+cases.append(("soft_cylinder_silhouette",s,"std:iso"))
 summary=[]
 for name,scene,key in cases:
  frame=MarcoVista(view_key=key,scale_n=100.,w_mm=100.,h_mm=100.);camera=OrbitCamera();apply_frame_camera(camera,frame,scene=scene)
