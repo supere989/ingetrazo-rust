@@ -1,0 +1,24 @@
+{
+  "reviewed_source": "f21b94fb466d49fe1564a558e0a4867c689f163d",
+  "verdict": "HOLD_PENDING_CORRECTION_AND_RUNTIME_EVIDENCE",
+  "findings": [
+    {
+      "area": "cache invalidation",
+      "required": "Establish revision coverage for style, layer and text changes and include retained factory identity where needed."
+    },
+    {
+      "area": "frame ordering",
+      "required": "Verify actual application first-add/delete and failed-update behavior because build_ui collects callbacks before prepare_gpu updates them."
+    },
+    {
+      "area": "world preparation failure",
+      "required": "Ensure failure before annotation preparation pauses submission or otherwise proves coherent retained world and annotation state."
+    }
+  ],
+  "reported_worker_evidence": {
+    "palette_intersection": "Worker reports exact software GPU full image with two resizes; root has not independently reviewed artifacts.",
+    "source_arrow": "Worker reports 217 differing pixels; strict parity remains failed."
+  },
+  "integration": "Not cherry-picked into root integration; independent publication evidence and corrections pending.",
+  "scope": "Source review only. No feature or release gate promoted."
+}
