@@ -1,0 +1,13 @@
+{
+  "source": "0fd793735586f088f232f7085f2aae90b6cc9369",
+  "run": 38076444922,
+  "artifact": 11679620630,
+  "independent_expected_rgba_match": true,
+  "pixels": 256,
+  "result": {
+    "passed": true,
+    "pixels": 256,
+    "physical_mac_claim": false
+  },
+  "scope": "Apple cloud GPU raw upload, allocation denial and prepared owner lifetime; no physical Mac or host Canvas claim"
+}
