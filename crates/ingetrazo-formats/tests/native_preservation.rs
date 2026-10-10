@@ -203,3 +203,21 @@ fn fresh_rust_sheet_saves_in_python_composition_schema() {
     assert_eq!(load_igz(&dst).unwrap().sheets[0].items.len(),2);
     std::fs::remove_file(dst).unwrap();
 }
+
+
+#[test]
+fn renamed_and_reordered_views_and_sections_keep_identity_metadata() {
+    let src=temp("view-identity-source.igz");let dst=temp("view-identity-save.igz");
+    let doc=json!({"edges":[],"faces":[],
+        "saved_views":[{"name":"A","style":{"unknown":1}},{"name":"B","style":{"unknown":2}}],
+        "section_planes":[{"uid":1,"point":[0.,0.,0.],"normal":[0.,0.,1.],"name":"A","unknown":3},{"uid":2,"point":[1.,0.,0.],"normal":[0.,1.,0.],"name":"B","unknown":4}]});
+    write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();
+    scene.saved_views.swap(0,1);scene.saved_views[1].name="renamed".into();
+    scene.section_planes.swap(0,1);scene.section_planes[1].name="renamed".into();
+    save_igz(&scene,&dst).unwrap();let out=scene_to_igz_document(&scene);
+    assert_eq!(out["saved_views"][0]["style"]["unknown"],2);
+    assert_eq!(out["saved_views"][1]["style"]["unknown"],1);
+    assert_eq!(out["section_planes"][0]["unknown"],4);
+    assert_eq!(out["section_planes"][1]["unknown"],3);
+    std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}

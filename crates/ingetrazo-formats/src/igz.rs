@@ -442,6 +442,21 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
     sheet.native_document=raw.clone();sheet.native_baseline=sheet_model(&sheet);sheet
 }
 
+fn view_model(v: &ingetrazo_core::saved_views::SavedView) -> serde_json::Value {
+    serde_json::json!({
+        "name":v.name, "target":v.target, "distance":v.distance, "yaw":v.yaw,
+        "pitch":v.pitch, "fov":v.fov_deg, "parallel":!v.perspective || v.parallel,
+        "hidden_layers":v.hidden_layers
+    })
+}
+
+fn section_model(v: &ingetrazo_core::section::SectionPlane) -> serde_json::Value {
+    serde_json::json!({
+        "point":v.point, "normal":v.normal, "name":v.name, "symbol":v.symbol,
+        "active":v.active, "uid":v.id.as_u128() as u64
+    })
+}
+
 fn scene_model(scene: &Scene) -> serde_json::Value {
     let loose = mesh_to_json(&scene.mesh);
     let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
@@ -485,15 +500,10 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     };
     doc["units"] = serde_json::json!({"length":unit,"precision":2});
 
-    doc["saved_views"] = serde_json::json!(scene.saved_views.iter().map(|v| serde_json::json!({
-        "name":v.name, "target":v.target, "distance":v.distance, "yaw":v.yaw,
-        "pitch":v.pitch, "fov":v.fov_deg, "parallel":!v.perspective || v.parallel,
-        "hidden_layers":v.hidden_layers
-    })).collect::<Vec<_>>());
-    doc["section_planes"] = serde_json::json!(scene.section_planes.iter().map(|v| serde_json::json!({
-        "point":v.point, "normal":v.normal, "name":v.name, "symbol":v.symbol,
-        "active":v.active, "uid":v.id.as_u128() as u64
-    })).collect::<Vec<_>>());
+    doc["saved_views"] = serde_json::json!(scene.saved_views.iter().map(|v|
+        overlay(&v.native_document,&v.native_baseline,view_model(v))).collect::<Vec<_>>());
+    doc["section_planes"] = serde_json::json!(scene.section_planes.iter().map(|v|
+        overlay(&v.native_document,&v.native_baseline,section_model(v))).collect::<Vec<_>>());
     doc["section_view"] = serde_json::json!({
         "planes_hidden": !scene.show_section_planes, "cuts_hidden": !scene.show_section_cuts,
         "fill_hidden": !scene.show_section_fill
@@ -783,6 +793,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             if let Ok(mut sv) = serde_json::from_value::<ingetrazo_core::saved_views::SavedView>(sv_item.clone()) {
                 sv.fov_deg = sv_item.get("fov").or_else(|| sv_item.get("fov_deg")).and_then(|v| v.as_f64()).unwrap_or(45.);
                 sv.perspective = !sv.parallel;
+                sv.native_document = sv_item.clone();
+                sv.native_baseline = view_model(&sv);
                 scene.saved_views.push(sv);
             }
         }
@@ -848,6 +860,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
                         plane.get("symbol").and_then(|v| v.as_str()).unwrap_or(""));
                     p.active = plane.get("active").and_then(|v| v.as_bool()).unwrap_or(false);
                     if let Some(uid) = plane.get("uid").and_then(|v| v.as_u64()) { p.id = uuid::Uuid::from_u128(uid as u128); }
+                    p.native_document = plane.clone();
+                    p.native_baseline = section_model(&p);
                     scene.section_planes.push(p);
                 }
             }

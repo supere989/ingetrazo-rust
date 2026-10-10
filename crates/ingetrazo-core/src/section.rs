@@ -38,6 +38,10 @@ pub fn next_symbol(existing: &[SectionPlane]) -> String {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SectionPlane {
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
     #[serde(default = "Uuid::new_v4")]
     pub id: Uuid,
     pub point: DVec3,
@@ -55,6 +59,8 @@ impl SectionPlane {
             normal.normalize()
         };
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
             point,
             normal: n,

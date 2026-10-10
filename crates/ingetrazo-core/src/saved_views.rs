@@ -11,6 +11,10 @@ use crate::layers::Layer;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SavedView {
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
     pub name: String,
     #[serde(default)]
     pub target: DVec3,
@@ -39,6 +43,8 @@ fn default_true() -> bool { true }
 impl SavedView {
     pub fn new(name: impl Into<String>) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             name: name.into(),
             target: DVec3::ZERO,
             distance: default_distance(),
@@ -58,6 +64,8 @@ impl SavedView {
             .collect();
 
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             name: name.into(),
             target: camera.target,
             distance: camera.distance,
