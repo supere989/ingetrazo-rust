@@ -8,7 +8,7 @@
     },
     {
       "area": "frame ordering",
-      "required": "Verify actual application first-add/delete and failed-update behavior because build_ui collects callbacks before prepare_gpu updates them."
+      "required": "Verify actual application first-add/delete and failed-update behavior for mutations during UI collection. prepare_gpu(true) precedes ctx.run and prepare_gpu(false) follows it; the latter can change membership of already collected callbacks."
     },
     {
       "area": "world preparation failure",
@@ -20,5 +20,6 @@
     "source_arrow": "Worker reports 217 differing pixels; strict parity remains failed."
   },
   "integration": "Not cherry-picked into root integration; independent publication evidence and corrections pending.",
-  "scope": "Source review only. No feature or release gate promoted."
+  "scope": "Source review only. No feature or release gate promoted.",
+  "followup": "Worker proposes post-preparation resolution of an ordered annotation slot to the currently admitted callback; implementation and actual application acceptance pending."
 }

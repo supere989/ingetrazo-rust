@@ -1,0 +1,13 @@
+{
+  "integrated_source": "d6c489fc",
+  "python_source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_execution_exit": 0,
+  "source_execution_exit": 0,
+  "source_sha256": {
+    "scripts/reference-ai-mixed-references.py": "41c30213867e087d76fbac00969446e353b4b2284e1b20bd6365051a19b472a6",
+    "scripts/check-ai-mixed-references.py": "9fabbbdceff921c15367943a5ae0e4e87c094df66079d9bda3341442ac522bed",
+    "tools/ai-interpreter-proof/src/bin/vm_mixed_references.rs": "bd8c91cd34b0ad5bf1ebfa3dc62fdb3af30920cb9240ddbf8588edc62d651cdb"
+  },
+  "binary_sha256": "c912ef86a336cde89d81756d42722b4dd56e54a862f982809bbfd3d08d645141",
+  "scope": "Fresh merged execution matches six original states and fourteen rejecting controls; full membership edits, callback safety, resource bounds and production integration remain open."
+}
