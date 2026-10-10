@@ -1,0 +1,17 @@
+{
+  "source": "74962b09eceef08cfbb822a2904fa60a5be2c2f1",
+  "review": "Standalone proof only; no production interpreter adoption",
+  "exact_observations": {
+    "stdout": "570\n570\n",
+    "persistent_value": "572",
+    "syntax_and_runtime_error_refusal": true
+  },
+  "not_proved": [
+    "Complete Python language/import compatibility",
+    "CAD native adapters and arbitrary original scripts",
+    "Transactional journal rollback and command identity",
+    "Cancellation/deadline and memory/output budgets",
+    "Original full traceback formatting"
+  ],
+  "source_review": "Real RustPython compiler/VM and persistent Scope are exercised. Native module is synthetic i32 add fixture; assertions and narrow chosen program are not arbitrary scripting acceptance."
+}
