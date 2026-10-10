@@ -1,0 +1,27 @@
+{
+  "status": "confirmed_render_discrepancy",
+  "hashes_verified": 17,
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "different_pixels": 99,
+      "max_channel_difference": 43
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "different_pixels": 0,
+      "max_channel_difference": 0
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "different_pixels": 409,
+      "max_channel_difference": 210
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "different_pixels": 333,
+      "max_channel_difference": 210
+    }
+  ],
+  "scope": "Retained image decode and inventories independently checked. Same Qt renderer isolates import/codec/runtime differences; native Vulkan not yet tested here. Sorted structural equality does not establish ordered rendering equality."
+}
