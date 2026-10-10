@@ -259,11 +259,11 @@ pub fn build_scene_render_data(
 
     // 4. Dimensions
     for dim in &scene.dimensions {
+        if !scene.is_layer_visible(dim.layer.as_deref()){continue;}
         let p0 = dim.start;
         let p1 = dim.end;
         let off = dim.offset;
-        let d0 = p0 + off;
-        let d1 = p1 + off;
+        let (d0,d1)=dim.line_points();
 
         // Witness lines
         data.dimension_lines.push_line(p0, d0, [0.15, 0.15, 0.2, 0.7], 1.0, LineStyle::Solid);

@@ -11,6 +11,10 @@ use crate::units::{format_length, LengthUnit};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Dimension {
+    #[serde(default)] pub native_document:serde_json::Value,
+    #[serde(default)] pub native_baseline:serde_json::Value,
+    #[serde(default)] pub layer:Option<String>,
+    #[serde(default)] pub axis:Option<String>,
     #[serde(default = "Uuid::new_v4")]
     pub id: Uuid,
     #[serde(alias = "a")]
@@ -20,12 +24,14 @@ pub struct Dimension {
     #[serde(default)]
     pub offset: DVec3,
     #[serde(default)]
+    #[serde(alias="text")]
     pub text_override: Option<String>,
 }
 
 impl Dimension {
     pub fn new(start: DVec3, end: DVec3, offset: DVec3) -> Self {
         Self {
+            native_document:serde_json::Value::Null,native_baseline:serde_json::Value::Null,layer:None,axis:None,
             id: Uuid::new_v4(),
             start,
             end,
@@ -34,13 +40,35 @@ impl Dimension {
         }
     }
 
+    fn linear_frame(start:DVec3,end:DVec3,axis:Option<&str>)->Option<(DVec3,DVec3)> {
+        let u=match axis{Some("x")=>DVec3::X,Some("y")=>DVec3::Y,Some("z")=>DVec3::Z,_=>return None};
+        let ab=end-start;if ab.length()<1e-9{return None;}let d=ab.normalize();let e=d-u*d.dot(u);if e.length()<1e-6{return None;}Some((u,e.normalize()))
+    }
+    pub fn line_points(&self)->(DVec3,DVec3) {
+        if let Some((_,e))=Self::linear_frame(self.start,self.end,self.axis.as_deref()){let a=self.offset.dot(e);let b=a-(self.end-self.start).dot(e);return(self.start+e*a,self.end+e*b);}
+        let d=(self.end-self.start).normalize_or_zero();let offset=self.offset-d*self.offset.dot(d);(self.start+offset,self.end+offset)
+    }
+    pub fn placement_for_cursor(start:DVec3,end:DVec3,cursor:DVec3)->(DVec3,Option<String>) {
+        let ab=end-start;let length=ab.length();if length<1e-9{return(cursor-start,None);}
+        let d=ab/length;let aligned=(cursor-start)-d*(cursor-start).dot(d);let w=cursor-(start+end)*0.5;
+        if w.dot(d).abs() <= 20_f64.to_radians().tan()*(w-d*w.dot(d)).length(){return(aligned,None);}
+        let mut best=None;let mut beyond=0;let lo=15_f64.to_radians().sin();let hi=15_f64.to_radians().cos();
+        for name in ["x","y","z"]{if let Some((u,e))=Self::linear_frame(start,end,Some(name)){
+            let along=d.dot(u).abs();if along<lo||along>hi{continue;}let t=(cursor-start).dot(e);let span=ab.dot(e);let low=0_f64.min(span);let high=0_f64.max(span);
+            let over=if t<low{low-t}else if t>high{t-high}else{0.};if over<=1e-9{continue;}beyond+=1;
+            if best.as_ref().map(|(old,_,_)|over>*old).unwrap_or(true){best=Some((over,name.to_owned(),e*t));}
+        }}
+        if beyond==1{if let Some((_,name,offset))=best{return(offset,Some(name));}}(aligned,None)
+    }
+
     pub fn length(&self) -> f64 {
-        (self.end - self.start).length()
+        let delta=self.end-self.start;
+        match self.axis.as_deref(){Some("x")=>delta.x.abs(),Some("y")=>delta.y.abs(),Some("z")=>delta.z.abs(),_=>delta.length()}
     }
 
     pub fn display_text(&self, unit: LengthUnit, decimals: usize) -> String {
         if let Some(ref text) = self.text_override {
-            text.clone()
+            text.replace("<>",&format_length(self.length(),unit,decimals))
         } else {
             format_length(self.length(), unit, decimals)
         }
@@ -51,6 +79,15 @@ impl Dimension {
 mod tests {
     use super::*;
 
+    #[test]
+    fn cursor_placement_matches_linear_side_above_and_aligned_corridor() {
+        let a=DVec3::ZERO;let b=DVec3::new(3.,4.,0.);
+        let (offset,axis)=Dimension::placement_for_cursor(a,b,DVec3::new(6.,1.,0.));assert_eq!(axis.as_deref(),Some("y"));
+        let mut dimension=Dimension::new(a,b,offset);dimension.axis=axis;assert_eq!(dimension.length(),4.);
+        let (first,last)=dimension.line_points();assert!((first-DVec3::new(6.,0.,0.)).length()<1e-10);assert!((last-DVec3::new(6.,4.,0.)).length()<1e-10);
+        let (_,axis)=Dimension::placement_for_cursor(a,b,DVec3::new(1.,6.,0.));assert_eq!(axis.as_deref(),Some("x"));
+        let (offset,axis)=Dimension::placement_for_cursor(a,b,DVec3::new(-4.,5.,0.));assert!(axis.is_none());assert!(offset.dot(b).abs()<1e-10);
+    }
     #[test]
     fn test_dimension_deserialize_ab_format() {
         let json_str = r#"{"a": [0.0, 0.0, 0.0], "b": [0.0, 0.0, 2.4], "offset": [-1.0, 0.0, 0.0]}"#;

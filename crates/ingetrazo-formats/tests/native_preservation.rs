@@ -262,3 +262,13 @@ fn texture_files_with_same_basename_get_distinct_archive_entries() {
     assert!(ingetrazo_formats::igz::save_igz_format1(&reopened,&plain).is_err());assert_eq!(std::fs::read(&plain).unwrap(),b"original");
     std::fs::remove_dir_all(dir).unwrap();
 }
+
+#[test]
+fn dimensions_use_original_schema_and_keep_identity_on_reorder_edits() {
+    let source=temp("dimension-source.igz");let target=temp("dimension-result.igz");
+    let original=json!({"edges":[],"faces":[],"dimensions":[{"a":[0.,0.,0.],"b":[3.,4.,0.],"offset":[-2.,0.,0.],"text":"width <> cm","axis":"x","layer":"Annotations","opaque":{"id":1}},{"a":[1.,2.,3.],"b":[4.,6.,3.],"offset":[0.,1.,0.],"opaque":{"id":2}}]});
+    write_plain(&original,&source);let mut scene=load_igz(&source).unwrap();assert_eq!(scene.dimensions[0].length(),3.);assert!(scene.dimensions[0].display_text(ingetrazo_core::units::LengthUnit::Meters,2).starts_with("width 3"));
+    scene.dimensions.reverse();scene.dimensions[1].end.x=7.;scene.dimensions[1].text_override=Some("edited <>".into());save_igz(&scene,&target).unwrap();
+    let reopened=load_igz(&target).unwrap();let doc=scene_to_igz_document(&reopened);assert_eq!(doc["dimensions"][0]["opaque"]["id"],2);assert_eq!(doc["dimensions"][1]["opaque"]["id"],1);assert_eq!(doc["dimensions"][1]["b"][0],7.);assert_eq!(doc["dimensions"][1]["text"],"edited <>");assert!(doc["dimensions"][1].get("start").is_none());
+    std::fs::remove_file(source).unwrap();std::fs::remove_file(target).unwrap();
+}

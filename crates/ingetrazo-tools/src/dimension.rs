@@ -71,10 +71,9 @@ impl Tool for DimensionTool {
             let p_off = ctx.world;
 
             // Offset vector is vector from midpoint of segment (p0..p1) to cursor
-            let mid = (p0 + p1) * 0.5;
-            let offset = p_off - mid;
+            let (offset,axis) = Dimension::placement_for_cursor(p0,p1,p_off);
 
-            let dim = Dimension::new(p0, p1, offset);
+            let mut dim = Dimension::new(p0, p1, offset);dim.axis=axis;
             scene.dimensions.push(dim);
             scene.bump_version();
 

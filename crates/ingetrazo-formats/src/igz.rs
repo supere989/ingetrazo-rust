@@ -479,6 +479,10 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
     sheet.native_document=raw.clone();sheet.native_baseline=sheet_model(&sheet);sheet
 }
 
+fn dimension_model(d:&Dimension)->serde_json::Value {
+    serde_json::json!({"a":d.start,"b":d.end,"offset":d.offset,"axis":d.axis,"layer":d.layer,"text":d.text_override})
+}
+
 fn view_model(v: &ingetrazo_core::saved_views::SavedView) -> serde_json::Value {
     serde_json::json!({
         "name":v.name, "target":v.target, "distance":v.distance, "yaw":v.yaw,
@@ -529,7 +533,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
         "perspective": scene.camera.perspective,
         "fov_deg": scene.camera.fov_deg,
     });
-    doc["dimensions"] = serde_json::to_value(&scene.dimensions).unwrap_or(serde_json::json!([]));
+    doc["dimensions"] = serde_json::json!(scene.dimensions.iter().map(|d|overlay(&d.native_document,&d.native_baseline,dimension_model(d))).collect::<Vec<_>>());
     doc["guides"] = serde_json::to_value(&scene.guides).unwrap_or(serde_json::json!([]));
     doc["text_labels"] = serde_json::to_value(&scene.text_labels).unwrap_or(serde_json::json!([]));
     let unit = match scene.unit {
@@ -925,16 +929,10 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         }
     }
 
-    if let Some(dims_val) = s_val.get("dimensions") {
-        if let Ok(dims) = serde_json::from_value::<Vec<Dimension>>(dims_val.clone()) {
-            scene.dimensions = dims;
-        } else if let Some(arr) = dims_val.as_array() {
-            for item in arr {
-                if let Ok(dim) = serde_json::from_value::<Dimension>(item.clone()) {
-                    scene.dimensions.push(dim);
-                }
-            }
-        }
+    if let Some(items)=s_val.get("dimensions").and_then(|v|v.as_array()) {
+        for raw in items {if let Ok(mut dim)=serde_json::from_value::<Dimension>(raw.clone()) {
+            dim.native_document=raw.clone();dim.native_baseline=dimension_model(&dim);scene.dimensions.push(dim);
+        }}
     }
 
     if let Some(guides_val) = s_val.get("guides") {
