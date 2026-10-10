@@ -21,3 +21,10 @@ thiserror.workspace = true
 uuid.workspace = true
 
 arboard = { version = "3.6.1", default-features = false }
+
+ash = { version = "0.38", default-features = false, features = ["loaded", "std", "debug"] }
+ash-window = "0.13"
+raw-window-handle = "0.6"
+winit = "0.30"
+egui-winit = "0.30"
+egui-ash-renderer = "=0.7.0"

@@ -891,8 +891,9 @@ impl IngeTrazoApp {
     }
 }
 
-impl eframe::App for IngeTrazoApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+impl IngeTrazoApp {
+    /// Backend-independent application UI and document lifecycle.
+    pub fn update_ui(&mut self, ctx: &egui::Context) {
         self.begin_document_frame(ctx);
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});
@@ -1016,6 +1017,10 @@ impl eframe::App for IngeTrazoApp {
         crate::section_actions::render_section_name_prompt(self,ctx);
         crate::blender::render_blender_dialog(self, ctx);
     }
+}
+
+impl eframe::App for IngeTrazoApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) { self.update_ui(ctx); }
 }
 
 #[cfg(test)]
