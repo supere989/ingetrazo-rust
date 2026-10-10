@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "crates/ingetrazo-core",
+    "crates/ingetrazo-metal",
     "crates/ingetrazo-tools",
     "crates/ingetrazo-formats",
     "crates/ingetrazo-render",

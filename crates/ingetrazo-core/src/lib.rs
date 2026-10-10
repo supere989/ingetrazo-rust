@@ -57,3 +57,4 @@ pub mod snap_screen;
 pub mod circle_inference;
 
 pub mod drawing_axes;
+pub mod gpu_memory;

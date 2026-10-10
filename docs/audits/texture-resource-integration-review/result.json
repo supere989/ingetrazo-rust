@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "workspace_tests": 434,
+  "ignored": 2,
+  "hardware_proof": "5181ec9",
+  "scope": "RGBA8 optimal images, GPU constant mip controls, persistent bounded staging, admission rollback",
+  "remaining": [
+    "source texture draw",
+    "compression/mip streaming",
+    "unbounded device-idle exception drain",
+    "Metal"
+  ]
+}

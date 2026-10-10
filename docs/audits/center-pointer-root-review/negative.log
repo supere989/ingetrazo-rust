@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-center-pointer-review/scripts/check-native-center-tracking.py", line 204, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-center-pointer-review/scripts/check-native-center-tracking.py", line 175, in main
+    deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
+  File "/tmp/ingetrazo-center-pointer-review/scripts/check-native-center-tracking.py", line 16, in wait
+    raise AssertionError("Timed out awaiting rendered event/state")
+AssertionError: Timed out awaiting rendered event/state

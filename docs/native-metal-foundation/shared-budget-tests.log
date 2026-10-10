@@ -1,0 +1,21 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-native-metal-foundation/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.48s
+     Running unittests src/lib.rs (/tmp/ingetrazo-native-metal-foundation-target/debug/deps/ingetrazo_core-424173c7a16df2e1)
+
+running 5 tests
+test gpu_memory::tests::compressed_odd_dimensions_layers_and_tiny_mips_use_complete_blocks ... ok
+test gpu_memory::tests::invalid_requests_do_not_change_accounting ... ok
+test gpu_memory::tests::live_driver_usage_not_double_counted_and_external_pressure_blocks ... ok
+test gpu_memory::global_limit_regression::global_limit_includes_other_heaps_reservations_and_retired_allocations ... ok
+test gpu_memory::tests::actual_aligned_requirements_rollback_and_fence_delayed_free ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 132 filtered out; finished in 0.00s
