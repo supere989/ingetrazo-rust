@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "0b80beec7e1852ab6e54d58cf0b1f91ea30be9c6",
+    "rust_commit": "4787c0ae8891f790957f09c07d38d4d38c77de35",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -19,6 +19,6 @@
     "--ignored",
     "--nocapture"
   ],
-  "output": "\nrunning 1 test\ntest native_clipboard_transport_rejects_foreign_text_and_malformed_payload_without_stale_cache ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s\n\n   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-core)\n   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-formats)\n   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-render)\n   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-tools)\n   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-gui)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.96s\n     Running tests/clipboard_transport_acceptance.rs (target/debug/deps/clipboard_transport_acceptance-98d1aefc075168f4)\n",
+  "output": "\nrunning 1 test\ntest native_clipboard_transport_rejects_foreign_text_and_malformed_payload_without_stale_cache ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running tests/clipboard_transport_acceptance.rs (target/debug/deps/clipboard_transport_acceptance-98d1aefc075168f4)\n",
   "scope": "Independent owners transfer geometry; unrelated text, malformed JSON and invalid topology clear cached geometry atomically; a replacement malformed request retires the previous valid preview. Wayland, Windows/macOS and clipboard-manager persistence are unverified."
 }
