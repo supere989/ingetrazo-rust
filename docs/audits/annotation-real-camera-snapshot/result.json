@@ -1,0 +1,1 @@
+{"cases": 10, "mvp_inverse_float32_bits_exact": true, "all_values_exact": true, "view_signed_zero_only": true, "old_matrix_differences": [9, 6, 12, 7, 15, 14, 6, 8, 4, 8], "altered_matrix_rejected": true}

@@ -1,0 +1,14 @@
+{
+  "source_commit": "4bb885923f71b77ea8e972d3ddb654fd1bd37d8e",
+  "binary_sha256": "9759d1ba586efc65d48c0d8cf461518ea48cb296cb04a2f166adcf1b3cfa23fd",
+  "execution_scope": "protocol built from precommit camera implementation identical to committed snapshot/protocol; final production GUI checked and focused admission test executed separately",
+  "files": {
+    "original.json": "8e8ebc02eda7ce9c609e3816ad1e46be8dd0f375e2ce9d6d30490fe9af245c5c",
+    "singular.json": "32f7569cd33026d8417bb7e1357b9c193142d4fdb7fba7549bc00edcd6605f96",
+    "native.json": "0b360360a263b95d9cfab54f5fd0f34d84243c5dde9fe69cde3c24ea9f6d8d04",
+    "protocol-build.log": "6b81bbb01e8f35a30e501c839e173a7b03ee67290dc756a4604520d686bc9d4e",
+    "production-check.log": "ae401f53eef5e3ca1975ea1768b8bb01315c5df730b23e975eb67acc86696e2a",
+    "admission-test.log": "4a4da3b9e03f32caf068158b7402011afcab7ad64e295dd49417a66a3125059f",
+    "result.json": "c3edff3e28c9b4c0f86ab5c36d70a45bee5303c363923dae1f0f452bf138ec1f"
+  }
+}

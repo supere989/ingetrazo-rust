@@ -1,0 +1,5 @@
+Ten actual pinned Qt camera snapshots match all numeric values exactly; MVP and inverse match float32 bits. View-only signed zeros differ in six entries, with identical MVP/inverse results. The previous annotation path differs for every camera. An altered matrix is rejected. Six authored cameras and all four frozen real-model cameras are mandatory.
+
+The singular control executes the actual source capture method with controlled GL calls. Source keeps its previous depth snapshot on inverse failure. Native annotation preparation refuses before updating its retained owner. This is transaction admission, not a claim of literal invalid-camera rendering parity. Actual GPU resolve, application projection/depth and full-model overlay images remain required.
+
+Reproduce reference with scripts/reference-annotation-camera.py SOURCE WORKTREE OUT; execute annotation_camera_protocol OUT/original.json; compare with scripts/check-annotation-camera.py. Production inverse is only computed after changed-key admission; unchanged callbacks retain the snapshot.
