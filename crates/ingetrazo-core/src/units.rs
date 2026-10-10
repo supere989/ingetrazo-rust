@@ -85,7 +85,8 @@ pub fn parse_length(text: &str, default_unit: LengthUnit) -> Result<f64, String>
 /// Format length in meters into string according to specified unit and precision.
 pub fn format_length(meters: f64, unit: LengthUnit, decimals: usize) -> String {
     let scaled = meters * unit.to_unit_scale();
-    format!("{:.*} {}", decimals, scaled, unit.suffix())
+    let separator = if matches!(unit, LengthUnit::Feet | LengthUnit::Inches) { "" } else { " " };
+    format!("{:.*}{}{}", decimals.min(6), scaled, separator, unit.suffix())
 }
 
 #[cfg(test)]

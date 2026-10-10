@@ -43,3 +43,5 @@ Stage5local: attachedclosed-solid FollowMe719a700 andwire/bridge planar9c44439 i
 Milestone4CI38013336872 FAILED renderedblackcapture afterfixed5sec; test/buildpassed, downstreamoraclesskipped. Readinesssmokefix waitsbounded45sec withsamecolorcriterion+livePID; localPASS. Needpublish+verifycloudagain, do notclaimgreen.
 
 Resource/systemclipboard integratedc71e261; fullworkspacePASS plus actualisolatedXvfb twoownertransferPASS. Reviewrequested stale/malformedpayload validation, successstatus and component/resourcecollision remapping beforepublication. DAEisolated geometry+sceneassembly two meaningful transform/instance/stride/reflection/unit/cycle/invalidindex fixturesPASS; stillnotwiredloader pending materials/UV/coplanarfusion/components/georef. CI38013592441 verifiedlive.
+
+Partsindependent91a2c58 integrated d652a09. Original ft/in formatting corrected(noquote-space,max6decimals); rerun leaves repeated-eigenvalue PCAextent mismatch only. Retainedbaseline untouched, notCIcompletiongate. Offsetsourcef91e02a readyreview; independentcases underway.

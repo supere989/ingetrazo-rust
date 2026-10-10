@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "316bd2cb47132deba8d3bf06b7895d77cbe3f7d5",
+    "rust_commit": "d652a09098c7f939098acaf525a3cff7a7d27049",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -25,16 +25,6 @@
           ]
         }
       ]
-    },
-    {
-      "unit": "ft",
-      "original": "Qty\tParts\tMaterial\tLength\tWidth\tThickness\n1\tNested paint\tRoot paint\t6.562'\t3.281'\t0.328'\n1\tPiece 1\tSteel\t1.907'\t0.131'\t0.131'\n2\tPiece 2, Piece 10\tWood\t1.905'\t0.131'\t0.131'\n1\tSkin\tPaint\t1.312'\t0.984'\tsurface\n",
-      "rust": "Qty\tParts\tMaterial\tLength\tWidth\tThickness\n1\tNested paint\tRoot paint\t6.562 '\t3.281 '\t0.328 '\n1\tPiece 1\tSteel\t1.907 '\t0.131 '\t0.131 '\n2\tPiece 2, Piece 10\tWood\t1.905 '\t0.131 '\t0.131 '\n1\tSkin\tPaint\t1.312 '\t0.984 '\tsurface\n"
-    },
-    {
-      "unit": "in",
-      "original": "Qty\tParts\tMaterial\tLength\tWidth\tThickness\n1\tNested paint\tRoot paint\t78.74\"\t39.37\"\t3.94\"\n1\tPiece 1\tSteel\t22.89\"\t1.57\"\t1.57\"\n2\tPiece 2, Piece 10\tWood\t22.85\"\t1.57\"\t1.57\"\n1\tSkin\tPaint\t15.75\"\t11.81\"\tsurface\n",
-      "rust": "Qty\tParts\tMaterial\tLength\tWidth\tThickness\n1\tNested paint\tRoot paint\t78.74 \"\t39.37 \"\t3.94 \"\n1\tPiece 1\tSteel\t22.89 \"\t1.57 \"\t1.57 \"\n2\tPiece 2, Piece 10\tWood\t22.85 \"\t1.57 \"\t1.57 \"\n1\tSkin\tPaint\t15.75 \"\t11.81 \"\tsurface\n"
     }
   ],
   "scope": "Original PCA/model-axis extent including splayed/stepped/repeated eigenvalues/degenerate/surface clouds; actual native nested paint and cut-list sizes/names/material merge/precision/surface controls, five document-unit text variants. Rendered caching/clipboard UX remains open."
