@@ -1,0 +1,11 @@
+{
+  "checkout": "3b188c47314fbd7bf1f537645f7ece985bc5eabe",
+  "binary_sha256": {
+    "native_vulkan": "7178698418f28ac77cc2f2d9e6a60353119b11a8fa6ea61cd701934d2a33e946",
+    "native_vulkan_world_fixture": "297ba63615c70b0e7ee26eb25cc8de9abf997a987f807836e0fe8860930e3cea",
+    "native_vulkan_resources_probe": "bfae5b0afcb7b49a8e0e1973c9cb125a03a45b65ada43c5ab780e50ae716da2d",
+    "native_vulkan_texture_chunks_probe": "64d5382e967a3bc69400fe6f85acee6db3d052bdfa7ac8d7391d99060a0e16a1",
+    "composer_cache_independent": "5b02e6839edef83b39d215b17bb8448dfaa67d962917b00ab383021bb29df176"
+  },
+  "limits": "Linux software llvmpipe only; native composer pixels/component/recovery and hardware Metal remain pending"
+}
