@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual original viewport textures; literal inputs and framebuffer samples."""
-import sys,time,json,hashlib
+import sys,time,json,hashlib,os
 from pathlib import Path
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
 from PySide6.QtGui import QSurfaceFormat,QVector3D,QImage,QColor
@@ -60,9 +60,11 @@ for name,options in cases:
   else:group.xform.rotate(45.,1.,0.,0.)
   groups=[group];mesh=Mesh()
  mode=options.get("style","textures")
- vp=Viewport();vp.resize(800,600);vp.scene=Scene(mesh=mesh,groups=groups);vp.style_override=Style(face_mode=mode,sky=False,edges=False,profiles=False,background=(1.,1.,1.));vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D();vp.camera.distance=4.;vp.show()
+ vp=Viewport();vp.resize(800,600);vp.scene=Scene(mesh=mesh,groups=groups);vp.style_override=Style(face_mode=mode,sky=False,edges=False,profiles=False,background=(1.,1.,1.));vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D();vp.camera.distance=4.;vp.setWindowTitle("IngeTrazo owned NVIDIA texture reference");vp.show()
  for _ in range(45):app.processEvents();time.sleep(.02)
- image=vp.grabFramebuffer();assert not image.isNull();image.save(str(root/(name+".png")));save_scene(vp.scene,root/(name+".igz"))
+ image=vp.grabFramebuffer();
+ if os.environ.get("INGETRAZO_REQUIRE_NVIDIA")=="1":assert "NVIDIA GeForce RTX 5090" in vp.gl_info["renderer"],vp.gl_info
+ assert not image.isNull();image.save(str(root/(name+".png")));save_scene(vp.scene,root/(name+".igz"))
  points=[(340,240),(460,240),(340,360),(460,360),(400,300)];samples=[]
  for x,y in points:c=image.pixelColor(x,y);samples.append([c.red(),c.green(),c.blue(),c.alpha()])
  rows.append({"case":name,"background":[1,1,1],"points":points,"samples":samples,"style_mode":mode,"show_textures":mode=="textures","gl_info":vp.gl_info,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest()})

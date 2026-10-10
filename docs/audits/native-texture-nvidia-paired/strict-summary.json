@@ -1,0 +1,26 @@
+[
+  {
+    "corpus": "five",
+    "candidate": "frozen",
+    "exit_code": 0,
+    "result": "PASS five actual original/native texture cases,25 exact RGBA samples,two negative controls\n"
+  },
+  {
+    "corpus": "five",
+    "candidate": "corrected",
+    "exit_code": 0,
+    "result": "PASS five actual original/native texture cases,25 exact RGBA samples,two negative controls\n"
+  },
+  {
+    "corpus": "heldout",
+    "candidate": "frozen",
+    "exit_code": 1,
+    "result": "{\n  \"cases\": {\n    \"color-back-tex-front\": true,\n    \"color-back-tex-reversed\": true,\n    \"tex-back-color-front\": true,\n    \"tex-back-color-reversed\": true,\n    \"tex-back-opaque-color-reversed\": true,\n    \"tex-group-reflected\": true,\n    \"tex-group-slanted\": true,\n    \"tex-hole\": true,\n    \"tex-mixed-backcolor-phase\": false,\n    \"tex-mixed-order-color-first\": true,\n    \"tex-mixed-order-tex-first\": true,\n    \"tex-shaded-average\": false,\n    \"tex-trans-back-color-front\": true,\n    \"tex-trans-back-color-reversed\": true,\n    \"tex-xray\": false\n  },\n  \"passing\": 12,\n  \"failed\": [\n    \"tex-mixed-backcolor-phase\",\n    \"tex-shaded-average\",\n    \"tex-xray\"\n  ],\n  \"negative_controls\": 2\n}\n"
+  },
+  {
+    "corpus": "heldout",
+    "candidate": "corrected",
+    "exit_code": 1,
+    "result": "{\n  \"cases\": {\n    \"color-back-tex-front\": true,\n    \"color-back-tex-reversed\": true,\n    \"tex-back-color-front\": true,\n    \"tex-back-color-reversed\": true,\n    \"tex-back-opaque-color-reversed\": true,\n    \"tex-group-reflected\": true,\n    \"tex-group-slanted\": true,\n    \"tex-hole\": true,\n    \"tex-mixed-backcolor-phase\": true,\n    \"tex-mixed-order-color-first\": true,\n    \"tex-mixed-order-tex-first\": true,\n    \"tex-shaded-average\": false,\n    \"tex-trans-back-color-front\": true,\n    \"tex-trans-back-color-reversed\": true,\n    \"tex-xray\": true\n  },\n  \"passing\": 14,\n  \"failed\": [\n    \"tex-shaded-average\"\n  ],\n  \"negative_controls\": 2\n}\n"
+  }
+]
