@@ -1,0 +1,9 @@
+{
+  "candidate": "258e585",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-sheet-paint-order-target cargo test --locked -p ingetrazo-core -p ingetrazo-gui",
+  "passed": 230,
+  "failed": 0,
+  "ignored": 2,
+  "retained_log_sha256": "fefdff4cd494143bcb1981b2b77905213314e39f2abc6f900e60fb8f0b53a9c6",
+  "remaining": "Independent actual preview z/hidden/category-order controls; all ten missing item painters, full border stacking and PDF/image acceptance remain open."
+}
