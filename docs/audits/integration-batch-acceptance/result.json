@@ -1,0 +1,11 @@
+{
+  "source": "712c8a1b821a9871954202df6542f3a0f030544f",
+  "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --workspace --locked --lib --tests -j2",
+  "exit_code": 0,
+  "passed": 635,
+  "failed": 0,
+  "ignored": 2,
+  "suite_summaries": 28,
+  "log_sha256": "9cf4fa62cf6b6ad7a65ef4a42a5f2c414b43b692dde5b96cf3c7c545589a2d72",
+  "scope": "Combined Linux workspace libraries and integration tests. Native Mac source acceptance remains revision-specific; focused arena budget hardware proof pending. Canvas candidate is excluded."
+}
