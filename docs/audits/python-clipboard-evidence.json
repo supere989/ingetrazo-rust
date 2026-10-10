@@ -1,0 +1,10 @@
+{
+  "provenance": {
+    "rust_commit": "c425b5ae42a1025e1792eefa901ef114c22c313f",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "scope": "Mixed selected holed loose face and opaque attributed curve: immutable placement preview/cancel, one history step and exact undo/redo; translated affine UV and native original geometry reopen. Same-plane overlap merge, cross-context transforms and system clipboard remain open."
+}
