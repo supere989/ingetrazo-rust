@@ -1,3 +1,4 @@
+pub mod headless;
 pub mod world;
 pub mod resources;
 mod queues;
@@ -459,9 +460,19 @@ pub struct VulkanContext {
     pub graphics_queue: vk::Queue,
     present_queue: vk::Queue,
     pub command_pool: vk::CommandPool,
+    pub transfer_timeout_ns:u64,
+    pub diagnostic_fail_fast:bool,
 }
 
 impl VulkanContext {
+    pub fn wait_transfer(&self,fence:vk::Fence)->Result<(),vk::Result> {
+        let result=unsafe {self.device.wait_for_fences(&[fence],true,self.transfer_timeout_ns)};
+        if result==Err(vk::Result::TIMEOUT)&&self.diagnostic_fail_fast {
+            eprintln!("GPU diagnostic fence exceeded {}ns; exiting without freeing potentially pending resources",self.transfer_timeout_ns);
+            std::process::exit(124);
+        }
+        result
+    }
     pub fn new(window: &Window, name: &str) -> Result<Self, Box<dyn Error>> {
         // Vulkan instance
         let entry = unsafe { Entry::load()? };
@@ -519,6 +530,8 @@ impl VulkanContext {
             graphics_queue,
             present_queue,
             command_pool,
+            transfer_timeout_ns:u64::MAX,
+            diagnostic_fail_fast:false,
         })
     }
 }
@@ -529,9 +542,8 @@ impl Drop for VulkanContext {
         unsafe {
             self.device.destroy_command_pool(self.command_pool, None);
             self.device.destroy_device(None);
-            self.surface.destroy_surface(self.surface_khr, None);
-            self.debug_utils
-                .destroy_debug_utils_messenger(self.debug_utils_messenger, None);
+            if self.surface_khr!=vk::SurfaceKHR::null(){self.surface.destroy_surface(self.surface_khr, None);}
+            if self.debug_utils_messenger!=vk::DebugUtilsMessengerEXT::null(){self.debug_utils.destroy_debug_utils_messenger(self.debug_utils_messenger, None);}
             self.instance.destroy_instance(None);
         }
     }
