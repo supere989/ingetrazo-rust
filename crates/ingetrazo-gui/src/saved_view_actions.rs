@@ -5,7 +5,7 @@ impl IngeTrazoApp {
         let mut view=SavedView::capture_scene(name,&self.scene,&self.camera);
         let s=&self.style;
         view.style=Some(serde_json::json!({"face_mode":match s.visual_style{VisualStyle::Wireframe=>"wireframe",VisualStyle::HiddenLine=>"hidden_line",VisualStyle::Monochrome=>"monochrome",VisualStyle::XRay=>"xray",_=>"textures"},
-            "edges":s.show_edges,"profiles":s.show_profiles,"edge_color":&s.edge_color[..3],"front_color":&s.front_color[..3],"back_color":&s.back_color[..3],"background":&s.background_color[..3],"section_fill":self.scene.show_section_fill}));
+            "edges":s.show_edges,"profiles":s.show_profiles,"edge_color":&s.edge_color[..3],"front_color":&s.front_color[..3],"back_color":&s.back_color[..3],"background":&s.background_color[..3],"section_fill":self.scene.show_section_fill,"section_fill_color":&s.section_fill_color[..3]}));
         view.shadows=Some(serde_json::json!({"enabled":self.shadows_enabled}));view
     }
     pub fn add_saved_view(&mut self,name:String){let view=self.capture_live_view(name);self.save_undo_state();self.scene.saved_views.push(view);self.selected_saved_view=Some(self.scene.saved_views.len()-1);self.scene.bump_version();}
@@ -26,7 +26,7 @@ impl IngeTrazoApp {
             if let Some(mode)=s.get("face_mode").and_then(|v|v.as_str()){self.style.visual_style=match mode{"wireframe"=>VisualStyle::Wireframe,"hidden_line"=>VisualStyle::HiddenLine,"monochrome"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};}
             if let Some(v)=s.get("edges").and_then(|v|v.as_bool()){self.style.show_edges=v;}if let Some(v)=s.get("profiles").and_then(|v|v.as_bool()){self.style.show_profiles=v;}
             fn color(value:Option<&serde_json::Value>,target:&mut [f32;4]){if let Some(a)=value.and_then(|v|v.as_array()).filter(|a|a.len()>=3){for i in 0..3{if let Some(v)=a[i].as_f64(){target[i]=v as f32;}}}}
-            color(s.get("edge_color"),&mut self.style.edge_color);color(s.get("front_color"),&mut self.style.front_color);color(s.get("back_color"),&mut self.style.back_color);color(s.get("background"),&mut self.style.background_color);
+            color(s.get("section_fill_color"),&mut self.style.section_fill_color);color(s.get("edge_color"),&mut self.style.edge_color);color(s.get("front_color"),&mut self.style.front_color);color(s.get("back_color"),&mut self.style.back_color);color(s.get("background"),&mut self.style.background_color);
             if let Some(v)=s.get("section_fill").and_then(|v|v.as_bool()){self.scene.show_section_fill=v;}
         }
         if let Some(v)=view.shadows.as_ref().and_then(|s|s.get("enabled")).and_then(|v|v.as_bool()){self.shadows_enabled=v;}

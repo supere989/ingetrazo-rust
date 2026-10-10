@@ -49,6 +49,7 @@ impl IngeTrazoApp {
         let p=&self.document_session.preferences;
         self.scene.unit=p.new_document_unit;self.recent_files=p.recent_files.clone();self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;
         self.style.visual_style=match p.visual_style.as_str(){"wireframe"=>VisualStyle::Wireframe,"hidden"=>VisualStyle::HiddenLine,"mono"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};
+        if let Some(rgb)=p.extra.get("section_fill_color").and_then(|v|v.as_array()).filter(|v|v.len()==3){for(i,value)in rgb.iter().enumerate(){if let Some(value)=value.as_f64().filter(|value|value.is_finite()){self.style.section_fill_color[i]=value.clamp(0.,1.)as f32;}}}
         self.shadows_enabled=p.shadows;self.show_toolbar=p.show_toolbar;self.show_tray=p.show_tray;
         match store.recovery_candidates(false) {Ok(candidates)=>{self.document_session.show_recovery=!candidates.is_empty();self.document_session.recovery=candidates;},Err(e)=>self.status_message=e}
         self.document_session.store=Some(store);self.mark_document_clean();
@@ -57,6 +58,7 @@ impl IngeTrazoApp {
         let p=&mut self.document_session.preferences;p.language=Some(self.language.clone());p.new_document_unit=self.scene.unit;
         p.recent_files=self.recent_files.clone();p.line_width=self.style.line_width;p.profile_width=self.style.profile_width;
         p.visual_style=match self.style.visual_style{VisualStyle::Wireframe=>"wireframe",VisualStyle::HiddenLine=>"hidden",VisualStyle::Monochrome=>"mono",VisualStyle::XRay=>"xray",_=>"shaded"}.into();
+        p.extra.insert("section_fill_color".into(),serde_json::json!(&self.style.section_fill_color[..3]));
         p.shadows=self.shadows_enabled;p.show_toolbar=self.show_toolbar;p.show_tray=self.show_tray;
         if let Some(store)=&self.document_session.store {if let Err(e)=store.save_preferences(p){self.status_message=e;}}
     }
