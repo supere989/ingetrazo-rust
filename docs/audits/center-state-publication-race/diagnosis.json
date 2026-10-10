@@ -1,0 +1,7 @@
+{
+  "cloud_run": 38026550115,
+  "cloud_revision": "8ac926d",
+  "failure": "Original probe JSONDecodeError empty state.json during timer write",
+  "correction": "Fixture writes same-directory state.tmp then atomic Path.replace; original application/submodule unchanged",
+  "local_acceptance": "Actual original curve hover/dwell/Move/Delete gesture PASS; positive assertions unchanged"
+}
