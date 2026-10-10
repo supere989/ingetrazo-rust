@@ -232,3 +232,5 @@ pub mod paper_font_resolver;
 pub mod paper_text_layout;
 
 pub mod paper_text_painter;
+
+pub mod annotation_font;

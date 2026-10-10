@@ -10,9 +10,39 @@ pub const MAX_LINE_BYTES: usize = 64 * 1024;
 pub const MAX_LINE_RUNS: usize = 4096;
 const MAX_LAYOUT_FONTS: usize = 64;
 const MAX_LAYOUT_FONT_BYTES: usize = 64 * 1024 * 1024;
-fn admit_font(
+/// Immutable face contract used by the same source visual-run algorithm at
+/// paper or resolved viewport size. Dispatch is statically monomorphized.
+pub trait LayoutFont {
+    fn key(&self) -> crate::paper_font::FontKey;
+    fn shared_bytes(&self) -> &std::sync::Arc<[u8]>;
+    fn covers_character(&self, ch: char) -> bool;
+    fn shape_run(&self, text: &str, rtl: Option<bool>) -> Result<Vec<Glyph>, String>;
+    fn ascent_26_6(&self) -> i32;
+    fn descent_26_6(&self) -> i32;
+}
+impl LayoutFont for CachedFont {
+    fn key(&self) -> crate::paper_font::FontKey {
+        self.key()
+    }
+    fn shared_bytes(&self) -> &std::sync::Arc<[u8]> {
+        self.shared_bytes()
+    }
+    fn covers_character(&self, ch: char) -> bool {
+        self.covers_character(ch)
+    }
+    fn shape_run(&self, text: &str, rtl: Option<bool>) -> Result<Vec<Glyph>, String> {
+        self.shape_run(text, rtl)
+    }
+    fn ascent_26_6(&self) -> i32 {
+        self.ascent_26_6()
+    }
+    fn descent_26_6(&self) -> i32 {
+        self.descent_26_6()
+    }
+}
+fn admit_font<F: LayoutFont>(
     owners: &mut Vec<(crate::paper_font::FontKey, usize)>,
-    font: &Rc<CachedFont>,
+    font: &Rc<F>,
 ) -> Result<(), String> {
     if owners.iter().any(|(key, _)| *key == font.key()) {
         return Ok(());
@@ -32,20 +62,41 @@ fn admit_font(
     owners.push((font.key(), font.shared_bytes().len()));
     Ok(())
 }
-#[derive(Debug, Clone)]
-pub struct FontRun {
+#[derive(Debug)]
+pub struct FontRun<F: LayoutFont = CachedFont> {
     pub rtl: bool,
-    pub font: Rc<CachedFont>,
+    pub font: Rc<F>,
     pub logical_bytes: Range<usize>,
     pub glyphs: Vec<Glyph>,
     pub x_26_6: i64,
 }
-#[derive(Debug, Clone)]
-pub struct VisualLine {
-    pub runs: Vec<FontRun>,
+#[derive(Debug)]
+pub struct VisualLine<F: LayoutFont = CachedFont> {
+    pub runs: Vec<FontRun<F>>,
     pub advance_26_6: i64,
     pub ascent_26_6: i32,
     pub descent_26_6: i32,
+}
+impl<F: LayoutFont> Clone for FontRun<F> {
+    fn clone(&self) -> Self {
+        Self {
+            rtl: self.rtl,
+            font: self.font.clone(),
+            logical_bytes: self.logical_bytes.clone(),
+            glyphs: self.glyphs.clone(),
+            x_26_6: self.x_26_6,
+        }
+    }
+}
+impl<F: LayoutFont> Clone for VisualLine<F> {
+    fn clone(&self) -> Self {
+        Self {
+            runs: self.runs.clone(),
+            advance_26_6: self.advance_26_6,
+            ascent_26_6: self.ascent_26_6,
+            descent_26_6: self.descent_26_6,
+        }
+    }
 }
 /// Borrow ordinary spans; admit the single discretionary replacement before allocating.
 fn discretionary_display(text: &str, broken: bool) -> Result<std::borrow::Cow<'_, str>, String> {
@@ -77,6 +128,25 @@ fn shape_line_with_level(
     text: &str,
     level: Option<unicode_bidi::Level>,
 ) -> Result<VisualLine, String> {
+    shape_line_with_provider_and_level(request, text, level, |request| {
+        Ok(resolver.resolve(request)?.font)
+    })
+}
+/// The provider owns its bounded face cache. A single shaping pass retains
+/// source bidi/script segmentation and per-character fallback at the chosen size.
+pub fn shape_line_with_provider<F: LayoutFont>(
+    request: &Request,
+    text: &str,
+    resolve: impl FnMut(Request) -> Result<Rc<F>, String>,
+) -> Result<VisualLine<F>, String> {
+    shape_line_with_provider_and_level(request, text, None, resolve)
+}
+fn shape_line_with_provider_and_level<F: LayoutFont>(
+    request: &Request,
+    text: &str,
+    level: Option<unicode_bidi::Level>,
+    mut resolve: impl FnMut(Request) -> Result<Rc<F>, String>,
+) -> Result<VisualLine<F>, String> {
     if text.len() > MAX_LINE_BYTES || text.contains('\n') || text.contains('\r') {
         return Err("Paper visual line domain exceeded".into());
     }
@@ -93,7 +163,7 @@ fn shape_line_with_level(
     };
     let mut base_request = request.clone();
     base_request.required_chars.clear();
-    let primary = resolver.resolve(base_request)?.font;
+    let primary = resolve(base_request)?;
     let mut owners = vec![];
     admit_font(&mut owners, &primary)?;
     let mut result = VisualLine {
@@ -107,7 +177,7 @@ fn shape_line_with_level(
         let (levels, visual) = bidi.visual_runs(paragraph, paragraph.range.clone());
         for range in visual {
             let rtl = levels[range.start].is_rtl();
-            let mut spans: Vec<(Range<usize>, Rc<CachedFont>, Option<u32>)> = vec![];
+            let mut spans: Vec<(Range<usize>, Rc<F>, Option<u32>)> = vec![];
             for (offset, ch) in text[range.clone()].char_indices() {
                 let start = range.start + offset;
                 let font = if ch.is_control() || primary.covers_character(ch) {
@@ -115,7 +185,7 @@ fn shape_line_with_level(
                 } else {
                     let mut fallback = request.clone();
                     fallback.required_chars = vec![ch];
-                    resolver.resolve(fallback)?.font
+                    resolve(fallback)?
                 };
                 admit_font(&mut owners, &font)?;
                 let script = unsafe {
