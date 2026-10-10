@@ -12,3 +12,6 @@ pub use submission::*;
 
 #[cfg(target_os = "macos")]
 pub mod presentation;
+
+#[cfg(target_os = "macos")]
+pub mod egui_painter;

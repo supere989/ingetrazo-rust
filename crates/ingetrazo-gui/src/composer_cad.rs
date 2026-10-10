@@ -215,12 +215,14 @@ impl Cache{
   Ok((self.geometry.as_ref().unwrap().clone(),self.batches.as_ref().unwrap().clone()))
  }
 }
+#[cfg(any(target_os="linux",target_os="windows"))]
 #[derive(Default)]pub struct NativeComposer{
  pub factory:Option<crate::native_vulkan::cad2d::Factory>,
  entries:std::collections::HashMap<uuid::Uuid,(Cache,Option<crate::native_vulkan::cad2d::Handle>)>,
  active:std::collections::HashSet<uuid::Uuid>,
  preview:(Cache,Option<crate::native_vulkan::cad2d::Handle>),
 }
+#[cfg(any(target_os="linux",target_os="windows"))]
 impl NativeComposer{
  pub fn clear_preview(&mut self){self.preview=Default::default();}
  pub fn paint_preview(&mut self,painter:&egui::Painter,shape:&SheetShape,zoom:f32,origin:Pos2)->Result<bool,String>{
@@ -242,6 +244,17 @@ impl NativeComposer{
   if let Some(handle)=handle{handle.update(g,b,pose)?;}else{*handle=Some(factory.handle(g,b,pose)?);}
   painter.add(handle.as_ref().unwrap().shape(painter.clip_rect()));Ok(true)
  }
+}
+// Metal precise CAD callback routing is not yet installed. The existing
+// application mesh path remains generic Color32 and cannot claim source AA.
+#[cfg(target_os="macos")]
+#[derive(Default)]pub struct NativeComposer;
+#[cfg(target_os="macos")]
+impl NativeComposer {
+ pub fn clear_preview(&mut self){}
+ pub fn retain_items(&mut self,_:&[ingetrazo_core::composition::SheetItem]){}
+ pub fn paint_preview(&mut self,_:&egui::Painter,_:&SheetShape,_:f32,_:Pos2)->Result<bool,String>{Ok(false)}
+ pub fn paint(&mut self,_:&egui::Painter,_:uuid::Uuid,_:&SheetShape,_:f32,_:Pos2)->Result<bool,String>{Ok(false)}
 }
 #[cfg(test)]mod tests{
  use super::*;

@@ -1473,6 +1473,7 @@ dependencies = [
  "image",
  "ingetrazo-core",
  "ingetrazo-formats",
+ "ingetrazo-metal",
  "ingetrazo-render",
  "ingetrazo-tools",
  "log",
@@ -1488,6 +1489,8 @@ dependencies = [
 name = "ingetrazo-metal"
 version = "0.3.15"
 dependencies = [
+ "blake3",
+ "egui",
  "ingetrazo-core",
  "objc2 0.6.5",
  "objc2-app-kit 0.3.2",
