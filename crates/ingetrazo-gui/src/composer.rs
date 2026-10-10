@@ -167,6 +167,10 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         let is_selected = selected_item == Some(idx);
 
         match item {
+            SheetItem::Shape(shape) => {
+                if let Err(error)=paint_sheet_shape(&painter,&shape.shape,zoom,paper_rect.min) {app.status_message=error;}
+                if is_selected {render_selection_box(&painter,rect_mm_to_screen(item.rect()));}
+            },
             SheetItem::ViewFrame(frame) => {
                 let fr = rect_mm_to_screen(frame.rect);
 
@@ -924,4 +928,37 @@ impl IngeTrazoApp {
  frame.view_key="scene:missing".into();assert_eq!(frame_camera_live(&scene,&frame,&live).target,live.target);
  scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Saved",&scene,&scene.camera));frame.view_key="scene:Saved".into();let snapshot=frame_scene(&scene,&frame);assert_eq!(frame_camera_live(&snapshot,&frame,&live).target,scene.camera.target);
  }
+}
+
+/// Physical shape commands are shared with export; screen projection happens once here.
+fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_shape::SheetShape,zoom:f32,origin:Pos2)->Result<(),String> {
+ use ingetrazo_core::sheet_shape::ShapePath;
+ fn color(value:&str,alpha:f64)->Result<Color32,String> {
+  let raw=value.strip_prefix('#').ok_or_else(||format!("Unsupported sheet colour: {value}"))?;
+  if raw.len()!=6{return Err(format!("Unsupported sheet colour: {value}"));}
+  let rgb=u32::from_str_radix(raw,16).map_err(|_|format!("Invalid sheet colour: {value}"))?;
+  Ok(Color32::from_rgba_unmultiplied((rgb>>16)as u8,(rgb>>8)as u8,rgb as u8,(alpha*255.).round()as u8))
+ }
+ let point=|p:glam::DVec2|origin+Vec2::new(((shape.x_mm+p.x)*f64::from(zoom))as f32,((shape.y_mm+p.y)*f64::from(zoom))as f32);
+ let commands=shape.paint_commands(100_000)?;
+ // Resolve all palette entries before touching the painter: a bad colour cannot half-paint an item.
+ let prepared=commands.iter().map(|c|Ok((c.stroke.as_ref().map(|(s,w)|color(s,1.).map(|v|Stroke::new(*w as f32*zoom,v))).transpose()?.unwrap_or(Stroke::NONE),c.fill.as_ref().map(|(s,a)|color(s,*a)).transpose()?.unwrap_or(Color32::TRANSPARENT)))).collect::<Result<Vec<_>,String>>()?;
+ for (command,(stroke,fill)) in commands.into_iter().zip(prepared) {
+  match command.path {
+   ShapePath::RoundedRect{size,radius}=>{let rect=Rect::from_two_pos(point(glam::DVec2::ZERO),point(size));painter.rect(rect,(radius*f64::from(zoom))as f32,fill,stroke);},
+   ShapePath::Ellipse{size}=>{let center=size/2.;let points=(0..96).map(|i|{let t=std::f64::consts::TAU*f64::from(i)/96.;point(center+glam::DVec2::new(center.x*t.cos(),center.y*t.sin()))}).collect();painter.add(egui::Shape::convex_polygon(points,fill,stroke));},
+   ShapePath::Polygon(points)=>{painter.add(egui::Shape::convex_polygon(points.into_iter().map(point).collect(),fill,stroke));},
+   ShapePath::Line(mut a,mut b)=>{
+    if let Some(clip)=command.clip {
+     let delta=b-a;let mut lo=0_f64;let mut hi=1_f64;
+     let area=clip.iter().zip(clip.iter().cycle().skip(1)).map(|(a,b)|a.perp_dot(*b)).sum::<f64>();let sign=area.signum();
+     for i in 0..clip.len() {let edge=clip[(i+1)%clip.len()]-clip[i];let base=sign*edge.perp_dot(a-clip[i]);let slope=sign*edge.perp_dot(delta);if slope.abs()<1e-12 {if base<0. {lo=1.;hi=0.;break;}}else {let t=-base/slope;if slope>0. {lo=lo.max(t);}else {hi=hi.min(t);}}}
+     if lo>hi {continue;}b=a+delta*hi;a+=delta*lo;
+    }
+    let points=[point(a),point(b)];painter.line_segment(points,stroke);
+    if stroke.width>0. {for p in points {painter.circle_filled(p,stroke.width/2.,stroke.color);}}
+   },
+  }
+ }
+ Ok(())
 }
