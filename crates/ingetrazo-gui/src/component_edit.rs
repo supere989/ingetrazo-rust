@@ -89,6 +89,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
         };
         let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
             || candidate.materials!=scene.materials || candidate.layers!=scene.layers
+            || candidate.embedded_textures!=scene.embedded_textures
             || session.definitions_baseline!=scene.component_definitions
             || session.mesh_share_baseline!=scene.mesh_shares
             || scene.dimensions!=session.dimension_baseline || scene.section_planes!=session.section_baseline
@@ -151,6 +152,10 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             }
             candidate.bump_version();
             candidate.materials=scene.materials.clone();candidate.layers=scene.layers.clone();
+            // Original context entry switches geometry only. Foreign clipboard
+            // images remain available after Finish and through mesh shareback
+            // Undo/Redo, just as the source extracted-file texture cache does.
+            candidate.embedded_textures=scene.embedded_textures.clone();
             if scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.dimension_frame.inverse();
                 candidate.dimensions=scene.dimensions.clone();
