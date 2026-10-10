@@ -22,7 +22,7 @@ pub fn add_segments(
     {
         return Err("Drawing coordinates must be finite".into());
     }
-    let paint_only=explicit.is_some_and(|ring|mesh.faces.iter().any(|face|{
+    let mut paint_only=explicit.is_some_and(|ring|mesh.faces.iter().any(|face|{
         let loops=planar::rings(mesh,face);let Ok(frame)=planar::Frame::new(&loops[0])else{return false;};
         ring.iter().all(|&p|frame.on_plane(p)&&(planar::inside_rings(frame.project(p),&loops.iter().map(|r|r.iter().map(|&p|frame.project(p)).collect()).collect::<Vec<_>>())||loops.iter().any(|r|(0..r.len()).any(|i|on_segment(p,r[i],r[(i+1)%r.len()])))))
     }));
@@ -38,6 +38,22 @@ pub fn add_segments(
         targets.push(id);
     }
     out = planar::split_edge_intersections(&out, &targets)?;
+    // Containment concerns the whole footprint, not only its corners. A band
+    // whose corners lie on the mother may cross a declared hole. Source
+    // AddFaceCommand refuses that carve, leaving the mother's attributes on
+    // the covered pieces instead of stamping paint-only authored metadata.
+    if paint_only {
+        paint_only = explicit.is_some_and(|ring| mesh.faces.iter().any(|face| {
+            let loops = planar::rings(mesh, face);
+            let Ok(frame) = planar::Frame::new(&loops[0]) else { return false; };
+            let projected: Vec<_> = loops.iter().map(|r| r.iter().map(|&p| frame.project(p)).collect()).collect();
+            let contains = |p: DVec3| frame.on_plane(p) && (planar::inside_rings(frame.project(p), &projected) || loops.iter().any(|r| (0..r.len()).any(|i| on_segment(p, r[i], r[(i+1)%r.len()]))));
+            ring.iter().all(|&p| contains(p)) && out.edges.iter().filter(|e| {
+                let a=out.vertices[e.v0].position; let b=out.vertices[e.v1].position;
+                (0..ring.len()).any(|i| on_segment(a,ring[i],ring[(i+1)%ring.len()]) && on_segment(b,ring[i],ring[(i+1)%ring.len()]))
+            }).all(|e| contains((out.vertices[e.v0].position+out.vertices[e.v1].position)*0.5))
+        }));
+    }
     if let Some(ring) = explicit {
         let ids = ring.iter().map(|&p| out.add_vertex(p)).collect();
         out.add_face(ids, vec![]).ok_or("Invalid drawing face")?;
@@ -292,6 +308,24 @@ mod tests {
     #[test]fn unrelated_spatial_vertices_do_not_supply_drafting_planes(){
         let mut m=Mesh::new();for i in 0..5000{m.add_vertex(DVec3::new(i as f64+10.,(i*i) as f64+10.,(i%17) as f64+1.));}let uid=m.vertices[4999].uid;
         let out=add_segments(&m,&[(DVec3::ZERO,DVec3::X)],None,None).unwrap();assert_eq!(out.edges.len(),1);assert!(out.faces.is_empty());assert!(out.vertices.iter().any(|v|v.uid==uid));
+    }
+    #[test]
+    fn rectangle_crossing_mother_hole_does_not_claim_paint_only_containment() {
+        let mut mesh=Mesh::new();
+        let outer=[(0.,0.),(4.,0.),(4.,4.),(0.,4.)].map(|(x,y)|mesh.add_vertex(DVec3::new(x,y,0.)));
+        let hole=[(1.,1.),(1.,3.),(3.,3.),(3.,1.)].map(|(x,y)|mesh.add_vertex(DVec3::new(x,y,0.)));
+        let f=mesh.add_face(outer.to_vec(),vec![hole.to_vec()]).unwrap();
+        mesh.faces[f].attrs.insert("vendor".into(),serde_json::json!(71));
+        mesh.faces[f].attrs.insert("color".into(),serde_json::json!([1,0,0]));
+        let ring=[DVec3::new(0.5,0.,0.),DVec3::new(2.,0.,0.),DVec3::new(2.,4.,0.),DVec3::new(0.5,4.,0.)];
+        let segments=(0..4).map(|i|(ring[i],ring[(i+1)%4])).collect::<Vec<_>>();
+        let out=add_segments(&mesh,&segments,Some(&ring),None).unwrap();
+        assert_eq!(out.faces.len(),4);
+        let painted:Vec<_>=out.faces.iter().enumerate().filter(|(_,f)|f.attrs.get("color").is_some()).collect();
+        assert_eq!(painted.len(),3);
+        assert!(painted.iter().all(|(_,f)|f.attrs.get("vendor")==Some(&serde_json::json!(71))));
+        assert!((painted.iter().map(|(i,_)|out.face_area(*i)).sum::<f64>()-12.).abs()<1e-9);
+        assert!(out.faces.iter().enumerate().any(|(i,f)|f.attrs.is_empty()&&(out.face_area(i)-2.).abs()<1e-9));
     }
     #[test]
     fn nonfinite_batch_is_atomic() {
