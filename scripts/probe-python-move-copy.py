@@ -37,7 +37,7 @@ for count,mode in [(3,"x"),(3,"/"),(2,"x")]:
  assert all(f.attrs["vendor"]==71 for f in vp.scene.mesh.faces)
  states.append({"count":count,"mode":mode,"faces":len(vp.scene.mesh.faces),"edges":len(vp.scene.mesh.edges),"face_start_x":starts,"undo":len(vp.history.undo_stack)})
 vp.history.undo();assert len(vp.scene.mesh.faces)==1
-rows.append({"name":"array-complete-face-retyping","states":states,"undo_restores_original":True})
+rows.append({"name":"array-complete-face-retyping","states":states,"undo_restores_original_faces":True,"edges_after_undo":len(vp.scene.mesh.edges),"original_edges":4,"source_orphan_boundary_edges_after_undo":len(vp.scene.mesh.edges)-4,"literal_topology_parity":False})
 vp=Viewport();vp.flash_status=lambda text:None;face=vp.scene.mesh.add_face([V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0)]);vp.scene.select([face]);t=MoveTool();vp.set_active_tool(t);t.on_click(N(viewport=vp,world=V(0,0,0),screen=QPointF(0,0)));t._copy=True;t.hover_point=V(3,0,0)
 parsed=vp._parse_value_buffer("3x200cm");assert parsed==("array",3,"x",2.)
 assert t.on_array_value(vp,parsed[1],parsed[2],step=parsed[3]);assert len(vp.history.undo_stack)==1
@@ -45,11 +45,19 @@ starts=sorted(min(p.x() for p in f.vertices) for f in vp.scene.mesh.faces);asser
 parsed=vp._parse_value_buffer("2*400cm");assert t.on_array_value(vp,parsed[1],parsed[2],step=parsed[3]);assert len(vp.history.undo_stack)==1
 starts=sorted(min(p.x() for p in f.vertices) for f in vp.scene.mesh.faces);assert starts==[0.,4.,8.]
 rows.append({"name":"spaced-array-current-drag-retype","face_start_x":starts,"undo":1,"source_units":"200cm then400cm"})
+vp=Viewport();vp.flash_status=lambda text:None;edge=vp.scene.mesh.add_edge(V(0,0,0),V(1,0,0));vp.scene.select([edge]);t=MoveTool();vp.set_active_tool(t);t.on_click(N(viewport=vp,world=V(0,0,0),screen=QPointF(0,0)))
+for y in (1.,2.):
+ t.on_hover(N(viewport=vp,world=V(0,y,0),screen=QPointF(0,0)));assert edge.a==V(0,y,0) and edge.b==V(1,y,0)
+ assert not vp.history.undo_stack
+assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier);assert edge.a==V(0,0,0) and edge.b==V(1,0,0);assert len(t.rubber_band_lines())==2
+assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier);assert edge.a==V(0,2,0)
+t.on_cancel(vp);assert edge.a==V(0,0,0) and edge.b==V(1,0,0) and not vp.history.undo_stack
+rows.append({"name":"live-preview-control-rollback","preview_absolute_y":[1.,2.],"control_on_restores_original":True,"control_off_restores_preview":True,"wireframe_lines":2,"cancel_restores_original":True,"undo":0})
 vp=Viewport();vp.flash_status=lambda text:None;t=MoveTool();vp.set_active_tool(t)
 assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier) and t._copy
 assert t.on_key(vp,Qt.Key_Control,Qt.ControlModifier) and not t._copy
 assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier) and t._copy
 t._reset();assert not t._copy
 rows.append({"name":"control-key-toggle","press_states":[True,False,True],"reset_consumes_copy":True})
-Path("docs/audits/move-copy-source-controls.json").write_text(json.dumps({"provenance":context(),"cases":rows,"scope":"Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Group/arrays/retyping/cancel remain separate."},indent=2)+"\n")
-print("Original Move copy holes/UV/flags and crossing topology PASS")
+Path("docs/audits/move-copy-source-controls.json").write_text(json.dumps({"provenance":context(),"cases":rows,"scope":"Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Controller face layout/attributes, Ctrl and preview rollback tested; original array ghost boundaries retained as literal topology failure. Group/rendered gesture acceptance remains separate."},indent=2)+"\n")
+print("Original Move controller checks recorded; literal array ghost-boundary mismatch retained")

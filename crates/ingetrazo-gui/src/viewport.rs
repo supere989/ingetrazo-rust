@@ -33,7 +33,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
     // Modifier release must retire the temporary lock even outside the canvas.
     app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor());
-    app.active_tool.note_control_state(ui.input(|i| i.modifiers.ctrl));
+    let model_version=app.scene.version;
+    app.active_tool.on_control_state(&mut app.scene,ui.input(|i| i.modifiers.ctrl));
+    if app.scene.version!=model_version{app.bump_model_revision();}
 
     // Zoom on wheel
     if scroll_delta != 0.0 && response.hovered() {
@@ -176,7 +178,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     });
                     app.dispatch_tool_click(&tool_ctx);
                 }
-                app.active_tool.on_move(&mut app.scene, &tool_ctx);
+                app.dispatch_tool_move(&tool_ctx);
                 if follow_me {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_context"), tool_ctx.clone())
@@ -212,7 +214,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         if app.paste_preview.is_some() {
             app.cancel_paste_preview();
         } else {
-            app.active_tool.on_cancel(&mut app.scene);
+            let version=app.scene.version;app.active_tool.on_cancel(&mut app.scene);
+            if app.scene.version!=version{app.bump_model_revision();}
         }
         ui.ctx().data_mut(|data| {
             data.remove::<egui::Pos2>(response.id.with("followme_press"));

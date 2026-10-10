@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "f8787f6bcbb8e3100caad51bc6cd23ad27a4a749",
+    "rust_commit": "a4b4dc13f6630d50eec4c871830012afc08bcd36",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -85,7 +85,11 @@
           "undo": 1
         }
       ],
-      "undo_restores_original": true
+      "undo_restores_original_faces": true,
+      "edges_after_undo": 24,
+      "original_edges": 4,
+      "source_orphan_boundary_edges_after_undo": 20,
+      "literal_topology_parity": false
     },
     {
       "name": "spaced-array-current-drag-retype",
@@ -98,6 +102,18 @@
       "source_units": "200cm then400cm"
     },
     {
+      "name": "live-preview-control-rollback",
+      "preview_absolute_y": [
+        1.0,
+        2.0
+      ],
+      "control_on_restores_original": true,
+      "control_off_restores_preview": true,
+      "wireframe_lines": 2,
+      "cancel_restores_original": true,
+      "undo": 0
+    },
+    {
       "name": "control-key-toggle",
       "press_states": [
         true,
@@ -107,5 +123,5 @@
       "reset_consumes_copy": true
     }
   ],
-  "scope": "Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Group/arrays/retyping/cancel remain separate."
+  "scope": "Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Controller face layout/attributes, Ctrl and preview rollback tested; original array ghost boundaries retained as literal topology failure. Group/rendered gesture acceptance remains separate."
 }
