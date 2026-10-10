@@ -611,6 +611,9 @@ fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
 
 pub fn save_igz_format1(scene: &Scene, path: &Path) -> Result<(), IgzError> {
     validate_native_save(scene)?;
+    if !scene.embedded_textures.is_empty() {
+        return Err(IgzError::InvalidDocument("plain JSON cannot preserve embedded archive assets; use ZIP format".into()));
+    }
     let envelope = IgzEnvelope {
         igz_format: 1,
         app_version: "0.3.15".to_string(),
@@ -642,12 +645,18 @@ pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
             if p.exists() {
                 if let Ok(data) = std::fs::read(p) {
                     let filename = p.file_name().unwrap_or_default().to_string_lossy();
-                    let entry_name = format!("textures/{filename}");
-                    if written.insert(entry_name.clone()) {
-                        zip.start_file(&entry_name, options)?;
-                        zip.write_all(&data)?;
+                    let base_name=format!("textures/{filename}");
+                    let mut entry_name=base_name.clone();
+                    let mut suffix=1;
+                    while written.contains(&entry_name) {
+                        entry_name=format!("{base_name}.{suffix}");
+                        suffix+=1;
                     }
-                    mat.texture_path = Some(entry_name);
+                    written.insert(entry_name.clone());
+                    zip.start_file(&entry_name,options)?;
+                    zip.write_all(&data)?;
+                    mat.texture_embed=Some(entry_name.clone());
+                    mat.texture_path=Some(entry_name);
                 }
             }
         }
@@ -667,12 +676,23 @@ pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
 }
 
 pub fn save_igz(scene: &Scene, path: &Path) -> Result<(), IgzError> {
-    let has_texture = scene.materials.values().any(|m| m.texture_path.is_some());
-    if has_texture || !scene.embedded_textures.is_empty() {
-        save_igz_format2(scene, path)
-    } else {
-        save_igz_format1(scene, path)
+    // Write next to the destination so a successful rename replaces it
+    // atomically. Failed JSON/asset/ZIP writes never truncate the original.
+    let parent=path.parent().filter(|p|!p.as_os_str().is_empty()).unwrap_or_else(||Path::new("."));
+    let temp=parent.join(format!(".ingetrazo-save-{}.tmp",uuid::Uuid::new_v4()));
+    let has_texture=scene.materials.values().any(|m|m.texture_path.is_some());
+    let result=if has_texture || !scene.embedded_textures.is_empty() {
+        save_igz_format2(scene,&temp)
+    } else {save_igz_format1(scene,&temp)};
+    if let Err(err)=result {
+        let _=std::fs::remove_file(&temp);
+        return Err(err);
     }
+    if let Err(err)=std::fs::rename(&temp,path) {
+        let _=std::fs::remove_file(&temp);
+        return Err(err.into());
+    }
+    Ok(())
 }
 
 pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {

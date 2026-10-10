@@ -245,3 +245,20 @@ fn explicit_components_share_updates_while_plain_proto_groups_remain_independent
     assert_ne!(reopened.groups[0].component_definition,reopened.groups[1].component_definition);
     std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
+
+
+#[test]
+fn texture_files_with_same_basename_get_distinct_archive_entries() {
+    use ingetrazo_core::{scene::Scene,materials::Material};
+    let dir=temp("textures");std::fs::create_dir_all(dir.join("a")).unwrap();std::fs::create_dir_all(dir.join("b")).unwrap();
+    let a=dir.join("a/paint.png");let b=dir.join("b/paint.png");
+    std::fs::write(&a,[1,2,3]).unwrap();std::fs::write(&b,[4,5,6]).unwrap();
+    let mut scene=Scene::new();scene.materials.insert("a".into(),Material::with_texture("a",a.to_string_lossy()));
+    scene.materials.insert("b".into(),Material::with_texture("b",b.to_string_lossy()));
+    let dst=dir.join("saved.igz");save_igz(&scene,&dst).unwrap();let reopened=load_igz(&dst).unwrap();
+    let ea=reopened.materials["a"].texture_embed.as_ref().unwrap();let eb=reopened.materials["b"].texture_embed.as_ref().unwrap();
+    assert_ne!(ea,eb);assert_eq!(reopened.embedded_textures[ea],vec![1,2,3]);assert_eq!(reopened.embedded_textures[eb],vec![4,5,6]);
+    let plain=dir.join("plain.igz");std::fs::write(&plain,b"original").unwrap();
+    assert!(ingetrazo_formats::igz::save_igz_format1(&reopened,&plain).is_err());assert_eq!(std::fs::read(&plain).unwrap(),b"original");
+    std::fs::remove_dir_all(dir).unwrap();
+}
