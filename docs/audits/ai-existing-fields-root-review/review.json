@@ -1,0 +1,11 @@
+{
+  "candidate": "ccb7e7a5f93406fa38c721d629b845bf35916883",
+  "fresh_original_matches": true,
+  "root_native_replay": false,
+  "integration": "held pending source-review findings",
+  "findings": [
+    "Projection checks membership extent but not stable Vertex/Face identity order; equal-length reorder/replacement can violate native ID correspondence.",
+    "Existing-field projection runs only when staged append entries are empty; mixed raw field edit and append can publish while skipping existing-field projection."
+  ],
+  "required": "Integrate both mutation classes under one atomic identity-aware command; until supported, refuse and restore unsupported combinations rather than silently diverge. Actual native Undo/Redo remains unimplemented."
+}
