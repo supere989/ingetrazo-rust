@@ -1,0 +1,8 @@
+{
+  "source": "original.json",
+  "native_artifact_sha256": "63fac339201c14d154ccf298b52e693590732adcaa28db86650327af733d0842",
+  "states_exact": 6,
+  "empty_history_control_reported": true,
+  "boundary": "Comparison of retained worker output with independently regenerated source; native frozen-source build provenance and root execution remain pending.",
+  "full_parity": false
+}
