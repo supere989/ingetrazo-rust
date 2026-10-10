@@ -42,7 +42,11 @@ impl World {
   let depth_format=[vk::Format::D24_UNORM_S8_UINT,vk::Format::D32_SFLOAT_S8_UINT].into_iter().find(|f|unsafe {context.instance.get_physical_device_format_properties(context.physical_device,*f)}.optimal_tiling_features.contains(vk::FormatFeatureFlags::DEPTH_STENCIL_ATTACHMENT)).ok_or("No supported depth/stencil format")?;
   let limits=unsafe {context.instance.get_physical_device_properties(context.physical_device)}.limits;
   let counts=limits.framebuffer_color_sample_counts&limits.framebuffer_depth_sample_counts&limits.framebuffer_stencil_sample_counts;
-  let samples=if counts.contains(vk::SampleCountFlags::TYPE_4){vk::SampleCountFlags::TYPE_4}else if counts.contains(vk::SampleCountFlags::TYPE_2){vk::SampleCountFlags::TYPE_2}else{vk::SampleCountFlags::TYPE_1};
+  let color_samples=unsafe {context.instance.get_physical_device_image_format_properties(context.physical_device,vk::Format::R8G8B8A8_SRGB,vk::ImageType::TYPE_2D,vk::ImageTiling::OPTIMAL,vk::ImageUsageFlags::COLOR_ATTACHMENT,vk::ImageCreateFlags::empty())}.map_err(|e|format!("World color image format unavailable: {e}"))?.sample_counts;
+  let depth_samples=unsafe {context.instance.get_physical_device_image_format_properties(context.physical_device,depth_format,vk::ImageType::TYPE_2D,vk::ImageTiling::OPTIMAL,vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT,vk::ImageCreateFlags::empty())}.map_err(|e|format!("World depth/stencil image format unavailable: {e}"))?.sample_counts;
+  let resolve_samples=unsafe {context.instance.get_physical_device_image_format_properties(context.physical_device,vk::Format::R8G8B8A8_SRGB,vk::ImageType::TYPE_2D,vk::ImageTiling::OPTIMAL,vk::ImageUsageFlags::COLOR_ATTACHMENT|vk::ImageUsageFlags::SAMPLED,vk::ImageCreateFlags::empty())}.map_err(|e|format!("World sampled resolve format unavailable: {e}"))?.sample_counts;
+  if !resolve_samples.contains(vk::SampleCountFlags::TYPE_1){return Err("World resolve image does not support one sample".into());}
+  let samples=select_sample_count(counts,color_samples,depth_samples)?;
   eprintln!("Native world MSAA: {:?} (original default4; unsupported fallback remains explicit)",samples);
   let multisampled=samples!=vk::SampleCountFlags::TYPE_1;
   let mut attachments=vec![vk::AttachmentDescription::default().format(vk::Format::R8G8B8A8_SRGB).samples(samples).load_op(vk::AttachmentLoadOp::CLEAR).store_op(if multisampled{vk::AttachmentStoreOp::DONT_CARE}else{vk::AttachmentStoreOp::STORE}).initial_layout(vk::ImageLayout::UNDEFINED).final_layout(if multisampled{vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL}else{vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL})];
@@ -177,5 +181,19 @@ pub fn verify_image_view_failure_rollback(context:&VulkanContext,budget:Arc<Vulk
   let a=vk::Pipeline::from_raw(42);let b=vk::Pipeline::from_raw(43);let mut destroyed=vec![];
   release_partial_pipelines(vec![a,vk::Pipeline::null(),b],|p|destroyed.push(p));
   assert_eq!(destroyed,vec![a,b]);
+ }
+}
+
+fn select_sample_count(global:vk::SampleCountFlags,color:vk::SampleCountFlags,depth:vk::SampleCountFlags)->Result<vk::SampleCountFlags,String> {
+ let common=global&color&depth;
+ [vk::SampleCountFlags::TYPE_4,vk::SampleCountFlags::TYPE_2,vk::SampleCountFlags::TYPE_1].into_iter().find(|samples|common.contains(*samples)).ok_or("No compatible world color/depth/stencil sample count".into())
+}
+#[cfg(test)]mod sample_count_regression {
+ use super::*;
+ #[test]fn format_support_limits_global_msaa_without_allocating_invalid_images(){
+  let all=vk::SampleCountFlags::TYPE_1|vk::SampleCountFlags::TYPE_2|vk::SampleCountFlags::TYPE_4;
+  assert_eq!(select_sample_count(all,all,vk::SampleCountFlags::TYPE_1|vk::SampleCountFlags::TYPE_2).unwrap(),vk::SampleCountFlags::TYPE_2);
+  assert_eq!(select_sample_count(all,vk::SampleCountFlags::TYPE_1,all).unwrap(),vk::SampleCountFlags::TYPE_1);
+  assert!(select_sample_count(all,vk::SampleCountFlags::TYPE_4,vk::SampleCountFlags::TYPE_2).is_err());
  }
 }
