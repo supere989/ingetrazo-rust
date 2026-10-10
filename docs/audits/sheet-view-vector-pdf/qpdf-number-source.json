@@ -1,0 +1,8 @@
+{
+  "url": "https://raw.githubusercontent.com/qt/qtbase/v6.11.0/src/gui/painting/qpdf.cpp",
+  "sha256": "ccd12fea8fc9824d0a3f7a676abace2e27d9eeebdb427c409b1b153ebba4bd30",
+  "function": "qt_real_to_string",
+  "source_inspection_version": "6.11.0",
+  "operative_Qt_version": "6.12.0",
+  "compatibility_evidence": "Eight actual Qt6.12 QPdfWriter output controls; no claim that different source tags are identical globally."
+}
