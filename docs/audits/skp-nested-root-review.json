@@ -1,0 +1,29 @@
+{
+  "source": "ee142abeac35bc31cb246b483f710abf5103017c",
+  "retained_artifact_digests_verified": true,
+  "independent_exact_comparisons": [
+    "SU_File-comparison.json",
+    "hole-paint-layer-comparison.json",
+    "inherited-paint-comparison.json",
+    "nested-equal-paint-protos-comparison.json",
+    "nested-fractional-transform-comparison.json",
+    "nested-inherited-paint-comparison.json",
+    "nested-proto-in-proto-comparison.json",
+    "nested-reflected-scaled-comparison.json",
+    "nested-shared-child-comparison.json",
+    "nested-shared-parent-comparison.json",
+    "nested-single-container-comparison.json",
+    "nested-tagged-flat-comparison.json",
+    "nested-tagged-shared-comparison.json",
+    "shared-eight-comparison.json",
+    "single-definition-comparison.json",
+    "small-two-flat-comparison.json"
+  ],
+  "comparison_count": 16,
+  "scope": "Real and controlled nested VFF document observations; texture refusal remains separate; legacy and full importer parity open",
+  "source_review": [
+    "Reachable graph census validates cycles and composed coordinate storage",
+    "Subtree polygon counts and tagged extraction precede prototype grouping",
+    "Content-folding canonicalizes recipe key order"
+  ]
+}
