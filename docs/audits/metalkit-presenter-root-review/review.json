@@ -3,5 +3,19 @@
   "source_review": "Diagnostic-only example changes framework view/draw scheduling, retains native device/queue and strict completed-command plus positive presentedTime requirement. No production rendering fallback.",
   "bounds": "Three pending frames,15s event-loop deadline, unresolved complete owners quarantined; CI outer process timeout required.",
   "next_experiment": "Manual-only ARM/Intel workflow. Pair framework probe with existing bounded custom clear presenter on same runner/session to avoid historical-run confounding. Retain both identities, logs, JSON, binary/source hashes even on failure.",
-  "acceptance": "Native link/runtime pending. Cross-target metadata compilation does not prove presentation. No platform gate promoted."
+  "acceptance": "Native link/runtime pending. Cross-target metadata compilation does not prove presentation. No platform gate promoted.",
+  "workflow_review": {
+    "state": "Draft read; not dispatched",
+    "accepted_controls": [
+      "workflow_dispatch only",
+      "ARM and Intel matrix with fail-fast disabled",
+      "45s subprocess bound outside15s fixture bound",
+      "always retain source SDK build runtime and binary evidence"
+    ],
+    "requested_before_dispatch": [
+      "Pair existing custom presenter on same runner/session",
+      "Explicitly reject non-null fixture error",
+      "Report actual queue device identity or relabel current device field accurately"
+    ]
+  }
 }
