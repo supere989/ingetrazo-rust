@@ -18,9 +18,11 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         let mut duplicate_sheet_idx = None;
         let mut delete_sheet_idx = None;
 
+        if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-sheet-tabs"),Vec::<egui::Rect>::new()));}
         for (idx, sheet) in app.scene.sheets.iter().enumerate() {
             let is_active = app.scene.active_sheet_index == Some(idx);
             let tab_resp = ui.selectable_label(is_active, &sheet.name);
+            if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{let mut tabs=d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-sheet-tabs")).unwrap_or_default();tabs.push(tab_resp.rect);d.insert_temp(egui::Id::new("pdf-ui-sheet-tabs"),tabs);});}
             if tab_resp.clicked() {
                 switch_to_sheet = Some(idx);
             }

@@ -5,6 +5,8 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")  # Reader stays headless; native Vulkan/XTEST use their owned X server.
 text_source=os.environ.get("INGETRAZO_PDF_UI_FIELD_OBSERVATIONS") or os.environ.get("INGETRAZO_PDF_UI_TEXT_OBSERVATIONS")
 field_mode=bool(os.environ.get("INGETRAZO_PDF_UI_FIELD_OBSERVATIONS"))
+canvas_mode=os.environ.get('INGETRAZO_PDF_UI_CANVAS_FIELDS')=='1'
+literal_control=os.environ.get('INGETRAZO_PDF_UI_CANVAS_LITERAL_CONTROL')=='1'
 text_cases=json.loads(Path(text_source).read_text())["cases"] if text_source else None
 unsupported=os.environ.get("INGETRAZO_PDF_UI_UNSUPPORTED")=="1"
 out=Path(os.environ.get("INGETRAZO_PDF_UI_EVIDENCE","docs/audits/composer-pdf-ui"+("-unsupported" if unsupported else "")));out.mkdir(exist_ok=True);(out/"state.json").unlink(missing_ok=True)
@@ -78,6 +80,13 @@ with tempfile.TemporaryDirectory() as runtime:
   border_gestures=None
   if field_mode:
    before=state();assert before["border"]["on"] is False and before["border"]["color"]=="#1e242c"
+   canvas_before=None
+   if canvas_mode:
+    if not literal_control:
+     expected=json.loads(Path(text_source).read_text())['before_equal_second']
+     click(before['sheet_tabs'][1]);canvas_before=wait(lambda:state()if state()['active_sheet']==1 and state()['canvas_text']==[expected]else None);capture('canvas-equal-second-before')
+     count=canvas_before['field_index_computations'];time.sleep(.15);assert state()['field_index_computations']==count
+     click(canvas_before['sheet_tabs'][0]);wait(lambda:state()['active_sheet']==0)
    click(before["border_menu"]);controls=wait(lambda:state().get("border_controls"));capture("border-menu-before")
    click(controls[0]);wait(lambda:state()["border"]["on"] is True)
    click(controls[1]);key(ord('a'),0xffe3)
@@ -91,7 +100,13 @@ with tempfile.TemporaryDirectory() as runtime:
    key(ord('y'),0xffe3);redone=wait(lambda:state() if state()["border"]["on"] is False and state()["border"]["color"]=='#ffffff' else None);capture("border-redo")
    assert any('key: Z' in event['event'] and 'ctrl: true' in event['event'] and event['final_frame_modifiers']=='Modifiers::NONE'for event in redone['history_key_events'])
    assert any('key: Y' in event['event'] and 'ctrl: true' in event['event'] and event['final_frame_modifiers']=='Modifiers::NONE'for event in redone['history_key_events'])
-   border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
+   canvas_states=[]
+   if canvas_mode:
+    for i in [1,2,0]:
+     click(state()['sheet_tabs'][i]);observed=wait(lambda:state()if state()['active_sheet']==i and state()['canvas_text']==[text_cases[i]['expanded']]else None);capture('canvas-sheet-'+str(i+1));canvas_states.append(observed)
+     count=observed['field_index_computations'];time.sleep(.15);assert state()['field_index_computations']==count
+    redone=state()
+   border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"canvas_before":canvas_before,"canvas_states":canvas_states,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
   current_path=out.resolve()/"current.pdf";all_path=out.resolve()/"all.pdf"
   if unsupported:
    current_path.write_bytes(b"existing destination current");all_path.write_bytes(b"existing destination all")
