@@ -16,5 +16,10 @@
     "sha256": "adfc569d5152e82d1b0716fc0d904c238dbd8dc188deec7ec4dc9c0760643397",
     "function": "QFontEngine::subPixelPositionFor",
     "policy": "FT engine uses four horizontal phases; (fraction + 1/64) floors to quarter phase."
+  },
+  "fixed_source": {
+    "url": "https://raw.githubusercontent.com/qt/qtbase/6.12/src/gui/painting/qfixed_p.h",
+    "sha256": "48d3b750415c99e4d9118a9ca1d212ca15d5ca1094dcfb4a63766c2d01ad6651",
+    "policy": "QFixed::fromReal truncates real times64 toward zero; round() is floor((fixed+32)/64)."
   }
 }
