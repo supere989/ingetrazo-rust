@@ -1,0 +1,189 @@
+{
+  "passed": false,
+  "reader": "1.4.4",
+  "tolerance_metres": 2e-05,
+  "cases": [
+    {
+      "name": "front_box",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 12
+    },
+    {
+      "name": "front_box",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 15
+    },
+    {
+      "name": "hidden_layer_face",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 12
+    },
+    {
+      "name": "hidden_layer_face",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 15
+    },
+    {
+      "name": "hidden_layer_group",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 12
+    },
+    {
+      "name": "hidden_layer_group",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 15
+    },
+    {
+      "name": "hollow_cap",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 12,
+      "native_lines": 22
+    },
+    {
+      "name": "hollow_cap",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 12,
+      "native_lines": 35
+    },
+    {
+      "name": "iso_box",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "iso_box",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 15,
+      "native_lines": 15
+    },
+    {
+      "name": "nested_reflected_box",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "nested_reflected_box",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 15,
+      "native_lines": 15
+    },
+    {
+      "name": "open_cut_chain",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 2,
+      "native_lines": 4
+    },
+    {
+      "name": "open_cut_chain",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 2,
+      "native_lines": 4
+    },
+    {
+      "name": "partial_rear_line",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 6,
+      "native_lines": 5
+    },
+    {
+      "name": "partial_rear_line",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 7,
+      "native_lines": 5
+    },
+    {
+      "name": "section_board",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 6,
+      "native_lines": 19
+    },
+    {
+      "name": "section_board",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 6,
+      "native_lines": 32
+    },
+    {
+      "name": "soft_cylinder_silhouette",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 28,
+      "native_lines": 28
+    },
+    {
+      "name": "soft_cylinder_silhouette",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 36,
+      "native_lines": 36
+    },
+    {
+      "name": "soft_reflected_silhouette",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 28,
+      "native_lines": 28
+    },
+    {
+      "name": "soft_reflected_silhouette",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 36,
+      "native_lines": 36
+    },
+    {
+      "name": "top_box",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 12
+    },
+    {
+      "name": "top_box",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 15
+    },
+    {
+      "name": "wall_hidden",
+      "hidden": false,
+      "passed": false,
+      "original_lines": 4,
+      "native_lines": 22
+    },
+    {
+      "name": "wall_hidden",
+      "hidden": true,
+      "passed": false,
+      "original_lines": 7,
+      "native_lines": 32
+    }
+  ]
+}

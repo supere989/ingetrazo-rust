@@ -48,3 +48,18 @@ pub fn write_view_dxf(mut out: impl Write, groups: &[ViewLayer<'_>]) -> io::Resu
     write!(out, "0\nENDSEC\n0\nEOF\n")?;
     Ok(count)
 }
+
+/// Same-directory transactional replacement; failures leave existing destination intact.
+pub fn save_view_dxf(path:&std::path::Path,groups:&[ViewLayer<'_>])->io::Result<usize> {
+    let parent=path.parent().filter(|p|!p.as_os_str().is_empty()).unwrap_or_else(||std::path::Path::new("."));
+    let temp=parent.join(format!(".ingetrazo-view-{}.tmp",uuid::Uuid::new_v4()));
+    let result=(||{
+        let file=std::fs::OpenOptions::new().write(true).create_new(true).open(&temp)?;
+        let mut writer=io::BufWriter::new(file);
+        let count=write_view_dxf(&mut writer,groups)?;writer.flush()?;writer.get_ref().sync_all()?;
+        drop(writer);std::fs::rename(&temp,path)?;
+        Ok(count)
+    })();
+    if result.is_err(){let _=std::fs::remove_file(&temp);}
+    result
+}

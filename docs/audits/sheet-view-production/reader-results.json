@@ -1,0 +1,197 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "96a74f76a690b5a1c4a213e82fff5c955c1295d3",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "fixture_sha256": "358e83c20124efdb7e2a7b08f5c361e0ff8a3ed3476fa28fe6c085e5d598c87b",
+  "reader": "1.4.4",
+  "tolerance_metres": 2e-05,
+  "cases": [
+    {
+      "name": "front_box",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "front_box",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_face",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_face",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_group",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_group",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hollow_cap",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "hollow_cap",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "iso_box",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "iso_box",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 15,
+      "native_lines": 15
+    },
+    {
+      "name": "nested_reflected_box",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "nested_reflected_box",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 15,
+      "native_lines": 15
+    },
+    {
+      "name": "open_cut_chain",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 2,
+      "native_lines": 2
+    },
+    {
+      "name": "open_cut_chain",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 2,
+      "native_lines": 2
+    },
+    {
+      "name": "partial_rear_line",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 6,
+      "native_lines": 6
+    },
+    {
+      "name": "partial_rear_line",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 7,
+      "native_lines": 7
+    },
+    {
+      "name": "section_board",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 6,
+      "native_lines": 6
+    },
+    {
+      "name": "section_board",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 6,
+      "native_lines": 6
+    },
+    {
+      "name": "soft_cylinder_silhouette",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 28,
+      "native_lines": 28
+    },
+    {
+      "name": "soft_cylinder_silhouette",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 36,
+      "native_lines": 36
+    },
+    {
+      "name": "soft_reflected_silhouette",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 28,
+      "native_lines": 28
+    },
+    {
+      "name": "soft_reflected_silhouette",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 36,
+      "native_lines": 36
+    },
+    {
+      "name": "top_box",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "top_box",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "wall_hidden",
+      "hidden": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "wall_hidden",
+      "hidden": true,
+      "passed": true,
+      "original_lines": 7,
+      "native_lines": 7
+    }
+  ],
+  "scope": "Fresh original HLR/source writer and actual native saved-frame export. Camera-plane metres/class endpoints, stable cached worker PIDs and selection/I/O failures. Actual UI gesture and PDF/image remain open."
+}

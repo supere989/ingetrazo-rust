@@ -903,9 +903,7 @@ impl IngeTrazoApp {
         }else{tr("View")};
         let names=[title.clone(),format!("{title}-PERFIL"),format!("{title}-CORTE"),format!("{title}-OCULTAS")];
         let groups=(0..if frame.hidden_lines{4}else{3}).map(|i|ingetrazo_formats::sheet_dxf::ViewLayer{name:&names[i],segments:&classes[i],dashed:i==3}).collect::<Vec<_>>();
-        // Finish worker computation and coordinate validation before touching destination bytes.
-        let mut bytes=Vec::new();let count=ingetrazo_formats::sheet_dxf::write_view_dxf(&mut bytes,&groups).map_err(|e|e.to_string())?;
-        std::fs::write(path,bytes).map_err(|e|e.to_string())?;
+        let count=ingetrazo_formats::sheet_dxf::save_view_dxf(path,&groups).map_err(|e|e.to_string())?;
         Ok(count)
     }
 }
