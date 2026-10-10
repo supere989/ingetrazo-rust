@@ -36,12 +36,14 @@ jobs:
       - name: Validate native CoreText face identity and warm ownership
         run: cargo run --locked -p ingetrazo-formats --example paper_coretext_provider_fixture -j2 > raw-metal-evidence/coretext.json 2> raw-metal-evidence/coretext-build.log
       - name: Capture original macOS painter and compare native face identity
+        if: ${{ !cancelled() }}
         run: |
           python3 -m venv /tmp/ingetrazo-macos-font-oracle
           /tmp/ingetrazo-macos-font-oracle/bin/python -m pip install 'PySide6==6.12.0' fonttools numpy > raw-metal-evidence/oracle-install.log 2>&1
           /tmp/ingetrazo-macos-font-oracle/bin/python scripts/probe-original-macos-paper-fonts.py raw-metal-evidence/original-fonts > raw-metal-evidence/oracle.log 2>&1
           /tmp/ingetrazo-macos-font-oracle/bin/python scripts/check-macos-paper-font-matches.py raw-metal-evidence/original-fonts/original-macos-fonts.json raw-metal-evidence/coretext.json > raw-metal-evidence/font-match.json 2> raw-metal-evidence/font-match.log
       - name: Capture actual application Canvas window
+        if: ${{ !cancelled() }}
         run: python3 scripts/check-metal-canvas-host.py target/debug/examples/native_metal_document_probe raw-metal-evidence/canvas-host
       - uses: actions/upload-artifact@v4
         if: always()

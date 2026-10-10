@@ -83,7 +83,7 @@ pub(super) fn match_font(request:&Request)->Result<(PathBuf,i32,FtPolicy,Option<
  for index in 0..count{
   let face=ttf_parser::Face::parse(&bytes,index).map_err(|_|"Invalid CoreText font face")?;
   if face.names().into_iter().any(|n|super::sfnt_postscript_name(n).as_deref()==Some(postscript.as_str())){
-   if face.is_bold()!=request.bold||face.is_italic()!=request.italic{return Err("CoreText style requires unsupported synthetic or variable face traits".into())}
+   if face.is_bold()!=request.bold||face.is_italic()!=request.italic{return Err(format!("CoreText selected {postscript:?} at {} face {index}: requested bold={} italic={}, file bold={} italic={}, OS/2 present={}, italic_angle={}; synthetic or variable traits remain unsupported",path.display(),request.bold,request.italic,face.is_bold(),face.is_italic(),face.tables().os2.is_some(),face.italic_angle()))}
    if !request.required_chars.iter().all(|ch|face.glyph_index(*ch).is_some()){return Err("CoreText file face does not cover its matched character set".into())}
    return Ok((path,index as i32,FtPolicy{hinting:Hinting::None,force_auto_hint:false},Some(std::sync::Arc::from(bytes))))
   }
