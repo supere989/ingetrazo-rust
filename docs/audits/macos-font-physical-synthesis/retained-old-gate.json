@@ -1,0 +1,45 @@
+{
+  "passed": false,
+  "matched": [
+    "helvetica",
+    "helvetica-bold",
+    "helvetica-italic",
+    "cjk",
+    "arabic"
+  ],
+  "cases": [
+    {
+      "name": "helvetica",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "helvetica-bold",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "helvetica-italic",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "times-bold-italic",
+      "passed": false,
+      "errors": [
+        "requested style mismatch"
+      ]
+    },
+    {
+      "name": "cjk",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "arabic",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "scope": "Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"
+}
