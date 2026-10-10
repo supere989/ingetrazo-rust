@@ -191,21 +191,38 @@ impl ImagePlaneList{
     pub fn truncate(&mut self,n:usize){if n<self.planes.len(){self.planes.truncate(n);self.changed();}}
     /// Unrestricted slice edits conservatively invalidate membership.
     pub fn poses_mut(&mut self)->&mut [ImagePlane]{self.changed();&mut self.planes}
-    /// Guarded single-object edits preserve warm pose performance and detect
-    /// identity changes or whole-object replacement on release.
+    /// Restricted frame mutation cannot change UUID or replace an object,
+    /// even when the returned handle is forgotten instead of dropped.
     pub fn pose_mut(&mut self,index:usize)->Option<ImagePoseGuard<'_>>{
-        let plane=self.planes.get_mut(index)?;let original_id=plane.id;
-        Some(ImagePoseGuard{plane,original_id,epoch:&self.epoch})
+        Some(ImagePoseGuard{plane:self.planes.get_mut(index)?})
     }
     pub fn iter_mut(&mut self)->std::slice::IterMut<'_,ImagePlane>{self.changed();self.planes.iter_mut()}
 }
 impl<'a> IntoIterator for &'a ImagePlaneList{type Item=&'a ImagePlane;type IntoIter=std::slice::Iter<'a,ImagePlane>;fn into_iter(self)->Self::IntoIter{self.planes.iter()}}
 impl<'a> IntoIterator for &'a mut ImagePlaneList{type Item=&'a mut ImagePlane;type IntoIter=std::slice::IterMut<'a,ImagePlane>;fn into_iter(self)->Self::IntoIter{self.changed();self.planes.iter_mut()}}
 
-pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane,original_id:uuid::Uuid,epoch:&'a std::sync::atomic::AtomicU64}
+/// Pose-only mutable access. Identity/whole-object writes require the list's
+/// conservatively invalidating mutation APIs.
+/// ```compile_fail
+/// use ingetrazo_core::image_plane::{ImagePlaneList,ImagePlane};
+/// let mut planes=ImagePlaneList::default();
+/// let id=planes[0].id;
+/// let mut pose=planes.pose_mut(0).unwrap();
+/// pose.id=id;
+/// ```
+/// ```compile_fail
+/// use ingetrazo_core::image_plane::{ImagePlaneList,ImagePlane};
+/// let mut planes=ImagePlaneList::default();
+/// let replacement=planes[0].clone();
+/// let mut pose=planes.pose_mut(0).unwrap();
+/// *pose=replacement;
+/// ```
+pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane}
 impl std::ops::Deref for ImagePoseGuard<'_>{type Target=ImagePlane;fn deref(&self)->&ImagePlane{self.plane}}
-impl std::ops::DerefMut for ImagePoseGuard<'_>{fn deref_mut(&mut self)->&mut ImagePlane{self.plane}}
-impl Drop for ImagePoseGuard<'_>{fn drop(&mut self){if self.plane.id!=self.original_id{self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}}}
+impl ImagePoseGuard<'_>{
+    pub fn set_origin(&mut self,origin:DVec3){self.plane.origin=origin;}
+    pub fn set_frame(&mut self,[origin,u,v]:[DVec3;3]){self.plane.origin=origin;self.plane.u=u;self.plane.v=v;}
+}
 
 /// Mirrors original command-held object lifetime without coordinate matching.
 #[derive(Debug, Clone, Default)]
