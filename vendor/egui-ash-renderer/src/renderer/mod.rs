@@ -306,6 +306,9 @@ impl Renderer {
     }
 
     /// Cold engineering identity, not a handle for external GPU commands.
+    /// Read-only managed ownership observation for actual allocation/refusal probes.
+    pub fn managed_texture_ids_for_probe(&self)->Vec<TextureId>{self.managed_textures.keys().copied().collect()}
+
     pub fn pipeline_identity_for_probe(&self)->u64{vk::Handle::as_raw(self.pipeline)}
     /// Prepare without changing or destroying the live pipeline.
     #[cfg(not(feature = "dynamic-rendering"))]

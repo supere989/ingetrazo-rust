@@ -283,6 +283,90 @@ impl System {
 
     pub fn bounded_completion_for_probe(&self)->bool{self.wait_gpu_completion()}
 
+    // A released failed set must not be retried if this frame does not paint it.
+    // Callback texture ownership is opaque: defer those frames to post-fence retirement.
+    fn cancel_unpainted_releases(&mut self,freed:&[egui::TextureId],paint:&[egui::ClippedPrimitive])->Result<(),String>{
+        if freed.is_empty()||paint.iter().any(|p|matches!(p.primitive,egui::epaint::Primitive::Callback(_))){return Ok(());}
+        let dead=freed.iter().copied().filter(|id|!paint.iter().any(|p|matches!(&p.primitive,egui::epaint::Primitive::Mesh(mesh) if mesh.texture_id==*id))).collect::<Vec<_>>();
+        crate::paper_raw_texture::cancel(&self.egui_ctx,&dead,&mut self.pending_texture_updates)
+    }
+
+    fn upload_pending_textures(&mut self)->Result<(),String>{
+        while let Some(delta)=self.pending_texture_updates.front() {
+            let raw=crate::paper_raw_texture::peek(&self.egui_ctx,delta.0)?;
+            let encoded=raw.as_ref().map(|image|(delta.0,egui_ash_renderer::EncodedRgbaImage{size:image.size,pixels:image.pixels.as_slice()}));
+            let encoded=encoded.as_ref().map(std::slice::from_ref).unwrap_or(&[]);
+            self.renderer.set_textures_with_encoded_images(self.vulkan_context.graphics_queue,self.vulkan_context.command_pool,std::slice::from_ref(delta),encoded).map_err(|e|e.to_string())?;
+            crate::paper_raw_texture::acknowledge(&self.egui_ctx,delta.0)?;
+            self.pending_texture_updates.pop_front();
+        }
+        Ok(())
+    }
+
+    #[doc(hidden)]
+    pub fn create_raw_texture_for_probe(&self)->Result<egui::TextureHandle,String>{crate::paper_raw_texture::create(&self.egui_ctx,[2,2],vec![8,9,12,68].repeat(4))}
+    #[doc(hidden)]
+    pub fn managed_texture_for_probe(&self,id:egui::TextureId)->bool{self.renderer.managed_texture_ids_for_probe().contains(&id)}
+
+    /// Actual managed Vulkan allocation/retry/retirement admission probe. No model mutation.
+    #[doc(hidden)]
+    pub fn verify_raw_texture_lifetime_for_probe(&mut self)->Result<(),String>{
+        if !self.pending_texture_updates.is_empty(){return Err("Probe requires drained upload queue".into());}
+        self.vulkan_context.wait_transfer(self.fence).map_err(|e|e.to_string())?;
+        let ids=self.renderer.managed_texture_ids_for_probe();
+        let committed=self.memory_budget.ledger.lock().unwrap().total_committed();
+        let serial=self.draw_serial;
+        let ordinary=egui::TextureId::Managed(u64::MAX-2);
+        let delta=egui::epaint::ImageDelta::full(egui::ColorImage::new([2,2],egui::Color32::RED),egui::TextureOptions::NEAREST);
+        self.renderer.set_textures(self.vulkan_context.graphics_queue,self.vulkan_context.command_pool,&[(ordinary,delta)]).map_err(|e|e.to_string())?;
+        let retained=self.memory_budget.ledger.lock().unwrap().total_committed();
+        if retained<=committed{return Err("Actual image allocation was not charged".into());}
+        // Real image allocation admitted, subsequent staging allocation denied.
+        let info=vk::ImageCreateInfo::default().image_type(vk::ImageType::TYPE_2D).extent(vk::Extent3D{width:2,height:2,depth:1}).mip_levels(1).array_layers(1).format(vk::Format::R8G8B8A8_SRGB).tiling(vk::ImageTiling::OPTIMAL).usage(vk::ImageUsageFlags::TRANSFER_DST|vk::ImageUsageFlags::SAMPLED).samples(vk::SampleCountFlags::TYPE_1);
+        let image=unsafe{self.vulkan_context.device.create_image(&info,None)}.map_err(|e|e.to_string())?;
+        let size=unsafe{self.vulkan_context.device.get_image_memory_requirements(image)}.size;
+        unsafe{self.vulkan_context.device.destroy_image(image,None)};
+        for release in [true,false]{
+            let handle=crate::paper_raw_texture::create(&self.egui_ctx,[2,2],vec![8,9,12,68].repeat(4))?;
+            let id=handle.id();
+            let delta=self.egui_ctx.tex_manager().write().take_delta();
+            if !delta.free.is_empty(){return Err("Unexpected pending free in probe".into());}
+            self.pending_texture_updates.extend(delta.set);
+            let limit={let mut l=self.memory_budget.ledger.lock().unwrap();let old=l.total_limit;l.total_limit=Some(retained+size);old};
+            let refusal=self.upload_pending_textures();
+            self.memory_budget.ledger.lock().unwrap().total_limit=limit;
+            if refusal.as_ref().err().is_none_or(|error|!error.contains("GPU allocation 16 exceeds global application budget")){return Err(format!("Expected actual 16-byte staging budget denial, got {refusal:?}"));}
+            let l=self.memory_budget.ledger.lock().unwrap();
+            if l.total_committed()!=retained||l.heaps.iter().any(|h|h.reserved!=0){return Err("Refused texture leaked GPU admission".into());}drop(l);
+            if self.draw_serial!=serial||!self.renderer.managed_texture_ids_for_probe().contains(&ordinary)||self.renderer.managed_texture_ids_for_probe().contains(&id){return Err("Refusal changed retained frame texture ownership".into());}
+            if crate::paper_raw_texture::peek(&self.egui_ctx,id)?.is_none(){return Err("Refusal lost retry bytes".into());}
+            eprintln!("RAW_LIFETIME refusal release={release} error={:?} committed={retained} frame={serial}",refusal.unwrap_err());
+            if release{
+                drop(handle);let freed=self.egui_ctx.tex_manager().write().take_delta().free;
+                self.cancel_unpainted_releases(&freed,&[])?;
+                self.renderer.free_textures(&freed).map_err(|e|e.to_string())?;
+                self.upload_pending_textures()?;
+                if self.renderer.managed_texture_ids_for_probe().contains(&id)||crate::paper_raw_texture::peek(&self.egui_ctx,id)?.is_some(){return Err("Released refusal uploaded orphan".into());}
+            }else{
+                self.upload_pending_textures()?;
+                if !self.renderer.managed_texture_ids_for_probe().contains(&id)||crate::paper_raw_texture::peek(&self.egui_ctx,id)?.is_some(){return Err("Actual raw retry/ACK failed".into());}
+                drop(handle);let freed=self.egui_ctx.tex_manager().write().take_delta().free;
+                self.vulkan_context.wait_transfer(self.fence).map_err(|e|e.to_string())?;
+                crate::paper_raw_texture::cancel(&self.egui_ctx,&freed,&mut self.pending_texture_updates)?;
+                self.renderer.free_textures(&freed).map_err(|e|e.to_string())?;
+            }
+            if self.memory_budget.ledger.lock().unwrap().total_committed()!=retained{return Err("Raw free did not return ledger baseline".into());}
+        }
+        // Ordinary managed image update still uses the existing conversion path.
+        let patch=egui::epaint::ImageDelta::partial([0,0],egui::ColorImage::new([1,1],egui::Color32::GREEN),egui::TextureOptions::NEAREST);
+        self.renderer.set_textures(self.vulkan_context.graphics_queue,self.vulkan_context.command_pool,&[(ordinary,patch)]).map_err(|e|e.to_string())?;
+        self.renderer.free_textures(&[ordinary]).map_err(|e|e.to_string())?;
+        let final_ids=self.renderer.managed_texture_ids_for_probe();let l=self.memory_budget.ledger.lock().unwrap();
+        if l.total_committed()!=committed||l.heaps.iter().any(|h|h.reserved!=0)||final_ids.len()!=ids.len()||ids.iter().any(|id|!final_ids.contains(id)){return Err("Final managed GPU ownership differs from baseline".into());}
+        eprintln!("PASS RAW_LIFETIME actual image+staging refusal / released-no-orphan / held-retry-ACK / raw-free / ordinary-partial-update-free; frames={serial} baseline_bytes={committed} final_bytes={} managed={}",l.total_committed(),ids.len());
+        Ok(())
+    }
+
     pub fn submitted_frames_for_probe(&self)->u64{self.draw_serial}
 
     /// Engineering observation only: never reset/destroy these borrowed handles.
@@ -374,24 +458,17 @@ impl System {
             self.textures_to_free = Some(textures_delta.free.clone());
         }
 
+        let clipped_primitives = self.egui_ctx.tessellate(shapes, pixels_per_point);
         self.pending_texture_updates.extend(textures_delta.set);
+        if let Err(error)=self.cancel_unpainted_releases(&textures_delta.free,&clipped_primitives){egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}
         // Current-frame set/use/free is legal: retire only at the next acknowledged
         // post-frame boundary, never discard a texture before its queued paint.
-        while let Some(delta)=self.pending_texture_updates.front() {
-            let raw=match crate::paper_raw_texture::peek(&self.egui_ctx,delta.0){Ok(raw)=>raw,Err(error)=>{egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}};
-            let encoded=raw.as_ref().map(|image|(delta.0,egui_ash_renderer::EncodedRgbaImage{size:image.size,pixels:image.pixels.as_slice()}));
-            let encoded=encoded.as_ref().map(std::slice::from_ref).unwrap_or(&[]);
-            if let Err(error)=self.renderer.set_textures_with_encoded_images(self.vulkan_context.graphics_queue,self.vulkan_context.command_pool,std::slice::from_ref(delta),encoded) {
-                let error=error.to_string();
-                if self.last_gpu_error.as_ref()!=Some(&error) {egui_app.gpu_error(&error);self.last_gpu_error=Some(error);}
-                self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
-                return; // Preserve document and last presented frame; pending deltas retry after pressure falls.
-            }
-            if let Err(error)=crate::paper_raw_texture::acknowledge(&self.egui_ctx,delta.0){egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}
-            self.pending_texture_updates.pop_front();self.last_gpu_error=None;
+        if let Err(error)=self.upload_pending_textures(){
+            if self.last_gpu_error.as_ref()!=Some(&error){egui_app.gpu_error(&error);self.last_gpu_error=Some(error);}
+            self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
+            return; // Retain last presented frame and retry pending deltas after pressure falls.
         }
-
-        let clipped_primitives = self.egui_ctx.tessellate(shapes, pixels_per_point);
+        self.last_gpu_error=None;
 
         if let Some(cad)=&mut self.cad2d {
             if let Err(error)=cad.prepare(&self.vulkan_context,&clipped_primitives,self.fence,self.draw_serial,self.draw_serial+1,pixels_per_point){
