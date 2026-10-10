@@ -19,7 +19,7 @@ def inventory(s):
  'saved_views':[v.to_dict()for v in s.saved_views],
  'section_planes':[v.to_dict()for v in s.section_planes],
  'images':[v.to_dict()for v in s.image_planes],
- 'guides_count':len(s.guides),'back_face_color':s.back_face_color}
+ 'guides_count':len(s.guides),'back_face_color':s.back_face_color,'dimension_style':s.dimension_style}
 rows=[]
 for name in ['gondola_v20','capilla_quiroz_v17','legacy_v7_synthetic']:
  path=oracle/'packages/python/tests/fixtures'/(name+'.skp');output=out/(name+'.igz');output.unlink(missing_ok=True)

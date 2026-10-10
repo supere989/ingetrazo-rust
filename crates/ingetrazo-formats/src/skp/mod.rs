@@ -522,6 +522,14 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         ));
     }
     let mut scene = Scene::new();
+    // SKP imports start a new source document. An absent IGZ dimension_style
+    // intentionally means legacy ticks, so preserve the complete new-document
+    // default explicitly rather than changing the general IGZ reader.
+    scene.native_document["dimension_style"] = serde_json::json!({
+        "decimals": 2, "units": "m", "font_size": 9, "color": [45,55,75],
+        "norma": "iso", "base_step_mm": 8.0, "ends": "arrow"
+    });
+    scene.native_baseline["terrain"] = serde_json::json!(scene.terrain);
     // Frozen Python Scene default; a model default tag is not imported again.
     scene.layers = vec![Layer::new("Layer 0")];
     for l in p.layers.values() {
