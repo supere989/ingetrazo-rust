@@ -291,6 +291,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let mut bump_needed = false;
     let mut fit_page_needed = false;
     let mut export_view_dxf = false;
+    let mut export_pdf = false;
+    let mut export_all_pdf = false;
 
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
         egui::Frame::window(ui.style()).show(ui, |ui| {
@@ -409,6 +411,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     export_view_dxf |= ui.button(tr("Export view as DXF…")).clicked();
                 }
 
+                export_pdf |= ui.button(tr("Export PDF…")).clicked();
+                export_all_pdf |= ui.button(tr("Export all sheets (PDF)…")).clicked();
+
                 // Delete selected item
                 if let Some(sel_idx) = sheet.selected_item {
                     if ui.button(tr("Delete Item")).clicked() {
@@ -419,6 +424,15 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             });
         });
     });
+
+    if export_pdf || export_all_pdf {
+        let title=if export_all_pdf{tr("Export all sheets (PDF)…")}else{tr("Export PDF…")};
+        let default=if export_all_pdf{"laminas.pdf"}else{"lamina.pdf"};
+        if let Some(path)=crate::dialogs::pick_save_file(&title,default,"*.pdf|PDF") {
+            let result=if export_all_pdf{app.export_composer_pdf(None,&path)}else{app.export_composer_pdf(Some(sheet_idx),&path)};
+            app.status_message=match result{Ok(count)=>format!("{}: {count} — {}",tr("Exported sheets"),path.display()),Err(error)=>error};
+        }
+    }
 
     if export_view_dxf {
         if let Some(path)=crate::dialogs::pick_save_file(&tr("Export view as DXF…"),"vista.dxf","*.dxf|DXF") {
@@ -1064,4 +1078,14 @@ pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_sha
   app.undo_composer_edit();assert!(app.scene.sheets[0].items.is_empty());
  }
 
+}
+
+impl IngeTrazoApp {
+    /// Prepare every page before opening the destination. Unsupported visible
+    /// painters report an error rather than silently exporting incomplete sheets.
+    pub fn export_composer_pdf(&self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
+        let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
+        let pages=sheets.iter().map(ingetrazo_formats::sheet_pdf_shapes::prepare).collect::<Result<Vec<_>,_>>()?;
+        ingetrazo_formats::sheet_pdf::save(path,&pages)?;Ok(pages.len())
+    }
 }
