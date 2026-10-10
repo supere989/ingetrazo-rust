@@ -28,6 +28,7 @@ pub(super) struct Probe {
     canvas_warm_frames: u64,
     canvas_last_raw: Option<[u64; 5]>,
     canvas_submission_observations: u64,
+    canvas_cancelled: u64,
 }
 impl Probe {
     pub fn new(root: PathBuf, choice: &str) -> Result<Self, String> {
@@ -71,6 +72,7 @@ impl Probe {
             canvas_warm_frames: 0,
             canvas_last_raw: None,
             canvas_submission_observations: 0,
+            canvas_cancelled: 0,
         })
     }
     pub fn setup(&mut self, app: &mut IngeTrazoApp) -> Result<(), String> {
@@ -117,8 +119,9 @@ impl Probe {
         self.canvas_submission_observations += 1;
         self.canvas_last_raw = crate::paper_raw_texture::stats(ctx);
         let Some(raw) = self.canvas_last_raw else { return; };
+        self.canvas_cancelled = crate::paper_raw_texture::cancelled(ctx).unwrap_or(0);
         let uploads = painter.stats().texture_uploads;
-        if raw[0] != 0 || raw[1] != 0 || raw[2] == 0 || raw[2] != raw[4] {
+        if raw[0] != 0 || raw[1] != 0 || raw[4] == 0 || raw[2].checked_sub(self.canvas_cancelled) != Some(raw[4]) {
             self.canvas_warm_frames = 0;
             self.canvas_uploads = None;
             return;
@@ -225,7 +228,8 @@ impl Probe {
                     "physical_mac_claim": false,
                     "raw_uploads": self.canvas_uploads.map(|v|v.0),
                     "texture_uploads": self.canvas_uploads.map(|v|v.1),
-                    "warm_frames": self.canvas_warm_frames
+                    "warm_frames": self.canvas_warm_frames,
+                    "cancelled_uploads": self.canvas_cancelled
                 });
                 let pending = self.root.join("own-window.pending");
                 std::fs::write(&pending, serde_json::to_vec_pretty(&snapshot).map_err(|e| e.to_string())?)
@@ -369,7 +373,7 @@ impl Probe {
             Ok(())
         })();
         std::fs::write(self.root.join("presentation-diagnostics.txt"), gpu.diagnostics()).map_err(|e| e.to_string())?;
-        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false,"canvas_last_raw":self.canvas_last_raw,"canvas_submission_observations":self.canvas_submission_observations,"canvas_warm_frames":self.canvas_warm_frames,"canvas_last_stable_uploads":self.canvas_uploads,"application_status":app.status_message,"active_sheet_index":app.scene.active_sheet_index,"sheet_count":app.scene.sheets.len()});
+        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false,"canvas_cancelled":self.canvas_cancelled,"canvas_last_raw":self.canvas_last_raw,"canvas_submission_observations":self.canvas_submission_observations,"canvas_warm_frames":self.canvas_warm_frames,"canvas_last_stable_uploads":self.canvas_uploads,"application_status":app.status_message,"active_sheet_index":app.scene.active_sheet_index,"sheet_count":app.scene.sheets.len()});
         std::fs::write(
             self.root.join("result.json"),
             serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
