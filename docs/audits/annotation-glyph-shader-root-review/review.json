@@ -1,0 +1,12 @@
+{
+  "review_scope": "WIP shader source inspection; not frozen candidate or GPU execution",
+  "finding": "Applying mul16 to all four straight RGBA channels squares alpha. Premultiplied color must retain source alpha; use original alpha for source-over inverse.",
+  "example": {
+    "source_alpha8": 230,
+    "source_alpha16": 59110,
+    "wip_premultiplied_alpha16": 53315,
+    "required_premultiplied_alpha16": 59110
+  },
+  "requested_correction": "Preserve alpha after RGB premultiplication and verify zero/partial/full source alpha with original Qt controls.",
+  "integration": "Not integrated; worker notified before acceptance."
+}
