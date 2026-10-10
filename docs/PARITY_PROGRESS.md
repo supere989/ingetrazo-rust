@@ -4,6 +4,8 @@ Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_An
 
 ## Outcome and evidence
 
+Reviewed terrain runtime visibility and command-owned clear/rebuild history match six fresh source states; stale visibility and literal wrong-Redo negatives reject. **539 workspace tests pass, two ignored**. Full StraightenModel, terrain serialization/rendering and broader presentation history remain OPEN. [Independent terrain review](audits/terrain-history-root-review/README.md).
+
 Reviewed saved-view command ownership matches fresh source panel/history state and four import-object lifetime states, preserving Redo after non-command panel edits. **537 workspace tests pass, two ignored**. Ordinary terrain visibility and full presentation history remain OPEN. [Independent saved-view review](audits/savedview-history-root-review/README.md).
 
 Reviewed global entity publication preserves guides, text and geodata through20 exact original/native history states and four context entries. Workspace remains **535 passed, two ignored**; broader global command families remain OPEN. [Independent global review](audits/context-global-root-review/README.md).
