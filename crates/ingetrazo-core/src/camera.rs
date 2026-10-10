@@ -239,7 +239,7 @@ impl OrbitCamera {
                 half_w,
                 -half_h,
                 half_h,
-                self.znear,
+                -self.zfar,
                 self.zfar,
             )
         }
@@ -291,4 +291,11 @@ mod tests {
             println!("[{:.4}, {:.4}, {:.4}, {:.4}]", r.x, r.y, r.z, r.w);
         }
     }
+}
+
+#[cfg(test)]mod original_ortho_tests{
+ use super::*;
+ #[test]fn orthographic_depth_matches_original_symmetric_range_even_inside_model(){
+  let mut camera=OrbitCamera::default();camera.perspective=false;camera.target=DVec3::ZERO;camera.distance=0.2;camera.pitch=std::f64::consts::FRAC_PI_2;camera.up=DVec3::Y;let matrix=camera.projection_matrix()*camera.view_matrix();for point in [camera.eye()+camera.forward(),camera.eye()-camera.forward()]{let clip=matrix*point.extend(1.);assert!((0. ..1.).contains(&(clip.z/clip.w)),"parallel sourceview includes geometry on either side of its eye");}let near=matrix*(camera.eye()-camera.forward()*camera.zfar).extend(1.);let far=matrix*(camera.eye()+camera.forward()*camera.zfar).extend(1.);assert!((near.z/near.w).abs()<1e-12);assert!((far.z/far.w-1.).abs()<1e-12);
+ }
 }
