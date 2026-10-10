@@ -882,13 +882,11 @@ impl IngeTrazoApp {
 
 impl eframe::App for IngeTrazoApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.handle_section_prompt_close(ctx);
+        self.begin_document_frame(ctx);
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});
             crate::section_actions::render_section_name_prompt(self,ctx);return;
         }
-        self.scene.refresh_dimensions();
-        self.document_session_ui(ctx);
         let title = if let Some(path) = &self.current_file {
             let filename = path.file_name().unwrap_or_default().to_string_lossy();
             format!("IngeTrazo — {filename}")

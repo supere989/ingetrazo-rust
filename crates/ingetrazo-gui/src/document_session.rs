@@ -102,6 +102,11 @@ impl IngeTrazoApp {
     pub fn show_discarded_recovery(&mut self) {
         if let Some(store)=&self.document_session.store {match store.recovery_candidates(true){Ok(c)=>{self.document_session.recovery=c;self.document_session.show_recovery=true;},Err(e)=>self.status_message=e}}
     }
+    pub(crate) fn begin_document_frame(&mut self,ctx:&egui::Context){
+        self.handle_section_prompt_close(ctx);
+        self.scene.refresh_dimensions();
+        self.document_session_ui(ctx);
+    }
     pub fn document_session_ui(&mut self,ctx:&egui::Context) {
         if ctx.input(|i|i.viewport().close_requested())&&!self.document_session.close_allowed {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
@@ -154,6 +159,13 @@ mod tests {
         app.save_to_path(&root.join("saved.igz"));assert!(app.document_session.close_allowed);assert!(!app.document_dirty());
         let loaded=ingetrazo_formats::igz::load_igz(&root.join("saved.igz")).unwrap();assert_eq!(loaded.mesh.vertices[0].position,DVec3::new(7.,8.,9.));
         std::fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn naming_modal_keeps_document_autosave_timer_and_pending_prompt(){
+        let root=root();std::fs::create_dir_all(&root).unwrap();let mut app=IngeTrazoApp::new();app.attach_session_store(SessionStore::isolated(&root));
+        let plane=ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::Z,"Section","A");let id=plane.id;app.scene.section_planes.push(plane);app.section_name_prompt=Some((id,"Section".into(),"A".into(),false));
+        app.document_session.last_autosave=Instant::now()-Duration::from_secs(301);let ctx=egui::Context::default();let _=ctx.run(Default::default(),|ctx|app.begin_document_frame(ctx));
+        assert!(app.section_name_prompt.is_some());let slot=app.document_session.store.as_ref().unwrap().slot_for(None).unwrap();assert!(slot.is_file());let recovered=ingetrazo_formats::igz::load_igz(&slot).unwrap();assert_eq!(recovered.section_planes.len(),1);assert_eq!(recovered.section_planes[0].name,"Section");std::fs::remove_dir_all(root).unwrap();
     }
     #[test]
     fn timer_skips_gestures_cleans_and_duplicates_then_discard_keeps_recovery() {
