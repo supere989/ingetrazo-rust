@@ -7,7 +7,7 @@ use super::budget::VulkanBudget;
 const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
 struct Buffer {handle:vk::Buffer,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>}
-#[derive(Default,Debug)]pub struct UploadStats {pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64}
+#[derive(Default,Debug)]pub struct UploadStats {pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64}
 pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats}
 impl Resources {
  pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default()}}
@@ -43,7 +43,7 @@ impl Resources {
  /// Returns only after transfer completion; no scene serialization or IPC on upload path.
  pub fn upload(&mut self,context:&super::VulkanContext,data:&[u8],usage:vk::BufferUsageFlags,force_staging:bool)->Result<BufferId,String> {
   if data.len()%4!=0{return Err("Vulkan buffer upload must be a multiple of four bytes".into());}
-  let destination=self.allocate(data.len() as u64,usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)?;
+  let destination=self.allocate(data.len() as u64,usage|vk::BufferUsageFlags::TRANSFER_DST|vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::DEVICE_LOCAL)?;
   let result=(|| {
    if !force_staging&&self.buffers[&destination].properties.contains(vk::MemoryPropertyFlags::HOST_VISIBLE) {
     self.write(destination,data)?;self.stats.direct_mapped_bytes+=data.len() as u64;return Ok(());
@@ -73,7 +73,7 @@ impl Resources {
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
      self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
      self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;submitted=true;
-     self.device.wait_for_fences(&[fence],true,u64::MAX).map_err(|e|e.to_string())?;submitted=false;
+     context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;
     }
     self.stats.chunks+=1;offset+=chunk.len() as u64;
    }
@@ -83,6 +83,65 @@ impl Resources {
   if submitted {let _=unsafe {self.device.device_wait_idle()};}
   unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
   result
+ }
+ /// Actual GPU-to-host copy; works for unmappable discrete device-local memory.
+ pub fn readback_buffer(&mut self,context:&super::VulkanContext,id:BufferId)->Result<Vec<u8>,String> {
+  let source=self.buffers.get(&id).ok_or("Unknown GPU readback buffer")?;let bytes=source.logical_bytes;let handle=source.handle;
+  self.read_chunks(context,bytes,4,|device,command,destination,offset,length|unsafe {
+   let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::MEMORY_WRITE).dst_access_mask(vk::AccessFlags::TRANSFER_READ).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(handle).offset(offset).size(length);
+   device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::ALL_COMMANDS,vk::PipelineStageFlags::TRANSFER,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
+   device.cmd_copy_buffer(command,handle,destination,&[vk::BufferCopy{src_offset:offset,dst_offset:0,size:length}]);
+  })
+ }
+ /// Read a resolved RGBA8 image, restoring its sampled layout after every chunk.
+ pub fn readback_image(&mut self,context:&super::VulkanContext,image:vk::Image,extent:vk::Extent2D)->Result<Vec<u8>,String> {
+  let row=extent.width as u64*4;let bytes=row.checked_mul(extent.height as u64).ok_or("Readback image size overflow")?;
+  self.read_chunks(context,bytes,row,|device,command,destination,offset,length|unsafe {
+   let range=vk::ImageSubresourceRange::default().aspect_mask(vk::ImageAspectFlags::COLOR).level_count(1).layer_count(1);
+   let mut barrier=vk::ImageMemoryBarrier::default().image(image).subresource_range(range).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).old_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL).new_layout(vk::ImageLayout::TRANSFER_SRC_OPTIMAL).src_access_mask(vk::AccessFlags::MEMORY_WRITE|vk::AccessFlags::SHADER_READ).dst_access_mask(vk::AccessFlags::TRANSFER_READ);
+   device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::ALL_COMMANDS,vk::PipelineStageFlags::TRANSFER,vk::DependencyFlags::empty(),&[],&[],&[barrier]);
+   let region=vk::BufferImageCopy::default().image_subresource(vk::ImageSubresourceLayers::default().aspect_mask(vk::ImageAspectFlags::COLOR).layer_count(1)).image_offset(vk::Offset3D{x:0,y:(offset/row)as i32,z:0}).image_extent(vk::Extent3D{width:extent.width,height:(length/row)as u32,depth:1});
+   device.cmd_copy_image_to_buffer(command,image,vk::ImageLayout::TRANSFER_SRC_OPTIMAL,destination,&[region]);
+   barrier.old_layout=vk::ImageLayout::TRANSFER_SRC_OPTIMAL;barrier.new_layout=vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL;barrier.src_access_mask=vk::AccessFlags::TRANSFER_READ;barrier.dst_access_mask=vk::AccessFlags::SHADER_READ;
+   device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::empty(),&[],&[],&[barrier]);
+  })
+ }
+ fn read_chunks(&mut self,context:&super::VulkanContext,bytes:u64,row:u64,mut record:impl FnMut(&Device,vk::CommandBuffer,vk::Buffer,u64,u64))->Result<Vec<u8>,String> {
+  if bytes==0||row==0||row>UPLOAD_CHUNK||bytes%row!=0{return Err("Invalid GPU readback extent".into());}
+  let chunk=(UPLOAD_CHUNK/row*row).min(bytes);
+  let staging=self.allocate(chunk,vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::HOST_VISIBLE)?;
+  self.stats.readback_staging_peak=self.stats.readback_staging_peak.max(self.buffers[&staging].allocation_bytes);
+  let info=vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).level(vk::CommandBufferLevel::PRIMARY).command_buffer_count(1);
+  let command=match unsafe {self.device.allocate_command_buffers(&info)} {Ok(c)=>c[0],Err(e)=>{self.destroy(staging);return Err(e.to_string());}};
+  let fence=match unsafe {self.device.create_fence(&vk::FenceCreateInfo::default(),None)} {Ok(f)=>f,Err(e)=>{unsafe {self.device.free_command_buffers(context.command_pool,&[command])};self.destroy(staging);return Err(e.to_string());}};
+  let mut submitted=false;
+  let result=(|| {
+   let mut output=Vec::with_capacity(usize::try_from(bytes).map_err(|_|"GPU readback does not fit host address space")?);let mut offset=0;
+   while offset<bytes {
+    let length=chunk.min(bytes-offset);let host=&self.buffers[&staging];
+    unsafe {
+     self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
+     self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
+     record(&self.device,command,host.handle,offset,length);
+     let barrier=vk::BufferMemoryBarrier::default().buffer(host.handle).offset(0).size(length).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(vk::AccessFlags::HOST_READ);
+     self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::HOST,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
+     self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
+     self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
+     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;submitted=true;
+     context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;
+    }
+    let host=&self.buffers[&staging];let pointer=unsafe {self.device.map_memory(host.memory,0,host.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
+    let read=(|| {
+     if !host.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT){unsafe {self.device.invalidate_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(host.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())?;}
+     output.extend_from_slice(unsafe {std::slice::from_raw_parts(pointer.cast::<u8>(),length as usize)});Ok::<(),String>(())
+    })();
+    unsafe {self.device.unmap_memory(host.memory)};read?;offset+=length;
+   }
+   self.stats.readback_bytes+=bytes;Ok(output)
+  })();
+  if submitted {let _=unsafe {self.device.device_wait_idle()};}
+  unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
+  self.destroy(staging);result
  }
  /// Diagnostic comparison after completed upload, for host-visible device-local heaps.
  pub fn verify_host_visible(&self,id:BufferId,expected:&[u8])->Result<(),String> {

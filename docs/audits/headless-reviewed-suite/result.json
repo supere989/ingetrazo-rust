@@ -1,0 +1,38 @@
+{
+  "binary_sha256": "42e81e6683a68c85ddb14a803927c15f82b869c39ebc1f4300c4db05a6976782",
+  "cases": [
+    {
+      "case": "positive",
+      "exit_code": 0,
+      "elapsed_seconds": 0.27057559401146136,
+      "command": [
+        "/tmp/ingetrazo-headless-integration-target/debug/examples/native_vulkan_headless_probe",
+        "--software-fixture",
+        "--output",
+        "/tmp/ingetrazo-headless-integration/docs/audits/headless-reviewed-suite/depth.png"
+      ]
+    },
+    {
+      "case": "wrong-vendor",
+      "exit_code": 1,
+      "elapsed_seconds": 0.019860271000652574,
+      "command": [
+        "/tmp/ingetrazo-headless-integration-target/debug/examples/native_vulkan_headless_probe",
+        "--software-fixture",
+        "--vendor",
+        "0x10de"
+      ]
+    },
+    {
+      "case": "unsignaled-timeout",
+      "exit_code": 124,
+      "elapsed_seconds": 5.0251448659983,
+      "command": [
+        "/tmp/ingetrazo-headless-integration-target/debug/examples/native_vulkan_headless_probe",
+        "--software-fixture",
+        "--timeout-control"
+      ]
+    }
+  ],
+  "scope": "Software production resource/depth and refusal/timeout controls only; hardware and Metal remain separate"
+}

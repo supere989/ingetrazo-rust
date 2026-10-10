@@ -22,7 +22,7 @@ impl VulkanBudget {
   let mut ledger=self.ledger.lock().unwrap_or_else(|p|p.into_inner());
   for i in 0..count {let _=ledger.update_live(i,budget.heap_budget[i]/10*9,budget.heap_usage[i]);}
  }
- pub fn diagnostics(&self)->String {let ledger=self.ledger.lock().unwrap_or_else(|p|p.into_inner());format!("GPU allocation budget: {} committed bytes; heaps {:?}",ledger.total_committed(),ledger.heaps)}
+ pub fn diagnostics(&self)->String {let ledger=self.ledger.lock().unwrap_or_else(|p|p.into_inner());format!("GPU allocation budget: {} committed bytes; peakcommitted {}; peakadmitted {}; globalcap {:?}; heaps {:?}",ledger.total_committed(),ledger.peak_committed,ledger.peak_admitted,ledger.total_limit,ledger.heaps)}
 }
 impl egui_ash_renderer::MemoryObserver for VulkanBudget {
  fn reserve(&self,heap:u32,bytes:u64)->egui_ash_renderer::RendererResult<u64> {self.refresh();self.ledger.lock().unwrap_or_else(|p|p.into_inner()).reserve(heap as usize,bytes).map_err(egui_ash_renderer::RendererError::Allocator)}

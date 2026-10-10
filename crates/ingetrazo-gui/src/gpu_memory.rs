@@ -6,12 +6,16 @@ pub struct HeapBudget { pub capacity:u64,pub limit:u64,pub live_budget:Option<u6
 #[derive(Clone,Debug)]
 struct Allocation {heap:usize,bytes:u64,retire_after:Option<u64>}
 #[derive(Debug)]
-pub struct MemoryBudget {pub heaps:Vec<HeapBudget>,next:u64,reservations:HashMap<u64,Allocation>,allocations:HashMap<u64,Allocation>}
+pub struct MemoryBudget {pub heaps:Vec<HeapBudget>,pub total_limit:Option<u64>,pub peak_committed:u64,pub peak_admitted:u64,next:u64,reservations:HashMap<u64,Allocation>,allocations:HashMap<u64,Allocation>}
 impl MemoryBudget {
- pub fn new(heaps:impl IntoIterator<Item=(u64,u64)>)->Self {Self {heaps:heaps.into_iter().map(|(capacity,limit)|HeapBudget {capacity,limit:limit.min(capacity),live_budget:None,live_usage:0,reserved:0,committed:0}).collect(),next:1,reservations:HashMap::new(),allocations:HashMap::new()}}
+ pub fn new(heaps:impl IntoIterator<Item=(u64,u64)>)->Self {Self {heaps:heaps.into_iter().map(|(capacity,limit)|HeapBudget {capacity,limit:limit.min(capacity),live_budget:None,live_usage:0,reserved:0,committed:0}).collect(),total_limit:None,peak_committed:0,peak_admitted:0,next:1,reservations:HashMap::new(),allocations:HashMap::new()}}
  pub fn update_live(&mut self,heap:usize,budget:u64,usage:u64)->Result<(),String> {let h=self.heaps.get_mut(heap).ok_or("Unknown memory heap")?;h.live_budget=Some(budget.min(h.capacity));h.live_usage=usage;Ok(())}
  pub fn reserve(&mut self,heap:usize,bytes:u64)->Result<u64,String> {
   if bytes==0 {return Err("Zero-byte allocation".into());}
+  let total=self.heaps.iter().try_fold(bytes,|n,h|n.checked_add(h.committed)?.checked_add(h.reserved)).ok_or("Global allocation size overflow")?;
+  if let Some(limit)=self.total_limit {
+   if total>limit{return Err(format!("GPU allocation {bytes} exceeds global application budget {limit}"));}
+  }
   let h=self.heaps.get_mut(heap).ok_or("Unknown memory heap")?;
   let own=h.committed.checked_add(h.reserved).and_then(|n|n.checked_add(bytes)).ok_or("Allocation size overflow")?;
   if own>h.limit {return Err(format!("GPU heap {heap}: allocation {bytes} exceeds application budget {}; reserved {}; committed {}",h.limit,h.reserved,h.committed));}
@@ -20,12 +24,12 @@ impl MemoryBudget {
    if external.checked_add(own).ok_or("Heap usage overflow")?>budget {return Err(format!("GPU heap {heap}: allocation {bytes} exceeds live budget {budget}; driver usage {}",h.live_usage));}
   }
   let ticket=self.next;self.next=self.next.checked_add(1).ok_or("Reservation identifier overflow")?;
-  h.reserved+=bytes;self.reservations.insert(ticket,Allocation{heap,bytes,retire_after:None});Ok(ticket)
+  h.reserved+=bytes;self.reservations.insert(ticket,Allocation{heap,bytes,retire_after:None});self.peak_admitted=self.peak_admitted.max(total);Ok(ticket)
  }
  pub fn cancel(&mut self,ticket:u64)->Result<(),String> {let a=self.reservations.remove(&ticket).ok_or("Unknown reservation")?;self.heaps[a.heap].reserved-=a.bytes;Ok(())}
  pub fn commit(&mut self,ticket:u64,handle:u64)->Result<(),String> {
   if self.allocations.contains_key(&handle) {return Err("Allocation handle already tracked".into());}
-  let a=self.reservations.remove(&ticket).ok_or("Unknown reservation")?;let h=&mut self.heaps[a.heap];h.reserved-=a.bytes;h.committed+=a.bytes;self.allocations.insert(handle,a);Ok(())
+  let a=self.reservations.remove(&ticket).ok_or("Unknown reservation")?;let h=&mut self.heaps[a.heap];h.reserved-=a.bytes;h.committed+=a.bytes;self.allocations.insert(handle,a);self.peak_committed=self.peak_committed.max(self.total_committed());Ok(())
  }
  /// Marks last use; bytes stay charged until caller destroys memory after that fence.
  pub fn retire(&mut self,handle:u64,fence_serial:u64)->Result<(),String> {let a=self.allocations.get_mut(&handle).ok_or("Unknown allocation")?;a.retire_after=Some(a.retire_after.unwrap_or(0).max(fence_serial));Ok(())}
@@ -67,3 +71,5 @@ pub fn texture_mip_bytes(width:u32,height:u32,depth:u32,layers:u32,mips:u32,form
   assert!(texture_mip_bytes(1,1,1,1,2,TextureStorage::Bc7).is_err());assert!(texture_mip_bytes(u32::MAX,u32::MAX,u32::MAX,u32::MAX,1,TextureStorage::Rgba8).is_err());
  }
 }
+
+#[cfg(test)]mod global_limit_regression {use super::*;#[test]fn global_limit_includes_other_heaps_reservations_and_retired_allocations(){let mut b=MemoryBudget::new([(1000,1000),(1000,1000)]);b.total_limit=Some(512);let t=b.reserve(0,256).unwrap();let u=b.reserve(1,256).unwrap();assert!(b.reserve(1,1).is_err());b.commit(t,11).unwrap();b.retire(11,4).unwrap();b.cancel(u).unwrap();assert!(b.reserve(1,257).is_err());b.freed(11).unwrap();assert!(b.reserve(1,512).is_ok());}}

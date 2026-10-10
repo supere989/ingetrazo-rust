@@ -1,0 +1,10 @@
+{
+  "validator": "ec96c67495cf7231639dfbed88a2723ec318d9a9",
+  "production": "0b44d7d unchanged executable SHA a145aac38e2fa945713441e9c90941702951f6c8524b019683b5304a4bc9143a",
+  "changes": "Fresh output required with0700; keep-id mapping; GPU0; immutableimageID resolvedpreexecution; timeout retains partiallog/command/result/elapsed/cleanup beforefailure",
+  "existing_output_control": {
+    "exit_code": 1,
+    "reason": "FileExistsError before any directory permission/image/container mutation"
+  },
+  "output_mode": "0700 confirmedhost; previous0777 historicalproofretainedseparately"
+}
