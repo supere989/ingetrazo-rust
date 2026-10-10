@@ -23,7 +23,17 @@ fn compatible(a: &MeshFace, b: &MeshFace) -> bool {
     let (Some(ta), Some(tb)) = (ta, tb) else {
         return false;
     };
-    if ta.get("path") != tb.get("path") {
+    // An omitted path is not a shared resource: embedded image identities
+    // and all persisted mapping metadata must also agree.
+    let mut metadata_a = ta.clone();
+    let mut metadata_b = tb.clone();
+    if let Some(map) = metadata_a.as_object_mut() {
+        map.remove("uvw");
+    }
+    if let Some(map) = metadata_b.as_object_mut() {
+        map.remove("uvw");
+    }
+    if metadata_a != metadata_b {
         return false;
     }
     let (Some(ua), Some(ub)) = (
@@ -222,11 +232,16 @@ pub fn simplify_mesh(
             }
         }
     }
+    let protected_start = out.faces.len();
     for face in &mesh.faces {
         if !face.holes.is_empty() || face.interior {
             planar::add_face(&mut out, &planar::rings(mesh, face), face)?;
         }
     }
+    let protected_flags: Vec<_> = out.faces[protected_start..]
+        .iter()
+        .map(|f| f.interior)
+        .collect();
     out = planar::stitch_boundaries(&out)?;
     // Original simplification rebuilds surfaces and drops orphan wire geometry.
     for edge in &mut out.edges {
@@ -258,6 +273,12 @@ pub fn simplify_mesh(
         }
     }
     out.preserve_vertex_uids_from(mesh);
+    crate::heal::refresh_interior(&mut out)?;
+    // Original Simplify preserves protected source partitions, including their
+    // deliberately authored runtime state, even in an otherwise flat drawing.
+    for (face, interior) in out.faces[protected_start..].iter_mut().zip(protected_flags) {
+        face.interior = interior;
+    }
     planar::validate_mesh(&out)?;
     let removed = mesh.faces.len().saturating_sub(out.faces.len());
     Ok((out, removed))
@@ -332,5 +353,24 @@ mod tests {
         for d in [f64::NAN, -1., 6.] {
             assert!(simplify_mesh(&m, d, false).is_err());
         }
+    }
+    #[test]
+    fn differing_embedded_texture_resources_never_merge() {
+        let mut m = Mesh::new();
+        let v = [DVec3::ZERO, DVec3::X, DVec3::new(1., 1., 0.), DVec3::Y].map(|p| m.add_vertex(p));
+        m.add_face(vec![v[0], v[1], v[2]], vec![]);
+        m.add_face(vec![v[0], v[2], v[3]], vec![]);
+        let uv = serde_json::json!([1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0.]);
+        m.faces[0].attrs.insert(
+            "texture".into(),
+            serde_json::json!({"embed":"first_image","uvw":uv}),
+        );
+        m.faces[1].attrs.insert(
+            "texture".into(),
+            serde_json::json!({"embed":"second_image","uvw":uv}),
+        );
+        assert_eq!(simplify_mesh(&m, 0., false).unwrap().0.faces.len(), 2);
+        m.faces[1].attrs = m.faces[0].attrs.clone();
+        assert_eq!(simplify_mesh(&m, 0., false).unwrap().0.faces.len(), 1);
     }
 }
