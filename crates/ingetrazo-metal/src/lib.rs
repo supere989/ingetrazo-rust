@@ -19,3 +19,6 @@ mod cad2d;
 #[cfg(target_os = "macos")]
 pub use cad2d::*;
 mod span_plan;
+
+#[cfg(target_os = "macos")]
+pub mod native_input;

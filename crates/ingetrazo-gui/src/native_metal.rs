@@ -13,7 +13,20 @@ use winit::{
     window::{Window, WindowId},
 };
 
+mod lifecycle_probe;
+/// Engineering probe through actual own-window Cocoa events, not physical input.
+pub fn run_document_probe(root: PathBuf, choice: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let probe = lifecycle_probe::Probe::new(root, choice)?;
+    let initial = Some(probe.document.clone());
+    run_inner(initial, Some(probe))
+}
 pub fn run(initial_file: Option<PathBuf>) -> Result<(), Box<dyn std::error::Error>> {
+    run_inner(initial_file, None)
+}
+fn run_inner(
+    initial_file: Option<PathBuf>,
+    probe: Option<lifecycle_probe::Probe>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let event = EventLoop::<()>::with_user_event().build()?;
     let ctx = egui::Context::default();
     let proxy = event.create_proxy();
@@ -28,6 +41,7 @@ pub fn run(initial_file: Option<PathBuf>) -> Result<(), Box<dyn std::error::Erro
         ctx,
         repaint: Instant::now(),
         error: None,
+        probe,
     };
     event.run_app(&mut host)?;
     if let Some(error) = host.error {
@@ -50,6 +64,7 @@ struct Host {
     ctx: egui::Context,
     repaint: Instant,
     error: Option<String>,
+    probe: Option<lifecycle_probe::Probe>,
 }
 impl Host {
     fn draw(&mut self, ev: &ActiveEventLoop) {
@@ -87,6 +102,13 @@ impl Host {
                 .push(egui::ViewportEvent::Close);
         }
         let output = self.ctx.run(raw, |ctx| state.app.update_ui(ctx));
+        if let Some(probe) = self.probe.as_mut() {
+            probe.observe(
+                &state.app,
+                &output.shapes,
+                state.gpu.presentation_counters().0,
+            );
+        }
         state
             .input
             .handle_platform_output(&state.window, output.platform_output);
@@ -193,9 +215,16 @@ impl ApplicationHandler for Host {
             );
             let mut app = IngeTrazoApp::new();
             app.system_clipboard = arboard::Clipboard::new().ok();
-            app.attach_session_store(SessionStore::user_default());
+            app.attach_session_store(if let Some(probe) = self.probe.as_ref() {
+                SessionStore::isolated(&probe.root.join("session"))
+            } else {
+                SessionStore::user_default()
+            });
             if let Some(path) = self.initial_file.take() {
                 app.open_document(&path);
+            }
+            if let Some(probe) = self.probe.as_mut() {
+                probe.setup(&mut app)?;
             }
             Ok(State {
                 painter,
@@ -232,6 +261,9 @@ impl ApplicationHandler for Host {
         let Some(state) = self.state.as_mut() else {
             return;
         };
+        if let Some(probe) = self.probe.as_mut() {
+            probe.native_event(&event);
+        }
         let response = state.input.on_window_event(&state.window, &event);
         match event {
             WindowEvent::CloseRequested => {
@@ -272,6 +304,13 @@ impl ApplicationHandler for Host {
                 state.window.set_title(&state.app.status_message);
                 self.repaint = Instant::now() + Duration::from_millis(100);
             }
+            if let Some(probe) = self.probe.as_mut() {
+                if let Err(e) = probe.tick(&state.app, &state.gpu, &state.window) {
+                    self.error = Some(e);
+                    ev.exit();
+                }
+                self.repaint = self.repaint.min(Instant::now() + Duration::from_millis(16));
+            }
             if Instant::now() >= self.repaint {
                 state.window.request_redraw();
             }
@@ -280,6 +319,11 @@ impl ApplicationHandler for Host {
     }
     fn exiting(&mut self, _: &ActiveEventLoop) {
         if let Some(state) = self.state.take() {
+            if let Some(probe) = self.probe.as_mut() {
+                if let Err(e) = probe.finish(&state.app, &state.gpu, self.error.as_deref()) {
+                    self.error = Some(e);
+                }
+            }
             eprintln!(
                 "Metal egui stats {:?}; presentation {:?}",
                 state.painter.stats(),
