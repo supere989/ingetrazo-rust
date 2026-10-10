@@ -136,6 +136,11 @@ impl Host {
             }
             let mut info = egui::ViewportInfo::default();
             let mut actions = egui::ahash::HashSet::default();
+            for command in &viewport.commands {
+                if matches!(command,egui::ViewportCommand::Visible(_)|egui::ViewportCommand::Minimized(_)) {
+                    eprintln!("Metal host native visibility command={command:?} before={:?}",state.window.is_visible());
+                }
+            }
             egui_winit::process_viewport_commands(
                 &self.ctx,
                 &mut info,
@@ -198,6 +203,7 @@ impl ApplicationHandler for Host {
                 )
                 .map_err(|e| e.to_string())?,
             );
+            eprintln!("Metal host visibility stage=window-created visible={:?}",window.is_visible());
             let metal = NativeMetal::new()?;
             eprintln!(
                 "Graphics backend: native Metal; device={}; unified={}; opt-in egui host",
@@ -205,6 +211,7 @@ impl ApplicationHandler for Host {
             );
             let painter = EguiPainter::new(&metal)?;
             let gpu = MetalPresentation::attach(window.clone(), metal)?;
+            eprintln!("Metal host visibility stage=layer-attached visible={:?}",window.is_visible());
             let input = egui_winit::State::new(
                 self.ctx.clone(),
                 egui::ViewportId::ROOT,
@@ -226,6 +233,7 @@ impl ApplicationHandler for Host {
             if let Some(probe) = self.probe.as_mut() {
                 probe.setup(&mut app)?;
             }
+            eprintln!("Metal host visibility stage=application-ready visible={:?}",window.is_visible());
             Ok(State {
                 painter,
                 gpu,
@@ -263,6 +271,9 @@ impl ApplicationHandler for Host {
         };
         if let Some(probe) = self.probe.as_mut() {
             probe.native_event(&event);
+        }
+        if matches!(event, WindowEvent::Focused(_)|WindowEvent::Occluded(_)) {
+            eprintln!("Metal host visibility event={event:?} visible={:?}",state.window.is_visible());
         }
         let response = state.input.on_window_event(&state.window, &event);
         match event {
