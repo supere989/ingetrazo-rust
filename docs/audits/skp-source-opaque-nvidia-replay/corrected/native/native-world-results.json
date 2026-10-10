@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "geometry_uploads": 1,
+      "warm_uploads": 0,
+      "hard_edge_bytes": 313656,
+      "dimensions": 0,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "geometry_uploads": 1,
+      "warm_uploads": 0,
+      "hard_edge_bytes": 313656,
+      "dimensions": 0,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "geometry_uploads": 1,
+      "warm_uploads": 0,
+      "hard_edge_bytes": 11928,
+      "dimensions": 26,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "geometry_uploads": 1,
+      "warm_uploads": 0,
+      "hard_edge_bytes": 11928,
+      "dimensions": 26,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    }
+  ],
+  "ledger_final": 0,
+  "scope": "complete imported scene input, World-only drawing; strict pixels checked separately"
+}

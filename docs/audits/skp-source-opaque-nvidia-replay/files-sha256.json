@@ -1,0 +1,23 @@
+{
+  "README.md": "a6b2328c4fd9d8d8e9995be71c75cb98715cd1383c2a6273cb1ac6dbfb886089",
+  "corrected/native/capilla_quiroz_v17-asymmetric-native-vulkan.png": "c98a76b3db5e11ab9dcc6a6953d1d5af1f2007d191067c3e210e9ee1858b1c8a",
+  "corrected/native/capilla_quiroz_v17-iso-native-vulkan.png": "78774f20ac8e5ada616ce41e0f769b6c1d549f2e0e1a8ec44fe2dc7e53ec0eb4",
+  "corrected/native/gondola_v20-asymmetric-native-vulkan.png": "5cf2d897474e0fd2e10335a64690d6b830ae28a6c4e2f9044b53408b2c35e939",
+  "corrected/native/gondola_v20-iso-native-vulkan.png": "2905243230f4a6623045d1fa8ab476657fa1eb42a86dafb27b3500874e3b4971",
+  "corrected/native/native-world-results.json": "baca6a99a85ada3d16f0d7a67167f8e365661845321a86fead68b859eaf605da",
+  "corrected/native/nvidia-egl-icd.json": "438b95ede904f30f140a828a92efd00aa3a8de11582820a93bc0b0c189676327",
+  "corrected/native-nvidia.log": "49faa6c0dcdb4bea6bf69bdc1f77e2c3bd49008e68e4197654a8b1fe4bd7f0f6",
+  "corrected/strict-results.json": "7a00a8fdb886551ffa7dd8e631ceec245094647a09049150d8b28772a078e25f",
+  "corrected/transport.json": "654afd4f73d0b87a1d272288b598ff145a2212b7b742e2aeb4c83487ac40f5df",
+  "corrected-build.log": "00814f503d539f7b85d19e061c184e5ef83989a718d74cfd2935dba2305e9a87",
+  "corrected-check.log": "d00053f7a5a92f4a3704e9d6a1c9c5da2a589745b42080b33bcb11fde72b5b3c",
+  "initial/native/capilla_quiroz_v17-asymmetric-native-vulkan.png": "c98a76b3db5e11ab9dcc6a6953d1d5af1f2007d191067c3e210e9ee1858b1c8a",
+  "initial/native/capilla_quiroz_v17-iso-native-vulkan.png": "78774f20ac8e5ada616ce41e0f769b6c1d549f2e0e1a8ec44fe2dc7e53ec0eb4",
+  "initial/native/gondola_v20-asymmetric-native-vulkan.png": "5cf2d897474e0fd2e10335a64690d6b830ae28a6c4e2f9044b53408b2c35e939",
+  "initial/native/gondola_v20-iso-native-vulkan.png": "2905243230f4a6623045d1fa8ab476657fa1eb42a86dafb27b3500874e3b4971",
+  "initial/native/native-world-results.json": "baca6a99a85ada3d16f0d7a67167f8e365661845321a86fead68b859eaf605da",
+  "initial/native/nvidia-egl-icd.json": "438b95ede904f30f140a828a92efd00aa3a8de11582820a93bc0b0c189676327",
+  "initial/native-nvidia.log": "49faa6c0dcdb4bea6bf69bdc1f77e2c3bd49008e68e4197654a8b1fe4bd7f0f6",
+  "initial/strict-results.json": "7a00a8fdb886551ffa7dd8e631ceec245094647a09049150d8b28772a078e25f",
+  "initial/transport.json": "2acbbf25ca14d6ecd2095280f36573ececf61936be86a5ccaad110b6b57f80c7"
+}
