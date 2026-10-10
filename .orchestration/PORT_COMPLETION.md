@@ -285,3 +285,5 @@ LiveCIaudit:94238032137378FAIL+35938032281082FAIL samecenterhintMoveactualstep; 
 Reviewed startup ownership65951ac integrated: root fresh actual RTX eight exact inventories/refusal, strict negatives, canonical531 tests/twoignored pass. Device-loss/OOM recovery remains unproven. Metal host and paper section painters stay isolated pending terminal actual rendering checks. Full37rows/five gates retained.
 
 Public41a1 CI38045557038 completed SUCCESS across all configured jobs, freshly verified. Startup-owner ca846cc run38046222715 and isolated Metal Drop ab370eb run38046278347 are currently live; no premature cloud/nativeDrop adoption claim.
+
+Actual offscreen Metal Drop proof both architectures reviewed/integrateda2d3d1;531canonicalPASS2ignored. Isolated host530591d ARM WSI step failed bounded15s; no mainhostadoption. Root sectionfill isolated532PASS, freshsolid78exact, heldout-hatch replay31889live.
