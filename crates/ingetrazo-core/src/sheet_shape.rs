@@ -71,6 +71,22 @@ pub struct ShapePaint {
     pub clip: Option<std::sync::Arc<[DVec2]>>,
 }
 impl SheetShape {
+    /// Original composer placement rules in physical page coordinates.
+    pub fn from_drag(kind: &str, start: DVec2, end: DVec2) -> Result<Self, String> {
+        if !matches!(kind,"rect"|"elipse"|"poligono"|"linea"|"flecha"|"terreno") {
+            return Err("Unsupported sheet shape tool".into());
+        }
+        if !start.is_finite() || !end.is_finite() {
+            return Err("Non-finite sheet shape placement".into());
+        }
+        let min=start.min(end);let mut size=(end-start).abs();
+        if !size.is_finite() {return Err("Sheet shape placement exceeds numeric range".into());}
+        let linear=matches!(kind,"linea"|"flecha"|"terreno");
+        if !linear {size=size.max(DVec2::splat(2.));}
+        Ok(Self {kind:kind.into(),x_mm:min.x,y_mm:min.y,w_mm:size.x,h_mm:size.y,
+            invert:linear && ((end.x<start.x)!=(end.y<start.y)),
+            stroke_mm:if kind=="terreno" {0.5}else{0.35},..Self::default()})
+    }
     /// Local item coordinates; consumers translate once by x_mm/y_mm.
     /// All strokes require round caps, matching the original painter.
     pub fn paint_commands(&self, command_budget: usize) -> Result<Vec<ShapePaint>, String> {
@@ -286,4 +302,23 @@ mod tests {
         assert_eq!(points[0], DVec2::new(20., 0.));
         assert!(commands[0].fill.is_some());
     }
+}
+
+#[cfg(test)]mod placement_tests {
+ use super::*;
+ #[test]fn actual_original_placement_geometry_and_style() {
+  let rows:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/sheet-shape-original/placement-controls.json")).unwrap();
+  assert_eq!(rows["cases"].as_array().unwrap().len(),9);
+  for row in rows["cases"].as_array().unwrap() {
+   let p=row["points"].as_array().unwrap();let n=|i:usize|p[i].as_f64().unwrap();
+   let mut actual=SheetShape::from_drag(row["kind"].as_str().unwrap(),DVec2::new(n(0),n(1)),DVec2::new(n(2),n(3))).unwrap();
+   let expected:SheetShape=serde_json::from_value(row["shape"].clone()).unwrap();
+   actual.z=expected.z;assert_eq!(actual,expected,"{}",row["kind"]);
+  }
+ }
+ #[test]fn invalid_placement_refuses_without_partial_shape() {
+  assert!(SheetShape::from_drag("unsupported",DVec2::ZERO,DVec2::ONE).is_err());
+  assert!(SheetShape::from_drag("rect",DVec2::splat(f64::NAN),DVec2::ONE).is_err());
+  assert!(SheetShape::from_drag("rect",DVec2::splat(-f64::MAX),DVec2::splat(f64::MAX)).is_err());
+ }
 }

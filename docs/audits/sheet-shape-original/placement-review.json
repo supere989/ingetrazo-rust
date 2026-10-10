@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "actual_original_placement_history_cases": 9,
+  "native_controller_tests": 2,
+  "scope": "Production original place_tool/History and physical native shape constructor. Authoring native UI, remembered terrain style, z-order insertion, snapping and image/export remain open."
+}
