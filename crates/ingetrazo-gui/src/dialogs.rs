@@ -184,6 +184,7 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
             .anchor(egui::Align2::CENTER_CENTER, egui::vec2(0.0, 0.0))
             .show(ctx, |ui| {
                 ui.heading(tr("Application Preferences"));
+                let mut ask=app.document_session.preferences.extra.get("section_ask_name").and_then(|v|v.as_bool()).unwrap_or(true);if ui.checkbox(&mut ask,tr("Ask for section name after placement")).changed(){app.document_session.preferences.extra.insert("section_ask_name".into(),serde_json::json!(ask));}
                 ui.separator();
 
                 egui::Grid::new("pref_grid").spacing([12.0, 8.0]).show(ui, |ui| {

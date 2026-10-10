@@ -46,6 +46,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
+        let plane_count=self.scene.section_planes.len();
         let before = self.tool_snapshot();
         self.active_tool.on_click(&mut self.scene, context);
         self.status_message = self
@@ -53,7 +54,7 @@ impl IngeTrazoApp {
             .error_message()
             .map(|error| format!("Tool error: {error}"))
             .unwrap_or_default();
-        let _ = self.record_tool_commit(before);
+        if self.record_tool_commit(before).is_ok()&&self.scene.section_planes.len()>plane_count{self.queue_section_name_prompt();}
     }
 
     pub fn dispatch_tool_release(&mut self, context: &ToolContext, drag_distance: f64) {

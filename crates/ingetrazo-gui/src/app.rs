@@ -77,6 +77,7 @@ pub struct IngeTrazoApp {
     pub outliner_rename: Option<(uuid::Uuid,String)>,
     pub selected_saved_view: Option<usize>,
     pub paste_preview: Option<crate::clipboard::PastePreview>,
+    pub section_name_prompt:Option<(uuid::Uuid,String,String,bool)>,
     pub active_tray_tab: TrayTab,
     pub active_layer_idx: usize,
     pub selected_mat_category: Option<String>,
@@ -160,7 +161,7 @@ impl IngeTrazoApp {
             clipboard: None,
             system_clipboard: None,
             clipboard_document: uuid::Uuid::new_v4(),
-            paste_preview: None,
+            paste_preview: None,section_name_prompt:None,
             selected_saved_view: None,
             parts_options:crate::outliner::PartsOptions::default(),
             parts_cache:crate::outliner::PartsCache::default(),
@@ -997,6 +998,7 @@ impl eframe::App for IngeTrazoApp {
 
         // 7. Modal Dialogs
         render_dialogs(self, ctx);
+        crate::section_actions::render_section_name_prompt(self,ctx);
         crate::blender::render_blender_dialog(self, ctx);
     }
 }
