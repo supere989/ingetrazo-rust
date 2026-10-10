@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": [
+    "edited loose geometry",
+    "edited persistent instance identity/name/transform",
+    "unknown face/document metadata retained",
+    "fresh Rust transformed group original runtime reopen",
+    "fresh Rust saved view, section plane and geographic datum original runtime interpretation"
+  ],
+  "scope": "Synthetic geometry/group/view/section/datum fields; actual Python runtime loader, no GUI editing/render proof."
+}

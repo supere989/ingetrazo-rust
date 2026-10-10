@@ -1,4 +1,5 @@
 {
+  "negative_controls_detected": 7,
   "passed": true,
   "fixtures": [
     {

@@ -9,7 +9,7 @@ jobs:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
       - name: Install native build dependencies
-        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev pkg-config
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 pkg-config
       - name: Check mandatory original fixtures
         run: python3 -c "from pathlib import Path; names = [\"arco-yanque\", \"banca-pergola-yanque\", \"luminaria-solar-yanque\", \"pileta-fuente-yanque\"]; assert all((Path(\"ingetrazo/examples\") / (n + \".igz\")).is_file() for n in names), \"Missing original fixtures\""
       - run: cargo test --workspace --locked
@@ -18,9 +18,20 @@ jobs:
         run: python3 scripts/check-document-parity.py
       - name: Independent export buffer acceptance
         run: python3 scripts/check-export-parity.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install pinned original runtime in CI environment
+        run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Original Python runtime document reopen
+        run: python scripts/check-python-reopen.py
+      - name: Original Python runtime fresh and edited Rust interpretation
+        run: python scripts/check-python-edits.py
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: semantic-parity-evidence
-          path: docs/audits/*semantic-evidence.*
+          path: |
+            docs/audits/*semantic-evidence.*
+            docs/audits/python-*-evidence.json
