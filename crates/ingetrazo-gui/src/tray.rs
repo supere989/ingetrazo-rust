@@ -56,6 +56,7 @@ pub fn render_side_tray(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
 fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     crate::outliner::render_outliner(app,ui);
+    crate::dimension_actions::render_dimensions(app,ui);
     // --- 1. Entity Info Panel ---
     egui::CollapsingHeader::new(tr("Entity info"))
         .default_open(true)

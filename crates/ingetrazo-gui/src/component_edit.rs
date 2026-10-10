@@ -9,6 +9,7 @@ pub struct ComponentEditSession {
     original_undo: Vec<Scene>,
     original_redo: Vec<Scene>,
     group_id: uuid::Uuid,
+    dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
 }
 
 impl IngeTrazoApp {
@@ -54,16 +55,21 @@ impl IngeTrazoApp {
             self.status_message="Cannot edit a singular group placement".into();return;
         }
         self.set_tool(ToolType::Select);
-        let session=ComponentEditSession{
+        self.scene.refresh_dimensions();
+        let mut session=ComponentEditSession{
             original_scene:self.scene.clone(),original_camera:self.camera.clone(),
             original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
-            group_id:group.id,
+            group_id:group.id,dimension_baseline:vec![],
         };
         let mut edit=Scene::new();
         edit.mesh=group.mesh;edit.groups=group.children;
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
+        edit.dimensions=self.scene.dimensions.clone();
+        let inverse=group.transform.inverse();
+        for dimension in &mut edit.dimensions{dimension.start=inverse.transform_point3(dimension.start);dimension.end=inverse.transform_point3(dimension.end);dimension.offset=inverse.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;}
+        edit.bind_dimensions();session.dimension_baseline=edit.dimensions.clone();
         self.camera.target=group.transform.inverse().transform_point3(self.camera.target);
         edit.camera=self.camera.clone();
         self.scene=edit;self.component_edit_stack.push(session);
@@ -74,7 +80,7 @@ impl IngeTrazoApp {
         if self.component_edit_stack.is_empty() {self.status_message="No group edit is active".into();return;}
         // A group schema currently has mesh and child containers, not document
         // annotations. Refuse unsupported new local annotations instead of losing them.
-        if !self.scene.dimensions.is_empty() || !self.scene.guides.is_empty() || !self.scene.text_labels.is_empty()
+        if !self.scene.guides.is_empty() || !self.scene.text_labels.is_empty()
             || !self.scene.section_planes.is_empty() || !self.scene.geo_points.is_empty() || !self.scene.geo_paths.is_empty()
             || self.scene.geo_datum.is_some() || self.scene.terrain.is_some() || !self.scene.sheets.is_empty()
             || !self.scene.saved_views.is_empty() {
@@ -89,7 +95,8 @@ impl IngeTrazoApp {
         let old=&candidate.groups[group_index];
         let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
-            || candidate.component_definitions!=self.scene.component_definitions;
+            || candidate.component_definitions!=self.scene.component_definitions
+            || self.scene.dimensions!=session.dimension_baseline;
         if changed {
             let replacement=ComponentDefinition{mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
             let updates:Vec<_>=self.scene.component_definitions.iter().filter(|(id,def)|
@@ -106,6 +113,22 @@ impl IngeTrazoApp {
                 candidate.bump_version();
             }
             candidate.materials=self.scene.materials.clone();candidate.layers=self.scene.layers.clone();
+            if self.scene.dimensions!=session.dimension_baseline {
+                let transform=candidate.groups[group_index].transform;
+                candidate.dimensions=self.scene.dimensions.clone();
+                for dimension in &mut candidate.dimensions{
+                    let unchanged_axis=session.dimension_baseline.iter().find(|old|old.id==dimension.id).map(|old|old.axis==dimension.axis).unwrap_or(false);
+                    if !unchanged_axis{if let Some(axis)=dimension.axis.as_deref(){
+                        let vector=match axis{"x"=>glam::DVec3::X,"y"=>glam::DVec3::Y,"z"=>glam::DVec3::Z,_=>{self.status_message="Invalid dimension axis".into();return;}};
+                        let mapped=transform.transform_vector3(vector).normalize_or_zero();
+                        let target=[("x",glam::DVec3::X),("y",glam::DVec3::Y),("z",glam::DVec3::Z)].into_iter().find(|(_,v)|mapped.dot(*v).abs()>1.-1e-9);
+                        let Some((axis,_))=target else{self.status_message="An axial dimension in a rotated context cannot be represented by the original schema; use an aligned dimension".into();return;};dimension.axis=Some(axis.to_owned());
+                    }}
+                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;
+                }
+                candidate.bind_dimensions();
+            }
+            candidate.refresh_dimensions();
         }
         let session=self.component_edit_stack.pop().unwrap();
         self.scene=candidate;self.camera=session.original_camera;
@@ -136,6 +159,16 @@ mod tests {
         let group=Group::with_mesh("component",mesh);let id=group.id;app.scene.groups.push(group);app.scene.make_component(id).unwrap();
         let mut copy=app.scene.groups[0].duplicate_instance();copy.transform=DMat4::from_translation(DVec3::new(3.,4.,5.));app.scene.groups.push(copy);
         app.scene.select(SelectionItem::Group(0));app
+    }
+    #[test]
+    fn local_dimensions_commit_to_parent_coordinates_and_cancel_restore() {
+        let mut app=app();app.scene.clear_selection();app.scene.select(SelectionItem::Group(1));
+        let original=app.scene.clone();app.begin_component_edit();
+        app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y));app.scene.bind_dimensions();
+        app.finish_component_edit();assert_eq!(app.component_edit_stack.len(),0);assert_eq!(app.scene.dimensions.len(),1);
+        assert_eq!(app.scene.dimensions[0].start,DVec3::new(3.,4.,5.));assert_eq!(app.scene.dimensions[0].end,DVec3::new(4.,4.,5.));assert_eq!(app.scene.dimensions[0].offset,DVec3::Y);
+        assert_eq!(app.scene.dimensions[0].anchor_a.as_ref().unwrap().path,vec![app.scene.groups[1].id]);
+        app.undo();assert_eq!(app.scene,original);app.begin_component_edit();app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::Y,DVec3::X));app.cancel_component_edit();assert_eq!(app.scene,original);
     }
     #[test]
     fn component_edit_commits_all_instances_once_and_undo_redo_restores_registry() {

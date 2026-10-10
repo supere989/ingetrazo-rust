@@ -129,3 +129,4 @@ pub mod saved_view_actions;
 pub mod outliner;
 
 mod geometry_actions;
+pub mod dimension_actions;
