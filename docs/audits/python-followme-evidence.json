@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "77feaf5e79650c06187b4cb9702a239bd27c57dc",
+    "rust_commit": "82b94ba49a4d2ab6dcd278554f62f8294766a879",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -85,6 +85,18 @@
       "original_volume": 4.070552245498565,
       "rust_volume": 4.070552359183047,
       "symmetric_difference_volume": 1.4067098915950378e-07
+    },
+    {
+      "case": "sphere-wire0-1-1",
+      "original_volume": 4.070552068435163,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 2.9074788445229705e-07
+    },
+    {
+      "case": "sphere-wire7_5-1-1",
+      "original_volume": 4.070552286704071,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 1.6917590747204155e-07
     }
   ],
   "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Arbitrary path and interactive workflow remain open."
