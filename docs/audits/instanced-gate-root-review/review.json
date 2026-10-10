@@ -1,0 +1,9 @@
+{
+  "candidate": "112d6c8",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-backpaint-review-target cargo test --locked --workspace",
+  "passed": 397,
+  "failed": 0,
+  "ignored": 2,
+  "log_sha256": "41d72ad649345b5e59b8ebe349099aae9bab2483c09266f14f2a3e738124fab6",
+  "remaining": "Independent actual instance gate and mirrored winding correction; prototype eligibility and texture/group boundary remain open."
+}
