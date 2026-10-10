@@ -15,6 +15,8 @@ pub struct PushPullTool {
     pub extrusion_distance: f64,
     pub is_dragging: bool,
     pub last_distance: Option<f64>,
+    pub keep_base: bool,
+    pub error: Option<String>,
 }
 
 impl PushPullTool {
@@ -28,6 +30,8 @@ impl PushPullTool {
         self.start_point = None;
         self.extrusion_distance = 0.0;
         self.is_dragging = false;
+        self.keep_base = false;
+        self.error = None;
     }
 
     /// Prepare the whole extrusion before changing the scene. A free face
@@ -35,6 +39,15 @@ impl PushPullTool {
     /// solids use union/difference so inward pushes remove material and outward
     /// pushes remove the former cap/internal partitions.
     pub fn extrude_face(scene: &mut Scene, face_id: usize, distance: f64) -> Result<(), String> {
+        Self::extrude_face_with_options(scene, face_id, distance, false)
+    }
+    /// Ctrl copies a segment and retains the original cap as a slab division.
+    pub fn extrude_face_with_options(
+        scene: &mut Scene,
+        face_id: usize,
+        distance: f64,
+        keep_base: bool,
+    ) -> Result<(), String> {
         use ingetrazo_core::{
             math::newell_vector,
             mesh::{Mesh, MeshFace},
@@ -212,9 +225,51 @@ impl PushPullTool {
                 .map(|h| h.iter().map(|&v| mesh.vertices[v].position).collect())
                 .collect();
             add_polygon(&mut component, &points, &holes, original)?;
+            component.faces.last_mut().unwrap().interior = original.interior;
         }
         let was_solid = solid_report(&component).0;
-        let mut candidate = if was_solid {
+        let mut candidate = if keep_base && component_faces.len() > 1 {
+            if was_solid {
+                ingetrazo_core::solids::validate_solid_mesh(&component)?;
+            }
+            ingetrazo_core::solids::validate_solid_mesh(&prism)?;
+            let mut result = mesh.clone();
+            let mut wall_planes = vec![];
+            for (id, original) in prism.faces.iter().enumerate() {
+                if id == 0 {
+                    continue;
+                }
+                let points: Vec<_> = original
+                    .vertices
+                    .iter()
+                    .map(|&v| prism.vertices[v].position)
+                    .collect();
+                let holes: Vec<Vec<_>> = original
+                    .holes
+                    .iter()
+                    .map(|r| r.iter().map(|&v| prism.vertices[v].position).collect())
+                    .collect();
+                if id >= 2 {
+                    wall_planes.push((points[0], prism.face_normal(id)));
+                }
+                add_polygon(&mut result, &points, &holes, original)?;
+            }
+            // Coplanar inward strips are overlapping boundary subdivisions,
+            // not coincident walls. Rebuild each touched wall plane while the
+            // kept slab and its belt remain explicit document geometry.
+            for (point, normal) in wall_planes {
+                let selected = result.faces.iter().position(|f| {
+                    f.vertices
+                        .iter()
+                        .all(|&v| (result.vertices[v].position - point).dot(normal).abs() < 1e-6)
+                });
+                if let Some(id) = selected {
+                    result = ingetrazo_core::planar::rebuild_faces(&result, &[id])?;
+                }
+            }
+            result = ingetrazo_core::planar::stitch_boundaries(&result)?;
+            ingetrazo_core::heal::orient_faces(&result)?
+        } else if was_solid {
             let anchor = component.vertices[0].position;
             let signed_volume: f64 = (0..component.faces.len())
                 .flat_map(|fid| component.triangulate_face(fid))
@@ -380,7 +435,11 @@ impl Tool for PushPullTool {
         self.reset();
     }
 
+    fn error_message(&self) -> Option<&str> {
+        self.error.as_deref()
+    }
     fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        self.keep_base = ctx.ctrl_held;
         if !self.is_dragging {
             self.hovered_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
         } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
@@ -390,6 +449,7 @@ impl Tool for PushPullTool {
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        self.keep_base = ctx.ctrl_held;
         if !self.is_dragging {
             let face_pick = self
                 .hovered_face
@@ -403,10 +463,13 @@ impl Tool for PushPullTool {
             }
         } else if let Some(face_id) = self.selected_face {
             let dist = self.extrusion_distance;
-            if Self::extrude_face(scene, face_id, dist).is_ok() {
-                self.last_distance = Some(dist);
+            match Self::extrude_face_with_options(scene, face_id, dist, self.keep_base) {
+                Ok(()) => {
+                    self.last_distance = Some(dist);
+                    self.reset();
+                }
+                Err(error) => self.error = Some(error),
             }
-            self.reset();
         }
     }
 
@@ -417,8 +480,10 @@ impl Tool for PushPullTool {
                 .or_else(|| crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id));
 
             if let Some(face_id) = face_pick {
-                let _ = Self::extrude_face(scene, face_id, last_d);
-                self.reset();
+                match Self::extrude_face_with_options(scene, face_id, last_d, ctx.ctrl_held) {
+                    Ok(()) => self.reset(),
+                    Err(error) => self.error = Some(error),
+                }
                 return;
             }
         }
@@ -432,12 +497,22 @@ impl Tool for PushPullTool {
             .map_err(|e| format!("Invalid distance: {e}"))?;
 
         if let Some(face_id) = self.selected_face {
-            Self::extrude_face(scene, face_id, dist)?;
+            if let Err(error) =
+                Self::extrude_face_with_options(scene, face_id, dist, self.keep_base)
+            {
+                self.error = Some(error.clone());
+                return Err(error);
+            }
             self.last_distance = Some(dist);
             self.reset();
             Ok(())
         } else if let Some(face_id) = self.hovered_face {
-            Self::extrude_face(scene, face_id, dist)?;
+            if let Err(error) =
+                Self::extrude_face_with_options(scene, face_id, dist, self.keep_base)
+            {
+                self.error = Some(error.clone());
+                return Err(error);
+            }
             self.last_distance = Some(dist);
             self.reset();
             Ok(())
@@ -460,6 +535,49 @@ mod tests {
         let v3 = scene.mesh.add_vertex(DVec3::new(0.0, 1.0, 0.0));
         scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]);
         scene
+    }
+
+    #[test]
+    fn ctrl_cap_copy_retains_slab_belts_and_inward_material() {
+        for distance in [2., -2.] {
+            let mut scene = make_test_square_scene();
+            PushPullTool::extrude_face(&mut scene, 0, 3.).unwrap();
+            let top = scene
+                .mesh
+                .faces
+                .iter()
+                .enumerate()
+                .find(|(_, f)| {
+                    f.vertices
+                        .iter()
+                        .all(|&v| (scene.mesh.vertices[v].position.z - 3.).abs() < 1e-8)
+                })
+                .map(|(i, _)| i)
+                .unwrap();
+            let ids: Vec<_> = scene.mesh.vertices.iter().map(|v| v.uid).collect();
+            PushPullTool::extrude_face_with_options(&mut scene, top, distance, true).unwrap();
+            assert_eq!(scene.mesh.faces.len(), 11);
+            assert_eq!(scene.mesh.faces.iter().filter(|f| f.interior).count(), 1);
+            assert!(
+                (scene.mesh.volume().unwrap() - if distance > 0. { 5. } else { 3. }).abs() < 1e-8
+            );
+            assert!(ids
+                .iter()
+                .all(|id| scene.mesh.vertices.iter().any(|v| v.uid == *id)));
+            let belt = if distance > 0. { 3. } else { 1. };
+            let edges: Vec<_> = scene
+                .mesh
+                .edges
+                .iter()
+                .filter(|e| {
+                    (scene.mesh.vertices[e.v0].position.z - belt).abs() < 1e-8
+                        && (scene.mesh.vertices[e.v1].position.z - belt).abs() < 1e-8
+                })
+                .collect();
+            assert_eq!(edges.len(), 4);
+            assert!(edges.iter().all(|e| e.faces.len() == 3));
+            ingetrazo_core::solids::validate_solid_mesh(&scene.mesh).unwrap();
+        }
     }
 
     #[test]

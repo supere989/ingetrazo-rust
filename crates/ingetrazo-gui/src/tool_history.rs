@@ -147,6 +147,14 @@ mod tests {
     }
 
     #[test]
+    fn ctrl_pushpull_vcb_preserves_slab_and_commits_one_undo() {
+        let mut app=app();ingetrazo_tools::pushpull::PushPullTool::extrude_face(&mut app.scene,0,3.).unwrap();
+        app.active_tool=create_tool(ToolType::PushPull);app.active_tool_type=ToolType::PushPull;let before=app.scene.mesh.clone();
+        let mut ctx=context(3.);ctx.ctrl_held=true;app.dispatch_tool_click(&ctx);app.active_tool.on_move(&mut app.scene,&ctx);assert_eq!(app.scene.mesh,before);assert!(app.undo_stack.is_empty());
+        app.dispatch_tool_vcb("2").unwrap();assert_eq!(app.scene.mesh.faces.len(),11);assert_eq!(app.scene.mesh.faces.iter().filter(|f|f.interior).count(),1);assert_eq!(app.undo_stack.len(),1);let after=app.scene.mesh.clone();app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,after);
+    }
+
+    #[test]
     fn offset_preview_failure_cancel_and_success_have_transactional_history() {
         let mut app=app();app.active_tool=create_tool(ToolType::Offset);app.active_tool_type=ToolType::Offset;
         let before=app.scene.mesh.clone();let click=context(0.);
