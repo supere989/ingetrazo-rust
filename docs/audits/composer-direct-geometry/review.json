@@ -11,9 +11,15 @@
   "limitations": [
     "currentcurvesandcoverageinheritexistingeguiapproximation",
     "notyetproductioncomposerhooked",
-    "cachekey/lifetimehookpending",
     "strictnineimageparitypending",
-    "expandedCADdarkcolorprecisionFAILretainedindependently"
+    "expandedCADdarkcolorprecisionFAILretainedindependently",
+    "nativehandle/productioncomposerhookpending"
   ],
-  "canonical_promotion": false
+  "canonical_promotion": false,
+  "cache_controls": [
+    "pose/stackingmetadata retainexactGeometryandBatchArcs",
+    "palette change retainsgeometryidentity withoutretessellation",
+    "invalidpalette atomic retainspriorgeometryandbatches",
+    "geometryorAAphysicaldensitychanges preparefreshidentity"
+  ]
 }
