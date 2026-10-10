@@ -512,10 +512,25 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
         let mut mesh = ingetrazo_core::mesh::Mesh::new();
         for group in &scene.groups {
             for face in &group.mesh.faces {
-                let outer=face.vertices.iter().map(|&v|mesh.add_vertex(group.mesh.vertices[v].position)).collect();
-                let holes=face.holes.iter().map(|ring|ring.iter().map(|&v|mesh.add_vertex(group.mesh.vertices[v].position)).collect()).collect();
-                let id=mesh.add_face(outer,holes).ok_or_else(||invalid("invalid editable COLLADA face"))?;
-                mesh.faces[id].attrs=face.attrs.clone();mesh.faces[id].layer=face.layer.clone();
+                let outer = face
+                    .vertices
+                    .iter()
+                    .map(|&v| mesh.add_vertex(group.mesh.vertices[v].position))
+                    .collect();
+                let holes = face
+                    .holes
+                    .iter()
+                    .map(|ring| {
+                        ring.iter()
+                            .map(|&v| mesh.add_vertex(group.mesh.vertices[v].position))
+                            .collect()
+                    })
+                    .collect();
+                let id = mesh
+                    .add_face(outer, holes)
+                    .ok_or_else(|| invalid("invalid editable COLLADA face"))?;
+                mesh.faces[id].attrs = face.attrs.clone();
+                mesh.faces[id].layer = face.layer.clone();
             }
         }
         let (mesh, _) =
@@ -571,6 +586,22 @@ pub(crate) fn scene_from_xml_at(
     };
     let world = axis * DMat4::from_scale(DVec3::splat(unit));
     let mut scene = Scene::new();
+    if let Some(geo) = asset
+        .and_then(|n| child(n, "coverage"))
+        .and_then(|n| child(n, "geographic_location"))
+    {
+        let scalar = |name: &str| {
+            child(geo, name)
+                .and_then(|n| n.text())
+                .and_then(|s| s.trim().parse::<f64>().ok())
+                .filter(|n| n.is_finite())
+        };
+        if let (Some(lat), Some(lon)) = (scalar("latitude"), scalar("longitude")) {
+            let alt = scalar("altitude").unwrap_or(0.);
+            scene.geo_datum = Some(ingetrazo_core::georef::SceneDatum::new(lat, lon, alt, 0.));
+        }
+    }
+
     fn mesh_group(
         node: Node<'_, '_>,
         world: DMat4,
@@ -742,6 +773,14 @@ mod tests {
         assert!((DVec3::new(m[0], m[1], m[2]).dot(point) + m[3] - 1.).abs() < 1e-10);
         assert!(scene_from_xml(&xml).is_err());
         std::fs::remove_dir_all(folder).unwrap();
+    }
+    #[test]
+    fn geographic_asset_preserves_site_anchor() {
+        let xml=document().replace("<unit meter=\"0.01\"/>","<unit meter=\"0.01\"/><coverage><geographic_location><latitude>51.5</latitude><longitude>-0.1</longitude><altitude>32</altitude></geographic_location></coverage>");
+        let scene = scene_from_xml(&xml).unwrap();
+        let datum = scene.geo_datum.unwrap();
+        assert_eq!((datum.lat, datum.lon, datum.alt), (51.5, -0.1, 32.));
+        assert_eq!(datum.north, 0.);
     }
     #[test]
     fn strided_accessors_instances_units_upaxis_and_reflection_are_composed() {
