@@ -9,6 +9,19 @@ use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 use std::{collections::VecDeque, mem::ManuallyDrop, sync::atomic::Ordering};
 use winit::window::Window;
 
+fn terminal_proof(
+    status: MTLCommandBufferStatus,
+    callback_seen: bool,
+    time: f64,
+) -> Result<Option<bool>, String> {
+    if status != MTLCommandBufferStatus::Completed || !callback_seen {
+        return Ok(None);
+    }
+    if !time.is_finite() || time < 0. {
+        return Err("Invalid native presentation completion timestamp; ownership retained".into());
+    }
+    Ok(Some(time > 0.))
+}
 struct Frame {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
@@ -123,19 +136,19 @@ impl MetalPresentation {
             // presentation callback also arrives for skipped frames (actual
             // ARM/Intel observer evidence). Positive timestamps alone count as
             // display proof; zero callback times remain explicitly skipped.
-            if frame.command.status() != MTLCommandBufferStatus::Completed
-                || !frame.callback_seen.load(Ordering::Acquire)
-            {
-                break;
-            }
-            let time = f64::from_bits(frame.callback_time.load(Ordering::Acquire));
-            if !time.is_finite() || time < 0. {
-                self.owners.metal.poisoned.store(true, Ordering::Release);
-                return Err(
-                    "Invalid native presentation completion timestamp; ownership retained".into(),
-                );
-            }
-            if time > 0. {
+            let displayed = match terminal_proof(
+                frame.command.status(),
+                frame.callback_seen.load(Ordering::Acquire),
+                f64::from_bits(frame.callback_time.load(Ordering::Acquire)),
+            ) {
+                Ok(Some(displayed)) => displayed,
+                Ok(None) => break,
+                Err(error) => {
+                    self.owners.metal.poisoned.store(true, Ordering::Release);
+                    return Err(error);
+                }
+            };
+            if displayed {
                 self.displayed += 1;
             } else {
                 self.skipped += 1;
@@ -309,5 +322,31 @@ impl Drop for MetalPresentation {
                 self.owners.frames.len()
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn gpu_completion_and_terminal_callback_are_both_required() {
+        assert_eq!(
+            terminal_proof(MTLCommandBufferStatus::Completed, false, 1.).unwrap(),
+            None
+        );
+        assert_eq!(
+            terminal_proof(MTLCommandBufferStatus::Scheduled, true, 1.).unwrap(),
+            None
+        );
+        assert_eq!(
+            terminal_proof(MTLCommandBufferStatus::Completed, true, 0.).unwrap(),
+            Some(false)
+        );
+        assert_eq!(
+            terminal_proof(MTLCommandBufferStatus::Completed, true, 1.).unwrap(),
+            Some(true)
+        );
+        assert!(terminal_proof(MTLCommandBufferStatus::Completed, true, f64::NAN).is_err());
+        assert!(terminal_proof(MTLCommandBufferStatus::Completed, true, -1.).is_err());
     }
 }
