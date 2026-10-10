@@ -1,0 +1,886 @@
+{
+  "passed": true,
+  "binary_sha256": "da30586b4ca3b255438de6c5c510c0d6f0a5b8922e1104aafc63aca9db6f1dc9",
+  "original_fixture_sha256": null,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual normal Composer button/pointer/double-click/keyboard Text placement/edit/CtrlEnter/UndoRedo/Escape/outside through native Vulkan public update_ui; editor typography not pixel-compared",
+  "states": [
+    {
+      "label": "placed",
+      "state": {
+        "serial": 28,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": null,
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "draft",
+      "state": {
+        "serial": 68,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "local-undo",
+      "state": {
+        "serial": 82,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "Text",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "local-redo",
+      "state": {
+        "serial": 97,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "committed",
+      "state": {
+        "serial": 113,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          2,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "hello\nworld",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo",
+      "state": {
+        "serial": 129,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          1,
+          1
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo",
+      "state": {
+        "serial": 145,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          2,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "hello\nworld",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "escape-active",
+      "state": {
+        "serial": 205,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.432695289,
+            "clicked": true,
+            "double": false,
+            "triple": false,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.523779154,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "discard",
+        "text_tool": false,
+        "history": [
+          2,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "hello\nworld",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "blank-active",
+      "state": {
+        "serial": 227,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.432695289,
+            "clicked": true,
+            "double": false,
+            "triple": false,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.523779154,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.805118796,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": true
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "discard",
+        "text_tool": false,
+        "history": [
+          2,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "hello\nworld",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "second-commit",
+      "state": {
+        "serial": 240,
+        "pointer_events": [
+          {
+            "at": 0.232883813,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.592038163,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.662379517,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.432695289,
+            "clicked": true,
+            "double": false,
+            "triple": false,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.523779154,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 1.805118796,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": true
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          3,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "9287cb2e-a445-459f-9434-fb72b9808ac3",
+            "text": "discard",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

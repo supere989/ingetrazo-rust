@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "scope": "Exact model text/history at 11 actual gesture phases; local undo chunk granularity and placement pixel rounding retained separately; no editor pixel equality",
+  "phases": [
+    {
+      "phase": "placed",
+      "model_texts": [
+        "Text"
+      ],
+      "history": [
+        1,
+        0
+      ],
+      "original_draft": null,
+      "native_draft": null
+    },
+    {
+      "phase": "draft",
+      "model_texts": [
+        "Text"
+      ],
+      "history": [
+        1,
+        0
+      ],
+      "original_draft": "hello\nworld",
+      "native_draft": "hello\nworld"
+    },
+    {
+      "phase": "local-undo",
+      "model_texts": [
+        "Text"
+      ],
+      "history": [
+        1,
+        0
+      ],
+      "original_draft": "hello\n",
+      "native_draft": "Text"
+    },
+    {
+      "phase": "local-redo",
+      "model_texts": [
+        "Text"
+      ],
+      "history": [
+        1,
+        0
+      ],
+      "original_draft": "hello\nworld",
+      "native_draft": "hello\nworld"
+    },
+    {
+      "phase": "committed",
+      "model_texts": [
+        "hello\nworld"
+      ],
+      "history": [
+        2,
+        0
+      ],
+      "original_draft": null,
+      "native_draft": null
+    },
+    {
+      "phase": "undo",
+      "model_texts": [
+        "Text"
+      ],
+      "history": [
+        1,
+        1
+      ],
+      "original_draft": null,
+      "native_draft": null
+    },
+    {
+      "phase": "redo",
+      "model_texts": [
+        "hello\nworld"
+      ],
+      "history": [
+        2,
+        0
+      ],
+      "original_draft": null,
+      "native_draft": null
+    },
+    {
+      "phase": "escape-active",
+      "model_texts": [
+        "hello\nworld"
+      ],
+      "history": [
+        2,
+        0
+      ],
+      "original_draft": "discard",
+      "native_draft": "discard"
+    },
+    {
+      "phase": "blank-active",
+      "model_texts": [
+        "hello\nworld"
+      ],
+      "history": [
+        2,
+        0
+      ],
+      "original_draft": "discard",
+      "native_draft": "discard"
+    },
+    {
+      "phase": "second-commit",
+      "model_texts": [
+        "discard"
+      ],
+      "history": [
+        3,
+        0
+      ],
+      "original_draft": null,
+      "native_draft": null
+    }
+  ]
+}

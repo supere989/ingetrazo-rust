@@ -1,0 +1,116 @@
+{
+  "rows": [
+    {
+      "label": "placed",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Text",
+          "z": 0.0
+        }
+      ],
+      "undo": 1,
+      "redo": 0,
+      "mode": "select"
+    },
+    {
+      "label": "draft",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Text",
+          "z": 0.0
+        }
+      ],
+      "undo": 1,
+      "redo": 0,
+      "mode": "select"
+    },
+    {
+      "label": "committed",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Hello\nworld",
+          "z": 0.0
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "mode": "select"
+    },
+    {
+      "label": "undo",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Text",
+          "z": 0.0
+        }
+      ],
+      "undo": 1,
+      "redo": 1,
+      "mode": "select"
+    },
+    {
+      "label": "redo",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Hello\nworld",
+          "z": 0.0
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "mode": "select"
+    },
+    {
+      "label": "cancel",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Hello\nworld",
+          "z": 0.0
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "mode": "select"
+    },
+    {
+      "label": "noop",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Hello\nworld",
+          "z": 0.0
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "mode": "select"
+    },
+    {
+      "label": "locked",
+      "texts": [
+        {
+          "x": 23.0,
+          "y": 41.0,
+          "text": "Hello\nworld",
+          "z": 0.0
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "mode": "select"
+    }
+  ]
+}
