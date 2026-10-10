@@ -52,6 +52,7 @@ fn main() {
             fill: None,
             stroke_options: None,
             clip: None,
+            clip_intersection: None,
         }],
     }];
     TRACK.store(true, Ordering::Relaxed);
