@@ -157,9 +157,26 @@ def main():
      moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
      assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
      ctrl_key(0x61);observe("delete-selected");key(0xffff);observe("delete-key")
-     move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
+     if original and os.environ.get("INGETRAZO_DELETE_COALESCE_NEGATIVE")=="1":
+      import signal
+      os.kill(app.pid,signal.SIGSTOP)
+      try:move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
+      finally:os.kill(app.pid,signal.SIGCONT)
+     else:
+      away=[moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]
+      move(away)
+      if original:
+       # Qt can compress an away/back pair to no event at all when its
+       # final position equals the old one. Acknowledge the actual first
+       # event before issuing the return, without retrying the gesture.
+       wait(lambda:state() if state().get("mouse_events") and state()["mouse_events"][-1]["edges"]==0 and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,away)))<1 else None)
+      move(moved["center_pixel"])
+      if original:wait(lambda:state() if state().get("mouse_events") and state()["mouse_events"][-1]["edges"]==0 and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,moved["center_pixel"])))<1 else None)
      deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
-     assert deleted["undo"]==2;capture("deleted-center")
+     assert deleted["undo"]==2
+     if original:
+      assert deleted["center_hint_observation"]["valid_reference"] is False and deleted["center_hint_observation"]["allowed"] is False
+     capture("deleted-center")
      report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_hint_metrics":hint_metrics,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":not hint_metrics["filled_center"],"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
    report["approach_hint_metrics"]=hint_metrics
