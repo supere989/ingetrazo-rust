@@ -540,6 +540,18 @@ impl Renderer {
             return Ok(());
         }
 
+        // Native-only first frames need no dummy/zero-sized UI mesh buffers.
+        if primitives.iter().all(|p| matches!(p.primitive, Primitive::Callback(_))) {
+            for primitive in primitives {
+                if let Primitive::Callback(callback)=&primitive.primitive {
+                    if let Some(native)=callback.callback.downcast_ref::<VulkanPaintCallback>() {
+                        native.0.paint(&egui::PaintCallbackInfo{viewport:callback.rect,clip_rect:primitive.clip_rect,pixels_per_point,screen_size_px:[extent.width,extent.height]},&self.device,command_buffer)?;
+                    }
+                }
+            }
+            return Ok(());
+        }
+
         if self.frames.is_none() {
             self.frames.replace(Frames::new(
                 &self.device,
