@@ -380,6 +380,52 @@ fn diffuse_image<'a, 'i>(
         .copied()
         .ok_or_else(|| invalid("unresolved texture image"))
 }
+fn representative_image_color(bytes: &[u8]) -> Option<[f64; 3]> {
+    image::load_from_memory(bytes).ok().map(|decoded| {
+        let decoded = decoded.to_rgba8();
+        if decoded.pixels().all(|p| p[3] == 255) {
+            // Qt smooth downsampling uses 14-bit area weights,
+            // truncating horizontal accumulation before vertical.
+            let weights = |n: u32| {
+                let step = 16384_u64.div_ceil(u64::from(n));
+                let mut left = 16384_u64;
+                (0..n)
+                    .map(|_| {
+                        let w = step.min(left);
+                        left -= w;
+                        w
+                    })
+                    .collect::<Vec<_>>()
+            };
+            let wx = weights(decoded.width());
+            let wy = weights(decoded.height());
+            let mut total = [0_u64; 3];
+            for (y, row) in decoded.rows().enumerate() {
+                let mut horizontal = [0_u64; 3];
+                for (x, pixel) in row.enumerate() {
+                    for i in 0..3 {
+                        horizontal[i] += u64::from(pixel[i]) * wx[x];
+                    }
+                }
+                for i in 0..3 {
+                    total[i] += (horizontal[i] >> 4) * wy[y];
+                }
+            }
+            return total.map(|v| (v >> 24) as f64 / 255.);
+        }
+        let mut sums = [0_u64; 3];
+        let mut alpha = 0_u64;
+        for pixel in decoded.pixels() {
+            alpha += u64::from(pixel[3]);
+            for i in 0..3 {
+                sums[i] += u64::from(pixel[i]) * u64::from(pixel[3]);
+            }
+        }
+        // Smooth image reduction averages premultiplied colors:
+        // transparent RGB must not tint the material fallback.
+        sums.map(|sum| ((sum + alpha / 2) / alpha.max(1)) as f64 / 255.)
+    })
+}
 #[derive(Default)]
 struct DaeMaterial {
     color: Option<[f64; 3]>,
@@ -422,31 +468,7 @@ fn material_colors<'a, 'i>(
                 let symbol = binding
                     .attribute("symbol")
                     .ok_or_else(|| invalid("missing material symbol"))?;
-                let fallback = image::load_from_memory(&bytes).ok().map(|decoded| {
-                    let decoded = decoded.to_rgba8();
-                    if decoded.pixels().all(|p| p[3] == 255) {
-                        // Qt smooth downsampling uses 14-bit area weights,
-                        // truncating horizontal accumulation before vertical.
-                        let weights = |n: u32| { let step = 16384_u64.div_ceil(u64::from(n)); let mut left = 16384_u64; (0..n).map(|_| { let w = step.min(left); left -= w; w }).collect::<Vec<_>>() };
-                        let wx = weights(decoded.width()); let wy = weights(decoded.height());
-                        let mut total = [0_u64; 3];
-                        for (y, row) in decoded.rows().enumerate() {
-                            let mut horizontal = [0_u64; 3];
-                            for (x, pixel) in row.enumerate() { for i in 0..3 { horizontal[i] += u64::from(pixel[i]) * wx[x]; } }
-                            for i in 0..3 { total[i] += (horizontal[i] >> 4) * wy[y]; }
-                        }
-                        return total.map(|v| (v >> 24) as f64 / 255.);
-                    }
-                    let mut sums = [0_u64; 3];
-                    let mut alpha = 0_u64;
-                    for pixel in decoded.pixels() {
-                        alpha += u64::from(pixel[3]);
-                        for i in 0..3 { sums[i] += u64::from(pixel[i]) * u64::from(pixel[3]); }
-                    }
-                    // Smooth image reduction averages premultiplied colors:
-                    // transparent RGB must not tint the material fallback.
-                    sums.map(|sum| ((sum + alpha / 2) / alpha.max(1)) as f64 / 255.)
-                });
+                let fallback = representative_image_color(&bytes);
                 assets.insert(key.clone(), bytes);
                 colors.insert(
                     symbol.to_owned(),
@@ -655,7 +677,10 @@ pub(crate) fn scene_from_xml_at(
                 .as_ref()
                 .and_then(|symbol| colors.get(symbol))
             {
-                if let Some(color) = material.color.filter(|_| material.image.is_none() || polygon.uv.is_none()) {
+                if let Some(color) = material
+                    .color
+                    .filter(|_| material.image.is_none() || polygon.uv.is_none())
+                {
                     mesh.faces[id]
                         .attrs
                         .insert("color".into(), serde_json::json!(color));
@@ -962,5 +987,44 @@ mod image_file_tests {
             assert!(image_bytes(doc.root_element(), &folder).is_err());
         }
         std::fs::remove_dir_all(folder).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod representative_image_tests {
+    use super::*;
+    fn color(pixels: [[u8; 4]; 4]) -> [f64; 3] {
+        let image =
+            image::RgbaImage::from_fn(2, 2, |x, y| image::Rgba(pixels[(y * 2 + x) as usize]));
+        let mut output = std::io::Cursor::new(Vec::new());
+        image::DynamicImage::ImageRgba8(image)
+            .write_to(&mut output, image::ImageFormat::Png)
+            .unwrap();
+        representative_image_color(output.get_ref()).unwrap()
+    }
+    #[test]
+    fn original_qt_opaque_fixed_point_and_alpha_weighted_controls() {
+        assert_eq!(
+            color([
+                [255, 0, 0, 255],
+                [0, 255, 0, 255],
+                [0, 0, 255, 255],
+                [255, 255, 255, 255]
+            ]),
+            [127. / 255.; 3]
+        );
+        assert_eq!(
+            color([[203, 71, 29, 255]; 4]),
+            [203. / 255., 71. / 255., 29. / 255.]
+        );
+        assert_eq!(
+            color([
+                [255, 0, 0, 255],
+                [0, 255, 0, 128],
+                [0, 0, 255, 64],
+                [255, 255, 255, 0]
+            ]),
+            [145. / 255., 73. / 255., 37. / 255.]
+        );
     }
 }
