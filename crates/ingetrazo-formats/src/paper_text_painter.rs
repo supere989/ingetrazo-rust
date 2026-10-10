@@ -42,6 +42,80 @@ impl Painter {
             self.resolver.as_ref().map(Resolver::stats),
         )
     }
+    /// Source background metrics intentionally ignore italic/underline and use primary font spacing.
+    pub fn draw_with_background(
+        &mut self,
+        style: &TextStyle<'_>,
+        color: [f32; 4],
+    ) -> Result<Vec<Draw>, String> {
+        if color
+            .iter()
+            .any(|v| !v.is_finite() || !(0. ..=1.).contains(v))
+        {
+            return Err("Invalid paper text background".into());
+        }
+        let mut draws = self.draw(style)?;
+        let size_mm = style.size_pt * 25.4 / 72.;
+        let scale = size_mm / 100. * 0.75;
+        let (y0, y1) = if style.text.is_empty() {
+            (0., size_mm)
+        } else {
+            let request = Request {
+                family: style.family.into(),
+                bold: style.bold,
+                italic: false,
+                required_chars: vec![],
+            };
+            let resolver = self.resolver.as_mut().unwrap();
+            let font = resolver.resolve(request.clone())?.font;
+            let paragraph = self.cache.layout(
+                resolver,
+                &request,
+                style.text,
+                style.width_mm.max(0.5) / scale,
+                Alignment::Left,
+            )?;
+            let ascent = font.ascent_26_6() as f64 / 64.;
+            let descent = font.descent_26_6() as f64 / 64.;
+            let height = ascent + descent;
+            let spacing = height + font.leading_26_6() as f64 / 64.;
+            let n = (paragraph.height_26_6 as f64 / 64. / height.max(1e-6))
+                .round_ties_even()
+                .max(1.);
+            (
+                (ascent - font.cap_height_26_6() as f64 / 64.) * scale - 0.25 * size_mm,
+                (height + (n - 1.) * spacing) * scale + 0.05 * size_mm,
+            )
+        };
+        let h = (y1 - y0).max(1.);
+        let x0 = -0.5;
+        let x1 = style.width_mm + 0.5;
+        draws
+            .try_reserve(1)
+            .map_err(|_| "Paper background draw allocation failed")?;
+        draws.insert(
+            0,
+            Draw {
+                origin_mm: style.origin_mm,
+                path: vec![
+                    PathOp::Move([x0, y0]),
+                    PathOp::Line([x1, y0]),
+                    PathOp::Line([x1, y0 + h]),
+                    PathOp::Line([x0, y0 + h]),
+                    PathOp::Close,
+                ],
+                fill: Some(color),
+                stroke: None,
+                stroke_options: None,
+                clip: None,
+                clip_intersection: None,
+                text: None,
+                flatten_transform: false,
+                even_odd: false,
+            },
+        );
+        Ok(draws)
+    }
     pub fn draw(&mut self, style: &TextStyle<'_>) -> Result<Vec<Draw>, String> {
         if style.family.len() > 1024
             || style.family.as_bytes().contains(&0)
@@ -126,6 +200,10 @@ impl Painter {
                         ],
                     });
                     x += glyph.advance[0] as f64 / 64.;
+                }
+                // QPdf emits RTL glyphs in logical order with negative relative advances.
+                if run.rtl {
+                    glyphs.reverse();
                 }
                 let mut decorations = vec![];
                 if style.underline {

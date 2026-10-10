@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QPainter,QPdfWriter,QFontInfo,QFontMetricsF,QRawFont,QTextLayout,QTextOption,QPageSize
 from PySide6.QtCore import QRectF,QSizeF,Qt,QPointF
 from core.composition import TextoItem,RENDER_DPI,PT_TO_MM
-from views.composer import paint_text_mm
+from views.composer import paint_text_mm, _text_metrics, _line_count, text_bg_span_mm
 app=QApplication([]);out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 class Observe(QPainter):
  def drawText(self,rect,flags,text):
@@ -49,9 +49,22 @@ if os.environ.get("INGETRAZO_TEXT_PARAGRAPHS")=="1":
   ("fallback_underline","Office 平面図",{"underline":True}),
   ("fallback_bold","Office 平面図",{"bold":True}),
  ]
+if os.environ.get("INGETRAZO_TEXT_BACKGROUNDS")=="1":
+ cases=[("bg_basic","Floor 1",{"bg_color":"#ffcc80"}),
+ ("bg_wrapped","Long project name with several words that wrap onto a second line",{"w_mm":32,"bg_color":"#336699","bg_opacity":.35}),
+ ("bg_empty","",{"bg_color":"#ffcc80"}),
+ ("bg_cjk","Office 平面図",{"bg_color":"#ccff99"}),
+ ("bg_rtl","שלום עולם العربية 123 repeated words",{"w_mm":32,"bg_color":"#cc99ff"}),
+ ("bg_serif","Floor 1\nSection A",{"family":"Serif","bg_color":"#ffcc80"}),
+ ("bg_bold","Floor 1\nSection A",{"bold":True,"bg_color":"#ffcc80"}),
+ ("bg_italic","Floor 1",{"italic":True,"bg_color":"#ffcc80"}),
+ ("bg_transparent","Floor 1",{"bg_color":"#ffcc80","bg_opacity":0})]
 rows=[]
 for name,text,props in cases:
  writer=QPdfWriter(str(out/(name+".original.pdf")));writer.setResolution(RENDER_DPI);writer.setPageSize(QPageSize(QSizeF(210,297),QPageSize.Unit.Millimeter));p=Observe(writer) if os.environ.get("INGETRAZO_TEXT_OBSERVER","1")=="1" else QPainter(writer);p.observed=[];p.scale(RENDER_DPI/25.4,RENDER_DPI/25.4);p.translate(20,30)
- item=TextoItem(text=text,size_pt=14,**props);paint_text_mm(p,item);p.end();rows.append({"name":name,"properties":props,"source_draw_calls":p.observed})
+ item=TextoItem(text=text,size_pt=14,**props);paint_text_mm(p,item);p.end();row={"name":name,"authored_text":text,"properties":props,"source_draw_calls":p.observed}
+ if props.get("bg_color"):
+  fm,scale=_text_metrics(14*PT_TO_MM,props.get("bold",False),props.get("family","Sans Serif"));row["source_background"]={"ascent":fm.ascent(),"descent":fm.descent(),"cap_height":fm.capHeight(),"leading":fm.leading(),"line_spacing":fm.lineSpacing(),"line_count":_line_count(text,props.get("w_mm",80),14*PT_TO_MM,props.get("bold",False),props.get("family","Sans Serif")),"span_mm":text_bg_span_mm(text,props.get("w_mm",80),14*PT_TO_MM,props.get("bold",False),props.get("family","Sans Serif"))}
+ rows.append(row)
 (out/"font-observations.json").write_text(json.dumps({"source":"views.composer.paint_text_mm / _draw_text_mm","scope":"Actual source PDFs and font records; supplementary Qt layout is not a Rust implementation or parity proof","cases":rows},indent=2,ensure_ascii=False)+"\n")
 print(f"PASS {len(rows)} actual original text painter PDFs and font observations; native text remains open")
