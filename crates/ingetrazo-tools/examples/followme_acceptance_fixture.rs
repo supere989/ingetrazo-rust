@@ -25,4 +25,11 @@ fn main(){let dir=std::path::PathBuf::from(std::env::args().nth(1).unwrap());for
  save(&scene.mesh,&dir.join(format!("{name}-source.igz")));std::fs::write(dir.join(format!("{name}-path.json")),serde_json::to_vec(&path.iter().map(|p|p.to_array()).collect::<Vec<_>>()).unwrap()).unwrap();sweep_profile(&mut scene,face,&path,false).unwrap();save(&scene.mesh,&dir.join(format!("{name}-result.igz")));
  }
 
+ for name in ["open-perpendicular","open-perpendicular-bend","open-coplanar"] {
+ let mut scene=Scene::new();let ring=[DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ring.to_vec(),vec![]).unwrap();
+ let other=if name=="open-coplanar"{[DVec3::X,DVec3::X*2.,DVec3::new(2.,1.,0.),DVec3::new(1.,1.,0.)]}else{[DVec3::ZERO,DVec3::Y,DVec3::new(0.,1.,-1.),-DVec3::Z]};let ids=other.map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();
+ let path=if name.ends_with("bend"){vec![DVec3::new(0.5,0.5,0.),DVec3::new(0.5,0.5,1.),DVec3::new(1.5,0.5,1.)]}else{vec![DVec3::new(0.5,0.5,0.),DVec3::new(0.5,0.5,1.)]};
+ save(&scene.mesh,&dir.join(format!("{name}-source.igz")));std::fs::write(dir.join(format!("{name}-path.json")),serde_json::to_vec(&path.iter().map(|p|p.to_array()).collect::<Vec<_>>()).unwrap()).unwrap();sweep_profile(&mut scene,0,&path,false).unwrap();save(&scene.mesh,&dir.join(format!("{name}-result.igz")));
+ }
+
 }

@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "9f192a2d34603126d7c1df973dd913c46ec15d09",
+    "rust_commit": "5519b6e23983d6daddf5ad767073f53dbf7fe79e",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -109,7 +109,25 @@
       "original_volume": 3.0,
       "rust_volume": 3.0,
       "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "open-perpendicular",
+      "original_faces": 7,
+      "rust_faces": 7,
+      "ordered_surface_equality": true
+    },
+    {
+      "case": "open-perpendicular-bend",
+      "original_faces": 11,
+      "rust_faces": 11,
+      "ordered_surface_equality": true
+    },
+    {
+      "case": "open-coplanar",
+      "original_faces": 7,
+      "rust_faces": 7,
+      "ordered_surface_equality": true
     }
   ],
-  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Attached closed cube cap straight and bent sweeps also match original native spatial solids. Arbitrary attachments and open sheets remain open."
+  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Attached closed cube cap straight and bent sweeps also match original native spatial solids. Three open perpendicular/coplanar sheet attachments match complete original ordered face geometry. Arbitrary attachments remain open."
 }

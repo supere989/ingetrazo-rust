@@ -31,9 +31,22 @@ def main():
             assert difference<1e-5,(name,difference)
             references[name]=a
             rows.append({"case":name,"original_volume":a.volume(),"rust_volume":b.volume(),"symmetric_difference_volume":difference})
+
+        def ring(vertices):
+            p=[tuple(round(v,5) for v in (x.x(),x.y(),x.z())) for x in vertices]
+            return min(tuple(p[i:]+p[:i]) for i in range(len(p)))
+        def face_set(mesh):return sorted((ring(f.vertices),tuple(sorted(ring(h) for h in f.holes))) for f in mesh.faces)
+        for name in ["open-perpendicular","open-perpendicular-bend","open-coplanar"]:
+            original=Scene();igz.load_into(original,Path(temp)/(name+"-source.igz"))
+            path=[QVector3D(*p) for p in json.loads((Path(temp)/(name+"-path.json")).read_text())]
+            assert sweep_profile(original.mesh,original.mesh.faces[0],path,False)
+            rust=Scene();igz.load_into(rust,Path(temp)/(name+"-result.igz"))
+            assert face_set(original.mesh)==face_set(rust.mesh),(name,"ordered complete surface geometry")
+            assert len(rust.mesh.faces)>2,"unchanged sheets negative control"
+            rows.append({"case":name,"original_faces":len(original.mesh.faces),"rust_faces":len(rust.mesh.faces),"ordered_surface_equality":True})
         # Straight extrusion cannot satisfy connected bent-path spatial equivalence.
         straight,bend=references["straight"],references["bend"]
         assert (straight-bend).volume()+(bend-straight).volume()>1
-    report={"provenance":context(),"passed":True,"negative_controls_detected":1,"cases":rows,"scope":"Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Attached closed cube cap straight and bent sweeps also match original native spatial solids. Arbitrary attachments and open sheets remain open."}
+    report={"provenance":context(),"passed":True,"negative_controls_detected":1,"cases":rows,"scope":"Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Attached closed cube cap straight and bent sweeps also match original native spatial solids. Three open perpendicular/coplanar sheet attachments match complete original ordered face geometry. Arbitrary attachments remain open."}
     Path("docs/audits/python-followme-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()
