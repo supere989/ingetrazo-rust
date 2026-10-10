@@ -1,4 +1,4 @@
-//! Default local-plane source texture mapping; positioned/projected/tint stays explicit.
+//! Local-plane, positioned/projected mappings and bounded legacy source tinting.
 use super::*;
 pub(super) fn tile_size(w: f64, h: f64) -> (f64, f64) {
     let sane = |x: f64| x.is_finite() && x > 1e-6 && x < 1e5;
@@ -438,4 +438,149 @@ mod admission_tests {
         assert_eq!(basis([0., 0., -1.]), (-DVec3::X, DVec3::Y));
         assert_eq!(basis([0., -1., 0.]), (DVec3::X, DVec3::Z));
     }
+}
+
+// Frozen core.texture.colorize_image: HLS in float64, visibility mean,
+// half-up channel quantization, alpha unchanged. No fitted colour table.
+fn hls(rgb: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = rgb;
+    let max = r.max(g).max(b);
+    let min = r.min(g).min(b);
+    let lum = (max + min) / 2.;
+    let delta = max - min;
+    if delta <= 1e-12 {
+        return [0., lum, 0.];
+    }
+    let den = if lum <= 0.5 {
+        max + min
+    } else {
+        2. - max - min
+    };
+    let sat = if den > 1e-12 { delta / den } else { 0. };
+    let rc = (max - r) / delta;
+    let gc = (max - g) / delta;
+    let bc = (max - b) / delta;
+    let hue = if max == r {
+        bc - gc
+    } else if max == g {
+        2. + rc - bc
+    } else {
+        4. + gc - rc
+    };
+    [(hue / 6.).rem_euclid(1.), lum, sat]
+}
+fn from_hls([h, l, s]: [f64; 3]) -> [f64; 3] {
+    let m2 = if l <= 0.5 {
+        l * (1. + s)
+    } else {
+        l + s - l * s
+    };
+    let m1 = 2. * l - m2;
+    let channel = |h: f64| {
+        let h = h.rem_euclid(1.);
+        if h < 1. / 6. {
+            m1 + (m2 - m1) * h * 6.
+        } else if h < 0.5 {
+            m2
+        } else if h < 2. / 3. {
+            m1 + (m2 - m1) * (2. / 3. - h) * 6.
+        } else {
+            m1
+        }
+    };
+    [channel(h + 1. / 3.), channel(h), channel(h - 1. / 3.)]
+}
+// Source default FastTransformation scales to 16x16 before alpha-weighted
+// guard. This remains independently checked against actual QImage sampling.
+fn needs_tint(image: &image::RgbaImage, target: [u8; 3]) -> bool {
+    let mut sum = [0_u64; 3];
+    let mut alpha = 0_u64;
+    for y in 0..16_u64 {
+        for x in 0..16_u64 {
+            let sx = ((2 * x + 1) * image.width() as u64 / 32).min(image.width() as u64 - 1) as u32;
+            let sy =
+                ((2 * y + 1) * image.height() as u64 / 32).min(image.height() as u64 - 1) as u32;
+            let p = image.get_pixel(sx, sy).0;
+            for c in 0..3 {
+                sum[c] += p[c] as u64 * p[3] as u64;
+            }
+            alpha += p[3] as u64;
+        }
+    }
+    alpha != 0 && (0..3).any(|c| (sum[c] as f64 / alpha as f64 - target[c] as f64).abs() > 24.)
+}
+pub(super) fn tint_legacy(
+    texture: &TextureRecord,
+    target: [u8; 3],
+) -> Result<Option<Vec<u8>>, SkpError> {
+    let format = image::guess_format(&texture.bytes)
+        .map_err(|_| SkpError::Invalid("Legacy tint image header".into()))?;
+    let reader = || image::ImageReader::with_format(std::io::Cursor::new(&texture.bytes), format);
+    let (w, h) = reader()
+        .into_dimensions()
+        .map_err(|_| SkpError::Invalid("Legacy tint dimensions".into()))?;
+    if w == 0 || h == 0 || w as u64 * h as u64 > 64 * 1024 * 1024 {
+        return Err(SkpError::Invalid("Legacy tint pixel admission".into()));
+    }
+    let mut decoded = reader()
+        .decode()
+        .map_err(|_| SkpError::Invalid("Legacy tint pixel payload".into()))?
+        .into_rgba8();
+    if !needs_tint(&decoded, target) {
+        return Ok(None);
+    }
+    // Pixel storage is reused in-place; no float image copies retained.
+    // Two passes avoid a per-pixel float64 array as in the reference.
+    let mut visible = false;
+    let mut sum = [0.; 3];
+    let mut n = 0usize;
+    for p in decoded.pixels() {
+        if p[3] != 0 {
+            visible = true;
+            break;
+        }
+    }
+    for p in decoded.pixels().filter(|p| !visible || p[3] != 0) {
+        for c in 0..3 {
+            sum[c] += p[c] as f64 / 255.;
+        }
+        n += 1;
+    }
+    let base = hls(sum.map(|c| c / n as f64));
+    let goal = hls(target.map(|c| c as f64 / 255.));
+    for p in decoded.pixels_mut() {
+        let source = hls([p[0] as f64 / 255., p[1] as f64 / 255., p[2] as f64 / 255.]);
+        let rgb = from_hls([
+            goal[0],
+            (source[1] + (goal[1] - base[1])).clamp(0., 1.),
+            goal[2],
+        ]);
+        for c in 0..3 {
+            p[c] = (rgb[c] * 255. + 0.5).clamp(0., 255.) as u8;
+        }
+    }
+    struct Output(Vec<u8>);
+    impl std::io::Write for Output {
+        fn write(&mut self, data: &[u8]) -> std::io::Result<usize> {
+            if self
+                .0
+                .len()
+                .checked_add(data.len())
+                .is_none_or(|n| n > 16 * 1024 * 1024)
+            {
+                return Err(std::io::Error::other("Tint encoded byte admission"));
+            }
+            self.0.extend_from_slice(data);
+            Ok(data.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+    let mut bytes = Output(Vec::new());
+    use image::ImageEncoder;
+    image::codecs::png::PngEncoder::new(&mut bytes)
+        .write_image(decoded.as_raw(), w, h, image::ExtendedColorType::Rgba8)
+        .map_err(|_| SkpError::Invalid("Legacy tint PNG encode/admission".into()))?;
+    Ok(Some(bytes.0))
 }

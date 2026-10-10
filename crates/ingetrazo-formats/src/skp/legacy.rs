@@ -427,7 +427,12 @@ impl<'a> Archive<'a> {
                 self.charge(name.capacity())?;
                 if self.r.u16()? != 0 {
                     let (rgba, texture, colorized) = self.texture_block()?;
-                    let value = Arc::new(Object::Material(name, rgba, Some(texture), colorized));
+                    let value = Arc::new(Object::Material(
+                        name,
+                        rgba,
+                        (!texture.bytes.is_empty()).then_some(texture),
+                        colorized,
+                    ));
                     self.slots.insert(slot, Slot::Object(Arc::clone(&value)));
                     return Ok(Some((slot, value)));
                 }
@@ -691,20 +696,48 @@ fn model(
         version: version.into(),
         ..Payload::default()
     };
+    let mut tint_cache = HashMap::<(String, [u8; 3]), Option<Arc<Vec<u8>>>>::new();
     for (id, material) in materials {
         if let Object::Material(name, color, texture, colorized) = material.as_ref() {
-            if *colorized {
-                return Err(SkpError::Unsupported(
-                    "legacy source colorized texture requires tint/greedy-flag guard".into(),
-                ));
-            }
+            let texture = if *colorized {
+                if let Some(texture) = texture {
+                    let target =
+                        [color[0], color[1], color[2]].map(|c| (c * 255.).round_ties_even() as u8);
+                    let key = (texture.archive_name.clone(), target);
+                    if !tint_cache.contains_key(&key) {
+                        let bytes = textures::tint_legacy(texture, target)?;
+                        ar.charge(
+                            key.0
+                                .capacity()
+                                .saturating_add(128)
+                                .saturating_add(bytes.as_ref().map_or(0, Vec::capacity)),
+                        )?;
+                        tint_cache.insert(key.clone(), bytes.map(Arc::new));
+                    }
+                    if let Some(bytes) = &tint_cache[&key] {
+                        ar.charge(bytes.len())?;
+                        Some(TextureRecord {
+                            archive_name: format!("legacy-material-{id}-tinted.png"),
+                            bytes: bytes.as_ref().clone(),
+                            width: texture.width,
+                            height: texture.height,
+                        })
+                    } else {
+                        Some(texture.clone())
+                    }
+                } else {
+                    None
+                }
+            } else {
+                texture.clone()
+            };
             if p.material_names.insert(id as u64, name.clone()).is_some()
                 || p.materials
                     .insert(
                         name.clone(),
                         MaterialRecord {
                             color: *color,
-                            texture: texture.clone(),
+                            texture,
                         },
                     )
                     .is_some()

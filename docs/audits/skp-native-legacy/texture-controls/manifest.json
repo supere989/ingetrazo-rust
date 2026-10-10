@@ -1,0 +1,386 @@
+{
+  "source_sha256": "8a4619b39eaaa41725ef5dde415c61c116369fff4c190e88b8d63176b097e5a4",
+  "openskp_revision": "291700bc213655a00461838de71e5f206311e619",
+  "cases": [
+    {
+      "name": "legacy-dib-unflagged",
+      "sha256": "f3dbd6d5ca7ec92d8dfe80817bcd40caf0f8bd89d05618f517e6f260dae699b3",
+      "width": 16,
+      "height": 16,
+      "target": [
+        20,
+        40,
+        60
+      ],
+      "colorized": false,
+      "material_name": "RedMat",
+      "png_sha256": "f25886d1597c7067d8e2801efb1cbff65e26493b63adffb64dffe77778d91287"
+    },
+    {
+      "name": "legacy-dib-greedy-average",
+      "sha256": "67bf4d64fd711bf150a978729e5fbeebffdf0cf8c97aab62e14c3458be84270e",
+      "width": 16,
+      "height": 16,
+      "target": [
+        20,
+        40,
+        60
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "f25886d1597c7067d8e2801efb1cbff65e26493b63adffb64dffe77778d91287"
+    },
+    {
+      "name": "legacy-dib-tint-green",
+      "sha256": "5df6fb2addbe246734c3b03ded5b9bfa37e8a301c7bcc57277e6642681194614",
+      "width": 16,
+      "height": 16,
+      "target": [
+        12,
+        173,
+        69
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "359f85e7d49d078ebb9d8d503ab91d84aefb2ac533f6f58d3556530b25e2f731"
+    },
+    {
+      "name": "legacy-dib-tint-alpha",
+      "sha256": "b62c578f74532d500bf1d8812f2edbee1f4d831e3c67d97d1c5ffa2f744bcc6e",
+      "width": 16,
+      "height": 16,
+      "target": [
+        181,
+        61,
+        19
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "18ba1cdc0805afdbf39e0f29268de8f5919a90ae58e8ee12cf79726fdd597a07"
+    },
+    {
+      "name": "legacy-dib-tint-odd",
+      "sha256": "d61797a169c99c3d067aea2e1df31bafa40b310fad9455c079746d6e01ec118d",
+      "width": 3,
+      "height": 5,
+      "target": [
+        110,
+        11,
+        203
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "91e944466d8597f04a47f950e840d2c6192ccd8b7bdb8d844b4e092071c0ae7d"
+    },
+    {
+      "name": "legacy-dib-guard-small",
+      "sha256": "318c947a8a1f73f4d1a7f83cb400d6434aa7c78ed861cccf1339caf94c7b4394",
+      "width": 3,
+      "height": 5,
+      "target": [
+        35,
+        55,
+        75
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "b92eb981030082292b7a47b79bc4ec9027f17a1ae737dbed660f7d0c983cf5d6"
+    },
+    {
+      "name": "legacy-dib-guard-large",
+      "sha256": "e3cafa1229dfd17a976aed7d3b23b65ebb7775de1ad1f8a547efdcecce1c5f91",
+      "width": 3,
+      "height": 5,
+      "target": [
+        90,
+        100,
+        120
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "b92eb981030082292b7a47b79bc4ec9027f17a1ae737dbed660f7d0c983cf5d6"
+    },
+    {
+      "name": "legacy-dib-fully-transparent",
+      "sha256": "b871eaf23eb3bdc0e6424ef2028521bbe9c0e97bbb0357916fc62d0c884756a6",
+      "width": 16,
+      "height": 16,
+      "target": [
+        181,
+        61,
+        19
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "c4ad1cd5a1a0d7068bcebc6f91cf0cb6e07e6b8fce495d3fd1d05029f3848a33"
+    },
+    {
+      "name": "legacy-dib-empty",
+      "sha256": "cbeca72ca2a5fad26e864f8546c774d7639aedb3aa18fbf7288fa5fe9bc9bfae",
+      "width": 16,
+      "height": 16,
+      "target": [
+        20,
+        40,
+        60
+      ],
+      "colorized": true,
+      "material_name": "RedMat",
+      "png_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "legacy-real-capilla-21",
+      "sha256": "0978d192d2c8aaed0411d4af8b2da2f1c72d9ed5800143a7f37a6de0da9b69de",
+      "width": 600,
+      "height": 600,
+      "target": [
+        229,
+        229,
+        229
+      ],
+      "colorized": true,
+      "material_name": "[Polished Concrete Old]",
+      "png_sha256": "6a127aee3d0397c60395069697dfc895c2b3a0fe78d647cf68bdde2051b42885",
+      "real_model": "capilla_quiroz_v17.skp",
+      "real_material_slot": 21,
+      "real_model_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e"
+    },
+    {
+      "name": "legacy-real-capilla-23",
+      "sha256": "42eea9cc9d3b314ecc482d2439d9c86dda20ba5492cead250edca805836e5517",
+      "width": 443,
+      "height": 443,
+      "target": [
+        200,
+        200,
+        203
+      ],
+      "colorized": true,
+      "material_name": "[Polished Concrete New]",
+      "png_sha256": "a1d9f7e770c578ca8a4112dd4ff22e5ca216cf76e67cc8245a1aa1bbbe6b298c",
+      "real_model": "capilla_quiroz_v17.skp",
+      "real_material_slot": 23,
+      "real_model_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e"
+    },
+    {
+      "name": "legacy-real-capilla-27",
+      "sha256": "b3dec3e2d9fa3be1b3a0a70292f1f338a18b846bd23f1532db5ccb7ad069bb0a",
+      "width": 150,
+      "height": 151,
+      "target": [
+        204,
+        235,
+        244
+      ],
+      "colorized": true,
+      "material_name": "[Translucent Glass Safety]",
+      "png_sha256": "8b6d153fc3566d1cc34ba8b454b84909e619a6103ce0fa51ee19cc69b2310909",
+      "real_model": "capilla_quiroz_v17.skp",
+      "real_material_slot": 27,
+      "real_model_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e"
+    },
+    {
+      "name": "legacy-real-capilla-30",
+      "sha256": "b6c6dfb1e1f740a53ebaa88abf0d7e570392f2df4dfd5dbde14f70fdf8bb1dd9",
+      "width": 1392,
+      "height": 1144,
+      "target": [
+        138,
+        64,
+        36
+      ],
+      "colorized": true,
+      "material_name": "[Roofing Tile Spanish]",
+      "png_sha256": "b8062e3fb513e6666d4614f5cf2e261c5150b9f9fdea8c0a445dd129878117c3",
+      "real_model": "capilla_quiroz_v17.skp",
+      "real_material_slot": 30,
+      "real_model_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e"
+    },
+    {
+      "name": "legacy-real-legacy-16",
+      "sha256": "ef0f8789c0f6f0e0e4f9977c30ecc282b10c61d9afe13e90dc5228e4ad3e4187",
+      "width": 668,
+      "height": 685,
+      "target": [
+        173,
+        150,
+        139
+      ],
+      "colorized": true,
+      "material_name": "osb_tex",
+      "png_sha256": "26dd526cc216aacaaa0e56faddfd97f5132ccb274a06cc009e9fc1a2317eb65d",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 16,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-18",
+      "sha256": "dee9e4db3c4f4b7a15c25696de9304ea44ba1a0c35a3b9d3b31710adadf25178",
+      "width": 500,
+      "height": 275,
+      "target": [
+        177,
+        90,
+        41
+      ],
+      "colorized": true,
+      "material_name": "deck_tex",
+      "png_sha256": "78558e6ed76060c72c480520a9085c0463165ed59ac18d0654ac687fb85b807d",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 18,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-20",
+      "sha256": "0e8eaef20f5e53fa8dcfebdbbdb0e5338e14868d6fd1bd31e3f27ada1be8b0be",
+      "width": 384,
+      "height": 384,
+      "target": [
+        164,
+        145,
+        123
+      ],
+      "colorized": true,
+      "material_name": "wall_tex",
+      "png_sha256": "3407abee4ff59ab02bde873ea4335cb9fe5ed3411281f2138112e1cff6aea96c",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 20,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-22",
+      "sha256": "dce6743b84d89e3d1430577ba2ca55d35cb405553157c65a34eb6abe98ce88c4",
+      "width": 350,
+      "height": 350,
+      "target": [
+        225,
+        221,
+        218
+      ],
+      "colorized": true,
+      "material_name": "gyp_tex",
+      "png_sha256": "4c546aa4faf48e1e8a7e288c98d25e59a58683297e774f0ddddf857b00291852",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 22,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-24",
+      "sha256": "b7f65bdf431ca0204b4978a3ae00283c35f70f6b1084ddfdf498e92898163b0d",
+      "width": 1280,
+      "height": 786,
+      "target": [
+        148,
+        153,
+        167
+      ],
+      "colorized": true,
+      "material_name": "galv_tex",
+      "png_sha256": "456ecc3693f9ed5b36324d0f56f235fff6efddff828d9aa3c9b3735d1c294c50",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 24,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-26",
+      "sha256": "750673571f5368880ccf4cf8882621d5352d76c1eccfe5411833fb738eca843e",
+      "width": 1280,
+      "height": 786,
+      "target": [
+        131,
+        112,
+        131
+      ],
+      "colorized": true,
+      "material_name": "galvpink_tex",
+      "png_sha256": "6005d3f0e417a9629ca5a525def8f7caf9fc6280099247f9a6252e5293e2b1d7",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 26,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-28",
+      "sha256": "6ee0054cfd7ab1261360a995095acb1f5cf8c0205c349074099d77e480798840",
+      "width": 1280,
+      "height": 786,
+      "target": [
+        147,
+        143,
+        142
+      ],
+      "colorized": true,
+      "material_name": "freegalv_tex",
+      "png_sha256": "35600df9c15e7a81433defbc54740abf00d233b1b86934fa544c9091ea3ce1c4",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 28,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-30",
+      "sha256": "387e6ac133cef404e4987d3f2d77b1755bd097334cbfe1ddf29ec3c925876d3f",
+      "width": 1280,
+      "height": 786,
+      "target": [
+        116,
+        54,
+        114
+      ],
+      "colorized": true,
+      "material_name": "galvdeeppink_tex",
+      "png_sha256": "e2124a11bf63b1b09f725c9cd191f43068eb1aa4f81193331917874d4031e7c4",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 30,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-32",
+      "sha256": "5fbfcc4c85dbba68e48bd9279cdeaf5a5277122b03b823591b4c359772640ca7",
+      "width": 1280,
+      "height": 1280,
+      "target": [
+        200,
+        200,
+        200
+      ],
+      "colorized": true,
+      "material_name": "conc_tex",
+      "png_sha256": "3cd61af5c35365b3bf310f137570f9d926690d312630cc08aada185fcac626b5",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 32,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    },
+    {
+      "name": "legacy-real-legacy-34",
+      "sha256": "d85186e61bb426d1eb9a98f217c4b5e097c8cb7d8f6d77288fedd6c1d4a033cf",
+      "width": 640,
+      "height": 640,
+      "target": [
+        198,
+        198,
+        197
+      ],
+      "colorized": true,
+      "material_name": "fibrec_tex",
+      "png_sha256": "e53636666c18e6384104dc414395018ff4f30366f124948e7778182facb3e1ba",
+      "real_model": "legacy_v7_synthetic.skp",
+      "real_material_slot": 34,
+      "real_model_sha256": "47fe9363597b0f99470ea5d6ed4bd8f6cad6a77a689bcccf72a1a512a7f536c7"
+    }
+  ],
+  "integrity_cases": [
+    {
+      "name": "legacy-dib-truncated",
+      "sha256": "1b2694db04dd76165d7563eec5cff9073b2a5a1fe57efbbbd8075c913ea125b0",
+      "width": 16,
+      "height": 16,
+      "target": [
+        20,
+        40,
+        60
+      ],
+      "colorized": false,
+      "material_name": "RedMat",
+      "png_sha256": "c5155ccce62b1f8e3ef49ed4bc681c5dbdafd2c2879103ec696a2c7dd171fc78"
+    }
+  ]
+}
