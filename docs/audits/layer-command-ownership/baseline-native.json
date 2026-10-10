@@ -1,0 +1,110 @@
+{
+  "panel_state_across_model_history": [
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Layer 1",
+          false,
+          true
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Layer 1",
+          false,
+          true
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    }
+  ],
+  "purge_held_object_visibility": [
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Unused",
+          false,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Unused",
+          false,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    }
+  ]
+}

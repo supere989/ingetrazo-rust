@@ -340,7 +340,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_undo_state(&mut self) {
-        self.seal_view_history();self.seal_terrain_history();
+        self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();
         self.bump_model_revision();
         self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
@@ -352,9 +352,7 @@ impl IngeTrazoApp {
     }
 
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
-        let Some(layer)=self.scene.layers.get_mut(index)else{return false;};
-        if layer.visible==visible{return false;}
-        layer.visible=visible;self.scene.bump_view_version();true
+        self.change_layer_visibility(index,visible)
     }
     pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
@@ -362,7 +360,7 @@ impl IngeTrazoApp {
         self.finish_composer_edit();
         if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
         if self.refuse_component_history_step(false){return;}
-        self.seal_view_history();self.seal_terrain_history();
+        self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
         if self.component_history_step(false).is_some(){return;}
@@ -376,7 +374,7 @@ impl IngeTrazoApp {
                 }
                 return;
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);self.redo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
             // Source map capture is a runtime panel publication; model commands
@@ -405,7 +403,7 @@ impl IngeTrazoApp {
                 }
                 return;
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);self.undo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);self.undo_stack.push(inverse);
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
             self.scene = next;self.bump_model_revision();
@@ -551,7 +549,7 @@ impl IngeTrazoApp {
         let before=self.scene.clone();
         let name=format!("{} {}",ingetrazo_core::i18n::tr("Group"),self.scene.groups.len()+1);
         match self.scene.group_selection(name) {
-            Ok(_)=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Created group");},
+            Ok(_)=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Created group");},
             Err(err)=>self.status_message=err,
         }
     }
@@ -559,7 +557,7 @@ impl IngeTrazoApp {
     pub fn explode_group(&mut self) {
         let before=self.scene.clone();
         match self.scene.explode_selected_groups() {
-            Ok(())=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Exploded group");},
+            Ok(())=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Exploded group");},
             Err(err)=>self.status_message=err,
         }
     }
@@ -632,21 +630,14 @@ impl IngeTrazoApp {
     }
 
     pub fn purge_unused_layers(&mut self) {
-        self.save_undo_state();
-        let purged = self.scene.purge_unused_layers();
-        if self.active_layer_idx >= self.scene.layers.len() {
-            self.active_layer_idx = 0;
-        }
-        self.status_message = format!("Purged {purged} unused layer(s)");
+        let mut used=self.scene.used_layer_names();for session in &self.component_edit_stack{used.extend(session.original_scene.used_layer_names());}
+        let purged=self.scene.layers.iter().filter(|l|!matches!(l.name.as_str(),"Layer0"|"Layer 0"|"Capa 0")&&!used.contains(&l.name)).count();
+        if purged>0{self.save_undo_state();self.scene.layers.retain(|l|matches!(l.name.as_str(),"Layer0"|"Layer 0"|"Capa 0")||used.contains(&l.name));self.scene.bump_version();}
+        if self.active_layer_idx>=self.scene.layers.len(){self.active_layer_idx=0;}self.status_message=format!("Purged {purged} unused layer(s)");
     }
 
     pub fn assign_selection_to_active_layer(&mut self) {
-        self.save_undo_state();
-        if let Some(layer) = self.scene.layers.get(self.active_layer_idx) {
-            let name = layer.name.clone();
-            let count = self.scene.assign_selection_to_layer(&name);
-            self.status_message = format!("Assigned {count} entity/entities to layer '{name}'");
-        }
+        if let Some(layer)=self.scene.layers.get(self.active_layer_idx){let name=layer.name.clone();let count=self.assign_selection_to_named_layer(&name);self.status_message=format!("Assigned {count} entity/entities to layer '{name}'");}
     }
 
     pub fn flip_along(&mut self, axis: char) {

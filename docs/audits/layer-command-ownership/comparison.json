@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "cases": 4,
+  "states": 13,
+  "negative_controls": {
+    "drop_panel_layer": "rejected",
+    "stale_purge_visibility": "rejected",
+    "remove_renamed_assignment": "rejected",
+    "lose_import_object": "rejected"
+  },
+  "default_label_normalization": "native legacy Layer0 -> source Layer 0; all other strings exact",
+  "scope": "operative original Qt panel/History and native app controller; no rendered input proof or full layer parity"
+}

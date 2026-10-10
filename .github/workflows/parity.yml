@@ -245,6 +245,12 @@ jobs:
           python scripts/probe-python-presentation-history.py docs/audits/savedview-membership-ci/original.json
           cargo run --locked -p ingetrazo-gui --example presentation_history_fixture -- docs/audits/savedview-membership-ci/native
           python scripts/check-saved-view-membership.py docs/audits/savedview-membership-ci/original.json docs/audits/savedview-membership-ci/native/native.json docs/audits/presentation-history/native-baseline.json
+      - name: Original layer panel and command ownership
+        run: |
+          mkdir -p docs/audits/layer-membership-ci
+          python scripts/probe-python-layer-history.py docs/audits/layer-membership-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example layer_history_fixture -- docs/audits/layer-membership-ci/native
+          python scripts/check-layer-command-ownership.py docs/audits/layer-membership-ci/original.json docs/audits/layer-membership-ci/native/native.json docs/audits/layer-command-ownership/baseline-native.json
       - name: Original global entities survive nested edit history
         run: |
           mkdir -p docs/audits/context-globals-ci
@@ -345,6 +351,7 @@ jobs:
             docs/audits/grid-heldout-ci/
             docs/audits/terrain-membership-ci/
             docs/audits/savedview-membership-ci/
+            docs/audits/layer-membership-ci/
             docs/audits/context-globals-ci/
             docs/audits/context-textures-ci/
             docs/audits/shareback-annotations-ci/

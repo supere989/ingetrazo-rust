@@ -48,6 +48,8 @@ pub struct Scene {
     pub history_views: crate::saved_views::ViewHistory,
     #[serde(skip)]
     pub history_terrain:crate::georef::TerrainHistory,
+    #[serde(skip)]
+    pub history_layers:crate::layers::LayerHistory,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
     /// Authoritative shared Mesh prototypes; placement topology is independent.
@@ -106,7 +108,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),
+            history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
@@ -216,37 +218,13 @@ impl Scene {
         }
     }
 
-    pub fn purge_unused_layers(&mut self) -> usize {
-        let mut used_layers = std::collections::HashSet::new();
-        for f in &self.mesh.faces {
-            if let Some(l) = f.layer.as_deref().or_else(|| f.attrs.get("layer").and_then(|v| v.as_str())) {
-                used_layers.insert(l.to_string());
-            }
-        }
-        for e in &self.mesh.edges {
-            if let Some(l) = &e.layer {
-                used_layers.insert(l.clone());
-            }
-        }
-        for g in &self.groups {
-            if let Some(l) = &g.layer {
-                used_layers.insert(l.clone());
-            }
-        }
-        let before_count = self.layers.len();
-        self.layers.retain(|l| {
-            l.name == crate::layers::DEFAULT_LAYER
-                || l.name == "Capa 0"
-                || l.name == "Layer0"
-                || l.name == "Layer 0"
-                || used_layers.contains(&l.name)
-        });
-        if self.layers.is_empty() {
-            self.layers.push(crate::layers::Layer::default());
-        }
-        self.bump_version();
-        before_count.saturating_sub(self.layers.len())
+    pub fn used_layer_names(&self)->std::collections::HashSet<String>{
+        fn mesh(mesh:&Mesh,used:&mut HashSet<String>){for f in &mesh.faces{if let Some(name)=f.layer.as_deref().or_else(||f.attrs.get("layer").and_then(|v|v.as_str())){used.insert(name.into());}}for e in &mesh.edges{if let Some(name)=&e.layer{used.insert(name.clone());}}}
+        fn groups(gs:&[Group],used:&mut HashSet<String>){for g in gs{if let Some(name)=&g.layer{used.insert(name.clone());}mesh(&g.mesh,used);groups(&g.children,used);}}
+        let mut used=HashSet::new();mesh(&self.mesh,&mut used);groups(&self.groups,&mut used);
+        for d in &self.dimensions{if let Some(name)=&d.layer{used.insert(name.clone());}}for t in &self.text_labels{if let Some(name)=&t.layer{used.insert(name.clone());}}for p in &self.section_planes{if let Some(name)=p.native_document.get("layer").and_then(|v|v.as_str()){used.insert(name.into());}}for v in &self.saved_views{used.extend(v.hidden_layers.iter().cloned());}used
     }
+    pub fn purge_unused_layers(&mut self)->usize{let used=self.used_layer_names();let before=self.layers.len();self.layers.retain(|l|matches!(l.name.as_str(),"Layer0"|"Layer 0"|"Capa 0")||used.contains(&l.name));let count=before-self.layers.len();if count>0{self.bump_version();}count}
 
     pub fn assign_selection_to_layer(&mut self, layer_name: &str) -> usize {
         let mut count = 0;

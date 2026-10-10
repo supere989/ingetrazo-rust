@@ -11,7 +11,6 @@
 
 use glam::DVec3;
 use ingetrazo_core::i18n::{tr, tr_fmt};
-use ingetrazo_core::layers::Layer;
 use ingetrazo_core::materials::Material;
 use ingetrazo_core::scene::SelectionItem;
 use ingetrazo_render::style::VisualStyle;
@@ -111,7 +110,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     ui.separator();
 
     // --- 2. Layers Panel ---
-    let mut visibility_changes=vec![];
+    let mut visibility_changes=vec![];let mut lock_changes=vec![];let mut rename_changes=vec![];
     egui::CollapsingHeader::new(tr("Layers"))
         .default_open(true)
         .show(ui, |ui| {
@@ -128,17 +127,17 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                         app.active_layer_idx = idx;
                     }
 
-                    let layer_display = if let Some(rest) = layer.name.strip_prefix("Capa ") {
+                    let _layer_display = if let Some(rest) = layer.name.strip_prefix("Capa ") {
                         format!("{} {rest}", tr("Layer"))
                     } else if let Some(rest) = layer.name.strip_prefix("Capa") {
                         format!("{}{rest}", tr("Layer"))
                     } else {
                         tr(&layer.name)
                     };
-                    ui.label(&layer_display);
+                    let mut name=layer.name.clone();if ui.text_edit_singleline(&mut name).changed(){rename_changes.push((idx,name));}
                     let mut visible=layer.visible;
                     if ui.checkbox(&mut visible, "").changed(){visibility_changes.push((idx,visible));}
-                    ui.checkbox(&mut layer.locked, "");
+                    let mut locked=layer.locked;if ui.checkbox(&mut locked, "").changed(){lock_changes.push((idx,locked));}
                     ui.end_row();
                 }
             });
@@ -146,17 +145,10 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.add_space(4.0);
             ui.horizontal_wrapped(|ui| {
                 if ui.button(tr("+ Layer")).clicked() {
-                    let next_idx = app.scene.layers.len();
-                    app.scene.layers.push(Layer::new(format!("{} {next_idx}", tr("Layer"))));
-                    app.scene.bump_view_version();
+                    let mut next_idx=1;while app.scene.layers.iter().any(|l|l.name==format!("{} {next_idx}",tr("Layer"))){next_idx+=1;}app.add_layer(format!("{} {next_idx}",tr("Layer")));
                 }
                 if ui.button("–").clicked() {
-                    if app.scene.layers.len() > 1 {
-                        app.scene.layers.pop();app.scene.bump_view_version();
-                        if app.active_layer_idx >= app.scene.layers.len() {
-                            app.active_layer_idx = app.scene.layers.len() - 1;
-                        }
-                    }
+                    app.delete_layer(app.active_layer_idx);
                 }
                 if ui.button(tr("Purge")).clicked() {
                     app.purge_unused_layers();
@@ -167,6 +159,8 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             });
         });
     for(index,visible)in visibility_changes{app.set_layer_visibility(index,visible);}
+    for(index,locked)in lock_changes{app.set_layer_locked(index,locked);}
+    for(index,name)in rename_changes{app.rename_layer(index,name);}
     ui.separator();
 
     // --- 3. Scenes Panel ---
