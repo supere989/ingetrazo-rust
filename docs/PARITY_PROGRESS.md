@@ -1,5 +1,7 @@
 # Rust parity progress tracker
 
+Reviewed native attribute ownership (2026-10-10, integration branch): twelve freshly regenerated original states match retained native append/Undo/Redo evidence; six rejecting checker controls pass. Code review confirms owned face attributes move through pre-reserved history slots without recursive JSON cloning. [Independent review](audits/ai-face-attributes/root-review.json). This is an owned native attribute prerequisite; arbitrary Python objects, shared aliases, non-string keys, Group identity and production scene integration remain OPEN. No feature row or release gate is promoted.
+
 Published `cbc4b494` ordered UI/CAD compute checks now pass on both native Apple runners. [Completed evidence](audits/main-cbc-ordered-compute-completion.json). The broader main workflow remains in progress; independent Canvas presentation, font pixels and physical-device release acceptance are separate requirements.
 
 Multiple-hole prerequisite (review branch, 2026-10-10): 24 fresh original/native append/Undo/Redo states match across eight hole recipes; three filter controls and one rollback/Redo control pass. [Independent review](audits/ai-holes-root/acceptance.json). Malformed-hole document rollback matches, but raw exception behavior remains unequal. Pathological triangulation, attributes, complete object/scene integration and production scripting remain OPEN.

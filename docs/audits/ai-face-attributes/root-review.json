@@ -1,0 +1,15 @@
+{
+  "source_commit": "99b13912",
+  "fresh_original_states": 12,
+  "retained_native_states_match": true,
+  "fresh_native_execution": false,
+  "checker": "12 states and six rejecting mutations pass",
+  "review": "History moves owned faces into reserved command slots after fallible preparation; attributes are not recursively cloned. Logical charge moves staging to history.",
+  "remaining": [
+    "actual VM object identity and aliasing",
+    "arbitrary Python keys and types",
+    "production scene integration",
+    "global memory bounds"
+  ],
+  "fresh_original_sha256": "b08533e57cccc152ab9c32169c8bac391afb060eb531140e03b0c3375d121a15"
+}
