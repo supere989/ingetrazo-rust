@@ -150,6 +150,15 @@ jobs:
         run: INGETRAZO_VIEW_PDF_FILL=solid QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-solid-ci
       - name: Original and native saved tilted cropped colored hatch PDF pages
         run: INGETRAZO_VIEW_PDF_FILL=hatch INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 INGETRAZO_VIEW_PDF_SCALE=20 INGETRAZO_VIEW_PDF_HATCH=0.7 INGETRAZO_VIEW_PDF_FILL_COLOR="#dc9b4e" QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-heldout-hatch-ci
+      - name: Actual source grid cutoff spacing and perspective suppression
+        run: |
+          mkdir -p docs/audits/grid-source-ci
+          python scripts/probe-python-paper-grid.py docs/audits/grid-source-ci/source.json
+          python -c "import json; assert json.load(open('docs/audits/grid-source-ci/source.json')) == json.load(open('docs/audits/sheet-view-grid-pdf/source-grid-controls.json'))"
+      - name: Original and native strict physical grid and hatch pages
+        run: INGETRAZO_VIEW_PDF_GRID=0.7 INGETRAZO_VIEW_PDF_FILL=hatch QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-default-ci
+      - name: Original and native noninteger grid saved tilted solid pages
+        run: INGETRAZO_VIEW_PDF_GRID=0.3317 INGETRAZO_VIEW_PDF_FILL=solid INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-heldout-ci
       - name: Actual composer PDF save dialogs and refusal preservation
         run: |
           cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
@@ -308,6 +317,9 @@ jobs:
             docs/audits/vector-view-ci/
             docs/audits/saved-vector-view-ci/
             docs/audits/section-numerics-ci/
+            docs/audits/grid-source-ci/
+            docs/audits/grid-default-ci/
+            docs/audits/grid-heldout-ci/
             docs/audits/shareback-annotations-ci/
             docs/audits/python-shareback-annotations-current.json
             docs/audits/section-solid-ci/

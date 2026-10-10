@@ -6,7 +6,7 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-Reviewed shareback c9cab2f:533 canonical workspace tests pass/twoignored; eight exact original command cases, six anchor reopens and four negatives pass; narrow annotation Undo defect corrected; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
+Reviewed physical grid5998e02:535 canonical workspace tests pass/twoignored; two fresh78page modes, source spacing controls and PDFalpha negative pass; eight exact original command cases, six anchor reopens and four negatives pass; narrow annotation Undo defect corrected; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
 
 | Worker | Isolated worktree | Current ownership | State |
 |---|---|---|---|
@@ -291,3 +291,5 @@ Actual offscreen Metal Drop proof both architectures reviewed/integrateda2d3d1;5
 Independent root section-fill review: fresh solid, savedtilteddefault hatch and heldoutscale20/color#dc9b4e/hatch0.7 each78exactpages;18exactsource controls pluscoordinate/validPDF negatives pass. Combined532PASS2ignored. Source grid300DPI failure retained bygeometry; native Metal WSIobserver0e0bb7c actualCI38046817228 live, boundedWSIfailurestillOPEN.
 
 Shareback reviewed c9cab2f:533canonicalPASS2ignored, retainedfresh8exact/fournegatives+sixoriginalanchors. Fullsource command families/resource publication remainopen. Rootgrid534workspace/defaultpageslive50346; native callbackobserveref689 CI38047180937 live.
+
+Reviewedgrid5998e02 integrated:535canonicalPASS2ignored; freshsourcecutoff+two78modes+actualPDFalpha negative retained. Metaltexture/mip candidatea610894 published isolated; nativecallbackeff689 actualzero/positive notifications observed, skipownercontractcorrection pending; no mainhostadoption. Fullfont/raster/publication/history/37rows/fivegates remainactive.
