@@ -7,6 +7,7 @@ pub enum LineKind {
     Edge,
     Profile,
     Cut,
+    Hidden,
 }
 #[derive(Clone, Debug)]
 pub struct VectorSegment {
@@ -308,6 +309,29 @@ fn complement(mut intervals: Vec<(f64, f64)>) -> Vec<(f64, f64)> {
     result
 }
 /// Return only visible portions; split edges remain referenced to world coordinates.
+// Remove coincident dashed ink under any solid ink, then deduplicate
+// projected hidden lines even if the corresponding world edges differ in depth.
+fn drop_hidden_under_visible(lines:Vec<VectorSegment>,camera:&OrbitCamera,tol:f64)->Vec<VectorSegment> {
+    let mut result=lines.iter().filter(|e|e.kind!=LineKind::Hidden).cloned().collect::<Vec<_>>();
+    for line in lines.iter().filter(|e|e.kind==LineKind::Hidden) {
+        let a=project(line.a,camera).truncate(); let b=project(line.b,camera).truncate();
+        let d=b-a; let length=d.length(); if length<tol {continue;}
+        let direction=d/length;
+        let mut blocked=vec![];
+        for other in &result {
+            let p=project(other.a,camera).truncate()-a;
+            let q=project(other.b,camera).truncate()-a;
+            if direction.perp_dot(p).abs()>tol || direction.perp_dot(q).abs()>tol {continue;}
+            let x=p.dot(direction)/length; let y=q.dot(direction)/length;
+            let lo=x.min(y).max(0.); let hi=x.max(y).min(1.);
+            if hi>lo {blocked.push((lo,hi));}
+        }
+        for (lo,hi) in complement(blocked) {
+            if (hi-lo)*length>tol {result.push(VectorSegment{a:line.a.lerp(line.b,lo),b:line.a.lerp(line.b,hi),kind:LineKind::Hidden});}
+        }
+    }
+    result
+}
 // Original hlr._merge_collinear joins only world-collinear, end-to-end ink
 // of the same class. Projected coincident lines at different depths stay distinct.
 fn merge_collinear(lines: Vec<VectorSegment>, tolerance: f64) -> Vec<VectorSegment> {
@@ -342,6 +366,10 @@ fn merge_collinear(lines: Vec<VectorSegment>, tolerance: f64) -> Vec<VectorSegme
     result
 }
 pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<VectorSegment> {
+    parallel_segments(scene, camera, true, false)
+}
+/// Paper HLR options match original profiles and hidden-line controls.
+pub fn parallel_segments(scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool) -> Vec<VectorSegment> {
     let mut surfaces = crate::section_clip::contour_geometry(scene);
     let mut edges = gather_edges(scene, camera);
     let mut caps = vec![];
@@ -417,10 +445,26 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
             .iter()
             .filter_map(|&tri| occluded_interval(a, b, tri, epsilon))
             .collect::<Vec<_>>();
-        intervals.extend(cap_intervals(a, b, &boundary, cap_plane, cap_eps));
+        let cap_hidden = cap_intervals(a, b, &boundary, cap_plane, cap_eps);
+        if hidden && edge.kind == LineKind::Edge {
+            for (lo, hi) in complement(complement(intervals.clone())) {
+                // Cap material suppresses both solid and dashed lines.
+                let blocked = cap_hidden.iter().filter_map(|&(x,y)| {
+                    let x=x.max(lo); let y=y.min(hi);
+                    (y>x).then_some(((x-lo)/(hi-lo),(y-lo)/(hi-lo)))
+                }).collect::<Vec<_>>();
+                for (x,y) in complement(blocked) {
+                    result.push(VectorSegment {
+                        a:edge.a.lerp(edge.b,lo+x*(hi-lo)),
+                        b:edge.a.lerp(edge.b,lo+y*(hi-lo)),kind:LineKind::Hidden,
+                    });
+                }
+            }
+        }
+        intervals.extend(cap_hidden);
         for (lo, hi) in complement(intervals) {
             let mut kind = edge.kind;
-            if kind == LineKind::Edge {
+            if profiles && kind == LineKind::Edge {
                 let mid = a.lerp(b, (lo + hi) / 2.);
                 let direction = (b - a).truncate().normalize();
                 let normal = DVec2::new(-direction.y, direction.x) * delta;
@@ -437,11 +481,27 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
             });
         }
     }
-    merge_collinear(result, delta * 1e-2)
+    let result = merge_collinear(result, delta * 1e-5);
+    if hidden { drop_hidden_under_visible(result,camera,delta * 1e-2) } else { result }
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn projected_hidden_ink_deduplicates_depth_and_subtracts_solid_overlap() {
+        let mut camera=OrbitCamera::default(); camera.yaw=-std::f64::consts::FRAC_PI_2; camera.pitch=0.;
+        let line=|a,b,kind| VectorSegment{a,b,kind};
+        let lines=vec![
+            line(DVec3::new(0.,0.,0.),DVec3::new(1.,0.,0.),LineKind::Profile),
+            line(DVec3::new(0.,2.,0.),DVec3::new(2.,2.,0.),LineKind::Hidden),
+            line(DVec3::new(0.,3.,0.),DVec3::new(2.,3.,0.),LineKind::Hidden),
+        ];
+        let result=drop_hidden_under_visible(lines,&camera,1e-9);
+        assert_eq!(result.len(),2);
+        assert_eq!(result[1].kind,LineKind::Hidden);
+        assert!((result[1].a.x-1.).abs()<1e-9);
+        assert!((result[1].b.x-2.).abs()<1e-9);
+    }
     #[test]
     fn triangle_cut_runs_merge_but_depth_and_line_class_remain_distinct() {
         let segment = |a, b, kind| VectorSegment { a, b, kind };
