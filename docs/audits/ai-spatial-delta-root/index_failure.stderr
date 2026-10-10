@@ -1,0 +1,57 @@
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-next-integration/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-next-integration/tools/ai-interpreter-proof)
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::alloc` is unsafe and requires unsafe block
+ --> src/bin/index_failure.rs:2:260
+  |
+2 | ...ne}).ok()==Some(1){std::ptr::null_mut()}else{System.alloc(l)}}unsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsa...
+  |                                                 ^^^^^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+ --> src/bin/index_failure.rs:2:92
+  |
+2 | ...ruct Fault;unsafe impl GlobalAlloc for Fault{unsafe fn alloc(&self,l:Layout)->*mut u8{if FAIL.fetch_update(Ordering::SeqCst,Orderi...
+  |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+  = note: `#[warn(unsafe_op_in_unsafe_fn)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::dealloc` is unsafe and requires unsafe block
+ --> src/bin/index_failure.rs:2:321
+  |
+2 | ...nsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self,p:*mut u8,l:Layout,n:usize)->*mut u8{if FAI...
+  |                                               ^^^^^^^^^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+ --> src/bin/index_failure.rs:2:277
+  |
+2 | ...std::ptr::null_mut()}else{System.alloc(l)}}unsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self...
+  |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::realloc` is unsafe and requires unsafe block
+ --> src/bin/index_failure.rs:2:529
+  |
+2 | ...).ok()==Some(1){std::ptr::null_mut()}else{System.realloc(p,l,n)}}}#[global_allocator]static ALLOC:Fault=Fault;
+  |                                              ^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+ --> src/bin/index_failure.rs:2:341
+  |
+2 | ...t u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self,p:*mut u8,l:Layout,n:usize)->*mut u8{if FAIL.fetch_update(Ordering::Seq...
+  |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+For more information about this error, try `rustc --explain E0133`.
+warning: `ingetrazo-ai-interpreter-proof` (bin "index_failure") generated 3 warnings (run `cargo fix --bin "index_failure" -p ingetrazo-ai-interpreter-proof` to apply 3 suggestions)
+    Finished `dev` profile [unoptimized] target(s) in 0.10s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/index_failure`

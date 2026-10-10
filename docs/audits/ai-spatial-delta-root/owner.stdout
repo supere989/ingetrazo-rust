@@ -1,0 +1,27 @@
+
+running 22 tests
+test journal::tests::discarded_journal_never_mutates_live_mesh ... ok
+test journal::tests::append_history_preserves_uid_and_refuses_external_ownership ... ok
+test journal::tests::nonfinite_base_is_refused_without_key_panic ... ok
+test journal::tests::malformed_base_refused_before_semantic_mutation ... ok
+test journal::tests::stale_publish_is_a_complete_refusal ... ok
+test journal::tests::redo_changed_base_refuses_without_mutation ... ok
+test journal::tests::stale_private_index_cannot_redirect_appended_ids ... ok
+test journal::tests::redo_replaced_base_edge_refuses_without_mutation ... ok
+test owner::tests::failed_undo_and_replacement_keep_published_state ... ok
+test owner::tests::caught_staging_refusal_cannot_publish_partial_vertices ... ok
+test owner::tests::prepared_index_refuses_stale_positions_without_lookup_change ... ok
+test owner::tests::persistent_registry_duplicate_vertex_last_wins_after_undo ... ok
+test owner::tests::persistent_registry_begin_no_base_scan_and_overlay_lookup_order ... ok
+test owner::tests::quota_failure_preserves_mesh_history_and_retry ... ok
+test owner::tests::persistent_registry_lifetime_stale_views_and_duplicate_base_edge_ids ... ok
+test owner::tests::persistent_registry_stale_before_lookup_and_failed_prepare_preserves_view ... ok
+test owner::tests::shared_budget_constructor_and_preparation_refusals_preserve_owner ... ok
+test owner::tests::history_admission_preserves_redo_and_retry_without_payload_growth ... ok
+test owner::tests::shared_budget_staging_and_commit_refusals_release_candidate_only ... ok
+test owner::tests::spatial_delta_native_collisions_restore_exact_predecessor_and_reject_stale ... ok
+test owner::tests::shared_budget_two_owners_and_existing_redo_survive_refused_commit ... ok
+test owner::tests::stale_transaction_after_replace_undo_redo_refuses ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

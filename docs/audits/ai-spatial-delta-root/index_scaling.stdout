@@ -1,0 +1,22 @@
+[
+  {
+    "base_vertices": 1000,
+    "initial_capacity_growth_bytes": 52288,
+    "append_undo_redo": 64,
+    "allocation_calls": 1869,
+    "allocated_bytes": 258696,
+    "largest_allocation": 11776,
+    "cold_vertex_rows": 1000,
+    "publication_rows": 388
+  },
+  {
+    "base_vertices": 50000,
+    "initial_capacity_growth_bytes": 2404288,
+    "append_undo_redo": 64,
+    "allocation_calls": 1869,
+    "allocated_bytes": 258696,
+    "largest_allocation": 11776,
+    "cold_vertex_rows": 50000,
+    "publication_rows": 388
+  }
+]
