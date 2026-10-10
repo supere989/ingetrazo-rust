@@ -8,6 +8,7 @@
 //! and interactive 3D viewport canvas.
 
 pub mod app;
+mod geographic_import;
 pub mod blender;
 pub mod composer;
 pub mod composer_cad;

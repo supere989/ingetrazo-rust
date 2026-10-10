@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"><Document>
+  <Placemark><name>Road A</name>
+    <LineString><coordinates>
+      -71.9785,-13.5170,0 -71.9700,-13.5100,0 -71.9600,-13.5050,0
+    </coordinates></LineString>
+  </Placemark>
+</Document></kml>

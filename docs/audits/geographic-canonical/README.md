@@ -1,0 +1,1 @@
+Canonical2206d4e4:559 tests pass/twoignored. Rebuilt native actualIGZloader23cases matches independently fresh pinned original corpus;23canonical saves reopen actualPython exact; four strict negatives reject. CI now repeats fresh original loader/native save/reopen. Broad geographic numeric/provider/fetch/cache/UI/GPU and all37rows/five release gates remain OPEN.

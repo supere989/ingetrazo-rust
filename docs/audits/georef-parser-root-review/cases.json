@@ -1,0 +1,42 @@
+[
+  {
+    "format": "kml",
+    "text": "<?xml version=\"1.0\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document>\n  <Placemark><name>Road A</name>\n    <LineString><coordinates>\n      -71.9785,-13.5170,0 -71.9700,-13.5100,0 -71.9600,-13.5050,0\n    </coordinates></LineString>\n  </Placemark>\n</Document></kml>"
+  },
+  {
+    "format": "kml",
+    "text": "<?xml version=\"1.0\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document>\n  <Placemark><name>Lot 1</name>\n    <Polygon><outerBoundaryIs><LinearRing><coordinates>\n      -71.98,-13.52 -71.97,-13.52 -71.97,-13.51 -71.98,-13.51 -71.98,-13.52\n    </coordinates></LinearRing></outerBoundaryIs></Polygon>\n  </Placemark>\n</Document></kml>"
+  },
+  {
+    "format": "kml",
+    "text": "<broken"
+  },
+  {
+    "format": "json",
+    "text": "{\"type\": \"Feature\", \"properties\": {\"name\": \"Canal \\u0394\"}, \"geometry\": {\"type\": \"LineString\", \"coordinates\": [[20, 10, 99], [21, 11]]}}"
+  },
+  {
+    "format": "json",
+    "text": "{\"type\": \"Feature\", \"properties\": {\"name\": \"Canal \\u0394\"}, \"geometry\": {\"type\": \"MultiLineString\", \"coordinates\": [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]}}"
+  },
+  {
+    "format": "json",
+    "text": "{\"type\": \"Feature\", \"properties\": {\"name\": \"Canal \\u0394\"}, \"geometry\": {\"type\": \"Polygon\", \"coordinates\": [[[1, 2], [3, 4], [5, 6], [1, 2]], [[20, 20], [30, 30], [40, 40]]]}}"
+  },
+  {
+    "format": "json",
+    "text": "{\"type\": \"Feature\", \"properties\": {\"name\": \"Canal \\u0394\"}, \"geometry\": {\"type\": \"MultiPolygon\", \"coordinates\": [[[[1, 2], [3, 4], [5, 6], [1, 2]]], [[[7, 8], [9, 10], [11, 12]]]]}}"
+  },
+  {
+    "format": "json",
+    "text": "{\"type\": \"Feature\", \"properties\": {\"name\": \"Canal \\u0394\"}, \"geometry\": {\"type\": \"GeometryCollection\", \"geometries\": [{\"type\": \"LineString\", \"coordinates\": [[20, 10], [21, 11]]}, {\"type\": \"Point\", \"coordinates\": [0, 0]}]}}"
+  },
+  {
+    "format": "json",
+    "text": "{broken"
+  },
+  {
+    "format": "kml",
+    "text": "<kml><Placemark><name> A </name><MultiGeometry><LineString><coordinates>bad 4,3,8 6,5</coordinates></LineString><Polygon><coordinates>1,2 3,4 5,6 1.0000000005,2</coordinates></Polygon></MultiGeometry></Placemark></kml>"
+  }
+]

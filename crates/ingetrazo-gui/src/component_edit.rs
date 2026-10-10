@@ -92,7 +92,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
         let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
             || candidate.materials!=scene.materials || candidate.layers!=scene.layers
             || candidate.embedded_textures!=scene.embedded_textures
-            || candidate.unit!=scene.unit || candidate.guides!=scene.guides || candidate.text_labels!=scene.text_labels || candidate.geo_datum!=scene.geo_datum || candidate.geo_points!=scene.geo_points || candidate.geo_paths!=scene.geo_paths || candidate.terrain!=scene.terrain || candidate.sheets!=scene.sheets || candidate.active_sheet_index!=scene.active_sheet_index || candidate.saved_views!=scene.saved_views
+            || candidate.tile_layer!=scene.tile_layer || candidate.unit!=scene.unit || candidate.guides!=scene.guides || candidate.text_labels!=scene.text_labels || candidate.geo_datum!=scene.geo_datum || candidate.geo_points!=scene.geo_points || candidate.geo_paths!=scene.geo_paths || candidate.terrain!=scene.terrain || candidate.sheets!=scene.sheets || candidate.active_sheet_index!=scene.active_sheet_index || candidate.saved_views!=scene.saved_views
             || session.definitions_baseline!=scene.component_definitions
             || session.mesh_share_baseline!=scene.mesh_shares
             || scene.dimensions!=session.dimension_baseline || scene.section_planes!=session.section_baseline
@@ -160,6 +160,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             // images remain available after Finish and through mesh shareback
             // Undo/Redo, just as the source extracted-file texture cache does.
             candidate.embedded_textures=scene.embedded_textures.clone();
+            candidate.tile_layer=scene.tile_layer.clone();
             candidate.image_planes=scene.image_planes.clone();candidate.image_objects=scene.image_objects.clone();candidate.unit=scene.unit;candidate.guides=scene.guides.clone();candidate.text_labels=scene.text_labels.clone();candidate.geo_datum=scene.geo_datum.clone();candidate.geo_points=scene.geo_points.clone();candidate.geo_paths=scene.geo_paths.clone();candidate.terrain=scene.terrain.clone();candidate.sheets=scene.sheets.clone();candidate.active_sheet_index=scene.active_sheet_index;candidate.saved_views=scene.saved_views.clone();
             if scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.dimension_frame.inverse();
@@ -393,6 +394,7 @@ impl IngeTrazoApp {
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
+        edit.tile_layer=self.scene.tile_layer.clone();
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
         edit.image_planes=self.scene.image_planes.clone();edit.image_objects=self.scene.image_objects.clone();edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
@@ -415,8 +417,9 @@ impl IngeTrazoApp {
         if self.component_edit_stack.is_empty() {self.status_message="No group edit is active".into();return;}
         // Validate the model after retiring transient preview without changing
         // the live tool, Scene, inference state, or history on refusal.
+        let preserve_global_preview=self.active_tool.preserves_global_preview_on_context_exit();
         let mut finishing_scene=self.scene.clone();
-        self.active_tool.restore_transient_model(&mut finishing_scene);
+        if !preserve_global_preview{self.active_tool.restore_transient_model(&mut finishing_scene);}
         let session=self.component_edit_stack.last().unwrap();
         let (candidate,changed)=match component_candidate(session,&finishing_scene) {Ok(result)=>result,Err(error)=>{self.status_message=error;return;}};
         // Lift target-tagged ordinary commands before changing either stack.
@@ -453,7 +456,7 @@ impl IngeTrazoApp {
         }
         let mut parked_candidates:Vec<_>=self.component_edit_stack[..self.component_edit_stack.len()-1].iter().map(|parent|parent.original_scene.clone()).collect();
         for parent in &mut parked_candidates {for bake in &bakes {if let Err(error)=bake.apply(parent){self.status_message=error;return;}}}
-        self.set_tool(ToolType::Select);
+        if !preserve_global_preview{self.set_tool(ToolType::Select);}
         let session=self.component_edit_stack.pop().unwrap();
         if !changed {
             if let Some(parent)=self.component_edit_stack.last_mut() {

@@ -1,0 +1,10 @@
+{
+  "revision": "4438023fb67d18834c84c8ca53eaf9c74d5a65ce",
+  "workspace_passed": 539,
+  "workspace_ignored": 2,
+  "exact_repeat_captures": 2,
+  "requested_zoom": 16,
+  "large_capture_zoom": 14,
+  "after_undo_small_capture_zoom": 16,
+  "full_geographic_parity": false
+}

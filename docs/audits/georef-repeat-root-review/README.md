@@ -1,0 +1,4 @@
+# Repeated-import requested zoom correction
+Fresh operative original BaseMapPanel methods preserve requested control zoom16 when the large capture is reduced to14. After Undo removes imported paths, a small import must capture zoom16. Previous native implementation incorrectly reused14; literal baseline JSON/log retained. Corrected native keeps requested zoom/visibility separate from captured result; both capture dictionaries now exactly match original.
+Opening a document with captured map synchronizes requested controls to persisted capture, as source refresh_from_scene; documents without a map leave controls unchanged. Requested zoom outside UI1..21 fails before publication.
+No actual control widgets, provider-picker, runtime display/fetch or generic command-history reference propagation claim. Candidate remains isolated. This fixes the demonstrated repeated-import contract without changing detail cap or comparisons.

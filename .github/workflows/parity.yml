@@ -155,6 +155,16 @@ jobs:
           mkdir -p docs/audits/font-resolver-ci
           python scripts/probe-python-paper-text.py docs/audits/font-resolver-ci/original
           cargo run --locked -p ingetrazo-formats --example paper_font_resolver_fixture -- docs/audits/font-resolver-ci/original/font-observations.json docs/audits/font-resolver-ci/native.json
+      - name: Actual original paragraph layout and direct PDF text
+        run: |
+          mkdir -p docs/audits/paragraph-ci
+          INGETRAZO_TEXT_EXPANDED=1 INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/probe-python-paper-text.py docs/audits/paragraph-ci/original
+          cargo run --locked -p ingetrazo-formats --example paper_paragraph_fixture -- docs/audits/paragraph-ci/original/font-observations.json docs/audits/paragraph-ci/native
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 72
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 144
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 300
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
       - name: Original and native strict vector View PDF pages
         run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci
       - name: Original and native saved-view PDF state against opposed live state
@@ -304,6 +314,25 @@ jobs:
         run: python scripts/check-rendered-composer-ink.py .
       - name: Original Line Rectangle Freehand drafting semantics
         run: python scripts/check-python-drafting.py
+      - name: Original image Move and context lifetime semantics
+        run: |
+          mkdir -p docs/audits/image-tools-ci
+          python scripts/probe-python-image-move.py docs/audits/image-tools-ci/move-original.json
+          python scripts/probe-python-selection-remove.py docs/audits/image-tools-ci/modifiers-original.json
+          cargo run --locked -p ingetrazo-gui --example image_move_tool > docs/audits/image-tools-ci/move-native.json
+          cargo run --locked -p ingetrazo-gui --example selection_remove > docs/audits/image-tools-ci/modifiers-native.json
+          python scripts/check-image-move-tools.py docs/audits/image-tools-ci/move-original.json docs/audits/image-tools-ci/move-native.json docs/audits/image-tools-ci/modifiers-original.json docs/audits/image-tools-ci/modifiers-native.json
+          python scripts/probe-python-image-move-context.py docs/audits/image-tools-ci/context-original.json
+          python scripts/probe-python-image-tool-roots.py docs/audits/image-tools-ci/roots-original.json
+          cargo run --locked -p ingetrazo-gui --example image_move_context > docs/audits/image-tools-ci/context-native.json
+          cargo run --locked -p ingetrazo-gui --example image_tool_roots > docs/audits/image-tools-ci/roots-native.json
+          python scripts/check-image-move-context.py docs/audits/image-tools-ci/context-original.json docs/audits/image-tools-ci/context-native.json docs/audits/image-tools-ci/roots-original.json docs/audits/image-tools-ci/roots-native.json docs/audits/image-move-context/literal-old.json docs/audits/image-move-context/roots-literal-old.json
+      - name: Original map metadata codec and actual source reopens
+        run: |
+          mkdir -p docs/audits/map-codec-ci
+          python scripts/probe-python-tile-capture.py docs/audits/map-codec-ci/original
+          cargo run --locked -p ingetrazo-formats --example tile_capture_baseline -- docs/audits/map-codec-ci/original docs/audits/map-codec-ci/native-files > docs/audits/map-codec-ci/native.json
+          python scripts/check-tile-capture-codec.py docs/audits/map-codec-ci/original docs/audits/map-codec-ci/native.json docs/audits/map-codec-ci/native-files | tee docs/audits/map-codec-ci/check.log
       - name: Original geographic path conversion topology
         run: python scripts/check-python-geopath-conversion.py
       - name: Ctrl PushPull literal success and intentional safety boundaries
@@ -340,6 +369,12 @@ jobs:
           python scripts/probe-python-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json
           cargo run --locked -p ingetrazo-gui --example image_frame_commands > docs/audits/image-ownership-ci/native-frames.json
           python scripts/check-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json docs/audits/image-ownership-ci/native-frames.json docs/audits/image-frame-command-ownership/literal-old-native.json
+      - name: Original image picking and reference work planes
+        run: |
+          mkdir -p docs/audits/image-ownership-ci
+          python scripts/probe-python-image-picking.py scripts/image-plane-pick-input.json docs/audits/image-ownership-ci/original-picking.json
+          cargo run --locked -p ingetrazo-gui --example image_plane_picking -- scripts/image-plane-pick-input.json > docs/audits/image-ownership-ci/native-picking.json
+          python scripts/check-image-plane-picking.py docs/audits/image-ownership-ci/original-picking.json docs/audits/image-ownership-ci/native-picking.json
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
@@ -370,6 +405,9 @@ jobs:
           path: |
             docs/audits/image-ownership-ci/
             docs/audits/font-resolver-ci/
+            docs/audits/paragraph-ci/
+            docs/audits/map-codec-ci/
+            docs/audits/image-tools-ci/
             docs/audits/image-plane-ci/
             docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*

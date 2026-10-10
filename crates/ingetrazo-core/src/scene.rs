@@ -94,6 +94,8 @@ pub struct Scene {
     pub geo_datum: Option<crate::georef::SceneDatum>,
     pub geo_points: Vec<crate::georef::GeoPoint>,
     pub geo_paths: Vec<crate::georef::GeoPath>,
+    #[serde(default)]
+    pub tile_layer: Option<crate::georef::TileCapture>,
     pub terrain: Option<crate::georef::TerrainObject>,
     pub sheets: Vec<crate::composition::Sheet>,
     pub active_sheet_index: Option<usize>,
@@ -142,6 +144,7 @@ impl Scene {
             geo_datum: None,
             geo_points: Vec::new(),
             geo_paths: Vec::new(),
+            tile_layer: None,
             terrain: None,
             sheets: Vec::new(),
             active_sheet_index: None,

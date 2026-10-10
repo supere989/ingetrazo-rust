@@ -356,8 +356,38 @@ impl PaperFont {
                 .map_or((0, 0), |g| (g.points.borrow().len(), g.total_points.get()))
         }
     }
+    /// Source FT line thickness / underline offset, both in pixel100 QFixed units.
+    pub fn decoration_metrics_26_6(&self) -> Result<[i32; 2], String> {
+        unsafe {
+            let geometry = self
+                .data
+                .as_ref()
+                .geometry
+                .as_ref()
+                .ok_or("Paper decoration metrics require a native outline policy")?;
+            let face = geometry.face.raw();
+            let size = (*face).size;
+            if size.is_null() {
+                return Err("Invalid paper decoration face metrics".into());
+            }
+            let scale = (*size).metrics.y_scale;
+            let thickness = i32::try_from(ft::FT_MulFix((*face).underline_thickness as _, scale))
+                .map_err(|_| "Paper decoration thickness outside fixed domain")?;
+            let center = i32::try_from(-ft::FT_MulFix((*face).underline_position as _, scale))
+                .map_err(|_| "Paper decoration offset outside fixed domain")?;
+            let offset = center
+                .checked_sub(thickness / 2)
+                .ok_or("Paper decoration metric overflow")?;
+            Ok([thickness.max(64), offset])
+        }
+    }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
         &self.bytes
+    }
+    /// Native nominal character coverage without a shaping allocation or font-byte copy.
+    pub fn covers_character(&self, ch: char) -> bool {
+        let mut glyph = 0;
+        unsafe { hb::hb_font_get_nominal_glyph(self.font.ptr.as_ptr(), ch as u32, &mut glyph) != 0 }
     }
     /// A single script/direction run. Paragraph bidi and line wrapping must not
     /// be inferred from this API; they remain separate source-layout contracts.

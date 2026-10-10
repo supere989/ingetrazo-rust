@@ -1,0 +1,8 @@
+{
+  "exact_handler_states": 18,
+  "baseline_camera_rounding_rejected": true,
+  "workspace_passed": 542,
+  "workspace_ignored": 2,
+  "binary_sha256": "8b54303439a1b865670ea8e7fc3863c32c1c2a4318856f91a915ed63b2fd7788",
+  "full_geographic_parity": false
+}

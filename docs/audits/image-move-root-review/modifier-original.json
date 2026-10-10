@@ -1,0 +1,34 @@
+{
+  "provenance": {
+    "rust_commit": "bb69f2670187cd2e254adb306a791a79a57e4da9",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "Face_unselected": {
+      "selected": false,
+      "count": 0
+    },
+    "Face_selected": {
+      "selected": false,
+      "count": 0
+    },
+    "Edge_unselected": {
+      "selected": false,
+      "count": 0
+    },
+    "Edge_selected": {
+      "selected": false,
+      "count": 0
+    },
+    "Group_unselected": {
+      "selected": false,
+      "count": 0
+    },
+    "Group_selected": {
+      "selected": false,
+      "count": 0
+    }
+  }
+}

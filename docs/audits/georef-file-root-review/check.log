@@ -1,0 +1,1 @@
+{"exact_file_cases": 7, "wrong_kmz_member_negative": true, "latlon_negative": true, "scope": "actual source file/KMZ loading; no GUI/projection/history claim"}

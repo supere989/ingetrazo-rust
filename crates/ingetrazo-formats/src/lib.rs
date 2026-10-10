@@ -15,6 +15,7 @@ pub mod gltf;
 pub mod gltf_import;
 pub mod ifc;
 pub mod igz;
+pub mod geoimport;
 pub mod obj;
 pub mod stl;
 
@@ -222,3 +223,5 @@ pub mod paper_text;
 mod paper_font_subset;
 pub mod paper_font;
 pub mod paper_font_resolver;
+
+pub mod paper_text_layout;
