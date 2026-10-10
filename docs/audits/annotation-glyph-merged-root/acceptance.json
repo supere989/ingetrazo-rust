@@ -3,6 +3,12 @@
   "focused_tests_passed": 3,
   "focused_tests_failed": 0,
   "fixture_build_exit": 0,
-  "rendered_corpus": "Pending active root session33024; not acceptance",
+  "rendered_corpus": {
+    "exit": 0,
+    "cases": 15,
+    "different_pixels": 0,
+    "binary_sha256": "d41508dbe8bb7a48fd1e53489d23b665ee66fc5f021bfd1658e666bc1a9ff8d8",
+    "scope": "Actual native Vulkan draw of recorded original operation sequence; real projection/depth/font-platform/application source parity remains required"
+  },
   "scope": "Merged native annotation metadata admission and fixture build; complete image parity awaits retained result."
 }
