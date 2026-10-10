@@ -1,0 +1,18 @@
+{
+  "source": "e84ab678795128fadf4e08a35acdc54a6e7cce1a",
+  "workspace": {
+    "passed": 670,
+    "failed": 0,
+    "ignored": 2,
+    "summaries": 29,
+    "command": "cargo test --workspace --locked --lib --tests --no-fail-fast -j2",
+    "log_sha256": "4512c2d6e38cc52db0fea8d6358fd97016be7a11d7292e30c103200aee3912bd"
+  },
+  "fresh_original_native": {
+    "cases": 10,
+    "states": 27,
+    "full_json_equal": true,
+    "negative_controls": 5
+  },
+  "scope": "Live UI-owned query transport and idle model history foundation. Interpreter, screenshot, broad modal history routing and per-script journal remain OPEN."
+}
