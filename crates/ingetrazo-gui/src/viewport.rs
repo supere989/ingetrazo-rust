@@ -300,14 +300,6 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    // Original QPainter image borders are independent overlay strokes, drawn
-    // above the native world texture. Cached native CAD callbacks preserve order.
-    if app.native_gpu_viewport_enabled {
-        if let Err(error)=app.image_outlines.paint(&app.scene,&app.camera,&painter,rect,app.native_composer.factory.as_ref()){
-            app.status_message=format!("Image outline: {error}");
-        }
-    }
-
     if let Some(preview) = &app.paste_preview {
         let mut camera = app.camera.clone();
         camera.target -= preview.offset;

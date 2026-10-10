@@ -1,0 +1,12 @@
+{
+  "source_before": "b21c65ee",
+  "finding": "Two consecutive identical image_outlines.paint calls in production render_viewport",
+  "origins": [
+    "2d059dfd3",
+    "13486d537"
+  ],
+  "correction": "Remove one duplicate submission; preserve original overlay order before previews",
+  "existing_evidence_boundary": "native_vulkan_image_outline_fixture manually paints once and bypasses render_viewport; previous exact outline captures do not cover duplicate production dispatch",
+  "validation": "Exact duplicate-block assertion confirms two before and one after; production compile/render acceptance pending next coherent batch",
+  "other_gap": "Native GPU viewport skips CPU scene annotation rendering; annotation overlay implementation remains required"
+}
