@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "workspace_passed": 422,
+  "ignored": 2,
+  "fresh_original_linked_gestures": true,
+  "fresh_native_linked_gestures": true,
+  "stale_edit_camera_regression_passed": true,
+  "boundary": "Linked root placements rendered with real input; nested-local rendered gestures and GPU upload performance remain open. Stale edit capture is a native integrity correction with retained failing baseline."
+}
