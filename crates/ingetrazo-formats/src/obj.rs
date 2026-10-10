@@ -3,7 +3,6 @@
 
 //! Wavefront OBJ format export and import.
 
-use std::fs::File;
 use std::io::{BufRead, BufReader, Read, Write};
 use std::path::Path;
 use glam::DVec3;
@@ -41,8 +40,13 @@ pub fn export_obj(scene: &Scene, writer: &mut impl Write) -> Result<(), ObjError
 
 /// Import an OBJ stream into a scene's mesh.
 pub fn import_obj(reader: &mut impl Read, scene: &mut Scene) -> Result<(), ObjError> {
+    let mut candidate=scene.clone();import_obj_inner(reader,&mut candidate)?;candidate.bump_version();*scene=candidate;Ok(())
+}
+
+fn import_obj_inner(reader: &mut impl Read, scene: &mut Scene) -> Result<(), ObjError> {
     let buf_reader = BufReader::new(reader);
     let mut file_verts: Vec<DVec3> = Vec::new();
+    let mut container=None;let mut material:Option<String>=None;let mut file_uv=Vec::<glam::DVec2>::new();
 
     for (line_num, line_res) in buf_reader.lines().enumerate() {
         let line = line_res?;
@@ -68,34 +72,65 @@ pub fn import_obj(reader: &mut impl Read, scene: &mut Scene) -> Result<(), ObjEr
                 let z: f64 = parts.next().and_then(|s| s.parse().ok()).ok_or_else(|| {
                     ObjError::Parse(line_num + 1, "Invalid vertex Z".to_string())
                 })?;
-                file_verts.push(DVec3::new(x, y, z));
+                let point=DVec3::new(x,y,z);
+                if !point.is_finite() {return Err(ObjError::Parse(line_num+1,"Nonfinite vertex".into()));}
+                file_verts.push(point);
             }
-            "f" => {
-                let mut face_pts = Vec::new();
-                for part in parts {
-                    let v_idx_str = part.split('/').next().unwrap_or("");
-                    if let Ok(idx) = v_idx_str.parse::<isize>() {
-                        let actual_idx = if idx > 0 {
-                            (idx - 1) as usize
-                        } else if idx < 0 {
-                            (file_verts.len() as isize + idx) as usize
-                        } else {
-                            continue;
-                        };
-                        if actual_idx < file_verts.len() {
-                            face_pts.push(file_verts[actual_idx]);
+            "vt" => {
+                let u=parts.next().and_then(|s|s.parse::<f64>().ok()).ok_or_else(||ObjError::Parse(line_num+1,"Invalid texture U".into()))?;
+                let v=parts.next().and_then(|s|s.parse::<f64>().ok()).ok_or_else(||ObjError::Parse(line_num+1,"Invalid texture V".into()))?;
+                if !u.is_finite()||!v.is_finite(){return Err(ObjError::Parse(line_num+1,"Nonfinite texture UV".into()));}file_uv.push(glam::DVec2::new(u,v));
+            }
+            "o" | "g" => {
+                let name=parts.collect::<Vec<_>>().join(" ");
+                if name.is_empty() {container=None;} else {
+                    let index=scene.groups.len();scene.groups.push(ingetrazo_core::groups::Group::new(name));container=Some(index);
+                }
+            }
+            "usemtl" => {material=Some(parts.collect::<Vec<_>>().join(" "));}
+            "f" | "l" => {
+                let mut points=Vec::new();let mut uvs=Vec::new();
+                for token in parts {
+                    let raw=token.split('/').next().unwrap_or("");
+                    let index=raw.parse::<isize>().map_err(|_|ObjError::Parse(line_num+1,"Invalid vertex index".into()))?;
+                    let index=if index>0 {index-1} else if index<0 {file_verts.len() as isize+index} else {-1};
+                    let point=usize::try_from(index).ok().and_then(|i|file_verts.get(i)).copied().ok_or_else(||ObjError::Parse(line_num+1,"Vertex index outside source array".into()))?;
+                    points.push(point);
+                    let uv=token.split('/').nth(1).filter(|v|!v.is_empty()).map(|raw| {
+                        let i=raw.parse::<isize>().map_err(|_|ObjError::Parse(line_num+1,"Invalid UV index".into()))?;
+                        let index=if i>0{i-1}else if i<0{file_uv.len() as isize+i}else{-1};
+                        usize::try_from(index).ok().and_then(|i|file_uv.get(i)).copied().ok_or_else(||ObjError::Parse(line_num+1,"UV index outside source array".into()))
+                    }).transpose()?;uvs.push(uv);
+                }
+                if points.len()<if cmd=="f" {3}else{2} {return Err(ObjError::Parse(line_num+1,"Insufficient entity vertices".into()));}
+                let mut attrs=material.as_ref().map(|name| {
+                    let mut attrs=std::collections::HashMap::new();attrs.insert("mat".into(),serde_json::json!(name));
+                    if let Some(mat)=scene.materials.get(name) {
+                        attrs.insert("color".into(),serde_json::json!([mat.color[0],mat.color[1],mat.color[2]]));attrs.insert("opacity".into(),serde_json::json!(mat.opacity));
+                        if let Some(path)=&mat.texture_path {attrs.insert("texture".into(),serde_json::json!({"path":path}));}
+                    }
+                    attrs
+                }).unwrap_or_default();
+                if cmd=="f" && attrs.contains_key("texture") {
+                    if uvs.iter().all(Option::is_some) {
+                        let e1=points[1]-points[0];let e2=points[2]-points[0];let n=e1.cross(e2);
+                        let matrix=glam::DMat3::from_cols(e1,e2,n).transpose();
+                        if matrix.determinant().abs()<1e-18 {return Err(ObjError::Parse(line_num+1,"Cannot fit degenerate texture plane".into()));}
+                        let uv=uvs.iter().map(|v|v.unwrap()).collect::<Vec<_>>();
+                        let gu=matrix.inverse()*DVec3::new(uv[1].x-uv[0].x,uv[2].x-uv[0].x,0.);
+                        let gv=matrix.inverse()*DVec3::new(uv[1].y-uv[0].y,uv[2].y-uv[0].y,0.);
+                        let cu=uv[0].x-gu.dot(points[0]);let cv=uv[0].y-gv.dot(points[0]);
+                        for (p,uv) in points.iter().zip(&uv) {
+                            if (gu.dot(*p)+cu-uv.x).abs()>1e-6 || (gv.dot(*p)+cv-uv.y).abs()>1e-6 {return Err(ObjError::Parse(line_num+1,"Nonaffine polygon UVs require triangle faces".into()));}
                         }
-                    }
+                        attrs.get_mut("texture").unwrap()["uvw"]=serde_json::json!([gu.x,gu.y,gu.z,cu,gv.x,gv.y,gv.z,cv]);
+                    } else {attrs.insert("texture".into(),serde_json::Value::Null);}
                 }
-
-                if face_pts.len() >= 3 {
-                    let mut loop_verts = Vec::new();
-                    for pt in face_pts {
-                        let v = scene.mesh.add_vertex(pt);
-                        loop_verts.push(v);
-                    }
-                    scene.mesh.add_face(loop_verts, vec![]);
-                }
+                let mesh=if let Some(i)=container {&mut scene.groups[i].mesh}else{&mut scene.mesh};
+                let ids=points.into_iter().map(|p|mesh.add_vertex(p)).collect::<Vec<_>>();
+                if cmd=="f" {
+                    let id=mesh.add_face(ids,vec![]).ok_or_else(||ObjError::Parse(line_num+1,"Degenerate face".into()))?;mesh.faces[id].attrs=attrs;
+                } else {for pair in ids.windows(2) {mesh.add_edge(pair[0],pair[1]);}}
             }
             _ => {}
         }
@@ -182,10 +217,44 @@ fn uv_basis(normal:DVec3)->(DVec3,DVec3) {
 }
 
 pub fn load_obj(path: &Path) -> Result<Scene, ObjError> {
-    let mut file = File::open(path)?;
-    let mut scene = Scene::new();
-    import_obj(&mut file, &mut scene)?;
-    Ok(scene)
+    let text=std::fs::read_to_string(path)?;let mut scene=Scene::new();
+    let parent=path.parent().unwrap_or_else(||Path::new("."));
+    for line in text.lines() {
+        if let Some(names)=line.trim().strip_prefix("mtllib ") {
+            let joined=parent.join(names.trim());
+            let paths=if joined.exists() {vec![joined]}else{names.split_whitespace().map(|name|parent.join(name)).collect()};
+            for mtl in paths {load_mtl(&mut scene,&mtl)?;}
+        }
+    }
+    import_obj(&mut std::io::Cursor::new(text),&mut scene)?;Ok(scene)
+}
+
+fn load_mtl(scene:&mut Scene,path:&Path)->Result<(),ObjError> {
+    use ingetrazo_core::materials::Material;
+    let text=std::fs::read_to_string(path)?;let mut current:Option<String>=None;
+    for (line_number,line) in text.lines().enumerate() {
+        let mut parts=line.trim().split_whitespace();let Some(command)=parts.next() else{continue;};
+        if command=="newmtl" {
+            let name=parts.collect::<Vec<_>>().join(" ");scene.materials.insert(name.clone(),Material::new(&name,[0.96,0.95,0.925,1.]));current=Some(name);continue;
+        }
+        let Some(material)=current.as_ref().and_then(|name|scene.materials.get_mut(name)) else{continue;};
+        match command {
+            "Kd" => {for i in 0..3 {
+                let value=parts.next().and_then(|p|p.parse::<f32>().ok()).filter(|v|v.is_finite()).ok_or_else(||ObjError::Parse(line_number+1,"Invalid MTL diffuse color".into()))?;material.color[i]=value;
+            }},
+            "d" | "Tr" => {
+                let value=parts.next().and_then(|p|p.parse::<f32>().ok()).filter(|v|v.is_finite()).ok_or_else(||ObjError::Parse(line_number+1,"Invalid MTL opacity".into()))?;
+                material.opacity=if command=="Tr" {1.-value}else{value};material.color[3]=material.opacity;
+            },
+            "map_Kd" => {
+                let name=parts.collect::<Vec<_>>().join(" ");
+                if name.starts_with('-') {return Err(ObjError::Parse(line_number+1,"MTL texture options are not yet supported".into()));}
+                material.texture_path=Some(path.parent().unwrap_or_else(||Path::new(".")).join(name).to_string_lossy().into());
+            },
+            _=>{}
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -203,6 +272,13 @@ mod asset_tests {
         let mut scene=Scene::new();scene.groups.push(group);scene.embedded_textures.insert("images/test.png".into(),vec![1,2,3,4]);
         scene.materials.insert("Blue Paint".into(),Material::new("Blue Paint",[0.1,0.2,0.8,0.6]));
         let path=directory.join("model.obj");save_obj(&scene,&path).unwrap();
+        let imported=load_obj(&path).unwrap();assert_eq!(imported.mesh.faces.len(),1);
+        let attrs=&imported.mesh.faces[0].attrs;assert_eq!(attrs["mat"],serde_json::json!("Blue_Paint"));
+        let map=attrs["texture"]["uvw"].as_array().unwrap();
+        for (p,expected) in [(DVec3::new(10.,20.,30.),[0.25,0.5]),(DVec3::new(11.,20.,30.),[1.25,0.5]),(DVec3::new(10.,21.,30.),[0.25,1.5])] {
+            let value=|i:usize|map[i].as_f64().unwrap();assert!((DVec3::new(value(0),value(1),value(2)).dot(p)+value(3)-expected[0]).abs()<1e-8);
+            assert!((DVec3::new(value(4),value(5),value(6)).dot(p)+value(7)-expected[1]).abs()<1e-8);
+        }
         let text=std::fs::read_to_string(&path).unwrap();assert!(text.contains("vt 0.250000000 0.500000000"));assert!(text.contains("mtllib model.mtl"));assert!(text.contains("usemtl Blue_Paint"));
         let mtl=std::fs::read_to_string(directory.join("model.mtl")).unwrap();assert!(mtl.contains("Kd 0.100000 0.200000 0.800000"));assert!(mtl.contains("d 0.600000"));
         let image=mtl.lines().find_map(|l|l.strip_prefix("map_Kd ")).unwrap();assert_eq!(std::fs::read(directory.join(image)).unwrap(),vec![1,2,3,4]);
@@ -216,5 +292,24 @@ mod asset_tests {
         let path=directory.join("model.obj");std::fs::write(&path,b"original").unwrap();std::fs::write(path.with_extension("mtl"),b"material-original").unwrap();
         assert!(save_obj(&scene,&path).is_err());assert_eq!(std::fs::read(&path).unwrap(),b"original");assert_eq!(std::fs::read(path.with_extension("mtl")).unwrap(),b"material-original");
         std::fs::remove_dir_all(directory).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod import_tests {
+    use super::*;
+    #[test]
+    fn bad_indices_or_nonfinite_vertices_never_partially_modify_scene() {
+        let mut scene=Scene::new();scene.mesh.add_vertex(DVec3::new(7.,8.,9.));let before=scene.clone();
+        for source in ["v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\nf 1 2 9\n","v NaN 0 0\n","v 0 0 0\nv 1 0 0\nf 0 1 2\n"] {
+            assert!(import_obj(&mut std::io::Cursor::new(source),&mut scene).is_err());assert_eq!(scene,before);
+        }
+    }
+    #[test]
+    fn named_objects_negative_indices_and_linework_are_retained() {
+        let source="v 0 0 0\nv 1 0 0\nv 0 1 0\ng seat\nf -3 -2 -1\ng leg\nl 1 2 3\n";
+        let mut scene=Scene::new();import_obj(&mut std::io::Cursor::new(source),&mut scene).unwrap();
+        assert_eq!(scene.groups.iter().map(|g|g.name.as_str()).collect::<Vec<_>>(),vec!["seat","leg"]);
+        assert_eq!(scene.groups[0].mesh.faces.len(),1);assert_eq!(scene.groups[1].mesh.edges.len(),2);assert!(scene.mesh.faces.is_empty());
     }
 }
