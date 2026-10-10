@@ -32,6 +32,7 @@ pub struct BillboardRenderItem {
 /// Aggregated scene render data ready for the viewport canvas.
 pub struct SceneRenderData {
     pub opaque_mesh: MeshRenderBuffer,
+    pub section_stencil: Option<crate::section_clip::SectionStencil>,
     pub transparent_mesh: MeshRenderBuffer,
     pub textured_meshes: std::collections::HashMap<String, MeshRenderBuffer>,
     pub visible_edges: LineRenderBuffer,
@@ -49,6 +50,7 @@ impl Default for SceneRenderData {
     fn default() -> Self {
         Self {
             opaque_mesh: MeshRenderBuffer::new(),
+            section_stencil: None,
             transparent_mesh: MeshRenderBuffer::new(),
             textured_meshes: std::collections::HashMap::new(),
             visible_edges: LineRenderBuffer::new(),
@@ -887,6 +889,13 @@ pub fn render_scene_to_egui(
         for (tex_name, buf) in &data.textured_meshes {
             collect_textured_mesh_into(tex_name, buf, &view_proj, rect, textures, &mut render_items);
         }
+    }
+
+    if let Some(section)=&data.section_stencil {
+        let width=rect.width().ceil().max(1.)as usize;let height=rect.height().ceil().max(1.)as usize;
+        let mask=section.rasterize(camera,width,height);
+        let color=egui::Color32::from_rgb((section.color[0]*255.)as u8,(section.color[1]*255.)as u8,(section.color[2]*255.)as u8);
+        for y in 0..height {let mut x=0;while x<width{if !mask[y*width+x]{x+=1;continue;}let start=x;while x<width&&mask[y*width+x]{x+=1;}let points=[egui::pos2(rect.left()+start as f32,rect.top()+y as f32),egui::pos2(rect.left()+x as f32,rect.top()+y as f32),egui::pos2(rect.left()+x as f32,rect.top()+y as f32+1.),egui::pos2(rect.left()+start as f32,rect.top()+y as f32+1.)];let ray=camera.screen_to_ray((start+x)as f64/2.,y as f64+0.5,width as f64,height as f64);let denominator=ray.dir.dot(section.plane.normal);if denominator.abs()<1e-12{continue;}let t=(section.plane.point-ray.origin).dot(section.plane.normal)/denominator;let point=ray.origin+ray.dir*t;let clip=view_proj*point.extend(1.);let depth=clip.z/clip.w;render_items.push(RenderItem::Triangle{pts:[points[0],points[1],points[2]],depth,color});render_items.push(RenderItem::Triangle{pts:[points[0],points[2],points[3]],depth,color});}}
     }
 
     collect_lines_into(&data.visible_edges, 0.00003, &view_proj, rect, &mut render_items);

@@ -1,38 +1,584 @@
 //! Display-only section clipping; interpolated vertices retain texture coordinates.
-use crate::{buffer::{Vertex,MeshRenderBuffer,LineRenderBuffer},pipeline::SceneRenderData};
-use ingetrazo_core::{section::SectionPlane,scene::Scene};use glam::DVec3;
-fn position(vertex:&Vertex)->DVec3{DVec3::new(vertex.position[0]as f64,vertex.position[1]as f64,vertex.position[2]as f64)}
-fn interpolate(a:Vertex,b:Vertex,t:f64)->Vertex{let t=t as f32;let mut result=a;for i in 0..3{result.position[i]=a.position[i]+(b.position[i]-a.position[i])*t;result.normal[i]=a.normal[i]+(b.normal[i]-a.normal[i])*t;}for i in 0..4{result.color[i]=a.color[i]+(b.color[i]-a.color[i])*t;}for i in 0..2{result.uv[i]=a.uv[i]+(b.uv[i]-a.uv[i])*t;}result}
-fn mesh(buffer:&mut MeshRenderBuffer,plane:&SectionPlane){let old=std::mem::take(buffer);for triangle in old.indices.chunks_exact(3){let vertices=triangle.iter().map(|&i|old.vertices[i as usize]).collect::<Vec<_>>();let mut polygon=vec![];for i in 0..3{let a=vertices[i];let b=vertices[(i+1)%3];let da=plane.signed_distance(position(&a));let db=plane.signed_distance(position(&b));if da<=1e-7{polygon.push(a);}if (da>1e-7)!=(db>1e-7){polygon.push(interpolate(a,b,da/(da-db)));}}if polygon.len()>=3{for i in 1..polygon.len()-1{let base=buffer.vertices.len()as u32;buffer.vertices.extend([polygon[0],polygon[i],polygon[i+1]]);buffer.indices.extend([base,base+1,base+2]);}}}}
-fn lines(buffer:&mut LineRenderBuffer,plane:&SectionPlane){let old=std::mem::take(buffer);for mut segment in old.segments{let a=DVec3::from_array(segment.v0.position.map(f64::from));let b=DVec3::from_array(segment.v1.position.map(f64::from));let da=plane.signed_distance(a);let db=plane.signed_distance(b);if da>1e-7&&db>1e-7{continue;}if (da>1e-7)!=(db>1e-7){let t=da/(da-db);let p=(a+(b-a)*t).as_vec3().to_array();let mut color=segment.v0.color;for(i,c)in color.iter_mut().enumerate(){*c=segment.v0.color[i]+(segment.v1.color[i]-segment.v0.color[i])*t as f32;}if da>1e-7{segment.v0.position=p;segment.v0.color=color;}else{segment.v1.position=p;segment.v1.color=color;}}buffer.push_segment(segment);}}
-fn cap_segments(buffers:impl Iterator<Item=MeshRenderBuffer>,plane:&SectionPlane)->Vec<(DVec3,DVec3)>{let mut segments=vec![];for buffer in buffers{for triangle in buffer.indices.chunks_exact(3){let points=[triangle[0],triangle[1],triangle[2]].map(|i|position(&buffer.vertices[i as usize]));let distances=points.map(|p|plane.signed_distance(p));if distances.iter().all(|d|d.abs()<1e-7){continue;}let mut hits=vec![];for i in 0..3{let j=(i+1)%3;if distances[i].abs()<1e-7{hits.push(points[i]);}if distances[i]*distances[j]< -1e-14{hits.push(points[i]+(points[j]-points[i])*(distances[i]/(distances[i]-distances[j])));}}let mut unique=vec![];for point in hits{if !unique.iter().any(|p:&DVec3|(*p-point).length()<1e-7){unique.push(point);}}if unique.len()==2{let direction=(points[1]-points[0]).cross(points[2]-points[0]).cross(plane.normal);if (unique[1]-unique[0]).dot(direction)<0.{unique.reverse();}segments.push((unique[0],unique[1]));}}}segments}
+use crate::{
+    buffer::{LineRenderBuffer, MeshRenderBuffer, Vertex},
+    pipeline::SceneRenderData,
+};
+use glam::DVec3;
+use ingetrazo_core::{scene::Scene, section::SectionPlane};
+fn position(vertex: &Vertex) -> DVec3 {
+    DVec3::new(
+        vertex.position[0] as f64,
+        vertex.position[1] as f64,
+        vertex.position[2] as f64,
+    )
+}
+fn interpolate(a: Vertex, b: Vertex, t: f64) -> Vertex {
+    let t = t as f32;
+    let mut result = a;
+    for i in 0..3 {
+        result.position[i] = a.position[i] + (b.position[i] - a.position[i]) * t;
+        result.normal[i] = a.normal[i] + (b.normal[i] - a.normal[i]) * t;
+    }
+    for i in 0..4 {
+        result.color[i] = a.color[i] + (b.color[i] - a.color[i]) * t;
+    }
+    for i in 0..2 {
+        result.uv[i] = a.uv[i] + (b.uv[i] - a.uv[i]) * t;
+    }
+    result
+}
+fn mesh(buffer: &mut MeshRenderBuffer, plane: &SectionPlane) {
+    let old = std::mem::take(buffer);
+    for triangle in old.indices.chunks_exact(3) {
+        let vertices = triangle
+            .iter()
+            .map(|&i| old.vertices[i as usize])
+            .collect::<Vec<_>>();
+        let mut polygon = vec![];
+        for i in 0..3 {
+            let a = vertices[i];
+            let b = vertices[(i + 1) % 3];
+            let da = plane.signed_distance(position(&a));
+            let db = plane.signed_distance(position(&b));
+            if da <= 1e-7 {
+                polygon.push(a);
+            }
+            if (da > 1e-7) != (db > 1e-7) {
+                polygon.push(interpolate(a, b, da / (da - db)));
+            }
+        }
+        if polygon.len() >= 3 {
+            for i in 1..polygon.len() - 1 {
+                let base = buffer.vertices.len() as u32;
+                buffer
+                    .vertices
+                    .extend([polygon[0], polygon[i], polygon[i + 1]]);
+                buffer.indices.extend([base, base + 1, base + 2]);
+            }
+        }
+    }
+}
+fn lines(buffer: &mut LineRenderBuffer, plane: &SectionPlane) {
+    let old = std::mem::take(buffer);
+    for mut segment in old.segments {
+        let a = DVec3::from_array(segment.v0.position.map(f64::from));
+        let b = DVec3::from_array(segment.v1.position.map(f64::from));
+        let da = plane.signed_distance(a);
+        let db = plane.signed_distance(b);
+        if da > 1e-7 && db > 1e-7 {
+            continue;
+        }
+        if (da > 1e-7) != (db > 1e-7) {
+            let t = da / (da - db);
+            let p = (a + (b - a) * t).as_vec3().to_array();
+            let mut color = segment.v0.color;
+            for (i, c) in color.iter_mut().enumerate() {
+                *c = segment.v0.color[i] + (segment.v1.color[i] - segment.v0.color[i]) * t as f32;
+            }
+            if da > 1e-7 {
+                segment.v0.position = p;
+                segment.v0.color = color;
+            } else {
+                segment.v1.position = p;
+                segment.v1.color = color;
+            }
+        }
+        buffer.push_segment(segment);
+    }
+}
+fn cap_segments(
+    buffers: impl Iterator<Item = MeshRenderBuffer>,
+    plane: &SectionPlane,
+) -> Vec<(DVec3, DVec3)> {
+    let mut segments = vec![];
+    for buffer in buffers {
+        for triangle in buffer.indices.chunks_exact(3) {
+            let points = [triangle[0], triangle[1], triangle[2]]
+                .map(|i| position(&buffer.vertices[i as usize]));
+            let distances = points.map(|p| plane.signed_distance(p));
+            if distances.iter().all(|d| d.abs() < 1e-7) {
+                continue;
+            }
+            let mut hits = vec![];
+            for i in 0..3 {
+                let j = (i + 1) % 3;
+                if distances[i].abs() < 1e-7 {
+                    hits.push(points[i]);
+                }
+                if distances[i] * distances[j] < -1e-14 {
+                    hits.push(
+                        points[i]
+                            + (points[j] - points[i])
+                                * (distances[i] / (distances[i] - distances[j])),
+                    );
+                }
+            }
+            let mut unique = vec![];
+            for point in hits {
+                if !unique.iter().any(|p: &DVec3| (*p - point).length() < 1e-7) {
+                    unique.push(point);
+                }
+            }
+            if unique.len() == 2 {
+                let direction = (points[1] - points[0])
+                    .cross(points[2] - points[0])
+                    .cross(plane.normal);
+                if (unique[1] - unique[0]).dot(direction) < 0. {
+                    unique.reverse();
+                }
+                segments.push((unique[0], unique[1]));
+            }
+        }
+    }
+    segments
+}
 // Contours use source surfaces even when the current style renders no faces.
-fn contour_geometry(scene:&Scene)->MeshRenderBuffer{
- fn add(out:&mut MeshRenderBuffer,scene:&Scene,mesh:&ingetrazo_core::mesh::Mesh,transform:glam::DMat4){
-  for id in 0..mesh.faces.len(){if !scene.mesh_face_visible(mesh,id){continue;}for (a,b,c) in mesh.triangulate_face(id){let base=out.vertices.len()as u32;for point in[a,b,c]{out.vertices.push(Vertex::from_dvec3(transform.transform_point3(point),DVec3::ZERO,[1.;4],[0.;2]));}out.indices.extend([base,base+1,base+2]);}}
- }
- fn group(out:&mut MeshRenderBuffer,scene:&Scene,item:&ingetrazo_core::groups::Group,parent:glam::DMat4){if item.hidden||!scene.is_layer_visible(item.layer.as_deref()){return;}let transform=parent*item.transform;add(out,scene,&item.mesh,transform);for child in &item.children{group(out,scene,child,transform);}}
- let mut result=MeshRenderBuffer::new();add(&mut result,scene,&scene.mesh,glam::DMat4::IDENTITY);for item in &scene.groups{group(&mut result,scene,item,glam::DMat4::IDENTITY);}result
+fn contour_geometry(scene: &Scene) -> MeshRenderBuffer {
+    fn add(
+        out: &mut MeshRenderBuffer,
+        scene: &Scene,
+        mesh: &ingetrazo_core::mesh::Mesh,
+        transform: glam::DMat4,
+    ) {
+        for id in 0..mesh.faces.len() {
+            if !scene.mesh_face_visible(mesh, id) {
+                continue;
+            }
+            for (a, b, c) in mesh.triangulate_face(id) {
+                let base = out.vertices.len() as u32;
+                for point in [a, b, c] {
+                    out.vertices.push(Vertex::from_dvec3(
+                        transform.transform_point3(point),
+                        DVec3::ZERO,
+                        [1.; 4],
+                        [0.; 2],
+                    ));
+                }
+                out.indices.extend([base, base + 1, base + 2]);
+            }
+        }
+    }
+    fn group(
+        out: &mut MeshRenderBuffer,
+        scene: &Scene,
+        item: &ingetrazo_core::groups::Group,
+        parent: glam::DMat4,
+    ) {
+        if item.hidden || !scene.is_layer_visible(item.layer.as_deref()) {
+            return;
+        }
+        let transform = parent * item.transform;
+        add(out, scene, &item.mesh, transform);
+        for child in &item.children {
+            group(out, scene, child, transform);
+        }
+    }
+    let mut result = MeshRenderBuffer::new();
+    add(&mut result, scene, &scene.mesh, glam::DMat4::IDENTITY);
+    for item in &scene.groups {
+        group(&mut result, scene, item, glam::DMat4::IDENTITY);
+    }
+    result
 }
-fn section_fill(data:&mut SceneRenderData,plane:&SectionPlane,mut color:[f32;4]){color[3]=1.;
-    let segments=cap_segments(std::iter::once(data.opaque_mesh.clone()).chain(std::iter::once(data.transparent_mesh.clone())).chain(data.textured_meshes.values().cloned()),plane);if segments.is_empty(){return;}let mut wire=ingetrazo_core::mesh::Mesh::new();for &(a,b)in &segments{let x=wire.add_vertex(a);let y=wire.add_vertex(b);wire.add_edge(x,y);}let Ok(regions)=ingetrazo_core::planar::rebuild_faces(&wire,&[])else{return;};let(u,v)=crate::pipeline::projection_basis(plane.normal);
-    for id in 0..regions.faces.len(){let triangles=regions.triangulate_face(id);let Some(&(a,b,c))=triangles.first()else{continue;};let probe=(a+b+c)/3.;let px=probe.dot(u);let py=probe.dot(v);let mut winding=0;for &(a,b)in &segments{let ax=a.dot(u);let ay=a.dot(v);let bx=b.dot(u);let by=b.dot(v);if(ay<=py&&by>py)||(by<=py&&ay>py){let x=ax+(bx-ax)*(py-ay)/(by-ay);if x>px{winding+=if by>ay{1}else{-1};}}}if winding==0{continue;}for(a,b,c)in triangles{let base=data.opaque_mesh.vertices.len()as u32;for point in[a,b,c]{data.opaque_mesh.vertices.push(Vertex::from_dvec3(point-plane.normal*1e-6,plane.normal,color,[0.;2]));}data.opaque_mesh.indices.extend([base,base+1,base+2]);}}
+pub(crate) fn clip_scene(
+    data: &mut SceneRenderData,
+    scene: &Scene,
+    style: &crate::style::StyleConfig,
+) {
+    if !scene.show_section_cuts {
+        return;
+    }
+    let Some(plane) = scene.section_planes.iter().find(|plane| plane.active) else {
+        return;
+    };
+    if scene.show_section_fill
+        && !matches!(
+            style.visual_style,
+            crate::style::VisualStyle::Wireframe | crate::style::VisualStyle::XRay
+        )
+    {
+        data.section_stencil = Some(SectionStencil {
+            plane: plane.clone(),
+            frame: scene
+                .section_frame(
+                    scene
+                        .section_planes
+                        .iter()
+                        .position(|p| p.id == plane.id)
+                        .unwrap(),
+                )
+                .unwrap(),
+            color: style.section_fill_color,
+            surfaces: std::iter::once(data.opaque_mesh.clone())
+                .chain(data.textured_meshes.values().cloned())
+                .collect(),
+        });
+    }
+    mesh(&mut data.opaque_mesh, plane);
+    mesh(&mut data.transparent_mesh, plane);
+    for buffer in data.textured_meshes.values_mut() {
+        mesh(buffer, plane);
+    }
+    mesh(&mut data.selection.overlay_mesh, plane);
+    for (a, b) in cap_segments(std::iter::once(contour_geometry(scene)), plane) {
+        data.visible_edges
+            .push_line(a, b, style.edge_color, 2.5, crate::buffer::LineStyle::Solid);
+    }
+    for buffer in [
+        &mut data.visible_edges,
+        &mut data.hidden_edges,
+        &mut data.guides,
+        &mut data.selection.outline_lines,
+        &mut data.dimension_lines,
+    ] {
+        lines(buffer, plane);
+    }
+    data.selection
+        .vertex_points
+        .points
+        .retain(|point| !plane.is_clipped(DVec3::from_array(point.position.map(f64::from))));
+    data.dimension_labels.retain(|(p, _)| !plane.is_clipped(*p));
+    data.text_labels
+        .retain(|(anchor, _, _)| !plane.is_clipped(*anchor));
+    data.billboards
+        .retain(|item| !plane.is_clipped(item.anchor));
 }
-pub(crate) fn clip_scene(data:&mut SceneRenderData,scene:&Scene,style:&crate::style::StyleConfig){if !scene.show_section_cuts{return;}let Some(plane)=scene.section_planes.iter().find(|plane|plane.active)else{return;};if scene.show_section_fill&&!matches!(style.visual_style,crate::style::VisualStyle::Wireframe|crate::style::VisualStyle::XRay){section_fill(data,plane,style.section_fill_color);}mesh(&mut data.opaque_mesh,plane);mesh(&mut data.transparent_mesh,plane);for buffer in data.textured_meshes.values_mut(){mesh(buffer,plane);}mesh(&mut data.selection.overlay_mesh,plane);for(a,b)in cap_segments(std::iter::once(contour_geometry(scene)),plane){data.visible_edges.push_line(a,b,style.edge_color,2.5,crate::buffer::LineStyle::Solid);}for buffer in [&mut data.visible_edges,&mut data.hidden_edges,&mut data.guides,&mut data.selection.outline_lines,&mut data.dimension_lines]{lines(buffer,plane);}data.selection.vertex_points.points.retain(|point|!plane.is_clipped(DVec3::from_array(point.position.map(f64::from))));data.dimension_labels.retain(|(p,_)|!plane.is_clipped(*p));data.text_labels.retain(|(anchor,_,_)|!plane.is_clipped(*anchor));data.billboards.retain(|item|!plane.is_clipped(item.anchor));}
-#[cfg(test)]mod tests{use super::*;
-#[test]fn contours_survive_styles_and_fill_toggle_without_mutating_geometry(){
- let mut scene=Scene::new();let ids=[DVec3::new(-1.,-1.,-1.),DVec3::new(1.,-1.,1.),DVec3::new(-1.,1.,-1.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));scene.show_section_cuts=true;scene.show_section_fill=false;let before=scene.clone();
- for visual in[crate::style::VisualStyle::Wireframe,crate::style::VisualStyle::XRay,crate::style::StyleConfig::default().visual_style]{let mut style=crate::style::StyleConfig::default();style.visual_style=visual;let data=crate::pipeline::build_scene_render_data(&scene,&Default::default(),&style,None);let cuts=data.visible_edges.segments.iter().filter(|s|s.width==2.5&&s.v0.position[2].abs()<1e-7&&s.v1.position[2].abs()<1e-7).collect::<Vec<_>>();assert_eq!(cuts.len(),1);for cut in cuts{assert!(cut.v0.position[2].abs()<1e-7&&cut.v1.position[2].abs()<1e-7);}}
- assert_eq!(scene,before);scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));assert!(contour_geometry(&scene).is_empty());
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn contours_survive_styles_and_fill_toggle_without_mutating_geometry() {
+        let mut scene = Scene::new();
+        let ids = [
+            DVec3::new(-1., -1., -1.),
+            DVec3::new(1., -1., 1.),
+            DVec3::new(-1., 1., -1.),
+        ]
+        .map(|p| scene.mesh.add_vertex(p));
+        scene.mesh.add_face(ids.to_vec(), vec![]);
+        scene
+            .section_planes
+            .push(SectionPlane::new(DVec3::ZERO, DVec3::Z, "A", "A"));
+        scene.show_section_cuts = true;
+        scene.show_section_fill = false;
+        let before = scene.clone();
+        for visual in [
+            crate::style::VisualStyle::Wireframe,
+            crate::style::VisualStyle::XRay,
+            crate::style::StyleConfig::default().visual_style,
+        ] {
+            let mut style = crate::style::StyleConfig::default();
+            style.visual_style = visual;
+            let data =
+                crate::pipeline::build_scene_render_data(&scene, &Default::default(), &style, None);
+            let cuts = data
+                .visible_edges
+                .segments
+                .iter()
+                .filter(|s| {
+                    s.width == 2.5 && s.v0.position[2].abs() < 1e-7 && s.v1.position[2].abs() < 1e-7
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(cuts.len(), 1);
+            for cut in cuts {
+                assert!(cut.v0.position[2].abs() < 1e-7 && cut.v1.position[2].abs() < 1e-7);
+            }
+        }
+        assert_eq!(scene, before);
+        scene.mesh.faces[0]
+            .attrs
+            .insert("hidden".into(), serde_json::json!(true));
+        assert!(contour_geometry(&scene).is_empty());
+    }
+    #[test]
+    fn original_stencil_closed_partition_transparent_and_duplicate_controls() {
+        let mut scene = Scene::new();
+        let ids = [
+            (0., 0., 0.),
+            (1., 0., 0.),
+            (1., 1., 0.),
+            (0., 1., 0.),
+            (0., 0., 2.),
+            (1., 0., 2.),
+            (1., 1., 2.),
+            (0., 1., 2.),
+        ]
+        .map(|(x, y, z)| scene.mesh.add_vertex(DVec3::new(x, y, z)));
+        for ring in [
+            [0, 3, 2, 1],
+            [4, 5, 6, 7],
+            [0, 1, 5, 4],
+            [1, 2, 6, 5],
+            [2, 3, 7, 6],
+            [3, 0, 4, 7],
+        ] {
+            scene.mesh.add_face(ring.map(|i| ids[i]).to_vec(), vec![]);
+        }
+        scene.section_planes.push(SectionPlane::new(
+            DVec3::new(0., 0., 1.5),
+            DVec3::Z,
+            "A",
+            "A",
+        ));
+        scene.show_section_cuts = true;
+        scene.show_section_fill = true;
+        let mut camera = ingetrazo_core::camera::OrbitCamera::default();
+        camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);
+        camera.perspective = false;
+        camera.target = DVec3::new(0.5, 0.5, 1.5);
+        camera.distance = 5.;
+        camera.aspect = 800. / 600.;
+        let style = crate::style::StyleConfig::default();
+        let count = |scene: &Scene| {
+            let data = crate::pipeline::build_scene_render_data(scene, &camera, &style, None);
+            data.section_stencil
+                .unwrap()
+                .rasterize(&camera, 800, 600)
+                .into_iter()
+                .filter(|v| *v)
+                .count()
+        };
+        let closed = count(&scene);
+        assert_eq!(closed, 20736); // 144px mask; original 2.5px contours leave 142px magenta interior.
+        let mut duplicate = scene.clone();
+        duplicate.mesh.faces.extend(scene.mesh.faces.clone());
+        assert_eq!(count(&duplicate), closed);
+        let slab = [
+            DVec3::new(0., 0., 1.),
+            DVec3::new(1., 0., 1.),
+            DVec3::new(1., 1., 1.),
+            DVec3::new(0., 1., 1.),
+        ]
+        .map(|p| scene.mesh.add_vertex(p));
+        scene.mesh.add_face(slab.to_vec(), vec![]);
+        assert_eq!(count(&scene), 0);
+        scene.mesh.faces.last_mut().unwrap().vertices.reverse();
+        assert_eq!(count(&scene),closed,"reversed slab exposes back surface in geometric stencil; original source may render oriented paired interiors differently");
+        for face in &mut duplicate.mesh.faces {
+            face.attrs.insert("opacity".into(), serde_json::json!(0.5));
+        }
+        let transparent =
+            crate::pipeline::build_scene_render_data(&duplicate, &camera, &style, None);
+        assert!(!transparent.transparent_mesh.is_empty());
+        assert!(transparent
+            .section_stencil
+            .unwrap()
+            .rasterize(&camera, 800, 600)
+            .into_iter()
+            .all(|v| !v));
+    }
+    #[test]
+    fn scene_cut_is_display_only_transforms_nested_geometry_and_respects_toggle() {
+        use crate::style::StyleConfig;
+        use glam::DMat4;
+        use ingetrazo_core::{camera::OrbitCamera, groups::Group, mesh::Mesh};
+        let mut source = Mesh::new();
+        let ids = [
+            DVec3::new(-2., 0., 0.),
+            DVec3::new(2., 0., 0.),
+            DVec3::new(-2., 2., 0.),
+        ]
+        .map(|p| source.add_vertex(p));
+        source.add_face(ids.to_vec(), vec![]);
+        let mut child = Group::with_mesh("child", source);
+        child.transform = DMat4::from_translation(DVec3::X);
+        let mut parent = Group::new("parent");
+        parent.children.push(child);
+        let mut scene = Scene::new();
+        scene.groups.push(parent);
+        scene
+            .section_planes
+            .push(SectionPlane::new(DVec3::ZERO, DVec3::X, "cut", "A"));
+        scene.show_section_cuts = true;
+        let before = scene.clone();
+        let data = crate::pipeline::build_scene_render_data(
+            &scene,
+            &OrbitCamera::default(),
+            &StyleConfig::default(),
+            None,
+        );
+        assert_eq!(scene, before);
+        assert!(data
+            .opaque_mesh
+            .vertices
+            .iter()
+            .all(|v| v.position[0] <= 1e-7));
+        assert!(data
+            .visible_edges
+            .vertices
+            .iter()
+            .all(|v| v.position[0] <= 1e-7));
+        assert!(!data.opaque_mesh.is_empty());
+        scene.show_section_cuts = false;
+        let uncut = crate::pipeline::build_scene_render_data(
+            &scene,
+            &OrbitCamera::default(),
+            &StyleConfig::default(),
+            None,
+        );
+        assert!(uncut
+            .opaque_mesh
+            .vertices
+            .iter()
+            .any(|v| v.position[0] > 1.));
+    }
+    #[test]
+    fn crossing_triangle_interpolates_uv_and_keeps_plane_boundary() {
+        let plane = SectionPlane::new(DVec3::ZERO, DVec3::X, "A", "A");
+        let mut buffer = MeshRenderBuffer::new();
+        buffer.vertices = vec![
+            Vertex::from_dvec3(DVec3::new(-1., 0., 0.), DVec3::Z, [1.; 4], [0., 0.]),
+            Vertex::from_dvec3(DVec3::new(1., 0., 0.), DVec3::Z, [1.; 4], [1., 0.]),
+            Vertex::from_dvec3(DVec3::new(-1., 2., 0.), DVec3::Z, [1.; 4], [0., 1.]),
+        ];
+        buffer.indices = vec![0, 1, 2];
+        mesh(&mut buffer, &plane);
+        assert_eq!(buffer.triangle_count(), 2);
+        assert!(buffer.vertices.iter().all(|v| v.position[0] <= 1e-7));
+        assert!(buffer
+            .vertices
+            .iter()
+            .any(|v| v.position[0] == 0. && v.uv[0] == 0.5));
+    }
 }
-#[test]fn hollow_solid_cap_preserves_the_void(){
- let mut scene=Scene::new();for(size,reverse)in[(2.,false),(1.,true)]{let ids=[(-1.,-1.,-1.),(1.,-1.,-1.),(1.,1.,-1.),(-1.,1.,-1.),(-1.,-1.,1.),(1.,-1.,1.),(1.,1.,1.),(-1.,1.,1.)].map(|(x,y,z)|scene.mesh.add_vertex(DVec3::new(x,y,z)*size));for ring in [[0,3,2,1],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]]{let mut vertices=ring.map(|i|ids[i]).to_vec();if reverse{vertices.reverse();}scene.mesh.add_face(vertices,vec![]);}}scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));scene.show_section_cuts=true;scene.show_section_fill=true;let data=crate::pipeline::build_scene_render_data(&scene,&Default::default(),&Default::default(),None);let mut area=0.;for indices in data.opaque_mesh.indices.chunks_exact(3){let vertices=indices.iter().map(|&i|data.opaque_mesh.vertices[i as usize]).collect::<Vec<_>>();if vertices.iter().all(|v|v.color==[0.35,0.37,0.41,1.]){let a=position(&vertices[0]);let b=position(&vertices[1]);let c=position(&vertices[2]);area+=(b-a).cross(c-a).length()/2.;let center=(a+b+c)/3.;assert!(center.x.abs()>=1.-1e-6||center.y.abs()>=1.-1e-6);}}assert!((area-12.).abs()<1e-5,"hollow cap area {area}");
+
+/// Original two-pass stencil equivalent: opaque depth, visible back faces, plane.
+pub struct SectionStencil {
+    pub plane: SectionPlane,
+    pub frame: [DVec3; 4],
+    pub color: [f32; 4],
+    pub surfaces: Vec<MeshRenderBuffer>,
 }
-#[test]fn closed_cube_cap_has_exact_area_and_fill_toggle(){
-    let mut scene=Scene::new();let ids=[(-1.,-1.,-1.),(1.,-1.,-1.),(1.,1.,-1.),(-1.,1.,-1.),(-1.,-1.,1.),(1.,-1.,1.),(1.,1.,1.),(-1.,1.,1.)].map(|(x,y,z)|scene.mesh.add_vertex(DVec3::new(x,y,z)));for ring in [[0,3,2,1],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]]{scene.mesh.add_face(ring.map(|i|ids[i]).to_vec(),vec![]);}scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));scene.show_section_cuts=true;scene.show_section_fill=true;let build=|scene:&Scene|crate::pipeline::build_scene_render_data(scene,&Default::default(),&Default::default(),None);let data=build(&scene);let area:f64=data.opaque_mesh.indices.chunks_exact(3).filter_map(|indices|{let vertices=indices.iter().map(|&i|data.opaque_mesh.vertices[i as usize]).collect::<Vec<_>>();if vertices.iter().all(|v|v.color==[0.35,0.37,0.41,1.]){let a=position(&vertices[0]);let b=position(&vertices[1]);let c=position(&vertices[2]);Some((b-a).cross(c-a).length()/2.)}else{None}}).sum();assert!((area-4.).abs()<1e-6,"cap area {area}");let mut style=crate::style::StyleConfig::default();style.section_fill_color=[0.2,0.4,0.6,0.1];let colored=crate::pipeline::build_scene_render_data(&scene,&Default::default(),&style,None);assert!(colored.opaque_mesh.vertices.iter().any(|v|v.color==[0.2,0.4,0.6,1.]));scene.show_section_fill=false;let unfilled=build(&scene);assert!(unfilled.opaque_mesh.vertices.iter().all(|v|v.color!=[0.35,0.37,0.41,1.]));
+impl SectionStencil {
+    pub fn rasterize(
+        &self,
+        camera: &ingetrazo_core::camera::OrbitCamera,
+        width: usize,
+        height: usize,
+    ) -> Vec<bool> {
+        let matrix = camera.projection_matrix() * camera.view_matrix();
+        let mut depths = vec![f64::INFINITY; width * height];
+        let mut stencil = vec![false; width * height];
+        let mut surfaces = self.surfaces.clone();
+        for buffer in &mut surfaces {
+            mesh(buffer, &self.plane);
+        }
+        for buffer in &surfaces {
+            for ids in buffer.indices.chunks_exact(3) {
+                let points = ids
+                    .iter()
+                    .map(|&i| position(&buffer.vertices[i as usize]))
+                    .collect::<Vec<_>>();
+                raster_triangle(
+                    [points[0], points[1], points[2]],
+                    matrix,
+                    width,
+                    height,
+                    |index, z, _| {
+                        depths[index] = depths[index].min(z);
+                    },
+                );
+            }
+        }
+        for buffer in &surfaces {
+            for ids in buffer.indices.chunks_exact(3) {
+                let points = ids
+                    .iter()
+                    .map(|&i| position(&buffer.vertices[i as usize]))
+                    .collect::<Vec<_>>();
+                raster_triangle(
+                    [points[0], points[1], points[2]],
+                    matrix,
+                    width,
+                    height,
+                    |index, z, back| {
+                        if back && z <= depths[index] + 1e-8 {
+                            stencil[index] = true;
+                        }
+                    },
+                );
+            }
+        }
+        let mut mask = vec![false; width * height];
+        for ring in [[0, 1, 2], [0, 2, 3]] {
+            raster_triangle(
+                ring.map(|i| self.frame[i]),
+                matrix,
+                width,
+                height,
+                |index, z, _| {
+                    if stencil[index] && z <= depths[index] + 1e-8 {
+                        mask[index] = true;
+                    }
+                },
+            );
+        }
+        mask
+    }
 }
-#[test]fn scene_cut_is_display_only_transforms_nested_geometry_and_respects_toggle(){
-    use ingetrazo_core::{groups::Group,mesh::Mesh,camera::OrbitCamera};use crate::style::StyleConfig;use glam::DMat4;
-    let mut source=Mesh::new();let ids=[DVec3::new(-2.,0.,0.),DVec3::new(2.,0.,0.),DVec3::new(-2.,2.,0.)].map(|p|source.add_vertex(p));source.add_face(ids.to_vec(),vec![]);let mut child=Group::with_mesh("child",source);child.transform=DMat4::from_translation(DVec3::X);let mut parent=Group::new("parent");parent.children.push(child);let mut scene=Scene::new();scene.groups.push(parent);scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::X,"cut","A"));scene.show_section_cuts=true;let before=scene.clone();let data=crate::pipeline::build_scene_render_data(&scene,&OrbitCamera::default(),&StyleConfig::default(),None);assert_eq!(scene,before);assert!(data.opaque_mesh.vertices.iter().all(|v|v.position[0]<=1e-7));assert!(data.visible_edges.vertices.iter().all(|v|v.position[0]<=1e-7));assert!(!data.opaque_mesh.is_empty());scene.show_section_cuts=false;let uncut=crate::pipeline::build_scene_render_data(&scene,&OrbitCamera::default(),&StyleConfig::default(),None);assert!(uncut.opaque_mesh.vertices.iter().any(|v|v.position[0]>1.));
+fn raster_triangle(
+    points: [DVec3; 3],
+    matrix: glam::DMat4,
+    width: usize,
+    height: usize,
+    mut visit: impl FnMut(usize, f64, bool),
+) {
+    let clips = points.map(|p| matrix * p.extend(1.));
+    if clips.iter().any(|p| p.w <= 1e-9) {
+        return;
+    }
+    let p = clips.map(|c| {
+        DVec3::new(
+            (c.x / c.w + 1.) * width as f64 / 2.,
+            (1. - c.y / c.w) * height as f64 / 2.,
+            c.z / c.w,
+        )
+    });
+    let area = (p[1].x - p[0].x) * (p[2].y - p[0].y) - (p[1].y - p[0].y) * (p[2].x - p[0].x);
+    if area.abs() < 1e-12 {
+        return;
+    }
+    let xmin = p
+        .iter()
+        .map(|p| p.x)
+        .fold(f64::INFINITY, f64::min)
+        .floor()
+        .max(0.) as usize;
+    let xmax = p
+        .iter()
+        .map(|p| p.x)
+        .fold(f64::NEG_INFINITY, f64::max)
+        .ceil()
+        .max(0.)
+        .min(width as f64) as usize;
+    let ymin = p
+        .iter()
+        .map(|p| p.y)
+        .fold(f64::INFINITY, f64::min)
+        .floor()
+        .max(0.) as usize;
+    let ymax = p
+        .iter()
+        .map(|p| p.y)
+        .fold(f64::NEG_INFINITY, f64::max)
+        .ceil()
+        .max(0.)
+        .min(height as f64) as usize;
+    for y in ymin..ymax {
+        for x in xmin..xmax {
+            let q = glam::DVec2::new(x as f64 + 0.5, y as f64 + 0.5);
+            let edge = |a: DVec3, b: DVec3| (b.x - a.x) * (q.y - a.y) - (b.y - a.y) * (q.x - a.x);
+            let weights = [
+                edge(p[1], p[2]) / area,
+                edge(p[2], p[0]) / area,
+                edge(p[0], p[1]) / area,
+            ];
+            if weights.iter().all(|w| *w >= -1e-10) {
+                let z = weights[0] * p[0].z + weights[1] * p[1].z + weights[2] * p[2].z;
+                if (0. ..=1.).contains(&z) {
+                    visit(y * width + x, z, area > 0.);
+                }
+            }
+        }
+    }
 }
-#[test]fn crossing_triangle_interpolates_uv_and_keeps_plane_boundary(){let plane=SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A");let mut buffer=MeshRenderBuffer::new();buffer.vertices=vec![Vertex::from_dvec3(DVec3::new(-1.,0.,0.),DVec3::Z,[1.;4],[0.,0.]),Vertex::from_dvec3(DVec3::new(1.,0.,0.),DVec3::Z,[1.;4],[1.,0.]),Vertex::from_dvec3(DVec3::new(-1.,2.,0.),DVec3::Z,[1.;4],[0.,1.])];buffer.indices=vec![0,1,2];mesh(&mut buffer,&plane);assert_eq!(buffer.triangle_count(),2);assert!(buffer.vertices.iter().all(|v|v.position[0]<=1e-7));assert!(buffer.vertices.iter().any(|v|v.position[0]==0.&&v.uv[0]==0.5));}}
