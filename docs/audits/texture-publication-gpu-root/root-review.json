@@ -1,0 +1,22 @@
+{
+  "source": "aa81780832c309de81c52059f62e9bccb5423d29",
+  "binary_sha256": "4758078bf6a0f49336073ea03b312e0627ac8c114e27dff9b35ab089774e3eb6",
+  "native_execution_pass": true,
+  "publication_refusal_and_retry_views": 2,
+  "style_roundtrip_views": 2,
+  "ledger_final": 0,
+  "strict_full_images_pass": false,
+  "changed_pixels": [
+    78,
+    351,
+    4832,
+    3723
+  ],
+  "remaining": [
+    "native annotations",
+    "remaining strict image differences",
+    "broader publication failure coverage",
+    "representative performance and platform coverage"
+  ],
+  "transport_exit_note": "Exit1 retains previous original import-isolation failure; native process exits0."
+}

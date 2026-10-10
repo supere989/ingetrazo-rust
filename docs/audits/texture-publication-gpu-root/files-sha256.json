@@ -1,0 +1,14 @@
+{
+  "build.log": "8c15b76e13c667d51dc069d7abd904d21dc5649715ce4db21756164630c7eabd",
+  "native/capilla_quiroz_v17-asymmetric-native-vulkan.png": "7277cf6540c3c8ab758002d3f52856519679c5409be6649c20c66ab89d5bf893",
+  "native/capilla_quiroz_v17-iso-native-vulkan.png": "958f44abebdfb870276533876e6bbe1bbe6d147bff313b2deeca35e6e4953f11",
+  "native/gondola_v20-asymmetric-native-vulkan.png": "5cf2d897474e0fd2e10335a64690d6b830ae28a6c4e2f9044b53408b2c35e939",
+  "native/gondola_v20-iso-native-vulkan.png": "2905243230f4a6623045d1fa8ab476657fa1eb42a86dafb27b3500874e3b4971",
+  "native/native-world-results.json": "35c6d9999b90b56e10dad83c0fa58b1af3b512c84a0c017ab3c260ed3861021c",
+  "native/nvidia-egl-icd.json": "438b95ede904f30f140a828a92efd00aa3a8de11582820a93bc0b0c189676327",
+  "native-nvidia.log": "49faa6c0dcdb4bea6bf69bdc1f77e2c3bd49008e68e4197654a8b1fe4bd7f0f6",
+  "pixel-check.log": "4e728308d2a3b3481cdf6a69ae7652827263d8c4cc00c5fc676948055d27833d",
+  "root-review.json": "850d96a55b5868fd0a7cdafffbb18cb50883bc55f30df3e24a5c6779f27a445c",
+  "strict-results.json": "d044a8594bedbaa1f1771c0666e0123bd17ef46cd90875b383f65f880fb29a78",
+  "transport.json": "7df43ed7949f1ef5ca81376108678a3d9a729ebcb53de7887291ff8548ae0e7d"
+}

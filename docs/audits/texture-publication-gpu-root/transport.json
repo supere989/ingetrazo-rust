@@ -1,0 +1,80 @@
+{
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "source": "aa81780832c309de81c52059f62e9bccb5423d29",
+  "importer_sha256": "eed8764efb292b24701e7aaccae729a318e88c80ccd4d1b55a0c2cf896f6bb02",
+  "probe_sha256": "4758078bf6a0f49336073ea03b312e0627ac8c114e27dff9b35ab089774e3eb6",
+  "device": "nvidia.com/gpu=0",
+  "cases": [
+    {
+      "label": "native-nvidia",
+      "command": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "ingetrazo-skp-hardware-1643814",
+        "--read-only",
+        "--network",
+        "none",
+        "--device",
+        "nvidia.com/gpu=0",
+        "--userns",
+        "keep-id:uid=1000,gid=1000",
+        "--user",
+        "1000:1000",
+        "--security-opt",
+        "label=disable",
+        "--tmpfs",
+        "/tmp:rw",
+        "-v",
+        "/usr/lib/libEGL.so.1:/usr/lib/libEGL.so.1:ro",
+        "-v",
+        "/usr/lib/libGLdispatch.so.0:/usr/lib/libGLdispatch.so.0:ro",
+        "-v",
+        "/home/raymondj/.local/share/containers/storage/overlay/73bdc7afba223e983c173af5f2e8792d8f11e0f7f2b72103b534260022eaadb6/merged/tmp/ingetrazo-root-publication-frozen-probe:/probe:ro",
+        "-v",
+        "/home/raymondj/.local/share/containers/storage/overlay/73bdc7afba223e983c173af5f2e8792d8f11e0f7f2b72103b534260022eaadb6/merged/tmp/ingetrazo-next-integration/docs/audits/skp-real-model-nvidia-failure/original:/input:ro",
+        "-v",
+        "/tmp/ingetrazo-root-publication-gpu-20261010/native:/out:rw",
+        "-e",
+        "VK_DRIVER_FILES=/out/nvidia-egl-icd.json",
+        "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+        "/probe",
+        "/input",
+        "/out"
+      ],
+      "timeout_seconds": 90,
+      "timed_out": false,
+      "returncode": 0,
+      "elapsed": 7.274329548992682,
+      "cleanup_returncode": 0
+    }
+  ],
+  "source_provenance": {
+    "checkout_path": "/tmp/ingetrazo-next-integration",
+    "checkout_head": "aa81780832c309de81c52059f62e9bccb5423d29",
+    "tracked_changes": [],
+    "probe_build_source": "aa81780832c309de81c52059f62e9bccb5423d29",
+    "scope": "Checkout HEAD is an observation, not proof of the probe build source. Probe SHA256 identifies executed bytes; supplied build source must be backed by retained build evidence."
+  },
+  "retained_reference": {
+    "path": "/home/raymondj/.local/share/containers/storage/overlay/73bdc7afba223e983c173af5f2e8792d8f11e0f7f2b72103b534260022eaadb6/merged/tmp/ingetrazo-next-integration/docs/audits/skp-real-model-nvidia-failure/original",
+    "strict_returncode": 1,
+    "files": {
+      "capilla_quiroz_v17-asymmetric-native-igz.png": "a6863f7a01a010cbda45d0323b09c38b802c24c5a483230759f6c7dc0a04098a",
+      "capilla_quiroz_v17-asymmetric-source.png": "a6863f7a01a010cbda45d0323b09c38b802c24c5a483230759f6c7dc0a04098a",
+      "capilla_quiroz_v17-inventory.json.gz": "3667fcc5db97bb7d54859fb63bd0a99edf2409607b9cf76b4d8ab6d2ebec5daa",
+      "capilla_quiroz_v17-iso-native-igz.png": "dc2faa7707f709c5b7f5e91abb25ef3959504a9e45f5d076d05df4de3f04e995",
+      "capilla_quiroz_v17-iso-source.png": "dc2faa7707f709c5b7f5e91abb25ef3959504a9e45f5d076d05df4de3f04e995",
+      "capilla_quiroz_v17.igz": "530c63625ac45deb0fcbfdb77fef0ab356a0f53e492b2084fd63b6211cb6f379",
+      "gondola_v20-asymmetric-native-igz.png": "bf1ccc79b99084f6d6124981cec6c5d9e3342b08e65bbfa84c4252caedead5bd",
+      "gondola_v20-asymmetric-source.png": "1c1c0c8a65d869e3a23828660fccd1a3e2627266cd3b5875dfd7c9a534cb18e9",
+      "gondola_v20-inventory.json.gz": "d2ada50e22e637d44a4308b8d2fc6c3c3e5197f516aa408f900d3e95cc04020f",
+      "gondola_v20-iso-native-igz.png": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7",
+      "gondola_v20-iso-source.png": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7",
+      "gondola_v20.igz": "591fc28eee6acba386d8ab952366c4b3f3651555310dd526b6a43ae9b64f8cd4",
+      "protocol.json": "fcf73cff8e9fa517fbec809dd9d6bc8b4b8835cdcc50d3712ebe46ca4cefc599",
+      "qt-isolation-results.json": "ee4749671ae2c515b99cae119584642511afa1cf36ccf0006c3915739c5cd330"
+    }
+  }
+}
