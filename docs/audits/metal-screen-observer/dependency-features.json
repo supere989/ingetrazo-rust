@@ -1,0 +1,28 @@
+{
+  "check": "cargo metadata --offline --locked --filter-platform aarch64-apple-darwin; no compiler/build/run",
+  "required_features": {
+    "objc2-app-kit": {
+      "version": "0.3.2",
+      "required_active": [
+        "NSScreen",
+        "NSView",
+        "NSWindow"
+      ]
+    },
+    "objc2-metal": {
+      "version": "0.3.2",
+      "required_active": [
+        "MTLDevice"
+      ]
+    },
+    "objc2-quartz-core": {
+      "version": "0.3.2",
+      "required_active": [
+        "CALayer",
+        "CAMetalLayer",
+        "objc2-metal"
+      ]
+    }
+  },
+  "api_review": "Generated objc2 0.3.2 methods are public safe reads; NSScreen fields unconditional in NSScreen implementation; CAMetalLayer preferredDevice gated objc2-metal and enclosing CALayer, displaySyncEnabled enclosing CALayer; MTLDevice registryID exposed in active MTLDevice trait. NSString Display already used throughout existing code. Native SDK compilation remains pending coordinated replay."
+}
