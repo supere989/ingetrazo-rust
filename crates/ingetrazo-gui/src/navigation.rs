@@ -8,11 +8,11 @@ pub struct Navigation {
  pub mode:Option<Mode>, pub eye_height:f64,
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
  dragged:bool, pub base:Option<DVec3>, next_tick:Option<f64>,
- held:[bool;6], mouse_captured:bool, cursor_locked_sent:bool,
+ held:[bool;6], mouse_captured:bool, cursor_locked_sent:bool,look_button:Option<egui::PointerButton>,look_cursor:Option<DVec2>,
  bounds_center:DVec3, collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
 }
 impl Default for Navigation {
- fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],mouse_captured:false,cursor_locked_sent:false,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
+ fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],mouse_captured:false,cursor_locked_sent:false,look_button:None,look_cursor:None,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
 }
 impl Navigation {
  // Remember refused admission until revision changes; direct queries preserve correctness.
@@ -42,7 +42,7 @@ impl Navigation {
   if let Some(index)=movement_key(key){if !pressed||self.claims_key(key,modifiers){self.held[index]=pressed;}}
  }
  fn axes(&self)->[i8;3]{[self.held[0]as i8-self.held[1]as i8,self.held[2]as i8-self.held[3]as i8,self.held[4]as i8-self.held[5]as i8]}
- pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
+ pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.look_button=None;self.look_cursor=None;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
  // Original Qt QTimer dispatches one fixed step after an overrun, not all
  // elapsed intervals. Keep a deadline independent of repaint frequency.
  fn tick_due(&mut self,time:f64,interval:f64)->bool{
@@ -143,17 +143,29 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
    }
    app.navigation.request_tick(ui.ctx(),time);
   }else{app.navigation.next_tick=None;}
-  let was_captured=app.navigation.mouse_captured;
-  if response.hovered()&&(pointer.button_pressed(egui::PointerButton::Primary)||pointer.button_pressed(egui::PointerButton::Secondary)){
-   app.navigation.mouse_captured=true;
-  }
-  if !pointer.primary_down()&&!pointer.secondary_down(){app.navigation.mouse_captured=false;}
-  if app.navigation.mouse_captured {
-   app.navigation.sync_cursor(ui.ctx());
-   let raw=ui.input(|i|i.events.iter().filter_map(|e|if let egui::Event::MouseMoved(d)=e{Some(*d)}else{None}).reduce(|a,b|a+b));
-   let delta=raw.unwrap_or_else(||pointer.delta());let rate=app.document_session.preferences.look_sensitivity as f64/500.;
-   if was_captured{app.camera.turn(delta.x as f64*rate,-delta.y as f64*rate);}
-  }else{app.navigation.sync_cursor(ui.ctx());}
+  // Own the button that began mouse-look, and consume motion before its
+  // release even when both arrive in this frame. Relative events supersede
+  // matching absolute cursor updates to avoid applying one move twice.
+  let has_relative=ui.input(|i|i.events.iter().any(|event|matches!(event,egui::Event::MouseMoved(_))));
+  let rate=app.document_session.preferences.look_sensitivity as f64/500.;
+  ui.input(|i|for event in &i.events{
+   match event{
+    egui::Event::PointerButton{pos,button,pressed,..} if matches!(button,egui::PointerButton::Primary|egui::PointerButton::Secondary)=>{
+     if *pressed{
+      if app.navigation.look_button.is_none()&&rect.contains(*pos){app.navigation.look_button=Some(*button);app.navigation.look_cursor=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round());app.navigation.mouse_captured=true;}
+     }else if app.navigation.look_button==Some(*button){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
+    },
+    egui::Event::PointerMoved(pos) if app.navigation.mouse_captured=>{
+     let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();
+     if !has_relative{if let Some(last)=app.navigation.look_cursor{let d=p-last;app.camera.turn(d.x*rate,-d.y*rate);}}
+     app.navigation.look_cursor=Some(p);
+    },
+    egui::Event::MouseMoved(delta) if app.navigation.mouse_captured=>{app.camera.turn(delta.x as f64*rate,-delta.y as f64*rate);},
+    _=>{},
+   }
+  });
+  if !pointer.primary_down()&&!pointer.secondary_down(){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
+  app.navigation.sync_cursor(ui.ctx());
   return None;
  }
  let position=pointer.hover_pos().map(|p|{let p=DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64);if mode==Mode::Position{p.round()}else{p}});
