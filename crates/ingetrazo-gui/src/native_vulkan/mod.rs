@@ -138,6 +138,7 @@ pub struct System {
 
     pub egui_ctx: Context,
     pub egui_winit: State,
+    pointer_modifiers:crate::pointer_modifiers::Handle,
     pub renderer: std::mem::ManuallyDrop<Renderer>,
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
     pub world: Option<world::World>,
@@ -252,6 +253,7 @@ impl System {
         control.checkpoint(resize::Stage::StartupRenderer)?;
         // Nothing has been submitted. Move every owner only after all constructors succeed.
         startup.command=None;startup.acquire=None;startup.fence=None;
+        let pointer_modifiers=crate::pointer_modifiers::install(&egui_ctx);
         Ok(Self {
             vulkan_context,
             command_buffer,
@@ -266,6 +268,7 @@ impl System {
 
             egui_ctx,
             egui_winit,
+            pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
             world:None,cad2d:None,draw_serial:0,
@@ -336,6 +339,7 @@ impl System {
 
         // Generate UI
         let mut raw_input = self.egui_winit.take_egui_input(&window);
+        if let Ok(mut timeline)=self.pointer_modifiers.lock(){timeline.begin_frame();}
         if self.close_requested { raw_input.viewports.entry(ViewportId::ROOT).or_default().events.push(egui::ViewportEvent::Close); }
 
         let egui::FullOutput {
@@ -482,7 +486,9 @@ impl System {
         window: &Window,
         _event_loop: &ActiveEventLoop,
     ) {
+        let appended_from=self.egui_winit.egui_input().events.len();
         let response = self.egui_winit.on_window_event(&window, &event);
+        if let Ok(mut timeline)=self.pointer_modifiers.lock(){timeline.record_appended(self.egui_winit.egui_input(),appended_from);}
         if response.repaint { self.repaint_at=std::time::Instant::now();window.request_redraw(); }
 
         match event {

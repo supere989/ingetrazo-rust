@@ -210,13 +210,16 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,_resp
  }
  // Walk preserves the source click anchor and most recent hover state. A
  // release in this frame retires the stroke before any scheduled step.
- ui.input(|i|for event in &i.events{
+ // Context data is retrieved before ui.input; the two egui locks never nest.
+ let motion_handle=crate::pointer_modifiers::get(ui.ctx());
+ let motion_samples=match motion_handle.as_ref(){Some(handle)=>match handle.lock(){Ok(samples)=>Some(samples),Err(_)=>{app.navigation.cancel();app.status_message="Native pointer modifier timeline is unavailable".into();return None;}},None=>None};
+ ui.input(|i|for(index,event)in i.events.iter().enumerate(){
   match event{
    egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed,modifiers}=>{
     if *pressed{if rect.contains(*pos){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64);app.navigation.press=Some((p,DVec3::ZERO));app.navigation.last=Some(p);app.navigation.walk_modifiers=*modifiers;app.navigation.next_tick=None;}}
     else{app.navigation.cancel();}
    },
-   egui::Event::PointerMoved(pos) if app.navigation.press.is_some()=>{app.navigation.last=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64));app.navigation.walk_modifiers=i.modifiers;},_=>{},
+   egui::Event::PointerMoved(pos) if app.navigation.press.is_some()=>{app.navigation.last=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64));match motion_samples.as_ref().map(|samples|samples.modifiers(index,*pos)).transpose(){Ok(Some(Some(modifiers)))=>app.navigation.walk_modifiers=modifiers,Ok(_)=>app.navigation.walk_modifiers=i.modifiers,Err(error)=>{app.navigation.cancel();app.status_message=error.into();}}},_=>{},
   }
  });
  if let(Some((anchor,_)),Some(p))=(app.navigation.press,app.navigation.last){
