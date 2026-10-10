@@ -1,0 +1,1 @@
+actual new-radial allocator refusal preserves mesh, Redo, earlier transaction; retry+Undo/Redo and ledger release PASS

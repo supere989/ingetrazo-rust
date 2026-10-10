@@ -1,0 +1,24 @@
+{
+  "source": "36e388b7",
+  "result": "PASS for bounded proper-ring ownership prerequisite",
+  "fresh_source_native_states": 18,
+  "focused_controls": 6,
+  "actual_allocator_refusal": "PASS",
+  "review": "All fallible radial/face preparation precedes edge publication. Private edge owner validates document/state token. Sidecar histories move only after underlying operation succeeds. Original oracle invokes run_transactional and real History. Extrude comparison projects group mesh only, not full Group identity or recipe semantics.",
+  "remaining": [
+    "production interpreter disabled",
+    "multiple/nested holes and source degenerates",
+    "new face attributes and handles",
+    "full recipe/scene integration",
+    "VM/native allocation bounds"
+  ],
+  "sha256": {
+    "focused.log": "92c4d9dcba14d2f910581d09e04036a4e61b911875f0f4166163f450b3ccb1c8",
+    "native.json": "4e72e4f6436541cfbf4ec7ed2d6ccb977a0f8ce75cb1639436ceca2dc08f95be",
+    "build.log": "6841309fe26fdfe071decf7e841edf025acd82eed0c64166188f973a2aafed95",
+    "allocator.log": "aaaa411a303b83e54442f7b4f5ca7430505ad7595b56749998b801e7192dcf99",
+    "original.json": "06b00cf789cd5cc9fec8db2f0eb7cf046de85eef7330c84724cccf2ea703b6db",
+    "source.log": "20d592cdcac06032fe57719686023e9ca333216c213f6cad375dc42ac0eb684d"
+  },
+  "purged_target_apparent_bytes": 188123494
+}
