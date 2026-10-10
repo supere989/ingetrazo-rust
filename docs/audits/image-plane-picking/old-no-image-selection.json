@@ -1,0 +1,167 @@
+{
+  "bare": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "transparent_zero": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "missing_texture": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "own_locked": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "layer_locked": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "layer_hidden": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "locked_and_layer_hidden": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "unknown_layer": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "default_hidden": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "tie_last": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "nearest_not_last": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "outside": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "edge_inclusive": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "parallel": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "behind": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "back_side": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "vertical": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "sheared_source_projection": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "degenerate_source": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "geometry_wins": {
+    "selected_before_click": [],
+    "selected": [
+      "Face"
+    ],
+    "pick": "Face"
+  },
+  "shift_toggle": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "selected": [
+      "Scan"
+    ],
+    "pick": null
+  },
+  "ctrl_add": {
+    "selected_before_click": [
+      "Two"
+    ],
+    "selected": [
+      "Two"
+    ],
+    "pick": null
+  },
+  "shift_ctrl_remove": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "shift_ctrl_existing_remove": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "selected": [
+      "Scan"
+    ],
+    "pick": null
+  },
+  "default_alias_is_unknown": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "empty_alias_is_unknown": {
+    "selected_before_click": [],
+    "selected": [],
+    "pick": null
+  },
+  "panel_hidden_prune": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "selected": [],
+    "pick": null
+  },
+  "panel_locked_prune": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "selected": [],
+    "pick": null
+  },
+  "panel_default_locked_prune": {
+    "selected_before_click": [
+      "Scan"
+    ],
+    "selected": [],
+    "pick": null
+  }
+}
