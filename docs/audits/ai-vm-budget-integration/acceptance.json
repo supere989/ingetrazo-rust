@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "cases": 9,
+  "fresh_native_exact_retained": true,
+  "source": "0e1c87b29ed73e54c4e0394d6f697c7a111d2620",
+  "scope": "Fresh integrated standalone bytecode budget replay; no wall-time or production claim"
+}
