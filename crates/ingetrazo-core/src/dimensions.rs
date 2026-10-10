@@ -11,6 +11,7 @@ use crate::units::{format_length, LengthUnit};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Dimension {
+    #[serde(skip)] pub measurement_frame:glam::DMat4,
     #[serde(skip)] pub anchor_a:Option<crate::dimension_anchors::VertexAnchor>,
     #[serde(skip)] pub anchor_b:Option<crate::dimension_anchors::VertexAnchor>,
     #[serde(default)] pub native_document:serde_json::Value,
@@ -33,6 +34,7 @@ pub struct Dimension {
 impl Dimension {
     pub fn new(start: DVec3, end: DVec3, offset: DVec3) -> Self {
         Self {
+            measurement_frame:glam::DMat4::IDENTITY,
             anchor_a:None,anchor_b:None,
             native_document:serde_json::Value::Null,native_baseline:serde_json::Value::Null,layer:None,axis:None,
             id: Uuid::new_v4(),
@@ -48,9 +50,11 @@ impl Dimension {
         let ab=end-start;if ab.length()<1e-9{return None;}let d=ab.normalize();let e=d-u*d.dot(u);if e.length()<1e-6{return None;}Some((u,e.normalize()))
     }
     pub fn line_points(&self)->(DVec3,DVec3) {
-        if let Some((_,e))=Self::linear_frame(self.start,self.end,self.axis.as_deref()){let a=self.offset.dot(e);let b=a-(self.end-self.start).dot(e);return(self.start+e*a,self.end+e*b);}
-        let d=(self.end-self.start).normalize_or_zero();let offset=self.offset-d*self.offset.dot(d);(self.start+offset,self.end+offset)
+        let start=self.measurement_frame.transform_point3(self.start);let end=self.measurement_frame.transform_point3(self.end);let offset=self.measurement_frame.transform_vector3(self.offset);
+        let(first,last)=if let Some((_,e))=Self::linear_frame(start,end,self.axis.as_deref()){let a=offset.dot(e);let b=a-(end-start).dot(e);(start+e*a,end+e*b)}else{let d=(end-start).normalize_or_zero();let offset=offset-d*offset.dot(d);(start+offset,end+offset)};
+        let inverse=self.measurement_frame.inverse();(inverse.transform_point3(first),inverse.transform_point3(last))
     }
+    pub fn placement_in_frame(start:DVec3,end:DVec3,cursor:DVec3,frame:glam::DMat4)->(DVec3,Option<String>){let(offset,axis)=Self::placement_for_cursor(frame.transform_point3(start),frame.transform_point3(end),frame.transform_point3(cursor));(frame.inverse().transform_vector3(offset),axis)}
     pub fn placement_for_cursor(start:DVec3,end:DVec3,cursor:DVec3)->(DVec3,Option<String>) {
         let ab=end-start;let length=ab.length();if length<1e-9{return(cursor-start,None);}
         let d=ab/length;let aligned=(cursor-start)-d*(cursor-start).dot(d);let w=cursor-(start+end)*0.5;
@@ -65,7 +69,7 @@ impl Dimension {
     }
 
     pub fn length(&self) -> f64 {
-        let delta=self.end-self.start;
+        let delta=self.measurement_frame.transform_vector3(self.end-self.start);
         match self.axis.as_deref(){Some("x")=>delta.x.abs(),Some("y")=>delta.y.abs(),Some("z")=>delta.z.abs(),_=>delta.length()}
     }
 

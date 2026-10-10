@@ -66,6 +66,7 @@ impl IngeTrazoApp {
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
+        edit.dimension_frame=self.scene.dimension_frame*group.transform;
         edit.dimensions=self.scene.dimensions.clone();
         let inverse=group.transform.inverse();
         for dimension in &mut edit.dimensions{dimension.start=inverse.transform_point3(dimension.start);dimension.end=inverse.transform_point3(dimension.end);dimension.offset=inverse.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;}
@@ -117,14 +118,7 @@ impl IngeTrazoApp {
                 let transform=candidate.groups[group_index].transform;
                 candidate.dimensions=self.scene.dimensions.clone();
                 for dimension in &mut candidate.dimensions{
-                    let unchanged_axis=session.dimension_baseline.iter().find(|old|old.id==dimension.id).map(|old|old.axis==dimension.axis).unwrap_or(false);
-                    if !unchanged_axis{if let Some(axis)=dimension.axis.as_deref(){
-                        let vector=match axis{"x"=>glam::DVec3::X,"y"=>glam::DVec3::Y,"z"=>glam::DVec3::Z,_=>{self.status_message="Invalid dimension axis".into();return;}};
-                        let mapped=transform.transform_vector3(vector).normalize_or_zero();
-                        let target=[("x",glam::DVec3::X),("y",glam::DVec3::Y),("z",glam::DVec3::Z)].into_iter().find(|(_,v)|mapped.dot(*v).abs()>1.-1e-9);
-                        let Some((axis,_))=target else{self.status_message="An axial dimension in a rotated context cannot be represented by the original schema; use an aligned dimension".into();return;};dimension.axis=Some(axis.to_owned());
-                    }}
-                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;
+                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
                 }
                 candidate.bind_dimensions();
             }
@@ -159,6 +153,18 @@ mod tests {
         let group=Group::with_mesh("component",mesh);let id=group.id;app.scene.groups.push(group);app.scene.make_component(id).unwrap();
         let mut copy=app.scene.groups[0].duplicate_instance();copy.transform=DMat4::from_translation(DVec3::new(3.,4.,5.));app.scene.groups.push(copy);
         app.scene.select(SelectionItem::Group(0));app
+    }
+    #[test]
+    fn axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context() {
+        let mut app=app();let transform=DMat4::from_translation(DVec3::new(3.,4.,5.))*DMat4::from_rotation_y(30_f64.to_radians())*DMat4::from_scale(DVec3::new(-2.,3.,4.));app.scene.groups[0].transform=transform;
+        let start=transform.transform_point3(DVec3::ZERO);let end=transform.transform_point3(DVec3::X);
+        let mut dimension=ingetrazo_core::dimensions::Dimension::new(start,end,DVec3::new(4.,3.,2.));dimension.axis=Some("x".into());app.scene.dimensions.push(dimension);app.scene.bind_dimensions();
+        let expected=app.scene.dimensions[0].clone();let expected_lines=expected.line_points();app.begin_component_edit();
+        assert!((app.scene.dimensions[0].length()-expected.length()).abs()<1e-10);
+        let(local_a,local_b)=app.scene.dimensions[0].line_points();assert!((transform.transform_point3(local_a)-expected_lines.0).length()<1e-9);assert!((transform.transform_point3(local_b)-expected_lines.1).length()<1e-9);
+        app.scene.dimensions[0].text_override=Some("world <>".into());
+        let mut fresh=ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y);fresh.axis=Some("z".into());fresh.measurement_frame=app.scene.dimension_frame;app.scene.dimensions.push(fresh);app.scene.bind_dimensions();
+        let expected_new=app.scene.dimensions[1].length();app.finish_component_edit();assert!(app.component_edit_stack.is_empty());assert_eq!(app.scene.dimensions.len(),2);assert!((app.scene.dimensions[0].length()-expected.length()).abs()<1e-10);assert!((app.scene.dimensions[1].length()-expected_new).abs()<1e-10);assert_eq!(app.scene.dimensions[1].axis.as_deref(),Some("z"));
     }
     #[test]
     fn local_dimensions_commit_to_parent_coordinates_and_cancel_restore() {

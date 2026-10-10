@@ -13,11 +13,11 @@ impl VertexAnchor {
 }
 impl Scene {
     pub fn resolve_dimension_anchor(&self,point:DVec3)->Option<VertexAnchor>{at(&self.mesh,DMat4::IDENTITY,point,&[]).or_else(||find(&self.groups,DMat4::IDENTITY,point,&mut vec![]))}
-    pub fn bind_dimensions(&mut self){let mut dimensions=std::mem::take(&mut self.dimensions);for dim in &mut dimensions{dim.anchor_a=self.resolve_dimension_anchor(dim.start);dim.anchor_b=self.resolve_dimension_anchor(dim.end);}self.dimensions=dimensions;}
+    pub fn bind_dimensions(&mut self){let mut dimensions=std::mem::take(&mut self.dimensions);for dim in &mut dimensions{dim.measurement_frame=self.dimension_frame;dim.anchor_a=self.resolve_dimension_anchor(dim.start);dim.anchor_b=self.resolve_dimension_anchor(dim.end);}self.dimensions=dimensions;}
     pub fn dimension_points(&self,dim:&Dimension)->(DVec3,DVec3){(dim.anchor_a.as_ref().and_then(|a|a.position(self)).unwrap_or(dim.start),dim.anchor_b.as_ref().and_then(|a|a.position(self)).unwrap_or(dim.end))}
     pub fn refresh_dimensions(&mut self){
         let mut dimensions=std::mem::take(&mut self.dimensions);
-        for dim in &mut dimensions{for(point,anchor)in[(&mut dim.start,&mut dim.anchor_a),(&mut dim.end,&mut dim.anchor_b)]{
+        for dim in &mut dimensions{dim.measurement_frame=self.dimension_frame;for(point,anchor)in[(&mut dim.start,&mut dim.anchor_a),(&mut dim.end,&mut dim.anchor_b)]{
             if let Some(held)=anchor.as_ref(){if let Some(live)=held.position(self){*point=live;}else{*anchor=self.resolve_dimension_anchor(*point);if let Some(live)=anchor.as_ref().and_then(|a|a.position(self)){*point=live;}}}
         }}self.dimensions=dimensions;
     }
