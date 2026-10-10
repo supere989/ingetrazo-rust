@@ -1,0 +1,43 @@
+{
+  "production_commits": [
+    "c2fa4bb",
+    "6de8b67"
+  ],
+  "tested_tip": "f7a1e0e",
+  "main_base": "65951ac",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_runtime": "Python3.13.13 / Qt6.12.0",
+  "workspace": {
+    "passed": 532,
+    "ignored": 2,
+    "failed": 0
+  },
+  "fresh_current_modes": {
+    "solid": 78,
+    "saved_tilted_cropped_colored_hatch": 78
+  },
+  "prior_modes": {
+    "tilted_solid": 78,
+    "hatch": 78,
+    "saved_cropped_colored_hatch": 78
+  },
+  "numerical_source_controls": 18,
+  "coordinate_mutation": {
+    "delta": "2^-22",
+    "exit": 101,
+    "expected": "exact ring equality refusal"
+  },
+  "valid_pdf_color_mutation": {
+    "exit": 1,
+    "parser_valid": true,
+    "different_pixels": {
+      "False": 9680,
+      "True": 9063
+    },
+    "expected": "strict complete page reader rejection"
+  },
+  "native_fixture_sha256": "ba183beef01e860f40d7fe2a1d0aad97d4473d4b29f26f7f95c385a11205d34a",
+  "worker_sha256": "97bd8da8882e13d7ac597b0c6ba0df4a176a62d31e278bf7f06d5ff22ecb3685",
+  "section_fixture_sha256": "3c2b5c0cfc2d3677e991da32d5c5de596cf264f6aac90a6aa4f9fbb9016e3e81",
+  "scope": "Bounded orthographic vector View solid/hatch physical painter; full P29 default raster/text/title/grid/annotations/UI remain open."
+}
