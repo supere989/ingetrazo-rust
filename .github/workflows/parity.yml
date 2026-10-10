@@ -46,6 +46,10 @@ jobs:
         run: python scripts/check-python-fillet.py
       - name: Independent nested mesh exchange geometry
         run: python scripts/check-exchange-exports.py
+      - name: Original runtime exchange import semantics
+        run: python scripts/audit-exchange-imports.py
+      - name: Independent DXF curve and refusal boundaries
+        run: python scripts/check-dxf-curves.py
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,4 +60,5 @@ jobs:
             docs/audits/python-*-evidence.json
             docs/audits/render-pergola.png
             docs/audits/render-startup.log
-            docs/audits/exchange-export-evidence.json
+            docs/audits/exchange-*-evidence.json
+            docs/audits/dxf-curve-evidence.json
