@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<ai>", line 2, in <module>
+ValueError: rollback
+Traceback (most recent call last):
+  File "<ai>", line 8, in <module>
+ValueError: field rollback
+Traceback (most recent call last):
+  File "<ai>", line 3, in <module>
+ValueError: private survives
+
+thread 'main' (1274454) panicked at src/bin/../vm_mesh.rs:467:43:
+Engineering unwind after VM mutation
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

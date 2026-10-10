@@ -68,38 +68,39 @@ pub mod editable_mesh {
     #[pyclass(name = "Vertex", traverse)]
     #[derive(Debug, PyPayload)]
     pub struct Vertex {
-        pub(super) position: PyRef<QVector3D>,
+        pub(super) position: PyRwLock<PyRef<QVector3D>>,
     }
     #[pyclass]
     impl Vertex {
         #[pygetset]
         fn position(zelf: &Py<Self>) -> PyRef<QVector3D> {
-            zelf.position.clone()
+            zelf.position.read().clone()
         }
     }
     #[pyattr]
     #[pyclass(name = "Face", traverse)]
     #[derive(Debug, PyPayload)]
     pub struct Face {
-        pub(super) r#loop: PyListRef,
-        hole_loops: PyListRef,
+        pub(super) r#loop: PyRwLock<PyListRef>,
+        pub(super) hole_loops: PyRwLock<PyListRef>,
         pub(super) attrs: PyRwLock<PyObjectRef>,
     }
     #[pyclass]
     impl Face {
         #[pygetset(name = "loop")]
         fn face_loop(zelf: &Py<Self>) -> PyListRef {
-            zelf.r#loop.clone()
+            zelf.r#loop.read().clone()
         }
         #[pygetset]
         fn hole_loops(zelf: &Py<Self>) -> PyListRef {
-            zelf.hole_loops.clone()
+            zelf.hole_loops.read().clone()
         }
         #[pygetset]
         fn vertices(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<PyListRef> {
             vm.host_budget_tick()?;
             let mut positions = Vec::new();
-            let ring = zelf.r#loop.borrow_vec();
+            let list = zelf.r#loop.read().clone();
+            let ring = list.borrow_vec();
             positions
                 .try_reserve_exact(ring.len())
                 .map_err(|_| vm.new_value_error("Face position slots refused"))?;
@@ -107,26 +108,29 @@ pub mod editable_mesh {
                 let vertex = vertex
                     .downcast_ref::<Vertex>()
                     .ok_or_else(|| vm.new_type_error("Face loop requires Vertex"))?;
-                positions.push(vertex.position.clone().into());
+                positions.push(vertex.position.read().clone().into());
             }
             Ok(vm.ctx.new_list(positions))
         }
         #[pymethod]
         fn normal(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<PyRef<QVector3D>> {
             vm.host_budget_tick()?;
-            let ring = zelf.r#loop.borrow_vec();
+            let list = zelf.r#loop.read().clone();
+            let ring = list.borrow_vec();
             let mut n = [0f64; 3];
             for i in 0..ring.len() {
                 let p = ring[i]
                     .downcast_ref::<Vertex>()
                     .ok_or_else(|| vm.new_type_error("Face loop requires Vertex"))?
                     .position
+                    .read()
                     .coordinates()
                     .map(f64::from);
                 let q = ring[(i + 1) % ring.len()]
                     .downcast_ref::<Vertex>()
                     .ok_or_else(|| vm.new_type_error("Face loop requires Vertex"))?
                     .position
+                    .read()
                     .coordinates()
                     .map(f64::from);
                 n[0] += (p[1] - q[1]) * (p[2] + q[2]);
@@ -145,13 +149,15 @@ pub mod editable_mesh {
         #[pymethod]
         fn centroid(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<PyRef<QVector3D>> {
             vm.host_budget_tick()?;
-            let ring = zelf.r#loop.borrow_vec();
+            let list = zelf.r#loop.read().clone();
+            let ring = list.borrow_vec();
             let mut sum = [0f64; 3];
             for v in ring.iter() {
                 let p = v
                     .downcast_ref::<Vertex>()
                     .ok_or_else(|| vm.new_type_error("Face loop requires Vertex"))?
                     .position
+                    .read()
                     .coordinates();
                 for i in 0..3 {
                     sum[i] += p[i] as f64;
@@ -299,7 +305,13 @@ pub mod editable_mesh {
                     for p in &positions[vertices.len() - base..] {
                         let position =
                             QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
-                        vertices.push(Vertex { position }.into_ref(&vm.ctx).into());
+                        vertices.push(
+                            Vertex {
+                                position: PyRwLock::new(position),
+                            }
+                            .into_ref(&vm.ctx)
+                            .into(),
+                        );
                     }
                     let build_ring = |ids: &[usize]| -> PyResult<PyListRef> {
                         let mut ring = Vec::new();
@@ -326,8 +338,8 @@ pub mod editable_mesh {
                         hole_lists.push(build_ring(ring)?.into());
                     }
                     let face = Face {
-                        r#loop,
-                        hole_loops: vm.ctx.new_list(hole_lists),
+                        r#loop: PyRwLock::new(r#loop),
+                        hole_loops: PyRwLock::new(vm.ctx.new_list(hole_lists)),
                         attrs: PyRwLock::new(vm.ctx.new_dict().into()),
                     }
                     .into_ref(&vm.ctx);
@@ -359,6 +371,175 @@ pub mod editable_mesh {
         }
     }
 }
+struct VertexRestore {
+    vertex: PyRef<editable_mesh::Vertex>,
+    position: PyRef<crate::vm_groups::native_groups::QVector3D>,
+}
+struct FaceRestore {
+    face: PyRef<editable_mesh::Face>,
+    outer: rustpython_vm::builtins::PyListRef,
+    holes: rustpython_vm::builtins::PyListRef,
+    attrs: rustpython_vm::PyObjectRef,
+}
+struct RootRestore {
+    mesh: PyRef<editable_mesh::Mesh>,
+    vertices: Vec<rustpython_vm::PyObjectRef>,
+    faces: Vec<rustpython_vm::PyObjectRef>,
+    positions: Vec<VertexRestore>,
+    face_fields: Vec<FaceRestore>,
+    _charge: Lease,
+    armed: bool,
+}
+impl RootRestore {
+    fn prepare(
+        mesh: PyRef<editable_mesh::Mesh>,
+        budget: &OwnerBudget,
+        vm: &rustpython_vm::VirtualMachine,
+    ) -> Result<Self, String> {
+        use rustpython_vm::{PyPayload, builtins::PyDict};
+        fn copy(
+            list: &rustpython_vm::builtins::PyListRef,
+        ) -> Result<Vec<rustpython_vm::PyObjectRef>, String> {
+            let source = list.borrow_vec();
+            let mut out = Vec::new();
+            out.try_reserve_exact(source.len())
+                .map_err(|_| "Root reference preparation refused")?;
+            out.extend(source.iter().cloned());
+            Ok(out)
+        }
+        let bytes = mesh
+            .vertices
+            .borrow_vec()
+            .len()
+            .checked_mul(
+                std::mem::size_of::<VertexRestore>()
+                    + std::mem::size_of::<rustpython_vm::PyObjectRef>(),
+            )
+            .and_then(|n| {
+                mesh.faces
+                    .borrow_vec()
+                    .len()
+                    .checked_mul(
+                        std::mem::size_of::<FaceRestore>()
+                            + std::mem::size_of::<rustpython_vm::PyObjectRef>(),
+                    )
+                    .and_then(|m| n.checked_add(m))
+            })
+            .ok_or("Root restoration extent overflow")?;
+        let mut charge = budget.reserve(Kind::Preparation, bytes)?;
+        let vertices = copy(&mesh.vertices)?;
+        let faces = copy(&mesh.faces)?;
+        let mut positions = Vec::new();
+        positions
+            .try_reserve_exact(vertices.len())
+            .map_err(|_| "Position restoration records refused")?;
+        for value in &vertices {
+            let vertex = value
+                .clone()
+                .downcast::<editable_mesh::Vertex>()
+                .map_err(|_| "Root vertex list requires Vertex")?;
+            let p = vertex.position.read().coordinates();
+            let position =
+                crate::vm_groups::native_groups::QVector3D::from_coordinates(p).into_ref(&vm.ctx);
+            positions.push(VertexRestore { vertex, position });
+        }
+        let mut face_fields = Vec::new();
+        face_fields
+            .try_reserve_exact(faces.len())
+            .map_err(|_| "Face restoration records refused")?;
+        let mut bytes = bytes;
+        for value in &faces {
+            let face = value
+                .clone()
+                .downcast::<editable_mesh::Face>()
+                .map_err(|_| "Root face list requires Face")?;
+            let outer = copy(&face.r#loop.read())?;
+            bytes = bytes
+                .checked_add(
+                    outer
+                        .capacity()
+                        .checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
+                        .ok_or("Loop byte overflow")?,
+                )
+                .ok_or("Loop byte overflow")?;
+            charge.resize(bytes)?;
+            let source_holes = face.hole_loops.read().clone();
+            let source_holes = source_holes.borrow_vec();
+            let mut holes = Vec::new();
+            holes
+                .try_reserve_exact(source_holes.len())
+                .map_err(|_| "Hole restoration slots refused")?;
+            for h in source_holes.iter() {
+                let h = h
+                    .downcast_ref::<rustpython_vm::builtins::PyList>()
+                    .ok_or("Hole requires list")?;
+                let h = h.borrow_vec();
+                let mut ring = Vec::new();
+                ring.try_reserve_exact(h.len())
+                    .map_err(|_| "Hole restoration members refused")?;
+                ring.extend(h.iter().cloned());
+                bytes = bytes
+                    .checked_add(
+                        ring.capacity()
+                            .checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
+                            .ok_or("Hole byte overflow")?,
+                    )
+                    .ok_or("Hole byte overflow")?;
+                charge.resize(bytes)?;
+                holes.push(vm.ctx.new_list(ring).into());
+            }
+            let old = face.attrs.read().clone();
+            let old = old
+                .downcast::<PyDict>()
+                .map_err(|_| "Root face attrs require dict")?;
+            let attrs = old.copy().into_ref(&vm.ctx).into();
+            face_fields.push(FaceRestore {
+                face,
+                outer: vm.ctx.new_list(outer),
+                holes: vm.ctx.new_list(holes),
+                attrs,
+            });
+        }
+        Ok(Self {
+            mesh,
+            vertices,
+            faces,
+            positions,
+            face_fields,
+            _charge: charge,
+            armed: true,
+        })
+    }
+    fn apply(&mut self) {
+        let vertices = std::mem::take(&mut self.vertices);
+        let faces = std::mem::take(&mut self.faces);
+        *self.mesh.vertices.borrow_vec_mut() = vertices;
+        *self.mesh.faces.borrow_vec_mut() = faces;
+        for record in self.positions.drain(..) {
+            *record.vertex.position.write() = record.position;
+        }
+        for record in self.face_fields.drain(..) {
+            *record.face.r#loop.write() = record.outer;
+            *record.face.hole_loops.write() = record.holes;
+            *record.face.attrs.write() = record.attrs;
+        }
+        self.armed = false;
+    }
+    fn restore(mut self) {
+        self.apply();
+    }
+    fn dismiss(mut self) {
+        self.armed = false;
+    }
+}
+impl Drop for RootRestore {
+    fn drop(&mut self) {
+        if self.armed {
+            self.apply();
+        }
+    }
+}
+
 pub struct Controller {
     interpreter: Interpreter,
     scope: Scope,
@@ -366,6 +547,7 @@ pub struct Controller {
     tainted: bool,
     pressure_after: Option<usize>,
     last_prepared: usize,
+    panic_after_execution: bool,
 }
 impl Controller {
     pub fn new() -> Self {
@@ -384,6 +566,7 @@ impl Controller {
             tainted: false,
             pressure_after: None,
             last_prepared: 0,
+            panic_after_execution: false,
         };
         controller.execute("mesh=Mesh()").unwrap();
         controller.adopt("mesh");
@@ -397,6 +580,12 @@ impl Controller {
     }
     pub fn last_prepared(&self) -> usize {
         self.last_prepared
+    }
+    pub fn panic_after_execution(&mut self, value: bool) {
+        self.panic_after_execution = value;
+    }
+    pub fn tainted(&self) -> bool {
+        self.tainted
     }
     pub fn adopt(&self, name: &str) {
         self.interpreter.enter(|vm| {
@@ -428,7 +617,20 @@ impl Controller {
             let _guard = Guard;
             vm.host_budget_arm(100000)
                 .map_err(|_| "VM fuel admission refused")?;
+            let baseline = match self.scope.globals.get_item("mesh", vm) {
+                Ok(value) => Some(RootRestore::prepare(
+                    value
+                        .downcast::<editable_mesh::Mesh>()
+                        .map_err(|_| "Root binding requires Mesh")?,
+                    &self.budget,
+                    vm,
+                )?),
+                Err(_) => None,
+            };
             let executed = session::execute(vm, &self.scope, source);
+            if self.panic_after_execution {
+                panic!("Engineering unwind after VM mutation");
+            }
             let mut stage = STAGED.with(|s| s.borrow_mut().take().unwrap());
             let result = if let Err(error) = executed {
                 vm.print_exception(&error);
@@ -486,9 +688,18 @@ impl Controller {
                 }
                 publish
             };
+            if let Some(baseline) = baseline {
+                if result.is_err() {
+                    baseline.restore();
+                } else {
+                    baseline.dismiss();
+                }
+            }
             vm.host_budget_reset_after_discard();
             result
         });
+        self.interpreter
+            .enter(|vm| vm.host_budget_reset_after_discard());
         self.budget.set_limit(prior_limit);
         self.tainted = false;
         result
@@ -499,7 +710,7 @@ impl Controller {
         }
     }
     pub fn observe(&self, name: &str) -> serde_json::Value {
-        self.interpreter.enter(|vm|{use rustpython_vm::AsObject;let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();let m=owner.mesh();let held=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let old_loop=self.scope.globals.get_item("loop",vm).unwrap();let attrs=self.scope.globals.get_item("heldattrs",vm).unwrap();let position=self.scope.globals.get_item("heldposition",vm).unwrap();let live=mesh.faces.borrow_vec();let first=held.r#loop.borrow_vec()[0].clone().downcast::<editable_mesh::Vertex>().unwrap();serde_json::json!({"name":name,"mesh":{"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":m.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"faces":m.faces.iter().map(|f|serde_json::json!({"vertices":f.vertices,"holes":f.holes})).collect::<Vec<_>>()},"persistent_faces":mesh.faces.is(&self.scope.globals.get_item("faces",vm).unwrap()),"persistent_vertices":mesh.vertices.is(&self.scope.globals.get_item("vertices",vm).unwrap()),"held_face_live":live.iter().any(|v|v.is(&held)),"face_loop_preserved":held.r#loop.is(&old_loop),"attrs_dict_preserved":held.attrs.read().is(&attrs),"vertex_position_preserved":first.position.is(&position)})})
+        self.interpreter.enter(|vm|{use rustpython_vm::AsObject;let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();let m=owner.mesh();let held=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let old_loop=self.scope.globals.get_item("loop",vm).unwrap();let attrs=self.scope.globals.get_item("heldattrs",vm).unwrap();let position=self.scope.globals.get_item("heldposition",vm).unwrap();let live=mesh.faces.borrow_vec();let first=held.r#loop.read().borrow_vec()[0].clone().downcast::<editable_mesh::Vertex>().unwrap();serde_json::json!({"name":name,"mesh":{"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":m.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"faces":m.faces.iter().map(|f|serde_json::json!({"vertices":f.vertices,"holes":f.holes})).collect::<Vec<_>>()},"persistent_faces":mesh.faces.is(&self.scope.globals.get_item("faces",vm).unwrap()),"persistent_vertices":mesh.vertices.is(&self.scope.globals.get_item("vertices",vm).unwrap()),"held_face_live":live.iter().any(|v|v.is(&held)),"face_loop_preserved":held.r#loop.read().is(&old_loop),"attrs_dict_preserved":held.attrs.read().is(&attrs),"vertex_position_preserved":first.position.read().is(&position)})})
     }
     pub fn native_counts(&self, name: &str) -> (usize, usize, usize) {
         self.interpreter.enter(|vm| {
