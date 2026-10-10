@@ -68,7 +68,7 @@ pub struct ShapePaint {
     pub path: ShapePath,
     pub stroke: Option<(String, f64)>,
     pub fill: Option<(String, f64)>,
-    pub clip: Option<Vec<DVec2>>,
+    pub clip: Option<std::sync::Arc<[DVec2]>>,
 }
 impl SheetShape {
     /// Local item coordinates; consumers translate once by x_mm/y_mm.
@@ -159,11 +159,11 @@ impl SheetShape {
                 let step = self.tick_step_mm.max(0.5);
                 let tick = self.tick_mm.max(0.2);
                 let depth = self.band_mm.max(0.5);
-                let band = vec![a, b, b + n * depth, a + n * depth];
+                let band: std::sync::Arc<[DVec2]> = [a, b, b + n * depth, a + n * depth].into();
                 let ground_stroke = Some((self.color.clone(), (self.stroke_mm * 0.6).max(0.1)));
                 match self.ground.as_str() {
                     "band" => commands.push(ShapePaint {
-                        path: ShapePath::Polygon(band),
+                        path: ShapePath::Polygon(band.to_vec()),
                         stroke: None,
                         fill: Some((self.fill_color.clone(), 0.6)),
                         clip: None,
@@ -242,6 +242,9 @@ mod tests {
             assert!(commands[..commands.len() - 2]
                 .iter()
                 .all(|c| c.clip.as_ref() == Some(clip)));
+            assert!(commands[..commands.len() - 2]
+                .iter()
+                .all(|c| std::sync::Arc::ptr_eq(c.clip.as_ref().unwrap(), clip)));
             assert!(commands.last().unwrap().clip.is_none());
         }
     }
