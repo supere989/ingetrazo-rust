@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "df4c6278d7918e6bdcebd0c0313e0c03560e6f44",
+    "rust_commit": "be94ddc719aec4ffe8aec8b6ddc16d3275070bea",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -42,6 +42,15 @@
       "name": "plain-edge-crossing",
       "edges": 5,
       "crossing_incidence": 4
+    },
+    {
+      "name": "control-key-toggle",
+      "press_states": [
+        true,
+        false,
+        true
+      ],
+      "reset_consumes_copy": true
     }
   ],
   "scope": "Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Group/arrays/retyping/cancel remain separate."

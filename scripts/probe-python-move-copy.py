@@ -6,7 +6,7 @@ from types import SimpleNamespace as N
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen");sys.path.insert(0,"/work/ingetrazo")
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QVector3D as V
-from PySide6.QtCore import QPointF
+from PySide6.QtCore import QPointF,Qt
 from views.viewport import Viewport
 from tools.move import MoveTool
 from acceptance_context import context
@@ -26,5 +26,11 @@ vp=Viewport();edge=vp.scene.mesh.add_edge(V(-1,0,0),V(1,0,0));vp.scene.mesh.add_
 assert len(m.edges)==5
 incident=sum((e.a-V(0,2,0)).length()<1e-6 or(e.b-V(0,2,0)).length()<1e-6 for e in m.edges);assert incident==4
 rows.append({"name":"plain-edge-crossing","edges":len(m.edges),"crossing_incidence":incident})
+vp=Viewport();vp.flash_status=lambda text:None;t=MoveTool();vp.set_active_tool(t)
+assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier) and t._copy
+assert t.on_key(vp,Qt.Key_Control,Qt.ControlModifier) and not t._copy
+assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier) and t._copy
+t._reset();assert not t._copy
+rows.append({"name":"control-key-toggle","press_states":[True,False,True],"reset_consumes_copy":True})
 Path("docs/audits/move-copy-source-controls.json").write_text(json.dumps({"provenance":context(),"cases":rows,"scope":"Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Group/arrays/retyping/cancel remain separate."},indent=2)+"\n")
 print("Original Move copy holes/UV/flags and crossing topology PASS")

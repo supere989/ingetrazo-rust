@@ -29,6 +29,7 @@ pub struct MoveTool {
     exclusions: ingetrazo_core::snap_screen::SnapExclusions,
     copy_assets:CopyAssets,
     last_error:Option<String>,
+    control_down:bool,
 }
 
 impl MoveTool {
@@ -170,6 +171,11 @@ impl Tool for MoveTool {
 
     fn error_message(&self)->Option<&str>{self.last_error.as_deref()}
 
+    fn note_control_state(&mut self,held:bool){
+        if held&&!self.control_down{self.is_copy_mode=!self.is_copy_mode;}
+        self.control_down=held;
+    }
+
     fn name(&self) -> &'static str {
         "Move"
     }
@@ -212,15 +218,11 @@ impl Tool for MoveTool {
 
     fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
         self.hover_point = Some(ctx.world);
-        if ctx.ctrl_held {
-            self.is_copy_mode = true;
-        }
+        self.note_control_state(ctx.ctrl_held);
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if ctx.ctrl_held {
-            self.is_copy_mode = true;
-        }
+        self.note_control_state(ctx.ctrl_held);
 
         if self.start_point.is_none() {
             self.gather_targets(scene, ctx);
@@ -315,6 +317,17 @@ mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
 
+    #[test]
+    fn control_press_toggles_once_release_keeps_mode_and_commit_consumes_it(){
+        let mut tool=MoveTool::new();tool.note_control_state(true);assert!(tool.is_copy_mode);
+        tool.note_control_state(true);assert!(tool.is_copy_mode);
+        tool.note_control_state(false);assert!(tool.is_copy_mode);
+        tool.note_control_state(true);assert!(!tool.is_copy_mode);
+        tool.note_control_state(false);tool.note_control_state(true);assert!(tool.is_copy_mode);
+        tool.reset();assert!(!tool.is_copy_mode);
+        tool.note_control_state(true);assert!(!tool.is_copy_mode,"held modifier does not rearm consumed operation");
+        tool.note_control_state(false);tool.note_control_state(true);assert!(tool.is_copy_mode);
+    }
     #[test]
     fn inference_excludes_incident_edges_and_nested_groups_but_copy_keeps_them(){
         let mut scene=Scene::new();
