@@ -1,0 +1,11 @@
+# Owned native face attribute prerequisite
+
+Source a6e44f00. Twelve actual frozen-original run_transactional / History states match native append/Undo/Redo for nested JSON attributes, color/opacity, layer, front/back texture/vendor fields, Unicode and empty values. Twelve face-owner focused tests pass. Twenty-seven unchanged-original multiple-hole states remain exact after the history ownership change.
+
+Attributes stay in live faces while applied; Undo moves the same objects into pre-reserved command slots, Redo moves them back after fallible preparation. No recursive Value cloning. One 57,344-byte string retains its allocation pointer; Undo+Redo allocate 3,296 bytes total in 17 calls, largest 736. Actual injected allocator null at new radial storage preserves old mesh, Redo and earlier transaction; subsequent branch, Undo/Redo and ledger drop pass. Logical attribute charge is transferred Staging→History without double charge; refused Undo/Redo and branch release are tested.
+
+This accounts logical map/vector/string capacities, not allocator/BTree overhead, live Mesh vector spare capacity, caller construction, VM/compiler/native memory or global allocation enforcement. Owned native JSON setter caps nesting at 64; arbitrary Python semantics are required separately. No production execution is enabled.
+
+Eight ORIGINAL-ONLY controls retain the next full contract: held Face becomes the exact same live Python object on Redo; shared list aliases two faces and persistent scope, mutation while undone appears in both on Redo; tuple values and integer/tuple dictionary keys survive. _finish returns the same appended Group, the held six-face mesh persists while undone, and the same Group returns on Redo. Native JSON equality/pointer evidence does NOT establish those VM object/type/alias/group contracts. No serialization at the future VM attribute boundary is authorized by this proof.
+
+Reproduce: cargo test/run --no-default-features -j2 --bin face_history/face_attributes/face_attribute_failure in tools/ai-interpreter-proof; original scripts/reference-ai-face-attributes.py and reference-ai-face-object-identity.py with frozen Qt interpreter. scripts/check-ai-face-attributes.py uses one strict validator for positives and six negative mutations.

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "append",
+    "faces": 2,
+    "held_is_live": true,
+    "shared_alias": true,
+    "shared_is_scope": true,
+    "tuple_type": "tuple",
+    "held_shared_value": [],
+    "scope_shared_value": [],
+    "live_shared_values": [
+      [],
+      []
+    ],
+    "nonstring_keys": [
+      "int",
+      "tuple"
+    ]
+  },
+  {
+    "name": "undo",
+    "faces": 0,
+    "held_is_live": false,
+    "shared_alias": false,
+    "shared_is_scope": false,
+    "tuple_type": null,
+    "held_shared_value": [],
+    "scope_shared_value": [],
+    "live_shared_values": [],
+    "nonstring_keys": []
+  },
+  {
+    "name": "scope-mutated-while-undone",
+    "faces": 0,
+    "held_is_live": false,
+    "shared_alias": false,
+    "shared_is_scope": false,
+    "tuple_type": null,
+    "held_shared_value": [
+      "while-undone"
+    ],
+    "scope_shared_value": [
+      "while-undone"
+    ],
+    "live_shared_values": [],
+    "nonstring_keys": []
+  },
+  {
+    "name": "redo",
+    "faces": 2,
+    "held_is_live": true,
+    "shared_alias": true,
+    "shared_is_scope": true,
+    "tuple_type": "tuple",
+    "held_shared_value": [
+      "while-undone"
+    ],
+    "scope_shared_value": [
+      "while-undone"
+    ],
+    "live_shared_values": [
+      [
+        "while-undone"
+      ],
+      [
+        "while-undone"
+      ]
+    ],
+    "nonstring_keys": [
+      "int",
+      "tuple"
+    ]
+  },
+  {
+    "name": "scope-alias-mutated",
+    "faces": 2,
+    "held_is_live": true,
+    "shared_alias": true,
+    "shared_is_scope": true,
+    "tuple_type": "tuple",
+    "held_shared_value": [
+      "while-undone",
+      "later"
+    ],
+    "scope_shared_value": [
+      "while-undone",
+      "later"
+    ],
+    "live_shared_values": [
+      [
+        "while-undone",
+        "later"
+      ],
+      [
+        "while-undone",
+        "later"
+      ]
+    ],
+    "nonstring_keys": [
+      "int",
+      "tuple"
+    ]
+  },
+  {
+    "name": "finish-group",
+    "returned_is_placement": true,
+    "face_color_types": [
+      "tuple"
+    ],
+    "soft_edges": 0
+  },
+  {
+    "name": "finish-undo",
+    "groups": 0,
+    "held_mesh_faces": 6
+  },
+  {
+    "name": "finish-redo",
+    "returned_is_placement": true,
+    "groups": 1
+  }
+]

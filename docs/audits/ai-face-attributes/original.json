@@ -1,0 +1,766 @@
+[
+  {
+    "name": "nested-attributes",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {
+          "color": [
+            0.1,
+            0.2,
+            0.3,
+            0.4
+          ],
+          "layer": "Authored",
+          "opacity": 0.75,
+          "vendor": {
+            "path": "unchanged.png",
+            "nested": [
+              null,
+              true,
+              17,
+              "payload"
+            ],
+            "empty": {}
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "nested-attributes-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "nested-attributes-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {
+          "color": [
+            0.1,
+            0.2,
+            0.3,
+            0.4
+          ],
+          "layer": "Authored",
+          "opacity": 0.75,
+          "vendor": {
+            "path": "unchanged.png",
+            "nested": [
+              null,
+              true,
+              17,
+              "payload"
+            ],
+            "empty": {}
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "texture-attributes",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {
+          "material": "Named Paint",
+          "back_color": [
+            0.9,
+            0.8,
+            0.7
+          ],
+          "texture": {
+            "path": "tile.png",
+            "uvw": [
+              [
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                0,
+                3
+              ]
+            ],
+            "vendor": {
+              "material": "opaque"
+            }
+          },
+          "flags": [
+            false,
+            {},
+            [],
+            123.5
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "texture-attributes-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "texture-attributes-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {
+          "material": "Named Paint",
+          "back_color": [
+            0.9,
+            0.8,
+            0.7
+          ],
+          "texture": {
+            "path": "tile.png",
+            "uvw": [
+              [
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                0,
+                3
+              ]
+            ],
+            "vendor": {
+              "material": "opaque"
+            }
+          },
+          "flags": [
+            false,
+            {},
+            [],
+            123.5
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "empty-attributes",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {}
+      }
+    ]
+  },
+  {
+    "name": "empty-attributes-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "empty-attributes-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {}
+      }
+    ]
+  },
+  {
+    "name": "unicode-attributes",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {
+          "café": "測定",
+          "nested": [
+            {
+              "tag": "Δ"
+            }
+          ],
+          "layer": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "unicode-attributes-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "unicode-attributes-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [],
+        "attrs": {
+          "café": "測定",
+          "nested": [
+            {
+              "tag": "Δ"
+            }
+          ],
+          "layer": ""
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "native_source": "a6e44f00",
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+  "binaries": {
+    "face_attributes": "63dc1ced37f2bf4314a8c1876060489985bd185dfb4e6d028737bf0c4b5db38f",
+    "face_attribute_failure": "4f428abd739b46bd1a83d915e3fbb73d2653e453fe1d14aea234af3565f9d7e5",
+    "face_holes": "bb9ddacc25f20f06f810479f0b0a3af4642cf018bd6af84439ee868a28621d8e"
+  },
+  "production_enabled": false
+}
