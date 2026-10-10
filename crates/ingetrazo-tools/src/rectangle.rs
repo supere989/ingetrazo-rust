@@ -20,6 +20,7 @@ pub struct RectangleTool {
     pub from_center: bool,
     error: Option<String>,
     square_lock: bool,
+    plane_lock: Option<DVec3>,
 }
 
 impl Default for RectangleTool {
@@ -31,6 +32,7 @@ impl Default for RectangleTool {
             from_center: false,
             error: None,
             square_lock: false,
+            plane_lock: None,
         }
     }
 }
@@ -51,7 +53,7 @@ impl RectangleTool {
         self.start_point = None;
         self.hover_point = None;
         self.from_center = false;
-        self.plane_normal=DVec3::Z;self.square_lock=false;self.error=None;
+        self.plane_normal=DVec3::Z;self.square_lock=false;self.error=None;self.plane_lock=None;
     }
 
     /// Calculate the 4 corners from start point and an opposite point.
@@ -107,7 +109,15 @@ impl RectangleTool {
 
 impl Tool for RectangleTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
-    fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.start_point.map(|p|(p,self.plane_normal))}
+    fn note_cursor_plane(&mut self,_point:DVec3,normal:DVec3){if self.start_point.is_none()&&self.plane_lock.is_none(){self.plane_normal=normal;}}
+    fn snap_anchor(&self)->Option<DVec3>{self.start_point}
+    fn lock_drawing_plane(&mut self,normal:DVec3)->bool{
+        if self.start_point.is_some(){return false;}self.plane_lock=if self.plane_lock.is_some_and(|n|n.dot(normal).abs()>0.999){None}else{Some(normal.normalize_or_zero())};self.plane_normal=self.plane_lock.unwrap_or(DVec3::Z);true
+    }
+    fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.start_point.or_else(||self.plane_lock.map(|_|self.hover_point.unwrap_or(DVec3::ZERO))).map(|p|(p,self.plane_normal))}
+    fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{let Some(c)=self.preview_corners()else{return vec![];};let mut edges=(0..4).map(|i|(c[i],c[(i+1)%4])).collect::<Vec<_>>();if (c[0].distance(c[1])-c[1].distance(c[2])).abs()<1e-6{edges.push((c[0],c[2]));}edges}
+    fn value_label(&self)->Option<(String,DVec3)>{let c=self.preview_corners()?;Some((format!("{:.3} × {:.3}",c[0].distance(c[1]),c[1].distance(c[2])),c[2]))}
+
     fn tool_type(&self) -> ToolType {
         ToolType::Rectangle
     }
@@ -142,6 +152,7 @@ impl Tool for RectangleTool {
 
     fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
         self.hover_point = Some(ctx.world);
+        if self.plane_lock.is_none(){if let Some(start)=self.start_point{let d=ctx.world-start;if d.dot(self.plane_normal).abs()>=1e-3{let flat=[DVec3::X,DVec3::Y,DVec3::Z].into_iter().filter(|n|d.dot(*n).abs()<1e-3).collect::<Vec<_>>();if flat.len()==1{self.plane_normal=flat[0];}}}}
         self.from_center=ctx.ctrl_held;
         if !ctx.shift_held{self.square_lock=false;}else if let Some(start)=self.start_point{let (u,v)=drawing_axes(self.plane_normal);let d=ctx.world-start;let a=d.dot(u).abs();let b=d.dot(v).abs();if a>1e-6&&b>1e-6&&(a-b).abs()<=0.04*a.max(b){self.square_lock=true;}}
 
@@ -149,8 +160,9 @@ impl Tool for RectangleTool {
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.from_center = ctx.ctrl_held;
+        if self.start_point.is_some(){self.on_move(scene,ctx);}
         if self.start_point.is_none() {
-            if let Some((face,_,_))=crate::base::pick_scene_face(scene,&ctx.ray){self.plane_normal=scene.mesh.face_normal(face);}
+            if self.plane_lock.is_none(){if let Some((face,_,_))=crate::base::pick_scene_face(scene,&ctx.ray){self.plane_normal=scene.mesh.face_normal(face);}}
             self.start_point = Some(ctx.world);
         } else {
             let start = self.start_point.unwrap();

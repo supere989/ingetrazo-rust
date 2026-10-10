@@ -223,7 +223,7 @@ pub fn add_segments(
     }
     out.preserve_vertex_uids_from(mesh);
     planar::validate_mesh(&out)?;
-    Ok(out)
+    if planar::equivalent(mesh,&out){Ok(mesh.clone())}else{Ok(out)}
 }
 
 #[cfg(test)]

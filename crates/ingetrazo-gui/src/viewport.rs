@@ -72,7 +72,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             // Tool-local work planes keep rectangle/Freehand hover coordinates
             // coplanar with the face where the gesture began.
-            let (plane_point,plane_normal)=app.paste_preview.as_ref().map(|p|(p.reference,DVec3::Z)).or_else(||app.active_tool.drawing_plane()).unwrap_or((DVec3::ZERO,DVec3::Z));
+            let plane_point_normal=cursor_work_plane(app,&cursor_ray);
+            let (plane_point,plane_normal)=plane_point_normal;
             let ground_plane=Plane::new(plane_point,plane_normal);
             let mut cursor_world_pos = if let Some(t) = ground_plane.intersect_ray(&cursor_ray) {
                 if t > 0.0 {
@@ -85,21 +86,21 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             };
 
             // Arrow keys for explicit axis locks
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowRight)) && !app.active_tool.lock_drawing_plane(DVec3::X) {
                 app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('x') {
                     None
                 } else {
                     Some('x')
                 };
             }
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowLeft)) && !app.active_tool.lock_drawing_plane(DVec3::Y) {
                 app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('y') {
                     None
                 } else {
                     Some('y')
                 };
             }
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowUp)) && !app.active_tool.lock_drawing_plane(DVec3::Z) {
                 app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('z') {
                     None
                 } else {
@@ -116,10 +117,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .paste_preview
                 .as_ref()
                 .map(|p| p.reference)
-                .or_else(|| app.active_tool.rubber_band().map(|(s, _)| s));
+                .or_else(|| app.active_tool.snap_anchor());
             let snap_res = app
                 .snap_engine
-                .snap(&cursor_ray, &app.scene, start_pt, None);
+                .snap(&cursor_ray, &app.scene, start_pt, app.active_tool.snap_close());
             if app.active_tool_type!=ToolType::Freehand && snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
                 active_snap_glyph = SnapGlyph::from_snap_result(&snap_res, start_pt);
@@ -140,6 +141,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 app.snap_engine.locked_line = None;
             }
 
+            app.active_tool.note_cursor_plane(plane_point,plane_normal);
             let tool_ctx = ToolContext {
                 screen: Some(glam::DVec2::new(rel_x,rel_y)),
                 world: cursor_world_pos,
@@ -351,4 +353,27 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             }
         }
     }
+}
+
+fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,DVec3){
+    if let Some(paste)=&app.paste_preview{return (paste.reference,DVec3::Z);}
+    let forward=app.camera.forward();let near_horizon=forward.z.abs()<15_f64.to_radians().sin();let vertical=if forward.x.abs()>=forward.y.abs(){DVec3::X}else{DVec3::Y};
+    if let Some((point,normal))=app.active_tool.drawing_plane(){if app.active_tool_type==ToolType::Line&&normal.z.abs()>0.94&&near_horizon{return(point,vertical);}return(point,normal);}
+    if let Some(point)=app.active_tool.snap_anchor(){return(point,if near_horizon{vertical}else{DVec3::Z});}
+    if let Some((face,_,point))=ingetrazo_tools::base::pick_scene_face(&app.scene,ray){return(point,app.scene.mesh.face_normal(face));}
+    if forward.abs().max_element()>=0.97{
+        let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
+        fn group_bounds(group:&ingetrazo_core::groups::Group,parent:glam::DMat4,lo:&mut DVec3,hi:&mut DVec3){let transform=parent*group.transform;for v in &group.mesh.vertices{let p=transform.transform_point3(v.position);*lo=lo.min(p);*hi=hi.max(p);}for child in &group.children{group_bounds(child,transform,lo,hi);}}
+        for v in &app.scene.mesh.vertices{lo=lo.min(v.position);hi=hi.max(v.position);}for group in &app.scene.groups{group_bounds(group,glam::DMat4::IDENTITY,&mut lo,&mut hi);}
+        let center=if lo.is_finite()&&hi.is_finite(){(lo+hi)*0.5}else{DVec3::ZERO};if let Some(plane)=ingetrazo_core::snap::first_point_work_plane(forward,center){return plane;}
+    }
+    (DVec3::ZERO,DVec3::Z)
+}
+
+#[cfg(test)]mod drafting_plane_tests{
+ use super::*;use ingetrazo_core::{math::Ray,scene::Scene};
+ #[test]fn standard_view_uses_model_center_oblique_uses_ground_and_line_can_rise(){
+  let mut app=IngeTrazoApp::new();app.scene=Scene::new();let a=app.scene.mesh.add_vertex(DVec3::new(10.,20.,30.));let b=app.scene.mesh.add_vertex(DVec3::new(14.,24.,34.));app.scene.mesh.add_edge(a,b);app.camera.pitch=0.;app.camera.yaw=0.;let ray=Ray::new(DVec3::new(-5.,-5.,-5.),DVec3::X);let (point,normal)=cursor_work_plane(&app,&ray);assert_eq!(point,DVec3::new(12.,22.,32.));assert_eq!(normal,-DVec3::X);
+  app.camera.pitch=30_f64.to_radians();app.camera.yaw=45_f64.to_radians();assert_eq!(cursor_work_plane(&app,&ray),(DVec3::ZERO,DVec3::Z));app.set_tool(ToolType::Line);let ctx=ToolContext::new(DVec3::new(1.,2.,3.),ray);app.dispatch_tool_click(&ctx);app.camera.pitch=0.;app.camera.yaw=0.;assert_eq!(cursor_work_plane(&app,&ray),(ctx.world,DVec3::X));
+ }
 }

@@ -26,6 +26,12 @@ use serde::{Deserialize, Serialize};
 use crate::math::{Plane, Ray, EPSILON};
 use crate::scene::Scene;
 
+/// Original first-point fallback: standard views draw through model center;
+/// oblique views keep their face/ground fallback.
+pub fn first_point_work_plane(forward:DVec3,center:DVec3)->Option<(DVec3,DVec3)>{
+    if !forward.is_finite()||!center.is_finite()||forward.length()<1e-9{return None;}let f=forward.normalize();if f.abs().max_element()<0.97{return None;}let normal=if f.x.abs()>=f.y.abs()&&f.x.abs()>=f.z.abs(){DVec3::X*f.x.signum()}else if f.y.abs()>=f.z.abs(){DVec3::Y*f.y.signum()}else{DVec3::Z*f.z.signum()};Some((center,normal))
+}
+
 // --- Colors for Snap Glyphs and Guides ---
 pub const COLOR_ENDPOINT: [f32; 3] = [0.16, 0.62, 0.36];    // Green
 pub const COLOR_MIDPOINT: [f32; 3] = [0.20, 0.66, 0.74];    // Cyan

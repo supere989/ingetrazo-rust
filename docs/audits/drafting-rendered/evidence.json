@@ -1,0 +1,39 @@
+{
+  "display": "isolated Xvfb 1280x900, software GL, empty document",
+  "controls": "actual XTest keyboard/pointer events; no direct model mutation",
+  "gesture": "Freehand press at750,400; held motion800,400\u2192850,450\u2192800,500\u2192750,400; release; Ctrl+Z; Ctrl+Y",
+  "region": [
+    720,
+    380,
+    150,
+    140
+  ],
+  "checks": {
+    "rectangle-preview3": {
+      "dark_pixels": 0,
+      "red_pixels": 10
+    },
+    "rectangle-committed": {
+      "dark_pixels": 0,
+      "red_pixels": 10
+    },
+    "freehand-slow-preview": {
+      "dark_pixels": 0,
+      "red_pixels": 609
+    },
+    "freehand-slow-committed": {
+      "dark_pixels": 599,
+      "red_pixels": 10
+    },
+    "freehand-slow-undo": {
+      "dark_pixels": 0,
+      "red_pixels": 10
+    },
+    "freehand-slow-redo": {
+      "dark_pixels": 599,
+      "red_pixels": 10
+    }
+  },
+  "redo_region_exact": true,
+  "boundary": "Manual rendered bounded workflow. Initial rapid120ms event batches coalesced on the software renderer; authoritative retained Freehand steps each awaited a full second, then screenshots were visually inspected. Rectangle screenshot proves visible full hover outline and committed face only; full original rendered UI comparison, automatic gesture timing and other camera grids remain open."
+}

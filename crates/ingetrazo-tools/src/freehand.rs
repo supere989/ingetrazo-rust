@@ -66,6 +66,7 @@ pub struct FreehandTool {
     screen: Vec<glam::DVec2>,
     error: Option<String>,
     work_plane: Option<(DVec3,DVec3)>,
+    hover_normal: DVec3,
     tolerance: f64,
 }
 
@@ -77,6 +78,7 @@ impl Default for FreehandTool {
             screen: vec![],
             error: None,
             work_plane: None,
+            hover_normal: DVec3::Z,
             tolerance: 0.05,
         }
     }
@@ -85,6 +87,7 @@ impl Default for FreehandTool {
 impl Tool for FreehandTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.work_plane}
+    fn note_cursor_plane(&mut self,_point:DVec3,normal:DVec3){if !self.drawing{self.hover_normal=normal;}}
     fn on_release(&mut self,scene:&mut Scene,_ctx:&ToolContext,_distance:f64){if self.drawing{self.commit(scene);}}
     fn tool_type(&self) -> ToolType {
         ToolType::Freehand
@@ -100,7 +103,7 @@ impl Tool for FreehandTool {
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         if !self.drawing {
-            self.work_plane=Some((ctx.world,crate::base::pick_scene_face(scene,&ctx.ray).map(|(i,_,_)|scene.mesh.face_normal(i)).unwrap_or(DVec3::Z)));
+            self.work_plane=Some((ctx.world,crate::base::pick_scene_face(scene,&ctx.ray).map(|(i,_,_)|scene.mesh.face_normal(i)).unwrap_or(self.hover_normal)));
             self.drawing = true;
             self.points.clear();self.screen.clear();self.error=None;
             self.points.push(ctx.world);if let Some(p)=ctx.screen{self.screen.push(p);}

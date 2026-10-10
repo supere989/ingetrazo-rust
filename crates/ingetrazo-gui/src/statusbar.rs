@@ -79,7 +79,7 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         ui.separator();
 
         // Prompt hint
-        let default_hint = tr("Select — Shift = add/remove, Ctrl = add. Double-click a group to edit it. F3 = search commands.");
+        let default_hint = if app.active_tool_type==ingetrazo_tools::base::ToolType::Select {tr("Select — Shift = add/remove, Ctrl = add. Double-click a group to edit it. F3 = search commands.")}else{format!("{} — {}",app.active_tool.name(),app.active_tool.description())};
         let hint = if !app.status_message.is_empty() {
             &app.status_message
         } else {

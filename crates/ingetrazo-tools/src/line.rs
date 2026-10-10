@@ -16,6 +16,7 @@ pub struct LineTool {
     pub chain_vertices: Vec<DVec3>,
     error: Option<String>,
     work_plane: Option<(DVec3,DVec3)>,
+    chain_commits: Vec<bool>,
 }
 
 impl LineTool {
@@ -27,25 +28,27 @@ impl LineTool {
         self.start_point = None;
         self.hover_point = None;
         self.chain_first_point = None;
-        self.chain_vertices.clear();self.work_plane=None;self.error=None;
+        self.chain_vertices.clear();self.work_plane=None;self.error=None;self.chain_commits.clear();
     }
 
-    fn commit_segment(&mut self, next_point: DVec3, scene: &mut Scene) -> Result<(),String> {
+    fn commit_segment(&mut self, next_point: DVec3, scene: &mut Scene, close_chain:bool) -> Result<(),String> {
         let Some(start) = self.start_point else { return Ok(()) };
         if (next_point - start).length() < 1e-9 {
             return Ok(());
         }
 
         let candidate=ingetrazo_core::drafting::add_segments(&scene.mesh,&[(start,next_point)],None,None)?;
+        let changed=candidate!=scene.mesh;
         scene.mesh=candidate;
         // Check if closing polygon at start of current chain
-        let closed_chain = self
+        let closed_chain = close_chain && self
             .chain_first_point
             .map_or(false, |first| (first - next_point).length() < 1e-4);
 
         if closed_chain {
             self.reset();
         } else {
+            self.chain_commits.push(changed);
             self.chain_vertices.push(next_point);
             self.start_point = Some(next_point);
         }
@@ -58,8 +61,11 @@ impl LineTool {
 impl Tool for LineTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.work_plane}
+    fn snap_close(&self)->Option<DVec3>{self.chain_first_point}
+    fn snap_anchor(&self)->Option<DVec3>{self.start_point}
     fn prepare_undo(&mut self,available:bool)->bool{
-        if self.start_point.is_none(){return false;}if self.chain_vertices.len()>1&&available{self.chain_vertices.pop();self.start_point=self.chain_vertices.last().copied();if self.chain_vertices.len()==1{self.chain_first_point=self.start_point;}false}else{self.reset();true}
+        if self.start_point.is_none(){return false;}
+        if self.chain_vertices.len()>1{let committed=self.chain_commits.pop().unwrap_or(available);if committed&&!available{self.reset();return true;}self.chain_vertices.pop();self.start_point=self.chain_vertices.last().copied();if self.chain_vertices.len()==1{self.chain_first_point=self.start_point;}!committed}else{self.reset();true}
     }
 
     fn tool_type(&self) -> ToolType {
@@ -105,7 +111,7 @@ impl Tool for LineTool {
             self.chain_first_point = Some(ctx.world);
             self.chain_vertices = vec![ctx.world];
         } else {
-            if let Err(error)=self.commit_segment(ctx.world,scene){self.error=Some(error);}
+            if let Err(error)=self.commit_segment(ctx.world,scene,true){self.error=Some(error);}
         }
     }
 
@@ -129,13 +135,14 @@ impl Tool for LineTool {
             let dy: f64 = parts[1].trim().parse().map_err(|e| format!("Invalid dy: {e}"))?;
             let dz: f64 = parts[2].trim().parse().map_err(|e| format!("Invalid dz: {e}"))?;
             let target = start + DVec3::new(dx, dy, dz);
-            self.commit_segment(target, scene)?;
+            self.commit_segment(target, scene,false)?;
             self.hover_point = Some(target);
             return Ok(());
         }
 
         // Otherwise length along current hover direction
         let length: f64 = trimmed.parse().map_err(|e| format!("Invalid length: {e}"))?;
+        if !length.is_finite()||length.abs()<1e-9{return Err("Length must be finite and nonzero".into());}
         let Some(hover) = self.hover_point else {
             return Err("No direction available for length input".into());
         };
@@ -146,7 +153,7 @@ impl Tool for LineTool {
         }
         let dir = delta.normalize();
         let target = start + dir * length;
-        self.commit_segment(target, scene)?;
+        self.commit_segment(target, scene,false)?;
         self.hover_point = Some(target);
         Ok(())
     }
