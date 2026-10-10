@@ -162,6 +162,8 @@ pub use renderer::*;
 /// Observes actual Vulkan allocation requirements before allocation. Hooks must not panic.
 /// Renderer frees happen only after the host has completed the relevant draw/upload fence.
 pub trait MemoryObserver: Send + Sync {
+    fn can_destroy(&self)->bool{true}
+    fn gpu_wait_failed(&self){}
     fn reserve(&self,heap:u32,bytes:u64)->RendererResult<u64>;
     fn commit(&self,ticket:u64,memory:ash::vk::DeviceMemory);
     fn cancel(&self,ticket:u64);

@@ -438,20 +438,23 @@ mod texture {
                         unsafe {
                             device.end_command_buffer(command)?;
                             device.reset_fences(&[fence])?;
-                            device.queue_submit(queue,&[vk::SubmitInfo::default().command_buffers(&commands)],fence)?;
+                            device.queue_submit(queue,&[vk::SubmitInfo::default().command_buffers(&commands)],fence).map_err(|e|{allocator.gpu_wait_failed();e})?;
                             submitted=true;
-                            device.wait_for_fences(&[fence],true,u64::MAX)?;
+                            device.wait_for_fences(&[fence],true,5_000_000_000)?;
+                            submitted=false;
                         }
                         self.initialized=true;
                         Ok::<(),crate::RendererError>(())
                     })();
                     // A device-loss wait error must not free pending staging.
-                    if transfer.is_err()&&submitted {unsafe {let _=device.device_wait_idle();}}
+                    if transfer.is_err()&&submitted {allocator.gpu_wait_failed();return transfer;}
+                    if !allocator.can_destroy(){return transfer;}
                     unsafe {device.free_command_buffers(command_pool,&commands);}
                     transfer?;
                 }
                 Ok(())
             })();
+            if !allocator.can_destroy(){return result;}
             unsafe {device.destroy_fence(fence,None);}
             allocator.destroy_buffer(device,staging,memory)?;
             result
@@ -542,6 +545,7 @@ mod texture {
 
         /// Free texture's resources.
         pub fn destroy(self, device: &Device, allocator: &mut Allocator) -> RendererResult<()> {
+            if !allocator.can_destroy(){return Ok(());}
             unsafe {
                 device.destroy_sampler(self.sampler, None);
                 device.destroy_image_view(self.image_view, None);

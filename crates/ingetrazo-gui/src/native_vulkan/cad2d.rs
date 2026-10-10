@@ -565,7 +565,7 @@ impl Drop for PressureRestore {
 }
 impl Drop for Renderer {
     fn drop(&mut self) {
-        let _ = unsafe { self.device.device_wait_idle() };
+        if !self.resources.drain_graphics(){self.resources.retain_owner(self.pipeline.clone());return;}
         let mut p = self.pipeline.lock().unwrap();
         unsafe {
             self.device.destroy_pipeline(p.pipeline, None);

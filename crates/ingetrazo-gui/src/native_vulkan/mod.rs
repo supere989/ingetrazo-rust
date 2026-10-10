@@ -4,6 +4,7 @@ pub mod world;
 pub mod resources;
 pub mod texture_cache;
 mod queues;
+pub mod lifetime;
 pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
 
@@ -114,6 +115,9 @@ pub struct System {
     image_available_semaphore: vk::Semaphore,
     // Presentation may outlive the graphics fence; one semaphore per acquired image.
     render_finished_semaphores: Vec<vk::Semaphore>,
+    present_fences:Vec<PresentFence>,
+    presented_without_fence:bool,
+    exited:bool,
     fence: vk::Fence,
 
     run: bool,
@@ -121,7 +125,7 @@ pub struct System {
 
     pub egui_ctx: Context,
     pub egui_winit: State,
-    pub renderer: Renderer,
+    pub renderer: std::mem::ManuallyDrop<Renderer>,
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
     pub world: Option<world::World>,
     pub cad2d: Option<cad2d::Renderer>,
@@ -167,6 +171,7 @@ impl System {
             }
         };
         let render_finished_semaphores = create_present_semaphores(&vulkan_context.device,swapchain.images.len())?;
+        let present_fences=create_present_fences(&vulkan_context,swapchain.images.len())?;
         let fence = {
             let fence_info = vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED);
             unsafe { vulkan_context.device.create_fence(&fence_info, None)? }
@@ -184,6 +189,7 @@ impl System {
         );
 
         let memory_budget=std::sync::Arc::new(budget::VulkanBudget::new(&vulkan_context.instance,vulkan_context.physical_device)?);
+        memory_budget.bind_lifetime(vulkan_context.lifetime.clone());
         let renderer = Renderer::with_memory_observer(
             &vulkan_context.instance,
             vulkan_context.physical_device,
@@ -202,6 +208,7 @@ impl System {
             swapchain,
             image_available_semaphore,
             render_finished_semaphores,
+            present_fences,presented_without_fence:false,exited:false,
             fence,
 
             run: true,
@@ -209,7 +216,7 @@ impl System {
 
             egui_ctx,
             egui_winit,
-            renderer,
+            renderer:std::mem::ManuallyDrop::new(renderer),
             memory_budget,
             world:None,cad2d:None,draw_serial:0,
             textures_to_free: None,
@@ -218,6 +225,15 @@ impl System {
             pending_texture_updates:std::collections::VecDeque::new(),
             last_gpu_error:None,
         })
+    }
+
+    pub fn bounded_completion_for_probe(&self)->bool{self.wait_gpu_completion()}
+
+    pub fn submitted_frames_for_probe(&self)->u64{self.draw_serial}
+
+    /// Engineering observation only: never reset/destroy these borrowed handles.
+    pub fn pending_present_fences_for_probe(&self)->Vec<vk::Fence>{
+        self.present_fences.iter().filter(|p|p.used).map(|p|p.fence).collect()
     }
 
     pub fn enable_cad2d(&mut self)->Result<&cad2d::Renderer,String>{
@@ -230,20 +246,21 @@ impl System {
         self.cad2d.as_mut().unwrap().verify_pressure_rollback_for_probe(&self.vulkan_context,self.fence,self.draw_serial)
     }
 
-    fn draw<A: App>(&mut self, egui_app: &mut A, window: &Window) {
+    pub fn draw<A: App>(&mut self, egui_app: &mut A, window: &Window) {
+        // A poisoned device is never retried from repeated repaint events.
+        if self.vulkan_context.lifetime.uncertain(){return;}
         // If swapchain must be recreated wait for windows to not be minimized anymore
         if self.dirty_swapchain {
             let PhysicalSize { width, height } = window.inner_size();
             if width > 0 && height > 0 {
-                self.swapchain
-                    .recreate(&self.vulkan_context)
-                    .expect("Failed to recreate swapchain");
-                // recreate waits for device idle, including pending presentation use.
+                if !self.wait_gpu_completion(){egui_app.gpu_error("Swapchain ownership remains pending; GPU resources quarantined");return;}
+                if let Err(error)=self.swapchain.recreate(&self.vulkan_context){self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
+                unsafe{for p in self.present_fences.drain(..){self.vulkan_context.device.destroy_fence(p.fence,None);}}
+                self.present_fences=match create_present_fences(&self.vulkan_context,self.swapchain.images.len()){Ok(p)=>p,Err(e)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&e.to_string());return;}};
+                // Graphics and presentation fences completed before replacing WSI owners.
                 unsafe { for semaphore in self.render_finished_semaphores.drain(..) { self.vulkan_context.device.destroy_semaphore(semaphore,None); } }
-                self.render_finished_semaphores=create_present_semaphores(&self.vulkan_context.device,self.swapchain.images.len()).expect("Failed to create presentation semaphores");
-                self.renderer
-                    .set_render_pass(self.swapchain.render_pass)
-                    .expect("Failed to rebuild renderer pipeline");
+                self.render_finished_semaphores=match create_present_semaphores(&self.vulkan_context.device,self.swapchain.images.len()){Ok(s)=>s,Err(error)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}};
+                if let Err(error)=self.renderer.set_render_pass(self.swapchain.render_pass){self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
                 if let Some(cad)=&mut self.cad2d{
                     if let Err(error)=cad.set_render_pass(self.swapchain.render_pass,&self.swapchain.image_views){egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
                 }
@@ -257,12 +274,11 @@ impl System {
             return;
         }
 
-        unsafe {
-            self.vulkan_context
-                .device
-                .wait_for_fences(&[self.fence], true, std::u64::MAX)
-                .expect("Failed to wait ")
-        };
+        if let Err(error)=self.vulkan_context.wait_transfer(self.fence){
+            egui_app.gpu_error(&format!("GPU draw completion unknown: {error}; resources quarantined"));
+            self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
+            return;
+        }
 
         // Free last frames textures after the previous frame is done rendering
         if let Some(textures) = self.textures_to_free.take() {
@@ -272,6 +288,7 @@ impl System {
         }
 
         egui_app.prepare_gpu(self,true);
+        if self.vulkan_context.lifetime.uncertain(){return;}
 
         // Generate UI
         let mut raw_input = self.egui_winit.take_egui_input(&window);
@@ -288,6 +305,7 @@ impl System {
         });
 
         egui_app.prepare_gpu(self,false);
+        if self.vulkan_context.lifetime.uncertain(){return;}
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
             let canceled=output.commands.iter().any(|c|matches!(c,egui::ViewportCommand::CancelClose));
@@ -329,7 +347,7 @@ impl System {
         let next_image_result = unsafe {
             self.swapchain.loader.acquire_next_image(
                 self.swapchain.khr,
-                std::u64::MAX,
+                lifetime::WAIT_NS,
                 self.image_available_semaphore,
                 vk::Fence::null(),
             )
@@ -340,23 +358,28 @@ impl System {
                 self.dirty_swapchain = true;
                 return;
             }
-            Err(error) => panic!("Error while acquiring next image. Cause: {}", error),
+            Err(vk::Result::TIMEOUT)|Err(vk::Result::NOT_READY)=>{egui_app.gpu_error("Swapchain image acquisition timed out; frame deferred");self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;},
+            Err(error)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&format!("Image acquisition failed: {error}; resources quarantined"));return;},
         };
 
-        if let Some(cad)=&mut self.cad2d{if let Err(error)=cad.set_input_image(image_index as usize){egui_app.gpu_error(&error);return;}}
-        unsafe {
-            self.vulkan_context
-                .device
-                .reset_fences(&[self.fence])
-                .expect("Failed to reset fences")
-        };
+        if let Some(cad)=&mut self.cad2d{
+            if let Err(error)=cad.set_input_image(image_index as usize){
+                self.vulkan_context.lifetime.quarantine();
+                egui_app.gpu_error(&format!("CAD input selection failed after image acquisition: {error}; resources quarantined"));return;
+            }
+        }
+        if let Some(present)=self.present_fences.get_mut(image_index as usize){
+            if present.used{if let Err(error)=self.vulkan_context.lifetime.wait(present.fence,lifetime::WAIT_NS){egui_app.gpu_error(&format!("Previous presentation completion unknown: {error}"));return;}present.used=false;}
+            if let Err(error)=unsafe{self.vulkan_context.device.reset_fences(&[present.fence])}{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
+        }
+        if let Err(error)=unsafe{self.vulkan_context.device.reset_fences(&[self.fence])}{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
 
         let wait_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT|if self.swapchain.integer_cad{vk::PipelineStageFlags::FRAGMENT_SHADER}else{vk::PipelineStageFlags::empty()}];
         let wait_semaphores = [self.image_available_semaphore];
         let signal_semaphores = [self.render_finished_semaphores[image_index as usize]];
 
         // Re-record commands to draw geometry
-        let draw_error=record_command_buffers(
+        let draw_error=match record_command_buffers(
             &self.vulkan_context.device,
             self.vulkan_context.command_pool,
             self.command_buffer,
@@ -367,8 +390,7 @@ impl System {
             &mut self.renderer,
             &clipped_primitives,
             self.world.as_mut(),self.draw_serial+1,
-        )
-        .expect("Failed to record command buffer");
+        ){Ok(result)=>result,Err(error)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}};
         if let Some(error)=draw_error {egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);}
 
         let command_buffers = [self.command_buffer];
@@ -377,21 +399,22 @@ impl System {
             .wait_dst_stage_mask(&wait_stages)
             .command_buffers(&command_buffers)
             .signal_semaphores(&signal_semaphores)];
-        unsafe {
-            self.vulkan_context
-                .device
-                .queue_submit(self.vulkan_context.graphics_queue, &submit_info, self.fence)
-                .expect("Failed to submit work to gpu.")
-        };
+        if let Err(error)=unsafe {self.vulkan_context.device.queue_submit(self.vulkan_context.graphics_queue,&submit_info,self.fence)}{
+            self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&format!("GPU submission failed: {error}; resources quarantined"));return;
+        }
 
         self.draw_serial+=1;
         let swapchains = [self.swapchain.khr];
         let images_indices = [image_index];
-        let present_info = vk::PresentInfoKHR::default()
+        let present_handles=self.present_fences.get(image_index as usize).map(|p|vec![p.fence]).unwrap_or_default();
+        let mut present_fence_info=vk::SwapchainPresentFenceInfoEXT::default().fences(&present_handles);
+        let mut present_info = vk::PresentInfoKHR::default()
             .wait_semaphores(&signal_semaphores)
             .swapchains(&swapchains)
             .image_indices(&images_indices);
 
+        if !present_handles.is_empty(){present_info=present_info.push_next(&mut present_fence_info);}
+        if let Some(p)=self.present_fences.get_mut(image_index as usize){p.used=true;}else{self.presented_without_fence=true;}
         let present_result = unsafe {
             self.swapchain
                 .loader
@@ -404,12 +427,12 @@ impl System {
             Err(vk::Result::ERROR_OUT_OF_DATE_KHR) => {
                 self.dirty_swapchain = true;
             }
-            Err(error) => panic!("Failed to present queue. Cause: {}", error),
+            Err(error) => {self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&format!("GPU presentation failed: {error}; resources quarantined"));},
             _ => {}
         }
     }
 
-    fn on_window_event(
+    pub fn on_window_event(
         &mut self,
         event: &WindowEvent,
         window: &Window,
@@ -433,35 +456,42 @@ impl System {
         }
     }
 
-    fn on_exit<A: App>(&mut self, egui_app: &mut A) {
-        log::info!("Stopping application");
-        eprintln!("{}",self.memory_budget.diagnostics());
-
-        unsafe {
-            self.vulkan_context
-                .device
-                .device_wait_idle()
-                .expect("Failed to wait for graphics device to idle.");
-
-            egui_app.clean(&self.vulkan_context);
-            if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
-            drop(self.world.take());
-            if let Some(cad)=&self.cad2d{eprintln!("CAD2D metrics: {:?}",cad.stats());}
-            drop(self.cad2d.take());
-
-            self.vulkan_context.device.destroy_fence(self.fence, None);
-            self.vulkan_context
-                .device
-                .destroy_semaphore(self.image_available_semaphore, None);
-            for semaphore in self.render_finished_semaphores.drain(..) { self.vulkan_context.device.destroy_semaphore(semaphore,None); }
-
-            self.swapchain.destroy(&self.vulkan_context);
-
-            self.vulkan_context
-                .device
-                .free_command_buffers(self.vulkan_context.command_pool, &[self.command_buffer]);
-        }
+    fn wait_gpu_completion(&self)->bool{
+        if self.presented_without_fence{self.vulkan_context.lifetime.quarantine();eprintln!("Bounded presentation cleanup unavailable: device lacks enabled present-fence feature; retaining WSI ownership");return false;}
+        let pending=self.present_fences.iter().filter(|p|p.used).map(|p|p.fence).collect::<Vec<_>>();
+        if self.vulkan_context.lifetime.wait_many(&pending,lifetime::WAIT_NS).is_err(){return false;}
+        self.vulkan_context.lifetime.drain_graphics()
     }
+    fn clean_gpu(&mut self){
+        if self.exited{return;}
+        if !self.wait_gpu_completion(){return;}
+        drop(self.world.take());drop(self.cad2d.take());
+        if self.vulkan_context.lifetime.uncertain(){return;}
+        unsafe{
+            std::mem::ManuallyDrop::drop(&mut self.renderer);
+            self.vulkan_context.device.destroy_fence(self.fence,None);
+            self.vulkan_context.device.destroy_semaphore(self.image_available_semaphore,None);
+            for semaphore in self.render_finished_semaphores.drain(..){self.vulkan_context.device.destroy_semaphore(semaphore,None);}
+            for present in self.present_fences.drain(..){self.vulkan_context.device.destroy_fence(present.fence,None);}
+            self.swapchain.destroy(&self.vulkan_context);
+            self.vulkan_context.device.free_command_buffers(self.vulkan_context.command_pool,&[self.command_buffer]);
+        }
+        self.exited=true;
+        eprintln!("Native bounded GPU cleanup complete; present_fences_enabled={}; committed_bytes={}",self.vulkan_context.present_fences_enabled,self.memory_budget.ledger.lock().unwrap_or_else(|p|p.into_inner()).total_committed());
+    }
+    fn on_exit<A:App>(&mut self,egui_app:&mut A){
+        eprintln!("{}",self.memory_budget.diagnostics());
+        if !self.wait_gpu_completion(){eprintln!("GPU shutdown quarantined: completion unknown");return;}
+        egui_app.clean(&self.vulkan_context);self.clean_gpu();
+    }
+
+}
+
+impl Drop for System {fn drop(&mut self){self.clean_gpu();if !self.exited{eprintln!("Retaining quarantined egui renderer and WSI resources");self.vulkan_context.lifetime.retain(self.memory_budget.clone());self.vulkan_context.lifetime.retain(unsafe{std::mem::ManuallyDrop::take(&mut self.renderer)});self.vulkan_context.lifetime.retain((self.swapchain.loader.clone(),self.swapchain.khr,self.swapchain.render_pass,std::mem::take(&mut self.swapchain.framebuffers),std::mem::take(&mut self.swapchain.image_views),std::mem::take(&mut self.render_finished_semaphores),std::mem::take(&mut self.present_fences),self.image_available_semaphore,self.fence,self.command_buffer));}}}
+struct PresentFence{fence:vk::Fence,used:bool}
+fn create_present_fences(context:&VulkanContext,count:usize)->Result<Vec<PresentFence>,vk::Result>{
+ if !context.present_fences_enabled{return Ok(Vec::new());}
+ let mut fences=Vec::new();for _ in 0..count{match unsafe{context.device.create_fence(&vk::FenceCreateInfo::default(),None)}{Ok(fence)=>fences.push(PresentFence{fence,used:false}),Err(error)=>{unsafe{for p in fences{context.device.destroy_fence(p.fence,None);}}return Err(error);}}}Ok(fences)
 }
 
 fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semaphore>,vk::Result> {
@@ -474,7 +504,8 @@ fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semapho
 }
 
 pub struct VulkanContext {
-    _entry: Entry,
+    _entry: Option<Entry>,
+    pub lifetime: std::sync::Arc<lifetime::Lifetime>,
     pub instance: Instance,
     debug_utils: debug_utils::Instance,
     debug_utils_messenger: vk::DebugUtilsMessengerEXT,
@@ -487,13 +518,14 @@ pub struct VulkanContext {
     pub graphics_queue: vk::Queue,
     present_queue: vk::Queue,
     pub command_pool: vk::CommandPool,
+    pub present_fences_enabled:bool,
     pub transfer_timeout_ns:u64,
     pub diagnostic_fail_fast:bool,
 }
 
 impl VulkanContext {
     pub fn wait_transfer(&self,fence:vk::Fence)->Result<(),vk::Result> {
-        let result=unsafe {self.device.wait_for_fences(&[fence],true,self.transfer_timeout_ns)};
+        let result=self.lifetime.wait(fence,self.transfer_timeout_ns);
         if result==Err(vk::Result::TIMEOUT)&&self.diagnostic_fail_fast {
             eprintln!("GPU diagnostic fence exceeded {}ns; exiting without freeing potentially pending resources",self.transfer_timeout_ns);
             std::process::exit(124);
@@ -527,12 +559,13 @@ impl VulkanContext {
             )?;
 
         // Vulkan logical device and queues
-        let (device, graphics_queue, present_queue) =
+        let (device, graphics_queue, present_queue,present_fences_enabled) =
             create_vulkan_device_and_graphics_and_present_qs(
                 &instance,
                 physical_device,
                 graphics_q_index,
                 present_q_index,
+                surface_maintenance_supported(&entry)?,
             )?;
 
         // Command pool & buffer
@@ -544,7 +577,8 @@ impl VulkanContext {
         };
 
         Ok(Self {
-            _entry: entry,
+            lifetime:std::sync::Arc::new(lifetime::Lifetime::new(device.clone(),graphics_queue)),
+            _entry: Some(entry),
             instance,
             debug_utils,
             debug_utils_messenger,
@@ -557,7 +591,8 @@ impl VulkanContext {
             graphics_queue,
             present_queue,
             command_pool,
-            transfer_timeout_ns:u64::MAX,
+            present_fences_enabled,
+            transfer_timeout_ns:lifetime::WAIT_NS,
             diagnostic_fail_fast:false,
         })
     }
@@ -566,6 +601,7 @@ impl VulkanContext {
 impl Drop for VulkanContext {
     fn drop(&mut self) {
         log::debug!("Destroying Vulkan Context");
+        if self.lifetime.uncertain(){eprintln!("Retaining quarantined Vulkan device, instance and loader; GPU completion unknown");if let Some(entry)=self._entry.take(){std::mem::forget(entry);}return;}
         unsafe {
             self.device.destroy_command_pool(self.command_pool, None);
             self.device.destroy_device(None);
@@ -617,7 +653,7 @@ impl Swapchain {
     fn recreate(&mut self, vulkan_context: &VulkanContext) -> Result<(), Box<dyn Error>> {
         log::debug!("Recreating the swapchain");
 
-        unsafe { vulkan_context.device.device_wait_idle()? };
+        // System has completed all graphics and actual present fences before this call.
 
         self.destroy(vulkan_context);
 
@@ -675,6 +711,14 @@ fn create_window(title: &str, event_loop: &ActiveEventLoop) -> Result<Window, Bo
     Ok(window)
 }
 
+fn surface_maintenance_supported(entry: &Entry) -> Result<bool, vk::Result> {
+    let extensions = unsafe { entry.enumerate_instance_extension_properties(None)? };
+    Ok([ash::ext::surface_maintenance1::NAME, ash::khr::get_surface_capabilities2::NAME]
+        .iter().all(|required| extensions.iter().any(|e| unsafe {
+            CStr::from_ptr(e.extension_name.as_ptr()) == *required
+        })))
+}
+
 fn create_vulkan_instance(
     entry: &Entry,
     window: &Window,
@@ -693,6 +737,11 @@ fn create_vulkan_instance(
     let mut extension_names =
         ash_window::enumerate_required_extensions(window.display_handle()?.as_raw())?.to_vec();
     extension_names.push(debug_utils::NAME.as_ptr());
+    // EXT_surface_maintenance1 requires KHR_get_surface_capabilities2.
+    if surface_maintenance_supported(entry)? {
+        extension_names.push(ash::khr::get_surface_capabilities2::NAME.as_ptr());
+        extension_names.push(ash::ext::surface_maintenance1::NAME.as_ptr());
+    }
 
     let create_flags=vk::InstanceCreateFlags::default();
 
@@ -793,7 +842,8 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     physical_device: vk::PhysicalDevice,
     graphics_q_index: u32,
     present_q_index: u32,
-) -> Result<(Device, vk::Queue, vk::Queue), Box<dyn Error>> {
+    surface_maintenance_enabled:bool,
+) -> Result<(Device, vk::Queue, vk::Queue,bool), Box<dyn Error>> {
     log::debug!("Creating vulkan device and graphics and present queues");
     let queue_priorities = [1.0f32];
     let queue_create_infos = {
@@ -810,24 +860,32 @@ fn create_vulkan_device_and_graphics_and_present_qs(
             .collect::<Vec<_>>()
     };
 
-    let device_extensions_ptrs = [
+    let mut device_extensions_ptrs = vec![
         swapchain::NAME.as_ptr(),
         #[cfg(any(target_os = "macos", target_os = "ios"))]
         ash::khr::portability_subset::NAME.as_ptr(),
     ];
 
+    let extensions=unsafe{instance.enumerate_device_extension_properties(physical_device)?};
+    let has_maintenance=surface_maintenance_enabled&&extensions.iter().any(|e|unsafe{CStr::from_ptr(e.extension_name.as_ptr())}==ash::ext::swapchain_maintenance1::NAME);
+    let mut maintenance=vk::PhysicalDeviceSwapchainMaintenance1FeaturesEXT::default();
+    if has_maintenance{let mut query=vk::PhysicalDeviceFeatures2::default().push_next(&mut maintenance);unsafe{instance.get_physical_device_features2(physical_device,&mut query);}}
+    let enabled=has_maintenance&&maintenance.swapchain_maintenance1!=0&&std::env::var_os("INGETRAZO_DISABLE_PRESENT_FENCES").is_none();
+    if enabled{device_extensions_ptrs.push(ash::ext::swapchain_maintenance1::NAME.as_ptr());}
+    eprintln!("Native present-fence negotiation: extension={has_maintenance} feature={} enabled={enabled}",maintenance.swapchain_maintenance1!=0);
     let available=unsafe{instance.get_physical_device_features(physical_device)};
     let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0);
-    let device_create_info = vk::DeviceCreateInfo::default()
+    let mut device_create_info = vk::DeviceCreateInfo::default()
         .queue_create_infos(&queue_create_infos)
         .enabled_extension_names(&device_extensions_ptrs)
         .enabled_features(&features);
 
+    if enabled{device_create_info=device_create_info.push_next(&mut maintenance);}
     let device = unsafe { instance.create_device(physical_device, &device_create_info, None)? };
     let graphics_queue = unsafe { device.get_device_queue(graphics_q_index, 0) };
     let present_queue = unsafe { device.get_device_queue(present_q_index, 0) };
 
-    Ok((device, graphics_queue, present_queue))
+    Ok((device, graphics_queue, present_queue,enabled))
 }
 
 fn create_vulkan_swapchain(

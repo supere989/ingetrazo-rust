@@ -22,6 +22,8 @@ use ash::{vk, Device};
 /// Base allocator trait for all implementations.
 pub trait Allocate {
     type Memory;
+    fn can_destroy(&self)->bool{true}
+    fn gpu_wait_failed(&self){}
 
     /// Create a Vulkan buffer.
     ///

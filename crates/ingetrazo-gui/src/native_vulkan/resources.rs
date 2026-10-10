@@ -10,13 +10,17 @@ const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
 struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>,persistent_map:Option<usize>}
 #[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64,pub image_upload_calls:u64,pub image_bytes:u64,pub image_mips_generated:u64,pub image_staging_maps:u64,pub image_staging_unmaps:u64}
-pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
+pub struct Resources {lifetime:Arc<super::lifetime::Lifetime>,device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
 impl Resources {
- pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
+ pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {budget.bind_lifetime(context.lifetime.clone());Self {lifetime:context.lifetime.clone(),device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
+ pub fn check_submission(&self)->Result<(),String>{self.lifetime.check()}
+ pub fn drain_graphics(&self)->bool{self.lifetime.drain_graphics()}
+ pub(crate) fn retain_owner<T:std::any::Any+Send+Sync>(&self,owner:T){self.lifetime.retain(owner);}
  pub fn buffer(&self,id:BufferId)->Option<vk::Buffer> {self.buffers.get(&id).map(|b|b.handle)}
  pub fn logical_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.logical_bytes)}
  pub fn allocation_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.allocation_bytes)}
  fn allocate(&mut self,bytes:u64,usage:vk::BufferUsageFlags,required:vk::MemoryPropertyFlags)->Result<BufferId,String> {
+  self.lifetime.check()?;
   if bytes==0 {return Err("Empty GPU buffer".into());}
   let info=vk::BufferCreateInfo::default().size(bytes).usage(usage).sharing_mode(vk::SharingMode::EXCLUSIVE);
   let buffer=unsafe {self.device.create_buffer(&info,None)}.map_err(|e|e.to_string())?;
@@ -34,8 +38,9 @@ impl Resources {
   let (memory,properties)=match result {Ok(memory)=>memory,Err(error)=>{unsafe {self.device.destroy_buffer(buffer,None)};return Err(error);}};
   self.stats.buffer_allocations+=1;self.stats.allocation_bytes_total+=requirements.size;let id=BufferId(self.next);self.next+=1;self.buffers.insert(id,Buffer {handle:buffer,usage,memory,logical_bytes:bytes,allocation_bytes:requirements.size,properties,last_use:0,retire_after:None,persistent_map:None});Ok(id)
  }
- fn destroy(&mut self,id:BufferId) {if let Some(buffer)=self.buffers.remove(&id) {self.stats.buffer_destructions+=1;unsafe {if buffer.persistent_map.is_some(){self.device.unmap_memory(buffer.memory);self.stats.image_staging_unmaps+=1;}self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
+ fn destroy(&mut self,id:BufferId) {if self.lifetime.uncertain(){return;}if let Some(buffer)=self.buffers.remove(&id) {self.stats.buffer_destructions+=1;unsafe {if buffer.persistent_map.is_some(){self.device.unmap_memory(buffer.memory);self.stats.image_staging_unmaps+=1;}self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
  fn write(&self,id:BufferId,data:&[u8])->Result<(),String> {
+  self.lifetime.check()?;
   let buffer=self.buffers.get(&id).ok_or("Unknown GPU upload buffer")?;
   if data.len() as u64>buffer.logical_bytes {return Err("Upload exceeds GPU buffer extent".into());}
   let ptr=if let Some(mapped)=buffer.persistent_map {mapped as *mut std::ffi::c_void}else{unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?};
@@ -113,12 +118,12 @@ impl Resources {
      }
      self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::ALL_COMMANDS,vk::DependencyFlags::empty(),&[],&barriers,&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
-     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;
+     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;
     }
     submitted=true;self.stats.transfer_submissions+=1;context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;self.stats.chunks+=1;
    }Ok(())
   })();
-  if submitted{let _=unsafe{self.device.device_wait_idle()};}
+  if submitted||self.lifetime.uncertain(){self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
   unsafe{self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}result
  }
  fn transfer_chunks(&mut self,context:&super::VulkanContext,destination:BufferId,staging:BufferId,data:&[u8])->Result<(),String> {
@@ -143,7 +148,7 @@ impl Resources {
      self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,stages,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
      self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
-     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;submitted=true;self.stats.transfer_submissions+=1;
+     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;submitted=true;self.stats.transfer_submissions+=1;
      context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;
     }
     self.stats.chunks+=1;offset+=chunk.len() as u64;
@@ -151,7 +156,7 @@ impl Resources {
    Ok(())
   })();
   // A failed wait must not allow a staging resource to be freed while still in use.
-  if submitted {let _=unsafe {self.device.device_wait_idle()};}
+  if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
   unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
   result
  }
@@ -198,7 +203,7 @@ impl Resources {
      self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::HOST,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
      self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
-     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;submitted=true;
+     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;submitted=true;
      context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;
     }
     let host=&self.buffers[&staging];let pointer=unsafe {self.device.map_memory(host.memory,0,host.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
@@ -210,12 +215,13 @@ impl Resources {
    }
    self.stats.readback_bytes+=bytes;Ok(output)
   })();
-  if submitted {let _=unsafe {self.device.device_wait_idle()};}
+  if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
   unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
   self.destroy(staging);result
  }
  /// Diagnostic comparison after completed upload, for host-visible device-local heaps.
  pub fn verify_host_visible(&self,id:BufferId,expected:&[u8])->Result<(),String> {
+  self.lifetime.check()?;
   let buffer=self.buffers.get(&id).ok_or("Unknown GPU buffer")?;
   if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_VISIBLE){return Err("Diagnostic requires host-visible device-local memory".into());}
   if expected.len() as u64!=buffer.logical_bytes{return Err("Diagnostic byte extent mismatch".into());}
@@ -223,7 +229,7 @@ impl Resources {
   let result=(|| {if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT) {unsafe {self.device.invalidate_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(buffer.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())?;}if unsafe {std::slice::from_raw_parts(ptr.cast::<u8>(),expected.len())}!=expected{return Err("GPU uploaded bytes differ".into());}Ok(())})();
   if buffer.persistent_map.is_none(){unsafe {self.device.unmap_memory(buffer.memory)}};result
  }
- pub fn mark_used(&mut self,id:BufferId,serial:u64)->Result<(),String> {let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;if b.retire_after.is_some(){return Err("Cannot submit a retired GPU buffer".into());}b.last_use=b.last_use.max(serial);Ok(())}
+ pub fn mark_used(&mut self,id:BufferId,serial:u64)->Result<(),String> {self.lifetime.check()?;let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;if b.retire_after.is_some(){return Err("Cannot submit a retired GPU buffer".into());}b.last_use=b.last_use.max(serial);Ok(())}
  pub fn retire(&mut self,id:BufferId)->Result<(),String> {let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;b.retire_after=Some(b.last_use);self.budget.ledger.lock().unwrap().retire(b.memory.as_raw(),b.last_use)}
  /// Caller associates the completed fence with its monotonically increasing draw serial.
  pub fn collect(&mut self,fence:vk::Fence,serial:u64)->Result<usize,String> {
@@ -231,4 +237,4 @@ impl Resources {
   let ready=self.buffers.iter().filter_map(|(&id,b)|b.retire_after.filter(|s|*s<=serial).map(|_|id)).collect::<Vec<_>>();let n=ready.len();for id in ready {self.destroy(id);}Ok(n)
  }
 }
-impl Drop for Resources {fn drop(&mut self){if !self.buffers.is_empty(){let _=unsafe {self.device.device_wait_idle()};let ids=self.buffers.keys().copied().collect::<Vec<_>>();for id in ids {self.destroy(id);}}}}
+impl Drop for Resources {fn drop(&mut self){if !self.buffers.is_empty(){if !self.lifetime.drain_graphics(){eprintln!("Retaining quarantined GPU buffers and memory ledger");self.lifetime.retain(self.budget.clone());self.lifetime.retain(std::mem::take(&mut self.buffers));if let Some(transfer)=self.image_transfer.take(){self.lifetime.retain(transfer);}return;}let ids=self.buffers.keys().copied().collect::<Vec<_>>();for id in ids {self.destroy(id);}}}}
