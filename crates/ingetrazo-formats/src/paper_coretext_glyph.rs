@@ -87,7 +87,10 @@ unsafe extern "C" {
 unsafe extern "C" {
     fn CGPathApply(p: Ref, info: *mut c_void, callback: extern "C" fn(*mut c_void, *const Element));
     fn CGPathRelease(p: Ref);
-    fn CGColorSpaceCreateDeviceRGB() -> Ref;
+    fn CGColorSpaceCreateWithName(name: Ref) -> Ref;
+    static kCGColorSpaceSRGB: Ref;
+    static kCGColorBlack: Ref;
+    fn CGColorGetConstantColor(name: Ref) -> Ref;
     fn CGColorSpaceRelease(p: Ref);
     fn CGBitmapContextCreate(
         data: *mut c_void,
@@ -101,7 +104,7 @@ unsafe extern "C" {
     fn CGContextRelease(p: Ref);
     fn CGContextSetShouldAntialias(p: Ref, v: bool);
     fn CGContextSetShouldSmoothFonts(p: Ref, v: bool);
-    fn CGContextSetRGBFillColor(p: Ref, r: f64, g: f64, b: f64, a: f64);
+    fn CGContextSetFillColorWithColor(p: Ref, color: Ref);
     fn CGContextSetTextMatrix(p: Ref, m: Matrix);
     fn CGContextSetTextPosition(p: Ref, x: f64, y: f64);
 }
@@ -162,11 +165,12 @@ extern "C" fn path_element(info: *mut c_void, e: *const Element) {
 pub(crate) fn synthetic_italic_shear() -> f64 {
     (14f32 * 0f32.acos() / 90f32).tan() as f64
 }
-// 32-bit big-endian + premultiplied FIRST alpha is byte-addressed ARGB.
-// Coverage extraction is Qt qGray of RGB, never the opaque alpha byte.
-const NATIVE_BITMAP_ARGB: u32 = 0x4000 | 2;
-fn native_argb_coverage(p: &[u8]) -> u8 {
-    255 - ((11 * u32::from(p[1]) + 16 * u32::from(p[2]) + 5 * u32::from(p[3])) / 32) as u8
+// Qt RGB32 uses 32Little + ignored FIRST alpha: bytes BGRX.
+// Match opaque source blending and invert RGB BEFORE qGray extraction.
+const NATIVE_BITMAP_BGRX: u32 = 0x2000 | 6;
+fn native_bgrx_coverage(p: &[u8]) -> u8 {
+    ((11 * (255 - u32::from(p[2])) + 16 * (255 - u32::from(p[1]))
+        + 5 * (255 - u32::from(p[0]))) / 32) as u8
 }
 
 fn subset_metric(value: f64, em: f64) -> f64 {
@@ -270,8 +274,9 @@ impl NativeFont {
         }
         // Native tracking policy and HB point-size are part of instance identity;
         // changing either cannot reuse an earlier paper layout/shape cache.
-        instance_identity.try_reserve_exact(16)
+        instance_identity.try_reserve_exact(24)
             .map_err(|_| "Native shaping identity allocation failed")?;
+        instance_identity.extend_from_slice(b"qrgb32sr");
         instance_identity.extend_from_slice(b"qtrk14.5");
         instance_identity.extend_from_slice(b"qptm");
         instance_identity.extend_from_slice(&crate::paper_text::QT_PAPER_SHAPING_POINT_SIZE.to_bits().to_be_bytes());
@@ -513,9 +518,13 @@ impl NativeFont {
         rgba.try_reserve_exact(pixels * 4)
             .map_err(|_| "Native raster allocation failed")?;
         rgba.resize(pixels * 4, 255);
-        let space = unsafe { CGColorSpaceCreateDeviceRGB() };
+        let black = unsafe { CGColorGetConstantColor(kCGColorBlack) };
+        if black.is_null() {
+            return Err("Native constant black color unavailable".into());
+        }
+        let space = unsafe { CGColorSpaceCreateWithName(kCGColorSpaceSRGB) };
         if space.is_null() {
-            return Err("Native RGB space unavailable".into());
+            return Err("Native sRGB space unavailable".into());
         }
         let ctx = unsafe {
             CGBitmapContextCreate(
@@ -525,7 +534,7 @@ impl NativeFont {
                 8,
                 width * 4,
                 space,
-                NATIVE_BITMAP_ARGB,
+                NATIVE_BITMAP_BGRX,
             )
         };
         unsafe { CGColorSpaceRelease(space) };
@@ -535,7 +544,7 @@ impl NativeFont {
         unsafe {
             CGContextSetShouldAntialias(ctx, true);
             CGContextSetShouldSmoothFonts(ctx, true);
-            CGContextSetRGBFillColor(ctx, 0., 0., 0., 1.);
+            CGContextSetFillColorWithColor(ctx, black);
             CGContextSetTextMatrix(
                 ctx,
                 Matrix {
@@ -567,7 +576,7 @@ impl NativeFont {
         coverage
             .try_reserve_exact(pixels)
             .map_err(|_| "Native coverage allocation failed")?;
-        coverage.extend(rgba.chunks_exact(4).map(native_argb_coverage));
+        coverage.extend(rgba.chunks_exact(4).map(native_bgrx_coverage));
         Ok(crate::paper_text::RasterGlyph {
             left: x.floor() as i32,
             top: -y.floor() as i32,
@@ -582,12 +591,12 @@ impl NativeFont {
 mod synthesis_metric_tests {
     use super::*;
     #[test]
-    fn opaque_argb_decodes_rgb_coverage_without_alpha_alias() {
-        assert_eq!(native_argb_coverage(&[255, 0, 0, 0]), 255);
-        assert_eq!(native_argb_coverage(&[255, 255, 255, 255]), 0);
-        assert_eq!(native_argb_coverage(&[255, 255, 0, 0]), 168);
-        assert_eq!(native_argb_coverage(&[255, 0, 0, 255]), 216);
-        assert_ne!(native_argb_coverage(&[255, 0, 0, 0]), 168);
+    fn opaque_bgrx_inverts_before_gray_without_alpha_alias() {
+        assert_eq!(native_bgrx_coverage(&[0, 0, 0, 255]), 255);
+        assert_eq!(native_bgrx_coverage(&[255, 255, 255, 255]), 0);
+        assert_eq!(native_bgrx_coverage(&[0, 0, 255, 255]), 167);
+        assert_eq!(native_bgrx_coverage(&[255, 0, 0, 255]), 215);
+        assert_ne!(native_bgrx_coverage(&[0, 0, 0, 255]), 168);
     }
     #[test]
     fn subset_uses_quantized_native_bearing_not_outline_minimum() {
