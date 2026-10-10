@@ -1,0 +1,16 @@
+{
+  "source": "0e0bb7c",
+  "run": 38046817228,
+  "arm": {
+    "job": 114197915792,
+    "artifact": 11668495412
+  },
+  "intel": {
+    "job": 114197915688,
+    "artifact": 11667069319
+  },
+  "native_draw_checkers_passed_both": true,
+  "wsi_passed": false,
+  "zero_layer_geometry_hypothesis_refuted": true,
+  "deadline_s": 15
+}
