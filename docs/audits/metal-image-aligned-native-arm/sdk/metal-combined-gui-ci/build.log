@@ -1,0 +1,719 @@
+[1m[92m   Compiling[0m bitflags v2.13.2
+[1m[92m   Compiling[0m objc2-encode v4.1.0
+[1m[92m   Compiling[0m zerofrom v0.1.8
+[1m[92m   Compiling[0m stable_deref_trait v1.2.1
+[1m[92m   Compiling[0m yoke v0.8.3
+[1m[92m   Compiling[0m smallvec v1.16.2
+[1m[92m   Compiling[0m objc2 v0.6.5
+[1m[92m   Compiling[0m log v0.4.34
+[1m[92m   Compiling[0m zerovec v0.11.8
+[1m[92m   Compiling[0m bytemuck v1.25.2
+[1m[92m   Compiling[0m core-foundation-sys v0.8.7
+[1m[92m   Compiling[0m core-foundation v0.9.4
+[1m[92m   Compiling[0m bitflags v1.3.2
+[1m[92m   Compiling[0m once_cell v1.21.4
+[1m[92m   Compiling[0m ttf-parser v0.25.1
+[1m[92m   Compiling[0m core-graphics-types v0.1.3
+[1m[92m   Compiling[0m dispatch2 v0.3.1
+[1m[92m   Compiling[0m block2 v0.6.2
+[1m[92m   Compiling[0m tinystr v0.8.4
+[1m[92m   Compiling[0m objc2-core-foundation v0.3.2
+[1m[92m   Compiling[0m foreign-types-shared v0.3.1
+[1m[92m   Compiling[0m writeable v0.6.4
+[1m[92m   Compiling[0m scopeguard v1.2.0
+[1m[92m   Compiling[0m litemap v0.8.3
+[1m[92m   Compiling[0m icu_locale_core v2.3.0
+[1m[92m   Compiling[0m owned_ttf_parser v0.25.1
+[1m[92m   Compiling[0m lock_api v0.4.14
+[1m[92m   Compiling[0m objc2-foundation v0.3.2
+[1m[92m   Compiling[0m objc2-core-video v0.3.2
+[1m[92m   Compiling[0m objc2-core-graphics v0.3.2
+[1m[92m   Compiling[0m foreign-types v0.5.0
+[1m[92m   Compiling[0m zerocopy v0.8.60
+[1m[92m   Compiling[0m parking_lot_core v0.9.12
+[1m[92m   Compiling[0m objc-sys v0.3.5
+[1m[92m   Compiling[0m potential_utf v0.1.6
+[1m[92m   Compiling[0m emath v0.30.0
+[1m[92m   Compiling[0m zerotrie v0.2.5
+[1m[92m   Compiling[0m utf8_iter v1.0.4
+[1m[92m   Compiling[0m ab_glyph_rasterizer v0.1.10
+[1m[92m   Compiling[0m ab_glyph v0.2.32
+[1m[92m   Compiling[0m icu_collections v2.3.0
+[1m[92m   Compiling[0m serde v1.0.229
+[1m[92m   Compiling[0m icu_provider v2.3.1
+[1m[92m   Compiling[0m ahash v0.8.12
+[1m[92m   Compiling[0m ecolor v0.30.0
+[1m[92m   Compiling[0m objc2 v0.5.3
+[1m[92m   Compiling[0m parking_lot v0.12.5
+[1m[92m   Compiling[0m core-graphics v0.23.2
+[1m[92m   Compiling[0m objc2-core-text v0.3.2
+[1m[92m   Compiling[0m raw-window-handle v0.6.2
+[1m[92m   Compiling[0m epaint_default_fonts v0.30.0
+[1m[92m   Compiling[0m profiling v1.0.18
+[1m[92m   Compiling[0m nohash-hasher v0.2.0
+[1m[92m   Compiling[0m thiserror v2.0.21
+[1m[92m   Compiling[0m epaint v0.30.0
+[1m[92m   Compiling[0m block2 v0.5.1
+[1m[92m   Compiling[0m icu_normalizer_data v2.3.0
+[1m[92m   Compiling[0m icu_properties_data v2.3.0
+[1m[92m   Compiling[0m objc2-metal v0.3.2
+[1m[92m   Compiling[0m objc2-cloud-kit v0.3.2
+[1m[92m   Compiling[0m objc2-core-image v0.3.2
+[1m[92m   Compiling[0m objc2-core-data v0.3.2
+[1m[92m   Compiling[0m dispatch v0.2.0
+[1m[92m   Compiling[0m objc2-foundation v0.2.2
+[1m[92m   Compiling[0m egui v0.30.0
+[1m[92m   Compiling[0m objc2-quartz-core v0.3.2
+[1m[92m   Compiling[0m icu_properties v2.3.0
+[1m[92m   Compiling[0m objc2-app-kit v0.3.2
+[1m[92m   Compiling[0m icu_normalizer v2.3.0
+[1m[92m   Compiling[0m tracing-core v0.1.36
+[1m[92m   Compiling[0m pin-project-lite v0.2.17
+[1m[92m   Compiling[0m idna_adapter v1.2.2
+[1m[92m   Compiling[0m tracing v0.1.44
+[1m[92m   Compiling[0m objc2-app-kit v0.2.2
+[1m[92m   Compiling[0m glam v0.29.3
+[1m[92m   Compiling[0m malloc_buf v0.0.6
+[1m[92m   Compiling[0m percent-encoding v2.3.2
+[1m[92m   Compiling[0m smol_str v0.2.2
+[1m[92m   Compiling[0m dpi v0.1.2
+[1m[92m   Compiling[0m cursor-icon v1.2.0
+[1m[92m   Compiling[0m form_urlencoded v1.2.2
+[1m[92m   Compiling[0m winit v0.30.13
+[1m[92m   Compiling[0m objc v0.2.7
+[1m[92m   Compiling[0m ingetrazo-core v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-core)
+[1m[92m   Compiling[0m png v0.18.1
+[1m[33mwarning[0m[1m: function `visit_meshes` is never used[0m
+   [1m[94m--> [0mcrates/ingetrazo-core/src/screen_pick.rs:120:15
+    [1m[94m|[0m
+[1m[94m120[0m [1m[94m|[0m pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    [1m[94m|[0m               [1m[33m^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[92m   Compiling[0m idna v1.1.0
+[1m[92m   Compiling[0m block v0.1.6
+[1m[92m   Compiling[0m image v0.25.10
+[1m[92m   Compiling[0m cocoa-foundation v0.1.2
+[1m[33mwarning[0m: `ingetrazo-core` (lib) generated 1 warning
+[1m[92m   Compiling[0m url v2.5.8
+[1m[92m   Compiling[0m cgl v0.3.2
+[1m[92m   Compiling[0m zopfli v0.8.3
+[1m[92m   Compiling[0m cocoa v0.25.0
+[1m[92m   Compiling[0m memoffset v0.9.1
+[1m[92m   Compiling[0m gltf-json v1.4.1
+[1m[92m   Compiling[0m ash v0.38.0+1.3.281
+[1m[92m   Compiling[0m memmap2 v0.9.11
+[1m[92m   Compiling[0m arrayvec v0.7.8
+[1m[92m   Compiling[0m web-time v1.1.0
+[1m[92m   Compiling[0m constant_time_eq v0.4.2
+[1m[92m   Compiling[0m glow v0.16.0
+[1m[92m   Compiling[0m webbrowser v1.2.4
+[1m[92m   Compiling[0m arboard v3.6.1
+[1m[92m   Compiling[0m glutin v0.32.3
+[1m[92m   Compiling[0m glutin-winit v0.5.0
+[1m[92m   Compiling[0m egui-winit v0.30.0
+[1m[92m   Compiling[0m egui_glow v0.30.0
+[1m[92m   Compiling[0m blake3 v1.8.7
+[1m[92m   Compiling[0m gltf v1.4.1
+[1m[92m   Compiling[0m pdf-writer v0.15.0
+[1m[92m   Compiling[0m ingetrazo-render v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-render)
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:777:35
+    [1m[94m|[0m
+[1m[94m777[0m [1m[94m|[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 185, 190)),
+    [1m[94m|[0m                                   [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+    [1m[94m= [0m[1mnote[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1101:35
+     [1m[94m|[0m
+[1m[94m1101[0m [1m[94m|[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 180, 190)),
+     [1m[94m|[0m                                   [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1123:71
+     [1m[94m|[0m
+[1m[94m1123[0m [1m[94m|[0m             painter.line_segment([p_anchor, p_pos], egui::Stroke::new(1.2, egui::Color32::from_rgb(45, 55, 75)));
+     [1m[94m|[0m                                                                       [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1189:66
+     [1m[94m|[0m
+[1m[94m1189[0m [1m[94m|[0m                 painter.line_segment([s0, s1], egui::Stroke::new(1.5, stroke_color));
+     [1m[94m|[0m                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.5_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1214:78
+     [1m[94m|[0m
+[1m[94m1214[0m [1m[94m|[0m                         painter.line_segment([start, end], egui::Stroke::new(1.5, stroke_color));
+     [1m[94m|[0m                                                                              [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.5_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1240:43
+     [1m[94m|[0m
+[1m[94m1240[0m [1m[94m|[0m                         egui::Stroke::new(1.0, egui::Color32::BLACK),
+     [1m[94m|[0m                                           [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1245:69
+     [1m[94m|[0m
+[1m[94m1245[0m [1m[94m|[0m                     painter.circle_stroke(pos, s, egui::Stroke::new(1.0, egui::Color32::BLACK));
+     [1m[94m|[0m                                                                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1254:97
+     [1m[94m|[0m
+[1m[94m1254[0m [1m[94m|[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+     [1m[94m|[0m                                                                                                 [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1257:114
+     [1m[94m|[0m
+[1m[94m1257[0m [1m[94m|[0m                     painter.line_segment([pos - egui::vec2(s, 0.0), pos + egui::vec2(s, 0.0)], egui::Stroke::new(2.0, glyph_color));
+     [1m[94m|[0m                                                                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `2.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1258:114
+     [1m[94m|[0m
+[1m[94m1258[0m [1m[94m|[0m                     painter.line_segment([pos - egui::vec2(0.0, s), pos + egui::vec2(0.0, s)], egui::Stroke::new(2.0, glyph_color));
+     [1m[94m|[0m                                                                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `2.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1266:97
+     [1m[94m|[0m
+[1m[94m1266[0m [1m[94m|[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+     [1m[94m|[0m                                                                                                 [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1353:66
+     [1m[94m|[0m
+[1m[94m1353[0m [1m[94m|[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+     [1m[94m|[0m                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `0.7_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1362:66
+     [1m[94m|[0m
+[1m[94m1362[0m [1m[94m|[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+     [1m[94m|[0m                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `0.7_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1383:69
+     [1m[94m|[0m
+[1m[94m1383[0m [1m[94m|[0m             painter.line_segment([s_orig, s_pos], egui::Stroke::new(1.8, col));
+     [1m[94m|[0m                                                                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.8_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1398:68
+     [1m[94m|[0m
+[1m[94m1398[0m [1m[94m|[0m                     painter.line_segment([a, b], egui::Stroke::new(1.2, col));
+     [1m[94m|[0m                                                                    [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency[0m
+  [1m[94m--> [0mcrates/ingetrazo-render/src/cad2d.rs:67:55
+   [1m[94m|[0m
+[1m[94m67[0m [1m[94m|[0m   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err([1m[94m...[0m
+   [1m[94m|[0m                                                       [1m[33m^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `#[warn(deprecated)]` on by default
+[1m[96mhelp[0m: replace the use of the deprecated method
+   [1m[94m|[0m
+[1m[94m67[0m [91m- [0m  static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.[91mfetch_update[0m(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
+[1m[94m67[0m [92m+ [0m  static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.[92mtry_update[0m(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:132:5
+    [1m[94m|[0m
+[1m[94m128[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m132[0m [1m[94m|[0m     pub finalizer: FT_Generic_Finalizer,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    [1m[94m= [0m[1mnote[0m: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:804:5
+    [1m[94m|[0m
+[1m[94m795[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m804[0m [1m[94m|[0m     pub read: FT_Stream_IoFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:805:5
+    [1m[94m|[0m
+[1m[94m795[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m805[0m [1m[94m|[0m     pub close: FT_Stream_CloseFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:817:5
+    [1m[94m|[0m
+[1m[94m813[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m817[0m [1m[94m|[0m     pub alloc: FT_Alloc_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:818:5
+    [1m[94m|[0m
+[1m[94m813[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m818[0m [1m[94m|[0m     pub free: FT_Free_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:819:5
+    [1m[94m|[0m
+[1m[94m813[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m819[0m [1m[94m|[0m     pub realloc: FT_Realloc_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:881:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m880[0m [1m[94m|[0m pub struct FT_Outline_Funcs {
+[1m[94m881[0m [1m[94m|[0m     pub move_to: FT_Outline_MoveToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:882:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m882[0m [1m[94m|[0m     pub line_to: FT_Outline_LineToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:883:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m883[0m [1m[94m|[0m     pub conic_to: FT_Outline_ConicToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:884:5
+    [1m[94m|[0m
+[1m[94m879[0m [1m[94m|[0m #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                                    [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m884[0m [1m[94m|[0m     pub cubic_to: FT_Outline_CubicToFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:896:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m896[0m [1m[94m|[0m     pub gray_spans: FT_SpanFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:897:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m897[0m [1m[94m|[0m     pub black_spans: FT_SpanFunc,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:898:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m898[0m [1m[94m|[0m     pub bit_test: FT_Raster_BitTest_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m[1m: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique[0m
+   [1m[94m--> [0mvendor/freetype-sys/src/lib.rs:899:5
+    [1m[94m|[0m
+[1m[94m890[0m [1m[94m|[0m #[derive(Debug, Hash, PartialEq, Eq)]
+    [1m[94m|[0m                       [1m[94m---------[0m [1m[94min this derive macro expansion[0m
+[1m[94m...[0m
+[1m[94m899[0m [1m[94m|[0m     pub bit_set: FT_Raster_BitSet_Func,
+    [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: the address of the same function can vary between different codegen units
+    [1m[94m= [0m[1mnote[0m: furthermore, different functions could have the same address after being merged together
+    [1m[94m= [0m[1mnote[0m: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+[1m[33mwarning[0m: `freetype-sys` (lib) generated 14 warnings
+[1m[92m   Compiling[0m raw-window-metal v0.4.0
+[1m[92m   Compiling[0m zip v2.4.2
+[1m[92m   Compiling[0m ingetrazo-formats v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-formats)
+[1m[92m   Compiling[0m ingetrazo-metal v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-metal)
+[1m[33mwarning[0m: `ingetrazo-render` (lib) generated 16 warnings (run `cargo fix --lib -p ingetrazo-render` to apply 16 suggestions)
+[1m[92m   Compiling[0m ash-window v0.13.0
+[1m[92m   Compiling[0m eframe v0.30.0
+[1m[33mwarning[0m[1m: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency[0m
+  [1m[94m--> [0mcrates/ingetrazo-metal/src/egui_painter.rs:64:14
+   [1m[94m|[0m
+[1m[94m64[0m [1m[94m|[0m             .fetch_update(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m              [1m[33m^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `#[warn(deprecated)]` on by default
+[1m[96mhelp[0m: replace the use of the deprecated method
+   [1m[94m|[0m
+[1m[94m64[0m [91m- [0m            .[91mfetch_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+[1m[94m64[0m [92m+ [0m            .[92mtry_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency[0m
+  [1m[94m--> [0mcrates/ingetrazo-metal/src/egui_painter.rs:80:18
+   [1m[94m|[0m
+[1m[94m80[0m [1m[94m|[0m                 .fetch_update(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m                  [1m[33m^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: replace the use of the deprecated method
+   [1m[94m|[0m
+[1m[94m80[0m [91m- [0m                .[91mfetch_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+[1m[94m80[0m [92m+ [0m                .[92mtry_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead[0m
+   [1m[94m--> [0mcrates/ingetrazo-metal/src/cad2d.rs:140:17
+    [1m[94m|[0m
+[1m[94m140[0m [1m[94m|[0m         options.setFastMathEnabled(false);
+    [1m[94m|[0m                 [1m[33m^^^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: function `scene_from_xml` is never used[0m
+   [1m[94m--> [0mcrates/ingetrazo-formats/src/dae_import.rs:757:15
+    [1m[94m|[0m
+[1m[94m757[0m [1m[94m|[0m pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    [1m[94m|[0m               [1m[33m^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m[1m: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead[0m
+   [1m[94m--> [0mcrates/ingetrazo-metal/src/cad_callback_painter.rs:100:21
+    [1m[94m|[0m
+[1m[94m100[0m [1m[94m|[0m             options.setFastMathEnabled(false);
+    [1m[94m|[0m                     [1m[33m^^^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead[0m
+   [1m[94m--> [0mcrates/ingetrazo-metal/src/cad_compute_painter.rs:129:21
+    [1m[94m|[0m
+[1m[94m129[0m [1m[94m|[0m             options.setFastMathEnabled(false);
+    [1m[94m|[0m                     [1m[33m^^^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: variable does not need to be mutable[0m
+   [1m[94m--> [0mcrates/ingetrazo-metal/src/egui_painter.rs:573:13
+    [1m[94m|[0m
+[1m[94m573[0m [1m[94m|[0m         let mut staging = metal.buffer(staging_bytes, true)?;
+    [1m[94m|[0m             [1m[94m----[0m[1m[33m^^^^^^^[0m
+    [1m[94m|[0m             [1m[94m|[0m
+    [1m[94m|[0m             [1m[94mhelp: remove this `mut`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+[1m[92m   Compiling[0m egui-ash-renderer v0.7.0 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/vendor/egui-ash-renderer)
+[1m[33mwarning[0m: `ingetrazo-metal` (lib) generated 6 warnings (run `cargo fix --lib -p ingetrazo-metal` to apply 3 suggestions)
+[1m[92m   Compiling[0m ingetrazo-tools v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-tools)
+[1m[92m   Compiling[0m ingetrazo-gui v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-gui)
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:161:54
+    [1m[94m|[0m
+[1m[94m161[0m [1m[94m|[0m     painter.rect_stroke(paper_rect, 0.0, Stroke::new(1.0, Color32::from_rgb(180, 180, 185)));
+    [1m[94m|[0m                                                      [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+    [1m[94m= [0m[1mnote[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:169:21
+    [1m[94m|[0m
+[1m[94m169[0m [1m[94m|[0m         Stroke::new(1.0, Color32::from_rgba_unmultiplied(160, 175, 200, 150)),
+    [1m[94m|[0m                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:217:62
+    [1m[94m|[0m
+[1m[94m217[0m [1m[94m|[0m                     painter.rect_stroke(fr, 0.0, Stroke::new(1.2, Color32::from_rgb(40, 40, 45)));
+    [1m[94m|[0m                                                              [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:770:60
+    [1m[94m|[0m
+[1m[94m770[0m [1m[94m|[0m                 painter.line_segment([s0, s1], Stroke::new(1.8, Color32::from_rgb(20, 100, 200)));
+    [1m[94m|[0m                                                            [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.8_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:779:48
+    [1m[94m|[0m
+[1m[94m779[0m [1m[94m|[0m     painter.rect_stroke(rect, 0.0, Stroke::new(1.4, Color32::BLACK));
+    [1m[94m|[0m                                                [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.4_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:788:21
+    [1m[94m|[0m
+[1m[94m788[0m [1m[94m|[0m         Stroke::new(1.0, Color32::BLACK),
+    [1m[94m|[0m                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:794:21
+    [1m[94m|[0m
+[1m[94m794[0m [1m[94m|[0m         Stroke::new(1.0, Color32::BLACK),
+    [1m[94m|[0m                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:847:50
+    [1m[94m|[0m
+[1m[94m847[0m [1m[94m|[0m     painter.circle_stroke(center, r, Stroke::new(1.2, Color32::BLACK));
+    [1m[94m|[0m                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:858:21
+    [1m[94m|[0m
+[1m[94m858[0m [1m[94m|[0m         Stroke::new(1.0, Color32::BLACK),
+    [1m[94m|[0m                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:864:21
+    [1m[94m|[0m
+[1m[94m864[0m [1m[94m|[0m         Stroke::new(1.0, Color32::BLACK),
+    [1m[94m|[0m                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:884:56
+    [1m[94m|[0m
+[1m[94m884[0m [1m[94m|[0m         painter.rect_stroke(div_rect, 0.0, Stroke::new(1.0, Color32::BLACK));
+    [1m[94m|[0m                                                        [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:901:48
+    [1m[94m|[0m
+[1m[94m901[0m [1m[94m|[0m     painter.rect_stroke(rect, 0.0, Stroke::new(1.5, highlight_color));
+    [1m[94m|[0m                                                [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.5_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer.rs:914:54
+    [1m[94m|[0m
+[1m[94m914[0m [1m[94m|[0m         painter.rect_stroke(h_rect, 0.0, Stroke::new(1.2, highlight_color));
+    [1m[94m|[0m                                                      [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/tray.rs:264:47
+    [1m[94m|[0m
+[1m[94m264[0m [1m[94m|[0m [1m[94m...[0m                   egui::Stroke::new(1.0, egui::Color32::from_rgb(100, 105, 115)),
+    [1m[94m|[0m                                         [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/tray.rs:339:87
+    [1m[94m|[0m
+[1m[94m339[0m [1m[94m|[0m [1m[94m...[0m                   ui.painter().rect_stroke(rect, 2.0, egui::Stroke::new(1.0, egui::Color32::from_rgb(90, 95, 105)));
+    [1m[94m|[0m                                                                             [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/viewport.rs:314:39
+    [1m[94m|[0m
+[1m[94m314[0m [1m[94m|[0m                     egui::Stroke::new(1., egui::Color32::from_rgba_unmultiplied(255, 180, 60, 150)),
+    [1m[94m|[0m                                       [1m[33m^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/viewport.rs:327:56
+    [1m[94m|[0m
+[1m[94m327[0m [1m[94m|[0m         painter.circle_stroke(pos,4.,egui::Stroke::new(3.,egui::Color32::from_white_alpha(230)));
+    [1m[94m|[0m                                                        [1m[33m^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `3_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/viewport.rs:328:56
+    [1m[94m|[0m
+[1m[94m328[0m [1m[94m|[0m         painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
+    [1m[94m|[0m                                                        [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.5_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/viewport.rs:340:35
+    [1m[94m|[0m
+[1m[94m340[0m [1m[94m|[0m                 egui::Stroke::new(2.0, egui::Color32::from_rgb(255, 60, 60)),
+    [1m[94m|[0m                                   [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `2.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/viewport.rs:372:48
+    [1m[94m|[0m
+[1m[94m372[0m [1m[94m|[0m                 let stroke = egui::Stroke::new(1.8, egui::Color32::from_rgb(243, 115, 41));
+    [1m[94m|[0m                                                [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.8_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m: `ingetrazo-formats` (lib) generated 1 warning
+[1m[33mwarning[0m[1m: function `build` is never used[0m
+   [1m[94m--> [0mcrates/ingetrazo-gui/src/composer_cad.rs:183:4
+    [1m[94m|[0m
+[1m[94m183[0m [1m[94m|[0m fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_[1m[94m...[0m
+    [1m[94m|[0m    [1m[33m^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m: `ingetrazo-gui` (lib) generated 21 warnings (run `cargo fix --lib -p ingetrazo-gui` to apply 20 suggestions)
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 1m 13s
+[1m[33mwarning[0m: the following packages contain code that will be rejected by a future version of Rust: block v0.1.6
+[1m[92mnote[0m: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
