@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "case": "red-half-white",
+      "pixel": [
+        251,
+        127,
+        127
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-red-half-white/resize-800x600.png"
+    },
+    {
+      "case": "red-half-black",
+      "pixel": [
+        124,
+        0,
+        0
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-black/resize-800x600.png"
+    },
+    {
+      "case": "opacity-bucket-order",
+      "pixel": [
+        213,
+        89,
+        126
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-opacity-bucket-order/resize-800x600.png"
+    },
+    {
+      "case": "opaque-front",
+      "pixel": [
+        0,
+        247,
+        0
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-opaque-front/resize-800x600.png"
+    },
+    {
+      "case": "opaque-back",
+      "pixel": [
+        124,
+        86,
+        37
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-opaque-back/resize-800x600.png"
+    },
+    {
+      "case": "equal-opacity-forward",
+      "pixel": [
+        125,
+        63,
+        187
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-equal-opacity-forward/resize-800x600.png"
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "pixel": [
+        187,
+        63,
+        125
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-equal-opacity-reversed/resize-800x600.png"
+    },
+    {
+      "case": "opacity-995",
+      "pixel": [
+        247,
+        1,
+        1
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-opacity-995/resize-800x600.png"
+    },
+    {
+      "case": "opacity-zero",
+      "pixel": [
+        255,
+        255,
+        255
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-opacity-zero/resize-800x600.png"
+    },
+    {
+      "case": "section-clipped",
+      "pixel": [
+        251,
+        127,
+        127
+      ],
+      "image": "/tmp/ingetrazo-vulkan-proof/alpha-ui-section-clipped/resize-800x600.png"
+    }
+  ],
+  "scope": "Actual native Vulkan UI compositor original alpha center controls; not backpaint/texture/general parity"
+}
