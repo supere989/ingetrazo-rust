@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if let Some(mode)=case["style_mode"].as_str() {style.visual_style=match mode {"wireframe"=>ingetrazo_render::style::VisualStyle::Wireframe,"hidden_line"=>ingetrazo_render::style::VisualStyle::HiddenLine,"monochrome"=>ingetrazo_render::style::VisualStyle::Monochrome,"xray"=>ingetrazo_render::style::VisualStyle::XRay,_=>ingetrazo_render::style::VisualStyle::ShadedWithTextures};}
         if name.starts_with("style-") {for i in 0..3 {style.front_color[i]=case["style_front_color"][i].as_f64().unwrap()as f32;style.back_color[i]=case["style_back_color"][i].as_f64().unwrap()as f32;}}
         style.show_sky = false;
-        style.show_edges = false;
+        style.show_edges = case["show_edges"].as_bool().unwrap_or(false);
         style.show_profiles = false;
         let mut world = World::new(&context, budget.clone())?;
         world.resize_offscreen(
@@ -71,7 +71,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             for mode in [ingetrazo_render::style::VisualStyle::Wireframe,ingetrazo_render::style::VisualStyle::XRay,ingetrazo_render::style::VisualStyle::HiddenLine,ingetrazo_render::style::VisualStyle::Monochrome] {
                 let mut changed=style.clone();changed.visual_style=mode;changed.front_color=[0.3,0.2,0.1,1.];changed.back_color=[0.1,0.2,0.3,1.];
                 world.set_scene(&context,&scene,&camera,&changed,fence,0,1)?;
-                assert_eq!(world.uploads,1,"style-only change must reuse cached geometry");assert_eq!(budget.ledger.lock().unwrap().total_committed(),committed);
+                assert_eq!(world.uploads,1,"style-only change must reuse cached geometry");if !scene.show_section_cuts {assert_eq!(budget.ledger.lock().unwrap().total_committed(),committed);} // Cap visibility has separate legitimate allocation.
             }
             world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;
         }
@@ -103,7 +103,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             image::ColorType::Rgba8,
         )?;
         let offset = (300 * 800 + 400) * 4;
-        rows.push(serde_json::json!({"case":name,"center_rgba":&image[offset..offset+4],"geometry_uploads":world.uploads,"opacity_runs":world.transparent_runs(),"paint_runs":world.paint_runs(),"ordinary_runs":world.ordinary_paint_runs(),"consolidated_opaque_count":world.consolidated_opaque_count(),"surface_bytes":world.transparent_surface_bytes(),"contour_metrics":format!("{:?}",world.contour_metrics())}));
+        rows.push(serde_json::json!({"case":name,"center_rgba":&image[offset..offset+4],"geometry_uploads":world.uploads,"hard_edge_bytes":world.edge_geometry_bytes(),"hard_edge_endpoint_count":world.edge_endpoint_count(),"opacity_runs":world.transparent_runs(),"paint_runs":world.paint_runs(),"ordinary_runs":world.ordinary_paint_runs(),"consolidated_opaque_count":world.consolidated_opaque_count(),"surface_bytes":world.transparent_surface_bytes(),"contour_metrics":format!("{:?}",world.contour_metrics())}));
         drop(world);
         assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
     }

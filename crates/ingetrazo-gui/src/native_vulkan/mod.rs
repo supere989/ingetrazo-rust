@@ -787,9 +787,12 @@ fn create_vulkan_device_and_graphics_and_present_qs(
         ash::khr::portability_subset::NAME.as_ptr(),
     ];
 
+    let available=unsafe{instance.get_physical_device_features(physical_device)};
+    let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0);
     let device_create_info = vk::DeviceCreateInfo::default()
         .queue_create_infos(&queue_create_infos)
-        .enabled_extension_names(&device_extensions_ptrs);
+        .enabled_extension_names(&device_extensions_ptrs)
+        .enabled_features(&features);
 
     let device = unsafe { instance.create_device(physical_device, &device_create_info, None)? };
     let graphics_queue = unsafe { device.get_device_queue(graphics_q_index, 0) };

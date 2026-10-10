@@ -496,6 +496,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(stable, normal);
     // Actual quota denials after partially preparing chunk resources must preserve the old drawable.
     let before = budget.ledger.lock().unwrap().total_committed();
+    let old_edge_cache=(world.edge_endpoint_count(),world.edge_geometry_bytes());
     let mut changed = s.clone();
     for face in &mut changed.mesh.faces {
         face.attrs
@@ -514,6 +515,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Dynamic quota pressure unexpectedly admitted the next chunk"
     );
     assert!(result.unwrap_err().contains("Contour chunk upload failed"));
+    assert_eq!((world.edge_endpoint_count(),world.edge_geometry_bytes()),old_edge_cache,"Rejected replacement changed cached drawable edges");
     assert_eq!(world.contour_metrics().failed_prepared_chunks, 2);
     assert_eq!(
         budget.ledger.lock().unwrap().total_committed(),
