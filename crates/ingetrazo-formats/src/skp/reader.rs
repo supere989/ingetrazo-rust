@@ -640,7 +640,7 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
             {
                 return Err(SkpError::Invalid("Duplicate material recipe".into()));
             }
-        } else if filename.starts_with("styles/") && filename.ends_with("style.xml") {
+        } else if p.back_color.is_none() && filename.starts_with("styles/") && filename.ends_with("style.xml") {
             if entry.size() > 1024 * 1024 {
                 return Err(SkpError::Invalid("Style XML exceeds limit".into()));
             }

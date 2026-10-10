@@ -551,7 +551,10 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         scene.materials.insert(name.clone(), material);
     }
     if let Some(c) = p.back_color {
-        scene.display_style.back_color = Some(c);
+        scene.native_document["back_face_color"] = serde_json::json!(c);
+        // This is authored metadata on a newly imported native scene, not an
+        // edit to a preserved original terrain schema.
+        scene.native_baseline["terrain"] = serde_json::json!(scene.terrain);
     }
     if !p.root.faces.is_empty() {
         let mut mesh = Mesh::new();
