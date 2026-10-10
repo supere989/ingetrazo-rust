@@ -70,8 +70,17 @@ impl Cache {
             builds: 0,
         })
     }
+    /// Sized-face encoded-byte references, not total resident font memory.
+    /// Multiple sizes may share one encoded Arc; native FT/HB tables are excluded.
     pub fn stats(&self) -> (usize, usize, u64) {
         (self.faces.len(), self.bytes, self.builds)
+    }
+    /// Resolver request/match and backing-font counters, independently of sized faces.
+    /// Resolution may admit backing fonts before sized-face admission refuses.
+    /// Backing and sized byte counters overlap shared encoded ownership and must
+    /// not be summed as actual allocated memory.
+    pub fn resolver_stats(&self) -> (usize, u64, (usize, usize, u64)) {
+        self.resolver.stats()
     }
     pub fn resolve(&mut self, request: Request, pixels: u32) -> Result<Rc<Face>, String> {
         if pixels == 0 || pixels > 4096 {
@@ -189,6 +198,19 @@ mod tests {
             }
         }
         assert_eq!(advances, 12);
+    }
+    #[test]
+    fn resolver_backing_admission_is_visible_when_sized_admission_refuses() {
+        let mut cache = Cache::new(Limits { faces: 1, retained_font_bytes: 1 }).unwrap();
+        let request = Request { family: "DejaVu Sans".into(), bold: true,
+            italic: false, required_chars: vec![] };
+        assert!(cache.resolve(request.clone(), 15).is_err());
+        assert_eq!(cache.stats(), (0, 0, 0));
+        let backing = cache.resolver_stats();
+        assert!(backing.2.0 > 0 && backing.2.1 > 1);
+        assert!(cache.resolve(request, 15).is_err());
+        assert_eq!(cache.resolver_stats(), backing);
+        assert_eq!(cache.stats(), (0, 0, 0));
     }
     #[test]
     fn refused_candidate_keeps_live_font_and_unused_retirement_is_bounded() {
