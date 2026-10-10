@@ -1,0 +1,188 @@
+{
+  "binary_sha256": "c08b99673312f56013e36e2f75ec6be54a14370a7aa73809f53881c3ef417228",
+  "source_stack_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter",
+  "cases": [
+    {
+      "name": "production-sharp",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 0,
+        "name": "production-sharp",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "cold_builds": [
+          1,
+          1
+        ],
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 14,
+          "cached_bytes": 375912,
+          "draws": 40
+        },
+        "serial": 8,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 46,
+            "cached_bytes": 375912,
+            "draws": 120
+          },
+          "serial": 24,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 54,
+            "cached_bytes": 375912,
+            "draws": 140
+          },
+          "serial": 28,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 60,
+            "cached_bytes": 375912,
+            "draws": 155
+          },
+          "serial": 31,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    }
+  ]
+}

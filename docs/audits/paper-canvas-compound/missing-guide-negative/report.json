@@ -1,0 +1,613 @@
+{
+  "binary_sha256": "d1ebeff37e2b666d0d67c7e5efebd27ae4162a9893f252726d47d5521c7ac94a",
+  "source_stack_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter",
+  "cases": [
+    {
+      "name": "production-sharp",
+      "changed": 762,
+      "first": [
+        [
+          431,
+          268
+        ],
+        [
+          848,
+          268
+        ],
+        [
+          431,
+          269
+        ],
+        [
+          432,
+          269
+        ],
+        [
+          847,
+          269
+        ]
+      ],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 0,
+        "name": "production-sharp",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "cold_builds": [
+          1,
+          1
+        ],
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 14,
+          "cached_bytes": 375912,
+          "draws": 40
+        },
+        "serial": 8,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 46,
+            "cached_bytes": 375912,
+            "draws": 120
+          },
+          "serial": 24,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 52,
+            "cached_bytes": 375912,
+            "draws": 135
+          },
+          "serial": 27,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 58,
+            "cached_bytes": 375912,
+            "draws": 150
+          },
+          "serial": 30,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-rounded-double",
+      "changed": 601,
+      "first": [
+        [
+          320,
+          192
+        ],
+        [
+          321,
+          192
+        ],
+        [
+          322,
+          192
+        ],
+        [
+          323,
+          192
+        ],
+        [
+          324,
+          192
+        ]
+      ],
+      "roi": [
+        297,
+        168,
+        988,
+        659
+      ],
+      "state": {
+        "index": 1,
+        "name": "production-rounded-double",
+        "origin": [
+          298.45001220703125,
+          169.5
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.7,
+          "color": "#000000",
+          "radius_mm": 2.5,
+          "style": "double"
+        },
+        "cold_builds": [
+          2,
+          2
+        ],
+        "gpu": {
+          "uploads": 4,
+          "cache_hits": 126,
+          "cached_bytes": 783000,
+          "draws": 338
+        },
+        "serial": 65,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 1,
+          "name": "production-rounded-double",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 154,
+            "cached_bytes": 783000,
+            "draws": 422
+          },
+          "serial": 79,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "production-rounded-double",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 160,
+            "cached_bytes": 783000,
+            "draws": 440
+          },
+          "serial": 82,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "production-rounded-double",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 168,
+            "cached_bytes": 783000,
+            "draws": 464
+          },
+          "serial": 86,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-straight-dash",
+      "changed": 1316,
+      "first": [
+        [
+          431,
+          268
+        ],
+        [
+          432,
+          268
+        ],
+        [
+          433,
+          268
+        ],
+        [
+          434,
+          268
+        ],
+        [
+          435,
+          268
+        ]
+      ],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 2,
+        "name": "production-straight-dash",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.6,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          3,
+          3
+        ],
+        "gpu": {
+          "uploads": 6,
+          "cache_hits": 234,
+          "cached_bytes": 358272,
+          "draws": 654
+        },
+        "serial": 120,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 2,
+          "name": "production-straight-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 264,
+            "cached_bytes": 358272,
+            "draws": 729
+          },
+          "serial": 135,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "production-straight-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 272,
+            "cached_bytes": 358272,
+            "draws": 749
+          },
+          "serial": 139,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "production-straight-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 278,
+            "cached_bytes": 358272,
+            "draws": 764
+          },
+          "serial": 142,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    }
+  ]
+}

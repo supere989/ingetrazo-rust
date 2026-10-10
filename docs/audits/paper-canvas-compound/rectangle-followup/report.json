@@ -1,0 +1,63 @@
+{
+  "source_statements_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "binary_sha256": "3a20d5782f7fd5a51b62d18e1de356c7df2135b68bb88c0370f8c4a3e458bc65",
+  "recipes": [
+    {
+      "name": "fractional-paper",
+      "page": [
+        50.0,
+        30.0
+      ],
+      "margin": 2.0,
+      "density": 2.3,
+      "phase": [
+        0.37,
+        0.23
+      ]
+    },
+    {
+      "name": "thin-paper",
+      "page": [
+        50.0,
+        30.0
+      ],
+      "margin": 3.0,
+      "density": 1.5,
+      "phase": [
+        0.23,
+        0.67
+      ]
+    },
+    {
+      "name": "integer-paper",
+      "page": [
+        50.0,
+        30.0
+      ],
+      "margin": 2.0,
+      "density": 2.0,
+      "phase": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "fractional-paper",
+      "changed": 0,
+      "first": []
+    },
+    {
+      "name": "thin-paper",
+      "changed": 0,
+      "first": []
+    },
+    {
+      "name": "integer-paper",
+      "changed": 0,
+      "first": []
+    }
+  ],
+  "scope": "Actual original QGraphicsScene operative page stack vs cold native spans; production GPU capture remains mandatory"
+}

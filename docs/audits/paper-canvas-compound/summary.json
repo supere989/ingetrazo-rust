@@ -1,0 +1,56 @@
+{
+  "actual_production_cases": [
+    {
+      "name": "production-sharp",
+      "cold_builds": [
+        1,
+        1
+      ],
+      "gpu": {
+        "uploads": 2,
+        "cache_hits": 14,
+        "cached_bytes": 375912,
+        "draws": 40
+      },
+      "warm_unchanged": true
+    },
+    {
+      "name": "production-rounded-double",
+      "cold_builds": [
+        2,
+        2
+      ],
+      "gpu": {
+        "uploads": 4,
+        "cache_hits": 126,
+        "cached_bytes": 783000,
+        "draws": 338
+      },
+      "warm_unchanged": true
+    },
+    {
+      "name": "production-straight-dash",
+      "cold_builds": [
+        3,
+        3
+      ],
+      "gpu": {
+        "uploads": 6,
+        "cache_hits": 232,
+        "cached_bytes": 358272,
+        "draws": 648
+      },
+      "warm_unchanged": true
+    }
+  ],
+  "actual_production_exact": [
+    0,
+    0,
+    0
+  ],
+  "restored_exact": [
+    0
+  ],
+  "restored_binary": "c08b99673312f56013e36e2f75ec6be54a14370a7aa73809f53881c3ef417228",
+  "scope": "Actual normal render_sheet_composer, empty authored item list, XTEST constructor recipe switches; thick pen controls separately cold-span only"
+}

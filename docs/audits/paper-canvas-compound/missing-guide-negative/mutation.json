@@ -1,0 +1,10 @@
+{
+  "binary_sha256": "d1ebeff37e2b666d0d67c7e5efebd27ae4162a9893f252726d47d5521c7ac94a",
+  "expected_exit": 1,
+  "changed": [
+    762,
+    601,
+    1316
+  ],
+  "mutation": "Set actual production margin-guide alpha to zero; source literal required guide retained"
+}

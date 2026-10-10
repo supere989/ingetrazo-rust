@@ -1,0 +1,99 @@
+{
+  "source_statements_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "binary_sha256": "4ebca985b0eb10d4f3b0db4082a928f85ccdcd77cd724e3f6503ed01fb11f8cb",
+  "recipes": [
+    {
+      "name": "fractional-paper",
+      "page": [
+        50.0,
+        30.0
+      ],
+      "margin": 2.0,
+      "density": 2.3,
+      "phase": [
+        0.37,
+        0.23
+      ]
+    },
+    {
+      "name": "thin-paper",
+      "page": [
+        50.0,
+        30.0
+      ],
+      "margin": 3.0,
+      "density": 1.5,
+      "phase": [
+        0.23,
+        0.67
+      ]
+    },
+    {
+      "name": "integer-paper",
+      "page": [
+        50.0,
+        30.0
+      ],
+      "margin": 2.0,
+      "density": 2.0,
+      "phase": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "wide-page",
+      "page": [
+        30.0,
+        20.0
+      ],
+      "margin": 2.0,
+      "density": 4.0,
+      "phase": [
+        0.37,
+        0.23
+      ]
+    },
+    {
+      "name": "wide-guide",
+      "page": [
+        20.0,
+        12.0
+      ],
+      "margin": 1.5,
+      "density": 6.25,
+      "phase": [
+        0.23,
+        0.67
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "fractional-paper",
+      "changed": 0,
+      "first": []
+    },
+    {
+      "name": "thin-paper",
+      "changed": 0,
+      "first": []
+    },
+    {
+      "name": "integer-paper",
+      "changed": 0,
+      "first": []
+    },
+    {
+      "name": "wide-page",
+      "changed": 0,
+      "first": []
+    },
+    {
+      "name": "wide-guide",
+      "changed": 0,
+      "first": []
+    }
+  ],
+  "scope": "Actual original QGraphicsScene operative page stack vs cold native spans; production GPU capture remains mandatory"
+}

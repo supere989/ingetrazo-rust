@@ -1,0 +1,1 @@
+{"index":2,"name":"production-straight-dash","origin":[417.25,253.5],"zoom":1.5,"ppp":1.0,"page":[297.0,210.0],"margin":10.0,"border":{"on":true,"mm":0.6,"color":"#000000","radius_mm":0.0,"style":"dashed"},"cold_builds":[3,3],"gpu":{"uploads":6,"cache_hits":312,"cached_bytes":358272,"draws":848},"serial":159,"status":"","next":[76.5,11.0],"close":[172.5,11.0]}
