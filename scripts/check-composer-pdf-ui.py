@@ -97,17 +97,25 @@ with tempfile.TemporaryDirectory() as runtime:
    click(controls[0]);wait(lambda:state()["border"]["on"] is False)
    key(0xff1b);time.sleep(.15);capture("border-white-disabled")
    edited=state();assert edited["border"]["color"]=='#ffffff' and edited["authored_text"]==before["authored_text"]
-   key(ord('z'),0xffe3);undone=wait(lambda:state() if state()["border"]["on"] is True else None);capture("border-undo")
-   key(ord('y'),0xffe3);redone=wait(lambda:state() if state()["border"]["on"] is False and state()["border"]["color"]=='#ffffff' else None);capture("border-redo")
+   assert edited['sheet_history']==[0,0]
+   key(ord('z'),0xffe3);undone=wait(lambda:state()if any('key: Z' in e['event']for e in state()['history_key_events'])else None);capture("border-undo")
+   key(ord('y'),0xffe3);redone=wait(lambda:state()if any('key: Y' in e['event']for e in state()['history_key_events'])else None);capture("border-redo")
+   assert undone['border']==redone['border']==edited['border']and redone['sheet_history']==[0,0]
    assert any('key: Z' in event['event'] and 'ctrl: true' in event['event'] and event['final_frame_modifiers']=='Modifiers::NONE'for event in redone['history_key_events'])
    assert any('key: Y' in event['event'] and 'ctrl: true' in event['event'] and event['final_frame_modifiers']=='Modifiers::NONE'for event in redone['history_key_events'])
+   # Genuine item Add/Undo/Redo with later direct paper edits. Remove it before PDF export.
+   initial_items=redone['item_count'];click(redone['add_north']);added=wait(lambda:state()if state()['item_count']==initial_items+1 and state()['sheet_history']==[1,0]else None);capture('item-added')
+   key(ord('z'),0xffe3);item_undo=wait(lambda:state()if state()['item_count']==initial_items and state()['sheet_history']==[0,1]else None);capture('item-undo')
+   assert item_undo['border']==edited['border']
+   key(ord('y'),0xffe3);item_redo=wait(lambda:state()if state()['item_count']==initial_items+1 and state()['sheet_history']==[1,0]else None);capture('item-redo');assert item_redo['border']==edited['border']
+   key(ord('z'),0xffe3);redone=wait(lambda:state()if state()['item_count']==initial_items and state()['sheet_history']==[0,1]else None)
    canvas_states=[]
    if canvas_mode:
     for i in [1,2,0]:
      click(state()['sheet_tabs'][i]);observed=wait(lambda:state()if state()['active_sheet']==i and state()['canvas_text']==expected_canvas(text_cases[i])else None);capture('canvas-sheet-'+str(i+1));canvas_states.append(observed)
      count=observed['field_index_computations'];expansions=observed['field_expansion_computations'];assert observed['calendar_samples_per_frame']==1;time.sleep(.15);idle=state();assert idle['field_index_computations']==count and idle['field_expansion_computations']==expansions and idle['calendar_samples_per_frame']==1
     redone=state()
-   border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"canvas_before":canvas_before,"canvas_states":canvas_states,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
+   border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"item_add":added,"item_undo":item_undo,"item_redo":item_redo,"canvas_before":canvas_before,"canvas_states":canvas_states,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
   current_path=out.resolve()/"current.pdf";all_path=out.resolve()/"all.pdf"
   if unsupported:
    current_path.write_bytes(b"existing destination current");all_path.write_bytes(b"existing destination all")
