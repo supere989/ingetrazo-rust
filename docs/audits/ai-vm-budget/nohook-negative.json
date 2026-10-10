@@ -2,5 +2,6 @@
   "literal_variant": "remove only vm.host_budget_tick call from bytecode dispatch; host arm/status APIs retained",
   "exit_code": 124,
   "external_harness_seconds": 2,
-  "valid_native_result": false
+  "valid_native_result": false,
+  "scaffold": "earlier six-case prototype, before finalizer/native-adapter admission extension; identical first loop"
 }

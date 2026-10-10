@@ -1,0 +1,7 @@
+{
+  "source_commit": "0d725728",
+  "budget_binary_sha256": "83449609f4c3ee1d42dee582c14827e7f3d3a4bffd62ba6b2cf6266757ec933e",
+  "negative_vm_frame_sha256": "48fc1cbce38adb7cceb156a4f798f0f9b82337b5ecca23205ce3d1e8ec6c83f1",
+  "negative_scaffold": "earlier six-case prototype before native adapter/finalizer extension; identical first caught-BaseException loop",
+  "result_scope": "standalone Linux devbox in-process RustPython bytecode fuel"
+}
