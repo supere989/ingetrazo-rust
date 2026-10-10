@@ -4,5 +4,6 @@
   "ignored": 2,
   "merge_review": "Keep sheet_shape/sheet_color and drawing_axes/gpu_memory modules. Preserve composer Factory handle with new Qt premultiplied palette construction. Retain both evidence histories.",
   "full_export_parity": "OPEN",
-  "fresh_pdf_replay": "pending"
+  "fresh_pdf_replay": "27 whole pages exact at72/144/300DPI against retained actual original source export",
+  "native_pdf_sha256": "1a48d4c8227c939b10b9568047eb2081eef41c8d878400aefcb3977f2620f2c3"
 }
