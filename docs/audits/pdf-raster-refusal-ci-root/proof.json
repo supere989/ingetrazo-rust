@@ -1,0 +1,16 @@
+{
+  "production_revision": "79441b0",
+  "checker_sha256": "ed4833e702fa2d80fb561598a8fe766b8f4fd6917b66d50ff17a4744d0889798",
+  "binary_sha256": "42ea55e3a929ee4d5c9f9cab557cfaab5cea12327f3a1c385e1f491a948c523c",
+  "readable_export_pages": [
+    1,
+    9
+  ],
+  "confirmed_destinations_preserved": 2,
+  "visible_popup_dark_pixels": 23960,
+  "actual_OK_dismissed_dark_pixels": 0,
+  "deadline_seconds": 20,
+  "failure_run": 38045079053,
+  "failure_job": 114192868145,
+  "scope": "Actual owned Xvfb native ash UI and genuine Zenity dialogs; no full sheet painter/release claim"
+}
