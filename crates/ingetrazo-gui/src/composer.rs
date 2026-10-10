@@ -26,6 +26,7 @@ use crate::app::IngeTrazoApp;
 pub struct ComposerState {
     pub pdf_export_error: Option<String>,
     pub text_tool:bool,
+    pub(super) tool_switch_rects:[egui::Rect;8],
     pub inline_text:Option<text_authoring::InlineText>,
     text_canvas:text_canvas::CanvasPainter,
     outer_border:crate::composer_border::CanvasBorder,
@@ -49,7 +50,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            pdf_export_error: None,text_tool:false,inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -77,6 +78,10 @@ fn canvas_field_index(app:&mut IngeTrazoApp,sheet_idx:usize)->Result<usize,Strin
 fn sheet_model_equal(a:&[ingetrazo_core::composition::Sheet],b:&[ingetrazo_core::composition::Sheet])->bool {
  let mut a=a.to_vec();let mut b=b.to_vec();for s in a.iter_mut().chain(b.iter_mut()){s.selected_item=None;}a==b
 }
+impl ComposerState {
+ pub fn arm_text(&mut self){self.text_tool=true;self.shape_tool=None;self.shape_start=None;}
+ pub fn arm_shape(&mut self,kind:&str){self.text_tool=false;self.shape_tool=Some(kind.into());self.shape_start=None;}
+}
 impl IngeTrazoApp {
  pub fn place_composer_shape(&mut self,kind:&str,start:glam::DVec2,end:glam::DVec2)->Result<uuid::Uuid,String>{
   let mut shape=ingetrazo_core::sheet_shape::SheetShape::from_drag(kind,start,end)?;
@@ -89,7 +94,7 @@ impl IngeTrazoApp {
   self.finish_composer_edit();self.begin_composer_edit();
   let id=uuid::Uuid::new_v4();let sheet=&mut self.scene.sheets[index];
   sheet.add_item(SheetItem::Shape(ingetrazo_core::composition::ShapeItem{id,shape}));
-  sheet.selected_item=Some(sheet.items.len()-1);self.finish_composer_edit();Ok(id)
+  sheet.selected_item=Some(sheet.items.len()-1);self.finish_composer_edit();self.composer_state.inline_text=None;self.composer_state.shape_tool=None;self.composer_state.shape_start=None;Ok(id)
  }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
@@ -424,13 +429,16 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
 
                 // Add Items Menu
-                let text_button=ui.button(tr("+ Text"));if text_button.clicked(){app.composer_state.text_tool=true;app.composer_state.shape_tool=None;}
+                app.composer_state.tool_switch_rects=[egui::Rect::NOTHING;8];
+                let text_button=ui.button(tr("+ Text"));app.composer_state.tool_switch_rects[0]=text_button.rect;if text_button.clicked(){app.composer_state.arm_text();app.native_composer.clear_preview();}
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-add-text"),text_button.rect));}
-                ui.menu_button(tr("+ Shape"),|ui|{
-                    for (kind,label) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")] {
-                        if ui.button(tr(label)).clicked(){app.composer_state.shape_tool=Some(kind.into());app.composer_state.shape_start=None;ui.close_menu();}
+                let shape_menu=ui.menu_button(tr("+ Shape"),|ui|{
+                    for (n,(kind,label)) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")].into_iter().enumerate() {
+                        let button=ui.button(tr(label));app.composer_state.tool_switch_rects[n+2]=button.rect;if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some()&&kind=="rect"{ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-shape-rect"),button.rect));}if button.clicked(){app.composer_state.arm_shape(kind);app.native_composer.clear_preview();ui.close_menu();}
                     }
                 });
+                app.composer_state.tool_switch_rects[1]=shape_menu.response.rect;
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-add-shape"),shape_menu.response.rect));}
                 if ui.button(tr("+ View")).on_hover_text(tr("Add 3D model viewport")).clicked() {
                     let mut vf = ViewFrame::default();
                     vf.rect = RectMm::new(sheet.margin_mm + 10.0, sheet.margin_mm + 10.0, 160.0, 110.0);
