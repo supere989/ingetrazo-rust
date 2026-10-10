@@ -180,6 +180,8 @@ impl PartialEq for ImageHistory {
 #[derive(Debug, Clone)]
 pub struct ImageDelta {
     pub add_command: bool,
+    /// Original AddImagePlaneCommand refreshes _made_layer on every do.
+    pub add_layer_created: Option<Arc<Mutex<bool>>>,
     pub added: Vec<(usize, ImagePlane)>,
     pub removed: Vec<(usize, ImagePlane)>,
     pub changed: Vec<(ImagePlane, ImagePlane)>,
@@ -187,6 +189,7 @@ pub struct ImageDelta {
 impl ImageDelta {
     pub fn between(before: &[ImagePlane], after: &[ImagePlane]) -> Self {
         Self {
+            add_layer_created: None,
             add_command: after.iter().any(|a| !before.iter().any(|b| b.id == a.id)),
             added: after
                 .iter()
@@ -214,6 +217,7 @@ impl ImageDelta {
     pub fn inverse(&self) -> Self {
         Self {
             add_command: self.add_command,
+            add_layer_created: self.add_layer_created.clone(),
             added: self.removed.clone(),
             removed: self.added.clone(),
             changed: self

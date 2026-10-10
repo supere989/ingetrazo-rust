@@ -14,6 +14,39 @@ pub(crate) fn restore(current: &Scene, target: &mut Scene) -> Option<ImageDelta>
         |d| d.restore(&current.image_planes, &current.image_objects),
     );
     if let Some(d) = &delta {
+        if let Some(created) = &d.add_layer_created {
+            let mut made = created.lock().unwrap();
+            if let Some((_, image)) = d.added.first() {
+                // Undo removes by the command-held image's CURRENT name,
+                // not the identity of the layer initially created.
+                let image = current
+                    .image_planes
+                    .iter()
+                    .find(|p| p.id == image.id)
+                    .unwrap_or(image);
+                if *made {
+                    if let Some(name) = image.layer.as_deref().filter(|n| !n.is_empty()) {
+                        if let Some(i) = target.layers.iter().position(|l| l.name == name) {
+                            target.layers.remove(i);
+                        }
+                    }
+                }
+                *made = false;
+            } else if let Some((_, image)) = d.removed.first() {
+                let image = target
+                    .image_planes
+                    .iter()
+                    .find(|p| p.id == image.id)
+                    .unwrap_or(image);
+                *made = false;
+                if let Some(name) = image.layer.as_deref().filter(|n| !n.is_empty()) {
+                    if !target.layers.iter().any(|l| l.name == name) {
+                        target.layers.push(Layer::new(name));
+                        *made = true;
+                    }
+                }
+            }
+        }
         if !d.added.is_empty() || !d.removed.is_empty() || !d.changed.is_empty() {
             fn remap(
                 item: &SelectionItem,
@@ -107,12 +140,21 @@ impl IngeTrazoApp {
                 image.path = key;
             }
         }
+        let mut made_layer = false;
         if let Some(name) = &image.layer {
             if !self.scene.layers.iter().any(|l| &l.name == name) {
                 self.scene.layers.push(Layer::new(name));
+                made_layer = true;
             }
         }
         self.scene.image_planes.push(image);
+        if let Some(before) = self.undo_stack.last_mut() {
+            let mut delta = ImageDelta::between(&before.image_planes, &self.scene.image_planes);
+            delta.add_layer_created = Some(std::sync::Arc::new(std::sync::Mutex::new(made_layer)));
+            before.history_images.0 = Some(delta);
+            // This command owns layer membership by name and do-time lookup.
+            before.history_layers.0 = Some(Default::default());
+        }
         self.scene.clear_selection();
         self.scene
             .select(SelectionItem::ImagePlane(self.scene.image_planes.len() - 1));
@@ -192,6 +234,55 @@ mod tests {
     use super::*;
     use glam::{DMat4, DVec3};
     use ingetrazo_core::{groups::Group, mesh::Mesh, scene::SelectionItem};
+    #[test]
+    fn add_image_layer_redo_uses_current_name_and_rechecks_creation() {
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.add_image_plane(ImagePlane::new("scan", DVec3::ZERO, DVec3::X, DVec3::Y));
+        let i = a
+            .scene
+            .layers
+            .iter()
+            .position(|l| l.name == "Images")
+            .unwrap();
+        a.rename_layer(i, "Renamed".into());
+        a.undo();
+        assert!(a.scene.layers.iter().any(|l| l.name == "Renamed"));
+        a.scene.layers.push(Layer::new("Images"));
+        a.redo();
+        a.undo();
+        assert!(a.scene.layers.iter().any(|l| l.name == "Images"));
+        assert!(a.scene.image_planes.is_empty());
+    }
+    #[test]
+    fn delete_image_layer_is_global_and_survives_owned_frame_undo() {
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        let p = ImagePlane::new("scan", DVec3::ZERO, DVec3::X, DVec3::Y);
+        let id = p.id;
+        a.scene.layers.push(Layer::new("Images"));
+        a.scene.image_planes.push(p);
+        let mut g = Group::new("Leaf");
+        g.mesh.add_vertex(DVec3::ZERO);
+        a.scene.groups.push(g);
+        a.scene.select(SelectionItem::Group(0));
+        a.begin_component_edit();
+        a.move_image_planes(&[id], DVec3::X).unwrap();
+        let i = a
+            .scene
+            .layers
+            .iter()
+            .position(|l| l.name == "Images")
+            .unwrap();
+        a.delete_layer(i);
+        a.finish_component_edit();
+        a.undo();
+        assert_eq!(a.scene.image_planes[0].origin, DVec3::ZERO);
+        assert_eq!(a.scene.image_planes[0].layer, None);
+        a.redo();
+        assert_eq!(a.scene.image_planes[0].origin, DVec3::X);
+        assert_eq!(a.scene.image_planes[0].layer, None);
+    }
     #[test]
     fn reference_only_finish_keeps_precise_prototype_and_layer_owned_history() {
         let mut a = IngeTrazoApp::new();
