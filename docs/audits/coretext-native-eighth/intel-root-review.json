@@ -1,0 +1,41 @@
+{
+  "source": "1f44d9d7075b17d0c70900631388526c55178c8d",
+  "artifact_sha256": "5846f15f238db52b20d5932d35d0dd1f5f96a431c42589b5c0cc641a76f09233",
+  "case_order": [
+    "helvetica",
+    "helvetica-bold",
+    "helvetica-italic",
+    "times-bold-italic",
+    "cjk",
+    "arabic"
+  ],
+  "tile_differences": [
+    0,
+    0,
+    1,
+    0,
+    0,
+    12
+  ],
+  "pdf_differences_case_then_72_150_300": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "scope": "Independent full RGBA image decode; no crop or tolerance. Presentation is separately recorded by worker artifact review."
+}
