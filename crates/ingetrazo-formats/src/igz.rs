@@ -775,8 +775,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
 
     // Standard IngeTrazo format
     let mut scene = Scene::new();
-    scene.display_style=ingetrazo_core::presentation::DocumentStyle::from_json(&s_val["display_style"]);
-    scene.shadows=ingetrazo_core::presentation::ShadowSettings::from_json(&s_val["shadows"]);
+    scene.display_style=ingetrazo_core::presentation::DocumentStyle::try_from_json(&s_val["display_style"]).map_err(IgzError::InvalidDocument)?;
+    scene.shadows=ingetrazo_core::presentation::ShadowSettings::try_from_json(&s_val["shadows"]).map_err(IgzError::InvalidDocument)?;
     scene.embedded_textures = embedded_textures;
     scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
