@@ -219,6 +219,19 @@ fn get_face_base_color(
     }
 }
 
+/// Source ordinary-color draw keys are quantized after diffuse multiplication.
+/// Texture averages have a separate unquantized source pass.
+fn native_ordinary_shaded_color(attrs: &std::collections::HashMap<String, serde_json::Value>, base: [f32;4], shade: f32, opacity: f32) -> [f32;4] {
+    let authored = attrs.get("color").and_then(|v|v.as_array());
+    let mut color = [0.;4];
+    for i in 0..3 {
+        let channel = authored.and_then(|a|a.get(i)).and_then(|v|v.as_f64()).unwrap_or(base[i] as f64);
+        color[i] = ((channel * shade as f64).clamp(0.,1.) * 64.).round_ties_even() as f32 / 64.;
+    }
+    color[3]=opacity;
+    color
+}
+
 /// Build full scene render data.
 pub fn build_scene_render_data(
     scene: &Scene,
@@ -384,12 +397,14 @@ fn build_mesh_buffers(
             if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         } else {
             let base_color = get_face_base_color(&face.attrs, scene, style);
-            let shaded_color = [
+            let shaded_color = if native_texture_sides && tex_val.is_none() {
+                native_ordinary_shaded_color(&face.attrs,base_color,shade,final_opacity)
+            } else {[
                 (base_color[0] * shade).clamp(0.0, 1.0),
                 (base_color[1] * shade).clamp(0.0, 1.0),
                 (base_color[2] * shade).clamp(0.0, 1.0),
                 final_opacity,
-            ];
+            ]};
 
             let first=if is_xray||source_final_opacity<0.999{transparent.indices.len()}else{opaque.indices.len()};
             let tris = mesh.triangulate_face(f_id);
@@ -547,12 +562,14 @@ fn build_group_buffers(
             if native_texture_sides {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,face_order,&tris,world_t,source_placement,reflected);}
         } else {
             let base_color = get_face_base_color(&attrs, scene, style);
-            let shaded_color = [
+            let shaded_color = if native_texture_sides && tex_val.is_none() {
+                native_ordinary_shaded_color(&attrs,base_color,shade,final_opacity)
+            } else {[
                 (base_color[0] * shade).clamp(0.0, 1.0),
                 (base_color[1] * shade).clamp(0.0, 1.0),
                 (base_color[2] * shade).clamp(0.0, 1.0),
                 final_opacity,
-            ];
+            ]};
 
             let first=if is_xray||source_final_opacity<0.999{transparent.indices.len()}else{opaque.indices.len()};
             let tris = group.mesh.triangulate_face(f_id);
@@ -1591,4 +1608,19 @@ fn append_source_back_texture(buffers:&mut crate::buffer::TextureBuffers,attrs:&
  for &(p0,p1,p2)in tris{let(p1,p2)=if reflected{(p2,p1)}else{(p1,p2)};let vertices=[p0,p1,p2].map(|p|{let world=transform.transform_point3(p);let uvp=if local_uv{p}else{world};Vertex::from_dvec3(world,normal,[shade,shade,shade,opacity as f32],[(gu.dot(uvp)+cu)as f32,(gv.dot(uvp)+cv)as f32])});buffer.push_triangle(vertices[0],vertices[1],vertices[2]);}
  let count=buffer.indices.len()-first;if let Some(last)=buffer.source_texture_runs.last_mut(){if last.back_side&&last.first+last.count==first&&last.shade==shade&&last.opacity==opacity{last.count+=count;return;}}
  buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{back_side:true,order,first,count,shade,opacity,front_cull:false});
+}
+
+#[cfg(test)] mod source_ordinary_color_law_tests {
+ use super::*;
+ #[test] fn actual_gondola_source_run_colors_and_half_ties() {
+  let mut attrs=std::collections::HashMap::new();
+  attrs.insert("color".into(),serde_json::json!([0.6,38./255.,0.]));
+  assert_eq!(native_ordinary_shaded_color(&attrs,[0.6,38./255.,0.,1.],0.75,1.),[29./64.,7./64.,0.,1.]);
+  attrs.insert("color".into(),serde_json::json!([142./255.,142./255.,142./255.]));
+  for (shade,key) in [(0.96875,35.),(0.75,27.),(0.71875,26.)] {
+   assert_eq!(native_ordinary_shaded_color(&attrs,[142./255.;4],shade,1.),[key/64.,key/64.,key/64.,1.]);
+  }
+  attrs.insert("color".into(),serde_json::json!([0.5/64.,1.5/64.,2.5/64.]));
+  assert_eq!(native_ordinary_shaded_color(&attrs,[0.;4],1.,0.5),[0.,2./64.,2./64.,0.5]);
+ }
 }
