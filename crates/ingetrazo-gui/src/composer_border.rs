@@ -1,5 +1,6 @@
 //! Original physical sheet border, painted above sheet items through cached native spans.
 use std::sync::Arc;
+#[path="composer_border_dash.rs"]mod curved_dash;
 use ingetrazo_render::{qt_gray::{PathContour,Segment},cad2d::{Geometry,Vertex,Batch,Pose,EncodedRgba}};
 use ingetrazo_core::composition::{Sheet,SourcePaperBorder};
 
@@ -82,7 +83,6 @@ pub fn source_spans(page:[f64;2],margin:f64,border:&SourcePaperBorder,density:f6
  if !border.on{return Ok(Vec::new());}
  if page.iter().chain([margin,density,phase[0],phase[1],border.mm,border.radius_mm].iter()).any(|v|!v.is_finite())||density<=0.||page.iter().any(|v|*v<=0.||*v>100_000.)||margin<0.{return Err("Invalid sheet border projection".into());}
  let radius=border.radius_mm.max(0.);
- if border.style=="dashed"&&radius>0.01{return Err("Source curved dashed sheet border canvas remains unsupported".into());}
  let width=border.mm.max(0.1);let rect=[margin,margin,page[0]-2.*margin,page[1]-2.*margin];let mut strokes=vec![(rect,width)];
  if border.style=="double"{let inset=width*2.+1.5;strokes.push(([rect[0]+inset,rect[1]+inset,rect[2]-2.*inset,rect[3]-2.*inset],(width*0.5).max(0.1)));}
  strokes.into_iter().map(|(rect,width)|{
@@ -90,7 +90,7 @@ pub fn source_spans(page:[f64;2],margin:f64,border:&SourcePaperBorder,density:f6
   if width*density<=1.{
    let map=|p:[f64;2]|[p[0]*density+phase[0],p[1]*density+phase[1]];let mut path=center;path.start=map(path.start);for s in &mut path.segments{match s{Segment::Line(to)=>*to=map(*to),Segment::Cubic{control1,control2,to}=>{*control1=map(*control1);*control2=map(*control2);*to=map(*to);}}}
    if border.style=="dashed"{ingetrazo_render::qt_cosmetic::rasterize_dashed_path(&path,true,width*density,100_000)}else{ingetrazo_render::qt_cosmetic::rasterize_path(&path,true,width*density,100_000)}
-  }else{let paths=if border.style=="dashed"{dashed_axis_paths(rect,width,true)?}else{solid_stroke_paths(rect,width,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,density,phase,250_000,100_000)}
+  }else{let paths=if border.style=="dashed"{if radius>0.01{curved_dash::paths(&center,width,density)?}else{dashed_axis_paths(rect,width,true)?}}else{solid_stroke_paths(rect,width,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,density,phase,250_000,100_000)}
  }).collect()
 }
 #[derive(Clone,Default)]pub struct CanvasBorder{
