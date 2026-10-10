@@ -110,7 +110,7 @@ fn transformed_nonempty_container_own_mesh_detaches_source_prototype() {
   if transformed {parent.transform=DMat4::from_translation(DVec3::new(1.,-1.,0.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(2.,3.,1.));}
   parent.children.push(Group::new("child"));app.scene.groups.push(parent);let definition=app.scene.make_component(app.scene.groups[0].id).unwrap();
   let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();
-  app.begin_component_edit();if nonempty {app.scene.mesh.vertices[0].position.z+=2.;} else {let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|app.scene.mesh.add_vertex(p));app.scene.mesh.add_face(v.to_vec(),vec![]).unwrap();}
+  app.begin_component_edit();if nonempty {app.scene.mesh.vertices[0].position.z+=2.;} else {let inverse=app.scene.dimension_frame.inverse();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|app.scene.mesh.add_vertex(inverse.transform_point3(p)));app.scene.mesh.add_face(v.to_vec(),vec![]).unwrap();}
   app.finish_component_edit();let private=transformed&&nonempty;
   assert_eq!(app.scene.groups[0].mesh_share!=app.scene.groups[1].mesh_share,private);
   let expected=source["cases"].as_array().unwrap().iter().find(|c|c["transformed"]==transformed&&c["nonempty"]==nonempty).unwrap();
@@ -119,4 +119,25 @@ fn transformed_nonempty_container_own_mesh_detaches_source_prototype() {
   if private {assert_eq!(app.scene.groups[1],before.groups[1]);assert_eq!(app.scene.component_definitions[&definition],before.component_definitions[&definition]);}
   let after=app.scene.clone();assert_eq!(app.undo_stack.len(),1);app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
  }}
+}
+
+#[test]
+fn root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces() {
+ let source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-world-authoring-source.json")).unwrap();
+ fn frame()->DMat4 {DMat4::from_translation(DVec3::new(1.,-1.,0.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(2.,3.,1.))}
+ fn points(mesh:&Mesh,transform:DMat4)->Vec<DVec3>{mesh.vertices.iter().map(|v|transform.transform_point3(v.position)).collect()}
+ fn compare(actual:Vec<DVec3>,expected:&serde_json::Value) {let expected=expected.as_array().unwrap();assert_eq!(actual.len(),expected.len());for p in actual {assert!(expected.iter().any(|value|p.distance(DVec3::new(value[0].as_f64().unwrap(),value[1].as_f64().unwrap(),value[2].as_f64().unwrap()))<2e-5),"world point {p:?} missing from source {expected:?}");}}
+ for row in source["cases"].as_array().unwrap() {
+  let nested=row["nested"].as_bool().unwrap();let mut app=IngeTrazoApp::new();let mut parent=Group::new("authored container");parent.transform=if nested {DMat4::from_translation(DVec3::new(2.,1.,0.))} else {frame()};
+  let mut child=Mesh::new();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|child.add_vertex(p));child.add_face(v.to_vec(),vec![]).unwrap();parent.children.push(Group::with_mesh("existing child",child));app.scene.groups.push(parent);app.scene.make_component(app.scene.groups[0].id).unwrap();let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);
+  if nested {let mut outer=Group::new("outer");outer.transform=frame();outer.children=std::mem::take(&mut app.scene.groups);app.scene.groups.push(outer);app.scene.make_component(app.scene.groups[0].id).unwrap();}
+  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();if nested {app.scene.select(SelectionItem::Group(0));app.begin_component_edit();}
+  let inverse=app.scene.dimension_frame.inverse();app.active_tool=Box::new(ingetrazo_tools::line::LineTool::new());
+  let authored=row["authored_world_points"].as_array().unwrap();for p in authored.iter().chain(std::iter::once(&authored[0])) {let world=DVec3::new(p[0].as_f64().unwrap(),p[1].as_f64().unwrap(),p[2].as_f64().unwrap());app.dispatch_tool_click(&context(inverse.transform_point3(world)));}
+  assert_eq!(app.scene.mesh.faces.len(),1);app.finish_component_edit();if nested {app.finish_component_edit();}
+  let (selected,sibling,enclosing)=if nested {(&app.scene.groups[0].children[0],&app.scene.groups[0].children[1],app.scene.groups[0].transform)} else {(&app.scene.groups[0],&app.scene.groups[1],DMat4::IDENTITY)};
+  assert_eq!(selected.mesh_share,sibling.mesh_share);compare(points(&selected.mesh,enclosing*selected.transform),&row["selected_world_vertices"]);compare(points(&sibling.mesh,enclosing*sibling.transform),&row["sibling_world_vertices"]);
+  compare(points(&selected.children[0].mesh,enclosing*selected.transform*selected.children[0].transform),&row["selected_child_world_vertices"]);compare(points(&sibling.children[0].mesh,enclosing*sibling.transform*sibling.children[0].transform),&row["sibling_child_world_vertices"]);
+  assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
+ }
 }

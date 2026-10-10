@@ -10,6 +10,7 @@ pub struct ComponentEditSession {
     original_redo: Vec<Scene>,
     group_id: uuid::Uuid,
     private_container_mesh: Option<uuid::Uuid>,
+    container_bake: Option<glam::DMat4>,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
@@ -68,7 +69,8 @@ impl IngeTrazoApp {
             original_scene:self.scene.clone(),original_camera:self.camera.clone(),
             original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
             group_id:group.id,
-            private_container_mesh:if !group.children.is_empty() && !group.mesh.vertices.is_empty() && group.transform!=glam::DMat4::IDENTITY {Some(uuid::Uuid::new_v4())} else {None},
+            private_container_mesh:if !group.children.is_empty() && !group.mesh.vertices.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(uuid::Uuid::new_v4())} else {None},
+            container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
             dimension_baseline:vec![],section_baseline:vec![],
         };
         let mut edit=Scene::new();
@@ -106,14 +108,27 @@ impl IngeTrazoApp {
             self.status_message="Edited instance no longer exists".into();return;
         };
         let old=&candidate.groups[group_index];
-        let changed=session.private_container_mesh.is_some() || old.mesh!=self.scene.mesh || old.children!=self.scene.groups
+        let edit_transform=old.transform;
+        let changed=session.container_bake.is_some() || session.private_container_mesh.is_some() || old.mesh!=self.scene.mesh || old.children!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
             || candidate.component_definitions!=self.scene.component_definitions
             || candidate.mesh_shares!=self.scene.mesh_shares
             || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed {
-            let replacement=ComponentDefinition{mesh_share:None,mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
+            let mut replacement=ComponentDefinition{mesh_share:None,mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
+            if let Some(world_frame)=session.container_bake {
+                replacement.mesh=match ingetrazo_core::containers::transform_mesh(&replacement.mesh,world_frame) {Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}};
+                for child in &mut replacement.children {child.transform=world_frame*child.transform;}
+                // Source containers enter world coordinates. The native edit
+                // tools remain local during preview, then express that same
+                // world-owned prototype in the enclosing native edit frame.
+                candidate.groups[group_index].transform=candidate.dimension_frame.inverse();
+                let axes=candidate.groups[group_index].native_document.get("axes").and_then(|value|value.as_array()).filter(|array|array.len()==16)
+                    .and_then(|array|array.iter().map(|value|value.as_f64()).collect::<Option<Vec<_>>>()).map(|values|{let mut array=[0.;16];array.copy_from_slice(&values);glam::DMat4::from_cols_array(&array)}).unwrap_or(glam::DMat4::IDENTITY);
+                if !candidate.groups[group_index].native_document.is_object() {candidate.groups[group_index].native_document=serde_json::json!({});}
+                candidate.groups[group_index].native_document["axes"]=serde_json::json!((world_frame*axes).to_cols_array());
+            }
             // Mesh publication and placement authoring are separate operations:
             // the original container owns its child list, while placed leaves
             // retain explicit prototype sharing (even component=false).
@@ -156,14 +171,14 @@ impl IngeTrazoApp {
             candidate.bump_version();
             candidate.materials=self.scene.materials.clone();candidate.layers=self.scene.layers.clone();
             if self.scene.dimensions!=session.dimension_baseline {
-                let transform=candidate.groups[group_index].transform;
+                let transform=edit_transform;
                 candidate.dimensions=self.scene.dimensions.clone();
                 for dimension in &mut candidate.dimensions{
                     dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
                 }
                 candidate.bind_dimensions();
             }
-            if self.scene.section_planes!=session.section_baseline{let transform=candidate.groups[group_index].transform;candidate.section_planes=self.scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
+            if self.scene.section_planes!=session.section_baseline{let transform=edit_transform;candidate.section_planes=self.scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
             candidate.show_section_cuts=self.scene.show_section_cuts;candidate.show_section_planes=self.scene.show_section_planes;candidate.show_section_fill=self.scene.show_section_fill;
             candidate.refresh_dimensions();
         }

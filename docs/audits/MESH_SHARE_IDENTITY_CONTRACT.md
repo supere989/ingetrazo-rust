@@ -73,3 +73,28 @@ world-space authoring into a transformed empty container still needs a distinct
 coordinate-equivalence control because original entry bakes the parent matrix
 into children and clears it, whereas native local editing retains that frame.
 No full transformed-empty authoring or rendered own-Mesh parity is claimed.
+
+## World-coordinate authoring correction
+
+Fresh original `AddFaceCommand` root and nested controls author the same frozen
+WORLD points into initially empty transformed containers. The original bakes
+its container frame into child placements, enters world coordinates, and keeps
+the empty own Mesh prototype shared. The earlier native local-frame publication
+failed the sibling's world surfaces; `component-world-authoring-baseline-failure.log`
+retains that failure on production `6880f46` with the new source-backed checker.
+
+Native preview stays local. Finish now transforms the own Mesh and child matrices
+into the original world frame, expresses the edited container as inverse enclosing
+edit frame, and preserves world axes metadata. Existing nonempty own Mesh uses a
+private token; empty own Mesh remains shared as in source. UVW uses the existing
+affine covector transformation, vertex UIDs and opaque attrs stay on their entities.
+Dimensions/sections still convert from the ORIGINAL edit placement rather than the
+new baked placement, avoiding a coordinate regression.
+
+The frozen source recipe and GUI Line dispatcher check root and nested own-Mesh
+WORLD vertices, both shared siblings, unchanged existing child WORLD vertices,
+prototype-token equality, one outer Undo/Redo entry, and registry restoration.
+Prior four own-Mesh controls now use inverse-native-frame inputs for the same
+world numeric points instead of conflating world and local input recipes.
+This is bounded command/controller proof. Rendered nested authoring, reentry axes,
+material/texture image comparison and broad component editing remain open.
