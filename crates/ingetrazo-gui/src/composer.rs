@@ -292,6 +292,16 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     fit_page_needed = true;
                 }
 
+                if let Some(SheetItem::ViewFrame(frame))=sheet.selected_item.and_then(|i|sheet.items.get_mut(i)) {
+                    ui.menu_button(tr("Ink"),|ui|{
+                        bump_needed |= ui.checkbox(&mut frame.profiles,tr("Profiles")).changed();
+                        bump_needed |= ui.checkbox(&mut frame.hidden_lines,tr("Hidden lines")).changed();
+                        for(label,value)in [("Cut",&mut frame.pen_cut_mm),("Profile",&mut frame.pen_profile_mm),("Edge",&mut frame.pen_edge_mm)] {
+                            ui.horizontal(|ui|{ui.label(tr(label));bump_needed |=ui.add(egui::DragValue::new(value).speed(0.01).range(0.05..=5.).suffix(" mm")).changed();});
+                        }
+                    });
+                }
+
                 // Delete selected item
                 if let Some(sel_idx) = sheet.selected_item {
                     if ui.button(tr("Delete Item")).clicked() {
@@ -418,11 +428,26 @@ fn render_model_projection(
     )};
     let view_proj = proj_mat * view_mat;
 
-    // Line stroke for technical plan rendering
-    let edge_stroke = Stroke::new(1.2, Color32::from_rgb(25, 25, 30));
-
-    let segments=if matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective{ingetrazo_render::vector_hlr::parallel_visible_segments(scene,&camera).into_iter().map(|s|(s.a,s.b)).collect()}else{section_projected_edges(scene)};
-    for(p0,p1)in segments{if let(Some((s0,_)),Some((s1,_)))=(project_point(p0,&view_proj,frame_rect),project_point(p1,&view_proj,frame_rect)){painter.line_segment([s0,s1],edge_stroke);}}
+    use ingetrazo_render::vector_hlr::LineKind;
+    let vector=matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective;
+    let segments=if vector {
+        ingetrazo_render::vector_hlr::parallel_segments(scene,&camera,frame.profiles,frame.hidden_lines)
+            .into_iter().map(|s|(s.a,s.b,s.kind)).collect::<Vec<_>>()
+    } else {section_projected_edges(scene).into_iter().map(|(a,b)|(a,b,LineKind::Edge)).collect()};
+    let paper_pixel=frame_rect.width()/frame.rect.w as f32;
+    for(p0,p1,kind)in segments {
+        if let(Some((s0,_)),Some((s1,_)))=(project_point(p0,&view_proj,frame_rect),project_point(p1,&view_proj,frame_rect)) {
+            let pen=match kind {LineKind::Cut=>frame.pen_cut_mm,LineKind::Profile=>frame.pen_profile_mm,_=>frame.pen_edge_mm};
+            let stroke=Stroke::new((pen.max(0.05) as f32)*paper_pixel,Color32::BLACK);
+            if kind==LineKind::Hidden {
+                // Original dashed ink is 1.5 mm dash / 0.8 mm gap in paper units.
+                let length=s0.distance(s1); let dash=1.5*paper_pixel;let period=2.3*paper_pixel;
+                if period>0. {let direction=(s1-s0)/length.max(1e-6);let mut t=0.;while t<length {
+                    painter.line_segment([s0+direction*t,s0+direction*(t+dash).min(length)],stroke);t+=period;
+                }}
+            }else{painter.line_segment([s0,s1],stroke);}
+        }
+    }
 
     // Draw traced GeoPaths if present
     for gp in &scene.geo_paths {

@@ -141,6 +141,10 @@ impl RectMm {
 }
 
 /// Model-View Frame (MarcoVista): projects 3D model onto the sheet at exact scale.
+fn default_cut_pen()->f64{0.5}
+fn default_profile_pen()->f64{0.35}
+fn default_edge_pen()->f64{0.18}
+fn default_profiles()->bool{true}
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ViewFrame {
     pub id: Uuid,
@@ -152,6 +156,11 @@ pub struct ViewFrame {
     pub title_text: String,
     pub border: bool,
     pub perspective: bool,
+    #[serde(default="default_cut_pen")] pub pen_cut_mm:f64,
+    #[serde(default="default_profile_pen")] pub pen_profile_mm:f64,
+    #[serde(default="default_edge_pen")] pub pen_edge_mm:f64,
+    #[serde(default="default_profiles")] pub profiles:bool,
+    #[serde(default)] pub hidden_lines:bool,
     #[serde(default)] pub cam_target:Option<[f64;3]>,
     #[serde(default)] pub cam_yaw:Option<f64>,
     #[serde(default)] pub cam_pitch:Option<f64>,
@@ -173,6 +182,7 @@ impl Default for ViewFrame {
             show_title: true,
             title_text: "Top View (1:100)".to_string(),
             border: true,
+            pen_cut_mm:0.5,pen_profile_mm:0.35,pen_edge_mm:0.18,profiles:true,hidden_lines:false,
             perspective: false,cam_target:None,cam_yaw:None,cam_pitch:None,cam_distance:None,cam_fov:None,
             rot_deg: 0.0,
             annotations: true,
@@ -337,6 +347,7 @@ impl Sheet {
             show_title: true,
             title_text: "Top Plan (1:100)".to_string(),
             border: true,
+            pen_cut_mm:0.5,pen_profile_mm:0.35,pen_edge_mm:0.18,profiles:true,hidden_lines:false,
             perspective: false,cam_target:None,cam_yaw:None,cam_pitch:None,cam_distance:None,cam_fov:None,
             rot_deg: 0.0,
             annotations: true,

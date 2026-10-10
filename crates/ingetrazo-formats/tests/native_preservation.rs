@@ -287,3 +287,19 @@ fn fresh_saved_view_references_exact_persisted_group_and_section_uids() {
  use ingetrazo_core::composition::SheetItem;
  let src=temp("frame-camera-source.igz");let dst=temp("frame-camera-edit.igz");let doc=json!({"edges":[],"faces":[],"compositions":[{"name":"Frame","paper":"A3","frames":[{"uid":"0123456789abcdef0123456789abcdef","cam_target":[1.,2.,3.],"cam_yaw":0.2,"cam_pitch":0.4,"cam_distance":9.,"cam_fov":55.,"perspective":true,"vendor_lens":{"uninterpreted":7}}]}]});write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();let SheetItem::ViewFrame(frame)=&mut scene.sheets[0].items[0]else{panic!()};assert_eq!(frame.cam_target,Some([1.,2.,3.]));assert_eq!(frame.cam_distance,Some(9.));frame.cam_target=Some([4.,5.,6.]);frame.cam_distance=Some(12.);frame.cam_fov=Some(70.);save_igz(&scene,&dst).unwrap();let raw=scene_to_igz_document(&scene);assert_eq!(raw["compositions"][0]["frames"][0]["vendor_lens"],doc["compositions"][0]["frames"][0]["vendor_lens"]);let reopened=load_igz(&dst).unwrap();let SheetItem::ViewFrame(frame)=&reopened.sheets[0].items[0]else{panic!()};assert_eq!(frame.cam_target,Some([4.,5.,6.]));assert_eq!(frame.cam_distance,Some(12.));assert_eq!(frame.cam_fov,Some(70.));assert!(frame.perspective);std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
+
+#[test]
+fn edited_vector_ink_controls_reopen_with_original_field_names() {
+ use ingetrazo_core::composition::SheetItem;
+ let src=temp("ink-source.igz");let dst=temp("ink-edit.igz");
+ let doc=json!({"edges":[],"faces":[],"compositions":[{"name":"Ink","paper":"A3","frames":[{"uid":"0123456789abcdef0123456789abcdef","pen_cut_mm":0.7,"pen_profile_mm":0.4,"pen_edge_mm":0.2,"profiles":false,"hidden_lines":true,"vendor_ink":{"value":7}}]}]});
+ write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();
+ let SheetItem::ViewFrame(frame)=&mut scene.sheets[0].items[0]else{panic!()};
+ assert_eq!(frame.pen_cut_mm,0.7);assert!(!frame.profiles);assert!(frame.hidden_lines);
+ frame.pen_cut_mm=0.9;frame.pen_profile_mm=0.6;frame.pen_edge_mm=0.15;frame.profiles=true;frame.hidden_lines=false;
+ save_igz(&scene,&dst).unwrap();let raw=scene_to_igz_document(&scene);
+ assert_eq!(raw["compositions"][0]["frames"][0]["vendor_ink"],json!({"value":7}));
+ let reopened=load_igz(&dst).unwrap();let SheetItem::ViewFrame(frame)=&reopened.sheets[0].items[0]else{panic!()};
+ assert_eq!(frame.pen_cut_mm,0.9);assert_eq!(frame.pen_profile_mm,0.6);assert_eq!(frame.pen_edge_mm,0.15);assert!(frame.profiles);assert!(!frame.hidden_lines);
+ std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}
