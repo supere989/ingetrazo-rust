@@ -1,0 +1,13 @@
+{
+  "captured_stdout": "570\n570\n",
+  "persistent_value": "572",
+  "runtime_exception": true,
+  "syntax_refused": true,
+  "traceback": "Traceback (most recent call last):\n  File \"/work/ingetrazo/core/ai.py\", line 366, in mutate\n    exec(compile(code, \"<ai>\", \"exec\"), scope)\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<ai>\", line 1, in <module>\nValueError: literal-failure\n",
+  "unchanged_history": true,
+  "changed_flags": [
+    false,
+    false,
+    false
+  ]
+}

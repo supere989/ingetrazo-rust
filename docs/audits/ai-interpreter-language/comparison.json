@@ -1,0 +1,13 @@
+{
+  "language_contract_equal": true,
+  "full_traceback_bytes_equal": false,
+  "native_extension_control": "synthetic fixture module, not CAD adapter",
+  "negative_rejections": [
+    "captured_stdout",
+    "persistent_value",
+    "syntax_refused",
+    "traceback",
+    "atomic_journal"
+  ],
+  "scene_journal_implemented": false
+}
