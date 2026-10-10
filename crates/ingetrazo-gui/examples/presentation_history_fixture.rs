@@ -81,6 +81,37 @@ fn main() {
             serde_json::json!({"entry":entry,"states":states,"history_before_finish":before}),
         );
     }
+    let mut a = IngeTrazoApp::new();
+    a.scene = Scene::new();
+    a.save_undo_state();
+    a.scene
+        .saved_views
+        .push(ingetrazo_core::saved_views::SavedView::new("Imported"));
+    a.scene.bump_version();
+    a.selected_saved_view = Some(0);
+    a.rename_selected_saved_view("Renamed".into());
+    a.remove_selected_saved_view();
+    let views = |a: &IngeTrazoApp| {
+        a.scene
+            .saved_views
+            .iter()
+            .map(|v| serde_json::json!([v.name, v.distance]))
+            .collect::<Vec<_>>()
+    };
+    let mut states = vec![views(&a)];
+    a.undo();
+    states.push(views(&a));
+    a.redo();
+    states.push(views(&a));
+    a.undo();
+    a.add_saved_view("Scene 1".into());
+    let branch = a.redo_stack.len();
+    a.redo();
+    states.push(views(&a));
+    rows.insert(
+        "import_object_lifetime".into(),
+        serde_json::json!({"states":states,"redo_retained_after_ui_add":branch}),
+    );
     std::fs::write(
         out.join("native.json"),
         serde_json::to_vec_pretty(&serde_json::json!({"cases":rows})).unwrap(),

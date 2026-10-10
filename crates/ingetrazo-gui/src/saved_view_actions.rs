@@ -8,18 +8,18 @@ impl IngeTrazoApp {
             "edges":s.show_edges,"profiles":s.show_profiles,"edge_color":&s.edge_color[..3],"front_color":&s.front_color[..3],"back_color":&s.back_color[..3],"background":&s.background_color[..3],"section_fill":self.scene.show_section_fill,"section_fill_color":&s.section_fill_color[..3]}));
         view.shadows=Some(serde_json::json!({"enabled":self.shadows_enabled}));view
     }
-    pub fn add_saved_view(&mut self,name:String){let view=self.capture_live_view(name);self.save_undo_state();self.scene.saved_views.push(view);self.selected_saved_view=Some(self.scene.saved_views.len()-1);self.scene.bump_version();}
+    pub fn add_saved_view(&mut self,name:String){let view=self.capture_live_view(name);self.seal_view_history();self.scene.saved_views.push(view);self.selected_saved_view=Some(self.scene.saved_views.len()-1);self.scene.bump_version();}
     pub fn update_selected_saved_view(&mut self){
         let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()) else{return;};
         let old=self.scene.saved_views[i].clone();let mut view=self.capture_live_view(old.name.clone());
-        view.native_document=old.native_document;view.native_baseline=old.native_baseline;
+        view.history_id=old.history_id;view.native_document=old.native_document;view.native_baseline=old.native_baseline;
         fn merge(old:Option<serde_json::Value>,new:Option<serde_json::Value>)->Option<serde_json::Value>{match(old,new){(Some(mut old),Some(new))if old.is_object()&&new.is_object()=>{for(k,v)in new.as_object().unwrap(){old[k]=v.clone();}Some(old)},(_,new)=>new}}
         view.style=merge(old.style,view.style);view.section=merge(old.section,view.section);view.shadows=merge(old.shadows,view.shadows);
         view.georef=merge(old.georef,view.georef);view.hidden_shown=old.hidden_shown;
-        if view!=self.scene.saved_views[i]{self.save_undo_state();self.scene.saved_views[i]=view;self.scene.bump_version();}
+        if view!=self.scene.saved_views[i]{self.seal_view_history();self.refresh_history_view(&view);self.scene.saved_views[i]=view;self.scene.bump_version();}
     }
-    pub fn remove_selected_saved_view(&mut self){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){self.save_undo_state();self.scene.saved_views.remove(i);self.selected_saved_view=if self.scene.saved_views.is_empty(){None}else{Some(i.min(self.scene.saved_views.len()-1))};self.scene.bump_version();}}
-    pub fn rename_selected_saved_view(&mut self,name:String){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){if !name.trim().is_empty()&&name!=self.scene.saved_views[i].name{self.save_undo_state();self.scene.saved_views[i].name=name;self.scene.bump_version();}}}
+    pub fn remove_selected_saved_view(&mut self){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){self.seal_view_history();self.scene.saved_views.remove(i);self.selected_saved_view=if self.scene.saved_views.is_empty(){None}else{Some(i.min(self.scene.saved_views.len()-1))};self.scene.bump_version();}}
+    pub fn rename_selected_saved_view(&mut self,name:String){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){if !name.trim().is_empty()&&name!=self.scene.saved_views[i].name{self.seal_view_history();self.scene.saved_views[i].name=name;let view=self.scene.saved_views[i].clone();self.refresh_history_view(&view);self.scene.bump_version();}}}
     pub fn apply_saved_view(&mut self,i:usize){
         let Some(view)=self.scene.saved_views.get(i).cloned() else{return;};self.selected_saved_view=Some(i);view.apply_scene(&mut self.scene,&mut self.camera);
         if let Some(s)=&view.style{
@@ -41,6 +41,6 @@ impl IngeTrazoApp {
         let first=app.scene.saved_views[0].clone();app.camera.distance=33.;app.update_selected_saved_view();assert_eq!(app.scene.saved_views[0],first);assert_eq!(app.scene.saved_views[1].native_document["opaque"],17);assert_eq!(app.scene.saved_views[1].style.as_ref().unwrap()["opaque_style"],19);
         app.scene.groups[0].children[0].hidden=false;app.scene.section_planes[0].active=false;app.style.visual_style=VisualStyle::Wireframe;app.shadows_enabled=false;app.camera.two_point=false;
         app.apply_saved_view(1);assert!(app.scene.groups[0].children[0].hidden);assert!(app.scene.section_planes[0].active);assert!(app.camera.two_point&&app.shadows_enabled);assert_eq!(app.camera.distance,33.);assert_eq!(app.style.visual_style,VisualStyle::XRay);
-        let before=app.scene.clone();app.remove_selected_saved_view();assert_eq!(app.scene.saved_views.len(),1);app.undo();assert_eq!(app.scene,before);
+        let history=app.undo_stack.len();app.remove_selected_saved_view();assert_eq!(app.scene.saved_views.len(),1);app.undo();assert_eq!(app.scene.saved_views.len(),1);assert_eq!(app.undo_stack.len(),history);
     }
 }

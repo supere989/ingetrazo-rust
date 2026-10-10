@@ -44,6 +44,8 @@ pub struct Scene {
     /// Command-specific prototype restore target, carried only by history snapshots.
     #[serde(skip)]
     pub history_shareback: Option<uuid::Uuid>,
+    #[serde(skip)]
+    pub history_views: crate::saved_views::ViewHistory,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
     /// Authoritative shared Mesh prototypes; placement topology is independent.
@@ -100,7 +102,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            history_shareback:None,
+            history_shareback:None,history_views:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

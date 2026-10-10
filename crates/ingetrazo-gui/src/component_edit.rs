@@ -7,8 +7,8 @@ pub struct ComponentEditSession {
     original_scene: Scene,
     cancel_scene: Scene,
     original_camera: OrbitCamera,
-    original_undo: Vec<Scene>,
-    original_redo: Vec<Scene>,
+    pub(crate) original_undo: Vec<Scene>,
+    pub(crate) original_redo: Vec<Scene>,
     group_id: uuid::Uuid,
     fold_history: bool,
     private_container_mesh: Option<uuid::Uuid>,
@@ -255,6 +255,7 @@ impl IngeTrazoApp {
             }
         }
         let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;
+        if next.history_shareback.is_none(){previous.saved_views=self.scene.saved_views.clone();previous.history_views.0=crate::history_views::restore(&self.scene,&mut replacement);self.scene.saved_views=replacement.saved_views.clone();}
         if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
         let mut cancel_replacement=replacement.clone();
         if let Some(original)=session.cancel_scene.groups.iter().find(|g|g.id==session.group_id){
@@ -303,7 +304,7 @@ impl IngeTrazoApp {
         if group.component_definition.is_none() {self.status_message="Selection is an independent group".into();return;}
         let before=self.scene.clone();
         match self.scene.make_component_unique(id) {
-            Ok(_)=>{self.undo_stack.push(before);self.redo_stack.clear();self.status_message="Component made unique".into();},
+            Ok(_)=>{self.seal_view_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message="Component made unique".into();},
             Err(e)=>self.status_message=e,
         }
     }
@@ -416,12 +417,13 @@ impl IngeTrazoApp {
         let fold=session.fold_history && session.mesh_baseline!=finishing_scene.mesh;
         let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(scene)=>Some(scene),Err(error)=>{self.status_message=error;return;}}}else{None};
         let mut lifted_undo=self.undo_stack.clone();let mut lifted_redo=self.redo_stack.clone();
+        if let Some(before)=lifted_undo.last_mut(){if before.history_views.0.is_none(){before.history_views.0=Some(ingetrazo_core::saved_views::ViewMembershipDelta::between(&before.saved_views,&finishing_scene.saved_views));}}
         if !fold || !changed {
             for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_views.0=entry.history_views.0.clone();scene
                     },Err(error)=>{self.status_message=error;return;}};
                 }
             }

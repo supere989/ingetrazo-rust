@@ -12,8 +12,9 @@ from core.mesh import Mesh
 from core.composition import Composicion
 from georef.geopath import GeoPath
 from georef.terrain import TerrainObject
-from core.history import MoveVerticesCommand,MoveGeoPathNodeCommand,SetGeoPathSurfaceCommand
+from core.history import MoveVerticesCommand,MoveGeoPathNodeCommand,SetGeoPathSurfaceCommand,SnapshotImport
 from acceptance_context import context
+from core.saved_views import SavedView
 app=QApplication([]);rows={}
 def state(vp):return {'views':[(v.name,v.distance) for v in vp.scene.saved_views],'sheets':[c.name for c in vp.scene.compositions],'terrain':None if vp.scene.terrain is None else vp.scene.terrain.visible,'path':[p.to_dict() for p in vp.scene.geo_paths]}
 for name,folded in [('ordinary',False),('folded',True)]:
@@ -26,4 +27,6 @@ for name,folded in [('ordinary',False),('folded',True)]:
  for _ in range(1 if folded else 2):vp.history.undo();states.append(state(vp))
  for _ in range(1 if folded else 2):vp.history.redo();states.append(state(vp))
  rows[name]={'entry':entry,'states':states,'history_before_finish':before}
+vp=Viewport();vp.flash_status=lambda *a:None;view=SavedView.capture('Imported',vp.scene,vp.camera);vp.history.execute(SnapshotImport(lambda scene:scene.saved_views.append(view)))
+panel=ScenesPanel(SimpleNamespace(viewport=vp,statusBar=lambda:SimpleNamespace(showMessage=lambda *a:None)));panel.list.setCurrentRow(0);panel.list.item(0).setText('Renamed');panel.list.setCurrentRow(0);panel._on_delete();owned=[[(v.name,v.distance) for v in vp.scene.saved_views]];vp.history.undo();owned.append([(v.name,v.distance) for v in vp.scene.saved_views]);vp.history.redo();owned.append([(v.name,v.distance) for v in vp.scene.saved_views]);vp.history.undo();panel._on_add();branch_depth=len(vp.history.redo_stack);vp.history.redo();owned.append([(v.name,v.distance) for v in vp.scene.saved_views]);rows['import_object_lifetime']={'states':owned,'redo_retained_after_ui_add':branch_depth}
 Path(sys.argv[1]).write_text(json.dumps({'provenance':context(),'cases':rows},indent=2)+'\n')
