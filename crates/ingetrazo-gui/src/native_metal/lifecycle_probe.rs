@@ -13,6 +13,8 @@ pub(super) struct Probe {
     label: String,
     center: Option<[f64; 2]>,
     modal_submission: Option<u64>,
+    deadline_presentation_diagnostics: Option<String>,
+    deadline_window_visible: Option<bool>,
     current_submission_floor: u64,
     current_output_has_modal: bool,
     modal_candidates: std::collections::VecDeque<(u64, [f64; 2])>,
@@ -52,6 +54,8 @@ impl Probe {
             label: choice.to_ascii_lowercase(),
             center: None,
             modal_submission: None,
+            deadline_presentation_diagnostics: None,
+            deadline_window_visible: None,
             current_submission_floor: 0,
             current_output_has_modal: false,
             modal_candidates: std::collections::VecDeque::with_capacity(32),
@@ -159,6 +163,11 @@ impl Probe {
         window: &Window,
     ) -> Result<(), String> {
         if self.started.elapsed() > Duration::from_secs(15) {
+            // Snapshot before event-loop teardown can order the native window out.
+            // This is error-only observation, never proof of display/retirement.
+            self.deadline_window_visible = window.is_visible();
+            self.deadline_presentation_diagnostics = Some(gpu.diagnostics());
+            eprintln!("Metal lifecycle BEFORE event-loop exit: {}",self.deadline_presentation_diagnostics.as_deref().unwrap());
             return Err(format!(
                 "Bounded Cocoa lifecycle deadline phase={} close={} move={} press={} release={} displayed={}",
                 self.phase,
@@ -288,7 +297,7 @@ impl Probe {
             }
             Ok(())
         })();
-        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"modal_candidates":self.modal_candidates,"modal_label":self.label,"last_modal_center":self.center,"current_output_has_modal":self.current_output_has_modal,"current_submission_floor":self.current_submission_floor,"ui_turns":self.ui_turns,"confirm_unsaved":app.document_session.confirm_unsaved,"presentation_diagnostics":gpu.diagnostics(),"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
+        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"deadline_window_visible":self.deadline_window_visible,"deadline_presentation_diagnostics":self.deadline_presentation_diagnostics,"modal_candidates":self.modal_candidates,"modal_label":self.label,"last_modal_center":self.center,"current_output_has_modal":self.current_output_has_modal,"current_submission_floor":self.current_submission_floor,"ui_turns":self.ui_turns,"confirm_unsaved":app.document_session.confirm_unsaved,"presentation_diagnostics":gpu.diagnostics(),"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
         std::fs::write(
             self.root.join("result.json"),
             serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
