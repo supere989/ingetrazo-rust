@@ -60,38 +60,15 @@ pub fn export_dae(scene: &Scene, writer: &mut impl Write, project_name: &str) ->
         }
     };
 
-    // Triangulate scene loose mesh
-    for f_id in 0..scene.mesh.faces.len() {
-        let tris = scene.mesh.triangulate_face(f_id);
-        for (p0, p1, p2) in tris {
-            let n = (p1 - p0).cross(p2 - p0).normalize_or_zero();
-            let ni = get_norm_idx(n, &mut normals);
-            let i0 = get_pos_idx(p0, &mut positions);
-            let i1 = get_pos_idx(p1, &mut positions);
-            let i2 = get_pos_idx(p2, &mut positions);
-            triangles.push((i0, i1, i2, ni));
-        }
-    }
-
-    // Triangulate scene groups
-    for g in &scene.groups {
-        if g.hidden {
-            continue;
-        }
-        for f_id in 0..g.mesh.faces.len() {
-            let tris = g.mesh.triangulate_face(f_id);
-            for (p0, p1, p2) in tris {
-                let tp0 = g.transform.transform_point3(p0);
-                let tp1 = g.transform.transform_point3(p1);
-                let tp2 = g.transform.transform_point3(p2);
-                let n = (tp1 - tp0).cross(tp2 - tp0).normalize_or_zero();
-                let ni = get_norm_idx(n, &mut normals);
-                let i0 = get_pos_idx(tp0, &mut positions);
-                let i1 = get_pos_idx(tp1, &mut positions);
-                let i2 = get_pos_idx(tp2, &mut positions);
-                triangles.push((i0, i1, i2, ni));
-            }
-        }
+    // Share the visible, nested, hole-aware world geometry contract with OBJ/STL.
+    for triangle in crate::exchange::triangles(scene) {
+        let [p0,p1,p2]=triangle.points;
+        let n=(p1-p0).cross(p2-p0).normalize_or_zero();
+        let ni=get_norm_idx(n,&mut normals);
+        let i0=get_pos_idx(p0,&mut positions);
+        let i1=get_pos_idx(p1,&mut positions);
+        let i2=get_pos_idx(p2,&mut positions);
+        triangles.push((i0,i1,i2,ni));
     }
 
     // Begin XML generation
