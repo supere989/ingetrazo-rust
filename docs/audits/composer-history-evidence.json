@@ -1,0 +1,503 @@
+{
+  "source_revision": "463b5fbeb4cc9b5403fc691b1a2d7c3141b3471b",
+  "native_binary_sha256": "2ce2654c1432fff39bd2b41b2da06f9a7d4b6f34f40b2820c5023ae96c0c478d",
+  "passed": true,
+  "cases": [
+    {
+      "case": "initial",
+      "state": {
+        "active": 0,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          320.0,
+          308.25
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 0,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "dragged",
+      "state": {
+        "active": 0,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          380.0,
+          338.25
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 0,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 80.0,
+              "y": 70.0
+            },
+            "redo": 0,
+            "undo": 1
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "undone",
+      "state": {
+        "active": 0,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          320.0,
+          308.25
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 0,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 1,
+            "undo": 0
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "redone",
+      "state": {
+        "active": 0,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          380.0,
+          338.25
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 0,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 80.0,
+              "y": 70.0
+            },
+            "redo": 0,
+            "undo": 1
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "cancelled",
+      "state": {
+        "active": 0,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          380.0,
+          338.25
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 0,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 80.0,
+              "y": 70.0
+            },
+            "redo": 0,
+            "undo": 1
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "model-extruded",
+      "state": {
+        "active": null,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          0.0,
+          0.0
+        ],
+        "drag": null,
+        "model_faces": 6,
+        "model_redo": 0,
+        "model_undo": 1,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 80.0,
+              "y": 70.0
+            },
+            "redo": 0,
+            "undo": 1
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "sheet-after-model",
+      "state": {
+        "active": 0,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          440.0,
+          368.25
+        ],
+        "drag": null,
+        "model_faces": 6,
+        "model_redo": 0,
+        "model_undo": 1,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 120.0,
+              "y": 90.0
+            },
+            "redo": 0,
+            "undo": 2
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "model-undone-sheet-retained",
+      "state": {
+        "active": null,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          0.0,
+          0.0
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 1,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 120.0,
+              "y": 90.0
+            },
+            "redo": 0,
+            "undo": 2
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    },
+    {
+      "case": "switched-mid-drag",
+      "state": {
+        "active": 1,
+        "buttons": {
+          "Extrude": [
+            201.0,
+            11.0
+          ],
+          "Model": [
+            145.5,
+            11.0
+          ],
+          "Sheet 1": [
+            33.0,
+            11.0
+          ],
+          "Sheet 2": [
+            91.0,
+            11.0
+          ]
+        },
+        "click": [
+          320.0,
+          308.25
+        ],
+        "drag": null,
+        "model_faces": 1,
+        "model_redo": 1,
+        "model_undo": 0,
+        "pending": false,
+        "sheets": [
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 160.0,
+              "y": 110.0
+            },
+            "redo": 0,
+            "undo": 3
+          },
+          {
+            "rect": {
+              "h": 60.0,
+              "w": 100.0,
+              "x": 40.0,
+              "y": 50.0
+            },
+            "redo": 0,
+            "undo": 0
+          }
+        ]
+      }
+    }
+  ],
+  "scope": "XTEST native gestures through production render_sheet_composer in an instrumented native eframe host. Drag one history entry, keyboard undo/redo routing to production app methods, Escape rollback, actual production PushPull dispatcher model commit, later sheet edit retained across model undo, F2 sheet switch while pointer held retires drag without mutating second sheet. Host navigation buttons/key routing instrumented; full application menus/shortcut dispatch and cross-platform display remain separate."
+}
