@@ -233,6 +233,7 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
         }
         let mut bound=None;
         for r in ready { unsafe {
+            let mut ordered_cursor=0;
             if bound!=Some((r.vertex,r.index)) {device.cmd_bind_vertex_buffers(command,0,&[r.vertex],&[0]);device.cmd_bind_index_buffer(command,r.index,0,vk::IndexType::UINT32);bound=Some((r.vertex,r.index));counters.binds.fetch_add(1,Ordering::Relaxed);}
             for (batch_index,(batch,rgba)) in r.batches.iter().zip(r.premultiplied.iter()).enumerate().filter(|(_, (b,_))| b.count > 0) {
                 if p.annotations{
@@ -250,17 +251,28 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                 );
                 if p.integer&&!r.opaque{
                     let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
-                    for range in ranges.iter().filter(|range|range.start>=batch.first&&range.end<=batch.first+batch.count){
-                        let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
-                        device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);
+                    ordered_intersections(batch.first..batch.first+batch.count,ranges,&mut ordered_cursor,|range,starts_layer|{
+                        if starts_layer{let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
+                        device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);}
                         device.cmd_draw_indexed(command,range.end-range.start,1,r.first_index+range.start,r.base_vertex,0);counters.draws.fetch_add(1,Ordering::Relaxed);
-                    }
+                    });
                 }else{device.cmd_draw_indexed(command, batch.count, 1, r.first_index+batch.first, r.base_vertex, 0);counters.draws.fetch_add(1, Ordering::Relaxed);}
             }
         }        }
         Ok(())
 }
 
+/// Palette records may split a disjoint source layer. Index partitions retain
+/// source order; synchronization is required once on entry to each new layer,
+/// never between its nonoverlapping color runs. The cursor advances monotonically.
+fn ordered_intersections(batch:std::ops::Range<u32>,ranges:&[std::ops::Range<u32>],cursor:&mut usize,mut draw:impl FnMut(std::ops::Range<u32>,bool)){
+ while let Some(range)=ranges.get(*cursor){
+  if range.start>=batch.end{break;}
+  let start=range.start.max(batch.start);let end=range.end.min(batch.end);
+  if start<end{draw(start..end,start==range.start);}
+  if range.end<=batch.end{*cursor+=1;}else{break;}
+ }
+}
 fn gate_ids(gate:ingetrazo_render::annotations::Gate,count:u32)->Result<[u32;2],String>{
  use ingetrazo_render::annotations::Gate;
  let ids=match gate {
@@ -426,14 +438,11 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
             let opaque=state.geometry.is_opaque(&state.batches);
             if !opaque{
-                let ranges=state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;
-                let mut range_index=0;let mut end=0;
+                state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;
+                let mut end=0;
                 for batch in state.batches.iter().filter(|batch|batch.count>0){
                     if batch.first!=end{return Err("Annotation batches do not partition geometry".into());}
                     end=batch.first+batch.count;
-                    while range_index<ranges.len()&&ranges[range_index].end<end{range_index+=1;}
-                    if range_index==ranges.len()||ranges[range_index].end!=end{return Err("Annotation palette splits ordered draw".into());}
-                    range_index+=1;
                 }
                 if end as usize!=state.geometry.indices().len(){return Err("Annotation palette does not cover geometry".into());}
             }
@@ -610,7 +619,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 if self.pipeline.lock().unwrap().integer&&!s.geometry.is_opaque(&s.batches){
                     s.geometry.validate_ordered_pose(s.pose,pixels_per_point)?;
                     let ranges=s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
-                    let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;if !ranges.iter().any(|r|r.end==end){return Err("Exact integer CAD2D palette boundary splits a disjoint draw".into());}}
+                    let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;}
                     if end as usize!=s.geometry.indices().len(){return Err("Exact integer CAD2D palette does not cover ordered geometry".into());}
                 }
                 let id = s.geometry.id();
@@ -991,6 +1000,13 @@ fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageVi
 mod annotation_gate_tests {
  use super::*;
  use ingetrazo_render::annotations::Gate;
+ #[test]fn palette_splits_draw_intersections_without_reordering_or_extra_layer_barriers(){
+  let ranges=[0..18,18..30,30..42];let batches=[0..6,6..24,24..42];let mut cursor=0;let mut calls=Vec::new();
+  for batch in batches{ordered_intersections(batch,&ranges,&mut cursor,|range,barrier|calls.push((range,barrier)));}
+  assert_eq!(calls,vec![(0..6,true),(6..18,false),(18..24,true),(24..30,false),(30..42,true)]);
+  assert_eq!(cursor,ranges.len());
+  let mut indices=Vec::new();for(range,_)in calls{indices.extend(range);}assert_eq!(indices,(0..42).collect::<Vec<_>>());
+ }
  #[test]fn gates_refuse_sentinel_and_inventory_before_gpu_admission(){
   assert_eq!(gate_ids(Gate::Always,0).unwrap(),[u32::MAX;2]);
   assert_eq!(gate_ids(Gate::Both(0,2),3).unwrap(),[0,2]);
