@@ -287,6 +287,54 @@ fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
     Ok(loops)
 }
 
+/// Resolve exporter-specific direct image and sampler/surface chains within one effect.
+fn diffuse_image<'a, 'i>(
+    effect: Node<'a, 'i>,
+    texture: Node<'a, 'i>,
+    ids: &HashMap<&'i str, Node<'a, 'i>>,
+) -> Result<Node<'a, 'i>> {
+    let reference = texture
+        .attribute("texture")
+        .ok_or_else(|| invalid("missing texture sampler"))?;
+    if let Some(image) = ids
+        .get(reference)
+        .filter(|n| n.tag_name().name() == "image")
+    {
+        return Ok(*image);
+    }
+    let parameter = |sid: &str| -> Result<Node<'a, 'i>> {
+        let found: Vec<_> = effect
+            .descendants()
+            .filter(|n| {
+                n.is_element()
+                    && n.tag_name().name() == "newparam"
+                    && n.attribute("sid") == Some(sid)
+            })
+            .collect();
+        if found.len() != 1 {
+            return Err(invalid("missing or ambiguous effect parameter"));
+        }
+        Ok(found[0])
+    };
+    let sampler = parameter(reference)?;
+    let surface_id = child(sampler, "sampler2D")
+        .and_then(|n| child(n, "source"))
+        .and_then(|n| n.text())
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .ok_or_else(|| invalid("missing sampler surface"))?;
+    let surface = parameter(surface_id)?;
+    let image_id = child(surface, "surface")
+        .and_then(|n| child(n, "init_from"))
+        .and_then(|n| n.text())
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .ok_or_else(|| invalid("missing surface image"))?;
+    ids.get(image_id)
+        .filter(|n| n.tag_name().name() == "image")
+        .copied()
+        .ok_or_else(|| invalid("unresolved texture image"))
+}
 fn material_colors<'a, 'i>(
     instance: Node<'a, 'i>,
     ids: &HashMap<&'i str, Node<'a, 'i>>,
@@ -314,7 +362,8 @@ fn material_colors<'a, 'i>(
             let Some(diffuse) = child(shader, "diffuse") else {
                 continue;
             };
-            if child(diffuse, "texture").is_some() {
+            if let Some(texture) = child(diffuse, "texture") {
+                let _image = diffuse_image(*effect, texture, ids)?;
                 return Err(invalid("COLLADA texture assembly is still unfinished"));
             }
             if let Some(color) = child(diffuse, "color") {
@@ -629,5 +678,52 @@ mod uv_affine_tests {
         assert!(affine_uv(&p, &uv).is_err());
         assert!(affine_uv(&[DVec3::ZERO; 3], &[DVec2::ZERO; 3]).is_err());
         assert!(affine_uv(&p, &uv[..3]).is_err());
+    }
+}
+
+#[cfg(test)]
+mod image_binding_tests {
+    use super::*;
+    #[test]
+    fn direct_image_and_scoped_sampler_chains_reject_broken_binding() {
+        let xml = r#"<COLLADA><image id="img"><init_from>textures/a.png</init_from></image><effect id="e"><newparam sid="surf"><surface><init_from>img</init_from></surface></newparam><newparam sid="sampler"><sampler2D><source>surf</source></sampler2D></newparam><texture texture="sampler"/><texture texture="img"/><texture texture="missing"/></effect></COLLADA>"#;
+        let doc = roxmltree::Document::parse(xml).unwrap();
+        let ids: HashMap<_, _> = doc
+            .descendants()
+            .filter_map(|n| n.attribute("id").map(|id| (id, n)))
+            .collect();
+        let effect = ids["e"];
+        let textures: Vec<_> = effect
+            .children()
+            .filter(|n| n.tag_name().name() == "texture")
+            .collect();
+        assert_eq!(
+            diffuse_image(effect, textures[0], &ids)
+                .unwrap()
+                .attribute("id"),
+            Some("img")
+        );
+        assert_eq!(
+            diffuse_image(effect, textures[1], &ids)
+                .unwrap()
+                .attribute("id"),
+            Some("img")
+        );
+        assert!(diffuse_image(effect, textures[2], &ids).is_err());
+        let broken = xml.replace(
+            "<init_from>img</init_from>",
+            "<init_from>noimage</init_from>",
+        );
+        let doc = roxmltree::Document::parse(&broken).unwrap();
+        let ids: HashMap<_, _> = doc
+            .descendants()
+            .filter_map(|n| n.attribute("id").map(|id| (id, n)))
+            .collect();
+        let effect = ids["e"];
+        let texture = effect
+            .children()
+            .find(|n| n.tag_name().name() == "texture")
+            .unwrap();
+        assert!(diffuse_image(effect, texture, &ids).is_err());
     }
 }
