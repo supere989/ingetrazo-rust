@@ -9,6 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::create_dir_all(&out)?;
     if out.join("checker-minified.rgba").exists()
         || out.join("result.json").exists()
+        || (0..4).any(|i| out.join(format!("batch-mip-{i}.rgba")).exists())
         || (0..3).any(|i| out.join(format!("mip-{i}.rgba")).exists())
     {
         return Err("stale mip artifacts refused".into());
@@ -23,10 +24,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     options.mipmap_mode = Some(egui::TextureFilter::Linear);
     let image = egui::ColorImage::new([7, 5], egui::Color32::from_rgb(37, 93, 157));
     let delta = egui::TexturesDelta {
-        set: vec![(
-            egui::TextureId::Managed(1),
-            egui::epaint::ImageDelta::full(image.clone(), options),
-        )],
+        set: vec![
+            (
+                egui::TextureId::Managed(1),
+                egui::epaint::ImageDelta::full(image.clone(), options),
+            ),
+            (
+                egui::TextureId::Managed(5),
+                egui::epaint::ImageDelta::full(
+                    egui::ColorImage::new([8, 4], egui::Color32::from_rgb(37, 93, 157)),
+                    options,
+                ),
+            ),
+        ],
         free: vec![],
     };
     painter.update_textures(&metal, &delta)?;
@@ -40,10 +50,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::fs::write(out.join(format!("mip-{level}.rgba")), bytes)?;
         assert_eq!(*bytes, [37, 93, 157, 255].repeat(size.0 * size.1));
     }
+    let batch = painter.read_texture_mips_for_probe(
+        &metal,
+        egui::TextureId::Managed(5),
+        Duration::from_secs(5),
+    )?;
+    assert_eq!(batch.len(), 4);
+    for (level, (bytes, size)) in batch
+        .iter()
+        .zip([(8, 4), (4, 2), (2, 1), (1, 1)])
+        .enumerate()
+    {
+        std::fs::write(out.join(format!("batch-mip-{level}.rgba")), bytes)?;
+        assert_eq!(*bytes, [37, 93, 157, 255].repeat(size.0 * size.1));
+    }
     let baseline = metal.budget.lock().unwrap().total_committed();
     let stats = painter.stats();
     assert_eq!(stats.mip_generation_submissions, 1);
-    assert_eq!(stats.generated_mip_levels, 2);
+    assert_eq!(stats.generated_mip_levels, 5);
     for _ in 0..5 {
         painter.update_textures(&metal, &egui::TexturesDelta::default())?;
         assert_eq!(
@@ -190,7 +214,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(blocked_metal.budget.lock().unwrap().total_committed(), held);
     std::fs::write(
         out.join("result.json"),
-        "{\"passed\":true,\"mips\":3,\"warm_generation_jobs\":0,\"transactional_refusal\":true,\"pending_drop_retained\":true,\"physical_mac_claim\":false}",
+        "{\"passed\":true,\"mips\":3,\"batch_images\":2,\"batch_commands\":1,\"warm_generation_jobs\":0,\"transactional_refusal\":true,\"pending_drop_retained\":true,\"physical_mac_claim\":false}",
     )?;
     Ok(())
 }
