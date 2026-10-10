@@ -1,0 +1,9 @@
+{
+  "baseline": "d74058cd4ba4873a55489416b368395a90b5257a",
+  "candidate": "Uncommitted isolated geometry patch at review time; must freeze before intake",
+  "official_source": "https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/Drawables.html",
+  "source_guidance": "Acquire late, release promptly after CPU work; presentDrawable schedules presentation through command buffer. Guide also permits certain post-presentation queries, so prolonged retention alone does not establish ARM failure cause.",
+  "review": "Candidate snapshots drawableID then drops only application drawable reference after presentDrawable and commit. Frame retains command, callback atomics/block, paint and canvas; layer/device/window lifetime and terminal callback+GPU completion checks remain. Existing present entrypoints contain per-frame autorelease pools.",
+  "acceptance": "Source-level bounded ownership correction appears consistent with documented lifetime. Native SDK compilation and strict ARM+Intel presentation replay required; no workaround or relaxed positive-present threshold authorized.",
+  "runtime_cause_proven": false
+}
