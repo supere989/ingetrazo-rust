@@ -507,7 +507,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Lower live admission only after actual chunk allocations, rather than assuming
     // driver staging requirements allow a fixed-cap partial failure window.
     world.set_contour_pressure_after_chunks_for_probe(Some(2))?;
-    let result = world.set_scene(&context, &changed, &camera, &style, fence, serial, 2);
+    let old_style=world.style_state();let mut rejected_style=style.clone();rejected_style.visual_style=ingetrazo_render::style::VisualStyle::Monochrome;rejected_style.front_color=[0.,1.,0.,1.];rejected_style.back_color=[1.,0.,0.,1.];
+    let result = world.set_scene(&context, &changed, &camera, &rejected_style, fence, serial, 2);
     assert!(
         result.is_err(),
         "Dynamic quota pressure unexpectedly admitted the next chunk"
@@ -525,6 +526,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Engineering pressure did not restore the original budget"
     );
     assert_eq!(world.uploads, baseline_uploads);
+    assert_eq!(world.style_state(),old_style,"Failed chunk candidate changed cached style state");
     world.set_contour_pressure_after_chunks_for_probe(None)?;
     serial += 1;
     let restored = render(&context, timer.as_ref(), &mut world, fence, command, serial)?;

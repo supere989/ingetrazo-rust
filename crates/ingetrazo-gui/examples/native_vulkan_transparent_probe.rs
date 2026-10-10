@@ -50,6 +50,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         for i in 0..3 {
             style.background_color[i] = case["background"][i].as_f64().unwrap() as f32;
         }
+        if let Some(mode)=case["style_mode"].as_str() {style.visual_style=match mode {"wireframe"=>ingetrazo_render::style::VisualStyle::Wireframe,"hidden_line"=>ingetrazo_render::style::VisualStyle::HiddenLine,"monochrome"=>ingetrazo_render::style::VisualStyle::Monochrome,"xray"=>ingetrazo_render::style::VisualStyle::XRay,_=>ingetrazo_render::style::VisualStyle::ShadedWithTextures};}
+        if name.starts_with("style-") {for i in 0..3 {style.front_color[i]=case["style_front_color"][i].as_f64().unwrap()as f32;style.back_color[i]=case["style_back_color"][i].as_f64().unwrap()as f32;}}
         style.show_sky = false;
         style.show_edges = false;
         style.show_profiles = false;
@@ -64,6 +66,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
         world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
         assert_eq!(world.uploads, 1);
+        if name.starts_with("style-") {
+            let committed=budget.ledger.lock().unwrap().total_committed();
+            for mode in [ingetrazo_render::style::VisualStyle::Wireframe,ingetrazo_render::style::VisualStyle::XRay,ingetrazo_render::style::VisualStyle::HiddenLine,ingetrazo_render::style::VisualStyle::Monochrome] {
+                let mut changed=style.clone();changed.visual_style=mode;changed.front_color=[0.3,0.2,0.1,1.];changed.back_color=[0.1,0.2,0.3,1.];
+                world.set_scene(&context,&scene,&camera,&changed,fence,0,1)?;
+                assert_eq!(world.uploads,1,"style-only change must reuse cached geometry");assert_eq!(budget.ledger.lock().unwrap().total_committed(),committed);
+            }
+            world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;
+        }
         unsafe {
             context
                 .device

@@ -399,6 +399,7 @@ fn build_mesh_buffers(
             let order=opaque.indices.len()+transparent.indices.len();
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
             record_source_back_paint(target,first,order,&face.attrs,shade);
+            record_default_back(target,first,&face.attrs,source_final_opacity);
             if !(is_xray||source_final_opacity<0.999)&&!target.source_front_cull.last().is_some_and(|r|r.0==first){target.source_consolidated_opaque_count+=target.indices.len()-first;}
         }
     }
@@ -552,6 +553,7 @@ fn build_group_buffers(
             let order=opaque.indices.len()+transparent.indices.len();
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
             record_source_back_paint(target,first,order,&attrs,shade);
+            record_default_back(target,first,&attrs,source_final_opacity);
         }
     }
 
@@ -1462,5 +1464,21 @@ fn source_effective_face_attrs<'a>(attrs:&'a std::collections::HashMap<String,se
   let inherited=source_effective_face_attrs(&attrs,Some(&paint));assert_eq!(inherited["opacity"],0.5);assert_eq!(inherited["back"],true);assert_eq!(inherited["vendor"],attrs["vendor"]);assert!(!attrs.contains_key("color"));
   let mut own=attrs.clone();own.insert("color".into(),serde_json::json!([1.,0.,0.]));assert!(matches!(source_effective_face_attrs(&own,Some(&paint)),std::borrow::Cow::Borrowed(_)));assert_eq!(source_effective_face_attrs(&own,Some(&paint))["opacity"],0.2);
   let mut explicit=attrs;explicit.insert("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.3}));assert_eq!(source_effective_face_attrs(&explicit,Some(&paint))["back"],explicit["back"]);
+ }
+}
+
+fn record_default_back(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::collections::HashMap<String,serde_json::Value>,opacity:f64){
+ // Original materials.back_is_default: translucent paint covers both sides.
+ if opacity<0.999||attrs.get("back").is_some_and(|v|!json_falsey(v)){return;}
+ let count=buffer.indices.len()-first;if count>0{if let Some(last)=buffer.source_default_back.last_mut().filter(|r|r.0+r.1==first){last.1+=count;}else{buffer.source_default_back.push((first,count));}}
+}
+fn json_falsey(v:&serde_json::Value)->bool {v.is_null()||v==false||v.as_f64()==Some(0.)||v.as_str()==Some("")||v.as_array().is_some_and(|a|a.is_empty())||v.as_object().is_some_and(|m|m.is_empty())}
+
+#[cfg(test)]mod default_back_regression {
+ use super::*;
+ #[test]fn opaque_defaults_merge_without_translucent_or_two_sided_overrides(){
+  let attrs=std::collections::HashMap::new();let mut buffer=MeshRenderBuffer::new();buffer.indices.resize(3,0);record_default_back(&mut buffer,0,&attrs,1.);buffer.indices.resize(6,0);record_default_back(&mut buffer,3,&attrs,1.);assert_eq!(buffer.source_default_back,vec![(0,6)]);
+  let two_sided=std::collections::HashMap::from([("back".into(),serde_json::json!(true))]);buffer.indices.resize(9,0);record_default_back(&mut buffer,6,&two_sided,1.);assert_eq!(buffer.source_default_back,vec![(0,6)]);
+  record_default_back(&mut buffer,6,&attrs,0.5);assert_eq!(buffer.source_default_back,vec![(0,6)]);
  }
 }

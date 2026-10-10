@@ -1,0 +1,6 @@
+{
+  "failure": "Forced chunks changed hollow section pixels",
+  "retained_log": "/tmp/style-chunk.log",
+  "sha256": "84c33ddf31c295d553da451ca95b68b40ebfe588ec4719f03b4b077ec039bfe3",
+  "cause": "Contour pipeline reused face fragment shader; compact flag at offset88 alias new face style mode. Dedicated contour fragment shader resolves ABI conflict. Actual normal/chunked image equality and partial-pressure rollback rerun pass."
+}

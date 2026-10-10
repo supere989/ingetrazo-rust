@@ -1,0 +1,89 @@
+{
+  "scope": "Software Vulkan current style source, frozen original Qt controls, existing positive5%/exactzero only; not exact wholeimage or hardware proof",
+  "cases": [
+    {
+      "case": "closed",
+      "original": 20164,
+      "native_software": 20164,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "shared-slab",
+      "original": 0,
+      "native_software": 0,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "shared-slab-reversed",
+      "original": 20164,
+      "native_software": 20164,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "transparent",
+      "original": 0,
+      "native_software": 0,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "duplicate",
+      "original": 20164,
+      "native_software": 20164,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "coplanar-backface",
+      "original": 0,
+      "native_software": 0,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "closed-iso",
+      "original": 9925,
+      "native_software": 9925,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "shared-slab-iso",
+      "original": 8519,
+      "native_software": 8519,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "original": 9925,
+      "native_software": 9925,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "closed-front",
+      "original": 0,
+      "native_software": 0,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "hollow",
+      "original": 14400,
+      "native_software": 14400,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "hollow-iso",
+      "original": 6970,
+      "native_software": 6963,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "transparent-hollow",
+      "original": 0,
+      "native_software": 0,
+      "pass_existing_bound": true
+    },
+    {
+      "case": "hollow-seam",
+      "original": 15552,
+      "native_software": 15696,
+      "pass_existing_bound": true
+    }
+  ]
+}

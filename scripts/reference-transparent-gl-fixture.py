@@ -37,6 +37,9 @@ if os.environ.get("INGETRAZO_ALPHA_GROUP_SHADE")=="1":
  for name in ["group-rotated-prototype","group-nested-rotated-prototype","group-classic-baked-rotation"]:cases[name]=([red],[1.,1.,1.])
 if os.environ.get("INGETRAZO_ALPHA_CONTAINER_PAINT")=="1":
  for name in ["paint-default-front","paint-default-reversed","paint-face-override","paint-explicit-back","paint-child-own","paint-top-owner-not-intermediate"]:cases[name]=([red],[1.,1.,1.])
+if os.environ.get("INGETRAZO_ALPHA_STYLE_CASES")=="1":
+ for mode in ["wireframe","hidden_line","monochrome","xray","shaded"]:
+  for kind,spec in [("front",([1.,0.,0.],1.,0.)),("reverse",([1.,0.,0.],1.,0.,{},True)),("translucent",red),("explicit-back",([1.,0.,0.],1.,0.,{"color":[0.,0.,1.],"opacity":1.},True))]:cases[f"style-{mode}-{kind}"]=([spec],[1.,1.,1.])
 for name,(faces,bg) in cases.items():
  vp=Viewport();vp.resize(800,600);mesh=Mesh()
  for spec in faces:
@@ -77,8 +80,11 @@ for name,(faces,bg) in cases.items():
   groups=[group];mesh=Mesh()
  vp.scene=Scene(mesh=mesh,groups=groups)
  if name=="section-clipped":vp.scene.section_planes=[SectionPlane(QVector3D(0,0,.1),QVector3D(0,0,1),active=True)];vp.scene.show_section_cuts=True;vp.scene.show_section_planes=False
- vp.style_override=Style(face_mode="shaded",sky=False,edges=False,profiles=False,background=tuple(bg));vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D(0,0,0);vp.camera.distance=4.;vp.show()
+ mode=name.split("-")[1] if name.startswith("style-") else "shaded"
+ vp.style_override=Style(face_mode=mode,sky=False,edges=False,profiles=False,background=tuple(bg),front_color=(.2,.4,.6) if name.startswith("style-") else (1.,1.,1.),back_color=(.8,.3,.1) if name.startswith("style-") else None);vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D(0,0,0);vp.camera.distance=4.
+ if name.startswith("style-"):vp.scene.display_style=vp.style_override
+ vp.show()
  for _ in range(45):app.processEvents();time.sleep(.02)
  image=vp.grabFramebuffer();assert not image.isNull();image.save(str(root/(name+".png")));save_scene(vp.scene,root/(name+".igz"));pixel=image.pixelColor(400,300)
- rows.append({"case":name,"center_rgba":[pixel.red(),pixel.green(),pixel.blue(),pixel.alpha()],"background":bg,"faces":faces,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest(),"cached_opacity_runs":[list(run) for run in vp._tcol_runs],"ordinary_faces_count":vp._faces_count,"front_culled_opaque_run":list(vp._fvcol_run),"opaque_back_run":list(vp._back_vcol_run),"cached_back_opacity_runs":[list(run) for run in vp._back_tcol_runs],"qt_image_format":str(image.format())});vp.close();vp.deleteLater();app.processEvents()
+ rows.append({"case":name,"center_rgba":[pixel.red(),pixel.green(),pixel.blue(),pixel.alpha()],"background":bg,"faces":faces,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest(),"cached_opacity_runs":[list(run) for run in vp._tcol_runs],"ordinary_faces_count":vp._faces_count,"front_culled_opaque_run":list(vp._fvcol_run),"opaque_back_run":list(vp._back_vcol_run),"cached_back_opacity_runs":[list(run) for run in vp._back_tcol_runs],"style_mode":mode,"style_front_color":list(vp.style_override.front_color),"style_back_color":list(vp.style_override.back_color) if vp.style_override.back_color is not None else None,"qt_image_format":str(image.format())});vp.close();vp.deleteLater();app.processEvents()
 report={"provenance":context(),"cases":rows,"scope":"Actual original Qt OpenGL encoded-RGB blend, depth-write-off, cached opacity run order; colored untextured front surfaces only. Not texture/back-side/instancing/Xray coverage."};(root/"original-alpha-results.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))

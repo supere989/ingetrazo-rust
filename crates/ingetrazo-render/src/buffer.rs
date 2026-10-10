@@ -75,6 +75,7 @@ pub struct MeshRenderBuffer {
     /// CPU-only exact opacity change spans (index offset, source f64). Never uploaded.
     pub source_opacity_runs: Vec<(usize, f64)>,
     pub source_front_cull: Vec<(usize,usize)>,
+    pub source_default_back:Vec<(usize,usize)>,
     /// Original consolidated opaque gate count; instanced-only placements exclude their indices.
     pub source_consolidated_opaque_count:usize,
     pub source_back_override_count:usize,
@@ -87,7 +88,7 @@ impl MeshRenderBuffer {
     pub fn new() -> Self {
         Self {
             source_opacity_runs: Vec::new(),
-            source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
+            source_default_back:Vec::new(),source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
             vertices: Vec::new(),
             indices: Vec::new(),
         }
@@ -96,7 +97,7 @@ impl MeshRenderBuffer {
     pub fn with_capacity(vert_cap: usize, ind_cap: usize) -> Self {
         Self {
             source_opacity_runs: Vec::new(),
-            source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
+            source_default_back:Vec::new(),source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
             vertices: Vec::with_capacity(vert_cap),
             indices: Vec::with_capacity(ind_cap),
         }
@@ -104,7 +105,7 @@ impl MeshRenderBuffer {
 
     pub fn clear(&mut self) {
         self.source_opacity_runs.clear();
-        self.source_front_cull.clear();self.source_back_paints.clear();self.source_consolidated_opaque_count=0;self.source_back_override_count=0;
+        self.source_default_back.clear();self.source_front_cull.clear();self.source_back_paints.clear();self.source_consolidated_opaque_count=0;self.source_back_override_count=0;
         self.vertices.clear();
         self.indices.clear();
     }
@@ -148,6 +149,7 @@ impl MeshRenderBuffer {
         let base = self.vertices.len() as u32;
         let offset=self.indices.len();
         self.source_consolidated_opaque_count+=other.source_consolidated_opaque_count;self.source_back_override_count+=other.source_back_override_count;
+        self.source_default_back.extend(other.source_default_back.iter().map(|&(first,count)|(offset+first,count)));
         self.source_front_cull.extend(other.source_front_cull.iter().map(|&(first,count)|(offset+first,count)));
         self.source_back_paints.extend(other.source_back_paints.iter().cloned().map(|mut p|{p.first+=offset;p.order+=offset;p}));
         self.source_opacity_runs.extend(other.source_opacity_runs.iter().map(|&(index,alpha)|(offset+index,alpha)));
