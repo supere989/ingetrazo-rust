@@ -373,3 +373,5 @@ Canonical image-frame integration656d2178:556workspacePASS/twoignored, fresh60so
 
 Isolated image-picking review87b1d78e:29fresh actualsource/native cases exact;560workspacePASS/twoignored. [Independent evidence](audits/image-picking-root-review/README.md). Selection/workplane controller proof only; physical pointer, broader geometry modifiers, interactive transforms/directGPU image drawing and all37rows/fivegates remain OPEN.
 Canonical resolvera11fca83:557workspacePASS/twoignored; canonical observer fresh14source/native font requests exact, expanded19 independently retained review cases andreal24font eviction separate. [Canonical evidence](audits/font-resolver-canonical/README.md). Linuxhelper adopted; nonLinux providers/fullparagraph/UI/fontformats/all37rows/fivegatesOPEN.
+
+Image-picking/font integration3d6c307e:561workspacePASS/twoignored. Existing29exact source cases and actualproductionpicker-removal rejection retained. Broader geometry combinedmodifiers pending before adoption; physical input/interactive tools/GPUdraw/full37rows/fivegates OPEN.
