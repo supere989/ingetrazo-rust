@@ -63,6 +63,7 @@ def rgba(image):
  image=image.convertToFormat(QImage.Format_RGBA8888)
  return np.frombuffer(image.constBits(),dtype=np.uint8).reshape(600,800,4).copy()
 old=clients();env=dict(os.environ,INGETRAZO_ARENA_PROBE_PATH=str(out),INGETRAZO_VULKAN_DEVICE="NVIDIA",INGETRAZO_CAD2D_INTEGER_BLEND="1");logfile=out/"fixture.log"
+window=None
 with logfile.open("w")as stream:
  child=subprocess.Popen([str(binary)],env=env,stdout=stream,stderr=stream)
  try:
@@ -89,4 +90,9 @@ with logfile.open("w")as stream:
   assert "PASS actual outline later-chunk pressure:"in text and "Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0"in text
   (out/"result.json").write_text(json.dumps({"passed":True,"device":device,"baseline":baseline,"warm":warm,"refused":refused,"retry":retry,"one":one,"scope":"Actual two-chunk native pages; real later candidate admission refusal after first transfer, old full frame+pose retained, retry exact Qt RGB32, actual warm zero transfer/map/allocation delta; not large-scene throughput or Metal"},indent=2))
  finally:
-  if child.poll()is None:child.terminate();child.wait(timeout=5)
+  if child.poll()is None:
+   if window is not None:
+    close(window)
+    try:child.wait(timeout=6)
+    except subprocess.TimeoutExpired:child.terminate();child.wait(timeout=3)
+   else:child.terminate();child.wait(timeout=5)

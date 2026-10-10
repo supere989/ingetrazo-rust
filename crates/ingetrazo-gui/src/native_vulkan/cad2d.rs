@@ -611,7 +611,7 @@ impl Renderer {
         eprintln!("PASS CAD2D actual vertex allocation/index budget denial/prior drawable/rollback/retry: {:?}",self.stats());
         Ok(())
     }
-    pub fn outline_arena_stats(&self)->serde_json::Value{serde_json::json!({"arena":self.arena.metrics(),"transfers":self.resources.stats,"callbacks":self.counters.callbacks.load(Ordering::Relaxed),"binds":self.counters.binds.load(Ordering::Relaxed),"draws":self.counters.draws.load(Ordering::Relaxed),"draw_slots_examined":self.counters.outline_slots_examined.load(Ordering::Relaxed)})}
+    pub fn outline_arena_stats(&self)->serde_json::Value{serde_json::json!({"arena":self.arena.metrics(),"actual_live_page_allocation_bytes":self.arena.allocation_bytes(&self.resources),"total_charged_gpu_bytes":self.budget.ledger.lock().unwrap().total_committed(),"transfers":self.resources.stats,"callbacks":self.counters.callbacks.load(Ordering::Relaxed),"binds":self.counters.binds.load(Ordering::Relaxed),"draws":self.counters.draws.load(Ordering::Relaxed),"draw_slots_examined":self.counters.outline_slots_examined.load(Ordering::Relaxed)})}
     pub fn stats(&self) -> Stats {
         Stats {
             callbacks: self.counters.callbacks.load(Ordering::Relaxed),

@@ -20,6 +20,7 @@ struct Slot{vertex:Ticket,index:Ticket}
 #[derive(Default,Clone,Debug,serde::Serialize)]pub struct Metrics{pub pages:u64,pub page_bytes:u64,pub uploads:u64,pub upload_bytes:u64,pub candidate_rollbacks:u64,pub preserved_failures:u64,pub live_slots:u64,pub retired_bytes:u64,pub prepare_slots_examined:u64,pub page_use_marks:u64}
 #[derive(Default)]pub(super)struct Gpu{vertex:Planner,index:Planner,vpages:BTreeMap<u64,BufferId>,ipages:BTreeMap<u64,BufferId>,slots:Vec<Option<Slot>>,paint:Option<Weak<Paint>>,next_page:u64,page_bytes:u64,pressure_after:Option<usize>,metrics:Metrics}
 impl Gpu{
+ pub(super)fn allocation_bytes(&self,resources:&Resources)->u64{self.vpages.values().chain(self.ipages.values()).filter_map(|id|resources.allocation_bytes(*id)).sum()}
  pub(super)fn metrics(&self)->Metrics{let mut m=self.metrics.clone();m.pages=(self.vpages.len()+self.ipages.len())as u64;m.page_bytes=self.vertex.metrics().page_bytes+self.index.metrics().page_bytes;m.retired_bytes=self.vertex.metrics().retired_bytes+self.index.metrics().retired_bytes;m.live_slots=self.slots.iter().flatten().count()as u64;m}
  fn reserve(planner:&mut Planner,pages:&mut BTreeMap<u64,BufferId>,next:&mut u64,resources:&mut Resources,bytes:u64,usage:vk::BufferUsageFlags,new_pages:&mut Vec<(bool,u64)>,vertex:bool,page_bytes:u64)->Result<Ticket,String>{
   if let Some(t)=planner.reserve(bytes,if vertex{12}else{4})?{return Ok(t);}
