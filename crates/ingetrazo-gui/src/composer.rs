@@ -211,6 +211,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         Vec2::new(580.0, 42.0),
     );
 
+    let saved_view_names=app.scene.saved_views.iter().map(|v|v.name.clone()).collect::<Vec<_>>();
     let geo_north = app.scene.geo_datum.as_ref().map(|d| d.north).unwrap_or(0.0);
     let mut bump_needed = false;
     let mut fit_page_needed = false;
@@ -293,6 +294,21 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 }
 
                 if let Some(SheetItem::ViewFrame(frame))=sheet.selected_item.and_then(|i|sheet.items.get_mut(i)) {
+                    ui.menu_button(tr("View"),|ui|{
+                        bump_needed |=ui.add(egui::DragValue::new(&mut frame.scale_n).range(0.01..=1e8).prefix("1:")).changed();
+                        bump_needed |=ui.checkbox(&mut frame.perspective,tr("Perspective")).changed();
+                        egui::ComboBox::from_id_salt("frame-render-style").selected_text(&frame.style).show_ui(ui,|ui|{
+                            for key in ["sombreado","vectorial","style:Architectural","style:Shaded","style:Hidden line","style:Monochrome","style:Wireframe","style:X-ray"]{bump_needed |=ui.selectable_value(&mut frame.style,key.into(),key).changed();}
+                        });
+                        egui::ComboBox::from_id_salt("frame-view-key").selected_text(&frame.view_key).show_ui(ui,|ui|{
+                            for key in ["__current__","std:top","std:bottom","std:front","std:back","std:right","std:left","std:iso"]{bump_needed |=ui.selectable_value(&mut frame.view_key,key.into(),key).changed();}
+                            for name in &saved_view_names {bump_needed |=ui.selectable_value(&mut frame.view_key,format!("scene:{name}"),name).changed();}
+                        });
+                        bump_needed |=ui.add(egui::DragValue::new(&mut frame.rot_deg).speed(1.).suffix("°")).changed();
+                        bump_needed |=ui.checkbox(&mut frame.border,tr("Border")).changed();
+                        bump_needed |=ui.checkbox(&mut frame.show_title,tr("Title")).changed();
+                        bump_needed |=ui.text_edit_singleline(&mut frame.title_text).changed();
+                    });
                     ui.menu_button(tr("Ink"),|ui|{
                         bump_needed |= ui.checkbox(&mut frame.paper_bg,tr("Paper background")).changed();
                         bump_needed |= ui.checkbox(&mut frame.profiles,tr("Profiles")).changed();
@@ -716,7 +732,7 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
   let mut scene=Scene::new();let a=scene.mesh.add_vertex(DVec3::new(10.,0.,0.));let b=scene.mesh.add_vertex(DVec3::new(12.,0.,0.));let e=scene.mesh.add_edge(a,b).unwrap();scene.mesh.edges[e].hidden=true;assert_eq!(frame_bounds(&scene),Some((DVec3::new(10.,0.,0.),DVec3::new(12.,0.,0.))));let mut group=ingetrazo_core::groups::Group::new("Vertices");group.mesh.add_vertex(DVec3::new(30.,0.,0.));scene.groups.push(group);assert_eq!(frame_bounds(&scene).unwrap().1.x,30.);scene.groups[0].hidden=true;assert_eq!(frame_bounds(&scene).unwrap().1.x,12.);
  }
  #[test]fn frame_overrides_roll_scale_and_perspective_have_original_camera_semantics(){
-  let mut scene=Scene::new();let ids=[DVec3::new(10.,20.,0.),DVec3::new(12.,20.,0.),DVec3::new(10.,24.,2.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);let mut frame=ViewFrame::default();frame.scale_n=20.;frame.rot_deg=90.;let camera=camera_for_frame(&scene,&frame);assert_eq!(camera.target,DVec3::new(11.,22.,1.));assert!((camera.pitch-std::f64::consts::FRAC_PI_2).abs()<1e-12);assert!((camera.up+DVec3::X).length()<1e-12);assert!((camera.distance-ingetrazo_core::composition::ortho_distance_for_height(3.,45.)).abs()<1e-12);
+  let mut scene=Scene::new();let ids=[DVec3::new(10.,20.,0.),DVec3::new(12.,20.,0.),DVec3::new(10.,24.,2.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);let mut frame=ViewFrame::default();assert_eq!(frame.view_key,"__current__");assert_eq!(frame.style,"sombreado");assert!(!frame.show_title&&!frame.border);frame.view_key="std:top".into();frame.scale_n=20.;frame.rot_deg=90.;let camera=camera_for_frame(&scene,&frame);assert_eq!(camera.target,DVec3::new(11.,22.,1.));assert!((camera.pitch-std::f64::consts::FRAC_PI_2).abs()<1e-12);assert!((camera.up+DVec3::X).length()<1e-12);assert!((camera.distance-ingetrazo_core::composition::ortho_distance_for_height(3.,45.)).abs()<1e-12);
   frame.perspective=true;frame.cam_yaw=Some(-1.2);frame.cam_pitch=Some(0.3);frame.cam_target=Some([4.,5.,6.]);frame.cam_distance=Some(7.);frame.cam_fov=Some(200.);let camera=camera_for_frame(&scene,&frame);assert_eq!(camera.target,DVec3::new(4.,5.,6.));assert_eq!(camera.distance,7.);assert_eq!(camera.fov_deg,120.);assert!(camera.perspective);frame.cam_fov=Some(60.);let camera=camera_for_frame(&scene,&frame);let matrix=camera.projection_matrix()*camera.view_matrix();let near=camera.eye()+camera.forward()*2.+camera.right();let far=camera.eye()+camera.forward()*4.+camera.right();let a=matrix*near.extend(1.);let b=matrix*far.extend(1.);assert!((a.x/a.w-2.*b.x/b.w).abs()<1e-12,"perspective must foreshorten far geometry");
  }
  #[test]fn saved_section_view_uses_original_camera_direction_without_mutating_live_state(){
