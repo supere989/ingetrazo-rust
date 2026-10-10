@@ -284,6 +284,9 @@ struct Cached {
 /// Cheap host-scoped callback factory; GPU ownership stays in Renderer.
 #[derive(Clone)]pub struct Factory{device:vk::Device,pipeline:Arc<Mutex<Pipeline>>,counters:Arc<Counters>}
 impl Factory{
+ /// Retained callback owners keep this pipeline allocation alive across cache hits.
+ pub fn cache_identity(&self)->usize{Arc::as_ptr(&self.pipeline)as usize}
+
  /// Fresh ordinary callback payload bound; shared geometry/batch/pipeline owners,
  /// allocator metadata and independently ledgered GPU storage are separate.
  pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{
