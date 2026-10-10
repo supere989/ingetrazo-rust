@@ -1,0 +1,2 @@
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
