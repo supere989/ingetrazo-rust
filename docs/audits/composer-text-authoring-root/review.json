@@ -1,0 +1,12 @@
+{
+  "reviewed_source": "f3d521dbcca22a43e64244c5fb0761d56f2c8a6d",
+  "fresh_source_probe_exact": true,
+  "scope": "Original hit/lock controls regenerated independently; native helper source reviewed, not fresh merged UI acceptance",
+  "integration": "held for followup",
+  "required_followups": [
+    "Text then Shape tool activation leaves text_tool enabled and routes placement to Text",
+    "Source ownership when activating Text during inline editing",
+    "Local text Undo grouping discrepancy",
+    "Remaining extended hit bounds and full editor interaction"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "rows": [
+    {
+      "name": "wrapped-authored-single-line",
+      "rect": [
+        19.5,
+        29.5,
+        83.5,
+        10.414444444444444
+      ],
+      "hits": [
+        "TextItem",
+        "TextItem",
+        null
+      ]
+    },
+    {
+      "name": "background-hit-extension",
+      "rect": [
+        18.5,
+        28.5,
+        85.5,
+        12.414444444444444
+      ],
+      "hits": [
+        "TextItem",
+        null
+      ]
+    },
+    {
+      "name": "higher-frame",
+      "hit": "FrameItem"
+    },
+    {
+      "name": "locked-higher-frame",
+      "hit": "TextItem"
+    },
+    {
+      "name": "unfilled-ellipse-bounding-box-hit",
+      "hit": "FormaCanvasItem"
+    },
+    {
+      "name": "lock-during-draft-commit",
+      "text": "locked draft",
+      "locked": true,
+      "undo": 1
+    },
+    {
+      "name": "undo-text-preserves-lock",
+      "text": "many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words many words ",
+      "locked": true
+    }
+  ]
+}
