@@ -4,7 +4,7 @@ import copy,json,sys
 from pathlib import Path
 s=json.loads(Path(sys.argv[1]).read_text());n=json.loads(Path(sys.argv[2]).read_text())
 required={"horizontal","horizontal-reversed","vertical","vertical-reversed","diagonal","diagonal-reversed","negative-slope","negative-slope-reversed","short","fractional"}
-required|={"clip-left","clip-left-reversed","clip-right","clip-bottom","clip-corner","clip-outside","clip-short"}
+if "--clipped" in sys.argv[3:]:required|={"clip-left","clip-left-reversed","clip-right","clip-bottom","clip-corner","clip-outside","clip-short"}
 def check(candidate):
  assert {r["name"]for r in s["cases"]}=={r["name"]for r in candidate["cases"]}==required
  for row in s["cases"]:
