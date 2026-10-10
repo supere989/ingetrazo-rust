@@ -70,14 +70,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 app.camera
                     .screen_to_ray(rel_x, rel_y, rect.width() as f64, rect.height() as f64);
 
-            // Default ground plane intersection
-            let ground_plane = Plane::new(
-                app.paste_preview
-                    .as_ref()
-                    .map(|p| p.reference)
-                    .unwrap_or(DVec3::ZERO),
-                DVec3::Z,
-            );
+            // Tool-local work planes keep rectangle/Freehand hover coordinates
+            // coplanar with the face where the gesture began.
+            let (plane_point,plane_normal)=app.paste_preview.as_ref().map(|p|(p.reference,DVec3::Z)).or_else(||app.active_tool.drawing_plane()).unwrap_or((DVec3::ZERO,DVec3::Z));
+            let ground_plane=Plane::new(plane_point,plane_normal);
             let mut cursor_world_pos = if let Some(t) = ground_plane.intersect_ray(&cursor_ray) {
                 if t > 0.0 {
                     cursor_ray.at(t)

@@ -45,6 +45,7 @@ impl RectangleTool {
         self.start_point = None;
         self.hover_point = None;
         self.from_center = false;
+        self.plane_normal=DVec3::Z;
     }
 
     /// Calculate the 4 corners from start point and an opposite point.
@@ -95,6 +96,7 @@ impl RectangleTool {
 
 impl Tool for RectangleTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
+    fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.start_point.map(|p|(p,self.plane_normal))}
     fn tool_type(&self) -> ToolType {
         ToolType::Rectangle
     }
@@ -137,6 +139,7 @@ impl Tool for RectangleTool {
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.from_center = ctx.ctrl_held;
         if self.start_point.is_none() {
+            if let Some((face,_,_))=crate::base::pick_scene_face(scene,&ctx.ray){self.plane_normal=scene.mesh.face_normal(face);}
             self.start_point = Some(ctx.world);
         } else {
             let start = self.start_point.unwrap();
@@ -167,8 +170,8 @@ impl Tool for RectangleTool {
         let w: f64 = parts[0].trim().parse().map_err(|e| format!("Invalid width: {e}"))?;
         let h: f64 = parts[1].trim().parse().map_err(|e| format!("Invalid height: {e}"))?;
 
-        if w.abs() < 1e-6 || h.abs() < 1e-6 {
-            return Err("Dimensions must be non-zero".into());
+        if !w.is_finite()||!h.is_finite()||w <= 0. || h <= 0. {
+            return Err("Dimensions must be finite and positive".into());
         }
 
         let (u, v) = plane_basis(self.plane_normal);
@@ -182,7 +185,8 @@ impl Tool for RectangleTool {
             (1.0, 1.0)
         };
 
-        let far = start + u * (w * sign_u) + v * (h * sign_v);
+        let size=if self.from_center{0.5}else{1.};
+        let far = start + u * (w * sign_u * size) + v * (h * sign_v * size);
         if let Some(corners) = self.compute_corners(start, far) {
             self.commit_corners(corners, scene)?;
             Ok(())
@@ -197,6 +201,13 @@ mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
 
+    #[test]fn center_typed_dimensions_are_whole_width_and_height(){
+        let mut scene=Scene::new();let mut tool=RectangleTool::new();tool.start_point=Some(DVec3::ZERO);tool.hover_point=Some(DVec3::X+DVec3::Y);tool.from_center=true;tool.on_vcb_input(&mut scene,"4,2").unwrap();assert!((scene.mesh.face_area(0)-8.).abs()<1e-9);assert!((scene.mesh.vertices.iter().map(|v|v.position.x).fold(f64::NEG_INFINITY,f64::max)-2.).abs()<1e-9);
+        let mut tool=RectangleTool::new();tool.start_point=Some(DVec3::ZERO);let before=scene.clone();assert!(tool.on_vcb_input(&mut scene,"-4,2").is_err());assert_eq!(scene,before);
+    }
+    #[test]fn first_face_pick_locks_a_vertical_work_plane(){
+        let mut scene=Scene::new();let ids=[DVec3::ZERO,DVec3::new(4.,0.,0.),DVec3::new(4.,0.,4.),DVec3::new(0.,0.,4.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);let mut tool=RectangleTool::new();let ctx=ToolContext::new(DVec3::new(1.,0.,1.),Ray::new(DVec3::new(1.,-3.,1.),DVec3::Y));tool.on_click(&mut scene,&ctx);assert!(tool.plane_normal.dot(DVec3::Y).abs()>0.999);assert_eq!(tool.drawing_plane().unwrap().0,ctx.world);let corners=tool.compute_corners(ctx.world,DVec3::new(2.,0.,3.)).unwrap();assert!(corners.iter().all(|p|p.y.abs()<1e-9));tool.on_cancel(&mut scene);assert!(tool.drawing_plane().is_none());assert_eq!(tool.plane_normal,DVec3::Z);
+    }
     #[test]fn rectangle_band_splits_closed_body_and_remains_pushable(){
         use crate::pushpull::PushPullTool;
         let mut scene=Scene::new();let points=[DVec3::ZERO,DVec3::new(4.,0.,0.),DVec3::new(4.,3.,0.),DVec3::new(0.,3.,0.)];let ids=points.map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);PushPullTool::extrude_face(&mut scene,0,2.).unwrap();

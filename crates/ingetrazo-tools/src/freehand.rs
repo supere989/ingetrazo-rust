@@ -65,6 +65,7 @@ pub struct FreehandTool {
     drawing: bool,
     screen: Vec<glam::DVec2>,
     error: Option<String>,
+    work_plane: Option<(DVec3,DVec3)>,
     tolerance: f64,
 }
 
@@ -75,6 +76,7 @@ impl Default for FreehandTool {
             drawing: false,
             screen: vec![],
             error: None,
+            work_plane: None,
             tolerance: 0.05,
         }
     }
@@ -82,6 +84,7 @@ impl Default for FreehandTool {
 
 impl Tool for FreehandTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
+    fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.work_plane}
     fn on_release(&mut self,scene:&mut Scene,_ctx:&ToolContext,_distance:f64){if self.drawing{self.commit(scene);}}
     fn tool_type(&self) -> ToolType {
         ToolType::Freehand
@@ -97,6 +100,7 @@ impl Tool for FreehandTool {
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         if !self.drawing {
+            self.work_plane=Some((ctx.world,crate::base::pick_scene_face(scene,&ctx.ray).map(|(i,_,_)|scene.mesh.face_normal(i)).unwrap_or(DVec3::Z)));
             self.drawing = true;
             self.points.clear();self.screen.clear();self.error=None;
             self.points.push(ctx.world);if let Some(p)=ctx.screen{self.screen.push(p);}
@@ -118,7 +122,7 @@ impl Tool for FreehandTool {
 
     fn on_cancel(&mut self, _scene: &mut Scene) {
         self.points.clear();self.screen.clear();
-        self.drawing = false;
+        self.drawing = false;self.work_plane=None;
     }
 
     fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{self.points.windows(2).map(|p|(p[0],p[1])).collect()}
@@ -135,7 +139,7 @@ impl Tool for FreehandTool {
 
 impl FreehandTool {
     pub fn commit(&mut self,scene:&mut Scene){
-        let result=self.prepare_commit(scene);self.points.clear();self.screen.clear();self.drawing=false;self.error=result.err();
+        let result=self.prepare_commit(scene);self.points.clear();self.screen.clear();self.drawing=false;self.work_plane=None;self.error=result.err();
     }
     fn prepare_commit(&self,scene:&mut Scene)->Result<(),String>{
         if self.points.len()<3{return Ok(());}

@@ -41,7 +41,9 @@ pub fn add_segments(
     }
     if let Some(id) = curve {
         for e in &mut out.edges {
-            if e.curve_id.is_some(){continue;}
+            if e.curve_id.is_some() {
+                continue;
+            }
             let a = out.vertices[e.v0].position;
             let b = out.vertices[e.v1].position;
             if segments
@@ -53,19 +55,79 @@ pub fn add_segments(
         }
     }
     let mut planes: Vec<(DVec3, DVec3)> = vec![];
+    let mut remember = |point: DVec3, normal: DVec3| {
+        if normal.length_squared() > 0.5
+            && !planes
+                .iter()
+                .any(|&(p, n)| n.dot(normal).abs() > 1. - 1e-7 && (point - p).dot(n).abs() < 1e-6)
+        {
+            planes.push((point, normal));
+        }
+    };
+    // A cycle through a new subedge must leave it through an incident edge.
+    // Those neighbors enumerate its possible planes without scanning arbitrary
+    // vertices throughout unrelated 3D content.
     for &(a, b) in segments {
-        for vertex in &out.vertices {
-            let n = (b - a).cross(vertex.position - a).normalize_or_zero();
-            if n.length_squared() < 0.5 {
+        if a.distance(b) < 1e-9 {
+            continue;
+        }
+        for edge in &out.edges {
+            if !on_segment(out.vertices[edge.v0].position, a, b)
+                || !on_segment(out.vertices[edge.v1].position, a, b)
+            {
                 continue;
             }
-            if !planes
-                .iter()
-                .any(|&(p, m)| m.dot(n).abs() > 1. - 1e-7 && (a - p).dot(m).abs() < 1e-6)
-            {
-                planes.push((a, n));
+            for endpoint in [edge.v0, edge.v1] {
+                for &neighbor in &out.vertices[endpoint].edges {
+                    let e = &out.edges[neighbor];
+                    let other = if e.v0 == endpoint { e.v1 } else { e.v0 };
+                    remember(
+                        a,
+                        (b - a)
+                            .cross(out.vertices[other].position - a)
+                            .normalize_or_zero(),
+                    );
+                }
             }
         }
+        // An interior chord can remain disconnected from the mother's boundary.
+        for (id, face) in out.faces.iter().enumerate() {
+            let p = out.vertices[face.vertices[0]].position;
+            let n = out.face_normal(id);
+            if (a - p).dot(n).abs() < 1e-6 && (b - p).dot(n).abs() < 1e-6 {
+                remember(p, n);
+            }
+        }
+    }
+    // Source curve drafting performs one global arrangement on whole-flat
+    // drawings, including disconnected old curves and deleted bounded cells.
+    if let Some(first) = out.vertices.first() {
+        let origin = first.position;
+        if let Some(axis) = out
+            .vertices
+            .iter()
+            .map(|v| v.position - origin)
+            .find(|d| d.length_squared() > 1e-12)
+        {
+            if let Some(normal) = out
+                .vertices
+                .iter()
+                .map(|v| axis.cross(v.position - origin).normalize_or_zero())
+                .find(|n| n.length_squared() > 0.5)
+            {
+                if out
+                    .vertices
+                    .iter()
+                    .all(|v| (v.position - origin).dot(normal).abs() < 1e-6)
+                {
+                    remember(origin, normal);
+                }
+            }
+        }
+    }
+    drop(remember);
+    if planes.len() > 4096 {
+        return Err("Drawing meets too many distinct planes for an interactive edit".into());
     }
     for (point, normal) in planes {
         // The explicit footprint supplies coverage; it does not auto-face
@@ -103,9 +165,13 @@ pub fn add_segments(
                 plane.add_edge(a, b);
             }
         }
-        if plane.edges.len()<3 {continue;}
+        if plane.edges.len() < 3 {
+            continue;
+        }
         let rebuilt = planar::rebuild_faces(&plane, &[])?;
-        if affected.is_empty()&&rebuilt.faces.is_empty(){continue;}
+        if affected.is_empty() && rebuilt.faces.is_empty() {
+            continue;
+        }
         let mut result = Mesh::new();
         for (i, f) in out.faces.iter().enumerate() {
             if !affected.contains(&i) {
@@ -203,6 +269,15 @@ mod tests {
         )
         .unwrap();
         assert!(out.faces.is_empty());
+    }
+    #[test]fn original_old_disconnected_curve_rebuilds_deleted_flat_region(){
+        let mut m=square();m.faces.clear();for e in &mut m.edges{e.faces.clear();}for v in &mut m.vertices{v.position.x+=10.;}
+        let a=m.add_vertex(DVec3::ZERO);let b=m.add_vertex(DVec3::X);let c=m.add_vertex(DVec3::X+DVec3::Y);for (a,b) in [(a,b),(b,c)]{let id=m.add_edge(a,b).unwrap();m.edges[id].curve_id=Some(71);}
+        let out=add_segments(&m,&[(DVec3::new(20.,0.,0.),DVec3::new(21.,0.,0.))],None,None).unwrap();assert_eq!(out.faces.len(),1);assert!((out.face_area(0)-1.).abs()<1e-9);
+    }
+    #[test]fn unrelated_spatial_vertices_do_not_supply_drafting_planes(){
+        let mut m=Mesh::new();for i in 0..5000{m.add_vertex(DVec3::new(i as f64+10.,(i*i) as f64+10.,(i%17) as f64+1.));}let uid=m.vertices[4999].uid;
+        let out=add_segments(&m,&[(DVec3::ZERO,DVec3::X)],None,None).unwrap();assert_eq!(out.edges.len(),1);assert!(out.faces.is_empty());assert!(out.vertices.iter().any(|v|v.uid==uid));
     }
     #[test]
     fn nonfinite_batch_is_atomic() {

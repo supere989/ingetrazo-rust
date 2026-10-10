@@ -104,6 +104,7 @@ pub trait Tool: Send + Sync {
     }
     fn on_move(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_release(&mut self, _scene: &mut Scene, _ctx: &ToolContext, _drag_distance: f64) {}
+    fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }
     fn preview_mesh(&self) -> Option<&Mesh> {
         None
     }
