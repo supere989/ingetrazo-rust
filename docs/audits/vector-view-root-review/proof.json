@@ -1,0 +1,18 @@
+{
+  "source": "dca5f3b3a2b84d1fabee56db08c70abd90d91314",
+  "base": "cd781e3",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "strict_view_pages": 78,
+  "strict_ordinary_shape_pages": 27,
+  "workspace_passed": 523,
+  "ignored": 2,
+  "inventory_negative_controls": 4,
+  "valid_color_negative_rejected": true,
+  "color_negative_pixels": [
+    2011,
+    3000
+  ],
+  "visual_inspection": "nested_reflected_box hidden144DPI",
+  "actual_pdf_UI": false,
+  "full_P29": false
+}
