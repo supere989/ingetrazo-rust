@@ -1,0 +1,46 @@
+{
+  "upstream_crate_sha256": "27bc9d5b815bc103f142aa054f561d9187d191692ec7c2d1e2b4737f8dbd7296",
+  "changed_existing_source_files": [
+    "src/components.rs",
+    "src/decoder.rs",
+    "src/idct.rs",
+    "src/lib.rs",
+    "src/worker.rs"
+  ],
+  "unchanged_existing_source_files": [
+    "src/bitstream.rs",
+    "src/color_convert/avx.rs",
+    "src/color_convert/neon64.rs",
+    "src/color_convert/scalar.rs",
+    "src/color_convert.rs",
+    "src/errors.rs",
+    "src/headers.rs",
+    "src/huffman.rs",
+    "src/idct/avx2.rs",
+    "src/idct/neon.rs",
+    "src/idct/scalar.rs",
+    "src/marker.rs",
+    "src/mcu.rs",
+    "src/mcu_prog.rs",
+    "src/misc.rs",
+    "src/unsafe_utils.rs",
+    "src/unsafe_utils_avx2.rs",
+    "src/unsafe_utils_neon.rs",
+    "src/upsampler/avx2.rs",
+    "src/upsampler/neon.rs",
+    "src/upsampler/portable_simd.rs",
+    "src/upsampler/scalar.rs",
+    "src/upsampler.rs"
+  ],
+  "review": "All existing algorithm changes are behind default-false source_islow/source_rows opt-in; SIMD source files unchanged. Extra private fields do change internal layout.",
+  "retained_provenance_files_verified": 105,
+  "retained_qt_cases": 32,
+  "retained_explicit_subsampling_cases": 64,
+  "fresh_independent_heldouts": 12,
+  "remaining": [
+    "production texture average integration",
+    "source path SIMD and performance",
+    "ARM and Windows runtime",
+    "large and streamed asset acceptance"
+  ]
+}
