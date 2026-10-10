@@ -1,0 +1,141 @@
+{
+  "cases": [
+    {
+      "name": "left-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "left-press-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "right-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "right-press-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "left-relative-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "right-relative-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "unrelated-release-retains-left",
+      "eye": [
+        0.0,
+        0.0,
+        1.6800000667572021
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.6057029097995548,
+      "pitch": -0.03490658387872768,
+      "captured": false,
+      "undo": 0
+    },
+    {
+      "name": "left-release-ends-with-right-held",
+      "eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "captured": false,
+      "undo": 0
+    }
+  ],
+  "scope": "actual frozen Viewport mouse event handlers/FirstPerson.on_look, controlled ordered QMouseEvents; not rendered XTEST"
+}

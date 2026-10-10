@@ -1,0 +1,6 @@
+{
+  "source_revision": "1e36c0dea94895613372a5c333f3587c63d3fbac",
+  "binary_sha256": "a621372a626e713515f62c4bf1a5f92bf2eb93a1b1fda85d5fabe04595250983",
+  "verdict": "FAIL all8 source event controls:7lost2degree look motions,1retainedwrong-button look after matching owner release",
+  "scope": "actual frozen Viewport QMouseEvent handlers versus native egui queued events; controlled input, not XTEST"
+}
