@@ -42,7 +42,6 @@ pub struct GeometryClipboard {
 pub struct IngeTrazoApp {
     /// Runtime-only native GPU viewport state; never serialized into the document.
     pub native_gpu_viewport_enabled: bool,
-    pub model_revision:u64,
     pub native_gpu_viewport_rect: Option<egui::Rect>,
     pub native_gpu_viewport_texture: Option<egui::TextureId>,
     pub document_session: crate::document_session::DocumentSession,
@@ -139,7 +138,7 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
-            native_gpu_viewport_enabled:false,model_revision:0,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
+            native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
             component_edit_stack: Vec::new(),
             scene,
             camera,
@@ -234,7 +233,6 @@ impl IngeTrazoApp {
         self.vcb_text.clear();
     }
 
-    pub fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);}
 
     pub fn new_document(&mut self) {self.request_document_action(crate::document_session::DocumentAction::New);}
 
