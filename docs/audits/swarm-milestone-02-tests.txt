@@ -1,0 +1,291 @@
+   Compiling ingetrazo-core v0.3.15 (/work/crates/ingetrazo-core)
+   Compiling ingetrazo-formats v0.3.15 (/work/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/work/crates/ingetrazo-tools)
+   Compiling ingetrazo-render v0.3.15 (/work/crates/ingetrazo-render)
+   Compiling ingetrazo-gui v0.3.15 (/work/crates/ingetrazo-gui)
+   Compiling ingetrazo-cli v0.3.15 (/work/crates/ingetrazo-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.03s
+     Running unittests src/main.rs (target/debug/deps/ingetrazo-37fa2355b3753cd5)
+
+running 2 tests
+test tests::test_cli_self_check ... ok
+test tests::test_cli_convert_headless ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_core-adeed2fb408092d8)
+
+running 50 tests
+test camera::tests::test_camera_orbit_and_view ... ok
+test camera::tests::test_compare_lookat ... ok
+test composition::tests::test_paper_dimensions ... ok
+test composition::tests::test_sacred_equation_cube_at_scale ... ok
+test composition::tests::test_sheet_creation_and_bounds ... ok
+test components::tests::recursive_replacements_and_missing_ids_are_atomic ... ok
+test components::tests::linked_updates_preserve_placements_and_unique_instances_detach ... ok
+test composition::tests::test_scale_formatting_and_parsing ... ok
+test dimensions::tests::test_dimension_deserialize_ab_format ... ok
+test geometry::tests::test_edge_length_and_closest_point ... ok
+test geometry::tests::test_face_normal_and_area ... ok
+test containers::tests::empty_selection_and_invalid_transform_do_not_mutate_scene ... ok
+test georef::tests::test_datum_derives_zone_and_hemisphere ... ok
+test georef::tests::test_geopath_area_and_length ... ok
+test georef::tests::test_north_angle_rotation ... ok
+test georef::tests::test_profile_sampling ... ok
+test containers::tests::grouping_and_explosion_preserve_holes_attrs_and_rebuild_topology ... ok
+test containers::tests::multi_explode_lifts_children_and_bakes_all_transforms_without_index_skips ... ok
+test georef::tests::test_round_trip_under_1mm_city_scale ... ok
+test georef::tests::test_utm_forward_inverse_round_trip ... ok
+test georef::tests::test_survey_point_csv_parsing ... ok
+test georef::tests::test_zone_for_lon ... ok
+test history::tests::test_add_and_delete_face_command ... ok
+test history::tests::test_geopath_command_undo_redo ... ok
+test history::tests::test_composite_transaction ... ok
+test history::tests::test_geopoints_command_undo_redo ... ok
+test history::tests::test_move_command_undo_redo ... ok
+test math::tests::test_newell_normal_and_area ... ok
+test math::tests::test_point_key_welding ... ok
+test mesh::tests::test_mesh_vertex_welding ... ok
+test mesh::tests::test_mesh_cube_volume ... ok
+test render_blender::tests::test_command_building ... ok
+test render_blender::tests::test_kelvin_to_rgb_values ... ok
+test render_blender::tests::test_progress_parsing ... ok
+test section::tests::test_section_clipping ... ok
+test section::tests::test_section_symbols ... ok
+test snap::tests::test_encouraged_point_tracking_guide ... ok
+test snap::tests::test_parallel_reference_inference ... ok
+test snap::tests::test_snap_endpoints_and_midpoints ... ok
+test snap::tests::test_two_point_crossing ... ok
+test triangulate::tests::test_convex_quad_fan ... ok
+test topology::tests::test_find_cycle ... ok
+test units::tests::test_parse_length_units ... ok
+test triangulate::tests::test_holed_polygon ... ok
+test solids::tests::rejects_invalid_inputs_without_mutation ... ok
+test solids::tests::test_solid_report_and_union ... ok
+test solids::tests::container_paint_is_baked_but_explicit_face_paint_wins ... ok
+test solids::tests::group_transforms_trim_split_direction_and_provenance ... ok
+test solids::tests::rotated_overlap_and_shared_face_union ... ok
+test solids::tests::overlap_containment_coincident_and_empty ... ok
+
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/boolean_acceptance.rs (target/debug/deps/boolean_acceptance-79fa6552a791d28a)
+
+running 2 tests
+test oracle_rejects_old_copy_and_concatenate_placeholders ... ok
+test overlapping_boxes_have_analytic_boolean_volumes_and_closed_boundaries ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_i18n.rs (target/debug/deps/test_i18n-b2e7b888ddf29ca1)
+
+running 1 test
+test test_i18n_all_languages_and_fallbacks ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_formats-3bd4f4cc0dcfe749)
+
+running 11 tests
+test gltf::tests::reflected_instance_retains_outward_winding ... ok
+test gltf::tests::nested_world_geometry_is_exported ... ok
+test gltf::tests::hidden_parent_suppresses_descendants_and_empty_has_no_accessors ... ok
+test ifc::tests::test_ifc_guid_length_and_validity ... ok
+test dae::tests::test_dae_export_basic_cube ... ok
+test ifc::tests::test_ifc_export_basic_structure ... ok
+test gltf::tests::textual_and_binary_containers_are_distinct ... ok
+test tests::test_stl_export_and_import ... ok
+test tests::test_convert_file ... ok
+test tests::test_obj_export_and_import ... ok
+test tests::test_igz_save_and_load ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/native_preservation.rs (target/debug/deps/native_preservation-f9f85385a7c08b19)
+
+running 11 tests
+test replacement_face_does_not_inherit_deleted_face_metadata ... ok
+test native_camera_section_and_datum_edits_use_original_schema ... ok
+test renamed_and_reordered_views_and_sections_keep_identity_metadata ... ok
+test fresh_rust_sheet_saves_in_python_composition_schema ... ok
+test survey_points_and_paths_preserve_metadata_through_rename_reorder_and_edit ... ok
+test texture_files_with_same_basename_get_distinct_archive_entries ... ok
+test original_composer_edits_preserve_unsupported_items_and_title_rows ... ok
+test native_noop_preserves_every_nested_value_and_repeated_save ... ok
+test edited_nested_instance_detaches_geometry_preserving_original_definition_and_metadata ... ok
+test explicit_components_share_updates_while_plain_proto_groups_remain_independent ... ok
+test zip_embedded_texture_and_survey_bytes_survive_without_disk_files ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/preservation_acceptance.rs (target/debug/deps/preservation_acceptance-8bd2c07003d70b59)
+
+running 3 tests
+test renamed_material_retains_unknown_source_attributes ... ok
+test deleting_edge_does_not_strip_surviving_curve_metadata ... ok
+test edited_geometry_material_layer_and_group_replace_raw_baseline ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/roundtrips.rs (target/debug/deps/roundtrips-5520dc9970305f66)
+
+running 9 tests
+test test_stl_binary_roundtrip ... ok
+test test_obj_export_and_import_roundtrip ... ok
+test test_stl_ascii_roundtrip ... ok
+test test_glb_export ... ok
+test test_stl_auto_detect ... ok
+test test_dxf_export_and_import ... ok
+test test_igz_format1_roundtrip ... ok
+test test_igz_format2_zip_roundtrip ... ok
+test test_load_example_banca_pergola ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_gui-10f0121a4206f302)
+
+running 22 tests
+test blender::tests::test_resolution_presets ... ok
+test blender::tests::test_blender_state_initialization ... ok
+test component_edit::tests::cancel_and_fragment_save_preserve_document_and_history ... ok
+test component_edit::tests::component_edit_commits_all_instances_once_and_undo_redo_restores_registry ... ok
+test app::tests::test_cad_clipboard_and_group_operations ... ok
+test tests::test_app_camera_presets ... ok
+test app::document_camera_tests::visible_camera_is_saved_restored_and_reset_for_new_document ... ok
+test component_edit::tests::mixed_selection_component_creation_and_explosion_are_reversible ... ok
+test component_edit::tests::nested_component_edit_propagates_and_folds_into_one_outer_history_entry ... ok
+test component_edit::tests::paste_retains_link_but_creates_unique_instance_uids ... ok
+test tests::test_app_initialization ... ok
+test tests::test_app_delete_and_select_all ... ok
+test tests::test_app_tool_switching ... ok
+test tests::test_app_undo_redo ... ok
+test tool_history::tests::cancel_invalid_vcb_and_selection_do_not_create_undo_commits ... ok
+test tool_history::tests::failed_path_sweep_reports_error_without_document_or_history_mutation ... ok
+test tool_history::tests::click_and_vcb_pushpull_each_create_one_undo_commit ... ok
+test tool_history::tests::transform_previews_are_inert_and_vcb_commits_undo_once ... ok
+test app::ordered_solid_selection_tests::first_selected_group_is_cutter_even_when_scene_order_is_reversed ... ok
+test app::tests::solid_boolean_prepares_before_undo_and_restores_inputs ... ok
+test app::tests::test_load_example_pergola ... ok
+test app::tests::test_group_3_colors ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_render-27c4fed2e3b492bd)
+
+running 5 tests
+test tests::test_buffer_creation_and_append ... ok
+test tests::test_edge_classification_and_hlr ... ok
+test tests::test_snap_marker_glyphs ... ok
+test tests::test_selection_buffers ... ok
+test tests::test_visual_styles_presets ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_tools-c3a9d48d5c4e2e2c)
+
+running 43 tests
+test arc::tests::test_3point_arc_tool ... ok
+test arc::tests::test_2point_arc_tool ... ok
+test eraser::tests::test_eraser_tool_soften_toggle ... ok
+test circle::tests::test_circle_tool_segments_and_vcb ... ok
+test circle::tests::test_circle_tool_two_clicks ... ok
+test eraser::tests::test_eraser_tool_erase_edge ... ok
+test freehand::tests::test_rdp_simplification ... ok
+test followme::tests::invalid_path_and_axis_crossing_are_atomic ... ok
+test followme::tests::path_ordering_rejects_branches_and_disconnected_chains ... ok
+test line::tests::test_line_tool_draw_and_rubber_band ... ok
+test line::tests::test_line_tool_closing_cycle_creates_face ... ok
+test line::tests::test_line_tool_vcb_input ... ok
+test move_tool::tests::test_move_tool_array_repeat ... ok
+test move_tool::tests::test_move_tool_copy_mode ... ok
+test move_tool::tests::test_move_tool_translation ... ok
+test offset::tests::test_offset_tool_inward ... ok
+test paint::tests::test_paint_tool_apply_and_sample ... ok
+test pushpull::tests::invalid_or_sub_weld_extrusion_is_atomic ... ok
+test rectangle::tests::test_rectangle_tool_two_clicks ... ok
+test rectangle::tests::test_rectangle_tool_xz_plane ... ok
+test rectangle::tests::test_rectangle_tool_vcb_input ... ok
+test pushpull::tests::test_pushpull_extrude_cube ... ok
+test pushpull::tests::test_pushpull_vcb_and_repeat ... ok
+test rotate_tool::tests::test_rotate_tool_90_degrees ... ok
+test rotate_tool::tests::test_rotate_tool_vcb_degrees ... ok
+test scale_tool::tests::test_scale_tool_uniform ... ok
+test select::tests::test_select_tool_double_click ... ok
+test select::tests::test_select_tool_single_click ... ok
+test tape::tests::test_tape_tool_measurement_and_guides ... ok
+test tape::tests::test_tape_tool_vcb ... ok
+test tests::test_create_tools ... ok
+test select::tests::test_select_tool_triple_click_all_connected ... ok
+test tests::test_dimension_tool ... ok
+test tests::test_line_tool_drawing ... ok
+test tests::test_polygon_tool ... ok
+test tests::test_rectangle_tool_drawing ... ok
+test tests::test_section_plane_tool ... ok
+test followme::tests::straight_and_bent_paths_form_mitered_solids ... ok
+test fillet::tests::one_edge_creates_tangent_strip_caps_curves_and_analytic_volume ... ok
+test pushpull::tests::repeated_cap_pushes_keep_whole_polygon_and_metadata ... ok
+test fillet::tests::concave_edge_adds_material_and_invalid_radius_is_atomic ... ok
+test fillet::tests::transformed_solid_rounding_uses_world_radius ... ok
+test followme::tests::holed_profile_and_closed_circular_path ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/fillet_acceptance.rs (target/debug/deps/fillet_acceptance-eb181b61f4e951de)
+
+running 2 tests
+test invalid_radii_are_refused_atomically ... ok
+test radius_and_segments_create_tangent_cylinder_geometry ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/followme_acceptance.rs (target/debug/deps/followme_acceptance-4a5380fd706c24c3)
+
+running 3 tests
+test branched_edge_network_is_rejected ... ok
+test malformed_paths_refuse_without_mutation ... ok
+test bent_path_has_corner_and_preserves_profile_material ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pushpull_acceptance.rs (target/debug/deps/pushpull_acceptance-dc40695d30255dfa)
+
+running 6 tests
+test invalid_face_does_not_mutate_document ... ok
+test standalone_holed_profile_creates_caps_and_inner_walls ... ok
+test nonfinite_distance_is_rejected_atomically ... ok
+test attached_edit_preserves_unrelated_solid_and_loose_wire_metadata ... ok
+test existing_solid_cap_push_and_recess_preserve_single_closed_boundary ... ok
+test embedded_pocket_and_through_cut_have_analytic_removed_volume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_formats
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_gui
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_render
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_tools
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

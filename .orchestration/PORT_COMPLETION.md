@@ -23,3 +23,5 @@ Review actual diffs and acceptance evidence. Cherry-pick reviewed commits into c
 - 2026-10-09: active goal created; three isolated first-stage workers launched from f2537fc. Source preservation and geometry correction proceed in parallel; validation supplies independent acceptance gates.
 
 - 2026-10-09: integrated reviewed source through77d921e. Corrected lossy preservation, geometry placeholders, tool undo, camera synchronization, cutter ordering, glTF container/recursive transforms and actual textured-render panic. First milestone publication and cloud CI pending. Next worker document registry commits b56e0d4/d5ebbc5 not yet integrated; geometry true sweep/fillet underway; validator independent source oracles underway.
+
+- 2026-10-09: first milestone f1499d4 public and cloud CI passed run38010979180. Second stage through2da7c62:170 tests, shared/nested editor original-runtime identity, group/explode correction, real FollowMe four shapes and Fillet three configurations. Root next exchange geometry; document worker recovery/preferences, geometry wider Fillet, validator exchange differential. Loose-geometry clipboard remains P12 open.
