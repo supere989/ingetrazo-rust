@@ -548,5 +548,10 @@
     "Named sRGB/ignored-alpha candidate causality not proved from scalar controls",
     "Dark appearance source font-smoothing policy remains broader scope",
     "ARM positive presentation callback still open"
-  ]
+  ],
+  "direction_boundary": {
+    "scalar_change": "For nonuniform RGB, invert-before-gray is old coverage minus1. For uniform RGB both operations are identical.",
+    "retained_times": "Every retained Times discrepancy reconstructs source coverage = native plus1. Scalar inversion order alone therefore cannot explain or close this residual; it moves opposite on nonuniform RGB.",
+    "context_candidate": "Named sRGB and opaque RGB32 may change actual native sample bytes. Causality and tile closure require actual Mac replay, not scalar admission."
+  }
 }
