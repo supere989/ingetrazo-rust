@@ -222,6 +222,8 @@ impl MoveTool {
 }
 
 impl Tool for MoveTool {
+    fn visit_image_metadata_roots(&self,visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){for(_,image)in &self.original_images{visit(image);}}
+    fn preserves_global_preview_on_context_exit(&self)->bool{self.start_point.is_some()&&!self.is_copy_mode&&!self.target_images.is_empty()&&self.target_vertices.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()}
     fn take_image_frame_command(&mut self)->Option<ingetrazo_core::image_plane::ImageFrameCommand>{self.image_command.take()}
     fn placement_preview(&self)->Option<crate::base::PlacementPreview<'_>> {
         if self.start_point.is_none() || self.is_copy_mode || self.original_groups.is_empty()

@@ -415,8 +415,9 @@ impl IngeTrazoApp {
         if self.component_edit_stack.is_empty() {self.status_message="No group edit is active".into();return;}
         // Validate the model after retiring transient preview without changing
         // the live tool, Scene, inference state, or history on refusal.
+        let preserve_global_preview=self.active_tool.preserves_global_preview_on_context_exit();
         let mut finishing_scene=self.scene.clone();
-        self.active_tool.restore_transient_model(&mut finishing_scene);
+        if !preserve_global_preview{self.active_tool.restore_transient_model(&mut finishing_scene);}
         let session=self.component_edit_stack.last().unwrap();
         let (candidate,changed)=match component_candidate(session,&finishing_scene) {Ok(result)=>result,Err(error)=>{self.status_message=error;return;}};
         // Lift target-tagged ordinary commands before changing either stack.
@@ -453,7 +454,7 @@ impl IngeTrazoApp {
         }
         let mut parked_candidates:Vec<_>=self.component_edit_stack[..self.component_edit_stack.len()-1].iter().map(|parent|parent.original_scene.clone()).collect();
         for parent in &mut parked_candidates {for bake in &bakes {if let Err(error)=bake.apply(parent){self.status_message=error;return;}}}
-        self.set_tool(ToolType::Select);
+        if !preserve_global_preview{self.set_tool(ToolType::Select);}
         let session=self.component_edit_stack.pop().unwrap();
         if !changed {
             if let Some(parent)=self.component_edit_stack.last_mut() {
