@@ -1,0 +1,7 @@
+{
+  "cloud_failure": "Actual original curve after Move:Line active/Undo1/memoryempty; recorded events stop at movedrim Move-click, no post-switch away/return.",
+  "change": "Acknowledge actual original away event before returning; acknowledge actual return before waiting for memory. Existing wait bound unchanged, no retries.",
+  "fresh_positive": "PASS original center/Move/Delete with event acknowledgement",
+  "independent_coalesced_negative": "pending",
+  "full_parity": "OPEN"
+}
