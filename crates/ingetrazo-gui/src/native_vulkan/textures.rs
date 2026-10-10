@@ -64,6 +64,7 @@ impl Textures{
  }
  pub fn abort(&mut self,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64)->Result<(),String>{drop(candidate.pool.take());for buffer in candidate.buffers{resources.retire(buffer)?;}resources.collect(fence,completed)?;self.stats.rollbacks+=1;Ok(())}
  pub(crate) fn preflight_publication(&mut self,context:&VulkanContext,resources:&Resources,candidate:&Candidate,fence:vk::Fence,completed:u64,extra_old:&[BufferId],extra_next:&[BufferId])->Result<Publication,String>{
+  if candidate.references.is_none(){return Err("Texture candidate lacks reference publication".into());}
   let mut old=Vec::new();old.try_reserve_exact(self.buffers.len().checked_add(extra_old.len()).ok_or("Retirement count overflow")?).map_err(|_|"Retirement list admission")?;old.extend_from_slice(&self.buffers);old.extend_from_slice(extra_old);
   let mut next=Vec::new();next.try_reserve_exact(candidate.buffers.len().checked_add(extra_next.len()).ok_or("Candidate count overflow")?).map_err(|_|"Candidate list admission")?;next.extend_from_slice(&candidate.buffers);next.extend_from_slice(extra_next);
   self.cache.preflight_publication(candidate.images.iter().chain(candidate.references.iter().flat_map(|r|r.images())))?;
@@ -112,6 +113,7 @@ impl Textures{
  }
  pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16])->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp)}
  pub fn image_stats(&self)->super::reference_images::Stats{self.references.stats}
+ pub fn discard_average_means(&mut self){self.averages.clear();self.stats.average_entries=0;}
  pub fn set_publication_entry_limit(&mut self,limit:Option<usize>){self.cache.set_publication_entry_limit(limit);}
  pub fn configure_average(&mut self,limits:ingetrazo_render::source_texture_decode::Limits,max_entries:usize)->Result<(),String>{self.averages.configure(limits,max_entries)}
  pub fn set_pressure_for_probe(&mut self,enabled:bool){self.probe_pressure=enabled;}

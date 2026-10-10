@@ -9,6 +9,7 @@ pub struct Cache { entries:HashMap<AssetId,[f32;3]>,limits:Limits,max_entries:us
 pub struct Candidate { entries:HashMap<AssetId,[f32;3]> }
 impl Cache {
  pub fn new(limits:Limits,max_entries:usize)->Self { Self{entries:HashMap::new(),limits,max_entries,stats:Stats::default()} }
+ pub fn clear(&mut self){self.entries.clear();self.stats.retained_entries=0;}
  pub fn limits(&self)->Limits{self.limits}
  pub fn configure(&mut self,limits:Limits,max_entries:usize)->Result<(),String>{
   if max_entries<self.entries.len(){return Err("Average cache policy below retained entries".into());}
@@ -53,6 +54,7 @@ mod tests{
   let mut candidate=Candidate::default();assert_eq!(cache.prepare(&mut candidate,id,&bytes).unwrap(),mean);assert_eq!(cache.stats.decodes,2);
   assert!(candidate.entries.is_empty());assert_eq!(cache.entries.len(),1);
   cache.publish(Candidate::default(),&Default::default());assert_eq!(cache.entries.get(&id),Some(&mean));
+  cache.clear();assert!(cache.entries.is_empty());assert_eq!(cache.stats.retained_entries,0);
  }
  #[test]fn cold_budget_refusal_never_publishes(){
   let bytes=png();let mut ids=super::super::texture_cache::TextureCache::default();let id=ids.identify(&bytes).id();
