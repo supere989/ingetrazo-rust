@@ -1,0 +1,259 @@
+{
+  "source_sha": "85905aa44896cede78553f7a9467144991c2488f",
+  "binary_sha256": "79396b71333df1247fe95e0998569081c3642d10b32536ec9c595fcadb8390cb",
+  "oracle_sha256": "8cb7609956ff3ca4592a7ed1ff4f34cbb3c549ee5fcde353563bcc952994c55e",
+  "rows": [
+    {
+      "name": "arrow",
+      "source_sha256": "47e94df223e4ffb8b147a9d16331b68396d8e824c9f262455b0cb45ab295affd",
+      "native_sha256": "ed3127e1387275b6115280d4cb9c5f066873a9aa091552ce7ccd956a98f95aa8",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "tick-selected",
+      "source_sha256": "031c4d0b53245d6b5e7bb7f6fde18d245e55fedbe37f7a64282b7260c960bdaf",
+      "native_sha256": "474c874b243bff1a6b70c621a1704e1bc03364a81d1bbb0bb1baed17806e97e6",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "none",
+      "source_sha256": "43f16cdc8d0f2b127749e82ee4f5daa411e7f7f600a5c7bbf435d61ef4f87d4c",
+      "native_sha256": "60cfa3fe706ece06acb4e3866fa2b802dc9a151f3bc53560bc508393d11bd594",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "partial-occlusion",
+      "source_sha256": "bbdd9a04b7b2db714b17e24fcbb6999df56ef319892259d65fd5da2b74479678",
+      "native_sha256": "a37a9a1ecdbd70f79726d68da398da41132a1f445bccecfa3962fa8a092693ec",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "hidden",
+      "source_sha256": "368bd85152f71f06455b22c734840a72d9feb2e810312fdafb03dac366fdf8fd",
+      "native_sha256": "c1a258cd48e6b262bf47f00934d4e8c3f6475dc964632b2955edf044bdd74ba0",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-right",
+      "source_sha256": "e833562714849fdb71dafd01bbc62d17cdb6186f1f33b15ed44c58545a0f6178",
+      "native_sha256": "302ac74bb7c390c6597e39e1a4cfbff8aa77bdcc85b2b1ba2f9cccdd4e975c65",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-left-selected",
+      "source_sha256": "9c77827d9c99f7a2036ad13e0527480d1e7985c09642e95d04e730f17468d639",
+      "native_sha256": "cb86153208e66362518319825fbcc0928daf6f3429813e5acb77c4af977d2be0",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-anchor-unprojectable",
+      "source_sha256": "02c0e743ec6e1b042666d1f967f57cc02123fd33af75ae5f0b19052f8ca5b2d2",
+      "native_sha256": "6569f62cace56762f164f8edd00fda15d4e62a5f4a64e73d69bfc38af3571864",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-hidden",
+      "source_sha256": "368bd85152f71f06455b22c734840a72d9feb2e810312fdafb03dac366fdf8fd",
+      "native_sha256": "c1a258cd48e6b262bf47f00934d4e8c3f6475dc964632b2955edf044bdd74ba0",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-empty",
+      "source_sha256": "78186476352d69d8fe944d07905a7f0e87474abc1b20163e113f7af92657f2f7",
+      "native_sha256": "a872f0970496190202252852c968b1f5d78511d4babe563b7cbe68ed2e647397",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "dim-hover",
+      "source_sha256": "dd671dfd60b79f849f181d93c3d4cc9267c0e9751026c9b051b165293a46e2c8",
+      "native_sha256": "6d0ae13c101ee3cb6b44e26b6e880631ced111ae792b9da2466b26acd2e3614c",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "dim-mm-axis",
+      "source_sha256": "0e6a747d7702dbe99c24c4cb1cb00218de773b5e956149b5260b0cc9675bd93e",
+      "native_sha256": "83f290e708805a04f77fb59c2e6f73df2fa782aebe33be5b969e391599a2216b",
+      "different_pixels": 9,
+      "first": [
+        {
+          "x": 250,
+          "y": 86,
+          "source": [
+            36,
+            84,
+            107,
+            255
+          ],
+          "native": [
+            37,
+            84,
+            108,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 87,
+          "source": [
+            214,
+            223,
+            228,
+            255
+          ],
+          "native": [
+            215,
+            223,
+            228,
+            255
+          ]
+        },
+        {
+          "x": 250,
+          "y": 87,
+          "source": [
+            36,
+            84,
+            107,
+            255
+          ],
+          "native": [
+            37,
+            84,
+            108,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 88,
+          "source": [
+            199,
+            211,
+            217,
+            255
+          ],
+          "native": [
+            199,
+            211,
+            218,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 89,
+          "source": [
+            209,
+            219,
+            224,
+            255
+          ],
+          "native": [
+            210,
+            219,
+            224,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 90,
+          "source": [
+            214,
+            223,
+            228,
+            255
+          ],
+          "native": [
+            215,
+            223,
+            228,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 91,
+          "source": [
+            214,
+            223,
+            228,
+            255
+          ],
+          "native": [
+            215,
+            223,
+            228,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 93,
+          "source": [
+            214,
+            223,
+            228,
+            255
+          ],
+          "native": [
+            215,
+            223,
+            228,
+            255
+          ]
+        },
+        {
+          "x": 249,
+          "y": 95,
+          "source": [
+            177,
+            194,
+            202,
+            255
+          ],
+          "native": [
+            177,
+            193,
+            202,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dim-feet-fractional",
+      "source_sha256": "d8e6d397baf6e0771d74ee215655fd0d289658fb781335016afa9852915d52b7",
+      "native_sha256": "a7fd72cde808b858fc9279681494f94c2c23147ee9232cdacb08a585ab72c36d",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-hover",
+      "source_sha256": "0219e42e93eb4df69cd7a0e4fd65f859ab27de84d727c464d82ec18df7afd856",
+      "native_sha256": "55995f64d84623a4d68e2a7a9c7058b1579a09b75ca38a9f684bdcf451766b61",
+      "different_pixels": 0,
+      "first": []
+    },
+    {
+      "name": "leader-splitlines",
+      "source_sha256": "e47c70c3df7caffe2a9b5daff05d6b877e01e5e24e782fbef5316750d491abbb",
+      "native_sha256": "d7f29a3a7728d903f293369e3a9d18956aaf95f540a44faef2c17fa4decca058",
+      "different_pixels": 0,
+      "first": []
+    }
+  ],
+  "passed": false,
+  "scope": "Actual native Vulkan draw of recorded original operation sequence; real projection/depth/font-platform/application source parity remains required"
+}

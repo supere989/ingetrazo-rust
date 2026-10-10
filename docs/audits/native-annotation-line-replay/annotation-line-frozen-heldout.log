@@ -1,0 +1,6 @@
+56 cases; failures 1
+Traceback (most recent call last):
+  File "/tmp/annotation-line-frozen-heldout.py", line 28, in <module>
+    report=dict(qt=qVersion(),binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),cases=len(rows),results=results,passed=all(r["different_pixels"]==0 for r in results));(out/"result.json").write_text(json.dumps(report,indent=2)+"\n");print(report["cases"],"cases; failures",sum(r["different_pixels"]!=0 for r in results));assert report["passed"]
+                                                                                                                                                                                                                                                                                                                                                   ~~~~~~^^^^^^^^^^
+AssertionError

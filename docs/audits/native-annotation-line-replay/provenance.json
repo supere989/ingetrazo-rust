@@ -1,0 +1,7 @@
+{
+  "source_sha": "85905aa44896cede78553f7a9467144991c2488f",
+  "protocol_sha256": "62176fdfdc757c21688a6c6fd56bb79f389155bcd440848414afd5d2c3f9712b",
+  "source15": "14/15 exact; dim-mm-axis9 pixels FAIL",
+  "heldout56": "55/56 exact; case53 three pixels FAIL",
+  "scope": "Strict failures retained. No full annotation parity."
+}

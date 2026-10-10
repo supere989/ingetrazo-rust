@@ -1,0 +1,20 @@
+arrow 0
+tick-selected 0
+none 0
+partial-occlusion 0
+hidden 0
+leader-right 0
+leader-left-selected 0
+leader-anchor-unprojectable 0
+leader-hidden 0
+leader-empty 0
+dim-hover 0
+dim-mm-axis 9
+dim-feet-fractional 0
+leader-hover 0
+leader-splitlines 0
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/check-native-annotation-source-images.py", line 34, in <module>
+    assert report["passed"],"Strict source annotation image parity remains FAIL"
+           ~~~~~~^^^^^^^^^^
+AssertionError: Strict source annotation image parity remains FAIL
