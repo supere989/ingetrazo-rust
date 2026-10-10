@@ -105,10 +105,12 @@ impl<A: App> ApplicationHandler for AppWrapper<A> {
     }
 
     fn exiting(&mut self, _: &ActiveEventLoop) {
-        self.app
-            .as_mut()
-            .unwrap()
-            .on_exit(self.egui_app.as_mut().unwrap());
+        // Startup may have failed before either owner was published. The
+        // unsubmitted guards already released those candidates; only a live
+        // application has submitted resources requiring the normal exit drain.
+        if let (Some(system), Some(app)) = (&mut self.app, &mut self.egui_app) {
+            system.on_exit(app);
+        }
     }
 }
 
