@@ -74,7 +74,9 @@ impl ToolContext {
 
 pub trait Tool: Send + Sync {
     /// Actionable preparation error from the last pointer commit, if any.
-    fn error_message(&self) -> Option<&str> { None }
+    fn error_message(&self) -> Option<&str> {
+        None
+    }
 
     fn tool_type(&self) -> ToolType;
     fn name(&self) -> &'static str;
@@ -98,9 +100,15 @@ pub trait Tool: Send + Sync {
     }
     fn on_move(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_release(&mut self, _scene: &mut Scene, _ctx: &ToolContext, _drag_distance: f64) {}
-    fn preview_mesh(&self) -> Option<&Mesh> { None }
-    fn value_label(&self) -> Option<(String,DVec3)> { None }
-    fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> { self.rubber_band().into_iter().collect() }
+    fn preview_mesh(&self) -> Option<&Mesh> {
+        None
+    }
+    fn value_label(&self) -> Option<(String, DVec3)> {
+        None
+    }
+    fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
+        self.rubber_band().into_iter().collect()
+    }
     fn on_cancel(&mut self, _scene: &mut Scene) {}
     fn on_vcb_input(&mut self, _scene: &mut Scene, _text: &str) -> Result<(), String> {
         Ok(())
@@ -157,9 +165,56 @@ pub fn pick_face(mesh: &Mesh, ray: &Ray) -> Option<(usize, f64, DVec3)> {
 }
 
 /// Scene-aware picking excludes the side hidden by the document cut.
-pub fn pick_scene_face(scene:&Scene,ray:&Ray)->Option<(usize,f64,DVec3)>{let mut closest=None;let mut min_t=f64::INFINITY;for id in 0..scene.mesh.faces.len(){for(a,b,c)in scene.mesh.triangulate_face(id){if let Some((t,p))=ray_triangle_intersect(ray,a,b,c){if t<min_t&&scene.section_point_visible(p){min_t=t;closest=Some((id,t,p));}}}}closest}
-pub fn pick_scene_edge(scene:&Scene,ray:&Ray,tolerance:f64)->Option<usize>{let mut closest=None;let mut min_dist=tolerance;for(id,edge)in scene.mesh.edges.iter().enumerate(){let Some((a,b))=scene.section_segment(scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position)else{continue;};let(dist,t)=ray_segment_distance(ray,a,b);if dist<min_dist&&t>0.{min_dist=dist;closest=Some(id);}}closest}
-pub fn pick_scene_vertex(scene:&Scene,ray:&Ray,tolerance:f64)->Option<usize>{let mut closest=None;let mut min_dist=tolerance;for(id,vertex)in scene.mesh.vertices.iter().enumerate(){let p=vertex.position;if !scene.section_point_visible(p){continue;}let t=(p-ray.origin).dot(ray.dir);let d=(p-ray.at(t)).length();if t>0.&&d<min_dist{min_dist=d;closest=Some(id);}}closest}
+pub fn pick_scene_face(scene: &Scene, ray: &Ray) -> Option<(usize, f64, DVec3)> {
+    let mut closest = None;
+    let mut min_t = f64::INFINITY;
+    for id in 0..scene.mesh.faces.len() {
+        for (a, b, c) in scene.mesh.triangulate_face(id) {
+            if let Some((t, p)) = ray_triangle_intersect(ray, a, b, c) {
+                if t < min_t && scene.section_point_visible(p) {
+                    min_t = t;
+                    closest = Some((id, t, p));
+                }
+            }
+        }
+    }
+    closest
+}
+pub fn pick_scene_edge(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usize> {
+    let mut closest = None;
+    let mut min_dist = tolerance;
+    for (id, edge) in scene.mesh.edges.iter().enumerate() {
+        let Some((a, b)) = scene.section_segment(
+            scene.mesh.vertices[edge.v0].position,
+            scene.mesh.vertices[edge.v1].position,
+        ) else {
+            continue;
+        };
+        let (dist, t) = ray_segment_distance(ray, a, b);
+        if dist < min_dist && t > 0. {
+            min_dist = dist;
+            closest = Some(id);
+        }
+    }
+    closest
+}
+pub fn pick_scene_vertex(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usize> {
+    let mut closest = None;
+    let mut min_dist = tolerance;
+    for (id, vertex) in scene.mesh.vertices.iter().enumerate() {
+        let p = vertex.position;
+        if !scene.section_point_visible(p) {
+            continue;
+        }
+        let t = (p - ray.origin).dot(ray.dir);
+        let d = (p - ray.at(t)).length();
+        if t > 0. && d < min_dist {
+            min_dist = d;
+            closest = Some(id);
+        }
+    }
+    closest
+}
 
 /// Distance and projection from point `p` to segment `ab`.
 pub fn point_segment_distance(p: DVec3, a: DVec3, b: DVec3) -> (f64, DVec3) {
@@ -242,7 +297,9 @@ pub fn create_tool(tool_type: ToolType) -> Box<dyn Tool> {
         ToolType::Line => Box::new(crate::line::LineTool::default()),
         ToolType::Freehand => Box::new(crate::freehand::FreehandTool::default()),
         ToolType::Rectangle => Box::new(crate::rectangle::RectangleTool::default()),
-        ToolType::RotatedRectangle => Box::new(crate::rotated_rectangle::RotatedRectangleTool::default()),
+        ToolType::RotatedRectangle => {
+            Box::new(crate::rotated_rectangle::RotatedRectangleTool::default())
+        }
         ToolType::Circle => Box::new(crate::circle::CircleTool::default()),
         ToolType::Polygon => Box::new(crate::polygon::PolygonTool::default()),
         ToolType::Arc => Box::new(crate::arc::ArcTool::default()),
@@ -263,13 +320,227 @@ pub fn create_tool(tool_type: ToolType) -> Box<dyn Tool> {
     }
 }
 
-#[cfg(test)]mod section_pick_tests{use super::*;use ingetrazo_core::section::SectionPlane;#[test]fn hidden_front_face_does_not_mask_visible_rear_face(){let mut scene=Scene::new();for z in[1.,-1.]{let ids=[DVec3::new(-1.,-1.,z),DVec3::new(1.,-1.,z),DVec3::new(0.,1.,z)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);}scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));scene.show_section_cuts=true;let ray=Ray::new(DVec3::new(0.,0.,3.),-DVec3::Z);assert_eq!(pick_scene_face(&scene,&ray).unwrap().0,1);scene.show_section_cuts=false;assert_eq!(pick_scene_face(&scene,&ray).unwrap().0,0);}
-#[test]fn crossing_edge_can_only_be_picked_on_visible_portion(){let mut scene=Scene::new();let a=scene.mesh.add_vertex(DVec3::new(-1.,0.,0.));let b=scene.mesh.add_vertex(DVec3::new(1.,0.,0.));scene.mesh.add_edge(a,b);scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;assert_eq!(pick_scene_edge(&scene,&Ray::new(DVec3::new(-0.5,0.,2.),-DVec3::Z),0.1),Some(0));assert_eq!(pick_scene_edge(&scene,&Ray::new(DVec3::new(0.5,0.,2.),-DVec3::Z),0.1),None);assert_eq!(pick_scene_vertex(&scene,&Ray::new(DVec3::new(1.,0.,2.),-DVec3::Z),0.1),None);}}
+#[cfg(test)]
+mod section_pick_tests {
+    use super::*;
+    use ingetrazo_core::section::SectionPlane;
+    #[test]
+    fn hidden_front_face_does_not_mask_visible_rear_face() {
+        let mut scene = Scene::new();
+        for z in [1., -1.] {
+            let ids = [
+                DVec3::new(-1., -1., z),
+                DVec3::new(1., -1., z),
+                DVec3::new(0., 1., z),
+            ]
+            .map(|p| scene.mesh.add_vertex(p));
+            scene.mesh.add_face(ids.to_vec(), vec![]);
+        }
+        scene
+            .section_planes
+            .push(SectionPlane::new(DVec3::ZERO, DVec3::Z, "A", "A"));
+        scene.show_section_cuts = true;
+        let ray = Ray::new(DVec3::new(0., 0., 3.), -DVec3::Z);
+        assert_eq!(pick_scene_face(&scene, &ray).unwrap().0, 1);
+        scene.show_section_cuts = false;
+        assert_eq!(pick_scene_face(&scene, &ray).unwrap().0, 0);
+    }
+    #[test]
+    fn crossing_edge_can_only_be_picked_on_visible_portion() {
+        let mut scene = Scene::new();
+        let a = scene.mesh.add_vertex(DVec3::new(-1., 0., 0.));
+        let b = scene.mesh.add_vertex(DVec3::new(1., 0., 0.));
+        scene.mesh.add_edge(a, b);
+        scene
+            .section_planes
+            .push(SectionPlane::new(DVec3::ZERO, DVec3::X, "A", "A"));
+        scene.show_section_cuts = true;
+        assert_eq!(
+            pick_scene_edge(&scene, &Ray::new(DVec3::new(-0.5, 0., 2.), -DVec3::Z), 0.1),
+            Some(0)
+        );
+        assert_eq!(
+            pick_scene_edge(&scene, &Ray::new(DVec3::new(0.5, 0., 2.), -DVec3::Z), 0.1),
+            None
+        );
+        assert_eq!(
+            pick_scene_vertex(&scene, &Ray::new(DVec3::new(1., 0., 2.), -DVec3::Z), 0.1),
+            None
+        );
+    }
+}
 
-pub fn pick_section_plane(scene:&Scene,ray:&Ray,tolerance:f64)->Option<usize>{if !scene.show_section_planes{return None;}let mut closest=None;let mut distance=tolerance;for id in 0..scene.section_planes.len(){let frame=scene.section_frame(id)?;for edge in 0..4{let(d,t)=ray_segment_distance(ray,frame[edge],frame[(edge+1)%4]);if d<distance&&t>0.{distance=d;closest=Some(id);}}}closest}
+pub fn pick_section_plane(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usize> {
+    if !scene.show_section_planes {
+        return None;
+    }
+    let mut closest = None;
+    let mut distance = tolerance;
+    for id in 0..scene.section_planes.len() {
+        let frame = scene.section_frame(id)?;
+        for edge in 0..4 {
+            let (d, t) = ray_segment_distance(ray, frame[edge], frame[(edge + 1) % 4]);
+            if d < distance && t > 0. {
+                distance = d;
+                closest = Some(id);
+            }
+        }
+    }
+    closest
+}
 
-#[cfg(test)]mod section_entity_tests{use super::*;use ingetrazo_core::{section::SectionPlane,scene::SelectionItem};#[test]fn plane_frame_select_move_rotate_preserve_uid_and_leave_mesh_untouched(){let mut scene=Scene::new();scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));scene.show_section_planes=true;let uid=scene.section_planes[0].id;let frame=scene.section_frame(0).unwrap();let point=(frame[0]+frame[1])*0.5;let ctx=ToolContext::new(point,Ray::new(point+DVec3::Z*3.,-DVec3::Z));let mut select=crate::select::SelectTool::new();select.on_click(&mut scene,&ctx);assert!(scene.selection.contains(&SelectionItem::SectionPlane(0)));let mut movement=crate::move_tool::MoveTool::new();movement.gather_targets(&scene,&ctx);movement.execute_move(DVec3::X,&mut scene);assert_eq!(scene.section_planes[0].point,DVec3::X);let mut rotation=crate::rotate_tool::RotateTool::with_normal(DVec3::Y);rotation.gather_targets(&scene,&ctx);rotation.center=Some(DVec3::ZERO);rotation.execute_rotation(std::f64::consts::FRAC_PI_2,&mut scene);assert!((scene.section_planes[0].point+DVec3::Z).length()<1e-10);assert!((scene.section_planes[0].normal-DVec3::X).length()<1e-10);assert_eq!(scene.section_planes[0].id,uid);assert!(scene.mesh.vertices.is_empty());let before=scene.clone();movement.is_copy_mode=true;movement.execute_move(DVec3::Y,&mut scene);rotation.is_copy_mode=true;rotation.execute_rotation(0.5,&mut scene);assert_eq!(scene,before);scene.show_section_planes=false;assert!(pick_section_plane(&scene,&ctx.ray,0.2).is_none());}}
+#[cfg(test)]
+mod section_entity_tests {
+    use super::*;
+    use ingetrazo_core::{scene::SelectionItem, section::SectionPlane};
+    #[test]
+    fn plane_frame_select_move_rotate_preserve_uid_and_leave_mesh_untouched() {
+        let mut scene = Scene::new();
+        scene
+            .section_planes
+            .push(SectionPlane::new(DVec3::ZERO, DVec3::Z, "A", "A"));
+        scene.show_section_planes = true;
+        let uid = scene.section_planes[0].id;
+        let frame = scene.section_frame(0).unwrap();
+        let point = (frame[0] + frame[1]) * 0.5;
+        let ctx = ToolContext::new(point, Ray::new(point + DVec3::Z * 3., -DVec3::Z));
+        let mut select = crate::select::SelectTool::new();
+        select.on_click(&mut scene, &ctx);
+        assert!(scene.selection.contains(&SelectionItem::SectionPlane(0)));
+        let mut movement = crate::move_tool::MoveTool::new();
+        movement.gather_targets(&scene, &ctx);
+        movement.execute_move(DVec3::X, &mut scene);
+        assert_eq!(scene.section_planes[0].point, DVec3::X);
+        let mut rotation = crate::rotate_tool::RotateTool::with_normal(DVec3::Y);
+        rotation.gather_targets(&scene, &ctx);
+        rotation.center = Some(DVec3::ZERO);
+        rotation.execute_rotation(std::f64::consts::FRAC_PI_2, &mut scene);
+        assert!((scene.section_planes[0].point + DVec3::Z).length() < 1e-10);
+        assert!((scene.section_planes[0].normal - DVec3::X).length() < 1e-10);
+        assert_eq!(scene.section_planes[0].id, uid);
+        assert!(scene.mesh.vertices.is_empty());
+        let before = scene.clone();
+        movement.is_copy_mode = true;
+        movement.execute_move(DVec3::Y, &mut scene);
+        rotation.is_copy_mode = true;
+        rotation.execute_rotation(0.5, &mut scene);
+        assert_eq!(scene, before);
+        scene.show_section_planes = false;
+        assert!(pick_section_plane(&scene, &ctx.ray, 0.2).is_none());
+    }
+}
 
 /// Root placement containing the nearest visible nested group geometry.
-pub fn pick_scene_group(scene:&Scene,ray:&Ray,tolerance:f64)->Option<(usize,f64)>{fn distance(group:&ingetrazo_core::groups::Group,parent:glam::DMat4,scene:&Scene,ray:&Ray,tolerance:f64,best:&mut f64){if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){return;}let transform=parent*group.transform;for(id,face)in group.mesh.faces.iter().enumerate(){if face.attrs.get("hidden").and_then(|v|v.as_bool())==Some(true)||!scene.is_layer_visible(face.layer.as_deref()){continue;}for(a,b,c)in group.mesh.triangulate_face(id){if let Some((t,p))=ray_triangle_intersect(ray,transform.transform_point3(a),transform.transform_point3(b),transform.transform_point3(c)){if t<*best&&scene.section_point_visible(p){*best=t;}}}}for edge in &group.mesh.edges{if edge.hidden||!scene.is_layer_visible(edge.layer.as_deref()){continue;}let a=transform.transform_point3(group.mesh.vertices[edge.v0].position);let b=transform.transform_point3(group.mesh.vertices[edge.v1].position);if let Some((a,b))=scene.section_segment(a,b){let(d,t)=ray_segment_distance(ray,a,b);if d<tolerance&&t>0.&&t<*best{*best=t;}}}for child in &group.children{distance(child,transform,scene,ray,tolerance,best);}}
- let mut closest=None;let mut best=f64::INFINITY;for(id,group)in scene.groups.iter().enumerate(){let mut d=f64::INFINITY;distance(group,glam::DMat4::IDENTITY,scene,ray,tolerance,&mut d);if d<best{best=d;closest=Some((id,d));}}closest}
+pub fn pick_scene_group(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<(usize, f64)> {
+    fn distance(
+        group: &ingetrazo_core::groups::Group,
+        parent: glam::DMat4,
+        scene: &Scene,
+        ray: &Ray,
+        tolerance: f64,
+        best: &mut f64,
+    ) {
+        if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
+            return;
+        }
+        let transform = parent * group.transform;
+        for (id, face) in group.mesh.faces.iter().enumerate() {
+            if face.attrs.get("hidden").and_then(|v| v.as_bool()) == Some(true)
+                || !scene.is_layer_visible(
+                    face.layer
+                        .as_deref()
+                        .or_else(|| face.attrs.get("layer").and_then(|v| v.as_str())),
+                )
+            {
+                continue;
+            }
+            for (a, b, c) in group.mesh.triangulate_face(id) {
+                if let Some((t, p)) = ray_triangle_intersect(
+                    ray,
+                    transform.transform_point3(a),
+                    transform.transform_point3(b),
+                    transform.transform_point3(c),
+                ) {
+                    if t < *best && scene.section_point_visible(p) {
+                        *best = t;
+                    }
+                }
+            }
+        }
+        for edge in &group.mesh.edges {
+            if edge.hidden || !scene.is_layer_visible(edge.layer.as_deref()) {
+                continue;
+            }
+            if !edge.faces.is_empty()
+                && !edge.faces.iter().any(|&id| {
+                    group.mesh.faces.get(id).is_some_and(|face| {
+                        face.attrs.get("hidden").and_then(|v| v.as_bool()) != Some(true)
+                            && scene.is_layer_visible(
+                                face.layer
+                                    .as_deref()
+                                    .or_else(|| face.attrs.get("layer").and_then(|v| v.as_str())),
+                            )
+                    })
+                })
+            {
+                continue;
+            }
+            let a = transform.transform_point3(group.mesh.vertices[edge.v0].position);
+            let b = transform.transform_point3(group.mesh.vertices[edge.v1].position);
+            if let Some((a, b)) = scene.section_segment(a, b) {
+                let (d, t) = ray_segment_distance(ray, a, b);
+                if d < tolerance && t > 0. && t < *best {
+                    *best = t;
+                }
+            }
+        }
+        for child in &group.children {
+            distance(child, transform, scene, ray, tolerance, best);
+        }
+    }
+    let mut closest = None;
+    let mut best = f64::INFINITY;
+    for (id, group) in scene.groups.iter().enumerate() {
+        let mut d = f64::INFINITY;
+        distance(group, glam::DMat4::IDENTITY, scene, ray, tolerance, &mut d);
+        if d < best {
+            best = d;
+            closest = Some((id, d));
+        }
+    }
+    closest
+}
+
+#[cfg(test)]
+mod group_visibility_tests {
+    use super::*;
+    use ingetrazo_core::{groups::Group, layers::Layer, mesh::Mesh};
+    #[test]
+    fn hidden_or_attr_layer_faces_do_not_leave_pickable_group_boundaries() {
+        let mut mesh = Mesh::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| mesh.add_vertex(p));
+        mesh.add_face(ids.to_vec(), vec![]);
+        let mut scene = Scene::new();
+        scene.groups.push(Group::with_mesh("part", mesh));
+        let boundary = Ray::new(DVec3::new(0.5, 0., 3.), -DVec3::Z);
+        assert!(pick_scene_group(&scene, &boundary, 0.1).is_some());
+        scene.groups[0].mesh.faces[0]
+            .attrs
+            .insert("hidden".into(), serde_json::json!(true));
+        assert!(pick_scene_group(&scene, &boundary, 0.1).is_none());
+        scene.groups[0].mesh.faces[0].attrs.remove("hidden");
+        scene.groups[0].mesh.faces[0]
+            .attrs
+            .insert("layer".into(), serde_json::json!("Hidden"));
+        let mut layer = Layer::new("Hidden");
+        layer.visible = false;
+        scene.layers.push(layer);
+        assert!(pick_scene_group(&scene, &boundary, 0.1).is_none());
+        let a = scene.groups[0].mesh.add_vertex(DVec3::new(2., 0., 0.));
+        let b = scene.groups[0].mesh.add_vertex(DVec3::new(3., 0., 0.));
+        scene.groups[0].mesh.add_edge(a, b);
+        assert!(
+            pick_scene_group(&scene, &Ray::new(DVec3::new(2.5, 0., 3.), -DVec3::Z), 0.1).is_some()
+        );
+    }
+}
