@@ -23,17 +23,41 @@ fn main() {
                 required_chars: vec![],
             })
             .unwrap();
-        let font = matched.font;
+        let mut font = matched.font;
         let text = call["text"].as_str().unwrap();
+        if font
+            .shape_run(text, None)
+            .unwrap()
+            .iter()
+            .any(|g| g.id == 0)
+        {
+            font = resolver
+                .resolve(Request {
+                    family: f["requested"].as_str().unwrap().into(),
+                    bold: f["bold"].as_bool().unwrap(),
+                    italic: f["italic"].as_bool().unwrap(),
+                    required_chars: text.chars().collect(),
+                })
+                .unwrap()
+                .font;
+        }
         let width = (call["rect"][2].as_f64().unwrap() * 64.).floor() / 64.;
         let flags = call["flags"].as_u64().unwrap();
-        let advance = |s: &str| {
-            font.shape_run(s, None)
-                .unwrap()
-                .iter()
-                .map(|g| g.advance[0] as i64)
-                .sum::<i64>()
+        let shape = |s: &str| {
+            let bidi = unicode_bidi::BidiInfo::new(s, None);
+            let mut output = Vec::new();
+            for para in &bidi.paragraphs {
+                let (levels, runs) = bidi.visual_runs(para, para.range.clone());
+                for run in runs {
+                    output.extend(
+                        font.shape_run(&s[run.clone()], Some(levels[run.start].is_rtl()))
+                            .unwrap(),
+                    );
+                }
+            }
+            output
         };
+        let advance = |s: &str| shape(s).iter().map(|g| g.advance[0] as i64).sum::<i64>();
         let mut lines = Vec::new();
         for para in text.split('\n') {
             let mut current = String::new();
@@ -58,7 +82,7 @@ fn main() {
         for (i, line) in lines.iter().enumerate() {
             let a = advance(line) as f64 / 64.;
             let x = if flags & 4 != 0 {
-                (width - a) / 2.
+                (((width - a) * 64.) / 2.).floor() / 64.
             } else if flags & 2 != 0 {
                 width - a
             } else {
@@ -66,7 +90,7 @@ fn main() {
             };
             let baseline = font.ascent_26_6() as f64 / 64. + i as f64 * line_height;
             let mut cursor = x;
-            for g in font.shape_run(line, None).unwrap() {
+            for g in shape(line) {
                 glyphs.push(TextGlyph {
                     glyph: g.id,
                     position_px: [
@@ -98,7 +122,7 @@ fn main() {
             draws: vec![Draw {
                 origin_mm: [20., 30.],
                 text: Some(TextDraw {
-                    font,
+                    font: font.clone(),
                     scale_mm: 14. * 25.4 / 72. / 100. * 0.75,
                     italic: f["italic"].as_bool().unwrap(),
                     glyphs,
@@ -109,7 +133,21 @@ fn main() {
                 stroke: None,
                 stroke_options: None,
                 fill: Some([30f32 / 255., 36f32 / 255., 44f32 / 255., 1.]),
-                clip: None,
+                clip: if line_height * lines.len() as f64 > call["rect"][3].as_f64().unwrap()
+                    || lines.iter().any(|l| advance(l) as f64 / 64. > width)
+                {
+                    let w = call["rect"][2].as_f64().unwrap() * 14. * 25.4 / 72. / 100. * 0.75;
+                    let h = call["rect"][3].as_f64().unwrap() * 14. * 25.4 / 72. / 100. * 0.75;
+                    Some(vec![
+                        sheet_pdf::PathOp::Move([0., 0.]),
+                        sheet_pdf::PathOp::Line([w, 0.]),
+                        sheet_pdf::PathOp::Line([w, h]),
+                        sheet_pdf::PathOp::Line([0., h]),
+                        sheet_pdf::PathOp::Close,
+                    ])
+                } else {
+                    None
+                },
                 clip_intersection: None,
                 flatten_transform: false,
             }],
