@@ -114,5 +114,5 @@ To install IngeTrazo into your local user applications menu with `.igz` desktop 
 
 See the [parity progress tracker](docs/PARITY_PROGRESS.md) for the audited inventory, open gaps, release gates and reproducible evidence.
 
-The latest local reviewed integration passes 327 Rust tests and adds original-runtime saved-view recall, live dimension anchors, nested world measurement and outliner checks. glTF/GLB imports and corrected Y-up exports pass independent probes; face intersection and healing have original geometry comparisons. Four original engineering documents retain field/asset preservation and Python reopening. Full interactive and feature parity remains open; see the tracker for acceptance boundaries and current gaps.
+The latest local reviewed integration passes 335 Rust tests and adds original-runtime saved-view recall, live dimension anchors, nested world measurement and outliner checks. glTF/GLB imports and corrected Y-up exports pass independent probes; face intersection and healing have original geometry comparisons. Four original engineering documents retain field/asset preservation and Python reopening. Full interactive and feature parity remains open; see the tracker for acceptance boundaries and current gaps.
 
