@@ -1,0 +1,6 @@
+{
+  "source": "b07dd80",
+  "passed": 521,
+  "ignored": 2,
+  "scope": "Combined integer CAD and finite WSI; individual source stages independently passed actual RTX. Fresh combined GPU descriptor ownership/hardware replay remains pending; no main production adoption."
+}
