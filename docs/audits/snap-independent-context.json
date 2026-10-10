@@ -1,0 +1,24 @@
+{
+  "production_source": "1f55a6fcd5f15b324b478377f49082375f769ff4",
+  "validator": "2771665d18ab1175531165f4a650a180bd5073e5",
+  "backend": "eframe software Glow Xvfb; no ash/Metal claim",
+  "shift_release_changed_channels": 6914,
+  "original_cases": 10,
+  "negative_controls": [
+    "wrong kind",
+    "shifted point",
+    "missing fixture"
+  ],
+  "executables": {
+    "screen_snap_fixture": "873bb2a8dddc90a48bf280037c65aa71e76a5da8494f99eae0686e56378131c7",
+    "shift_inference_render_fixture": "2965f07dd9196a3c374d9b2e99817b5240e5d5ce736aab9dbac444914d8c8824",
+    "drawing_reference_render_fixture": "6507e67ec90c36c44d322af452c7d948f23faeffcedbef23da13f1eb49104e18"
+  },
+  "limits": [
+    "orthographic ten-case oracle only",
+    "source nested reference uses flattened world edges",
+    "source occlusion uses independent analytic callback",
+    "perspective/arc centers/tracking memory/broad inference corpus not independently covered",
+    "full native Vulkan viewport event routing remains separate"
+  ]
+}
