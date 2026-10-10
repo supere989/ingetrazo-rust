@@ -1,0 +1,69 @@
+{
+  "source": "d74058cd4ba4873a55489416b368395a90b5257a",
+  "run": 38093876455,
+  "artifact_sha256": "7a00062586923e5afed0bdfeb29388ebf45a729ac0f4f4ccacd8bdaaf4e4c683",
+  "root_independent_png_decode": [
+    {
+      "name": "helvetica",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 0
+    },
+    {
+      "name": "helvetica-bold",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 0
+    },
+    {
+      "name": "helvetica-italic",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 1
+    },
+    {
+      "name": "times-bold-italic",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 0
+    },
+    {
+      "name": "cjk",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 0
+    },
+    {
+      "name": "arabic",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 12
+    },
+    {
+      "name": "italic-overlap",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 0
+    },
+    {
+      "name": "arabic-marks",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 12
+    },
+    {
+      "name": "times-overlap",
+      "gpu_changed_pixels": 0,
+      "ordered_changed_pixels": 0,
+      "aggregate_changed_pixels": 0
+    }
+  ],
+  "warm_observation": "Six base and three held-out cases report three warm frames, unchanged measured uploads and pool allocations with zero warm deep admissions. Diagnostic per-capture target/readback allocations are outside pool counts.",
+  "presentation": {
+    "passed": false,
+    "displayed": 0,
+    "pending": 3,
+    "skipped": 1
+  },
+  "scope": "Nine GPU Canvas image cases exact. Physical Mac and ARM presentation acceptance OPEN. PDF decode retained by reviewer, not repeated here."
+}
