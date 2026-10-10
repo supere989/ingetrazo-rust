@@ -1,0 +1,13 @@
+{
+  "run": 38056309963,
+  "source": "3401ebb59735d18bf5426fe54df7941f242df149",
+  "arm_job": 114225443809,
+  "arm_artifact": 11671231558,
+  "github_archive_sha256": "11d889fcff3b317574e009abfee705a5351faf2130131ac436f8d44533d08e5f",
+  "independent_checker_replayed": true,
+  "native_device": "Apple Paravirtual device",
+  "physical_hardware_claim": false,
+  "application_presentation_claim": false,
+  "intel_job": 114225443701,
+  "intel_verdict": "pending"
+}
