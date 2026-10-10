@@ -1,3 +1,5 @@
+mod queues;
+pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
 
 
@@ -29,6 +31,7 @@ pub trait App {
     fn title() -> &'static str;
     fn new(app: &mut System, initial_file: Option<std::path::PathBuf>) -> Self;
     fn build_ui(&mut self, ctx: &Context);
+    fn gpu_error(&mut self,error:&str) {eprintln!("GPU rendering paused: {error}");}
     fn clean(&mut self, vulkan_ctx: &VulkanContext) {
         let _ = vulkan_ctx;
     }
@@ -113,10 +116,13 @@ pub struct System {
     pub egui_ctx: Context,
     pub egui_winit: State,
     pub renderer: Renderer,
+    pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
 
     textures_to_free: Option<Vec<TextureId>>,
     close_requested: bool,
     repaint_at: std::time::Instant,
+    pending_texture_updates: std::collections::VecDeque<(TextureId,egui::epaint::ImageDelta)>,
+    last_gpu_error: Option<String>,
 
     pub vulkan_context: VulkanContext,
 }
@@ -168,7 +174,8 @@ impl System {
             None,
         );
 
-        let renderer = Renderer::with_default_allocator(
+        let memory_budget=std::sync::Arc::new(budget::VulkanBudget::new(&vulkan_context.instance,vulkan_context.physical_device)?);
+        let renderer = Renderer::with_memory_observer(
             &vulkan_context.instance,
             vulkan_context.physical_device,
             vulkan_context.device.clone(),
@@ -177,6 +184,7 @@ impl System {
                 srgb_framebuffer: swapchain.srgb,
                 ..Default::default()
             },
+            memory_budget.clone(),
         )?;
 
         Ok(Self {
@@ -193,10 +201,13 @@ impl System {
             egui_ctx,
             egui_winit,
             renderer,
+            memory_budget,
 
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
+            pending_texture_updates:std::collections::VecDeque::new(),
+            last_gpu_error:None,
         })
     }
 
@@ -268,14 +279,15 @@ impl System {
             self.textures_to_free = Some(textures_delta.free.clone());
         }
 
-        if !textures_delta.set.is_empty() {
-            self.renderer
-                .set_textures(
-                    self.vulkan_context.graphics_queue,
-                    self.vulkan_context.command_pool,
-                    textures_delta.set.as_slice(),
-                )
-                .expect("Failed to update texture");
+        self.pending_texture_updates.extend(textures_delta.set);
+        while let Some(delta)=self.pending_texture_updates.front() {
+            if let Err(error)=self.renderer.set_textures(self.vulkan_context.graphics_queue,self.vulkan_context.command_pool,std::slice::from_ref(delta)) {
+                let error=error.to_string();
+                if self.last_gpu_error.as_ref()!=Some(&error) {egui_app.gpu_error(&error);self.last_gpu_error=Some(error);}
+                self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
+                return; // Preserve document and last presented frame; pending deltas retry after pressure falls.
+            }
+            self.pending_texture_updates.pop_front();self.last_gpu_error=None;
         }
 
         let clipped_primitives = self.egui_ctx.tessellate(shapes, pixels_per_point);
@@ -310,7 +322,7 @@ impl System {
         let signal_semaphores = [self.render_finished_semaphores[image_index as usize]];
 
         // Re-record commands to draw geometry
-        record_command_buffers(
+        let draw_error=record_command_buffers(
             &self.vulkan_context.device,
             self.vulkan_context.command_pool,
             self.command_buffer,
@@ -322,6 +334,7 @@ impl System {
             &clipped_primitives,
         )
         .expect("Failed to record command buffer");
+        if let Some(error)=draw_error {egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);}
 
         let command_buffers = [self.command_buffer];
         let submit_info = [vk::SubmitInfo::default()
@@ -386,6 +399,7 @@ impl System {
 
     fn on_exit<A: App>(&mut self, egui_app: &mut A) {
         log::info!("Stopping application");
+        eprintln!("{}",self.memory_budget.diagnostics());
 
         unsafe {
             self.vulkan_context
@@ -621,7 +635,7 @@ fn create_vulkan_instance(
         .application_version(vk::make_api_version(0, 0, 1, 0))
         .engine_name(c"No Engine")
         .engine_version(vk::make_api_version(0, 0, 1, 0))
-        .api_version(vk::make_api_version(0, 1, 0, 0));
+        .api_version(vk::make_api_version(0, 1, 1, 0));
 
     let mut extension_names =
         ash_window::enumerate_required_extensions(window.display_handle()?.as_raw())?.to_vec();
@@ -682,73 +696,27 @@ fn create_vulkan_physical_device_and_get_graphics_and_present_qs_indices(
 ) -> Result<(vk::PhysicalDevice, u32, u32), Box<dyn Error>> {
     log::debug!("Creating vulkan physical device");
     let devices = unsafe { instance.enumerate_physical_devices()? };
-    let mut graphics = None;
-    let mut present = None;
-    let device = devices
-        .into_iter()
-        .find(|device| {
-            let device = *device;
-
-            // Does device supports graphics and present queues
-            let props = unsafe { instance.get_physical_device_queue_family_properties(device) };
-            for (index, family) in props.iter().filter(|f| f.queue_count > 0).enumerate() {
-                let index = index as u32;
-                graphics = None;
-                present = None;
-
-                if family.queue_flags.contains(vk::QueueFlags::GRAPHICS)
-                    && family.queue_flags.contains(vk::QueueFlags::COMPUTE)
-                    && graphics.is_none()
-                {
-                    graphics = Some(index);
-                }
-
-                let present_support = unsafe {
-                    surface
-                        .get_physical_device_surface_support(device, index, surface_khr)
-                        .expect("Failed to get surface support")
-                };
-                if present_support && present.is_none() {
-                    present = Some(index);
-                }
-
-                if graphics.is_some() && present.is_some() {
-                    break;
-                }
-            }
-
-            // Does device support desired extensions
-            let extension_props = unsafe {
-                instance
-                    .enumerate_device_extension_properties(device)
-                    .expect("Failed to get device ext properties")
-            };
-            let extention_support = extension_props.iter().any(|ext| {
-                let name = unsafe { CStr::from_ptr(ext.extension_name.as_ptr()) };
-                swapchain::NAME == name
-            });
-
-            // Does the device have available formats for the given surface
-            let formats = unsafe {
-                surface
-                    .get_physical_device_surface_formats(device, surface_khr)
-                    .expect("Failed to get physical device surface formats")
-            };
-
-            // Does the device have available present modes for the given surface
-            let present_modes = unsafe {
-                surface
-                    .get_physical_device_surface_present_modes(device, surface_khr)
-                    .expect("Failed to get physical device surface present modes")
-            };
-
-            graphics.is_some()
-                && present.is_some()
-                && extention_support
-                && !formats.is_empty()
-                && !present_modes.is_empty()
-        })
-        .expect("Could not find a suitable device");
+    let requested=std::env::var("INGETRAZO_VULKAN_DEVICE").ok();
+    let mut suitable=Vec::new();
+    for (index,device) in devices.into_iter().enumerate() {
+        let properties=unsafe {instance.get_physical_device_properties(device)};
+        let name=unsafe {CStr::from_ptr(properties.device_name.as_ptr())}.to_string_lossy().into_owned();
+        let families=unsafe {instance.get_physical_device_queue_family_properties(device)};
+        let present=families.iter().enumerate().map(|(i,f)|if f.queue_count==0 {Ok(false)}else{unsafe {surface.get_physical_device_surface_support(device,i as u32,surface_khr)}}).collect::<Result<Vec<_>,_>>()?;
+        let Some(queues)=queues::select(&families,&present) else {eprintln!("Vulkan adapter {index} {name}: no suitable graphics/present queues");continue;};
+        let extensions=unsafe {instance.enumerate_device_extension_properties(device)}?;
+        if !extensions.iter().any(|e|unsafe {CStr::from_ptr(e.extension_name.as_ptr())}==swapchain::NAME) {continue;}
+        if unsafe {surface.get_physical_device_surface_formats(device,surface_khr)}?.is_empty()||unsafe {surface.get_physical_device_surface_present_modes(device,surface_khr)}?.is_empty(){continue;}
+        eprintln!("Suitable Vulkan adapter {index}: {name}; {:?}; queues {:?}",properties.device_type,queues);
+        if requested.as_ref().is_some_and(|r|r!=&index.to_string()&&!name.to_lowercase().contains(&r.to_lowercase())) {continue;}
+        let memory=unsafe {instance.get_physical_device_memory_properties(device)};
+        let local=memory.memory_heaps[..memory.memory_heap_count as usize].iter().filter(|h|h.flags.contains(vk::MemoryHeapFlags::DEVICE_LOCAL)).map(|h|h.size).sum::<u64>();
+        suitable.push((queues::rank(properties.device_type),local,index,device,queues));
+    }
+    if requested.is_some()&&suitable.len()>1 {return Err("Vulkan device override matches multiple adapters; use enumeration index".into());}
+    suitable.sort_by_key(|(rank,bytes,index,_,_)|(*rank,*bytes,std::cmp::Reverse(*index)));
+    let (_,_,_,device,queues)=suitable.pop().ok_or("No suitable Vulkan adapter (or override did not match)")?;
+    let graphics=queues.graphics;let present=queues.present;
 
     unsafe {
         let props = instance.get_physical_device_properties(device);
@@ -764,7 +732,7 @@ fn create_vulkan_physical_device_and_get_graphics_and_present_qs_indices(
 
     }
 
-    Ok((device, graphics.unwrap(), present.unwrap()))
+    Ok((device, graphics, present))
 }
 
 fn create_vulkan_device_and_graphics_and_present_qs(
@@ -1020,7 +988,7 @@ fn record_command_buffers(
     renderer: &mut Renderer,
 
     clipped_primitives: &[ClippedPrimitive],
-) -> Result<(), Box<dyn Error>> {
+) -> Result<Option<String>, Box<dyn Error>> {
     unsafe { device.reset_command_pool(command_pool, vk::CommandPoolResetFlags::empty())? };
 
     let command_buffer_begin_info =
@@ -1048,13 +1016,13 @@ fn record_command_buffers(
         )
     };
 
-    renderer.cmd_draw(command_buffer, extent, pixels_per_point, clipped_primitives)?;
+    let draw_error=renderer.cmd_draw(command_buffer,extent,pixels_per_point,clipped_primitives).err().map(|e|e.to_string());
 
     unsafe { device.cmd_end_render_pass(command_buffer) };
 
     unsafe { device.end_command_buffer(command_buffer)? };
 
-    Ok(())
+    Ok(draw_error)
 }
 
 impl App for crate::IngeTrazoApp {
@@ -1067,4 +1035,5 @@ impl App for crate::IngeTrazoApp {
         app
     }
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
+    fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}
 }

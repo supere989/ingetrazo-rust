@@ -147,3 +147,5 @@ pub mod section_actions;
 
 #[cfg(any(target_os="linux",target_os="windows"))]
 pub mod native_vulkan;
+
+pub mod gpu_memory;
