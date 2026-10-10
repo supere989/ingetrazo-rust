@@ -181,3 +181,18 @@ pub fn prepare(sheet: &Sheet) -> Result<Page, String> {
         draws,
     })
 }
+
+/// Admit an atlas while retaining at most the global writer budgets.
+pub fn prepare_all(sheets:&[Sheet])->Result<Vec<Page>,String>{
+ if sheets.is_empty()||sheets.len()>10_000{return Err("PDF requires 1..10000 pages".into());}
+ let mut pages=Vec::new();let mut draws=0usize;let mut commands=0usize;
+ for sheet in sheets{
+  let page=prepare(sheet)?;
+  draws=draws.checked_add(page.draws.len()).ok_or("PDF draw count overflow")?;
+  if draws>crate::sheet_pdf::MAX_DRAWS{return Err("PDF atlas draw budget exceeded".into());}
+  for draw in &page.draws{commands=commands.checked_add(draw.path.len()).and_then(|n|n.checked_add(draw.clip.as_ref().map_or(0,Vec::len))).ok_or("PDF command count overflow")?;}
+  if commands>crate::sheet_pdf::MAX_COMMANDS{return Err("PDF atlas command budget exceeded".into());}
+  pages.push(page);
+ }
+ Ok(pages)
+}

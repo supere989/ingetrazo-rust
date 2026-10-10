@@ -1085,7 +1085,7 @@ impl IngeTrazoApp {
     /// painters report an error rather than silently exporting incomplete sheets.
     pub fn export_composer_pdf(&self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
         let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
-        let pages=sheets.iter().map(ingetrazo_formats::sheet_pdf_shapes::prepare).collect::<Result<Vec<_>,_>>()?;
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all(sheets)?;
         ingetrazo_formats::sheet_pdf::save(path,&pages)?;Ok(pages.len())
     }
 }

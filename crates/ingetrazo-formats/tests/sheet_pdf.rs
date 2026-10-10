@@ -205,3 +205,11 @@ fn preparation_rejects_total_draws_across_individually_admitted_shapes() {
         .unwrap()
         .contains("draw budget"));
 }
+
+#[test]
+fn atlas_preparation_refuses_combined_draws_before_retaining_all_pages(){
+ use ingetrazo_core::{composition::{ShapeItem,SheetItem},sheet_shape::SheetShape};
+ let mut sheet=shape_sheet();sheet.items.push(SheetItem::Shape(ShapeItem{id:uuid::Uuid::new_v4(),shape:SheetShape{kind:"terreno".into(),ground:"ticks".into(),w_mm:30_000.,h_mm:0.,tick_step_mm:0.5,band_mm:1.,..Default::default()}}));
+ assert!(ingetrazo_formats::sheet_pdf_shapes::prepare(&sheet).is_ok());
+ assert!(ingetrazo_formats::sheet_pdf_shapes::prepare_all(&[sheet.clone(),sheet]).err().unwrap().contains("atlas draw budget"));
+}
