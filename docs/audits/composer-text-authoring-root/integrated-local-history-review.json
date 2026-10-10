@@ -117,5 +117,6 @@
     "docs/audits/composer-text-authoring/local-undo-final/original/report.json": "b73321f142edf5546ce14bf0942ce103277589b1b7846d99ce54e66fabe06451",
     "docs/audits/composer-text-authoring/local-undo-final/native/report.json": "fd7de84ed5bb832fd727ef22596d6b60a5039931125f6846ccb4b67b8d5cae9b"
   },
-  "scope": "Independent retained artifact review; source selection remains 0 while native is None after placed. Agent notified to distinguish observation versus actual behavior. No fresh merged runtime acceptance."
+  "scope": "Independent retained artifact review; source selection remains 0 while native is None after placed. Agent notified to distinguish observation versus actual behavior. No fresh merged runtime acceptance.",
+  "resolution": "Editor entry now selects the Text item. Fresh merged final mode/shortcut comparisons verify selection presence in30states; see ../text-import-combined/acceptance.json. Historical differences retained."
 }
