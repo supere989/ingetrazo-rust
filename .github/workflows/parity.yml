@@ -27,6 +27,8 @@ jobs:
         run: python scripts/check-python-reopen.py
       - name: Original Python runtime fresh and edited Rust interpretation
         run: python scripts/check-python-edits.py
+      - name: Original Python versus Rust boolean shape acceptance
+        run: python scripts/check-python-booleans.py
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4

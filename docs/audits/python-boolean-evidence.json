@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "negative_controls_detected": 1,
+  "operations": [
+    {
+      "scenario": "overlap",
+      "operation": "union",
+      "original_volume": 1.5,
+      "rust_volume": 1.5,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "scenario": "overlap",
+      "operation": "subtract",
+      "original_volume": 0.5,
+      "rust_volume": 0.5,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "scenario": "overlap",
+      "operation": "intersect",
+      "original_volume": 0.5,
+      "rust_volume": 0.49999999999999994,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "scenario": "rotated",
+      "operation": "union",
+      "original_volume": 1.487416691065826,
+      "rust_volume": 1.4874166851196944,
+      "symmetric_difference_volume": 5.946131586819873e-09
+    },
+    {
+      "scenario": "rotated",
+      "operation": "subtract",
+      "original_volume": 0.48741668904107843,
+      "rust_volume": 0.4874167024521235,
+      "symmetric_difference_volume": 1.3411045042048963e-08
+    },
+    {
+      "scenario": "rotated",
+      "operation": "intersect",
+      "original_volume": 0.5125833109589215,
+      "rust_volume": 0.5125832975478766,
+      "symmetric_difference_volume": 1.3411045044163055e-08
+    },
+    {
+      "scenario": "contained",
+      "operation": "union",
+      "original_volume": 1.0,
+      "rust_volume": 1.0,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "scenario": "contained",
+      "operation": "subtract",
+      "original_volume": 0.8749999999999999,
+      "rust_volume": 0.8749999999999999,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "scenario": "contained",
+      "operation": "intersect",
+      "original_volume": 0.125,
+      "rust_volume": 0.125,
+      "symmetric_difference_volume": 0.0
+    }
+  ],
+  "scope": "Overlapping, rotated and contained boxes; original Python shape oracle via independent native manifold3d. No arbitrary/degenerate/attribute/GUI parity claim."
+}
