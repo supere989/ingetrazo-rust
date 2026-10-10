@@ -1,0 +1,11 @@
+{
+  "provenance": {
+    "rust_commit": "a69c43890bfcb6482cc3462f2bb71c484ce15276",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "original_cursor_cases": 32,
+  "scope": "Original placement offsets/axis across 15-degree thresholds and side/corner/aligned/3D/zero-length cases; fresh and edited native dimension a/b/offset/axis/text/layer original runtime reopen and opaque metadata retention. Anchor tracking and rendered text remain open."
+}
