@@ -1,0 +1,9 @@
+# Shared host native Cocoa lifecycle diagnostic
+
+Build GUI example native_metal_document_probe and run with --output=FRESH_DIR --choice=save|discard|cancel on native macOS. Each case must use a different empty directory. The probe uses the same native_metal Host and IngeTrazoApp.update_ui path as the opt-in application, isolated SessionStore, and a private IGZ containing an authored dirty triangle.
+
+It waits for an actual positive presentation callback, invokes only its own NSWindow.performClose, and requires the observed winit CloseRequested event and real unsaved-document modal. It obtains button centers from readonly rendered text geometry, then sends separate actual Cocoa NSEvent move/press/release events to that own NSWindow. Each transition requires the corresponding observed native event and a subsequent application UI turn. It never injects egui RawInput or directly calls Save/Discard/Cancel handlers. Native event dispatch is engineering evidence, not physical pointer/keyboard, accessibility or user interaction proof.
+
+Cancel must preserve dirty state, original bytes and refusal of closure; it then requests another actual native close and clicks Discard. Discard leaves the original IGZ bytes unchanged. Save must retire dirty state, change the IGZ and reopen a persisted face containing the exact authored point (123,234,345). Exit requires actual application close_allowed, received native events and positive presentation. Fresh result.json retains failures, counters and the phase. Each complete diagnostic has a finite15-second bound; no existing WSI acceptance criterion or ownership rule changes.
+
+Native execution is pending. This is not a full application input, physical Mac, world, CAD callback or renderer acceptance claim. The current ARM WSI failure must remain visible; no zero-time skipped callback substitutes for presentation.

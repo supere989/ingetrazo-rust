@@ -21,3 +21,6 @@ pub mod presentation;
 
 #[cfg(target_os = "macos")]
 pub mod egui_painter;
+
+#[cfg(target_os = "macos")]
+pub mod native_input;
