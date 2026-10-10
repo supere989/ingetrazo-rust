@@ -38,8 +38,8 @@ fn unsupported_and_malformed_import_preserve_destination() {
     }
     std::fs::remove_file(path).unwrap();
     assert!(matches!(
-        skp::parse_skp_bytes(&REAL[..4], "legacy"),
-        Err(SkpError::Unsupported(_))
+        skp::parse_skp_bytes(&REAL[..4], "truncated-header"),
+        Err(SkpError::Invalid(_))
     ));
 }
 #[test]

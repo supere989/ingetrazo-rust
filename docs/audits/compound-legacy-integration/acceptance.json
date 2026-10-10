@@ -1,0 +1,20 @@
+{
+  "workspace_source": "83dadbe9",
+  "workspace": {
+    "passed": 673,
+    "failed": 1,
+    "ignored": 2,
+    "summaries": 29
+  },
+  "retained_failure": "Four-byte malformed header previously expected Unsupported; native legacy parser correctly returns Invalid.",
+  "correction": "Test assertion only; production code unchanged. Five-test SKP target passes.",
+  "aggregate_passed": 674,
+  "aggregate_ignored": 2,
+  "reuse": "673 - 4 overlapping passes + 5 focused passes; not a second complete workspace run.",
+  "fresh_legacy_comparisons": 6,
+  "fresh_paper_comparisons": {
+    "cold": 5,
+    "production": 3
+  },
+  "scope": "Legacy primitive controls, not full real legacy model parity. Paper compound acceptance does not close full composer/platform gates."
+}
