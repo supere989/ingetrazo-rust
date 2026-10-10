@@ -14,6 +14,8 @@ if os.environ.get('INGETRAZO_TEXT_FONT_RUNS')=='1':
  names=['fallback_bold','mixed_cjk_rtl','mixed_latin_cjk','mixed_scripts']
 if os.environ.get('INGETRAZO_TEXT_LINEBREAKS')=='1':
  names=sorted(['punctuation','cjk_wrap','soft_hyphen','line_separator','paragraph_separator','punctuation_rtl'])
+if os.environ.get('INGETRAZO_TEXT_SHY_BOUNDARIES')=='1':
+ names=sorted(['shy_'+str(w)for w in [12,14,16,20,24,32]]+['shy_prefix_'+str(w)for w in [13,14,15,16]])
 assert sorted(p.name.removesuffix('.native.pdf')for p in out.glob('*.native.pdf'))==names
 for name in names:
  images=[];sizes=[]
