@@ -37,6 +37,7 @@ recipes=[("image-quadrants","quadrants",1.,False,"textures",True,None),
 ("image-coplanar-trace","quadrants",1.,False,"textures",True,None)]
 for name,texture,opacity,reverse,mode,show,layer in recipes:
  vp=Viewport();vp.resize(800,600);vp.scene=Scene(mesh=Mesh());
+ if os.environ.get("INGETRAZO_IMAGE_OUTLINE_ABLATION")=="1":vp._draw_image_outlines=lambda painter:None
  if name.endswith("behind") or name=="image-coplanar-trace":
   z=0. if name=="image-coplanar-trace" else -.1
   face=vp.scene.mesh.add_face([QVector3D(-1,-1,z),QVector3D(1,-1,z),QVector3D(1,1,z),QVector3D(-1,1,z)]);face.attrs["color"]=(0.,0.,1.)
@@ -53,6 +54,6 @@ for name,texture,opacity,reverse,mode,show,layer in recipes:
  assert not image.isNull();image.save(str(root/(name+".png")));save_scene(vp.scene,root/(name+".igz"))
  points=[(340,240),(460,240),(340,360),(460,360),(400,300)];samples=[]
  for x,y in points:c=image.pixelColor(x,y);samples.append([c.red(),c.green(),c.blue(),c.alpha()])
- rows.append({"case":name,"background":[1,1,1],"points":points,"samples":samples,"gl_info":vp.gl_info,"style_mode":{"wireframe":"wireframe","hidden":"hidden_line","xray":"xray"}.get(mode,"textures"),"show_textures":show,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest()})
+ rows.append({"case":name,"background":[1,1,1],"points":points,"samples":samples,"gl_info":vp.gl_info,"image_outline_ablation":os.environ.get("INGETRAZO_IMAGE_OUTLINE_ABLATION")=="1","projection_matrix":list(vp.camera.projection_matrix().data()),"view_matrix":list(vp.camera.view_matrix().data()),"mvp":list((vp.camera.projection_matrix()*vp.camera.view_matrix()).data()),"style_mode":{"wireframe":"wireframe","hidden":"hidden_line","xray":"xray"}.get(mode,"textures"),"show_textures":show,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest()})
  vp.close();vp.deleteLater();app.processEvents()
 report={"cases":rows,"scope":"Actual original sixteen image-plane controls; no full GPU image parity claim"};(root/"original-alpha-results.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
