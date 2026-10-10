@@ -1,0 +1,92 @@
+{
+  "accepted": false,
+  "raw_floor_half_down_mismatch_pixels": 1167,
+  "mismatch_color_groups": [
+    {
+      "count": 777,
+      "resolved": [
+        159,
+        119,
+        80,
+        255
+      ],
+      "predicted": [
+        159,
+        119,
+        79,
+        255
+      ],
+      "sample_sum": [
+        636,
+        478,
+        318,
+        1020
+      ]
+    },
+    {
+      "count": 388,
+      "resolved": [
+        96,
+        110,
+        129,
+        255
+      ],
+      "predicted": [
+        95,
+        110,
+        129,
+        255
+      ],
+      "sample_sum": [
+        382,
+        442,
+        516,
+        1020
+      ]
+    },
+    {
+      "count": 1,
+      "resolved": [
+        76,
+        64,
+        53,
+        255
+      ],
+      "predicted": [
+        76,
+        63,
+        53,
+        255
+      ],
+      "sample_sum": [
+        306,
+        254,
+        214,
+        1020
+      ]
+    },
+    {
+      "count": 1,
+      "resolved": [
+        75,
+        64,
+        56,
+        255
+      ],
+      "predicted": [
+        75,
+        63,
+        56,
+        255
+      ],
+      "sample_sum": [
+        301,
+        254,
+        226,
+        1020
+      ]
+    }
+  ],
+  "interpretation": "Raw reads isolate 771 Qt image-conversion pixels, but 1167 raw pixels still contradict universal integer half-down resolve. Earlier 133 scalar controls are insufficient to establish that rule for arbitrary colors. Keep production resolve unchanged until a paired Vulkan replay tests actual extracted values.",
+  "next_action": "Expand paired GL/Vulkan diagnostic with extracted multi-channel samples; investigate edge face input 107 versus 108 rather than assuming resolve is causal."
+}

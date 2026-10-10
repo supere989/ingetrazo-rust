@@ -28,6 +28,16 @@ lib=ctypes.CDLL('libGL.so.1')
 def call(name,types,*args):
  fn=getattr(lib,name);fn.argtypes=types;fn.restype=None;fn(*args)
 U=ctypes.c_uint;I=ctypes.c_int;B=ctypes.c_ubyte;tex=U();fbo=U()
+def raw_pixels():
+ data=np.empty((600,800,4),dtype=np.uint8)
+ call('glReadPixels',[I,I,I,I,U,U,ctypes.c_void_p],0,0,800,600,0x1908,0x1401,data.ctypes.data)
+ assert gl.glGetError()==0
+ return data[::-1].copy()
+resolved_target=QOpenGLFramebufferObject(800,600);assert resolved_target.isValid()
+call('glBindFramebuffer',[U,U],0x8CA8,vp._scene_fbo.handle());call('glBindFramebuffer',[U,U],0x8CA9,resolved_target.handle())
+call('glBlitFramebuffer',[I,I,I,I,I,I,I,I,U,U],0,0,800,600,0,0,800,600,0x4000,0x2600)
+call('glBindFramebuffer',[U,U],0x8CA8,resolved_target.handle());raw_resolved=raw_pixels();np.save(out/'resolved-raw.npy',raw_resolved)
+
 call('glGenTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));call('glBindTexture',[U,U],0x9100,tex.value);call('glTexImage2DMultisample',[U,I,U,I,I,B],0x9100,4,0x8058,800,600,1)
 call('glGenFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glBindFramebuffer',[U,U],0x8CA9,fbo.value);call('glFramebufferTexture2D',[U,U,U,U,I],0x8CA9,0x8CE0,0x9100,tex.value,0)
 call('glBindFramebuffer',[U,U],0x8CA8,vp._scene_fbo.handle());call('glBlitFramebuffer',[I,I,I,I,I,I,I,I,U,U],0,0,800,600,0,0,800,600,0x4000,0x2600);assert gl.glGetError()==0,'MSAA-preserving copy failed'
@@ -36,14 +46,17 @@ assert program.addShaderFromSourceCode(QOpenGLShader.Fragment,'#version 330 core
 assert program.link(),program.log();assert program.bind();vao=QOpenGLVertexArrayObject();assert vao.create();vao.bind();target=QOpenGLFramebufferObject(800,600);assert target.isValid()
 for capability in [0x0B71,0x0BE2,0x0B90,0x0B44,0x3000,0x8E51]:gl.glDisable(capability)
 gl.glViewport(0,0,800,600);gl.glActiveTexture(0x84C0);call('glBindTexture',[U,U],0x9100,tex.value);gl.glUniform1i(program.uniformLocation('image'),0)
-samples=[]
+samples=[];raw_samples=[]
 for i in range(4):
  assert target.bind();gl.glUniform1i(program.uniformLocation('sample_index'),i);gl.glDrawArrays(0x0004,0,3);assert gl.glGetError()==0
+ raw=raw_pixels();raw_samples.append(raw);np.save(out/f'sample-{i}-raw.npy',raw)
  im=target.toImage();assert im.save(str(out/f'sample-{i}.png'));samples.append(pixels(im))
 reconstructed=((sum(x.astype(np.uint16) for x in samples)+1)//4).astype(np.uint8);different=int(np.any(reconstructed!=scene_pixels,axis=2).sum());overlay_different=int(np.any(scene_pixels!=a,axis=2).sum())
-report={'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
+raw_sum=sum(x.astype(np.uint16) for x in raw_samples);raw_reconstructed=((raw_sum+1)//4).astype(np.uint8)
+raw_different=int(np.any(raw_reconstructed!=raw_resolved,axis=2).sum())
+report={'raw_reconstruction_different_pixels':raw_different,'raw_vs_qimage_scene_different_pixels':int(np.any(raw_resolved!=scene_pixels,axis=2).sum()),'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
 (out/'review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
-vao.release();program.release();del target;del vao;del program;call('glDeleteFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glDeleteTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()
+vao.release();program.release();del target;del resolved_target;del vao;del program;call('glDeleteFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glDeleteTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()
 
 assert fresh_exact, 'Fresh source does not match retained reference; diagnostic samples retained, acceptance refused'
 assert different == 0, 'Per-sample reconstruction differs from fresh frame'
