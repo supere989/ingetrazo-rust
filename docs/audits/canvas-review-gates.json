@@ -1,12 +1,16 @@
 {
-  "candidate": "0b6c7fdd",
+  "candidate": "efd219dc",
   "adopted": false,
   "reviewed_success": "Independent reviewer decoded six retained QImage regions and checked three warm counter observations; no new render run",
   "required_before_adoption": [
-    "Cancel failed pending raw uploads when their texture is freed, including queued renderer deltas, to prevent later orphan allocation.",
-    "Checker must require literal three-sheet/six-region inventory and mandatory source document; empty input must fail.",
-    "Preserve source paint order and whole-item composition for backgrounds and decorations.",
-    "Validate managed GPU texture update/free behavior under upload failure."
+    "Actual managed Vulkan GPU texture update/free under upload refusal and retry, including no orphan allocation after release"
   ],
-  "scope": "Six white-background text regions do not prove full canvas or general draw order."
+  "scope": "Six white-background text regions do not prove full canvas or general draw order.",
+  "integration_source": "a5d8c38c3363127ac558fc1d59b0368ad31a951c",
+  "resolved_in_integration": [
+    "Pending raw bytes and failed queued updates cancelled together at acknowledged next-frame retirement; same-frame set/use/free preserved",
+    "Literal recipe hash and mandatory three-sheet/six-region inventory enforced",
+    "Whole-item background/glyph/decoration order validated by six independent exact regions"
+  ],
+  "combined_workspace": "647 PASS, 0 FAIL, 2 ignored"
 }

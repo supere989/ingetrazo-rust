@@ -1,0 +1,13 @@
+{
+  "source": "3e1f12468478f220ad3a2dc3a2a41e9f5e8484de",
+  "run_id": 38074730037,
+  "job_id": 114279211020,
+  "artifact_id": 11678348487,
+  "sha256": "0d0bc2c7dd4a14db8f57ce1a2ad0be80a538fed9ffc5d1d330b3532c7f8ac03a",
+  "zip_crc_verified": true,
+  "combined_native_gui_check_and_build": "PASS",
+  "native_font_tests": 33,
+  "cad_drop_tests": 2,
+  "framebuffer_fetch": "Explicit unsupported refusal on Intel runner; no framebuffer-fetch rendered proof",
+  "physical_mac_acceptance": false
+}
