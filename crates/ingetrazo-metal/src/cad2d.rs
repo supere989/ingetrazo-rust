@@ -65,7 +65,6 @@ struct Frame {
     _palette: Option<Arc<Buffer>>,
 }
 struct Inner {
-    metal: NativeMetal,
     pipeline: Option<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     compute: Option<Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
     gpu_palette: Option<Arc<Buffer>>,
@@ -80,6 +79,8 @@ struct Inner {
     stats: MetalCadStats,
     palette: Vec<Batch>,
     colors: Vec<[f32; 4]>,
+    // Device/queue outlive all resource owners on verified normal retirement.
+    metal: NativeMetal,
 }
 /// Completion-unknown Drop retains the entire inner owner, including pipeline,
 /// target/geometry/readback, command, queue/device and ledger. No implicit wait.
