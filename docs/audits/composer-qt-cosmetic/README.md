@@ -21,3 +21,5 @@ Primary references:
 ## Source-ordered draw grouping diagnostic
 
 `qt_cosmetic::disjoint_ranges` greedily retains maximal prefixes with disjoint integer one-row pixel intervals. It bounds span admission, uses row/x ordered maps, never reorders any span, and flushes only on actual overlap. Three kernel tests pass, including full order preservation and pairwise disjointness. Rounded small fixture: 311 coalesced spans partition into 28 ordered disjoint draw ranges (not311). This is diagnostic metadata only; no renderer/barrier changes are activated. Float-transformed general triangles do not inherit this integer pixel-aligned guarantee. Source width opacity and actual destination operator must still be established.
+
+Raw coverage diagnostic: run `composer_thin_spans_fixture 1` to preserve identical geometry and report pre-width values62 and191 at(28,12); opacity179/256 produces spans43 and133. FastDraw applies width to the64-bit brush before converting and multiplying raw coverage; generic span processing applies width to coverage first. These operations must not be conflated in the destination-composition protocol.
