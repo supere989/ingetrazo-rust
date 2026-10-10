@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "states": 19,
+  "negative_controls": 6,
+  "literal_old_failures": [
+    [
+      "rename",
+      2
+    ],
+    [
+      "rename",
+      3
+    ],
+    [
+      "rename",
+      4
+    ],
+    [
+      "existing_redo",
+      3
+    ],
+    [
+      "existing_redo",
+      5
+    ],
+    [
+      "delete",
+      0
+    ],
+    [
+      "delete",
+      1
+    ],
+    [
+      "delete",
+      2
+    ],
+    [
+      "delete",
+      3
+    ],
+    [
+      "nested_delete",
+      0
+    ],
+    [
+      "nested_delete",
+      1
+    ],
+    [
+      "nested_delete",
+      2
+    ],
+    [
+      "nested_delete",
+      3
+    ]
+  ],
+  "boundary": "controller reference membership/global layer clear; image graphics and remaining command families open"
+}
