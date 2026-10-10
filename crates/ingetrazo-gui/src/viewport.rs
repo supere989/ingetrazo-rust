@@ -63,6 +63,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     // 2. Cursor Raycasting & Snapping
     let mut active_snap_glyph = None;
+    let mut active_center_hint = None;
 
     if let Some(mouse_pos) = pointer.hover_pos() {
         if rect.contains(mouse_pos) {
@@ -139,7 +140,11 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     cursor:glam::DVec2::new(rel_x,rel_y),candidate:cursor_world_pos,plane_normal,
                 };
                 let result=app.snap_engine.snap_screen(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context);
-                app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));result
+                app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));
+                if result.kind!=ingetrazo_core::snap::SnapKind::Center || app.native_gpu_viewport_enabled {
+                    active_center_hint=app.snap_engine.center_hint_pixel(&context.viewport,context.cursor);
+                }
+                result
             }else{app.snap_engine.snap(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close())};
             if app.active_tool_type!=ToolType::Freehand && snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
@@ -306,6 +311,17 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 );
             }
         }
+    }
+
+    // Source center approach marker is a UI overlay, shared by native Vulkan
+    // and the software viewport. Native world rendering has no snap glyph pass.
+    if let Some(pixel)=active_center_hint {
+        let pos=rect.min+egui::vec2(pixel.x as f32,pixel.y as f32);
+        let rgb=ingetrazo_core::snap::COLOR_ENDPOINT;
+        let green=egui::Color32::from_rgb((rgb[0]*255.) as u8,(rgb[1]*255.) as u8,(rgb[2]*255.) as u8);
+        painter.circle_filled(pos,4.,green);
+        painter.circle_stroke(pos,4.,egui::Stroke::new(3.,egui::Color32::from_white_alpha(230)));
+        painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
     }
 
     // 4. Render Active Tool Rubber Band (if any)

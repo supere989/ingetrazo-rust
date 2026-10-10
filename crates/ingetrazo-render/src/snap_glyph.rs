@@ -6,7 +6,7 @@
 //! Generates 2D/3D markers for snapping:
 //! - Endpoint (green square)
 //! - Midpoint (cyan circle)
-//! - Center (cyan circle)
+//! - Center (inference-colored circle)
 //! - Intersection (dark cross)
 //! - On Edge (red diamond)
 //! - On Face (blue square)
@@ -49,7 +49,7 @@ impl SnapGlyph {
         let (shape, color, size_px) = match snap.kind {
             SnapKind::Endpoint => (GlyphShape::Square, [0.16, 0.62, 0.36, 1.0], 8.0),
             SnapKind::Midpoint => (GlyphShape::Circle, [0.20, 0.66, 0.74, 1.0], 8.0),
-            SnapKind::Center => (GlyphShape::Circle, [0.20, 0.66, 0.74, 1.0], 8.0),
+            SnapKind::Center => (GlyphShape::Circle, [snap.color[0], snap.color[1], snap.color[2], 1.0], 8.0),
             SnapKind::Intersection => (GlyphShape::Cross, [0.2, 0.2, 0.2, 1.0], 10.0),
             SnapKind::OnEdge => (GlyphShape::Diamond, [0.86, 0.22, 0.27, 1.0], 8.0),
             SnapKind::OnFace => (GlyphShape::Square, [0.42, 0.46, 0.92, 1.0], 7.0),
@@ -94,4 +94,15 @@ impl SnapGlyph {
             guides,
         })
     }
+}
+
+#[cfg(test)]mod center_color_tests {
+ use super::*;
+ #[test]fn center_glyph_retains_source_inference_color(){
+  for color in [ingetrazo_core::snap::COLOR_ENDPOINT,[0.20,0.66,0.74]] {
+   let snap=SnapResult{point:DVec3::ZERO,kind:SnapKind::Center,color,label:"Center".into(),axis:None,guides:vec![]};
+   let glyph=SnapGlyph::from_snap_result(&snap,None).unwrap();
+   assert_eq!(glyph.color,[color[0],color[1],color[2],1.]);
+  }
+ }
 }
