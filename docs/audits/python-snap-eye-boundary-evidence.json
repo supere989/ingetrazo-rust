@@ -1,0 +1,155 @@
+{
+  "context": {
+    "rust_commit": "5a4686b7e313224ba66b4d868ed5433183a1f722",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "native_sha256": "5c4a94c37a3357262062160f68372ca4ddcd941e3aab9e4afb31390cbc43d65f",
+  "passed": true,
+  "cases": [
+    {
+      "input": {
+        "name": "genuine-behind-eye",
+        "edges": [
+          [
+            [
+              2.0,
+              -6.093267440795898,
+              5.25
+            ],
+            [
+              2.0999999046325684,
+              -6.093267440795898,
+              5.25
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.003337879207
+            ],
+            "candidate": [
+              2.0,
+              2.999919891357422,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "none",
+        "point": [
+          2.0,
+          2.999919891357422,
+          0.0
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "none",
+        "point": [
+          2.0,
+          2.999919891357422,
+          0.0
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "eye-straddling-front-endpoint",
+        "edges": [
+          [
+            [
+              2.0,
+              -5.616953372955322,
+              4.974999904632568
+            ],
+            [
+              2.0999999046325684,
+              -6.093267440795898,
+              5.25
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.003337879207
+            ],
+            "candidate": [
+              2.0,
+              2.999919891357422,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.616953372955322,
+          4.974999904632568
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.616953372955322,
+          4.974999904632568
+        ]
+      }
+    }
+  ],
+  "scope": "Two source/native eye boundary controls plus unchanged eleven-case perspective gate; source actual Qt projection and empty-face occlusion method; no renderer clipping changes or independent UI claim"
+}
