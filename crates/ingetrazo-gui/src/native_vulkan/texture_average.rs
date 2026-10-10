@@ -30,7 +30,7 @@ impl Cache {
  }
  pub fn publish(&mut self,candidate:Candidate,active:&std::collections::HashSet<AssetId>){
 
-  self.entries.extend(candidate.entries);self.entries.retain(|id,_|active.contains(id));self.stats.retained_entries=self.entries.len();
+  self.entries.extend(candidate.entries);if !active.is_empty(){self.entries.retain(|id,_|active.contains(id));}self.stats.retained_entries=self.entries.len();
  }
 }
 
@@ -52,6 +52,7 @@ mod tests{
   cache.reserve_publication(&candidate).unwrap();cache.publish(candidate,&[id].into_iter().collect());
   let mut candidate=Candidate::default();assert_eq!(cache.prepare(&mut candidate,id,&bytes).unwrap(),mean);assert_eq!(cache.stats.decodes,2);
   assert!(candidate.entries.is_empty());assert_eq!(cache.entries.len(),1);
+  cache.publish(Candidate::default(),&Default::default());assert_eq!(cache.entries.get(&id),Some(&mean));
  }
  #[test]fn cold_budget_refusal_never_publishes(){
   let bytes=png();let mut ids=super::super::texture_cache::TextureCache::default();let id=ids.identify(&bytes).id();

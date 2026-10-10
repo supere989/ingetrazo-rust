@@ -8,8 +8,9 @@ use std::collections::{HashMap,HashSet};
 #[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>}
 struct Pool{device:Device,handle:vk::DescriptorPool}
 impl Drop for Pool{fn drop(&mut self){unsafe{self.device.destroy_descriptor_pool(self.handle,None)}}}
+pub(crate) struct Publication{retirement:super::resources::CompletedRetirement,active:HashSet<AssetId>}
 pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,images:Vec<PreparedTexture>,references:Option<super::reference_images::Candidate>,pub contours:Vec<(BufferId,u32,u32)>,averages:super::texture_average::Candidate,average_active:HashSet<AssetId>}
-#[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64,pub average_decodes:u64,pub average_hits:u64,pub average_entries:usize}
+#[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64,pub average_decodes:u64,pub average_hits:u64,pub average_entries:usize,pub sampled_entries:usize}
 pub struct Textures{references:super::reference_images::ReferenceImages,image_key:Option<(u64,u64)>,probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;16],averages:super::texture_average::Cache,pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
 impl Textures{
  pub fn new(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags,budget:std::sync::Arc<super::budget::VulkanBudget>)->Result<Self,String>{
@@ -62,14 +63,29 @@ impl Textures{
   if let Err(error)=prepare{self.abort(resources,candidate,fence,completed)?;return Err(error);}self.stats.average_decodes=self.averages.stats.decodes;self.stats.average_hits=self.averages.stats.hits;self.stats.builds+=1;Ok(candidate)
  }
  pub fn abort(&mut self,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64)->Result<(),String>{drop(candidate.pool.take());for buffer in candidate.buffers{resources.retire(buffer)?;}resources.collect(fence,completed)?;self.stats.rollbacks+=1;Ok(())}
- pub fn publish(&mut self,context:&VulkanContext,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64,scene:&ingetrazo_core::scene::Scene)->Result<(),String>{
-  if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{self.abort(resources,candidate,fence,completed)?;return Err("Texture publication requires completed draw fence".into());}
-  for image in candidate.images.drain(..){self.cache.publish(image)?;}
-  if let Some(references)=candidate.references.take(){self.references.publish(&mut self.cache,references,scene.image_planes.publication_revision())?;self.image_key=Some((scene.image_planes.membership_epoch(),scene.view_version));}
-  drop(self.pool.take());for buffer in self.buffers.drain(..){resources.retire(buffer)?;}resources.collect(fence,completed)?;
-  self.pool=candidate.pool.take();self.buffers=candidate.buffers;self.draws=candidate.draws;
-  let active=self.draws.iter().map(|d|d.asset).chain(self.references.assets()).collect::<HashSet<_>>();self.cache.collect_unused(context,&active,fence,completed)?;self.averages.publish(candidate.averages,&candidate.average_active);self.stats.average_entries=self.averages.stats.retained_entries;Ok(())
+ pub(crate) fn preflight_publication(&mut self,context:&VulkanContext,resources:&Resources,candidate:&Candidate,fence:vk::Fence,completed:u64,extra_old:&[BufferId],extra_next:&[BufferId])->Result<Publication,String>{
+  let mut old=Vec::new();old.try_reserve_exact(self.buffers.len().checked_add(extra_old.len()).ok_or("Retirement count overflow")?).map_err(|_|"Retirement list admission")?;old.extend_from_slice(&self.buffers);old.extend_from_slice(extra_old);
+  let mut next=Vec::new();next.try_reserve_exact(candidate.buffers.len().checked_add(extra_next.len()).ok_or("Candidate count overflow")?).map_err(|_|"Candidate list admission")?;next.extend_from_slice(&candidate.buffers);next.extend_from_slice(extra_next);
+  self.cache.preflight_publication(candidate.images.iter().chain(candidate.references.iter().flat_map(|r|r.images())))?;
+  let mut active=HashSet::new();let count=candidate.draws.len().checked_add(candidate.references.as_ref().map_or(0,|r|r.assets().count())).ok_or("Active texture count overflow")?;
+  active.try_reserve(count).map_err(|_|"Active texture identity admission")?;
+  active.extend(candidate.draws.iter().filter(|d|d.mean.is_none()).map(|d|d.asset).chain(candidate.references.iter().flat_map(|r|r.assets())));
+  let retirement=resources.publication_preflight(context,fence,completed,&old,&next)?;
+  Ok(Publication{retirement,active})
  }
+ pub(crate) fn publish_admitted(&mut self,resources:&mut Resources,mut candidate:Candidate,publication:Publication,completed:u64,scene:&ingetrazo_core::scene::Scene){
+  for image in candidate.images.drain(..){self.cache.publish_admitted(image);}
+  if let Some(references)=candidate.references.take(){self.references.publish_admitted(&mut self.cache,references,scene.image_planes.publication_revision());self.image_key=Some((scene.image_planes.membership_epoch(),scene.view_version));}
+  drop(self.pool.take());resources.retire_completed(publication.retirement);
+  self.pool=candidate.pool.take();self.buffers=candidate.buffers;self.draws=candidate.draws;
+  self.cache.collect_unused_completed(&publication.active,completed);
+  self.averages.publish(candidate.averages,&candidate.average_active);self.stats.average_entries=self.averages.stats.retained_entries;self.stats.sampled_entries=self.cache.published_entries();
+ }
+ pub fn publish(&mut self,context:&VulkanContext,resources:&mut Resources,candidate:Candidate,fence:vk::Fence,completed:u64,scene:&ingetrazo_core::scene::Scene)->Result<(),String>{
+  let publication=match self.preflight_publication(context,resources,&candidate,fence,completed,&[],&[]){Ok(proof)=>proof,Err(error)=>{self.abort(resources,candidate,fence,completed)?;return Err(error);}};
+  self.publish_admitted(resources,candidate,publication,completed,scene);Ok(())
+ }
+
  /// No allocation, geometry traversal, hashing, decoding, or transfer on draw.
  pub fn record(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool)->Result<(),String>{
   for draw in self.draws.iter().filter(|d|match phase{Phase::Opaque=>d.opaque&&!d.back,Phase::BackOpaque=>d.opaque&&d.back,Phase::TransparentFront=>!d.opaque&&!d.back,Phase::TransparentBack=>!d.opaque&&d.back,Phase::Mask|Phase::Depth=>true}){
@@ -87,11 +103,16 @@ impl Textures{
   let key=(scene.image_planes.membership_epoch(),scene.view_version);
   if self.image_key==Some(key){return self.references.refresh_pose(scene);}
   let candidate=self.references.prepare(context,resources,&mut self.cache,scene,fence)?;
-  self.references.publish(&mut self.cache,candidate,scene.image_planes.publication_revision())?;
-  self.image_key=Some(key);let active=self.draws.iter().map(|d|d.asset).chain(self.references.assets()).collect::<HashSet<_>>();self.cache.collect_unused(context,&active,fence,completed)?;Ok(())
+  self.cache.preflight_publication(candidate.images())?;
+  let mut active=HashSet::new();active.try_reserve(self.draws.len().checked_add(candidate.assets().count()).ok_or("Image refresh identity overflow")?).map_err(|_|"Image refresh identity admission")?;
+  active.extend(self.draws.iter().filter(|d|d.mean.is_none()).map(|d|d.asset).chain(candidate.assets()));
+  let retirement=resources.publication_preflight(context,fence,completed,&[],&[])?;
+  self.references.publish_admitted(&mut self.cache,candidate,scene.image_planes.publication_revision());
+  resources.retire_completed(retirement);self.image_key=Some(key);self.cache.collect_unused_completed(&active,completed);self.stats.sampled_entries=self.cache.published_entries();Ok(())
  }
  pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16])->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp)}
  pub fn image_stats(&self)->super::reference_images::Stats{self.references.stats}
+ pub fn set_publication_entry_limit(&mut self,limit:Option<usize>){self.cache.set_publication_entry_limit(limit);}
  pub fn configure_average(&mut self,limits:ingetrazo_render::source_texture_decode::Limits,max_entries:usize)->Result<(),String>{self.averages.configure(limits,max_entries)}
  pub fn set_pressure_for_probe(&mut self,enabled:bool){self.probe_pressure=enabled;}
  pub fn cache_stats(&self)->&super::texture_cache::TextureStats{&self.cache.stats}

@@ -46,6 +46,7 @@ pub struct Candidate {
     images: Vec<PreparedTexture>,
 }
 impl Candidate {
+    pub(crate) fn images(&self)->impl Iterator<Item=&PreparedTexture>{self.images.iter()}
     pub fn sampled(&self)->impl Iterator<Item=(AssetId,(vk::ImageView,vk::Sampler,bool))>+'_ {self.images.iter().map(|p|(p.id(),p.sampled()))}
 
     pub fn assets(&self) -> impl Iterator<Item = AssetId> + '_ {
@@ -216,20 +217,13 @@ impl ReferenceImages {
         self.stats.builds += 1;
         Ok(c)
     }
-    pub fn publish(
-        &mut self,
-        cache: &mut TextureCache,
-        mut c: Candidate,
-        publication: u64,
-    ) -> Result<(), String> {
-        for image in c.images.drain(..) {
-            cache.publish(image)?;
-        }
-        drop(self.pool.take());
-        self.pool = c.pool.take();
-        self.draws = c.draws;
-        self.publication = publication;
-        Ok(())
+    pub fn publish(&mut self,cache:&mut TextureCache,c:Candidate,publication:u64)->Result<(),String>{
+        cache.preflight_publication(c.images())?;
+        self.publish_admitted(cache,c,publication);Ok(())
+    }
+    pub(crate) fn publish_admitted(&mut self,cache:&mut TextureCache,mut c:Candidate,publication:u64){
+        for image in c.images.drain(..){cache.publish_admitted(image);}
+        drop(self.pool.take());self.pool=c.pool.take();self.draws=c.draws;self.publication=publication;
     }
     pub fn assets(&self) -> impl Iterator<Item = AssetId> + '_ {
         self.draws.iter().map(|d| d.asset)
@@ -238,13 +232,11 @@ impl ReferenceImages {
         if self.publication == scene.image_planes.publication_revision() {
             return Ok(());
         }
+        for draw in &self.draws {
+            scene.image_planes.get(draw.index).filter(|p|p.id==draw.id).ok_or("Image membership changed before descriptor preparation")?;
+        }
         for draw in &mut self.draws {
-            let p = scene
-                .image_planes
-                .get(draw.index)
-                .filter(|p| p.id == draw.id)
-                .ok_or("Image membership changed before descriptor preparation")?;
-            draw.update(p);
+            draw.update(scene.image_planes.get(draw.index).unwrap());
         }
         self.publication = scene.image_planes.publication_revision();
         self.stats.pose_refreshes += 1;

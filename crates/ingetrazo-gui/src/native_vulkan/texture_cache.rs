@@ -67,6 +67,7 @@ pub struct TextureCache {
     images: HashMap<AssetId, Entry>,
     pub stats: TextureStats,
     diagnostic_readback: bool,
+    publication_entry_limit: Option<usize>,
 }
 impl Default for TextureCache {
     fn default() -> Self {
@@ -74,6 +75,7 @@ impl Default for TextureCache {
             images: HashMap::new(),
             stats: TextureStats::default(),
             diagnostic_readback: false,
+            publication_entry_limit: None,
         }
     }
 }
@@ -160,18 +162,25 @@ impl TextureCache {
         })
     }
     /// Publish only after all referencing descriptor and scene candidates succeed.
-    pub fn publish(&mut self, candidate: PreparedTexture) -> Result<AssetId, String> {
-        if let Some(image) = candidate.image {
-            self.images.entry(candidate.id).or_insert(Entry {
-                image,
-                hard_cutout: candidate.hard_cutout,
-                last_use: 0,
-            });
+    pub fn set_publication_entry_limit(&mut self,limit:Option<usize>){self.publication_entry_limit=limit;}
+    pub(crate) fn preflight_publication<'a>(&mut self,candidates:impl Iterator<Item=&'a PreparedTexture>)->Result<(),String>{
+        let mut count=0usize;
+        for candidate in candidates {
+            if candidate.image.is_none()&&!self.images.contains_key(&candidate.id){
+                return Err("Prepared cached texture was evicted before publication".into());
+            }
+            if candidate.image.is_some(){count=count.checked_add(1).ok_or("Texture publication count overflow")?;}
         }
-        if !self.images.contains_key(&candidate.id) {
-            return Err("Prepared cached texture was evicted before publication".into());
-        }
-        Ok(candidate.id)
+        if self.publication_entry_limit.is_some_and(|limit|self.images.len().checked_add(count).is_none_or(|n|n>limit)){return Err("Texture publication retained entry admission".into());}
+        self.images.try_reserve(count).map_err(|_|"Texture publication map admission".into())
+    }
+    pub(crate) fn publish_admitted(&mut self,candidate:PreparedTexture)->AssetId{
+        if let Some(image)=candidate.image{self.images.entry(candidate.id).or_insert(Entry{image,hard_cutout:candidate.hard_cutout,last_use:0});}
+        debug_assert!(self.images.contains_key(&candidate.id));candidate.id
+    }
+    pub fn publish(&mut self,candidate:PreparedTexture)->Result<AssetId,String>{
+        self.preflight_publication(std::iter::once(&candidate))?;
+        Ok(self.publish_admitted(candidate))
     }
     pub fn sampled(&self, id: AssetId) -> Result<(vk::ImageView, vk::Sampler, bool), String> {
         let entry = self.images.get(&id).ok_or("Texture asset not admitted")?;
@@ -204,6 +213,12 @@ impl TextureCache {
         self.stats.retired += count as u64;
         Ok(count)
     }
+    pub(crate) fn collect_unused_completed(&mut self,active:&std::collections::HashSet<AssetId>,completed_serial:u64){
+        let before=self.images.len();
+        self.images.retain(|id,entry|active.contains(id)||entry.last_use>completed_serial);
+        self.stats.retired+=(before-self.images.len()) as u64;
+    }
+    pub fn published_entries(&self)->usize{self.images.len()}
     pub fn allocation_bytes(&self) -> u64 {
         self.images.values().map(|e| e.image.allocation_bytes).sum()
     }
@@ -315,4 +330,16 @@ mod source_orientation_tests {
         assert_eq!(p,[16,17,18,19,20,21,22,23,8,9,10,11,12,13,14,15,0,1,2,3,4,5,6,7]);
         assert_eq!(p.as_ptr(),pointer);
     }
+}
+
+
+#[cfg(test)]
+mod publication_admission_tests{
+ use super::*;
+ #[test]fn missing_cached_identity_refuses_before_mutation_and_empty_retry_succeeds(){
+  let mut cache=TextureCache::default();
+  let candidate=PreparedTexture{id:AssetId([17;32]),image:None,view:vk::ImageView::null(),sampler:vk::Sampler::null(),hard_cutout:false};
+  assert!(cache.preflight_publication(std::iter::once(&candidate)).is_err());assert!(cache.images.is_empty());
+  cache.preflight_publication(std::iter::empty()).unwrap();assert!(cache.images.is_empty());
+ }
 }

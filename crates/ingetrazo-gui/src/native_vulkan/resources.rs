@@ -10,9 +10,12 @@ const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
 struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>,persistent_map:Option<usize>}
 #[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64,pub image_upload_calls:u64,pub image_bytes:u64,pub image_mips_generated:u64,pub upload_staging_maps:u64,pub upload_staging_unmaps:u64}
-pub struct Resources {lifetime:Arc<super::lifetime::Lifetime>,device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
+pub struct Resources {owner:Arc<()>,lifetime:Arc<super::lifetime::Lifetime>,device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
+/// Private proof acquired before descriptor publication. IDs are not freed by
+/// dropping an unused proof; the original Resources owner remains authoritative.
+pub(crate) struct CompletedRetirement {owner:Arc<()>,ids:Vec<BufferId>}
 impl Resources {
- pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {budget.bind_lifetime(context.lifetime.clone());Self {lifetime:context.lifetime.clone(),device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
+ pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {budget.bind_lifetime(context.lifetime.clone());Self {owner:Arc::new(()),lifetime:context.lifetime.clone(),device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
  // Admit the immutable device/lifetime owner before allocating or using context handles.
  fn admit_context(&self,context:&super::VulkanContext)->Result<(),String>{
   if !Arc::ptr_eq(&self.lifetime,&context.lifetime)||self.device.handle()!=context.device.handle(){return Err("Upload context differs from resource owner".into());}
@@ -274,6 +277,31 @@ impl Resources {
   if buffer.persistent_map.is_none(){unsafe {self.device.unmap_memory(buffer.memory)}};result
  }
  pub fn mark_used(&mut self,id:BufferId,serial:u64)->Result<(),String> {self.lifetime.check()?;let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;if b.retire_after.is_some(){return Err("Cannot submit a retired GPU buffer".into());}b.last_use=b.last_use.max(serial);Ok(())}
+ pub(crate) fn publication_preflight(&self,context:&super::VulkanContext,fence:vk::Fence,serial:u64,old:&[BufferId],next:&[BufferId])->Result<CompletedRetirement,String>{
+  self.admit_context(context)?;
+  let mut ids=Vec::new();ids.try_reserve_exact(old.len()).map_err(|_|"Retirement identity admission")?;ids.extend_from_slice(old);
+  ids.sort_unstable_by_key(|id|id.0);
+  if ids.windows(2).any(|pair|pair[0]==pair[1]){return Err("Duplicate retirement identity".into());}
+  let ledger=self.budget.ledger.lock().map_err(|_|"Resource budget poisoned")?;
+  for id in &ids{
+   let buffer=self.buffers.get(id).ok_or("Unknown retiring GPU buffer")?;
+   if buffer.last_use>serial{return Err("Retirement serial precedes GPU buffer use".into());}
+   if !ledger.contains_allocation(buffer.memory.as_raw()){return Err("Retiring allocation missing from ledger".into());}
+  }
+  for id in next{
+   if ids.binary_search_by_key(&id.0,|old|old.0).is_ok(){return Err("Candidate buffer also selected for retirement".into());}
+   let buffer=self.buffers.get(id).ok_or("Unknown candidate GPU buffer")?;
+   if buffer.retire_after.is_some(){return Err("Candidate GPU buffer already retired".into());}
+   if !ledger.contains_allocation(buffer.memory.as_raw()){return Err("Candidate allocation missing from ledger".into());}
+  }
+  drop(ledger);
+  if !unsafe{self.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Publication requires completed draw fence".into());}
+  Ok(CompletedRetirement{owner:self.owner.clone(),ids})
+ }
+ pub(crate) fn retire_completed(&mut self,proof:CompletedRetirement){
+  assert!(Arc::ptr_eq(&self.owner,&proof.owner),"Retirement proof owner changed");
+  for id in proof.ids{self.destroy(id);}
+ }
  pub fn retire(&mut self,id:BufferId)->Result<(),String> {let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;b.retire_after=Some(b.last_use);self.budget.ledger.lock().unwrap().retire(b.memory.as_raw(),b.last_use)}
  /// Caller associates the completed fence with its monotonically increasing draw serial.
  pub fn collect(&mut self,fence:vk::Fence,serial:u64)->Result<usize,String> {

@@ -127,6 +127,9 @@ impl MemoryBudget {
         self.peak_committed = self.peak_committed.max(self.total_committed());
         Ok(())
     }
+    pub fn contains_allocation(&self, handle: u64) -> bool {
+        self.allocations.contains_key(&handle)
+    }
     /// Marks last use; bytes stay charged until caller destroys memory after that fence.
     pub fn retire(&mut self, handle: u64, fence_serial: u64) -> Result<(), String> {
         let a = self

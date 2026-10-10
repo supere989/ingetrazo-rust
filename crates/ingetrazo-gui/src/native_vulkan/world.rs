@@ -37,6 +37,8 @@ struct Target {device:Device,pool:vk::DescriptorPool,_color:Image,_msaa:Option<I
 impl Drop for Target {fn drop(&mut self){unsafe {self.device.destroy_framebuffer(self.framebuffer,None);self.device.destroy_sampler(self.sampler,None);let _=self.device.free_descriptor_sets(self.pool,&[self.set]);}}}
 #[derive(Default,Clone,Copy,Debug)]pub struct ContourMetrics {pub additional_position_bytes:u64,pub batches:usize,pub cold_build_ms:f64,pub compact_preprocess_ms:f64,pub warm_cache_ms:f64,pub cache_hits:u64,pub failed_prepared_chunks:usize,pub rollbacks:u64,pub edge_buffer_uploads:u64,pub failed_prepared_edge_bytes:u64}
 #[derive(Clone,Copy)]struct ContourBatch {vertices:BufferId,indices:BufferId,triangles:u32,compact:bool,stride:u32,owned:bool}
+struct PreparedContours{device:Device,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>}
+impl Drop for PreparedContours{fn drop(&mut self){if self.pool!=vk::DescriptorPool::null(){unsafe{self.device.destroy_descriptor_pool(self.pool,None);}}}}
 struct Contours {device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,pipeline:vk::Pipeline,sets:Vec<vk::DescriptorSet>,limit:u64}
 impl Contours {
  fn new(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags)->Result<Self,String>{
@@ -52,9 +54,9 @@ impl Contours {
   }
   result.pipeline=make_pipeline(&result.device,render_pass,result.layout,WorldPass::Contour,samples,false)?;Ok(result)
  }
- fn replace_batches(&mut self,resources:&Resources,batches:&[ContourBatch])->Result<(),String>{
+ fn prepare_batches(&self,resources:&Resources,batches:&[ContourBatch])->Result<PreparedContours,String>{
   // Prepare a replacement pool before touching descriptors used by the old model.
-  if batches.is_empty(){unsafe{if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None);}}self.pool=vk::DescriptorPool::null();self.sets.clear();return Ok(());}
+  if batches.is_empty(){return Ok(PreparedContours{device:self.device.clone(),pool:vk::DescriptorPool::null(),sets:Vec::new()});}
   let count=u32::try_from(batches.len()).map_err(|_|"Too many contour batches")?;
   let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::STORAGE_BUFFER,descriptor_count:count.checked_mul(2).ok_or("Too many contour descriptors")?}];
   let pool=unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&sizes),None)}.map_err(|e|e.to_string())?;
@@ -67,8 +69,13 @@ impl Contours {
     let writes=[vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(0).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(&vertices),vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(&indices)];unsafe{self.device.update_descriptor_sets(&writes,&[]);}
    }Ok(sets)
   })();
-  match prepare {Ok(sets)=>{unsafe{if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None);}}self.pool=pool;self.sets=sets;Ok(())},Err(error)=>{unsafe{self.device.destroy_descriptor_pool(pool,None);}Err(error)}}
+  match prepare {Ok(sets)=>Ok(PreparedContours{device:self.device.clone(),pool,sets}),Err(error)=>{unsafe{self.device.destroy_descriptor_pool(pool,None);}Err(error)}}
  }
+ fn publish(&mut self,mut candidate:PreparedContours){
+  unsafe{if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None);}}
+  self.pool=std::mem::replace(&mut candidate.pool,vk::DescriptorPool::null());self.sets=std::mem::take(&mut candidate.sets);
+ }
+
 
 }
 impl Drop for Contours {fn drop(&mut self){unsafe{if self.pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.pipeline,None);}if self.layout!=vk::PipelineLayout::null(){self.device.destroy_pipeline_layout(self.layout,None);}if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None);}if self.descriptor_layout!=vk::DescriptorSetLayout::null(){self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}}
@@ -179,8 +186,16 @@ impl World {
   let texture_average=has_texture_sources&&!style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures;
   let texture_enabled=texture_average||has_texture_sources&&(style.visual_style==ingetrazo_render::style::VisualStyle::XRay||(style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures));
   if self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average{
-   self.textures.as_mut().unwrap().refresh_images(context,&mut self.resources,scene,fence,completed_serial)?;
-   if cap_changed {let next=self.upload_cap(context,cap)?;if let Some(old)=self.cap_vertices.take(){self.resources.retire(old)?;self.resources.collect(fence,completed_serial)?;}self.cap_vertices=next;self.cap_signature=cap;}
+   let next_cap=if cap_changed{Some(self.upload_cap(context,cap)?)}else{None};
+   let cap_retirement=if let Some(next)=next_cap{
+    match self.resources.publication_preflight(context,fence,completed_serial,self.cap_vertices.as_slice(),next.as_slice()){
+     Ok(proof)=>Some(proof),Err(error)=>{if let Some(id)=next{self.resources.retire(id)?;self.resources.collect(fence,completed_serial)?;}return Err(error);}
+    }
+   }else{None};
+   if let Err(error)=self.textures.as_mut().unwrap().refresh_images(context,&mut self.resources,scene,fence,completed_serial){
+    if let Some(Some(id))=next_cap{self.resources.retire(id)?;self.resources.collect(fence,completed_serial)?;}return Err(error);
+   }
+   if let Some(next)=next_cap{self.resources.retire_completed(cap_retirement.unwrap());self.cap_vertices=next;self.cap_signature=cap;}
    self.cap_key=Some(cap_key);self.contour_metrics.cache_hits+=1;self.contour_metrics.warm_cache_ms=started.elapsed().as_secs_f64()*1000.;return Ok(());
   }
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("World resource replacement requires completed draw fence".into());}
@@ -197,7 +212,7 @@ impl World {
    (Some(vertices),Some(indices))
   };
   let mut next_transparent=None;let mut next_edges=None;
-  let mut batches=Vec::new();let limit=self.contours.as_ref().unwrap().limit;let mut preprocessing=0.;let mut next_cap=None;let mut next_textures=None;
+  let mut batches=Vec::new();let limit=self.contours.as_ref().unwrap().limit;let mut preprocessing=0.;let mut next_cap=None;let mut next_textures=None;let mut next_contours=None;let mut next_publication=None;
   let prepare=(||->Result<(),String>{
    if !hard_edges.positions.is_empty(){next_edges=Some(self.resources.upload(context,bytemuck::cast_slice(&hard_edges.positions),vk::BufferUsageFlags::VERTEX_BUFFER,false)?);self.contour_metrics.edge_buffer_uploads+=1;}
    if let(Some(v),Some(i))=(vertices,indices){
@@ -213,13 +228,22 @@ impl World {
    let candidate=self.textures.as_mut().unwrap().prepare_mode(context,&mut self.resources,&texture_buffers,&scene.embedded_textures,scene,fence,completed_serial,limit,texture_average)?;
    for &(buffer,triangles,stride)in &candidate.contours{batches.push(ContourBatch{vertices:buffer,indices:buffer,triangles,compact:true,stride,owned:false});}
    next_textures=Some(candidate);
-   self.contours.as_mut().unwrap().replace_batches(&self.resources,&batches)
+   next_contours=Some(self.contours.as_ref().unwrap().prepare_batches(&self.resources,&batches)?);
+   let mut old=Vec::new();let mut next=Vec::new();
+   old.try_reserve_exact(self.contour_batches.len()+6).map_err(|_|"World retirement list admission")?;
+   next.try_reserve_exact(batches.len()+6).map_err(|_|"World candidate list admission")?;
+   old.extend(self.contour_batches.iter().filter(|b|b.owned).map(|b|b.vertices).chain([self.vertices,self.indices,self.transparent_vertices,self.edge_vertices].into_iter().flatten()));
+   if next_cap.is_some(){old.extend(self.cap_vertices);}
+   next.extend(batches.iter().filter(|b|b.owned).map(|b|b.vertices).chain([vertices,indices].into_iter().flatten()).chain(next_transparent).chain(next_edges));
+   if let Some(cap)=next_cap{next.extend(cap);}
+   next_publication=Some(self.textures.as_mut().unwrap().preflight_publication(context,&self.resources,next_textures.as_ref().unwrap(),fence,completed_serial,&old,&next)?);
+   Ok(())
   })();
   if let Err(error)=prepare {if let Some(candidate)=next_textures.take(){self.textures.as_mut().unwrap().abort(&mut self.resources,candidate,fence,completed_serial)?;}self.contour_metrics.failed_prepared_edge_bytes=next_edges.and_then(|id|self.resources.logical_bytes(id)).unwrap_or(0);self.contour_metrics.failed_prepared_chunks=batches.iter().filter(|b|b.owned).count();self.contour_metrics.rollbacks+=1;for id in batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([vertices,indices].into_iter().flatten()).chain(next_cap.into_iter().flatten()).chain(next_transparent).chain(next_edges){self.resources.retire(id)?;}self.resources.collect(fence,completed_serial)?;return Err(error);}
-  self.textures.as_mut().unwrap().publish(context,&mut self.resources,next_textures.unwrap(),fence,completed_serial,scene)?;
-  if let Some(next)=next_cap{if let Some(old)=self.cap_vertices.take(){self.resources.retire(old)?;}self.cap_vertices=next;self.cap_signature=cap;}self.cap_key=Some(cap_key);
-  for old in self.contour_batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([self.vertices.take(),self.indices.take(),self.transparent_vertices.take(),self.edge_vertices.take()].into_iter().flatten()){self.resources.retire(old)?;}
-  self.resources.collect(fence,completed_serial)?;self.contour_metrics.additional_position_bytes=batches.iter().filter(|b|b.owned).map(|b|self.resources.logical_bytes(b.vertices).unwrap()).sum();self.contour_metrics.batches=batches.len();self.contour_metrics.compact_preprocess_ms=preprocessing;self.contour_metrics.cold_build_ms=started.elapsed().as_secs_f64()*1000.;self.contour_batches=batches;
+  self.contours.as_mut().unwrap().publish(next_contours.take().unwrap());
+  self.textures.as_mut().unwrap().publish_admitted(&mut self.resources,next_textures.unwrap(),next_publication.unwrap(),completed_serial,scene);
+  if let Some(next)=next_cap{self.cap_vertices=next;self.cap_signature=cap;}self.cap_key=Some(cap_key);
+  self.contour_metrics.additional_position_bytes=batches.iter().filter(|b|b.owned).map(|b|self.resources.logical_bytes(b.vertices).unwrap()).sum();self.contour_metrics.batches=batches.len();self.contour_metrics.compact_preprocess_ms=preprocessing;self.contour_metrics.cold_build_ms=started.elapsed().as_secs_f64()*1000.;self.contour_batches=batches;
   self.edge_vertices=next_edges;self.edge_count=edge_count;self.transparent_vertices=next_transparent;self.opacity_runs=runs;self.ordinary_runs=ordinary_runs;self.default_back_runs=default_back_runs;self.consolidated_opaque_count=mesh.source_consolidated_opaque_count;self.vertices=vertices;self.indices=indices;self.count=count;self.revision=Some(revision);self.texture_enabled=texture_enabled;self.texture_average=texture_average;self.has_texture_sources=has_texture_sources;self.uploads+=1;Ok(())
  }
  fn upload_cap(&mut self,context:&VulkanContext,cap:Option<([[f32;3];4],[f32;4])>)->Result<Option<BufferId>,String>{
@@ -228,6 +252,7 @@ impl World {
  /// Cached source opacity buckets; diagnostic observation does not rebuild buffers.
  pub fn transparent_runs(&self)->Vec<(f32,u32,u32)>{self.opacity_runs.iter().filter(|r|r.kind!=3).map(|r|(r.opacity,r.first,r.count)).collect()}
  pub fn paint_runs(&self)->Vec<(u32,f32,u32,u32)>{self.opacity_runs.iter().map(|r|(r.kind,r.opacity,r.first,r.count)).collect()}
+ pub fn set_texture_publication_entry_limit(&mut self,limit:Option<usize>){self.textures.as_mut().unwrap().set_publication_entry_limit(limit);}
  pub fn configure_texture_average(&mut self,limits:ingetrazo_render::source_texture_decode::Limits,peak_entries:usize)->Result<(),String>{self.textures.as_mut().unwrap().configure_average(limits,peak_entries)}
  pub fn set_texture_pressure_for_probe(&mut self,enabled:bool){self.textures.as_mut().unwrap().set_pressure_for_probe(enabled);}
  pub fn reference_image_stats(&self)->super::reference_images::Stats{self.textures.as_ref().unwrap().image_stats()}
