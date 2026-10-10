@@ -1,0 +1,36 @@
+{
+  "source_revision": "47900c38b6092748e807424917074f9cca26909f",
+  "binary_sha256": "1bdbcda25c013006d0405873d09a7102a96ae765075b49274f0cf20c5ccfb704",
+  "build_exit": 0,
+  "execution_exit": 0,
+  "checks": [
+    {
+      "matched_states": 4,
+      "negative_controls": [
+        "position",
+        "loop_wrapper",
+        "attrs_wrapper",
+        "position_wrapper",
+        "missing_state",
+        "quota",
+        "unwind",
+        "production",
+        "type"
+      ],
+      "literal_old_identity_rejected": true,
+      "scope": "root append and shallow field failure restoration",
+      "full_scripting_acceptance": false
+    },
+    {
+      "finalizer_control": true,
+      "negative_controls": [
+        "discard_finalizer_bytecode_refused",
+        "final_zero_with_cycle",
+        "production_enabled"
+      ],
+      "full_callback_safety": false,
+      "production_enabled": false
+    }
+  ],
+  "scope": "Fresh merged executable compared with independently regenerated pinned Python four-state reference. Append/shallow rollback/finalizer-bytecode refusal only; production disabled. Existing mutation/history, arbitrary native callback safety and physical memory enforcement remain open."
+}

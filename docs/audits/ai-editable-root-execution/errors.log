@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<ai>", line 2, in <module>
+ValueError: rollback
+Traceback (most recent call last):
+  File "<ai>", line 8, in <module>
+ValueError: field rollback
+Traceback (most recent call last):
+  File "<ai>", line 2, in <module>
+ValueError: finalizer discard
+Exception ignored while calling deallocator <function Reenter.__del__ at 0x5627bdd3fee0>: <function Reenter.__del__ at 0x5627bdd3fee0>
+RuntimeError: Host bytecode budget exhausted
+Traceback (most recent call last):
+  File "<ai>", line 3, in <module>
+ValueError: private survives
+
+thread 'main' (1277995) panicked at src/bin/../vm_mesh.rs:663:17:
+Engineering unwind after VM mutation
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
