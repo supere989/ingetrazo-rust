@@ -1,0 +1,33 @@
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-vulkan/crates/ingetrazo-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_render-48fb10131abf9ca4)
+
+running 19 tests
+test hlr::hard_coplanar_tests::hard_coplanar_division_remains_visible_while_soft_division_is_hidden ... ok
+test pipeline::native_surface_regression::surface_upload_keeps_nested_transform_and_hidden_visibility_without_hlr ... ok
+test section_clip::tests::crossing_triangle_interpolates_uv_and_keeps_plane_boundary ... ok
+test tests::test_buffer_creation_and_append ... ok
+test pipeline::native_surface_regression::reflected_nested_placements_preserve_painted_front_and_uv_correspondence ... ok
+test section_clip::tests::contours_survive_styles_and_fill_toggle_without_mutating_geometry ... ok
+test tests::test_selection_buffers ... ok
+test section_clip::tests::scene_cut_is_display_only_transforms_nested_geometry_and_respects_toggle ... ok
+test tests::test_snap_marker_glyphs ... ok
+test tests::test_edge_classification_and_hlr ... ok
+test tests::test_visual_styles_presets ... ok
+test vector_hlr::tests::projected_hidden_ink_deduplicates_depth_and_subtracts_solid_overlap ... ok
+test vector_hlr::tests::actual_triangle_occlusion_splits_rear_line_and_preserves_coplanar_front ... ok
+test vector_hlr::tests::triangle_cut_runs_merge_but_depth_and_line_class_remain_distinct ... ok
+test vector_hlr::tests::face_hole_does_not_occlude_line_through_void ... ok
+test section_clip::raster_tests::triangle_crossing_near_plane_retains_visible_pixels ... ok
+test vector_hlr::tests::section_cap_occludes_internal_lines_and_cut_chords_remain_visible ... ok
+test vector_hlr::tests::paper_section_hollow_rings_follow_even_odd_without_reversed_winding ... ok
+test section_clip::tests::original_stencil_closed_partition_transparent_and_duplicate_controls ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+   Doc-tests ingetrazo_render
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

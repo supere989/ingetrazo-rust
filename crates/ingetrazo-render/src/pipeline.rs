@@ -421,6 +421,9 @@ fn build_group_buffers(
     }
 
     let world_t = *parent_transform * group.transform;
+    // Original viewport._instance_entry.tp32 preserves painted front winding
+    // under reflected placements. Reorder local corners before UV evaluation.
+    let reflected = world_t.determinant() < 0.0;
 
     // Billboard / Face-Me cutout figures
     if group.billboard {
@@ -493,6 +496,7 @@ fn build_group_buffers(
 
             let tris = group.mesh.triangulate_face(f_id);
             for (p0, p1, p2) in tris {
+                let (p1, p2) = if reflected {(p2, p1)} else {(p1, p2)};
                 let wp0 = world_t.transform_point3(p0);
                 let wp1 = world_t.transform_point3(p1);
                 let wp2 = world_t.transform_point3(p2);
@@ -523,6 +527,7 @@ fn build_group_buffers(
             let tris = group.mesh.triangulate_face(f_id);
             if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
             for (p0, p1, p2) in tris {
+                let (p1, p2) = if reflected {(p2, p1)} else {(p1, p2)};
                 let wp0 = world_t.transform_point3(p0);
                 let wp1 = world_t.transform_point3(p1);
                 let wp2 = world_t.transform_point3(p2);
@@ -1370,6 +1375,22 @@ fn render_grid_and_axes(
   assert_eq!(visible.opaque_mesh.indices.len(),3);assert!(visible.opaque_mesh.vertices.iter().all(|v|v.position[0]>=3.&&v.position[1]>=2.));assert!(visible.visible_edges.vertices.is_empty());assert!(visible.hidden_edges.vertices.is_empty());
   scene.groups[0].hidden=true;assert!(build_world_surfaces(&scene,&camera,&style).opaque_mesh.indices.is_empty());
  }
+ #[test]fn reflected_nested_placements_preserve_painted_front_and_uv_correspondence(){
+  for textured in [false,true] {for double_reflection in [false,true] {
+   let mut scene=Scene::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));let face=mesh.add_face(ids.to_vec(),vec![]).unwrap();
+   mesh.faces[face].attrs.insert("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.5}));
+   if textured {mesh.faces[face].attrs.insert("texture".into(),serde_json::json!({"path":"test.png","uvw":[1.,0.,0.,0.,0.,1.,0.,0.]}));}
+   let mut child=ingetrazo_core::groups::Group::with_mesh("leaf",mesh);child.transform=DMat4::from_scale(DVec3::new(-2.,3.,1.));
+   let mut parent=ingetrazo_core::groups::Group::new("parent");if double_reflection {parent.transform=DMat4::from_scale(DVec3::new(-1.,1.,1.));}parent.children.push(child);scene.groups.push(parent);
+   let mut style=StyleConfig::default();style.show_textures=textured;style.visual_style=VisualStyle::ShadedWithTextures;
+   let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);
+   let buf=if textured {data.textured_meshes.get("test.png").expect("textured placement")}else {&data.opaque_mesh};
+   assert_eq!(buf.indices.len(),3);let pts:Vec<_>=buf.indices.iter().map(|&i|{let p=buf.vertices[i as usize].position;DVec3::new(p[0]as f64,p[1]as f64,p[2]as f64)}).collect();
+   assert!((pts[1]-pts[0]).cross(pts[2]-pts[0]).z>0.,"reflection must retain front paint");
+   if textured {for v in &buf.vertices {assert_eq!(v.uv,[v.position[0],v.position[1]],"corner reorder must retain position/UV pairing");}}
+  }}
+ }
+
 }
 
 // Original viewport _bucket_back_face: explicit back paint only; opacity<.999
