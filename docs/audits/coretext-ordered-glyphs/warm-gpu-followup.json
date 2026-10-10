@@ -1,0 +1,18 @@
+{
+  "source": "42fea56b",
+  "gpu_fixture": "1552eb5a",
+  "vulkan_warm": "bc7f0146",
+  "vulkan_factory_identity": "2c9b0e61",
+  "focused_producer_tests": {
+    "passed": 3,
+    "failed": 0,
+    "binary_sha256": "8048b2533d99f14b2926c60342198e2a34b70b303237b8f8a31433d7cbaa5d6b"
+  },
+  "checker_syntax": "PASS",
+  "native_sdk_runtime": "PENDING",
+  "actual_gpu_protocol": "Nine literal source cases; each production ordered callback rendered through existing Metal compute painter, white800x300 canvas, complete GPU readback equals production record observation and frozen original PNG; three warm renders exact, no deep admission/plan/palette upload/canvas allocation increase; blank/one-pixel GPU-output negatives required",
+  "presentation_scope": "Independent raw lifecycle swatch gate retained; font readback does not prove WSI/physical Mac",
+  "metadata_review": "Checked existing new_compute/prepare/submit_diagnostic_with_pool/wait_readback/compute_stats API signatures. No Apple SDK compile claimed on Linux.",
+  "warm_policy": "Unchanged retained immutable Arc layouts skip cold scans; pose always admitted. Cache factory keys tagged by retained owner identity, so replacements do not reuse old backend handles.",
+  "cloud_launched": false
+}

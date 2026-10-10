@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! In-process Linux paper font matching. Cache refresh is explicit; no command-line resolver.
+//! In-process native paper font matching. Cache refresh is explicit; no command-line resolver.
 use crate::{
     paper_font::{CachedFont, FontCache, FontKey},
     paper_text::{FtPolicy, Hinting},
@@ -32,7 +32,9 @@ struct CachedMatch {
     policy: FtPolicy,
     font: std::rc::Weak<CachedFont>,
 }
+#[cfg(not(target_os = "macos"))]
 type Ptr = *mut c_void;
+#[cfg(not(target_os = "macos"))]
 struct Api {
     init: unsafe extern "C" fn() -> Ptr,
     config_destroy: unsafe extern "C" fn(Ptr),
@@ -53,15 +55,18 @@ struct Api {
     pattern_charset: unsafe extern "C" fn(Ptr, *const c_char, Ptr) -> i32,
     _library: libloading::Library,
 }
+#[cfg(not(target_os = "macos"))]
 struct Pattern<'a> {
     ptr: NonNull<c_void>,
     api: &'a Api,
 }
+#[cfg(not(target_os = "macos"))]
 impl Drop for Pattern<'_> {
     fn drop(&mut self) {
         unsafe { (self.api.destroy)(self.ptr.as_ptr()) }
     }
 }
+#[cfg(not(target_os = "macos"))]
 impl Api {
     fn load() -> Result<Self, String> {
         #[cfg(not(target_os = "linux"))]
@@ -104,7 +109,9 @@ impl Api {
 }
 /// Resolves one face per request; paragraph fallback segmentation is a separate layout responsibility.
 pub struct Resolver {
+    #[cfg(not(target_os = "macos"))]
     config: NonNull<c_void>,
+    #[cfg(not(target_os = "macos"))]
     api: Api,
     fonts: FontCache,
     requests: HashMap<Request, CachedMatch>,
@@ -114,16 +121,21 @@ pub struct Resolver {
 }
 impl Drop for Resolver {
     fn drop(&mut self) {
+        #[cfg(not(target_os = "macos"))]
         unsafe { (self.api.config_destroy)(self.config.as_ptr()) }
     }
 }
 impl Resolver {
     pub fn new() -> Result<Self, String> {
+        #[cfg(not(target_os = "macos"))]
         let api = Api::load()?;
+        #[cfg(not(target_os = "macos"))]
         let config =
             NonNull::new(unsafe { (api.init)() }).ok_or("Native font configuration unavailable")?;
         Ok(Self {
+            #[cfg(not(target_os = "macos"))]
             config,
+            #[cfg(not(target_os = "macos"))]
             api,
             fonts: FontCache::default(),
             requests: HashMap::new(),
@@ -134,10 +146,13 @@ impl Resolver {
     }
     /// Explicit installed-font/config epoch replacement; outstanding resources retain their old identity safely.
     pub fn refresh(&mut self) -> Result<(), String> {
+        #[cfg(not(target_os = "macos"))]
+        {
         let replacement = NonNull::new(unsafe { (self.api.init)() })
             .ok_or("Native font configuration refresh failed")?;
         let old = std::mem::replace(&mut self.config, replacement);
         unsafe { (self.api.config_destroy)(old.as_ptr()) };
+        }
         self.requests.clear();
         self.order.clear();
         self.namespace = uuid::Uuid::new_v4();
@@ -151,27 +166,8 @@ impl Resolver {
     pub fn stats(&self) -> (usize, u64, (usize, usize, u64)) {
         (self.requests.len(), self.matches, self.fonts.stats())
     }
-    pub fn resolve(&mut self, mut request: Request) -> Result<Match, String> {
-        if request.family.is_empty() {
-            request.family = "Sans Serif".into();
-        }
-        if request.family.len() > 1024 || request.required_chars.len() > 256 {
-            return Err("Paper font request budget exceeded".into());
-        }
-        request.required_chars.sort_unstable();
-        request.required_chars.dedup();
-        let family =
-            CString::new(request.family.as_bytes()).map_err(|_| "Invalid paper font family")?;
-        if let Some(found) = self.requests.get(&request) {
-            if let Some(font) = found.font.upgrade() {
-                return Ok(Match {
-                    path: found.path.clone(),
-                    index: found.index,
-                    policy: found.policy,
-                    font,
-                });
-            }
-        }
+    #[cfg(not(target_os = "macos"))]
+    fn match_native(&self, request: &Request, family: &CString) -> Result<(PathBuf, i32, FtPolicy, Option<Arc<[u8]>>), String> {
         let pattern = Pattern {
             ptr: NonNull::new(unsafe { (self.api.create)() })
                 .ok_or("Native font pattern allocation failed")?,
@@ -258,6 +254,35 @@ impl Resolver {
             },
             force_auto_hint: autohint != 0,
         };
+        Ok((path, index, policy, None))
+    }
+    pub fn resolve(&mut self, mut request: Request) -> Result<Match, String> {
+        if request.family.is_empty() {
+            request.family = "Sans Serif".into();
+        }
+        if request.family.len() > 1024 || request.required_chars.len() > 256 {
+            return Err("Paper font request budget exceeded".into());
+        }
+        request.required_chars.sort_unstable();
+        request.required_chars.dedup();
+        let family =
+            CString::new(request.family.as_bytes()).map_err(|_| "Invalid paper font family")?;
+        if let Some(found) = self.requests.get(&request) {
+            if let Some(font) = found.font.upgrade() {
+                return Ok(Match {
+                    path: found.path.clone(),
+                    index: found.index,
+                    policy: found.policy,
+                    font,
+                });
+            }
+        }
+        #[cfg(not(target_os="macos"))]
+        let (path, index, policy, matched_bytes) = self.match_native(&request, &family)?;
+        #[cfg(target_os="macos")]
+        let (path,index,native)=coretext::match_font(&request)?;
+        #[cfg(target_os="macos")]
+        let policy=FtPolicy{hinting:Hinting::None,force_auto_hint:false};
         // Stable physical identity across FIFO/font eviction and external retained owners.
         // No geometry equality deduplication or growing historical identity map.
         let mut identity_name = Vec::new();
@@ -272,14 +297,19 @@ impl Resolver {
             Hinting::Full => 2,
         });
         identity_name.push(u8::from(policy.force_auto_hint));
+        #[cfg(target_os="macos")]
+        {identity_name.try_reserve_exact(native.instance_identity.len()).map_err(|_|"Native identity allocation failed")?;identity_name.extend_from_slice(&native.instance_identity);}
         let identity = uuid::Uuid::new_v5(&self.namespace, &identity_name);
         let key = FontKey {
             identity,
             face_index: index as u32,
             policy,
         };
+        #[cfg(not(target_os="macos"))]
         let font = if let Some(font) = self.fonts.get(key) {
             font
+        } else if let Some(bytes) = matched_bytes {
+            self.fonts.load(key, bytes)?
         } else {
             let metadata = std::fs::metadata(&path)
                 .map_err(|e| format!("Paper font file unavailable: {e}"))?;
@@ -298,6 +328,8 @@ impl Resolver {
                 .map_err(|e| e.to_string())?;
             self.fonts.load(key, Arc::from(bytes))?
         };
+        #[cfg(target_os="macos")]
+        let font=self.fonts.load_coretext(FontKey{face_index:0,..key},native)?;
         let found = Match {
             path,
             index: index as u32,
@@ -338,7 +370,7 @@ impl Resolver {
 mod publication_tests {
     use super::*;
 
-    #[cfg(not(target_os = "linux"))]
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
     #[test]
     fn missing_native_provider_is_an_explicit_error() {
         assert!(matches!(Resolver::new(), Err(error) if error.contains("other platform providers remain unimplemented")));
@@ -366,5 +398,39 @@ mod publication_tests {
             assert_eq!(resolver.requests.len(), resolver.order.len());
             assert!(Rc::ptr_eq(&resolver.resolve(request.clone()).unwrap().font, &held.font));
         }
+    }
+}
+
+#[cfg(target_os = "macos")]
+#[path = "paper_font_coretext.rs"]
+mod coretext;
+
+/// Decode a physical SFNT PostScript identity, including Macintosh Roman records.
+/// PostScript names are ASCII; other legacy encodings must not be guessed.
+pub fn sfnt_postscript_name(name: ttf_parser::name::Name<'_>) -> Option<String> {
+    if name.name_id != ttf_parser::name_id::POST_SCRIPT_NAME { return None; }
+    name.to_string().or_else(|| {
+        (name.platform_id == ttf_parser::PlatformId::Macintosh
+            && name.encoding_id == 0 && !name.name.is_empty()
+            && name.name.iter().all(|b| (33..=126).contains(b)))
+            .then(|| String::from_utf8(name.name.to_vec()).expect("ASCII name"))
+    })
+}
+
+#[cfg(test)]
+mod postscript_identity_tests {
+    use super::sfnt_postscript_name;
+    #[test]
+    fn mac_roman_identity_is_exact_and_other_encodings_are_not_guessed() {
+        let name = ttf_parser::name::Name { platform_id: ttf_parser::PlatformId::Macintosh,
+            encoding_id: 0, language_id: 0, name_id: ttf_parser::name_id::POST_SCRIPT_NAME,
+            name: b"Helvetica-Bold" };
+        assert_eq!(sfnt_postscript_name(name).as_deref(), Some("Helvetica-Bold"));
+        assert_eq!(sfnt_postscript_name(ttf_parser::name::Name { encoding_id: 1, ..name }), None);
+        assert_eq!(sfnt_postscript_name(ttf_parser::name::Name { name: b"bad\xff", ..name }), None);
+        assert_eq!(sfnt_postscript_name(ttf_parser::name::Name { name_id: 1, ..name }), None);
+        let unicode = ttf_parser::name::Name { platform_id: ttf_parser::PlatformId::Unicode,
+            name: b"\0A\0B", ..name };
+        assert_eq!(sfnt_postscript_name(unicode).as_deref(), Some("AB"));
     }
 }

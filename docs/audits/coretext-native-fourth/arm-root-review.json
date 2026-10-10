@@ -1,0 +1,158 @@
+{
+  "run": 38086632034,
+  "artifact": 11682348741,
+  "sha256": "21fe99e1a00e89f20902e151e32ce8ec276b933f26d9a18778b9143e548ffb6b",
+  "source": "dc11af7d179dd060d0b69a2b238f8f09c33ef2c5",
+  "comparisons": [
+    {
+      "case": "arabic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 72,
+      "changed_pixels": 62
+    },
+    {
+      "case": "cjk",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 300,
+      "changed_pixels": 309
+    },
+    {
+      "case": "helvetica",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    }
+  ],
+  "exact": 16,
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "5bc26ae056f3ef859b2c37961360452cebec9d402e3c1cb8939281b963c831b5",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "diagnostic_capture": {
+      "sha256": "e10a9c065d5dcc4f4f90fb726654b51363f43eb71cd66fec88871d66e1a88add",
+      "observation": {
+        "window_id": 24,
+        "displayed": 0,
+        "diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194)\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=4; retired=1; displayed=0; skipped=1; frames=[submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=336.5762932916667 gpuEnd=336.6045145416667 callback_seen=false callback_time=0; submission=3 id=2 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=336.60452587500004 gpuEnd=336.60934050000003 callback_seen=false callback_time=0; submission=4 id=3 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=336.6225120416667 gpuEnd=336.648106875 callback_seen=false callback_time=0]",
+        "acceptance_proof": false
+      },
+      "acceptance_proof": false
+    },
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 11,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 14,
+      "canvas_warm_frames": 13,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "Independent decoded image comparison of actual ARM production artifact; not a new render. Font spacing and Canvas presentation remain open."
+}

@@ -1,0 +1,14 @@
+{
+  "source": "1552eb5a",
+  "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo check -j2 -p ingetrazo-gui --example native_paper_font_tiles --target aarch64-apple-darwin",
+  "exit_code": 101,
+  "failure_owner": "libz-sys1.1.29 C build before GUI observer Rust compilation",
+  "errors": [
+    "pkg-config has not been configured to support cross-compilation",
+    "cc: error: unrecognized command-line option -arch",
+    "cc: error: unrecognized command-line option -mmacosx-version-min=11.0"
+  ],
+  "scope": "Missing local Apple C SDK/compiler; no native GUI Rust/SDK acceptance claimed. Native Mac workflow required.",
+  "followup": "An uncommitted compile-only helper factorization was started, then interrupted and fully reverted at parent instruction. No production/helper duplication retained and no pass claimed.",
+  "cloud_launched": false
+}

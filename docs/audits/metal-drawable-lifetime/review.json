@@ -1,0 +1,30 @@
+{
+  "base": "d74058cd4ba4873a55489416b368395a90b5257a",
+  "source_sha256": "dfbd96d72db798a618effd73000a83bef6aa2e51a941f734d9cee8f6555eced6",
+  "official_source": "https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/Drawables.html",
+  "official_quote": "Always release a drawable as soon as possible; preferably, immediately after finalizing a frame\u2019s CPU work.",
+  "change": "Application strong drawable owner is released after presentDrawable and commit; frame freezes drawableID only. Callback reads actual callback argument presentedTime. Command, callback block, paint, private canvas, window, layer, device and queue remain retained until existing GPU completion plus terminal callback proof; unknown work remains quarantined.",
+  "pool": "Both public present_clear and present_paint already establish an objc2 autoreleasepool around present_inner; its return drains autoreleased drawable references per frame. No pool/default/timing/gate changes.",
+  "metal_contract": "Apple describes presentDrawable as scheduled-handler registration before commit. Existing ordinary queue.commandBuffer retains encoded resources; commandBufferWithUnretainedReferences is not used. The application does not need a retained drawable for post-submit diagnostics.",
+  "diagnostics": "Frozen drawable ID and explicit drawable_owner=released_after_commit replace direct retained-drawable timestamp queries. callback_time remains the observed timestamp, with callback_seen distinguishing unobserved zero.",
+  "cause_classification": "Plausible drawable pool ownership correction supported by Apple guidance, NOT proven ARM presentation cause. Intel presentation already passes. No VM/hardware inference.",
+  "check": {
+    "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo check -j2 -p ingetrazo-metal --lib --tests --target aarch64-apple-darwin",
+    "exit": 0,
+    "scope": "Apple-target Rust type/API checking of production library and unit test bodies; no linking or runtime test execution. No local Apple C SDK is needed for this crate-only check.",
+    "retained_initial_failures": [
+      "New worktree original submodule directory was empty; include_str source dependencies unavailable until existing /work/ingetrazo symlink installed correctly.",
+      "Changed field drawable_id initially used u64 but native drawableID returns usize; corrected to exact native type, subsequent check passed."
+    ],
+    "warnings": [
+      "Existing unused core visit_meshes",
+      "Existing deprecated setFastMathEnabled (three sites)",
+      "Existing unused mut staging"
+    ]
+  },
+  "remaining": [
+    "Actual native ARM SDK/runtime replay must retain strict positive callback gate and bounded owner cleanup.",
+    "Physical Mac acceptance and complete platform font/render parity remain open."
+  ],
+  "cloud_dispatch": "none"
+}

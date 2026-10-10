@@ -1,0 +1,47 @@
+[package]
+name = "harfbuzz-sys"
+version = "0.8.0"
+readme = "README.md"
+categories = ["external-ffi-bindings", "internationalization", "text-processing"]
+description = "Rust bindings to the HarfBuzz text shaping engine"
+
+authors = { workspace = true }
+documentation = { workspace = true }
+edition = { workspace = true }
+keywords = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+
+exclude = [
+    "harfbuzz/docs/*",
+    "harfbuzz/subprojects/benchmark-1.5.2/*",
+    "harfbuzz/test/*",
+    "update.sh",
+]
+
+links = "harfbuzz"
+build = "build.rs"
+
+[build-dependencies]
+pkg-config = { version = "0.3" }
+cc = { version = "1" }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+objc2-core-graphics = { version = "0.3.2", default-features = false, features = ["CGFont"], optional = true }
+objc2-core-text = { version = "0.3.2", default-features = false, features = ["CTFont"], optional = true }
+
+[target.'cfg(target_family = "windows")'.dependencies.windows]
+version = "0.62"
+optional = true
+features = ["Win32_Graphics_DirectWrite"]
+
+[dependencies.freetype-sys]
+version = "0.23.0"
+optional = true
+
+[features]
+default = ["coretext", "directwrite", "freetype"]
+bundled = []
+coretext = ["dep:objc2-core-graphics", "dep:objc2-core-text"]
+directwrite = ["dep:windows"]
+freetype = ["dep:freetype-sys"]

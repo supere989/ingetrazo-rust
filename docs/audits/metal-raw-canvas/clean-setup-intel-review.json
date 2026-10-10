@@ -1,0 +1,124 @@
+{
+  "source": "579087242d29bfb4b75ba1ca115fe01657f432c6",
+  "artifact_id": 11681062799,
+  "artifact_sha256": "d2d4b96d71142c623c40f718f083ea5c5a97304cd9ec651b8e603c743602423d",
+  "canvas": {
+    "passed": true,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "f19be1470e23e94d3621591a62c2a389a290671d89793cbdd3bbe0942c5c1f4e",
+    "snapshot": {
+      "window_id": 27,
+      "submitted": 4,
+      "displayed": 2,
+      "completed_inflight": 1,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        2,
+        13024,
+        1
+      ],
+      "texture_uploads": 56,
+      "warm_frames": 3,
+      "cancelled_uploads": 1
+    },
+    "image_sha256": "97a4d2472ab2d848d73f9f415a929cad7c88208be21e4489de968ce2bc71c078",
+    "exit_code": 0,
+    "host": {
+      "passed": true,
+      "choice": "canvas",
+      "phase": 4,
+      "close_events": 1,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 21,
+      "skipped": 0,
+      "pending": 1,
+      "error": null,
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        13024,
+        1
+      ],
+      "canvas_submission_observations": 22,
+      "canvas_warm_frames": 21,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          13024,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "font_comparison": {
+    "passed": false,
+    "matched": [
+      "helvetica",
+      "helvetica-bold",
+      "helvetica-italic",
+      "arabic"
+    ],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": false,
+        "errors": [
+          "native refusal: CoreText selected \"Times-BoldItalic\" at /System/Library/Fonts/Times.ttc face 3: requested bold=true italic=true, file bold=false italic=true, OS/2 present=true, italic_angle=-15; synthetic or variable traits remain unsupported",
+          "physical face mismatch"
+        ]
+      },
+      {
+        "name": "cjk",
+        "passed": false,
+        "errors": [
+          "native refusal: CoreText font file budget exceeded: selected \"PingFangSC-Regular\" at /System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved/PingFangUI.ttc, file_bytes=56102280, limit=16777216",
+          "physical face mismatch"
+        ]
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "errors": []
+      }
+    ],
+    "scope": "Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"
+  },
+  "scope": "Independent artifact integrity and positive actual Intel Paravirtual Canvas capture/lifecycle verification. No pixel parity, physical Mac, user gesture or ARM acceptance. One unresolved presentation owner remains quarantined.",
+  "visual_review": {
+    "observed": "Actual own-window screenshot shows application chrome, landscape sheet, margin border and two-line Native Metal Canvas text. No blank/corrupt surface observed.",
+    "image_sha256": "97a4d2472ab2d848d73f9f415a929cad7c88208be21e4489de968ce2bc71c078",
+    "pixel_parity": false
+  }
+}

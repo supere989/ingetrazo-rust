@@ -1,0 +1,11 @@
+{
+  "reviewed_source": "915d1003",
+  "review": "Presentation call-path inspection",
+  "findings": [
+    "addPresentedHandler registered before command.presentDrawable and commit",
+    "Frame retains drawable, command, callback and paint owners",
+    "poll requires command completion plus terminal callback; positive timestamp required for displayed classification",
+    "No confirmed lifetime or dispatch defect identified by this inspection"
+  ],
+  "limitation": "Actual ARM Canvas artifacts still fail positive presentation proof. Visible diagnostic capture does not prove per-submission retirement. No inference that virtualized device is the cause. Physical Mac acceptance remains required."
+}

@@ -1,0 +1,77 @@
+{
+  "run": 38079339677,
+  "job": 114292846412,
+  "artifact": 11680106429,
+  "sha256": "502791435e2faade4bcc74ab7f76bac10b26eb2514c98c831638a5ef4d21e062",
+  "fonts": [
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "ABC",
+      "path": "/System/Library/Fonts/Helvetica.ttc",
+      "index": 0,
+      "warm_same_owner": true,
+      "chosen_bold": false,
+      "chosen_italic": false,
+      "coverage": true,
+      "postscript": "Helvetica"
+    },
+    {
+      "family": "Helvetica",
+      "bold": true,
+      "italic": false,
+      "text": "ABC",
+      "path": "/System/Library/Fonts/Helvetica.ttc",
+      "index": 1,
+      "warm_same_owner": true,
+      "chosen_bold": true,
+      "chosen_italic": false,
+      "coverage": true,
+      "postscript": "Helvetica-Bold"
+    },
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": true,
+      "text": "ABC",
+      "path": "/System/Library/Fonts/Helvetica.ttc",
+      "index": 2,
+      "warm_same_owner": true,
+      "chosen_bold": false,
+      "chosen_italic": true,
+      "coverage": true,
+      "postscript": "Helvetica-Oblique"
+    },
+    {
+      "family": "Times",
+      "bold": true,
+      "italic": true,
+      "text": "ABC",
+      "error": "CoreText selected \"Times-BoldItalic\" at /System/Library/Fonts/Times.ttc face 3: requested bold=true italic=true, file bold=false italic=true, OS/2 present=true, italic_angle=-15; synthetic or variable traits remain unsupported"
+    },
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "\u6f22\u5b57",
+      "error": "CoreText font file budget exceeded"
+    },
+    {
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      "path": "/System/Library/Fonts/GeezaPro.ttc",
+      "index": 0,
+      "warm_same_owner": true,
+      "chosen_bold": false,
+      "chosen_italic": false,
+      "coverage": true,
+      "postscript": "GeezaPro"
+    }
+  ],
+  "original_oracle": "FAIL: missing physical identity; early assert prevented remaining case capture. Must retain all observed QFont/glyph-run identities before asserting.",
+  "presentation_diagnostics": "extent=(1024, 653); visible=Some(false); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=14; retired=11; displayed=0; skipped=11; frames=[submission=8 id=7 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=362.949122875 gpuEnd=362.95020975 callback_seen=false callback_time=0; submission=11 id=10 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=364.0081167916667 gpuEnd=364.0091452916667 callback_seen=false callback_time=0; submission=14 id=13 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=365.59408075000005 gpuEnd=365.59562575 callback_seen=false callback_time=0]",
+  "interpretation": "Times OS/2 is present, so missing-table hypothesis is refuted. CJK fails16MiB whole-file admission; face extraction/shared ownership needed. Completed GPU submissions are not displayed proof. Visibility was sampled at finish after event-loop exit; it does not establish original cause."
+}

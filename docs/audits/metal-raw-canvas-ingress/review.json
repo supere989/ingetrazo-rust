@@ -1,0 +1,23 @@
+{
+  "scope": "Direct encoded premultiplied RGBA8 full texture replacements in existing Metal transactional uploader",
+  "validation": "aarch64-apple-darwin cargo check -p ingetrazo-metal passed",
+  "log_sha256": "15c4e0a37ea458ca89844003b3d8edb1d44db66b9ff2bf9288a7b82a227e8d64",
+  "admission": [
+    "Nonzero dimensions <=4096",
+    "Exact checked RGBA byte count",
+    "Unique raw IDs with exactly one full managed replacement",
+    "Metadata lookup and matching linear expected time"
+  ],
+  "retained_semantics": [
+    "Ordinary egui path unchanged",
+    "Immutable staged texture owners",
+    "Existing allocation and CPU snapshot budgets",
+    "Existing mip submission and publication transaction"
+  ],
+  "open": [
+    "Host queue integration and retirement",
+    "Actual native GPU byte comparison and denial/retry",
+    "Physical Mac presentation"
+  ],
+  "claim": "Cross compilation only; not runtime acceptance"
+}

@@ -1,0 +1,267 @@
+{
+  "run": 38085609658,
+  "job": 114311348435,
+  "artifact_sha256": "0fc569981d2ebeb9f1d5a0ac58bfaa18acc833743b198b78defc5c0b1437504a",
+  "independently_decoded": [
+    {
+      "case": "arabic",
+      "dpi": 72,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 142,
+      "native_ink": 142
+    },
+    {
+      "case": "cjk",
+      "dpi": 72,
+      "passed": false,
+      "changed_pixels": 67,
+      "source_ink": 172,
+      "native_ink": 168
+    },
+    {
+      "case": "helvetica",
+      "dpi": 72,
+      "passed": false,
+      "changed_pixels": 19,
+      "source_ink": 143,
+      "native_ink": 143
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 72,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 163,
+      "native_ink": 163
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 72,
+      "passed": false,
+      "changed_pixels": 23,
+      "source_ink": 142,
+      "native_ink": 142
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 72,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 134,
+      "native_ink": 134
+    },
+    {
+      "case": "arabic",
+      "dpi": 150,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 379,
+      "native_ink": 379
+    },
+    {
+      "case": "cjk",
+      "dpi": 150,
+      "passed": false,
+      "changed_pixels": 5,
+      "source_ink": 543,
+      "native_ink": 543
+    },
+    {
+      "case": "helvetica",
+      "dpi": 150,
+      "passed": false,
+      "changed_pixels": 82,
+      "source_ink": 446,
+      "native_ink": 445
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 150,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 538,
+      "native_ink": 538
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 150,
+      "passed": false,
+      "changed_pixels": 82,
+      "source_ink": 439,
+      "native_ink": 438
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 150,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 400,
+      "native_ink": 400
+    },
+    {
+      "case": "arabic",
+      "dpi": 300,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 1132,
+      "native_ink": 1132
+    },
+    {
+      "case": "cjk",
+      "dpi": 300,
+      "passed": false,
+      "changed_pixels": 350,
+      "source_ink": 1724,
+      "native_ink": 1709
+    },
+    {
+      "case": "helvetica",
+      "dpi": 300,
+      "passed": false,
+      "changed_pixels": 207,
+      "source_ink": 1393,
+      "native_ink": 1392
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 300,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 1837,
+      "native_ink": 1837
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 300,
+      "passed": false,
+      "changed_pixels": 204,
+      "source_ink": 1408,
+      "native_ink": 1407
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 300,
+      "passed": true,
+      "changed_pixels": 0,
+      "source_ink": 1251,
+      "native_ink": 1251
+    }
+  ],
+  "exact_pages": 9,
+  "font_match": {
+    "passed": false,
+    "matched": [
+      "helvetica",
+      "helvetica-bold",
+      "helvetica-italic",
+      "cjk",
+      "arabic"
+    ],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": false,
+        "errors": [
+          "requested style mismatch"
+        ]
+      },
+      {
+        "name": "cjk",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "errors": []
+      }
+    ],
+    "scope": "Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"
+  },
+  "canvas": {
+    "passed": true,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "135049021b3d5364032e48a760724dc7da8456b0332e72cfdfc4a55cebec4ff6",
+    "snapshot": {
+      "window_id": 27,
+      "submitted": 5,
+      "displayed": 1,
+      "completed_inflight": 1,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "texture_uploads": 56,
+      "warm_frames": 4,
+      "cancelled_uploads": 1
+    },
+    "image_sha256": "bcb5abbba7bf6ffcadc36e9a8e692aa658fb4ce87ffc85635628df321bef3eae",
+    "exit_code": 0,
+    "host": {
+      "passed": true,
+      "choice": "canvas",
+      "phase": 4,
+      "close_events": 1,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 14,
+      "skipped": 2,
+      "pending": 0,
+      "error": null,
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 16,
+      "canvas_warm_frames": 15,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "visual_review": {
+    "image_sha256": "bcb5abbba7bf6ffcadc36e9a8e692aa658fb4ce87ffc85635628df321bef3eae",
+    "observed": "Actual application menus/toolbars/inspector, A3 landscape sheet with inset border and visible two-line Native Metal Canvas / 0123456789 text. No blank-sheet or missing-application-content failure observed.",
+    "boundary": "Visual inspection is not exact original/native Canvas pixel parity or physical input acceptance."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "Actual retained PDF bearing and text-position mutations; diagnostic only, no shaping/producer acceptance",
+  "bearing_changes": [
+    {
+      "glyph": ".notdef",
+      "native": 186,
+      "original": 184
+    },
+    {
+      "glyph": "glyph00001",
+      "native": 111,
+      "original": 110
+    },
+    {
+      "glyph": "glyph00002",
+      "native": 119,
+      "original": 116
+    }
+  ],
+  "rows": [
+    {
+      "dpi": 72,
+      "baseline_changed_pixels": 67,
+      "bearing_only_changed_pixels": 62,
+      "bearing_and_spacing_changed_pixels": 0
+    },
+    {
+      "dpi": 150,
+      "baseline_changed_pixels": 5,
+      "bearing_only_changed_pixels": 0,
+      "bearing_and_spacing_changed_pixels": 0
+    },
+    {
+      "dpi": 300,
+      "baseline_changed_pixels": 350,
+      "bearing_only_changed_pixels": 309,
+      "bearing_and_spacing_changed_pixels": 0
+    }
+  ]
+}

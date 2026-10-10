@@ -1,0 +1,15 @@
+{
+  "source": "efbbcb50b6c5c0acba2a1bd06d7aadecd78a9c78",
+  "artifact_id": 11679058175,
+  "artifact_sha256": "947ee38f2631e53c4c4b3e34dedcd83eed8398c308bf0858824935e3d49fdc14",
+  "zip_digest_and_integrity": "PASS",
+  "result": "FAIL",
+  "device": "Apple Paravirtual device",
+  "host_submitted": 12,
+  "host_skipped": 9,
+  "host_unresolved": 3,
+  "host_displayed": 0,
+  "failure": "Bounded native Canvas presentation deadline; no owned-window capture produced",
+  "interpretation": "Actual presentation acceptance failed. Compilation and offscreen pixels remain independently valid. No inference that font provider alone caused the absence of displayed frames.",
+  "next": "Retain exact presentation command/callback diagnostics on termination; keep displayed-frame requirement. Native font provider also remains required."
+}

@@ -1,0 +1,279 @@
+{
+  "artifact_sha256": "9ac8c476302aa62c17c6b99abb63ea214f0facd03a784d197eb43dc953ae80a9",
+  "source_entry": "original-fonts/original-macos-fonts.json",
+  "cases": [
+    {
+      "name": "times-bold-italic",
+      "family": "Times",
+      "bold": true,
+      "italic": true,
+      "text": "ABC",
+      "observations": [
+        {
+          "qt_database_styles": {
+            "Times": [],
+            ".Times Fallback": [
+              {
+                "style": "Regular",
+                "weight": 400,
+                "bold": false,
+                "italic": false
+              }
+            ]
+          },
+          "requested_font": {
+            "family": "Times",
+            "bold": true,
+            "italic": true,
+            "weight": 700
+          },
+          "actual_painter_font": ".Times Fallback",
+          "actual_painter_style": "Regular",
+          "actual_painter_traits": {
+            "bold": true,
+            "italic": false,
+            "weight": 700,
+            "exact_match": false
+          },
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": ".Times Fallback",
+              "style": "Regular",
+              "glyphs": [
+                36,
+                37,
+                38
+              ],
+              "positions": [
+                [
+                  0.0,
+                  89.109375
+                ],
+                [
+                  72.203125,
+                  89.109375
+                ],
+                [
+                  138.890625,
+                  89.109375
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/Fonts/Supplemental/Times New Roman.ttf",
+                  "index": 0,
+                  "postscript": "TimesNewRomanPSMT",
+                  "sha256": "f3b4ffff71c2a0c7227d37497683b2498fb2d0a4e8beae26f022e3ccfcaabfa3",
+                  "file_bytes": 824920,
+                  "face_table_bytes": 824500,
+                  "table_tags": [
+                    "DSIG",
+                    "GDEF",
+                    "GPOS",
+                    "GSUB",
+                    "JSTF",
+                    "LTSH",
+                    "OS/2",
+                    "PCLT",
+                    "VDMX",
+                    "cmap",
+                    "cvt ",
+                    "fpgm",
+                    "gasp",
+                    "glyf",
+                    "hdmx",
+                    "head",
+                    "hhea",
+                    "hmtx",
+                    "kern",
+                    "loca",
+                    "maxp",
+                    "name",
+                    "post",
+                    "prep"
+                  ],
+                  "largest_tables": [
+                    {
+                      "tag": "glyf",
+                      "bytes": 594610
+                    },
+                    {
+                      "tag": "hdmx",
+                      "bytes": 81224
+                    },
+                    {
+                      "tag": "GPOS",
+                      "bytes": 39180
+                    },
+                    {
+                      "tag": "post",
+                      "bytes": 35465
+                    },
+                    {
+                      "tag": "loca",
+                      "bytes": 13524
+                    }
+                  ]
+                }
+              ],
+              "table_hashes": [
+                "67aebcac8560c026f94d7d63f87e066cf54a2517e34b475f9bc7fadbae9dbb17",
+                "665211e1d36fb7a8c0633e4b54be374b5fc281e7d82288b0828d6509231e6916"
+              ],
+              "raw_head_hex": "000100000005028fd832d3e05f0f3cf50819080000000000a2e31dc200000000cfb4b9a9fb74fd8c1000080e00000009000100010000"
+            }
+          ]
+        }
+      ],
+      "png_sha256": "0e3ad00b34fae4f3d1300f3f7e818c959f07efa0c66e29670a6f725f49871174"
+    },
+    {
+      "name": "cjk",
+      "family": "Helvetica",
+      "bold": false,
+      "italic": false,
+      "text": "\u6f22\u5b57",
+      "observations": [
+        {
+          "qt_database_styles": {
+            "Helvetica": [
+              {
+                "style": "Regular",
+                "weight": 400,
+                "bold": false,
+                "italic": false
+              },
+              {
+                "style": "Oblique",
+                "weight": 400,
+                "bold": false,
+                "italic": true
+              },
+              {
+                "style": "Light",
+                "weight": 300,
+                "bold": false,
+                "italic": false
+              },
+              {
+                "style": "Light Oblique",
+                "weight": 300,
+                "bold": false,
+                "italic": true
+              },
+              {
+                "style": "Bold",
+                "weight": 700,
+                "bold": true,
+                "italic": false
+              },
+              {
+                "style": "Bold Oblique",
+                "weight": 700,
+                "bold": true,
+                "italic": true
+              }
+            ]
+          },
+          "requested_font": {
+            "family": "Helvetica",
+            "bold": false,
+            "italic": false,
+            "weight": 400
+          },
+          "actual_painter_font": "Helvetica",
+          "actual_painter_style": "Regular",
+          "actual_painter_traits": {
+            "bold": false,
+            "italic": false,
+            "weight": 400,
+            "exact_match": true
+          },
+          "supplementary_qtextlayout_runs": [
+            {
+              "family": "PingFang SC",
+              "style": "Regular",
+              "glyphs": [
+                664,
+                895
+              ],
+              "positions": [
+                [
+                  0.0,
+                  105.984375
+                ],
+                [
+                  100.40625,
+                  105.984375
+                ]
+              ],
+              "physical_faces": [
+                {
+                  "path": "/System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved/PingFangUI.ttc",
+                  "index": 16,
+                  "postscript": "PingFangSC-Medium",
+                  "sha256": "ae0aeea8ce656655e84f947143eea225954845f97c110b4ef1efd83472850733",
+                  "file_bytes": 56102280,
+                  "face_table_bytes": 54642620,
+                  "table_tags": [
+                    "BASE",
+                    "GSUB",
+                    "HVAR",
+                    "OS/2",
+                    "STAT",
+                    "VORG",
+                    "avar",
+                    "cidg",
+                    "cmap",
+                    "fvar",
+                    "head",
+                    "hhea",
+                    "hmtx",
+                    "hvgl",
+                    "maxp",
+                    "meta",
+                    "name",
+                    "post",
+                    "trak",
+                    "vhea",
+                    "vmtx"
+                  ],
+                  "largest_tables": [
+                    {
+                      "tag": "hvgl",
+                      "bytes": 53903096
+                    },
+                    {
+                      "tag": "cmap",
+                      "bytes": 412864
+                    },
+                    {
+                      "tag": "GSUB",
+                      "bytes": 132416
+                    },
+                    {
+                      "tag": "hmtx",
+                      "bytes": 93436
+                    },
+                    {
+                      "tag": "vmtx",
+                      "bytes": 93110
+                    }
+                  ]
+                }
+              ],
+              "table_hashes": [
+                "6e976b82bd0c2a57294dbc824bb060fdb6a52912439c008eefa656bf32940499",
+                "686705aea0f7ba2b4f8e26e63ea95ba39962c223c791ba35a4c1ce3317799b08"
+              ],
+              "raw_head_hex": "00010000000000002e7621905f0f3cf5000003e800000000e2c656f000000000e2c72496fff1ff1803ec038600000009000000010000"
+            }
+          ]
+        }
+      ],
+      "png_sha256": "ea0772c7125d98fa14da1f008c7dbc45099256b08a5e70317f0d688497052b56"
+    }
+  ],
+  "decision": "Do not treat raising the 16 MiB file limit as font parity. CJK source physical face has hvgl and variable tables, with no glyf/CFF/CFF2; native glyph extraction and bounded ownership must be established together with original face selection. Times source fallback selection and synthetic traits also remain unresolved.",
+  "acceptance": false
+}

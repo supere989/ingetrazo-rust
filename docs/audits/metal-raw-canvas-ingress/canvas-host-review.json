@@ -1,0 +1,19 @@
+{
+  "source": "470c2248",
+  "decision": "Host Canvas acceptance OPEN",
+  "finding": "paper_font_resolver::Api::load explicitly refuses non-Linux platforms. Successful Metal texture API and SDK compilation do not establish Canvas text rendering.",
+  "affected_path": [
+    "paper_font_resolver::Resolver::new",
+    "composer source text raster cache",
+    "native_metal managed raw upload"
+  ],
+  "required": [
+    "Native macOS font provider with correct style, fallback and collection face identity",
+    "Actual host raw publication and acknowledgement, at least three stable warm upload frames",
+    "Owned-window rendered artifact compared against the relevant original platform baseline"
+  ],
+  "current_probe": "Strict local probe requires nonzero acknowledged raw textures with empty pending queue and stable warm upload counters before capture. It must not count an error screen as success.",
+  "assigned_workstream": "geometry, after border source freeze",
+  "physical_mac_claim": false,
+  "pixel_parity_claim": false
+}

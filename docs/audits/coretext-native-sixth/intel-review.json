@@ -1,0 +1,589 @@
+{
+  "artifact_id": 11683342893,
+  "artifact_sha256": "2480fffcb530c91bc1e380836e4ce40315cc5dca3e5cb00a64c32cd2c230b6aa",
+  "source_revision": "7e48fe1060d84ccf2cdeb4512727767d7af734f0",
+  "decode": "Independent QImage RGBA8888 + NumPy exact per-pixel inequality; no tolerance or transforms",
+  "tiles": [
+    {
+      "case": "helvetica",
+      "changed_pixels": 54
+    },
+    {
+      "case": "helvetica-bold",
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "changed_pixels": 55
+    },
+    {
+      "case": "times-bold-italic",
+      "changed_pixels": 43
+    },
+    {
+      "case": "cjk",
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "changed_pixels": 46
+    }
+  ],
+  "pdf": [
+    {
+      "case": "helvetica",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 72,
+      "changed_pixels": 62
+    },
+    {
+      "case": "cjk",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 300,
+      "changed_pixels": 309
+    },
+    {
+      "case": "arabic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 300,
+      "changed_pixels": 0
+    }
+  ],
+  "canvas_host": {
+    "passed": true,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "3b1c87596dbbb623453c0aee61a2eb413aa8245d156a445160920a417dae0372",
+    "snapshot": {
+      "window_id": 26,
+      "submitted": 4,
+      "displayed": 2,
+      "completed_inflight": 0,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "texture_uploads": 56,
+      "warm_frames": 3,
+      "cancelled_uploads": 1
+    },
+    "image_sha256": "925de7fa8d6871fcddb8dcff126f488ab90a8d9fb1a7a4ee823a0289cd52b056",
+    "exit_code": 0,
+    "host": {
+      "passed": true,
+      "choice": "canvas",
+      "phase": 4,
+      "close_events": 1,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 30,
+      "skipped": 1,
+      "pending": 0,
+      "error": null,
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 31,
+      "canvas_warm_frames": 30,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "native_canvas_observer": {
+    "passed": true,
+    "scope": "Actual production native font resolver/layout/raster/Canvas cached tile + encoded white composition; no GPU upload, WSI, desktop or physical input claim",
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          25,
+          11
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1324,
+            1,
+            3
+          ],
+          1,
+          [
+            [
+              1,
+              1,
+              3,
+              52944,
+              1
+            ],
+            [
+              1,
+              1,
+              [
+                1,
+                52944,
+                1
+              ]
+            ]
+          ],
+          [
+            1,
+            1100,
+            1,
+            1100,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3
+        ]
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          11
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1324,
+            1,
+            3
+          ],
+          1,
+          [
+            [
+              2,
+              2,
+              6,
+              106092,
+              2
+            ],
+            [
+              2,
+              2,
+              [
+                2,
+                106092,
+                2
+              ]
+            ]
+          ],
+          [
+            1,
+            1188,
+            1,
+            1188,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3
+        ]
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          25,
+          11
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1364,
+            1,
+            3
+          ],
+          1,
+          [
+            [
+              3,
+              3,
+              9,
+              157664,
+              3
+            ],
+            [
+              3,
+              3,
+              [
+                3,
+                157664,
+                3
+              ]
+            ]
+          ],
+          [
+            1,
+            1100,
+            1,
+            1100,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3
+        ]
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          10
+        ],
+        "tile_origin": [
+          30,
+          32
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1480,
+            1,
+            3
+          ],
+          1,
+          [
+            [
+              4,
+              4,
+              12,
+              270656,
+              4
+            ],
+            [
+              4,
+              4,
+              [
+                4,
+                270656,
+                4
+              ]
+            ]
+          ],
+          [
+            1,
+            1080,
+            1,
+            1080,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": {
+          "bold_cache_identity_distinct": true,
+          "missing_bold_changes_pixels": true,
+          "invalid_glyph_and_scale_refused": true,
+          "scale_bounds": [
+            {
+              "scale": 0.25,
+              "size": [
+                25,
+                19
+              ],
+              "right_edge_ink_rows": 0,
+              "source_identical_padded_bounds": true
+            },
+            {
+              "scale": 1.0,
+              "size": [
+                91,
+                70
+              ],
+              "right_edge_ink_rows": 0,
+              "source_identical_padded_bounds": true
+            },
+            {
+              "scale": 4.0,
+              "size": [
+                352,
+                273
+              ],
+              "right_edge_ink_rows": 0,
+              "source_identical_padded_bounds": true
+            },
+            {
+              "scale": 32.0,
+              "bounded_refusal": "Native raster byte budget exceeded"
+            }
+          ]
+        },
+        "phase_counts": [
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "name": "cjk",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          24,
+          13
+        ],
+        "tile_origin": [
+          30,
+          31
+        ],
+        "warm_before": [
+          [
+            1,
+            2,
+            1404,
+            1,
+            2
+          ],
+          1,
+          [
+            [
+              5,
+              5,
+              14,
+              912056,
+              5
+            ],
+            [
+              6,
+              6,
+              [
+                5,
+                912056,
+                5
+              ]
+            ]
+          ],
+          [
+            1,
+            1248,
+            1,
+            1248,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3
+        ]
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          13
+        ],
+        "tile_origin": [
+          30,
+          32
+        ],
+        "warm_before": [
+          [
+            1,
+            7,
+            1696,
+            1,
+            7
+          ],
+          1,
+          [
+            [
+              6,
+              6,
+              21,
+              997128,
+              6
+            ],
+            [
+              13,
+              13,
+              [
+                6,
+                997128,
+                6
+              ]
+            ]
+          ],
+          [
+            1,
+            1404,
+            1,
+            1404,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      }
+    ]
+  }
+}

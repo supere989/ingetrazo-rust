@@ -1,5 +1,8 @@
 name: Rust and semantic acceptance
-on: [push, pull_request]
+on:
+  push:
+    branches-ignore: [review/metal-raw-canvas]
+  pull_request:
 jobs:
   metal-native-link:
     name: Native Metal framework link (${{ matrix.runner }})

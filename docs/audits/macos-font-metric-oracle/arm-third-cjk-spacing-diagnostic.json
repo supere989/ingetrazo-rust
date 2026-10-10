@@ -1,0 +1,20 @@
+{
+  "scope": "Actual retained PDF incremental mutation to diagnostic source text position only; not a shaping/producer fix",
+  "rows": [
+    {
+      "dpi": 72,
+      "original_changed_pixels": 67,
+      "spacing_only_changed_pixels": 5
+    },
+    {
+      "dpi": 150,
+      "original_changed_pixels": 5,
+      "spacing_only_changed_pixels": 5
+    },
+    {
+      "dpi": 300,
+      "original_changed_pixels": 350,
+      "spacing_only_changed_pixels": 41
+    }
+  ]
+}

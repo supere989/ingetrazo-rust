@@ -1,0 +1,18 @@
+{
+  "status": "pre_freeze_review_requires_changes",
+  "worktree": "/tmp/ingetrazo-coretext-glyph",
+  "findings": [
+    {
+      "file": "paper_coretext_glyph.rs",
+      "function": "NativeFont::raster",
+      "issue": "QFixed conversion casts f64 to i32 before checking raw native bounds. NaN/infinity/out-of-range may saturate into finite values and evade post-conversion checks.",
+      "required": "Validate native rect and intermediate transformed extents before fixed conversion; retain refusing controls."
+    },
+    {
+      "file": "check-macos-paper-font-matches.py",
+      "issue": "Requested trait equality differs from actual source fallback physical traits for Times.",
+      "required": "Compare observed source physical identity and synthetic behavior separately; do not replace failed requested-trait equality with unconditional acceptance."
+    }
+  ],
+  "remaining": "Actual native SDK/runtime, glyph pixel equality, source fallback matching, cache ownership and PDF subset acceptance required."
+}

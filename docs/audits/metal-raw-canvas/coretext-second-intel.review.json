@@ -1,0 +1,9 @@
+{
+  "run": 38078797189,
+  "job": 114291251324,
+  "artifact": 11678499863,
+  "sha256": "ae9b83b3007811563e5a34fb76abe4d63d17ac7415fc80442999095a95e1e5f3",
+  "revision": "68cee8daf2534ceecdc6046b374104928fab3f78",
+  "error": " crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs:9:68:\nnative face/style/coverage Request { family: \"Times\", bold: true, italic: true, required_chars: ['A', 'B', 'C'] }: CoreText style requires unsupported synthetic or variable face traits\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+  "canvas": "NOT RUN after provider failure"
+}

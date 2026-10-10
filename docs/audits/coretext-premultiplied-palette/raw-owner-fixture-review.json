@@ -1,0 +1,7 @@
+{
+  "change": "Preserve raw upload ownership acceptance independently of ordered Text implementation.",
+  "fixture": "Retained 2x2 RGBA swatch drawn every Canvas frame; separate 1x1 dropped before submission.",
+  "gates": "Existing positive acknowledged count, drained queue, stable upload counters and positive displayed presentation unchanged; explicit cancellation now required.",
+  "scope": "Lifecycle diagnostic only; strict full-image font fixture unchanged.",
+  "validation": "Python checker parses; source diff whitespace check passes; native Apple compile and runtime pending coherent ordered candidate."
+}

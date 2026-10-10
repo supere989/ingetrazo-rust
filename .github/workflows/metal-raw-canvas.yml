@@ -1,0 +1,79 @@
+name: Native Metal encoded texture acceptance
+on:
+  push:
+    branches: [review/metal-raw-canvas]
+  workflow_dispatch:
+jobs:
+  raw-texture:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and execute bounded native raw texture fixture
+        run: |
+          mkdir -p raw-metal-evidence
+          git rev-parse HEAD > raw-metal-evidence/revision.txt
+          cargo build --locked -p ingetrazo-metal --example egui_raw_probe -j2 > raw-metal-evidence/build.log 2>&1
+          cargo build --locked -p ingetrazo-gui --example native_metal --example native_metal_document_probe --example native_paper_font_tiles -j2 > raw-metal-evidence/host-build.log 2>&1
+          shasum -a 256 target/debug/examples/egui_raw_probe > raw-metal-evidence/binary.sha256
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('raw-metal-evidence/execution.log','w') as log:
+              subprocess.run(['target/debug/examples/egui_raw_probe','--output=raw-metal-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
+          PYTHON
+      - name: Validate native CoreText face identity and warm ownership
+        run: cargo run --locked -p ingetrazo-formats --example paper_coretext_provider_fixture -j2 > raw-metal-evidence/coretext.json 2> raw-metal-evidence/coretext-build.log
+      - name: Capture original macOS painter and compare native face identity
+        if: ${{ !cancelled() }}
+        run: |
+          python3 -m venv /tmp/ingetrazo-macos-font-oracle
+          /tmp/ingetrazo-macos-font-oracle/bin/python -m pip install 'PySide6==6.12.0' fonttools numpy > raw-metal-evidence/oracle-install.log 2>&1
+          /tmp/ingetrazo-macos-font-oracle/bin/python scripts/probe-original-macos-paper-fonts.py raw-metal-evidence/original-fonts > raw-metal-evidence/oracle.log 2>&1
+          /tmp/ingetrazo-macos-font-oracle/bin/python scripts/check-macos-paper-font-matches.py raw-metal-evidence/original-fonts/original-macos-fonts.json raw-metal-evidence/coretext.json > raw-metal-evidence/font-match.json 2> raw-metal-evidence/font-match.log
+      - name: Generate native production font PDF pages
+        if: ${{ !cancelled() }}
+        run: cargo run --locked -p ingetrazo-formats --example paper_coretext_pdf_fixture -j2 -- raw-metal-evidence/native-font-pages > raw-metal-evidence/native-font-pages.log 2>&1
+      - name: Compare all required original and native font PDF pages
+        if: ${{ !cancelled() }}
+        run: |
+          /tmp/ingetrazo-macos-font-oracle/bin/python - <<'PYTHON'
+          import json, pathlib, subprocess
+          root=pathlib.Path('raw-metal-evidence')
+          results=[]
+          for dpi in (72,150,300):
+              with (root/f'font-pages-{dpi}.log').open('w') as log:
+                  result=subprocess.run(['/tmp/ingetrazo-macos-font-oracle/bin/python','scripts/check-macos-paper-font-pages.py',str(root/'original-fonts'),str(root/'native-font-pages'),str(dpi)],stdout=log,stderr=subprocess.STDOUT)
+              results.append({'dpi':dpi,'exit_code':result.returncode})
+          (root/'font-pages-summary.json').write_text(json.dumps(results,indent=2)+'\n')
+          raise SystemExit(0 if all(row['exit_code']==0 for row in results) else 1)
+          PYTHON
+      - name: Observe production Canvas font tiles and warm ownership
+        if: ${{ !cancelled() }}
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('raw-metal-evidence/native-canvas-tiles.log','w') as log:
+              subprocess.run(['target/debug/examples/native_paper_font_tiles','raw-metal-evidence/native-canvas-tiles'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
+          PYTHON
+      - name: Compare strict source and native Canvas font tiles
+        if: ${{ !cancelled() }}
+        run: /tmp/ingetrazo-macos-font-oracle/bin/python scripts/check-macos-paper-font-tiles.py raw-metal-evidence/original-fonts raw-metal-evidence/native-canvas-tiles raw-metal-evidence/canvas-tiles-comparison.json
+      - name: Capture actual application Canvas window
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-metal-canvas-host.py target/debug/examples/native_metal_document_probe raw-metal-evidence/canvas-host
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-metal-${{ matrix.runner }}
+          path: raw-metal-evidence/
+          if-no-files-found: error

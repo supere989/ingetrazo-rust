@@ -1,0 +1,21 @@
+{
+  "qt": "6.12.0",
+  "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/coretext/qfontengine_coretext.mm",
+  "sha256": "a11cdd716adbb09ad01e1e58bc02219aeaa37370073f613b8fd69a6798aa1a2e",
+  "synthesis_draw_lines": [
+    860,
+    868
+  ],
+  "bounding_box_lines": [
+    384,
+    399
+  ],
+  "alpha_bounds_lines": [
+    585,
+    630
+  ],
+  "bold_bounds_policy": "Source does not expand physical alpha-map metrics for synthetic bold; preserves +3 width padding, even large-scale clipping risk",
+  "coverage_probe_source_sha256": "04d893261d3ba89412b78b1048f6d13196a8d5dad00da38fe3a9430b444d228c",
+  "coverage_probe_binary_sha256": "7f0da1cdd6cba0adb5318daa00d7f81630e7490a8ad0052b2382cfea9cfc493f",
+  "checks": "Four distinct ARGB RGB-channel controls and old opaque-black168 negative; production extracted helper only, not macOS raster proof"
+}

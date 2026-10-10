@@ -1,0 +1,44 @@
+[
+  {
+    "glyph": ".notdef",
+    "coordinates_equal": true,
+    "ends_equal": true,
+    "flags_equal": true,
+    "source_hmtx": [
+      2048,
+      184
+    ],
+    "native_hmtx": [
+      2048,
+      186
+    ]
+  },
+  {
+    "glyph": "glyph00001",
+    "coordinates_equal": true,
+    "ends_equal": true,
+    "flags_equal": true,
+    "source_hmtx": [
+      2048,
+      110
+    ],
+    "native_hmtx": [
+      2048,
+      111
+    ]
+  },
+  {
+    "glyph": "glyph00002",
+    "coordinates_equal": true,
+    "ends_equal": true,
+    "flags_equal": true,
+    "source_hmtx": [
+      2048,
+      116
+    ],
+    "native_hmtx": [
+      2048,
+      119
+    ]
+  }
+]

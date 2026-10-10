@@ -1,0 +1,609 @@
+{
+  "artifact_id": 11684001498,
+  "artifact": "../coretext-native-sixth/arm.zip",
+  "scope": "Reconstruction of43 retained Times RGB discrepancies under identical single-mask source-over. Causality of bitmap/color-space source candidate still pending real native replay.",
+  "pairs": [
+    {
+      "source_rgb": [
+        234,
+        234,
+        235
+      ],
+      "native_rgb": [
+        235,
+        235,
+        236
+      ],
+      "source_mask": 24,
+      "native_mask": 23
+    },
+    {
+      "source_rgb": [
+        103,
+        107,
+        113
+      ],
+      "native_rgb": [
+        104,
+        108,
+        114
+      ],
+      "source_mask": 172,
+      "native_mask": 171
+    },
+    {
+      "source_rgb": [
+        124,
+        127,
+        132
+      ],
+      "native_rgb": [
+        124,
+        128,
+        133
+      ],
+      "source_mask": 149,
+      "native_mask": 148
+    },
+    {
+      "source_rgb": [
+        30,
+        36,
+        44
+      ],
+      "native_rgb": [
+        31,
+        37,
+        45
+      ],
+      "source_mask": 255,
+      "native_mask": 254
+    },
+    {
+      "source_rgb": [
+        140,
+        143,
+        147
+      ],
+      "native_rgb": [
+        141,
+        144,
+        148
+      ],
+      "source_mask": 130,
+      "native_mask": 129
+    },
+    {
+      "source_rgb": [
+        219,
+        220,
+        221
+      ],
+      "native_rgb": [
+        220,
+        221,
+        222
+      ],
+      "source_mask": 41,
+      "native_mask": 40
+    },
+    {
+      "source_rgb": [
+        179,
+        181,
+        184
+      ],
+      "native_rgb": [
+        180,
+        182,
+        185
+      ],
+      "source_mask": 86,
+      "native_mask": 85
+    },
+    {
+      "source_rgb": [
+        54,
+        59,
+        66
+      ],
+      "native_rgb": [
+        55,
+        60,
+        67
+      ],
+      "source_mask": 228,
+      "native_mask": 227
+    },
+    {
+      "source_rgb": [
+        114,
+        118,
+        123
+      ],
+      "native_rgb": [
+        115,
+        118,
+        123
+      ],
+      "source_mask": 160,
+      "native_mask": 159
+    },
+    {
+      "source_rgb": [
+        185,
+        187,
+        190
+      ],
+      "native_rgb": [
+        186,
+        188,
+        190
+      ],
+      "source_mask": 79,
+      "native_mask": 78
+    },
+    {
+      "source_rgb": [
+        33,
+        39,
+        46
+      ],
+      "native_rgb": [
+        34,
+        39,
+        47
+      ],
+      "source_mask": 252,
+      "native_mask": 251
+    },
+    {
+      "source_rgb": [
+        116,
+        119,
+        124
+      ],
+      "native_rgb": [
+        116,
+        120,
+        125
+      ],
+      "source_mask": 158,
+      "native_mask": 157
+    },
+    {
+      "source_rgb": [
+        94,
+        99,
+        104
+      ],
+      "native_rgb": [
+        95,
+        100,
+        105
+      ],
+      "source_mask": 182,
+      "native_mask": 181
+    },
+    {
+      "source_rgb": [
+        115,
+        118,
+        123
+      ],
+      "native_rgb": [
+        116,
+        119,
+        124
+      ],
+      "source_mask": 159,
+      "native_mask": 158
+    },
+    {
+      "source_rgb": [
+        32,
+        38,
+        46
+      ],
+      "native_rgb": [
+        33,
+        39,
+        46
+      ],
+      "source_mask": 253,
+      "native_mask": 252
+    },
+    {
+      "source_rgb": [
+        218,
+        219,
+        220
+      ],
+      "native_rgb": [
+        219,
+        220,
+        221
+      ],
+      "source_mask": 42,
+      "native_mask": 41
+    },
+    {
+      "source_rgb": [
+        75,
+        80,
+        86
+      ],
+      "native_rgb": [
+        76,
+        81,
+        87
+      ],
+      "source_mask": 204,
+      "native_mask": 203
+    },
+    {
+      "source_rgb": [
+        46,
+        51,
+        59
+      ],
+      "native_rgb": [
+        47,
+        52,
+        60
+      ],
+      "source_mask": 237,
+      "native_mask": 236
+    },
+    {
+      "source_rgb": [
+        124,
+        127,
+        132
+      ],
+      "native_rgb": [
+        124,
+        128,
+        133
+      ],
+      "source_mask": 149,
+      "native_mask": 148
+    },
+    {
+      "source_rgb": [
+        32,
+        38,
+        46
+      ],
+      "native_rgb": [
+        33,
+        39,
+        46
+      ],
+      "source_mask": 253,
+      "native_mask": 252
+    },
+    {
+      "source_rgb": [
+        32,
+        38,
+        46
+      ],
+      "native_rgb": [
+        33,
+        39,
+        46
+      ],
+      "source_mask": 253,
+      "native_mask": 252
+    },
+    {
+      "source_rgb": [
+        83,
+        88,
+        94
+      ],
+      "native_rgb": [
+        84,
+        88,
+        94
+      ],
+      "source_mask": 195,
+      "native_mask": 194
+    },
+    {
+      "source_rgb": [
+        192,
+        194,
+        196
+      ],
+      "native_rgb": [
+        193,
+        195,
+        197
+      ],
+      "source_mask": 71,
+      "native_mask": 70
+    },
+    {
+      "source_rgb": [
+        70,
+        75,
+        81
+      ],
+      "native_rgb": [
+        71,
+        76,
+        82
+      ],
+      "source_mask": 210,
+      "native_mask": 209
+    },
+    {
+      "source_rgb": [
+        38,
+        44,
+        51
+      ],
+      "native_rgb": [
+        39,
+        45,
+        52
+      ],
+      "source_mask": 246,
+      "native_mask": 245
+    },
+    {
+      "source_rgb": [
+        219,
+        220,
+        221
+      ],
+      "native_rgb": [
+        220,
+        221,
+        222
+      ],
+      "source_mask": 41,
+      "native_mask": 40
+    },
+    {
+      "source_rgb": [
+        191,
+        192,
+        195
+      ],
+      "native_rgb": [
+        191,
+        193,
+        195
+      ],
+      "source_mask": 73,
+      "native_mask": 72
+    },
+    {
+      "source_rgb": [
+        77,
+        82,
+        88
+      ],
+      "native_rgb": [
+        78,
+        82,
+        89
+      ],
+      "source_mask": 202,
+      "native_mask": 201
+    },
+    {
+      "source_rgb": [
+        165,
+        167,
+        171
+      ],
+      "native_rgb": [
+        166,
+        168,
+        171
+      ],
+      "source_mask": 102,
+      "native_mask": 101
+    },
+    {
+      "source_rgb": [
+        116,
+        119,
+        124
+      ],
+      "native_rgb": [
+        116,
+        120,
+        125
+      ],
+      "source_mask": 158,
+      "native_mask": 157
+    },
+    {
+      "source_rgb": [
+        219,
+        220,
+        221
+      ],
+      "native_rgb": [
+        220,
+        221,
+        222
+      ],
+      "source_mask": 41,
+      "native_mask": 40
+    },
+    {
+      "source_rgb": [
+        46,
+        51,
+        59
+      ],
+      "native_rgb": [
+        47,
+        52,
+        60
+      ],
+      "source_mask": 237,
+      "native_mask": 236
+    },
+    {
+      "source_rgb": [
+        168,
+        170,
+        173
+      ],
+      "native_rgb": [
+        169,
+        171,
+        174
+      ],
+      "source_mask": 99,
+      "native_mask": 98
+    },
+    {
+      "source_rgb": [
+        108,
+        112,
+        117
+      ],
+      "native_rgb": [
+        109,
+        112,
+        118
+      ],
+      "source_mask": 167,
+      "native_mask": 166
+    },
+    {
+      "source_rgb": [
+        74,
+        79,
+        85
+      ],
+      "native_rgb": [
+        75,
+        80,
+        86
+      ],
+      "source_mask": 205,
+      "native_mask": 204
+    },
+    {
+      "source_rgb": [
+        127,
+        130,
+        135
+      ],
+      "native_rgb": [
+        128,
+        131,
+        136
+      ],
+      "source_mask": 145,
+      "native_mask": 144
+    },
+    {
+      "source_rgb": [
+        32,
+        38,
+        46
+      ],
+      "native_rgb": [
+        33,
+        39,
+        46
+      ],
+      "source_mask": 253,
+      "native_mask": 252
+    },
+    {
+      "source_rgb": [
+        35,
+        41,
+        49
+      ],
+      "native_rgb": [
+        36,
+        42,
+        50
+      ],
+      "source_mask": 249,
+      "native_mask": 248
+    },
+    {
+      "source_rgb": [
+        45,
+        51,
+        58
+      ],
+      "native_rgb": [
+        46,
+        51,
+        59
+      ],
+      "source_mask": 238,
+      "native_mask": 237
+    },
+    {
+      "source_rgb": [
+        168,
+        170,
+        173
+      ],
+      "native_rgb": [
+        169,
+        171,
+        174
+      ],
+      "source_mask": 99,
+      "native_mask": 98
+    },
+    {
+      "source_rgb": [
+        91,
+        95,
+        101
+      ],
+      "native_rgb": [
+        92,
+        96,
+        102
+      ],
+      "source_mask": 186,
+      "native_mask": 185
+    },
+    {
+      "source_rgb": [
+        86,
+        91,
+        97
+      ],
+      "native_rgb": [
+        87,
+        92,
+        98
+      ],
+      "source_mask": 191,
+      "native_mask": 190
+    },
+    {
+      "source_rgb": [
+        101,
+        105,
+        110
+      ],
+      "native_rgb": [
+        101,
+        106,
+        111
+      ],
+      "source_mask": 175,
+      "native_mask": 174
+    }
+  ]
+}

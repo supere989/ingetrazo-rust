@@ -1,0 +1,47 @@
+{
+  "source_revision": "dbe5275c20c9e05fca4c1f86f38e2dea2d7a7c49",
+  "test_binary_sha256": "51824c5fdaa8da6096569834779d422fc589786165d1c5573f8e1cd5720c2ffc",
+  "native_scope": "Explicit mutable-font tracking marker; general unmarked HarfBuzz8.4 shaping remains original; not a full14.5 upgrade",
+  "commands": [
+    {
+      "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-coretext-focused-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test -p harfbuzz-sys --lib qt_tracking_tests -j2 --offline",
+      "exit": 0,
+      "passed": 4,
+      "failed": 0,
+      "tests": [
+        "sole_nonzero_track_clamps_and_interpolates_before_scale",
+        "multiple_tracks_interpolate_at_zero_without_offset",
+        "tracking_uses_graphemes_and_preserves_shaped_offsets",
+        "empty_and_truncated_tables_preserve_safe_shaping"
+      ]
+    },
+    {
+      "command": "same bounded environment cargo check -p ingetrazo-formats -j2 --offline",
+      "exit": 0,
+      "log": "formats-check.log"
+    }
+  ],
+  "retained_development_failures": [
+    {
+      "kind": "test assumption",
+      "result": "Original RTL test wrongly assumed first output glyph with a public cluster receives the grapheme addition. Actual Arabic mark precedes its base. Production source unchanged; corrected test asserts actual nonspacing mark glyph IDs receive no addition and shaped IDs/clusters/offsets unchanged."
+    },
+    {
+      "kind": "environment",
+      "result": "Formats check initially refused missing worktree submodule files. Rebound only owned worktree ingetrazo symlink to unchanged /work/ingetrazo; focused check passed."
+    },
+    {
+      "kind": "upstream whitespace",
+      "result": "Full new-vendor git diff --check reports inherited upstream tabs/trailing whitespace. Original files preserved with exact hashes; owned application/test/docs changes pass focused whitespace check."
+    }
+  ],
+  "remaining_required": [
+    "Actual native macOS SDK compile and complete six-case font metrics/traits/synthesis replay",
+    "18 strict72/150/300 PDF comparisons including retained CJK62/0/309 baseline",
+    "Six strict production Canvas tile comparisons including four retained nonzero residuals",
+    "Complex native font grapheme/offset and fallback controls beyond synthetic test fonts",
+    "ARM strict positive presentation callback remains open"
+  ],
+  "process_claim": "In-process source shaping; no renderer subprocess, no postshape cluster repair, no new worker",
+  "temporary_cleanup": "Focused terminal target and logs removed after evidence retention; no root target touched"
+}

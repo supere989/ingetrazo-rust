@@ -1,0 +1,91 @@
+{
+  "artifact_sha256": "acb3d704210ec6a2beeba73f6c7c542b6829855c56e09a23144ec5a0d097d745",
+  "scope": "Only native PDF hmtx lsb and required SFNT checksums changed; coordinates/endpoints/flags/advances required identical; diagnostic not production proof",
+  "rows": [
+    {
+      "case": "helvetica",
+      "dpi": 72,
+      "original_changed_pixels": 19,
+      "bearing_only_changed_pixels": 0,
+      "bearing_changes": [
+        {
+          "glyph": "glyph00003",
+          "native": 89,
+          "original": 90
+        }
+      ],
+      "negative_original_native_rejected": true
+    },
+    {
+      "case": "helvetica",
+      "dpi": 150,
+      "original_changed_pixels": 82,
+      "bearing_only_changed_pixels": 0,
+      "bearing_changes": [
+        {
+          "glyph": "glyph00003",
+          "native": 89,
+          "original": 90
+        }
+      ],
+      "negative_original_native_rejected": true
+    },
+    {
+      "case": "helvetica",
+      "dpi": 300,
+      "original_changed_pixels": 207,
+      "bearing_only_changed_pixels": 0,
+      "bearing_changes": [
+        {
+          "glyph": "glyph00003",
+          "native": 89,
+          "original": 90
+        }
+      ],
+      "negative_original_native_rejected": true
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 72,
+      "original_changed_pixels": 23,
+      "bearing_only_changed_pixels": 0,
+      "bearing_changes": [
+        {
+          "glyph": "glyph00003",
+          "native": 157,
+          "original": 158
+        }
+      ],
+      "negative_original_native_rejected": true
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 150,
+      "original_changed_pixels": 82,
+      "bearing_only_changed_pixels": 0,
+      "bearing_changes": [
+        {
+          "glyph": "glyph00003",
+          "native": 157,
+          "original": 158
+        }
+      ],
+      "negative_original_native_rejected": true
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 300,
+      "original_changed_pixels": 204,
+      "bearing_only_changed_pixels": 0,
+      "bearing_changes": [
+        {
+          "glyph": "glyph00003",
+          "native": 157,
+          "original": 158
+        }
+      ],
+      "negative_original_native_rejected": true
+    }
+  ],
+  "all_bearing_only_exact": true
+}

@@ -1,0 +1,12 @@
+{
+  "scope": "Constructed checker controls only; synthesis and point-size fields supplied to retained artifact to isolate validator. Not actual new native proof.",
+  "positive_cases": 6,
+  "all_six_reject_each_context": [
+    "None",
+    "0",
+    "100",
+    "True",
+    "nan"
+  ],
+  "actual_new_native_proof": "pending native SDK run"
+}

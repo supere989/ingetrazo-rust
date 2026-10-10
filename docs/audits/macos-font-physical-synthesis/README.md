@@ -1,0 +1,7 @@
+# Physical face versus synthetic requested style
+
+The old gate requires the physical face flags to equal requested bold/italic. Actual original Qt Times request bold+italic resolves TimesNewRomanPSMT index0, whose OS/2 and head both report neither trait; actual native uses exactly that same face. Source still renders requested synthesis: all three actual Times PDF pages match native exactly. The old gate failure is retained unchanged.
+
+The correction compares physical chosen flags to exact source physical flags, independently retains every requested property, and requires explicit compiled producer PDF synthetic-bold/italic policy observations. No missing observation defaults to pass. Checker-only constructed-policy controls pass all six identities and reject wrong physical bold/italic, omitted/wrong synthesis and changed requests. These controls are not a new native execution; the next coordinated SDK batch must provide actual new fields. Pixel/layout gates remain unchanged, required, and separate. Canvas synthesized bold remains an explicit refusal, not accepted by this face policy.
+
+Source qfontengine_coretext.mm synthesisFlags checks requested versus native CT traits; PDF writer calls CachedFont::synthetic_bold_offset_px/synthetic_italic_shear. The native fixture now records these same actual methods. Physical OS/2/head disagreement is refused rather than inferred. Variable/multi-run ambiguity needs broader cases.

@@ -1,0 +1,120 @@
+{
+  "source": "7e48fe1060d84ccf2cdeb4512727767d7af734f0",
+  "artifact": 11684001498,
+  "zip_sha256": "5a901916d495d2afe99838191dfa3242593d3d2cbd4ec7db0b02260fd2bdf01b",
+  "cases": [
+    {
+      "name": "helvetica",
+      "tile_changed_pixels": 54,
+      "pdf_changed_pixels": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "helvetica-bold",
+      "tile_changed_pixels": 0,
+      "pdf_changed_pixels": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "helvetica-italic",
+      "tile_changed_pixels": 55,
+      "pdf_changed_pixels": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "times-bold-italic",
+      "tile_changed_pixels": 43,
+      "pdf_changed_pixels": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "cjk",
+      "tile_changed_pixels": 0,
+      "pdf_changed_pixels": [
+        62,
+        0,
+        309
+      ]
+    },
+    {
+      "name": "arabic",
+      "tile_changed_pixels": 46,
+      "pdf_changed_pixels": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "canvas_host": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "0644e74126138c959e1d3d4391652c8bdb2351d5ba8829e3ec750cf667fc1750",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "diagnostic_capture": {
+      "sha256": "9e59795f2aaf6fd41a964444bdc6d3ee9b17303adb3e67aa7b22ba78040dc4ff",
+      "observation": {
+        "window_id": 24,
+        "displayed": 0,
+        "diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194)\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=3; retired=1; displayed=0; skipped=1; frames=[submission=2 id=1 command=MTLCommandBufferStatus(3) presentedTime=0 gpuStart=0 gpuEnd=0 callback_seen=false callback_time=0; submission=3 id=2 command=MTLCommandBufferStatus(3) presentedTime=0 gpuStart=0 gpuEnd=0 callback_seen=false callback_time=0]",
+        "acceptance_proof": false
+      },
+      "acceptance_proof": false
+    },
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 5,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 8,
+      "canvas_warm_frames": 7,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "Independent actual image decoding, zero tolerance; no full native parity claim"
+}

@@ -19,6 +19,7 @@ struct Palette {
 }
 #[derive(Default, Clone, Copy, Debug)]
 pub struct Stats {
+    pub deep_admissions:u64,
     pub plan_uploads: u64,
     pub palette_uploads: u64,
     pub warm_hits: u64,
@@ -59,25 +60,21 @@ impl Painter {
         if !Self::supported(metal) {
             return Err("Exact Metal R32Uint read/write composition requires texture tier1".into());
         }
-        snapshot.geometry.validate_batches(&snapshot.batches)?;
         snapshot
             .geometry
             .validate_ordered_pose(snapshot.pose, density)?;
         let source=snapshot.geometry.source_spans().ok_or("Exact Metal compute requires original source span metadata; arbitrary geometry remains unsupported")?;
         let translation = source.translation(snapshot.pose, density)?;
         let id = snapshot.geometry.id();
-        let layout_matches = |p: &Plan| {
-            p.batches.len() == snapshot.batches.len()
-                && p.batches
-                    .iter()
-                    .zip(snapshot.batches.iter())
-                    .all(|(a, b)| a.first == b.first && a.count == b.count)
-        };
-        let cached = self.plans.get(&id).filter(|p| layout_matches(p)).cloned();
+        // Immutable Arc identity is the admitted layout signature. Replacing
+        // batches is a cold admission even if its lengths happen to match.
+        let cached = self.plans.get(&id)
+            .filter(|p| Arc::ptr_eq(&p.batches, &snapshot.batches)).cloned();
         let mut plan_bytes = 0;
         let plan = if let Some(plan) = cached {
             plan
         } else {
+            self.stats.deep_admissions+=1;
             let p = crate::span_plan::compile_source(&snapshot.geometry, &snapshot.batches)?;
             let upload = |bytes: &[u8]| -> Result<Buffer, String> {
                 let mut b = metal.buffer(bytes.len(), true)?;

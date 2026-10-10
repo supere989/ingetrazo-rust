@@ -241,6 +241,12 @@ pub struct Glyph {
     pub advance: [i32; 2],
     pub offset: [i32; 2],
 }
+/// Frozen source paper painter uses pixel100 normalized layout. Qt's effective
+/// point size is75 at its reference96DPI, including QPdfWriter300DPI; device
+/// painter scaling does not redefine the immutable HB shaping context.
+#[cfg(target_os="macos")]
+pub(crate) const QT_PAPER_SHAPING_POINT_SIZE: f32 = 100. * 72. / 96.;
+
 impl PaperFont {
     pub fn new(bytes: Arc<[u8]>, face_index: u32) -> Result<Self, String> {
         Self::new_with_outline_policy(bytes, face_index, None)
@@ -260,8 +266,17 @@ impl PaperFont {
         policy: Option<FtPolicy>,
         pixels: u32,
     ) -> Result<Self, String> {
+        Self::new_with_shaping_context(bytes, face_index, policy, pixels, None)
+    }
+    fn new_with_shaping_context(
+        bytes: Arc<[u8]>, face_index: u32, policy: Option<FtPolicy>,
+        pixels: u32, point_size: Option<f32>,
+    ) -> Result<Self, String> {
         if pixels == 0 || pixels > 4096 {
             return Err("Native font pixel size outside admission".into());
+        }
+        if point_size.is_some_and(|p| !p.is_finite() || p <= 0. || p > 4096.) {
+            return Err("Paper shaping point context refused".into());
         }
         let fixed_size = i64::from(pixels) * 64;
         if bytes.is_empty() || bytes.len() > MAX_FONT_BYTES {
@@ -314,10 +329,16 @@ impl PaperFont {
             hb::hb_ot_font_set_funcs(parent.raw());
             hb::hb_font_set_scale(parent.raw(), fixed_size as i32, -(fixed_size as i32));
             hb::hb_font_set_ppem(parent.raw(), pixels, pixels);
+            if let Some(ptem) = point_size { hb::hb_font_set_ptem(parent.raw(), ptem); }
             let font = Handle::new(
                 hb::hb_font_create_sub_font(parent.raw()),
                 hb::hb_font_destroy,
             )?;
+            // Native CoreText paper fonts use the exact Qt tracking source policy.
+            // General FreeType shaping keeps its existing HarfBuzz behavior.
+            if point_size.is_some() && hb::ingetrazo_hb_font_set_qt_tracking(font.raw()) == 0 {
+                return Err("Paper font tracking policy admission failed".into());
+            }
             let funcs = Handle::new(hb::hb_font_funcs_create(), hb::hb_font_funcs_destroy)?;
             if hb::hb_font_is_immutable(font.raw()) != 0
                 || hb::hb_font_funcs_is_immutable(funcs.raw()) != 0
@@ -365,6 +386,17 @@ impl PaperFont {
                 leading_26_6,
             })
         }
+    }
+    #[cfg(target_os="macos")]
+    pub(crate) fn new_coretext(native:&crate::paper_coretext_glyph::NativeFont)->Result<Self,String>{
+        let mut font=Self::new_with_shaping_context(native.bytes.clone(),0,None,100,Some(QT_PAPER_SHAPING_POINT_SIZE))?;
+        let metrics=native.metrics();let data=unsafe{font.data.as_mut()};
+        for (id,width)in data.widths.iter_mut().enumerate(){*width=(native.advance(id as u32)?*64.)as i32;}
+        data.metrics=[metrics[0],metrics[1],metrics[2]];font.ascent_26_6=metrics[0];font.descent_26_6=metrics[1];font.leading_26_6=metrics[2];Ok(font)
+    }
+    /// Immutable HarfBuzz point context (zero means unspecified).
+    pub fn shaping_point_size(&self) -> f32 {
+        unsafe { hb::hb_font_get_ptem(self.font.raw()) }
     }
     /// Render an existing pixel100 glyph at the actual canvas device transform.
     /// Phases are 1/64 device pixel; this does not modify shaping/outline caches.

@@ -1,0 +1,7 @@
+{
+  "source": "1cbcabd4",
+  "extracted_production_scalar_sha256": "d2c763213ee39cb6ceb1efefc21c97fbf8a1ec26ffe56f5df5704bbfd6f6039e",
+  "result": "new=88.875 old=88.859375 shear=0.24932801723480225",
+  "scope": "Scalar ordering and shear only. Actual native SDK/Canvas pixel validation pending.",
+  "pdf_review": "All three sheet_pdf synthesis callers retain0.3; CoreText14degree selection is isolated within native rasterize_glyph branch. Existing exactTimesPDF evidence remains source0464623b, not rerun."
+}

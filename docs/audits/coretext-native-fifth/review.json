@@ -1,0 +1,52 @@
+{
+  "run": 38087821842,
+  "revision": "f2d0820f797003af0b9ba7cb54adfaf9fa367535",
+  "artifact": 11683545044,
+  "zip_sha256": "738fd926e161e8436d7c6cbff3dc1dbe4156db35e6b7acf57eff7741cd266909",
+  "physical_cases": 6,
+  "physical_pass": 6,
+  "pdf_exact": 16,
+  "pdf_total": 18,
+  "cjk_pdf_changed": [
+    62,
+    0,
+    309
+  ],
+  "canvas": [
+    {
+      "name": "helvetica",
+      "actual_changed_pixels": 179,
+      "diagnostic_up_one_changed_pixels": 55
+    },
+    {
+      "name": "helvetica-bold",
+      "actual_changed_pixels": 174,
+      "diagnostic_up_one_changed_pixels": 0
+    },
+    {
+      "name": "helvetica-italic",
+      "actual_changed_pixels": 181,
+      "diagnostic_up_one_changed_pixels": 52
+    },
+    {
+      "name": "times-bold-italic",
+      "actual_changed_pixels": 159,
+      "diagnostic_up_one_changed_pixels": 43
+    },
+    {
+      "name": "cjk",
+      "actual_changed_pixels": 214,
+      "diagnostic_up_one_changed_pixels": 0
+    },
+    {
+      "name": "arabic",
+      "actual_changed_pixels": 158,
+      "diagnostic_up_one_changed_pixels": 48
+    }
+  ],
+  "diagnostic_scope": "Up-one image translation diagnostic only, not accepted production proof; source-native floor fix pending runtime",
+  "source_qfixed_sha256": "48d3b750415c99e4d9118a9ca1d212ca15d5ca1094dcfb4a63766c2d01ad6651",
+  "source_qfixed_truncate": "val>>6 arithmeticfloor fornegative",
+  "arm_displayed": 0,
+  "arm_presentation": "strictfailure retained; no bypass or proven VM exclusion"
+}

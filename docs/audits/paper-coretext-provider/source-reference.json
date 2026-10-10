@@ -1,0 +1,8 @@
+{
+  "qt_url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/coretext/qcoretextfontdatabase.mm",
+  "qt_sha256": "0d45c954db30f38d3f5c4312dd07f27cf30b73884915b0c6d49adad5e657f561",
+  "source_commit": "de82723a",
+  "linux_check": "exit0",
+  "linux_focused_test": "1 passed; 35 filtered",
+  "cross_check": "exit101 libz-sys host cc missing Apple SDK; provider not compiled"
+}

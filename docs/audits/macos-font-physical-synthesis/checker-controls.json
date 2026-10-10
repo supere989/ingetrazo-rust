@@ -1,0 +1,99 @@
+{
+  "scope": "Actual frozen source/native physical records with constructed expected synthesis booleans for checker unit control, not a new compiled provider proof",
+  "artifact_sha256": "acb3d704210ec6a2beeba73f6c7c542b6829855c56e09a23144ec5a0d097d745",
+  "positive": {
+    "passed": true,
+    "matched": [
+      "helvetica",
+      "helvetica-bold",
+      "helvetica-italic",
+      "times-bold-italic",
+      "cjk",
+      "arabic"
+    ],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "cjk",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "errors": []
+      }
+    ],
+    "scope": "Actual Qt physical face/traits and requested PDF synthesis policy; pixel/layout gates independent; Canvas synthesized-bold still unsupported"
+  },
+  "unaltered_old_native_missing_policy_refused": true,
+  "negative_controls": [
+    {
+      "mutated": "chosen_bold",
+      "case": "times-bold-italic",
+      "rejected": true,
+      "errors": [
+        "source physical trait mismatch: bold"
+      ]
+    },
+    {
+      "mutated": "chosen_italic",
+      "case": "times-bold-italic",
+      "rejected": true,
+      "errors": [
+        "source physical trait mismatch: italic"
+      ]
+    },
+    {
+      "mutated": "pdf_synthetic_bold",
+      "case": "times-bold-italic",
+      "rejected": true,
+      "errors": [
+        "missing/wrong PDF synthesis policy: bold"
+      ]
+    },
+    {
+      "mutated": "pdf_synthetic_italic",
+      "case": "times-bold-italic",
+      "rejected": true,
+      "errors": [
+        "missing/wrong PDF synthesis policy: italic"
+      ]
+    },
+    {
+      "mutated": "bold",
+      "case": "times-bold-italic",
+      "rejected": true,
+      "errors": [
+        "request mismatch: bold"
+      ]
+    },
+    {
+      "mutated": "italic",
+      "case": "times-bold-italic",
+      "rejected": true,
+      "errors": [
+        "request mismatch: italic"
+      ]
+    }
+  ]
+}
