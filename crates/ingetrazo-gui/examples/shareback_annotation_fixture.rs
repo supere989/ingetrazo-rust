@@ -126,6 +126,84 @@ fn main() {
     assert!(reopened.history_shareback.is_none());
     assert_eq!(reopened.dimensions[1].end, DVec3::new(14., 20., 30.));
     assert!(reopened.dimensions[1].anchor_b.is_some());
+    let mut nested = IngeTrazoApp::new();
+    nested.scene = Scene::new();
+    let mut m = Mesh::new();
+    let a = m.add_vertex(DVec3::ZERO);
+    let b = m.add_vertex(DVec3::X);
+    m.add_edge(a, b);
+    let mut leaf = Group::with_mesh("Leaf", m);
+    let leaf_id = leaf.id;
+    leaf.transform = DMat4::from_translation(DVec3::new(1., 2., 3.));
+    let mut middle = Group::new("Middle");
+    middle.transform = DMat4::from_translation(DVec3::new(10., 20., 30.));
+    middle.children.push(leaf);
+    let mut parent = Group::new("Parent");
+    parent.transform = DMat4::from_translation(DVec3::new(100., 200., 300.));
+    parent.children.push(middle);
+    nested.scene.groups.push(parent);
+    nested.scene.dimensions.push(Dimension::new(
+        DVec3::new(111., 222., 333.),
+        DVec3::new(112., 222., 333.),
+        DVec3::Y,
+    ));
+    nested.scene.bind_dimensions();
+    for _ in 0..3 {
+        nested.scene.select(SelectionItem::Group(0));
+        nested.begin_component_edit();
+    }
+    nested.save_undo_state();
+    nested.scene.mesh.vertices[1].position.x = 117.;
+    nested.scene.refresh_dimensions();
+    nested.save_undo_state();
+    let mut d = Dimension::new(
+        DVec3::new(111., 222., 333.),
+        DVec3::new(117., 222., 333.),
+        DVec3::Y * 2.,
+    );
+    d.text_override = Some("Nested <>".into());
+    nested.scene.dimensions.push(d);
+    nested.scene.bind_dimensions();
+    nested.finish_component_edit();
+    fn nested_state(app: &IngeTrazoApp, id: uuid::Uuid) -> serde_json::Value {
+        fn find(groups: &[Group], id: uuid::Uuid) -> &Group {
+            for group in groups {
+                if group.id == id {
+                    return group;
+                }
+                if group.children.iter().any(|g| g.id == id) {
+                    return find(&group.children, id);
+                }
+            }
+            for group in groups {
+                if !group.children.is_empty() {
+                    return find(&group.children, id);
+                }
+            }
+            panic!("Missing nested target");
+        }
+        let mut value = state(app);
+        value["mesh"] = serde_json::json!(find(&app.scene.groups, id)
+            .mesh
+            .vertices
+            .iter()
+            .map(|v| v.position.to_array())
+            .collect::<Vec<_>>());
+        value
+    }
+    let mut states = vec![nested_state(&nested, leaf_id)];
+    nested.undo();
+    states.push(nested_state(&nested, leaf_id));
+    nested.redo();
+    states.push(nested_state(&nested, leaf_id));
+    nested.finish_component_edit();
+    nested.finish_component_edit();
+    states.push(nested_state(&nested, leaf_id));
+    nested.undo();
+    states.push(nested_state(&nested, leaf_id));
+    nested.redo();
+    states.push(nested_state(&nested, leaf_id));
+    rows.insert("nested_parked_and_root".into(), serde_json::json!(states));
     std::fs::write(
         dir.join("native.json"),
         serde_json::to_vec_pretty(&serde_json::json!({"cases":rows})).unwrap(),

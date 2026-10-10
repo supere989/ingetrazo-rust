@@ -154,10 +154,17 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             if scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.dimension_frame.inverse();
                 candidate.dimensions=scene.dimensions.clone();
-                for dimension in &mut candidate.dimensions{
-                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
+                let mut dimensions=std::mem::take(&mut candidate.dimensions);
+                for dimension in &mut dimensions{
+                    let held=(dimension.anchor_a.is_some(),dimension.anchor_b.is_some());
+                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.measurement_frame=candidate.dimension_frame;
+                    // Leaving an ancestor is a representation change, not a new
+                    // AddDimension command. Never revive a hold already lost
+                    // by a completed child shareback Undo.
+                    dimension.anchor_a=if held.0 {candidate.resolve_dimension_anchor(dimension.start)}else{None};
+                    dimension.anchor_b=if held.1 {candidate.resolve_dimension_anchor(dimension.end)}else{None};
                 }
-                candidate.bind_dimensions();
+                candidate.dimensions=dimensions;
             }
             if scene.section_planes!=session.section_baseline{let transform=candidate.dimension_frame.inverse();candidate.section_planes=scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
             candidate.show_section_cuts=scene.show_section_cuts;candidate.show_section_planes=scene.show_section_planes;candidate.show_section_fill=scene.show_section_fill;
