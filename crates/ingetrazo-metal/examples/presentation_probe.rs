@@ -13,6 +13,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         window: Option<std::sync::Arc<Window>>,
         error: Option<String>,
         frames: u64,
+        automatic: bool,
+        started: std::time::Instant,
+        resized: bool,
+        resize_requested: bool,
     }
     impl ApplicationHandler for Probe {
         fn resumed(&mut self, ev: &ActiveEventLoop) {
@@ -47,11 +51,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     ev.exit();
                     Ok(())
                 }
-                WindowEvent::Resized(size) => gpu.resize(
+                WindowEvent::Resized(size) => {
+                    if self.resize_requested { self.resized = true; }
+                    gpu.resize(
                     size.width,
                     size.height,
                     self.window.as_ref().unwrap().scale_factor(),
-                ),
+                ) },
                 WindowEvent::ScaleFactorChanged { scale_factor, .. } => {
                     let s = self.window.as_ref().unwrap().inner_size();
                     gpu.resize(s.width, s.height, scale_factor)
@@ -78,12 +84,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     return;
                 }
             }
+            if self.automatic {
+                if self.started.elapsed() > std::time::Duration::from_secs(15) {
+                    self.error = Some("bounded WSI probe missed presented completion".into());
+                    ev.exit();
+                    return;
+                }
+                if let Some(gpu) = self.gpu.as_ref() {
+                    let (_, retired, pending) = gpu.counters();
+                    if retired >= 2 && !self.resize_requested {
+                        self.resize_requested = true;
+                        let _ = self.window.as_ref().unwrap().request_inner_size(winit::dpi::LogicalSize::new(640., 480.));
+                    }
+                    if self.resized && retired >= 6 && pending == 0 {
+                        eprintln!("PASS actual CAMetalLayer presented retirement and resize {:?}", gpu.counters());
+                        ev.exit();
+                        return;
+                    }
+                }
+            }
             // Probe cadence only; production repaint scheduling belongs to egui.
             ev.set_control_flow(ControlFlow::WaitUntil(
                 std::time::Instant::now() + std::time::Duration::from_millis(16),
             ));
             if let Some(w) = self.window.as_ref() {
-                w.request_redraw();
+                if !self.automatic || self.frames < if self.resized { 6 } else { 2 } { w.request_redraw(); }
             }
         }
         fn exiting(&mut self, _: &ActiveEventLoop) {
@@ -97,6 +122,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         window: None,
         error: None,
         frames: 0,
+        automatic: std::env::args().any(|s| s == "--automatic"),
+        started: std::time::Instant::now(),
+        resized: false,
+        resize_requested: false,
     };
     event.run_app(&mut probe)?;
     if let Some(e) = probe.error {
