@@ -1,0 +1,10 @@
+{
+  "source": "214b3f12",
+  "fresh_merged_build_exit": 0,
+  "focused_tests_passed": 2,
+  "actual_application_replay_exit": 0,
+  "publication_replay_exit": 0,
+  "binary_sha256": "6600bf1b1516d9be98d2c2fea7e1bf3f750f15d7df967ad9c0380417a5e199f9",
+  "backend": "llvmpipe Vulkan",
+  "scope": "Actual application first add, last delete, exact empty viewport restoration, full-frame preservation on real admission refusal, pending managed texture retry, eight exact controlled Qt publication images and bounded owned-process cleanup. Original arrow217pixel gap, font/depth policy, RTX and broad application parity remain open."
+}

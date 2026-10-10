@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all eighteen PDF pages exact; two Canvas cases
 
 ## Dated implementation and verification evidence
 
+Merged annotation application acceptance (2026-10-10): fresh integrated build passes two focused tests, actual application mid-UI add/delete/refusal/retry, deferred managed-texture retry, and eight exact controlled Qt publication images on llvmpipe Vulkan. Last deletion restores the exact empty viewport after correcting pre-UI resource serial ownership. Both owned processes close within the bound. [Independent merged acceptance](audits/native-annotation-merged-root/acceptance.json). Original arrow still differs by217pixels; native font/depth policy, RTX and broad rendering parity remain OPEN.
+
 Ninth ARM Metal review (2026-10-10): root independently decoded all nine complete GPU Canvas images exactly against source; ordered records also match and prior aggregate negatives still differ. Six base and three held-out cases retain warm counters. [Root evidence](audits/coretext-native-ninth/arm-root-review.json). Reviewer retains all eighteen exact PDFs and strict negatives. ARM presentation still fails despite completed GPU commands; Intel ninth run remains pending. No release gate is promoted.
 
 Review CI completion (2026-10-10): public review source `70320e11` passes all five configured jobs, including Linux original-runtime checks and both native Apple SDK jobs. [Exact revision evidence](audits/review-70320-ci-completion.json). Later local integration changes and strict rendered parity remain separately unaccepted; no release gate is promoted.
