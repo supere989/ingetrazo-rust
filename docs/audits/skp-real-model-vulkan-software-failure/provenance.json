@@ -1,0 +1,13 @@
+{
+  "source_commit": "6d951818",
+  "binary_sha256": "e7e368287c74b9b0e3ecbe0ebf1bc59069315a2608c9cc8d6c6a9878f348a495",
+  "input_protocol_sha256": "915447247dda50bdab26c3e5e666b1db6b4ac175025cbaa6dc696be9f3e3f3de",
+  "command": [
+    "/tmp/ingetrazo-skp-native-target/debug/examples/native_vulkan_skp_real_model_probe",
+    "/tmp/ingetrazo-skp-real-render-qt-runtime",
+    "/tmp/ingetrazo-skp-real-render-vulkan-software-current",
+    "--software-fixture"
+  ],
+  "driver_file": "/usr/share/vulkan/icd.d/lvp_icd.json",
+  "backend": "software llvmpipe Vulkan, Qt software reference; actual NVIDIA pairing still required"
+}

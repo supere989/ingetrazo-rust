@@ -1,0 +1,14 @@
+{
+  "gondola_v20-iso-native-vulkan.png": "eac210cbe9470fd625da70eca29968a97516b7958f7f12c8ae68a0ef526f1741",
+  "gondola_v20-asymmetric-native-vulkan.png": "1e4693f4a683d52226ab9cc273ccdb110e8d9573094d8ddad75c8a267fcd34ed",
+  "capilla_quiroz_v17-iso-native-vulkan.png": "351e35d4983d560209f81ab2a3f7b3c2de732e8b15bf60460e35d46557f18104",
+  "capilla_quiroz_v17-asymmetric-native-vulkan.png": "5c67f5df7085b2d84a413d529ce6fba44ac4d52b9978d496d3243de4030c51c1",
+  "native-world-results.json": "baca6a99a85ada3d16f0d7a67167f8e365661845321a86fead68b859eaf605da",
+  "strict-results.json": "75c8c5de9f69a5912e13f51358bc0a51e4562b874020385bf9bc06f957f738dd",
+  "native.log": "37d16ec5b98972591a4586aab5beef1c1e4a68b1a87fcaa733dcc5108171b611",
+  "borrow-checker-build-failure.log": "59d2f5a16a81c3406c3e190b3d4049010274e41848066fd3ddca297445da846e",
+  "build-restored.log": "ae29cbd08d62eff65e0947a632147d08df29bbb6cbe099610ae409a5f9697835",
+  "incorrect-icd-path-failure.log": "97bec1e043ab4148cfea071ba714f4f45037e3d2145d2f17c00a2eb80331d24c",
+  "provenance.json": "e9ace48ff8cc9a5cdf33a5537dd7e1fc5f6e68f1dd3c69110a25f1fdb86f1123",
+  "README.md": "2ccac85c5bc98057ba4bf770a10102d2cd60eea8d8780f7582fe8a4c01d1e00c"
+}
