@@ -1,0 +1,44 @@
+{
+  "source": "692393dccd36eb2ad6e743da95911c47db8c3f32",
+  "run": 38081005126,
+  "jobs": [
+    {
+      "id": 114297729605,
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "id": 114297729711,
+      "name": "compilation-and-tests",
+      "status": "in_progress",
+      "conclusion": null,
+      "active": [
+        "Original and native saved tilted cropped colored hatch PDF pages"
+      ]
+    },
+    {
+      "id": 114297729758,
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "id": 114297729777,
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "id": 114297729778,
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    }
+  ],
+  "scope": "Observed job state; not complete cloud acceptance or physical Mac evidence"
+}
