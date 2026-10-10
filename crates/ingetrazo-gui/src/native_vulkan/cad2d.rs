@@ -38,11 +38,13 @@ struct Ready {
     vertex: vk::Buffer,
     index: vk::Buffer,
     batches: Arc<[Batch]>,
+    premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
 }
 struct State {
     geometry: Arc<Geometry>,
     batches: Arc<[Batch]>,
+    premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
     ready: Option<Ready>,
 }
@@ -83,6 +85,7 @@ impl Handle {
             .state
             .lock()
             .map_err(|_| "CAD2D state poisoned")?;
+        if !Arc::ptr_eq(&s.batches,&batches){s.premultiplied=prepare_palette(&batches)?;}
         s.geometry = geometry;
         s.batches = batches;
         s.pose = pose;
@@ -171,13 +174,13 @@ impl VulkanPaint for NativePaint {
                 0,
                 bytemuck::cast_slice(&push),
             );
-            for batch in r.batches.iter().filter(|b| b.count > 0) {
+            for (batch,rgba) in r.batches.iter().zip(r.premultiplied.iter()).filter(|(b,_)| b.count > 0) {
                 device.cmd_push_constants(
                     command,
                     p.layout,
                     vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
                     32,
-                    bytemuck::cast_slice(&batch.color.0),
+                    bytemuck::cast_slice(rgba),
                 );
                 device.cmd_draw_indexed(command, batch.count, 1, batch.first, 0, 0);
                 self.counters.draws.fetch_add(1, Ordering::Relaxed);
@@ -186,6 +189,7 @@ impl VulkanPaint for NativePaint {
         Ok(())
     }
 }
+fn prepare_palette(batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{batches.iter().map(|b|b.color.qt_premultiplied8()).collect::<Result<Vec<_>,_>>().map(Arc::from)}
 struct Cached {
     vertex: BufferId,
     index: BufferId,
@@ -267,6 +271,7 @@ impl Renderer {
             device: self.device.handle(),
             state: Mutex::new(State {
                 geometry,
+                premultiplied:prepare_palette(&batches)?,
                 batches,
                 pose,
                 ready: None,
@@ -399,6 +404,7 @@ impl Renderer {
                     vertex: self.resources.buffer(c.vertex).unwrap(),
                     index: self.resources.buffer(c.index).unwrap(),
                     batches: s.batches.clone(),
+                    premultiplied:s.premultiplied.clone(),
                     pose: s.pose,
                 });
             } else {
