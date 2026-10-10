@@ -396,7 +396,52 @@ impl PushPullTool {
         // No partial mutation or version bump escapes a failed preparation.
         ingetrazo_core::heal::refresh_interior(&mut candidate)?;
         if keep_base && was_solid {
-            ingetrazo_core::solids::validate_solid_mesh(&candidate)
+            let seed = candidate
+                .faces
+                .iter()
+                .position(|f| {
+                    f.vertices
+                        .iter()
+                        .any(|&v| candidate.vertices[v].position.distance(origin) < 1e-6)
+                        && f.vertices.iter().all(|&v| {
+                            (candidate.vertices[v].position - origin).dot(normal).abs() < 1e-6
+                        })
+                })
+                .ok_or("Ctrl copy lost its starting slab")?;
+            let mut incident = std::collections::BTreeMap::<(usize, usize), Vec<usize>>::new();
+            for (id, f) in candidate.faces.iter().enumerate() {
+                for ring in std::iter::once(&f.vertices).chain(&f.holes) {
+                    for i in 0..ring.len() {
+                        let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
+                        incident.entry((a.min(b), a.max(b))).or_default().push(id);
+                    }
+                }
+            }
+            let mut faces = std::collections::HashSet::from([seed]);
+            let mut queue = vec![seed];
+            while let Some(id) = queue.pop() {
+                let f = &candidate.faces[id];
+                for ring in std::iter::once(&f.vertices).chain(&f.holes) {
+                    for i in 0..ring.len() {
+                        let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
+                        for &next in &incident[&(a.min(b), a.max(b))] {
+                            if faces.insert(next) {
+                                queue.push(next);
+                            }
+                        }
+                    }
+                }
+            }
+            let mut ids: Vec<_> = faces.into_iter().collect();
+            ids.sort_unstable();
+            let body = ingetrazo_core::pieces::copy_part(
+                &candidate,
+                &ingetrazo_core::pieces::Piece {
+                    faces: ids,
+                    edges: vec![],
+                },
+            )?;
+            ingetrazo_core::solids::validate_solid_mesh(&body)
                 .map_err(|e|format!("Ctrl copy would leave an invalid solid: {e}. Use a normal Push/Pull or a smaller copy."))?;
         }
         scene.mesh = candidate;
@@ -576,6 +621,51 @@ mod tests {
         let error = PushPullTool::extrude_face_with_options(&mut scene, top, 2., true).unwrap_err();
         assert!(error.contains("Ctrl copy would leave an invalid solid"));
         assert_eq!(scene, before);
+    }
+
+    #[test]
+    fn ctrl_copy_validates_its_body_and_retains_unrelated_open_geometry() {
+        let mut scene = make_test_square_scene();
+        PushPullTool::extrude_face(&mut scene, 0, 3.).unwrap();
+        let top = scene
+            .mesh
+            .faces
+            .iter()
+            .position(|f| {
+                f.vertices
+                    .iter()
+                    .all(|&v| (scene.mesh.vertices[v].position.z - 3.).abs() < 1e-8)
+            })
+            .unwrap();
+        let ids = [
+            DVec3::new(10., 0., 0.),
+            DVec3::new(11., 0., 0.),
+            DVec3::new(11., 1., 0.),
+            DVec3::new(10., 1., 0.),
+        ]
+        .map(|p| scene.mesh.add_vertex(p));
+        let sheet = scene.mesh.add_face(ids.to_vec(), vec![]).unwrap();
+        scene.mesh.faces[sheet]
+            .attrs
+            .insert("sheet".into(), serde_json::json!("retained"));
+        let a = scene.mesh.add_vertex(DVec3::new(20., 0., 0.));
+        let b = scene.mesh.add_vertex(DVec3::new(21., 0., 0.));
+        let wire = scene.mesh.add_edge(a, b).unwrap();
+        scene.mesh.edges[wire]
+            .attrs
+            .insert("wire".into(), serde_json::json!("retained"));
+        PushPullTool::extrude_face_with_options(&mut scene, top, 2., true).unwrap();
+        assert_eq!(scene.mesh.faces.len(), 12);
+        assert!(scene
+            .mesh
+            .faces
+            .iter()
+            .any(|f| f.attrs.get("sheet") == Some(&serde_json::json!("retained"))));
+        assert!(scene
+            .mesh
+            .edges
+            .iter()
+            .any(|e| e.attrs.get("wire") == Some(&serde_json::json!("retained"))));
     }
 
     #[test]
