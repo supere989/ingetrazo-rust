@@ -1,0 +1,13 @@
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/cad2d.rs b/crates/ingetrazo-gui/src/native_vulkan/cad2d.rs
+index cd3b103..813d3a4 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/cad2d.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/cad2d.rs
+@@ -595,7 +595,7 @@ impl Drop for PressureRestore {
+ }
+ impl Drop for Renderer {
+     fn drop(&mut self) {
+-        if !self.resources.drain_graphics(){self.resources.retain_owner(self.pipeline.clone());return;}
++        if !self.resources.drain_graphics(){return;}
+         let mut p = self.pipeline.lock().unwrap();
+         unsafe {
+             self.device.destroy_pipeline(p.pipeline, None);

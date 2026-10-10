@@ -1,0 +1,32 @@
+{
+  "source": "a9d8da7",
+  "base": "b07dd80",
+  "adapter": "NVIDIA GeForce RTX 5090",
+  "vendor": "0x10de",
+  "driver": "615.71.09",
+  "integer_blend_enabled": true,
+  "positive": {
+    "binary_sha256": "b525bdeb4126880ad3332b6792b5b21519ba4ab5ebfe9e6a5934bc9cfa752d77",
+    "owned_two_resizes_and_close": true,
+    "timeout_ms": 5000,
+    "charged_bytes": 525824,
+    "retained_owner_records": 7,
+    "descriptor_sets": 3,
+    "final_external_handles_dropped": true,
+    "weak_upgrades_and_metadata_identical": true,
+    "actual_subsequent_gpu_completion": true,
+    "automatic_recovery": false
+  },
+  "negative": {
+    "binary_sha256": "b76474b147e7bfd6ca0cb759c59a69628084a85517afe26718de6bd9a4a31173",
+    "source_variant": "only remove retain_owner(self.pipeline.clone()) from failed CAD Drop drain",
+    "expected_checker_rejection": true,
+    "error": "Quarantine lost final integer descriptor owner after dropping Fixture and System"
+  },
+  "gui_tests": {
+    "passed": 108,
+    "ignored": 1
+  },
+  "hardware_device_loss": false,
+  "actual_native_metal": false
+}
