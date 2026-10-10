@@ -112,6 +112,7 @@ pub trait Tool: Send + Sync {
     fn lock_drawing_plane(&mut self,_normal:DVec3)->bool{false}
     /// Consume an inferred-shape lock key without changing model geometry.
     fn toggle_inference_lock(&mut self)->bool{false}
+    fn lock_drawing_reference(&mut self,_reference:Option<ingetrazo_core::screen_pick::HoverReference>)->bool{false}
     /// Notify modifier transitions, including frames without pointer movement.
     fn note_control_state(&mut self,_held:bool){}
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }
@@ -133,33 +134,7 @@ pub trait Tool: Send + Sync {
     }
 }
 
-/// Möller–Trumbore ray-triangle intersection test.
-pub fn ray_triangle_intersect(ray: &Ray, v0: DVec3, v1: DVec3, v2: DVec3) -> Option<(f64, DVec3)> {
-    let edge1 = v1 - v0;
-    let edge2 = v2 - v0;
-    let h = ray.dir.cross(edge2);
-    let a = edge1.dot(h);
-    if a.abs() < 1e-9 {
-        return None;
-    }
-    let f = 1.0 / a;
-    let s = ray.origin - v0;
-    let u = f * s.dot(h);
-    if !(0.0..=1.0).contains(&u) {
-        return None;
-    }
-    let q = s.cross(edge1);
-    let v = f * ray.dir.dot(q);
-    if v < 0.0 || u + v > 1.0 {
-        return None;
-    }
-    let t = f * edge2.dot(q);
-    if t > 1e-9 {
-        Some((t, ray.at(t)))
-    } else {
-        None
-    }
-}
+pub use ingetrazo_core::math::ray_triangle_intersect;
 
 /// Pick the closest face intersected by the ray.
 pub fn pick_face(mesh: &Mesh, ray: &Ray) -> Option<(usize, f64, DVec3)> {

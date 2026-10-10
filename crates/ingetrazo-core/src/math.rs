@@ -228,3 +228,31 @@ mod tests {
         assert!((area - 6.0).abs() < 1e-6);
     }
 }
+
+/// Möller–Trumbore ray-triangle intersection test.
+pub fn ray_triangle_intersect(ray: &Ray, v0: DVec3, v1: DVec3, v2: DVec3) -> Option<(f64, DVec3)> {
+    let edge1 = v1 - v0;
+    let edge2 = v2 - v0;
+    let h = ray.dir.cross(edge2);
+    let a = edge1.dot(h);
+    if a.abs() < 1e-9 {
+        return None;
+    }
+    let f = 1.0 / a;
+    let s = ray.origin - v0;
+    let u = f * s.dot(h);
+    if !(0.0..=1.0).contains(&u) {
+        return None;
+    }
+    let q = s.cross(edge1);
+    let v = f * ray.dir.dot(q);
+    if v < 0.0 || u + v > 1.0 {
+        return None;
+    }
+    let t = f * edge2.dot(q);
+    if t > 1e-9 {
+        Some((t, ray.at(t)))
+    } else {
+        None
+    }
+}

@@ -109,8 +109,18 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 };
             }
             if ui.input(|i| i.key_pressed(egui::Key::ArrowDown)) && !app.active_tool.toggle_inference_lock() {
-                app.snap_engine.locked_axis = None;
-                app.snap_engine.locked_line = None;
+                let viewport=ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64);
+                let reference=ingetrazo_core::screen_pick::hovered_reference(&app.scene,&viewport,glam::DVec2::new(rel_x,rel_y),&cursor_ray);
+                if !app.active_tool.lock_drawing_reference(reference){
+                    app.snap_engine.locked_axis = None;
+                    app.snap_engine.locked_line = None;
+                }
+            }
+            // A key can change the plane in this frame. Reintersect before
+            // producing the tool context, including click-on-key frames.
+            let (plane_point,plane_normal)=cursor_work_plane(app,&cursor_ray);
+            if let Some(t)=Plane::new(plane_point,plane_normal).intersect_ray(&cursor_ray){
+                if t>0.{cursor_world_pos=cursor_ray.at(t);}
             }
 
             // Run Snap Engine

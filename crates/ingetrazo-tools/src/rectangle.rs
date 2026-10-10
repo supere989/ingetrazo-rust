@@ -23,6 +23,7 @@ pub struct RectangleTool {
     arrow_square_lock: bool,
     control_down: bool,
     plane_lock: Option<DVec3>,
+    plane_reference: Option<ingetrazo_core::screen_pick::ReferenceKind>,
 }
 
 impl Default for RectangleTool {
@@ -37,6 +38,7 @@ impl Default for RectangleTool {
             arrow_square_lock: false,
             control_down: false,
             plane_lock: None,
+            plane_reference: None,
         }
     }
 }
@@ -56,7 +58,7 @@ impl RectangleTool {
     pub fn reset(&mut self) {
         self.start_point = None;
         self.hover_point = None;
-        self.plane_normal=DVec3::Z;self.square_lock=false;self.arrow_square_lock=false;self.error=None;self.plane_lock=None;
+        self.plane_normal=DVec3::Z;self.square_lock=false;self.arrow_square_lock=false;self.error=None;self.plane_lock=None;self.plane_reference=None;
     }
 
     /// Calculate the 4 corners from start point and an opposite point.
@@ -131,8 +133,18 @@ impl Tool for RectangleTool {
 
     fn note_cursor_plane(&mut self,_point:DVec3,normal:DVec3){if self.start_point.is_none()&&self.plane_lock.is_none(){self.plane_normal=normal;}}
     fn snap_anchor(&self)->Option<DVec3>{self.start_point}
+    fn lock_drawing_reference(&mut self,reference:Option<ingetrazo_core::screen_pick::HoverReference>)->bool{
+        if self.start_point.is_some(){return false;}
+        if self.plane_reference.is_some(){self.plane_reference=None;self.plane_lock=None;self.plane_normal=DVec3::Z;}
+        else if let Some(reference)=reference{
+            if reference.normal.is_finite()&&reference.normal.length()>1e-9{
+                self.plane_reference=Some(reference.kind);self.plane_lock=Some(reference.normal.normalize());self.plane_normal=reference.normal.normalize();
+            }
+        }
+        true
+    }
     fn lock_drawing_plane(&mut self,normal:DVec3)->bool{
-        if self.start_point.is_some(){return false;}self.plane_lock=if self.plane_lock.is_some_and(|n|n.dot(normal).abs()>0.999){None}else{Some(normal.normalize_or_zero())};self.plane_normal=self.plane_lock.unwrap_or(DVec3::Z);true
+        if self.start_point.is_some(){return false;}let had_reference=self.plane_reference.take().is_some();self.plane_lock=if !had_reference&&self.plane_lock.is_some_and(|n|n.dot(normal).abs()>0.999){None}else{Some(normal.normalize_or_zero())};self.plane_normal=self.plane_lock.unwrap_or(DVec3::Z);true
     }
     fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.start_point.or_else(||self.plane_lock.map(|_|self.hover_point.unwrap_or(DVec3::ZERO))).map(|p|(p,self.plane_normal))}
     fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{let Some(c)=self.preview_corners()else{return vec![];};let mut edges=(0..4).map(|i|(c[i],c[(i+1)%4])).collect::<Vec<_>>();if (c[0].distance(c[1])-c[1].distance(c[2])).abs()<1e-6{edges.push((c[0],c[2]));}edges}
@@ -245,6 +257,22 @@ impl Tool for RectangleTool {
 mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
+
+    #[test]
+    fn reference_plane_lock_prefers_caller_edge_and_survives_first_click(){
+        use ingetrazo_core::screen_pick::{HoverReference,ReferenceKind};
+        let mut scene=Scene::new();let before=scene.clone();let mut tool=RectangleTool::new();
+        assert!(tool.lock_drawing_reference(None));assert!(tool.drawing_plane().is_none());
+        let n=DVec3::new(1.,2.,3.).normalize();assert!(tool.lock_drawing_reference(Some(HoverReference{normal:n,kind:ReferenceKind::Edge})));
+        let ctx=ToolContext::new(DVec3::new(2.,3.,4.),Ray::new(DVec3::Z,-DVec3::Z));tool.on_click(&mut scene,&ctx);
+        assert_eq!(tool.drawing_plane().unwrap(),(ctx.world,n));assert!(!tool.lock_drawing_reference(None));
+        assert_eq!(serde_json::to_value(&scene).unwrap(),serde_json::to_value(&before).unwrap());
+        tool.on_cancel(&mut scene);assert!(tool.drawing_plane().is_none());
+        assert!(tool.lock_drawing_reference(Some(HoverReference{normal:DVec3::Y,kind:ReferenceKind::Face})));
+        assert!(tool.lock_drawing_reference(None));assert!(tool.drawing_plane().is_none());
+        tool.lock_drawing_reference(Some(HoverReference{normal:n,kind:ReferenceKind::Edge}));
+        assert!(tool.lock_drawing_plane(DVec3::X));assert_eq!(tool.plane_reference,None);assert_eq!(tool.plane_normal,DVec3::X);
+    }
 
     #[test]
     fn control_toggles_center_persistently_without_pointer_motion() {
