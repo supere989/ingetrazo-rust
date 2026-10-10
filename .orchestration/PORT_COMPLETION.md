@@ -53,3 +53,5 @@ CI38013592441 SUCCESS verified publishedb01dbcf. Local84e7d72 clipboardremap int
 Clipboardb9 allocatorreservednames/opaque preservation/overlap andOffset195workflow integrated8d9c279; fullworkspacePASS; currentmandatoryclipboard+9offsetoraclePASS. Sourceplane cap corrected24 in29f4336. Independentvalidator retained opaque-corruption baseline ffd; correctedboundary/OS/paintprecedence neworacle underway.
 
 Open attachedsheet FollowMe891source integrated85b1729; fullworkspacePASS. Previewregistrycache+red4blue2 originalfirst-coverpaint regression integrated29685f4. Independent nativeopenattached sweep/clipboardboundary/OS/collisionprotocol underway; originalinteriorpartition Orientation stillgap geometryworkercontinuing.
+
+ClipboardactualPythonboundary+foreignresource/prototypechecks PASS canonicalbf8f2a2; nativeisolatedX11 stalevalidpreview→malformed/unrelated replacement regressionPASS afterc94fix. Historicalopaque/stalepreviewfailures retained. Groupnativepaintdict remap956 integrated0af45ee. Coloredholeoverlapcomparisonpendingvalidator; docworker P19 sections branch basedmain0af45ee dependencyhygieneclean.
