@@ -34,6 +34,7 @@ impl SelectTool {
 
         // Seed queue from start item
         match start_item {
+            SelectionItem::SectionPlane(id)=>{scene.select(SelectionItem::SectionPlane(id));return;}
             SelectionItem::Vertex(vid) => {
                 queue.push_back(vid);
                 visited_verts.insert(vid);
@@ -233,10 +234,11 @@ impl Tool for SelectTool {
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
         let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
 
-        let item = if let Some(eid) = hit_edge {
+        let item = if let Some(id)=hit_plane{Some(SelectionItem::SectionPlane(id))}else if let Some(eid) = hit_edge {
             Some(SelectionItem::Edge(eid))
         } else if let Some(fid) = hit_face {
             Some(SelectionItem::Face(fid))
@@ -264,9 +266,11 @@ impl Tool for SelectTool {
     }
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
         let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
 
+        if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(fid) = hit_face {
             let mut bounding_edges = Vec::new();
             let f = &scene.mesh.faces[fid];
@@ -295,9 +299,11 @@ impl Tool for SelectTool {
     }
 
     fn on_triple_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
         let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
 
+        if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(fid) = hit_face {
             Self::select_all_connected(scene, SelectionItem::Face(fid));
         } else if let Some(eid) = hit_edge {

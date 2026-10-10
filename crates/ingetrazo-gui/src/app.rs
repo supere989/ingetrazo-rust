@@ -348,13 +348,14 @@ impl IngeTrazoApp {
 
         let mut faces_to_remove = Vec::new();
         let mut edges_to_remove = Vec::new();
-        let mut groups_to_remove = Vec::new();
+        let mut groups_to_remove = Vec::new();let mut planes_to_remove=Vec::new();
 
         for item in &self.scene.selection {
             match item {
                 SelectionItem::Face(f_id) => faces_to_remove.push(*f_id),
                 SelectionItem::Edge(e_id) => edges_to_remove.push(*e_id),
                 SelectionItem::Group(g_idx) => groups_to_remove.push(*g_idx),
+                SelectionItem::SectionPlane(id)=>planes_to_remove.push(*id),
                 _ => {}
             }
         }
@@ -373,6 +374,7 @@ impl IngeTrazoApp {
             }
         }
 
+        planes_to_remove.sort_unstable_by(|a,b|b.cmp(a));for id in planes_to_remove{if id<self.scene.section_planes.len(){self.scene.section_planes.remove(id);}}
         groups_to_remove.sort_unstable_by(|a, b| b.cmp(a));
         for g in groups_to_remove {
             if g < self.scene.groups.len() {

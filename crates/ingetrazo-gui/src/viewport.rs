@@ -326,16 +326,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
-        for sp in &app.scene.section_planes {
-            let n = sp.normal;
-            let (u, v) = ingetrazo_render::pipeline::projection_basis(n);
-            let r = 2.0;
-            let corners = [
-                sp.point - u * r - v * r,
-                sp.point + u * r - v * r,
-                sp.point + u * r + v * r,
-                sp.point - u * r + v * r,
-            ];
+        for (index,sp) in app.scene.section_planes.iter().enumerate() {
+            let Some(corners)=app.scene.section_frame(index)else{continue;};
             let mut screen_corners = Vec::new();
             for c in &corners {
                 if let Some((sc, _)) = project_point(*c, &view_proj, rect) {
@@ -347,7 +339,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 for i in 0..4 {
                     painter.line_segment([screen_corners[i], screen_corners[(i + 1) % 4]], stroke);
                 }
-                if let Some((tag_sc, _)) = project_point(sp.point + v * (r + 0.3), &view_proj, rect)
+                if let Some((tag_sc, _)) = project_point((corners[2]+corners[3])*0.5+(corners[2]-corners[1]).normalize_or_zero()*0.3, &view_proj, rect)
                 {
                     painter.text(
                         tag_sc,

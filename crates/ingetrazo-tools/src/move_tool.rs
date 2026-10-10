@@ -15,6 +15,7 @@ pub struct MoveTool {
     pub is_copy_mode: bool,
     pub target_vertices: Vec<usize>,
     pub target_groups: Vec<usize>,
+    pub target_planes:Vec<usize>,
     pub last_targets: Vec<usize>,
     pub last_delta: Option<DVec3>,
     pub last_moved_verts: Vec<usize>,
@@ -30,13 +31,13 @@ impl MoveTool {
         self.hover_point = None;
         self.is_copy_mode = false;
         self.target_vertices.clear();
-        self.target_groups.clear();
+        self.target_groups.clear();self.target_planes.clear();
     }
 
     /// Resolve targets from selection or mouse click.
     pub fn gather_targets(&mut self, scene: &Scene, ctx: &ToolContext) {
         let mut vert_set = HashSet::new();
-        let mut group_set = HashSet::new();
+        let mut group_set = HashSet::new();let mut plane_set=HashSet::new();
 
         if !scene.selection.is_empty() {
             for item in &scene.selection {
@@ -61,12 +62,13 @@ impl MoveTool {
                     SelectionItem::Group(gid) => {
                         group_set.insert(*gid);
                     }
+                    SelectionItem::SectionPlane(id)=>{plane_set.insert(*id);},
                     SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) => {}
                 }
             }
         } else {
             // Pick under cursor
-            if let Some(vid) = crate::base::pick_scene_vertex(scene, &ctx.ray, 0.2) {
+            if let Some(id)=crate::base::pick_section_plane(scene,&ctx.ray,0.2){plane_set.insert(id);}else if let Some(vid) = crate::base::pick_scene_vertex(scene, &ctx.ray, 0.2) {
                 vert_set.insert(vid);
             } else if let Some(eid) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2) {
                 let e = &scene.mesh.edges[eid];
@@ -80,7 +82,7 @@ impl MoveTool {
         }
 
         self.target_vertices = vert_set.into_iter().collect();
-        self.target_groups = group_set.into_iter().collect();
+        self.target_groups = group_set.into_iter().collect();self.target_planes=plane_set.into_iter().collect();
     }
 
     /// Execute translation or copy.
@@ -112,6 +114,7 @@ impl MoveTool {
             self.last_moved_verts = self.target_vertices.clone();
         }
 
+        for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point+=delta;}}
         self.last_targets = self.target_vertices.clone();
         self.last_delta = Some(delta);
         scene.bump_version();
@@ -165,7 +168,7 @@ impl Tool for MoveTool {
 
         if self.start_point.is_none() {
             self.gather_targets(scene, ctx);
-            if !self.target_vertices.is_empty() || !self.target_groups.is_empty() {
+            if !self.target_vertices.is_empty() || !self.target_groups.is_empty() || !self.target_planes.is_empty() {
                 self.start_point = Some(ctx.world);
             }
         } else {

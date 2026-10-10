@@ -76,6 +76,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
                 for item in &app.scene.selection {
                     match item {
+                        SelectionItem::SectionPlane(_)=>{},
                         SelectionItem::Face(f_id) => {
                             face_count += 1;
                             if *f_id < app.scene.mesh.faces.len() {

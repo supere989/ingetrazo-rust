@@ -26,6 +26,7 @@ pub enum SelectionItem {
     Group(usize),
     GeoPoint(usize),
     GeoPath(usize),
+    SectionPlane(usize),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
