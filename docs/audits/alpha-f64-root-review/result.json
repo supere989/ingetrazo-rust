@@ -1,0 +1,10 @@
+{
+  "candidate": "883d0038ec13cb44262824fc4388e3f970284485",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-alpha-integration-target cargo test --locked --workspace",
+  "passed": 392,
+  "failed": 0,
+  "ignored": 2,
+  "log_sha256": "3d6882b3a83dd3094dc3e63b003e327210148a3dbc244140f7677a4ce9aedc21",
+  "hardware_window_acceptance": "open; independent own-window readiness failure retained separately",
+  "retained_log_sha256": "4b5b1cadd711c7d6b69373f681124025eba8c8533b59c72c8ee0ac1d03a39363"
+}
