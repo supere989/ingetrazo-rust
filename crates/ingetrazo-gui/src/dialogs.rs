@@ -110,6 +110,23 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
             });
     }
 
+    if app.show_geographic_import_dialog {
+        egui::Window::new(tr("Import georef")).collapsible(false).show(ctx, |ui| {
+            ui.label(tr("KML / KMZ / GeoJSON alignment file"));
+            ui.text_edit_singleline(&mut app.dialog_path_input);
+            if ui.button(tr("Browse…")).clicked() {
+                if let Some(path)=pick_open_file(&tr("Import georef"), "*.kml *.kmz *.geojson *.json|Georef") {app.dialog_path_input=path.to_string_lossy().into_owned();}
+            }
+            if ui.button(tr("Import")).clicked() {
+                let path=PathBuf::from(app.dialog_path_input.trim());
+                match app.import_geographic_paths(&path) {
+                    Ok(_)=>app.show_geographic_import_dialog=false,
+                    Err(err)=>app.status_message=format!("Import failed: {err}"),
+                }
+            }
+            if ui.button(tr("Cancel")).clicked(){app.show_geographic_import_dialog=false;}
+        });
+    }
     // 2. Open / Import Dialog
     if app.show_open_dialog {
         egui::Window::new(tr("Open Document"))
