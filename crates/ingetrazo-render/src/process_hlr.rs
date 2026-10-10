@@ -5,7 +5,7 @@ use glam::DVec3;
 use memmap2::{Mmap, MmapMut};
 use std::{
     fs::{File, OpenOptions},
-    io::{self, BufRead, BufReader, Write},
+    io::{self, BufRead, BufReader, BufWriter, Write},
     path::{Path, PathBuf},
     process::{Child, ChildStdin, Command, Stdio},
     sync::{
@@ -34,7 +34,7 @@ fn point(b: &[u8], at: usize) -> io::Result<DVec3> {
         f64::from_bits(word(b, at + 16)?),
     ))
 }
-fn put_point(f: &mut File, p: DVec3) -> io::Result<()> {
+fn put_point(f: &mut impl Write, p: DVec3) -> io::Result<()> {
     for v in p.to_array() {
         f.write_all(&v.to_le_bytes())?;
     }
@@ -46,10 +46,17 @@ struct Worker {
     output: Receiver<io::Result<String>>,
     reader: Option<std::thread::JoinHandle<()>>,
     timeout: Duration,
+    descriptor_bytes: u64,
     results: Mmap,
     path: PathBuf,
 }
 impl Worker {
+    fn send(&mut self, command: &str) -> io::Result<()> {
+        writeln!(self.input, "{command}")?;
+        self.input.flush()?;
+        self.descriptor_bytes += command.len() as u64 + 1;
+        Ok(())
+    }
     fn reply(&mut self) -> io::Result<String> {
         let line = self
             .output
@@ -63,6 +70,7 @@ impl Worker {
                     invalid("HLR worker response channel closed")
                 }
             })??;
+        self.descriptor_bytes += line.len() as u64;
         if line.starts_with("ERR ") {
             return Err(invalid(line.trim()));
         }
@@ -76,6 +84,7 @@ pub struct ProcessMetrics {
     pub tasks: usize,
     pub input_bytes: u64,
     pub output_bytes: u64,
+    pub descriptor_bytes: u64,
     pub elapsed: std::time::Duration,
 }
 /// Persistent children share one immutable projected geometry mapping per revision.
@@ -175,6 +184,7 @@ impl HlrProcessPool {
                 output,
                 reader: Some(reader),
                 timeout,
+                descriptor_bytes: 0,
                 results,
                 path,
             });
@@ -221,6 +231,7 @@ impl HlrProcessPool {
             return Err(invalid("nonfinite HLR input"));
         }
         let start = std::time::Instant::now();
+        let descriptor_start = self.workers.iter().map(|w| w.descriptor_bytes).sum::<u64>();
         self.revision = self
             .revision
             .checked_add(1)
@@ -228,10 +239,11 @@ impl HlrProcessPool {
         let path = self
             .directory
             .join(format!("geometry-{}.bin", self.revision));
-        let mut f = OpenOptions::new()
+        let file = OpenOptions::new()
             .write(true)
             .create_new(true)
             .open(&path)?;
+        let mut f = BufWriter::with_capacity(64 * 1024, file);
         f.write_all(MAGIC)?;
         f.write_all(&(edges.len() as u64).to_le_bytes())?;
         f.write_all(&(triangles.len() as u64).to_le_bytes())?;
@@ -245,12 +257,12 @@ impl HlrProcessPool {
                 put_point(&mut f, p)?;
             }
         }
-        let input_bytes = f.metadata()?.len();
+        f.flush()?;
+        let input_bytes = f.get_ref().metadata()?.len();
         drop(f);
         // Paths are generated internally, contain no protocol delimiters, and stay immutable.
         for w in &mut self.workers {
-            writeln!(w.input, "LOAD {}", path.display())?;
-            w.input.flush()?;
+            w.send(&format!("LOAD {}", path.display()))?;
             if w.reply()?.trim() != "LOADED" {
                 return Err(invalid("worker did not load geometry"));
             }
@@ -266,8 +278,7 @@ impl HlrProcessPool {
                     break;
                 }
                 let end = next.saturating_add(self.grain).min(edges.len());
-                writeln!(w.input, "RUN {next} {end}")?;
-                w.input.flush()?;
+                w.send(&format!("RUN {next} {end}"))?;
                 pending.push((i, next, end));
                 next = end;
                 tasks += 1;
@@ -311,8 +322,7 @@ impl HlrProcessPool {
         }
         // All workers have finished reading; replacement LOAD drops their prior mappings.
         for w in &mut self.workers {
-            writeln!(w.input, "UNLOAD")?;
-            w.input.flush()?;
+            w.send("UNLOAD")?;
             if w.reply()?.trim() != "UNLOADED" {
                 return Err(invalid("worker did not release geometry"));
             }
@@ -323,6 +333,8 @@ impl HlrProcessPool {
             tasks,
             input_bytes,
             output_bytes,
+            descriptor_bytes: self.workers.iter().map(|w| w.descriptor_bytes).sum::<u64>()
+                - descriptor_start,
             elapsed: start.elapsed(),
         };
         Ok(result)
