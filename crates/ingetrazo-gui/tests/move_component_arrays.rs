@@ -205,3 +205,30 @@ fn nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands() {
   if row["authored_parent"]==true {let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);}
  }
 }
+
+#[test]
+fn actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition() {
+ let source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-entry-unique-source.json")).unwrap();
+ fn vector(v:&serde_json::Value)->DVec3 {DVec3::new(v[0].as_f64().unwrap(),v[1].as_f64().unwrap(),v[2].as_f64().unwrap())}
+ for row in source["cases"].as_array().unwrap() {
+  let kind=row["kind"].as_str().unwrap();let mut app=IngeTrazoApp::new();app.scene=ingetrazo_core::scene::Scene::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]).unwrap();mesh.faces[0].attrs.insert("vendor".into(),serde_json::json!(71));mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"uvw":[1.,0.,0.,3.,0.,1.,0.,4.]}));let token=uuid::Uuid::new_v4();app.scene.register_mesh_share(token,mesh.clone()).unwrap();
+  let mut group=Group::with_mesh(kind,mesh);group.mesh_share=Some(token);let component=kind=="root-component-shared";group.native_document=serde_json::json!({"component":component,"xform":row["before_matrix"]});
+  // Source nested frame already includes its parent's entry bake.
+  let parent_frame=DMat4::from_translation(DVec3::new(2.,-1.,4.));let world=if let Some(values)=row["before_matrix"].as_array() {let raw:Vec<_>=values.iter().map(|v|v.as_f64().unwrap()).collect();DMat4::from_cols_array(&raw.try_into().unwrap())}else{DMat4::IDENTITY};
+  group.transform=if kind.starts_with("nested") {parent_frame.inverse()*world} else {world};app.scene.groups.push(group);if component {app.scene.make_component(app.scene.groups[0].id).unwrap();}
+  if kind!="root-plain-unshared" {let mut sibling=app.scene.groups[0].duplicate_instance();if kind!="classic-plain-shared" {sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;}app.scene.groups.push(sibling);}
+  if kind.starts_with("nested") {let mut outer=Group::new("outer");outer.transform=parent_frame;outer.native_document=serde_json::json!({"component":kind=="nested-component-parent","xform":parent_frame.to_cols_array()});outer.children=std::mem::take(&mut app.scene.groups);app.scene.groups.push(outer);if kind=="nested-component-parent" {app.scene.make_component(app.scene.groups[0].id).unwrap();}}
+  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();let camera=app.camera.clone();app.begin_component_edit();if kind.starts_with("nested") {if kind=="nested-deleted-sibling" {app.scene.select(SelectionItem::Group(1));app.delete_selection();app.scene.clear_selection();}app.scene.select(SelectionItem::Group(0));app.begin_component_edit();}
+  // Native context-local active Undo differs from source global History;
+  // this control checks entry geometry/policy and History after exit only.
+  assert_eq!(app.camera,camera);assert_eq!(app.scene.mesh.vertices.len(),row["entry_world_points"].as_array().unwrap().len());
+  for (p,e) in app.scene.mesh.vertices.iter().zip(row["entry_world_points"].as_array().unwrap()){assert!(p.position.distance(vector(e))<2e-5);}
+  app.finish_component_edit();assert_eq!(app.undo_stack.len(),row["history_after_no_edit_exit"].as_u64().unwrap()as usize);
+  let selected=&app.scene.groups[0];assert_eq!(selected.mesh_share!=Some(token),row["source_unique_on_entry"].as_bool().unwrap());for (p,e) in selected.mesh.vertices.iter().zip(row["after_points"].as_array().unwrap()){assert!(p.position.distance(vector(e))<2e-5);}
+  if row["source_unique_on_entry"]==true {assert_eq!(selected.transform,DMat4::IDENTITY);assert!(selected.native_document["xform"].is_null());assert!(selected.axes_matrix().is_some());}
+  if row["sibling_in_context_after"]==true {assert_eq!(selected.mesh_share==app.scene.groups[1].mesh_share,row["sibling_same_mesh_after"].as_bool().unwrap());}
+  assert_eq!(selected.mesh.faces[0].attrs["vendor"],row["after_attrs"]["vendor"]);for (a,b) in selected.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(row["after_attrs"]["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
+  if kind.starts_with("nested") {app.finish_component_edit();assert_eq!(app.undo_stack.len(),row["history_after_no_edit_exit"].as_u64().unwrap()as usize);}
+  if row["source_unique_on_entry"]==true {let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);}
+ }
+}

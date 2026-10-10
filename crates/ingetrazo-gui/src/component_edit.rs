@@ -17,6 +17,7 @@ pub struct ComponentEditSession {
     groups_baseline: Vec<ingetrazo_core::groups::Group>,
     mesh_share_baseline: std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>,
     definitions_baseline: std::collections::HashMap<uuid::Uuid,ComponentDefinition>,
+    editing_definition: bool,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
@@ -70,6 +71,36 @@ impl IngeTrazoApp {
         if let Err(error)=self.scene.migrate_legacy_mesh_shares() {self.status_message=error;return;}
         // Migration may add identities but does not replace placement geometry.
         let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
+        // Operative Viewport.begin_group_edit: an ordinary placed leaf
+        // copied outside a component definition becomes unique before entry.
+        // Mesh tokens establish sharing; equal geometry never does.
+        let inside_definition=self.component_edit_stack.last().is_some_and(|s|s.editing_definition);
+        let component=group.component_definition.is_some() || group.native_document.get("component").and_then(|v|v.as_bool())==Some(true);
+        let placed=group.transform!=glam::DMat4::IDENTITY || group.component_definition.is_some() || group.native_document.get("xform").is_some_and(|v|v.is_array());
+        fn shared_placement(groups:&[ingetrazo_core::groups::Group],token:uuid::Uuid,id:uuid::Uuid,skip_context:Option<uuid::Uuid>)->bool {
+            groups.iter().any(|g|Some(g.id)!=skip_context && ((g.id!=id && g.mesh_share==Some(token)) || shared_placement(&g.children,token,id,skip_context)))
+        }
+        let shared=group.mesh_share.is_some_and(|token|shared_placement(&self.scene.groups,token,group.id,None)
+            || self.component_edit_stack.iter().any(|s|shared_placement(&s.original_scene.groups,token,group.id,Some(s.group_id))));
+        if placed && !component && group.children.is_empty() && !inside_definition && shared {
+            let world=self.scene.dimension_frame*group.transform;
+            let mesh=match ingetrazo_core::containers::transform_mesh(&group.mesh,world) {Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}};
+            let axes=world*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY);
+            self.save_undo_state();
+            let selected=self.scene.groups.iter_mut().find(|g|g.id==group.id).unwrap();
+            selected.mesh=mesh;selected.mesh_share=None;selected.transform=glam::DMat4::IDENTITY;
+            if !selected.native_document.is_object() {selected.native_document=serde_json::json!({});}
+            selected.native_document["xform"]=serde_json::Value::Null;
+            selected.native_document["axes"]=serde_json::json!(axes.to_cols_array());
+            // An explicitly baked classic placement encodes xform=null. Its
+            // model comparison baseline is now identity, keeping that source
+            // representation while leaving original prototype identity intact
+            // for codec detachment and the Undo snapshot.
+            if !selected.native_baseline.is_object() {selected.native_baseline=serde_json::json!({});}
+            selected.native_baseline["xform"]=serde_json::json!(glam::DMat4::IDENTITY.to_cols_array());
+            self.scene.bump_version();self.bump_model_revision();
+        }
+        let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
         self.scene.refresh_dimensions();
         let world_frame=self.scene.dimension_frame*group.transform;
         let world_mesh=if world_frame==glam::DMat4::IDENTITY {group.mesh.clone()} else {
@@ -89,6 +120,7 @@ impl IngeTrazoApp {
             leaf_share_back:if group.children.is_empty() {Some(world_frame.inverse())} else {None},
             mesh_baseline:world_mesh.clone(),groups_baseline:world_children.clone(),
             mesh_share_baseline:self.scene.mesh_shares.clone(),definitions_baseline:self.scene.component_definitions.clone(),
+            editing_definition:component,
             dimension_baseline:vec![],section_baseline:vec![],
         };
         let drawing_frame=if group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array()) {

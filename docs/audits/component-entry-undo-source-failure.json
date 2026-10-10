@@ -1,0 +1,32 @@
+{
+  "provenance": {
+    "rust_commit": "0c6a71b16484ff05493ab84a1877991a59aa2639",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "scope": "Actual original Viewport begin/end edit, MainWindow._on_undo operative handler and AddFaceCommand. Controlled caller, not actual key/pixel. Native context-local Undo policy remains a literal difference; source loses newly authored active face on exit after Undo MakeUnique.",
+  "before_undo": {
+    "history": 1,
+    "scene_mesh_is_edited_group": true,
+    "edited_group_shares_sibling": false
+  },
+  "after_undo": {
+    "history": 0,
+    "scene_mesh_is_edited_group": false,
+    "edited_group_shares_sibling": true,
+    "edited_context_active": true
+  },
+  "authored_before_exit": {
+    "active_mesh_faces": 2,
+    "group_mesh_faces": 1,
+    "history": 1
+  },
+  "after_exit": {
+    "group_mesh_faces": 1,
+    "sibling_mesh_faces": 1,
+    "loose_mesh_faces": 0,
+    "history": 1
+  },
+  "source_authored_face_lost_on_exit": true
+}
