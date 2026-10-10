@@ -1,5 +1,7 @@
 # Rust parity progress tracker
 
+Multiple-hole prerequisite (review branch, 2026-10-10): 24 fresh original/native append/Undo/Redo states match across eight hole recipes; three filter controls and one rollback/Redo control pass. [Independent review](audits/ai-holes-root/acceptance.json). Malformed-hole document rollback matches, but raw exception behavior remains unequal. Pathological triangulation, attributes, complete object/scene integration and production scripting remain OPEN.
+
 Cloud checkpoint: published `2fc09994` has completed all five configured CI jobs successfully. Current published `cbc4b494` has 696 passing local tests and its separate cloud validation is still running. Native Metal Canvas/font parity remains a separate failing review workflow; no release gate is closed by these CI results.
 
 Reviewed combined batch (2026-10-10): **696 workspace tests pass, zero failures, two ignored**, covering spatial-delta ownership, single production image-outline dispatch and source opaque shading correction. [Combined acceptance](audits/shading-face-combined/acceptance.json). Independent fresh standalone face-history checks match 18 source states with allocator refusal controls. Independent GPU image decoding confirms remaining strict failures: Gondola78/351 differing pixels and chapel5088/3754; [GPU review](audits/skp-source-opaque-nvidia-replay/root-review.json). Texture averages, native annotations, full scripting, Metal parity and all release gates remain OPEN.

@@ -1,0 +1,10 @@
+{
+  "document": {
+    "vertices": 0,
+    "edges": 0,
+    "faces": 0,
+    "undo": 0,
+    "redo": 0
+  },
+  "raw_error": "Source maximal-hole normal requires three positions"
+}

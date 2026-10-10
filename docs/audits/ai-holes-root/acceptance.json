@@ -1,0 +1,27 @@
+{
+  "source": "173935e8",
+  "fresh_exact_history_states": 24,
+  "focused_filter_controls": 3,
+  "atomic_refusal_control": 1,
+  "source_error_document_rollback_equal": true,
+  "exception_parity": false,
+  "review": "Eight source recipes cover nested/reordered/disjoint/equal duplicate/collinear/vertical/slanted/concave fallback. Kept-ring vertex order matches original. Native fallback triangulation may still differ on ties/pathological cases.",
+  "remaining": [
+    "Exact interpreter exception types/messages/tracebacks and caught-error staged reads",
+    "Source fallback triangulation tie and rounding semantics",
+    "Arbitrary face attrs and full Group/Scene adapters",
+    "Quadratic filter scheduling and native allocation bounds before production"
+  ],
+  "purged_target_apparent_bytes": 193283221,
+  "sha256": {
+    "native.json": "a9b9e9d6a211b232bde4fc0a64ce112137ee01e30b73192aa295ab1a6915aa07",
+    "build.log": "30f9d8877c3c54c65ad880b50a2c87cef624687d6413bbaa2d2740fe9c6c4a99",
+    "original.json": "a9b9e9d6a211b232bde4fc0a64ce112137ee01e30b73192aa295ab1a6915aa07",
+    "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "filter-tests.log": "69f581846f70a35ae005c47ba3aacebcde1ceb1f39294c82aefe97b721cd46e8",
+    "refusal-tests.log": "b342cb0ea8e78892df4caa70753682f235072ddb4f5c74d6dbd98895cdcf718c",
+    "native-error.json": "257c6ade38a5bb11673659dd65aa068ae7676baf5862f003de54d71a883c3a7e",
+    "source-error.json": "5585f8dfcb08fbbe02b491c618aeee3490da01d0bbc527b56e1c146294fd4207",
+    "source-error.log": "dfab9136082e1300f00e3ae795b873f853b201c4aadb2949d221b1179d428472"
+  }
+}
