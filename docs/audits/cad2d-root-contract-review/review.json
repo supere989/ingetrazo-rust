@@ -1,0 +1,23 @@
+{
+  "candidate": "566a9b8",
+  "focused_tests": {
+    "passed": 2,
+    "failed": 0
+  },
+  "review": "Encoded straight RGBA independent of immutable geometry and pose. Inline callback preserves command order and resets UI descriptor/tag rebinding.",
+  "blocking_findings": [
+    {
+      "case": "callback-only first frame",
+      "path": "cmd_draw -> Frames::new -> Mesh::new -> create_and_fill_buffer(empty) -> default allocator create_buffer size=0",
+      "required": "Avoid UI buffer allocation/binding when no mesh is present; verify callback-only then mixed frames on actual GPU."
+    }
+  ],
+  "pending": [
+    "native pipeline and budget/fence preparation",
+    "actual alpha pixel oracle",
+    "callback-mesh same-texture restoration",
+    "clipping and viewport controls",
+    "warm geometry upload accounting"
+  ],
+  "canonical_promotion": false
+}
