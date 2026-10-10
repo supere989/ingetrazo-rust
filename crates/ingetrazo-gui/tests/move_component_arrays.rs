@@ -57,3 +57,18 @@ fn entering_edit_context_retires_live_group_preview_before_camera_frame_capture(
  app.begin_component_edit();assert_eq!(app.camera.target,frame.inverse().transform_point3(target),"context capture must follow live preview cancellation");assert_eq!(app.scene.dimension_frame,frame);
  app.cancel_component_edit();assert_eq!(app.scene.groups[0].transform,frame);assert_eq!(app.camera.target,target);
 }
+#[test]
+fn refused_singular_context_keeps_live_preview_and_revision_until_user_cancel(){
+ let mut app=IngeTrazoApp::new();let mut group=Group::with_mesh("singular",mesh());group.transform=DMat4::from_scale(DVec3::new(1.,0.,1.));app.scene.groups.push(group);app.scene.select(SelectionItem::Group(0));
+ let original=app.scene.groups[0].transform;app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));
+ let live=app.scene.clone();let revision=app.model_revision;let anchor=app.active_tool.snap_anchor();app.begin_component_edit();
+ assert!(app.component_edit_stack.is_empty());assert_eq!(app.scene,live);assert_eq!(app.model_revision,revision);assert_eq!(app.active_tool.snap_anchor(),anchor);assert!(app.status_message.contains("singular"));
+ app.set_tool(ingetrazo_tools::base::ToolType::Select);assert_eq!(app.scene.groups[0].transform,original);assert!(app.active_tool.snap_anchor().is_none());
+}
+#[test]
+fn rotated_scaled_context_uses_restored_grab_placement_and_cancel_camera(){
+ let mut app=IngeTrazoApp::new();let mut group=Group::with_mesh("placed",mesh());group.transform=DMat4::from_translation(DVec3::X*2.)*DMat4::from_rotation_z(0.37)*DMat4::from_scale(DVec3::new(2.,3.,4.));app.scene.groups.push(group);app.scene.select(SelectionItem::Group(0));
+ let original=app.scene.groups[0].transform;let camera=app.camera.clone();app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));
+ app.begin_component_edit();assert_eq!(app.scene.dimension_frame,original);assert_eq!(app.camera.target,original.inverse().transform_point3(camera.target));
+ app.cancel_component_edit();assert_eq!(app.scene.groups[0].transform,original);assert_eq!(app.camera,camera);assert!(app.undo_stack.is_empty());
+}
