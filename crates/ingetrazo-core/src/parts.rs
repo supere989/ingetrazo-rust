@@ -33,6 +33,8 @@ pub fn part_summary(group:&Group)->PartSummary{
     fn walk(g:&Group,paint:Option<&serde_json::Value>,areas:&mut Vec<(String,f64)>,faces:&mut usize){
         let inherited=g.native_document.get("material").filter(|v|!v.is_null()).or(paint);
         for(i,face)in g.mesh.faces.iter().enumerate(){let own=serde_json::to_value(&face.attrs).unwrap();let label=material_label(&own).or_else(||inherited.and_then(material_label));if let Some(label)=label{let area=g.mesh.face_area(i);if let Some((_,total))=areas.iter_mut().find(|(name,_)|name==&label){*total+=area;}else{areas.push((label,area));}}*faces+=1;}
+        // Original part_material uses each placement paint or the queried
+        // root part paint; it does not inherit intermediate ancestors.
         for child in &g.children{walk(child,paint,areas,faces);}
     }
     let mut areas=vec![];let mut faces=0;walk(group,group.native_document.get("material").filter(|v|!v.is_null()),&mut areas,&mut faces);
@@ -53,6 +55,10 @@ pub fn cut_list(rows:&[PartSummary],precision_mm:f64,by_material:bool)->Vec<CutL
 pub fn cut_list_text(lines:&[CutListLine])->String{let mut text="Qty\tParts\tMaterial\tL (mm)\tW (mm)\tT (mm)".to_owned();for line in lines{text.push_str(&format!("\n{}\t{}\t{}\t{:.0}\t{:.0}\t{:.0}",line.quantity,line.names.join(", "),line.materials.iter().filter(|s|!s.is_empty()).cloned().collect::<Vec<_>>().join(", "),line.size[0]*1000.,line.size[1]*1000.,line.size[2]*1000.));}text}
 #[cfg(test)]mod tests{use super::*;
     fn box_points(size:DVec3)->Vec<DVec3>{let mut p=vec![];for x in[0.,1.]{for y in[0.,1.]{for z in[0.,1.]{p.push(size*DVec3::new(x,y,z));}}}p}
+    #[test]fn nested_material_matches_original_root_fallback_and_explicit_face_override(){
+        let mut mesh=crate::mesh::Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);let leaf=Group::with_mesh("leaf",mesh);let mut middle=Group::new("middle");middle.native_document=serde_json::json!({"material":{"mat":"middle paint"}});middle.children.push(leaf);let mut root=Group::new("root");root.native_document=serde_json::json!({"material":{"mat":"root paint"}});root.children.push(middle);
+        assert_eq!(part_summary(&root).material,"root paint");root.children[0].children[0].mesh.faces[0].attrs.insert("mat".into(),serde_json::json!("face paint"));assert_eq!(part_summary(&root).material,"face paint");root.children[0].native_document=serde_json::Value::Null;root.children[0].children[0].mesh.faces[0].attrs.clear();assert_eq!(part_summary(&root).material,"root paint");
+    }
     #[test]fn surface_majority_material_uses_explicit_paint_then_inherited_container(){
         let mut mesh=crate::mesh::Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X);let c=mesh.add_vertex(DVec3::Y);mesh.add_face(vec![a,b,c],vec![]);
         let a=mesh.add_vertex(DVec3::new(2.,0.,0.));let b=mesh.add_vertex(DVec3::new(2.1,0.,0.));let c=mesh.add_vertex(DVec3::new(2.,0.1,0.));let small=mesh.add_face(vec![a,b,c],vec![]).unwrap();mesh.faces[small].attrs.insert("color".into(),serde_json::json!([1.,0.,0.]));
