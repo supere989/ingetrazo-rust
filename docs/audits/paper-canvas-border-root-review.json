@@ -1,0 +1,64 @@
+{
+  "reviewed_source": "0e4c93def81d387f4fed8c545b4f04abced000c2",
+  "cpu_exact_pairs": 8,
+  "independent_native_crop_comparisons": [
+    [
+      "native",
+      "sharp-solid",
+      0
+    ],
+    [
+      "native",
+      "rounded-solid",
+      0
+    ],
+    [
+      "native",
+      "sharp-double",
+      0
+    ],
+    [
+      "native",
+      "rounded-double",
+      0
+    ],
+    [
+      "native",
+      "thin-sharp",
+      0
+    ],
+    [
+      "native",
+      "thin-rounded",
+      0
+    ],
+    [
+      "native",
+      "clamped-elliptical",
+      0
+    ],
+    [
+      "native",
+      "dashed-retained",
+      6
+    ],
+    [
+      "native-dashed-followup",
+      "dashed-retained",
+      0
+    ],
+    [
+      "native-restored-sharp",
+      "sharp-solid",
+      0
+    ],
+    [
+      "native-order-negative",
+      "sharp-solid",
+      6411
+    ]
+  ],
+  "warm_counters": "stable cold_builds/uploads/cached_bytes for every retained case",
+  "source_review": "Composer border call follows all items; existing independent dashed-line initial phase remains zero.",
+  "scope": "Bounded border callback parity; full compound Canvas, thick curved dashed, Metal and Glow remain OPEN."
+}
