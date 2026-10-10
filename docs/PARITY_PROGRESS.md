@@ -113,7 +113,7 @@ No row is Verified in this current inventory. All rows remain open until their a
 | P36 | P1 | Packaging/platform integration | Partial | [package.sh](../package.sh): clean public-clone Linux release build/install, AppImage extract-and-run diagnostics/rendered startup and packaged-worker acceptance pass with retained provenance. FUSE/physical desktop, broader portability and Windows/macOS acceptance remain open. | Clean recursive clone builds and installs on each claimed OS; associations, icons, startup and dependency diagnostics. |
 | P37 | P1 | CI/performance/parity acceptance | Partial | [repository root](../): CI now runs recursive checkout, mandatory fixtures, Rust tests, source/runtime semantic oracles, original regressions and virtual-render smoke. Published checkpoint `e08e698` cloud run `38023766503` passed all configured gates. Bounded RTX headless resource/depth/contour controls and clean Linux release/AppImage engineering acceptance now have retained evidence; full workflow, representative performance and all-platform release acceptance remain open. Wider corpus and performance/release acceptance remain open. | CI builds/tests with submodules; baseline regression corpus, semantic document checks, rendered workflows and performance budgets. |
 
-Inventory: **10 Implemented**, **2 Missing**, **25 Partial**. **0 Verified**. These are status counts, not effort percentages.
+Inventory: **10 Implemented**, **0 Missing**, **27 Partial**. **0 Verified**. These are status counts, not effort percentages.
 
 ## Historical baseline document losses
 
