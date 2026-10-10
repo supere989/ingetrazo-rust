@@ -19,7 +19,11 @@ fn edited_geometry_material_layer_and_group_replace_raw_baseline() {
     assert_eq!(out["faces"][0]["audit_extension"],original["faces"][0]["audit_extension"]);
     assert_eq!(out["groups"][0]["name"],"changed");assert_eq!(out["groups"][0]["xform"][12],4.);
     assert_eq!(out["groups"][0]["audit_group"],19);
-    assert_eq!(out["layers"][0]["locked"],true);
+    let layers=out["layers"].as_array().unwrap();
+    assert_eq!(layers[0]["name"],ingetrazo_core::layers::DEFAULT_LAYER);
+    assert_eq!(layers[0]["locked"],false);
+    let authored=layers.iter().find(|layer|layer["name"]=="audit").unwrap();
+    assert_eq!(authored["locked"],true);
     assert_eq!(out["materials"][0]["color"][1],1.);
     assert_eq!(out["materials"][0]["audit_material"],21);
     assert_eq!(out["audit_document"],original["audit_document"]);

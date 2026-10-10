@@ -1,0 +1,11 @@
+{
+  "source": "3e7f0ab01491be2cbe224f7d42de857f2cbbe7e0",
+  "command": "cargo test --workspace --locked --lib --tests -j2",
+  "exit_code": 101,
+  "passed": 240,
+  "failed": 1,
+  "ignored": 0,
+  "suite_summaries": 10,
+  "log_sha256": "a652906044bd8530b01433595a80b7c1fbcf36cb5fcefad069fd06cd05bd2e0a",
+  "scope": "Combined nested/positioned/projected/fallback SKP, Canvas borders, default layer semantics and MCP protocol; no native Metal runtime claim."
+}
