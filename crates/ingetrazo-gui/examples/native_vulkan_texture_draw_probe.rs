@@ -107,6 +107,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         world.set_scene(&context,&scene,&camera,&style,fence,1,1)?;
         let after=world.texture_stats();assert_eq!(warm,(after.0.uploads,after.1.hashes,after.1.decodes,after.1.uploads),"Warm scene reuses actual sampled images and geometry");
         if name=="texture-quadrants" {
+            // Original XRay samples existing opaque texture runs, even when
+            // show_textures is false. Presentation must not rehash/reupload.
+            let world_uploads=world.uploads;
+            let mut xray=style.clone();xray.visual_style=ingetrazo_render::style::VisualStyle::XRay;xray.show_textures=false;
+            world.set_scene(&context,&scene,&camera,&xray,fence,1,1)?;
+            let stats=world.texture_stats();assert_eq!(warm,(stats.0.uploads,stats.1.hashes,stats.1.decodes,stats.1.uploads));assert_eq!(world.uploads,world_uploads);
+            world.set_scene(&context,&scene,&camera,&style,fence,1,1)?;
             let old=budget.ledger.lock().unwrap().total_committed();
             for bytes in scene.embedded_textures.values_mut(){bytes.push(0);}
             scene.version+=1;
