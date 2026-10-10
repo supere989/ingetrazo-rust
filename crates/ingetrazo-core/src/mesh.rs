@@ -253,7 +253,12 @@ impl Mesh {
             .iter()
             .map(|&v| self.vertices[v].position)
             .collect();
-        0.5 * newell_vector(&positions).length()
+        let outer=0.5 * newell_vector(&positions).length();
+        let holes:f64=f.holes.iter().map(|ring| {
+            let positions:Vec<_>=ring.iter().map(|&v|self.vertices[v].position).collect();
+            0.5*newell_vector(&positions).length()
+        }).sum();
+        (outer-holes).max(0.)
     }
 
     /// Compute centroid of a face.

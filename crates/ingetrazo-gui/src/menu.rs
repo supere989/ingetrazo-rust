@@ -282,15 +282,15 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             ui.menu_button(tr("Intersect Faces"), |ui| {
                 if ui.button(tr("With Selection")).clicked() {
-                    app.status_message = tr("Intersected faces with selection");
+                    app.intersect_faces(ingetrazo_core::intersect::IntersectMode::WithSelection);
                     ui.close_menu();
                 }
                 if ui.button(tr("With Model")).clicked() {
-                    app.status_message = tr("Intersected faces with model");
+                    app.intersect_faces(ingetrazo_core::intersect::IntersectMode::WithModel);
                     ui.close_menu();
                 }
                 if ui.button(tr("With Context")).clicked() {
-                    app.status_message = tr("Intersected faces with context");
+                    app.intersect_faces(ingetrazo_core::intersect::IntersectMode::WithContext);
                     ui.close_menu();
                 }
             });

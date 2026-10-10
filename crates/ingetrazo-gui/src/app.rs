@@ -608,13 +608,6 @@ impl IngeTrazoApp {
         self.status_message = format!("Healed overlapping geometry: removed {removed} redundant face(s)");
     }
 
-    pub fn rebuild_planar_faces(&mut self) {
-        self.save_undo_state();
-        self.scene.mesh.rebuild_spatial_index();
-        self.scene.bump_version();
-        self.status_message = ingetrazo_core::i18n::tr("Rebuilt planar faces");
-    }
-
     pub fn split_into_pieces(&mut self) {
         self.save_undo_state();
         let mut visited = vec![false; self.scene.mesh.faces.len()];
