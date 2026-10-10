@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "input_sha256": "cf962f47084e7ab1e238f53a6ab0c86e32677aa80bf3f9f61af4f21caf92a61a",
+  "native_source": "3998fc0d2c3014744525d0d210b60a44892290b3",
+  "binary_sha256": "2bae646f43bc098ab84a435ab966ad78564c4cdc6f8f41bedd7ee72aac5a4eac",
+  "negative": "compiled-old differing representative rejected"
+}

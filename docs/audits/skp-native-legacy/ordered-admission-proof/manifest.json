@@ -1,0 +1,84 @@
+[
+  {
+    "path": "README.md",
+    "sha256": "fd1bdfba90c21a001d8b2bce1f1ba574bebf305fff838df219b3912fff16057f"
+  },
+  {
+    "path": "admission/capilla_quiroz_v17-comparison.json.gz",
+    "sha256": "7986707a8b954410e35a8d64fa4b3178806343cddc05c3dc8c769deddebfc910",
+    "raw_sha256": "fe9e29a3856921390c03f75bd7c3395b5ccf92c94574b34451cf631c82e3fa7d"
+  },
+  {
+    "path": "admission/capilla_quiroz_v17.log",
+    "sha256": "1e08d6ea8997f98fa59be8e04bc1ee5e66a52c6a9792c87b8d6e8da415ff4752"
+  },
+  {
+    "path": "admission/gondola_v20-comparison.json.gz",
+    "sha256": "0cbc0eeb5fd24f9c816e9d12e88f5ce8a81ac733af5055b8b65b12c6ea4dfce8",
+    "raw_sha256": "3f4d8fa959c4fffac740354b16eb146af677316d9ff87563b2c5ff4e66e10ef1"
+  },
+  {
+    "path": "admission/gondola_v20.log",
+    "sha256": "9e0a120ccb40a79b16bc39f9ce22f6e2e14ca9a7a90842dcc0d097f8792e9818"
+  },
+  {
+    "path": "admission/legacy_v7_synthetic-comparison.json.gz",
+    "sha256": "cfcc214153a0a926ff5dea54e4fa564b64c1e85a960d990c783e8d8fce1b1e53",
+    "raw_sha256": "caa9e1a208f4894d88c291cff39010d2c66d38e653c4c302a50c3850461b6e8e"
+  },
+  {
+    "path": "admission/legacy_v7_synthetic.log",
+    "sha256": "62b2c060bf91c3a1fe3f1422fe58c0c720c514338613847d636402562cd2f86a"
+  },
+  {
+    "path": "admission/report.json",
+    "sha256": "9d62fca1cf0c53ac25e03c0f8cb6671364fbe7effed0e2b94581bf97eec84716"
+  },
+  {
+    "path": "back-control/comparison.json",
+    "sha256": "5780364d69b118a46445d2336a8f03fcead8e6a0c471e9ab3bff71260858c3ab"
+  },
+  {
+    "path": "back-control/native.log",
+    "sha256": "9fae4b72ee1f9e0d33a4a5a1a622c301672ecf06c45e4b8c10f374262308b10f"
+  },
+  {
+    "path": "back-control/report.json",
+    "sha256": "2a45c740f7662458e00f033d15eee4286e6147b1f7ba8d8294e0b4f62bee26e7"
+  },
+  {
+    "path": "focused-admission.log",
+    "sha256": "b04619343ebc342c9cf4f61fb72b8cca3f1c7f84647d0e51972534fa1f7ea0bb"
+  },
+  {
+    "path": "ordered/capilla_quiroz_v17-comparison.json.gz",
+    "sha256": "7986707a8b954410e35a8d64fa4b3178806343cddc05c3dc8c769deddebfc910",
+    "raw_sha256": "fe9e29a3856921390c03f75bd7c3395b5ccf92c94574b34451cf631c82e3fa7d"
+  },
+  {
+    "path": "ordered/capilla_quiroz_v17.log",
+    "sha256": "1e08d6ea8997f98fa59be8e04bc1ee5e66a52c6a9792c87b8d6e8da415ff4752"
+  },
+  {
+    "path": "ordered/gondola_v20-comparison.json.gz",
+    "sha256": "0cbc0eeb5fd24f9c816e9d12e88f5ce8a81ac733af5055b8b65b12c6ea4dfce8",
+    "raw_sha256": "3f4d8fa959c4fffac740354b16eb146af677316d9ff87563b2c5ff4e66e10ef1"
+  },
+  {
+    "path": "ordered/gondola_v20.log",
+    "sha256": "9e0a120ccb40a79b16bc39f9ce22f6e2e14ca9a7a90842dcc0d097f8792e9818"
+  },
+  {
+    "path": "ordered/legacy_v7_synthetic-comparison.json.gz",
+    "sha256": "cfcc214153a0a926ff5dea54e4fa564b64c1e85a960d990c783e8d8fce1b1e53",
+    "raw_sha256": "caa9e1a208f4894d88c291cff39010d2c66d38e653c4c302a50c3850461b6e8e"
+  },
+  {
+    "path": "ordered/legacy_v7_synthetic.log",
+    "sha256": "62b2c060bf91c3a1fe3f1422fe58c0c720c514338613847d636402562cd2f86a"
+  },
+  {
+    "path": "ordered/report.json",
+    "sha256": "b352a9454587ca4b6894ad4453679596e76e15325505c4038d0f84e3e522661d"
+  }
+]
