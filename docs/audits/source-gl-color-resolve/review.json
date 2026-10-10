@@ -1,0 +1,13 @@
+{
+  "cases": 133,
+  "actual_hardware": "RTX5090 NVIDIA615.71.09 OpenGL3.3",
+  "observation": "All controlled red-byte sample averages round nearest with half ties downward; all four sample permutations agree. This matches integer (sum+1)/4 for this corpus.",
+  "scope": "Controlled Qt FBO.toImage API used by original screenshot capture. Not yet compared with native Vulkan or proven as production Gondola cause. No render acceptance promoted.",
+  "files_sha256": {
+    "resolve.json": "fa60d7f6a8f5fc893e7f008dc0954758da74f2f2be96f86b97080596c9b542cb",
+    "run.log": "f2eacf2f6e281cf2d692425ad3ce6c6a8c3d2e6e5cb3a56d99a2ebf1afe495cd",
+    "transport.json": "ee0c746db28173771c316c61bf88e66334755ae366119f75db6476039308545e",
+    "transport.py": "7f4b563844c2a2d0154bbe8288c28b53a4c90e42977be9d512d6581e0ae20f47"
+  },
+  "script_sha256": "36e7fee42590fcd71cbdad68adfe2046fca38d28f9920bb9a71b642daeccc578"
+}
