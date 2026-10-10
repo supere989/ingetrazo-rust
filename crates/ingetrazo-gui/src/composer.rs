@@ -265,6 +265,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let geo_north = app.scene.geo_datum.as_ref().map(|d| d.north).unwrap_or(0.0);
     let mut bump_needed = false;
     let mut fit_page_needed = false;
+    let mut export_view_dxf = false;
 
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
         egui::Frame::window(ui.style()).show(ui, |ui| {
@@ -374,6 +375,10 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     });
                 }
 
+                if sheet.selected_item.and_then(|i|sheet.items.get(i)).is_some_and(|item|matches!(item,SheetItem::ViewFrame(_))) {
+                    export_view_dxf |= ui.button(tr("Export view as DXF…")).clicked();
+                }
+
                 // Delete selected item
                 if let Some(sel_idx) = sheet.selected_item {
                     if ui.button(tr("Delete Item")).clicked() {
@@ -384,6 +389,15 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             });
         });
     });
+
+    if export_view_dxf {
+        if let Some(path)=crate::dialogs::pick_save_file(&tr("Export view as DXF…"),"vista.dxf","*.dxf|DXF") {
+            match app.export_composer_view_dxf(sheet_idx,&path) {
+                Ok(count)=>app.status_message=format!("{}: {count} — {}",tr("Exported lines"),path.display()),
+                Err(error)=>app.status_message=error,
+            }
+        }
+    }
 
     if fit_page_needed {
         let fit_x = (response_rect.width() * 0.85) / paper_w_mm as f32;
@@ -862,4 +876,36 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
   let mut scene=Scene::new();scene.camera.yaw=-1.1;scene.camera.pitch=0.42;scene.camera.target=DVec3::new(4.,5.,6.);scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Cut",&scene,&scene.camera));let captured=scene.camera.clone();scene.camera.yaw=0.3;let original=scene.clone();let mut frame=ViewFrame::default();frame.view_key="scene:Cut".into();let snapshot=frame_scene(&scene,&frame);let camera=frame_camera(&snapshot,&frame);assert_eq!(camera.target,captured.target);assert!((camera.forward()-captured.forward()).length()<1e-12);assert!(!camera.perspective);assert_eq!(scene,original);
   frame.view_key="std:front".into();assert!(frame_camera(&scene,&frame).eye().y<0.);frame.view_key="std:right".into();assert!(frame_camera(&scene,&frame).eye().x>0.);
  }
+}
+
+/// Export the selected frame as classified orthographic model-space ink.
+/// Reuses the production persistent worker/cache; no scene clone per line or subprocess per export.
+impl IngeTrazoApp {
+    pub fn export_composer_view_dxf(&mut self,sheet_idx:usize,path:&std::path::Path)->Result<usize,String> {
+        let sheet=self.scene.sheets.get(sheet_idx).ok_or("No sheet selected")?;
+        let frame=match sheet.selected_item.and_then(|i|sheet.items.get(i)) {
+            Some(SheetItem::ViewFrame(frame))=>frame.clone(),
+            _=>return Err(tr("Select a view frame to export")),
+        };
+        let snapshot=frame_scene(&self.scene,&frame);
+        let camera=frame_camera(&snapshot,&frame);
+        let ink=self.composer_compute.segments(&snapshot,&camera,self.clipboard_document,self.model_revision,&frame.view_key,frame.profiles,frame.hidden_lines)?;
+        let right=camera.right();let up=right.cross(camera.forward());let eye=camera.eye();
+        let mut classes:[Vec<[f64;4]>;4]=Default::default();
+        for segment in ink.iter() {
+            let index=match segment.kind {ingetrazo_render::vector_hlr::LineKind::Edge=>0,ingetrazo_render::vector_hlr::LineKind::Profile=>1,ingetrazo_render::vector_hlr::LineKind::Cut=>2,ingetrazo_render::vector_hlr::LineKind::Hidden=>3};
+            if index==3&&!frame.hidden_lines {continue;}
+            let a=segment.a-eye;let b=segment.b-eye;
+            classes[index].push([a.dot(right),a.dot(up),b.dot(right),b.dot(up)]);
+        }
+        let title=if let Some(name)=frame.view_key.strip_prefix("scene:"){name.to_string()}else if let Some(key)=frame.view_key.strip_prefix("std:"){
+            tr(match key {"top"=>"Top (plan)","bottom"=>"bottom","front"=>"Front","back"=>"Back","right"=>"Right","left"=>"Left","iso"=>"Isometric",_=>key})
+        }else{tr("View")};
+        let names=[title.clone(),format!("{title}-PERFIL"),format!("{title}-CORTE"),format!("{title}-OCULTAS")];
+        let groups=(0..if frame.hidden_lines{4}else{3}).map(|i|ingetrazo_formats::sheet_dxf::ViewLayer{name:&names[i],segments:&classes[i],dashed:i==3}).collect::<Vec<_>>();
+        // Finish worker computation and coordinate validation before touching destination bytes.
+        let mut bytes=Vec::new();let count=ingetrazo_formats::sheet_dxf::write_view_dxf(&mut bytes,&groups).map_err(|e|e.to_string())?;
+        std::fs::write(path,bytes).map_err(|e|e.to_string())?;
+        Ok(count)
+    }
 }

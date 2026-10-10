@@ -10,6 +10,7 @@ mod exchange;
 pub mod dae;
 mod dae_import;
 pub mod dxf;
+pub mod sheet_dxf;
 pub mod gltf;
 pub mod gltf_import;
 pub mod ifc;

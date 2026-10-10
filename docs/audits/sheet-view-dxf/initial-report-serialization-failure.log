@@ -1,0 +1,29 @@
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running `/tmp/ingetrazo-sheet-export-target/debug/examples/sheet_dxf_fixture docs/audits/sheet-view-dxf/native.dxf`
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-export/scripts/check-sheet-view-dxf.py", line 25, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-sheet-export/scripts/check-sheet-view-dxf.py", line 23, in main
+    (directory/"evidence.json").write_text(json.dumps(report,indent=2)+"\n")
+                                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.13/json/__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/conda/lib/python3.13/json/encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/conda/lib/python3.13/json/encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/conda/lib/python3.13/json/encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type DXFTag is not JSON serializable
