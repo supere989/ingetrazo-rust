@@ -1,0 +1,304 @@
+[
+  {
+    "case": "image-quadrants",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-alpha",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-cutout",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-opacity-0999",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-opacity-below",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-reversed",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-wireframe",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-hidden-line",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-xray",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-hidden-layer",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-overlap",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-opaque-behind",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-faded-behind",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-threshold-behind",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-below-threshold-behind",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-coplanar-trace",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-oblique",
+    "differing_pixels": 1654,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 114,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      143,
+      171,
+      656,
+      428
+    ]
+  },
+  {
+    "case": "image-perspective",
+    "differing_pixels": 1677,
+    "central_150x150_differing": 48,
+    "max_channel_difference": 165,
+    "central_max_channel_difference": 135,
+    "bbox": [
+      143,
+      201,
+      656,
+      485
+    ]
+  },
+  {
+    "case": "image-uv-asymmetric",
+    "differing_pixels": 1957,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 140,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      182,
+      136,
+      617,
+      409
+    ]
+  },
+  {
+    "case": "image-uv-asymmetric-perspective",
+    "differing_pixels": 1682,
+    "central_150x150_differing": 238,
+    "max_channel_difference": 145,
+    "central_max_channel_difference": 135,
+    "bbox": [
+      191,
+      114,
+      701,
+      323
+    ]
+  },
+  {
+    "case": "image-uv-negative-v",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  },
+  {
+    "case": "image-offscreen-clip",
+    "differing_pixels": 1312,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      544,
+      118,
+      799,
+      481
+    ]
+  },
+  {
+    "case": "image-near-clipped",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-tinted-alpha",
+    "differing_pixels": 2176,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 135,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      218,
+      118,
+      581,
+      481
+    ]
+  }
+]
