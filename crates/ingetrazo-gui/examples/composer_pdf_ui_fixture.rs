@@ -6,7 +6,14 @@ impl App for Fixture {
  fn new(system:&mut System,_:Option<std::path::PathBuf>)->Self{
  let mut app=IngeTrazoApp::new();app.set_language("en");app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory().into());
  let shapes:Vec<SheetShape>=serde_json::from_slice(&std::fs::read(std::env::var("INGETRAZO_PDF_UI_RECIPES").unwrap()).unwrap()).unwrap();
- app.scene.sheets=shapes.into_iter().map(|shape|{let mut s=Sheet::default();s.items.clear();s.items.push(SheetItem::Shape(ShapeItem{id:uuid::Uuid::new_v4(),shape}));s}).collect();if std::env::var_os("INGETRAZO_PDF_UI_UNSUPPORTED").is_some(){app.scene.sheets=vec![Sheet::default()];}app.scene.active_sheet_index=Some(0);
+ app.scene.sheets=shapes.into_iter().map(|shape|{let mut s=Sheet::default();s.items.clear();s.items.push(SheetItem::Shape(ShapeItem{id:uuid::Uuid::new_v4(),shape}));s}).collect();if std::env::var_os("INGETRAZO_PDF_UI_UNSUPPORTED").is_some(){app.scene.sheets=vec![Sheet::default()];}if let Ok(path)=std::env::var("INGETRAZO_PDF_UI_TEXT_OBSERVATIONS") {
+ let source:serde_json::Value=serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap();
+ app.scene.sheets=source["cases"].as_array().unwrap().iter().map(|case|{
+ let mut sheet=Sheet::new(case["name"].as_str().unwrap(),ingetrazo_core::composition::PaperSize::A4,ingetrazo_core::composition::Orientation::Portrait);sheet.items.clear();
+ let call=&case["source_draw_calls"][0];let item=ingetrazo_core::composition::TextItem{id:uuid::Uuid::new_v4(),pos:(20.,30.),text:call["text"].as_str().unwrap().into(),font_size_pt:14.,bold:call["font"]["bold"].as_bool().unwrap()};
+ sheet.native_items.insert(item.id,case["properties"].clone());sheet.items.push(SheetItem::Text(item));sheet}).collect();
+ }
+ app.scene.active_sheet_index=Some(0);
  Self{app,dir:std::env::var("INGETRAZO_PDF_UI_OUT").unwrap().into(),current:0,all:0}}
  fn build_ui(&mut self,ctx:&egui::Context){
  egui::CentralPanel::default().show(ctx,|ui|ingetrazo_gui::composer::render_sheet_composer(&mut self.app,ui,0));
