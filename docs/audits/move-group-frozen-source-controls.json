@@ -1,0 +1,37 @@
+{
+  "provenance": {
+    "rust_commit": "30a62731c6b3ea3bf2dfe36b0323b999b4964e3c",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "placed": false,
+      "pointer_recipe_offsets": [
+        1,
+        2,
+        3
+      ],
+      "frozen_scene_version": 1,
+      "geometry_unchanged": true,
+      "matrix_unchanged": true,
+      "undo": 0,
+      "cancel_restores": true
+    },
+    {
+      "placed": true,
+      "pointer_recipe_offsets": [
+        1,
+        2,
+        3
+      ],
+      "frozen_scene_version": 1,
+      "geometry_unchanged": true,
+      "matrix_unchanged": true,
+      "undo": 0,
+      "cancel_restores": true
+    }
+  ],
+  "scope": "Operative original Move.on_click/on_hover/on_cancel and Viewport frozen-preview state. Controlled world/screen recipes with a real isolated software GL context, no rendered pointer/GPU upload or timing acceptance."
+}
