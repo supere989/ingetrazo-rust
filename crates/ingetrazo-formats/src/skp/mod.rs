@@ -478,6 +478,7 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             ));
         }
         for face in d.faces.values() {
+            if face.loops.is_empty() || face.loops.iter().any(Vec::is_empty) {return Err(SkpError::Invalid("Face requires nonempty loops".into()));}
             if face
                 .uv_transform
                 .iter()
@@ -700,6 +701,14 @@ mod import_weld_tests {
         });
         assert!(matches!(scene_from_payload(&p), Err(SkpError::Invalid(_))));
         assert!(scene_from_payload(&base).is_ok());
+    }
+    #[test]
+    fn public_image_payload_empty_loops_refuse_before_scene_build() {
+        let base:Payload=serde_json::from_str(include_str!("../../../../docs/audits/skp-native-legacy/component-proof/vff35/hole-paint-layer-payload.json")).unwrap();
+        for loops in [Vec::new(),vec![Vec::new()]] {
+            let mut p=base.clone();p.root.image=true;p.root.faces.values_mut().next().unwrap().loops=loops;
+            assert!(matches!(scene_from_payload(&p),Err(SkpError::Invalid(_))));
+        }
     }
     #[test]
     fn adopted_back_color_preserves_geometry_style_and_native_save() {
