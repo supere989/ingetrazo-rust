@@ -24,7 +24,7 @@ impl ImageOutlineCache{
   let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut selected=Vec::with_capacity(count);let mut generated=0u64;
   for(index,image)in scene.image_planes.iter().enumerate(){
    let is_selected=scene.selection.contains(&SelectionItem::ImagePlane(index));if is_selected{selected.push(index);}
-   let layer=image.layer.as_deref().unwrap_or("Layer 0");if scene.layers.iter().any(|l|l.name==layer&&!l.visible){continue;}
+   let layer=ingetrazo_core::layers::entity_layer_name(image.layer.as_deref());if scene.layers.iter().any(|l|l.name==layer&&!l.visible){continue;}
    let o=image.origin.as_vec3();let u=image.u.as_vec3();let v=image.v.as_vec3();let corners=[o,o+u,o+u+v,o+v];
    for edge in 0..4{
     let a=corners[edge].to_array();let b=corners[(edge+1)%4].to_array();

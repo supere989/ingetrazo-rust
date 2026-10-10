@@ -19,7 +19,7 @@ pub struct ChunkFrame<'a>{pub slots:&'a[Option<Arc<PlaneOutlineChunk>>],pub chan
  pub metrics:ChunkMetrics,
 }
 fn make_chunk(image:&ImagePlane,selected:bool,matrix:&[f32;16],size:[u32;2],density:f32,hidden:&HashSet<String>)->Result<Option<Arc<PlaneOutlineChunk>>,String>{
- if hidden.contains(image.layer.as_deref().unwrap_or("Layer 0")){return Ok(None);}
+ if hidden.contains(ingetrazo_core::layers::entity_layer_name(image.layer.as_deref())){return Ok(None);}
  let o=image.origin.as_vec3();let u=image.u.as_vec3();let v=image.v.as_vec3();let corners=[o,o+u,o+u+v,o+v];
  if corners.iter().any(|p|!p.is_finite()){return Err("Nonfinite image outline frame".into());}
  let(mut vertices,mut indices,mut batches)=(Vec::new(),Vec::new(),Vec::new());let mut count_strips=0u64;

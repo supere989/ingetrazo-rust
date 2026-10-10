@@ -7,6 +7,31 @@ use serde::{Deserialize, Serialize};
 
 pub const DEFAULT_LAYER: &str = "Layer 0";
 
+/// Original entity_layer uses `label or DEFAULT_LAYER`; registry names remain literal.
+pub fn entity_layer_name(label: Option<&str>) -> &str {
+    label.filter(|name| !name.is_empty()).unwrap_or(DEFAULT_LAYER)
+}
+
+#[cfg(test)]
+mod entity_label_tests {
+    use super::*;
+    #[test]
+    fn empty_entity_labels_use_default_without_renaming_authored_registry() {
+        let mut scene = crate::scene::Scene::new();
+        scene.layers[0].visible = false;
+        scene.layers.insert(0, Layer::new(""));
+        scene.layers.push(Layer::new("Layer0"));
+        scene.layers.push(Layer::new(" "));
+        assert!(!scene.is_layer_visible(None));
+        assert!(!scene.is_layer_visible(Some("")));
+        assert!(scene.is_layer_visible(Some("Layer0")));
+        assert!(scene.is_layer_visible(Some(" ")));
+        assert_eq!(scene.layers[0].name, "");
+        assert_eq!(entity_layer_name(Some(" ")), " ");
+    }
+}
+
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Layer {
     #[serde(skip, default = "uuid::Uuid::new_v4")]

@@ -293,7 +293,7 @@ impl ReferenceImages {
     }
 }
 fn image_visible(scene: &Scene, p: &ImagePlane) -> bool {
-    let name = p.layer.as_deref().unwrap_or("Layer 0");
+    let name = ingetrazo_core::layers::entity_layer_name(p.layer.as_deref());
     scene
         .layers
         .iter()

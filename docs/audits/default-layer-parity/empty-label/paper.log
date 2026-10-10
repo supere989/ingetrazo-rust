@@ -1,0 +1,19 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-ai-foundation/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-ai-foundation/crates/ingetrazo-render)
+    Finished `test` profile [unoptimized] target(s) in 3.14s
+     Running unittests src/lib.rs (/tmp/ingetrazo-ai-bridge-target/debug/deps/ingetrazo_render-f512ce7571b13033)
+
+running 1 test
+test paper_scene::literal_default_layer_tests::authored_first_hidden_layer0_does_not_hide_unlabelled_paper_geometry ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 62 filtered out; finished in 0.00s
+

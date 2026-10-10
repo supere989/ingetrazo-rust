@@ -207,24 +207,8 @@ impl Scene {
     }
 
     pub fn is_layer_visible(&self, layer_name: Option<&str>) -> bool {
-        match layer_name {
-            Some(name) => {
-                for l in &self.layers {
-                    if l.name == name {
-                        return l.visible;
-                    }
-                }
-                true
-            }
-            None => {
-                for l in &self.layers {
-                    if l.name == crate::layers::DEFAULT_LAYER {
-                        return l.visible;
-                    }
-                }
-                true
-            }
-        }
+        let name = crate::layers::entity_layer_name(layer_name);
+        self.layers.iter().find(|layer| layer.name == name).map_or(true, |layer| layer.visible)
     }
 
     pub fn used_layer_names(&self)->std::collections::HashSet<String>{
