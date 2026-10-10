@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "21036f858dc01d25b5ec476b7c370091d8987720",
+    "rust_commit": "9f192a2d34603126d7c1df973dd913c46ec15d09",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -97,7 +97,19 @@
       "original_volume": 4.070552286704071,
       "rust_volume": 4.070552359183047,
       "symmetric_difference_volume": 1.6917590747204155e-07
+    },
+    {
+      "case": "attached-straight",
+      "original_volume": 1.9999999999999998,
+      "rust_volume": 1.9999999999999998,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "attached-bend",
+      "original_volume": 3.0,
+      "rust_volume": 3.0,
+      "symmetric_difference_volume": 0.0
     }
   ],
-  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Arbitrary path and interactive workflow remain open."
+  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Attached closed cube cap straight and bent sweeps also match original native spatial solids. Arbitrary attachments and open sheets remain open."
 }

@@ -17,4 +17,12 @@ fn main(){let dir=std::path::PathBuf::from(std::env::args().nth(1).unwrap());for
  if label.starts_with("wire"){let ids=path.iter().map(|&p|scene.mesh.add_vertex(p)).collect::<Vec<_>>();for i in 0..ids.len(){scene.mesh.add_edge(ids[i],ids[(i+1)%ids.len()]);}}
  save(&scene.mesh,&dir.join(format!("{name}-source.igz")));std::fs::write(dir.join(format!("{name}-path.json")),serde_json::to_vec(&path.iter().map(|p|p.to_array()).collect::<Vec<_>>()).unwrap()).unwrap();sweep_profile(&mut scene,0,&path,true).unwrap();save(&scene.mesh,&dir.join(format!("{name}-result.igz")));
  }}
+ for name in ["attached-straight","attached-bend"] {
+ let mut scene=Scene::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();
+ ingetrazo_tools::pushpull::PushPullTool::extrude_face(&mut scene,0,1.).unwrap();
+ let face=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|(scene.mesh.vertices[v].position.z-1.).abs()<1e-8)).unwrap();
+ let path=if name=="attached-straight"{vec![DVec3::new(0.5,0.5,1.),DVec3::new(0.5,0.5,2.)]}else{vec![DVec3::new(0.5,0.5,1.),DVec3::new(0.5,0.5,2.),DVec3::new(1.5,0.5,2.)]};
+ save(&scene.mesh,&dir.join(format!("{name}-source.igz")));std::fs::write(dir.join(format!("{name}-path.json")),serde_json::to_vec(&path.iter().map(|p|p.to_array()).collect::<Vec<_>>()).unwrap()).unwrap();sweep_profile(&mut scene,face,&path,false).unwrap();save(&scene.mesh,&dir.join(format!("{name}-result.igz")));
+ }
+
 }
