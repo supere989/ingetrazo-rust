@@ -59,7 +59,8 @@ back=[f"back-{f}-{b}-{direction}" for f,b in [(0.5,0.3),(1.,0.3),(0.5,1.),(1.,1.
 instanced=["back-gate-instanced-only-front","back-gate-instanced-only-reversed"]
 shade=["group-rotated-prototype","group-nested-rotated-prototype","group-classic-baked-rotation"]
 paint=["paint-default-front","paint-default-reversed","paint-face-override","paint-explicit-back","paint-child-own","paint-top-owner-not-intermediate"]
-assert names in [base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint],names
+styles=[f"style-{mode}-{kind}"for mode in ["wireframe","hidden_line","monochrome","xray","shaded"]for kind in ["front","reverse","translucent","explicit-back"]]
+assert names in [base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint+styles],names
 (out/"native-ui-results.json").write_text(json.dumps({"passed":False,"cases":[],"status":"starting"}))
 
 for row in original["cases"]:
@@ -87,6 +88,6 @@ for row in original["cases"]:
     child.terminate()
     try:child.wait(timeout=3)
     except subprocess.TimeoutExpired:child.kill();child.wait(timeout=3)
-  (out/"native-ui-results.json").write_text(json.dumps({"passed":all(r["passed"]for r in rows),"cases":rows,"scope":"Actual NVIDIA Vulkan swapchain plus production World and encoded egui adapter; capture strictly newly created own named client window, clean own WM close. No desktop/root image capture."},indent=2)+"\n")
+  (out/"native-ui-results.json").write_text(json.dumps({"passed":len(rows)==len(original["cases"])and all(r["passed"]for r in rows),"cases":rows,"scope":"Actual NVIDIA Vulkan swapchain plus production World and encoded egui adapter; capture strictly newly created own named client window, clean own WM close. No desktop/root image capture."},indent=2)+"\n")
 assert len(rows)==len(original["cases"])and all(r["passed"]for r in rows),rows
 (out/"pending-case.json").unlink()
