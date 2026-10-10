@@ -30,7 +30,7 @@ for name in ['opaque','cutout','translucent']:
  source=Scene();load_skp(source,path);native=Scene();load_into(native,output)
  a=scene(source);b=scene(native);
  a['billboards']=[(g.name,g.billboard)for g in source.groups];b['billboards']=[(g.name,g.billboard)for g in native.groups]
- assert sum(g.billboard for g in source.groups)==(1 if name=='cutout' else 0)
+ assert sum(bool(g.billboard) for g in source.groups)==(1 if name=='cutout' else 0)
  a['imported_field_inventory']=inventory(source);b['imported_field_inventory']=inventory(native);raw=(json.dumps({'original':a,'native':b},separators=(',',':'))+'\n').encode();(out/(name+'-comparison.json.gz')).write_bytes(gzip.compress(raw,mtime=0));assert a==b,'strict whole-document mismatch retained'
  original=json.loads(json.dumps(a));mesh=source.groups[0].mesh;mesh.vertices[0].position.setX(mesh.vertices[0].position.x()+1);assert scene(source)!= {k:v for k,v in b.items()if k not in ('imported_field_inventory','billboards')}
  rows.append({'name':name,'passed':True,'input_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'groups':len(a['groups']),'materials':len(a['materials']),'inventory':a['imported_field_inventory'],'comparison_raw_sha256':hashlib.sha256(raw).hexdigest(),'negative':'altered geometry rejected'})

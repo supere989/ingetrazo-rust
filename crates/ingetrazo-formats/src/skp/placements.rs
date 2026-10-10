@@ -255,6 +255,7 @@ impl Planner<'_> {
             g.layer = layer_name(self.p, place.layer)?;
             if d.image {
                 g.billboard = mesh_image_cutout(self.p, &g.mesh, &mut self.cutouts)?;
+                if g.billboard {g.native_document["billboard"]=serde_json::json!("mesh");g.native_baseline["billboard"]=serde_json::json!(true);}
             }
             if !d.image && place.x != DMat4::IDENTITY {
                 g.native_document = serde_json::json!({"axes":place.x.to_cols_array()});
