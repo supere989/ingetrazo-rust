@@ -76,7 +76,7 @@ impl IngeTrazoApp {
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
-                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.clipboard_document=uuid::Uuid::new_v4();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
+                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
                     self.document_session.recovered_slot=Some(record.slot);self.document_session.clean=None;
                     self.document_session.show_recovery=false;self.status_message="Recovered unsaved copy; save it to a new file".into();},
                 Err(e)=>self.status_message=format!("Recovery failed: {e}"),

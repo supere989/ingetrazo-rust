@@ -40,6 +40,10 @@ pub struct GeometryClipboard {
 }
 
 pub struct IngeTrazoApp {
+    /// Runtime-only native GPU viewport state; never serialized into the document.
+    pub native_gpu_viewport_enabled: bool,
+    pub native_gpu_viewport_rect: Option<egui::Rect>,
+    pub native_gpu_viewport_texture: Option<egui::TextureId>,
     pub document_session: crate::document_session::DocumentSession,
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
@@ -98,6 +102,8 @@ pub struct IngeTrazoApp {
     pub texture_opacity: f32,
     pub terrain_contour_interval: f64,
     pub composer_state: crate::composer::ComposerState,
+    pub composer_compute:crate::composer_compute::ComposerCompute,
+    pub model_revision:u64,
     pub blender_state: crate::blender::BlenderRenderState,
     pub show_render_dialog: bool,
 }
@@ -132,6 +138,7 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
+            native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
             component_edit_stack: Vec::new(),
             scene,
             camera,
@@ -188,6 +195,7 @@ impl IngeTrazoApp {
             texture_opacity: 1.0,
             terrain_contour_interval: 1.0,
             composer_state: crate::composer::ComposerState::default(),
+            composer_compute:Default::default(),model_revision:0,
             blender_state: crate::blender::BlenderRenderState::default(),
             show_render_dialog: false,
         };
@@ -225,6 +233,7 @@ impl IngeTrazoApp {
         self.vcb_text.clear();
     }
 
+
     pub fn new_document(&mut self) {self.request_document_action(crate::document_session::DocumentAction::New);}
 
     pub(crate) fn new_document_unchecked(&mut self) {
@@ -234,7 +243,7 @@ impl IngeTrazoApp {
         }
         self.save_undo_state();
         self.retire_current_recovery();
-        self.scene = Scene::new();
+        self.scene = Scene::new();self.bump_model_revision();
         self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();
         self.camera = self.scene.camera.clone();
@@ -259,7 +268,7 @@ impl IngeTrazoApp {
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
-                self.scene = loaded_scene;self.clipboard_document=uuid::Uuid::new_v4();
+                self.scene = loaded_scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();
@@ -319,6 +328,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_undo_state(&mut self) {
+        self.bump_model_revision();
         self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
@@ -328,6 +338,12 @@ impl IngeTrazoApp {
         }
     }
 
+    pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
+        let Some(layer)=self.scene.layers.get_mut(index)else{return false;};
+        if layer.visible==visible{return false;}
+        layer.visible=visible;self.scene.bump_view_version();true
+    }
+    pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
@@ -337,7 +353,7 @@ impl IngeTrazoApp {
             self.redo_stack.push(self.scene.clone());
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
-            self.scene = prev;
+            self.scene = prev;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
         }
@@ -350,7 +366,7 @@ impl IngeTrazoApp {
             self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
-            self.scene = next;
+            self.scene = next;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
         }
@@ -1494,4 +1510,16 @@ mod ordered_solid_selection_tests {
         app.scene.clear_selection();
         assert!(app.scene.selection_order.is_empty());
     }
+}
+
+#[cfg(test)]mod model_revision_regression {
+ use super::*;
+ #[test]fn history_and_context_swaps_never_reuse_gpu_model_revision(){
+  let mut app=IngeTrazoApp::new();let initial=app.model_revision;
+  app.save_undo_state();app.scene.mesh.add_vertex(DVec3::X);let committed=app.model_revision;assert!(committed>initial);
+  app.undo();let undo=app.model_revision;assert!(undo>committed);app.redo();assert!(app.model_revision>undo);
+  let mut mesh=ingetrazo_core::mesh::Mesh::new();let vertices=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(vertices.to_vec(),vec![]);
+  app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("context",mesh));app.scene.selection.insert(SelectionItem::Group(0));let before=app.model_revision;
+  app.begin_component_edit();assert_eq!(app.component_edit_stack.len(),1);assert!(app.model_revision>before);let entered=app.model_revision;app.cancel_component_edit();assert!(app.model_revision>entered);
+ }
 }

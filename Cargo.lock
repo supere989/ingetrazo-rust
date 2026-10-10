@@ -1425,6 +1425,7 @@ dependencies = [
  "arboard",
  "ash",
  "ash-window",
+ "bytemuck",
  "eframe",
  "egui",
  "egui-ash-renderer",

@@ -249,6 +249,12 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
+    app.native_gpu_viewport_rect=Some(rect);
+    if app.native_gpu_viewport_enabled {
+        if let Some(texture)=app.native_gpu_viewport_texture {
+            painter.image(texture,rect,egui::Rect::from_min_max(egui::pos2(0.0,0.0),egui::pos2(1.0,1.0)),egui::Color32::WHITE);
+        } else {painter.rect_filled(rect,0.0,egui::Color32::from_rgb(210,214,212));ui.ctx().request_repaint();}
+    } else {
     let render_data = build_scene_render_data(
         &app.scene,
         &app.camera,
@@ -264,6 +270,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         &app.style,
         &tex_map,
     );
+
+    }
 
     if let Some(preview) = &app.paste_preview {
         let mut camera = app.camera.clone();

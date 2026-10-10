@@ -30,12 +30,13 @@ impl IngeTrazoApp {
     fn record_tool_commit(&mut self, before: Scene) -> Result<(),String> {
         if before.mesh != self.scene.mesh {
             if let Err(error)=ingetrazo_core::heal::refresh_interior(&mut self.scene.mesh) {
-                self.scene=before;
+                self.scene=before;self.bump_model_revision();
                 self.status_message=format!("Tool error: {error}");
                 return Err(error);
             }
         }
         if changed_model(&before, &self.scene) {
+            self.bump_model_revision();
             self.undo_stack.push(before);
             self.redo_stack.clear();
             if self.undo_stack.len() > 50 {
@@ -86,7 +87,7 @@ impl IngeTrazoApp {
                 self.record_tool_commit(before)
             }
             Err(error) => {
-                self.scene = before;
+                self.scene = before;self.bump_model_revision();
                 Err(error)
             }
         }

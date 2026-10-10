@@ -111,6 +111,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     ui.separator();
 
     // --- 2. Layers Panel ---
+    let mut visibility_changes=vec![];
     egui::CollapsingHeader::new(tr("Layers"))
         .default_open(true)
         .show(ui, |ui| {
@@ -135,7 +136,8 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                         tr(&layer.name)
                     };
                     ui.label(&layer_display);
-                    ui.checkbox(&mut layer.visible, "");
+                    let mut visible=layer.visible;
+                    if ui.checkbox(&mut visible, "").changed(){visibility_changes.push((idx,visible));}
                     ui.checkbox(&mut layer.locked, "");
                     ui.end_row();
                 }
@@ -146,10 +148,11 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 if ui.button(tr("+ Layer")).clicked() {
                     let next_idx = app.scene.layers.len();
                     app.scene.layers.push(Layer::new(format!("{} {next_idx}", tr("Layer"))));
+                    app.scene.bump_view_version();
                 }
                 if ui.button("–").clicked() {
                     if app.scene.layers.len() > 1 {
-                        app.scene.layers.pop();
+                        app.scene.layers.pop();app.scene.bump_view_version();
                         if app.active_layer_idx >= app.scene.layers.len() {
                             app.active_layer_idx = app.scene.layers.len() - 1;
                         }
@@ -163,6 +166,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 }
             });
         });
+    for(index,visible)in visibility_changes{app.set_layer_visibility(index,visible);}
     ui.separator();
 
     // --- 3. Scenes Panel ---

@@ -173,7 +173,14 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 painter.rect_filled(fr, 0.0, Color32::WHITE);
 
                 // Render 3D model projection inside the view frame
-                render_model_projection_with_resources(&app.scene,&painter,fr,frame,&app.style,&app.textures.iter().map(|(k,v)|(k.clone(),v.id())).collect());
+                let vector=matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective;
+                let ink=if vector{
+                    let snapshot=frame_scene(&app.scene,frame);let camera=frame_camera(&snapshot,frame);
+                    match app.composer_compute.segments(&snapshot,&camera,app.clipboard_document,app.model_revision,&frame.view_key,frame.profiles,frame.hidden_lines){
+                        Ok(ink)=>Some(ink),Err(error)=>{app.status_message=error;Some(std::sync::Arc::new(vec![]))}
+                    }
+                }else{None};
+                render_model_projection_with_ink(&app.scene,&painter,fr,frame,&app.style,&app.textures.iter().map(|(k,v)|(k.clone(),v.id())).collect(),ink.as_deref().map(Vec::as_slice));
 
                 // View Frame border
                 if frame.border {
@@ -578,6 +585,9 @@ pub fn render_model_projection(
     render_model_projection_with_resources(scene,painter,frame_rect,frame,&ingetrazo_render::style::StyleConfig::default_shaded(),&std::collections::HashMap::new());
 }
 pub fn render_model_projection_with_resources(scene:&Scene,painter:&egui::Painter,frame_rect:Rect,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig,textures:&std::collections::HashMap<String,egui::TextureId>) {
+    render_model_projection_with_ink(scene,painter,frame_rect,frame,base,textures,None);
+}
+fn render_model_projection_with_ink(scene:&Scene,painter:&egui::Painter,frame_rect:Rect,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig,textures:&std::collections::HashMap<String,egui::TextureId>,prepared:Option<&[ingetrazo_render::vector_hlr::VectorSegment]>) {
     let painter = painter.with_clip_rect(frame_rect);
     let snapshot=frame_scene(scene,frame);let scene=snapshot.as_ref();
 
@@ -612,8 +622,9 @@ pub fn render_model_projection_with_resources(scene:&Scene,painter:&egui::Painte
     }
     if vector {paint_paper_cut(&painter,frame_rect,frame,scene,&view_proj);}
     let mut segments=if vector {
-        ingetrazo_render::vector_hlr::parallel_segments(scene,&camera,frame.profiles,frame.hidden_lines)
-            .into_iter().map(|s|(s.a,s.b,s.kind)).collect::<Vec<_>>()
+        if let Some(ink)=prepared{ink.iter().map(|s|(s.a,s.b,s.kind)).collect::<Vec<_>>()}else{
+        ingetrazo_render::vector_hlr::parallel_segments(scene,&camera,frame.profiles,frame.hidden_lines).into_iter().map(|s|(s.a,s.b,s.kind)).collect::<Vec<_>>()
+        }
     } else {section_projected_edges(scene).into_iter().map(|(a,b)|(a,b,LineKind::Edge)).collect()};
     // Thin hidden ink first, heavy cut ink last, as original _paint_hlr_lines_mm.
     segments.sort_by_key(|s|match s.2{LineKind::Hidden=>0,LineKind::Edge=>1,LineKind::Profile=>2,LineKind::Cut=>3});
