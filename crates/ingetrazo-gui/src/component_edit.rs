@@ -87,6 +87,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
         let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
             return Err("Edited instance no longer exists".into());
         };
+        let images_changed=candidate.image_planes!=scene.image_planes;
         let presentation_changed=candidate.display_style!=scene.display_style || candidate.shadows!=scene.shadows;
         let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
             || candidate.materials!=scene.materials || candidate.layers!=scene.layers
@@ -96,7 +97,8 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             || session.mesh_share_baseline!=scene.mesh_shares
             || scene.dimensions!=session.dimension_baseline || scene.section_planes!=session.section_baseline
             || scene.show_section_cuts!=candidate.show_section_cuts||scene.show_section_planes!=candidate.show_section_planes||scene.show_section_fill!=candidate.show_section_fill;
-        if changed || session.container_axes.is_some() || session.container_bake.is_some() || session.private_container_mesh.is_some() {
+        let image_global_only=images_changed&&session.mesh_baseline==scene.mesh&&session.groups_baseline==scene.groups&&session.definitions_baseline==scene.component_definitions&&session.mesh_share_baseline==scene.mesh_shares&&scene.dimensions==session.dimension_baseline&&scene.section_planes==session.section_baseline&&candidate.materials==scene.materials&&candidate.unit==scene.unit&&candidate.guides==scene.guides&&candidate.text_labels==scene.text_labels&&candidate.geo_datum==scene.geo_datum&&candidate.geo_points==scene.geo_points&&candidate.geo_paths==scene.geo_paths&&candidate.terrain==scene.terrain&&candidate.sheets==scene.sheets&&candidate.saved_views==scene.saved_views;
+        if (changed&&!image_global_only) || session.container_axes.is_some() || session.container_bake.is_some() || session.private_container_mesh.is_some() {
             let mut replacement=ComponentDefinition{mesh_share:None,mesh:scene.mesh.clone(),children:scene.groups.clone()};
             if let Some(inverse)=session.leaf_share_back {
                 // Original placed leaves edit a world copy, then inverse-map
@@ -158,7 +160,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             // images remain available after Finish and through mesh shareback
             // Undo/Redo, just as the source extracted-file texture cache does.
             candidate.embedded_textures=scene.embedded_textures.clone();
-            candidate.unit=scene.unit;candidate.guides=scene.guides.clone();candidate.text_labels=scene.text_labels.clone();candidate.geo_datum=scene.geo_datum.clone();candidate.geo_points=scene.geo_points.clone();candidate.geo_paths=scene.geo_paths.clone();candidate.terrain=scene.terrain.clone();candidate.sheets=scene.sheets.clone();candidate.active_sheet_index=scene.active_sheet_index;candidate.saved_views=scene.saved_views.clone();
+            candidate.image_planes=scene.image_planes.clone();candidate.image_objects=scene.image_objects.clone();candidate.unit=scene.unit;candidate.guides=scene.guides.clone();candidate.text_labels=scene.text_labels.clone();candidate.geo_datum=scene.geo_datum.clone();candidate.geo_points=scene.geo_points.clone();candidate.geo_paths=scene.geo_paths.clone();candidate.terrain=scene.terrain.clone();candidate.sheets=scene.sheets.clone();candidate.active_sheet_index=scene.active_sheet_index;candidate.saved_views=scene.saved_views.clone();
             if scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.dimension_frame.inverse();
                 candidate.dimensions=scene.dimensions.clone();
@@ -196,9 +198,10 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             }
             candidate.refresh_dimensions();
         }
+        candidate.image_planes=scene.image_planes.clone();candidate.image_objects=scene.image_objects.clone();if image_global_only{candidate.layers=scene.layers.clone();candidate.embedded_textures=scene.embedded_textures.clone();}
         candidate.display_style=scene.display_style.clone();candidate.shadows=scene.shadows.clone();
         candidate.clear_selection();
-        Ok((candidate,changed||presentation_changed))
+        Ok((candidate,changed||presentation_changed||images_changed))
 }
 
 impl IngeTrazoApp {
@@ -258,7 +261,7 @@ impl IngeTrazoApp {
         }
         crate::document_presentation::preserve(&self.scene,&mut replacement);
         let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;
-        if next.history_shareback.is_none(){previous.layers=self.scene.layers.clone();previous.history_layers.0=crate::history_layers::restore(&self.scene,&mut replacement);self.scene.layers=replacement.layers.clone();previous.saved_views=self.scene.saved_views.clone();previous.history_views.0=crate::history_views::restore(&self.scene,&mut replacement);self.scene.saved_views=replacement.saved_views.clone();crate::history_terrain::restore(&mut self.scene,&mut replacement,&mut previous);self.scene.terrain=replacement.terrain.clone();}
+        if next.history_shareback.is_none(){previous.layers=self.scene.layers.clone();previous.history_layers.0=crate::history_layers::restore(&self.scene,&mut replacement);self.scene.layers=replacement.layers.clone();previous.saved_views=self.scene.saved_views.clone();previous.history_views.0=crate::history_views::restore(&self.scene,&mut replacement);self.scene.saved_views=replacement.saved_views.clone();crate::history_terrain::restore(&mut self.scene,&mut replacement,&mut previous);self.scene.terrain=replacement.terrain.clone();previous.image_planes=self.scene.image_planes.clone();previous.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut replacement);self.scene.image_planes=replacement.image_planes.clone();self.scene.image_objects=replacement.image_objects.clone();}
         if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
         let mut cancel_replacement=replacement.clone();
         if let Some(original)=session.cancel_scene.groups.iter().find(|g|g.id==session.group_id){
@@ -307,7 +310,7 @@ impl IngeTrazoApp {
         if group.component_definition.is_none() {self.status_message="Selection is an independent group".into();return;}
         let before=self.scene.clone();
         match self.scene.make_component_unique(id) {
-            Ok(_)=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message="Component made unique".into();},
+            Ok(_)=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message="Component made unique".into();},
             Err(e)=>self.status_message=e,
         }
     }
@@ -391,7 +394,7 @@ impl IngeTrazoApp {
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
-        edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
+        edit.image_planes=self.scene.image_planes.clone();edit.image_objects=self.scene.image_objects.clone();edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
         edit.mesh_shares=self.scene.mesh_shares.clone();
         // Original Scene.begin_group_edit exposes WORLD geometry and leaves
@@ -423,6 +426,7 @@ impl IngeTrazoApp {
         let fold=session.fold_history && session.mesh_baseline!=finishing_scene.mesh;
         let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(scene)=>Some(scene),Err(error)=>{self.status_message=error;return;}}}else{None};
         let mut lifted_undo=self.undo_stack.clone();let mut lifted_redo=self.redo_stack.clone();
+        if let Some(before)=lifted_undo.last_mut(){if before.history_images.0.is_none(){before.history_images.0=Some(ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&finishing_scene.image_planes));}}
         if let Some(before)=lifted_undo.last_mut(){if before.history_terrain.0.is_none(){before.history_terrain.0=Some(ingetrazo_core::georef::TerrainHistory::seal(&before.terrain,&finishing_scene.terrain));}}
         if let Some(before)=lifted_undo.last_mut(){if before.history_layers.0.is_none(){before.history_layers.0=Some(ingetrazo_core::layers::LayerDelta::between(&before.layers,&finishing_scene.layers));}}
         if let Some(before)=lifted_undo.last_mut(){if before.history_views.0.is_none(){before.history_views.0=Some(ingetrazo_core::saved_views::ViewMembershipDelta::between(&before.saved_views,&finishing_scene.saved_views));}}
@@ -431,7 +435,7 @@ impl IngeTrazoApp {
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>{self.status_message=error;return;}};
                 }
             }

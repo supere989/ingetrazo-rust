@@ -52,7 +52,7 @@ impl Default for DocumentStyle {
         }
     }
 }
-fn truth(v: &serde_json::Value) -> bool {
+pub(crate) fn truth(v: &serde_json::Value) -> bool {
     match v {
         serde_json::Value::Null => false,
         serde_json::Value::Bool(b) => *b,
@@ -62,7 +62,7 @@ fn truth(v: &serde_json::Value) -> bool {
         serde_json::Value::Object(o) => !o.is_empty(),
     }
 }
-fn number(v: &serde_json::Value) -> Option<f64> {
+pub(crate) fn number(v: &serde_json::Value) -> Option<f64> {
     v.as_bool()
         .map(|b| if b { 1. } else { 0. })
         .or_else(|| v.as_f64())

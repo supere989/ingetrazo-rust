@@ -16,6 +16,7 @@ impl Default for DocumentSession {fn default()->Self {Self{store:None,preference
     autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,
     recovery:vec![],show_recovery:false,recovered_slot:None}}}
 fn same_model(a:&Scene,b:&Scene)->bool {
+    a.image_planes==b.image_planes &&
     a.mesh==b.mesh &&
     a.groups==b.groups &&
     a.dimensions==b.dimensions &&

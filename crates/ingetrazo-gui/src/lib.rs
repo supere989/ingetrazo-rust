@@ -158,3 +158,5 @@ mod history_layers;
 mod document_presentation;
 
 mod history_terrain;
+
+mod image_plane_actions;
