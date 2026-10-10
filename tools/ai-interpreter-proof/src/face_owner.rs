@@ -5,6 +5,9 @@ struct Draft{face:MeshFace,edges:Vec<usize>}
 pub struct FaceTransaction{edge:Transaction,drafts:Vec<Draft>,base_faces:usize,base_edges:usize,charge:Lease,budget:OwnerBudget,failed:bool,corners:usize,attribute_bytes:usize,attribute_charge:Lease}
 struct Command{base_faces:usize,base_edges:usize,faces:Vec<MeshFace>,face_count:usize,corners:usize,incidence:Vec<(usize,Vec<usize>)>,_charge:Lease}
 pub struct FaceOwner{owner:JournalOwner,undo:Vec<Command>,redo:Vec<Command>}
+/// Exclusive prepared face/edge publication; drop discards all staged records.
+pub struct PreparedFaces<'a>{edge:crate::owner::PreparedAppend<'a>,undo:&'a mut Vec<Command>,redo:&'a mut Vec<Command>,faces:Vec<MeshFace>,prepared_new:Vec<Vec<usize>>,radial:Vec<(usize,Vec<usize>)>,command:Command,_preparation:Lease,_radial_charge:Lease}
+impl PreparedFaces<'_>{pub fn apply(self){let Self{edge,undo,redo,faces,prepared_new,radial,mut command,_preparation,_radial_charge}=self;let owner=edge.apply();let(storage,edges)=owner.face_storage();for(eid,ids)in &radial{if *eid<command.base_edges{edges[*eid].faces.extend(ids);}}for(offset,ids)in prepared_new.into_iter().enumerate(){edges[command.base_edges+offset].faces=ids;}storage.extend(faces);command.incidence=radial;redo.clear();undo.push(command);drop(_preparation);drop(_radial_charge);}}
 impl FaceOwner{
  pub fn new(mesh:Mesh)->Result<Self,String>{Self::new_with_budget(mesh,OwnerBudget::new(None))}
  pub fn new_with_budget(mesh:Mesh,budget:OwnerBudget)->Result<Self,String>{Ok(Self{owner:JournalOwner::new_with_budget(mesh,budget)?,undo:vec![],redo:vec![]})}
@@ -13,8 +16,9 @@ impl FaceOwner{
  pub fn budget(&self)->OwnerBudget{self.owner.budget()}
  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
  pub fn begin(&self)->Result<FaceTransaction,String>{Ok(FaceTransaction{edge:self.owner.try_begin()?,drafts:vec![],base_faces:self.mesh().faces.len(),base_edges:self.mesh().edges.len(),charge:self.budget().reserve(Kind::Staging,0)?,budget:self.budget(),failed:false,corners:0,attribute_bytes:0,attribute_charge:self.budget().reserve(Kind::Staging,0)?})}
- pub fn commit(&mut self,mut t:FaceTransaction)->Result<bool,String>{
-  if t.failed||t.edge.journal.admission_failed{return Err("Face transaction refused; staged work discarded".into());}if t.drafts.is_empty(){return Ok(false);}
+ pub fn commit(&mut self,t:FaceTransaction)->Result<bool,String>{let Some(prepared)=self.prepare(t)?else{return Ok(false)};prepared.apply();Ok(true)}
+ pub fn prepare(&mut self,mut t:FaceTransaction)->Result<Option<PreparedFaces<'_>>,String>{
+  if t.failed||t.edge.journal.admission_failed{return Err("Face transaction refused; staged work discarded".into());}if t.drafts.is_empty(){return Ok(None);}
   if t.base_faces!=self.mesh().faces.len()||t.base_edges!=self.mesh().edges.len(){return Err("Stale face transaction".into());}
   let prep=self.budget().reserve(Kind::Preparation,face_bound(t.corners,t.drafts.len())?)?;
   let mut faces=Vec::new();faces.try_reserve_exact(t.drafts.len()).map_err(|_|"Face publication records refused")?;
@@ -29,9 +33,8 @@ impl FaceOwner{
   let edge_total=t.base_edges.checked_add(t.edge.journal.added_edges.len()).ok_or("Edge extent overflow")?;
   let radial_bytes=(edge_total-t.base_edges).checked_mul(std::mem::size_of::<Vec<usize>>()).and_then(|n|radial.iter().filter(|x|x.0>=t.base_edges).try_fold(n,|n,x|x.1.len().checked_mul(std::mem::size_of::<usize>()).and_then(|bytes|n.checked_add(bytes)))).ok_or("New radial byte overflow")?;let _radial_charge=self.budget().reserve(Kind::Preparation,radial_bytes).map_err(|e|format!("New radial preparation: {e}"))?;let mut prepared_new=Vec::new();prepared_new.try_reserve_exact(edge_total-t.base_edges).map_err(|_|"New radial records refused")?;
   for eid in t.base_edges..edge_total{let ids=radial.binary_search_by_key(&eid,|x|x.0).ok().map(|i|&radial[i].1[..]).unwrap_or(&[]);let mut copy=Vec::new();copy.try_reserve_exact(ids.len()).map_err(|_|"New radial reservation refused")?;copy.extend_from_slice(ids);prepared_new.push(copy);}
-  t.edge.force_command=true;if !self.owner.commit(t.edge)?{return Err("Face/edge publication mismatch".into());}
-  {let(storage,edges)=self.owner.face_storage();for (eid,ids) in &radial{if *eid<t.base_edges{edges[*eid].faces.extend(ids);}}for (offset,ids) in prepared_new.into_iter().enumerate(){edges[t.base_edges+offset].faces=ids;}storage.extend(faces);}
-  self.redo.clear();self.undo.push(Command{base_faces:t.base_faces,base_edges:t.base_edges,faces:retained,face_count,corners:t.corners,incidence:radial,_charge:charge});drop(prep);Ok(true)
+  t.edge.force_command=true;let edge=self.owner.prepare(t.edge)?.ok_or("Face/edge publication mismatch")?;
+  Ok(Some(PreparedFaces{edge,undo:&mut self.undo,redo:&mut self.redo,faces,prepared_new,radial,command:Command{base_faces:t.base_faces,base_edges:t.base_edges,faces:retained,face_count,corners:t.corners,incidence:vec![],_charge:charge},_preparation:prep,_radial_charge}))
  }
  pub fn undo(&mut self)->Result<bool,String>{let Some(command)=self.undo.last()else{return Ok(false)};self.redo.try_reserve(1).map_err(|_|"Face redo history refused")?;
   if self.mesh().faces.len()!=command.base_faces.checked_add(command.face_count).ok_or("Face undo extent overflow")? || !command.faces.is_empty() || command.faces.capacity()<command.face_count{return Err("Face undo ownership mismatch".into());}
