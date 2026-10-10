@@ -10,6 +10,7 @@ struct Fixture {
     app: IngeTrazoApp,
     dir: std::path::PathBuf,
     mode: String,
+    initial_root_ids:Vec<String>,
 }
 impl App for Fixture {
     fn title() -> &'static str {
@@ -19,6 +20,7 @@ impl App for Fixture {
         let mut app = IngeTrazoApp::new();
         app.show_tray = false;
         app.native_gpu_viewport_enabled = true;
+        let mut initial_root_ids=Vec::new();
         let mode = std::env::var("INGETRAZO_CENTER_MODE").unwrap_or("curve".into());
         let radius = if mode == "tiny" { 0.01 } else { 1.2 };
         let center = DVec3::new(2., 3., 1.);
@@ -58,15 +60,18 @@ impl App for Fixture {
                 let mut outer=ingetrazo_core::groups::Group::new("linked outer context");outer.children.push(child);if std::env::var_os("INGETRAZO_CONTEXT_EXIT").is_some(){outer.transform=glam::DMat4::from_translation(DVec3::new(1.,-1.,0.));}
                 app.scene.groups.insert(0,outer);app.scene.make_component(app.scene.groups[0].id).unwrap();
                 let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=glam::DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);
+                initial_root_ids=app.scene.groups.iter().map(|g|g.id.to_string()).collect();
                 app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));app.begin_component_edit();
             }
             app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));
         }
         app.set_tool(if mode=="group"{ToolType::Move}else{ToolType::Line});
         app.mark_document_clean();
+        if initial_root_ids.is_empty(){initial_root_ids=app.scene.groups.iter().map(|g|g.id.to_string()).collect();}
         Self {
             app,
             dir: path.unwrap(),
+            initial_root_ids,
             mode,
         }
     }
@@ -108,7 +113,7 @@ impl App for Fixture {
             let mut committed_wire_segments=Vec::new();
             for group in &self.app.scene.groups{projected_wires(group,glam::DMat4::IDENTITY,&project,&mut committed_wire_segments);}
             let preview_wire_segments=self.app.active_tool.rubber_band_lines().iter().map(|(a,b)|[project(*a),project(*b)]).collect::<Vec<_>>();
-            let state = serde_json::json!({"selection_count":self.app.scene.selection.len(),"viewport_rect":[rect.left(),rect.top(),rect.width(),rect.height()],"committed_wire_segments":committed_wire_segments,"preview_wire_segments":preview_wire_segments,"active_world_centers":group_centers.iter().map(|p|self.app.scene.dimension_frame.transform_point3(DVec3::from_array(*p)).to_array()).collect::<Vec<_>>(),"root_child_counts":self.app.scene.groups.iter().map(|g|g.children.len()).collect::<Vec<_>>(),"root_child_world_centers":self.app.scene.groups.iter().map(|g|g.children.iter().map(|c|{let local=c.mesh.vertices.iter().map(|v|v.position).sum::<DVec3>()/c.mesh.vertices.len().max(1) as f64;(g.transform*c.transform).transform_point3(local).to_array()}).collect::<Vec<_>>()).collect::<Vec<_>>(),"context_depth":self.app.component_edit_stack.len(),"definitions":self.app.scene.component_definitions,"group_definitions":self.app.scene.groups.iter().map(|g|g.component_definition).collect::<Vec<_>>(),"group_centers":group_centers,"group_ids":self.app.scene.groups.iter().map(|g|g.id.to_string()).collect::<Vec<_>>(),"group_count":self.app.scene.groups.len(),"mode":self.mode,"vertices":self.app.scene.mesh.vertices.len(),"unused_vertices":self.app.scene.mesh.vertices.iter().filter(|v|v.edges.is_empty()).count(),"copy_probe_pixel":copy_probe,"copy_center":copy_center.map(|p|p.to_array()),"curves":self.app.scene.mesh.edges.iter().map(|e|e.curve_id).collect::<Vec<_>>(),"preview_lines":self.app.active_tool.rubber_band_lines().len(),"time":ctx.input(|i|i.time),"center":center.to_array(),"rim":project(rim),"center_pixel":project(center),"move_target":project(rim+DVec3::X*std::env::var("INGETRAZO_MOVE_DISTANCE").ok().and_then(|v|v.parse::<f64>().ok()).unwrap_or(1.)),"kind":self.app.snap_engine.current_inference().map(|s|format!("{:?}",s.kind)),"inference_point":self.app.snap_engine.current_inference().map(|s|s.point.to_array()),"memory":self.app.snap_engine.encouraged_points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"edges":self.app.scene.mesh.edges.len()+self.app.scene.groups.iter().map(|g|g.mesh.edges.len()).sum::<usize>(),"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"tool":format!("{:?}",self.app.active_tool_type),"revision":self.app.model_revision});
+            let state = serde_json::json!({"selection_count":self.app.scene.selection.len(),"viewport_rect":[rect.left(),rect.top(),rect.width(),rect.height()],"committed_wire_segments":committed_wire_segments,"preview_wire_segments":preview_wire_segments,"active_world_centers":group_centers.iter().map(|p|self.app.scene.dimension_frame.transform_point3(DVec3::from_array(*p)).to_array()).collect::<Vec<_>>(),"root_child_counts":self.app.scene.groups.iter().map(|g|g.children.len()).collect::<Vec<_>>(),"root_child_world_centers":self.app.scene.groups.iter().map(|g|g.children.iter().map(|c|{let local=c.mesh.vertices.iter().map(|v|v.position).sum::<DVec3>()/c.mesh.vertices.len().max(1) as f64;(g.transform*c.transform).transform_point3(local).to_array()}).collect::<Vec<_>>()).collect::<Vec<_>>(),"context_depth":self.app.component_edit_stack.len(),"root_ids":if self.app.component_edit_stack.is_empty(){self.app.scene.groups.iter().map(|g|g.id.to_string()).collect::<Vec<_>>()}else{self.initial_root_ids.clone()},"redo":self.app.redo_stack.len(),"history_context":self.app.scene.history_context,"definitions":self.app.scene.component_definitions,"group_definitions":self.app.scene.groups.iter().map(|g|g.component_definition).collect::<Vec<_>>(),"group_centers":group_centers,"group_ids":self.app.scene.groups.iter().map(|g|g.id.to_string()).collect::<Vec<_>>(),"group_count":self.app.scene.groups.len(),"mode":self.mode,"vertices":self.app.scene.mesh.vertices.len(),"unused_vertices":self.app.scene.mesh.vertices.iter().filter(|v|v.edges.is_empty()).count(),"copy_probe_pixel":copy_probe,"copy_center":copy_center.map(|p|p.to_array()),"curves":self.app.scene.mesh.edges.iter().map(|e|e.curve_id).collect::<Vec<_>>(),"preview_lines":self.app.active_tool.rubber_band_lines().len(),"time":ctx.input(|i|i.time),"center":center.to_array(),"rim":project(rim),"center_pixel":project(center),"move_target":project(rim+DVec3::X*std::env::var("INGETRAZO_MOVE_DISTANCE").ok().and_then(|v|v.parse::<f64>().ok()).unwrap_or(1.)),"kind":self.app.snap_engine.current_inference().map(|s|format!("{:?}",s.kind)),"inference_point":self.app.snap_engine.current_inference().map(|s|s.point.to_array()),"memory":self.app.snap_engine.encouraged_points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"edges":self.app.scene.mesh.edges.len()+self.app.scene.groups.iter().map(|g|g.mesh.edges.len()).sum::<usize>(),"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"tool":format!("{:?}",self.app.active_tool_type),"revision":self.app.model_revision});
             std::fs::write(
                 self.dir.join("state.tmp"),
                 serde_json::to_vec(&state).unwrap(),

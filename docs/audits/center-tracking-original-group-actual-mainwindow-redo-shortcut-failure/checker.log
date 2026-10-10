@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-history-rendered/scripts/check-rendered-move-group.py", line 159, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-history-rendered/scripts/check-rendered-move-group.py", line 145, in main
+    finished_redo=wait(lambda:state() if state()["undo"]==1 and state()["redo"]==0 and state()["context_depth"]==0 else None)
+  File "/tmp/ingetrazo-history-rendered/scripts/check-rendered-move-group.py", line 14, in wait
+    raise AssertionError("Timed out awaiting rendered event/state")
+AssertionError: Timed out awaiting rendered event/state
