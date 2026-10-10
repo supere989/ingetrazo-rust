@@ -1,0 +1,2 @@
+# Retained whole-image failure
+Actual NVIDIA original framebuffer versus the frozen 5f85e184 native RTX proof in ../native-image-planes. Strict RGBA whole-image comparison rejects 15 of 16 cases; hidden-layer is exact. This supersedes any implication that 80 selected samples establish whole-image parity. Visible source QPainter dashed image outlines are currently absent natively. Quadrant texture interiors also differ by up to two channel values, so adding outlines alone cannot establish parity. No threshold was relaxed.
