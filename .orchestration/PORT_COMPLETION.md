@@ -310,3 +310,5 @@ Reviewed parked-context deletion throughdf2cc797: fresh fourcases16states exact,
 ## Reviewed callback integration checkpoint
 
 Canonical source252704fb passes543 workspace tests/twoignored. Immutable backend-neutral CAD producer ownership, invalid palette/index rollback and retained mutation negative are adopted, with existing Vulkan dispatch preserved. Metal host/callback consumers remain isolated and require actual native presentation, pixels, lifecycle and owner-retirement proof. Current authoritative evidence is docs/audits/metal-callback-root-review; all37 full feature rows and five release gates remain OPEN.
+
+Canonical3f0d8854 presentation/controller codec integration:548PASS/twoignored, fresh runtime16parser/13reopen and savedview deletion PASS. All37rows/fivegates remainOPEN. Prior main8c40 VulkanCI and isolatedMetal897 native lifecycle failures retained as unresolved; follow-up audit required.

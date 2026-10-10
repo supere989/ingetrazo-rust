@@ -1,3 +1,5 @@
+   Compiling serde_json v1.0.151
+   Compiling ingetrazo-core v0.3.15 (/work/crates/ingetrazo-core)
 warning: function `visit_meshes` is never used
    --> crates/ingetrazo-core/src/screen_pick.rs:120:15
     |
@@ -7,5 +9,5 @@ warning: function `visit_meshes` is never used
     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
 warning: `ingetrazo-core` (lib) generated 1 warning
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
-     Running `/tmp/ingetrazo-presentation-root-target/debug/examples/presentation_codec docs/audits/document-presentation-ci/codec-original.json`
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.07s
+     Running `target/debug/examples/presentation_codec docs/audits/document-presentation-ci/codec-original.json`
