@@ -1,0 +1,47 @@
+{
+  "provenance": {
+    "rust_commit": "aba22420bb131858cdbbc40aad1fdad1ff5a4de8",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "hollow",
+      "magenta_fill_pixels": 14400,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "hollow-iso",
+      "magenta_fill_pixels": 6970,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "transparent-hollow",
+      "magenta_fill_pixels": 0,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "hollow-seam",
+      "magenta_fill_pixels": 15552,
+      "faces": 18,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    }
+  ],
+  "scope": "Original Qt OpenGL on Linux X11 Mesa; shared interior slab suppresses cap although closed control fills. A physical correction that excludes the slab is an intentional divergence. These are literal pixel classification controls, not broad rendering parity."
+}
