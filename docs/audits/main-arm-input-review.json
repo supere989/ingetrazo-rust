@@ -1,0 +1,9 @@
+{
+  "source": "039a5b63d1160011faaa196bfb3cd69af4e5645c",
+  "run_id": 38076274359,
+  "artifact_id": 11679465744,
+  "source_motion_modifier_retained": true,
+  "missing_metadata_cancels_motion": true,
+  "undo_preserved": true,
+  "scope": "Actual macOS egui-winit owned-window controlled event ingress. Real OS coalescing, physical hardware and full Metal host rendering remain open."
+}
