@@ -27,3 +27,8 @@ The native reader now admits bounded embedded PNG/JPEG assets and preserves orig
 
 
 Texture integrity admission additionally decodes each distinct embedded identity once and bounds aggregate retained raw asset bytes (including per-material duplicate ownership) to 256 MiB before scene publication; archive parsing applies the same cap before each image read. A header-valid truncated PNG is refused. Frozen original OpenSKP imports that malformed asset and publishes a texture whose QImage is null, so this refusal is an explicit integrity correction rather than malformed-input parity.
+
+
+## Positioned and projected VFF mapping
+
+Native decoding now follows the pinned seven-level per-side FTC record path and preserves front/back 3×3 matrices. Source-order adjugate inversion and projective q division feed the original affine recipe fit, including singular/horizon fallback and back-only face reversal. The VFF projected-drape continuity test groups identical material/rounded matrix keys, samples the first 80 faces in authored order, and selects plan XY only at the original eight-face and seam thresholds. Results are cached once per definition during placement planning. The named 32-row corpus includes perspective, independently painted sides, eight-face projected terrain and its seven-face nonprojected control. Nonvertical projected axes, legacy records, tinting and large textured face fit semantics remain required; no full SKP claim.

@@ -135,6 +135,7 @@ fn product(a: DMat4, b: DMat4) -> DMat4 {
     DMat4::from_cols_array(&out)
 }
 struct Planner<'a> {
+    projected: HashMap<usize, HashSet<u64>>,
     p: &'a Payload,
     ids: HashSet<u64>,
     proto_order: Vec<Key>,
@@ -158,7 +159,22 @@ impl Planner<'_> {
                 "Placement depth admission exceeded".into(),
             ));
         }
-        super::collect(self.p, d, x, paint, layer, mesh, &mut HashSet::new(), depth)?;
+        let key = d as *const Definition as usize;
+        if !self.projected.contains_key(&key) {
+            self.projected
+                .insert(key, textures::projected_faces(self.p, d)?);
+        }
+        super::collect(
+            self.p,
+            d,
+            x,
+            paint,
+            layer,
+            mesh,
+            &mut HashSet::new(),
+            depth,
+            &self.projected[&key],
+        )?;
         for ins in &d.instances {
             let child = definition(self.p, ins.definition)?;
             let next = product(x, matrix(&ins.matrix));
@@ -348,6 +364,7 @@ pub(super) fn append(p: &Payload, scene: &mut Scene) -> Result<(), SkpError> {
         }
     }
     let mut pl = Planner {
+        projected: HashMap::new(),
         p,
         ids,
         proto_order: Vec::new(),

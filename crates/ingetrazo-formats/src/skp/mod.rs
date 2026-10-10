@@ -36,6 +36,10 @@ pub struct Edge {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Face {
     #[serde(default)]
+    pub uv_transform: Option<[f64; 9]>,
+    #[serde(default)]
+    pub uv_transform_back: Option<[f64; 9]>,
+    #[serde(default)]
     pub normal: Option<[f64; 3]>,
     pub loops: Vec<Vec<(u64, bool)>>,
     pub flags: EntityFlags,
@@ -50,6 +54,8 @@ pub struct Instance {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Definition {
+    #[serde(default)]
+    pub face_order: Vec<u64>,
     pub name: String,
     pub vertices: BTreeMap<u64, [f64; 3]>,
     pub edges: BTreeMap<u64, Edge>,
@@ -211,6 +217,7 @@ fn collect(
     mesh: &mut Mesh,
     _stack: &mut HashSet<u64>,
     depth: usize,
+    projected: &HashSet<u64>,
 ) -> Result<(), SkpError> {
     if d.vertices.values().any(|v| !point(*v, x).is_finite()) {
         return Err(SkpError::Invalid(
@@ -228,7 +235,7 @@ fn collect(
     if d.billboard {
         return Err(SkpError::Unsupported("face-camera component".into()));
     }
-    for face in d.faces.values() {
+    for (face_id, face) in &d.faces {
         let flip = face.flags.material.is_none() && face.back_material.is_some();
         let material = face.flags.material.or(face.back_material).or(inh);
         let mut a = attrs(p, material)?;
@@ -277,7 +284,15 @@ fn collect(
             }
             loops.push(vertices);
         }
-        textures::bake(&mut a, face, d, &loops[0], mesh, flip)?;
+        textures::bake(
+            &mut a,
+            face,
+            d,
+            &loops[0],
+            mesh,
+            flip,
+            projected.contains(face_id),
+        )?;
         let holes = loops.split_off(1);
         let f = mesh
             .add_face(loops.remove(0), holes)
@@ -323,6 +338,17 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             return Err(SkpError::Invalid(
                 "Nonfinite or unrepresentable vertex".into(),
             ));
+        }
+        for face in d.faces.values() {
+            if face
+                .uv_transform
+                .iter()
+                .chain(face.uv_transform_back.iter())
+                .flatten()
+                .any(|v| !v.is_finite())
+            {
+                return Err(SkpError::Invalid("Nonfinite texture mapping".into()));
+            }
         }
         for ins in &d.instances {
             let x = matrix(&ins.matrix);
@@ -407,6 +433,7 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             &mut mesh,
             &mut HashSet::new(),
             0,
+            &textures::projected_faces(p, &p.root)?,
         )?;
         scene.groups.push(Group::with_mesh(&p.name, mesh));
     }

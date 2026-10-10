@@ -1,0 +1,131 @@
+{
+  "source_sha256": "c0d6ec9f52688deff40b04e069a1bfd039a8b69c83bda119beaeb58bdd35b7c9",
+  "openskp_revision": "291700bc213655a00461838de71e5f206311e619",
+  "cases": [
+    {
+      "name": "hole-paint-layer",
+      "sha256": "b37fd8759c9286112148a3f7833d6b27ef3a6cabbf9ec48e5a103f5e198926a4"
+    },
+    {
+      "name": "single-definition",
+      "sha256": "be51338ae6a15f26a86da104141f1071bda4e78b59cb89b4d78918b2fc92b007"
+    },
+    {
+      "name": "small-two-flat",
+      "sha256": "3a0e04d9a208024374bf2e8c21de1868b19204e82b887849ed8e7c4ac5709df0"
+    },
+    {
+      "name": "shared-eight",
+      "sha256": "4b77fc6a805bb4f9a29c2d14b6db234566fc58d98854710f5a281165e9438a12"
+    },
+    {
+      "name": "inherited-paint",
+      "sha256": "9fc7f73cba16260f3c233752caadcbed22a28b694f9f1ddf846929dc3c100db0"
+    },
+    {
+      "name": "texture-refusal",
+      "sha256": "913aaa6c1456d82deaed7577f48891ad95ff13ff93ae4205da2d43f751d37f4d"
+    },
+    {
+      "name": "nested-single-container",
+      "sha256": "66a589adba16d243573ef06953102839c3afde66a43ae21cd0138ffe0ac6f015"
+    },
+    {
+      "name": "nested-shared-child",
+      "sha256": "6176ee9d8d0ae0ce31117e5030862ccdcb81216a1bd0e5816fb66396862adc0c"
+    },
+    {
+      "name": "nested-shared-parent",
+      "sha256": "db95b5d607b2c9e33f0cece9ee9e737af34e46da270b9a78248494ded5f825a1"
+    },
+    {
+      "name": "nested-proto-in-proto",
+      "sha256": "a22003696e775007171fb6d55b0b6886f7324d41a493ca6771972b9ca8e0f24f"
+    },
+    {
+      "name": "nested-tagged-flat",
+      "sha256": "6e1205d069ca4fa2c495978a1f0100579bdab8dbaeec078edd3a852607b6c9d8"
+    },
+    {
+      "name": "nested-tagged-shared",
+      "sha256": "b78c582bd279e6ef9b333f9525875e356db05f91089c1c971dbc991a25a4eb67"
+    },
+    {
+      "name": "nested-inherited-paint",
+      "sha256": "52de06bc78d138ebf68d1161efc10b616acdfeea21bd3a03fd06c34403843421"
+    },
+    {
+      "name": "nested-reflected-scaled",
+      "sha256": "f73d95fea70f7305213b191a66b7f56e4d2d57bd88c29007b04945528e3e1fdb"
+    },
+    {
+      "name": "nested-equal-paint-protos",
+      "sha256": "16cf8eff26a35cb8e84f8499054ae4ee502ad7ff447748879608e78cde532b5d"
+    },
+    {
+      "name": "nested-fractional-transform",
+      "sha256": "515599a5680d851ef3acbc612f4c269d1fbf2c7b42ba606302b35e64c1a83c75"
+    },
+    {
+      "name": "texture-default-hole",
+      "sha256": "b9f0f21da086a3843774ce6bb6ab560cee7ad43bbc160051dd1801c01542dca1"
+    },
+    {
+      "name": "texture-sentinel-size",
+      "sha256": "8399e84d8612df479357e81f3b908dca4b186b79743054196579c5daf9d6dbe4"
+    },
+    {
+      "name": "texture-default-size",
+      "sha256": "7fc89cf2ff4876ccb24c5dca52ac71f9f8873e5c4ed7dd16c1cdb076cea6a0d6"
+    },
+    {
+      "name": "texture-sibling-fallback",
+      "sha256": "98994d14d5722cedb2f0ea0812922f463f862b97b1a74edbb5326f968b21f18f"
+    },
+    {
+      "name": "texture-shared-local",
+      "sha256": "adad65e769680f717c7fc7f71dc833ff9f7b898b6758772621f5b714d2e1c67c"
+    },
+    {
+      "name": "texture-nested-transform",
+      "sha256": "850413c7321946196380b46c8a7ba5bfcc2ae55cee282ee905fb94f7805fee98"
+    },
+    {
+      "name": "texture-downward-basis",
+      "sha256": "86be15195913ba1ed2b796515e2e0ad30be3fdcaac8e1b0edef53cf149b3c8e3"
+    },
+    {
+      "name": "positioned-identity",
+      "sha256": "8a0c58fd7051eb1d01661b3b920535db5d1063e551a873c3fade291c131f0d0d"
+    },
+    {
+      "name": "positioned-rotated",
+      "sha256": "e28be60eef2c2a7cd723ad5277e07c93628267091b0b9cb0ed5e06bbf0b83450"
+    },
+    {
+      "name": "positioned-perspective",
+      "sha256": "618aefeeecd1843f06e951ffd639040a5b2a85f532a6a9f36ac59ad76db5410a"
+    },
+    {
+      "name": "positioned-singular",
+      "sha256": "3d91c9d7bd045b07626b14f13ef64680405d1dc3c8cb33af3a22b7c028a19445"
+    },
+    {
+      "name": "positioned-back-only",
+      "sha256": "1798e80403c92433cf98063ebb010062bdd158fdefb73110483b9f63a86cf92b"
+    },
+    {
+      "name": "positioned-two-sides",
+      "sha256": "ae3347a456f7b47701f5e3a15b798f4ac24ddfb2773cb5c4820e521f0d3f8e8c"
+    },
+    {
+      "name": "projected-eight-terrain",
+      "sha256": "eeb017f658f7b0d83877214873fcf50b4f1edf375b00f883ddabba288754cf66"
+    },
+    {
+      "name": "positioned-seven-terrain",
+      "sha256": "db5f595bf6d0ac4a7e4072f6ca857234a691154557dc293b8e92e3307774a63e"
+    }
+  ],
+  "stage": "positioned-v1"
+}

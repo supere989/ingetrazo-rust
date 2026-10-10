@@ -14,8 +14,9 @@ from formats.skp import load_skp
 from formats.igz import load_into
 mandatory=['hole-paint-layer','single-definition','small-two-flat','shared-eight','inherited-paint','texture-refusal']
 manifest=json.loads((inputs/'manifest.json').read_text());
-if manifest.get('stage')in ('nested-v1','textures-v1'):mandatory+=['nested-single-container','nested-shared-child','nested-shared-parent','nested-proto-in-proto','nested-tagged-flat','nested-tagged-shared','nested-inherited-paint','nested-reflected-scaled','nested-equal-paint-protos','nested-fractional-transform']
-if manifest.get('stage')=='textures-v1':mandatory+=['texture-default-hole','texture-sentinel-size','texture-default-size','texture-sibling-fallback','texture-shared-local','texture-nested-transform','texture-downward-basis']
+if manifest.get('stage')in ('nested-v1','textures-v1','positioned-v1'):mandatory+=['nested-single-container','nested-shared-child','nested-shared-parent','nested-proto-in-proto','nested-tagged-flat','nested-tagged-shared','nested-inherited-paint','nested-reflected-scaled','nested-equal-paint-protos','nested-fractional-transform']
+if manifest.get('stage')in ('textures-v1','positioned-v1'):mandatory+=['texture-default-hole','texture-sentinel-size','texture-default-size','texture-sibling-fallback','texture-shared-local','texture-nested-transform','texture-downward-basis']
+if manifest.get('stage')=='positioned-v1':mandatory+=['positioned-identity','positioned-rotated','positioned-perspective','positioned-singular','positioned-back-only','positioned-two-sides','projected-eight-terrain','positioned-seven-terrain']
 assert [r['name']for r in manifest['cases']]==mandatory
 for row in manifest['cases']:assert hashlib.sha256((inputs/(row['name']+'.skp')).read_bytes()).hexdigest()==row['sha256']
 def ring(vertices):

@@ -63,11 +63,156 @@ fn fit(points: &[DVec3], uv: &[[f64; 2]]) -> Option<[f64; 8]> {
     }
     out.iter().all(|x| x.is_finite()).then_some(out)
 }
+fn positioned(
+    raw: &[[f64; 3]],
+    normal: [f64; 3],
+    matrix: [f64; 9],
+    sw: f64,
+    sh: f64,
+    projected: bool,
+) -> Option<Vec<[f64; 2]>> {
+    let m = [&matrix[0..3], &matrix[3..6], &matrix[6..9]];
+    let det = m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
+        - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+        + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+    if det.abs() < 1e-15 {
+        return None;
+    }
+    let inv = [
+        [
+            (m[1][1] * m[2][2] - m[1][2] * m[2][1]) / det,
+            (m[0][2] * m[2][1] - m[0][1] * m[2][2]) / det,
+            (m[0][1] * m[1][2] - m[0][2] * m[1][1]) / det,
+        ],
+        [
+            (m[1][2] * m[2][0] - m[1][0] * m[2][2]) / det,
+            (m[0][0] * m[2][2] - m[0][2] * m[2][0]) / det,
+            (m[0][2] * m[1][0] - m[0][0] * m[1][2]) / det,
+        ],
+        [
+            (m[1][0] * m[2][1] - m[1][1] * m[2][0]) / det,
+            (m[0][1] * m[2][0] - m[0][0] * m[2][1]) / det,
+            (m[0][0] * m[1][1] - m[0][1] * m[1][0]) / det,
+        ],
+    ];
+    let (x, y) = basis(normal);
+    raw.iter()
+        .map(|p| {
+            let p = DVec3::from_array(*p);
+            let (x2, y2) = if projected {
+                (p.x, p.y)
+            } else {
+                (p.dot(x), p.dot(y))
+            };
+            let u = x2 * inv[0][0] + y2 * inv[1][0] + inv[2][0];
+            let v = x2 * inv[0][1] + y2 * inv[1][1] + inv[2][1];
+            let q = x2 * inv[0][2] + y2 * inv[1][2] + inv[2][2];
+            if q.abs() < 1e-12 {
+                None
+            } else {
+                Some([u / q / sw, v / q / sh])
+            }
+        })
+        .collect()
+}
+// Python round uses decimal rounding of the binary value, rather than scaling
+// first (which can create new ties). Rust's fixed precision formatter does likewise.
+fn decimal_key(value: f64, digits: usize) -> u64 {
+    let rounded = format!("{value:.digits$}")
+        .parse::<f64>()
+        .expect("finite decimal");
+    if rounded == 0. {
+        0
+    } else {
+        rounded.to_bits()
+    }
+}
+pub(super) fn projected_faces(p: &Payload, d: &Definition) -> Result<HashSet<u64>, SkpError> {
+    let mut groups = BTreeMap::<(u64, [u64; 9]), Vec<(u64, &Face)>>::new();
+    let order = if d.face_order.is_empty() {
+        d.faces.keys().copied().collect::<Vec<_>>()
+    } else {
+        d.face_order.clone()
+    };
+    if order.len() != d.faces.len()
+        || order.iter().copied().collect::<HashSet<_>>().len() != order.len()
+    {
+        return Err(SkpError::Invalid("Invalid face ordering metadata".into()));
+    }
+    for id in order {
+        let f = d
+            .faces
+            .get(&id)
+            .ok_or_else(|| SkpError::Invalid("Unknown ordered face".into()))?;
+        let (Some(material), Some(matrix)) = (f.flags.material, f.uv_transform) else {
+            continue;
+        };
+        if p.material_names
+            .get(&material)
+            .and_then(|n| p.materials.get(n))
+            .is_none_or(|m| m.texture.is_none())
+        {
+            continue;
+        }
+        groups
+            .entry((material, matrix.map(|v| decimal_key(v, 1))))
+            .or_default()
+            .push((id, f));
+    }
+    let mut result = HashSet::new();
+    for ((material, _), faces) in groups {
+        if faces.len() < 8 {
+            continue;
+        }
+        let tex = p
+            .material_names
+            .get(&material)
+            .and_then(|n| p.materials.get(n))
+            .and_then(|m| m.texture.as_ref())
+            .unwrap();
+        let (sw, sh) = tile_size(tex.width, tex.height);
+        let discontinuity = |projected| -> Result<Option<f64>, SkpError> {
+            let mut at = BTreeMap::<[u64; 3], BTreeSet<[u64; 2]>>::new();
+            for (_, face) in faces.iter().take(80) {
+                let raw = ring(d, &face.loops[0])?;
+                let Some(uv) = positioned(
+                    &raw,
+                    face.normal.unwrap_or([0., 0., 1.]),
+                    face.uv_transform.unwrap(),
+                    sw / 0.0254,
+                    sh / 0.0254,
+                    projected,
+                ) else {
+                    return Ok(None);
+                };
+                for (point, uv) in raw.iter().zip(uv) {
+                    at.entry(point.map(|v| decimal_key(v, 1)))
+                        .or_default()
+                        .insert(uv.map(|v| decimal_key(v, 2)));
+                }
+            }
+            if at.is_empty() {
+                Ok(None)
+            } else {
+                Ok(Some(
+                    at.values().filter(|v| v.len() > 1).count() as f64 / at.len() as f64,
+                ))
+            }
+        };
+        if matches!((discontinuity(false)?,discontinuity(true)?),(Some(local),Some(plan)) if local>0.3 && plan<0.1)
+        {
+            result.extend(faces.iter().map(|(id, _)| *id));
+        }
+    }
+    Ok(result)
+}
 fn bake_entry(
     entry: &mut serde_json::Value,
     raw: &[[f64; 3]],
     world: &[DVec3],
     normal: [f64; 3],
+    matrix: Option<[f64; 9]>,
+    projected: bool,
 ) -> Result<(), SkpError> {
     let Some(tex) = entry.get_mut("texture") else {
         return Ok(());
@@ -85,17 +230,25 @@ fn bake_entry(
         .as_f64()
         .ok_or_else(|| SkpError::Invalid("Texture tile missing".into()))?
         / 0.0254;
-    let (x, y) = basis(normal);
-    let uv = raw
-        .iter()
-        .map(|v| {
-            let v = DVec3::from_array(*v);
-            [v.dot(x) / sw, v.dot(y) / sh]
-        })
-        .collect::<Vec<_>>();
+    let uv = if let Some(matrix) = matrix {
+        let Some(uv) = positioned(raw, normal, matrix, sw, sh, projected) else {
+            return Ok(());
+        };
+        uv
+    } else {
+        let (x, y) = basis(normal);
+        raw.iter()
+            .map(|v| {
+                let v = DVec3::from_array(*v);
+                [v.dot(x) / sw, v.dot(y) / sh]
+            })
+            .collect()
+    };
     if let Some(map) = fit(world, &uv) {
         tex["uvw"] = serde_json::json!(map);
-        tex["planar"] = serde_json::json!(true);
+        if matrix.is_none() {
+            tex["planar"] = serde_json::json!(true);
+        }
     }
     Ok(())
 }
@@ -106,6 +259,7 @@ pub(super) fn bake(
     outer: &[usize],
     mesh: &Mesh,
     flip: bool,
+    projected: bool,
 ) -> Result<(), SkpError> {
     if !attrs.contains_key("texture")
         && !attrs
@@ -124,10 +278,21 @@ pub(super) fn bake(
         .collect::<Vec<_>>();
     let n = face.normal.unwrap_or([0., 0., 1.]);
     let mut entry = serde_json::to_value(&*attrs).map_err(|e| SkpError::Invalid(e.to_string()))?;
-    bake_entry(&mut entry, &raw, &world, n)?;
+    bake_entry(
+        &mut entry,
+        &raw,
+        &world,
+        n,
+        if flip {
+            face.uv_transform_back
+        } else {
+            face.uv_transform
+        },
+        projected,
+    )?;
     if let Some(back) = entry.get_mut("back") {
         if back.is_object() {
-            bake_entry(back, &raw, &world, n)?;
+            bake_entry(back, &raw, &world, n, face.uv_transform_back, false)?;
         }
     }
     *attrs = serde_json::from_value(entry).map_err(|e| SkpError::Invalid(e.to_string()))?;
@@ -250,6 +415,21 @@ mod admission_tests {
         assert!(
             matches!(admit_assets(&payload), Err(SkpError::Invalid(s)) if s.contains("header"))
         );
+    }
+    #[test]
+    fn positioned_homogeneous_and_singular_source_boundaries() {
+        let raw = [[0., 0., 0.], [10., 0., 0.], [10., 10., 0.]];
+        let identity = [1., 0., 0., 0., 1., 0., 0., 0., 1.];
+        assert_eq!(
+            positioned(&raw, [0., 0., 1.], identity, 10., 20., false).unwrap(),
+            vec![[0., 0.], [1., 0.], [1., 0.5]]
+        );
+        assert!(positioned(&raw, [0., 0., 1.], [0.; 9], 10., 20., false).is_none());
+        let horizon = [1., 0., -0.1, 0., 1., 0., 0., 0., 1.];
+        // Inverse q=1+.1*x; x=-10 is the projective horizon.
+        assert!(positioned(&[[-10., 0., 0.]], [0., 0., 1.], horizon, 10., 20., false).is_none());
+        assert_eq!(decimal_key(-0.01, 1), decimal_key(0., 1));
+        assert_eq!(f64::from_bits(decimal_key(2.675, 2)), 2.67);
     }
     #[test]
     fn tile_fallback_and_normal_basis_match_source() {

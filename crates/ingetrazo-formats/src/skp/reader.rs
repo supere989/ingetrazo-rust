@@ -17,6 +17,38 @@ impl<'a> Node<'a> {
         self.children.iter().find(|n| n.tag == tag)
     }
 }
+fn uv_matrix(face: &Node<'_>, side: [u8; 2]) -> Result<Option<[f64; 9]>, SkpError> {
+    let Some(info) = face.child([0xd0, 7]).and_then(|n| n.child([0xdc, 5])) else {
+        return Ok(None);
+    };
+    let mut body = info.body;
+    for tag in [
+        [0xdd, 5],
+        [0xb1, 0x36],
+        [0xb2, 0x36],
+        [0x10, 0x27],
+        side,
+        [0x13, 0x27],
+        [0x15, 0x27],
+    ] {
+        let records = raw_nodes(body)?;
+        let Some(node) = records.iter().find(|n| n.tag == tag) else {
+            return Ok(None);
+        };
+        body = node.body;
+    }
+    if body.len() != 72 {
+        return Ok(None);
+    }
+    let mut result = [0.; 9];
+    for (value, bytes) in result.iter_mut().zip(body.chunks_exact(8)) {
+        *value = f64::from_le_bytes(bytes.try_into().unwrap());
+        if !value.is_finite() {
+            return Err(SkpError::Invalid("Nonfinite texture mapping".into()));
+        }
+    }
+    Ok(Some(result))
+}
 fn container(t: [u8; 2]) -> bool {
     matches!(
         t,
@@ -248,16 +280,12 @@ fn geometry(n: &Node<'_>, d: &mut Definition) -> Result<(), SkpError> {
             if loops.is_empty() {
                 return Err(SkpError::Invalid("Face lacks loops".into()));
             }
-            if n.child([0xd0, 7])
-                .and_then(|n| n.child([0xdc, 5]))
-                .is_some_and(|n| n.body.windows(2).any(|t| t == [0xb1, 0x36]))
-            {
-                d.unsupported.insert("positioned texture UV mapping".into());
-            }
             if d.faces
                 .insert(
                     id,
                     Face {
+                        uv_transform: uv_matrix(n, [0x11, 0x27])?,
+                        uv_transform_back: uv_matrix(n, [0x12, 0x27])?,
                         normal: n.child([0xad, 0x0d]).map(|n| vec3(n.body)).transpose()?,
                         loops,
                         flags: flags(n)?,
@@ -268,6 +296,7 @@ fn geometry(n: &Node<'_>, d: &mut Definition) -> Result<(), SkpError> {
             {
                 return Err(SkpError::Invalid("Duplicate face identity".into()));
             }
+            d.face_order.push(id);
         }
         [0x64, 0x19] => {
             let mut matrix = [0.; 12];
