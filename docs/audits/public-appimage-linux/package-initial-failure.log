@@ -1,0 +1,27 @@
+==> Building IngeTrazo 0.3.15 (Rust Native)...
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.09s
+==> Packaging portable tarball...
+Created: /tmp/ingetrazo-public-clean-acceptance/dist/IngeTrazo-0.3.15-linux-x86_64.tar.gz (8.1M)
+==> Packaging AppDir...
+==> Generating AppImage...
+Fetching appimagetool...
+appimagetool, continuous build (git version 854e19e), build 313 built on 2026-10-04 14:58:08 UTC
+file command is missing but required, please install it
+Error: No suitable fusermount binary found on the $PATH
+fuse: device not found, try 'modprobe fuse' first
+
+Cannot mount AppImage, please check your FUSE setup.
+You might still be able to extract the contents of this AppImage 
+if you run it with the --appimage-extract option. 
+See https://github.com/AppImage/AppImageKit/wiki/FUSE 
+for more information
+open dir error: No such file or directory

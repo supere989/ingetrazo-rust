@@ -1,0 +1,14 @@
+{
+  "source": "ed80f4a336e14abaa6025bfb523ce76bc598a0f7",
+  "artifacts": {
+    "IngeTrazo-0.3.15-linux-x86_64.tar.gz": {
+      "bytes": 8419706,
+      "sha256": "a8733ab8555b4892ca3ae4bae32de62a19db344bebcbec1e73a394106fea26e0"
+    },
+    "IngeTrazo-0.3.15-x86_64.AppImage": {
+      "bytes": 8632824,
+      "sha256": "2680c9351e3b4879c694936d8a90950b05c9c8132c6981ef752361d6aaffd63d"
+    }
+  },
+  "scope": "AppImage extract-and-run diagnostics and software Xvfb GUI; extracted packaged worker independent composer proof. Initial file/FUSE failure retained; file installed only in devbox and same downloaded appimagetool rerun. FUSE mounting, physical desktop, broad dependency portability and other OS acceptance remain open"
+}

@@ -12,6 +12,13 @@ APPDIR="$BUILD/IngeTrazo.AppDir"
 TARBALL="$DIST/IngeTrazo-$VERSION-linux-$ARCH.tar.gz"
 APPIMAGE="$DIST/IngeTrazo-$VERSION-$ARCH.AppImage"
 
+# appimagetool needs file even when running without FUSE.
+if ! command -v file >/dev/null 2>&1; then
+    echo "Error: AppImage packaging requires the file utility in the build environment." >&2
+    echo "Install the file package in your devbox, then rerun package.sh." >&2
+    exit 1
+fi
+
 echo "==> Building IngeTrazo $VERSION (Rust Native)..."
 cd "$ROOT"
 cargo build --locked --release -p ingetrazo-cli -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker

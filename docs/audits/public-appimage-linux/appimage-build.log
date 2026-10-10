@@ -1,0 +1,51 @@
+appimagetool, continuous build (git version 854e19e), build 313 built on 2026-10-04 14:58:08 UTC
+WARNING: appstreamcli command is missing, please install it if you want to use AppStream metadata
+Using architecture x86_64
+Deleting pre-existing .DirIcon
+Creating .DirIcon symlink based on information from desktop file
+WARNING: AppStream upstream metadata is missing, please consider creating it
+         in usr/share/metainfo/ingetrazo.appdata.xml
+         Please see https://www.freedesktop.org/software/appstream/docs/chap-Quickstart.html#sect-Quickstart-DesktopApps
+         for more information or use the generator at
+         https://docs.appimage.org/packaging-guide/optional/appstream.html#using-the-appstream-generator
+Generating squashfs...
+/tmp/ingetrazo-public-clean-acceptance/build/IngeTrazo.AppDir should be packaged as dist/IngeTrazo-0.3.15-x86_64.AppImage
+Downloading runtime file from https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64
+Downloaded runtime binary of size 944632
+Parallel mksquashfs: Using 32 processors
+Creating 4.0 filesystem on dist/IngeTrazo-0.3.15-x86_64.AppImage, block size 131072.
+[===============================================================|] 176/176 100%
+
+Exportable Squashfs 4.0 filesystem, zstd compressed, data block size 131072
+	compressed data, compressed metadata, compressed fragments,
+	compressed xattrs, compressed ids
+	duplicates are removed
+Filesystem size 7507.17 Kbytes (7.33 Mbytes)
+	34.34% of uncompressed filesystem size (21860.56 Kbytes)
+Inode table size 679 bytes (0.66 Kbytes)
+	54.98% of uncompressed inode table size (1235 bytes)
+Directory table size 233 bytes (0.23 Kbytes)
+	59.74% of uncompressed directory table size (390 bytes)
+Number of duplicate files found 2
+Number of inodes 17
+Number of files 7
+Number of fragments 1
+Number of symbolic links 1
+Number of device nodes 0
+Number of fifo nodes 0
+Number of socket nodes 0
+Number of directories 9
+Number of hard-links 0
+Number of ids (unique uids + gids) 1
+Number of uids 1
+	root (0)
+Number of gids 1
+	root (0)
+Embedding ELF...
+Marking the AppImage as executable...
+Embedding MD5 digest
+Success
+
+Please consider submitting your AppImage to AppImageHub, the crowd-sourced
+central directory of available AppImages, by opening a pull request
+at https://github.com/AppImage/appimage.github.io

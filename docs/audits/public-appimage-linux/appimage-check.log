@@ -1,0 +1,13 @@
+IngeTrazo 0.3.15
+  packaged   : yes (compiled Rust binary)
+  runtime    : Rust native (eframe/egui + OpenGL)
+  formats: igz   : found (native JSON/ZIP format 1 & 2)
+  formats: obj   : found (Wavefront OBJ import & export)
+  formats: stl   : found (Stereolithography binary & ASCII)
+  formats: dxf   : found (AutoCAD DXF 3DFACE)
+  formats: gltf  : found (glTF 2.0 binary GLB)
+  render engine  : found (HLR, wireframe, visual styles)
+  tools engine   : found (select, line, rect, pushpull, etc.)
+  topology       : found (shared-vertex manifold solid)
+
+OK
