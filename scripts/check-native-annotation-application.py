@@ -6,9 +6,9 @@ import argparse
 from owned_process_cleanup import stop_owned_helper
 parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--source",required=True);args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
-x=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
-assert select.select([x.stdout],[],[],5)[0],"Owned Xvfb startup timeout"
-display=":"+x.stdout.readline().strip();control=out/"control";control.mkdir(exist_ok=True)
+xvfb=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
+assert select.select([xvfb.stdout],[],[],5)[0],"Owned Xvfb startup timeout"
+display=":"+xvfb.stdout.readline().strip();control=out/"control";control.mkdir(exist_ok=True)
 env=dict(os.environ,DISPLAY=display,XDG_CONFIG_HOME=str(out/"config"),INGETRAZO_CAD2D_INTEGER_BLEND="1",INGETRAZO_ANNOTATION_APP_CONTROL="1",INGETRAZO_ANNOTATION_DEPTH_SAMPLE="0",INGETRAZO_ANNOTATION_ORACLE=str(Path(__file__).resolve().parents[1]/"docs/audits/native-annotation-source/original.json"),INGETRAZO_ANNOTATION_CONTROL_DIR=str(control))
 lib=C.CDLL("libX11.so.6");lib.XOpenDisplay.argtypes=[C.c_char_p];lib.XOpenDisplay.restype=C.c_void_p
 lib.XDefaultRootWindow.argtypes=[C.c_void_p];lib.XDefaultRootWindow.restype=C.c_ulong
@@ -44,27 +44,6 @@ def read_image(path):
  image=QImage(str(path));assert not image.isNull() and image.width()==1000 and image.height()==700,"Missing/unreadable/wrong-extent PNG"
  image=image.convertToFormat(QImage.Format_RGBA8888)
  return np.frombuffer(image.constBits(),np.uint8).reshape(700,image.bytesPerLine())[:,:1000*4].reshape(700,1000,4).copy()
-def reference(alternate=False,clear=False,second=True):
- image=QImage(640,400,QImage.Format_RGBA8888);image.fill(QColor("white"))
- if not clear:
-  def mul(x,a):
-   t=x*a+128;return (t+(t>>8))>>8
-  def pixel(value):
-   r,g,b,a=[mul(v,128)for v in value];return (a<<24)|(r<<16)|(g<<8)|b
-  first=QImage(20,1,QImage.Format_ARGB32_Premultiplied)
-  for x in range(20):first.setPixel(x,0,pixel([60,10,20,80]if x<10 else[10,50,30,90]))
-  later=QImage(20,1,QImage.Format_ARGB32_Premultiplied);later.fill(pixel([0,0,60,60]if alternate else[0,60,0,60]))
-  painter=QPainter(image);painter.drawImage(20,20,first)
-  if second:painter.drawImage(25,20,later)
-  painter.end()
- return image
-def pixels(image):
- image=image.convertToFormat(QImage.Format_RGBA8888)
- return np.frombuffer(image.constBits(),np.uint8).reshape(400,image.bytesPerLine())[:,:640*4].reshape(400,640,4).copy()
-def capture(name,expected):
- path=out/(name+".png");subprocess.run(["import","-display",display,"-window",str(window),str(path)],check=True,timeout=5)
- actual=read_image(path);different=np.any(actual!=expected,axis=2)
- return dict(name=name,image_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),different_pixels=int(different.sum()),state=state())
 rows=[];p=None
 try:
  with(out/"runtime.log").open("w")as log:
@@ -83,10 +62,12 @@ try:
      if fmt.value==32 and items.value==1 and C.cast(data,C.POINTER(C.c_ulong))[0]==p.pid:matches.append(children[i])
      lib.XFree(data)
     lib.XFree(name)
-  lib.XFree(children);assert len(matches)==1,f"Owned process window identity absent/ambiguous: {observed}";window=matches[0];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d);time.sleep(.3)
+  lib.XFree(children);assert len(matches)==1,f"Owned process window identity absent/ambiguous: {observed}";window=matches[0];before_resize=state()["submitted_serial"];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d);wait(lambda:state()["screen_size"]==[1000.0,700.0] and state()["submitted_serial"]>before_resize)
   def take(name):
    path=out/(name+".png");subprocess.run(["import","-display",display,"-window",str(window),str(path)],check=True,timeout=5);return read_image(path)
+  frozen_rect=state()["viewport"]
   def roi(image):
+   assert state()["viewport"]==frozen_rect,"Viewport changed during comparison"
    x0,y0,x1,y1=[int(v)for v in state()["viewport"]];return image[y0:y1,x0:x1]
   base=take("baseline");base_roi=roi(base);assert base_roi.size>0 and np.any(base_roi[:,:,:3]!=0),"Black startup cannot prove empty viewport"
   def action(nonce,name,held=False):
@@ -110,4 +91,4 @@ except BaseException as error:
  (out/"failure.json").write_text(json.dumps(dict(source_sha=args.source,error=repr(error),rows=rows,last_state=state()),indent=2)+"\n");raise
 finally:
  if p is not None:stop_owned_helper(p,out/"app-cleanup.json",timeout=5)
- lib.XCloseDisplay(d);stop_owned_helper(x,out/"xvfb-cleanup.json",timeout=5)
+ lib.XCloseDisplay(d);stop_owned_helper(xvfb,out/"xvfb-cleanup.json",timeout=5)

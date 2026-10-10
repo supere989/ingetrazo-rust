@@ -144,7 +144,7 @@ impl App for ApplicationProbe{
    App::prepare_gpu(&mut self.app,system,resize);
    if self.pressure{assert!(system.annotation_prepare_error.is_some(),"Actual app pressure unexpectedly published");self.pressure=false;self.held=true;}
   }
-  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len()});
+  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len()});
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());let temp=dir.join("state.tmp");std::fs::write(&temp,serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(temp,dir.join("state.json")).unwrap();
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Actual annotation app refusal: {error}");}
