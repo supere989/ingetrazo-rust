@@ -1,0 +1,193 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "latin",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "accents",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bold",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "italic",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "underline",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "wrap",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "newlines",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "center",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "right",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "serif",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "mono",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "arabic",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "hebrew",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "cjk",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "combining",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "kerns",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "serif_bold",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "arabic_run",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "hebrew_run",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "mixed_latin_cjk",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "mixed_cjk_rtl",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "mixed_scripts",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "spaces",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "tabs",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "nbsp",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "empty_paragraphs",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "long_word",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "mixed_wrapped",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "rtl_wrapped",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "fallback_underline",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "fallback_bold",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    }
+  ],
+  "invalid_style_preserves_destination": true,
+  "scope": "Production composer export controller, not OS dialog or rendered pointer proof"
+}

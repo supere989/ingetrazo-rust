@@ -1,0 +1,16 @@
+{
+  "production": "de1957d0",
+  "checker_correction": "ff3623dc",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "background_pages": 27,
+  "regression_paragraph_pages": 93,
+  "actual_ui_pages": 30,
+  "source_metrics_cases": 9,
+  "initial_failure": "RTL logical glyph order mismatch retained in paper-text-background-first-failure; no threshold changes",
+  "open": [
+    "dynamic fields",
+    "native Mac/Windows font providers",
+    "Text canvas/property UI",
+    "full P29"
+  ]
+}

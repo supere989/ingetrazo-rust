@@ -88,6 +88,7 @@ pub struct CachedFont {
     metadata: Metadata,
     italic: bool,
     bold: bool,
+    cap_height_26_6: i32,
     builds: Cell<u64>,
 }
 impl std::fmt::Debug for CachedFont {
@@ -180,6 +181,7 @@ impl CachedFont {
         }
         let shaper =
             PaperFont::new_with_outline_policy(bytes.clone(), key.face_index, Some(key.policy))?;
+        let cap_height_26_6 = shaper.cap_height_26_6(face.capital_height())?;
         let geometry = subset::GlyphStore::new(bytes, key.face_index)?;
         Ok(Self {
             key,
@@ -194,6 +196,7 @@ impl CachedFont {
             metadata,
             italic,
             bold,
+            cap_height_26_6,
             builds: Cell::new(0),
         })
     }
@@ -202,6 +205,9 @@ impl CachedFont {
     }
     pub fn covers_character(&self, ch: char) -> bool {
         self.shaper.covers_character(ch)
+    }
+    pub fn cap_height_26_6(&self) -> i32 {
+        self.cap_height_26_6
     }
     pub fn ascent_26_6(&self) -> i32 {
         self.shaper.ascent_26_6
