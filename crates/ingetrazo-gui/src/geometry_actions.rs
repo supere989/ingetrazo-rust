@@ -136,7 +136,7 @@ impl IngeTrazoApp {
                 if let Some(definition) = group.component_definition {
                     if let Err(error) = candidate.replace_component_definition(
                         definition,
-                        ingetrazo_core::components::ComponentDefinition {
+                        ingetrazo_core::components::ComponentDefinition {mesh_share:None,
                             mesh: ingetrazo_core::mesh::Mesh::new(),
                             children: pieces,
                         },

@@ -38,3 +38,23 @@ fn equal_authored_geometry_does_not_create_identity_and_unique_detaches() {
  scene.publish_mesh_share(token,changed).unwrap();assert_eq!(scene.groups[0].mesh.vertices[0].position,DVec3::Y);
  assert_eq!(scene.groups[1].mesh.vertices[0].position,DVec3::X);assert_eq!(scene.groups[2].mesh.vertices[0].position,DVec3::X);
 }
+
+#[test]
+fn tokenless_recovery_migration_links_only_definition_members_and_is_idempotent() {
+ let mut scene=Scene::new();let mut mesh=Mesh::new();mesh.add_vertex(DVec3::X);
+ let mut parent=Group::new("container");parent.children.push(Group::with_mesh("child",mesh.clone()));
+ scene.groups.push(parent);scene.make_component(scene.groups[0].id).unwrap();scene.groups.push(scene.groups[0].duplicate_instance());
+ scene.groups.push(Group::with_mesh("unrelated equal",mesh));
+ fn remove_tokens(value:&mut serde_json::Value) {
+  match value {serde_json::Value::Object(map)=>{map.remove("mesh_share");map.remove("mesh_shares");for value in map.values_mut(){remove_tokens(value);}},serde_json::Value::Array(items)=>for value in items {remove_tokens(value);},_=>{}}
+ }
+ let mut old=serde_json::to_value(&scene).unwrap();remove_tokens(&mut old);
+ let mut recovered:Scene=serde_json::from_value(old).unwrap();let placements=recovered.groups.iter().map(|g|(g.id,g.transform,g.children.iter().map(|c|c.id).collect::<Vec<_>>())).collect::<Vec<_>>();
+ assert!(recovered.migrate_legacy_mesh_shares().unwrap());let token=recovered.groups[0].children[0].mesh_share.unwrap();
+ assert_eq!(recovered.groups[1].children[0].mesh_share,Some(token));assert_eq!(recovered.groups[2].mesh_share,None);
+ assert_eq!(recovered.groups.iter().map(|g|(g.id,g.transform,g.children.iter().map(|c|c.id).collect::<Vec<_>>())).collect::<Vec<_>>(),placements);
+ let migrated=recovered.clone();assert!(!recovered.migrate_legacy_mesh_shares().unwrap());assert_eq!(recovered,migrated);
+ let mut changed=recovered.mesh_shares[&token].clone();changed.vertices[0].position=DVec3::Z;recovered.publish_mesh_share(token,changed).unwrap();
+ assert_eq!(recovered.groups[0].children[0].mesh.vertices[0].position,DVec3::Z);assert_eq!(recovered.groups[1].children[0].mesh.vertices[0].position,DVec3::Z);assert_eq!(recovered.groups[2].mesh.vertices[0].position,DVec3::X);
+ let mut broken=migrated.clone();broken.groups[0].component_definition=Some(Uuid::new_v4());let before=broken.clone();assert!(broken.migrate_legacy_mesh_shares().is_err());assert_eq!(broken,before);
+}

@@ -1,0 +1,207 @@
+{
+  "provenance": {
+    "rust_commit": "9fd5924ec9dbbebe5fd893132d4b4b11e9f3dc10",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "scope": "Actual Scene.begin_group_edit/_bake_container_xform/end_group_edit; direct ownMesh vertex edit or first face addition; no viewport gestures/History acceptance.",
+  "cases": [
+    {
+      "transformed": false,
+      "nonempty": false,
+      "private_mesh_after_entry": false,
+      "original_prototype_retained_by_sibling": true,
+      "selected_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_before": []
+    },
+    {
+      "transformed": false,
+      "nonempty": true,
+      "private_mesh_after_entry": false,
+      "original_prototype_retained_by_sibling": true,
+      "selected_vertices": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_vertices": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_before": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "transformed": true,
+      "nonempty": false,
+      "private_mesh_after_entry": false,
+      "original_prototype_retained_by_sibling": true,
+      "selected_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_before": []
+    },
+    {
+      "transformed": true,
+      "nonempty": true,
+      "private_mesh_after_entry": true,
+      "original_prototype_retained_by_sibling": true,
+      "selected_vertices": [
+        [
+          1.0,
+          -1.0,
+          2.0
+        ],
+        [
+          2.8410096168518066,
+          -0.21853774785995483,
+          0.0
+        ],
+        [
+          -0.17219340801239014,
+          1.761514663696289,
+          0.0
+        ]
+      ],
+      "sibling_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "sibling_before": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ]
+    }
+  ]
+}

@@ -825,7 +825,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     fn register_definitions(groups:&[Group],defs:&mut std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>) {
         for g in groups {
             if let Some(id)=g.component_definition {
-                defs.entry(id).or_insert_with(||ingetrazo_core::components::ComponentDefinition{mesh:g.mesh.clone(),children:g.children.clone()});
+                defs.entry(id).or_insert_with(||ingetrazo_core::components::ComponentDefinition{mesh_share:None,mesh:g.mesh.clone(),children:g.children.clone()});
             }
             register_definitions(&g.children,defs);
         }

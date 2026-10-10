@@ -6,6 +6,8 @@ use crate::{groups::Group,mesh::Mesh,scene::Scene};
 
 #[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub struct ComponentDefinition {
+    #[serde(default)]
+    pub mesh_share: Option<Uuid>,
     pub mesh: Mesh,
     /// Child placements are part of the definition. Their own component links
     /// are retained when this definition is placed or edited.
@@ -13,6 +15,54 @@ pub struct ComponentDefinition {
 }
 
 impl Scene {
+    /// Restore explicit prototype identities from older component recovery data.
+    /// Only existing component IDs/member paths establish identity. Geometry
+    /// equality verifies that cache; it never links unrelated authored groups.
+    pub fn migrate_legacy_mesh_shares(&mut self)->Result<bool,String> {
+        let mut candidate=self.clone();
+        let mut prototypes=std::collections::HashMap::<Vec<Uuid>,(Uuid,Mesh)>::new();
+        for (id,def) in &mut candidate.component_definitions {
+            let token=*def.mesh_share.get_or_insert_with(Uuid::new_v4);
+            prototypes.insert(vec![*id],(token,def.mesh.clone()));
+        }
+        fn templates(groups:&mut [Group],prefix:&[Uuid],prototypes:&mut std::collections::HashMap<Vec<Uuid>,(Uuid,Mesh)>) {
+            for group in groups {
+                if group.component_definition.is_some() {continue;}
+                let mut key=prefix.to_vec();key.push(group.definition_member.unwrap_or(group.id));
+                let token=*group.mesh_share.get_or_insert_with(Uuid::new_v4);
+                prototypes.insert(key.clone(),(token,group.mesh.clone()));
+                templates(&mut group.children,&key,prototypes);
+            }
+        }
+        for (id,def) in &mut candidate.component_definitions {templates(&mut def.children,&[*id],&mut prototypes);}
+        for (token,mesh) in prototypes.values() {
+            if !candidate.mesh_shares.contains_key(token) {candidate.mesh_shares.insert(*token,mesh.clone());}
+        }
+        fn apply(groups:&mut [Group],prefix:Option<Vec<Uuid>>,prototypes:&std::collections::HashMap<Vec<Uuid>,(Uuid,Mesh)>,shares:&mut std::collections::HashMap<Uuid,Mesh>)->Result<(),String> {
+            for group in groups {
+                let key=if let Some(id)=group.component_definition {
+                    if !prototypes.contains_key(&vec![id]) {return Err("legacy component definition not found".into());}
+                    Some(vec![id])
+                } else {prefix.as_ref().map(|prefix|{let mut key=prefix.clone();key.push(group.definition_member.unwrap_or(group.id));key})};
+                if group.mesh_share.is_none() {
+                    if let Some(key)=&key {
+                        let matching=prototypes.get(key).filter(|(_,mesh)|serde_json::to_value(mesh).ok()==serde_json::to_value(&group.mesh).ok());
+                        let token=matching.map(|(token,_)|*token).unwrap_or_else(Uuid::new_v4);
+                        group.mesh_share=Some(token);shares.entry(token).or_insert_with(||group.mesh.clone());
+                    }
+                } else if let Some(token)=group.mesh_share {
+                    shares.entry(token).or_insert_with(||group.mesh.clone());
+                }
+                apply(&mut group.children,key,prototypes,shares)?;
+            }
+            Ok(())
+        }
+        apply(&mut candidate.groups,None,&prototypes,&mut candidate.mesh_shares)?;
+        for (id,def) in &mut candidate.component_definitions {apply(&mut def.children,Some(vec![*id]),&prototypes,&mut candidate.mesh_shares)?;}
+        if candidate==*self {return Ok(false);}
+        candidate.bump_version();*self=candidate;Ok(true)
+    }
+
     /// Register explicit source-prototype identity without changing component flags.
     /// Codec callers assign the same token only for the same native proto identity.
     pub fn register_mesh_share(&mut self, id:Uuid, mesh:Mesh)->Result<(),String> {
@@ -41,17 +91,9 @@ impl Scene {
                 refresh(&mut group.children,id,mesh);
             }
         }
-        fn linked_definitions(groups:&[Group],id:Uuid,found:&mut HashSet<Uuid>) {
-            for group in groups {
-                if group.mesh_share==Some(id) {if let Some(def)=group.component_definition {found.insert(def);}}
-                linked_definitions(&group.children,id,found);
-            }
-        }
-        let mut linked=HashSet::new();linked_definitions(&self.groups,id,&mut linked);
-        for def in self.component_definitions.values() {linked_definitions(&def.children,id,&mut linked);}
         refresh(&mut self.groups,id,&mesh);
-        for (definition_id,def) in &mut self.component_definitions {
-            if linked.contains(definition_id) {def.mesh=mesh.clone();}
+        for def in self.component_definitions.values_mut() {
+            if def.mesh_share==Some(id) {def.mesh=mesh.clone();}
             refresh(&mut def.children,id,&mesh);
         }
         self.mesh_shares.insert(id,mesh);self.bump_version();Ok(())
@@ -77,7 +119,7 @@ impl Scene {
         }
         register(group,&mut self.mesh_shares);
         for child in &mut group.children {child.definition_member=Some(child.id);}
-        self.component_definitions.insert(id,ComponentDefinition {mesh:group.mesh.clone(),children:group.children.clone()});
+        self.component_definitions.insert(id,ComponentDefinition {mesh_share:group.mesh_share,mesh:group.mesh.clone(),children:group.children.clone()});
         group.component_definition=Some(id);self.bump_version();Ok(id)
     }
 
@@ -173,7 +215,7 @@ impl Scene {
                 detach_children(child,defs);
                 if child.component_definition.is_some() {
                     let id=Uuid::new_v4();
-                    defs.insert(id,ComponentDefinition{mesh:child.mesh.clone(),children:child.children.clone()});
+                    defs.insert(id,ComponentDefinition{mesh_share:child.mesh_share,mesh:child.mesh.clone(),children:child.children.clone()});
                     child.component_definition=Some(id);
                 }
             }
@@ -293,7 +335,7 @@ mod tests {
         let definition=scene.make_component(id).unwrap();let before=scene.clone();
         let mut replacement=scene.component_definitions[&definition].clone();replacement.children.push(scene.groups[0].duplicate_instance());
         assert!(scene.replace_component_definition(definition,replacement).is_err());assert_eq!(scene,before);
-        assert!(scene.replace_component_definition(Uuid::new_v4(),ComponentDefinition{mesh:Mesh::new(),children:vec![]}).is_err());
+        assert!(scene.replace_component_definition(Uuid::new_v4(),ComponentDefinition{mesh_share:None,mesh:Mesh::new(),children:vec![]}).is_err());
         assert_eq!(scene,before);
     }
 }

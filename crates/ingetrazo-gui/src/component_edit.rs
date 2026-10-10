@@ -9,6 +9,7 @@ pub struct ComponentEditSession {
     original_undo: Vec<Scene>,
     original_redo: Vec<Scene>,
     group_id: uuid::Uuid,
+    private_container_mesh: Option<uuid::Uuid>,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
@@ -59,11 +60,16 @@ impl IngeTrazoApp {
         // Retiring Move may restore its transient placement. Capture the edit
         // from the restored entity, not the validated live-preview clone.
         let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
+        if let Err(error)=self.scene.migrate_legacy_mesh_shares() {self.status_message=error;return;}
+        // Migration may add identities but does not replace placement geometry.
+        let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
         self.scene.refresh_dimensions();
         let mut session=ComponentEditSession{
             original_scene:self.scene.clone(),original_camera:self.camera.clone(),
             original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
-            group_id:group.id,dimension_baseline:vec![],section_baseline:vec![],
+            group_id:group.id,
+            private_container_mesh:if !group.children.is_empty() && !group.mesh.vertices.is_empty() && group.transform!=glam::DMat4::IDENTITY {Some(uuid::Uuid::new_v4())} else {None},
+            dimension_baseline:vec![],section_baseline:vec![],
         };
         let mut edit=Scene::new();
         edit.mesh=group.mesh;edit.groups=group.children;
@@ -100,14 +106,14 @@ impl IngeTrazoApp {
             self.status_message="Edited instance no longer exists".into();return;
         };
         let old=&candidate.groups[group_index];
-        let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
+        let changed=session.private_container_mesh.is_some() || old.mesh!=self.scene.mesh || old.children!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
             || candidate.component_definitions!=self.scene.component_definitions
             || candidate.mesh_shares!=self.scene.mesh_shares
             || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed {
-            let replacement=ComponentDefinition{mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
+            let replacement=ComponentDefinition{mesh_share:None,mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
             // Mesh publication and placement authoring are separate operations:
             // the original container owns its child list, while placed leaves
             // retain explicit prototype sharing (even component=false).
@@ -128,9 +134,10 @@ impl IngeTrazoApp {
             for (token,mesh) in &self.scene.mesh_shares {
                 if candidate.mesh_shares.get(token)!=Some(mesh) {meshes.insert(*token,mesh.clone());}
             }
-            let root_token=candidate.groups[group_index].mesh_share;
+            let root_token=session.private_container_mesh.or(candidate.groups[group_index].mesh_share);
+            if session.private_container_mesh.is_some() {candidate.groups[group_index].mesh_share=root_token;}
             if let Some(token)=root_token {
-                if candidate.groups[group_index].mesh!=replacement.mesh {meshes.insert(token,replacement.mesh.clone());}
+                if session.private_container_mesh.is_some() || candidate.groups[group_index].mesh!=replacement.mesh {meshes.insert(token,replacement.mesh.clone());}
             }
             // Import newly authored identities, never infer them from equal meshes.
             for (token,mesh) in &meshes {

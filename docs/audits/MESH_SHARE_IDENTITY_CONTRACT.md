@@ -46,3 +46,30 @@ This followup is tested on explicit identities produced by Make Component.
 Native-proto decoding and migration of older tokenless component recovery data
 remain required codec/compatibility followups. Actual rendered child-list exit
 proof remains pending; earlier rendered Move-only Finish evidence is retained.
+
+## Recovery and private own-mesh followup
+
+`ComponentDefinition.mesh_share: Option<Uuid>` identifies its cached root Mesh;
+publication updates that cache only by explicit token rather than inferring a
+prototype from component flags. Minimal constructor defaults in other modules
+are schema compatibility edits, not codec behavior changes.
+
+`Scene.migrate_legacy_mesh_shares()` atomically restores old component recovery
+identities from existing definition IDs and child-member paths. Cache geometry
+is verified within that identity; equal unrelated geometry stays independent.
+Divergent old placement caches receive private tokens. Repeated migration is
+idempotent; missing definitions fail without changing the document. GUI edit
+entry invokes migration before capturing the local session. Recovery/legacy
+codec callers should invoke this public method after deserialization as well.
+
+Actual original Scene entry proves nonidentity + nonempty own Mesh is copied
+while its sibling keeps the prototype. Native edit sessions allocate a fresh
+private token for that selected container, including unchanged Finish; Cancel
+restores the original session snapshot. Empty own Mesh and identity placement
+keep sharing. Frozen `component-own-mesh-source.json` includes four source
+controls. GUI controls verify private-token selection, untouched sibling and
+cached definition, and Undo/Redo. These controls use direct numeric Mesh edits;
+world-space authoring into a transformed empty container still needs a distinct
+coordinate-equivalence control because original entry bakes the parent matrix
+into children and clears it, whereas native local editing retains that frame.
+No full transformed-empty authoring or rendered own-Mesh parity is claimed.

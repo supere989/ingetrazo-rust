@@ -744,7 +744,7 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
         for (id, mesh) in fused_definitions {
             scene.component_definitions.insert(
                 id,
-                ingetrazo_core::components::ComponentDefinition {
+                ingetrazo_core::components::ComponentDefinition {mesh_share:None,
                     mesh,
                     children: vec![],
                 },
@@ -1058,7 +1058,7 @@ pub(crate) fn scene_from_xml_at(
         for (_, (id, mesh)) in prototypes {
             scene.component_definitions.insert(
                 id,
-                ingetrazo_core::components::ComponentDefinition {
+                ingetrazo_core::components::ComponentDefinition {mesh_share:None,
                     mesh,
                     children: vec![],
                 },

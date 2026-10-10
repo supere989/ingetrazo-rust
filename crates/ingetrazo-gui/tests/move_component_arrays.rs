@@ -100,3 +100,23 @@ fn container_finish_copy_array_delete_match_source_independent_lists() {
   app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.mesh_shares,after.mesh_shares);
  }
 }
+
+#[test]
+fn transformed_nonempty_container_own_mesh_detaches_source_prototype() {
+ let source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-own-mesh-source.json")).unwrap();
+ for transformed in [false,true] {for nonempty in [false,true] {
+  let mut app=IngeTrazoApp::new();let mut parent=Group::new("container");
+  if nonempty {let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|parent.mesh.add_vertex(p));parent.mesh.add_face(v.to_vec(),vec![]).unwrap();}
+  if transformed {parent.transform=DMat4::from_translation(DVec3::new(1.,-1.,0.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(2.,3.,1.));}
+  parent.children.push(Group::new("child"));app.scene.groups.push(parent);let definition=app.scene.make_component(app.scene.groups[0].id).unwrap();
+  let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();
+  app.begin_component_edit();if nonempty {app.scene.mesh.vertices[0].position.z+=2.;} else {let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|app.scene.mesh.add_vertex(p));app.scene.mesh.add_face(v.to_vec(),vec![]).unwrap();}
+  app.finish_component_edit();let private=transformed&&nonempty;
+  assert_eq!(app.scene.groups[0].mesh_share!=app.scene.groups[1].mesh_share,private);
+  let expected=source["cases"].as_array().unwrap().iter().find(|c|c["transformed"]==transformed&&c["nonempty"]==nonempty).unwrap();
+  for (actual,expected) in app.scene.groups[1].mesh.vertices.iter().zip(expected["sibling_vertices"].as_array().unwrap()) {let e=DVec3::new(expected[0].as_f64().unwrap(),expected[1].as_f64().unwrap(),expected[2].as_f64().unwrap());assert!(actual.position.distance(e)<1e-6);}
+  assert_eq!(app.scene.groups[1].mesh.vertices.len(),expected["sibling_vertices"].as_array().unwrap().len());
+  if private {assert_eq!(app.scene.groups[1],before.groups[1]);assert_eq!(app.scene.component_definitions[&definition],before.component_definitions[&definition]);}
+  let after=app.scene.clone();assert_eq!(app.undo_stack.len(),1);app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
+ }}
+}
