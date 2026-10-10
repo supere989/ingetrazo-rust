@@ -33,6 +33,8 @@ jobs:
           with open('raw-metal-evidence/execution.log','w') as log:
               subprocess.run(['target/debug/examples/egui_raw_probe','--output=raw-metal-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
           PYTHON
+      - name: Validate native CoreText face identity and warm ownership
+        run: cargo run --locked -p ingetrazo-formats --example paper_coretext_provider_fixture -j2 > raw-metal-evidence/coretext.json 2> raw-metal-evidence/coretext-build.log
       - name: Capture actual application Canvas window
         run: python3 scripts/check-metal-canvas-host.py target/debug/examples/native_metal_document_probe raw-metal-evidence/canvas-host
       - uses: actions/upload-artifact@v4

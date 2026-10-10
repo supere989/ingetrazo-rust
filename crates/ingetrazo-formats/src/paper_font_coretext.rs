@@ -77,11 +77,13 @@ pub(super) fn match_font(request:&Request)->Result<(PathBuf,i32,FtPolicy,Option<
  use std::io::Read;
  let mut bytes=Vec::new();bytes.try_reserve_exact(metadata.len() as usize).map_err(|_|"CoreText font file allocation failed")?;
  std::fs::File::open(&path).map_err(|e|e.to_string())?.take(crate::paper_text::MAX_FONT_BYTES as u64+1).read_to_end(&mut bytes).map_err(|e|e.to_string())?;
+ if bytes.len()>crate::paper_text::MAX_FONT_BYTES{return Err("CoreText font grew beyond byte budget".into())}
  let count=ttf_parser::fonts_in_collection(&bytes).unwrap_or(1);
  if count>4096{return Err("CoreText font collection budget exceeded".into())}
  for index in 0..count{
   let face=ttf_parser::Face::parse(&bytes,index).map_err(|_|"Invalid CoreText font face")?;
   if face.names().into_iter().any(|n|n.name_id==ttf_parser::name_id::POST_SCRIPT_NAME&&n.to_string().as_deref()==Some(postscript.as_str())){
+   if face.is_bold()!=request.bold||face.is_italic()!=request.italic{return Err("CoreText style requires unsupported synthetic or variable face traits".into())}
    if !request.required_chars.iter().all(|ch|face.glyph_index(*ch).is_some()){return Err("CoreText file face does not cover its matched character set".into())}
    return Ok((path,index as i32,FtPolicy{hinting:Hinting::None,force_auto_hint:false},Some(std::sync::Arc::from(bytes))))
   }
