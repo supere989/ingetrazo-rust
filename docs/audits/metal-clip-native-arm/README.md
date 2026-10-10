@@ -1,0 +1,5 @@
+# Fresh native Apple Silicon clip-stage failure
+
+Actual CI38051649729 source63d53e1e ARM job114211827864 artifact11669389366 is retained in full, with ZIP digest in provenance.json. All three actual shared-application lifecycle choices remain at phase0, zero submissions and zero input events. The improved admission message identifies vertex12 of a mesh with valid indices and finite clip as the offender. Thus unbounded clip admission has not resolved the actual painting refusal; exact offending vertex values must be diagnosed before changing admission. No vertex or geometry bounds are broadened.
+
+The independent presentation probe submitted4/retired1/displayed0/skipped1 and retained3 actually Completed commands with unobserved callbacks. Its unchanged deadline failed; visible Cocoa geometry does not replace positive presentation ownership. Actual generic egui draws, sampler contracts, compressed decoding and asynchronous mips still pass in the same artifact. Those bounded offscreen successes do not establish native host readiness or full parity.
