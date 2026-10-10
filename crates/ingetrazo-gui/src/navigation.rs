@@ -1,6 +1,6 @@
 //! Camera navigation state; geometry and model history stay in their existing owners.
 use glam::{DVec2,DVec3};
-use ingetrazo_core::{camera::OrbitCamera,math::{Plane,Ray},screen_pick,walkthrough::{self,WalkModifiers}};
+use ingetrazo_core::{camera::OrbitCamera,math::{Plane,Ray},screen_pick,visible_ray_index::VisibleRayIndex,walkthrough::{self,WalkModifiers}};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
 pub enum Mode { Position,Look,Walk }
 impl Mode { pub fn hint(self)->&'static str {match self {Self::Position=>"Position Camera — click or drag from where to stand",Self::Look=>"Look Around — drag to turn",Self::Walk=>"Walk — drag; Ctrl run, Shift rise/strafe, Alt through walls"}} }
@@ -8,11 +8,24 @@ pub struct Navigation {
  pub mode:Option<Mode>, pub eye_height:f64,
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
  dragged:bool, pub base:Option<DVec3>, accumulator:f64,
+ collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
 }
 impl Default for Navigation {
- fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,accumulator:0.}}
+ fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,accumulator:0.,collision_key:None,collision:None,collision_error:None}}
 }
 impl Navigation {
+ // Remember refused admission until revision changes; direct queries preserve correctness.
+ fn prepare_collision(&mut self,scene:&ingetrazo_core::scene::Scene,model_revision:u64){
+  let key=(scene.version,scene.view_version,model_revision);
+  if self.collision_key==Some(key){return;}
+  self.collision=None;self.collision_error=None;self.collision_key=Some(key);
+  match VisibleRayIndex::new(scene,128*1024*1024){
+   Ok(index)=>self.collision=Some(index),Err(error)=>self.collision_error=Some(error),
+  }
+ }
+ fn distance(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<f64>{
+  match &self.collision {Some(index)=>index.distance(scene,ray),None=>screen_pick::hover_face(scene,ray).map(|h|h.2)}
+ }
  pub fn cancel(&mut self){self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.accumulator=0.;}
  pub fn activate(&mut self,mode:Mode){self.cancel();self.mode=Some(mode);}
  pub fn place(&mut self,camera:&mut OrbitCamera,base:DVec3,look:Option<DVec3>)->bool{
@@ -54,10 +67,11 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  let Some(mode)=app.navigation.mode else{return};
  let pointer=ui.input(|i|i.pointer.clone());
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();return;}
+ if matches!(mode,Mode::Position|Mode::Walk){app.navigation.prepare_collision(&app.scene,app.model_revision);}
  let position=pointer.hover_pos().map(|p|DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64));
  let world=position.filter(|_|mode==Mode::Position).map(|p|{
   let ray=app.camera.screen_to_ray(p.x,p.y,rect.width()as f64,rect.height()as f64);
-  screen_pick::hover_face(&app.scene,&ray).map(|hit|hit.0).or_else(||Plane::new(DVec3::ZERO,DVec3::Z).intersect_ray(&ray).filter(|t|*t>0.).map(|t|ray.at(t)))
+  app.navigation.distance(&app.scene,&ray).map(|t|ray.at(t)).or_else(||Plane::new(DVec3::ZERO,DVec3::Z).intersect_ray(&ray).filter(|t|*t>0.).map(|t|ray.at(t)))
  });
  if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
   if let Some(p)=position {if mode!=Mode::Position||world.flatten().is_some(){
@@ -76,8 +90,8 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
      let modifiers=ui.input(|i|WalkModifiers{run:i.modifiers.ctrl,shift:i.modifiers.shift,through_walls:i.modifiers.alt});
      while app.navigation.accumulator>=0.033{
       app.navigation.accumulator-=0.033;
-      let scene=&app.scene;
-      walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|screen_pick::hover_face(scene,&Ray::new(o,d)).map(|h|h.2));
+      let scene=&app.scene;let navigation=&app.navigation;
+      walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));
      }
      ui.ctx().request_repaint_after(std::time::Duration::from_millis(33));
     }
@@ -136,5 +150,27 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   restarted.attach_session_store(crate::session_state::SessionStore::isolated(&root));
   assert_eq!(restarted.navigation.eye_height,1.85);
   std::fs::remove_dir_all(root).unwrap();
+ }
+}
+
+#[cfg(test)]mod collision_cache_tests {
+ use super::*;
+ #[test]fn warm_camera_queries_reuse_index_and_history_revision_rebuilds(){
+  let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;
+  let ids=[DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(1.,1.,0.),DVec3::new(-1.,1.,0.)].map(|p|app.scene.mesh.add_vertex(p));
+  app.scene.mesh.add_face(ids.to_vec(),vec![]);
+  app.navigation.prepare_collision(&app.scene,app.model_revision);
+  assert_eq!(app.navigation.collision.as_ref().unwrap().triangle_count(),2);
+  let key=app.navigation.collision_key;
+  for i in 0..1000{
+   app.camera.turn(0.01,0.);app.navigation.prepare_collision(&app.scene,app.model_revision);
+   assert_eq!(app.navigation.collision_key,key);
+   assert_eq!(app.navigation.distance(&app.scene,&Ray::new(DVec3::new((i%10)as f64/10.,0.,2.),-DVec3::Z)),Some(2.));
+  }
+  app.scene.mesh.clear();app.model_revision+=1;
+  app.navigation.prepare_collision(&app.scene,app.model_revision);
+  assert_ne!(app.navigation.collision_key,key);
+  assert_eq!(app.navigation.collision.as_ref().unwrap().triangle_count(),0);
+  assert_eq!(app.navigation.distance(&app.scene,&Ray::new(DVec3::Z,-DVec3::Z)),None);
  }
 }
