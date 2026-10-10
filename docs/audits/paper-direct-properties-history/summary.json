@@ -1,0 +1,13 @@
+{
+  "production_commit": "b1576f3c",
+  "source_fixture_commit": "831d7567",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "gui_tests": "143 passed, 1 ignored",
+  "source_native_history_exact_controls": 5,
+  "actual_original_color_dialog_and_undo": true,
+  "actual_native_property_shortcuts_and_item_add_undo_redo": true,
+  "pdf_comparisons_exact": 12,
+  "native_ui_binary_sha256": "ebe89c9d63d970ac981178fcabbc33e74aba7e820ecd6858f70cd04d12a0e4ce",
+  "literal_source_property_history_difference_resolved_for": "Page paper size/orientation and all border properties",
+  "scope": "Item snapshots retain current direct page/border fields; unrelated item-command Undo/Redo and pending Redo stay ordered. Runtime/archived border fields preserved. Cancellation retention is a native integrity control, not claimed exact original drag Escape parity. Full Text canvas/layout/font and P29 remain open."
+}

@@ -1,0 +1,1969 @@
+{
+  "warm_dialog_export": {
+    "current_button": [
+      820.0,
+      91.0
+    ],
+    "all_button": [
+      941.0,
+      91.0
+    ],
+    "current_clicks": 1,
+    "all_clicks": 2,
+    "status": "Exported sheets: 3 \u2014 /tmp/ingetrazo-paper-direct-property-native-final/warm-all.pdf",
+    "error_dialog": null,
+    "error_ok": null,
+    "export_result": "Exported sheets: 3 \u2014 /tmp/ingetrazo-paper-direct-property-native-final/warm-all.pdf",
+    "scene_signature": [
+      3564,
+      7088658780288429082
+    ],
+    "paper_resources": [
+      [
+        4,
+        4,
+        121,
+        3038880,
+        4
+      ],
+      [
+        1,
+        1,
+        [
+          1,
+          759720,
+          1
+        ]
+      ]
+    ],
+    "history_key_events": [
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      }
+    ],
+    "active_sheet": 0,
+    "sheet_tabs": [
+      [
+        78.0,
+        788.6375122070312
+      ],
+      [
+        124.0,
+        788.6375122070312
+      ],
+      [
+        169.5,
+        788.6375122070312
+      ]
+    ],
+    "canvas_text_rects": [
+      [
+        388.5,
+        237.06875610351562,
+        546.5,
+        248.06875610351562
+      ],
+      [
+        388.5,
+        267.0687561035156,
+        510.5,
+        278.0687561035156
+      ]
+    ],
+    "canvas_text": [
+      "1/3 dynamic-fields Same {unknown}",
+      "10/10/2026 dynamic-fields"
+    ],
+    "calendar_samples_per_frame": 1,
+    "field_expansion_computations": 38,
+    "field_index_computations": 19,
+    "keys": [
+      "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+      "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+    ],
+    "sheets": 3,
+    "item_count": 2,
+    "add_north": [
+      617.5,
+      91.0
+    ],
+    "border_menu": [
+      365.5,
+      91.0
+    ],
+    "border_controls": [
+      [
+        469.0,
+        117.0
+      ],
+      [
+        469.0,
+        159.18124389648438
+      ]
+    ],
+    "border": {
+      "on": false,
+      "mm": 0.5,
+      "color": "#ffffff",
+      "radius_mm": 0.0,
+      "style": "single"
+    },
+    "sheet_history": [
+      0,
+      1
+    ],
+    "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+  },
+  "border_gestures": {
+    "before": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3484,
+        9487352648581964162
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 2,
+      "field_index_computations": 1,
+      "keys": [],
+      "sheets": 3,
+      "item_count": 2,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": null,
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#1e242c",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        0,
+        0
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "edited": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3563,
+        11963884018217244168
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 24,
+      "field_index_computations": 12,
+      "keys": [
+        "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }"
+      ],
+      "sheets": 3,
+      "item_count": 2,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": [
+        [
+          469.0,
+          117.0
+        ],
+        [
+          469.0,
+          159.18124389648438
+        ]
+      ],
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#ffffff",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        0,
+        0
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "undo": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3563,
+        11963884018217244168
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        }
+      ],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 24,
+      "field_index_computations": 12,
+      "keys": [
+        "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+      ],
+      "sheets": 3,
+      "item_count": 2,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": [
+        [
+          469.0,
+          117.0
+        ],
+        [
+          469.0,
+          159.18124389648438
+        ]
+      ],
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#ffffff",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        0,
+        0
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "redo": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3564,
+        7088658780288429082
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        }
+      ],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 38,
+      "field_index_computations": 19,
+      "keys": [
+        "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+      ],
+      "sheets": 3,
+      "item_count": 2,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": [
+        [
+          469.0,
+          117.0
+        ],
+        [
+          469.0,
+          159.18124389648438
+        ]
+      ],
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#ffffff",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        0,
+        1
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "item_add": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3669,
+        7419307132282257913
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        }
+      ],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 26,
+      "field_index_computations": 13,
+      "keys": [
+        "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+      ],
+      "sheets": 3,
+      "item_count": 3,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": [
+        [
+          469.0,
+          117.0
+        ],
+        [
+          469.0,
+          159.18124389648438
+        ]
+      ],
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#ffffff",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        1,
+        0
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "item_undo": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3564,
+        15419557795118531103
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        }
+      ],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 28,
+      "field_index_computations": 14,
+      "keys": [
+        "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+      ],
+      "sheets": 3,
+      "item_count": 2,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": [
+        [
+          469.0,
+          117.0
+        ],
+        [
+          469.0,
+          159.18124389648438
+        ]
+      ],
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#ffffff",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        0,
+        1
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "item_redo": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3669,
+        430005175711528070
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        },
+        {
+          "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "final_frame_modifiers": "Modifiers::NONE"
+        }
+      ],
+      "active_sheet": 0,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 30,
+      "field_index_computations": 15,
+      "keys": [
+        "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+      ],
+      "sheets": 3,
+      "item_count": 3,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": [
+        [
+          469.0,
+          117.0
+        ],
+        [
+          469.0,
+          159.18124389648438
+        ]
+      ],
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#ffffff",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        1,
+        0
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "canvas_before": {
+      "current_button": [
+        820.0,
+        91.0
+      ],
+      "all_button": [
+        941.0,
+        91.0
+      ],
+      "current_clicks": 0,
+      "all_clicks": 0,
+      "status": "",
+      "error_dialog": null,
+      "error_ok": null,
+      "export_result": null,
+      "scene_signature": [
+        3484,
+        16517811749599062716
+      ],
+      "paper_resources": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      "history_key_events": [],
+      "active_sheet": 1,
+      "sheet_tabs": [
+        [
+          78.0,
+          788.6375122070312
+        ],
+        [
+          124.0,
+          788.6375122070312
+        ],
+        [
+          169.5,
+          788.6375122070312
+        ]
+      ],
+      "canvas_text_rects": [
+        [
+          388.5,
+          237.06875610351562,
+          546.5,
+          248.06875610351562
+        ],
+        [
+          388.5,
+          267.0687561035156,
+          510.5,
+          278.0687561035156
+        ]
+      ],
+      "canvas_text": [
+        "1/3 dynamic-fields Same {unknown}",
+        "10/10/2026 dynamic-fields"
+      ],
+      "calendar_samples_per_frame": 1,
+      "field_expansion_computations": 4,
+      "field_index_computations": 2,
+      "keys": [],
+      "sheets": 3,
+      "item_count": 2,
+      "add_north": [
+        617.5,
+        91.0
+      ],
+      "border_menu": [
+        365.5,
+        91.0
+      ],
+      "border_controls": null,
+      "border": {
+        "on": false,
+        "mm": 0.5,
+        "color": "#1e242c",
+        "radius_mm": 0.0,
+        "style": "single"
+      },
+      "sheet_history": [
+        0,
+        0
+      ],
+      "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+    },
+    "canvas_states": [
+      {
+        "current_button": [
+          820.0,
+          91.0
+        ],
+        "all_button": [
+          941.0,
+          91.0
+        ],
+        "current_clicks": 0,
+        "all_clicks": 0,
+        "status": "",
+        "error_dialog": null,
+        "error_ok": null,
+        "export_result": null,
+        "scene_signature": [
+          3564,
+          2013516340572572023
+        ],
+        "paper_resources": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          null
+        ],
+        "history_key_events": [
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          }
+        ],
+        "active_sheet": 1,
+        "sheet_tabs": [
+          [
+            78.0,
+            788.6375122070312
+          ],
+          [
+            124.0,
+            788.6375122070312
+          ],
+          [
+            169.5,
+            788.6375122070312
+          ]
+        ],
+        "canvas_text_rects": [
+          [
+            388.5,
+            237.06875610351562,
+            546.5,
+            248.06875610351562
+          ],
+          [
+            388.5,
+            267.0687561035156,
+            510.5,
+            278.0687561035156
+          ]
+        ],
+        "canvas_text": [
+          "2/3 dynamic-fields Same {unknown}",
+          "10/10/2026 dynamic-fields"
+        ],
+        "calendar_samples_per_frame": 1,
+        "field_expansion_computations": 34,
+        "field_index_computations": 17,
+        "keys": [
+          "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+          "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+        ],
+        "sheets": 3,
+        "item_count": 2,
+        "add_north": [
+          617.5,
+          91.0
+        ],
+        "border_menu": [
+          365.5,
+          91.0
+        ],
+        "border_controls": [
+          [
+            469.0,
+            117.0
+          ],
+          [
+            469.0,
+            159.18124389648438
+          ]
+        ],
+        "border": {
+          "on": false,
+          "mm": 0.5,
+          "color": "#ffffff",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "sheet_history": [
+          0,
+          1
+        ],
+        "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+      },
+      {
+        "current_button": [
+          820.0,
+          91.0
+        ],
+        "all_button": [
+          941.0,
+          91.0
+        ],
+        "current_clicks": 0,
+        "all_clicks": 0,
+        "status": "",
+        "error_dialog": null,
+        "error_ok": null,
+        "export_result": null,
+        "scene_signature": [
+          3564,
+          15966385732417526498
+        ],
+        "paper_resources": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          null
+        ],
+        "history_key_events": [
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          }
+        ],
+        "active_sheet": 2,
+        "sheet_tabs": [
+          [
+            78.0,
+            788.6375122070312
+          ],
+          [
+            124.0,
+            788.6375122070312
+          ],
+          [
+            169.5,
+            788.6375122070312
+          ]
+        ],
+        "canvas_text_rects": [
+          [
+            388.5,
+            237.06875610351562,
+            546.5,
+            248.06875610351562
+          ],
+          [
+            388.5,
+            267.0687561035156,
+            510.5,
+            278.0687561035156
+          ]
+        ],
+        "canvas_text": [
+          "3/3 dynamic-fields Third {unknown}",
+          "10/10/2026 dynamic-fields"
+        ],
+        "calendar_samples_per_frame": 1,
+        "field_expansion_computations": 36,
+        "field_index_computations": 18,
+        "keys": [
+          "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+          "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+        ],
+        "sheets": 3,
+        "item_count": 2,
+        "add_north": [
+          617.5,
+          91.0
+        ],
+        "border_menu": [
+          365.5,
+          91.0
+        ],
+        "border_controls": [
+          [
+            469.0,
+            117.0
+          ],
+          [
+            469.0,
+            159.18124389648438
+          ]
+        ],
+        "border": {
+          "on": false,
+          "mm": 0.5,
+          "color": "#ffffff",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "sheet_history": [
+          0,
+          1
+        ],
+        "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+      },
+      {
+        "current_button": [
+          820.0,
+          91.0
+        ],
+        "all_button": [
+          941.0,
+          91.0
+        ],
+        "current_clicks": 0,
+        "all_clicks": 0,
+        "status": "",
+        "error_dialog": null,
+        "error_ok": null,
+        "export_result": null,
+        "scene_signature": [
+          3564,
+          7088658780288429082
+        ],
+        "paper_resources": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          null
+        ],
+        "history_key_events": [
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          },
+          {
+            "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+            "final_frame_modifiers": "Modifiers::NONE"
+          }
+        ],
+        "active_sheet": 0,
+        "sheet_tabs": [
+          [
+            78.0,
+            788.6375122070312
+          ],
+          [
+            124.0,
+            788.6375122070312
+          ],
+          [
+            169.5,
+            788.6375122070312
+          ]
+        ],
+        "canvas_text_rects": [
+          [
+            388.5,
+            237.06875610351562,
+            546.5,
+            248.06875610351562
+          ],
+          [
+            388.5,
+            267.0687561035156,
+            510.5,
+            278.0687561035156
+          ]
+        ],
+        "canvas_text": [
+          "1/3 dynamic-fields Same {unknown}",
+          "10/10/2026 dynamic-fields"
+        ],
+        "calendar_samples_per_frame": 1,
+        "field_expansion_computations": 38,
+        "field_index_computations": 19,
+        "keys": [
+          "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+          "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+          "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+        ],
+        "sheets": 3,
+        "item_count": 2,
+        "add_north": [
+          617.5,
+          91.0
+        ],
+        "border_menu": [
+          365.5,
+          91.0
+        ],
+        "border_controls": [
+          [
+            469.0,
+            117.0
+          ],
+          [
+            469.0,
+            159.18124389648438
+          ]
+        ],
+        "border": {
+          "on": false,
+          "mm": 0.5,
+          "color": "#ffffff",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "sheet_history": [
+          0,
+          1
+        ],
+        "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+      }
+    ],
+    "actual_pointer_properties": true,
+    "actual_global_shortcuts_route_sheet_history": true
+  },
+  "text_frozen_source_cases": 3,
+  "text_source_exact_pages": 12,
+  "text_reader_exact_pages": 4,
+  "actual_x11_pointer_buttons_passed": true,
+  "current": {
+    "current_button": [
+      820.0,
+      91.0
+    ],
+    "all_button": [
+      941.0,
+      91.0
+    ],
+    "current_clicks": 1,
+    "all_clicks": 0,
+    "status": "Exported sheets: 1 \u2014 /tmp/ingetrazo-paper-direct-property-native-final/current.pdf",
+    "error_dialog": null,
+    "error_ok": null,
+    "export_result": "Exported sheets: 1 \u2014 /tmp/ingetrazo-paper-direct-property-native-final/current.pdf",
+    "scene_signature": [
+      3564,
+      7088658780288429082
+    ],
+    "paper_resources": [
+      [
+        2,
+        2,
+        56,
+        1519440,
+        2
+      ],
+      [
+        1,
+        1,
+        [
+          1,
+          759720,
+          1
+        ]
+      ]
+    ],
+    "history_key_events": [
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      }
+    ],
+    "active_sheet": 0,
+    "sheet_tabs": [
+      [
+        78.0,
+        788.6375122070312
+      ],
+      [
+        124.0,
+        788.6375122070312
+      ],
+      [
+        169.5,
+        788.6375122070312
+      ]
+    ],
+    "canvas_text_rects": [
+      [
+        388.5,
+        237.06875610351562,
+        546.5,
+        248.06875610351562
+      ],
+      [
+        388.5,
+        267.0687561035156,
+        510.5,
+        278.0687561035156
+      ]
+    ],
+    "canvas_text": [
+      "1/3 dynamic-fields Same {unknown}",
+      "10/10/2026 dynamic-fields"
+    ],
+    "calendar_samples_per_frame": 1,
+    "field_expansion_computations": 38,
+    "field_index_computations": 19,
+    "keys": [
+      "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+      "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+    ],
+    "sheets": 3,
+    "item_count": 2,
+    "add_north": [
+      617.5,
+      91.0
+    ],
+    "border_menu": [
+      365.5,
+      91.0
+    ],
+    "border_controls": [
+      [
+        469.0,
+        117.0
+      ],
+      [
+        469.0,
+        159.18124389648438
+      ]
+    ],
+    "border": {
+      "on": false,
+      "mm": 0.5,
+      "color": "#ffffff",
+      "radius_mm": 0.0,
+      "style": "single"
+    },
+    "sheet_history": [
+      0,
+      1
+    ],
+    "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+  },
+  "all": {
+    "current_button": [
+      820.0,
+      91.0
+    ],
+    "all_button": [
+      941.0,
+      91.0
+    ],
+    "current_clicks": 1,
+    "all_clicks": 1,
+    "status": "Exported sheets: 3 \u2014 /tmp/ingetrazo-paper-direct-property-native-final/all.pdf",
+    "error_dialog": null,
+    "error_ok": null,
+    "export_result": "Exported sheets: 3 \u2014 /tmp/ingetrazo-paper-direct-property-native-final/all.pdf",
+    "scene_signature": [
+      3564,
+      7088658780288429082
+    ],
+    "paper_resources": [
+      [
+        4,
+        4,
+        121,
+        3038880,
+        4
+      ],
+      [
+        1,
+        1,
+        [
+          1,
+          759720,
+          1
+        ]
+      ]
+    ],
+    "history_key_events": [
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      },
+      {
+        "event": "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+        "final_frame_modifiers": "Modifiers::NONE"
+      }
+    ],
+    "active_sheet": 0,
+    "sheet_tabs": [
+      [
+        78.0,
+        788.6375122070312
+      ],
+      [
+        124.0,
+        788.6375122070312
+      ],
+      [
+        169.5,
+        788.6375122070312
+      ]
+    ],
+    "canvas_text_rects": [
+      [
+        388.5,
+        237.06875610351562,
+        546.5,
+        248.06875610351562
+      ],
+      [
+        388.5,
+        267.0687561035156,
+        510.5,
+        278.0687561035156
+      ]
+    ],
+    "canvas_text": [
+      "1/3 dynamic-fields Same {unknown}",
+      "10/10/2026 dynamic-fields"
+    ],
+    "calendar_samples_per_frame": 1,
+    "field_expansion_computations": 38,
+    "field_index_computations": 19,
+    "keys": [
+      "Key { key: A, physical_key: Some(A), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: A, physical_key: Some(A), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Num3, physical_key: Some(Num3), pressed: true, repeat: false, modifiers: Modifiers { shift: true } }",
+      "Key { key: Num3, physical_key: Some(Num3), pressed: false, repeat: false, modifiers: Modifiers { shift: true } }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: F, physical_key: Some(F), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Enter, physical_key: Some(Enter), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Enter, physical_key: Some(Enter), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Escape, physical_key: Some(Escape), pressed: true, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Escape, physical_key: Some(Escape), pressed: false, repeat: false, modifiers: Modifiers::NONE }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Y, physical_key: Some(Y), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: true, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }",
+      "Key { key: Z, physical_key: Some(Z), pressed: false, repeat: false, modifiers: Modifiers { ctrl: true, command: true } }"
+    ],
+    "sheets": 3,
+    "item_count": 2,
+    "add_north": [
+      617.5,
+      91.0
+    ],
+    "border_menu": [
+      365.5,
+      91.0
+    ],
+    "border_controls": [
+      [
+        469.0,
+        117.0
+      ],
+      [
+        469.0,
+        159.18124389648438
+      ]
+    ],
+    "border": {
+      "on": false,
+      "mm": 0.5,
+      "color": "#ffffff",
+      "radius_mm": 0.0,
+      "style": "single"
+    },
+    "sheet_history": [
+      0,
+      1
+    ],
+    "authored_text": "{hoja}/{total} {archivo} {nombre} {unknown}"
+  },
+  "dialog_acceptance": "Actual genuine Zenity GTK save dialogs entered with XTEST keyboard",
+  "successful_ui_pdf_export": true,
+  "pdf_page_counts": [
+    1,
+    3
+  ],
+  "page_nonwhite_pixels": [
+    1908,
+    1908,
+    1915,
+    1906
+  ],
+  "error_dialog_dismissed": null,
+  "error_popup_dark_pixels": null,
+  "dismissed_popup_dark_pixels": null,
+  "unsupported_destination_ui": "Separately exercised in unsupported scenario",
+  "binary_sha256": "ebe89c9d63d970ac981178fcabbc33e74aba7e820ecd6858f70cd04d12a0e4ce",
+  "scope": "Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."
+}
