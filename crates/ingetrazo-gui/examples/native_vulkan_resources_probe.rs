@@ -11,6 +11,8 @@ impl App for Probe {
   resources.verify_host_visible(id,&data).unwrap();assert_eq!(resources.stats.bytes,data.len() as u64);assert_eq!(resources.stats.chunks,3);assert!(resources.stats.staging_peak<=8*1024*1024);
   let charged=system.memory_budget.ledger.lock().unwrap().total_committed();assert!(charged>=data.len() as u64);
   resources.mark_used(id,9).unwrap();resources.retire(id).unwrap();
+  ingetrazo_gui::native_vulkan::world::verify_image_view_failure_rollback(&system.vulkan_context,system.memory_budget.clone()).unwrap();
+  eprintln!("PASS actual image allocation/binding followed by injected view failure rollback");
   let device=&system.vulkan_context.device;let fence=unsafe {device.create_fence(&vk::FenceCreateInfo::default(),None)}.unwrap();
   assert_eq!(resources.collect(fence,9).unwrap(),0);assert_eq!(system.memory_budget.ledger.lock().unwrap().total_committed(),charged);
   unsafe {device.queue_submit(system.vulkan_context.graphics_queue,&[vk::SubmitInfo::default()],fence).unwrap();device.wait_for_fences(&[fence],true,u64::MAX).unwrap();}

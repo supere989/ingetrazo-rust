@@ -6,8 +6,12 @@ use super::{budget::VulkanBudget,resources::{Resources,BufferId},VulkanContext};
 struct Image {device:Device,budget:Arc<VulkanBudget>,handle:vk::Image,memory:vk::DeviceMemory,view:vk::ImageView}
 impl Image {
  fn new(context:&VulkanContext,budget:Arc<VulkanBudget>,extent:vk::Extent2D,format:vk::Format,usage:vk::ImageUsageFlags,aspect:vk::ImageAspectFlags)->Result<Self,String> {
+  Self::new_with_view(context,budget,extent,format,usage,aspect,|device,info|unsafe {device.create_image_view(info,None)})
+ }
+ fn new_with_view(context:&VulkanContext,budget:Arc<VulkanBudget>,extent:vk::Extent2D,format:vk::Format,usage:vk::ImageUsageFlags,aspect:vk::ImageAspectFlags,create_view:impl FnOnce(&Device,&vk::ImageViewCreateInfo)->Result<vk::ImageView,vk::Result>)->Result<Self,String> {
   let device=context.device.clone();let info=vk::ImageCreateInfo::default().image_type(vk::ImageType::TYPE_2D).extent(vk::Extent3D{width:extent.width,height:extent.height,depth:1}).mip_levels(1).array_layers(1).format(format).tiling(vk::ImageTiling::OPTIMAL).usage(usage).samples(vk::SampleCountFlags::TYPE_1);
   let handle=unsafe {device.create_image(&info,None)}.map_err(|e|e.to_string())?;let requirements=unsafe {device.get_image_memory_requirements(handle)};
+  let mut bound_memory=None;
   let result=(|| {
    let properties=unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)};
    let ty=(0..properties.memory_type_count).find(|&i|requirements.memory_type_bits&(1<<i)!=0&&properties.memory_types[i as usize].property_flags.contains(vk::MemoryPropertyFlags::DEVICE_LOCAL)).ok_or("No device-local image memory")?;
@@ -16,12 +20,13 @@ impl Image {
    let memory=match unsafe {device.allocate_memory(&info,None)} {Ok(m)=>m,Err(e)=>{budget.cancel(ticket);return Err(e.to_string());}};
    if let Err(e)=unsafe {device.bind_image_memory(handle,memory,0)} {unsafe {device.free_memory(memory,None)};budget.cancel(ticket);return Err(e.to_string());}
    budget.commit(ticket,memory);
+   bound_memory=Some(memory);
    let range=vk::ImageSubresourceRange::default().aspect_mask(aspect).level_count(1).layer_count(1);
-   match unsafe {device.create_image_view(&vk::ImageViewCreateInfo::default().image(handle).view_type(vk::ImageViewType::TYPE_2D).format(format).subresource_range(range),None)} {
-    Ok(view)=>Ok((memory,view)),Err(e)=>{unsafe {device.free_memory(memory,None)};budget.freed(memory);Err(e.to_string())}
+   match create_view(&device,&vk::ImageViewCreateInfo::default().image(handle).view_type(vk::ImageViewType::TYPE_2D).format(format).subresource_range(range)) {
+    Ok(view)=>Ok((memory,view)),Err(e)=>Err(e.to_string())
    }
   })();
-  match result {Ok((memory,view))=>Ok(Self{device,budget,handle,memory,view}),Err(e)=>{unsafe {device.destroy_image(handle,None)};Err(e)}}
+  match result {Ok((memory,view))=>Ok(Self{device,budget,handle,memory,view}),Err(e)=>{unsafe {device.destroy_image(handle,None)};if let Some(memory)=bound_memory {unsafe {device.free_memory(memory,None)};budget.freed(memory);}Err(e)}}
  }
 }
 impl Drop for Image {fn drop(&mut self){unsafe {self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.handle,None);self.device.free_memory(self.memory,None)};self.budget.freed(self.memory);}}
@@ -90,12 +95,37 @@ impl World {
 impl Drop for World {fn drop(&mut self){let _=unsafe {self.device.device_wait_idle()};drop(self.target.take());unsafe {self.device.destroy_pipeline(self.pipeline,None);self.device.destroy_pipeline_layout(self.layout,None);self.device.destroy_render_pass(self.render_pass,None);self.device.destroy_descriptor_pool(self.pool,None);self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}
 fn make_pipeline(device:&Device,render_pass:vk::RenderPass,layout:vk::PipelineLayout)->Result<vk::Pipeline,String> {
  let code=|bytes:&[u8]|ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e|e.to_string());
- let vertex=unsafe {device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&code(include_bytes!("shaders/world.vert.spv"))?),None)}.map_err(|e|e.to_string())?;
- let fragment=match unsafe {device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&code(include_bytes!("shaders/world.frag.spv"))?),None)} {Ok(m)=>m,Err(e)=>{unsafe {device.destroy_shader_module(vertex,None)};return Err(e.to_string());}};
+ let vertex_code=code(include_bytes!("shaders/world.vert.spv"))?;
+ let fragment_code=code(include_bytes!("shaders/world.frag.spv"))?;
+ let vertex=unsafe {device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&vertex_code),None)}.map_err(|e|e.to_string())?;
+ let fragment=match unsafe {device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&fragment_code),None)} {Ok(m)=>m,Err(e)=>{unsafe {device.destroy_shader_module(vertex,None)};return Err(e.to_string());}};
  let stages=[vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(vertex).name(c"main"),vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fragment).name(c"main")];
  let binding=[vk::VertexInputBindingDescription{binding:0,stride:48,input_rate:vk::VertexInputRate::VERTEX}];let attrs=[vk::VertexInputAttributeDescription{location:0,binding:0,format:vk::Format::R32G32B32_SFLOAT,offset:0},vk::VertexInputAttributeDescription{location:1,binding:0,format:vk::Format::R32G32B32_SFLOAT,offset:12},vk::VertexInputAttributeDescription{location:2,binding:0,format:vk::Format::R32G32B32A32_SFLOAT,offset:24},vk::VertexInputAttributeDescription{location:3,binding:0,format:vk::Format::R32G32_SFLOAT,offset:40}];
  let input=vk::PipelineVertexInputStateCreateInfo::default().vertex_binding_descriptions(&binding).vertex_attribute_descriptions(&attrs);let assembly=vk::PipelineInputAssemblyStateCreateInfo::default().topology(vk::PrimitiveTopology::TRIANGLE_LIST);let viewport=vk::PipelineViewportStateCreateInfo::default().viewport_count(1).scissor_count(1);let raster=vk::PipelineRasterizationStateCreateInfo::default().polygon_mode(vk::PolygonMode::FILL).line_width(1.0).cull_mode(vk::CullModeFlags::NONE);let multisample=vk::PipelineMultisampleStateCreateInfo::default().rasterization_samples(vk::SampleCountFlags::TYPE_1);let depth=vk::PipelineDepthStencilStateCreateInfo::default().depth_test_enable(true).depth_write_enable(true).depth_compare_op(vk::CompareOp::LESS_OR_EQUAL);let colors=[vk::PipelineColorBlendAttachmentState::default().color_write_mask(vk::ColorComponentFlags::RGBA)];let blend=vk::PipelineColorBlendStateCreateInfo::default().attachments(&colors);let dynamic=vk::PipelineDynamicStateCreateInfo::default().dynamic_states(&[vk::DynamicState::VIEWPORT,vk::DynamicState::SCISSOR]);
  let result=unsafe {device.create_graphics_pipelines(vk::PipelineCache::null(),&[vk::GraphicsPipelineCreateInfo::default().stages(&stages).vertex_input_state(&input).input_assembly_state(&assembly).viewport_state(&viewport).rasterization_state(&raster).multisample_state(&multisample).depth_stencil_state(&depth).color_blend_state(&blend).dynamic_state(&dynamic).layout(layout).render_pass(render_pass)],None)};
  unsafe {device.destroy_shader_module(vertex,None);device.destroy_shader_module(fragment,None);}
- result.map(|p|p[0]).map_err(|(_,e)|e.to_string())
+ match result {Ok(p)=>Ok(p[0]),Err((pipelines,e))=>{release_partial_pipelines(pipelines,|p|unsafe {device.destroy_pipeline(p,None)});Err(e.to_string())}}
+
+}
+
+fn release_partial_pipelines(pipelines:Vec<vk::Pipeline>,mut destroy:impl FnMut(vk::Pipeline)) {
+ for pipeline in pipelines {if pipeline!=vk::Pipeline::null(){destroy(pipeline);}}
+}
+/// Engineering probe: inject only view creation failure after actual allocation/binding.
+/// The image and memory allocation still run through the production owner and ledger.
+pub fn verify_image_view_failure_rollback(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<(),String> {
+ let before=budget.ledger.lock().unwrap().total_committed();
+ let result=Image::new_with_view(context,budget.clone(),vk::Extent2D{width:2,height:2},vk::Format::R8G8B8A8_SRGB,vk::ImageUsageFlags::COLOR_ATTACHMENT,vk::ImageAspectFlags::COLOR,|_,_|Err(vk::Result::ERROR_OUT_OF_HOST_MEMORY));
+ if result.is_ok(){return Err("Injected view failure unexpectedly succeeded".into());}
+ let ledger=budget.ledger.lock().unwrap();
+ if ledger.total_committed()!=before||ledger.heaps.iter().any(|h|h.reserved!=0){return Err("Image view failure leaked GPU allocation".into());}
+ Ok(())
+}
+#[cfg(test)]mod lifecycle_regression {
+ use super::*;use ash::vk::Handle;
+ #[test]fn failed_pipeline_batch_releases_every_partial_non_null_handle(){
+  let a=vk::Pipeline::from_raw(42);let b=vk::Pipeline::from_raw(43);let mut destroyed=vec![];
+  release_partial_pipelines(vec![a,vk::Pipeline::null(),b],|p|destroyed.push(p));
+  assert_eq!(destroyed,vec![a,b]);
+ }
 }
