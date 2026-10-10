@@ -1,0 +1,646 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "848d5871310f94734dda081033e3ca314ffee1dd",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "early": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 0.11644349,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "acquired": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 0.367944895,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "centered": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 0.773531766,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "anchor": {
+    "active_world_centers": [],
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Close",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 1,
+    "preview_wire_segments": [
+      [
+        [
+          661.0,
+          336.72986048918267
+        ],
+        [
+          661.0,
+          336.72986048918267
+        ]
+      ]
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 1.174333141,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "moved": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 4,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 24,
+    "time": 3.178917683,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "moved_hint": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      2.9962494373321533,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 4,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 24,
+    "time": 3.630363915,
+    "tool": "Line",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "deleted": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "definitions": {},
+    "edges": 0,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      3.246844449038087,
+      5.156175152661698,
+      0.0
+    ],
+    "kind": "None",
+    "memory": [
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 5,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 4.679531776,
+    "tool": "Line",
+    "undo": 2,
+    "unused_vertices": 0,
+    "vertices": 24,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "requested_move_delta": [
+    1.0,
+    0,
+    0
+  ],
+  "actual_move_delta": [
+    0.9962495075927937,
+    0.0,
+    0.0
+  ],
+  "move_coordinate_parity": false,
+  "pointer_quantized_move_matches": true,
+  "approach_hint_metrics": {
+    "filled_center": true,
+    "core_green": 25,
+    "outer_green": 78,
+    "core_samples": 25,
+    "majority_threshold": 13
+  },
+  "approach_green_pixels": 78,
+  "approach_hint_visual_parity_open": false,
+  "elapsed_wall_seconds": 0.3031884919910226,
+  "scope": "Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending.",
+  "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+  "executable_sha256": "988723bc21fd9af1e5874dd35b58a1989ed97f1934b95ed46b570b2bfe70788e"
+}
