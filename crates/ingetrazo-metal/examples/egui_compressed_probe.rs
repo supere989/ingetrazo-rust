@@ -2,8 +2,8 @@
 #[cfg(target_os = "macos")]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     use ingetrazo_metal::{
-        NativeMetal,
         egui_painter::{CompressedFormat, EguiPainter},
+        NativeMetal,
     };
     use std::{path::PathBuf, time::Duration};
     let out = std::env::args()
@@ -39,18 +39,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut painter = EguiPainter::new(&metal)?;
         let before = metal.budget.lock().unwrap().total_committed();
         if !supported {
-            assert!(
-                painter
-                    .upload_compressed_texture(
-                        &metal,
-                        egui::TextureId::Managed(1),
-                        format,
-                        [4, 4],
-                        &blocks,
-                        egui::TextureOptions::NEAREST
-                    )
-                    .is_err()
-            );
+            assert!(painter
+                .upload_compressed_texture(
+                    &metal,
+                    egui::TextureId::Managed(1),
+                    format,
+                    [4, 4],
+                    &blocks,
+                    egui::TextureOptions::NEAREST
+                )
+                .is_err());
             assert_eq!(metal.budget.lock().unwrap().total_committed(), before);
             eprintln!("EXPLICIT_UNSUPPORTED {name}");
             continue;
@@ -108,47 +106,41 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let baseline = metal.budget.lock().unwrap().total_committed();
         let limit = metal.budget.lock().unwrap().total_limit;
         metal.budget.lock().unwrap().total_limit = Some(baseline);
-        assert!(
-            painter
-                .upload_compressed_texture(
-                    &metal,
-                    egui::TextureId::Managed(1),
-                    format,
-                    [4, 4],
-                    &blocks,
-                    egui::TextureOptions::NEAREST
-                )
-                .is_err()
-        );
+        assert!(painter
+            .upload_compressed_texture(
+                &metal,
+                egui::TextureId::Managed(1),
+                format,
+                [4, 4],
+                &blocks,
+                egui::TextureOptions::NEAREST
+            )
+            .is_err());
         assert_eq!(metal.budget.lock().unwrap().total_committed(), baseline);
         metal.budget.lock().unwrap().total_limit = Some(baseline + image_bytes);
-        assert!(
-            painter
-                .upload_compressed_texture(
-                    &metal,
-                    egui::TextureId::Managed(1),
-                    format,
-                    [4, 4],
-                    &blocks,
-                    egui::TextureOptions::NEAREST
-                )
-                .is_err()
-        );
+        assert!(painter
+            .upload_compressed_texture(
+                &metal,
+                egui::TextureId::Managed(1),
+                format,
+                [4, 4],
+                &blocks,
+                egui::TextureOptions::NEAREST
+            )
+            .is_err());
         assert_eq!(metal.budget.lock().unwrap().total_committed(), baseline);
         metal.budget.lock().unwrap().total_limit = limit;
         assert_eq!(render(&painter)?, sampled);
-        assert!(
-            painter
-                .upload_compressed_texture(
-                    &metal,
-                    egui::TextureId::Managed(1),
-                    format,
-                    [4, 4],
-                    &blocks[..blocks.len() - 1],
-                    egui::TextureOptions::NEAREST
-                )
-                .is_err()
-        );
+        assert!(painter
+            .upload_compressed_texture(
+                &metal,
+                egui::TextureId::Managed(1),
+                format,
+                [4, 4],
+                &blocks[..blocks.len() - 1],
+                egui::TextureOptions::NEAREST
+            )
+            .is_err());
         let patch = egui::TexturesDelta {
             set: vec![(
                 egui::TextureId::Managed(1),
@@ -163,23 +155,81 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert!(painter.update_textures(&metal, &patch).is_err());
         let mut mips = egui::TextureOptions::NEAREST;
         mips.mipmap_mode = Some(egui::TextureFilter::Nearest);
-        assert!(
-            painter
-                .upload_compressed_texture(
-                    &metal,
-                    egui::TextureId::Managed(1),
-                    format,
-                    [4, 4],
-                    &blocks,
-                    mips
-                )
-                .is_err()
-        );
+        assert!(painter
+            .upload_compressed_texture(
+                &metal,
+                egui::TextureId::Managed(1),
+                format,
+                [4, 4],
+                &blocks,
+                mips
+            )
+            .is_err());
         assert_eq!(metal.budget.lock().unwrap().total_committed(), baseline);
         assert_eq!(painter.stats().compressed_upload_submissions, 1);
         drop(paint);
         drop(painter);
         assert_eq!(metal.budget.lock().unwrap().total_committed(), 0);
+        // A real queue stall must retain BOTH the private compressed image and
+        // upload staging after the painter disappears, not just cached pixels.
+        use objc2_metal::{MTLCommandBuffer, MTLCommandQueue, MTLDevice, MTLSharedEvent};
+        let stalled = NativeMetal::new()?;
+        let event = stalled
+            .device
+            .newSharedEvent()
+            .ok_or("shared event unavailable")?;
+        struct Release(objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn MTLSharedEvent>>);
+        impl Drop for Release {
+            fn drop(&mut self) {
+                self.0.setSignaledValue(1);
+            }
+        }
+        let _release = Release(event.clone());
+        let gate = stalled
+            .queue
+            .commandBuffer()
+            .ok_or("gate command unavailable")?;
+        gate.encodeWaitForEvent_value(objc2::runtime::ProtocolObject::from_ref(&*event), 1);
+        gate.commit();
+        let mut pending = EguiPainter::new(&stalled)?;
+        pending.upload_compressed_texture(
+            &stalled,
+            egui::TextureId::Managed(1),
+            format,
+            [4, 4],
+            &blocks,
+            egui::TextureOptions::NEAREST,
+        )?;
+        let retained = stalled.budget.lock().unwrap().total_committed();
+        assert!(
+            retained > image_bytes,
+            "pending staging must also be charged"
+        );
+        drop(pending);
+        assert_eq!(stalled.budget.lock().unwrap().total_committed(), retained);
+        assert!(
+            stalled.buffer(16, true).is_err(),
+            "unknown completion must poison admission"
+        );
+        event.setSignaledValue(1);
+        let drain = stalled
+            .queue
+            .commandBuffer()
+            .ok_or("drain command unavailable")?;
+        drain.commit();
+        let started = std::time::Instant::now();
+        while drain.status() != objc2_metal::MTLCommandBufferStatus::Completed {
+            if started.elapsed() > Duration::from_secs(5) {
+                return Err("compressed diagnostic drain bounded timeout".into());
+            }
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        assert_eq!(
+            stalled.budget.lock().unwrap().total_committed(),
+            retained,
+            "quarantined owners cannot be reclaimed by a guessed completion"
+        );
+        eprintln!("PASS {name}: stalled compressed image+staging retained_bytes={retained}; admission poisoned; real later completion observed");
         eprintln!(
             "PASS {name}: actual allocated_image_bytes={image_bytes}; block_bytes={}; warm_uploads0; pressure+rollback; finalledger0",
             blocks.len()
