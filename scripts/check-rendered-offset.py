@@ -16,7 +16,7 @@ def main():
  subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","offset_render_acceptance_fixture"],check=True)
  directory=Path("docs/audits/offset-render");directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
-  if p.name in ("state.json","capture.txt","before.png","preview.png","cancelled.png","committed.png"):p.unlink()
+  if p.name in ("state.json","capture.txt","before.png","preview.png","cancelled.png","committed.png","committed.igz"):p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-offset-x11-") as t:
   server=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1200x900x24","-nolisten","tcp"],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
   app=None
@@ -83,7 +83,10 @@ def main():
    cancel_changed=sum(a!=b for a,b in zip(before,cancelled));assert cancel_changed<500,"cancel must remove rendered inset"
    red=lambda p:p[0]>240 and 40<p[1]<90 and 40<p[2]<90
    added_red=sum(red(b) and not red(a) for a,b in zip(before,preview_image));assert added_red>1000,"preview inset must add red geometry pixels"
-   report={"provenance":context(),"passed":True,"native_events":"X11 pointer warp and XTEST native button/escape key synthesis on disposable Xvfb","preview_changed_pixels":changed,"preview_added_red_pixels":added_red,"cancel_changed_pixels":cancel_changed,"initial":initial,"preview":preview,"committed":committed,"scope":"Production render_viewport within native eframe harness: face pointer pick, perpendicular moving preview rendered, Escape cancel no model/history mutation, second-click commit one undo. This isolates viewport gestures; full app menus/tool selection/VCB/undo keyboard routing and other display platforms remain open."}
+   committed_image=pixels(directory/"committed.png")
+   dark=lambda p:5<p[0]<180 and 5<p[1]<180 and 5<p[2]<180
+   committed_dark=sum(dark(b) and not dark(a) for a,b in zip(before,committed_image));assert committed_dark>1000,"committed hard inset must remain visibly rendered"
+   report={"provenance":context(),"passed":True,"native_events":"X11 pointer warp and XTEST native button/escape key synthesis on disposable Xvfb","preview_changed_pixels":changed,"preview_added_red_pixels":added_red,"cancel_changed_pixels":cancel_changed,"committed_added_dark_pixels":committed_dark,"initial":initial,"preview":preview,"committed":committed,"scope":"Production render_viewport within native eframe harness: face pointer pick, perpendicular moving preview rendered, Escape cancel no model/history mutation, second-click commit one undo and visible hard inner boundary. This isolates viewport gestures; full app menus/tool selection/VCB/undo keyboard routing and other display platforms remain open."}
    Path("docs/audits/offset-render-semantic-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
   finally:
    if app:app.terminate();app.wait(timeout=5)

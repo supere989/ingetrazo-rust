@@ -1,0 +1,12 @@
+{
+  "provenance": {
+    "rust_commit": "a7517b83c8f0aff0dc2ed262bc10ee3cf49030da",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "original_hard_edges": 8,
+  "original_soft_edges": 0,
+  "scope": "Original core.hlr.collect_geometry classifies all four coplanar Offset inset edges as hard, validating committed boundary visibility independently of soft-edge toggle."
+}

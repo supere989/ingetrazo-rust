@@ -7,6 +7,7 @@ impl eframe::App for Harness{
    let matrix=self.app.camera.projection_matrix()*self.app.camera.view_matrix();
    let project=|p:DVec3|{let c=matrix*p.extend(1.);let n=c.truncate()/c.w;[rect.left() as f64+(n.x+1.)*0.5*rect.width()as f64,rect.top()as f64+(1.-n.y)*0.5*rect.height()as f64]};
    let rows=serde_json::json!({"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"preview":self.app.active_tool.rubber_band_lines().iter().map(|(a,b)|[a.to_array(),b.to_array()]).collect::<Vec<_>>(),"click":project(DVec3::new(1.3,0.,0.)),"move":project(DVec3::new(2.7,0.5,0.)),"pointer":ctx.input(|i|i.pointer.hover_pos().map(|p|[p.x,p.y]))});
+   if self.app.scene.mesh.faces.len()==2 && !self.dir.join("committed.igz").exists(){ingetrazo_formats::igz::save_igz(&self.app.scene,&self.dir.join("committed.igz")).unwrap();}
    std::fs::write(self.dir.join("state.json"),serde_json::to_vec(&rows).unwrap()).unwrap();
   });
   if let Ok(name)=std::fs::read_to_string(self.dir.join("capture.txt")){if name!=self.capture{self.capture=name;ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(egui::UserData::new(())));}}

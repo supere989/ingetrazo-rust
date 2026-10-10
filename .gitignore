@@ -5,3 +5,9 @@
 *.pyc
 .env
 .env.*
+
+# Transient isolated native viewport acceptance state
+docs/audits/offset-render/state.json
+docs/audits/offset-render/capture.txt
+docs/audits/offset-render/runtime.log
+docs/audits/offset-render/committed.igz

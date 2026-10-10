@@ -60,6 +60,8 @@ jobs:
         run: python scripts/check-python-orient.py
       - name: Original offset regions and chains
         run: python scripts/check-python-offset.py
+      - name: Original Offset hard-edge display semantics
+        run: python scripts/check-python-offset-display.py
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation

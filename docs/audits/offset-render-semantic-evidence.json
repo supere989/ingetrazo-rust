@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "969216d5d380975537f1d767b37635b58b4e6ed0",
+    "rust_commit": "a7517b83c8f0aff0dc2ed262bc10ee3cf49030da",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -10,6 +10,7 @@
   "preview_changed_pixels": 2494,
   "preview_added_red_pixels": 2476,
   "cancel_changed_pixels": 0,
+  "committed_added_dark_pixels": 2648,
   "initial": {
     "click": [
       427.75465893592866,
@@ -110,5 +111,5 @@
     "preview": [],
     "undo": 1
   },
-  "scope": "Production render_viewport within native eframe harness: face pointer pick, perpendicular moving preview rendered, Escape cancel no model/history mutation, second-click commit one undo. This isolates viewport gestures; full app menus/tool selection/VCB/undo keyboard routing and other display platforms remain open."
+  "scope": "Production render_viewport within native eframe harness: face pointer pick, perpendicular moving preview rendered, Escape cancel no model/history mutation, second-click commit one undo and visible hard inner boundary. This isolates viewport gestures; full app menus/tool selection/VCB/undo keyboard routing and other display platforms remain open."
 }
