@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 use ingetrazo_gui::{app::IngeTrazoApp,native_vulkan::{App,System}};
 use ingetrazo_core::composition::Sheet;
 struct Fixture{app:IngeTrazoApp,dir:std::path::PathBuf,stats:serde_json::Value}
@@ -12,4 +14,15 @@ impl App for Fixture{
  let history=self.app.composer_state.sheet_history.get(&self.app.scene.sheets[0].id);let value=serde_json::json!({"paper_mm":self.app.scene.sheets[0].dimensions_mm(),"tool":self.app.composer_state.shape_tool,"start":self.app.composer_state.shape_start.map(|p|[p.x,p.y]),"items":self.app.scene.sheets[0].items,"undo":history.map(|h|h.0.len()).unwrap_or(0),"redo":history.map(|h|h.1.len()).unwrap_or(0),"metrics":self.stats,"button":[button.x,button.y],"paper":[paper.left(),paper.top(),paper.right(),paper.bottom()]});std::fs::write(self.dir.join("state.tmp"),value.to_string()).unwrap();std::fs::rename(self.dir.join("state.tmp"),self.dir.join("state.json")).unwrap();ctx.request_repaint_after(std::time::Duration::from_millis(30));
  }
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

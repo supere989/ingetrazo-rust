@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Production cache identity, actual descriptors and unpublished rollback.
 use ash::vk;
 use ingetrazo_gui::native_vulkan::{
@@ -5,7 +7,7 @@ use ingetrazo_gui::native_vulkan::{
     texture_cache::TextureCache, VulkanContext,
 };
 use std::{collections::HashSet, io::Cursor, sync::Arc};
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let request = if std::env::args().any(|s| s == "--software-fixture") {
         DeviceRequest::software_fixture()
     } else {
@@ -148,4 +150,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
     eprintln!("PASS bounded texture cache/actualdescriptor/GPUreadback/unpublishedrollback/cachehits/identitydenial/serialgate/ledgerzero {:?}",cache.stats);
     Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

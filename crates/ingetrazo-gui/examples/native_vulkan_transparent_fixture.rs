@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Full-viewport native Vulkan section oracle; uses production world pipelines.
 use glam::DVec3;use ingetrazo_core::{camera::{OrbitCamera,StandardView}};use ingetrazo_render::style::StyleConfig;
 use ingetrazo_gui::native_vulkan::{App,System};
@@ -24,4 +26,15 @@ impl App for Fixture {
  }
  fn gpu_error(&mut self,error:&str){panic!("GPU section fixture failed: {error}");}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

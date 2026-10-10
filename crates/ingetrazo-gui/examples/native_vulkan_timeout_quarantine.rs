@@ -1,8 +1,10 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Engineering fault: an actual host-reset event holds the GPU queue until a
 //! finite transfer wait expires. This is NOT a device-loss or hardware-hang test.
 use ash::vk;
 use ingetrazo_gui::native_vulkan::{VulkanContext,headless::DeviceRequest,budget::VulkanBudget,resources::{Resources,TextureImage}};
-fn main()->Result<(),Box<dyn std::error::Error>>{
+pub fn main()->Result<(),Box<dyn std::error::Error>>{
  let arguments=std::env::args().collect::<Vec<_>>();let hardware=arguments.iter().any(|s|s=="--hardware");
  let kind=arguments.iter().find_map(|s|s.strip_prefix("--kind=")).unwrap_or("image");
  assert!(["image","buffer","batch","readback"].contains(&kind));
@@ -58,4 +60,15 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
 
  println!("PASS actual queued timeout: kind={} elapsed_ms={} retained_bytes={} before_bytes={} prior_buffer_destructions={} old_buffer_preserved=true new_admission_refused=true drop_frees_pending=false subsequent_real_completion=true automatic_recovery=false last_external_ledger_drop_retained=true",kind,elapsed.as_millis(),retained,before,destroyed);
  Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

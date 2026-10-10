@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Actual native Vulkan application/input path; writes observational state only.
 use glam::DVec3;
@@ -136,7 +138,18 @@ impl App for Fixture {
         panic!("Native fixture GPU error: {error}");
     }
 }
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dir = std::env::args().nth(1).unwrap();
     ingetrazo_gui::native_vulkan::run_app::<Fixture>(Some(dir.into()))
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

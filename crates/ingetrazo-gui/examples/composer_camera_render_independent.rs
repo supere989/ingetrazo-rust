@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 use glam::DVec3;
 use ingetrazo_core::{
     composition::{SheetItem, ViewFrame},
@@ -92,6 +94,17 @@ impl App for Fixture {
         ctx.request_repaint_after(std::time::Duration::from_millis(50));
     }
 }
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

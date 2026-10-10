@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 use ingetrazo_gui::native_vulkan::{App,System};
 use ingetrazo_core::sheet_shape::SheetShape;
 struct Fixture {shapes:Vec<SheetShape>,out:std::path::PathBuf,native:ingetrazo_gui::composer_cad::NativeComposer,stats:ingetrazo_gui::native_vulkan::cad2d::Stats}
@@ -7,4 +9,15 @@ impl App for Fixture {
  fn prepare_gpu(&mut self,system:&mut System,_:bool){if self.native.factory.is_some(){self.stats=system.enable_cad2d().unwrap().stats();}}
  fn build_ui(&mut self,ctx:&egui::Context){let value=|key:&str,default:f32|std::env::var(key).ok().map(|v|v.parse::<f32>().unwrap()).unwrap_or(default);let zoom=value("INGETRAZO_SHAPE_ZOOM",8.);let ppp=value("INGETRAZO_SHAPE_PPP",1.);let ox=value("INGETRAZO_SHAPE_ORIGIN_X",50.);let oy=value("INGETRAZO_SHAPE_ORIGIN_Y",50.);ctx.set_pixels_per_point(ppp);let phase=std::fs::read_to_string(self.out.join("phase")).unwrap_or_else(|_|"0".into()).trim().parse::<usize>().unwrap();let shape=&self.shapes[phase];egui::CentralPanel::default().frame(egui::Frame::none().fill(egui::Color32::WHITE)).show(ctx,|ui|{let origin=egui::pos2(ox-shape.x_mm as f32*zoom,oy-shape.y_mm as f32*zoom);if !self.native.paint(ui.painter(),uuid::Uuid::from_u128(phase as u128+1),shape,zoom,origin).unwrap(){ingetrazo_gui::composer::paint_sheet_shape(ui.painter(),shape,zoom,origin).unwrap();}});std::fs::write(self.out.join("state.tmp"),serde_json::json!({"phase":phase,"direct":self.native.factory.is_some(),"zoom":zoom,"ppp":ctx.pixels_per_point(),"origin":[ox,oy],"uploads":self.stats.uploads,"upload_bytes":self.stats.upload_bytes,"cached_bytes":self.stats.cached_bytes,"cache_hits":self.stats.cache_hits}).to_string()).unwrap();std::fs::rename(self.out.join("state.tmp"),self.out.join("state.json")).unwrap();ctx.request_repaint_after(std::time::Duration::from_millis(30));}
 }
-fn main()->Result<(),Box<dyn std::error::Error>> {ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>> {ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

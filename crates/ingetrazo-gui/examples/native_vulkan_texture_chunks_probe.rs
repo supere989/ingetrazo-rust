@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Production texture uploader: image fits budget, full-image staging does not.
 use ingetrazo_gui::native_vulkan::{App,System,VulkanContext};
 use ash::vk;
@@ -25,4 +27,15 @@ impl App for Probe {
  fn build_ui(&mut self,ctx:&egui::Context){egui::CentralPanel::default().show(ctx,|ui|{ui.painter().image(egui::TextureId::Managed(777),egui::Rect::from_min_size(egui::pos2(20.,20.),egui::vec2(384.,288.)),egui::Rect::from_min_max(egui::Pos2::ZERO,egui::pos2(1.,1.)),egui::Color32::WHITE);});}
  fn clean(&mut self,_:&VulkanContext){}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Probe>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Probe>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

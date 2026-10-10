@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Bounded, strict hardware evidence using production context/resources/world commands.
 use ash::vk;
 use glam::DVec3;
@@ -6,7 +8,7 @@ use ingetrazo_core::{scene::Scene,camera::{OrbitCamera,StandardView}};
 use std::{sync::Arc,time::Instant};
 fn pixel(bytes:&[u8],x:usize,y:usize)->&[u8]{let i=(y*800+x)*4;&bytes[i..i+3]}
 fn red(c:&[u8])->bool{c[0]>=180&&c[1]<10&&c[2]<10}fn blue(c:&[u8])->bool{c[2]>200&&c[0]<10&&c[1]<10}
-fn main()->Result<(),Box<dyn std::error::Error>> {
+pub fn main()->Result<(),Box<dyn std::error::Error>> {
  let args=std::env::args().skip(1).collect::<Vec<_>>();
  let mut request=if args.iter().any(|a|a=="--software-fixture"){DeviceRequest::software_fixture()}else{DeviceRequest::nvidia_hardware()};
  if let Some(value)=args.windows(2).find(|a|a[0]=="--vendor").map(|a|&a[1]) {request.vendor_id=Some(if let Some(hex)=value.strip_prefix("0x"){u32::from_str_radix(hex,16)?}else{value.parse()?});}
@@ -59,4 +61,15 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  drop(world);drop(resources);assert_eq!(budget.ledger.lock().unwrap().total_committed(),0,"Production GPU owners leaked allocations");
  println!("PASS headless strict adapter {:?}; actual17MiB GPUupload/readback+fence/free; productionworld depth/cache/invalidation; global128MiB limit; eachfence5s; image{}",request,output.display());
  Ok(())
+}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
 }

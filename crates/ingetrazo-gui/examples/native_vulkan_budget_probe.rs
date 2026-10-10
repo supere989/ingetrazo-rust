@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 //! Actual Vk image reservation followed by staging denial; no user paths/clipboard.
 use ingetrazo_gui::native_vulkan::{App,System,VulkanContext};
 use ash::vk;
@@ -22,4 +24,15 @@ impl App for Probe {
  fn build_ui(&mut self,ctx:&egui::Context){self.app.update_ui(ctx);}
  fn clean(&mut self,_:&VulkanContext){}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Probe>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Probe>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}

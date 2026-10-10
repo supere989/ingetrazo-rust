@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux", target_os="windows"))]
+mod platform {
 use ingetrazo_gui::{app::IngeTrazoApp,native_vulkan::{App,System}};
 use ingetrazo_core::{composition::{Sheet,SheetItem,ShapeItem},sheet_shape::SheetShape};
 struct Fixture{app:IngeTrazoApp,dir:std::path::PathBuf,current:usize,all:usize}
@@ -14,4 +16,15 @@ impl App for Fixture {
  if let Some((a,b,current,all))=observation{self.current+=usize::from(current);self.all+=usize::from(all);let a=a.center();let b=b.center();let value=serde_json::json!({"current_button":[a.x,a.y],"all_button":[b.x,b.y],"current_clicks":self.current,"all_clicks":self.all,"status":self.app.status_message,"error_dialog":self.app.composer_state.pdf_export_error,"error_ok":ctx.data(|d|d.get_temp::<egui::Rect>(egui::Id::new("pdf-ui-error-ok"))).map(|r|[r.center().x,r.center().y]),"export_result":ctx.data(|d|d.get_temp::<String>(egui::Id::new("pdf-ui-result"))),"sheets":self.app.scene.sheets.len()});std::fs::write(self.dir.join("state.tmp"),value.to_string()).unwrap();std::fs::rename(self.dir.join("state.tmp"),self.dir.join("state.json")).unwrap();}
  ctx.request_repaint_after(std::time::Duration::from_millis(30));}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+
+#[cfg(any(target_os="linux", target_os="windows"))]
+fn main() -> impl std::process::Termination { platform::main() }
+
+#[cfg(not(any(target_os="linux", target_os="windows")))]
+fn main() {
+    eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal.");
+    std::process::exit(2);
+}
