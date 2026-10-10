@@ -55,6 +55,11 @@ impl Navigation {
 }
 fn movement_key(key:egui::Key)->Option<usize>{match key{egui::Key::W=>Some(0),egui::Key::S=>Some(1),egui::Key::D=>Some(2),egui::Key::A=>Some(3),egui::Key::E=>Some(4),egui::Key::Q=>Some(5),_=>None}}
 impl crate::IngeTrazoApp {
+ pub fn navigation_suspended(&self)->bool{
+  self.scene.active_sheet_index.is_some()||self.section_name_prompt.is_some()||self.show_open_dialog||self.show_save_dialog||self.show_preferences_dialog||self.show_command_search||self.show_geographic_import_dialog||self.show_texture_edit_dialog||self.show_render_dialog
+ }
+ pub fn navigation_claims_key(&self,key:egui::Key,modifiers:egui::Modifiers)->bool{!self.navigation_suspended()&&self.navigation.claims_key(key,modifiers)}
+
  pub fn navigation_height(&mut self,text:&str)->Result<(),String>{
   let mode=self.navigation.mode.ok_or("Camera navigation is inactive")?;
   let height=ingetrazo_core::units::parse_length(text,self.scene.unit)?;
@@ -79,6 +84,7 @@ impl crate::IngeTrazoApp {
  }
 }
 pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response){
+ if app.navigation_suspended(){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return;}
  let Some(mode)=app.navigation.mode else{return};
  let pointer=ui.input(|i|i.pointer.clone());
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return;}
@@ -259,6 +265,18 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   let mut run=|capture:bool|{navigation.mouse_captured=capture;let out=ctx.run(egui::RawInput::default(),|ctx|navigation.sync_cursor(ctx));
    out.viewport_output[&egui::ViewportId::ROOT].commands.iter().filter(|command|matches!(command,egui::ViewportCommand::CursorGrab(_)|egui::ViewportCommand::CursorVisible(_))).count()};
   assert_eq!(run(false),0);assert_eq!(run(true),2);assert_eq!(run(true),0);assert_eq!(run(false),2);assert_eq!(run(false),0);
+ }
+
+ #[test]fn sheet_and_dialog_ownership_stop_navigation_before_dispatch(){
+  let ctx=egui::Context::default();let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;app.activate_navigation(Mode::FirstPerson);
+  app.camera.look_from(DVec3::Z*1.68,DVec3::Y);
+  for sheet in [true,false]{
+   app.navigation.key_event(egui::Key::W,true,egui::Modifiers::NONE);app.navigation.mouse_captured=true;
+   app.scene.active_sheet_index=if sheet{Some(0)}else{None};app.show_preferences_dialog=!sheet;
+   let before=app.camera.clone();frame(&mut app,&ctx,0.,true,vec![]);
+   assert_eq!(app.camera,before);assert_eq!(app.navigation.axes(),[0,0,0]);assert!(!app.navigation.mouse_captured);
+   assert!(!app.navigation_claims_key(egui::Key::W,egui::Modifiers::NONE));
+  }
  }
 
 }

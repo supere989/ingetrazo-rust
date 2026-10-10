@@ -962,6 +962,7 @@ impl IngeTrazoApp {
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
+        if self.navigation_suspended(){self.navigation.cancel();self.navigation.sync_cursor(ctx);}
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});
             crate::section_actions::render_section_name_prompt(self,ctx);return;
@@ -1019,13 +1020,13 @@ impl IngeTrazoApp {
                 self.set_tool(ToolType::PushPull);
             } else if ctx.input(|i| i.key_pressed(egui::Key::M)) {
                 self.set_tool(ToolType::Move);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)&&!self.navigation.claims_key(egui::Key::Q,i.modifiers)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)&&!self.navigation_claims_key(egui::Key::Q,i.modifiers)) {
                 self.set_tool(ToolType::Rotate);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::S)&&!self.navigation.claims_key(egui::Key::S,i.modifiers)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::S)&&!self.navigation_claims_key(egui::Key::S,i.modifiers)) {
                 self.set_tool(ToolType::Scale);
             } else if ctx.input(|i| i.key_pressed(egui::Key::T)) {
                 self.set_tool(ToolType::Tape);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::E)&&!self.navigation.claims_key(egui::Key::E,i.modifiers)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::E)&&!self.navigation_claims_key(egui::Key::E,i.modifiers)) {
                 self.set_tool(ToolType::Eraser);
             } else if ctx.input(|i| i.key_pressed(egui::Key::B)) {
                 self.set_tool(ToolType::Paint);

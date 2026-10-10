@@ -27,7 +27,7 @@ use std::{
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
-    event::WindowEvent,
+    event::{WindowEvent,DeviceEvent,DeviceId},
     event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
     window::{Window, WindowId},
 };
@@ -101,6 +101,14 @@ impl<A: App> ApplicationHandler for AppWrapper<A> {
         if let (Some(app),Some(window),Some(egui_app))=(&mut self.app,&self.window,&mut self.egui_app) {
             if matches!(event,WindowEvent::RedrawRequested) { app.draw(egui_app,window); }
             else { app.on_window_event(&event,window,event_loop); }
+        }
+    }
+
+    fn device_event(&mut self,_:&ActiveEventLoop,_:DeviceId,event:DeviceEvent){
+        if let DeviceEvent::MouseMotion{delta}=event {
+            if let (Some(app),Some(window))=(&mut self.app,&self.window){
+                if window.has_focus(){app.egui_winit.on_mouse_motion(delta);window.request_redraw();}
+            }
         }
     }
 
