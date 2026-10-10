@@ -1,0 +1,12 @@
+{
+  "candidate": "0b6c7fdd",
+  "adopted": false,
+  "reviewed_success": "Independent reviewer decoded six retained QImage regions and checked three warm counter observations; no new render run",
+  "required_before_adoption": [
+    "Cancel failed pending raw uploads when their texture is freed, including queued renderer deltas, to prevent later orphan allocation.",
+    "Checker must require literal three-sheet/six-region inventory and mandatory source document; empty input must fail.",
+    "Preserve source paint order and whole-item composition for backgrounds and decorations.",
+    "Validate managed GPU texture update/free behavior under upload failure."
+  ],
+  "scope": "Six white-background text regions do not prove full canvas or general draw order."
+}
