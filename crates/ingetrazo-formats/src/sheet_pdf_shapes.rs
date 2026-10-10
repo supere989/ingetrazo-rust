@@ -10,7 +10,7 @@ use ingetrazo_core::{
 fn polygon(points: &[glam::DVec2], offset: glam::DVec2) -> Vec<PathOp> {
     let mut result = Vec::new();
     for (i, p) in points.iter().enumerate() {
-        let p = (*p + offset).as_vec2().to_array();
+        let p = (*p + offset).to_array();
         result.push(if i == 0 {
             PathOp::Move(p)
         } else {
@@ -21,7 +21,7 @@ fn polygon(points: &[glam::DVec2], offset: glam::DVec2) -> Vec<PathOp> {
     result
 }
 fn path(shape: &ShapePath, offset: glam::DVec2) -> Vec<PathOp> {
-    let xy = |x: f64, y: f64| [(x + offset.x) as f32, (y + offset.y) as f32];
+    let xy = |x: f64, y: f64| [x + offset.x, y + offset.y];
     let cubic = |a: [f64; 2], b: [f64; 2], c: [f64; 2]| {
         let a = xy(a[0], a[1]);
         let b = xy(b[0], b[1]);
@@ -31,8 +31,8 @@ fn path(shape: &ShapePath, offset: glam::DVec2) -> Vec<PathOp> {
     let k = 0.5522847498307934;
     match shape {
         ShapePath::Line(a, b) => vec![
-            PathOp::Move((*a + offset).as_vec2().to_array()),
-            PathOp::Line((*b + offset).as_vec2().to_array()),
+            PathOp::Move((*a + offset).to_array()),
+            PathOp::Line((*b + offset).to_array()),
         ],
         ShapePath::Polygon(p) => polygon(p, offset),
         ShapePath::Ellipse { size } => {
@@ -75,11 +75,13 @@ fn path(shape: &ShapePath, offset: glam::DVec2) -> Vec<PathOp> {
     }
 }
 fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
+    let origin_mm = offset.to_array();
+    let offset = glam::DVec2::ZERO;
     let color = |value: &str| parse_sheet_color(value).map(|c| c.map(|v| v as f32 / 255.));
     let stroke = command
         .stroke
         .as_ref()
-        .map(|(c, w)| Ok::<_, String>((color(c)?, *w as f32)))
+        .map(|(c, w)| Ok::<_, String>((color(c)?, *w)))
         .transpose()?;
     let fill = command
         .fill
@@ -93,6 +95,8 @@ fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
         })
         .transpose()?;
     Ok(Draw {
+        origin_mm,
+        even_odd: true,
         path: path(&command.path, offset),
         stroke,
         fill,
@@ -146,11 +150,12 @@ pub fn prepare(sheet: &Sheet) -> Result<Page, String> {
         }
     }
     let (w, h) = sheet.dimensions_mm();
-    let size = [w as f32, h as f32];
+    let size = [w, h];
     // Original standard QPageSize uses integer point dimensions and ten-point
     // default QPdfWriter margins. At source RENDER_DPI=300, Qt rounds
     // ten points to42device pixels (10.08points), observed in content matrices.
     Ok(Page {
+        device_dpi: Some(300.),
         size_mm: size,
         media_box_points: Some(size.map(|v| (v * 72. / 25.4).round())),
         origin_mm: [42. * 25.4 / 300.; 2],

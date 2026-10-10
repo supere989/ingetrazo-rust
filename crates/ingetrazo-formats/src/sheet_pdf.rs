@@ -1,43 +1,60 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Direct physical-page vector output. Caller supplies validated item painters;
 //! no rendering process, raster screenshot, or intermediate image is required.
-use pdf_writer::{Content, Name, Pdf, Rect, Ref};
+use pdf_writer::{Name, Pdf, Rect, Ref};
 use std::{io::Write, path::Path};
 #[derive(Clone, Debug)]
 pub enum PathOp {
-    Move([f32; 2]),
-    Line([f32; 2]),
-    Cubic([f32; 6]),
+    Move([f64; 2]),
+    Line([f64; 2]),
+    Cubic([f64; 6]),
     Close,
 }
 #[derive(Clone, Debug)]
 pub struct Draw {
+    pub origin_mm: [f64; 2],
+    pub even_odd: bool,
     pub path: Vec<PathOp>,
-    pub stroke: Option<([f32; 4], f32)>,
+    pub stroke: Option<([f32; 4], f64)>,
     pub fill: Option<[f32; 4]>,
     pub clip: Option<Vec<PathOp>>,
 }
 pub struct Page {
-    pub size_mm: [f32; 2],
-    pub media_box_points: Option<[f32; 2]>,
-    pub origin_mm: [f32; 2],
+    /// Source logical-device frame; paths remain physical mm. No rasterization.
+    pub device_dpi: Option<f64>,
+    pub size_mm: [f64; 2],
+    pub media_box_points: Option<[f64; 2]>,
+    pub origin_mm: [f64; 2],
     pub draws: Vec<Draw>,
 }
-fn path(content: &mut Content, ops: &[PathOp]) {
+// Emit finite physical coordinates without f32 narrowing. Fixed decimal PDF
+// numbers avoid exponential notation and preserve authored double precision.
+fn number(value: f64) -> String {
+    let text = format!("{value:.12}");
+    let text = text.trim_end_matches('0').trim_end_matches('.');
+    if text == "-0" {
+        "0".into()
+    } else {
+        text.into()
+    }
+}
+fn path(content: &mut Vec<u8>, ops: &[PathOp]) {
     for op in ops {
         match *op {
-            PathOp::Move([x, y]) => {
-                content.move_to(x, y);
-            }
-            PathOp::Line([x, y]) => {
-                content.line_to(x, y);
-            }
-            PathOp::Cubic([a, b, c, d, e, f]) => {
-                content.cubic_to(a, b, c, d, e, f);
-            }
-            PathOp::Close => {
-                content.close_path();
-            }
+            PathOp::Move([x, y]) => writeln!(content, "{} {} m", number(x), number(y)).unwrap(),
+            PathOp::Line([x, y]) => writeln!(content, "{} {} l", number(x), number(y)).unwrap(),
+            PathOp::Cubic(p) => writeln!(
+                content,
+                "{} {} {} {} {} {} c",
+                number(p[0]),
+                number(p[1]),
+                number(p[2]),
+                number(p[3]),
+                number(p[4]),
+                number(p[5])
+            )
+            .unwrap(),
+            PathOp::Close => content.extend_from_slice(b"h\n"),
         }
     }
 }
@@ -47,7 +64,7 @@ fn validate_path(ops: &[PathOp]) -> Result<(), String> {
     }
     let mut open = false;
     for op in ops {
-        let points: &[f32] = match op {
+        let points: &[f64] = match op {
             PathOp::Move(p) => {
                 open = true;
                 p
@@ -90,6 +107,12 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
     let mut path_commands = 0usize;
     for page in pages {
         if page
+            .device_dpi
+            .is_some_and(|v| !v.is_finite() || v < 1. || v > 9600.)
+        {
+            return Err("Invalid PDF logical device DPI".into());
+        }
+        if page
             .size_mm
             .iter()
             .any(|v| !v.is_finite() || *v <= 0. || *v > 10_000.)
@@ -119,6 +142,13 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
                 .ok_or("PDF command count overflow")?;
             if path_commands > 500_000 {
                 return Err("PDF aggregate command budget exceeded".into());
+            }
+            if draw
+                .origin_mm
+                .iter()
+                .any(|v| !v.is_finite() || v.abs() > 1_000_000.)
+            {
+                return Err("Invalid PDF draw origin".into());
             }
             validate_path(&draw.path)?;
             if let Some(clip) = &draw.clip {
@@ -162,55 +192,72 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
         let names = (0..page.draws.len())
             .map(|i| format!("G{i}"))
             .collect::<Vec<_>>();
-        let mut content = Content::new();
-        let unit = 72. / 25.4;
+        let mut content = Vec::new();
+        let physical_unit = 72. / 25.4;
+        let unit = page.device_dpi.map_or(physical_unit, |dpi| 72. / dpi);
+        let local_scale = page.device_dpi.map_or(1., |dpi| dpi / 25.4);
         let box_size = page
             .media_box_points
-            .unwrap_or(page.size_mm.map(|v| v * unit));
-        content.transform([
-            unit,
-            0.,
-            0.,
-            -unit,
-            page.origin_mm[0] * unit,
-            box_size[1] - page.origin_mm[1] * unit,
-        ]);
+            .unwrap_or(page.size_mm.map(|v| v * physical_unit));
+        writeln!(
+            content,
+            "{} 0 0 {} {} {} cm",
+            number(unit),
+            number(-unit),
+            number(page.origin_mm[0] * physical_unit),
+            number(box_size[1] - page.origin_mm[1] * physical_unit)
+        )
+        .unwrap();
         for (i, draw) in page.draws.iter().enumerate() {
-            content.save_state();
-            content.set_parameters(Name(names[i].as_bytes()));
+            writeln!(
+                content,
+                "q\n/{} gs\n{} 0 0 {} {} {} cm",
+                names[i],
+                number(local_scale),
+                number(local_scale),
+                number(draw.origin_mm[0] * local_scale),
+                number(draw.origin_mm[1] * local_scale)
+            )
+            .unwrap();
             if let Some(clip) = &draw.clip {
                 path(&mut content, clip);
-                content.clip_nonzero();
-                content.end_path();
+                content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
             }
-            if let Some(color) = draw.fill {
-                content.set_fill_rgb(color[0], color[1], color[2]);
+            if let Some(c) = draw.fill {
+                writeln!(
+                    content,
+                    "{} {} {} rg",
+                    number(c[0] as f64),
+                    number(c[1] as f64),
+                    number(c[2] as f64)
+                )
+                .unwrap();
             }
-            if let Some((color, width)) = draw.stroke {
-                content.set_stroke_rgb(color[0], color[1], color[2]);
-                content.set_line_width(width);
-                content.set_line_cap(pdf_writer::types::LineCapStyle::RoundCap);
-                content.set_line_join(pdf_writer::types::LineJoinStyle::BevelJoin);
+            if let Some((c, width)) = draw.stroke {
+                writeln!(
+                    content,
+                    "{} {} {} RG\n{} w\n1 J\n2 j",
+                    number(c[0] as f64),
+                    number(c[1] as f64),
+                    number(c[2] as f64),
+                    number(width)
+                )
+                .unwrap();
             }
             path(&mut content, &draw.path);
-            match (draw.fill.is_some(), draw.stroke.is_some()) {
-                (true, true) => {
-                    content.fill_nonzero_and_stroke();
-                }
-                (true, false) => {
-                    content.fill_nonzero();
-                }
-                (false, true) => {
-                    content.stroke();
-                }
-                _ => {
-                    content.end_path();
-                }
-            }
-            content.restore_state();
+            content.extend_from_slice(
+                match (draw.fill.is_some(), draw.stroke.is_some(), draw.even_odd) {
+                    (true, true, true) => b"B*\n",
+                    (true, false, true) => b"f*\n",
+                    (true, true, false) => b"B\n",
+                    (true, false, false) => b"f\n",
+                    (false, true, _) => b"S\n",
+                    _ => b"n\n",
+                },
+            );
+            content.extend_from_slice(b"Q\n");
         }
-        let bytes = content.finish();
-        pdf.stream(stream, &bytes);
+        pdf.stream(stream, &content);
         for (i, draw) in page.draws.iter().enumerate() {
             pdf.ext_graphics(alpha_ids[i])
                 .stroking_alpha(draw.stroke.map_or(1., |(c, _)| c[3]))
@@ -219,7 +266,7 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
         let mut writer = pdf.page(id);
         writer
             .parent(tree)
-            .media_box(Rect::new(0., 0., box_size[0], box_size[1]))
+            .media_box(Rect::new(0., 0., box_size[0] as f32, box_size[1] as f32))
             .contents(stream);
         let mut resources = writer.resources();
         let mut states = resources.ext_g_states();

@@ -1,10 +1,13 @@
 use ingetrazo_formats::sheet_pdf::{self, Draw, Page, PathOp};
-fn page(size: [f32; 2]) -> Page {
+fn page(size: [f64; 2]) -> Page {
     Page {
+        device_dpi: None,
         size_mm: size,
         media_box_points: None,
         origin_mm: [10. * 25.4 / 72.; 2],
         draws: vec![Draw {
+            origin_mm: [0., 0.],
+            even_odd: false,
             path: vec![
                 PathOp::Move([20., 20.]),
                 PathOp::Line([60., 20.]),
