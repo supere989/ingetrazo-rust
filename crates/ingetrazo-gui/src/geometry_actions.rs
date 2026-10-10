@@ -48,6 +48,7 @@ impl IngeTrazoApp {
             })
             .collect();
         let mut candidate = self.scene.clone();
+        candidate.camera = self.camera.clone();
         match ingetrazo_core::georef::geopath_to_geometry(&mut candidate, &ids) {
             Ok(count) => {
                 self.save_undo_state();
