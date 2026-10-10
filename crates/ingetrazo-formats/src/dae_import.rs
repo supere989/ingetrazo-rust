@@ -580,9 +580,15 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
                 mesh.faces[id].layer = face.layer.clone();
             }
         }
-        let (mesh, _) =
+        let (mut fused, _) =
             ingetrazo_core::simplify::simplify_mesh(&mesh, 0., false).map_err(invalid)?;
-        scene.mesh = ingetrazo_core::heal::orient_faces(&mesh).map_err(invalid)?;
+        // Import stitching retains the source boundary stations even when
+        // same-plane triangle edges disappear from the editable surface.
+        for vertex in &mesh.vertices {
+            fused.add_vertex(vertex.position);
+        }
+        let fused = ingetrazo_core::planar::stitch_boundaries(&fused).map_err(invalid)?;
+        scene.mesh = ingetrazo_core::heal::orient_faces(&fused).map_err(invalid)?;
         scene.groups.clear();
         scene.bump_version();
     } else {
