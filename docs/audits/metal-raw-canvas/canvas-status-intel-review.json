@@ -1,0 +1,51 @@
+{
+  "run": 38080892548,
+  "job": 114297397462,
+  "artifact": 11680448636,
+  "sha256": "3363c32bd3267a2a9a90fa47c1008cabdecc3b299c9537619beb5cf3a4fa66b7",
+  "source": "514e1e147a9330cb20b100e25f74243c5920fe70",
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "6493d5b5dd8582de90a36fd5f48b4f4216c672840280d1224667fbb267d06e5a",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 229,
+      "skipped": 1,
+      "pending": 2,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=229",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        13024,
+        1
+      ],
+      "canvas_submission_observations": 232,
+      "canvas_warm_frames": 0,
+      "canvas_last_stable_uploads": null,
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "raw_texture": {
+    "passed": true,
+    "pixels": 256,
+    "physical_mac_claim": false
+  },
+  "scope": "Retained Intel failure: positive presentation but cancelled payload prevents old readiness equality; corrected source is in run 38081610734, not yet accepted."
+}
