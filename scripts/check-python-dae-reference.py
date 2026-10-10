@@ -11,7 +11,7 @@ from core.mesh import Mesh
 from formats import dae,igz
 NS="{http://www.collada.org/2005/11/COLLADASchema}"
 def summary(s):
- r=oracle.signature(s);r["group_names"]=[g.name for g in s.groups];r["group_faces"]=[len(g.mesh.faces)for g in s.groups];r["group_edges"]=[len(g.mesh.edges)for g in s.groups];r["components"]=[g.is_component()for g in s.groups];r["shared_pairs"]=[[i,j]for i in range(len(s.groups))for j in range(i+1,len(s.groups))if s.groups[i].mesh is s.groups[j].mesh];return r
+ r=oracle.signature(s);r["group_edge_flags"]=[sorted([{"points":sorted([[round(v.x(),5),round(v.y(),5),round(v.z(),5)]for v in [e.a,e.b]]),"soft":e.soft,"hidden":e.hidden}for e in oracle.world_mesh(g).edges],key=lambda e:e["points"])for g in s.groups];r["group_names"]=[g.name for g in s.groups];r["group_faces"]=[len(g.mesh.faces)for g in s.groups];r["group_edges"]=[len(g.mesh.edges)for g in s.groups];r["components"]=[g.is_component()for g in s.groups];r["shared_pairs"]=[[i,j]for i in range(len(s.groups))for j in range(i+1,len(s.groups))if s.groups[i].mesh is s.groups[j].mesh];return r
 def main():
  app=QApplication([]);exe=os.environ.get("INGETRAZO_DAE_FIXTURE")
  if exe is None:
@@ -41,6 +41,8 @@ def main():
    shutil.copy2(out,root/out.name);rust=Scene();igz.load_into(rust,out);b=summary(rust)
    world=all(a[k]==b[k]for k in ["area","bounds","color_area","textures"]);same=oracle.editable(a,b);rows.append({"case":name,"original":a,"rust":b,"world_match":world,"editable_schema_match":same})
  controls=[]
+ if rows[5].get("rust"):
+  changed=copy.deepcopy(rows[5]["original"]);changed["group_edge_flags"][0][0]["soft"]=not changed["group_edge_flags"][0][0]["soft"];assert not oracle.editable(rows[5]["original"],changed);controls.append({"case":"paint-boundary-softened","detected":True})
  for name,index,field,value in [("lost-boundary-stations",0,"rings",[[[0,0,0],[20,0,0],[20,10,0],[0,10,0]]]),("lost-shared-definition",4,"shared_pairs",[]),("wrong-reference-name",3,"group_names",["Wrong"])]:
   original=rows[index]["original"];changed=copy.deepcopy(original);changed[field]=value;detected=not oracle.editable(original,changed);assert detected;controls.append({"case":name,"detected":True})
  original=rows[5]["original"];changed=copy.deepcopy(original);paint=json.loads(changed["surface_recipes"][0]);paint["attrs"]["color"]=[0,0,0];changed["surface_recipes"][0]=json.dumps(paint,sort_keys=True);assert not oracle.editable(original,changed);controls.append({"case":"repainted-region-same-area","detected":True})
