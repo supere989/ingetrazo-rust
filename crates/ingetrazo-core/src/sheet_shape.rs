@@ -165,7 +165,7 @@ impl SheetShape {
                     "band" => commands.push(ShapePaint {
                         path: ShapePath::Polygon(band.to_vec()),
                         stroke: None,
-                        fill: Some((self.fill_color.clone(), 0.6)),
+                        fill: Some((self.fill_color.clone(), f64::from(0.6_f32))),
                         clip: None,
                     }),
                     "hatch" => {
