@@ -1,0 +1,9 @@
+{
+  "source_revision": "62cbf50",
+  "binary_sha256": "c515c18f8991902e05a337f8898ba661db6d8c5b61b7a0c146ef606478ade546",
+  "build": "cargo build --locked debug profile",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "device": "strict NVIDIA RTX5090 CDI gpu0",
+  "command": "read-only/no-network immutable-image headless native_vulkan_upload_churn external45stimeout, explicitlibEGLNVIDIA ICD",
+  "scope": "Debug walltime baseline five repeats, twenty cases; forced staging even unified memory. Timing excludes actual GPUreadback checks. Tiny32 vs packed32 differresourceownership, no batchspeedclaim yet."
+}
