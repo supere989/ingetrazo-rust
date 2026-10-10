@@ -1,0 +1,206 @@
+   Compiling libc v0.2.190
+    Checking objc2-encode v4.1.0
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+    Checking bitflags v2.13.2
+   Compiling objc2 v0.6.5
+   Compiling syn v3.0.6
+    Checking cfg-if v1.0.5
+    Checking block2 v0.6.2
+    Checking dispatch2 v0.3.1
+    Checking objc2-core-foundation v0.3.2
+   Compiling autocfg v1.5.1
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.229
+   Compiling objc-sys v0.3.5
+   Compiling rustversion v1.0.23
+    Checking objc2-foundation v0.3.2
+   Compiling version_check v0.9.5
+   Compiling zerocopy v0.8.60
+   Compiling parking_lot_core v0.9.12
+   Compiling dashu-int v0.5.1
+   Compiling ahash v0.8.12
+   Compiling serde v1.0.229
+    Checking dashu-base v0.5.1
+   Compiling getrandom v0.4.3
+   Compiling zmij v1.0.23
+    Checking ttf-parser v0.25.1
+    Checking smallvec v1.16.2
+    Checking num-modular v0.6.6
+    Checking static_assertions v1.1.0
+    Checking scopeguard v1.2.0
+    Checking lock_api v0.4.14
+    Checking owned_ttf_parser v0.25.1
+    Checking objc2 v0.5.3
+   Compiling serde_derive v1.0.229
+    Checking emath v0.30.0
+   Compiling serde_json v1.0.151
+    Checking core-foundation-sys v0.8.7
+   Compiling find-msvc-tools v0.1.14
+    Checking equivalent v1.0.2
+    Checking hashbrown v0.17.1
+   Compiling thiserror v2.0.21
+    Checking either v1.18.0
+    Checking once_cell v1.21.4
+    Checking ab_glyph_rasterizer v0.1.10
+   Compiling shlex v2.0.1
+    Checking ab_glyph v0.2.32
+   Compiling cc v1.6.0
+    Checking indexmap v2.14.2
+    Checking itertools v0.14.0
+    Checking core-foundation v0.9.4
+    Checking ecolor v0.30.0
+    Checking dashu-ratio v0.5.1
+    Checking block2 v0.5.1
+    Checking parking_lot v0.12.5
+    Checking clipper2-rust v1.2.0
+   Compiling foreign-types-macros v0.2.4
+   Compiling thiserror-impl v2.0.21
+    Checking bitflags v1.3.2
+    Checking profiling v1.0.18
+   Compiling cfg_aliases v0.2.2
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking epaint_default_fonts v0.30.0
+    Checking dispatch v0.2.0
+    Checking rustc-hash v2.1.3
+    Checking nohash-hasher v0.2.0
+    Checking foreign-types-shared v0.3.1
+    Checking foreign-types v0.5.0
+    Checking epaint v0.30.0
+    Checking manifold-rust v0.16.0
+    Checking objc2-foundation v0.2.2
+   Compiling winit v0.30.13
+    Checking core-graphics-types v0.1.3
+    Checking uuid v1.27.0
+    Checking glam v0.29.3
+    Checking earcutr v0.5.0
+   Compiling blake3 v1.8.7
+    Checking objc2-metal v0.3.2
+   Compiling bytemuck_derive v1.12.1
+    Checking objc2-core-video v0.3.2
+    Checking objc2-core-graphics v0.3.2
+    Checking pin-project-lite v0.2.17
+    Checking log v0.4.34
+    Checking tracing-core v0.1.36
+    Checking tracing v0.1.44
+    Checking ingetrazo-core v0.3.15 (/tmp/ingetrazo-metal-drawable-lifetime/crates/ingetrazo-core)
+    Checking objc2-quartz-core v0.3.2
+    Checking bytemuck v1.25.2
+    Checking core-graphics v0.23.2
+    Checking objc2-app-kit v0.2.2
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Checking egui v0.30.0
+    Checking objc2-core-data v0.3.2
+    Checking objc2-cloud-kit v0.3.2
+    Checking objc2-core-image v0.3.2
+    Checking objc2-core-text v0.3.2
+    Checking memmap2 v0.9.11
+    Checking constant_time_eq v0.4.2
+    Checking smol_str v0.2.2
+    Checking arrayvec v0.7.8
+    Checking cursor-icon v1.2.0
+    Checking dpi v0.1.2
+    Checking raw-window-handle v0.6.2
+    Checking ingetrazo-render v0.3.15 (/tmp/ingetrazo-metal-drawable-lifetime/crates/ingetrazo-render)
+    Checking objc2-app-kit v0.3.2
+    Checking ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-drawable-lifetime/crates/ingetrazo-metal)
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad2d.rs:141:17
+    |
+141 |         options.setFastMathEnabled(false);
+    |                 ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+  --> crates/ingetrazo-metal/src/cad_callback_painter.rs:96:21
+   |
+96 |             options.setFastMathEnabled(false);
+   |                     ^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad_compute_painter.rs:119:21
+    |
+119 |             options.setFastMathEnabled(false);
+    |                     ^^^^^^^^^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> crates/ingetrazo-metal/src/egui_painter.rs:607:13
+    |
+607 |         let mut staging = metal.buffer(staging_bytes, true)?;
+    |             ----^^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-metal` (lib) generated 4 warnings (run `cargo fix --lib -p ingetrazo-metal` to apply 1 suggestion)
+warning: unused imports: `DefinedClass`, `MainThreadOnly`, `NSObjectProtocol`, `NSObject`, `define_class`, and `extern_protocol`
+  --> crates/ingetrazo-metal/examples/metalkit_presenter_control.rs:10:9
+   |
+10 |         DefinedClass, MainThreadMarker, MainThreadOnly, class, define_class, extern_protocol,
+   |         ^^^^^^^^^^^^                    ^^^^^^^^^^^^^^         ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^
+...
+13 |         runtime::{NSObject, NSObjectProtocol, ProtocolObject},
+   |                   ^^^^^^^^  ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `objc2_core_foundation::CGSize`
+  --> crates/ingetrazo-metal/examples/metalkit_presenter_control.rs:16:9
+   |
+16 |     use objc2_core_foundation::CGSize;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `CAMetalDrawable`
+  --> crates/ingetrazo-metal/examples/metalkit_presenter_control.rs:18:29
+   |
+18 |     use objc2_quartz_core::{CAMetalDrawable, CAMetalLayer};
+   |                             ^^^^^^^^^^^^^^^
+
+warning: unused imports: `AtomicBool` and `AtomicU64`
+  --> crates/ingetrazo-metal/examples/metalkit_presenter_control.rs:26:22
+   |
+26 |             atomic::{AtomicBool, AtomicU64, Ordering},
+   |                      ^^^^^^^^^^  ^^^^^^^^^
+
+error[E0133]: call to unsafe function `objc2_app_kit::NSWindow::setReleasedWhenClosed` is unsafe and requires unsafe function or block
+  --> crates/ingetrazo-metal/examples/appkit_presenter_control.rs:45:9
+   |
+45 |         window.setReleasedWhenClosed(false);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+   |
+   = note: consult the function's documentation for information on how to avoid undefined behavior
+
+error[E0446]: private type `DelegateIvars` in public interface
+   --> crates/ingetrazo-metal/examples/support/metalkit_frame.rs:141:1
+    |
+138 |   struct DelegateIvars {
+    |   -------------------- `DelegateIvars` declared as private
+...
+141 | / define_class!(
+142 | |     #[unsafe(super=NSObject)]
+143 | |     #[thread_kind=MainThreadOnly]
+144 | |     #[ivars=DelegateIvars]
+...   |
+161 | | );
+    | |_^ can't leak private type
+    |
+    = note: this error originates in the macro `$crate::__define_class_inner` which comes from the expansion of the macro `define_class` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0133`.
+error: could not compile `ingetrazo-metal` (example "appkit_presenter_control") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+For more information about this error, try `rustc --explain E0446`.
+warning: `ingetrazo-metal` (example "metalkit_presenter_control") generated 4 warnings
+error: could not compile `ingetrazo-metal` (example "metalkit_presenter_control") due to 1 previous error; 4 warnings emitted

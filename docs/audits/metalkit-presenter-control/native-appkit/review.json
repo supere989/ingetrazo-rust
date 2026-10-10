@@ -1,0 +1,33 @@
+{
+  "scope": "Diagnostic source only; no productionfallback and no new cloud execution",
+  "prior_paired_run": 38096096481,
+  "source_contract": "Identical shared draw/callback implementation extracted from f0515536, whitespace/visibility-normalized exact compare PASS",
+  "isolated_changes": [
+    "NSApplication created directly with no delegate",
+    "NSWindow created directly; no winit objects instantiated",
+    "No winit CFRunLoop observers/waker",
+    "native NSTimer polls strict terminalproof/deadline",
+    "system MTKView still owns timed draw scheduling/currentDrawable"
+  ],
+  "unchanged_gpu_contract": [
+    "same NativeMetal device/queue",
+    "BGRA8Unorm/framebufferOnly",
+    "bounded3 pending",
+    "presentDrawable thencommit",
+    "actual callbackargument timestamp",
+    "Completed ANDpositive timestamp fordisplayed",
+    "zero timestampskip notpass",
+    "15s native deadline",
+    "unresolvedcompleteownersquarantine"
+  ],
+  "native_activation": "Regular activation plusactual NSApplication.run; no claimthat winit hadnon-native runloop",
+  "reference_ordering_boundary": "Direct window/timer setup occurs before NSApplication.run automatic launch; this is partof diagnostic AppKit-hosting boundary ratherthana productionreplacement",
+  "metadata_compile": "PASS targeted --locked Apple aarch64 examples appkit_presenter_control and metalkit_presenter_control; native SDK link/runtime pending",
+  "initial_failures_retained": [
+    "dev-only NSTimer/block2 feature needslockedgraphupdate",
+    "unsafe setReleasedWhenClosed and public DelegateIvars corrected"
+  ],
+  "lock_delta": "Existing objc2-foundation nowincludesexisting block2 0.6.2 due dev-only NSTimer API; no new package/version",
+  "next_runtime_requirement": "One same-session three-control sequence if rootauthorizes, each outer45s deadline and allreports preserved; noautomaticdispatch",
+  "interpretation": "AppKitpositive vswinitMTKViewfail narrows delegate/observer/window/launchboundary asunit. Allfail leavescommondevice/session/callbackcontract unresolved. No VM, physicalMac or generalplatform claim."
+}
