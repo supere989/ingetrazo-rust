@@ -1,0 +1,178 @@
+{
+  "negative_controls": [
+    {
+      "case": "wrong-paper-width",
+      "detected": true
+    },
+    {
+      "case": "continuous-hidden-line",
+      "detected": true
+    },
+    {
+      "case": "missing-ink",
+      "detected": true
+    }
+  ],
+  "native_revision": "fa743d3f4fe58cf74f477ab3b5e877ae5b00cd7d",
+  "binary_sha256": "50fe8d90fbb9f821c573253459d6b3736c31db5f4108a2163cec26ac3858b392",
+  "passed": true,
+  "cases": [
+    {
+      "width_mm": 0.18,
+      "original": {
+        "pixels": 2552,
+        "bounds": [
+          239,
+          560,
+          279,
+          520
+        ],
+        "solid_width": 2,
+        "dash_runs": [
+          [
+            379,
+            389
+          ],
+          [
+            397,
+            408
+          ],
+          [
+            415,
+            426
+          ]
+        ]
+      },
+      "native": {
+        "pixels": 2584,
+        "bounds": [
+          239,
+          560,
+          279,
+          520
+        ],
+        "solid_width": 2,
+        "dash_runs": [
+          [
+            378,
+            390
+          ],
+          [
+            396,
+            408
+          ],
+          [
+            415,
+            427
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "width_mm": 0.5,
+      "original": {
+        "pixels": 5104,
+        "bounds": [
+          238,
+          561,
+          278,
+          521
+        ],
+        "solid_width": 4,
+        "dash_runs": [
+          [
+            378,
+            389
+          ],
+          [
+            397,
+            408
+          ],
+          [
+            415,
+            426
+          ]
+        ]
+      },
+      "native": {
+        "pixels": 5154,
+        "bounds": [
+          238,
+          561,
+          278,
+          521
+        ],
+        "solid_width": 4,
+        "dash_runs": [
+          [
+            378,
+            390
+          ],
+          [
+            396,
+            408
+          ],
+          [
+            415,
+            427
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "width_mm": 1.0,
+      "original": {
+        "pixels": 10148,
+        "bounds": [
+          236,
+          563,
+          276,
+          523
+        ],
+        "solid_width": 8,
+        "dash_runs": [
+          [
+            378,
+            389
+          ],
+          [
+            397,
+            408
+          ],
+          [
+            415,
+            426
+          ]
+        ]
+      },
+      "native": {
+        "pixels": 10246,
+        "bounds": [
+          236,
+          563,
+          276,
+          523
+        ],
+        "solid_width": 8,
+        "dash_runs": [
+          [
+            378,
+            390
+          ],
+          [
+            396,
+            408
+          ],
+          [
+            415,
+            427
+          ]
+        ]
+      },
+      "match": true
+    }
+  ],
+  "scope": "Actual original paint_frame_mm versus production composer::render_model_projection in native eframe. Eight pixels/mm, three paper widths, front opaque wall and hidden box. Total ink tolerance5%, solid width/bounds/dash endpoints1pixel for raster AA. Cut-class pens, hatch/fill, other DPI, selected frames, raster styles and exports remain separate."
+}
