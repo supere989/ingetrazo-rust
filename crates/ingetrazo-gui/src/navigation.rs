@@ -1,6 +1,6 @@
 //! Camera navigation state; geometry and model history stay in their existing owners.
 use glam::{DVec2,DVec3};
-use ingetrazo_core::{camera::OrbitCamera,math::{Plane,Ray},screen_pick,visible_ray_index::VisibleRayIndex,walkthrough::{self,WalkModifiers}};
+use ingetrazo_core::{camera::OrbitCamera,math::Ray,screen_pick,visible_ray_index::VisibleRayIndex,walkthrough::{self,WalkModifiers}};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
 pub enum Mode { Position,Look,Walk,FirstPerson }
 impl Mode { pub fn hint(self)->&'static str {match self {Self::Position=>"Position Camera — click or drag from where to stand",Self::Look=>"Look Around — drag to turn",Self::Walk=>"Walk — drag; Ctrl run, Shift rise/strafe, Alt through walls",Self::FirstPerson=>"First Person — WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"}} }
@@ -9,10 +9,10 @@ pub struct Navigation {
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
  dragged:bool, pub base:Option<DVec3>, accumulator:f64,
  held:[bool;6], mouse_captured:bool, cursor_locked_sent:bool,
- collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
+ bounds_center:DVec3, collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
 }
 impl Default for Navigation {
- fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,accumulator:0.,held:[false;6],mouse_captured:false,cursor_locked_sent:false,collision_key:None,collision:None,collision_error:None}}
+ fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,accumulator:0.,held:[false;6],mouse_captured:false,cursor_locked_sent:false,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
 }
 impl Navigation {
  // Remember refused admission until revision changes; direct queries preserve correctness.
@@ -20,6 +20,7 @@ impl Navigation {
   let key=(scene.version,scene.view_version,model_revision);
   if self.collision_key==Some(key){return;}
   self.collision=None;self.collision_error=None;self.collision_key=Some(key);
+  self.bounds_center=first_point_bounds_center(scene);
   match VisibleRayIndex::new(scene,128*1024*1024){
    Ok(index)=>self.collision=Some(index),Err(error)=>self.collision_error=Some(error),
   }
@@ -43,6 +44,9 @@ impl Navigation {
  fn axes(&self)->[i8;3]{[self.held[0]as i8-self.held[1]as i8,self.held[2]as i8-self.held[3]as i8,self.held[4]as i8-self.held[5]as i8]}
  pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.accumulator=0.;}
  pub fn activate(&mut self,mode:Mode){self.cancel();self.mode=Some(mode);}
+ pub fn preview_line(&self)->Option<(DVec3,DVec3)>{
+  self.press.zip(self.look_at).map(|((_,base),look)|(base+DVec3::Z*self.eye_height,look))
+ }
  pub fn place(&mut self,camera:&mut OrbitCamera,base:DVec3,look:Option<DVec3>)->bool{
   let eye=base+DVec3::Z*self.eye_height;
   let mut direction=look.map(|p|p-eye).filter(|d|d.length()>1e-6).unwrap_or_else(||{
@@ -84,11 +88,11 @@ impl crate::IngeTrazoApp {
   self.status_message=mode.hint().into();
  }
 }
-pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response){
- if app.navigation_suspended(){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return;}
- let Some(mode)=app.navigation.mode else{return};
+pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response)->Option<ingetrazo_core::snap::SnapResult>{
+ if app.navigation_suspended(){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
+ let Some(mode)=app.navigation.mode else{return None};
  let pointer=ui.input(|i|i.pointer.clone());
- if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return;}
+ if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
  if matches!(mode,Mode::Position|Mode::Walk|Mode::FirstPerson){app.navigation.prepare_collision(&app.scene,app.model_revision);}
  if mode==Mode::FirstPerson {
   if ui.ctx().wants_keyboard_input(){app.navigation.held=[false;6];}
@@ -114,20 +118,24 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
    let delta=raw.unwrap_or_else(||pointer.delta());let rate=app.document_session.preferences.look_sensitivity as f64/500.;
    if was_captured{app.camera.turn(delta.x as f64*rate,-delta.y as f64*rate);}
   }else{app.navigation.sync_cursor(ui.ctx());}
-  return;
+  return None;
  }
- let position=pointer.hover_pos().map(|p|DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64));
+ let position=pointer.hover_pos().map(|p|{let p=DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64);if mode==Mode::Position{p.round()}else{p}});
+ let mut hovered_snap=None;
  let world=position.filter(|_|mode==Mode::Position).and_then(|p|{
-  let ray=app.camera.screen_to_ray(p.x,p.y,rect.width()as f64,rect.height()as f64);
+  let ray=crate::navigation_ray::cursor_ray(&app.camera,p.x.round(),p.y.round(),rect.width()as f64,rect.height()as f64)?;
   let hit=app.navigation.hit(&app.scene,&ray);
-  let normal=hit.map(|hit|hit.1).unwrap_or(DVec3::Z);
-  if ray.dir.dot(normal).abs()<6_f64.to_radians().sin(){return None;}
-  let candidate=hit.map(|hit|hit.0).or_else(||Plane::new(DVec3::ZERO,DVec3::Z).intersect_ray(&ray).filter(|t|*t>=0.).map(|t|ray.at(t)))?;
+  // Position has no captured start plane: source uses the ordinary first-point
+  // face/image/standard-view fallback during both click and stand-look drag.
+  let (plane_point,normal)=crate::viewport::cursor_work_plane_with_center(app,&ray,Some(app.navigation.bounds_center));
+  let candidate=crate::navigation_ray::plane_hit(&ray,plane_point,normal)?;
   app.snap_engine.note_model_revision(app.model_revision);
   let context=ingetrazo_core::snap_screen::ScreenSnapContext{viewport:screen_pick::PixelViewport::new(&app.camera,rect.width()as f64,rect.height()as f64),cursor:p,candidate,plane_normal:normal};
   let result=app.snap_engine.snap_screen_with_policy(&ray,&app.scene,None,None,&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{face_under_cursor:hit.is_some(),..Default::default()});
   app.snap_engine.note_screen_result(&result,false,ui.input(|i|i.time));
-  Some(result.point)
+  app.snap_engine.note_inference_result(&result);
+  let point=result.point;hovered_snap=Some(result);
+  Some(point)
  });
  if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
   if let Some(p)=position {if mode!=Mode::Position||world.is_some(){
@@ -164,10 +172,12 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  }
  if mode==Mode::Walk {if let Some((anchor,_))=app.navigation.press{
   let center=egui::pos2(rect.min.x+anchor.x as f32,rect.min.y+anchor.y as f32);
-  let painter=ui.painter_at(rect);let stroke=egui::Stroke::new(1.,egui::Color32::WHITE);
-  painter.line_segment([center-egui::vec2(8.,0.),center+egui::vec2(8.,0.)],stroke);
-  painter.line_segment([center-egui::vec2(0.,8.),center+egui::vec2(0.,8.)],stroke);
+  let painter=ui.painter_at(rect);let stroke=egui::Stroke::new(1.5,egui::Color32::from_rgba_unmultiplied(30,30,30,230));
+  painter.line_segment([center-egui::vec2(10.,0.),center+egui::vec2(10.,0.)],stroke);
+  painter.line_segment([center-egui::vec2(0.,10.),center+egui::vec2(0.,10.)],stroke);
+  painter.circle_stroke(center,4.,egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,255,255,200)));
  }}
+ hovered_snap
 }
 
 #[cfg(test)]mod tests {
@@ -300,4 +310,28 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   assert_eq!(app.navigation.mode,Some(Mode::Look));assert!(app.camera.eye().distance(endpoint+DVec3::Z*1.68)<1e-10);assert!(app.camera.perspective);assert!(app.undo_stack.is_empty());
  }
 
+}
+
+/// Frozen Scene.bounds policy for the first-point standard-view plane. Loose
+/// orphan vertices are excluded; visible placements include their full mesh.
+/// Source edge.hidden is a draw flag, not Scene.entity_visible's bounds flag.
+pub(crate) fn first_point_bounds_center(scene:&ingetrazo_core::scene::Scene)->DVec3{
+ let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
+ fn absorb(p:DVec3,lo:&mut DVec3,hi:&mut DVec3){if p.is_finite(){*lo=lo.min(p);*hi=hi.max(p);}}
+ for edge in &scene.mesh.edges{if scene.is_layer_visible(edge.layer.as_deref()){for id in [edge.v0,edge.v1]{if let Some(v)=scene.mesh.vertices.get(id){absorb(v.position,&mut lo,&mut hi);}}}}
+ for (id,face) in scene.mesh.faces.iter().enumerate(){if scene.mesh_face_visible(&scene.mesh,id){for &id in &face.vertices{if let Some(v)=scene.mesh.vertices.get(id){absorb(v.position,&mut lo,&mut hi);}}}}
+ fn placements(scene:&ingetrazo_core::scene::Scene,group:&ingetrazo_core::groups::Group,parent:glam::DMat4,lo:&mut DVec3,hi:&mut DVec3){
+  let world=parent*group.transform;
+  if !group.hidden&&!group.billboard&&scene.is_layer_visible(group.layer.as_deref()){for v in &group.mesh.vertices{absorb(world.transform_point3(v.position),lo,hi);}}
+  // iter_placements traverses every child; Scene.placements filters each yielded
+  // placement, rather than dropping a hidden nested placement's descendants.
+  for child in &group.children{placements(scene,child,world,lo,hi);}
+ }
+ for group in &scene.groups{if !group.hidden&&!group.billboard&&scene.is_layer_visible(group.layer.as_deref()){placements(scene,group,glam::DMat4::IDENTITY,&mut lo,&mut hi);}}
+ if lo.is_finite()&&hi.is_finite(){(lo+hi)*0.5}else{DVec3::ZERO}
+}
+
+#[cfg(test)]mod bounds_cache_tests{
+ use super::*;
+ #[test]fn model_visibility_rebuilds_position_center_but_unchanged_hover_reuses_it(){let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;let a=app.scene.mesh.add_vertex(DVec3::new(5.,4.,0.));let b=app.scene.mesh.add_vertex(DVec3::new(6.,4.,1.));let edge=app.scene.mesh.add_edge(a,b).unwrap();app.scene.mesh.edges[edge].layer=Some("visible".into());let layer=ingetrazo_core::layers::Layer::new("visible");app.scene.layers.push(layer);app.scene.mesh.add_vertex(DVec3::splat(1000.));app.navigation.prepare_collision(&app.scene,app.model_revision);assert_eq!(app.navigation.bounds_center,DVec3::new(5.5,4.,0.5));let key=app.navigation.collision_key;app.navigation.prepare_collision(&app.scene,app.model_revision);assert_eq!(app.navigation.collision_key,key);assert!(app.set_layer_visibility(app.scene.layers.len()-1,false));app.navigation.prepare_collision(&app.scene,app.model_revision);assert_eq!(app.navigation.bounds_center,DVec3::ZERO);assert_ne!(app.navigation.collision_key,key);}
 }

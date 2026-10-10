@@ -65,9 +65,20 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     // 2. Cursor Raycasting & Snapping
     let mut active_snap_glyph = None;
     let mut active_center_hint = None;
+    let mut navigation_preview_stroke=egui::Stroke::new(2.,egui::Color32::from_rgba_unmultiplied(242,115,41,217));
 
     if app.navigation.mode.is_some() {
-        crate::navigation::input(app,ui,rect,&response);
+        if let Some(result)=crate::navigation::input(app,ui,rect,&response){
+            active_snap_glyph=SnapGlyph::from_snap_result(&result,None);
+            use ingetrazo_core::snap::SnapKind;
+            let (color,alpha,width)=match result.kind{
+                SnapKind::AxisLock=>(result.color,1.,2.5),SnapKind::AxisInference=>(result.color,0.5,2.5),
+                SnapKind::Reference|SnapKind::FromPoint=>(result.color,1.,2.5),
+                SnapKind::Close=>([0.20,0.40,0.78],0.95,2.),_ =>([0.95,0.45,0.16],0.85,2.)};
+            navigation_preview_stroke=egui::Stroke::new(width,egui::Color32::from_rgba_unmultiplied((color[0]*255.).round()as u8,(color[1]*255.).round()as u8,(color[2]*255.).round()as u8,(alpha*255_f32).round()as u8));
+            let viewport=ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width()as f64,rect.height()as f64);
+            if let Some(mouse)=pointer.hover_pos(){active_center_hint=app.snap_engine.center_hint_pixel(&viewport,glam::DVec2::new((mouse.x-rect.min.x)as f64,(mouse.y-rect.min.y)as f64));}
+        }
     } else {
     if let Some(mouse_pos) = pointer.hover_pos() {
         if rect.contains(mouse_pos) {
@@ -277,6 +288,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     );
 
     }
+    if app.native_gpu_viewport_enabled && app.navigation.mode==Some(crate::navigation::Mode::Position){
+        if let Some(glyph)=active_snap_glyph.as_ref(){ingetrazo_render::pipeline::render_snap_glyphs(std::slice::from_ref(glyph),&app.camera,&painter,rect);}
+    }
 
     // Original QPainter image borders are independent overlay strokes, drawn
     // above the native world texture. Cached native CAD callbacks preserve order.
@@ -339,7 +353,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     // 4. Render Active Tool Rubber Band (if any)
-    for (p0, p1) in app.active_tool.rubber_band_lines() {
+    for ((p0,p1),stroke) in app.active_tool.rubber_band_lines().into_iter().map(|line|(line,egui::Stroke::new(2.0,egui::Color32::from_rgb(255,60,60)))).chain(app.navigation.preview_line().map(|line|(line,navigation_preview_stroke))) {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
         if let (Some((s0, _)), Some((s1, _))) = (
             project_point(p0, &view_proj, rect),
@@ -347,7 +361,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         ) {
             painter.line_segment(
                 [s0, s1],
-                egui::Stroke::new(2.0, egui::Color32::from_rgb(255, 60, 60)),
+                stroke,
             );
         }
     }
@@ -399,6 +413,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 }
 
 pub fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,DVec3){
+ cursor_work_plane_with_center(app,ray,None)
+}
+pub(crate) fn cursor_work_plane_with_center(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray,cached_center:Option<DVec3>)->(DVec3,DVec3){
     if let Some(paste)=&app.paste_preview{return (paste.reference,DVec3::Z);}
     let forward=app.camera.forward();let near_horizon=forward.z.abs()<15_f64.to_radians().sin();let vertical=if forward.x.abs()>=forward.y.abs(){DVec3::X}else{DVec3::Y};
     if let Some((point,normal))=app.active_tool.drawing_plane(){if app.active_tool_type==ToolType::Line&&normal.z.abs()>0.94&&near_horizon{return(point,vertical);}return(point,normal);}
@@ -435,10 +452,7 @@ pub fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVe
     if let Some((point,normal,_))=ingetrazo_core::screen_pick::hover_face(&app.scene,ray){return(point,normal);}
     if let Some((id,_))=app.scene.image_plane_hit(ray,ingetrazo_core::image_plane::ImagePickMode::Inference){let image=&app.scene.image_planes[id];return(image.center(),image.normal());}
     if forward.abs().max_element()>=0.97{
-        let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
-        fn group_bounds(group:&ingetrazo_core::groups::Group,parent:glam::DMat4,lo:&mut DVec3,hi:&mut DVec3){let transform=parent*group.transform;for v in &group.mesh.vertices{let p=transform.transform_point3(v.position);*lo=lo.min(p);*hi=hi.max(p);}for child in &group.children{group_bounds(child,transform,lo,hi);}}
-        for v in &app.scene.mesh.vertices{lo=lo.min(v.position);hi=hi.max(v.position);}for group in &app.scene.groups{group_bounds(group,glam::DMat4::IDENTITY,&mut lo,&mut hi);}
-        let center=if lo.is_finite()&&hi.is_finite(){(lo+hi)*0.5}else{DVec3::ZERO};if let Some(plane)=ingetrazo_core::snap::first_point_work_plane(forward,center){return plane;}
+        let center=cached_center.unwrap_or_else(||crate::navigation::first_point_bounds_center(&app.scene));if let Some(plane)=ingetrazo_core::snap::first_point_work_plane(forward,center){return plane;}
     }
     (DVec3::ZERO,DVec3::Z)
 }
