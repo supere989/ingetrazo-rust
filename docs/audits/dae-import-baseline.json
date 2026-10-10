@@ -1,0 +1,518 @@
+{
+  "provenance": {
+    "rust_commit": "29b783651d61fd643bef270be7adfaf65a52dc47",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
+  "native_fixture_sha256": "7ae12e489b569a22a83d5a85b5ece6f9b95d6f426e320f680a8dead1d2de0b94",
+  "native_source_revision": "2a42b898178c5b94651fb3b42b22b72aa4804152",
+  "cases": [
+    {
+      "case": "painted-rectangle",
+      "original": {
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": true
+    },
+    {
+      "case": "holed-surface",
+      "original": {
+        "area": 12.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 12.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          [
+            [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ]
+          ]
+        ],
+        "georef": null
+      },
+      "rust": {
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 16.0
+        },
+        "loose_faces": 2,
+        "groups": 0,
+        "world_faces": 2,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ],
+          [
+            [
+              1.0,
+              1.0,
+              0.0
+            ],
+            [
+              3.0,
+              1.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              1.0,
+              3.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          [
+            [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ]
+          ],
+          []
+        ],
+        "georef": null
+      },
+      "world_match": false,
+      "editable_schema_match": false
+    },
+    {
+      "case": "nested-reflection",
+      "original": {
+        "area": 96.0,
+        "bounds": [
+          [
+            2.0,
+            10.0
+          ],
+          [
+            20.0,
+            32.0
+          ],
+          [
+            30.0,
+            30.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 96.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              2.0,
+              20.0,
+              30.0
+            ],
+            [
+              10.0,
+              20.0,
+              30.0
+            ],
+            [
+              10.0,
+              32.0,
+              30.0
+            ],
+            [
+              2.0,
+              32.0,
+              30.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "area": 96.0,
+        "bounds": [
+          [
+            2.0,
+            10.0
+          ],
+          [
+            20.0,
+            32.0
+          ],
+          [
+            30.0,
+            30.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 96.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              2.0,
+              20.0,
+              30.0
+            ],
+            [
+              2.0,
+              32.0,
+              30.0
+            ],
+            [
+              10.0,
+              32.0,
+              30.0
+            ],
+            [
+              10.0,
+              20.0,
+              30.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": false
+    },
+    {
+      "case": "georeferenced",
+      "original": {
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": [
+          51.5,
+          -0.1,
+          32.0,
+          0.0
+        ]
+      },
+      "rust": {
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.2, 0.4, 0.6]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": false
+    }
+  ],
+  "world_passed": false,
+  "schema_passed": false,
+  "scope": "Original authored COLLADA painted/holed/nested reflected/georeferenced documents, actual original load compared with separate-process native decode and actual original IGZ reopen. World surface area/bounds/color allocation distinct from editable loose-mesh fusion/group/georef schema. This initial corpus does not cover texture fallback, FACEME, large reference threshold or arbitrary COLLADA."
+}
