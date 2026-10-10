@@ -361,7 +361,7 @@ impl Renderer {
                     let data = image
                         .pixels
                         .iter()
-                        .flat_map(|c| c.to_array())
+                        .flat_map(|c| encoded_image_pixel(*c))
                         .collect::<Vec<_>>();
 
                     (w, h, data)
@@ -919,4 +919,21 @@ pub fn orthographic_vk(
     ];
 
     res
+}
+
+// Only changed ColorImage uploads cross the ecolor representation boundary.
+// FontImage has a separate coverage contract (a,a,a,a) and stays untouched.
+fn encoded_image_pixel(c:egui::Color32)->[u8;4]{
+ let bytes=c.to_array();if bytes[3]==0||bytes[3]==255{return bytes;}
+ let rgba=egui::Rgba::from(c).to_array();let alpha=rgba[3];
+ let encoded=|v:f32|{let straight=(v/alpha).clamp(0.,1.);let rgb=if straight<=0.0031308{straight*12.92}else{1.055*straight.powf(1./2.4)-0.055};(rgb*alpha*255.).round().clamp(0.,255.)as u8};
+ [encoded(rgba[0]),encoded(rgba[1]),encoded(rgba[2]),bytes[3]]
+}
+#[cfg(test)]mod encoded_pixel_tests {
+ use super::*;
+ #[test]fn opaque_additive_and_half_white_representation(){
+  assert_eq!(encoded_image_pixel(egui::Color32::from_rgb(226,232,238)),[226,232,238,255]);
+  assert_eq!(encoded_image_pixel(egui::Color32::from_rgba_unmultiplied(255,255,255,128)),[128,128,128,128]);
+  assert_eq!(encoded_image_pixel(egui::Color32::from_rgb_additive(10,20,30)),[10,20,30,0]);
+ }
 }
