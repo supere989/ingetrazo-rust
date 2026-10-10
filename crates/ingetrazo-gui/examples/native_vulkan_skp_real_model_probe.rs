@@ -1,3 +1,5 @@
+#[cfg(any(target_os = "linux", target_os = "windows"))]
+mod platform {
 //! Diagnostic production World rendering of complete native SKP imports.
 //! Annotation UI overlays are not emitted by World and remain a required gap.
 use ash::vk;
@@ -36,7 +38,7 @@ fn capture(
     assert_eq!(pixels.len(), 800 * 600 * 4);
     Ok(pixels)
 }
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().collect::<Vec<_>>();
     let input = std::path::PathBuf::from(args.get(1).ok_or("input directory required")?);
     let output = std::path::PathBuf::from(args.get(2).ok_or("output directory required")?);
@@ -287,3 +289,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     )?;
     Ok(())
 }
+
+}
+#[cfg(any(target_os = "linux", target_os = "windows"))]
+fn main() -> Result<(), Box<dyn std::error::Error>> { platform::main() }
+#[cfg(not(any(target_os = "linux", target_os = "windows")))]
+fn main() { eprintln!("This diagnostic requires native Vulkan on Linux or Windows; macOS uses native Metal."); std::process::exit(2); }

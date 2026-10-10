@@ -1,0 +1,15 @@
+{
+  "failed_source": "a5eb2eb502433a7ec016801c2a66dafd394f9daa",
+  "run": 38088914963,
+  "job": 114321128108,
+  "artifact": 11683452219,
+  "artifact_sha256": "e1cd4650c36a9b22ecb3ccb6d96ff7071fe868fb3821b98a0aaa19949d102bc7",
+  "cause": "Vulkan-only example imported native_vulkan on macOS despite library platform guard",
+  "fix": "Guard platform module for Linux/Windows; explicit unavailable diagnostic main elsewhere",
+  "validation": [
+    "Direct rustc metadata compile passes aarch64-apple-darwin",
+    "Direct rustc metadata compile passes x86_64-apple-darwin",
+    "Platform body byte-identical except public main visibility"
+  ],
+  "full_ci_replay": "pending"
+}
