@@ -961,12 +961,9 @@ pub fn render_scene_to_egui(
             }
             RenderItem::TexturedTriangle { pts, uvs, depth: _, color, tex_id } => {
                 let mut mesh = egui::Mesh::with_texture(tex_id);
-                mesh.colored_vertex(pts[0], color);
-                mesh.colored_vertex(pts[1], color);
-                mesh.colored_vertex(pts[2], color);
-                mesh.vertices[0].uv = uvs[0];
-                mesh.vertices[1].uv = uvs[1];
-                mesh.vertices[2].uv = uvs[2];
+                for (pos, uv) in pts.into_iter().zip(uvs) {
+                    mesh.vertices.push(egui::epaint::Vertex { pos, uv, color });
+                }
                 mesh.add_triangle(0, 1, 2);
                 painter.add(egui::Shape::mesh(mesh));
             }
