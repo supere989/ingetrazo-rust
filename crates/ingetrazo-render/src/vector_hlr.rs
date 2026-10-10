@@ -711,16 +711,33 @@ pub fn parallel_segments_with_pool(scene:&Scene,camera:&OrbitCamera,profiles:boo
 pub fn parallel_original_qt_paper_with_pool(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:&mut crate::process_hlr::HlrProcessPool)->std::io::Result<Vec<VectorSegment>> {
     segments_impl(scene,camera,profiles,hidden,Some(pool),true)
 }
+/// Completed paper ink and the closed section material computed by the same cold
+/// geometry pass. Callers can cache admission/fill data without rebuilding contours.
+pub struct OriginalQtPaperDrawing {
+    pub segments: Vec<VectorSegment>,
+    pub section_material: Vec<[DVec3; 3]>,
+}
+pub fn original_qt_paper_drawing_with_pool(
+    scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool,
+    pool: &mut crate::process_hlr::HlrProcessPool,
+) -> std::io::Result<OriginalQtPaperDrawing> {
+    let basis = OriginalQtPaperBasis::from_camera(camera);
+    let (surfaces, edges, triangles) = original_qt_paper_geometry(scene, &basis);
+    let mut section_material = Vec::new();
+    let segments = segments_projected(scene, &basis, profiles, hidden, Some(pool),
+        surfaces, edges, triangles, true, Some(&mut section_material))?;
+    Ok(OriginalQtPaperDrawing { segments, section_material })
+}
 fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,original_qt:bool)->std::io::Result<Vec<VectorSegment>> {
     if original_qt {
         let basis=OriginalQtPaperBasis::from_camera(camera);
         let(surfaces,edges,triangles)=original_qt_paper_geometry(scene,&basis);
-        segments_projected(scene,&basis,profiles,hidden,pool,surfaces,edges,triangles,true)
+        segments_projected(scene,&basis,profiles,hidden,pool,surfaces,edges,triangles,true,None)
     }else{
-        segments_projected(scene,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false)
+        segments_projected(scene,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false,None)
     }
 }
-fn segments_projected(scene:&Scene,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool)->std::io::Result<Vec<VectorSegment>>{
+fn segments_projected(scene:&Scene,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool,section_material:Option<&mut Vec<[DVec3;3]>>)->std::io::Result<Vec<VectorSegment>>{
     let mut edges=edges;
     let mut caps = vec![];
     if let Some(plane) = scene.active_section() {
@@ -735,6 +752,7 @@ fn segments_projected(scene:&Scene,camera:&impl PaperProjection,profiles:bool,hi
         }
         crate::section_clip::mesh(&mut surfaces, plane);
     }
+    if let Some(material)=section_material { material.extend_from_slice(&caps); }
     let triangles = if original_qt&&scene.active_section().is_none() {original_triangles.into_iter().map(|t|t.map(|p|project(p,camera))).collect::<Vec<_>>()} else {surfaces
         .indices
         .chunks_exact(3)

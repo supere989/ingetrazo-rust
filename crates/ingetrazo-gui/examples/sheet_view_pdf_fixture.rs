@@ -255,7 +255,65 @@ fn main() {
             .unwrap();
         assert_eq!(app.composer_compute.completed_jobs, qt_jobs);
         assert_eq!(app.composer_compute.worker_ids(), pids);
-        rows.push(serde_json::json!({"name":name,"pages":2,"warm_cache_no_jobs":true,"worker_pids":pids,"scene_unchanged":true,"cache_policy_separation":true,"operative_camera_basis":true,"operative_hard_world_exact":app.scene.active_section().is_none()}));
+        let paper = app
+            .composer_compute
+            .original_qt_paper_drawing(
+                &app.scene,
+                &app.camera,
+                app.clipboard_document,
+                app.model_revision,
+                "__current__",
+                true,
+                false,
+            )
+            .unwrap();
+        assert_eq!(
+            paper.section_material,
+            ingetrazo_render::vector_hlr::paper_section_triangles(&app.scene),
+            "cached admission material must equal the independent existing section API"
+        );
+        let cache_jobs = app.composer_compute.completed_jobs;
+        let warm = app
+            .composer_compute
+            .original_qt_paper_drawing(
+                &app.scene,
+                &app.camera,
+                app.clipboard_document,
+                app.model_revision,
+                "__current__",
+                true,
+                false,
+            )
+            .unwrap();
+        assert!(
+            std::sync::Arc::ptr_eq(&paper, &warm),
+            "warm admission returns the complete cached record, not rebuilt caps"
+        );
+        assert_eq!(cache_jobs, app.composer_compute.completed_jobs);
+        if !paper.section_material.is_empty() {
+            for sheet in &mut app.scene.sheets {
+                for item in &mut sheet.items {
+                    if let SheetItem::ViewFrame(frame) = item {
+                        frame.cut_fill = "solid".into();
+                    }
+                }
+            }
+            let sentinel = root.join(format!("{name}.unsupported-fill.pdf"));
+            std::fs::write(&sentinel, b"section admission sentinel").unwrap();
+            let before_jobs = app.composer_compute.completed_jobs;
+            let error = app.export_composer_pdf(None, &sentinel).unwrap_err();
+            assert!(error.contains("section fill painter"), "{error}");
+            assert_eq!(
+                before_jobs, app.composer_compute.completed_jobs,
+                "unsupported fill admission must reuse completed section geometry"
+            );
+            assert_eq!(
+                std::fs::read(&sentinel).unwrap(),
+                b"section admission sentinel"
+            );
+            std::fs::remove_file(sentinel).unwrap();
+        }
+        rows.push(serde_json::json!({"name":name,"pages":2,"warm_cache_no_jobs":true,"worker_pids":pids,"scene_unchanged":true,"cache_policy_separation":true,"cached_section_admission":true,"operative_camera_basis":true,"operative_hard_world_exact":app.scene.active_section().is_none()}));
     }
     assert_eq!(rows.len(), 13);
     std::fs::write(

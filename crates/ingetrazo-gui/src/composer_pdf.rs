@@ -102,12 +102,7 @@ pub(super) fn view_draws(
     if camera.perspective || !camera.view_matrix().is_finite() {
         return Err("Invalid orthographic PDF frame camera".into());
     }
-    if frame.cut_fill != "none"
-        && !ingetrazo_render::vector_hlr::paper_section_triangles(&snapshot).is_empty()
-    {
-        return Err("PDF section fill painter remains unavailable".into());
-    }
-    let ink = compute.original_qt_paper_segments(
+    let drawing = compute.original_qt_paper_drawing(
         &snapshot,
         &camera,
         document,
@@ -116,6 +111,10 @@ pub(super) fn view_draws(
         frame.profiles,
         frame.hidden_lines,
     )?;
+    if frame.cut_fill != "none" && !drawing.section_material.is_empty() {
+        return Err("PDF section fill painter remains unavailable".into());
+    }
+    let ink = &drawing.segments;
     if ink.is_empty() {
         return Err("PDF empty view placeholder text painter remains unavailable".into());
     }

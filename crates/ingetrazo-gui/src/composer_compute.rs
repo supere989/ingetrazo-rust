@@ -4,7 +4,7 @@ use ingetrazo_core::{camera::OrbitCamera, scene::Scene};
 use ingetrazo_render::{
     process_hlr::{HlrProcessPool, ProcessMetrics},
     vector_hlr::{
-        parallel_original_qt_paper_with_pool, parallel_segments_with_pool, OriginalQtPaperBasis,
+        original_qt_paper_drawing_with_pool, parallel_segments_with_pool, OriginalQtPaperBasis,
         VectorSegment,
     },
 };
@@ -33,10 +33,26 @@ struct Key {
     hidden: bool,
     view_key: String,
 }
+pub struct PaperDrawing {
+    pub segments: Arc<Vec<VectorSegment>>,
+    pub section_material: Vec<[glam::DVec3; 3]>,
+}
+impl PaperDrawing {
+    fn bytes(&self) -> usize {
+        self.segments
+            .capacity()
+            .saturating_mul(std::mem::size_of::<VectorSegment>())
+            .saturating_add(
+                self.section_material
+                    .capacity()
+                    .saturating_mul(std::mem::size_of::<[glam::DVec3; 3]>()),
+            )
+    }
+}
 pub struct ComposerCompute {
     pool: Option<HlrProcessPool>,
     failure: Option<String>,
-    cache: VecDeque<(Key, Arc<Vec<VectorSegment>>)>,
+    cache: VecDeque<(Key, Arc<PaperDrawing>)>,
     cache_bytes: usize,
     worker: Option<PathBuf>,
     pub completed_jobs: u64,
@@ -109,6 +125,7 @@ impl ComposerCompute {
             hidden,
             InkPolicy::NativeF64,
         )
+        .map(|drawing| drawing.segments.clone())
     }
     pub fn original_qt_paper_segments(
         &mut self,
@@ -130,6 +147,30 @@ impl ComposerCompute {
             hidden,
             InkPolicy::OriginalQtPaperV1,
         )
+        .map(|drawing| drawing.segments.clone())
+    }
+    /// Returns cached cut material with ink; a warm admission check performs no
+    /// contour construction, triangulation, projection or worker publication.
+    pub fn original_qt_paper_drawing(
+        &mut self,
+        scene: &Scene,
+        camera: &OrbitCamera,
+        document: uuid::Uuid,
+        revision: u64,
+        view_key: &str,
+        profiles: bool,
+        hidden: bool,
+    ) -> Result<Arc<PaperDrawing>, String> {
+        self.segments_policy(
+            scene,
+            camera,
+            document,
+            revision,
+            view_key,
+            profiles,
+            hidden,
+            InkPolicy::OriginalQtPaperV1,
+        )
     }
     fn segments_policy(
         &mut self,
@@ -141,7 +182,7 @@ impl ComposerCompute {
         profiles: bool,
         hidden: bool,
         policy: InkPolicy,
-    ) -> Result<Arc<Vec<VectorSegment>>, String> {
+    ) -> Result<Arc<PaperDrawing>, String> {
         let key = Key {
             policy,
             document,
@@ -186,11 +227,31 @@ impl ComposerCompute {
                 }
             }
         }
-        let solve = match policy {
-            InkPolicy::NativeF64 => parallel_segments_with_pool,
-            InkPolicy::OriginalQtPaperV1 => parallel_original_qt_paper_with_pool,
+        let result = match policy {
+            InkPolicy::NativeF64 => parallel_segments_with_pool(
+                scene,
+                camera,
+                profiles,
+                hidden,
+                self.pool.as_mut().unwrap(),
+            )
+            .map(|segments| PaperDrawing {
+                segments: Arc::new(segments),
+                section_material: Vec::new(),
+            }),
+            InkPolicy::OriginalQtPaperV1 => original_qt_paper_drawing_with_pool(
+                scene,
+                camera,
+                profiles,
+                hidden,
+                self.pool.as_mut().unwrap(),
+            )
+            .map(|drawing| PaperDrawing {
+                segments: Arc::new(drawing.segments),
+                section_material: drawing.section_material,
+            }),
         };
-        let ink = match solve(scene, camera, profiles, hidden, self.pool.as_mut().unwrap()) {
+        let ink = match result {
             Ok(ink) => Arc::new(ink),
             Err(e) => {
                 let error = format!("Drawing computation failed: {e}");
@@ -200,18 +261,13 @@ impl ComposerCompute {
             }
         };
         self.completed_jobs = self.completed_jobs.saturating_add(1);
-        let bytes = ink
-            .capacity()
-            .saturating_mul(std::mem::size_of::<VectorSegment>());
+        let bytes = ink.bytes();
         const BUDGET: usize = 32 * 1024 * 1024;
         while !self.cache.is_empty()
             && (self.cache_bytes.saturating_add(bytes) > BUDGET || self.cache.len() >= 32)
         {
             let (_, old) = self.cache.pop_front().unwrap();
-            self.cache_bytes = self.cache_bytes.saturating_sub(
-                old.capacity()
-                    .saturating_mul(std::mem::size_of::<VectorSegment>()),
-            );
+            self.cache_bytes = self.cache_bytes.saturating_sub(old.bytes());
         }
         if bytes <= BUDGET {
             self.cache_bytes += bytes;
