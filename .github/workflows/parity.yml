@@ -336,6 +336,18 @@ jobs:
           cargo run --locked -p ingetrazo-gui --example image_move_context > docs/audits/image-tools-ci/context-native.json
           cargo run --locked -p ingetrazo-gui --example image_tool_roots > docs/audits/image-tools-ci/roots-native.json
           python scripts/check-image-move-context.py docs/audits/image-tools-ci/context-original.json docs/audits/image-tools-ci/context-native.json docs/audits/image-tools-ci/roots-original.json docs/audits/image-tools-ci/roots-native.json docs/audits/image-move-context/literal-old.json docs/audits/image-move-context/roots-literal-old.json
+      - name: Original mixed Move contexts and reliable image membership
+        run: |
+          python scripts/probe-python-image-mixed-context.py docs/audits/image-tools-ci/mixed-original.json
+          cargo run --locked -p ingetrazo-gui --example image_mixed_context > docs/audits/image-tools-ci/mixed-native.json
+          python scripts/check-image-mixed-context.py docs/audits/image-tools-ci/mixed-original.json docs/audits/image-tools-ci/mixed-native.json docs/audits/image-mixed-context-baseline/native-baseline10.json
+          python scripts/probe-python-image-move-membership.py docs/audits/image-tools-ci/membership-original.json
+          cargo run --locked -p ingetrazo-gui --example image_move_membership > docs/audits/image-tools-ci/membership-native.json
+          python scripts/check-image-move-membership.py docs/audits/image-tools-ci/membership-original.json docs/audits/image-tools-ci/membership-native.json docs/audits/image-move-membership/literal-old.json
+          python scripts/probe-python-move-position-keys.py docs/audits/image-tools-ci/keys-original.json
+          cargo run --locked -p ingetrazo-tools --example move_position_keys > docs/audits/image-tools-ci/keys-native.json
+          python scripts/check-move-position-keys.py docs/audits/image-tools-ci/keys-original.json docs/audits/image-tools-ci/keys-native.json
+          cargo run --locked -p ingetrazo-tools --example image_move_epoch > docs/audits/image-tools-ci/epoch-native.json
       - name: Original map metadata codec and actual source reopens
         run: |
           mkdir -p docs/audits/map-codec-ci
