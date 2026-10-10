@@ -40,7 +40,7 @@ struct State {
     gpu: MetalPresentation,
     input: egui_winit::State,
     app: IngeTrazoApp,
-    window: Window,
+    window: std::sync::Arc<Window>,
     close_requested: bool,
     pending_textures: egui::TexturesDelta,
 }
@@ -60,6 +60,23 @@ impl Host {
             state.app.status_message = format!("Native Metal painting paused: {e}");
             state.window.set_title(&state.app.status_message);
             self.repaint = Instant::now() + Duration::from_millis(100);
+        }
+        // Preserve queued raw input and texture deltas under ordinary capacity
+        // backpressure; native close requests still enter application guards.
+        if !state.close_requested {
+            match state.gpu.can_prepare() {
+                Ok(true) => {}
+                Ok(false) => {
+                    self.repaint = Instant::now() + Duration::from_millis(8);
+                    return;
+                }
+                Err(e) => {
+                    state.app.status_message = format!("Native Metal painting paused: {e}");
+                    state.window.set_title(&state.app.status_message);
+                    self.repaint = Instant::now() + Duration::from_millis(100);
+                    return;
+                }
+            }
         }
         let mut raw = state.input.take_egui_input(&state.window);
         if state.close_requested {
@@ -112,9 +129,12 @@ impl Host {
                 .checked_add(viewport.repaint_delay)
                 .unwrap_or_else(|| Instant::now() + Duration::from_secs(3600));
         }
-        let primitives = self.ctx.tessellate(output.shapes, output.pixels_per_point);
         state.pending_textures.append(output.textures_delta);
         let result = (|| -> Result<bool, String> {
+            if !state.gpu.can_prepare()? {
+                return Ok(false);
+            }
+            let primitives = self.ctx.tessellate(output.shapes, output.pixels_per_point);
             state
                 .painter
                 .update_textures(state.gpu.metal(), &state.pending_textures)?;
@@ -147,21 +167,22 @@ impl ApplicationHandler for Host {
             return;
         }
         let result = (|| -> Result<State, String> {
-            let window = ev
-                .create_window(
+            let window = std::sync::Arc::new(
+                ev.create_window(
                     Window::default_attributes()
                         .with_title("IngeTrazo — native Metal (opt-in)")
                         .with_inner_size(winit::dpi::LogicalSize::new(1280., 800.))
                         .with_min_inner_size(winit::dpi::LogicalSize::new(640., 480.)),
                 )
-                .map_err(|e| e.to_string())?;
+                .map_err(|e| e.to_string())?,
+            );
             let metal = NativeMetal::new()?;
             eprintln!(
                 "Graphics backend: native Metal; device={}; unified={}; opt-in egui host",
                 metal.info.name, metal.info.unified_memory
             );
             let painter = EguiPainter::new(&metal)?;
-            let gpu = MetalPresentation::attach(&window, metal)?;
+            let gpu = MetalPresentation::attach(window.clone(), metal)?;
             let input = egui_winit::State::new(
                 self.ctx.clone(),
                 egui::ViewportId::ROOT,
@@ -250,7 +271,6 @@ impl ApplicationHandler for Host {
                 state.app.status_message = format!("Native Metal painting paused: {e}");
                 state.window.set_title(&state.app.status_message);
                 self.repaint = Instant::now() + Duration::from_millis(100);
-                return;
             }
             if Instant::now() >= self.repaint {
                 state.window.request_redraw();
