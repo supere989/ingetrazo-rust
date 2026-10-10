@@ -1,0 +1,13 @@
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs b/crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs
+index 7c761d74..4335603e 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs
+@@ -15,7 +15,7 @@ impl Handle{
+  }
+  pub fn shape(&self,rect:egui::Rect)->egui::Shape{egui::PaintCallback{rect,callback:self.callback.clone()}.into()}
+ }
+-impl VulkanPaint for Paint{fn as_any(&self)->&dyn Any{self}fn paint(&self,info:&egui::PaintCallbackInfo,device:&Device,command:vk::CommandBuffer)->RendererResult<()>{if device.handle()!=self.device{return Err(egui_ash_renderer::RendererError::Init("Outline arena device mismatch".into()));}let s=self.state.lock().unwrap();self.counters.outline_slots_examined.fetch_add(s.ready.len()as u64,Ordering::Relaxed);let p=self.pipeline.lock().unwrap();record_ready(info,device,command,&p,&self.counters,s.ready_pose,s.ready.iter().flatten())}}
++impl VulkanPaint for Paint{fn as_any(&self)->&dyn Any{self}fn paint(&self,info:&egui::PaintCallbackInfo,device:&Device,command:vk::CommandBuffer)->RendererResult<()>{if device.handle()!=self.device{return Err(egui_ash_renderer::RendererError::Init("Outline arena device mismatch".into()));}let s=self.state.lock().unwrap();self.counters.outline_slots_examined.fetch_add(s.ready.len()as u64,Ordering::Relaxed);let p=self.pipeline.lock().unwrap();record_ready(info,device,command,&p,&self.counters,s.pose,s.ready.iter().flatten())}}
+ struct Slot{vertex:Ticket,index:Ticket}
+ #[derive(Default,Clone,Debug,serde::Serialize)]pub struct Metrics{pub pages:u64,pub page_bytes:u64,pub uploads:u64,pub upload_bytes:u64,pub candidate_rollbacks:u64,pub preserved_failures:u64,pub live_slots:u64,pub retired_bytes:u64,pub prepare_slots_examined:u64,pub page_use_marks:u64}
+ #[derive(Default)]pub(super)struct Gpu{vertex:Planner,index:Planner,vpages:BTreeMap<u64,BufferId>,ipages:BTreeMap<u64,BufferId>,slots:Vec<Option<Slot>>,paint:Option<Weak<Paint>>,next_page:u64,page_bytes:u64,pressure_after:Option<usize>,metrics:Metrics}

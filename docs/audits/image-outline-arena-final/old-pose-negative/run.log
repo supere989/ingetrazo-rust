@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/capture.py", line 78, in <module>
+    (out/"advance").write_text("pressure");refused=stage("refused");retained=wait(lambda:capture_owned(window));assert retained.save(str(out/"refused.png"));assert np.array_equal(rgba(image),rgba(retained)),"Old pixels changed after later candidate refusal"
+                                                                                                                                                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Old pixels changed after later candidate refusal
+Fontconfig error: Cannot load default config file: No such file: (null)
