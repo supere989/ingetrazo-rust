@@ -89,6 +89,8 @@ pub struct PlacementPreview<'a> {
 }
 
 pub trait Tool: Send + Sync {
+    /// Consume the source relative image command after an actual tool commit.
+    fn take_image_frame_command(&mut self)->Option<ingetrazo_core::image_plane::ImageFrameCommand>{None}
     /// Actionable preparation error from the last pointer commit, if any.
     fn error_message(&self) -> Option<&str> {
         None
@@ -566,4 +568,20 @@ mod group_visibility_tests {
             pick_scene_group(&scene, &Ray::new(DVec3::new(2.5, 0., 3.), -DVec3::Z), 0.1).is_some()
         );
     }
+}
+
+/// Source gather_images keeps explicit selection even when subsequently locked
+/// or hidden; only implicit cursor acquisition applies selectable guards.
+pub fn gather_image_targets(scene:&Scene,ctx:&ToolContext)->Vec<usize>{
+    let selected=scene.selection.iter().filter_map(|item|match item{ingetrazo_core::scene::SelectionItem::ImagePlane(id) if *id<scene.image_planes.len()=>Some(*id),_=>None}).collect::<Vec<_>>();
+    if selected.is_empty()&&scene.selection.is_empty(){scene.image_plane_hit(&ctx.ray,ingetrazo_core::image_plane::ImagePickMode::Selectable).map(|(id,_)|vec![id]).unwrap_or_default()}else{selected}
+}
+
+#[cfg(test)] mod image_acquisition_tests{
+ use super::*;use ingetrazo_core::scene::SelectionItem;
+ #[test] fn selected_hidden_locked_images_keep_source_target_ownership(){
+  let mut scene=Scene::new();let mut image=ingetrazo_core::image_plane::ImagePlane::new("scan",DVec3::ZERO,DVec3::X,DVec3::Y);image.locked=true;scene.image_planes.push(image);
+  let ctx=ToolContext::new(DVec3::ZERO,ingetrazo_core::math::Ray::new(DVec3::new(0.5,0.5,1.),-DVec3::Z));
+  assert!(gather_image_targets(&scene,&ctx).is_empty());scene.select(SelectionItem::ImagePlane(0));assert_eq!(gather_image_targets(&scene,&ctx),vec![0]);
+ }
 }

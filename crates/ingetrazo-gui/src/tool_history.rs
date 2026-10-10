@@ -29,7 +29,7 @@ impl IngeTrazoApp {
         before
     }
 
-    fn record_tool_commit(&mut self, before: Scene) -> Result<(),String> {
+    fn record_tool_commit(&mut self, mut before: Scene) -> Result<(),String> {
         if before.mesh != self.scene.mesh {
             if let Err(error)=ingetrazo_core::heal::refresh_interior(&mut self.scene.mesh) {
                 self.scene=before;self.bump_model_revision();
@@ -37,10 +37,12 @@ impl IngeTrazoApp {
                 return Err(error);
             }
         }
+        let image_command=self.active_tool.take_image_frame_command();
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene);
         if committed {
             self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);
+            if let Some(command)=image_command{let mut delta=ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&self.scene.image_planes);delta.frame_command=Some((command,false));before.history_images.0=Some(delta);}
             self.bump_model_revision();
             if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
             self.active_tool.note_history_revision(self.model_revision,true);
