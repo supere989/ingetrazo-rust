@@ -424,6 +424,19 @@ fn material_colors<'a, 'i>(
                     .ok_or_else(|| invalid("missing material symbol"))?;
                 let fallback = image::load_from_memory(&bytes).ok().map(|decoded| {
                     let decoded = decoded.to_rgba8();
+                    if decoded.pixels().all(|p| p[3] == 255) {
+                        // Qt smooth downsampling uses 14-bit area weights,
+                        // truncating horizontal accumulation before vertical.
+                        let weights = |n: u32| { let step = 16384_u64.div_ceil(u64::from(n)); let mut left = 16384_u64; (0..n).map(|_| { let w = step.min(left); left -= w; w }).collect::<Vec<_>>() };
+                        let wx = weights(decoded.width()); let wy = weights(decoded.height());
+                        let mut total = [0_u64; 3];
+                        for (y, row) in decoded.rows().enumerate() {
+                            let mut horizontal = [0_u64; 3];
+                            for (x, pixel) in row.enumerate() { for i in 0..3 { horizontal[i] += u64::from(pixel[i]) * wx[x]; } }
+                            for i in 0..3 { total[i] += (horizontal[i] >> 4) * wy[y]; }
+                        }
+                        return total.map(|v| (v >> 24) as f64 / 255.);
+                    }
                     let mut sums = [0_u64; 3];
                     let mut alpha = 0_u64;
                     for pixel in decoded.pixels() {
