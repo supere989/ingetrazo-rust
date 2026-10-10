@@ -36,7 +36,7 @@ for path in sorted(set(files)):
   for index,font in enumerate(fonts):
    # Read exact stored tables, independent of any fontTools decompilation.
    key=tuple(hashlib.sha256(font.reader[tag]).hexdigest() for tag in ("head","name"))
-   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":file_digest})
+   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":file_digest,"file_bytes":path.stat().st_size,"face_table_bytes":sum(table.length for table in font.reader.tables.values()),"largest_tables":sorted([{"tag":str(tag),"bytes":table.length} for tag,table in font.reader.tables.items()],key=lambda row:row["bytes"],reverse=True)[:5]})
   owner.close()
  except Exception as error:inventory_errors.append({"path":str(path),"error":repr(error)})
 rows=[]
