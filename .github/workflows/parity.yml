@@ -42,6 +42,10 @@ jobs:
         run: python scripts/check-python-followme.py
       - name: Original Python shared component definition acceptance
         run: python scripts/check-python-components.py
+      - name: Original runtime authored glTF reference imports
+        run: python scripts/check-python-gltf-import.py
+      - name: Original runtime mixed clipboard geometry
+        run: python scripts/check-python-clipboard.py
       - name: Original Python versus Rust fillet geometry
         run: python scripts/check-python-fillet.py
       - name: Independent nested mesh exchange geometry

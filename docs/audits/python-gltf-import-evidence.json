@@ -1,0 +1,41 @@
+{
+  "provenance": {
+    "rust_commit": "a13018398310e7b18875c07b15522b293fc593e0",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 2,
+  "cases": [
+    {
+      "case": "external.gltf",
+      "original_reopened_triangles": 2,
+      "world_vertices_and_uvs_equal": true,
+      "asset_sha256": "56c876a2af80284ee409e23de3aefd28576d828399368b2a259f8ead960c623b"
+    },
+    {
+      "case": "embedded.gltf",
+      "original_reopened_triangles": 2,
+      "world_vertices_and_uvs_equal": true,
+      "asset_sha256": "56c876a2af80284ee409e23de3aefd28576d828399368b2a259f8ead960c623b"
+    },
+    {
+      "case": "embedded.glb",
+      "original_reopened_triangles": 2,
+      "world_vertices_and_uvs_equal": true,
+      "asset_sha256": "56c876a2af80284ee409e23de3aefd28576d828399368b2a259f8ead960c623b"
+    },
+    {
+      "case": "range",
+      "refused": true,
+      "destination_preserved": true
+    },
+    {
+      "case": "required-extension",
+      "refused": true,
+      "destination_preserved": true
+    }
+  ],
+  "scope": "Authored GLB/textual glTF external and embedded buffers/images; two shared mesh instances, nested reflected TRS, strided normalized ushort UVs, KHR texture offset/scale, PBR color/opacity and raw image bytes. Original textured importer drops PBR color, so color is independently checked against authored input. Rigging/animations/DAE and broader primitives remain open."
+}

@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "77d921e41820e42c19bb94cc688f3d88df883caf",
+    "rust_commit": "a13018398310e7b18875c07b15522b293fc593e0",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -9,7 +9,24 @@
   "results": [
     {
       "format": ".gltf",
-      "decoded_points": [
+      "encoded_y_up_points": [
+        [
+          12.0,
+          34.0,
+          -23.0
+        ],
+        [
+          12.0,
+          34.0,
+          -24.0
+        ],
+        [
+          11.0,
+          34.0,
+          -23.0
+        ]
+      ],
+      "decoded_world_z_up_points": [
         [
           12.0,
           23.0,
@@ -30,7 +47,24 @@
     },
     {
       "format": ".glb",
-      "decoded_points": [
+      "encoded_y_up_points": [
+        [
+          12.0,
+          34.0,
+          -23.0
+        ],
+        [
+          12.0,
+          34.0,
+          -24.0
+        ],
+        [
+          11.0,
+          34.0,
+          -23.0
+        ]
+      ],
+      "decoded_world_z_up_points": [
         [
           12.0,
           23.0,
