@@ -6,7 +6,7 @@ The `native_vulkan` example runs the production `IngeTrazoApp::update_ui` direct
 
 The shared update function preserves document/session logic and existing texture handles. Native root viewport close events enter the application Save/Discard/Cancel guard; returned Close/CancelClose commands determine exit. egui-winit supplies keyboard, pointer, IME and platform clipboard handling. Redraw scheduling follows egui repaint delay and input wakeups, with an event-loop proxy for immediate background repaint requests. A single in-flight fence retires texture frees safely. Zero extent postpones swapchain recreation.
 
-`cargo test -p ingetrazo-gui --lib`: 73 passed, 1 ignored. `cargo tree -i wgpu`: no packages. Actual disposable Xvfb startup used Mesa llvmpipe Vulkan 1.4.318, with production menus, viewport and tray visible in retained capture. Extension diagnostics describe advertisement, not enabled hardware RT. Use `scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan OUTPUT` for native resize captures. Do not equate screenshot existence with pixel parity.
+`cargo test -p ingetrazo-gui --lib`: 73 passed, 1 ignored. `cargo tree -i wgpu`: no packages. Actual disposable Xvfb startup used Mesa llvmpipe Vulkan 1.4.318, with production menus, viewport and tray visible in retained capture. Extension diagnostics describe advertisement, not enabled hardware RT. Use `scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan OUTPUT` for native resize captures and an actual WM_DELETE_WINDOW clean-close control. Do not equate screenshot existence with pixel parity.
 
 ## Remaining production gates
 
