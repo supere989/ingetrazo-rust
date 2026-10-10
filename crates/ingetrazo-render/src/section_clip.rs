@@ -339,7 +339,22 @@ mod tests {
                 .count()
         };
         let closed = count(&scene);
-        assert_eq!(closed, 20736); // 144px mask; original 2.5px contours leave 142px magenta interior.
+        assert_eq!(closed, 20880); // Polygon-offset side fragments extend one edge row; contours occlude that border.
+        let mut coplanar = scene.clone();
+        coplanar.mesh = ingetrazo_core::mesh::Mesh::new();
+        let ids = [
+            DVec3::new(0., 1., 1.5),
+            DVec3::new(1., 1., 1.5),
+            DVec3::new(1., 0., 1.5),
+            DVec3::new(0., 0., 1.5),
+        ]
+        .map(|p| coplanar.mesh.add_vertex(p));
+        coplanar.mesh.add_face(ids.to_vec(), vec![]);
+        assert_eq!(
+            count(&coplanar),
+            0,
+            "plane offset(2,2) must lose to coincident opaque surface offset(1,1)"
+        );
         let mut cavity = scene.clone();
         let inner = [
             (0.25, 0.25, 0.25),
@@ -366,7 +381,7 @@ mod tests {
         }
         assert_eq!(
             count(&cavity),
-            20736 - 5184,
+            20880 - 5184,
             "front-facing cavity surface must suppress fill in the void"
         );
         for visual in [
@@ -519,6 +534,7 @@ impl SectionStencil {
                     matrix,
                     width,
                     height,
+                    1.,
                     |index, z, _| {
                         depths[index] = depths[index].min(z);
                     },
@@ -536,8 +552,9 @@ impl SectionStencil {
                     matrix,
                     width,
                     height,
+                    0.,
                     |index, z, back| {
-                        if back && z <= depths[index] + 1e-8 {
+                        if back && z <= depths[index] + 1e-12 {
                             stencil[index] = true;
                         }
                     },
@@ -551,8 +568,9 @@ impl SectionStencil {
                 matrix,
                 width,
                 height,
+                2.,
                 |index, z, _| {
-                    if stencil[index] && z <= depths[index] + 1e-8 {
+                    if stencil[index] && z <= depths[index] + 1e-12 {
                         mask[index] = true;
                     }
                 },
@@ -566,6 +584,7 @@ fn raster_triangle(
     matrix: glam::DMat4,
     width: usize,
     height: usize,
+    offset: f64,
     mut visit: impl FnMut(usize, f64, bool),
 ) {
     let mut polygon = points.map(|p| matrix * p.extend(1.)).to_vec();
@@ -600,6 +619,7 @@ fn raster_triangle(
             [polygon[0], polygon[i], polygon[i + 1]],
             width,
             height,
+            offset,
             &mut visit,
         );
     }
@@ -608,6 +628,7 @@ fn raster_projected(
     clips: [glam::DVec4; 3],
     width: usize,
     height: usize,
+    offset: f64,
     visit: &mut impl FnMut(usize, f64, bool),
 ) {
     if clips.iter().any(|p| p.w <= 1e-12) {
@@ -624,6 +645,13 @@ fn raster_projected(
     if area.abs() < 1e-12 {
         return;
     }
+    // Original opaque pass uses glPolygonOffset(1,1), plane uses (2,2).
+    // Depth24 units match the reference Mesa stencil8 framebuffer.
+    let dzdx =
+        ((p[1].z - p[0].z) * (p[2].y - p[0].y) - (p[2].z - p[0].z) * (p[1].y - p[0].y)) / area;
+    let dzdy =
+        ((p[1].x - p[0].x) * (p[2].z - p[0].z) - (p[2].x - p[0].x) * (p[1].z - p[0].z)) / area;
+    let bias = offset * (dzdx.abs().max(dzdy.abs()) + 1. / 16777216.);
     let xmin = p
         .iter()
         .map(|p| p.x)
@@ -662,7 +690,7 @@ fn raster_projected(
             if weights.iter().all(|w| *w >= -1e-10) {
                 let z = weights[0] * p[0].z + weights[1] * p[1].z + weights[2] * p[2].z;
                 if (0. ..=1.).contains(&z) {
-                    visit(y * width + x, z, area > 0.);
+                    visit(y * width + x, z + bias, area > 0.);
                 }
             }
         }
@@ -685,6 +713,7 @@ mod raster_tests {
             matrix,
             100,
             100,
+            0.,
             |i, z, _| {
                 assert!((0. ..=1.).contains(&z));
                 hits.push(i);
@@ -701,6 +730,7 @@ mod raster_tests {
             matrix,
             100,
             100,
+            0.,
             |_, _, _| invisible += 1,
         );
         assert_eq!(invisible, 0);
