@@ -1,4 +1,4 @@
-#[cfg(not(target_os="macos"))]mod native{
+mod native{
 use winit::{application::ApplicationHandler,event::{WindowEvent,ElementState,MouseButton,DeviceId},event_loop::{ActiveEventLoop,EventLoop},window::Window,keyboard::ModifiersState,dpi::{LogicalSize,PhysicalPosition}};
 use ingetrazo_gui::{IngeTrazoApp,navigation::{self,Mode},pointer_modifiers};use glam::DVec3;
 fn ui(app:&mut IngeTrazoApp,ctx:&egui::Context,input:egui::RawInput){let _=ctx.run(input,|ctx|{egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|{let rect=ui.available_rect_before_wrap();let response=ui.allocate_rect(rect,egui::Sense::click_and_drag());navigation::input(app,ui,rect,&response);});});}
@@ -9,9 +9,8 @@ ui(&mut app,&ctx,egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui:
 for event in [WindowEvent::Focused(true),WindowEvent::CursorMoved{device_id:device,position:PhysicalPosition::new(400.,300.)},WindowEvent::MouseInput{device_id:device,state:ElementState::Pressed,button:MouseButton::Left},WindowEvent::ModifiersChanged(ModifiersState::CONTROL.into()),WindowEvent::CursorMoved{device_id:device,position:PhysicalPosition::new(400.,240.)},WindowEvent::ModifiersChanged(ModifiersState::empty().into())]{let start=state.egui_input().events.len();let _=state.on_window_event(&window,&event);if !missing{if let Some(h)=&handle{h.lock().unwrap().record_appended(state.egui_input(),start);}}}
 let mut input=state.take_egui_input(&window);assert!(!input.modifiers.ctrl);input.time=Some(0.01);input.focused=true;input.screen_rect=Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.)));let count=input.events.len();if let Some(h)=&handle{h.lock().unwrap().begin_frame();}ui(&mut app,&ctx,input);if let Some(h)=&handle{h.lock().unwrap().begin_frame();}ui(&mut app,&ctx,egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.))),time:Some(0.05),focused:true,..Default::default()});if missing&&snapshots{assert!(app.navigation.walk_anchor().is_none());assert!(app.camera.eye().y.abs()<1e-12);assert_eq!(app.status_message,"Native pointer modifier snapshot is missing");}
 rows.push(serde_json::json!({"status":app.status_message,"missing_metadata_control":missing,"name":if snapshots{"native-ingress-same-frame"}else{"final-state-only-negative"},"eye":app.camera.eye().to_array(),"forward":app.camera.forward().to_array(),"undo":app.undo_stack.len(),"emitted_egui_events":count,"frame_final_ctrl":false}));
-}println!("{}",serde_json::json!({"cases":rows,"scope":"actual egui-winit State on native owned X11 window; controlled native CursorMoved/ModifiersChanged sequence, not real XTEST/coalescing or GPU proof"}));event_loop.exit();}
+}println!("{}",serde_json::json!({"cases":rows,"scope":"actual egui-winit State on native owned window; controlled native CursorMoved/ModifiersChanged sequence, not real XTEST/coalescing or GPU proof"}));event_loop.exit();}
 fn window_event(&mut self,_:&ActiveEventLoop,_:winit::window::WindowId,_:WindowEvent){}
 }
 pub fn run(){EventLoop::new().unwrap().run_app(&mut Probe).unwrap();}}
-#[cfg(not(target_os="macos"))]fn main(){native::run();}
-#[cfg(target_os="macos")]fn main(){eprintln!("Vulkan/X11 ingress diagnostic; native Metal ingress requires its own implementation and proof");std::process::exit(2);}
+fn main(){native::run();}

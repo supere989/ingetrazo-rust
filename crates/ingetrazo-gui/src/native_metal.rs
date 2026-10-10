@@ -53,6 +53,7 @@ struct State {
     painter: EguiPainter,
     gpu: MetalPresentation,
     input: egui_winit::State,
+    pointer_modifiers: crate::pointer_modifiers::Handle,
     app: IngeTrazoApp,
     window: std::sync::Arc<Window>,
     close_requested: bool,
@@ -94,6 +95,7 @@ impl Host {
             }
         }
         let mut raw = state.input.take_egui_input(&state.window);
+        if let Ok(mut timeline) = state.pointer_modifiers.lock() { timeline.begin_frame(); }
         if state.close_requested {
             raw.viewports
                 .entry(egui::ViewportId::ROOT)
@@ -233,10 +235,12 @@ impl ApplicationHandler for Host {
             if let Some(probe) = self.probe.as_mut() {
                 probe.setup(&mut app)?;
             }
+            let pointer_modifiers = crate::pointer_modifiers::install(&self.ctx);
             Ok(State {
                 painter,
                 gpu,
                 input,
+                pointer_modifiers,
                 app,
                 window,
                 close_requested: false,
@@ -271,7 +275,11 @@ impl ApplicationHandler for Host {
         if let Some(probe) = self.probe.as_mut() {
             probe.native_event(&event);
         }
+        let appended_from = state.input.egui_input().events.len();
         let response = state.input.on_window_event(&state.window, &event);
+        if let Ok(mut timeline) = state.pointer_modifiers.lock() {
+            timeline.record_appended(state.input.egui_input(), appended_from);
+        }
         match event {
             WindowEvent::CloseRequested => {
                 state.close_requested = true;

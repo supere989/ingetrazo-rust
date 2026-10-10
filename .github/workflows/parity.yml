@@ -23,6 +23,11 @@ jobs:
           mkdir -p docs/audits/metal-combined-gui-ci
           cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
           cargo build --locked -p ingetrazo-gui --example native_metal --example native_metal_document_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+      - name: Native modifier ingress and missing-metadata refusal
+        run: |
+          cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-ingress.json 2> docs/audits/metal-combined-gui-ci/modifier-ingress.log
+          python3 scripts/check-walk-modifier-ingress.py docs/audits/navigation-walk-modifier-ingress/navigation-ingress-source.json docs/audits/metal-combined-gui-ci/modifier-ingress.json > docs/audits/metal-combined-gui-ci/modifier-ingress-check.json
+          INGETRAZO_INGRESS_MISSING_CONTROL=1 cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-missing.json 2> docs/audits/metal-combined-gui-ci/modifier-missing.log
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
