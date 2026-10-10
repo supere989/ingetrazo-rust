@@ -7,7 +7,7 @@
   },
   "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
   "native_fixture_sha256": "7ae12e489b569a22a83d5a85b5ece6f9b95d6f426e320f680a8dead1d2de0b94",
-  "native_source_revision": "2a42b898178c5b94651fb3b42b22b72aa4804152",
+  "native_source_revision": "4b2c (parent-confirmed binary build; old2a42checkout inference was incorrect)",
   "cases": [
     {
       "case": "painted-rectangle",
@@ -514,5 +514,6 @@
   ],
   "world_passed": false,
   "schema_passed": false,
-  "scope": "Original authored COLLADA painted/holed/nested reflected/georeferenced documents, actual original load compared with separate-process native decode and actual original IGZ reopen. World surface area/bounds/color allocation distinct from editable loose-mesh fusion/group/georef schema. This initial corpus does not cover texture fallback, FACEME, large reference threshold or arbitrary COLLADA."
+  "scope": "Original authored COLLADA painted/holed/nested reflected/georeferenced documents, actual original load compared with separate-process native decode and actual original IGZ reopen. World surface area/bounds/color allocation distinct from editable loose-mesh fusion/group/georef schema. This initial corpus does not cover texture fallback, FACEME, large reference threshold or arbitrary COLLADA.",
+  "native_source_provenance": "Exact binary sha256 is authoritative; executable was shared across isolated import worktrees."
 }
