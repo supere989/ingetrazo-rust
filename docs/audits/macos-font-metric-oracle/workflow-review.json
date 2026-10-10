@@ -1,0 +1,11 @@
+{
+  "embedded_python": "AST parse PASS",
+  "resolutions": [
+    72,
+    150,
+    300
+  ],
+  "failure_policy": "All three comparisons run, any failure fails step; generation/comparison run after earlier failures unless cancelled",
+  "yaml_parser": "PyYAML unavailable; indentation manually reviewed, cloud parser pending",
+  "execution": "Not launched; batching with provider correction"
+}
