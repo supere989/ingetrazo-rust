@@ -539,6 +539,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         state.ready=ready;self.annotation_owner=Some(Arc::downgrade(&handle.inner));self.annotation_admission=Some(admitted);
         Ok(())
     }
+    pub(crate) fn force_annotation_pressure_for_probe(&mut self){self.pressure_after_vertex=true;}
     pub(crate) fn clear_annotation(&mut self,context:&VulkanContext,
         queries:Option<super::annotation_visibility_gpu::PreparedVisibility<'_>>,
         fence:vk::Fence,completed:u64)->Result<(),String>{
