@@ -71,6 +71,15 @@ for name,texture,opacity,reverse,mode,show,layer in recipes:
   vp.camera.projection_matrix=diagnostic_projection
  vp.show()
  for _ in range(45):app.processEvents();time.sleep(.02)
+ outline_segments=[]
+ for plane_index,plane in enumerate(vp.scene.image_planes):
+  if not vp.scene.entity_visible(plane):continue
+  for a,b in plane.border_edges():
+   clipped=vp._clip_segment_front(a,b)
+   if clipped is None:continue
+   pa,pb=map(vp._world_to_pixel,clipped)
+   if pa is not None and pb is not None:
+    outline_segments.append({"plane":plane_index,"a":[a.x(),a.y(),a.z()],"b":[b.x(),b.y(),b.z()],"clipped_a":[clipped[0].x(),clipped[0].y(),clipped[0].z()],"clipped_b":[clipped[1].x(),clipped[1].y(),clipped[1].z()],"screen_a":pa,"screen_b":pb})
  image=vp.grabFramebuffer()
  vp.makeCurrent();gl=ctypes.CDLL("libGL.so.1");scene_fbo=vp._scene_fbo;assert scene_fbo is not None;scene_fbo.bind()
  sample_count=ctypes.c_int();sample_buffers=ctypes.c_int();gl.glGetIntegerv(0x80A9,ctypes.byref(sample_count));gl.glGetIntegerv(0x80A8,ctypes.byref(sample_buffers));sample_positions=[]
@@ -81,6 +90,6 @@ for name,texture,opacity,reverse,mode,show,layer in recipes:
  assert not image.isNull();image.save(str(root/(name+".png")));save_scene(vp.scene,root/(name+".igz"))
  points=[(340,240),(460,240),(340,360),(460,360),(400,300)];samples=[]
  for x,y in points:c=image.pixelColor(x,y);samples.append([c.red(),c.green(),c.blue(),c.alpha()])
- rows.append({"case":name,"background":[1,1,1],"camera_view":camera_view,"camera_perspective":vp.camera.perspective,"points":points,"samples":samples,"gl_info":vp.gl_info,"actual_gl_samples":sample_count.value,"actual_gl_sample_buffers":sample_buffers.value,"qt_surface_samples":vp.format().samples(),"scene_fbo_samples":scene_fbo.format().samples(),"gl_sample_positions":sample_positions,"uv_mirror_ablation":os.environ.get("INGETRAZO_IMAGE_UV_MIRROR_ABLATION")=="1","projection_y_ablation":os.environ.get("INGETRAZO_IMAGE_PROJECTION_Y_ABLATION"),"image_outline_ablation":os.environ.get("INGETRAZO_IMAGE_OUTLINE_ABLATION")=="1","projection_matrix":list(vp.camera.projection_matrix().data()),"view_matrix":list(vp.camera.view_matrix().data()),"mvp":list((vp.camera.projection_matrix()*vp.camera.view_matrix()).data()),"style_mode":{"wireframe":"wireframe","hidden":"hidden_line","xray":"xray"}.get(mode,"textures"),"show_textures":show,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest()})
+ rows.append({"case":name,"background":[1,1,1],"camera_view":camera_view,"camera_perspective":vp.camera.perspective,"points":points,"samples":samples,"gl_info":vp.gl_info,"actual_gl_samples":sample_count.value,"actual_gl_sample_buffers":sample_buffers.value,"qt_surface_samples":vp.format().samples(),"scene_fbo_samples":scene_fbo.format().samples(),"gl_sample_positions":sample_positions,"uv_mirror_ablation":os.environ.get("INGETRAZO_IMAGE_UV_MIRROR_ABLATION")=="1","projection_y_ablation":os.environ.get("INGETRAZO_IMAGE_PROJECTION_Y_ABLATION"),"image_outline_ablation":os.environ.get("INGETRAZO_IMAGE_OUTLINE_ABLATION")=="1","outline_segments":outline_segments,"projection_matrix":list(vp.camera.projection_matrix().data()),"view_matrix":list(vp.camera.view_matrix().data()),"mvp":list((vp.camera.projection_matrix()*vp.camera.view_matrix()).data()),"style_mode":{"wireframe":"wireframe","hidden":"hidden_line","xray":"xray"}.get(mode,"textures"),"show_textures":show,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest()})
  vp.close();vp.deleteLater();app.processEvents()
 report={"cases":rows,"scope":f"Actual original {len(rows)} image-plane controls; no full GPU image parity claim"};(root/"original-alpha-results.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
