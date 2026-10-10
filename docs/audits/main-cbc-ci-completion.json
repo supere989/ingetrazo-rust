@@ -1,0 +1,37 @@
+{
+  "run": 38085808606,
+  "source": "cbc4b49499e1f222009a8aae0c96df6492b6f5d4",
+  "jobs": [
+    {
+      "id": 114311933689,
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114311933803,
+      "name": "compilation-and-tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114311933808,
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114311933825,
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114311933859,
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "scope": "All five configured main CI jobs pass; separate strict Metal font/Canvas branch, representative hardware performance and full release gates remain open."
+}
