@@ -52,7 +52,12 @@ pub struct SectionPlane {
 }
 
 impl SectionPlane {
-    pub fn new(point: DVec3, normal: DVec3, name: impl Into<String>, symbol: impl Into<String>) -> Self {
+    pub fn new(
+        point: DVec3,
+        normal: DVec3,
+        name: impl Into<String>,
+        symbol: impl Into<String>,
+    ) -> Self {
         let n = if normal.length_squared() < 1e-12 {
             DVec3::Z
         } else {
@@ -70,9 +75,18 @@ impl SectionPlane {
         }
     }
 
-    pub fn native_uid(&self)->serde_json::Value {
-        let current=serde_json::json!(self.id.as_u128() as u64);
-        if self.native_baseline.get("uid").map(|v|v==&current).unwrap_or(true){if let Some(uid)=self.native_document.get("uid"){return uid.clone();}}
+    pub fn native_uid(&self) -> serde_json::Value {
+        let current = serde_json::json!(self.id.as_u128() as u64);
+        if self
+            .native_baseline
+            .get("uid")
+            .map(|v| v == &current)
+            .unwrap_or(true)
+        {
+            if let Some(uid) = self.native_document.get("uid") {
+                return uid.clone();
+            }
+        }
         current
     }
 
@@ -116,10 +130,128 @@ mod tests {
     }
 }
 
-impl crate::scene::Scene{
-    pub fn active_section(&self)->Option<&SectionPlane>{if self.show_section_cuts{self.section_planes.iter().find(|plane|plane.active)}else{None}}
-    pub fn section_point_visible(&self,point:DVec3)->bool{self.active_section().is_none_or(|plane|plane.signed_distance(point)<=1e-7)}
-    pub fn section_segment(&self,a:DVec3,b:DVec3)->Option<(DVec3,DVec3)>{let Some(plane)=self.active_section()else{return Some((a,b));};let da=plane.signed_distance(a);let db=plane.signed_distance(b);if da>1e-7&&db>1e-7{return None;}if da>1e-7||db>1e-7{let p=a+(b-a)*(da/(da-db));if da>1e-7{Some((p,b))}else{Some((a,p))}}else{Some((a,b))}}
+impl crate::scene::Scene {
+    pub fn active_section(&self) -> Option<&SectionPlane> {
+        if self.show_section_cuts {
+            self.section_planes.iter().find(|plane| plane.active)
+        } else {
+            None
+        }
+    }
+    pub fn section_point_visible(&self, point: DVec3) -> bool {
+        self.active_section()
+            .is_none_or(|plane| plane.signed_distance(point) <= 1e-7)
+    }
+    pub fn section_segment(&self, a: DVec3, b: DVec3) -> Option<(DVec3, DVec3)> {
+        let Some(plane) = self.active_section() else {
+            return Some((a, b));
+        };
+        let da = plane.signed_distance(a);
+        let db = plane.signed_distance(b);
+        if da > 1e-7 && db > 1e-7 {
+            return None;
+        }
+        if da > 1e-7 || db > 1e-7 {
+            let p = a + (b - a) * (da / (da - db));
+            if da > 1e-7 {
+                Some((p, b))
+            } else {
+                Some((a, p))
+            }
+        } else {
+            Some((a, b))
+        }
+    }
 }
 
-impl crate::scene::Scene{pub fn section_frame(&self,index:usize)->Option<[DVec3;4]>{let plane=self.section_planes.get(index)?;let reference=if plane.normal.z.abs()<0.9{DVec3::Z}else{DVec3::X};let u=reference.cross(plane.normal).normalize();let v=plane.normal.cross(u).normalize();let mut points=self.mesh.vertices.iter().map(|vertex|vertex.position).collect::<Vec<_>>();fn groups(groups:&[crate::groups::Group],parent:glam::DMat4,points:&mut Vec<DVec3>){for group in groups{let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().map(|vertex|transform.transform_point3(vertex.position)));children(&group.children,transform,points);}}fn children(children:&[crate::groups::Group],parent:glam::DMat4,points:&mut Vec<DVec3>){groups(children,parent,points)}groups(&self.groups,glam::DMat4::IDENTITY,&mut points);let(mut lo_u,mut hi_u,mut lo_v,mut hi_v)=(-1.5,1.5,-1.5,1.5);if !points.is_empty(){lo_u=f64::INFINITY;hi_u=f64::NEG_INFINITY;lo_v=f64::INFINITY;hi_v=f64::NEG_INFINITY;for p in points{let p=p-plane.point;lo_u=lo_u.min(p.dot(u));hi_u=hi_u.max(p.dot(u));lo_v=lo_v.min(p.dot(v));hi_v=hi_v.max(p.dot(v));}let mu=((hi_u-lo_u)*0.1).max(0.2);let mv=((hi_v-lo_v)*0.1).max(0.2);lo_u-=mu;hi_u+=mu;lo_v-=mv;hi_v+=mv;}Some([(lo_u,lo_v),(hi_u,lo_v),(hi_u,hi_v),(lo_u,hi_v)].map(|(x,y)|plane.point+u*x+v*y))}}
+impl crate::scene::Scene {
+    pub fn section_frame(&self, index: usize) -> Option<[DVec3; 4]> {
+        let plane = self.section_planes.get(index)?;
+        let mut u = DVec3::X - plane.normal * plane.normal.x;
+        if u.length() < 0.1 {
+            u = DVec3::Y - plane.normal * plane.normal.y;
+        }
+        let u = u.normalize();
+        let v = plane.normal.cross(u).normalize();
+        let mut points = self
+            .mesh
+            .vertices
+            .iter()
+            .map(|vertex| vertex.position)
+            .collect::<Vec<_>>();
+        fn groups(groups: &[crate::groups::Group], parent: glam::DMat4, points: &mut Vec<DVec3>) {
+            for group in groups {
+                let transform = parent * group.transform;
+                points.extend(
+                    group
+                        .mesh
+                        .vertices
+                        .iter()
+                        .map(|vertex| transform.transform_point3(vertex.position)),
+                );
+                children(&group.children, transform, points);
+            }
+        }
+        fn children(
+            children: &[crate::groups::Group],
+            parent: glam::DMat4,
+            points: &mut Vec<DVec3>,
+        ) {
+            groups(children, parent, points)
+        }
+        groups(&self.groups, glam::DMat4::IDENTITY, &mut points);
+        let (mut lo_u, mut hi_u, mut lo_v, mut hi_v) = (-1.5, 1.5, -1.5, 1.5);
+        if !points.is_empty() {
+            lo_u = f64::INFINITY;
+            hi_u = f64::NEG_INFINITY;
+            lo_v = f64::INFINITY;
+            hi_v = f64::NEG_INFINITY;
+            let lo = points.iter().copied().reduce(DVec3::min).unwrap();
+            let hi = points.iter().copied().reduce(DVec3::max).unwrap();
+            let corners = [
+                (lo.x, lo.y, lo.z),
+                (hi.x, lo.y, lo.z),
+                (lo.x, hi.y, lo.z),
+                (hi.x, hi.y, lo.z),
+                (lo.x, lo.y, hi.z),
+                (hi.x, lo.y, hi.z),
+                (lo.x, hi.y, hi.z),
+                (hi.x, hi.y, hi.z),
+            ];
+            for (x, y, z) in corners {
+                let p = DVec3::new(x, y, z) - plane.point;
+                lo_u = lo_u.min(p.dot(u));
+                hi_u = hi_u.max(p.dot(u));
+                lo_v = lo_v.min(p.dot(v));
+                hi_v = hi_v.max(p.dot(v));
+            }
+            let mu = (hi_u - lo_u) * 0.06 + 0.2;
+            let mv = (hi_v - lo_v) * 0.06 + 0.2;
+            lo_u -= mu;
+            hi_u += mu;
+            lo_v -= mv;
+            hi_v += mv;
+        }
+        Some(
+            [(lo_u, lo_v), (hi_u, lo_v), (hi_u, hi_v), (lo_u, hi_v)]
+                .map(|(x, y)| plane.point + u * x + v * y),
+        )
+    }
+}
+
+#[cfg(test)]
+mod frame_tests {
+    use super::*;
+    #[test]
+    fn section_frame_matches_original_projected_bounds_margin() {
+        let mut scene = crate::scene::Scene::new();
+        scene.mesh.add_vertex(DVec3::splat(-1.));
+        scene.mesh.add_vertex(DVec3::splat(1.));
+        scene
+            .section_planes
+            .push(SectionPlane::new(DVec3::ZERO, DVec3::Z, "A", "A"));
+        let frame = scene.section_frame(0).unwrap();
+        assert!((frame[0] - DVec3::new(-1.32, -1.32, 0.)).length() < 1e-10);
+        assert!((frame[2] - DVec3::new(1.32, 1.32, 0.)).length() < 1e-10);
+    }
+}
