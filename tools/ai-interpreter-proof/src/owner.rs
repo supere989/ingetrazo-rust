@@ -2,7 +2,7 @@
 use crate::journal::{MeshJournal,validate_base};
 use crate::owner_budget::{OwnerBudget,Lease,Kind};
 use crate::owner_registry::Registry;
-use ingetrazo_core::mesh::{Mesh,MeshVertex,MeshEdge,PreparedSpatialIndex};
+use ingetrazo_core::mesh::{Mesh,MeshVertex,MeshEdge,PreparedSpatialIndex,PreparedSpatialDelta};
 use glam::DVec3;use uuid::Uuid;use std::collections::{HashMap,HashSet};
 pub struct Transaction{document:Uuid,state:Uuid,journal:MeshJournal,charge:Lease,admission_failed:bool}
 impl Transaction{pub fn registry_lookup_calls(&self)->usize{self.journal.registry.as_ref().unwrap().lookup_calls()} pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(),String>{
@@ -12,7 +12,7 @@ impl Transaction{pub fn registry_lookup_calls(&self)->usize{self.journal.registr
  let result=self.journal.add_edge(a,b).map(|_|());
  self.charge.resize(staging_bound(0,0,self.journal.added_vertices.len(),self.journal.added_edges.len())?)?;result
 }}
-struct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize,charge:Lease}
+struct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize,charge:Lease,spatial:PreparedSpatialDelta}
 pub struct JournalOwner{mesh:Mesh,document:Uuid,state:Uuid,version:u64,undo:Vec<Delta>,redo:Vec<Delta>,index_entry_limit:Option<usize>,history_byte_limit:Option<usize>,undo_bytes:usize,redo_bytes:usize,append_vertex_limit:Option<usize>,append_edge_limit:Option<usize>,budget:OwnerBudget,registry:Registry}
 impl JournalOwner{
  pub fn new(mesh:Mesh)->Result<Self,String>{Self::new_with_budget(mesh,OwnerBudget::new(None))}
@@ -41,42 +41,42 @@ impl JournalOwner{
   let base_vertices=self.mesh.vertices.len();let base_edges=self.mesh.edges.len();
   let total=base_vertices.checked_add(j.added_vertices.len()).ok_or("Vertex extent overflow")?;
   let edge_total=base_edges.checked_add(j.added_edges.len()).ok_or("Edge extent overflow")?;
-  let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(total,edge_total)?)?;
+  let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(j.added_vertices.len(),j.added_edges.len())?)?;
   let mut history_charge=self.budget.reserve(Kind::History,delta_bound(j.added_vertices.len(),j.added_edges.len())?)?;
   let mut vertices=Vec::new();vertices.try_reserve(j.added_vertices.len()).map_err(|_|"Vertex preparation refused")?;for p in j.added_vertices{vertices.push(MeshVertex::new(p));}
   let mut edges=Vec::new();edges.try_reserve(j.added_edges.len()).map_err(|_|"Edge preparation refused")?;
   let mut additions=HashMap::<usize,Vec<usize>>::new();additions.try_reserve(j.added_edges.len().checked_mul(2).ok_or("Adjacency extent overflow")?).map_err(|_|"Adjacency preparation refused")?;
   for (offset,(a,b)) in j.added_edges.into_iter().enumerate(){if a>=total||b>=total||a==b{return Err("Invalid planned endpoint".into());}let id=base_edges.checked_add(offset).ok_or("Edge extent overflow")?;for endpoint in [a,b]{let entries=additions.entry(endpoint).or_default();entries.try_reserve(1).map_err(|_|"Adjacency preparation refused")?;entries.push(id);}edges.push(MeshEdge::new(a,b));}
   for (&id,ids) in &additions{if id>=base_vertices{let adjacency=&mut vertices[id-base_vertices].edges;adjacency.try_reserve_exact(ids.len()).map_err(|_|"Prepared vertex adjacency refused")?;adjacency.extend(ids);}}
-  let mut positions=Vec::new();positions.try_reserve_exact(total).map_err(|_|"Index positions refused")?;positions.extend(self.mesh.vertices.iter().map(|v|v.position));positions.extend(vertices.iter().map(|v|v.position));let index=self.index(&positions)?;
+  if self.index_entry_limit.is_some_and(|n|total>n){return Err("Prepared-index entry admission denied".into());}let appended_positions=positions(&vertices,0)?;let spatial=self.mesh.prepare_spatial_append(&appended_positions).map_err(str::to_owned)?;
   // Delta copies concern only new records. No base UUID/position/edge arrays
   // survive the transaction, and no Scene/Mesh snapshot is retained.
   let after=Uuid::new_v4();let retained_vertices=copy_vertices(&vertices)?;let retained_edges=copy_append_edges(&edges)?;
-  let bytes=delta_bytes(&retained_vertices,&retained_edges)?;
+  let bytes=delta_bytes(&retained_vertices,&retained_edges)?.checked_add(spatial.retained_bytes()).ok_or("Spatial delta byte overflow")?;
   history_charge.resize(bytes)?;
   let projected=self.undo_bytes.checked_add(bytes).ok_or("History payload extent overflow")?;
   if self.history_byte_limit.is_some_and(|limit|projected>limit){return Err("History payload admission denied".into());}
-  let delta=Delta{before:self.state,after,base_vertices,base_edges,vertices:retained_vertices,edges:retained_edges,bytes,charge:history_charge};
+  let delta=Delta{before:self.state,after,base_vertices,base_edges,vertices:retained_vertices,edges:retained_edges,bytes,charge:history_charge,spatial};
   self.undo.try_reserve(1).map_err(|_|"History admission refused")?;self.mesh.vertices.try_reserve(vertices.len()).map_err(|_|"Vertex admission refused")?;self.mesh.edges.try_reserve(edges.len()).map_err(|_|"Edge admission refused")?;
   for (&id,ids) in &additions{if id<base_vertices{self.mesh.vertices[id].edges.try_reserve(ids.len()).map_err(|_|"Live adjacency admission refused")?;}}
   let registry_change=self.registry.prepare_append(&vertices,&edges)?;
   self.mesh.vertices.extend(vertices);self.mesh.edges.extend(edges);for (id,ids) in additions{if id<base_vertices{self.mesh.vertices[id].edges.extend(ids);}}
   // Exact prepared positions plus exclusive private owner make this swap
   // infallible after publication; install performs no allocation.
-  self.mesh.install_prepared_spatial_index(index).expect("private prepared append positions");self.state=after;self.version=next_version;registry_change.apply(after,next_version).expect("private prepared registry append");self.redo.clear();self.redo_bytes=0;self.undo_bytes=projected;self.undo.push(delta);Ok(true)
+  self.mesh.install_spatial_append(&delta.spatial).expect("private prepared append positions");self.state=after;self.version=next_version;registry_change.apply(after,next_version).expect("private prepared registry append");self.redo.clear();self.redo_bytes=0;self.undo_bytes=projected;self.undo.push(delta);Ok(true)
  }
  pub fn undo(&mut self)->Result<bool,String>{let Some(d)=self.undo.last()else{return Ok(false)};if self.state!=d.after{return Err("Stale undo state".into());}
-  let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(d.base_vertices,d.base_edges.checked_add(d.edges.len()).ok_or("Edge extent overflow")?)?)?;let positions=positions(&self.mesh.vertices[..d.base_vertices],0)?;let index=self.index(&positions)?;self.redo.try_reserve(1).map_err(|_|"Redo history admission refused")?;
+  let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(d.vertices.len(),d.edges.len())?)?;if self.index_entry_limit.is_some_and(|n|d.base_vertices>n){return Err("Prepared-index entry admission denied".into());}self.redo.try_reserve(1).map_err(|_|"Redo history admission refused")?;
   let mut touched=HashSet::new();touched.try_reserve(d.edges.len().checked_mul(2).ok_or("Touched extent overflow")?).map_err(|_|"Touched endpoint admission refused")?;for e in &d.edges{for id in [e.v0,e.v1]{if id<d.base_vertices{touched.insert(id);}}}
   let registry_change=self.registry.prepare_truncate(d.base_vertices,d.base_edges,&d.vertices,&d.edges)?;
-  let d=self.undo.pop().unwrap();self.mesh.edges.truncate(d.base_edges);self.mesh.vertices.truncate(d.base_vertices);for id in touched{self.mesh.vertices[id].edges.retain(|&e|e<d.base_edges);}self.mesh.install_prepared_spatial_index(index).expect("private prepared undo positions");self.state=d.before;self.version=next_version;registry_change.apply(d.before,next_version).expect("private prepared registry undo");self.undo_bytes-=d.bytes;self.redo_bytes+=d.bytes;self.redo.push(d);Ok(true)
+  self.mesh.restore_spatial_append(&d.spatial).map_err(str::to_owned)?;let d=self.undo.pop().unwrap();self.mesh.edges.truncate(d.base_edges);self.mesh.vertices.truncate(d.base_vertices);for id in touched{self.mesh.vertices[id].edges.retain(|&e|e<d.base_edges);}self.state=d.before;self.version=next_version;registry_change.apply(d.before,next_version).expect("private prepared registry undo");self.undo_bytes-=d.bytes;self.redo_bytes+=d.bytes;self.redo.push(d);Ok(true)
  }
  pub fn redo(&mut self)->Result<bool,String>{let Some(d)=self.redo.last()else{return Ok(false)};if self.state!=d.before{return Err("Stale redo state".into());}
-  let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let total=self.mesh.vertices.len().checked_add(d.vertices.len()).ok_or("Vertex extent overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(total,d.base_edges.checked_add(d.edges.len()).ok_or("Edge extent overflow")?)?)?;let mut positions=positions(&self.mesh.vertices,d.vertices.len())?;positions.extend(d.vertices.iter().map(|v|v.position));let index=self.index(&positions)?;
+  let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let total=self.mesh.vertices.len().checked_add(d.vertices.len()).ok_or("Vertex extent overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(d.vertices.len(),d.edges.len())?)?;if self.index_entry_limit.is_some_and(|n|total>n){return Err("Prepared-index entry admission denied".into());}self.mesh.reserve_spatial_append(&d.spatial).map_err(str::to_owned)?;
   let vertices=copy_vertices(&d.vertices)?;let edges=copy_append_edges(&d.edges)?;let mut additions=HashMap::<usize,Vec<usize>>::new();additions.try_reserve(edges.len().checked_mul(2).ok_or("Adjacency extent overflow")?).map_err(|_|"Redo adjacency map refused")?;for (offset,e) in edges.iter().enumerate(){for id in [e.v0,e.v1]{if id<d.base_vertices{let ids=additions.entry(id).or_default();ids.try_reserve(1).map_err(|_|"Redo prepared adjacency refused")?;ids.push(d.base_edges.checked_add(offset).ok_or("Redo edge extent overflow")?);}}}
   self.undo.try_reserve(1).map_err(|_|"Undo history admission refused")?;self.mesh.vertices.try_reserve(vertices.len()).map_err(|_|"Redo vertex admission refused")?;self.mesh.edges.try_reserve(edges.len()).map_err(|_|"Redo edge admission refused")?;for (&id,ids) in &additions{self.mesh.vertices[id].edges.try_reserve(ids.len()).map_err(|_|"Redo adjacency admission refused")?;}
   let registry_change=self.registry.prepare_append(&vertices,&edges)?;
-  let d=self.redo.pop().unwrap();self.mesh.vertices.extend(vertices);self.mesh.edges.extend(edges);for (id,ids) in additions{self.mesh.vertices[id].edges.extend(ids);}self.mesh.install_prepared_spatial_index(index).expect("private prepared redo positions");self.state=d.after;self.version=next_version;registry_change.apply(d.after,next_version).expect("private prepared registry redo");self.redo_bytes-=d.bytes;self.undo_bytes+=d.bytes;self.undo.push(d);Ok(true)
+  let d=self.redo.pop().unwrap();self.mesh.vertices.extend(vertices);self.mesh.edges.extend(edges);for (id,ids) in additions{self.mesh.vertices[id].edges.extend(ids);}self.mesh.install_spatial_append(&d.spatial).expect("private prepared redo positions");self.state=d.after;self.version=next_version;registry_change.apply(d.after,next_version).expect("private prepared registry redo");self.redo_bytes-=d.bytes;self.undo_bytes+=d.bytes;self.undo.push(d);Ok(true)
  }
 }
 // Explicit conservative payload slots, not allocator internals or VM memory.
@@ -120,6 +120,11 @@ fn delta_bytes(vertices:&Vec<MeshVertex>,edges:&Vec<MeshEdge>)->Result<usize,Str
  for v in vertices{bytes=bytes.checked_add(v.edges.capacity().checked_mul(std::mem::size_of::<usize>()).ok_or("Delta adjacency byte extent overflow")?).ok_or("Delta byte extent overflow")?;}Ok(bytes)
 }
 #[cfg(test)]mod tests{use super::*;
+ #[test]fn spatial_delta_native_collisions_restore_exact_predecessor_and_reject_stale(){
+ let mut m=Mesh::new();m.vertices.push(MeshVertex::new(DVec3::ZERO));m.vertices.push(MeshVertex::new(DVec3::ZERO));m.rebuild_spatial_index();let points=[DVec3::ZERO,DVec3::X,DVec3::ZERO];let patch=m.prepare_spatial_append(&points).unwrap();for p in points{m.vertices.push(MeshVertex::new(p));}m.install_spatial_append(&patch).unwrap();assert_eq!(m.add_vertex(DVec3::ZERO),4);
+ m.restore_spatial_append(&patch).unwrap();m.vertices.truncate(2);assert_eq!(m.add_vertex(DVec3::ZERO),1);assert!(m.restore_spatial_append(&patch).is_err());m.reserve_spatial_append(&patch).unwrap();for p in points{m.vertices.push(MeshVertex::new(p));}m.install_spatial_append(&patch).unwrap();assert_eq!(m.add_vertex(DVec3::ZERO),4);
+ let before=m.clone();m.vertices[4].position=DVec3::Y;assert!(m.restore_spatial_append(&patch).is_err());m.vertices[4].position=DVec3::ZERO;assert_eq!(m,before);assert!(m.prepare_spatial_append(&[DVec3::NAN]).is_err());assert_eq!(m,before);
+ }
  #[test]fn persistent_registry_stale_before_lookup_and_failed_prepare_preserves_view(){
  let mut o=JournalOwner::new(Mesh::new()).unwrap();
  for action in 0..4{let mut held=o.try_begin().unwrap();match action{0=>{let mut t=o.try_begin().unwrap();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.commit(t).unwrap();},1=>{o.undo().unwrap();},2=>{o.redo().unwrap();},_=>{o.replace(Mesh::new()).unwrap();}}

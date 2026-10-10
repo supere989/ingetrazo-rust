@@ -117,6 +117,8 @@ pub struct Mesh {
 
 /// Prepared replacement lookup. All allocation occurs before publication;
 /// coordinates bind this index to the exact ordered vertex positions.
+pub struct PreparedSpatialDelta { base:usize, positions:Vec<DVec3>, changes:Vec<(PointKey,Option<VertexId>,VertexId)> }
+impl PreparedSpatialDelta {pub fn retained_bytes(&self)->usize{self.positions.capacity()*std::mem::size_of::<DVec3>()+self.changes.capacity()*std::mem::size_of::<(PointKey,Option<VertexId>,VertexId)>()}}
 pub struct PreparedSpatialIndex { positions:Vec<DVec3>, index:HashMap<PointKey,VertexId> }
 
 impl Default for Mesh {
@@ -164,6 +166,33 @@ impl Mesh {
         if self.vertices.len()!=prepared.positions.len()||self.vertices.iter().zip(&prepared.positions).any(|(v,p)|v.position!=*p){return Err("Prepared index does not match vertices");}
         self.spatial_index=prepared.index;Ok(())
     }
+
+    /// Private append-owner preparation: reserves before publication and records
+    /// predecessor mappings so native-key collisions can be reversed exactly.
+    /// Caller must preserve exclusive ownership and the untouched prefix.
+    pub fn prepare_spatial_append(&mut self,positions:&[DVec3])->Result<PreparedSpatialDelta,&'static str>{
+        let base=self.vertices.len();base.checked_add(positions.len()).ok_or("Spatial append extent overflow")?;
+        let mut ordered=Vec::new();ordered.try_reserve_exact(positions.len()).map_err(|_|"Spatial delta coordinates refused")?;
+        let mut changes:Vec<(PointKey,Option<VertexId>,VertexId)>=Vec::new();changes.try_reserve_exact(positions.len()).map_err(|_|"Spatial delta keys refused")?;
+        let mut seen=HashMap::<PointKey,usize>::new();seen.try_reserve(positions.len()).map_err(|_|"Spatial delta key planning refused")?;
+        for (offset,&p) in positions.iter().enumerate(){if !p.is_finite(){return Err("Nonfinite spatial delta coordinate");}let key=PointKey::from_vec3(p);let id=base+offset;ordered.push(p);if let Some(&slot)=seen.get(&key){changes[slot].2=id;}else{seen.insert(key,changes.len());changes.push((key,self.spatial_index.get(&key).copied(),id));}}
+        self.spatial_index.try_reserve(changes.len()).map_err(|_|"Spatial delta index reservation refused")?;
+        Ok(PreparedSpatialDelta{base,positions:ordered,changes})
+    }
+    pub fn validate_spatial_append(&self,delta:&PreparedSpatialDelta)->Result<(),&'static str>{
+        if self.vertices.len()!=delta.base||delta.changes.iter().any(|(k,old,_)|self.spatial_index.get(k).copied()!=*old){return Err("Stale spatial append predecessor");}Ok(())
+    }
+    pub fn install_spatial_append(&mut self,delta:&PreparedSpatialDelta)->Result<(),&'static str>{
+        if self.vertices.len()!=delta.base+delta.positions.len()||self.vertices[delta.base..].iter().zip(&delta.positions).any(|(v,p)|v.position!=*p)||delta.changes.iter().any(|(k,old,_)|self.spatial_index.get(k).copied()!=*old){return Err("Stale spatial append publication");}
+        for &(key,_,id) in &delta.changes{self.spatial_index.insert(key,id);}Ok(())
+    }
+    /// Validate before any caller semantic writes. After success, restoration
+    /// performs no allocations; the exclusive owner immediately truncates tail.
+    pub fn restore_spatial_append(&mut self,delta:&PreparedSpatialDelta)->Result<(),&'static str>{
+        if self.vertices.len()!=delta.base+delta.positions.len()||self.vertices[delta.base..].iter().zip(&delta.positions).any(|(v,p)|v.position!=*p)||delta.changes.iter().any(|(k,_,id)|self.spatial_index.get(k)!=Some(id)){return Err("Stale spatial truncate publication");}
+        for &(key,old,_) in &delta.changes{if let Some(id)=old{self.spatial_index.insert(key,id);}else{self.spatial_index.remove(&key);}}Ok(())
+    }
+    pub fn reserve_spatial_append(&mut self,delta:&PreparedSpatialDelta)->Result<(),&'static str>{self.validate_spatial_append(delta)?;self.spatial_index.try_reserve(delta.changes.len()).map_err(|_|"Spatial redo reservation refused")}
 
     /// Rebuild the spatial lookup table (e.g. after deserialization).
     pub fn rebuild_spatial_index(&mut self) {

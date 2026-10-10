@@ -31,7 +31,7 @@ impl Registry{
   for (i,x) in vertices.iter().enumerate(){v.push((SourceKey::new(x.position),s.positions.len()+i,x.position));}
   let mut e=Vec::new();e.try_reserve_exact(edges.len()).map_err(|_|"Registry pending edges refused")?;
   for (i,x) in edges.iter().enumerate(){e.push((ordered(x.v0,x.v1),(base_edges+i,x.v0,x.v1)));}
-  s.positions.try_reserve_exact(vertices.len()).map_err(|_|"Registry position publication refused")?;s.vertices.try_reserve(v.len()).map_err(|_|"Registry vertex publication refused")?;s.edges.try_reserve(e.len()).map_err(|_|"Registry edge publication refused")?;
+  s.positions.try_reserve(vertices.len()).map_err(|_|"Registry position publication refused")?;s.vertices.try_reserve(v.len()).map_err(|_|"Registry vertex publication refused")?;s.edges.try_reserve(e.len()).map_err(|_|"Registry edge publication refused")?;
   Ok(Change{inner:self.0.clone(),document:s.document,state:s.state,version:s.version,vertex_extent:nv,edge_extent:ne,vertices:v,edges:e,grow,bytes,truncate:false})
  }
  pub fn prepare_truncate(&self,vertex_extent:usize,edge_extent:usize,vertices:&[MeshVertex],edges:&[MeshEdge])->Result<Change,String>{
