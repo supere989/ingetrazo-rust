@@ -39,7 +39,7 @@ fn terminal_proof(
 struct Frame {
     submission_id: u64,
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
-    drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
+    drawable_id: u64,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
     _center_readback: Option<crate::Buffer>,
     callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
@@ -192,7 +192,8 @@ impl MetalPresentation {
         Ok(())
     }
     /// Nonblocking completion query. Command completion alone is insufficient:
-    /// presentation can still own the drawable after rendering has completed.
+    /// Core Animation can still own presentation after rendering has completed.
+    /// Caller drawable identity is immutable; callback receipt is authoritative.
     pub fn poll(&mut self) -> Result<usize, String> {
         let mut count = 0;
         if self.diagnostic_center_readback {
@@ -229,7 +230,8 @@ impl MetalPresentation {
                     return Err(error);
                 }
             };
-            // Each immutable frame owns its drawable, command and paint.
+            // Each immutable frame owns its command, paint/readback and callback
+            // state. Core Animation owns the transferred drawable presentation.
             // A missing head callback cannot invalidate a later owner's actual
             // terminal proof. Never release the unresolved head by inference.
             if displayed {
@@ -329,12 +331,17 @@ impl MetalPresentation {
         unsafe {
             drawable.addPresentedHandler(block2::RcBlock::as_ptr(&callback));
         }
+        // Record only immutable identity. Metal/Core Animation take scheduling
+        // ownership through presentDrawable; retaining the caller reference
+        // beyond final CPU work can exhaust the limited drawable pool.
+        let drawable_id = drawable.drawableID() as u64;
         command.presentDrawable(ProtocolObject::from_ref(&*drawable));
         command.commit();
+        drop(drawable);
         self.owners.frames.push_back(Frame {
             submission_id: self.submitted + 1,
             command,
-            drawable,
+            drawable_id,
             callback_seen,
             callback_time,
             _callback: callback,
@@ -406,11 +413,11 @@ impl MetalPresentation {
             .iter()
             .map(|f| {
                 format!(
-                    "submission={} id={} command={:?} presentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
+                    "submission={} id={} command={:?} callbackObservedPresentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
                     f.submission_id,
-                    f.drawable.drawableID(),
+                    f.drawable_id,
                     f.command.status(),
-                    f.drawable.presentedTime(),
+                    f64::from_bits(f.callback_time.load(Ordering::Acquire)),
                     f.command.GPUStartTime(),
                     f.command.GPUEndTime(),
                     f.callback_seen.load(Ordering::Acquire),

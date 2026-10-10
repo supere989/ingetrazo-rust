@@ -50,6 +50,9 @@ jobs:
         run: |
           target/debug/examples/clear_quantization_probe --output=docs/audits/metal-native-link-ci/clear-quantization > docs/audits/metal-native-link-ci/clear-quantization.log 2>&1
           python3 scripts/check-metal-clear-quantization.py docs/audits/metal-native-link-ci/clear-quantization > docs/audits/metal-native-link-ci/clear-quantization-check.log
+      - name: Actual presentation terminal ownership unit controls
+        if: always()
+        run: cargo test --locked -p ingetrazo-metal presentation::tests -- --nocapture > docs/audits/metal-native-link-ci/presentation-owner-tests.log 2>&1
       - name: Actual native CAMetalLayer presentation and requested resize
         run: target/debug/examples/presentation_probe --automatic > docs/audits/metal-native-link-ci/presentation.log 2>&1
       - name: Actual same-runner Qt owned clear diagnostic
