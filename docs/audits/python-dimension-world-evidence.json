@@ -1,0 +1,12 @@
+{
+  "provenance": {
+    "rust_commit": "e52ff72798d5bc328ba6151043c9201e4c8a57dd",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": 12,
+  "maximum_world_line_coordinate_error": 8.4637959076872e-06,
+  "scope": "Actual two-level GUI edit contexts with rotated/reflected/nonuniform parent-child transforms: world-axis x/y/z and aligned measurement, line endpoints and cursor placement against original Dimension APIs. Rendered labels remain separate."
+}
