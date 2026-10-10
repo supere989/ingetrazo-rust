@@ -18,6 +18,7 @@ def tuplev(p):return tuple(round(x,6) for x in (p.x(),p.y(),p.z()))
 def check_dim(scene,a,b):
  d=scene.dimensions[0];assert tuplev(d.a)==a and tuplev(d.b)==b,(tuplev(d.a),tuplev(d.b),a,b)
 def main():
+ subprocess.run([sys.executable,"scripts/probe-python-dimension-entry-undo.py"],check=True)
  app=QApplication.instance() or QApplication([]);rows=[]
  with tempfile.TemporaryDirectory() as tmp:
   directory=Path(tmp);s=Scene();s.mesh=wire();s.dimensions=[Dimension(V(0,0,0),V(1,0,0),V(0,1,0))];igz.save_scene(s,directory/"source.igz")
@@ -36,6 +37,6 @@ def main():
     leaf=reopened.groups[0].children[0].children[0];assert leaf.name=="Edited leaf"
     source=Scene();igz.load_into(source,directory/"outliner-source.igz");assert leaf.uid==source.groups[0].children[0].children[0].uid
    rows.append({"case":name,"original_runtime_endpoints":[a,b],"passed":True})
- report={"provenance":context(),"passed":True,"cases":rows,"scope":"Stable anchors refreshed at GUI frame boundaries: movement/group/scale/explode/deletion with exact scene undo; original native reopen and original live vertex/group endpoint rebinding. Translated-context local dimension creation and three-level outliner actual selection/edit/rename+UID retention/undo. Nested nonuniform/reflected world-frame measurement and rendered inspector remain separate."}
+ report={"provenance":context(),"passed":True,"cases":rows,"scope":"Stable anchors refreshed at GUI frame boundaries: movement/group/scale/explode/deletion with Rust atomic scene undo (original annotation shareback Undo divergence retained separately); original native reopen and original live vertex/group endpoint rebinding. Translated-context world dimension creation and three-level outliner actual selection/edit/rename+UID retention/undo. Nested nonuniform/reflected world-frame measurement and rendered inspector remain separate."}
  Path("docs/audits/python-dimension-anchor-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()
