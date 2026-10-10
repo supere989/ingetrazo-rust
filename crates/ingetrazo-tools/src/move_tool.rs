@@ -27,6 +27,7 @@ pub struct MoveTool {
     pub target_planes:Vec<usize>,
     pub target_images:Vec<usize>,
     original_images:Vec<(usize,ingetrazo_core::image_plane::ImagePlane)>,
+    preview_images:Vec<(usize,DVec3)>,
     image_command:Option<ingetrazo_core::image_plane::ImageFrameCommand>,
     pub last_targets: Vec<usize>,
     pub last_delta: Option<DVec3>,
@@ -57,7 +58,7 @@ impl MoveTool {
         self.is_copy_mode = false;
         self.exclusions=Default::default();
         self.target_vertices.clear();
-        self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.original_images.clear();
+        self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.original_images.clear();self.preview_images.clear();
         self.original_positions.clear();self.original_groups.clear();self.original_planes.clear();self.preview_delta=DVec3::ZERO;
     }
 
@@ -66,6 +67,7 @@ impl MoveTool {
         self.last_error=None;self.image_command=None;
         self.target_images=crate::base::gather_image_targets(scene,ctx);
         self.original_images=self.target_images.iter().map(|&id|(id,scene.image_planes[id].clone())).collect();
+        self.preview_images=self.original_images.iter().map(|(id,image)|(*id,image.origin)).collect();
         self.array_base=None;self.replace_history=false;
         let mut vert_set = HashSet::new();
         let mut copy_edges=HashSet::new();let mut copy_faces=HashSet::new();let mut isolated=vec![];
@@ -159,12 +161,14 @@ impl MoveTool {
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+delta;}}
         // Qt applies each preview increment in float32, including accumulated rounding.
         for (id,_) in &self.original_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=(live.origin.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();}}
+        for(id,origin)in &mut self.preview_images{if let Some(live)=scene.image_planes.get(*id){*origin=live.origin;}}
         self.preview_delta=delta;scene.bump_version();self.preview_version=scene.version;
     }
     fn revert_preview(&mut self,scene:&mut Scene){
         if self.preview_delta!=DVec3::ZERO{
             let image_origins=self.original_images.iter().filter_map(|(id,_)|scene.image_planes.get(*id).map(|p|(*id,(p.origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
-            self.restore_positions(scene);for(id,origin)in image_origins{scene.image_planes[id].origin=origin;}self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
+            self.restore_positions(scene);for(id,origin)in image_origins{scene.image_planes[id].origin=origin;}
+            for(id,origin)in &mut self.preview_images{if let Some(live)=scene.image_planes.get(*id){*origin=live.origin;}}self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
     }
     /// Execute translation or copy.
     pub fn execute_move(&mut self, delta: DVec3, scene: &mut Scene) {
@@ -246,7 +250,8 @@ impl Tool for MoveTool {
     fn restore_current_preview_model(&self,scene:&mut Scene){
         if self.start_point.is_none(){return;}
         scene.version=self.preview_version;
-        for (id,image) in &self.original_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=(image.origin.as_vec3()+self.preview_delta.as_vec3()).as_dvec3();}}
+        // The exact accumulated float32 pose cannot be reconstructed from its inverse.
+        for(id,origin)in &self.preview_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=*origin;}}
         for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(self.preview_delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+self.preview_delta;}}
@@ -617,5 +622,14 @@ mod tests {
   tool.on_cancel(&mut scene);assert_eq!(scene.image_planes[0].origin,DVec3::ZERO);assert!(tool.take_image_frame_command().is_none());
   tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_move(&mut scene,&ctx(DVec3::X));tool.on_control_state(&mut scene,true);assert_eq!(scene.image_planes[0].origin,DVec3::ZERO);let mut end=ctx(DVec3::X*3.);end.ctrl_held=true;tool.on_click(&mut scene,&end);assert_eq!(scene.image_planes.len(),1);assert!(tool.take_image_frame_command().is_none());
   tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_click(&mut scene,&ctx(DVec3::Y*2.));let command=tool.take_image_frame_command().unwrap();scene.image_planes[0].origin+=DVec3::X*10.;scene.image_objects.publish(&scene.image_planes);command.apply(&mut scene.image_planes,&scene.image_objects,false);assert_eq!(scene.image_planes[0].origin,DVec3::X*10.);
+ }
+}
+
+#[cfg(test)]mod image_refusal_tests{
+ use super::*;use ingetrazo_core::{image_plane::ImagePlane,math::Ray};
+ #[test]fn refusal_restores_exact_accumulated_preview(){
+  let mut scene=Scene::new();scene.image_planes.push(ImagePlane::new("scan",DVec3::new(0.125,-1.25,2.5),DVec3::X,DVec3::Y));scene.select(SelectionItem::ImagePlane(0));let mut tool=MoveTool::new();
+  let ctx=|p|ToolContext::new(p,Ray::new(DVec3::new(0.5,0.5,10.),-DVec3::Z));tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_move(&mut scene,&ctx(DVec3::new(0.7,1.2,-0.3)));tool.on_move(&mut scene,&ctx(DVec3::new(0.9,0.4,0.8)));let exact=scene.image_planes[0].origin;
+  let mut before=scene.clone();tool.restore_transient_model(&mut before);assert!(tool.on_vcb_input(&mut scene,"invalid").is_err());scene=before;tool.restore_current_preview_model(&mut scene);assert_eq!(scene.image_planes[0].origin,exact);assert_eq!(exact.z,3.3000001907348633);
  }
 }
