@@ -221,3 +221,27 @@ fn renamed_and_reordered_views_and_sections_keep_identity_metadata() {
     assert_eq!(out["section_planes"][1]["unknown"],3);
     std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
+
+
+#[test]
+fn explicit_components_share_updates_while_plain_proto_groups_remain_independent() {
+    let src=temp("component-source.igz");let dst=temp("component-save.igz");
+    let identity=json!([1.,0.,0.,0.,0.,1.,0.,0.,0.,0.,1.,0.,0.,0.,0.,1.]);
+    let doc=json!({"edges":[],"faces":[],"protos":[{"edges":[],"faces":[{"vertices":[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.]],"opaque":9}]}],
+        "groups":[{"name":"linked1","proto":0,"component":true,"xform":identity},{"name":"linked2","proto":0,"component":true,"xform":identity},
+        {"name":"plain","proto":0,"component":false,"xform":identity}]});
+    write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();
+    let id=scene.groups[0].component_definition.unwrap();
+    assert_eq!(scene.groups[1].component_definition,Some(id));assert_eq!(scene.groups[2].component_definition,None);
+    let mut def=scene.component_definitions[&id].clone();def.mesh.vertices[0].position.z=7.;
+    scene.replace_component_definition(id,def).unwrap();
+    assert_eq!(scene.groups[0].mesh.vertices[0].position.z,7.);assert_eq!(scene.groups[1].mesh.vertices[0].position.z,7.);
+    assert_eq!(scene.groups[2].mesh.vertices[0].position.z,0.);
+    save_igz(&scene,&dst).unwrap();let out=scene_to_igz_document(&scene);
+    assert_eq!(out["groups"][0]["proto"],out["groups"][1]["proto"]);assert_ne!(out["groups"][0]["proto"],out["groups"][2]["proto"]);
+    let reopened=load_igz(&dst).unwrap();assert_eq!(reopened.groups[0].component_definition,reopened.groups[1].component_definition);
+    let unique=scene.make_component_unique(scene.groups[1].id).unwrap();assert_ne!(unique,id);
+    save_igz(&scene,&dst).unwrap();let reopened=load_igz(&dst).unwrap();
+    assert_ne!(reopened.groups[0].component_definition,reopened.groups[1].component_definition);
+    std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}

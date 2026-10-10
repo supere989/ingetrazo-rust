@@ -259,6 +259,10 @@ fn merge_changed(original: Option<&serde_json::Value>, baseline: Option<&serde_j
 fn group_model(g: &Group) -> serde_json::Value {
     let mut obj = mesh_to_json(&g.mesh);
     obj["name"] = serde_json::json!(g.name);
+    obj["uid"] = serde_json::json!(g.id.simple().to_string());
+    obj["component"] = serde_json::json!(g.component_definition.is_some());
+    // Internal comparison identity, removed before writing native groups.
+    obj["_component_definition"] = serde_json::json!(g.component_definition);
     obj["xform"] = serde_json::json!(g.transform.to_cols_array());
     obj["layer"] = serde_json::json!(g.layer);
     obj["ifc"] = serde_json::json!(g.ifc_tag);
@@ -268,14 +272,29 @@ fn group_model(g: &Group) -> serde_json::Value {
     obj
 }
 
-fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>) -> serde_json::Value {
+fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut std::collections::HashMap<uuid::Uuid,usize>) -> serde_json::Value {
     let model = group_model(g);
     let mut obj = overlay(&g.native_document, &g.native_baseline, model.clone());
     // Rust meshes are independent copies. Editing an imported instance makes a
     // new definition; never mutate a retained prototype used by other instances.
     let geometry_changed = ["edges", "faces"].iter()
         .any(|k| g.native_baseline.get(*k) != model.get(*k));
-    if g.native_document.get("proto").is_some() && geometry_changed {
+    if let Some(definition)=g.component_definition {
+        let idx=if let Some(idx)=shared.get(&definition) {*idx} else {
+            let original_idx=g.native_document.get("proto").and_then(|v|v.as_u64()).map(|i|i as usize);
+            let idx=if !geometry_changed && original_idx.is_some()
+                && !shared.values().any(|idx|Some(*idx)==original_idx) {original_idx.unwrap()} else {
+                let original_mesh=original_idx.and_then(|i|protos.get(i)).unwrap_or(&g.native_document);
+                let baseline_mesh=serde_json::json!({"edges":g.native_baseline.get("edges"),"faces":g.native_baseline.get("faces")});
+                let mesh=overlay(original_mesh,&baseline_mesh,mesh_to_json(&g.mesh));
+                let idx=protos.len();protos.push(mesh);idx
+            };
+            shared.insert(definition,idx);idx
+        };
+        obj["proto"]=serde_json::json!(idx);obj["component"]=serde_json::json!(true);
+        obj.as_object_mut().unwrap().remove("edges");
+        obj.as_object_mut().unwrap().remove("faces");
+    } else if g.native_document.get("proto").is_some() && geometry_changed {
         obj["proto"] = serde_json::json!(protos.len());
         let original_mesh = g.native_document.get("proto").and_then(|v| v.as_u64())
             .and_then(|i| protos.get(i as usize)).unwrap_or(&g.native_document);
@@ -298,10 +317,11 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>) -> serde_json::
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
     }
-    let children = g.children.iter().map(|c| group_to_json(c, protos)).collect::<Vec<_>>();
+    let children = g.children.iter().map(|c| group_to_json(c, protos, shared)).collect::<Vec<_>>();
     if g.native_baseline.get("children") != model.get("children") {
         obj["children"] = serde_json::json!(children);
     }
+    obj.as_object_mut().unwrap().remove("_component_definition");
     obj
 }
 
@@ -539,7 +559,8 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
     if scene.native_baseline.get("groups") != current.get("groups") {
         let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
-        doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos)).collect::<Vec<_>>());
+        let mut shared=std::collections::HashMap::new();
+        doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos, &mut shared)).collect::<Vec<_>>());
         if !protos.is_empty() { doc["protos"] = serde_json::json!(protos); }
     }
     doc
@@ -561,6 +582,19 @@ fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
             }
         }
     }
+    fn validate_components(groups:&[Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>)->Result<(),IgzError> {
+        for group in groups {
+            if let Some(id)=group.component_definition {
+                let def=defs.get(&id).ok_or_else(||IgzError::InvalidDocument("component definition not found".into()))?;
+                if mesh_to_json(&group.mesh)!=mesh_to_json(&def.mesh) {
+                    return Err(IgzError::InvalidDocument("component instance geometry diverged; use a shared definition edit or Make Unique".into()));
+                }
+            }
+            validate_components(&group.children,defs)?;
+        }
+        Ok(())
+    }
+    validate_components(&scene.groups,&scene.component_definitions)?;
     for sheet in &scene.sheets {
         for item in &sheet.items {
             if let ingetrazo_core::composition::SheetItem::GraphicScale(bar)=item {
@@ -697,8 +731,16 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         }
     }
 
-    fn read_group(v: &serde_json::Value, protos: &[Mesh]) -> Result<Group, IgzError> {
+    let proto_ids:Vec<_>=proto_meshes.iter().map(|_|uuid::Uuid::new_v4()).collect();
+    fn read_group(v: &serde_json::Value, protos: &[Mesh], proto_ids:&[uuid::Uuid], depth:usize) -> Result<Group, IgzError> {
+        if depth>64 {return Err(IgzError::InvalidDocument("group nesting limit exceeded".into()));}
         let mut g = Group::new(v.get("name").and_then(|v| v.as_str()).unwrap_or("Group"));
+        if let Some(id)=v.get("uid").and_then(|v|v.as_str()).and_then(|s|uuid::Uuid::parse_str(s).ok()) {g.id=id;}
+        if v.get("component").and_then(|v|v.as_bool())==Some(true) {
+            if let Some(idx)=v.get("proto").and_then(|v|v.as_u64()) {
+                g.component_definition=proto_ids.get(idx as usize).copied();
+            }
+        }
         g.mesh = if let Some(idx) = v.get("proto").and_then(|v| v.as_u64()) {
             protos.get(idx as usize).cloned().ok_or_else(||
                 IgzError::InvalidDocument(format!("missing component prototype {idx}")))?
@@ -716,7 +758,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         g.hidden = v.get("hidden").and_then(|v| v.as_bool()).unwrap_or(false);
         g.billboard = v.get("billboard").map(|v| v == true || v == "mesh").unwrap_or(false);
         if let Some(children) = v.get("children").and_then(|v| v.as_array()) {
-            g.children = children.iter().map(|v| read_group(v, protos)).collect::<Result<_,_>>()?;
+            g.children = children.iter().map(|v| read_group(v, protos, proto_ids, depth+1)).collect::<Result<_,_>>()?;
         }
         g.mesh.rebuild_spatial_index();
         g.native_document = v.clone();
@@ -724,8 +766,31 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         Ok(g)
     }
     if let Some(groups_arr) = s_val.get("groups").and_then(|g| g.as_array()) {
-        scene.groups = groups_arr.iter().map(|v| read_group(v, &proto_meshes)).collect::<Result<_,_>>()?;
+        scene.groups = groups_arr.iter().map(|v| read_group(v, &proto_meshes, &proto_ids, 0)).collect::<Result<_,_>>()?;
     }
+
+    fn register_definitions(groups:&[Group],defs:&mut std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>) {
+        for g in groups {
+            if let Some(id)=g.component_definition {
+                defs.entry(id).or_insert_with(||ingetrazo_core::components::ComponentDefinition{mesh:g.mesh.clone(),children:g.children.clone()});
+            }
+            register_definitions(&g.children,defs);
+        }
+    }
+    register_definitions(&scene.groups,&mut scene.component_definitions);
+    fn bind_members(groups:&mut [Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>) {
+        fn assign(children:&mut [Group],templates:&[Group]) {
+            for (child,template) in children.iter_mut().zip(templates) {
+                child.definition_member=Some(template.id);
+                assign(&mut child.children,&template.children);
+            }
+        }
+        for g in groups {
+            if let Some(def)=g.component_definition.and_then(|id|defs.get(&id)) {assign(&mut g.children,&def.children);}
+            bind_members(&mut g.children,defs);
+        }
+    }
+    bind_members(&mut scene.groups,&scene.component_definitions);
 
     if let Some(layers_arr) = s_val.get("layers").and_then(|l| l.as_array()) {
         scene.layers.clear();
