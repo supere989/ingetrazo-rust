@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "cases": 3,
+  "binary_sha256": "29779f203107366f6dd03196d6fff70b4700b906e5e91406247a6cb37a03326f",
+  "binary_source": "12b7518235c0f22a0b7c455ebdf95d2ff6c8c342",
+  "reuse_basis": "Production importer unchanged; subsequent format edit is test-only exact saved-color assertion.",
+  "scope": "Fresh authored MFC leader text/dimension import and original reopen, not rendered label parity",
+  "purged_transports": [
+    {
+      "name": "unicode-leader-payload.json",
+      "sha256": "abc5f23c82647e7e4e8d98273937bdb2e18bdf1fe94a7059d3802c50ab8b159f"
+    },
+    {
+      "name": "unicode-leader.igz",
+      "sha256": "80e0de596c35a76c3ee5537370241b5e6daf25bb76d8733222cc779ea385baae"
+    },
+    {
+      "name": "zero-leader-payload.json",
+      "sha256": "9cbae881e79622f0abce6c1c94a74268f2dbbf13f366e20062958da0abeb3745"
+    },
+    {
+      "name": "zero-leader.igz",
+      "sha256": "3d6bc37d24cfe1257e8126f4ef8f0bbe608b5519fc7a3173e3e623859c1a692f"
+    },
+    {
+      "name": "empty-leader-payload.json",
+      "sha256": "efb01505e3e70e4240b71f8172cf3be4160aaa450afb02776289d1af4c316bc5"
+    },
+    {
+      "name": "empty-leader.igz",
+      "sha256": "89fd38dcf44f79941438e621929fbca6d74336b0e021b34bf29b1edef4395adf"
+    }
+  ]
+}

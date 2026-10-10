@@ -1,0 +1,175 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "unicode-leader",
+      "passed": true,
+      "input_sha256": "e8d3176eeff942008fec114511b66529b49e9146a05963ad87b863229fa4659b",
+      "groups": 1,
+      "materials": 0,
+      "inventory": {
+        "root_mesh": {
+          "faces": [],
+          "edges": [],
+          "vertices": []
+        },
+        "dimensions": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.2540000081062317,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.05079999938607216,
+              0.0
+            ],
+            null,
+            null,
+            null,
+            true,
+            true
+          ]
+        ],
+        "texts": [
+          [
+            [
+              0.05079999938607216,
+              0.07620000094175339,
+              0.10159999877214432
+            ],
+            [
+              0.12700000405311584,
+              -0.05080000311136246,
+              0.20320001244544983
+            ],
+            "Leader \u03a9"
+          ]
+        ],
+        "saved_views": [],
+        "section_planes": [],
+        "images": [],
+        "guides_count": 0,
+        "back_face_color": null
+      },
+      "comparison_raw_sha256": "cd595f1028aab41128fe564927a8476f1af93a550625c9db395017d01d15c4d3",
+      "negative": "altered geometry rejected"
+    },
+    {
+      "name": "zero-leader",
+      "passed": true,
+      "input_sha256": "3d0b26f7cddd637ad7812bff62e95b44f64123cdbba169e84960a5f1fdc7d911",
+      "groups": 1,
+      "materials": 0,
+      "inventory": {
+        "root_mesh": {
+          "faces": [],
+          "edges": [],
+          "vertices": []
+        },
+        "dimensions": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.2540000081062317,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.05079999938607216,
+              0.0
+            ],
+            null,
+            null,
+            null,
+            true,
+            true
+          ]
+        ],
+        "texts": [
+          [
+            [
+              0.02539999969303608,
+              0.05079999938607216,
+              0.07620000094175339
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Label"
+          ]
+        ],
+        "saved_views": [],
+        "section_planes": [],
+        "images": [],
+        "guides_count": 0,
+        "back_face_color": null
+      },
+      "comparison_raw_sha256": "269ba8834a4eb04752c1a1ab23290f7ac12f0c0f91ccfe6e8d5b02c5fbf9fbed",
+      "negative": "altered geometry rejected"
+    },
+    {
+      "name": "empty-leader",
+      "passed": true,
+      "input_sha256": "aeef79754aa74f0434031e114e42974355da9607e19ed4fa7488242bed9eb614",
+      "groups": 1,
+      "materials": 0,
+      "inventory": {
+        "root_mesh": {
+          "faces": [],
+          "edges": [],
+          "vertices": []
+        },
+        "dimensions": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.2540000081062317,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.05079999938607216,
+              0.0
+            ],
+            null,
+            null,
+            null,
+            true,
+            true
+          ]
+        ],
+        "texts": [],
+        "saved_views": [],
+        "section_planes": [],
+        "images": [],
+        "guides_count": 0,
+        "back_face_color": null
+      },
+      "comparison_raw_sha256": "172ad39b4453bab40f50a2ce5f2ed08c1b8cfc918a0dc437f8c282cfac30a04f",
+      "negative": "altered geometry rejected"
+    }
+  ],
+  "parser_pin": "291700bc213655a00461838de71e5f206311e619",
+  "app_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source": "980dda7b6b429b32260f6830d5dd0b0ef99760b8",
+  "binary_sha256": "29779f203107366f6dd03196d6fff70b4700b906e5e91406247a6cb37a03326f"
+}
