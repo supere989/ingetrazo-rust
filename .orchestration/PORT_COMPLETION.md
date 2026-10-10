@@ -6,7 +6,7 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-First milestone integrated and locally checked: 145 Rust tests, four original runtime reopen checks, fresh/edited schema fixtures, nine boolean/four PushPull differential shape checks and textured virtual render. Next parallel stage: shared component registry/edit context, true FollowMe/Fillet, independent acceptance. No full parity claim; all tracker gates remain in scope.
+Third milestone published at7e0f8e7:200Rust tests, original document/reopen and textured virtual-render acceptance. Cloudrun38012356527 is live; previous milestone cloud passed. Fourth stage pending:clipboard preview, savedviews/outliner/dimensions, actualintersection/healing/rebuild/pieces, glTF import/material/axes oracle. No full parity claim; all tracker gates remain in scope.
 
 | Worker | Branch/worktree | Ownership | State |
 |---|---|---|---|
