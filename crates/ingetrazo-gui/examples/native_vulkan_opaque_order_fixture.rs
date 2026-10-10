@@ -1,3 +1,5 @@
+#[cfg(any(target_os="linux",target_os="windows"))]
+mod platform {
 //! Cold engineering controls: actual opaque batch order and unordered refusal.
 use std::sync::Arc;
 use ingetrazo_render::cad2d::{Geometry,Vertex,Batch,EncodedRgba,Pose};
@@ -21,4 +23,10 @@ impl App for Fixture{
  fn build_ui(&mut self,ctx:&egui::Context){egui::CentralPanel::default().frame(egui::Frame::none().fill(egui::Color32::WHITE)).show(ctx,|ui|{ui.painter().add(self.paint.shape(ui.max_rect()));});if ctx.input(|i|i.viewport().close_requested()){ctx.send_viewport_cmd(egui::ViewportCommand::Close);}}
  fn gpu_error(&mut self,error:&str){panic!("OPAQUE_ADMISSION_REFUSAL: {error}");}
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+#[cfg(any(target_os="linux",target_os="windows"))]
+fn main()->Result<(),Box<dyn std::error::Error>>{platform::main()}
+#[cfg(not(any(target_os="linux",target_os="windows")))]
+fn main(){eprintln!("This diagnostic requires the native Vulkan Linux/Windows backend");std::process::exit(2);}
