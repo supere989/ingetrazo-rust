@@ -1,0 +1,46 @@
+{
+  "eye_height": 2.5,
+  "value_buffer": "",
+  "measurement": "2.50 m",
+  "measurement_label": "Eye height",
+  "gl_metadata": {
+    "vendor": "Mesa",
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+  },
+  "endpoint_pixel": [
+    -72.26501804324741,
+    144.0542166263667
+  ],
+  "snap_kind": null,
+  "window_id": 2097159,
+  "window_title": "IngeTrazo \u2014 Untitled",
+  "frames": 71,
+  "eye": [
+    1.2202699184417725,
+    -0.6033546924591064,
+    2.5
+  ],
+  "forward": [
+    0.32572129368782043,
+    0.2004438191652298,
+    -0.9239739179611206
+  ],
+  "mode": "LookAroundTool",
+  "preview": null,
+  "preview_pixels": null,
+  "viewport": [
+    40,
+    58,
+    680,
+    669
+  ],
+  "undo": 0,
+  "version": 1,
+  "faces": 0,
+  "focused": true,
+  "pointer": [
+    515,
+    368
+  ]
+}

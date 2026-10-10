@@ -166,3 +166,5 @@ mod history_terrain;
 mod image_plane_actions;
 
 pub mod image_outlines;
+pub mod navigation;
+pub mod navigation_ray;

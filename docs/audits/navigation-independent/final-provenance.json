@@ -1,0 +1,98 @@
+{
+  "source_revision": "d00d56a0b682c38c54a08233621622b08054edaa",
+  "production_commit": "9d8144a4",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt_and_pyside_version": "6.12.0 6.12.0",
+  "native_binary_sha256": {
+    "position_first_point_acceptance": "802564ac13d99084fe9f5be3df31084f36538fc5f9bfda51042334f30aaf111f",
+    "position_ray_protocol": "385308950bef390fe26dca73c7cd4e7ccaa04ec5228e6fd24bb17b66bf3519a5",
+    "position_navigation_native_fixture": "8d7deaa5edaaa92891251176dadd5555675466d7f67086dd8eb15b93528b5477"
+  },
+  "source_files_sha256": {
+    "crates/ingetrazo-gui/src/navigation.rs": "b5f7ba7bb81b58bb27c0312d1886fffa2c95fdb4fce4806e95f46b2978e18163",
+    "crates/ingetrazo-gui/src/navigation_ray.rs": "43dd181f16a8984237d519eae232c5470c2dbbe551256891a8f0d01df9628751",
+    "crates/ingetrazo-gui/src/viewport.rs": "463209edc384827429eb842c4b7a9b8df5d63aa1b864754aa6b3f013c41b3a35",
+    "crates/ingetrazo-render/src/pipeline.rs": "3201abc470ec4dff6f8e157045e4aa0ca09c7a9bdceaae13f45fa9c6797d4627",
+    "scripts/probe-python-position-first-point.py": "e7e46151ab982520328b74b0d2f2a397c7be124f5e4f57b7106380a170a858a0",
+    "scripts/probe-python-position-rays.py": "149cd70a5ab34a1ac32a87ebfa62e23e8f3f81855123287edd312529bd5853fd",
+    "scripts/check-position-navigation.py": "8d10f54ca14f87297cbe1f32a8e86ab39318f83b2eb8e40f53f2240d21e9837f",
+    "scripts/check-rendered-position-navigation.py": "7424d70a1e9e7e1144c0ee1eb2741967f82524b675d0b2b1535e6b75b529fea8",
+    "scripts/original_position_navigation_fixture.py": "38f2028994faf7b46781c1c96078d982a0c0eeaaf4dad6dcc665fa2ad7fec8a3"
+  },
+  "qt_reference_sha256": {
+    "qmatrix4x4.cpp": "5f4f9b1ad8149c5717624a07865f3e74ff51f261844616395ca09363c61925ed",
+    "qmatrix4x4.h": "07dc91f399811fbec0f3a899ab1b1f7c094fb370d40e304bf1529ffdc11faa72",
+    "qvectornd.h": "a9f784cc40a1a7a88d9453a297d9cf15f332e60b222b869dbd49c720f69de2d3"
+  },
+  "controller_cases": 16,
+  "literal_ray_cases": 72,
+  "checker_negatives": 6,
+  "compiled_old_defects": 7,
+  "gui_lib_tests": {
+    "passed": 147,
+    "ignored": 1
+  },
+  "rendered_cases": [
+    {
+      "implementation": "original-Qt-OpenGL-llvmpipe",
+      "cancel": false,
+      "glyph_green": 122,
+      "preview_coverage": {
+        "samples": 48,
+        "visible": 48,
+        "coverage": 1.0
+      },
+      "negatives": [
+        "black-world",
+        "missing-preview",
+        "missing-endpoint-glyph"
+      ]
+    },
+    {
+      "implementation": "original-Qt-OpenGL-llvmpipe",
+      "cancel": true,
+      "glyph_green": 122,
+      "preview_coverage": {
+        "samples": 48,
+        "visible": 48,
+        "coverage": 1.0
+      },
+      "negatives": [
+        "black-world",
+        "missing-preview",
+        "missing-endpoint-glyph"
+      ]
+    },
+    {
+      "implementation": "native-Vulkan-llvmpipe",
+      "cancel": false,
+      "glyph_green": 61,
+      "preview_coverage": {
+        "samples": 48,
+        "visible": 48,
+        "coverage": 1.0
+      },
+      "negatives": [
+        "black-world",
+        "missing-preview",
+        "missing-endpoint-glyph"
+      ]
+    },
+    {
+      "implementation": "native-Vulkan-llvmpipe",
+      "cancel": true,
+      "glyph_green": 61,
+      "preview_coverage": {
+        "samples": 48,
+        "visible": 48,
+        "coverage": 1.0
+      },
+      "negatives": [
+        "black-world",
+        "missing-preview",
+        "missing-endpoint-glyph"
+      ]
+    }
+  ],
+  "scope": "Source/controller and actual owned-window llvmpipe input/preview/endpoint-glyph visibility; no full navigation, whole-image AA, physicalGPU/Metal proof"
+}

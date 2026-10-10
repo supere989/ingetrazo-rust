@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-navigation-validation/scripts/check-native-navigation-input.py", line 59, in <module>
+    assert valid_png(out/"native-navigation.png"),"missing/invalid owned-window image"
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: missing/invalid owned-window image

@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "operation": "look_from",
+      "max_absolute_difference": 5.245208734017126e-08,
+      "within_2e_5": true
+    },
+    {
+      "operation": "look_from",
+      "max_absolute_difference": 1.9929318639810845e-07,
+      "within_2e_5": true
+    },
+    {
+      "operation": "look_from",
+      "max_absolute_difference": 6.110557393412819e-08,
+      "within_2e_5": true
+    },
+    {
+      "operation": "look_from",
+      "max_absolute_difference": 6.110557393412819e-08,
+      "within_2e_5": true
+    },
+    {
+      "operation": "look_from",
+      "max_absolute_difference": 2.0728772121003658e-07,
+      "within_2e_5": true
+    },
+    {
+      "operation": "turn",
+      "max_absolute_difference": 5.87875074842259e-07,
+      "within_2e_5": true
+    },
+    {
+      "operation": "turn",
+      "max_absolute_difference": 1.1609620376162866e-06,
+      "within_2e_5": true
+    },
+    {
+      "operation": "turn",
+      "max_absolute_difference": 2.2169894187129557e-07,
+      "within_2e_5": true
+    },
+    {
+      "operation": "move_eye",
+      "max_absolute_difference": 2.0728772298639342e-07,
+      "within_2e_5": true
+    },
+    {
+      "operation": "move_eye",
+      "max_absolute_difference": 2.0728772298639342e-07,
+      "within_2e_5": true
+    }
+  ],
+  "scope": "Actual pinned Qt float32 camera versus native float64 arithmetic; explicit absolute2e-5 bound, not exact pixels or fulltools"
+}

@@ -253,6 +253,8 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     ui.checkbox(&mut app.document_session.preferences.autosave,"Enable recovery copies");ui.end_row();
                     ui.strong("Autosave interval");
                     ui.add(egui::Slider::new(&mut app.document_session.preferences.autosave_minutes,1..=60).text("minutes"));ui.end_row();
+                    ui.strong("First-person look sensitivity");
+                    ui.add(egui::Slider::new(&mut app.document_session.preferences.look_sensitivity,1..=100));ui.end_row();
                     ui.strong("Undo steps");
                     ui.add(egui::Slider::new(&mut app.document_session.preferences.undo_steps,1..=1000));ui.end_row();
 

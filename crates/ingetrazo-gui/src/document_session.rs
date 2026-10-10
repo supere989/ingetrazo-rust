@@ -49,6 +49,7 @@ impl IngeTrazoApp {
         let p=&self.document_session.preferences;
         if let Some(lang)=p.language.clone() {self.set_language(&lang);}
         let p=&self.document_session.preferences;
+        self.navigation.eye_height=p.walk_eye_height;
         self.scene.unit=p.new_document_unit;self.recent_files=p.recent_files.clone();self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;
         self.style.visual_style=match p.visual_style.as_str(){"wireframe"=>VisualStyle::Wireframe,"hidden"=>VisualStyle::HiddenLine,"mono"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};
         if let Some(rgb)=p.extra.get("section_fill_color").and_then(|v|v.as_array()).filter(|v|v.len()==3){for(i,value)in rgb.iter().enumerate(){if let Some(value)=value.as_f64().filter(|value|value.is_finite()){self.style.section_fill_color[i]=value.clamp(0.,1.)as f32;}}}

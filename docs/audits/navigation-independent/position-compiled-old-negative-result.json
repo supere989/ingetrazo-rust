@@ -1,0 +1,111 @@
+{
+  "passed_negative": true,
+  "source_revision": "11250fab90f0e1fd174a7997bc9020dc8dad7241",
+  "binary_sha256": "8801e5ea02bfa0255a7e878e33432e820c710a1942e01ee4a75e171247bc2ee4",
+  "old_controller_sha256": "46185b4c95360068596dc9383358889770283ba338f1a6ec0d293691cbcd4a9d",
+  "fixture_sha256": "97d9af4c5409df7e86fc0256f051e86621f6efdf411515dfc5a642695030d973",
+  "failures": [
+    {
+      "name": "front-empty",
+      "old_mode": "Some(Position)",
+      "old_eye": [
+        6.123233995736766e-16,
+        -10.0,
+        0.0
+      ],
+      "source_eye": [
+        0.4142135977745056,
+        0.0,
+        1.2657864093780518
+      ]
+    },
+    {
+      "name": "right-empty",
+      "old_mode": "Some(Position)",
+      "old_eye": [
+        10.0,
+        0.0,
+        0.0
+      ],
+      "source_eye": [
+        0.0,
+        0.4142135977745056,
+        1.2657864093780518
+      ]
+    },
+    {
+      "name": "front-locked-image",
+      "old_mode": "Some(Position)",
+      "old_eye": [
+        6.123233995736766e-16,
+        -10.0,
+        0.0
+      ],
+      "source_eye": [
+        0.4142135977745056,
+        2.0,
+        1.2657864093780518
+      ]
+    },
+    {
+      "name": "visible-edge-bounds",
+      "old_mode": "Some(Position)",
+      "old_eye": [
+        6.123233995736766e-16,
+        -10.0,
+        0.0
+      ],
+      "source_eye": [
+        0.4142135977745056,
+        4.0,
+        1.2657864093780518
+      ]
+    },
+    {
+      "name": "hidden-layer-bounds",
+      "old_mode": "Some(Position)",
+      "old_eye": [
+        6.123233995736766e-16,
+        -10.0,
+        0.0
+      ],
+      "source_eye": [
+        0.4142135977745056,
+        4.0,
+        1.2657864093780518
+      ]
+    },
+    {
+      "name": "group-orphan-bounds",
+      "old_mode": "Some(Position)",
+      "old_eye": [
+        6.123233995736766e-16,
+        -10.0,
+        0.0
+      ],
+      "source_eye": [
+        0.4142135977745056,
+        8.0,
+        1.2657864093780518
+      ]
+    },
+    {
+      "name": "position-drag",
+      "old_preview": [],
+      "source_preview": [
+        [
+          [
+            0.4142135977745056,
+            -0.4142135679721832,
+            1.6799999475479126
+          ],
+          [
+            0.9664983153343201,
+            -0.6903559565544128,
+            0.0
+          ]
+        ]
+      ]
+    }
+  ]
+}

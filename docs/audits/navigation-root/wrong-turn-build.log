@@ -1,0 +1,12 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-navigation-root/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running `/tmp/ingetrazo-paper-font-root-target/debug/examples/walkthrough_camera /tmp/ingetrazo-navigation-root/docs/audits/navigation-root/original.json`

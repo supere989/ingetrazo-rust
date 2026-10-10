@@ -340,17 +340,17 @@ pub fn render_left_cad_palette(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         // --- 5. Walkthrough ---
         let ic_poscam = app.icons.get(ui.ctx(), "position_camera").cloned();
         if render_icon_button(ui, ic_poscam.as_ref(), "Eye", false, &tr("Position Camera")).clicked() {
-            app.status_message = tr("Position Camera — click where the observer stands");
+            app.activate_navigation(crate::navigation::Mode::Position);
         }
 
         let ic_walk = app.icons.get(ui.ctx(), "walk").cloned();
         if render_icon_button(ui, ic_walk.as_ref(), "Wk", false, &tr("Walk")).clicked() {
-            app.status_message = tr("Walk — arrow keys or mouse to walk through the model");
+            app.activate_navigation(crate::navigation::Mode::Walk);
         }
 
         let ic_look = app.icons.get(ui.ctx(), "look_around").cloned();
         if render_icon_button(ui, ic_look.as_ref(), "Lk", false, &tr("Look Around")).clicked() {
-            app.status_message = tr("Look Around — turn camera around observer position");
+            app.activate_navigation(crate::navigation::Mode::Look);
         }
 
         ui.separator();
