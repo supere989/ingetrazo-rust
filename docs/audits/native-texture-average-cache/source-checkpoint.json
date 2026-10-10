@@ -1,0 +1,12 @@
+{
+  "source_commit": "bdc347ca97dad62790d4f4f658c56b9774648f22",
+  "compiler": "shaderc Rust crate 0.8.3",
+  "compiler_manifest": "[package]\nname=\"ingetrazo-image-shader-compiler\"\nversion=\"0.1.0\"\nedition=\"2021\"\n[dependencies]\nshaderc=\"=0.8.3\"\n",
+  "command": "ingetrazo-image-shader-compiler texture_average.frag texture_average.frag.spv",
+  "shader_sha256": "c5351c176bd29a77cba4e7b9b7da5d5a0d589901918f71c2e725c3cbecc4e65a",
+  "spirv_sha256": "85bdab2cb3f51a1354a9b719b8501487404f2426cc125e70e7ae72a56331731f",
+  "byte_identical_replay": true,
+  "compiler_sha256": "43cd68febc8b9632d845557a50ebacc45aa1652eb7c0f51bb9e3a292d31e25d8",
+  "focused_tests_passed": 2,
+  "gpu_render_acceptance": "pending independent actual replay"
+}
