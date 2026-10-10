@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-navigation-validation/scripts/check-rendered-position-navigation.py", line 65, in <module>
+    key(0xff0d);typed_state=wait(lambda:state()if state().get('measurement')=='2.50 m'else None);assert typed_state['eye']==initial['eye']and typed_state['undo']==0,'typed height before placement mutated camera/history';move(p)
+                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-navigation-validation/scripts/check-rendered-position-navigation.py", line 21, in wait
+    raise AssertionError('Position rendered observation deadline')
+AssertionError: Position rendered observation deadline
