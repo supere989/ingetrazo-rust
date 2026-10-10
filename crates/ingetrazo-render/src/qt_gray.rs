@@ -4,7 +4,7 @@
 // Rust adaptation of line/cell/sweep mathematics; see licenses/FTL.txt.
 //! Bounded native line-outline scan conversion matching Qt6.12 gray raster.
 //! Source: Qt qoutlinemapper.cpp (26.6 qRound), qgrayraster.c line/cell/sweep.
-//! Curves and stroking are deliberately outside this module. No pixel image.
+//! Curves use source QBezier subdivision before fixed-point cells; stroking is external.
 use std::collections::BTreeMap;
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
 pub struct Span {pub x:i32,pub y:i32,pub len:u32,pub coverage:u8}
@@ -64,6 +64,9 @@ pub fn rasterize(contours:&[Vec<[f64;2]>],max_cells:usize,max_runs:usize)->Resul
   let fixed=contour.iter().map(|p|{if p.iter().any(|x|!x.is_finite()||x.abs()>1_000_000.){return Err("Gray raster input outside finite bounded coordinates".into());}Ok([(p[0]*64.).round() as i64*4,(p[1]*64.).round() as i64*4])}).collect::<Result<Vec<_>,String>>()?;
   for i in 0..fixed.len(){cells.line(fixed[i],fixed[(i+1)%fixed.len()])?;}
  }
+ finish(cells,max_runs)
+}
+fn finish(cells:Cells,max_runs:usize)->Result<Vec<Span>,String>{
  let mut out=Vec::new();let(mut row,mut cover,mut next)=(None,0_i64,0_i64);
  for((y,x),(dc,area))in cells.map {
   if row!=Some(y){row=Some(y);cover=0;next=x;}
@@ -72,8 +75,41 @@ pub fn rasterize(contours:&[Vec<[f64;2]>],max_cells:usize,max_runs:usize)->Resul
  }
  Ok(out)
 }
+#[derive(Clone,Debug)]
+pub enum Segment{Line([f64;2]),Cubic{control1:[f64;2],control2:[f64;2],to:[f64;2]}}
+#[derive(Clone,Debug)]pub struct PathContour{pub start:[f64;2],pub segments:Vec<Segment>}
+fn fixed(p:[f64;2])->Result<[i64;2],String>{
+ if p.iter().any(|x|!x.is_finite()||x.abs()>1_000_000.){return Err("Gray raster input outside finite bounded coordinates".into());}
+ Ok([(p[0]*64.).round()as i64*4,(p[1]*64.).round()as i64*4])
+}
+fn flatten_cubic(a:[f64;2],c1:[f64;2],c2:[f64;2],b:[f64;2])->Vec<[f64;2]>{
+ let mut stack=vec![([a,c1,c2,b],9usize)];let mut out=Vec::new();
+ while let Some((q,level))=stack.pop(){let dx=q[3][0]-q[0][0];let dy=q[3][1]-q[0][1];let mut length=dx.abs()+dy.abs();
+  let deviation=if length>1.{(dx*(q[0][1]-q[1][1])-dy*(q[0][0]-q[1][0])).abs()+(dx*(q[0][1]-q[2][1])-dy*(q[0][0]-q[2][0])).abs()}else{length=1.;(q[0][0]-q[1][0]).abs()+(q[0][1]-q[1][1]).abs()+(q[0][0]-q[2][0]).abs()+(q[0][1]-q[2][1]).abs()};
+  if deviation<0.25*length||level==0{out.push(q[3]);continue;}
+  let midpoint=|a:[f64;2],b:[f64;2]|[(a[0]+b[0])*0.5,(a[1]+b[1])*0.5];
+  let ab=midpoint(q[0],q[1]);let bc=midpoint(q[1],q[2]);let cd=midpoint(q[2],q[3]);let abc=midpoint(ab,bc);let bcd=midpoint(bc,cd);let middle=midpoint(abc,bcd);
+  stack.push(([middle,bcd,cd,q[3]],level-1));stack.push(([q[0],ab,abc,middle],level-1));
+ }out
+}
+/// Closed cubic/line contours in physical coordinates: source threshold 0.25, depth 9.
+pub fn rasterize_paths(paths:&[PathContour],max_cells:usize,max_runs:usize)->Result<Vec<Span>,String>{
+ if max_cells==0||max_runs==0{return Err("Gray raster admission must be positive".into());}
+ let count=paths.iter().try_fold(0usize,|n,p|n.checked_add(p.segments.len()+1)).ok_or("Gray path count overflow")?;
+ if count>max_cells{return Err("Gray path admission exceeded".into());}
+ let mut cells=Cells{map:BTreeMap::new(),limit:max_cells,steps:0};
+ for path in paths{let start=fixed(path.start)?;let mut current=start;let mut current_float=path.start;for segment in &path.segments{match segment{Segment::Line(to)=>{let next=fixed(*to)?;cells.line(current,next)?;current=next;current_float=*to;},Segment::Cubic{control1,control2,to}=>{let next=fixed(*to)?;fixed(*control1)?;fixed(*control2)?;for point in flatten_cubic(current_float,*control1,*control2,*to){let point=fixed(point)?;cells.line(current,point)?;current=point;}current=next;current_float=*to;}}}cells.line(current,start)?;}
+ finish(cells,max_runs)
+}
 #[cfg(test)]mod tests {
  use super::*;
+ #[test]fn cubic_path_admission_and_finite_controls(){
+  let path=PathContour{start:[0.,0.],segments:vec![Segment::Cubic{control1:[10.,20.],control2:[20.,20.],to:[30.,0.]}]};
+  assert!(!rasterize_paths(&[path.clone()],10000,10000).unwrap().is_empty());
+  assert!(rasterize_paths(&[path.clone()],1,10000).is_err());
+  let mut bad=path;bad.start[0]=f64::NAN;assert!(rasterize_paths(&[bad],10000,10000).is_err());
+ }
+
  #[test]fn malformed_and_excessive_edges_refuse(){
   assert!(rasterize(&[vec![[f64::NAN,0.],[1.,0.],[1.,1.]]],100,100).is_err());
   assert!(rasterize(&[vec![[0.,0.];101]],100,100).is_err());
