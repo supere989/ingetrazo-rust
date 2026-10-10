@@ -328,6 +328,13 @@ struct Cached {
 /// Cheap host-scoped callback factory; GPU ownership stays in Renderer.
 #[derive(Clone)]pub struct Factory{device:vk::Device,pipeline:Arc<Mutex<Pipeline>>,counters:Arc<Counters>}
 impl Factory{
+ /// Fresh callback payload bound before allocating a handle. Annotation factories
+ /// include their distinct wrapper; shared pipeline/counter owners stay separate.
+ pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{
+  let annotations=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.annotations;
+  (std::mem::size_of::<NativePaint>()+std::mem::size_of::<VulkanPaintCallback>()+if annotations{std::mem::size_of::<AnnotationPaint>()}else{0})
+   .checked_add(palette_len.checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD palette byte overflow")?).ok_or_else(||"CAD retained byte overflow".into())
+ }
  pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
   geometry.validate_batches(&batches)?;pose.validate()?;
   let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,premultiplied:prepare_palette(&geometry,&batches)?,geometry,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
