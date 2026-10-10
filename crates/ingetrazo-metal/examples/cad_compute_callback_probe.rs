@@ -163,7 +163,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     )?;
     let primitive = |rect: egui::Rect, color: egui::Color32| {
         let mut mesh = egui::Mesh::with_texture(texture);
-        mesh.add_colored_rect(rect, color);
+        mesh.add_rect_with_uv(rect, [egui::epaint::WHITE_UV, egui::epaint::WHITE_UV].into(), color);
         egui::ClippedPrimitive {
             clip_rect: egui::Rect::EVERYTHING,
             primitive: egui::epaint::Primitive::Mesh(mesh),
