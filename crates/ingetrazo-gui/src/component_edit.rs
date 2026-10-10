@@ -116,6 +116,9 @@ impl IngeTrazoApp {
             }
             if let Some(id)=candidate.groups[group_index].component_definition {
                 if let Err(e)=candidate.replace_component_definition(id,replacement) {self.status_message=e;return;}
+                // The edited instance owns its child placements. Other copies
+                // received shared mesh changes while retaining their matrices.
+                candidate.groups[group_index].children=self.scene.groups.clone();
             } else {
                 candidate.groups[group_index].mesh=replacement.mesh;
                 candidate.groups[group_index].children=replacement.children;

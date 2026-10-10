@@ -24,14 +24,14 @@ fn linked_nested_group_spaced_arrays_keep_definitions_and_atomic_history(){
  app.redo();assert_eq!(app.scene.groups,committed.groups);assert_eq!(app.scene.component_definitions,committed.component_definitions);
 }
 #[test]
-fn local_component_group_move_commits_shared_definition_once_and_undo_restores(){
+fn local_component_group_move_retains_sibling_placement_and_undo_restores(){
  let mut app=IngeTrazoApp::new();let mut outer=Group::new("outer");outer.children.push(Group::with_mesh("child",mesh()));
  app.scene.groups.push(outer);let definition=app.scene.make_component(app.scene.groups[0].id).unwrap();let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.);app.scene.groups.push(sibling);
  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();assert_eq!(app.scene.groups.len(),1);
  app.scene.select(SelectionItem::Group(0));app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));app.dispatch_tool_click(&context(DVec3::Y*3.));
  assert_eq!(app.undo_stack.len(),1);app.finish_component_edit();assert_eq!(app.undo_stack.len(),1);
  assert_eq!(app.scene.component_definitions[&definition].children[0].transform.w_axis.y,3.);
- assert!(app.scene.groups.iter().all(|g|g.children[0].transform.w_axis.y==3.));assert_eq!(app.scene.groups[1].transform,before.groups[1].transform);
+ assert_eq!(app.scene.groups[0].children[0].transform.w_axis.y,3.);assert_eq!(app.scene.groups[1].children[0].transform.w_axis.y,0.,"original shared meshes retain per-instance child placement matrices");assert_eq!(app.scene.groups[1].transform,before.groups[1].transform);
  let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.component_definitions,before.component_definitions);app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.component_definitions,after.component_definitions);
 }
 #[test]
@@ -71,4 +71,14 @@ fn rotated_scaled_context_uses_restored_grab_placement_and_cancel_camera(){
  let original=app.scene.groups[0].transform;let camera=app.camera.clone();app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));
  app.begin_component_edit();assert_eq!(app.scene.dimension_frame,original);assert_eq!(app.camera.target,original.inverse().transform_point3(camera.target));
  app.cancel_component_edit();assert_eq!(app.scene.groups[0].transform,original);assert_eq!(app.camera,camera);assert!(app.undo_stack.is_empty());
+}
+#[test]
+fn shared_child_mesh_refresh_and_native_reopen_retain_independent_placements(){
+ let mut app=IngeTrazoApp::new();let mut outer=Group::new("outer");outer.children.push(Group::with_mesh("child",mesh()));app.scene.groups.push(outer);let definition=app.scene.make_component(app.scene.groups[0].id).unwrap();app.scene.groups.push(app.scene.groups[0].duplicate_instance());
+ app.scene.groups[0].children[0].transform=DMat4::from_translation(DVec3::Y*3.);app.scene.groups[1].children[0].transform=DMat4::from_translation(DVec3::Z*2.);
+ let ids=[app.scene.groups[0].children[0].id,app.scene.groups[1].children[0].id];
+ let mut changed=app.scene.component_definitions[&definition].clone();changed.children[0].mesh.vertices[0].position.z=7.;app.scene.replace_component_definition(definition,changed).unwrap();
+ for (i,transform) in [DMat4::from_translation(DVec3::Y*3.),DMat4::from_translation(DVec3::Z*2.)].into_iter().enumerate(){assert_eq!(app.scene.groups[i].children[0].transform,transform);assert_eq!(app.scene.groups[i].children[0].id,ids[i]);assert_eq!(app.scene.groups[i].children[0].mesh.vertices[0].position.z,7.);}
+ let path=std::env::temp_dir().join(format!("ingetrazo-placement-{}.igz",uuid::Uuid::new_v4()));ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();let loaded=ingetrazo_formats::igz::load_igz(&path).unwrap();if let Some(artifact)=std::env::var_os("INGETRAZO_PLACEMENT_SAVE_ARTIFACT"){std::fs::copy(&path,artifact).unwrap();}std::fs::remove_file(path).unwrap();
+ for i in 0..2{assert_eq!(loaded.groups[i].children[0].transform,app.scene.groups[i].children[0].transform);assert_eq!(loaded.groups[i].children[0].id,ids[i]);assert_eq!(loaded.groups[i].children[0].mesh.vertices[0].position.z,7.);}
 }
