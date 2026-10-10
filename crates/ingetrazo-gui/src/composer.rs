@@ -376,7 +376,7 @@ fn section_projected_edges(scene:&Scene)->Vec<(DVec3,DVec3)>{fn mesh(mesh:&inget
 
 /// Projects and renders the 3D model inside the ViewFrame at exact scale 1:N.
 fn frame_bounds(scene:&Scene)->Option<(DVec3,DVec3)>{
- let mut points=vec![];for edge in &scene.mesh.edges{if !edge.hidden&&scene.is_layer_visible(edge.layer.as_deref()){points.extend([scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position]);}}for(id,face)in scene.mesh.faces.iter().enumerate(){if scene.mesh_face_visible(&scene.mesh,id){points.extend(face.vertices.iter().map(|&i|scene.mesh.vertices[i].position));}}
+ let mut points=vec![];for edge in &scene.mesh.edges{if scene.is_layer_visible(edge.layer.as_deref()){points.extend([scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position]);}}for(id,face)in scene.mesh.faces.iter().enumerate(){if scene.mesh_face_visible(&scene.mesh,id){points.extend(face.vertices.iter().map(|&i|scene.mesh.vertices[i].position));}}
  fn groups(items:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in items{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().map(|v|transform.transform_point3(v.position)));groups(&group.children,transform,scene,points);}}
  groups(&scene.groups,glam::DMat4::IDENTITY,scene,&mut points);if points.is_empty(){None}else{Some(points.into_iter().fold((DVec3::splat(f64::INFINITY),DVec3::splat(f64::NEG_INFINITY)),|(a,b),p|(a.min(p),b.max(p))))}
 }
@@ -585,6 +585,9 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
  use super::*;
  #[test]fn hidden_face_boundaries_and_contours_are_absent_from_sheet(){
   let mut scene=Scene::new();let ids=[DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(-1.,1.,0.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.section_planes.push(ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"Cut","A"));scene.show_section_cuts=true;assert!(!section_projected_edges(&scene).is_empty());scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));assert!(section_projected_edges(&scene).is_empty());
+ }
+ #[test]fn frame_bounds_matches_original_edge_and_group_vertex_semantics(){
+  let mut scene=Scene::new();let a=scene.mesh.add_vertex(DVec3::new(10.,0.,0.));let b=scene.mesh.add_vertex(DVec3::new(12.,0.,0.));let e=scene.mesh.add_edge(a,b).unwrap();scene.mesh.edges[e].hidden=true;assert_eq!(frame_bounds(&scene),Some((DVec3::new(10.,0.,0.),DVec3::new(12.,0.,0.))));let mut group=ingetrazo_core::groups::Group::new("Vertices");group.mesh.add_vertex(DVec3::new(30.,0.,0.));scene.groups.push(group);assert_eq!(frame_bounds(&scene).unwrap().1.x,30.);scene.groups[0].hidden=true;assert_eq!(frame_bounds(&scene).unwrap().1.x,12.);
  }
  #[test]fn frame_overrides_roll_scale_and_perspective_have_original_camera_semantics(){
   let mut scene=Scene::new();let ids=[DVec3::new(10.,20.,0.),DVec3::new(12.,20.,0.),DVec3::new(10.,24.,2.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);let mut frame=ViewFrame::default();frame.scale_n=20.;frame.rot_deg=90.;let camera=camera_for_frame(&scene,&frame);assert_eq!(camera.target,DVec3::new(11.,22.,1.));assert!((camera.pitch-std::f64::consts::FRAC_PI_2).abs()<1e-12);assert!((camera.up+DVec3::X).length()<1e-12);assert!((camera.distance-ingetrazo_core::composition::ortho_distance_for_height(3.,45.)).abs()<1e-12);
