@@ -1,0 +1,479 @@
+{
+  "provenance": {
+    "rust_commit": "bc86676ff98a8d996c94b06e1dd971f71e621fe8",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "scope": "Actual original MainWindow constructor QAction Ctrl+Z/Redo connections, QAction.trigger through operative handlers, actual Viewport entry/exit and History commands. Qt offscreen; one real Qt Ctrl+Z key event plus eight deterministic QAction controls; no physical input or rendered gesture acceptance. Nine distinct history controls retain original face-loss counterexample.",
+  "undo_shortcut": "Ctrl+Z",
+  "cases": [
+    {
+      "name": "classic-local-two-undo-redo-exit",
+      "after_two": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 3,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "active_undo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 2,
+        "group_faces": 2,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "active_redo": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 3,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit_undo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 2,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit_redo": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      }
+    },
+    {
+      "name": "container-local-two-undo-redo-exit",
+      "after_two": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 3,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "active_undo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 2,
+        "group_faces": 2,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "active_redo": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 3,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit_undo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 2,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit_redo": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      }
+    },
+    {
+      "name": "placed-component-local-two-undo-redo-exit",
+      "after_two": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 3,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": false,
+        "peer_faces": 1
+      },
+      "active_undo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 2,
+        "group_faces": 2,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": false,
+        "peer_faces": 1
+      },
+      "active_redo": {
+        "undo_commands": [
+          "AddFaceCommand",
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 3,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": false,
+        "peer_faces": 1
+      },
+      "exit": {
+        "undo_commands": [
+          "ReshareInstanceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 3
+      },
+      "exit_undo": {
+        "undo_commands": [],
+        "redo_commands": [
+          "ReshareInstanceCommand"
+        ],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 1
+      },
+      "exit_redo": {
+        "undo_commands": [
+          "ReshareInstanceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 3,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 3
+      }
+    },
+    {
+      "name": "classic-undo-prior-loose-command",
+      "active_undo": {
+        "undo_commands": [],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "active_redo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      }
+    },
+    {
+      "name": "container-undo-prior-loose-command",
+      "active_undo": {
+        "undo_commands": [],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "active_redo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "exit": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": false,
+        "group_shares_peer": null,
+        "peer_faces": null
+      }
+    },
+    {
+      "name": "placed-component-undo-prior-loose-command",
+      "active_undo": {
+        "undo_commands": [],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": false,
+        "peer_faces": 1
+      },
+      "active_redo": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": true,
+        "group_shares_peer": false,
+        "peer_faces": 1
+      },
+      "exit": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 1
+      }
+    },
+    {
+      "name": "ordinary-entry-undo-detached-authored-face-loss",
+      "after_entry_undo": {
+        "undo_commands": [],
+        "redo_commands": [
+          "MakeUniqueCommand"
+        ],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 1
+      },
+      "authored_before_exit": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 2,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 1
+      },
+      "exit": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": false,
+        "active_faces": 0,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": false,
+        "group_shares_peer": true,
+        "peer_faces": 1
+      },
+      "literal_original_data_loss": true
+    },
+    {
+      "name": "line-first-point-consumes-undo-before-global-history",
+      "state": {
+        "undo_commands": [
+          "AddFaceCommand"
+        ],
+        "redo_commands": [],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 1,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "chain_reset": true
+    },
+    {
+      "name": "actual-qt-ctrl-z-prior-loose-command-active-context",
+      "state": {
+        "undo_commands": [],
+        "redo_commands": [
+          "AddFaceCommand"
+        ],
+        "active_context": true,
+        "active_faces": 1,
+        "group_faces": 1,
+        "parked_faces": 0,
+        "active_is_group": true,
+        "group_shares_peer": null,
+        "peer_faces": null
+      },
+      "key_event": "Ctrl+Z to real Viewport widget",
+      "pixel_acceptance": false
+    }
+  ]
+}
