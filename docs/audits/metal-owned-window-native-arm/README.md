@@ -1,0 +1,5 @@
+# Actual owned Cocoa window observation
+
+Actual ARM CI38051790448 source df6f9099 job114212235741 artifact11669184642 is retained in full with ZIP digest/provenance. Native NSView-attached NSWindow34 was captured using only screencapture -l34. Permission succeeded; the actual800x628 PNG has all four exact expected interior RGB[20,51,89] samples (imageSHA5bcc4dfac1b5647ae70ae356d4e0359c123d934ccfc3897e9329b4aca41a35f9). This is actual owned-window GPU content visibility, not physical Mac or shared-app rendering acceptance.
+
+The independent presentation process still exited1 at15.06seconds, without capture-triggered termination. Its snapshot showed3submitted/3Completed/0retired/0displayed. The unchanged positive-callback and retirement criterion remains failed despite visible pixels; unknown callback owners are retained. This evidence narrows the diagnosis away from an invisible/unattached layer. All three application document lifecycle cases still fail before painting at the separately recorded invalidvertex12 admission. Generic offscreen draw/compression/mip tests remain bounded positives, not host acceptance.
