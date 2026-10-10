@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-composer-pdf-ui.py", line 90, in <module>
+    key(ord('z'),0xffe3);undone=wait(lambda:state() if state()["border"]["on"] is True else None);capture("border-undo")
+                                ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-composer-pdf-ui.py", line 19, in wait
+    raise AssertionError("Actual UI timeout")
+AssertionError: Actual UI timeout
