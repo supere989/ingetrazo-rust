@@ -1,0 +1,6 @@
+
+thread 'main' (1226726) panicked at src/bin/vm_group_identity.rs:2:2267:
+assertion `left == right` failed
+  left: 19856
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

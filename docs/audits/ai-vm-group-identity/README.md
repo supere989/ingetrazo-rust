@@ -1,0 +1,15 @@
+# Real VM Group/Mesh ownership prerequisite
+
+Frozen source `4e2c16bb` plus report-only `fcf10d75`, original `6be29fe437a7cd992d4e079f71720821b25216b9`. Production scripting remains disabled.
+
+The actual original and native executions match three membership/held-object states and five full ordered vertex/edge/face inventories: counterclockwise, clockwise, reversed height, zero-height coplanar, and empty extrusions. Coplanar winding is preserved. Real Python assertions establish list/tuple/iterator color behavior, arbitrary truthy name identity, helper globals unaffected by user-global builtin-name shadows, and outline double iteration. Ordinary caught Python helper errors preserve an earlier completed group, matching the original; native admission refusals and fuel poison discard staged membership.
+
+Native controls establish caught shared-budget refusal preserving existing Redo and charges, detached Group/Mesh/Face identity on ordinal reuse, branch truncation, one persistent GC-owned Mesh.faces list, external held Group retaining its VM/native geometry and charge through controller teardown, deliberate Group→Mesh→Face attrs→Group cycle release, and another controller's globals surviving both teardown and final external-handle release. There is no JSON attribute boundary or native geometry clone during Group wrapping/history.
+
+The first run failed its shutdown assertion with 19,856 charged bytes (`shutdown-before-owner-teardown.log`). The fix belongs to the real Controller/HeldGroup lifecycle, rather than fixture-only cleanup. Controller teardown clears its scope/history inside the live VM and runs existing GC with callbacks poisoned; external handles retain their own actual VM and Mesh until release.
+
+Logical admission includes native vertex/edge/face capacities, adjacency/radial/ring/hole-vector capacities, spatial-index entry capacity, persistent face-list item capacity and command handle capacity. Native attrs/layers are empty by construction and explicitly refused if present in this builder. This is logical payload admission: VM object/dict/compiler memory, temporary extraction arrays, native orientation scratch, hash-table control bytes, allocator overhead/history-vector slack and physical allocator failure are not comprehensively bounded.
+
+Required remaining scope includes native projection/synchronization of mutable VM face lists and attrs, mutable preexisting-object rollback, full Mesh/Vertex/Edge/Face/Group constructors/properties, all helper shapes and exact general orientation/triangulation, actual application Scene integration, arbitrary imports, compiler/native memory and wall-time bounds. Mesh.faces has real list identity; mutating that list is not yet synchronized into the native geometry projection. This prerequisite does not claim full Group, Mesh, Scene or run_python parity.
+
+Reproduce using commands in provenance.json, then `python3 scripts/check-ai-vm-group-identity.py original.json native.json`. Twelve deliberate data/type/inventory/claim mutations use the same validator and must be rejected. No broad workspace suite was rerun.
