@@ -1,0 +1,11 @@
+{
+  "previous_commit": "16df7b43843a24115aa023a6f38d8f40ad05db9f",
+  "authenticated_commit_workflow_runs": [],
+  "branch": "review/metal-presenter-diagnostic",
+  "diagnostic_push_trigger": "exact branch only",
+  "parity_compute": "exact branch added to branches-ignore",
+  "raw_canvas": "unchanged exact review/metal-raw-canvas branch trigger; cannot run on diagnostic branch",
+  "default_branch_mutation": false,
+  "dispatch": "not yet pushed; root review pending",
+  "workflow_sha256": "5bfc0a0a24e6bf4ae98b44addbf379fccebb57e34b20e344eb4a9461b2d22091"
+}

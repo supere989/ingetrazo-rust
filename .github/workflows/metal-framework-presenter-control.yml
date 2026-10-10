@@ -1,5 +1,7 @@
 name: Manual native MetalKit presenter lifecycle control
 on:
+  push:
+    branches: [review/metal-presenter-diagnostic]
   workflow_dispatch:
 jobs:
   framework-presenter:
