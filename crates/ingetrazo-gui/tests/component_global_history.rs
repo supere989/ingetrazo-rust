@@ -28,3 +28,37 @@ fn source(name:&str)->serde_json::Value {let v:serde_json::Value=serde_json::fro
 #[test]fn unchanged_shared_finish_validates_and_rebinds_pending_redo_instead_of_detaching(){let mut app=setup("placed-component");app.begin_component_edit();add(&mut app,0.);app.undo();assert_eq!(app.scene.mesh.faces.len(),1);assert_eq!(app.redo_stack.len(),1);app.finish_component_edit();assert!(app.undo_stack.is_empty());assert_eq!(app.redo_stack.len(),1);assert!(app.redo_stack[0].history_context.is_empty());assert!(app.scene.groups.iter().all(|g|g.mesh.faces.len()==1));app.redo();assert!(app.scene.groups.iter().all(|g|g.mesh.faces.len()==2));assert_eq!(app.undo_stack.len(),1);app.undo();assert!(app.scene.groups.iter().all(|g|g.mesh.faces.len()==1));assert_eq!(app.redo_stack.len(),1);}
 
 #[test]fn invalid_candidate_or_historical_mesh_refuses_finish_atomically(){for corrupt_history in [false,true]{let mut app=setup("classic");app.begin_component_edit();add(&mut app,0.);if corrupt_history{app.undo_stack[0].mesh.vertices[0].position.x=f64::INFINITY;}else{app.scene.mesh.vertices[0].position.x=f64::INFINITY;}let active=app.scene.clone();let undo=app.undo_stack.clone();let redo=app.redo_stack.clone();app.finish_component_edit();assert_eq!(app.scene,active);assert_eq!(app.undo_stack,undo);assert_eq!(app.redo_stack,redo);assert_eq!(app.component_edit_stack.len(),1);assert!(!app.status_message.contains("Committed"));}}
+
+#[test]
+fn refused_finish_preserves_live_tool_preview_and_revision() {
+    use ingetrazo_tools::base::{ToolType,ToolContext};
+    use ingetrazo_core::math::Ray;
+    for corrupt_history in [false,true] {
+        let mut app=setup("classic");app.begin_component_edit();add(&mut app,3.);
+        app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Move);
+        let start=app.scene.mesh.vertices[0].position;
+        let context=ToolContext::new(start,Ray::new(DVec3::Z,-DVec3::Z));
+        app.dispatch_tool_click(&context);app.dispatch_tool_move(&ToolContext::new(start+DVec3::X,context.ray));
+        if corrupt_history {app.undo_stack[0].mesh.vertices[0].position.x=f64::INFINITY;}
+        else {app.scene.mesh.add_vertex(DVec3::new(f64::INFINITY,0.,0.));}
+        let scene=app.scene.clone();let undo=app.undo_stack.clone();let redo=app.redo_stack.clone();
+        let anchor=app.active_tool.snap_anchor();let preview=app.active_tool.rubber_band_lines();let revision=app.model_revision;
+        app.finish_component_edit();
+        assert_eq!(app.scene,scene);assert_eq!(app.undo_stack,undo);assert_eq!(app.redo_stack,redo);
+        assert_eq!(app.active_tool_type,ToolType::Move);assert_eq!(app.active_tool.snap_anchor(),anchor);
+        assert_eq!(app.active_tool.rubber_band_lines(),preview);assert_eq!(app.model_revision,revision);
+        assert_eq!(app.component_edit_stack.len(),1);assert!(!app.status_message.contains("Committed"));
+    }
+}
+#[test]
+fn successful_finish_retires_live_preview_without_authoring_it() {
+    use ingetrazo_tools::base::{ToolType,ToolContext};
+    use ingetrazo_core::math::Ray;
+    let mut app=setup("classic");app.begin_component_edit();let original_mesh=app.scene.mesh.clone();
+    app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Move);
+    let start=app.scene.mesh.vertices[0].position;let context=ToolContext::new(start,Ray::new(DVec3::Z,-DVec3::Z));
+    app.dispatch_tool_click(&context);app.dispatch_tool_move(&ToolContext::new(start+DVec3::X,context.ray));
+    assert_ne!(app.scene.mesh,original_mesh);app.finish_component_edit();
+    assert!(app.component_edit_stack.is_empty());assert_eq!(app.active_tool_type,ToolType::Select);
+    assert!(app.active_tool.snap_anchor().is_none());assert_eq!(app.scene.groups[0].mesh,original_mesh);assert!(app.undo_stack.is_empty());
+}
