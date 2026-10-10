@@ -1514,7 +1514,7 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
  // Original bucket_face retains double-sided opaque textured fronts even
  // when a translucent back override exists; culling applies only glass fronts.
  record_source_back_paint(buffer,first,first,attrs,shade);
- if opacity>=0.999{buffer.source_front_cull.retain(|r|r.0!=first);}
+ if opacity>=0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first){buffer.source_front_cull.pop();}
  let front_cull=opacity<0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first);
  if let Some(last)=buffer.source_texture_runs.last_mut(){if last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
  buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{first,count,shade,opacity,front_cull});
@@ -1536,6 +1536,14 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
   assert_eq!(texture.indices.len(),3);assert_eq!(texture.source_texture_runs.len(),1);
   for vertex in &texture.vertices{let p=transform.inverse().transform_point3(DVec3::from_array(vertex.position.map(|v|v as f64)));assert!((vertex.uv[0]as f64-(2.*p.x+0.25)).abs()<1e-5);assert!((vertex.uv[1]as f64-(3.*p.y+0.5)).abs()<1e-5);}
   assert_eq!(texture.source_consolidated_opaque_count,0,"Source texture triangles never enter plain opaque glass gate");
+ }
+ #[test]fn opaque_front_exception_preserves_previous_glass_cull_span(){
+  let mut buffer=MeshRenderBuffer::new();let v=Vertex::new([0.;3],[0.;3],[1.;4],[0.;2]);
+  let attrs=std::collections::HashMap::from([("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.5}))]);
+  buffer.push_triangle(v,v,v);record_source_texture(&mut buffer,0,&attrs,1.,0.5);
+  buffer.push_triangle(v,v,v);record_source_texture(&mut buffer,3,&attrs,1.,1.);
+  assert_eq!(buffer.source_front_cull,vec![(0,3)]);
+  assert!(buffer.source_texture_runs[0].front_cull);assert!(!buffer.source_texture_runs[1].front_cull);
  }
  #[test]fn exact_source_opacity_and_opaque_textured_front_cull_exception_survive_preparation(){
   let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;
