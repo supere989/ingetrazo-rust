@@ -1,0 +1,1 @@
+Fresh root Move replay: eight actual original Move families and six geometry remove-modifier controls exact; five mutations/empty controls reject. Actual original modifier target supplied intentionally; native ray picked. No physicalpointer orGPUdraw proof. Current canonical font/picking integration retained; fullworkspace review ofnewMove stage remains pending.
