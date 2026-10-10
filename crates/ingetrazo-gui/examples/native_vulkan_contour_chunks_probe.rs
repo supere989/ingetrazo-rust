@@ -224,6 +224,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .map(|a| std::path::PathBuf::from(&a[1]))
             .unwrap_or_else(|| "/tmp/contour-chunk-corpus".into());
         std::fs::create_dir_all(&out)?;
+        let expected = [
+            ("original", vec!["closed-front", "closed-iso", "closed", "coplanar-backface", "duplicate", "shared-slab-iso", "shared-slab-reversed-iso", "shared-slab-reversed", "shared-slab", "transparent"]),
+            ("hollow-original", vec!["hollow-iso", "hollow-seam", "hollow", "transparent-hollow"]),
+        ];
+        for (directory, names) in expected {
+            for name in names {
+                if !root.join(directory).join(format!("{name}.igz")).is_file() {
+                    return Err(format!("Missing mandatory original corpus case {directory}/{name}.igz").into());
+                }
+            }
+        }
         let mut serial = 0;
         for directory in ["original", "hollow-original"] {
             let mut inputs = std::fs::read_dir(root.join(directory))?
