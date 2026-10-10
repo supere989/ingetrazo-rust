@@ -151,3 +151,5 @@ pub mod native_vulkan;
 
 pub mod gpu_memory;
 pub mod composer_compute;
+
+mod history_views;
