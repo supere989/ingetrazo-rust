@@ -1,0 +1,18 @@
+{
+  "workflow_sha256": "c74951c97f6f7639f3ffcf23301df08edb802252057d7e35ae916ec830814ebd",
+  "scope": "Three sequential cause-isolating presenter controls, one runner/session, distinctprocesses",
+  "inventory": [
+    "custom_presenter_control",
+    "metalkit_presenter_control",
+    "appkit_presenter_control"
+  ],
+  "limits_each": {
+    "fixture_seconds": 15,
+    "outer_seconds": 45
+  },
+  "strict_gate": "errorNone,positivecallback>=2,pending0,queue/device equal;bothframework controls layer equality and timed/currentDrawable;AppKitwinit_hostingfalse;allthree same device",
+  "provenance": "source revision,binary/report SHA256,SDK,rustc,submodule,log allretained",
+  "branch_trigger": "diagnostic exactbranch only; parity/compute explicitignore;raw exactotherbranch",
+  "python_ast": "PASS",
+  "native_execution": "Pending authorized singlepush, no rerun"
+}

@@ -29,14 +29,14 @@ jobs:
           uname -m >> framework-presenter-evidence/platform.txt
           xcodebuild -version > framework-presenter-evidence/sdk.txt
       - name: Compile and link only the native framework control
-        run: cargo build --locked -j2 -p ingetrazo-metal --example metalkit_presenter_control --example custom_presenter_control > framework-presenter-evidence/build.log 2>&1
-      - name: Run one bounded native framework lifecycle control
+        run: cargo build --locked -j2 -p ingetrazo-metal --example metalkit_presenter_control --example custom_presenter_control --example appkit_presenter_control > framework-presenter-evidence/build.log 2>&1
+      - name: Run three bounded native presenter lifecycle controls
         run: |
           python3 - <<'PYTHON'
           import hashlib, json, pathlib, subprocess, time
           root=pathlib.Path('framework-presenter-evidence')
           pair={'scope':'Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback','controls':{}}
-          for name in ('custom_presenter_control','metalkit_presenter_control'):
+          for name in ('custom_presenter_control','metalkit_presenter_control','appkit_presenter_control'):
               binary=pathlib.Path('target/debug/examples')/name
               report=root/(name+'.json')
               evidence={'source_revision':(root/'revision.txt').read_text().strip(),
@@ -62,18 +62,20 @@ jobs:
                           and type(fixture.get('pending')) is int and fixture['pending']==0
                           and type(fixture.get('queue_device')) is int
                           and fixture['queue_device']==fixture.get('device_registry_id'))
-                      if name=='metalkit_presenter_control':
+                      if name in ('metalkit_presenter_control','appkit_presenter_control'):
                           evidence['passed']=(evidence['passed']
                               and fixture.get('framework_timed_updates') is True
                               and fixture.get('framework_current_drawable') is True
                               and fixture['queue_device']==fixture.get('layer_device'))
+                      if name=='appkit_presenter_control':
+                          evidence['passed']=evidence['passed'] and fixture.get('winit_hosting') is False
                   except (ValueError,TypeError,AttributeError,KeyError) as error:
                       evidence['fixture_report_error']=repr(error)
               pair['controls'][name]=evidence
               (root/'execution.json').write_text(json.dumps(pair,indent=2)+'\n')
           controls=pair['controls']
           ids=[c.get('fixture',{}).get('queue_device') for c in controls.values()]
-          pair['same_device']=len(ids)==2 and all(type(i) is int for i in ids) and ids[0]==ids[1]
+          pair['same_device']=len(ids)==3 and all(type(i) is int for i in ids) and len(set(ids))==1
           pair['passed']=pair['same_device'] and all(c['passed'] for c in controls.values())
           (root/'execution.json').write_text(json.dumps(pair,indent=2)+'\n')
           raise SystemExit(0 if pair['passed'] else 1)
