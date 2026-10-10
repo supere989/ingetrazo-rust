@@ -190,8 +190,33 @@ pub(crate) fn arrange_2d(
                     break;
                 }
             }
-            if edge == (a, b) && chain.len() >= 3 && area(&chain).abs() > TOL * TOL {
-                cycles.push(chain);
+            if edge == (a, b) {
+                // Bridge edges are traversed twice by the same face walk.
+                // Extract simple loops; a dangling cut remains a loose edge,
+                // and a bridge to a hole does not turn its face into a slit.
+                let mut pending = vec![chain];
+                while let Some(chain) = pending.pop() {
+                    if chain.len() < 3 {
+                        continue;
+                    }
+                    let mut first = BTreeMap::new();
+                    let mut repeat = None;
+                    for (i, &p) in chain.iter().enumerate() {
+                        if let Some(&j) = first.get(&key(p)) {
+                            repeat = Some((j, i));
+                            break;
+                        }
+                        first.insert(key(p), i);
+                    }
+                    if let Some((a, b)) = repeat {
+                        pending.push(chain[a..b].to_vec());
+                        let mut rest = chain[..a].to_vec();
+                        rest.extend_from_slice(&chain[b..]);
+                        pending.push(rest);
+                    } else if area(&chain).abs() > TOL * TOL {
+                        cycles.push(chain);
+                    }
+                }
             }
         }
     }
@@ -311,11 +336,40 @@ pub(crate) fn preserve_edges(mesh: &mut Mesh, original: &Mesh) {
 /// Rebuild all coplanar regions on one selected plane, retaining other planes.
 pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
     validate_mesh(mesh)?;
-    let first = selected.first().copied().unwrap_or(0);
-    if mesh.faces.is_empty() {
-        return Ok(mesh.clone());
-    }
-    let frame = Frame::new(&rings(mesh, mesh.faces.get(first).ok_or("Invalid selected face")?)[0])?;
+    let frame = if mesh.faces.is_empty() {
+        if mesh.vertices.len() < 3 || mesh.edges.len() < 3 {
+            return Ok(mesh.clone());
+        }
+        let origin = mesh.vertices[0].position;
+        let mut plane = None;
+        'outer: for a in mesh.vertices.iter().skip(1) {
+            for b in mesh.vertices.iter().skip(2) {
+                if (a.position - origin).cross(b.position - origin).length() > 1e-9 {
+                    plane = Some(Frame::new(&[origin, a.position, b.position])?);
+                    break 'outer;
+                }
+            }
+        }
+        let Some(mut frame) = plane else {
+            return Ok(mesh.clone());
+        };
+        let largest = frame.normal.abs().max_element();
+        let sign = if frame.normal.x.abs() == largest {
+            frame.normal.x
+        } else if frame.normal.y.abs() == largest {
+            frame.normal.y
+        } else {
+            frame.normal.z
+        };
+        if sign < 0. {
+            frame.normal = -frame.normal;
+            frame.v = -frame.v;
+        }
+        frame
+    } else {
+        let first = selected.first().copied().unwrap_or(0);
+        Frame::new(&rings(mesh, mesh.faces.get(first).ok_or("Invalid selected face")?)[0])?
+    };
     if selected.iter().any(|&id| {
         mesh.faces
             .get(id)
@@ -367,10 +421,20 @@ pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
     }
     for (outer, holes) in cells {
         let p = sample(&outer);
-        let Some(source_index) = source_rings.iter().position(|r| inside_rings(p, r)) else {
+        let source_index = source_rings.iter().position(|r| inside_rings(p, r));
+        // Preserve declared voids; otherwise a bounded loose-wire region is
+        // precisely the missing face this command is intended to reconstruct.
+        if source_index.is_none()
+            && source_rings
+                .iter()
+                .any(|rings| rings.iter().skip(1).any(|hole| inside_ring(p, hole)))
+        {
             continue;
-        };
-        let source = &mesh.faces[affected[source_index]];
+        }
+        let default_source = MeshFace::new(vec![]);
+        let source = source_index
+            .map(|i| &mesh.faces[affected[i]])
+            .unwrap_or(&default_source);
         let mut loops = vec![outer
             .iter()
             .map(|&p| frame.unproject(p))
@@ -380,7 +444,10 @@ pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
                 .iter()
                 .map(|r| r.iter().map(|&p| frame.unproject(p)).collect()),
         );
-        if mesh.face_normal(affected[source_index]).dot(frame.normal) < 0. {
+        if source_index
+            .map(|i| mesh.face_normal(affected[i]).dot(frame.normal) < 0.)
+            .unwrap_or(false)
+        {
             for r in &mut loops {
                 r.reverse();
             }
@@ -407,6 +474,82 @@ mod tests {
         .collect();
         mesh.add_face(r, vec![]).unwrap()
     }
+    #[test]
+    fn loose_closed_wire_reconstructs_missing_face_and_preserves_edge_metadata() {
+        let mut mesh = Mesh::new();
+        let ids: Vec<_> = [
+            DVec3::ZERO,
+            DVec3::new(2., 0., 0.),
+            DVec3::new(2., 2., 0.),
+            DVec3::new(0., 2., 0.),
+        ]
+        .into_iter()
+        .map(|p| mesh.add_vertex(p))
+        .collect();
+        for i in 0..4 {
+            let id = mesh.add_edge(ids[i], ids[(i + 1) % 4]).unwrap();
+            mesh.edges[id].curve_id = Some(9);
+            mesh.edges[id]
+                .attrs
+                .insert("retain".into(), serde_json::json!(i));
+        }
+        let rebuilt = rebuild_faces(&mesh, &[]).unwrap();
+        assert_eq!(rebuilt.faces.len(), 1);
+        assert!((rebuilt.face_area(0) - 4.).abs() < 1e-8);
+        assert!(rebuilt.edges.iter().all(|e| e.faces.len() == 1
+            && e.curve_id == Some(9)
+            && e.attrs.contains_key("retain")));
+        for v in &mesh.vertices {
+            assert_eq!(
+                rebuilt
+                    .vertices
+                    .iter()
+                    .find(|p| p.position == v.position)
+                    .unwrap()
+                    .uid,
+                v.uid
+            );
+        }
+    }
+
+    #[test]
+    fn dangling_lines_and_hole_bridges_do_not_enter_face_rings() {
+        let ring = [
+            DVec2::ZERO,
+            DVec2::new(4., 0.),
+            DVec2::splat(4.),
+            DVec2::new(0., 4.),
+        ];
+        let mut lines: Vec<_> = (0..4).map(|i| (ring[i], ring[(i + 1) % 4])).collect();
+        lines.push((DVec2::new(0., 2.), DVec2::new(0.5, 2.)));
+        let cells = arrange_2d(&lines).unwrap();
+        assert_eq!(cells.len(), 1);
+        assert!((area(&cells[0].0) - 16.).abs() < 1e-8);
+        assert!(!cells[0].0.contains(&DVec2::new(0.5, 2.)));
+        let hole = [
+            DVec2::splat(1.),
+            DVec2::new(1., 3.),
+            DVec2::splat(3.),
+            DVec2::new(3., 1.),
+        ];
+        lines.extend((0..4).map(|i| (hole[i], hole[(i + 1) % 4])));
+        lines.push((DVec2::new(0.5, 2.), DVec2::new(1., 2.)));
+        let cells = arrange_2d(&lines).unwrap();
+        assert_eq!(cells.len(), 2);
+        assert_eq!(
+            cells.iter().filter(|(_, holes)| holes.len() == 1).count(),
+            1
+        );
+        for (outer, holes) in cells {
+            let points: BTreeSet<_> = outer.iter().map(|&p| key(p)).collect();
+            assert_eq!(points.len(), outer.len());
+            for ring in holes {
+                let points: BTreeSet<_> = ring.iter().map(|&p| key(p)).collect();
+                assert_eq!(points.len(), ring.len());
+            }
+        }
+    }
+
     #[test]
     fn dimension_anchor_survives_move_rebuild_and_another_move() {
         use crate::{dimensions::Dimension, scene::Scene};
