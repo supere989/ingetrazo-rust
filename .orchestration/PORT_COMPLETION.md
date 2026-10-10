@@ -39,3 +39,5 @@ Checkpoint255cf92:232 Rust tests pass. Original world dimension oracle passes12 
 Milestone4 publication prepared: sourcecb8ada9,232tests, fouroriginalPiecescases pass canonical; finalCLI/doc/native/render checks pass. Pending cloudvalidation, independentDAE, partscontrols5f74edf review. All37rows/releasegates remainopen.
 
 Stage5local: attachedclosed-solid FollowMe719a700 andwire/bridge planar9c44439 integrated; fullworkspace testpasses. RootDAE decoder+hierarchicalassembly WIP isolatedimports (roxmltree0.20,checkedindices/strides,orderedmatrix/TRS,units/upaxis,instance-nodecycle guards, barelibraryfallback). Notwiredloader; materials/UV/components/editablefusion/scenegeoref remainrequired. Clipboardworld/local a1c057b readyforreview, system/assets continuing.
+
+Milestone4CI38013336872 FAILED renderedblackcapture afterfixed5sec; test/buildpassed, downstreamoraclesskipped. Readinesssmokefix waitsbounded45sec withsamecolorcriterion+livePID; localPASS. Needpublish+verifycloudagain, do notclaimgreen.
