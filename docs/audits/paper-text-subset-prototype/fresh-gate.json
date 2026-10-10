@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "strict_pages": 27,
+  "intermediate_cases": 9,
+  "native_sha256": "d074e6aa0a53ef2f65ffebf6aed897a20817c04136fe0423f11bf98b3cf040d5",
+  "negative": "valid same-length first-glyph Td x+1 rejected",
+  "remaining_original_cases": [
+    "underline",
+    "wrap",
+    "newlines",
+    "center",
+    "right",
+    "arabic",
+    "hebrew",
+    "cjk",
+    "arabic_run",
+    "hebrew_run"
+  ],
+  "scope": "Experimental direct subset encoder with fixed source helper frame, not production app export/fontresolution/paragraph/cache/bidi/ToUnicode/UI/fullP29"
+}
