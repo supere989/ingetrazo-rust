@@ -1,0 +1,11 @@
+{
+  "source": "b6a07d0bd4370bcd6ee8fb560d3b0874990ee0ae",
+  "command": "cargo test --workspace --locked -j2",
+  "passed": 703,
+  "failed": 0,
+  "ignored": 2,
+  "summaries": 35,
+  "log_sha256": "5a034e5518c7ba82897aca51cc253f07f3d7a964153854441b8f6e9c0256ef2a",
+  "scope": "Combined workspace acceptance for source texture decoding, texture averages and admitted native publication. Standalone scripting proof evidence is separate.",
+  "remaining": "Strict GPU whole-image parity, native annotations, complete scripting, Mac strict font/Canvas parity, performance and all release gates remain open."
+}
