@@ -69,6 +69,11 @@ pub struct Callback {
     counters: Arc<Counters>,
 }
 impl Callback {
+    /// Cold ownership accounting: the callback record owns only shared Arc
+    /// references. Geometry, batches and the shared counter owner are separate.
+    /// Allocator metadata and native consuming GPU caches are not payload bytes.
+    pub fn retained_cpu_bytes(&self)->usize { std::mem::size_of::<Self>() }
+
     pub fn update(
         &self,
         geometry: Arc<Geometry>,

@@ -22,6 +22,12 @@ impl From<crate::native_vulkan::cad2d::Factory> for Factory {
     }
 }
 impl Factory {
+    pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{match self{
+        #[cfg(any(target_os="linux",target_os="windows"))]
+        Self::Vulkan(factory)=>factory.retained_cpu_bytes_bound(palette_len),
+        Self::MetalProducer(_)=>Ok(std::mem::size_of::<ingetrazo_render::cad_callback::Callback>()),
+    }}
+
     pub fn handle(
         &self,
         geometry: Arc<Geometry>,
@@ -38,6 +44,14 @@ impl Factory {
     }
 }
 impl Handle {
+    /// Cold producer-owned records; immutable geometry/batches are charged by
+    /// their cache owner and renderer-global/GPU allocation ledgers separately.
+    pub fn retained_cpu_bytes(&self)->Result<usize,String>{match self{
+        #[cfg(any(target_os="linux",target_os="windows"))]
+        Self::Vulkan(handle)=>handle.retained_cpu_bytes(),
+        Self::MetalProducer(handle)=>Ok(handle.retained_cpu_bytes()),
+    }}
+
     pub fn update(
         &self,
         geometry: Arc<Geometry>,

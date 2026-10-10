@@ -7,7 +7,8 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
 #[derive(Clone)]struct Layout {text:String,draws:Arc<Vec<Draw>>,bytes:usize,fonts:Vec<(FontKey,usize)>}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],bold:bool,italic:bool,color:[u8;4]}
 #[derive(Clone)]struct GlyphImage {pixels:Arc<Vec<u8>>,left:i32,top:i32,width:usize,height:usize,bytes:usize}
-#[derive(Clone)]struct Tile{draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
+#[path="composer_text_ordered.rs"] mod ordered;
+#[derive(Clone)]struct Tile{ordered:Option<ordered::Ordered>,draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
 #[derive(Clone,Default)]pub(super) struct CanvasPainter {
  context:Option<(u64,u64,uuid::Uuid)>,layouts:HashMap<uuid::Uuid,Layout>,layout_bytes:usize,layout_order:VecDeque<uuid::Uuid>,font_refs:HashMap<FontKey,(usize,usize)>,font_bytes:usize,
@@ -15,14 +16,17 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
  tiles:HashMap<uuid::Uuid,Tile>,tile_order:VecDeque<uuid::Uuid>,tile_bytes:usize,pub tile_builds:u64,
  // Explicit fixture opt-in; no runtime retention or warm-path capture.
  sample_observation:Option<Vec<Sample>>,
+ ordered_builds:u64,ordered_items:usize,ordered_parts:usize,ordered_bytes:usize,
  frame_ops:usize,frame_textures:Vec<TextureHandle>,pub layout_builds:u64,pub raster_builds:u64,
 }
 impl std::fmt::Debug for CanvasPainter{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("CanvasPainter").field("stats",&self.stats()).finish()}}
 impl CanvasPainter {
  pub fn stats(&self)->[u64;5]{[self.layouts.len()as u64,self.glyphs.len()as u64,self.glyph_bytes as u64,self.layout_builds,self.raster_builds]}
+ pub fn ordered_stats(&self)->[u64;4]{[self.ordered_builds,self.ordered_items as u64,self.ordered_parts as u64,self.ordered_bytes as u64]}
+ fn retire_tile(&mut self,id:uuid::Uuid){if let Some(old)=self.tiles.remove(&id){self.tile_bytes-=old.bytes;if let Some(ordered)=old.ordered{self.ordered_items-=1;self.ordered_parts-=ordered.part_count();self.ordered_bytes-=ordered.bytes;}}}
  pub fn begin_frame(&mut self){self.frame_textures.clear();self.frame_ops=0;}
  fn prepare(&mut self,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,resources:&mut Painter)->Result<Arc<Vec<Draw>>,String>{
-  let context=(model,scene,sheet.id);if self.context!=Some(context){self.layouts.clear();self.layout_bytes=0;self.layout_order.clear();self.font_refs.clear();self.font_bytes=0;self.tiles.clear();self.tile_order.clear();self.tile_bytes=0;self.context=Some(context);}
+  let context=(model,scene,sheet.id);if self.context!=Some(context){self.layouts.clear();self.layout_bytes=0;self.layout_order.clear();self.font_refs.clear();self.font_bytes=0;self.tiles.clear();self.tile_order.clear();self.tile_bytes=0;self.ordered_items=0;self.ordered_parts=0;self.ordered_bytes=0;self.context=Some(context);}
   if let Some(entry)=self.layouts.get(&item.id){if entry.text==text{return Ok(entry.draws.clone());}}
   let expanded=TextItem{id:item.id,pos:item.pos,text:text.into(),font_size_pt:item.font_size_pt,bold:item.bold};let draws=super::pdf::text_draws(sheet,&expanded,resources,None)?;
   let bytes=draws.iter().try_fold(text.len(),|n,d|n.checked_add(d.path.len()*24+d.clip.as_ref().map_or(0,|p|p.len()*24)+d.text.as_ref().map_or(0,|t|t.glyphs.len()*24+t.decorations.len()*40))).ok_or("Canvas text layout size overflow")?;
@@ -50,10 +54,10 @@ impl CanvasPainter {
   while self.glyphs.len()>=4096||self.glyph_bytes+bytes>32*1024*1024{let old=self.order.pop_front().ok_or("Canvas glyph cache invariant failed")?;let retired=self.glyphs.remove(&old).ok_or("Canvas glyph cache identity failed")?;self.glyph_bytes-=retired.bytes;}
   let image=GlyphImage{pixels,left:bitmap.left,top:bitmap.top,width:bitmap.width,height:bitmap.height,bytes};self.glyphs.insert(key,image.clone());self.order.push_back(key);self.glyph_bytes+=bytes;self.raster_builds+=1;Ok(image)
  }
- fn tile(&mut self,painter:&egui::Painter,draws:&Arc<Vec<Draw>>,item:&TextItem,zoom:f32,origin:Pos2)->Result<Option<(TextureHandle,Rect)>,String>{
+ fn tile(&mut self,painter:&egui::Painter,draws:&Arc<Vec<Draw>>,item:&TextItem,zoom:f32,origin:Pos2,factory:Option<&crate::composer_backend::Factory>)->Result<Option<(TextureHandle,Rect)>,String>{
   let ppp=painter.ctx().pixels_per_point()as f64;let density=f64::from(zoom)*ppp;
   let base=origin+Vec2::new(item.pos.0 as f32*zoom,item.pos.1 as f32*zoom);let physical=[f64::from(base.x)*ppp,f64::from(base.y)*ppp];let anchor=[physical[0].floor()as i64,physical[1].floor()as i64];let phase=[physical[0].fract().to_bits(),physical[1].fract().to_bits()];
-  if let Some(tile)=self.tiles.get(&item.id){if tile.density==density.to_bits()&&tile.phase==phase&&tile.draws.upgrade().is_some_and(|old|Arc::ptr_eq(&old,draws)){return Ok(tile_image(tile,anchor,ppp));}}
+  if let Some(tile)=self.tiles.get(&item.id){if tile.ordered.is_some()==factory.is_some()&&tile.density==density.to_bits()&&tile.phase==phase&&tile.draws.upgrade().is_some_and(|old|Arc::ptr_eq(&old,draws)){return Ok(tile_image(tile,anchor,ppp));}}
   let mut samples=Vec::new();let count=draws.iter().map(|d|d.text.as_ref().map_or(0,|t|t.glyphs.len())).sum();samples.try_reserve(count).map_err(|_|"Canvas glyph sample allocation failed")?;let mut working_bytes=0usize;let mut extent:Option<[i64;4]>=None;
   for draw in draws.iter(){let pos=origin+Vec2::new(draw.origin_mm[0]as f32*zoom,draw.origin_mm[1]as f32*zoom);let scale=draw.text.as_ref().map_or(1.,|t|t.scale_mm)*density;let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
    let mut clip=[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2];if let Some(path)=&draw.clip{let mut min=[f64::INFINITY;2];let mut max=[f64::NEG_INFINITY;2];for op in path{if let PathOp::Move(p)|PathOp::Line(p)=op{for axis in 0..2{let value=if axis==0{f64::from(pos.x)}else{f64::from(pos.y)}*ppp+p[axis]*density;min[axis]=min[axis].min(value);max[axis]=max[axis].max(value);}}}clip=[min[0].floor()as i64,min[1].floor()as i64,max[0].ceil()as i64,max[1].ceil()as i64];}
@@ -66,22 +70,30 @@ impl CanvasPainter {
    for decoration in &text.decorations{let [x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[f64::from(pos.x)*ppp+x0*scale,f64::from(pos.y)*ppp+y0*scale-half,f64::from(pos.x)*ppp+x1*scale,f64::from(pos.y)*ppp+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],f64::from(pos.y)*ppp+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working_bytes,sample)?;}}
   }
   if let Some(observation)=&mut self.sample_observation{observation.clear();observation.try_reserve(samples.len()).map_err(|_|"Canvas sample observation allocation failed")?;observation.extend(samples.iter().cloned());}
-  let (size,offset,pixels)=if let Some(extent)=extent{let width=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let height=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;let bytes=width.checked_mul(height).and_then(|n|n.checked_mul(4)).filter(|&n|n<=16*1024*1024).ok_or("Canvas tile coverage budget exceeded")?;if width>4096||height>4096{return Err("Canvas tile dimensions exceeded".into());}let mut pixels=Vec::new();pixels.try_reserve_exact(bytes).map_err(|_|"Canvas tile allocation failed")?;pixels.resize(bytes,0);
-   for sample in samples{for row in 0..sample.image.height{let y=sample.y+row as i64;if y<sample.clip[1]||y>=sample.clip[3]{continue;}for col in 0..sample.image.width{let x=sample.x+col as i64;if x<sample.clip[0]||x>=sample.clip[2]{continue;}let src=&sample.image.pixels[(row*sample.image.width+col)*4..][..4];let dst=&mut pixels[((y-extent[1])as usize*width+(x-extent[0])as usize)*4..][..4];source_over(dst,src);}}}
+  if let Some(extent)=extent{let w=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let h=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;if w>4096||h>4096||w.checked_mul(h).and_then(|n|n.checked_mul(4)).is_none_or(|n|n>16*1024*1024){return Err("Canvas tile coverage budget exceeded".into());}}
+  let pose=ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[base.x,base.y]};
+  let ordered=if let Some(factory)=factory{Some(ordered::Ordered::build(&samples,anchor,[physical[0]-anchor[0]as f64,physical[1]-anchor[1]as f64],ppp as f32,factory,pose)?)}else{None};
+  let (size,offset,pixels)=if let Some(extent)=extent{let width=usize::try_from(extent[2]-extent[0]).map_err(|_|"Canvas tile dimension invalid")?;let height=usize::try_from(extent[3]-extent[1]).map_err(|_|"Canvas tile dimension invalid")?;let bytes=width.checked_mul(height).and_then(|n|n.checked_mul(4)).filter(|&n|n<=16*1024*1024).ok_or("Canvas tile coverage budget exceeded")?;if width>4096||height>4096{return Err("Canvas tile dimensions exceeded".into());}let mut pixels=Vec::new();if ordered.is_none(){pixels.try_reserve_exact(bytes).map_err(|_|"Canvas tile allocation failed")?;pixels.resize(bytes,0);}
+   if ordered.is_none(){for sample in samples{for row in 0..sample.image.height{let y=sample.y+row as i64;if y<sample.clip[1]||y>=sample.clip[3]{continue;}for col in 0..sample.image.width{let x=sample.x+col as i64;if x<sample.clip[0]||x>=sample.clip[2]{continue;}let src=&sample.image.pixels[(row*sample.image.width+col)*4..][..4];let dst=&mut pixels[((y-extent[1])as usize*width+(x-extent[0])as usize)*4..][..4];source_over(dst,src);}}}}
    ([width,height],[extent[0]-anchor[0],extent[1]-anchor[1]],pixels)
   }else{([0,0],[0,0],Vec::new())};
   self.tiles.try_reserve(1).map_err(|_|"Canvas tile cache allocation failed")?;self.tile_order.try_reserve(1).map_err(|_|"Canvas tile order allocation failed")?;
-  let bytes=pixels.len();let texture=if bytes==0{None}else{Some(crate::paper_raw_texture::create(painter.ctx(),size,pixels)?)};
-  if let Some(old)=self.tiles.remove(&item.id){self.tile_bytes-=old.bytes;}self.tile_order.retain(|&id|id!=item.id);while self.tiles.len()>=10000||self.tile_bytes+bytes>32*1024*1024{let id=self.tile_order.pop_front().ok_or("Canvas tile cache invariant failed")?;if let Some(old)=self.tiles.remove(&id){self.tile_bytes-=old.bytes;}}
-  let tile=Tile{draws:Arc::downgrade(draws),density:density.to_bits(),phase,offset,size,texture,bytes};let result=tile_image(&tile,anchor,ppp);self.tiles.insert(item.id,tile);self.tile_order.push_back(item.id);self.tile_bytes+=bytes;self.tile_builds+=1;Ok(result)
+  let bytes=ordered.as_ref().map_or(pixels.len(),|p|p.bytes);let texture=if ordered.is_some()||pixels.is_empty(){None}else{Some(crate::paper_raw_texture::create(painter.ctx(),size,pixels)?)};
+  self.retire_tile(item.id);self.tile_order.retain(|&id|id!=item.id);while self.tiles.len()>=10000||self.tile_bytes+bytes>32*1024*1024{let id=self.tile_order.pop_front().ok_or("Canvas tile cache invariant failed")?;self.retire_tile(id);}
+  if let Some(ordered)=&ordered{self.ordered_builds+=1;self.ordered_items+=1;self.ordered_parts+=ordered.part_count();self.ordered_bytes+=ordered.bytes;}let tile=Tile{ordered,draws:Arc::downgrade(draws),density:density.to_bits(),phase,offset,size,texture,bytes};let result=tile_image(&tile,anchor,ppp);self.tiles.insert(item.id,tile);self.tile_order.push_back(item.id);self.tile_bytes+=bytes;self.tile_builds+=1;Ok(result)
  }
- pub fn paint(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter)->Result<Rect,String>{
+ pub fn paint(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter)->Result<Rect,String>{self.paint_with_factory(painter,sheet,item,text,model,scene,zoom,origin,resources,None)}
+ pub fn paint_with_factory(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter,factory:Option<&crate::composer_backend::Factory>)->Result<Rect,String>{
   if !zoom.is_finite()||zoom<=0.||!origin.x.is_finite()||!origin.y.is_finite(){return Err("Invalid canvas text transform".into());}
   let draws=self.prepare(sheet,item,text,model,scene,resources)?;let count=draws.iter().map(|d|d.text.as_ref().map_or(usize::from(!d.path.is_empty()),|t|t.glyphs.len()+t.decorations.len())).sum::<usize>();if self.frame_ops.checked_add(count).is_none_or(|n|n>262144){return Err("Canvas glyph frame budget exceeded".into());}self.frame_textures.try_reserve(1).map_err(|_|"Canvas glyph lifetime allocation failed")?;
   let mut bounds=Rect::NOTHING;
   for draw in draws.iter(){if let Some(text)=&draw.text{if text.font.synthetic_bold_offset_px(text.bold)?>0. && !text.font.supports_synthetic_bold_rasterization(){return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}}}
   // Publish one complete cached item only after all source paints/resources validate.
-  if let Some((texture,rect))=self.tile(painter,&draws,item,zoom,origin)?{painter.image(texture.id(),rect,Rect::from_min_max(Pos2::ZERO,Pos2::new(1.,1.)),Color32::WHITE);self.frame_textures.push(texture);bounds=bounds.union(rect);}self.frame_ops+=count;Ok(bounds)
+  if let Some((texture,rect))=self.tile(painter,&draws,item,zoom,origin,factory)?{painter.image(texture.id(),rect,Rect::from_min_max(Pos2::ZERO,Pos2::new(1.,1.)),Color32::WHITE);self.frame_textures.push(texture);bounds=bounds.union(rect);}if let Some(tile)=self.tiles.get(&item.id){if let Some(ordered)=&tile.ordered{
+   let base=origin+Vec2::new(item.pos.0 as f32*zoom,item.pos.1 as f32*zoom);ordered.paint(painter,ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[base.x,base.y]})?;
+   let ppp=painter.ctx().pixels_per_point()as f64;let anchor=[(f64::from(base.x)*ppp).floor()as i64,(f64::from(base.y)*ppp).floor()as i64];
+   if tile.size[0]>0&&tile.size[1]>0{let min=Pos2::new(((anchor[0]+tile.offset[0])as f64/ppp)as f32,((anchor[1]+tile.offset[1])as f64/ppp)as f32);bounds=bounds.union(Rect::from_min_size(min,Vec2::new(tile.size[0]as f32/ppp as f32,tile.size[1]as f32/ppp as f32)));}
+  }}self.frame_ops+=count;Ok(bounds)
  }
 }
 

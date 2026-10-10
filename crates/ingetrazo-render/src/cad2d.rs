@@ -110,7 +110,7 @@ impl Geometry {
  pub fn premultiplied_palette(&self)->Option<&Arc<[PremultipliedRgba8]>>{self.premultiplied_palette.as_ref()}
  pub fn palette_cache_identity(&self)->u64{if self.premultiplied_palette.is_some(){self.id}else{0}}
  pub fn resolve_batch_colors(&self,batches:&[Batch])->Result<Vec<[f32;4]>,String>{
-  self.validate_batches(batches)?;
+  if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}
   if let Some(colors)=&self.premultiplied_palette{Ok(colors.iter().map(|c|c.shader_units()).collect())}else{batches.iter().map(|b|b.color.qt_premultiplied8()).collect()}
  }
  pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
