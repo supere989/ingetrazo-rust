@@ -1,0 +1,18 @@
+{
+  "source_revision": "a1840bee7611ca8ca439bec878d29d45b6607a39",
+  "binary_sha256": "28458f8d130abcd224e81a6a2763f6aae5351f652902e2aefdcee71300de8f59",
+  "matched_actual_qt_controls": 133,
+  "final_ledger": 0,
+  "result": "Actual Vulkan World resolve agrees exactly with Qt FBO.toImage across controlled sample colors and permutations. A differing resolve rounding rule is not supported as the Gondola residual cause.",
+  "remaining": "Input color quantization, coverage, geometry and draw ordering require separate investigation. Full models still fail; no custom resolve path is justified by these results.",
+  "files_sha256": {
+    "build.log": "aa5f014adea3f611170ebe1ba63e69da3afcbf852eefcf2bf2a03ed59cf1dab0",
+    "initial-build-failure.log": "c8c44fba47c7013bd4436ae2698a697b93b92b25ab276b57216c1fd1e7e5fdc1",
+    "nvidia-egl-icd.json": "56308b7e2637544de6608d43469a797b8c2e7394c703c5a4fe823084c48ef5c7",
+    "run.log": "e10dd1355cbed61d4b20815e47d00a5de4d8ed23f18764b7aa553a0dc788fef6",
+    "transport.json": "ef77f78c153948184ee2be1de37e0217215f07cf7caa9fc0cb732099d3a4f83a",
+    "transport.py": "75720b98435808ff5284027f180e0caddbe4ea62c1f975b86ea92d5fae017625",
+    "type-inference-build-failure.log": "c633c0277a22b5d09976c3bacd968665de8f7fa8e2c49ce259c07cc83c9745c5",
+    "wait-error-build-failure.log": "45f2afca9c4ba791ca51926afe52173ef70b8449474d4798d4458a9e99360763"
+  }
+}

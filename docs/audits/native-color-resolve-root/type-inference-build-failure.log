@@ -1,0 +1,347 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: fields `0` and `1` are never read
+  --> crates/ingetrazo-formats/src/skp/legacy.rs:19:11
+   |
+19 |     Named(String, serde_json::Map<String, serde_json::Value>),
+   |     ----- ^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     fields in this variant
+   |
+   = note: `Object` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+help: consider changing the fields to be of unit type to suppress this warning while preserving the field numbering, or remove the fields
+   |
+19 -     Named(String, serde_json::Map<String, serde_json::Value>),
+19 +     Named((), ()),
+   |
+
+warning: field `0` is never read
+  --> crates/ingetrazo-formats/src/skp/legacy.rs:25:11
+   |
+25 |     Curve(Option<[f64; 14]>),
+   |     ----- ^^^^^^^^^^^^^^^^^
+   |     |
+   |     field in this variant
+   |
+   = note: `Object` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+25 -     Curve(Option<[f64; 14]>),
+25 +     Curve(()),
+   |
+
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+
+warning: `ingetrazo-formats` (lib) generated 3 warnings
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-next-integration/crates/ingetrazo-gui)
+error[E0283]: type annotations needed for `std::result::Result<std::vec::Vec<Value>, _>`
+  --> crates/ingetrazo-gui/src/native_vulkan/world/color_resolve_probe.rs:13:6
+   |
+13 |  let result=(||{
+   |      ^^^^^^
+...
+42 |    let rgba=world.readback(context)?;let first=&rgba[..4];if !rgba.chunks_exact(4).all(|p|p==first){return Err("Controlled sample color not uniform across target".into());}
+   |                                                                                                                                                                    ---- type must be known at this point
+   |
+   = note: multiple `impl`s satisfying `_: From<&str>` found in the following crates: `egui`, `zune_core`, `zune_jpeg`:
+           - impl From<&'static str> for Id;
+           - impl From<&'static str> for zune_core::bytestream::reader::ZByteIoError;
+           - impl From<&'static str> for zune_jpeg::errors::DecodeErrors;
+   = note: required for `&str` to implement `Into<_>`
+help: consider giving `result` an explicit type, where the type for type parameter `U` is specified
+   |
+13 |  let result: std::result::Result<_, E>=(||{
+   |            +++++++++++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::result::Result<std::vec::Vec<Value>, _>`
+  --> crates/ingetrazo-gui/src/native_vulkan/world/color_resolve_probe.rs:13:6
+   |
+13 |  let result=(||{
+   |      ^^^^^^
+...
+41 |    context.wait_transfer(fence)?;
+   |                                - type must be known at this point
+   |
+note: multiple `impl`s satisfying `_: From<ash::vk::Result>` found
+  --> crates/ingetrazo-gui/src/native_vulkan/resize.rs:46:1
+   |
+46 | impl From<ash::vk::Result> for PrepareError{fn from(value:ash::vk::Result)->Self{Self::Vulkan(value)}}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: and another `impl` found in the `egui_ash_renderer` crate: `impl From<ash::vk::Result> for RendererError;`
+help: consider giving `result` an explicit type, where the placeholders `_` are specified
+   |
+13 |  let result: std::result::Result<_, E>=(||{
+   |            +++++++++++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::result::Result<std::vec::Vec<Value>, _>`
+  --> crates/ingetrazo-gui/src/native_vulkan/world/color_resolve_probe.rs:13:6
+   |
+13 |  let result=(||{
+   |      ^^^^^^
+...
+20 |   let vertices=world.vertices.ok_or("Missing diagnostic quad vertices")?;let indices=world.indices.ok_or("Missing diagnostic quad indices")?;
+   |                                                                                                                                            - type must be known at this point
+   |
+   = note: multiple `impl`s satisfying `_: From<&str>` found in the following crates: `egui`, `zune_core`, `zune_jpeg`:
+           - impl From<&'static str> for Id;
+           - impl From<&'static str> for zune_core::bytestream::reader::ZByteIoError;
+           - impl From<&'static str> for zune_jpeg::errors::DecodeErrors;
+help: consider giving `result` an explicit type, where the placeholders `_` are specified
+   |
+13 |  let result: std::result::Result<_, E>=(||{
+   |            +++++++++++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::result::Result<std::vec::Vec<Value>, _>`
+  --> crates/ingetrazo-gui/src/native_vulkan/world/color_resolve_probe.rs:13:6
+   |
+13 |  let result=(||{
+   |      ^^^^^^
+...
+20 |   let vertices=world.vertices.ok_or("Missing diagnostic quad vertices")?;let indices=world.indices.ok_or("Missing diagnostic quad in...
+   |                                                                        - type must be known at this point
+   |
+   = note: multiple `impl`s satisfying `_: From<&str>` found in the following crates: `egui`, `zune_core`, `zune_jpeg`:
+           - impl From<&'static str> for Id;
+           - impl From<&'static str> for zune_core::bytestream::reader::ZByteIoError;
+           - impl From<&'static str> for zune_jpeg::errors::DecodeErrors;
+help: consider giving `result` an explicit type, where the placeholders `_` are specified
+   |
+13 |  let result: std::result::Result<_, E>=(||{
+   |            +++++++++++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::result::Result<std::vec::Vec<Value>, _>`
+  --> crates/ingetrazo-gui/src/native_vulkan/world/color_resolve_probe.rs:13:6
+   |
+13 |  let result=(||{
+   |      ^^^^^^
+...
+17 |   scene.mesh.add_face(ids.to_vec(),vec![]).ok_or("Diagnostic quad face refused")?;
+   |                                                                                 - type must be known at this point
+   |
+   = note: multiple `impl`s satisfying `_: From<&str>` found in the following crates: `egui`, `zune_core`, `zune_jpeg`:
+           - impl From<&'static str> for Id;
+           - impl From<&'static str> for zune_core::bytestream::reader::ZByteIoError;
+           - impl From<&'static str> for zune_jpeg::errors::DecodeErrors;
+help: consider giving `result` an explicit type, where the placeholders `_` are specified
+   |
+13 |  let result: std::result::Result<_, E>=(||{
+   |            +++++++++++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::result::Result<std::vec::Vec<Value>, _>`
+  --> crates/ingetrazo-gui/src/native_vulkan/world/color_resolve_probe.rs:13:6
+   |
+13 |  let result=(||{
+   |      ^^^^^^
+...
+49 |  let rows=result?;drop(world);
+   |                 - type must be known at this point
+   |
+   = note: multiple `impl`s satisfying `std::string::String: From<_>` found in the following crates: `alloc`, `smol_str`, `url`, `uuid`:
+           - impl From<Box<str>> for std::string::String;
+           - impl From<SmolStr> for std::string::String;
+           - impl From<Uuid> for std::string::String;
+           - impl From<char> for std::string::String;
+           - impl From<url::Url> for std::string::String;
+help: consider giving `result` an explicit type, where the placeholders `_` are specified
+   |
+13 |  let result: std::result::Result<_, E>=(||{
+   |            +++++++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0283`.
+error: could not compile `ingetrazo-gui` (lib) due to 6 previous errors
