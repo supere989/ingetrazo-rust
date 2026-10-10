@@ -67,7 +67,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             let cursor_ray = app.camera.screen_to_ray(rel_x, rel_y, rect.width() as f64, rect.height() as f64);
 
             // Default ground plane intersection
-            let ground_plane = Plane::new(DVec3::ZERO, DVec3::Z);
+            let ground_plane = Plane::new(app.paste_preview.as_ref().map(|p|p.reference).unwrap_or(DVec3::ZERO), DVec3::Z);
             let mut cursor_world_pos = if let Some(t) = ground_plane.intersect_ray(&cursor_ray) {
                 if t > 0.0 {
                     cursor_ray.at(t)
@@ -95,7 +95,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             }
 
             // Run Snap Engine
-            let start_pt = app.active_tool.rubber_band().map(|(s, _)| s);
+            let start_pt = app.paste_preview.as_ref().map(|p|p.reference).or_else(||app.active_tool.rubber_band().map(|(s, _)| s));
             let snap_res = app.snap_engine.snap(&cursor_ray, &app.scene, start_pt, None);
             if snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
@@ -122,27 +122,27 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 alt_held: alt_down,
             };
 
-            let follow_me = app.active_tool_type == ToolType::FollowMe;
-            // Follow Me starts a profile on press, then observes the path during
-            // drag. Other tools retain their established release-click behavior.
-            if follow_me && pointer.button_pressed(egui::PointerButton::Primary) {
-                ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_press"), mouse_pos));
-                app.dispatch_tool_click(&tool_ctx);
+            if app.paste_preview.is_some() {
+                app.update_paste_preview(cursor_world_pos);
+                if response.clicked() && !alt_down {app.commit_paste_preview();}
+            } else {
+                let follow_me = app.active_tool_type == ToolType::FollowMe;
+                if follow_me && pointer.button_pressed(egui::PointerButton::Primary) {
+                    ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_press"), mouse_pos));
+                    app.dispatch_tool_click(&tool_ctx);
+                }
+                app.active_tool.on_move(&mut app.scene, &tool_ctx);
+                if follow_me {ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_context"), tool_ctx.clone()));}
+                if !follow_me && response.double_clicked() && !alt_down {
+                    app.dispatch_tool_double_click(&tool_ctx);
+                } else if !follow_me && response.clicked() && !alt_down {
+                    app.dispatch_tool_click(&tool_ctx);
+                }
             }
-            app.active_tool.on_move(&mut app.scene, &tool_ctx);
-            if follow_me { ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_context"), tool_ctx.clone())); }
-            if !follow_me && response.double_clicked() && !alt_down {
-                app.dispatch_tool_double_click(&tool_ctx);
-            } else if !follow_me && response.clicked() && !alt_down {
-                app.dispatch_tool_click(&tool_ctx);
-            }
-
         }
     }
-
-    // Release may occur beyond the viewport: commit the last path observed
-    // inside it, using the actual press/release displacement for jitter.
-    if app.active_tool_type == ToolType::FollowMe && pointer.button_released(egui::PointerButton::Primary) {
+    // Observe release beyond the viewport, without committing a tool during paste.
+    if app.paste_preview.is_none() && app.active_tool_type == ToolType::FollowMe && pointer.button_released(egui::PointerButton::Primary) {
         let origin=ui.ctx().data_mut(|data| data.remove_temp::<egui::Pos2>(response.id.with("followme_press")));
         let context=ui.ctx().data(|data| data.get_temp::<ToolContext>(response.id.with("followme_context")));
         if let (Some(origin),Some(context),Some(end))=(origin,context,pointer.hover_pos()) {
@@ -155,7 +155,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         app.snap_engine.locked_axis = None;
         app.snap_engine.locked_line = None;
         app.snap_engine.clear_encouraged();
-        app.active_tool.on_cancel(&mut app.scene);
+        if app.paste_preview.is_some() {app.cancel_paste_preview();} else {app.active_tool.on_cancel(&mut app.scene);}
         ui.ctx().data_mut(|data| { data.remove::<egui::Pos2>(response.id.with("followme_press")); data.remove::<ToolContext>(response.id.with("followme_context")); });
     }
 
@@ -194,6 +194,11 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     render_scene_to_egui(&render_data, &app.camera, &painter, rect, &app.style, &tex_map);
 
+    if let Some(preview)=&app.paste_preview {
+        let mut camera=app.camera.clone();camera.target-=preview.offset;
+        let ghost=build_scene_render_data(&preview.scene,&camera,&app.style,None);
+        render_scene_to_egui(&ghost,&camera,&painter,rect,&app.style,&tex_map);
+    } else {
     // Immutable sweep preview: no document versions or undo snapshots change.
     if let Some(mesh) = app.active_tool.preview_mesh() {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();

@@ -1,7 +1,35 @@
-//! Clipboard acceptance tests, independent of serialized raw snapshots.
+use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::Scene;
+pub struct PastePreview {pub scene:Scene,pub reference:DVec3,pub offset:DVec3}
+impl IngeTrazoApp {
+    pub fn begin_paste_preview(&mut self) {
+        let Some(clipboard)=self.clipboard.clone() else{return;};
+        if clipboard.mesh.faces.is_empty()&&clipboard.mesh.edges.is_empty()&&clipboard.groups.is_empty(){return;}
+        self.set_tool(ingetrazo_tools::base::ToolType::Select);
+        let mut scene=Scene::new();scene.mesh=clipboard.mesh;scene.groups=clipboard.groups;
+        scene.materials=self.scene.materials.clone();scene.layers=self.scene.layers.clone();
+        self.paste_preview=Some(PastePreview{scene,reference:clipboard.reference,offset:DVec3::ZERO});
+        self.status_message="Place copied geometry; click to stamp, Esc to cancel".into();
+    }
+    pub fn update_paste_preview(&mut self,world:DVec3){if world.is_finite(){if let Some(preview)=&mut self.paste_preview{preview.offset=world-preview.reference;}}}
+    pub fn cancel_paste_preview(&mut self){self.paste_preview=None;self.status_message="Paste cancelled".into();}
+    pub fn commit_paste_preview(&mut self)->bool {
+        let Some(preview)=self.paste_preview.take() else{return false;};
+        if self.paste_internal(preview.offset){self.status_message="Pasted selection".into();true}else{self.paste_preview=Some(preview);false}
+    }
+}
+
+// Clipboard acceptance tests, independent of serialized raw snapshots.
 #[cfg(test)]
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
+    #[test]
+    fn preview_cancel_and_commit_are_one_atomic_stamp() {
+        let mut app=IngeTrazoApp::new();let a=app.scene.mesh.add_vertex(DVec3::new(0.,0.,8.));let b=app.scene.mesh.add_vertex(DVec3::new(1.,0.,8.));app.scene.mesh.add_edge(a,b);app.scene.select(SelectionItem::Edge(0));app.copy_selection();
+        let before=app.scene.clone();let depth=app.undo_stack.len();app.paste_selection();app.update_paste_preview(DVec3::new(5.,6.,8.));
+        assert_eq!(app.scene,before);assert_eq!(app.undo_stack.len(),depth);assert_eq!(app.paste_preview.as_ref().unwrap().offset,DVec3::new(5.,6.,0.));
+        app.cancel_paste_preview();assert_eq!(app.scene,before);assert_eq!(app.undo_stack.len(),depth);
+        app.paste_selection();app.update_paste_preview(DVec3::new(5.,6.,8.));assert!(app.commit_paste_preview());assert!(!app.commit_paste_preview());assert_eq!(app.undo_stack.len(),depth+1);assert_eq!(app.scene.mesh.edges.len(),2);app.undo();assert_eq!(app.scene,before);
+    }
     #[test]
     fn loose_copy_paste_preserves_holes_opaque_data_uvs_curves_and_one_history_step() {
         let mut app=IngeTrazoApp::new();

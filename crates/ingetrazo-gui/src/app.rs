@@ -64,6 +64,7 @@ pub struct IngeTrazoApp {
     pub icons: crate::icons::IconManager,
     pub recent_files: Vec<PathBuf>,
     pub clipboard: Option<GeometryClipboard>,
+    pub paste_preview: Option<crate::clipboard::PastePreview>,
     pub active_tray_tab: TrayTab,
     pub active_layer_idx: usize,
     pub selected_mat_category: Option<String>,
@@ -143,6 +144,7 @@ impl IngeTrazoApp {
             icons: crate::icons::IconManager::new(),
             recent_files: Vec::new(),
             clipboard: None,
+            paste_preview: None,
             active_tray_tab: TrayTab::Inspector,
             active_layer_idx: 0,
             selected_mat_category: None,
@@ -191,6 +193,7 @@ impl IngeTrazoApp {
     }
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        self.paste_preview=None;
         self.active_tool.on_deactivate(&mut self.scene);
         self.active_tool_type = tool_type;
         self.active_tool = create_tool(tool_type);
@@ -384,7 +387,14 @@ impl IngeTrazoApp {
     pub fn copy_selection(&mut self) {
         let mesh=match ingetrazo_core::containers::copy_selected_mesh(&self.scene){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
         let groups=self.scene.groups.iter().enumerate().filter(|(i,_)|self.scene.selection.contains(&SelectionItem::Group(*i))).map(|(_,g)|g.clone()).collect::<Vec<_>>();
-        let reference=mesh.vertices.first().map(|v|v.position).or_else(||groups.first().map(|g|g.transform.w_axis.truncate())).unwrap_or(DVec3::ZERO);
+        let mut reference=mesh.vertices.iter().map(|v|v.position).reduce(DVec3::min);
+        fn placement_min(group:&ingetrazo_core::groups::Group,parent:glam::DMat4,minimum:&mut Option<DVec3>) {
+            let transform=parent*group.transform;
+            for vertex in &group.mesh.vertices {let point=transform.transform_point3(vertex.position);*minimum=Some(minimum.map(|p|p.min(point)).unwrap_or(point));}
+            for child in &group.children{placement_min(child,transform,minimum);}
+        }
+        for group in &groups{placement_min(group,glam::DMat4::IDENTITY,&mut reference);}
+        let reference=reference.unwrap_or(DVec3::ZERO);
         let count=mesh.faces.len()+mesh.edges.len()+groups.len();
         if count==0{self.status_message="Nothing selected to copy".into();return;}
         self.clipboard=Some(GeometryClipboard{mesh,reference,groups});self.status_message=format!("Copied selection ({count} items)");
@@ -398,7 +408,7 @@ impl IngeTrazoApp {
         for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*group.transform;let index=self.scene.groups.len();self.scene.groups.push(group);self.scene.select(SelectionItem::Group(index));}
         self.scene.bump_version();true
     }
-    pub fn paste_selection(&mut self) {self.paste_internal(DVec3::new(1.,1.,0.));self.status_message="Pasted selection".into();}
+    pub fn paste_selection(&mut self) {self.begin_paste_preview();}
     pub fn paste_in_place(&mut self) {self.paste_internal(DVec3::ZERO);self.status_message="Pasted in place".into();}
 
     pub fn repeat_last_command(&mut self) {
@@ -1344,6 +1354,7 @@ mod tests {
 
         // 5. Paste selection
         app.paste_selection();
+        app.update_paste_preview(DVec3::new(1.,1.,0.));app.commit_paste_preview();
         assert_eq!(app.scene.groups.len(), 2);
 
         // 6. Explode group
