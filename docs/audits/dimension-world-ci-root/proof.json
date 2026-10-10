@@ -1,0 +1,13 @@
+{
+  "source": "7276c2c",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_edit_entry_cases": 12,
+  "annotation_world_data_preserved": true,
+  "existing_coordinate_tolerance": 3e-05,
+  "maximum_world_line_error": 8.463795921898054e-06,
+  "positive_binary_sha256": "0aa398fd3ce852259a8e56d64aa09d265aad2f1dbc10a3e2997472f8888ca219",
+  "negative_binary_sha256": "da0fb0c0f66a92fa550e9f5680a67ac4d5e1090b91a4578ab2707ebbbab857d4",
+  "literal_double_transform_rejected": true,
+  "production_changes": false,
+  "rendered_labels_verified": false
+}

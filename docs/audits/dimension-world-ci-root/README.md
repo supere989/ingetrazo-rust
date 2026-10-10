@@ -1,0 +1,7 @@
+# Dimension WORLD CI fixture review
+
+Public a024442 CI38042865280 failed because its old fixture expected dimension_frame to equal parent*child after nested GUI edit entry. Current production follows frozen original: containers bake placement into children; leaf sessions edit a world-space mesh copy. Annotation WORLD data stay WORLD; drawing axes are distinct. The fixture applied placement a second time to line points and cursor offset.
+
+Source7276c2c executes twelve real frozen-original Viewport.begin_group_edit/end_one_group_edit controls with rotated/reflected/nonuniform transforms. Parent xform becomes identity, leaf xform becomes None, original Dimension object and exact annotation/line/value snapshot remain unchanged. Native asserts identity measurement frame and exact preservation of its endpoint/offset values; original API length/line/cursor comparisons retain the existing3e-5 tolerance (maximum8.464e-6). A separately built literal double-transform output variant is rejected with80.868 world coordinate error. Prior fixture assertion failure and the initial source observer incorrectly expecting a null parent transform are retained; the source requires identity for that container. No production changes or rendered label/window acceptance claim.
+
+Replay: CARGO_TARGET_DIR=<unique> python scripts/check-python-dimension-world.py; optional binary argument permits independently built positive/negative controls without rebuilding. Original Python submodule unchanged.

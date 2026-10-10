@@ -1,0 +1,41 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running `/tmp/ingetrazo-dimension-world-target/debug/examples/dimension_world_acceptance_fixture /tmp/tmp_iggb__2`
+QOpenGLWidget is not supported on this platform.
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-dimension-world-root/scripts/check-python-dimension-world.py", line 57, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-dimension-world-root/scripts/check-python-dimension-world.py", line 49, in main
+    d=Dimension(V(*a),V(*b),V(*off),axis=case["axis"]);observations.append(observe_entry(case,d));assert row["world_annotations_preserved"];points=d.line_points();assert len(row["line_points"])==2 and all(len(p)==3 for p in row["line_points"])
+                                                                           ~~~~~~~~~~~~~^^^^^^^^
+  File "/tmp/ingetrazo-dimension-world-root/scripts/check-python-dimension-world.py", line 30, in observe_entry
+    assert parent_baked and leaf_baked,"Original source placement entry differs"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Original source placement entry differs

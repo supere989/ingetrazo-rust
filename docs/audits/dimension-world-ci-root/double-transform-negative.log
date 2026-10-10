@@ -1,0 +1,9 @@
+QOpenGLWidget is not supported on this platform.
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-dimension-world-root/scripts/check-python-dimension-world.py", line 57, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-dimension-world-root/scripts/check-python-dimension-world.py", line 52, in main
+    error=max(abs(x-y) for x,y in zip(coords(expected),actual));maximum=max(maximum,error);assert error<3e-5,(case,error)
+                                                                                                  ^^^^^^^^^^
+AssertionError: ({'parent': [1.0, 0.0, 0.0, 0.0, 0.0, 0.7047694655894313, 0.25651510749425155, 0.0, 0.0, -0.6840402866513374, 1.8793852415718169, 0.0, 10.0, 20.0, 30.0, 1.0], 'child': [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 2.0, 3.0, 1.0], 'a': [1, 2, 3], 'b': [4, 6, 5], 'offset': [-2, 3, 4], 'cursor': [8, -2, 4], 'axis': None}, 80.86840187236291)
