@@ -1,0 +1,121 @@
+{
+  "source_commit": "211b8b19",
+  "status": "selection_mismatch_requires_followup",
+  "phases": 18,
+  "differences": [
+    {
+      "phase": "draft",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "undo-world",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "undo-newline",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "undo-replacement",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "redo-replacement",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "redo-newline",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "redo-world",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-replacement",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-replacement-undo",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-replacement-redo",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-cursor-insert",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-cursor-undo",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-cursor-redo",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-backspace",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-backspace-undo",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-backspace-redo",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    },
+    {
+      "phase": "held-commit",
+      "field": "selected",
+      "original": 0,
+      "native": null
+    }
+  ],
+  "matching_fields": [
+    "phase label",
+    "inline draft",
+    "model text",
+    "history counts",
+    "placement mode"
+  ],
+  "sha256": {
+    "docs/audits/composer-text-authoring/local-undo-final/original/report.json": "b73321f142edf5546ce14bf0942ce103277589b1b7846d99ce54e66fabe06451",
+    "docs/audits/composer-text-authoring/local-undo-final/native/report.json": "fd7de84ed5bb832fd727ef22596d6b60a5039931125f6846ccb4b67b8d5cae9b"
+  },
+  "scope": "Independent retained artifact review; source selection remains 0 while native is None after placed. Agent notified to distinguish observation versus actual behavior. No fresh merged runtime acceptance."
+}
