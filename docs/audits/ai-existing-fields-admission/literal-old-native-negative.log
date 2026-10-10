@@ -1,0 +1,6 @@
+    Finished `dev` profile [unoptimized] target(s) in 22.13s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/vm_existing_fields`
+
+thread 'main' (1285997) panicked at src/bin/vm_existing_fields.rs:39:9:
+assertion failed: c.execute(code).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

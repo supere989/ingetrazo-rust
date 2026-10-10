@@ -29,6 +29,9 @@ struct Entry {
     faces: usize,
     vertices: usize,
     published: bool,
+    vertices_created: Vec<PyRef<editable_mesh::Vertex>>,
+    faces_created: Vec<PyRef<editable_mesh::Face>>,
+    handle_charge: Lease,
 }
 impl Drop for Entry {
     fn drop(&mut self) {
@@ -36,6 +39,63 @@ impl Drop for Entry {
             discard_tail(&self.mesh.faces, self.faces);
             discard_tail(&self.mesh.vertices, self.vertices);
         }
+    }
+}
+impl Entry {
+    fn validate_created(&self) -> Result<(), String> {
+        use rustpython_vm::AsObject;
+        let vertices = self.mesh.vertices.borrow_vec();
+        let faces = self.mesh.faces.borrow_vec();
+        let transaction = self
+            .transaction
+            .as_ref()
+            .ok_or("Missing staged transaction")?;
+        if vertices.len() != self.vertices + self.vertices_created.len()
+            || faces.len() != self.faces + self.faces_created.len()
+        {
+            return Err("Staged membership modification unsupported".into());
+        }
+        for (i, v) in self.vertices_created.iter().enumerate() {
+            if !vertices[self.vertices + i].is(v) {
+                return Err("Staged Vertex identity/order modification unsupported".into());
+            }
+            if v.position.read().coordinates()
+                != transaction.added_positions()[i].as_vec3().to_array()
+            {
+                return Err("Staged Vertex position modification unsupported".into());
+            }
+        }
+        for (i, f) in self.faces_created.iter().enumerate() {
+            if !faces[self.faces + i].is(f) {
+                return Err("Staged Face identity/order modification unsupported".into());
+            }
+            let native = transaction.staged_face(self.faces + i)?;
+            let outer = f.r#loop.read().clone();
+            let outer = outer.borrow_vec();
+            if outer.len() != native.vertices.len()
+                || outer
+                    .iter()
+                    .zip(&native.vertices)
+                    .any(|(v, &id)| !v.is(&vertices[id]))
+            {
+                return Err("Staged Face loop modification unsupported".into());
+            }
+            let holes = f.hole_loops.read().clone();
+            let holes = holes.borrow_vec();
+            if holes.len() != native.holes.len() {
+                return Err("Staged Face holes modification unsupported".into());
+            }
+            for (h, ids) in holes.iter().zip(&native.holes) {
+                let h = h
+                    .downcast_ref::<rustpython_vm::builtins::PyList>()
+                    .ok_or("Staged hole requires list")?;
+                let h = h.borrow_vec();
+                if h.len() != ids.len() || h.iter().zip(ids).any(|(v, &id)| !v.is(&vertices[id])) {
+                    return Err("Staged Face hole modification unsupported".into());
+                }
+            }
+        }
+        Ok(())
     }
 }
 struct Stage {
@@ -57,11 +117,10 @@ struct Guard<'a>(&'a rustpython_vm::VirtualMachine);
 impl Drop for Guard<'_> {
     fn drop(&mut self) {
         self.0.host_budget_abort();
-        STAGED.with(|s| {
-            if let Some(mut stage) = s.borrow_mut().take() {
-                stage.rollback();
-            }
-        })
+        let stage = STAGED.with(|s| s.borrow_mut().take());
+        if let Some(mut stage) = stage {
+            stage.rollback();
+        }
     }
 }
 #[pymodule]
@@ -293,6 +352,12 @@ pub mod editable_mesh {
                                 faces: zelf.faces.borrow_vec().len(),
                                 vertices: zelf.vertices.borrow_vec().len(),
                                 published: false,
+                                vertices_created: Vec::new(),
+                                faces_created: Vec::new(),
+                                handle_charge: stage
+                                    .budget
+                                    .reserve(Kind::Staging, 0)
+                                    .map_err(|e| vm.new_value_error(e))?,
                             },
                         );
                     }
@@ -311,19 +376,48 @@ pub mod editable_mesh {
                     let growth = new
                         .checked_sub(vertices.len())
                         .ok_or_else(|| vm.new_value_error("Vertex list ownership mismatch"))?;
+                    let handle_slots = positions
+                        .len()
+                        .checked_add(entry.faces_created.len())
+                        .and_then(|n| n.checked_add(1))
+                        .and_then(|n| {
+                            n.checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
+                        })
+                        .ok_or_else(|| vm.new_value_error("Staged handle extent overflow"))?;
+                    entry
+                        .handle_charge
+                        .resize(handle_slots)
+                        .map_err(|e| vm.new_value_error(e))?;
+                    entry.vertices_created.try_reserve(growth).map_err(|_| {
+                        vm.new_value_error("Staged Vertex identity reservation refused")
+                    })?;
+                    entry.faces_created.try_reserve(1).map_err(|_| {
+                        vm.new_value_error("Staged Face identity reservation refused")
+                    })?;
+                    let capacity = entry
+                        .vertices_created
+                        .capacity()
+                        .checked_add(entry.faces_created.capacity())
+                        .and_then(|n| {
+                            n.checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
+                        })
+                        .ok_or_else(|| vm.new_value_error("Staged handle capacity overflow"))?;
+                    entry
+                        .handle_charge
+                        .resize(capacity)
+                        .map_err(|e| vm.new_value_error(e))?;
                     vertices
                         .try_reserve(growth)
                         .map_err(|_| vm.new_value_error("Vertex list reservation refused"))?;
                     for p in &positions[vertices.len() - base..] {
                         let position =
                             QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
-                        vertices.push(
-                            Vertex {
-                                position: PyRwLock::new(position),
-                            }
-                            .into_ref(&vm.ctx)
-                            .into(),
-                        );
+                        let vertex = Vertex {
+                            position: PyRwLock::new(position),
+                        }
+                        .into_ref(&vm.ctx);
+                        entry.vertices_created.push(vertex.clone());
+                        vertices.push(vertex.into());
                     }
                     let build_ring = |ids: &[usize]| -> PyResult<PyListRef> {
                         let mut ring = Vec::new();
@@ -360,6 +454,7 @@ pub mod editable_mesh {
                         .try_reserve(1)
                         .map_err(|_| vm.new_value_error("Face list reservation refused"))?;
                     faces.push(face.clone().into());
+                    entry.faces_created.push(face.clone());
                     Ok(face)
                 })();
                 if operation.is_err() {
@@ -659,6 +754,55 @@ impl<'a> RootRestore<'a> {
             armed: true,
         })
     }
+    fn validate_live(&self, append: bool) -> Result<bool, String> {
+        use rustpython_vm::AsObject;
+        let vertices = self.mesh.vertices.borrow_vec();
+        let faces = self.mesh.faces.borrow_vec();
+        if vertices.len() < self.vertices.len()
+            || faces.len() < self.faces.len()
+            || (!append
+                && (vertices.len() != self.vertices.len() || faces.len() != self.faces.len()))
+        {
+            return Err("Existing field publication membership extent unsupported".into());
+        }
+        if vertices.iter().zip(&self.vertices).any(|(a, b)| !a.is(b))
+            || faces.iter().zip(&self.faces).any(|(a, b)| !a.is(b))
+        {
+            return Err(
+                "Existing field publication requires exact Vertex/Face identity order".into(),
+            );
+        }
+        let mut changed = false;
+        for record in &self.positions {
+            changed |= record.vertex.position.read().coordinates() != record.position.coordinates();
+        }
+        for record in &self.face_fields {
+            let current = record.face.r#loop.read().clone();
+            let current = current.borrow_vec();
+            let before = record.outer.borrow_vec();
+            changed |= current.len() != before.len()
+                || current.iter().zip(before.iter()).any(|(a, b)| !a.is(b));
+            let holes = record.face.hole_loops.read().clone();
+            let holes = holes.borrow_vec();
+            let old = record.holes.borrow_vec();
+            if holes.len() != old.len() {
+                changed = true;
+            } else {
+                for (a, b) in holes.iter().zip(old.iter()) {
+                    let a = a
+                        .downcast_ref::<rustpython_vm::builtins::PyList>()
+                        .ok_or("Live hole requires list")?;
+                    let b = b
+                        .downcast_ref::<rustpython_vm::builtins::PyList>()
+                        .ok_or("Captured hole requires list")?;
+                    let a = a.borrow_vec();
+                    let b = b.borrow_vec();
+                    changed |= a.len() != b.len() || a.iter().zip(b.iter()).any(|(a, b)| !a.is(b));
+                }
+            }
+        }
+        Ok(changed)
+    }
     fn apply(&mut self) {
         self.vm.host_budget_abort();
         let vertices = std::mem::take(&mut self.vertices);
@@ -804,6 +948,11 @@ impl Controller {
                     .map_err(|_| "Publication entries refused")?;
                 entries.extend(stage.entries.drain().map(|(_, e)| e));
                 let publish = (|| {
+                    for entry in &entries {entry.validate_created()?;}
+                    if let Some(before)=&baseline {
+                        let changed=before.validate_live(!entries.is_empty())?;
+                        if changed&&!entries.is_empty(){return Err("Combined raw existing-field edit and append publication not yet supported".into());}
+                    }
                     if entries.is_empty() {
                         if let Ok(value) = self.scope.globals.get_item("mesh", vm) {
                             let mesh = value

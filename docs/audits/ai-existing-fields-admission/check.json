@@ -1,0 +1,1 @@
+{"projected_source_states": 2, "source_history_states_retained_not_native_accepted": 6, "negative_controls": ["position", "loop", "rollback", "registry", "charge", "history_claim", "production", "inventory", "identity_guard"], "native_history_accepted": false, "production_enabled": false}

@@ -1,0 +1,7 @@
+# Identity/order and combined edit admission correction
+
+Fresh genuine VM execution now checks exact prior Vertex/Face identity and order before native field publication. Staged appends retain actual new Vertex/Face handles, validating their membership order, positions and rings against the admitted transaction before publication. Retained handle capacities are logically charged. Existing-field+append executions are explicitly refused before native publication until a unified ticket exists.
+
+Focused controls refuse vertex reorder/replacement, face reorder/replacement, raw existing position plus append, newly-added face loop reversal and newly-added vertex position edits. Each verifies exact prior native geometry retained and VM membership/field restoration. Two original geometry states remain exact, final ledger zero; nine checker negatives reject. Literal ccb7e7a5 vm_mesh.rs compiled against this same fixture fails the first admission assertion (exit101), proving the previous unsafe acceptance. Initial missing-trait compile failure retained. Positive binary/hash captured before running old variant; corrected source restored afterward.
+
+This is not full identity-based topology mutation support. Reorder/replacement/mixed operations remain required and their refusal is a temporary standalone safety boundary. Command history, full arbitrary-object/native callback/resource bounds and production integration remain open.
