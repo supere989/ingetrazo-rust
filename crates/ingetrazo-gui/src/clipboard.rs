@@ -1,5 +1,15 @@
 use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::Scene;
 pub struct PastePreview {pub scene:Scene,pub reference:DVec3,pub offset:DVec3}
+/// Fail before mutation when a foreign document uses a resource name for different data.
+pub(crate) fn merge_resources(destination:&mut Scene,source:&Scene)->Result<(),String>{
+    for(name,bytes)in &source.embedded_textures {if destination.embedded_textures.get(name).is_some_and(|existing|existing!=bytes){return Err(format!("Clipboard asset name conflict: {name}"));}}
+    for(name,material)in &source.materials {if destination.materials.get(name).is_some_and(|existing|existing!=material){return Err(format!("Clipboard material name conflict: {name}"));}}
+    for(name,bytes)in &source.embedded_textures{destination.embedded_textures.entry(name.clone()).or_insert_with(||bytes.clone());}
+    for(name,material)in &source.materials{destination.materials.entry(name.clone()).or_insert_with(||material.clone());}
+    for(id,definition)in &source.component_definitions{destination.component_definitions.entry(*id).or_insert_with(||definition.clone());}
+    for layer in &source.layers{if !destination.layers.iter().any(|existing|existing.name==layer.name){destination.layers.push(layer.clone());}}
+    Ok(())
+}
 impl IngeTrazoApp {
     pub fn begin_paste_preview(&mut self) {
         let Some(clipboard)=self.clipboard.clone() else{return;};
@@ -10,6 +20,7 @@ impl IngeTrazoApp {
         let mut scene=Scene::new();scene.mesh=mesh;scene.groups=clipboard.groups;
         for group in &mut scene.groups{group.transform=inverse*group.transform;}
         scene.materials=self.scene.materials.clone();scene.layers=self.scene.layers.clone();
+        if let Err(e)=merge_resources(&mut scene,&clipboard.resources){self.status_message=e;return;}
         self.paste_preview=Some(PastePreview{scene,reference:inverse.transform_point3(clipboard.reference),offset:DVec3::ZERO});
         self.status_message="Place copied geometry; click to stamp, Esc to cancel".into();
     }
@@ -25,6 +36,12 @@ impl IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
+    #[test]
+    fn foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo(){
+        let mut source=IngeTrazoApp::new();let a=source.scene.mesh.add_vertex(DVec3::ZERO);let b=source.scene.mesh.add_vertex(DVec3::X);source.scene.mesh.add_edge(a,b);source.scene.select(SelectionItem::Edge(0));source.scene.embedded_textures.insert("texture.png".into(),vec![1,2,3,4]);source.copy_selection();
+        let encoded=serde_json::to_string(source.clipboard.as_ref().unwrap()).unwrap();let mut destination=IngeTrazoApp::new();destination.clipboard=Some(serde_json::from_str(&encoded).unwrap());let before=destination.scene.clone();destination.begin_paste_preview();assert_eq!(destination.paste_preview.as_ref().unwrap().scene.embedded_textures["texture.png"],vec![1,2,3,4]);assert_eq!(destination.scene,before);assert!(destination.commit_paste_preview());assert_eq!(destination.scene.embedded_textures["texture.png"],vec![1,2,3,4]);destination.undo();assert_eq!(destination.scene,before);
+        destination.scene.embedded_textures.insert("texture.png".into(),vec![9]);let before=destination.scene.clone();let depth=destination.undo_stack.len();assert!(!destination.paste_internal(DVec3::ZERO));assert_eq!(destination.scene,before);assert_eq!(destination.undo_stack.len(),depth);
+    }
     #[test]
     fn copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture(){
         use ingetrazo_core::{groups::Group,mesh::Mesh};use glam::DMat4;

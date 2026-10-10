@@ -213,7 +213,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     // 3. Render 3D Scene
     // Decode and upload embedded textures into egui texture manager
-    for (name, bytes) in &app.scene.embedded_textures {
+    for (name, bytes) in app.scene.embedded_textures.iter().chain(app.paste_preview.iter().flat_map(|preview|preview.scene.embedded_textures.iter())) {
         if !app.textures.contains_key(name) {
             if let Ok(img) = image::load_from_memory(bytes) {
                 let rgba = img.to_rgba8();

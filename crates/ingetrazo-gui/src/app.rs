@@ -30,10 +30,11 @@ pub enum TrayTab {
     Render,
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct GeometryClipboard {
     pub mesh: ingetrazo_core::mesh::Mesh,
     pub reference: DVec3,
+    pub resources: Scene,
     pub groups: Vec<ingetrazo_core::groups::Group>,
 }
 
@@ -409,7 +410,8 @@ impl IngeTrazoApp {
         let reference=reference.unwrap_or(DVec3::ZERO);
         let count=mesh.faces.len()+mesh.edges.len()+groups.len();
         if count==0{self.status_message="Nothing selected to copy".into();return;}
-        self.clipboard=Some(GeometryClipboard{mesh,reference,groups});self.status_message=format!("Copied selection ({count} items)");
+        let mut resources=Scene::new();resources.materials=self.scene.materials.clone();resources.layers=self.scene.layers.clone();resources.embedded_textures=self.scene.embedded_textures.clone();resources.component_definitions=self.scene.component_definitions.clone();
+        self.clipboard=Some(GeometryClipboard{mesh,reference,groups,resources});self.status_message=format!("Copied selection ({count} items)");
     }
     pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
         let Some(cb)=self.clipboard.clone() else{return false;};
@@ -417,10 +419,13 @@ impl IngeTrazoApp {
         let inverse=self.scene.dimension_frame.inverse();
         let source=match ingetrazo_core::containers::transform_mesh(&cb.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return false;}};
         let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&source,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};
-        self.save_undo_state();self.scene.mesh=mesh;self.scene.clear_selection();
-        for id in faces{self.scene.select(SelectionItem::Face(id));}for id in edges{self.scene.select(SelectionItem::Edge(id));}
-        for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*inverse*group.transform;let index=self.scene.groups.len();self.scene.groups.push(group);self.scene.select(SelectionItem::Group(index));}
-        self.scene.bump_version();true
+        let mut candidate=self.scene.clone();
+        if let Err(e)=crate::clipboard::merge_resources(&mut candidate,&cb.resources){self.status_message=e;return false;}
+        candidate.mesh=mesh;candidate.clear_selection();
+        for id in faces{candidate.select(SelectionItem::Face(id));}for id in edges{candidate.select(SelectionItem::Edge(id));}
+        for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*inverse*group.transform;let index=candidate.groups.len();candidate.groups.push(group);candidate.select(SelectionItem::Group(index));}
+        let definitions=candidate.component_definitions.clone();for(id,definition)in definitions{if let Err(e)=candidate.replace_component_definition(id,definition){self.status_message=e;return false;}}
+        self.save_undo_state();candidate.bump_version();self.scene=candidate;true
     }
     pub fn paste_selection(&mut self) {self.begin_paste_preview();}
     pub fn paste_in_place(&mut self) {self.paste_internal(DVec3::ZERO);self.status_message="Pasted in place".into();}
