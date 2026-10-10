@@ -638,6 +638,27 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
                 fused.add_vertex(vertex.position);
             }
             group.mesh = ingetrazo_core::planar::stitch_boundaries(&fused).map_err(invalid)?;
+            for i in 0..group.mesh.edges.len() {
+                let faces = &group.mesh.edges[i].faces;
+                let soft = if faces.len() == 2 {
+                    let a = &group.mesh.faces[faces[0]].attrs;
+                    let b = &group.mesh.faces[faces[1]].attrs;
+                    let image = |attrs: &HashMap<String, serde_json::Value>| {
+                        attrs.get("texture").and_then(|t| t.get("embed")).cloned()
+                    };
+                    a.get("color") == b.get("color")
+                        && image(a) == image(b)
+                        && group
+                            .mesh
+                            .face_normal(faces[0])
+                            .dot(group.mesh.face_normal(faces[1]))
+                            .abs()
+                            > 0.85
+                } else {
+                    false
+                };
+                group.mesh.edges[i].soft = soft;
+            }
         }
         scene.bump_version();
     }
