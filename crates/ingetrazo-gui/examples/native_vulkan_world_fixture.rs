@@ -9,6 +9,11 @@ impl App for Fixture {
   for (points,color) in [([DVec3::new(-1.,-1.,1.),DVec3::new(1.,-1.,-1.),DVec3::new(0.,1.,0.)],[1.,0.,0.,1.]),([DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(0.,1.,0.)],[0.,0.,1.,1.])] {
    let vertices=points.map(|p|app.scene.mesh.add_vertex(p));let face=app.scene.mesh.add_face(vertices.to_vec(),vec![]).unwrap();app.scene.mesh.faces[face].attrs.insert("color".into(),serde_json::json!(color));
   }
+  if let Ok(mode)=std::env::var("INGETRAZO_WORLD_SECTION") {
+   let normal=if mode=="reverse" {-DVec3::X}else{DVec3::X};
+   let mut plane=ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,normal,"Cut","A");plane.active=mode!="inactive";
+   app.scene.section_planes.push(plane);app.scene.show_section_fill=false;app.scene.show_section_cuts=mode!="disabled";
+  }
   app.scene.bump_version();app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);app.camera.target=DVec3::ZERO;app.camera.distance=4.;app.camera.perspective=false;app.mark_document_clean();
   Self{app}
  }

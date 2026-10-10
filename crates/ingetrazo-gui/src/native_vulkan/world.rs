@@ -32,7 +32,7 @@ impl Image {
 impl Drop for Image {fn drop(&mut self){unsafe {self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.handle,None);self.device.free_memory(self.memory,None)};self.budget.freed(self.memory);}}
 struct Target {device:Device,pool:vk::DescriptorPool,_color:Image,_depth:Image,framebuffer:vk::Framebuffer,sampler:vk::Sampler,set:vk::DescriptorSet,extent:vk::Extent2D,texture:egui::TextureId}
 impl Drop for Target {fn drop(&mut self){unsafe {self.device.destroy_framebuffer(self.framebuffer,None);self.device.destroy_sampler(self.sampler,None);let _=self.device.free_descriptor_sets(self.pool,&[self.set]);}}}
-pub struct World {device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,revision:Option<(u64,u64,u64)>,style:Option<ingetrazo_render::style::StyleConfig>,mvp:[f32;16],pub uploads:u64}
+pub struct World {device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,revision:Option<(u64,u64,u64)>,style:Option<ingetrazo_render::style::StyleConfig>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
 impl World {
  pub fn new(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<Self,String> {
   let device=context.device.clone();
@@ -42,11 +42,11 @@ impl World {
   let subpasses=[vk::SubpassDescription::default().pipeline_bind_point(vk::PipelineBindPoint::GRAPHICS).color_attachments(&colors).depth_stencil_attachment(&depth)];
   let dependencies=[vk::SubpassDependency::default().src_subpass(vk::SUBPASS_EXTERNAL).dst_subpass(0).src_stage_mask(vk::PipelineStageFlags::FRAGMENT_SHADER).dst_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT|vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS).src_access_mask(vk::AccessFlags::SHADER_READ).dst_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE|vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE),vk::SubpassDependency::default().src_subpass(0).dst_subpass(vk::SUBPASS_EXTERNAL).src_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT).dst_stage_mask(vk::PipelineStageFlags::FRAGMENT_SHADER).src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::SHADER_READ)];
   let render_pass=unsafe {device.create_render_pass(&vk::RenderPassCreateInfo::default().attachments(&attachments).subpasses(&subpasses).dependencies(&dependencies),None)}.map_err(|e|e.to_string())?;
-  let push=[vk::PushConstantRange::default().stage_flags(vk::ShaderStageFlags::VERTEX).size(64)];let layout=match unsafe {device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&push),None)} {Ok(layout)=>layout,Err(e)=>{unsafe {device.destroy_render_pass(render_pass,None)};return Err(e.to_string());}};
+  let push=[vk::PushConstantRange::default().stage_flags(vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT).size(96)];let layout=match unsafe {device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&push),None)} {Ok(layout)=>layout,Err(e)=>{unsafe {device.destroy_render_pass(render_pass,None)};return Err(e.to_string());}};
   let pipeline=match make_pipeline(&device,render_pass,layout) {Ok(p)=>p,Err(e)=>{unsafe {device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e);}};
   let descriptor_layout=match egui_ash_renderer::vulkan::create_vulkan_descriptor_set_layout(&device) {Ok(l)=>l,Err(e)=>{unsafe {device.destroy_pipeline(pipeline,None);device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e.to_string());}};
   let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:4}];let pool=match unsafe {device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().flags(vk::DescriptorPoolCreateFlags::FREE_DESCRIPTOR_SET).max_sets(4).pool_sizes(&sizes),None)} {Ok(p)=>p,Err(e)=>{unsafe {device.destroy_descriptor_set_layout(descriptor_layout,None);device.destroy_pipeline(pipeline,None);device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e.to_string());}};
-  Ok(Self{device,budget:budget.clone(),resources:Resources::new(context,budget),render_pass,pipeline,layout,descriptor_layout,pool,depth_format,target:None,vertices:None,indices:None,count:0,revision:None,style:None,mvp:[0.0;16],uploads:0})
+  Ok(Self{device,budget:budget.clone(),resources:Resources::new(context,budget),render_pass,pipeline,layout,descriptor_layout,pool,depth_format,target:None,vertices:None,indices:None,count:0,revision:None,style:None,mvp:[0.0;16],clip:[0.;4],clip_enabled:0,uploads:0})
  }
  /// Must be called after the previous UI/draw fence completes.
  pub fn resize(&mut self,context:&VulkanContext,renderer:&mut egui_ash_renderer::Renderer,extent:vk::Extent2D)->Result<egui::TextureId,String> {
@@ -63,6 +63,10 @@ impl World {
  }
  pub fn set_scene(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64)->Result<(),String> {
   self.mvp=(camera.projection_matrix()*camera.view_matrix()).as_mat4().to_cols_array();
+  self.clip_enabled=0;
+  if scene.show_section_cuts {if let Some(plane)=scene.section_planes.iter().find(|p|p.active) {
+   self.clip=[plane.normal.x as f32,plane.normal.y as f32,plane.normal.z as f32,-plane.normal.dot(plane.point) as f32];self.clip_enabled=1;
+  }}
   let revision=(scene.version,scene.view_version,epoch);
   if self.revision==Some(revision)&&self.style.as_ref()==Some(style){return Ok(());}
   let mut plain=style.clone();plain.visual_style=ingetrazo_render::style::VisualStyle::ShadedWithTextures;plain.show_textures=false;
@@ -85,7 +89,9 @@ impl World {
    self.device.cmd_begin_render_pass(command,&vk::RenderPassBeginInfo::default().render_pass(self.render_pass).framebuffer(target.framebuffer).render_area(vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}).clear_values(&clears),vk::SubpassContents::INLINE);
    self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.pipeline);
    self.device.cmd_set_viewport(command,0,&[vk::Viewport{x:0.0,y:0.0,width:target.extent.width as f32,height:target.extent.height as f32,min_depth:0.0,max_depth:1.0}]);self.device.cmd_set_scissor(command,0,&[vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}]);
-   self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX,0,bytemuck::cast_slice(&self.mvp));
+   self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,bytemuck::cast_slice(&self.mvp));
+   self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,64,bytemuck::cast_slice(&self.clip));
+   self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&self.clip_enabled));
    if let (Some(vertices),Some(indices))=(self.vertices,self.indices){self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);self.device.cmd_bind_index_buffer(command,self.resources.buffer(indices).unwrap(),0,vk::IndexType::UINT32);self.device.cmd_draw_indexed(command,self.count,1,0,0,0);self.resources.mark_used(vertices,serial)?;self.resources.mark_used(indices,serial)?;}
    self.device.cmd_end_render_pass(command);
   }

@@ -47,3 +47,10 @@ Depth/stencil storage is allocated, but stencil section masks are not yet implem
 ## Bounded UI texture transfer
 
 The vendored uploader now reuses a staging allocation capped at 8 MiB, borrows contiguous source row slices, and waits for a dedicated transfer fence rather than queue_wait_idle. An actual 4096×3072 RGBA image (48 MiB) uploads with only 8 MiB staging headroom, then accepts a partial lower-right update. Native screenshot samples are exactly red/green/blue/yellow across chunk boundaries and the partial region. The prior full-image uploader is compiled as a retained negative control and fails the same budget. Actual allocation rollback and native startup/two resizes/clean close are rerun. This is synchronous chunked transfer, not asynchronous mip streaming or compressed texture support; worker-assisted decode and upload responsiveness remain gates.
+
+
+## Native section fragment clipping checkpoint
+
+The world pass now clips model fragments using the original first-active world-plane convention (`views/viewport.py` around 1380 and `resources/shaders/basic.vert`): keep dot(normal, position - origin) <= 0. A 96-byte push-constant range carries camera, plane and enable state; changing the cut does not require clipping/re-uploading geometry. Actual active/reversed/inactive/disabled controls pass native screenshot samples, with the crossing-face depth fixture still passing after the shader change. Each control also passes startup, two native resizes and clean OS close.
+
+This is fragment clipping only. Native section stencil fill, contour edges, overlays and quantitative comparison with the original OpenGL cut screenshots remain open. Fragment discard currently implements the plane boundary without enabling optional shaderClipDistance; future early clipping optimization requires queried features and preserved pixels. The old compositor is the default until the direct world path meets broader acceptance.
