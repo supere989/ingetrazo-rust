@@ -1,5 +1,4 @@
 {
-  "archive_source": "existing Cargo registry cache; checksum matched upstream declared archive",
   "upstream_archive_sha256": "eab537ce43cab850c64b4cdc390ce7e4f47f877485ddc323208e268280c308ae",
   "upstream_files": 1343,
   "changed_files": [

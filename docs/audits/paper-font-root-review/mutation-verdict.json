@@ -1,0 +1,6 @@
+{
+  "actual_source_mutation": "remove subset cache lookup",
+  "negative_exit": 101,
+  "assertion": "warm no glyph/subset rebuild",
+  "restored_positive_exit": 0
+}
