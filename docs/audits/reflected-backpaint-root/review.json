@@ -1,0 +1,9 @@
+{
+  "candidate": "9f40135",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-backpaint-review-target cargo test --locked --workspace",
+  "passed": 398,
+  "failed": 0,
+  "ignored": 2,
+  "log_sha256": "a17403e3ae5bbc9fb1b85b6f3bf49756a1249f4db3e42c3d24ebc76bafe81f06",
+  "remaining": "Independent same-GPU reflected heldout rerun and complete prior controls, prototype/texture/style/shading boundary remain open."
+}
