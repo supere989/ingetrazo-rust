@@ -57,6 +57,68 @@ impl Resources {
   if let Err(error)=result {self.destroy(destination);return Err(error);}
   self.stats.bytes+=data.len() as u64;Ok(destination)
  }
+ /// Transactional bounded transfer batch; individual destination ownership is preserved.
+ /// All input validation happens before allocations; one staging buffer and command/fence
+ /// are reused across <=8MiB submissions. Existing upload() behavior is unchanged.
+ pub fn upload_many(&mut self,context:&super::VulkanContext,inputs:&[(&[u8],vk::BufferUsageFlags)])->Result<Vec<BufferId>,String>{
+  let supported=vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::INDEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER|vk::BufferUsageFlags::UNIFORM_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC|vk::BufferUsageFlags::TRANSFER_DST;
+  let mut total=0u64;
+  for (data,usage) in inputs{
+   if data.is_empty()||data.len()%4!=0{return Err("Batch upload requires nonempty four-byte-aligned buffers".into());}
+   if usage.is_empty()||!supported.contains(*usage){return Err("Unsupported batch buffer transfer usage".into());}
+   total=total.checked_add(data.len()as u64).ok_or("Batch byte count overflow")?;
+  }
+  if inputs.is_empty(){return Ok(Vec::new());}
+  let mut destinations=Vec::new();let mut staging=None;
+  let result=(||->Result<(),String>{
+   for (data,usage) in inputs{destinations.push(self.allocate(data.len()as u64,*usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)?);}
+   let id=self.allocate(total.min(UPLOAD_CHUNK),vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::HOST_VISIBLE)?;
+   staging=Some(id);self.stats.staging_allocations+=1;self.stats.staging_peak=self.stats.staging_peak.max(self.buffers[&id].allocation_bytes);
+   self.transfer_many(context,&destinations,id,inputs)
+  })();
+  if let Some(id)=staging{self.destroy(id);}
+  if let Err(error)=result{for id in destinations{self.destroy(id);}return Err(error);}
+  self.stats.upload_calls+=inputs.len()as u64;self.stats.bytes+=total;Ok(destinations)
+ }
+ fn transfer_many(&mut self,context:&super::VulkanContext,destinations:&[BufferId],staging:BufferId,inputs:&[(&[u8],vk::BufferUsageFlags)])->Result<(),String>{
+  let info=vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).level(vk::CommandBufferLevel::PRIMARY).command_buffer_count(1);
+  let command=unsafe{self.device.allocate_command_buffers(&info)}.map_err(|e|e.to_string())?[0];self.stats.transfer_command_allocations+=1;
+  let fence=match unsafe{self.device.create_fence(&vk::FenceCreateInfo::default(),None)}{Ok(f)=>f,Err(e)=>{unsafe{self.device.free_command_buffers(context.command_pool,&[command])};return Err(e.to_string());}};self.stats.transfer_fence_creations+=1;
+  let mut submitted=false;
+  let result=(||->Result<(),String>{
+   let mut input=0usize;let mut offset=0usize;
+   while input<inputs.len(){
+    let mut pieces=Vec::new();let mut used=0usize;
+    while input<inputs.len()&&used<UPLOAD_CHUNK as usize{
+     let length=(inputs[input].0.len()-offset).min(UPLOAD_CHUNK as usize-used);
+     pieces.push((input,offset,used,length));used+=length;offset+=length;
+     if offset==inputs[input].0.len(){input+=1;offset=0;}
+    }
+    // Scatter directly into mapped staging: no additional packed CPU byte buffer.
+    let host=&self.buffers[&staging];
+    let pointer=unsafe{self.device.map_memory(host.memory,0,host.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
+    for &(index,start,target,length) in &pieces{unsafe{std::ptr::copy_nonoverlapping(inputs[index].0[start..start+length].as_ptr(),pointer.cast::<u8>().add(target),length)};}
+    let flushed=if host.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT){Ok(())}else{unsafe{self.device.flush_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(host.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())};
+    unsafe{self.device.unmap_memory(host.memory)};flushed?;
+    unsafe{
+     self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
+     self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
+     let mut barriers=Vec::new();
+     for &(index,start,source,length) in &pieces{
+      let target=self.buffers[&destinations[index]].handle;
+      self.device.cmd_copy_buffer(command,host.handle,target,&[vk::BufferCopy{src_offset:source as u64,dst_offset:start as u64,size:length as u64}]);
+      barriers.push(vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(vk::AccessFlags::MEMORY_READ).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(target).offset(start as u64).size(length as u64));
+     }
+     self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::ALL_COMMANDS,vk::DependencyFlags::empty(),&[],&barriers,&[]);
+     self.device.end_command_buffer(command).map_err(|e|e.to_string())?;self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
+     self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;
+    }
+    submitted=true;self.stats.transfer_submissions+=1;context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;self.stats.chunks+=1;
+   }Ok(())
+  })();
+  if submitted{let _=unsafe{self.device.device_wait_idle()};}
+  unsafe{self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}result
+ }
  fn transfer_chunks(&mut self,context:&super::VulkanContext,destination:BufferId,staging:BufferId,data:&[u8])->Result<(),String> {
   let info=vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).level(vk::CommandBufferLevel::PRIMARY).command_buffer_count(1);
   let command=unsafe {self.device.allocate_command_buffers(&info)}.map_err(|e|e.to_string())?[0];
