@@ -1,0 +1,15 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-core)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-render)
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-tools)
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.03s
+     Running `target/debug/examples/saved_views_acceptance_fixture /tmp/tmpir31_x2u`
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-validation/scripts/check-python-saved-views.py", line 24, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-validation/scripts/check-python-saved-views.py", line 20, in main
+    assert scene.groups[0].children[0].hidden and scene.section_planes[0].active
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
