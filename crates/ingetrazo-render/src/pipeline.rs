@@ -359,6 +359,8 @@ fn build_mesh_buffers(
             let vert_color = [shade, shade, shade, final_opacity];
 
             let tris = mesh.triangulate_face(f_id);
+            let buffer=textured_meshes.entry(tex_key).or_default();
+            let first=buffer.indices.len();
             for (p0, p1, p2) in tris {
                 let u0 = gu.dot(p0) + cu;
                 let v0 = gv.dot(p0) + cv;
@@ -371,8 +373,9 @@ fn build_mesh_buffers(
                 let v1 = Vertex::from_dvec3(p1, norm, vert_color, [u1 as f32, v1 as f32]);
                 let v2 = Vertex::from_dvec3(p2, norm, vert_color, [u2 as f32, v2 as f32]);
 
-                textured_meshes.entry(tex_key.clone()).or_default().push_triangle(v0, v1, v2);
+                buffer.push_triangle(v0, v1, v2);
             }
+            record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity);
         } else {
             let base_color = get_face_base_color(&face.attrs, scene, style);
             let shaded_color = [
@@ -500,29 +503,37 @@ fn build_group_buffers(
                 .unwrap_or("texture")
                 .to_string();
 
-            let (gu, cu, gv, cv) = face_uv_axes(&tex, world_norm);
+            // Source prototype texture maps are fitted in the prototype's
+            // local frame, while classic flattened groups use world points.
+            let (gu, cu, gv, cv) = face_uv_axes(&tex, if source_placement {local_norm}else{world_norm});
             let vert_color = [shade, shade, shade, final_opacity];
 
             let tris = group.mesh.triangulate_face(f_id);
+            let buffer=textured_meshes.entry(tex_key).or_default();
+            let first=buffer.indices.len();
             for (p0, p1, p2) in tris {
                 let (p1, p2) = if reflected {(p2, p1)} else {(p1, p2)};
                 let wp0 = world_t.transform_point3(p0);
                 let wp1 = world_t.transform_point3(p1);
                 let wp2 = world_t.transform_point3(p2);
 
-                let u0 = gu.dot(wp0) + cu;
-                let v0 = gv.dot(wp0) + cv;
-                let u1 = gu.dot(wp1) + cu;
-                let v1 = gv.dot(wp1) + cv;
-                let u2 = gu.dot(wp2) + cu;
-                let v2 = gv.dot(wp2) + cv;
+                let uvp0=if source_placement {p0}else{wp0};
+                let u0 = gu.dot(uvp0) + cu;
+                let v0 = gv.dot(uvp0) + cv;
+                let uvp1=if source_placement {p1}else{wp1};
+                let u1 = gu.dot(uvp1) + cu;
+                let v1 = gv.dot(uvp1) + cv;
+                let uvp2=if source_placement {p2}else{wp2};
+                let u2 = gu.dot(uvp2) + cu;
+                let v2 = gv.dot(uvp2) + cv;
 
                 let v0 = Vertex::from_dvec3(wp0, world_norm, vert_color, [u0 as f32, v0 as f32]);
                 let v1 = Vertex::from_dvec3(wp1, world_norm, vert_color, [u1 as f32, v1 as f32]);
                 let v2 = Vertex::from_dvec3(wp2, world_norm, vert_color, [u2 as f32, v2 as f32]);
 
-                textured_meshes.entry(tex_key.clone()).or_default().push_triangle(v0, v1, v2);
+                buffer.push_triangle(v0, v1, v2);
             }
+            record_source_texture(buffer,first,&attrs,shade,source_final_opacity);
         } else {
             let base_color = get_face_base_color(&attrs, scene, style);
             let shaded_color = [
@@ -1495,5 +1506,39 @@ fn json_falsey(v:&serde_json::Value)->bool {v.is_null()||v==false||v.as_f64()==S
   let attrs=std::collections::HashMap::new();let mut buffer=MeshRenderBuffer::new();buffer.indices.resize(3,0);record_default_back(&mut buffer,0,&attrs,1.);buffer.indices.resize(6,0);record_default_back(&mut buffer,3,&attrs,1.);assert_eq!(buffer.source_default_back,vec![(0,6)]);
   let two_sided=std::collections::HashMap::from([("back".into(),serde_json::json!(true))]);buffer.indices.resize(9,0);record_default_back(&mut buffer,6,&two_sided,1.);assert_eq!(buffer.source_default_back,vec![(0,6)]);
   record_default_back(&mut buffer,6,&attrs,0.5);assert_eq!(buffer.source_default_back,vec![(0,6)]);
+ }
+}
+
+fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::collections::HashMap<String,serde_json::Value>,shade:f32,opacity:f64){
+ let count=buffer.indices.len()-first;if count==0{return;}
+ // Original bucket_face retains double-sided opaque textured fronts even
+ // when a translucent back override exists; culling applies only glass fronts.
+ record_source_back_paint(buffer,first,first,attrs,shade);
+ if opacity>=0.999{buffer.source_front_cull.retain(|r|r.0!=first);}
+ let front_cull=opacity<0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first);
+ if let Some(last)=buffer.source_texture_runs.last_mut(){if last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
+ buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{first,count,shade,opacity,front_cull});
+}
+
+#[cfg(test)]mod native_texture_regression{
+ use super::*;use ingetrazo_core::groups::Group;
+ fn textured_mesh(opacity:f64,back:bool)->Mesh{
+  let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));let id=mesh.add_face(ids.to_vec(),vec![]).unwrap();
+  mesh.faces[id].attrs.insert("texture".into(),serde_json::json!({"path":"source.png","uvw":[2.,0.,0.,0.25,0.,3.,0.,0.5]}));
+  mesh.faces[id].attrs.insert("opacity".into(),serde_json::json!(opacity));
+  if back{mesh.faces[id].attrs.insert("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.5}));}mesh
+ }
+ #[test]fn prototype_uv_remains_local_after_reflected_scaled_translated_placement(){
+  let mut scene=Scene::new();let mut group=Group::with_mesh("placed",textured_mesh(1.,false));group.native_document=serde_json::json!({"proto":0,"xform":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]});
+  group.transform=DMat4::from_scale_rotation_translation(DVec3::new(-2.,3.,1.),glam::DQuat::from_rotation_x(std::f64::consts::FRAC_PI_2),DVec3::new(20.,30.,40.));let transform=group.transform;scene.groups.push(group);
+  let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;
+  let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);let texture=&data.textured_meshes["source.png"];
+  assert_eq!(texture.indices.len(),3);assert_eq!(texture.source_texture_runs.len(),1);
+  for vertex in &texture.vertices{let p=transform.inverse().transform_point3(DVec3::from_array(vertex.position.map(|v|v as f64)));assert!((vertex.uv[0]as f64-(2.*p.x+0.25)).abs()<1e-5);assert!((vertex.uv[1]as f64-(3.*p.y+0.5)).abs()<1e-5);}
+  assert_eq!(texture.source_consolidated_opaque_count,0,"Source texture triangles never enter plain opaque glass gate");
+ }
+ #[test]fn exact_source_opacity_and_opaque_textured_front_cull_exception_survive_preparation(){
+  let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;
+  for (opacity,cull) in [(1.,false),(0.99899999999,true)]{let mut scene=Scene::new();scene.mesh=textured_mesh(opacity,true);let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);let texture=&data.textured_meshes["source.png"];let run=&texture.source_texture_runs[0];assert_eq!(run.opacity,opacity);assert_eq!(run.front_cull,cull);assert_eq!(texture.source_back_paints.len(),1);assert_eq!(texture.source_back_paints[0].opacity,0.5);}
  }
 }

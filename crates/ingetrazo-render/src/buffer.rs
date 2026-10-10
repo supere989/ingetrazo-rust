@@ -69,6 +69,11 @@ impl Vertex {
 /// CPU paint metadata for a contiguous face span; never uploaded.
 #[derive(Clone, Debug, PartialEq)]
 pub struct SourceBackPaint {pub first:usize,pub count:usize,pub order:usize,pub color:[f32;3],pub opacity:f64}
+/// CPU-only source texture run metadata. A GPU backend packs only position
+/// plus UV (20 bytes); shade/opacity/culling are per-draw state, never expanded
+/// into additional per-vertex uploaded color or normal attributes.
+#[derive(Clone, Debug, PartialEq)]
+pub struct SourceTextureRun {pub first:usize,pub count:usize,pub shade:f32,pub opacity:f64,pub front_cull:bool}
 /// Mesh render buffer storing indexed triangle data.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MeshRenderBuffer {
@@ -80,6 +85,7 @@ pub struct MeshRenderBuffer {
     pub source_consolidated_opaque_count:usize,
     pub source_back_override_count:usize,
     pub source_back_paints: Vec<SourceBackPaint>,
+    pub source_texture_runs:Vec<SourceTextureRun>,
     pub vertices: Vec<Vertex>,
     pub indices: Vec<u32>,
 }
@@ -88,6 +94,7 @@ impl MeshRenderBuffer {
     pub fn new() -> Self {
         Self {
             source_opacity_runs: Vec::new(),
+            source_texture_runs:Vec::new(),
             source_default_back:Vec::new(),source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
             vertices: Vec::new(),
             indices: Vec::new(),
@@ -97,6 +104,7 @@ impl MeshRenderBuffer {
     pub fn with_capacity(vert_cap: usize, ind_cap: usize) -> Self {
         Self {
             source_opacity_runs: Vec::new(),
+            source_texture_runs:Vec::new(),
             source_default_back:Vec::new(),source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
             vertices: Vec::with_capacity(vert_cap),
             indices: Vec::with_capacity(ind_cap),
@@ -104,7 +112,7 @@ impl MeshRenderBuffer {
     }
 
     pub fn clear(&mut self) {
-        self.source_opacity_runs.clear();
+        self.source_opacity_runs.clear();self.source_texture_runs.clear();
         self.source_default_back.clear();self.source_front_cull.clear();self.source_back_paints.clear();self.source_consolidated_opaque_count=0;self.source_back_override_count=0;
         self.vertices.clear();
         self.indices.clear();
