@@ -9,7 +9,7 @@ jobs:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
       - name: Install native build dependencies
-        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 libfreetype6 libfontconfig1 libx11-6 libxrandr2 libxcursor1 libxi6 libxinerama1 libxkbcommon-x11-0 xvfb xauth imagemagick pkg-config libxtst6 libgl1-mesa-dri libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 libfreetype6 libfontconfig1 libx11-6 libxrandr2 libxcursor1 libxi6 libxinerama1 libxkbcommon-x11-0 xvfb xauth imagemagick pkg-config libxtst6 libgl1-mesa-dri libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libvulkan1 mesa-vulkan-drivers
       - name: Check mandatory original fixtures
         run: python3 -c "from pathlib import Path; names = [\"arco-yanque\", \"banca-pergola-yanque\", \"luminaria-solar-yanque\", \"pileta-fuente-yanque\"]; assert all((Path(\"ingetrazo/examples\") / (n + \".igz\")).is_file() for n in names), \"Missing original fixtures\""
       - run: cargo test --workspace --locked
@@ -17,7 +17,16 @@ jobs:
         run: python3 scripts/check-native-clipboard.py
       - name: Native rendered Offset viewport gestures
         run: python3 scripts/check-rendered-offset.py
-      - run: cargo build --locked -p ingetrazo-cli
+      - name: Build native launcher and minimal render worker
+        run: cargo build --locked -p ingetrazo-cli -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker
+      - name: Persistent shared-buffer HLR and worker deadline controls
+        run: cargo run --locked -p ingetrazo-render --example process_hlr_acceptance -- target/debug/ingetrazo-render-worker
+      - name: Build direct Vulkan host and allocation probe
+        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe
+      - name: Direct Vulkan virtual-display lifecycle
+        run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan docs/audits/native-vulkan-ci-host
+      - name: Actual Vulkan image and staging denial rollback
+        run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan_budget_probe docs/audits/native-vulkan-ci-budget
       - name: Software-rendered virtual-display startup
         run: scripts/render-smoke.sh
       - name: Semantic document acceptance
@@ -122,3 +131,5 @@ jobs:
             docs/audits/section-rust-render/*
             docs/audits/offset-render/*.png
             docs/audits/offset-render/runtime.log
+            docs/audits/native-vulkan-ci-host/*
+            docs/audits/native-vulkan-ci-budget/*
