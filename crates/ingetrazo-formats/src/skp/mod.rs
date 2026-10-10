@@ -707,7 +707,7 @@ mod import_weld_tests {
         assert_eq!(b["back_face_color"],serde_json::json!([0.2,0.3,0.4]));
         let path=std::env::temp_dir().join(format!("skp-back-color-{}.igz",uuid::Uuid::new_v4()));
         crate::igz::save_igz_format1(&scene,&path).unwrap();let saved:serde_json::Value=serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();std::fs::remove_file(&path).unwrap();
-        assert!(saved.to_string().contains("back_face_color"));
+        assert_eq!(saved["scene"]["back_face_color"],serde_json::json!([0.2,0.3,0.4]));
         let mut old=scene.clone();old.native_baseline=serde_json::Value::Null;assert!(crate::igz::save_igz_format1(&old,&path).is_err());assert!(!path.exists());
     }
     #[test]

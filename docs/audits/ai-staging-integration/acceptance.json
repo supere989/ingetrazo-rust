@@ -1,0 +1,6 @@
+{
+  "source": "c6c94bb2",
+  "passed": true,
+  "focused_tests": 2,
+  "scope": "Typed partial vertex/edge admission and actual Python catch then commit refusal; retry succeeds. No comprehensive VM/OOM bound or production claim."
+}
