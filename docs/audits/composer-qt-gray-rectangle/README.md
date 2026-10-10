@@ -1,0 +1,11 @@
+# Bounded source-derived native gray rectangle stage
+
+This software is based in part on the work of the FreeType Team. PureRust line/cell/sweep mathematics adapts Qt6.12 qgrayraster.c (FTL), with original copyright and licenses/FTL.txt retained. Outline points use source26.6 qRound before8-bit subpixel cell accumulation; coverage is signedarea arithmetic shift9 then abs/saturate255. Equalcoverage horizontal spans coalesce into GPUgeometry runs. NoCPUfullimage upload or extraimage/renderpass.
+
+Six actualQt whole128² polygon images match exactly: subpixelrectangle, trapezoid, reversedwinding, hole, beveloutline andnegative clippedrectangle. Production straightrectangle stroke now matches whole600×500 original image exactly, improving2084→4→0pixels. The initial4innercorner failure is retained. SourceQPainterPathStroker rawinnerbevel trace revisits originalcorners; healing it into a simple miterhole changes AA windingarea. Native follows that literal trace.
+
+Fullnine productionchecker STILLFAILS: eight curved/otherpaths keep previous tessellation and unchanged residuals. Noallshape-AA claim. Cosmetic/oversizedwidth strokes explicitly retain priorpath. Exactpath admission:250000edges/cells,8×cell edgework,100000runs,total8MiBprepared spanvertices+indices. Invalid/nonfinite/oversized admission returns beforecachedmesh mutation.
+
+Cache keys include physicalfractional pixelphase and density for exactrectangles. Positivephysicalcoordinates safely reuse equalfraction integertranslations; origins nearnegative/tie boundaries retain fullphysicalorigin. Changedphase rebuilds. Cachetests prove unchangedwarmArc identity, positiveintegerreuse, fractionalphaseinvalidate andfailedadmission keepsoldmesh. These are cacheAPI tests, notGPUthroughput measurements. Rotation is not part of current shapePose (axisalignedonly); any future rotation must join key and transformedoutline.
+
+Next fullscope: source cubicflattening/stroker for rounded/ellipse/openRoundCap strokes; polygonjoins/clips; wholeRGBA sourcecontrols and destinationbackground arithmetic. Measure cold/warm runbytes/time before default/performance claims. GPUcompute coldscanconversion for large oranimatedpaths is a planned acceleration stage, notimplemented. ActualRTX/nativeMetal drawing for this newgeometry remains pending.

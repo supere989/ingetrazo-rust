@@ -1,0 +1,22 @@
+{
+  "base_revision": "efddd76",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "production_binary_sha256": "47db3be65bc6c3832ec6499c086325218cf3590f4c328b3bfa50884bdf840637",
+  "kernel_binary_sha256": "70fb4b9132e5cdb1647222427a8226ac5db20af6d5e487c068a65c2d3e48d9ea",
+  "source_rules": [
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qgrayraster.c",
+      "sha256": "8ed8709602d7805f9de666a0a8c8c1fc3924c0b54cba5c3f31b0fafa899e6fda"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qoutlinemapper.cpp",
+      "sha256": "10ebc9ce5c2cd1bb903438ff4720097cb13818f0d1a20595c8ba89ecd9a04616"
+    }
+  ],
+  "backend": "actual software Vulkan llvmpipe; actual Qt6.12 QImage AA raster reference",
+  "explicit_native_env": {
+    "INGETRAZO_SHAPE_DIRECT": "1",
+    "INGETRAZO_VULKAN_DEVICE": "llvmpipe",
+    "VK_DRIVER_FILES": "/usr/share/vulkan/icd.d/lvp_icd.json"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "negative-clipped",
+      "spans": 246,
+      "different_pixels": 0
+    },
+    {
+      "name": "rectangle",
+      "spans": 140,
+      "different_pixels": 0
+    },
+    {
+      "name": "trapezoid",
+      "spans": 500,
+      "different_pixels": 0
+    },
+    {
+      "name": "reversed",
+      "spans": 492,
+      "different_pixels": 0
+    },
+    {
+      "name": "hole",
+      "spans": 245,
+      "different_pixels": 0
+    },
+    {
+      "name": "bevel-outline",
+      "spans": 432,
+      "different_pixels": 0
+    }
+  ],
+  "boundary": "Actual QPainter winding AA polygons vs pureRust26.6 line/cell/sweep runs. Not source curve flattening/stroking or GPU performance."
+}

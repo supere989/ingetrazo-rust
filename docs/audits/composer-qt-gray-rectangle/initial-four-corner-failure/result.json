@@ -1,0 +1,54 @@
+{
+  "mandatory_cases": 9,
+  "inventory_negative_controls": 3,
+  "passed": false,
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 4,
+      "passed": false
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 1976,
+      "passed": false
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 1932,
+      "passed": false
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 1744,
+      "passed": false
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 1048,
+      "passed": false
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 1115,
+      "passed": false
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 1608,
+      "passed": false
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 3936,
+      "passed": false
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 1311,
+      "passed": false
+    }
+  ],
+  "binary_sha256": "85161a19b720c61ad06ea7f5812eb0f1afdf40126c7a8f4555dce02fbd46f6f8",
+  "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+}
