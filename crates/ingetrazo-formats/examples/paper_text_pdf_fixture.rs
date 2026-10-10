@@ -1,3 +1,5 @@
+#[path = "paper_subset_fixture.rs"]
+mod subset;
 // Engineering direct-embedding acceptance fixture. Not application text export.
 use ingetrazo_formats::paper_text::{FtPolicy, Hinting, PaperFont};
 use pdf_writer::{
@@ -44,6 +46,8 @@ fn main() {
         let run = font
             .shape_run(call["text"].as_str().unwrap(), None)
             .unwrap();
+        let (program, cid_map) =
+            subset::subset_program(&bytes, &run.iter().map(|g| g.id).collect::<Vec<_>>());
         let face = ttf_parser::Face::parse(&bytes, 0).unwrap();
         let upem = face.units_per_em() as f32;
         let mut p = Pdf::new();
@@ -68,7 +72,7 @@ fn main() {
             let mut widths = cid.widths();
             for id in ids {
                 widths.consecutive(
-                    id,
+                    cid_map[&(id as u32)],
                     [
                         (face.glyph_hor_advance(ttf_parser::GlyphId(id)).unwrap() as f32 * 1000.
                             / upem)
@@ -93,25 +97,28 @@ fn main() {
             .cap_height(face.ascender() as f32 * 1000. / upem)
             .stem_v(44.)
             .font_file2(Ref::new(8));
-        p.stream(Ref::new(8), &bytes)
+        p.stream(Ref::new(8), &program)
             .insert(Name(b"Length1"))
-            .primitive(bytes.len() as i32);
+            .primitive(program.len() as i32);
         let mut content = Vec::new();
+        let shear = if call["font"]["italic"].as_bool().unwrap() && !face.is_italic() {
+            0.3
+        } else {
+            0.0
+        };
         // Source default QPdfWriter A4 physical frame, logical DPI300/10mm margins.
-        writeln!(content,"0.240000000 0 0 -0.240000000 10.0800000 831.919999 cm\nq\n0.437500000 0 0 0.437500000 236.220472 354.330708 cm\n0.117647059 0.141176477 0.172549024 rg\nBT\n/F 100 Tf 1 0 0 -1 0 0 Tm").unwrap();
+        writeln!(content,"0.240000000 0 0 -0.240000000 10.0800000 831.919999 cm\nq\n0.437500000 0 0 0.437500000 236.220472 354.330708 cm\n0.117647059 0.141176477 0.172549024 rg\nBT\n/F 100 Tf 1 0 {} -1 0 0 Tm",shear).unwrap();
         let mut advance = 0i64;
-        let mut previous = [0i64, 0i64];
+        let mut previous = [0f64, 0f64];
         for g in run {
-            let position = [
-                advance + g.offset[0] as i64,
-                -font.ascent_26_6 as i64 - g.offset[1] as i64,
-            ];
+            let y = (-font.ascent_26_6 as i64 - g.offset[1] as i64) as f64 / 64.;
+            let position = [(advance + g.offset[0] as i64) as f64 / 64. - shear * y, y];
             writeln!(
                 content,
                 "{:.9} {:.9} Td <{:04X}> Tj",
-                (position[0] - previous[0]) as f64 / 64.,
-                (position[1] - previous[1]) as f64 / 64.,
-                g.id
+                position[0] - previous[0],
+                position[1] - previous[1],
+                cid_map[&g.id]
             )
             .unwrap();
             previous = position;
