@@ -206,6 +206,18 @@ impl CachedFont {
     pub fn leading_26_6(&self) -> i32 {
         self.shaper.leading_26_6
     }
+    /// Source QPainter antialiased underline: ceil FT offset plus half thickness, capped at descent.
+    pub fn underline_metrics_px(&self) -> Result<[f64; 2], String> {
+        let [thickness, offset] = self.shaper.decoration_metrics_26_6()?;
+        let thickness = f64::from(thickness) / 64.;
+        let offset = f64::from(offset) / 64.;
+        let descent = f64::from(self.descent_26_6()) / 64.;
+        let mut adjusted = offset.ceil() + thickness / 2.;
+        if offset <= descent {
+            adjusted = adjusted.min(descent - thickness / 2.);
+        }
+        Ok([thickness, adjusted])
+    }
     pub fn synthetic_italic_shear(&self, requested: bool) -> f64 {
         if requested && !self.italic {
             0.3

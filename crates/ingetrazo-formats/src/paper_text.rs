@@ -356,6 +356,31 @@ impl PaperFont {
                 .map_or((0, 0), |g| (g.points.borrow().len(), g.total_points.get()))
         }
     }
+    /// Source FT line thickness / underline offset, both in pixel100 QFixed units.
+    pub fn decoration_metrics_26_6(&self) -> Result<[i32; 2], String> {
+        unsafe {
+            let geometry = self
+                .data
+                .as_ref()
+                .geometry
+                .as_ref()
+                .ok_or("Paper decoration metrics require a native outline policy")?;
+            let face = geometry.face.raw();
+            let size = (*face).size;
+            if size.is_null() {
+                return Err("Invalid paper decoration face metrics".into());
+            }
+            let scale = (*size).metrics.y_scale;
+            let thickness = i32::try_from(ft::FT_MulFix((*face).underline_thickness as _, scale))
+                .map_err(|_| "Paper decoration thickness outside fixed domain")?;
+            let center = i32::try_from(-ft::FT_MulFix((*face).underline_position as _, scale))
+                .map_err(|_| "Paper decoration offset outside fixed domain")?;
+            let offset = center
+                .checked_sub(thickness / 2)
+                .ok_or("Paper decoration metric overflow")?;
+            Ok([thickness.max(64), offset])
+        }
+    }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
         &self.bytes
     }
