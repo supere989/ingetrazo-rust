@@ -1,0 +1,22 @@
+{
+  "workspace_source": "0c3adfaf",
+  "later_changes": "documentation only through66b9d3be",
+  "workspace_pass": 693,
+  "workspace_fail": 0,
+  "workspace_ignored": 2,
+  "workspace_summaries": 35,
+  "merged_offset_replay": "PASS",
+  "independent_offset_race_cases": 6,
+  "old_behavior_failures_reproduced": 2,
+  "registry_acceptance": "../ai-persistent-registry-root/acceptance.json",
+  "import_images": "../skp-real-model-qt-runtime-replay/root-decoded-review.json",
+  "typed_import_edits": "PASS in combined suite",
+  "purged_terminal_target": "/tmp/ingetrazo-offset-capture-target",
+  "purged_apparent_bytes": 8351196554,
+  "open": [
+    "Native Vulkan whole model pixels fail on retained older branch",
+    "Native Metal font and Canvas platform parity",
+    "Production scripting full adapters and execution bounds",
+    "All five release gates"
+  ]
+}

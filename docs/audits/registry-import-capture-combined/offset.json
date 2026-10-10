@@ -1,0 +1,112 @@
+{
+  "provenance": {
+    "rust_commit": "66b9d3be6e3278f5971a2cbc53b41d5d94c1c16b",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "native_events": "X11 pointer warp and XTEST native button/escape key synthesis on disposable Xvfb",
+  "preview_changed_pixels": 2480,
+  "preview_added_red_pixels": 2476,
+  "cancel_changed_pixels": 0,
+  "committed_added_dark_pixels": 2639,
+  "initial": {
+    "faces": 1,
+    "undo": 0,
+    "preview": [],
+    "click": [
+      427.7546589359287,
+      556.4152595828996
+    ],
+    "move": [
+      572.2453410640715,
+      504.8114446871747
+    ],
+    "pointer": null
+  },
+  "preview": {
+    "faces": 1,
+    "undo": 0,
+    "preview": [
+      [
+        [
+          3.5018269512942624,
+          3.5018269512942624,
+          0.0
+        ],
+        [
+          0.49817304870573764,
+          3.5018269512942624,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.49817304870573764,
+          3.5018269512942624,
+          0.0
+        ],
+        [
+          0.4981730487057374,
+          0.4981730487057374,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.4981730487057374,
+          0.4981730487057374,
+          0.0
+        ],
+        [
+          3.5018269512942624,
+          0.4981730487057374,
+          0.0
+        ]
+      ],
+      [
+        [
+          3.5018269512942624,
+          0.4981730487057374,
+          0.0
+        ],
+        [
+          3.5018269512942624,
+          3.5018269512942624,
+          0.0
+        ]
+      ]
+    ],
+    "click": [
+      427.7546589359287,
+      556.4152595828996
+    ],
+    "move": [
+      572.2453410640715,
+      504.8114446871747
+    ],
+    "pointer": [
+      572.0,
+      505.0
+    ]
+  },
+  "committed": {
+    "faces": 2,
+    "undo": 1,
+    "preview": [],
+    "click": [
+      427.7546589359287,
+      556.4152595828996
+    ],
+    "move": [
+      572.2453410640715,
+      504.8114446871747
+    ],
+    "pointer": [
+      572.0,
+      505.0
+    ]
+  },
+  "scope": "Production render_viewport within native eframe harness: face pointer pick, perpendicular moving preview rendered, Escape cancel no model/history mutation, second-click commit one undo and visible hard inner boundary. This isolates viewport gestures; full app menus/tool selection/VCB/undo keyboard routing and other display platforms remain open."
+}

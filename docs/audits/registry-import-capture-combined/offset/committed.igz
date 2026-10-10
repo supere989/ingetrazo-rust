@@ -1,0 +1,354 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "edges": [
+      {
+        "a": [
+          4.0,
+          4.0,
+          0.0
+        ],
+        "b": [
+          0.0,
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          0.0,
+          4.0,
+          0.0
+        ],
+        "b": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b": [
+          4.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          4.0,
+          0.0,
+          0.0
+        ],
+        "b": [
+          4.0,
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          3.5018269512942624,
+          3.5018269512942624,
+          0.0
+        ],
+        "b": [
+          3.5018269512942624,
+          0.4981730487057374,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          3.5018269512942624,
+          0.4981730487057374,
+          0.0
+        ],
+        "b": [
+          0.4981730487057374,
+          0.49817304870573764,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          0.4981730487057374,
+          0.49817304870573764,
+          0.0
+        ],
+        "b": [
+          0.49817304870573764,
+          3.5018269512942624,
+          0.0
+        ]
+      },
+      {
+        "a": [
+          0.49817304870573764,
+          3.5018269512942624,
+          0.0
+        ],
+        "b": [
+          3.5018269512942624,
+          3.5018269512942624,
+          0.0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "vertices": [
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "holes": [
+          [
+            [
+              3.5018269512942624,
+              3.5018269512942624,
+              0.0
+            ],
+            [
+              3.5018269512942624,
+              0.4981730487057374,
+              0.0
+            ],
+            [
+              0.4981730487057374,
+              0.49817304870573764,
+              0.0
+            ],
+            [
+              0.49817304870573764,
+              3.5018269512942624,
+              0.0
+            ]
+          ]
+        ]
+      },
+      {
+        "vertices": [
+          [
+            3.5018269512942624,
+            3.5018269512942624,
+            0.0
+          ],
+          [
+            0.49817304870573764,
+            3.5018269512942624,
+            0.0
+          ],
+          [
+            0.4981730487057374,
+            0.49817304870573764,
+            0.0
+          ],
+          [
+            3.5018269512942624,
+            0.4981730487057374,
+            0.0
+          ]
+        ]
+      }
+    ],
+    "display_style": {
+      "name": "Default",
+      "face_mode": "textures",
+      "edges": true,
+      "profiles": true,
+      "back_edges": false,
+      "edge_color": [
+        0.13,
+        0.17,
+        0.23
+      ],
+      "front_color": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "back_color": null,
+      "background": [
+        0.9,
+        0.91,
+        0.92
+      ],
+      "sky": true,
+      "sky_color": [
+        0.925,
+        0.935,
+        0.945
+      ],
+      "ground_color": [
+        0.815,
+        0.82,
+        0.815
+      ],
+      "section_fill": true,
+      "section_fill_color": [
+        0.35,
+        0.37,
+        0.41
+      ]
+    },
+    "shadows": {
+      "enabled": false,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "groups": [],
+    "layers": [
+      {
+        "name": "Layer 0",
+        "visible": true,
+        "locked": false,
+        "color": null
+      }
+    ],
+    "materials": [],
+    "camera": {
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "distance": 20.0,
+      "yaw": -0.7853981633974483,
+      "pitch": 0.5235987755982988,
+      "perspective": true,
+      "fov_deg": 45.0
+    },
+    "dimensions": [],
+    "image_planes": [],
+    "guides": [],
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    },
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "planes_hidden": false,
+      "cuts_hidden": false,
+      "fill_hidden": false
+    },
+    "georef": {
+      "datum": null
+    },
+    "geo_points": [],
+    "geo_paths": [],
+    "terrain": null,
+    "tile_layer": null,
+    "compositions": [
+      {
+        "name": "Sheet 1",
+        "paper": "A3",
+        "landscape": true,
+        "margin_mm": 10.0,
+        "frames": [
+          {
+            "x_mm": 20.0,
+            "y_mm": 20.0,
+            "w_mm": 380.0,
+            "h_mm": 207.0,
+            "scale_n": 100.0,
+            "view_key": "std:top",
+            "style": "vectorial",
+            "show_title": true,
+            "title_text": "Top Plan (1:100)",
+            "border": true,
+            "perspective": false,
+            "rot_deg": 0.0,
+            "annotations": true,
+            "paper_bg": false,
+            "cut_fill": "solid",
+            "cut_fill_color": "#595e69",
+            "cut_hatch_mm": 1.5,
+            "pen_cut_mm": 0.5,
+            "pen_profile_mm": 0.35,
+            "pen_edge_mm": 0.18,
+            "profiles": true,
+            "hidden_lines": false,
+            "cam_target": null,
+            "cam_yaw": null,
+            "cam_pitch": null,
+            "cam_distance": null,
+            "cam_fov": null,
+            "section_marks": true,
+            "uid": "dcf0df723b5c4d419ea4cdf48e401c8c"
+          }
+        ],
+        "texts": [],
+        "nortes": [],
+        "scalebars": [],
+        "shapes": [],
+        "cajetin": {
+          "x_mm": 270.0,
+          "y_mm": 237.0,
+          "w_mm": 140.0,
+          "h_mm": 50.0,
+          "proyecto": "Active-iQ Architecture",
+          "autor": "IngeTrazo Cad Engine",
+          "fecha": "2026-10-07",
+          "lamina": "A-01",
+          "escala": "1:100",
+          "drawing_title": "General Plan",
+          "campos": [
+            [
+              "PROYECTO",
+              "Active-iQ Architecture"
+            ],
+            [
+              "AUTOR",
+              "IngeTrazo Cad Engine"
+            ],
+            [
+              "FECHA",
+              "2026-10-07"
+            ],
+            [
+              "ESCALA",
+              "1:100"
+            ],
+            [
+              "LÁMINA",
+              "A-01"
+            ],
+            [
+              "TÍTULO",
+              "General Plan"
+            ]
+          ]
+        }
+      }
+    ],
+    "active_sheet_index": null
+  }
+}
