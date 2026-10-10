@@ -1,0 +1,19 @@
+{
+  "archive_digest_verified": true,
+  "license_digest_verified": true,
+  "changed_upstream_files": [
+    "src/frame.rs",
+    "src/lib.rs",
+    "src/stdlib/mod.rs",
+    "src/vm/mod.rs",
+    "src/vm/thread.rs"
+  ],
+  "missing_upstream_files": [],
+  "retained_checker": "9 controls and 4 negative mutations PASS",
+  "scope": "Independent source/provenance and retained evidence review, not fresh runtime replay or production acceptance",
+  "remaining": [
+    "compiler/native work and memory bounds",
+    "host reset coupled to journal discard",
+    "full imports and document transactions"
+  ]
+}
