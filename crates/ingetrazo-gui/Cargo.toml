@@ -31,3 +31,6 @@ egui-winit = "0.30"
 egui-ash-renderer = "=0.7.0"
 
 bytemuck.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
