@@ -6,11 +6,11 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-Reviewed canonical code f20a7c1, defect record58fc0a1:530 workspace tests pass/twoignored; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
+Reviewed canonical code65951ac:531 workspace tests pass/twoignored; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
 
 | Worker | Isolated worktree | Current ownership | State |
 |---|---|---|---|
-| document_integrity | /tmp/ingetrazo-constructor-lifetime | Native Vulkan startup owners, typed errors; unapproved annotation Undo defect recorded | Running |
+| document_integrity | /tmp/ingetrazo-constructor-lifetime | Command-specific component shareback Undo parity; startup owners integrated | Running |
 | geometry | /tmp/ingetrazo-sheet-view-pdf | Source section solid/hatch PDF painters; default/raster/text and complete paper scope retained | Running |
 | validation | /tmp/ingetrazo-metal-host | Direct Metal egui painter/shared app/CAMetalLayer, actual GPU and WSI controls, full native renderer | Running |
 
@@ -281,3 +281,7 @@ Nativeworld integration accepted428PASS2ignored freshuniquetarget67640terminal0;
 PreciseCAD API91b5842 mergedlatestworld942; fullworkspace430PASS2ignored terminal23633,5software +5RTXcontrols10ownedcaptures checkeddevice/dimensions/alpha/order/scissor/cache/error/pressure PASS. Source49+3cef andevidence3d5/e56/649 reviewed; APIintegration only composeradapter/expandedRGBAcoverage/AA/Metal OPEN. Rootownsnextshapeadapter; renderertextures separate; geometrytransformedempty/clipboardFinish broader stillactive.
 
 LiveCIaudit:94238032137378FAIL+35938032281082FAIL samecenterhintMoveactualstep; latesttimeoutundo1script142. Validatorassignedretainedcloudartifact+freshactualXTEST diagnosis; doNOTmaskretries/tolerances. Lastgreen a67538031439871. Rootpublicfailedlogretained; currentcloudacceptancefailed explicitly.
+
+Reviewed startup ownership65951ac integrated: root fresh actual RTX eight exact inventories/refusal, strict negatives, canonical531 tests/twoignored pass. Device-loss/OOM recovery remains unproven. Metal host and paper section painters stay isolated pending terminal actual rendering checks. Full37rows/five gates retained.
+
+Public41a1 CI38045557038 completed SUCCESS across all configured jobs, freshly verified. Startup-owner ca846cc run38046222715 and isolated Metal Drop ab370eb run38046278347 are currently live; no premature cloud/nativeDrop adoption claim.

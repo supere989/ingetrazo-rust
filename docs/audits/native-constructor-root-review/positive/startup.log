@@ -1,0 +1,42 @@
+STARTUP_CANCEL StartupInstance audit={"created":{"Instance":1,"DebugMessenger":1},"destroyed":{"Instance":1,"DebugMessenger":1}}
+STARTUP_CANCEL StartupSurface audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1}}
+STARTUP_CANCEL StartupDevice audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1}}
+STARTUP_CANCEL StartupPool audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1}}
+STARTUP_CANCEL StartupCommand audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1}}
+STARTUP_CANCEL StartupSwapchain audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1,"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1,"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3}}
+STARTUP_CANCEL StartupSync audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1,"AcquireSemaphore":1,"GraphicsFence":1,"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"Semaphore":3,"PresentFence":3},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1,"AcquireSemaphore":1,"GraphicsFence":1,"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"Semaphore":3,"PresentFence":3}}
+STARTUP_CANCEL StartupRenderer audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1,"AcquireSemaphore":1,"GraphicsFence":1,"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"Semaphore":3,"PresentFence":3},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1,"AcquireSemaphore":1,"GraphicsFence":1,"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"Semaphore":3,"PresentFence":3}}
+STARTUP_ALL_8_PASS no_queue_submission=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
