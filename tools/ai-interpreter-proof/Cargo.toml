@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2024"
 publish = false
 [workspace]
+[features]
+default = ["vm"]
+vm = ["dep:rustpython-vm"]
 [dependencies]
-rustpython-vm = { version = "=0.6.0", default-features = false, features = ["compiler", "gc", "importlib", "stdio"] }
+rustpython-vm = { version = "=0.6.0", optional = true, default-features = false, features = ["compiler", "gc", "importlib", "stdio"] }
 serde_json = "1"
 ingetrazo-core = { path = "../../crates/ingetrazo-core" }
 glam = "0.29"

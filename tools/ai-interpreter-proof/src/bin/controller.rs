@@ -1,3 +1,4 @@
+#[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"]mod journal;#[path="../owner.rs"]mod owner;#[path="../session.rs"]mod session;#[path="../controller.rs"]mod controller;
 use ingetrazo_core::mesh::Mesh;
 fn main(){let mut c=controller::Controller::new(Mesh::new()).unwrap();let mut out=vec![];

@@ -1,3 +1,4 @@
+#[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"]mod journal;#[path="../owner.rs"]mod owner;
 use owner::JournalOwner;use ingetrazo_core::mesh::Mesh;use glam::DVec3;
 fn record(o:&JournalOwner,name:&str,out:&mut Vec<serde_json::Value>){let (u,r)=o.history_counts();out.push(serde_json::json!({"name":name,"vertices":o.mesh().vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":o.mesh().edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"undo":u,"redo":r}));}

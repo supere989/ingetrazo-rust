@@ -1,0 +1,16 @@
+{
+  "parent_revision": "0302a272",
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "commands": [
+    "cargo test -j2 --no-default-features --bin owner shared_budget",
+    "cargo run -j2 --no-default-features --bin owner",
+    "cargo run -j2 --no-default-features --bin owner_history"
+  ],
+  "target": "/tmp/ingetrazo-ai-owner-budget-target",
+  "binaries_sha256": {
+    "owner": "18159cf2a636f2bd3f24ca641724c3d1320208bdeec8b373197bcc33fdba6a40",
+    "owner_history": "64268f6a29a61a8c36002847dbd82d915568845e2ea2c30936abbdb58e61a0ca"
+  },
+  "original_evidence_reused": true,
+  "production": false
+}

@@ -1,0 +1,10 @@
+    Finished `test` profile [unoptimized] target(s) in 0.26s
+     Running unittests src/bin/owner.rs (/tmp/ingetrazo-ai-owner-budget-target/debug/deps/owner-c357b2b7fa195b89)
+
+running 3 tests
+test owner::tests::shared_budget_constructor_and_preparation_refusals_preserve_owner ... ok
+test owner::tests::shared_budget_staging_and_commit_refusals_release_candidate_only ... ok
+test owner::tests::shared_budget_two_owners_and_existing_redo_survive_refused_commit ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
