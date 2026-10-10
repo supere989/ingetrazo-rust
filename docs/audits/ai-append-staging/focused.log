@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized] target(s) in 21.42s
+     Running unittests src/bin/controller.rs (/tmp/ingetrazo-ai-owner-target/debug/deps/controller-774609b422d1fb1d)
+
+running 2 tests
+test owner::tests::caught_staging_refusal_cannot_publish_partial_vertices ... ok
+test controller::tests::script_catching_staging_refusal_still_discards ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.05s
+

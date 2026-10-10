@@ -16,6 +16,7 @@ pub struct Execution{pub failure:Option<Failure>,pub changed:bool,pub error:bool
 pub struct Controller{interpreter:Interpreter,scope:Scope,owner:JournalOwner,unwind_tainted:bool}
 impl Controller{
  pub fn new(mesh:Mesh)->Result<Self,String>{let owner=JournalOwner::new(mesh)?;let builder=InterpreterBuilder::new();let module=native_owner::module_def(&builder.ctx);let interpreter=builder.add_native_module(module).interpreter();let scope=interpreter.enter(|vm|{let scope=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("import native_owner",Mode::Exec,"<setup>").unwrap(),scope.clone()).unwrap();scope});Ok(Self{interpreter,scope,owner,unwind_tainted:false})}
+ pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.owner.set_append_limits(vertices,edges);}
  pub fn mesh(&self)->&Mesh{self.owner.mesh()}
  pub fn history_counts(&self)->(usize,usize){self.owner.history_counts()}
  pub fn set_index_entry_limit(&mut self,limit:Option<usize>){self.owner.set_index_entry_limit(limit);}
@@ -24,7 +25,7 @@ impl Controller{
  pub fn execute(&mut self,source:&str,fuel:u64)->Result<Execution,String>{
   if self.unwind_tainted{return Err("Controller execution did not finish; VM reuse refused".into());}
   if STAGED.with(|s|s.borrow().is_some()){return Err("An owner execution is already active".into());}
-  let transaction=self.owner.begin();let owner=&mut self.owner;let scope=self.scope.clone();
+  let transaction=self.owner.try_begin()?;let owner=&mut self.owner;let scope=self.scope.clone();
   self.unwind_tainted=true;
   let result=self.interpreter.enter(|vm|{vm.host_budget_arm(fuel).map_err(str::to_owned)?;STAGED.with(|s|*s.borrow_mut()=Some(transaction));let _discard_on_unwind=StageGuard;let mut events=vec!["armed","staged"];
    let executed=session::execute(vm,&scope,source);let poisoned=vm.host_budget_poisoned();let transaction=STAGED.with(|s|s.borrow_mut().take()).expect("private staged execution owner");
@@ -38,6 +39,7 @@ impl Controller{
 
 #[cfg(test)]mod tests{
  use super::*;
+ #[test]fn script_catching_staging_refusal_still_discards(){let mut c=Controller::new(Mesh::new()).unwrap();c.set_append_limits(Some(1),None);let result=c.execute("try:\n    native_owner.edge(0.,0.,0.,1.,0.,0.)\nexcept ValueError:\n    pass",2000).unwrap();assert!(matches!(result.failure,Some(Failure::Preparation(reason)) if reason.contains("staging admission failed")));assert!(c.mesh().vertices.is_empty());assert_eq!(c.history_counts(),(0,0));c.set_append_limits(None,None);assert!(c.execute("native_owner.edge(0.,0.,0.,1.,0.,0.)",2000).unwrap().changed);}
  #[test]fn callback_unwind_discards_staged_owner_and_refuses_vm_reuse(){
   let mut c=Controller::new(Mesh::new()).unwrap();
   let caught=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||c.execute("native_owner.edge(0.,0.,0.,1.,0.,0.)\nnative_owner.host_panic()",2000)));

@@ -5,9 +5,9 @@ use glam::DVec3;use uuid::Uuid;use std::collections::{HashMap,HashSet};
 pub struct Transaction{document:Uuid,state:Uuid,journal:MeshJournal}
 impl Transaction{pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(),String>{self.journal.add_edge(a,b).map(|_|())}}
 struct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize}
-pub struct JournalOwner{mesh:Mesh,document:Uuid,state:Uuid,version:u64,undo:Vec<Delta>,redo:Vec<Delta>,index_entry_limit:Option<usize>,history_byte_limit:Option<usize>,undo_bytes:usize,redo_bytes:usize}
+pub struct JournalOwner{mesh:Mesh,document:Uuid,state:Uuid,version:u64,undo:Vec<Delta>,redo:Vec<Delta>,index_entry_limit:Option<usize>,history_byte_limit:Option<usize>,undo_bytes:usize,redo_bytes:usize,append_vertex_limit:Option<usize>,append_edge_limit:Option<usize>}
 impl JournalOwner{
- pub fn new(mut mesh:Mesh)->Result<Self,String>{validate_base(&mesh)?;let positions:Vec<_>=mesh.vertices.iter().map(|v|v.position).collect();let index=Mesh::prepare_spatial_index(&positions).map_err(str::to_owned)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;Ok(Self{mesh,document:Uuid::new_v4(),state:Uuid::new_v4(),version:0,undo:vec![],redo:vec![],index_entry_limit:None,history_byte_limit:None,undo_bytes:0,redo_bytes:0})}
+ pub fn new(mut mesh:Mesh)->Result<Self,String>{validate_base(&mesh)?;let positions:Vec<_>=mesh.vertices.iter().map(|v|v.position).collect();let index=Mesh::prepare_spatial_index(&positions).map_err(str::to_owned)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;Ok(Self{mesh,document:Uuid::new_v4(),state:Uuid::new_v4(),version:0,undo:vec![],redo:vec![],index_entry_limit:None,history_byte_limit:None,undo_bytes:0,redo_bytes:0,append_vertex_limit:None,append_edge_limit:None})}
  pub fn mesh(&self)->&Mesh{&self.mesh}
  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
  pub fn retained_baseline_entries(&self)->usize{0}
@@ -16,12 +16,14 @@ impl JournalOwner{
  /// Retained delta payload admission, excluding VM, scratch and history Vec slack.
  pub fn set_history_byte_limit(&mut self,limit:Option<usize>){self.history_byte_limit=limit;}
  pub fn history_payload_bytes(&self)->(usize,usize){(self.undo_bytes,self.redo_bytes)}
- pub fn begin(&self)->Transaction{Transaction{document:self.document,state:self.state,journal:MeshJournal::begin(&self.mesh,self.version)}}
+ pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.append_vertex_limit=vertices;self.append_edge_limit=edges;}
+ pub fn begin(&self)->Transaction{self.try_begin().expect("legacy proof owner preparation")}
+ pub fn try_begin(&self)->Result<Transaction,String>{let mut journal=MeshJournal::try_begin(&self.mesh,self.version)?;journal.set_append_limits(self.append_vertex_limit,self.append_edge_limit);Ok(Transaction{document:self.document,state:self.state,journal})}
  fn index(&self,positions:&[DVec3])->Result<PreparedSpatialIndex,String>{if self.index_entry_limit.is_some_and(|n|positions.len()>n){return Err("Prepared-index entry admission denied".into());}Mesh::prepare_spatial_index(positions).map_err(str::to_owned)}
  pub fn replace(&mut self,mut mesh:Mesh)->Result<(),String>{validate_base(&mesh)?;let positions:Vec<_>=mesh.vertices.iter().map(|v|v.position).collect();let index=self.index(&positions)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;self.mesh=mesh;self.document=Uuid::new_v4();self.state=Uuid::new_v4();self.version+=1;self.undo.clear();self.redo.clear();self.undo_bytes=0;self.redo_bytes=0;Ok(())}
  pub fn commit(&mut self,t:Transaction)->Result<bool,String>{
   if t.document!=self.document||t.state!=self.state||t.journal.base_version!=self.version{return Err("Stale owner transaction".into());}
-  let j=t.journal;if j.added_vertices.is_empty()&&j.added_edges.is_empty(){return Ok(false);}
+  let j=t.journal;if j.admission_failed{return Err("Transaction staging admission failed".into());}if j.added_vertices.is_empty()&&j.added_edges.is_empty(){return Ok(false);}
   let base_vertices=self.mesh.vertices.len();let base_edges=self.mesh.edges.len();
   let total=base_vertices.checked_add(j.added_vertices.len()).ok_or("Vertex extent overflow")?;
   let mut vertices=Vec::new();vertices.try_reserve(j.added_vertices.len()).map_err(|_|"Vertex preparation refused")?;for p in j.added_vertices{vertices.push(MeshVertex::new(p));}
@@ -72,6 +74,8 @@ fn delta_bytes(vertices:&Vec<MeshVertex>,edges:&Vec<MeshEdge>)->Result<usize,Str
  for v in vertices{bytes=bytes.checked_add(v.edges.capacity().checked_mul(std::mem::size_of::<usize>()).ok_or("Delta adjacency byte extent overflow")?).ok_or("Delta byte extent overflow")?;}Ok(bytes)
 }
 #[cfg(test)]mod tests{use super::*;
+ #[test]fn caught_staging_refusal_cannot_publish_partial_vertices(){let mut o=JournalOwner::new(Mesh::new()).unwrap();o.set_append_limits(Some(1),None);let mut t=o.try_begin().unwrap();assert!(t.add_edge(DVec3::ZERO,DVec3::X).is_err());assert!(t.add_edge(DVec3::Y,DVec3::Z).unwrap_err().contains("previously refused"));assert!(o.commit(t).unwrap_err().contains("staging admission failed"));assert!(o.mesh().vertices.is_empty());assert_eq!(o.history_counts(),(0,0));o.set_append_limits(None,Some(0));let mut t=o.try_begin().unwrap();assert!(t.add_edge(DVec3::ZERO,DVec3::X).is_err());assert!(o.commit(t).is_err());assert!(o.mesh().vertices.is_empty());o.set_append_limits(None,None);let mut t=o.try_begin().unwrap();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.commit(t).unwrap();assert_eq!(o.mesh().edges.len(),1);o.set_append_limits(Some(0),Some(0));let mut duplicate=o.try_begin().unwrap();duplicate.add_edge(DVec3::ZERO,DVec3::X).unwrap();assert!(!o.commit(duplicate).unwrap());assert_eq!(o.history_counts(),(1,0));}
+
  #[test]fn history_admission_preserves_redo_and_retry_without_payload_growth(){
   let mut o=JournalOwner::new(Mesh::new()).unwrap();let mut t=o.begin();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.commit(t).unwrap();
   let first=o.history_payload_bytes();assert!(first.0>0);assert_eq!(first.1,0);let saved=o.mesh().clone();

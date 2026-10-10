@@ -1,0 +1,6 @@
+{
+  "parent_revision": "4d2aa6e7",
+  "test_binary_sha256": "700a9e20e90c7b172098278ff113bb0ae0f14c61828fff79297ff6191627da6a",
+  "command": "cargo test -j2 --bin controller staging_refusal",
+  "production": false
+}

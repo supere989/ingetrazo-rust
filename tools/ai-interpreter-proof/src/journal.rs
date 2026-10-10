@@ -15,26 +15,35 @@ pub struct MeshJournal {
  base_positions:Vec<DVec3>,
  pub added_vertices:Vec<DVec3>,
  pub added_edges:Vec<(usize,usize)>,
+ pub admission_failed:bool,
+ vertex_limit:Option<usize>,edge_limit:Option<usize>,
 }
 impl MeshJournal {
- pub fn begin(mesh:&Mesh,version:u64)->Self {
-  Self {base_version:version,base_vertices:mesh.vertices.len(),base_edges:mesh.edges.len(),
-   vertices:mesh.vertices.iter().enumerate().filter(|(_,v)|v.position.is_finite()&&(v.position*10000.).is_finite()).map(|(id,v)|(SourceKey::new(v.position),id)).collect(),
-   edges:mesh.edges.iter().enumerate().map(|(id,e)|(ordered(e.v0,e.v1),(id,e.v0,e.v1))).collect(),base_positions:mesh.vertices.iter().map(|v|v.position).collect(),added_vertices:vec![],added_edges:vec![]}
+ pub fn begin(mesh:&Mesh,version:u64)->Self{Self::try_begin(mesh,version).expect("legacy proof journal preparation")}
+ pub fn try_begin(mesh:&Mesh,version:u64)->Result<Self,String>{
+  let mut vertices=HashMap::new();vertices.try_reserve(mesh.vertices.len()).map_err(|_|"Source lookup admission refused")?;
+  for (id,v) in mesh.vertices.iter().enumerate(){if v.position.is_finite()&&(v.position*10000.).is_finite(){vertices.insert(SourceKey::new(v.position),id);}}
+  let mut edges=HashMap::new();edges.try_reserve(mesh.edges.len()).map_err(|_|"Source edge lookup admission refused")?;
+  for (id,e) in mesh.edges.iter().enumerate(){edges.insert(ordered(e.v0,e.v1),(id,e.v0,e.v1));}
+  let mut base_positions=Vec::new();base_positions.try_reserve_exact(mesh.vertices.len()).map_err(|_|"Source positions admission refused")?;base_positions.extend(mesh.vertices.iter().map(|v|v.position));
+  Ok(Self{base_version:version,base_vertices:mesh.vertices.len(),base_edges:mesh.edges.len(),vertices,edges,base_positions,added_vertices:vec![],added_edges:vec![],admission_failed:false,vertex_limit:None,edge_limit:None})
  }
+ pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.vertex_limit=vertices;self.edge_limit=edges;}
+ fn admission<T>(&mut self,result:Result<T,String>)->Result<T,String>{if result.is_err(){self.admission_failed=true;}result}
  pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(usize,DVec3,DVec3),String>{
+  if self.admission_failed{return Err("Transaction staging previously refused".into());}
   let a=a.as_vec3().as_dvec3();let b=b.as_vec3().as_dvec3();
   if !a.is_finite()||!b.is_finite(){return Err("Nonfinite endpoint".into());}
   let ka=SourceKey::new(a);let kb=SourceKey::new(b);
-  let v0=self.vertex(ka,a);let v1=self.vertex(kb,b);
+  let v0=self.vertex(ka,a)?;let v1=self.vertex(kb,b)?;
   if v0==v1{return Err("degenerate edge: endpoints weld to one vertex".into());}
   let key=ordered(v0,v1);
-  let endpoints=if let Some(&existing)=self.edges.get(&key){existing}else{let id=self.base_edges+self.added_edges.len();self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
+  let endpoints=if let Some(&existing)=self.edges.get(&key){existing}else{let preparation=(||{if self.edge_limit.is_some_and(|n|self.added_edges.len()>=n){return Err("Append edge staging admission denied".into());}self.edges.try_reserve(1).map_err(|_|"Append edge lookup admission refused")?;self.added_edges.try_reserve(1).map_err(|_|"Append edge staging allocation refused")?;self.base_edges.checked_add(self.added_edges.len()).ok_or_else(||"Append edge extent overflow".into())})();let id=self.admission(preparation)?;self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
   Ok((endpoints.0,self.position(endpoints.1),self.position(endpoints.2)))
  }
  fn position(&self,id:usize)->DVec3{if id<self.base_vertices{self.base_positions[id]}else{self.added_vertices[id-self.base_vertices]}}
- fn vertex(&mut self,key:SourceKey,p:DVec3)->usize {
-  if let Some(&id)=self.vertices.get(&key){return id;}
+ fn vertex(&mut self,key:SourceKey,p:DVec3)->Result<usize,String> {
+  if let Some(&id)=self.vertices.get(&key){return Ok(id);}
   // Original registry probes neighbouring cells in dx/dy/dz order,
   // with Qt float32 subtraction and squared-length, strictly below step².
   for dx in -1..=1{for dy in -1..=1{for dz in -1..=1{
@@ -42,15 +51,16 @@ impl MeshJournal {
    let neighbour=SourceKey([&key.0[0]+dx,&key.0[1]+dy,&key.0[2]+dz]);
    if let Some(&id)=self.vertices.get(&neighbour){
     let d=self.position(id).as_vec3()-p.as_vec3();
-    if (d.length_squared() as f64)<1e-8{return id;}
+    if (d.length_squared() as f64)<1e-8{return Ok(id);}
    }
   }}}
-  let id=self.base_vertices+self.added_vertices.len();self.vertices.insert(key,id);self.added_vertices.push(p);id
+  let preparation=(||{if self.vertex_limit.is_some_and(|n|self.added_vertices.len()>=n){return Err("Append vertex staging admission denied".into());}self.vertices.try_reserve(1).map_err(|_|"Append vertex lookup admission refused")?;self.added_vertices.try_reserve(1).map_err(|_|"Append vertex staging allocation refused")?;self.base_vertices.checked_add(self.added_vertices.len()).ok_or_else(||"Append vertex extent overflow".into())})();let id=self.admission(preparation)?;self.vertices.insert(key,id);self.added_vertices.push(p);Ok(id)
  }
  /// UI owner admission precedes every mutation. Version must cover all writers.
  /// This proof supports only appended unpainted edges: richer writes are refused.
  pub fn publish(self,mesh:&mut Mesh,version:u64)->Result<bool,String>{Ok(self.publish_owned(mesh,version)?.is_some())}
  pub fn publish_owned(self,mesh:&mut Mesh,version:u64)->Result<Option<AppendUndo>,String>{
+  if self.admission_failed{return Err("Transaction staging admission failed".into());}
   if version!=self.base_version||mesh.vertices.len()!=self.base_vertices||mesh.edges.len()!=self.base_edges{return Err("Stale transaction base".into());}
   // Public vertex arrays can have duplicate keys or a stale private spatial
   // index. Never ask add_vertex to reinterpret already planned real IDs.
@@ -117,7 +127,7 @@ impl AppendUndo{
  }
 }
 pub(crate) fn validate_base(mesh:&Mesh)->Result<(),String>{
- let mut incidence=vec![0u8;mesh.edges.len()];
+ let mut incidence=Vec::new();incidence.try_reserve_exact(mesh.edges.len()).map_err(|_|"Base incidence admission refused")?;incidence.resize(mesh.edges.len(),0u8);
  for (id,v) in mesh.vertices.iter().enumerate(){
   if !v.position.is_finite(){return Err("Malformed base vertex".into());}
   for &edge in &v.edges{
