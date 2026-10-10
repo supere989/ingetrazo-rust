@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 0,
+      "source_sha256": "2c88847a63e73b2a0961b29bb687488f9efb2042f77fa20296c87c05e0883637",
+      "native_sha256": "a29ea6790eed47e9723465e961782ca5a021e8b08e44886dd882a7d07aba791f"
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 0,
+      "source_sha256": "a211abfa3f83e4b3ab5993997023fa74d369f58d8ebd9e96112816c78a2e1e8f",
+      "native_sha256": "ecb4beadeb75952a72a1525928cdcabf596d4e65e58b8925e12ebc595493abbc"
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 0,
+      "source_sha256": "a8384aaebdfa553f843724feb8e99b47094b386d14a1ea7417a325a34b6f0e97",
+      "native_sha256": "ebde83353ef336f721f21494554f3bc3554768d3c9bf8f204d7395db55de9e8f"
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 0,
+      "source_sha256": "e6076bd7e2b3f1ea4ad845718fccd2c59930fea6850b7ed0b688aa6eb0eaebb4",
+      "native_sha256": "b7fddc4aea0a82db2e226fe659305396517406e11c56fb73eb7250702611a1aa"
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 0,
+      "source_sha256": "7419ff23d364aa4ad86b6faac72c4beb78c4802efc8ed76bd47c0c12f54cf21a",
+      "native_sha256": "8f502aa457bd1f7cf2002210f8332b4ed618952597fe33bcdcc164e0a6e1959b"
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 0,
+      "source_sha256": "cc07449c2c37263ad4205d7e7407188e87821d96adc2cff74ee705fe013722b5",
+      "native_sha256": "b223c123536ceffc514c6fb35fb9725fd6a9dc52e6b53a09b3394647e0fcdd21"
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 0,
+      "source_sha256": "0f2063046481988675de6d4eb36f882182eba73a9675a58531dc33d86dc40bfa",
+      "native_sha256": "e57d413fc631c2cf97fcdf261dc11a35c86155f80ecfce648dffd9888f1630da"
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 0,
+      "source_sha256": "30b698611fa75ea1d02477b22c409908e2f1079a21cbe621b198ac6a71756468",
+      "native_sha256": "5478ce24efd5dc9c68f8ecffc02fe46bf5c89a38bfa974126180b63a77f1eea2"
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 0,
+      "source_sha256": "f17d9ab5b17637ef6902c91aecbb6bda2e4132dfe085015d270793e3ce389b61",
+      "native_sha256": "a72184042580c92defb2617d0ed7a749d93a8f0aec03070a94c722f6c34aa784"
+    }
+  ],
+  "old_float_negative": [
+    {
+      "name": "rect",
+      "different_pixels": 0
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 4
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 10
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 5
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 0
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 0
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 0
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 0
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 0
+    }
+  ],
+  "inventory_and_missing_negatives": 4,
+  "altered_pixel_negative": true,
+  "black_startup_negative": true,
+  "boundary": "actual NVIDIA owned window whole600x500 source images, exact bytes; only these nine local shapes, no Metal/thin/full sheet closure"
+}

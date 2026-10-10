@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-integer-descriptor-lifetime/scripts/check-native-cad2d-inline.py", line 15, in <module>
+    metrics=re.search(r'CAD2D metrics: Stats \{([^}]+)',log);assert metrics,label
+                                                                    ^^^^^^^
+AssertionError: baseline

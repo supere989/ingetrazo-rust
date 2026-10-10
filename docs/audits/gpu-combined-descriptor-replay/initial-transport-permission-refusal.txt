@@ -1,0 +1,1 @@
+Initial host runner refused before GPU/window launch: Path.exists assertion for rootless publish merged/usr/lib/x86_64-linux-gnu. Host uid lacked traversal access. Replayed existing readonly transport under podman unshare; no chmod/host/source edits. No output directory was created for initial refusal.
