@@ -1,0 +1,13 @@
+{
+  "tested_commit": "69785e8",
+  "binary_sha256": "13ba520a185c03fc41c3cf1286607b454ca38038213743e85158d1d4bd5da02f",
+  "actual_adapter": "NVIDIA RTX5090 strict request",
+  "controls": [
+    "image",
+    "buffer",
+    "batch",
+    "readback"
+  ],
+  "scope": "Fresh independently built actual GPU reset-event-held queue;50ms wait timeout preserves old buffer/new admission refusal/no pending frees, host event release then actual completion. Not hardware hang/device loss or automatic recovery.",
+  "remaining": "Accounting lifetime strengthening and WSI presentation/queue submission bounds remain open; frozen stage not approved for release."
+}
