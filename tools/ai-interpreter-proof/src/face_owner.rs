@@ -6,8 +6,10 @@ pub struct FaceTransaction{edge:Transaction,drafts:Vec<Draft>,base_faces:usize,b
 struct Command{base_faces:usize,base_edges:usize,faces:Vec<MeshFace>,face_count:usize,corners:usize,incidence:Vec<(usize,Vec<usize>)>,_charge:Lease}
 pub struct FaceOwner{owner:JournalOwner,undo:Vec<Command>,redo:Vec<Command>}
 impl FaceOwner{
- pub fn new(mesh:Mesh)->Result<Self,String>{Ok(Self{owner:JournalOwner::new(mesh)?,undo:vec![],redo:vec![]})}
+ pub fn new(mesh:Mesh)->Result<Self,String>{Self::new_with_budget(mesh,OwnerBudget::new(None))}
+ pub fn new_with_budget(mesh:Mesh,budget:OwnerBudget)->Result<Self,String>{Ok(Self{owner:JournalOwner::new_with_budget(mesh,budget)?,undo:vec![],redo:vec![]})}
  pub fn mesh(&self)->&Mesh{self.owner.mesh()}
+ pub(crate) fn into_mesh(self)->Mesh{self.owner.into_mesh()}
  pub fn budget(&self)->OwnerBudget{self.owner.budget()}
  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
  pub fn begin(&self)->Result<FaceTransaction,String>{Ok(FaceTransaction{edge:self.owner.try_begin()?,drafts:vec![],base_faces:self.mesh().faces.len(),base_edges:self.mesh().edges.len(),charge:self.budget().reserve(Kind::Staging,0)?,budget:self.budget(),failed:false,corners:0,attribute_bytes:0,attribute_charge:self.budget().reserve(Kind::Staging,0)?})}

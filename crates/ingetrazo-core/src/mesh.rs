@@ -128,6 +128,9 @@ impl Default for Mesh {
 }
 
 impl Mesh {
+    /// Entry capacity for logical payload accounting; excludes hash-table control/allocator overhead.
+    pub fn spatial_index_capacity(&self) -> usize { self.spatial_index.capacity() }
+
     pub fn new() -> Self {
         Self {
             vertices: Vec::new(),

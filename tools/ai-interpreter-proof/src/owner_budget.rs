@@ -20,3 +20,5 @@ impl Lease{
  pub fn resize(&mut self,bytes:usize)->Result<(),String>{let mut s=self.budget.0.borrow_mut();let total=s.bytes.iter().try_fold(0usize,|n,&x|n.checked_add(x)).ok_or("Owner budget extent overflow")?;if bytes>self.bytes{let extra=bytes-self.bytes;let next=total.checked_add(extra).ok_or("Owner budget extent overflow")?;if s.limit.is_some_and(|limit|next>limit){return Err("Shared owner payload admission denied".into());}s.bytes[self.kind as usize]+=extra;s.peak=s.peak.max(next);}else{s.bytes[self.kind as usize]-=self.bytes-bytes;}self.bytes=bytes;Ok(())}
 }
 impl Drop for Lease{fn drop(&mut self){self.budget.0.borrow_mut().bytes[self.kind as usize]-=self.bytes;}}
+
+impl std::fmt::Debug for Lease{fn fmt(&self,f:&mut std::fmt::Formatter)->std::fmt::Result{f.debug_struct("Lease").field("kind",&self.kind).field("bytes",&self.bytes).finish()}}

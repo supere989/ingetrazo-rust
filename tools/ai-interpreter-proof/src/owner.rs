@@ -21,6 +21,8 @@ impl JournalOwner{
  pub fn registry_identity(&self)->usize{self.registry.identity()}
  pub fn budget(&self)->OwnerBudget{self.budget.clone()}
  pub fn mesh(&self)->&Mesh{&self.mesh}
+ /// Consume a private newly constructed owner without cloning native geometry.
+ pub(crate) fn into_mesh(self)->Mesh{self.mesh}
  pub(crate) fn face_storage(&mut self)->(&mut Vec<ingetrazo_core::mesh::MeshFace>,&mut Vec<MeshEdge>){(&mut self.mesh.faces,&mut self.mesh.edges)}
  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
  pub fn retained_baseline_entries(&self)->usize{0}

@@ -239,6 +239,13 @@ pub fn refresh_interior(mesh: &mut Mesh) -> Result<(), String> {
     }
     classify_components(mesh, false)
 }
+/// Orient an exclusively owned, unpublished proper nonplanar candidate.
+/// Errors can leave this candidate partially changed; callers must discard it.
+/// Coplanar/degenerate source helper policy is the caller's responsibility.
+pub fn orient_boundary_candidate(mesh: &mut Mesh) -> Result<(), String> {
+    planar::validate_mesh(mesh)?;
+    orient_closed_components(mesh)
+}
 fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
     classify_components(mesh, true)
 }
