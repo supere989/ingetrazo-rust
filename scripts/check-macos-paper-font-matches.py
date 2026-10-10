@@ -17,6 +17,11 @@ def compare(original,native):
    if got.get("warm_same_owner") is not True:errors.append("missing stable warm ownership")
   observed=source["observations"];runs=[run for call in observed for run in call["supplementary_qtextlayout_runs"]]
   if not observed or not runs:errors.append("missing source glyph runs")
+  points=[call.get("operative_call",{}).get("effective_point_size") for call in observed]
+  if not points or any(type(point) not in (int,float) or point<=0 for point in points):
+   errors.append("missing source shaping point context")
+  elif type(got.get("shaping_point_size")) not in (int,float) or any(got["shaping_point_size"]!=point for point in points):
+   errors.append("missing/wrong native shaping point context")
   for run in runs:
    matches=[face for face in run["physical_faces"]if face["path"]==got.get("path") and face["index"]==got.get("index") and face["postscript"]==got.get("postscript")]
    if len(matches)!=1:errors.append("physical face mismatch");continue
