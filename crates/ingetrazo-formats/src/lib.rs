@@ -214,3 +214,5 @@ mod tests {
 }
 
 pub mod sheet_pdf;
+
+pub mod sheet_pdf_shapes;
