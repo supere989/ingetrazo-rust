@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/reference-skp-real-render.py", line 45, in <module>
+    (out/'qt-isolation-results.json').write_text(json.dumps({'passed':all(r['exact']for r in rows),'cases':rows,'scope':'Qt renderer import isolation only; native Vulkan stage required'},indent=2)+'\n');assert all(r['exact']for r in rows),'strict pixel failure retained'
+                                                                                                                                                                                                                  ~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: strict pixel failure retained

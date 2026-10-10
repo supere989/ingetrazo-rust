@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/tmp/ingetrazo-parity-python/bin/python",
+    "/tmp/ingetrazo-skp-native-import/scripts/reference-skp-real-render.py",
+    "/tmp/ingetrazo-openskp-reference",
+    "/tmp/ingetrazo-skp-native-target/debug/examples/skp_import_acceptance_fixture",
+    "/tmp/ingetrazo-skp-real-render-qt"
+  ],
+  "returncode": 1,
+  "elapsed": 44.97583352198126,
+  "backend": "Qt/OpenGL llvmpipe on owned Xvfb"
+}

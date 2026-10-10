@@ -1,0 +1,19 @@
+{
+  "execution.log": "c894b7b7f35823a377c6bba6cc7e28823305ef66ca9314595b63fbb50cdd4992",
+  "gondola_v20-inventory.json.gz": "336ea18bc17980185c09b732e0b0ce7439c4f03a7cdd6f71477af6e7f4e6f5af",
+  "gondola_v20-iso-source.png": "45fcb70f9ef06e363a82940a0036eec9f3e51488fe33265300a82faa294052d4",
+  "gondola_v20-iso-native-igz.png": "f292a1c089a747c758e3e3b23770259703bb5813fb1824046e164cb060065475",
+  "gondola_v20-asymmetric-source.png": "dc2be343f3166a5c6794f6293f1d4fffdf951bbeedc6e79fb713dec50b280b67",
+  "gondola_v20-asymmetric-native-igz.png": "dc2be343f3166a5c6794f6293f1d4fffdf951bbeedc6e79fb713dec50b280b67",
+  "capilla_quiroz_v17-inventory.json.gz": "22bf8f943f809cfee17caca2da1fc536c101c172f8eccf2d8667ec8aef815cfe",
+  "capilla_quiroz_v17-iso-source.png": "dc70b0e54c570ee3a2f4b3d969e5bb73b49297c2d734564e4fb4e7477a08c19f",
+  "capilla_quiroz_v17-iso-native-igz.png": "3014bdd476ff24b1c9ab03e5405da01bc5e737c0e45b64e88c2c53c918c7dd4a",
+  "capilla_quiroz_v17-asymmetric-source.png": "53f2a3d58f1fbd4f6714dbdff0c0a0d101f65d4dfed0e91f0d4c3ff884916c49",
+  "capilla_quiroz_v17-asymmetric-native-igz.png": "6ec870441b7df964798d7ec6aaf4bb820440e3f36e8ec3c22fd5b749a13a2883",
+  "protocol.json": "9b4fcb451ff14a8f577bf57007eabae3ae28aadacd04ac06c51e8552af282fb6",
+  "qt-isolation-results.json": "2097e827c38d34758d900b32806d275375ff367d49348fcd542dd24c6f8cf6dc",
+  "transport.json": "d191c4e102c9d21e4f4785e75d5b05cd695b79bc1ff2f50ece569dc208f1295e",
+  "cleanup.json": "ccdf4bd6e42325dede976fb92ac246f3e33e2e6e1b881015dd1a9af56578c16c",
+  "strict-pixel-details.json": "869fab115a56c7a57759d3218e2aeb26cbc0c8743b4a4dfc18dfd251c1a26e9b",
+  "README.md": "b3fb006931fc8675326da424043e6c9fc3f4f13554e0c2e50074493ebbf5115c"
+}

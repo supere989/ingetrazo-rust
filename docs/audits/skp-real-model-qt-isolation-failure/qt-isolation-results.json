@@ -1,0 +1,142 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "model": "gondola_v20",
+      "camera": {
+        "target": [
+          48.07872009277344,
+          5.732326507568359,
+          1.5701091289520264
+        ],
+        "distance": 10.354882521905513,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "igz_sha256": "131490d887c5eae5994e63ad21d76619319ddba77ab26b8bce21fb6c270d5876",
+      "different_pixels": 99,
+      "source_ink_pixels": 51560,
+      "exact": false,
+      "source_image_sha256": "45fcb70f9ef06e363a82940a0036eec9f3e51488fe33265300a82faa294052d4",
+      "native_igz_image_sha256": "f292a1c089a747c758e3e3b23770259703bb5813fb1824046e164cb060065475"
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "model": "gondola_v20",
+      "camera": {
+        "target": [
+          48.07872009277344,
+          5.732326507568359,
+          1.5701091289520264
+        ],
+        "distance": 10.354882521905513,
+        "yaw": 0.4886921905584123,
+        "pitch": 0.4188790204786391,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "igz_sha256": "131490d887c5eae5994e63ad21d76619319ddba77ab26b8bce21fb6c270d5876",
+      "different_pixels": 0,
+      "source_ink_pixels": 56762,
+      "exact": true,
+      "source_image_sha256": "dc2be343f3166a5c6794f6293f1d4fffdf951bbeedc6e79fb713dec50b280b67",
+      "native_igz_image_sha256": "dc2be343f3166a5c6794f6293f1d4fffdf951bbeedc6e79fb713dec50b280b67"
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "model": "capilla_quiroz_v17",
+      "camera": {
+        "target": [
+          5.813098430633545,
+          2.8220772743225098,
+          1.5564720630645752
+        ],
+        "distance": 43.65325497694099,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e",
+      "igz_sha256": "58acde9fcb2c3cc4bffd053d50a1938dac087c0c532a566d63f88d045318afcb",
+      "different_pixels": 409,
+      "source_ink_pixels": 11444,
+      "exact": false,
+      "source_image_sha256": "dc70b0e54c570ee3a2f4b3d969e5bb73b49297c2d734564e4fb4e7477a08c19f",
+      "native_igz_image_sha256": "3014bdd476ff24b1c9ab03e5405da01bc5e737c0e45b64e88c2c53c918c7dd4a"
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "model": "capilla_quiroz_v17",
+      "camera": {
+        "target": [
+          5.813098430633545,
+          2.8220772743225098,
+          1.5564720630645752
+        ],
+        "distance": 43.65325497694099,
+        "yaw": 0.4886921905584123,
+        "pitch": 0.4188790204786391,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e",
+      "igz_sha256": "58acde9fcb2c3cc4bffd053d50a1938dac087c0c532a566d63f88d045318afcb",
+      "different_pixels": 333,
+      "source_ink_pixels": 10179,
+      "exact": false,
+      "source_image_sha256": "53f2a3d58f1fbd4f6714dbdff0c0a0d101f65d4dfed0e91f0d4c3ff884916c49",
+      "native_igz_image_sha256": "6ec870441b7df964798d7ec6aaf4bb820440e3f36e8ec3c22fd5b749a13a2883"
+    }
+  ],
+  "scope": "Qt renderer import isolation only; native Vulkan stage required"
+}
