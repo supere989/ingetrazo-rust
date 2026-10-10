@@ -68,8 +68,10 @@ fn shape_line_with_level(
     // QPainter drawText without TextExpandTabs replaces tabs by ordinary spaces.
     // Tabs are one UTF-8 byte, so logical byte offsets remain stable.
     let normalized;
-    let text = if text.contains('\t') {
-        normalized = text.replace('\t', " ");
+    let text = if text.contains('\t') || text.contains('\u{2029}') {
+        // QPainter's paragraph separator consumes no glyph/advance here and does not end drawText's line.
+        // U+200B has the same UTF-8 byte width, retaining source logical cluster offsets.
+        normalized = text.replace('\t', " ").replace('\u{2029}', "\u{200b}");
         normalized.as_str()
     } else {
         text
@@ -248,44 +250,72 @@ pub fn layout_paragraph(
         let mut start = 0;
         let mut end = 0;
         let mut ranges = vec![];
-        let mut words = paragraph.char_indices().peekable();
-        while let Some((word_start, ch)) = words.next() {
-            if ch == ' ' || ch == '\t' {
+        // Unicode legal opportunities include punctuation and CJK, not merely ASCII spaces.
+        // The pinned table is Unicode15; newer Qt tailoring/dictionary boundaries need separate proof.
+        for (at, opportunity) in unicode_linebreak::linebreaks(paragraph) {
+            if paragraph[..at].ends_with('\u{2029}') {
                 continue;
             }
-            let mut word_end = word_start + ch.len_utf8();
-            while let Some(&(offset, ch)) = words.peek() {
-                if ch == ' ' || ch == '\t' {
-                    break;
+            let candidate =
+                paragraph[start..at].trim_end_matches([' ', '\t', '\r', '\u{2028}', '\u{2029}']);
+            let candidate_end = start + candidate.len();
+            if !candidate.is_empty() {
+                measured_bytes = measured_bytes
+                    .checked_add(candidate.len())
+                    .ok_or("Paper paragraph work overflow")?;
+                if measured_bytes > 4 * 1024 * 1024 {
+                    return Err("Paper paragraph shaping work budget exceeded".into());
                 }
-                words.next();
-                word_end = offset + ch.len_utf8();
+                let advance =
+                    shape_line_with_level(resolver, request, candidate, level)?.advance_26_6;
+                if end > start && advance > width {
+                    if ranges.len() >= 4096 {
+                        return Err("Paper paragraph line budget exceeded".into());
+                    }
+                    ranges
+                        .try_reserve(1)
+                        .map_err(|_| "Paper paragraph range allocation failed")?;
+                    ranges.push(start..end);
+                    start = end;
+                    while start < at && matches!(paragraph.as_bytes()[start], b' ' | b'\t') {
+                        start += 1;
+                    }
+                }
+                end = at;
             }
-            let candidate = &paragraph[start..word_end];
-            measured_bytes = measured_bytes
-                .checked_add(candidate.len())
-                .ok_or("Paper paragraph work overflow")?;
-            if measured_bytes > 4 * 1024 * 1024 {
-                return Err("Paper paragraph shaping work budget exceeded".into());
+            if opportunity == unicode_linebreak::BreakOpportunity::Mandatory && at < paragraph.len()
+            {
+                if ranges.len() >= 4096 {
+                    return Err("Paper paragraph line budget exceeded".into());
+                }
+                ranges
+                    .try_reserve(1)
+                    .map_err(|_| "Paper paragraph range allocation failed")?;
+                ranges.push(start..candidate_end);
+                start = at;
+                end = at;
             }
-            let advance = shape_line_with_level(resolver, request, candidate, level)?.advance_26_6;
-            if end > start && advance > width {
-                ranges.push(start..end);
-                start = word_start;
-            }
-            end = word_end;
         }
+        ranges
+            .try_reserve(1)
+            .map_err(|_| "Paper paragraph range allocation failed")?;
         ranges.push(start..paragraph.len());
         for range in ranges {
             if result.lines.len() >= 4096 {
                 return Err("Paper paragraph line budget exceeded".into());
             }
-            let line = shape_line_with_level(
-                resolver,
-                request,
-                paragraph[range].trim_end_matches([' ', '\t']),
-                level,
-            )?;
+            let broken_soft_hyphen =
+                range.end < paragraph.len() && paragraph[range.clone()].ends_with('\u{00ad}');
+            let authored = paragraph[range].trim_end_matches([' ', '\t']);
+            let display;
+            let text = if broken_soft_hyphen {
+                // The discretionary hyphen is painted only when this opportunity actually ends a line.
+                display = format!("{}-", authored.strip_suffix('\u{00ad}').unwrap());
+                display.as_str()
+            } else {
+                authored
+            };
+            let line = shape_line_with_level(resolver, request, text, level)?;
             for run in &line.runs {
                 admit_font(&mut owners, &run.font)?;
             }

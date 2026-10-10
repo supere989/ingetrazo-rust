@@ -24,3 +24,4 @@ ttf-parser = "=0.25.1"
 freetype-sys = { version = "=0.23.0", features = ["bundled"] }
 libloading = "=0.8.9"
 unicode-bidi = "=0.3.18"
+unicode-linebreak = "=0.1.5"

@@ -1,0 +1,12 @@
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded unicode-linebreak v0.1.5
+unicode-linebreak #unicode #text #layout
+Implementation of the Unicode Line Breaking Algorithm
+version: 0.1.5
+license: Apache-2.0
+rust-version: 1.56
+documentation: https://docs.rs/unicode-linebreak/0.1.5
+homepage: https://github.com/axelf4/unicode-linebreak
+repository: https://github.com/axelf4/unicode-linebreak
+crates.io: https://crates.io/crates/unicode-linebreak/0.1.5
