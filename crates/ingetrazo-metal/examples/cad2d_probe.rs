@@ -86,7 +86,7 @@ fn main() -> Result<(), String> {
                 color: EncodedRgba::from_bytes([1, 7, 19, 128], 1.)?,
             },
         ];
-        let actual = renderer.render(&geometry, &batches, Pose::default(), [255; 4])?;
+        let actual = renderer.render_readback(&geometry, &batches, Pose::default(), [255; 4])?;
         if let Some(ref p) = output {
             std::fs::write(p.join(format!("{name}.rgba")), &actual).map_err(|e| e.to_string())?;
         }
@@ -114,14 +114,20 @@ fn main() -> Result<(), String> {
         scale: [0.5; 2],
         translation: [16.; 2],
     };
-    let image = renderer.render(&geometry, &batch, pose, [255; 4])?;
+    let image = renderer.render_readback(&geometry, &batch, pose, [255; 4])?;
     assert_eq!(
         &image[(24 * 64 + 24) * 4..(24 * 64 + 24) * 4 + 4],
         &[255, 0, 0, 255]
     );
+    let reads = renderer.stats().readback_submissions;
     for _ in 0..10 {
-        assert_eq!(renderer.render(&geometry, &batch, pose, [255; 4])?, image);
+        renderer.render(&geometry, &batch, pose, [255; 4])?;
     }
+    assert_eq!(renderer.stats().readback_submissions, reads);
+    assert_eq!(
+        renderer.render_readback(&geometry, &batch, pose, [255; 4])?,
+        image
+    );
     assert_eq!(renderer.stats().geometry_uploads, 1);
     assert_eq!(renderer.stats().palette_preparations, 7);
     // Actual vertex allocation followed by index admission refusal; old cached
@@ -145,11 +151,14 @@ fn main() -> Result<(), String> {
     assert!(renderer.prepare(&replacement).is_err());
     assert_eq!(budget.lock().unwrap().total_committed(), committed);
     budget.lock().unwrap().total_limit = None;
-    assert_eq!(renderer.render(&geometry, &batch, pose, [255; 4])?, image);
+    assert_eq!(
+        renderer.render_readback(&geometry, &batch, pose, [255; 4])?,
+        image
+    );
     assert_eq!(renderer.stats().geometry_uploads, 1);
     assert!(
         renderer
-            .render(
+            .render_readback(
                 &geometry,
                 &[Batch {
                     first: u32::MAX,

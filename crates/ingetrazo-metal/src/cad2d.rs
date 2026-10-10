@@ -20,6 +20,7 @@ pub struct MetalCadStats {
     pub geometry_bytes: u64,
     pub target_bytes: u64,
     pub palette_preparations: u64,
+    pub readback_submissions: u64,
 }
 #[repr(C)]
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
@@ -53,7 +54,7 @@ struct Inner {
     metal: NativeMetal,
     pipeline: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     target: Texture,
-    readback: Buffer,
+    readback: Option<Buffer>,
     width: usize,
     height: usize,
     row: usize,
@@ -124,7 +125,6 @@ impl MetalCad2d {
             .map_err(|e| format!("Metal CAD pipeline: {e:?}"))?;
         let row = (width.checked_mul(4).ok_or("Target byte overflow")? + 255) & !255;
         let target = Self::target(&metal, width, height)?;
-        let readback = metal.buffer(row.checked_mul(height).ok_or("Readback overflow")?, true)?;
         let stats = MetalCadStats {
             target_bytes: MTLResource::allocatedSize(&**target.raw) as u64,
             ..Default::default()
@@ -134,7 +134,7 @@ impl MetalCad2d {
                 metal,
                 pipeline,
                 target,
-                readback,
+                readback: None,
                 width,
                 height,
                 row,
@@ -251,14 +251,32 @@ impl MetalCad2d {
     }
     /// One render encoder with coherent raster-order framebuffer fetch, followed
     /// only by a diagnostic BLIT readback. Uniform changes do not rebuild geometry.
+    /// Production offscreen draw: no image copy/readback or CPU output.
     pub fn render(
         &mut self,
         geometry: &Arc<Geometry>,
         batches: &[Batch],
         pose: Pose,
         clear: [u8; 4],
+    ) -> Result<(), String> {
+        objc2::rc::autoreleasepool(|_| {
+            self.render_inner(geometry, batches, pose, clear, false)
+                .map(|_| ())
+        })
+    }
+    /// Explicit engineering readback; storage is admitted/mapped only when
+    /// requested and reused. Not used by the production draw entry point.
+    pub fn render_readback(
+        &mut self,
+        geometry: &Arc<Geometry>,
+        batches: &[Batch],
+        pose: Pose,
+        clear: [u8; 4],
     ) -> Result<Vec<u8>, String> {
-        objc2::rc::autoreleasepool(|_| self.render_inner(geometry, batches, pose, clear))
+        objc2::rc::autoreleasepool(|_| {
+            self.render_inner(geometry, batches, pose, clear, true)
+                .map(|v| v.unwrap())
+        })
     }
     fn render_inner(
         &mut self,
@@ -266,7 +284,8 @@ impl MetalCad2d {
         batches: &[Batch],
         pose: Pose,
         clear: [u8; 4],
-    ) -> Result<Vec<u8>, String> {
+        readback: bool,
+    ) -> Result<Option<Vec<u8>>, String> {
         if batches.len() > 4096 {
             return Err("Metal CAD batch admission exceeds4096".into());
         }
@@ -302,6 +321,13 @@ impl MetalCad2d {
         } else {
             None
         };
+        if readback && self.inner.readback.is_none() {
+            self.inner.readback = Some(
+                self.inner
+                    .metal
+                    .buffer(self.inner.row * self.inner.height, true)?,
+            );
+        }
         self.prepare(geometry)?;
         if let Some(colors) = colors {
             self.inner.palette = batches.to_vec();
@@ -362,13 +388,16 @@ impl MetalCad2d {
             }
         }
         encoder.endEncoding();
-        let blit = command
-            .blitCommandEncoder()
-            .ok_or("Metal CAD readback encoder failed")?;
-        unsafe {
-            blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(&self.inner.target.raw,0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width:self.inner.width,height:self.inner.height,depth:1},&self.inner.readback.raw,0,self.inner.row,self.inner.row*self.inner.height);
+        if readback {
+            let blit = command
+                .blitCommandEncoder()
+                .ok_or("Metal CAD readback encoder failed")?;
+            unsafe {
+                blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(&self.inner.target.raw,0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width:self.inner.width,height:self.inner.height,depth:1},&self.inner.readback.as_ref().unwrap().raw,0,self.inner.row,self.inner.row*self.inner.height);
+            }
+            blit.endEncoding();
+            self.inner.stats.readback_submissions += 1;
         }
-        blit.endEncoding();
         self.inner.pending = Some(command);
         self.inner.pending.as_ref().unwrap().commit();
         self.inner.stats.submissions += 1;
@@ -389,9 +418,19 @@ impl MetalCad2d {
             std::thread::sleep(Duration::from_millis(1));
         }
         self.inner.pending.take();
+        if !readback {
+            return Ok(None);
+        }
         let raw = unsafe {
             std::slice::from_raw_parts(
-                self.inner.readback.raw.contents().as_ptr().cast::<u8>(),
+                self.inner
+                    .readback
+                    .as_ref()
+                    .unwrap()
+                    .raw
+                    .contents()
+                    .as_ptr()
+                    .cast::<u8>(),
                 self.inner.row * self.inner.height,
             )
         };
@@ -399,6 +438,6 @@ impl MetalCad2d {
         for row in raw.chunks_exact(self.inner.row) {
             output.extend_from_slice(&row[..self.inner.width * 4]);
         }
-        Ok(output)
+        Ok(Some(output))
     }
 }
