@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "zones": [
+    "UTC",
+    "America/New_York",
+    "Europe/Berlin",
+    "Pacific/Auckland"
+  ],
+  "source_timestamp_controls": 132,
+  "source_sha256": "f11b130ece8fb7572bfb92d77baecd7b5596176a90219c40aa419e88bd858234",
+  "scope": "Original composition.field_values date.today with controlled timestamps and native datetime local-date conversion; native Unix localtime_r. Windows/macOS live execution remains separate."
+}
