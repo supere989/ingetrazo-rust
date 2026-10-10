@@ -335,6 +335,14 @@ pub(crate) fn preserve_edges(mesh: &mut Mesh, original: &Mesh) {
 }
 /// Rebuild all coplanar regions on one selected plane, retaining other planes.
 pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
+    rebuild_faces_policy(mesh, selected, true)
+}
+/// Authoring closes newly bounded cells, including cells inside old holes.
+/// Rebuild/heal and simplification retain their declared-void policy.
+pub(crate) fn rebuild_drawing_faces(mesh: &Mesh) -> Result<Mesh, String> {
+    rebuild_faces_policy(mesh, &[], false)
+}
+fn rebuild_faces_policy(mesh: &Mesh, selected: &[usize], preserve_voids: bool) -> Result<Mesh, String> {
     validate_mesh(mesh)?;
     let frame = if mesh.faces.is_empty() {
         if mesh.vertices.len() < 3 || mesh.edges.len() < 3 {
@@ -424,7 +432,7 @@ pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
         let source_index = source_rings.iter().position(|r| inside_rings(p, r));
         // Preserve declared voids; otherwise a bounded loose-wire region is
         // precisely the missing face this command is intended to reconstruct.
-        if source_index.is_none()
+        if preserve_voids && source_index.is_none()
             && source_rings
                 .iter()
                 .any(|rings| rings.iter().skip(1).any(|hole| inside_ring(p, hole)))

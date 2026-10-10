@@ -49,3 +49,5 @@ pub mod offset;
 pub mod simplify;
 
 pub mod drafting;
+
+mod drafting_earcut;
