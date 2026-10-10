@@ -1,0 +1,11 @@
+{
+  "source": "7a849ec026a27e92439f84d86fdd527b20401c22",
+  "independent_observation": "Eight retained cases match names, topology, stdout, failure and change flags. This is not full document equality.",
+  "integration": "Standalone prototype held pending source-compatible welding and guaranteed publication IDs.",
+  "required": [
+    "Preflight ID mapping so mesh.add_vertex cannot change planned indices during publication. Duplicate/imported base data must refuse or preserve exact topology without partial writes.",
+    "Source half-grid/neighbor-cell welding controls; do not generalize integer fixtures.",
+    "Allocation/output/deadline bounds, complete mutation journal and actual undo/redo ownership."
+  ],
+  "scope": "No production interpreter adoption; full traceback bytes remain different."
+}
