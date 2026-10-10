@@ -518,7 +518,8 @@ impl SnapEngine {
                     };
                     (p, d, Some(axis.to_ascii_lowercase()))
                 })
-            });
+            })
+            .or_else(|| self.shift_lock.map(|(a,b)| (a,(b-a).normalize_or_zero(),None)));
         let on_line = |p: DVec3| line.is_none_or(|(a, d, _)| (p - a).cross(d).length() < 1e-5);
         if let Some(p) =
             close.filter(|p| on_line(*p) && pixels(*p) <= 9. && scene.section_point_visible(*p))
@@ -1024,5 +1025,37 @@ mod operation_reset_tests {
         assert!(engine.reference_edge.is_none() && engine.encouraged_points.is_empty());
         assert!(engine.screen_dwell.is_none() && engine.acquired_point.is_none());
         assert!(engine.hovered_center.is_none() && engine.center_reference.is_none());
+    }
+}
+
+#[cfg(test)]
+mod shift_lock_tests {
+    use super::*;
+    #[test]
+    fn press_captures_once_release_preserves_arrow_and_no_late_capture() {
+        let mut engine=SnapEngine::default();
+        let start=DVec3::new(2.,3.,0.);
+        let mut inferred=result(start-DVec3::X*2.,SnapKind::AxisInference,COLOR_AXIS_X,"X");
+        inferred.axis=Some('x');
+        engine.note_inference_result(&inferred);
+        engine.update_shift_state(true,Some(start));
+        assert_eq!(engine.shift_lock,Some((start,start-DVec3::X)));
+        engine.note_inference_result(&result(start+DVec3::Y, SnapKind::Reference,COLOR_REFERENCE,"Parallel"));
+        engine.update_shift_state(true,Some(start));
+        assert_eq!(engine.shift_lock,Some((start,start-DVec3::X)));
+        engine.locked_axis=Some('z');
+        engine.update_shift_state(false,Some(start));
+        assert!(engine.shift_lock.is_none());
+        assert_eq!(engine.locked_axis,Some('z'));
+        engine.note_inference_result(&result(start,SnapKind::Endpoint,COLOR_ENDPOINT,"Endpoint"));
+        engine.update_shift_state(true,Some(start));
+        assert!(engine.shift_lock.is_none());
+        engine.note_inference_result(&inferred);
+        engine.update_shift_state(true,Some(start));
+        assert!(engine.shift_lock.is_none(),"moving onto an inference while already holding Shift does not capture it");
+        engine.reset_operation_state();
+        engine.note_inference_result(&inferred);
+        engine.update_shift_state(true,None);
+        assert!(engine.shift_lock.is_none(),"source requires an active start point");
     }
 }

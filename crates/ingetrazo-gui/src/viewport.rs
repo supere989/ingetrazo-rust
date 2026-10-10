@@ -31,6 +31,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let shift_down = ui.input(|i| i.modifiers.shift);
     let alt_down = ui.input(|i| i.modifiers.alt);
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
+    // Modifier release must retire the temporary lock even outside the canvas.
+    app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor());
     app.active_tool.note_control_state(ui.input(|i| i.modifiers.ctrl));
 
     // Zoom on wheel
@@ -142,21 +144,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 cursor_world_pos = snap_res.point;
                 active_snap_glyph = SnapGlyph::from_snap_result(&snap_res, start_pt);
 
-                // If Shift is held down and we have an active axis or guide, lock it
-                if shift_down
-                    && app.snap_engine.locked_axis.is_none()
-                    && app.snap_engine.locked_line.is_none()
-                {
-                    if let Some(ax) = snap_res.axis {
-                        app.snap_engine.locked_axis = Some(ax);
-                    } else if let Some((g0, g1, _)) = snap_res.guides.first() {
-                        app.snap_engine.locked_line = Some((*g0, *g1));
-                    }
-                }
-            } else if !shift_down && app.snap_engine.locked_line.is_some() {
-                // Release temporary shift line lock
-                app.snap_engine.locked_line = None;
             }
+            app.snap_engine.note_inference_result(&snap_res);
 
             app.active_tool.note_cursor_plane(plane_point,plane_normal);
             let tool_ctx = ToolContext {
@@ -213,9 +202,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     // Handle Esc to cancel active tool and clear locks
     if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
-        app.snap_engine.locked_axis = None;
-        app.snap_engine.locked_line = None;
-        app.snap_engine.clear_encouraged();
+        app.snap_engine.reset_operation_state();
         if app.paste_preview.is_some() {
             app.cancel_paste_preview();
         } else {
