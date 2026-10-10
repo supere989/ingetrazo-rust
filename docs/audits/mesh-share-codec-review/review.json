@@ -1,5 +1,5 @@
 {
-  "status": "held_pending_full_workspace_and_finish",
+  "status": "held_pending_component_finish",
   "formats_tests": "pass",
   "native_preservation": {
     "passed": 16,
@@ -17,9 +17,13 @@
     "second-tests.log"
   ],
   "remaining": [
-    "full workspace regression",
-    "component Finish integration validation"
+    "component Finish integration and transformed nonempty container ownMesh identity validation"
   ],
   "canonical_promotion": false,
-  "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, and Make Unique detachment"
+  "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, and Make Unique detachment",
+  "workspace_counts": [
+    428,
+    0,
+    2
+  ]
 }
