@@ -1,0 +1,11 @@
+{
+  "script_sha256": "3af17b90beee9e51980227287fd089bd9ab510de4e8cd3a54ec5e6f3cc825c3b",
+  "source_capture": "Pinned viewport._capture_depth executed unchanged via AST",
+  "result": "RTX5090 depth24/stencil8 resolve selects sample1 for2x and sample0 for4x, across rotated unique depth assignments",
+  "remaining": [
+    "Vulkan physical sample position and framebuffer orientation mapping",
+    "Coverage and representative geometry comparisons",
+    "Other GPUs drivers and Metal"
+  ],
+  "production_policy_activated": false
+}

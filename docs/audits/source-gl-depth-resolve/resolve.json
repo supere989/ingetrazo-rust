@@ -1,0 +1,187 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+  "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+  "gl_version": "3.3.0 NVIDIA 615.71.09",
+  "cases": [
+    {
+      "requested_samples": 2,
+      "actual_samples": 2,
+      "shift": 0,
+      "sample_positions_gl_bottom_left": [
+        [
+          0.75,
+          0.75
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "depth_internal_format": "0x88f0",
+      "written_depths": [
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "resolved_depth": 0.6666666865348816,
+      "selected_sample": 1,
+      "all_64_pixels_same": true
+    },
+    {
+      "requested_samples": 2,
+      "actual_samples": 2,
+      "shift": 1,
+      "sample_positions_gl_bottom_left": [
+        [
+          0.75,
+          0.75
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "depth_internal_format": "0x88f0",
+      "written_depths": [
+        0.6666666666666666,
+        0.3333333333333333
+      ],
+      "resolved_depth": 0.3333333432674408,
+      "selected_sample": 1,
+      "all_64_pixels_same": true
+    },
+    {
+      "requested_samples": 4,
+      "actual_samples": 4,
+      "shift": 0,
+      "sample_positions_gl_bottom_left": [
+        [
+          0.375,
+          0.125
+        ],
+        [
+          0.875,
+          0.375
+        ],
+        [
+          0.125,
+          0.625
+        ],
+        [
+          0.625,
+          0.875
+        ]
+      ],
+      "depth_internal_format": "0x88f0",
+      "written_depths": [
+        0.2,
+        0.4,
+        0.6,
+        0.8
+      ],
+      "resolved_depth": 0.20000000298023224,
+      "selected_sample": 0,
+      "all_64_pixels_same": true
+    },
+    {
+      "requested_samples": 4,
+      "actual_samples": 4,
+      "shift": 1,
+      "sample_positions_gl_bottom_left": [
+        [
+          0.375,
+          0.125
+        ],
+        [
+          0.875,
+          0.375
+        ],
+        [
+          0.125,
+          0.625
+        ],
+        [
+          0.625,
+          0.875
+        ]
+      ],
+      "depth_internal_format": "0x88f0",
+      "written_depths": [
+        0.4,
+        0.6,
+        0.8,
+        0.2
+      ],
+      "resolved_depth": 0.4000000059604645,
+      "selected_sample": 0,
+      "all_64_pixels_same": true
+    },
+    {
+      "requested_samples": 4,
+      "actual_samples": 4,
+      "shift": 2,
+      "sample_positions_gl_bottom_left": [
+        [
+          0.375,
+          0.125
+        ],
+        [
+          0.875,
+          0.375
+        ],
+        [
+          0.125,
+          0.625
+        ],
+        [
+          0.625,
+          0.875
+        ]
+      ],
+      "depth_internal_format": "0x88f0",
+      "written_depths": [
+        0.6,
+        0.8,
+        0.2,
+        0.4
+      ],
+      "resolved_depth": 0.6000000238418579,
+      "selected_sample": 0,
+      "all_64_pixels_same": true
+    },
+    {
+      "requested_samples": 4,
+      "actual_samples": 4,
+      "shift": 3,
+      "sample_positions_gl_bottom_left": [
+        [
+          0.375,
+          0.125
+        ],
+        [
+          0.875,
+          0.375
+        ],
+        [
+          0.125,
+          0.625
+        ],
+        [
+          0.625,
+          0.875
+        ]
+      ],
+      "depth_internal_format": "0x88f0",
+      "written_depths": [
+        0.8,
+        0.2,
+        0.4,
+        0.6
+      ],
+      "resolved_depth": 0.800000011920929,
+      "selected_sample": 0,
+      "all_64_pixels_same": true
+    }
+  ],
+  "scope": "Actual original Qt combined-depth-stencil FBO capture after controlled per-sample writes; only this device/format/sample count, not general driver policy"
+}
