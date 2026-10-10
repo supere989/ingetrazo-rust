@@ -5,5 +5,11 @@
   "consequence": "CPU producer tests and Metal planning do not establish compatibility with production Vulkan. Shared activation must await correction.",
   "requested_fix": "Coordinate producer/consumer layout, preserving draw order and minimizing barriers; validate actual multi-run glyph on Vulkan.",
   "additional_review": "runs*128 is not demonstrated conservative peak allocation with Vec excess capacity and handle/backend-owned palettes; accounting must identify its true scope.",
-  "status": "OPEN; assigned to geometry and validation owners; no full parity acceptance"
+  "status": "Source incompatibility corrected in review branch; actual GPU and producer memory acceptance OPEN",
+  "correction": {
+    "candidate": "f369095b6f9a42ae177290cb646191497b3cf63f",
+    "integrated": "9d6e7411",
+    "source_review": "Draw emits batch and glyph-range intersections with monotonic cursor; barrier only when entering a source layer. Admission retains complete batch partition checks.",
+    "validation": "Worker reports14 focused tests passed; root inspected source. Actual multi-run GPU pixel and barrier-counter evidence remains pending."
+  }
 }
