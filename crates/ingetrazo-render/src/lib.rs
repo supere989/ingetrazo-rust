@@ -122,3 +122,5 @@ mod tests {
         assert_eq!(glyph.point, DVec3::new(1.0, 2.0, 3.0));
     }
 }
+
+mod section_clip;
