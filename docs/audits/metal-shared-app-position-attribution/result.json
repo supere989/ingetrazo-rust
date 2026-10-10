@@ -1,0 +1,629 @@
+{
+  "gpu_claim": false,
+  "invalid_meshes": [
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 0,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 1,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 2,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 3,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 4,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 5,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 6,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        982.0,
+        769.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 7,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        19782046.0,
+        9891179.0
+      ],
+      "primitive": 83,
+      "size": [
+        1280.0,
+        800.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 0,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 1,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 2,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 3,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 4,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 5,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 6,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        726.0,
+        625.6375122070312
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 7,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        15767843.0,
+        7884068.0
+      ],
+      "primitive": 79,
+      "size": [
+        1024.0,
+        656.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 0,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 1,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 2,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 3,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 4,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 5,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 6,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "clip": [
+        50.0,
+        60.0,
+        342.0,
+        369.63751220703125
+      ],
+      "finite_pos": true,
+      "finite_uv": true,
+      "frame": 7,
+      "index": 12,
+      "indices_valid": true,
+      "pos": [
+        8631512.0,
+        4315870.5
+      ],
+      "primitive": 55,
+      "size": [
+        640.0,
+        400.0
+      ],
+      "uv": [
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

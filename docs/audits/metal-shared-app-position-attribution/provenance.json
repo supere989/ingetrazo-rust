@@ -1,0 +1,9 @@
+{
+  "source_revision": "26f3b3de",
+  "input_sha256": "6f56312d4d0fb9ab7890e7cf444ede073d984a5c666f7d0c909c23c8c3bce7c0",
+  "original_native_run": 38050590186,
+  "input_artifact": 11669187628,
+  "cpu_only": true,
+  "gpu_claim": false,
+  "recipe": "open actual native input IGZ; same three marker vertices/face; eight actual update_ui/tessellate frames per logical extent; unchanged admission inspection"
+}
