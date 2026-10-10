@@ -3,6 +3,15 @@ use ingetrazo_render::process_hlr::{worker_main, HlrProcessPool};
 fn main() {
     let args: Vec<_> = std::env::args_os().collect();
     if args.get(1).is_some_and(|s| s == "--hlr-worker") {
+        if let Ok(mode) = std::env::var("INGETRAZO_TEST_HLR_STALL") {
+            if mode == "task" {
+                use std::io::Write;
+                println!("READY");
+                std::io::stdout().flush().unwrap();
+            }
+            std::thread::sleep(std::time::Duration::from_secs(60));
+            return;
+        }
         worker_main(std::path::Path::new(&args[2])).unwrap();
         return;
     }
@@ -58,5 +67,31 @@ fn main() {
         .is_err());
     let mut bounded = HlrProcessPool::new(&executable, 1, 3, 24).unwrap();
     assert!(bounded.intervals(&edges, &triangles, 1e-9).is_err());
-    println!("persistent two-process HLR, repeated revisions, ordering, nonfinite and capacity controls PASS");
+    for mode in ["startup", "task"] {
+        std::env::set_var("INGETRAZO_TEST_HLR_STALL", mode);
+        let started = std::time::Instant::now();
+        let result = HlrProcessPool::new_with_timeout(
+            &executable,
+            1,
+            3,
+            4096,
+            std::time::Duration::from_millis(50),
+        );
+        if mode == "startup" {
+            assert_eq!(result.err().unwrap().kind(), std::io::ErrorKind::TimedOut);
+        } else {
+            let mut stalled = result.unwrap();
+            assert_eq!(
+                stalled
+                    .intervals(&edges, &triangles, 1e-9)
+                    .unwrap_err()
+                    .kind(),
+                std::io::ErrorKind::TimedOut
+            );
+            assert!(stalled.intervals(&edges, &triangles, 1e-9).is_err());
+        }
+        assert!(started.elapsed() < std::time::Duration::from_secs(2));
+        std::env::remove_var("INGETRAZO_TEST_HLR_STALL");
+    }
+    println!("persistent two-process HLR, repeated revisions, ordering, nonfinite, capacity and startup/task deadline controls PASS");
 }

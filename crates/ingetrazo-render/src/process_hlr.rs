@@ -7,8 +7,12 @@ use std::{
     fs::{File, OpenOptions},
     io::{self, BufRead, BufReader, Write},
     path::{Path, PathBuf},
-    process::{Child, ChildStdin, ChildStdout, Command, Stdio},
-    sync::atomic::{AtomicU64, Ordering},
+    process::{Child, ChildStdin, Command, Stdio},
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        mpsc::{self, Receiver},
+    },
+    time::Duration,
 };
 static NEXT: AtomicU64 = AtomicU64::new(0);
 const MAGIC: &[u8; 8] = b"ITHLR001";
@@ -39,16 +43,26 @@ fn put_point(f: &mut File, p: DVec3) -> io::Result<()> {
 struct Worker {
     child: Child,
     input: ChildStdin,
-    output: BufReader<ChildStdout>,
+    output: Receiver<io::Result<String>>,
+    reader: Option<std::thread::JoinHandle<()>>,
+    timeout: Duration,
     results: Mmap,
     path: PathBuf,
 }
 impl Worker {
     fn reply(&mut self) -> io::Result<String> {
-        let mut line = String::new();
-        if self.output.read_line(&mut line)? == 0 {
-            return Err(invalid("HLR worker exited"));
-        }
+        let line = self
+            .output
+            .recv_timeout(self.timeout)
+            .map_err(|e| match e {
+                mpsc::RecvTimeoutError::Timeout => io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "HLR worker response deadline exceeded",
+                ),
+                mpsc::RecvTimeoutError::Disconnected => {
+                    invalid("HLR worker response channel closed")
+                }
+            })??;
         if line.starts_with("ERR ") {
             return Err(invalid(line.trim()));
         }
@@ -81,6 +95,25 @@ impl HlrProcessPool {
         grain: usize,
         result_bytes: usize,
     ) -> io::Result<Self> {
+        Self::new_with_timeout(
+            executable,
+            count,
+            grain,
+            result_bytes,
+            Duration::from_secs(30),
+        )
+    }
+    /// Response deadline applies to startup and every task descriptor exchange.
+    pub fn new_with_timeout(
+        executable: &Path,
+        count: usize,
+        grain: usize,
+        result_bytes: usize,
+        timeout: Duration,
+    ) -> io::Result<Self> {
+        if timeout.is_zero() {
+            return Err(invalid("zero worker response deadline"));
+        }
         if count == 0 || grain == 0 || result_bytes < 24 {
             return Err(invalid("invalid worker count, grain or output budget"));
         }
@@ -116,11 +149,32 @@ impl HlrProcessPool {
                 .stderr(Stdio::inherit())
                 .spawn()?;
             let input = child.stdin.take().unwrap();
-            let output = BufReader::new(child.stdout.take().unwrap());
+            let mut pipe = BufReader::new(child.stdout.take().unwrap());
+            let (sender, output) = mpsc::sync_channel(1);
+            // One persistent descriptor reader per child makes deadlines portable.
+            // Geometry/computation remains in child processes, never in this reader.
+            let reader = std::thread::spawn(move || loop {
+                let mut line = String::new();
+                let read = std::io::Read::take(&mut pipe, 4097).read_line(&mut line);
+                let reply = match read {
+                    Ok(0) => Err(invalid("HLR worker exited")),
+                    Ok(n) if n > 4096 || !line.ends_with('\n') => {
+                        Err(invalid("oversized or incomplete worker descriptor"))
+                    }
+                    Ok(_) => Ok(line),
+                    Err(e) => Err(e),
+                };
+                let failed = reply.is_err();
+                if sender.send(reply).is_err() || failed {
+                    break;
+                }
+            });
             pool.workers.push(Worker {
                 child,
                 input,
                 output,
+                reader: Some(reader),
+                timeout,
                 results,
                 path,
             });
@@ -143,6 +197,10 @@ impl HlrProcessPool {
         let result = self.intervals_inner(edges, triangles, epsilon);
         if result.is_err() {
             self.poisoned = true;
+            for w in &mut self.workers {
+                let _ = w.child.kill();
+                let _ = w.child.wait();
+            }
         }
         result
     }
@@ -272,9 +330,16 @@ impl HlrProcessPool {
 }
 impl Drop for HlrProcessPool {
     fn drop(&mut self) {
-        for w in &mut self.workers {
+        for mut w in self.workers.drain(..) {
             let _ = w.child.kill();
             let _ = w.child.wait();
+            // Disconnect bounded sender before joining, then unmap before Windows removal.
+            drop(w.output);
+            drop(w.input);
+            if let Some(reader) = w.reader.take() {
+                let _ = reader.join();
+            }
+            drop(w.results);
             let _ = std::fs::remove_file(&w.path);
         }
         let _ = std::fs::remove_dir_all(&self.directory);
