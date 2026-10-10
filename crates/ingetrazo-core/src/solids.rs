@@ -396,6 +396,17 @@ fn fuse_source_faces(mesh: &Mesh, provenance: &[usize]) -> Result<(Mesh, Vec<usi
     Ok((result, sources))
 }
 
+/// Validate the kernel's strict solid contract, including winding consistency
+/// and exact self-intersection rejection, without mutating the mesh.
+pub fn validate_solid_mesh(mesh: &Mesh) -> Result<(), String> {
+    let mut sources = Sources {
+        faces: vec![],
+        edges: vec![],
+        soft_pairs: HashSet::new(),
+    };
+    kernel(mesh, &mut sources).map(|_| ())
+}
+
 /// Low-level arithmetic: Subtract/Trim compute A−B. Empty meshes are valid.
 /// Split requires the multi-result group API.
 pub fn perform_solid_op(op: SolidOp, a: &Mesh, b: &Mesh) -> Result<Mesh, String> {
