@@ -27,7 +27,7 @@
         ],
         "component": true,
         "name": "Parent",
-        "uid": "60718626644e42fb",
+        "uid": "6ea17816d25446d3",
         "children": [
           {
             "proto": 1,
@@ -51,7 +51,7 @@
             ],
             "component": true,
             "name": "Child",
-            "uid": "426502c152a14218"
+            "uid": "23645e4125824977"
           }
         ]
       }
