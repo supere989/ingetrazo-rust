@@ -19,5 +19,7 @@
     "clipping and viewport controls",
     "warm geometry upload accounting"
   ],
-  "canonical_promotion": false
+  "canonical_promotion": false,
+  "combined_regression": "sharedtargetunresolvedimport despiteactualpublicmodule; suspectedconcurrentworktreecachecollision, isolatedtargetrerun33841 live; no passclaim",
+  "source": "native3cef03f and5softwarecontrols3d5f8be nowreviewbranch"
 }
