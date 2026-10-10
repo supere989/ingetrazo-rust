@@ -1,0 +1,414 @@
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-document-global-contracts/crates/ingetrazo-core)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-document-global-contracts/crates/ingetrazo-tools)
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-document-global-contracts/crates/ingetrazo-formats)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-document-global-contracts/crates/ingetrazo-render)
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-document-global-contracts/crates/ingetrazo-metal)
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-document-global-contracts/crates/ingetrazo-gui)
+warning: struct `SpanPlan` is never constructed
+  --> crates/ingetrazo-metal/src/span_plan.rs:21:19
+   |
+21 | pub(crate) struct SpanPlan {
+   |                   ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `compile` is never used
+  --> crates/ingetrazo-metal/src/span_plan.rs:26:15
+   |
+26 | pub(crate) fn compile(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan, String> {
+   |               ^^^^^^^
+
+warning: `ingetrazo-metal` (lib) generated 2 warnings
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/geoimport_file_fixture-0the7cs7xjxmm/s-hn3505zcr1-1972hzc-working/query-cache.bin`: No space left on device (os error 28)
+
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/context_screen_snap_fixture-0tp4s8y58ow8d/s-hn3505z4sg-1i0f0xt-working/query-cache.bin`: No space left on device (os error 28)
+
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/image_move_epoch-2zmdj9pisotor/s-hn35061kuu-0bv20nz-working/query-cache.bin`: No space left on device (os error 28)
+
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/qt_gray_cubic_protocol-09y5q4u60vamk/s-hn3505zejq-0g9n631-working/query-cache.bin`: No space left on device (os error 28)
+
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/component_acceptance_fixture-089u7xlltenyk/s-hn3505yrnm-01bd82u-working/query-cache.bin`: No space left on device (os error 28)
+
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/drafting_acceptance_fixture-32e2x7bdxcnok/s-hn3505wetq-0216nyn-working/query-cache.bin`: No space left on device (os error 28)
+
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/paper_boundary_fixture-2rjj69aglnyqh/s-hn3505zdv5-13whm8c-working/query-cache.bin`: No space left on device (os error 28)
+
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+error: could not compile `ingetrazo-core` (example "perspective_screen_fixture")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name perspective_screen_fixture --edition=2021 crates/ingetrazo-core/examples/perspective_screen_fixture.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8f315b9834169383 -C extra-filename=-023abb564184737e --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern approx=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libapprox-f289a606ca612b07.rlib --extern earcutr=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libearcutr-faedcd8edec133ea.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern manifold_rust=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmanifold_rust-f979723338775d0c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib` (exit status: 101)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `ingetrazo-core` (example "simplify_acceptance_fixture")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name simplify_acceptance_fixture --edition=2021 crates/ingetrazo-core/examples/simplify_acceptance_fixture.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=5a8e0813b879a3e7 -C extra-filename=-01676198aeada677 --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern approx=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libapprox-f289a606ca612b07.rlib --extern earcutr=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libearcutr-faedcd8edec133ea.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern manifold_rust=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmanifold_rust-f979723338775d0c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib` (exit status: 101)
+error: could not compile `ingetrazo-core` (example "context_screen_snap_fixture") due to 1 previous error
+error: could not compile `ingetrazo-core` (example "drafting_acceptance_fixture") due to 1 previous error
+error: could not compile `ingetrazo-core` (example "offset_acceptance_fixture")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name offset_acceptance_fixture --edition=2021 crates/ingetrazo-core/examples/offset_acceptance_fixture.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=67b683ab7ff98782 -C extra-filename=-9e0c01f43b390029 --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern approx=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libapprox-f289a606ca612b07.rlib --extern earcutr=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libearcutr-faedcd8edec133ea.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern manifold_rust=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmanifold_rust-f979723338775d0c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib` (exit status: 101)
+error: could not compile `ingetrazo-render` (example "image_outline_projection_probe")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name image_outline_projection_probe --edition=2021 crates/ingetrazo-render/examples/image_outline_projection_probe.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=4c1757b4bfee1a89 -C extra-filename=-7953e8c57bd7f023 --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern bytemuck=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libbytemuck-81463f860a205f2a.rlib --extern egui=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libegui-85dd173db1591c2a.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern ingetrazo_render=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_render-c8bf921c8b67b7c3.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern memmap2=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmemmap2-cf77983ab434d597.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib` (exit status: 101)
+error: could not compile `ingetrazo-formats` (example "geoimport_file_fixture") due to 1 previous error
+error: could not compile `ingetrazo-formats` (example "component_acceptance_fixture") due to 1 previous error
+error: could not compile `ingetrazo-formats` (example "sheet_pdf_allocation_probe")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name sheet_pdf_allocation_probe --edition=2021 crates/ingetrazo-formats/examples/sheet_pdf_allocation_probe.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=f19c82191d0a838f -C extra-filename=-f1cc2578d42bf4cb --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern base64=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libbase64-76f54f820f429c43.rlib --extern freetype_sys=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libfreetype_sys-8a411ac0bd2bcb50.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern gltf=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libgltf-954dfa5106c0606e.rlib --extern harfbuzz_sys=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libharfbuzz_sys-f06d85064aec5b39.rlib --extern image=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libimage-f6944997c931f4bd.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern ingetrazo_formats=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_formats-007770639337e001.rlib --extern libloading=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblibloading-6425d4424c74443f.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern pdf_writer=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libpdf_writer-b3bbb25a9f094964.rlib --extern roxmltree=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libroxmltree-4c435eac2690251c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern ttf_parser=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libttf_parser-bc3afd1d5581ba97.rlib --extern unicode_bidi=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libunicode_bidi-84e4e45231a36f63.rlib --extern unicode_linebreak=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libunicode_linebreak-1159b0aab2c4f49d.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib --extern zip=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libzip-ea1b36647ce965cf.rlib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/harfbuzz-sys-9b48c75356fb0c30/out` (exit status: 101)
+error: could not compile `ingetrazo-render` (example "qt_gray_cubic_protocol") due to 1 previous error
+error: could not compile `ingetrazo-render` (example "paper_boundary_fixture") due to 1 previous error
+error: could not compile `ingetrazo-tools` (example "image_move_epoch") due to 1 previous error
+error: could not compile `ingetrazo-core` (example "sheet_shape_commands")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name sheet_shape_commands --edition=2021 crates/ingetrazo-core/examples/sheet_shape_commands.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=6dc6f7cc318eead7 -C extra-filename=-00dbeaa07b192dea --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern approx=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libapprox-f289a606ca612b07.rlib --extern earcutr=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libearcutr-faedcd8edec133ea.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern manifold_rust=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmanifold_rust-f979723338775d0c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib` (exit status: 101)
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+error: failed to write query cache to `/tmp/ingetrazo-document-global-contracts-target/debug/incremental/orient_acceptance_fixture-3ixsz5v8r26u9/s-hn3505w635-0fu2xcq-working/query-cache.bin`: No space left on device (os error 28)
+
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+error: rustc interrupted by SIGSEGV, printing backtrace
+
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x3bf964c)[0x7efdaddf964c]
+/lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7efdaa033330]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc(+0x13065)[0x55c020e99065]
+/lib/x86_64-linux-gnu/libc.so.6(+0x47af3)[0x7efdaa035af3]
+/lib/x86_64-linux-gnu/libc.so.6(+0x47bbe)[0x7efdaa035bbe]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x4d4ea69)[0x7efdaef4ea69]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-stable(_ZN4llvm18report_fatal_errorERKNS_5TwineEb+0x14c)[0x7efda56e8ebc]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-stable(+0x5ee8f98)[0x7efda56e8f98]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-stable(+0x99579aa)[0x7efda91579aa]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x625b573)[0x7efdb045b573]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x625af80)[0x7efdb045af80]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x625c76e)[0x7efdb045c76e]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(_RINvNtNtCs75vJTIYSa2J_3std3sys9backtrace28___rust_begin_short_backtraceNCINvNtNtCs6mxrFuF96Hs_17rustc_codegen_ssa4back5write10spawn_workNtCs8s8WVorVxGo_18rustc_codegen_llvm18LlvmCodegenBackendE0uEB2c_+0x1e8)[0x7efdb056b6ea]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x636b268)[0x7efdb056b268]
+/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/librustc_driver-4d71126a08f22b4a.so(+0x636edac)[0x7efdb056edac]
+/lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7efdaa08aaa4]
+/lib/x86_64-linux-gnu/libc.so.6(+0x129c6c)[0x7efdaa117c6c]
+
+note: we would appreciate a report at https://github.com/rust-lang/rust
+help: you can increase rustc's stack size by setting RUST_MIN_STACK=16777216
+error: could not compile `ingetrazo-render` (example "process_hlr_acceptance")
+
+Caused by:
+  No space left on device (os error 28)
+
+Caused by:
+  failed to parse process output: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name process_hlr_acceptance --edition=2021 crates/ingetrazo-render/examples/process_hlr_acceptance.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=3d03c85dca7de218 -C extra-filename=-b15d6de1dfaa235f --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern bytemuck=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libbytemuck-81463f860a205f2a.rlib --extern egui=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libegui-85dd173db1591c2a.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern ingetrazo_render=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_render-c8bf921c8b67b7c3.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern memmap2=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmemmap2-cf77983ab434d597.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib` (exit status: 101)
+error: could not compile `ingetrazo-formats` (example "authored_group_acceptance")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name authored_group_acceptance --edition=2021 crates/ingetrazo-formats/examples/authored_group_acceptance.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1de0197f615f7206 -C extra-filename=-32089b41afb67c5e --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern base64=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libbase64-76f54f820f429c43.rlib --extern freetype_sys=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libfreetype_sys-8a411ac0bd2bcb50.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern gltf=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libgltf-954dfa5106c0606e.rlib --extern harfbuzz_sys=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libharfbuzz_sys-f06d85064aec5b39.rlib --extern image=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libimage-f6944997c931f4bd.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern ingetrazo_formats=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_formats-007770639337e001.rlib --extern libloading=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblibloading-6425d4424c74443f.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern pdf_writer=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libpdf_writer-b3bbb25a9f094964.rlib --extern roxmltree=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libroxmltree-4c435eac2690251c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern ttf_parser=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libttf_parser-bc3afd1d5581ba97.rlib --extern unicode_bidi=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libunicode_bidi-84e4e45231a36f63.rlib --extern unicode_linebreak=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libunicode_linebreak-1159b0aab2c4f49d.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib --extern zip=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libzip-ea1b36647ce965cf.rlib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/harfbuzz-sys-9b48c75356fb0c30/out` (exit status: 101)
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcvZP7VF/symbols.o" "<7 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcvZP7VF/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/device_probe-dd64634947860963" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+error: could not compile `ingetrazo-core` (example "geopath_acceptance_fixture")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name geopath_acceptance_fixture --edition=2021 crates/ingetrazo-core/examples/geopath_acceptance_fixture.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=30331ef4cd622b7f -C extra-filename=-f55b2bb939eae174 --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern approx=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libapprox-f289a606ca612b07.rlib --extern earcutr=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libearcutr-faedcd8edec133ea.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern manifold_rust=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libmanifold_rust-f979723338775d0c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib` (exit status: 101)
+error: could not compile `ingetrazo-metal` (lib test)
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name ingetrazo_metal --edition=2021 crates/ingetrazo-metal/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=2caae875cd9d6a90 -C extra-filename=-d974d748f090b271 --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/deps -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern bytemuck=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libbytemuck-81463f860a205f2a.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern ingetrazo_render=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_render-c8bf921c8b67b7c3.rlib` (exit status: 101)
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcBlNhtJ/symbols.o" "<34 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/{libingetrazo_render-c8bf921c8b67b7c3,libegui-85dd173db1591c2a,libepaint-d219ba0ea398d1da,libnohash_hasher-3dea44db06f57849,liblog-08a2790420b3f930,libprofiling-61d7135310eedc44,libahash-04069987720f7507,libgetrandom-994e17821f5d423e,libonce_cell-56e2c5688d6fa4f6,libzerocopy-fd5c1f3bc14bc680,libepaint_default_fonts-9e8419a47fe23e08,libab_glyph-03da7c72ba693a76,libowned_ttf_parser-b27a1d6042282462,libttf_parser-bc3afd1d5581ba97,libab_glyph_rasterizer-8ce847dc04f7bf61,libparking_lot-799e7b18627e3ea2,libparking_lot_core-4c967f4c9bf7efe4,libsmallvec-563878475245ebc2,liblock_api-00d283d858804a89,libscopeguard-d7f327f1116c8f3f,libecolor-e230c37a64f34fa5,libemath-4e95ddaa45509947,libmemmap2-cf77983ab434d597,libingetrazo_core-6f1547ad9d1362b9,libearcutr-faedcd8edec133ea,libitertools-199a96caadd1c7a1,libeither-6d85f83f28dff121,libmanifold_rust-f979723338775d0c,libdashu_ratio-791dad9730346951,libdashu_int-f341b171b49bf05b,libnum_modular-844d6ed29b2bda37,libstatic_assertions-d05dfa74f04cf9c7,libdashu_base-5285bdd80688ae7f,librustc_hash-1ecbff53d6dd9162,libclipper2_rust-16bd9bc3623b4edd,libnum_traits-f7b8d2bab384e908,libuuid-61da2242513acfa8,libgetrandom-cff2bccf3785ea4b,liblibc-efb2781555332332,libcfg_if-896e4ddc4c880786,libsha1_smol-cb67a1aa41c2e580,libglam-caaa133496c3d76f,libserde-3d9f4a542b5fef78,libbytemuck-81463f860a205f2a,libserde_json-b3ad55d2c41eea92,libmemchr-82b368222789aaa4,libzmij-903071458ada82f7,libitoa-17e8fd3d4fa56fd6,libindexmap-cdf2b8ed43bf57d1,libequivalent-e21dbb601b189988,libhashbrown-e034d444d9f5b1ba,libserde_core-cbc63947bd87ed87}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcBlNhtJ/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/qt_gray_protocol-94f1aa03d2cd1b07" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+error: could not compile `ingetrazo-core` (example "orient_acceptance_fixture") due to 1 previous error
+error: could not compile `ingetrazo-metal` (example "device_probe") due to 1 previous error
+error: could not compile `ingetrazo-render` (example "qt_gray_protocol") due to 1 previous error
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/drawing_axes_acceptance-1qh83qq2tqzc1/s-hn3505w8yp-01gurrb-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/native_preservation-2jk9yaxwydlgg/s-hn3505zcb2-149s87q-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/headless_contour_independent-27br15n5nnm3v/s-hn35061mua-1tjxrpe-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+error: could not compile `ingetrazo-core` (test "drawing_axes_acceptance") due to 1 previous error
+error: could not compile `ingetrazo-formats` (test "native_preservation") due to 1 previous error
+error: could not compile `ingetrazo-gui` (example "headless_contour_independent") due to 1 previous error
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcnYYs5F/symbols.o" "<26 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/{libingetrazo_render-c8bf921c8b67b7c3,libegui-85dd173db1591c2a,libepaint-d219ba0ea398d1da,libnohash_hasher-3dea44db06f57849,liblog-08a2790420b3f930,libprofiling-61d7135310eedc44,libahash-04069987720f7507,libgetrandom-994e17821f5d423e,libonce_cell-56e2c5688d6fa4f6,libzerocopy-fd5c1f3bc14bc680,libepaint_default_fonts-9e8419a47fe23e08,libab_glyph-03da7c72ba693a76,libowned_ttf_parser-b27a1d6042282462,libttf_parser-bc3afd1d5581ba97,libab_glyph_rasterizer-8ce847dc04f7bf61,libparking_lot-799e7b18627e3ea2,libparking_lot_core-4c967f4c9bf7efe4,libsmallvec-563878475245ebc2,liblock_api-00d283d858804a89,libscopeguard-d7f327f1116c8f3f,libecolor-e230c37a64f34fa5,libemath-4e95ddaa45509947,libmemmap2-cf77983ab434d597,libingetrazo_core-6f1547ad9d1362b9,libearcutr-faedcd8edec133ea,libitertools-199a96caadd1c7a1,libeither-6d85f83f28dff121,libmanifold_rust-f979723338775d0c,libdashu_ratio-791dad9730346951,libdashu_int-f341b171b49bf05b,libnum_modular-844d6ed29b2bda37,libstatic_assertions-d05dfa74f04cf9c7,libdashu_base-5285bdd80688ae7f,librustc_hash-1ecbff53d6dd9162,libclipper2_rust-16bd9bc3623b4edd,libnum_traits-f7b8d2bab384e908,libserde_json-b3ad55d2c41eea92,libmemchr-82b368222789aaa4,libzmij-903071458ada82f7,libitoa-17e8fd3d4fa56fd6,libindexmap-cdf2b8ed43bf57d1,libequivalent-e21dbb601b189988,libhashbrown-e034d444d9f5b1ba,libuuid-61da2242513acfa8,libgetrandom-cff2bccf3785ea4b,liblibc-efb2781555332332,libcfg_if-896e4ddc4c880786,libsha1_smol-cb67a1aa41c2e580,libglam-caaa133496c3d76f,libserde-3d9f4a542b5fef78,libserde_core-cbc63947bd87ed87,libbytemuck-81463f860a205f2a}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcnYYs5F/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/cad2d_premultiply_protocol-09887cbc4571fba4" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+error: could not compile `ingetrazo-render` (example "cad2d_premultiply_protocol") due to 1 previous error
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/mesh_share_acceptance-386d3k5vpl9ob/s-hn3505waum-0eidr29-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+error: could not compile `ingetrazo-core` (test "mesh_share_acceptance") due to 1 previous error
+error: could not compile `ingetrazo-formats` (example "paper_font_resolver_eviction_fixture")
+
+Caused by:
+  process didn't exit successfully: `/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name paper_font_resolver_eviction_fixture --edition=2021 crates/ingetrazo-formats/examples/paper_font_resolver_eviction_fixture.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=e665e43411e22248 -C extra-filename=-107c7faada8c1452 --out-dir /tmp/ingetrazo-document-global-contracts-target/debug/examples -C incremental=/tmp/ingetrazo-document-global-contracts-target/debug/incremental -L dependency=/tmp/ingetrazo-document-global-contracts-target/debug/deps --extern base64=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libbase64-76f54f820f429c43.rlib --extern freetype_sys=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libfreetype_sys-8a411ac0bd2bcb50.rlib --extern glam=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libglam-caaa133496c3d76f.rlib --extern gltf=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libgltf-954dfa5106c0606e.rlib --extern harfbuzz_sys=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libharfbuzz_sys-f06d85064aec5b39.rlib --extern image=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libimage-f6944997c931f4bd.rlib --extern ingetrazo_core=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_core-6f1547ad9d1362b9.rlib --extern ingetrazo_formats=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libingetrazo_formats-007770639337e001.rlib --extern libloading=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblibloading-6425d4424c74443f.rlib --extern log=/tmp/ingetrazo-document-global-contracts-target/debug/deps/liblog-08a2790420b3f930.rlib --extern pdf_writer=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libpdf_writer-b3bbb25a9f094964.rlib --extern roxmltree=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libroxmltree-4c435eac2690251c.rlib --extern serde=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde-3d9f4a542b5fef78.rlib --extern serde_json=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libserde_json-b3ad55d2c41eea92.rlib --extern thiserror=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libthiserror-87f01fa4fe87f169.rlib --extern ttf_parser=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libttf_parser-bc3afd1d5581ba97.rlib --extern unicode_bidi=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libunicode_bidi-84e4e45231a36f63.rlib --extern unicode_linebreak=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libunicode_linebreak-1159b0aab2c4f49d.rlib --extern uuid=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libuuid-61da2242513acfa8.rlib --extern zip=/tmp/ingetrazo-document-global-contracts-target/debug/deps/libzip-ea1b36647ce965cf.rlib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib -L native=/tmp/ingetrazo-document-global-contracts-target/debug/build/harfbuzz-sys-9b48c75356fb0c30/out` (signal: 11, SIGSEGV: invalid memory reference)
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/ingetrazo_tools-34n088iqg1iqu/s-hn3505w4k5-0v8bmnj-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+error: could not compile `ingetrazo-tools` (lib test) due to 1 previous error
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/ingetrazo_render-3sh8gzqc4k0ph/s-hn3505zcks-1gb3kff-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+error: could not compile `ingetrazo-render` (lib test) due to 1 previous error
+error: failed to write file /tmp/ingetrazo-document-global-contracts-target/debug/incremental/ingetrazo_core-1bgce8s7t0f0g/s-hn3505wbi4-0nngddb-working/dep-graph.part.bin: No space left on device (os error 28)"
+
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)
+error: could not compile `ingetrazo-core` (lib test) due to 1 previous error; 1 warning emitted
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcA31Dgt/symbols.o" "<40 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/{libingetrazo_core-6f1547ad9d1362b9,libearcutr-faedcd8edec133ea,libitertools-199a96caadd1c7a1,libeither-6d85f83f28dff121,libmanifold_rust-f979723338775d0c,libdashu_ratio-791dad9730346951,libdashu_int-f341b171b49bf05b,libnum_modular-844d6ed29b2bda37,libstatic_assertions-d05dfa74f04cf9c7,libdashu_base-5285bdd80688ae7f,librustc_hash-1ecbff53d6dd9162,libclipper2_rust-16bd9bc3623b4edd,libnum_traits-f7b8d2bab384e908,libserde_json-b3ad55d2c41eea92,libmemchr-82b368222789aaa4,libzmij-903071458ada82f7,libitoa-17e8fd3d4fa56fd6,libindexmap-cdf2b8ed43bf57d1,libequivalent-e21dbb601b189988,libhashbrown-e034d444d9f5b1ba,libuuid-61da2242513acfa8,libgetrandom-cff2bccf3785ea4b,liblibc-efb2781555332332,libcfg_if-896e4ddc4c880786,libsha1_smol-cb67a1aa41c2e580,libglam-caaa133496c3d76f,libserde-3d9f4a542b5fef78,libserde_core-cbc63947bd87ed87}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcA31Dgt/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/screen_snap_fixture-180c7dc07eb2a855" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+error: could not compile `ingetrazo-core` (example "screen_snap_fixture") due to 1 previous error
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/rustcm0JxL7/symbols.o" "<13 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libtest-*,libgetopts-*,librustc_std_workspace_std-*}.rlib" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/{libingetrazo_core-6f1547ad9d1362b9,libearcutr-faedcd8edec133ea,libitertools-199a96caadd1c7a1,libeither-6d85f83f28dff121,libmanifold_rust-f979723338775d0c,libdashu_ratio-791dad9730346951,libdashu_int-f341b171b49bf05b,libnum_modular-844d6ed29b2bda37,libstatic_assertions-d05dfa74f04cf9c7,libdashu_base-5285bdd80688ae7f,librustc_hash-1ecbff53d6dd9162,libclipper2_rust-16bd9bc3623b4edd,libnum_traits-f7b8d2bab384e908,libserde_json-b3ad55d2c41eea92,libmemchr-82b368222789aaa4,libzmij-903071458ada82f7,libitoa-17e8fd3d4fa56fd6,libindexmap-cdf2b8ed43bf57d1,libequivalent-e21dbb601b189988,libhashbrown-e034d444d9f5b1ba,libuuid-61da2242513acfa8,libgetrandom-cff2bccf3785ea4b,liblibc-efb2781555332332,libcfg_if-896e4ddc4c880786,libsha1_smol-cb67a1aa41c2e580,libglam-caaa133496c3d76f,libserde-3d9f4a542b5fef78,libserde_core-cbc63947bd87ed87}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/rustcm0JxL7/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/test_i18n-3be6aaaf520c5aaa" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+error: could not compile `ingetrazo-core` (test "test_i18n") due to 1 previous error
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcG8ePsY/symbols.o" "<22 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "/tmp/ingetrazo-document-global-contracts-target/debug/deps/{libingetrazo_formats-007770639337e001,libunicode_linebreak-1159b0aab2c4f49d,libunicode_bidi-84e4e45231a36f63,liblibloading-6425d4424c74443f,libttf_parser-bc3afd1d5581ba97,libgltf-954dfa5106c0606e,libbase64-7df46378b2223ba1,liburlencoding-fa6b0164ecddd156,libbyteorder-84532e27cf0dd08f,libgltf_json-2b66e51d6b81f049,liblazy_static-123e86bcf22fb137,libimage-f6944997c931f4bd,libbytemuck-81463f860a205f2a,libbyteorder_lite-d26e26b9b7354199,libmoxcms-8ae81194ba685141,libpxfm-4019ed2cfac9a3e8,libpng-71b613795848a91a,libfdeflate-f797f8e19dd129af,libzune_jpeg-f62200c34d724af5,libzune_core-5f95d4f1ad950c27,libharfbuzz_sys-f06d85064aec5b39,libfreetype_sys-8a411ac0bd2bcb50,libpdf_writer-b3bbb25a9f094964,libryu-b726d2da29e285ab,libbitflags-ec488ff30f70a0d2,libzip-ea1b36647ce965cf,libzopfli-0bfd00693f723644,libbumpalo-70b706b7283a172c,liblog-08a2790420b3f930,libflate2-8853dc34bb576b72,libminiz_oxide-cce96677aa1cd28f,libsimd_adler32-91606a7c255d4dd3,libthiserror-87f01fa4fe87f169,libcrc32fast-377ac1ac1b024ad2,libbase64-76f54f820f429c43,libroxmltree-4c435eac2690251c,libingetrazo_core-6f1547ad9d1362b9,libearcutr-faedcd8edec133ea,libitertools-199a96caadd1c7a1,libeither-6d85f83f28dff121,libmanifold_rust-f979723338775d0c,libdashu_ratio-791dad9730346951,libdashu_int-f341b171b49bf05b,libnum_modular-844d6ed29b2bda37,libstatic_assertions-d05dfa74f04cf9c7,libdashu_base-5285bdd80688ae7f,librustc_hash-1ecbff53d6dd9162,libclipper2_rust-16bd9bc3623b4edd,libnum_traits-f7b8d2bab384e908,libserde_json-b3ad55d2c41eea92,libmemchr-82b368222789aaa4,libzmij-903071458ada82f7,libitoa-17e8fd3d4fa56fd6,libindexmap-cdf2b8ed43bf57d1,libequivalent-e21dbb601b189988,libhashbrown-e034d444d9f5b1ba,libuuid-61da2242513acfa8,libgetrandom-cff2bccf3785ea4b,liblibc-efb2781555332332,libcfg_if-896e4ddc4c880786,libsha1_smol-cb67a1aa41c2e580,libglam-caaa133496c3d76f,libserde-3d9f4a542b5fef78,libserde_core-cbc63947bd87ed87}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-ldl" "-lstdc++" "-lz" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/rustcG8ePsY/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/build/freetype-sys-23248d6a02319e42/out" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib" "-L" "/tmp/ingetrazo-document-global-contracts-target/debug/build/harfbuzz-sys-9b48c75356fb0c30/out" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-document-global-contracts-target/debug/examples/sheet_dxf_fixture-cfdf0fa3af674880" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+error: could not compile `ingetrazo-formats` (example "sheet_dxf_fixture") due to 1 previous error
