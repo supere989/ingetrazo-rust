@@ -35,7 +35,7 @@ impl Image {
 impl Drop for Image {fn drop(&mut self){unsafe {self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.handle,None);self.device.free_memory(self.memory,None)};self.budget.freed(self.memory);}}
 struct Target {device:Device,pool:vk::DescriptorPool,_color:Image,_msaa:Option<Image>,_depth:Image,framebuffer:vk::Framebuffer,sampler:vk::Sampler,set:vk::DescriptorSet,extent:vk::Extent2D,texture:Option<egui::TextureId>}
 impl Drop for Target {fn drop(&mut self){unsafe {self.device.destroy_framebuffer(self.framebuffer,None);self.device.destroy_sampler(self.sampler,None);let _=self.device.free_descriptor_sets(self.pool,&[self.set]);}}}
-#[derive(Default,Clone,Copy,Debug)]pub struct ContourMetrics {pub additional_position_bytes:u64,pub batches:usize,pub cold_build_ms:f64,pub compact_preprocess_ms:f64,pub warm_cache_ms:f64,pub cache_hits:u64,pub failed_prepared_chunks:usize,pub rollbacks:u64}
+#[derive(Default,Clone,Copy,Debug)]pub struct ContourMetrics {pub additional_position_bytes:u64,pub batches:usize,pub cold_build_ms:f64,pub compact_preprocess_ms:f64,pub warm_cache_ms:f64,pub cache_hits:u64,pub failed_prepared_chunks:usize,pub rollbacks:u64,pub edge_buffer_uploads:u64,pub failed_prepared_edge_bytes:u64}
 #[derive(Clone,Copy)]struct ContourBatch {vertices:BufferId,indices:BufferId,triangles:u32,compact:bool,stride:u32,owned:bool}
 struct Contours {device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,pipeline:vk::Pipeline,sets:Vec<vk::DescriptorSet>,limit:u64}
 impl Contours {
@@ -193,7 +193,7 @@ impl World {
   let mut next_transparent=None;let mut next_edges=None;
   let mut batches=Vec::new();let limit=self.contours.as_ref().unwrap().limit;let mut preprocessing=0.;let mut next_cap=None;
   let prepare=(||->Result<(),String>{
-   if !hard_edges.positions.is_empty(){next_edges=Some(self.resources.upload(context,bytemuck::cast_slice(&hard_edges.positions),vk::BufferUsageFlags::VERTEX_BUFFER,false)?);}
+   if !hard_edges.positions.is_empty(){next_edges=Some(self.resources.upload(context,bytemuck::cast_slice(&hard_edges.positions),vk::BufferUsageFlags::VERTEX_BUFFER,false)?);self.contour_metrics.edge_buffer_uploads+=1;}
    if let(Some(v),Some(i))=(vertices,indices){
     if self.resources.logical_bytes(v).unwrap()<=limit&&self.resources.logical_bytes(i).unwrap()<=limit{batches.push(ContourBatch{vertices:v,indices:i,triangles:count/3,compact:false,stride:12,owned:false});}
     else{upload_contour_chunks(context,&mut self.resources,&mesh,limit,&mut batches,&mut preprocessing,self.probe_pressure_after,&self.budget).map_err(|e|format!("Contour chunk upload failed: {e}"))?;}
@@ -206,7 +206,7 @@ impl World {
    if cap_changed{next_cap=Some(self.upload_cap(context,cap)?);}
    self.contours.as_mut().unwrap().replace_batches(&self.resources,&batches)
   })();
-  if let Err(error)=prepare {self.contour_metrics.failed_prepared_chunks=batches.iter().filter(|b|b.owned).count();self.contour_metrics.rollbacks+=1;for id in batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([vertices,indices].into_iter().flatten()).chain(next_cap.into_iter().flatten()).chain(next_transparent).chain(next_edges){self.resources.retire(id)?;}self.resources.collect(fence,completed_serial)?;return Err(error);}
+  if let Err(error)=prepare {self.contour_metrics.failed_prepared_edge_bytes=next_edges.and_then(|id|self.resources.logical_bytes(id)).unwrap_or(0);self.contour_metrics.failed_prepared_chunks=batches.iter().filter(|b|b.owned).count();self.contour_metrics.rollbacks+=1;for id in batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([vertices,indices].into_iter().flatten()).chain(next_cap.into_iter().flatten()).chain(next_transparent).chain(next_edges){self.resources.retire(id)?;}self.resources.collect(fence,completed_serial)?;return Err(error);}
   if let Some(next)=next_cap{if let Some(old)=self.cap_vertices.take(){self.resources.retire(old)?;}self.cap_vertices=next;self.cap_signature=cap;}self.cap_key=Some(cap_key);
   for old in self.contour_batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([self.vertices.take(),self.indices.take(),self.transparent_vertices.take(),self.edge_vertices.take()].into_iter().flatten()){self.resources.retire(old)?;}
   self.resources.collect(fence,completed_serial)?;self.contour_metrics.additional_position_bytes=batches.iter().filter(|b|b.owned).map(|b|self.resources.logical_bytes(b.vertices).unwrap()).sum();self.contour_metrics.batches=batches.len();self.contour_metrics.compact_preprocess_ms=preprocessing;self.contour_metrics.cold_build_ms=started.elapsed().as_secs_f64()*1000.;self.contour_batches=batches;
