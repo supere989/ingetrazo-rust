@@ -1,0 +1,12 @@
+{
+  "source_revision": "653c104ddc56e7fe9b701b47c1f35992ee434e51",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "2e59bb17a3e45845a52f1105e1b743893f71ea7449ef9051af0dd88ddb57309a",
+  "fresh_merged_build_and_both_runtime_execution": true,
+  "positive_and_three_assertion_negatives": true,
+  "files": {
+    "build.log": "9de76e05ad227d0b5f8c467fcccb6fd84444c7ca7369305ea752a08ce7050517",
+    "result.json": "4239031ff85955cf48fd3cab2e02635d8056180ff319865ba0cd6c9a87b88763"
+  },
+  "scope": "Fuelled isolated finalizer identity, resurrection and actual payload release; native callback reentry, whole VM heap and production scripting remain open"
+}
