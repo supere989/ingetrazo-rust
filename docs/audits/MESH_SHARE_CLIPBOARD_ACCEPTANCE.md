@@ -11,7 +11,9 @@ document, source token and remapped prototype signature. A cached target is
 reused only if its registered prototype still matches; otherwise an unoccupied
 fresh UUID is allocated. An occupied equal prototype is never treated as an
 identity match unless that import cache establishes the source identity.
-The cache retains only the current source/destination pair, clears on new local
+The cache retains only signatures referenced by the current payload, bounding
+its size by the current prototype count rather than imported history. Changed
+signatures evict old mappings; repeated current signatures stay stable. It clears on new local
 Copy, and is outside Scene/history/native serialization. Hash collisions cannot
 silently overwrite geometry: target prototype equality is verified before reuse.
 Changed source snapshots get separate identities from already-pasted geometry.

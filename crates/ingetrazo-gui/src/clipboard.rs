@@ -44,6 +44,7 @@ pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destina
         use std::hash::{Hash,Hasher};let mut hash=std::collections::hash_map::DefaultHasher::new();serde_json::to_value(definition).unwrap_or_default().to_string().hash(&mut hash);let target=uuid::Uuid::from_u128(id.as_u128()^document.as_u128()^u128::from(hash.finish()));definitions.insert(*id,target);
     }}
     let mut shares=HashMap::new();
+    let mut current_imports=std::collections::HashSet::new();
     if payload.source_document!=document {
         let incoming:std::collections::HashSet<_>=payload.resources.mesh_shares.keys().copied().collect();
         let mut allocated=std::collections::HashSet::new();
@@ -54,6 +55,7 @@ pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destina
             let mut hash=std::collections::hash_map::DefaultHasher::new();
             serde_json::to_value(&remapped).unwrap_or_default().to_string().hash(&mut hash);
             let key=(document,payload.source_document,*token,hash.finish());
+            current_imports.insert(key);
             let prior=imports.get(&key).copied().filter(|target|!allocated.contains(target)&&destination.mesh_shares.get(target).is_none_or(|mesh|mesh==&remapped));
             let target=prior.unwrap_or_else(|| {
                 loop {let target=uuid::Uuid::new_v4();if !allocated.contains(&target)&&!incoming.contains(&target)&&!destination.mesh_shares.contains_key(&target){break target;}}
@@ -62,6 +64,7 @@ pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destina
             allocated.insert(target);shares.insert(*token,target);
         }
     }
+    imports.retain(|key,_|current_imports.contains(key));
     fn mesh(mesh:&mut ingetrazo_core::mesh::Mesh,assets:&HashMap<String,String>,materials:&HashMap<String,String>){for face in &mut mesh.faces{for(key,value)in &mut face.attrs{if key=="mat"||key=="material"{if let Some(target)=value.as_str().and_then(|name|materials.get(name)){*value=serde_json::json!(target);}}if key=="texture"{texture_refs(value,assets);}}}}
     fn groups(groups:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>,shares:&HashMap<uuid::Uuid,uuid::Uuid>){for group in groups{if let Some(token)=group.mesh_share{group.mesh_share=Some(*shares.get(&token).unwrap_or(&token));}if let Some(id)=group.component_definition{group.component_definition=Some(*defs.get(&id).unwrap_or(&id));}mesh(&mut group.mesh,assets,materials);values(&mut group.native_document,assets,materials);if let Some(paint)=group.native_document.get_mut("material"){values(paint,assets,materials);}if let Some(texture)=&mut group.billboard_texture{if let Some(target)=assets.get(texture){*texture=target.clone();}}groups_children(&mut group.children,assets,materials,defs,shares);}}
     fn groups_children(children:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>,shares:&HashMap<uuid::Uuid,uuid::Uuid>){groups(children,assets,materials,defs,shares)}
@@ -157,7 +160,7 @@ mod tests {
         let copied=destination.scene.clone();destination.undo();destination.undo();assert_eq!(destination.scene.groups,before.groups);assert_eq!(destination.scene.mesh_shares,before.mesh_shares);destination.redo();destination.redo();assert_eq!(destination.scene.groups,copied.groups);
         // A changed source prototype is a new imported snapshot; it cannot
         // overwrite the older pasted geometry or alias its identity.
-        let mut updated=source.scene.mesh_shares[&old].clone();updated.vertices[0].position.z=7.;source.scene.publish_mesh_share(old,updated).unwrap();source.copy_selection();destination.clipboard=source.clipboard.clone();assert!(destination.paste_internal(DVec3::Y*3.));let newer=destination.scene.groups[4].mesh_share.unwrap();assert_ne!(newer,tokens[0]);assert_eq!(destination.scene.mesh_shares[&tokens[0]].vertices[0].position.z,0.);assert_eq!(destination.scene.mesh_shares[&newer].vertices[0].position.z,7.);
+        let mut updated=source.scene.mesh_shares[&old].clone();updated.vertices[0].position.z=7.;source.scene.publish_mesh_share(old,updated).unwrap();source.copy_selection();destination.clipboard=source.clipboard.clone();assert!(destination.paste_internal(DVec3::Y*3.));let newer=destination.scene.groups[4].mesh_share.unwrap();assert_ne!(newer,tokens[0]);assert_eq!(destination.scene.mesh_shares[&tokens[0]].vertices[0].position.z,0.);assert_eq!(destination.scene.mesh_shares[&newer].vertices[0].position.z,7.);assert_eq!(destination.clipboard_mesh_share_imports.len(),2);assert!(destination.paste_internal(DVec3::Y*4.));assert_eq!(destination.scene.groups[6].mesh_share,Some(newer));assert_eq!(destination.clipboard_mesh_share_imports.len(),2);
     }
     #[test]
     fn resource_allocator_reserves_incoming_names_and_leaves_opaque_fields(){
