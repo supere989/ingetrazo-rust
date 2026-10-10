@@ -230,5 +230,15 @@ fn actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition() {
   assert_eq!(selected.mesh.faces[0].attrs["vendor"],row["after_attrs"]["vendor"]);for (a,b) in selected.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(row["after_attrs"]["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
   if kind.starts_with("nested") {app.finish_component_edit();assert_eq!(app.undo_stack.len(),row["history_after_no_edit_exit"].as_u64().unwrap()as usize);}
   if row["source_unique_on_entry"]==true {let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);}
+  let document=ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
+  let path=std::env::temp_dir().join(format!("unique-entry-{}.igz",uuid::Uuid::new_v4()));
+  ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();
+  let reopened=ingetrazo_formats::igz::load_igz(&path).unwrap();
+  assert_eq!(ingetrazo_formats::igz::scene_to_igz_document(&reopened),document,"native reopen {kind}");
+  let selected=if kind.starts_with("nested") {&reopened.groups[0].children[0]} else {&reopened.groups[0]};
+  assert_eq!(selected.mesh.faces[0].attrs["vendor"],row["after_attrs"]["vendor"]);
+  if row["source_unique_on_entry"]==true {assert_eq!(selected.transform,DMat4::IDENTITY);assert!(selected.axes_matrix().is_some());}
+  std::fs::remove_file(path).unwrap();
+
  }
 }
