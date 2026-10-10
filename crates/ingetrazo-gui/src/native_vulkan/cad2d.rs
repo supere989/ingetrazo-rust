@@ -48,6 +48,7 @@ struct Ready {
     ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,
     opaque:bool,
 }
+struct AdmittedLayout { geometry:Arc<Geometry>, batches:Arc<[Batch]>, opaque:bool }
 struct State {
     gates: Option<Arc<[ingetrazo_render::annotations::Gate]>>,
     geometry: Arc<Geometry>,
@@ -55,6 +56,7 @@ struct State {
     premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
     ready: Option<Ready>,
+    admission:Option<AdmittedLayout>,
 }
 struct Pipeline {
     annotations: bool,
@@ -341,7 +343,7 @@ impl Factory{
  }
  pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
   geometry.validate_batches(&batches)?;pose.validate()?;
-  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,premultiplied:prepare_palette(&geometry,&batches)?,geometry,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
+  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,premultiplied:prepare_palette(&geometry,&batches)?,geometry,batches,pose,ready:None,admission:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
   let callback=Arc::new(VulkanPaintCallback(inner.clone()));Ok(Handle{inner,callback})
  }
  pub(crate) fn annotation_handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<Handle,String>{
@@ -633,17 +635,25 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 if !Arc::ptr_eq(&paint.pipeline, &self.pipeline) {
                     return Err("CAD2D callback belongs to a different Vulkan host".into());
                 }
-                let s = paint.state.lock().map_err(|_| "CAD2D state poisoned")?;
-                s.geometry.validate_batches(&s.batches)?;
+                let mut s = paint.state.lock().map_err(|_| "CAD2D state poisoned")?;
                 s.pose.validate()?;
                 if let Some(r) = &s.ready {
                     self.active.insert(r.id);
                 }
-                if self.pipeline.lock().unwrap().integer&&!s.geometry.is_opaque(&s.batches){
+                let integer=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.integer;
+                let same=s.admission.as_ref().is_some_and(|a|Arc::ptr_eq(&a.geometry,&s.geometry)&&Arc::ptr_eq(&a.batches,&s.batches));
+                if !same {
+                    s.geometry.validate_batches(&s.batches)?;
+                    let opaque=s.geometry.is_opaque(&s.batches);
+                    if integer&&!opaque {
+                        s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
+                        let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;}
+                        if end as usize!=s.geometry.indices().len(){return Err("Exact integer CAD2D palette does not cover ordered geometry".into());}
+                    }
+                    s.admission=Some(AdmittedLayout{geometry:s.geometry.clone(),batches:s.batches.clone(),opaque});
+                }
+                if integer&&!s.admission.as_ref().unwrap().opaque {
                     s.geometry.validate_ordered_pose(s.pose,pixels_per_point)?;
-                    let ranges=s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
-                    let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;}
-                    if end as usize!=s.geometry.indices().len(){return Err("Exact integer CAD2D palette does not cover ordered geometry".into());}
                 }
                 let id = s.geometry.id();
                 self.active.insert(id);
@@ -739,7 +749,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                     premultiplied:s.premultiplied.clone(),
                     pose: s.pose,
                     ordered_draws:s.geometry.ordered_draws(),
-                    opaque:s.geometry.is_opaque(&s.batches),
+                    opaque:s.admission.as_ref().expect("layout admitted before publication").opaque,
                 });
             } else {
                 s.ready = None;
