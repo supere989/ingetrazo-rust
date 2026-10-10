@@ -1,0 +1,81 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling autocfg v1.5.1
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling cfg-if v1.0.5
+   Compiling rustversion v1.0.23
+   Compiling libc v0.2.190
+   Compiling dashu-int v0.5.1
+   Compiling getrandom v0.4.3
+   Compiling serde v1.0.229
+   Compiling static_assertions v1.1.0
+   Compiling zmij v1.0.23
+   Compiling num-modular v0.6.6
+   Compiling dashu-base v0.5.1
+   Compiling either v1.18.0
+   Compiling thiserror v2.0.21
+   Compiling serde_json v1.0.151
+   Compiling rustc-hash v2.1.3
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling log v0.4.34
+   Compiling itertools v0.14.0
+   Compiling num-traits v0.2.19
+   Compiling syn v3.0.6
+   Compiling clipper2-rust v1.2.0
+   Compiling approx v0.5.1
+   Compiling earcutr v0.5.0
+   Compiling uuid v1.27.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling dashu-ratio v0.5.1
+   Compiling manifold-rust v0.16.0
+   Compiling glam v0.29.3
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-metal-submission/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.91s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-submission-target/debug/deps/ingetrazo_core-1f54203ca09e4fe6)
+
+running 5 tests
+test gpu_memory::tests::compressed_odd_dimensions_layers_and_tiny_mips_use_complete_blocks ... ok
+test gpu_memory::tests::invalid_requests_do_not_change_accounting ... ok
+test gpu_memory::tests::live_driver_usage_not_double_counted_and_external_pressure_blocks ... ok
+test gpu_memory::global_limit_regression::global_limit_includes_other_heaps_reservations_and_retired_allocations ... ok
+test gpu_memory::tests::actual_aligned_requirements_rollback_and_fence_delayed_free ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 140 filtered out; finished in 0.00s
+
+     Running tests/boolean_acceptance.rs (/tmp/ingetrazo-metal-submission-target/debug/deps/boolean_acceptance-46f835c75edb7f71)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/drawing_axes_acceptance.rs (/tmp/ingetrazo-metal-submission-target/debug/deps/drawing_axes_acceptance-eef340927cbdd7b2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/mesh_share_acceptance.rs (/tmp/ingetrazo-metal-submission-target/debug/deps/mesh_share_acceptance-ceb03fda21eb8a63)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/test_i18n.rs (/tmp/ingetrazo-metal-submission-target/debug/deps/test_i18n-25e3a311e4443a01)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
