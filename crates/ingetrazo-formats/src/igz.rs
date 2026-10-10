@@ -313,6 +313,18 @@ fn material_model(mat: &Material) -> serde_json::Value {
     })
 }
 
+fn point_model(point: &ingetrazo_core::georef::GeoPoint) -> serde_json::Value {
+    serde_json::json!({"position":point.position,"name":point.name,"desc":point.desc})
+}
+
+fn path_model(path: &ingetrazo_core::georef::GeoPath) -> serde_json::Value {
+    use ingetrazo_core::georef::SurfaceFillMode;
+    let surface = path.surface.as_ref().map(|mode| match mode {
+        SurfaceFillMode::Flat => "flat", SurfaceFillMode::Draped => "draped"
+    });
+    serde_json::json!({"points":path.points,"closed":path.closed,"name":path.name,"surface":surface})
+}
+
 fn scene_model(scene: &Scene) -> serde_json::Value {
     let loose = mesh_to_json(&scene.mesh);
     let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
@@ -371,8 +383,10 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     });
     doc["georef"] = serde_json::json!({"datum": scene.geo_datum.as_ref().map(|d|
         serde_json::json!({"lat":d.lat,"lon":d.lon,"alt":d.alt,"north":d.north}))});
-    doc["geo_points"] = serde_json::json!(scene.geo_points);
-    doc["geo_paths"] = serde_json::json!(scene.geo_paths);
+    doc["geo_points"] = serde_json::json!(scene.geo_points.iter().map(|p|
+        overlay(&p.native_document,&p.native_baseline,point_model(p))).collect::<Vec<_>>());
+    doc["geo_paths"] = serde_json::json!(scene.geo_paths.iter().map(|p|
+        overlay(&p.native_document,&p.native_baseline,path_model(p))).collect::<Vec<_>>());
     doc["terrain"] = serde_json::json!(scene.terrain);
     doc["compositions"] = serde_json::json!(scene.sheets);
     doc["active_sheet_index"] = serde_json::json!(scene.active_sheet_index);
@@ -396,7 +410,7 @@ fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
     // original records for no-op saves; refuse edits instead of writing a file
     // the Python reader silently misinterprets.
     {
-        for key in ["compositions", "geo_points", "geo_paths", "terrain"] {
+        for key in ["compositions", "terrain"] {
             let value = current.get(key).unwrap();
             let nonempty = !value.is_null() && value.as_array().map(|a| !a.is_empty()).unwrap_or(true);
             if (scene.native_document.is_object() && scene.native_baseline.get(key) != Some(value))
@@ -722,8 +736,39 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             }
         }
     }
-    load_field!(geo_points, "geo_points");
-    load_field!(geo_paths, "geo_paths");
+    if let Some(points) = s_val.get("geo_points").and_then(|v| v.as_array()) {
+        for raw in points {
+            if let Some(position) = raw.get("position") {
+                if let Ok(position) = serde_json::from_value(position.clone()) {
+                    let mut point = ingetrazo_core::georef::GeoPoint::new(position,
+                        raw.get("name").and_then(|v| v.as_str()).unwrap_or(""),
+                        raw.get("desc").and_then(|v| v.as_str()).unwrap_or(""));
+                    point.native_document = raw.clone();
+                    point.native_baseline = point_model(&point);
+                    scene.geo_points.push(point);
+                }
+            }
+        }
+    }
+    if let Some(paths) = s_val.get("geo_paths").and_then(|v| v.as_array()) {
+        for raw in paths {
+            if let Some(points) = raw.get("points") {
+                if let Ok(points) = serde_json::from_value(points.clone()) {
+                    let mut path = ingetrazo_core::georef::GeoPath::new(points,
+                        raw.get("closed").and_then(|v| v.as_bool()).unwrap_or(false),
+                        raw.get("name").and_then(|v| v.as_str()).unwrap_or(""));
+                    path.surface = match raw.get("surface").and_then(|v| v.as_str()) {
+                        Some("flat") => Some(ingetrazo_core::georef::SurfaceFillMode::Flat),
+                        Some("draped") => Some(ingetrazo_core::georef::SurfaceFillMode::Draped),
+                        _ => None
+                    };
+                    path.native_document = raw.clone();
+                    path.native_baseline = path_model(&path);
+                    scene.geo_paths.push(path);
+                }
+            }
+        }
+    }
     load_field!(terrain, "terrain");
     load_field!(sheets, "compositions");
     load_field!(active_sheet_index, "active_sheet_index");

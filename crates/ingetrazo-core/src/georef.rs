@@ -225,6 +225,10 @@ impl SceneDatum {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct GeoPoint {
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
     pub position: DVec3,
     pub name: String,
     pub desc: String,
@@ -233,6 +237,8 @@ pub struct GeoPoint {
 impl GeoPoint {
     pub fn new(position: DVec3, name: impl Into<String>, desc: impl Into<String>) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             position,
             name: name.into(),
             desc: desc.into(),
@@ -335,6 +341,10 @@ pub enum SurfaceFillMode {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct GeoPath {
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
     pub points: Vec<DVec3>,
     pub closed: bool,
     pub name: String,
@@ -346,6 +356,8 @@ pub struct GeoPath {
 impl GeoPath {
     pub fn new(points: Vec<DVec3>, closed: bool, name: impl Into<String>) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             points,
             closed,
             name: name.into(),

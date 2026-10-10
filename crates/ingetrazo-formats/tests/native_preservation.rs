@@ -146,3 +146,22 @@ fn replacement_face_does_not_inherit_deleted_face_metadata() {
     assert!(scene_to_igz_document(&scene)["faces"][0].get("opaque_deleted").is_none());
     std::fs::remove_file(src).unwrap();
 }
+
+
+#[test]
+fn survey_points_and_paths_preserve_metadata_through_rename_reorder_and_edit() {
+    let src=temp("geographic-source.igz"); let dst=temp("geographic-save.igz");
+    let doc=json!({"edges":[],"faces":[],
+        "geo_points":[{"position":[1.,2.,3.],"name":"P1","desc":"survey","opaque":1},{"position":[4.,5.,6.],"name":"P2","opaque":2}],
+        "geo_paths":[{"points":[[0.,0.,0.],[1.,0.,0.],[1.,1.,0.]],"name":"plot","closed":true,"surface":"draped","opaque":3}]});
+    write_plain(&doc,&src); let mut scene=load_igz(&src).unwrap();
+    assert_eq!(scene.geo_points.len(),2); assert!(scene.geo_paths[0].surface.is_some());
+    scene.geo_points.swap(0,1);scene.geo_points[1].name="renamed".into();scene.geo_points[1].position.z=9.;
+    scene.geo_paths[0].points[1].z=5.;scene.geo_paths[0].name="changed".into();
+    save_igz(&scene,&dst).unwrap(); let out=scene_to_igz_document(&scene);
+    assert_eq!(out["geo_points"][0]["opaque"],2);assert_eq!(out["geo_points"][1]["opaque"],1);
+    assert_eq!(out["geo_paths"][0]["opaque"],3);assert_eq!(out["geo_paths"][0]["surface"],"draped");
+    let reopened=load_igz(&dst).unwrap();
+    assert_eq!(reopened.geo_points[1].position.z,9.);assert_eq!(reopened.geo_paths[0].points[1].z,5.);
+    std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}
