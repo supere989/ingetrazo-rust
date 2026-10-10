@@ -81,7 +81,9 @@ def check_materials(path,expected_asset):
                 point=vertices[int(indices[0])-1];uv=uvs[int(indices[1])-1]
                 expected=(0.5*(10-point[0])+0.25,0.5*(point[1]-20)+0.5)
                 assert all(abs(a-b)<1e-6 for a,b in zip(uv,expected)),(point,uv,expected);checks+=1
-    assert material_names and all(name.startswith("Audit_Paint_") for name in material_names)
+    assert set(material_names)=={"Audit_Paint"},material_names
+    definitions=[line.split()[1] for line in path.with_suffix(".mtl").read_text().splitlines() if line.startswith("newmtl ")]
+    assert definitions==["Audit_Paint"],definitions
     assets=[]
     for line in path.with_suffix(".mtl").read_text().splitlines():
         fields=line.split()
@@ -131,6 +133,14 @@ def main():
         colored=Scene();obj.load_obj(colored,color_output)
         colored_faces=[f for group in colored.groups for f in world_mesh(group).faces]+list(colored.mesh.faces)
         assert colored_faces and all(all(abs(float(a)-b)<1e-6 for a,b in zip(f.attrs["color"],(.2,.4,.8))) for f in colored_faces)
+        distinct=Scene();distinct.materials["First Paint"]=Material("First Paint",(.2,.4,.8));distinct.materials["Second Paint"]=Material("Second Paint",(.2,.4,.8))
+        for i,name in enumerate(("First Paint","Second Paint")):
+            distinct.mesh.add_face([QVector3D(i*2,0,0),QVector3D(i*2+1,0,0),QVector3D(i*2,1,0)])
+            distinct.mesh.faces[-1].attrs={"mat":name}
+        distinct_source=directory/"distinct.igz";igz.save_scene(distinct,distinct_source)
+        distinct_output=directory/"distinct.obj";subprocess.run([args.binary,"convert",str(distinct_source),str(distinct_output)],check=True,capture_output=True)
+        definitions=[line.split()[1] for line in distinct_output.with_suffix(".mtl").read_text().splitlines() if line.startswith("newmtl ")]
+        assert set(definitions)=={"First_Paint","Second_Paint"},definitions
         bad=directory/"missing.igz";bad.write_text(json.dumps({"igz_format":1,"app_version":"independent","scene":{"edges":[],"faces":[{"vertices":[[0,0,0],[1,0,0],[0,1,0]],"texture":{"embed":"absent.png"}}]}}))
         preserved=directory/"preserved.obj";preserved.write_bytes(b"original-object");preserved.with_suffix(".mtl").write_bytes(b"original-material")
         refused=subprocess.run([args.binary,"convert",str(bad),str(preserved)],capture_output=True,text=True)

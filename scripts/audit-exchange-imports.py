@@ -27,7 +27,7 @@ def colors(scene):
 def edge_segments(scene):
     return sorted(set(tuple(sorted((tuple(round(v,6) for v in (edge.a.x(),edge.a.y(),edge.a.z())),tuple(round(v,6) for v in (edge.b.x(),edge.b.y(),edge.b.z()))))) for mesh in meshes(scene) for edge in mesh.edges))
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument("--binary",default="target/debug/ingetrazo");args=parser.parse_args();app=QApplication.instance() or QApplication([]);rows=[]
+    parser=argparse.ArgumentParser();parser.add_argument("--binary",default="target/debug/ingetrazo");parser.add_argument("--output",default="docs/audits/exchange-import-evidence.json");args=parser.parse_args();app=QApplication.instance() or QApplication([]);rows=[]
     with tempfile.TemporaryDirectory() as temp:
         directory=Path(temp)
         objpath=directory/"parts.obj";(directory/"parts.mtl").write_text("newmtl red\nKd 1 0 0\n")
@@ -55,5 +55,5 @@ def main():
                     row["original_segments"]=edge_segments(original);row["rust_segments"]=edge_segments(rust)
             rows.append(row)
     report={"provenance":context(),"passed":all(not r["errors"] for r in rows),"results":rows,"scope":"Named touching OBJ parts+MTL colors, STL triangles, DXF metre LINE/LWPOLYLINE/layer. Not full entity/unit/recentering/texture/import atomicity coverage."}
-    Path("docs/audits/exchange-import-baseline.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps({"passed":report["passed"],"results":[{"format":r["format"],"errors":r["errors"]} for r in rows]},indent=2));return 0 if report["passed"] else 1
+    Path(args.output).write_text(json.dumps(report,indent=2)+"\n");print(json.dumps({"passed":report["passed"],"results":[{"format":r["format"],"errors":r["errors"]} for r in rows]},indent=2));return 0 if report["passed"] else 1
 if __name__=="__main__":raise SystemExit(main())
