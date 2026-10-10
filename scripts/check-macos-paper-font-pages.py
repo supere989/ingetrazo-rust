@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Six required native macOS PDFs; retain partial diagnostics without accepting refusals."""
 import os,sys,json
+import numpy as np
 from pathlib import Path
 os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
 from PySide6.QtWidgets import QApplication
@@ -11,9 +12,11 @@ NAMES=['arabic','cjk','helvetica','helvetica-bold','helvetica-italic','times-bol
 def compare_images(source,native):
  if source.size()!=native.size():return {'passed':False,'error':'image dimensions differ'}
  source=source.convertToFormat(QImage.Format.Format_RGBA8888);native=native.convertToFormat(QImage.Format.Format_RGBA8888)
- a,b=bytes(source.constBits()),bytes(native.constBits())
- source_ink=sum(a[i:i+3]!=b'\xff\xff\xff'for i in range(0,len(a),4));native_ink=sum(b[i:i+3]!=b'\xff\xff\xff'for i in range(0,len(b),4))
- changed=sum(a[i:i+4]!=b[i:i+4]for i in range(0,len(a),4))
+ def pixels(image):
+  return np.frombuffer(image.constBits(),dtype=np.uint8).reshape(image.height(),image.bytesPerLine())[:,:image.width()*4].reshape(image.height(),image.width(),4)
+ a,b=pixels(source),pixels(native)
+ source_ink=int(np.count_nonzero(np.any(a[:,:,:3]!=255,axis=2)));native_ink=int(np.count_nonzero(np.any(b[:,:,:3]!=255,axis=2)))
+ changed=int(np.count_nonzero(np.any(a!=b,axis=2)))
  return {'passed':source_ink>0 and native_ink>0 and changed==0,'changed_pixels':changed,'source_ink':source_ink,'native_ink':native_ink}
 def read_page(path,dpi):
  doc=QPdfDocument()
