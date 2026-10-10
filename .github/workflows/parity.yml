@@ -224,6 +224,8 @@ jobs:
         run: python scripts/check-python-pieces.py
       - name: Original runtime nested world dimension measurement
         run: python scripts/check-python-dimension-world.py
+      - name: Original command-specific annotation shareback Undo and anchor lifetimes
+        run: INGETRAZO_SHAREBACK_EVIDENCE=docs/audits/shareback-annotations-ci python scripts/check-python-shareback-annotations.py
       - name: Original runtime dimension anchors and nested outliner
         run: python scripts/check-python-dimension-anchors.py
       - name: Original runtime planar healing
@@ -306,6 +308,8 @@ jobs:
             docs/audits/vector-view-ci/
             docs/audits/saved-vector-view-ci/
             docs/audits/section-numerics-ci/
+            docs/audits/shareback-annotations-ci/
+            docs/audits/python-shareback-annotations-current.json
             docs/audits/section-solid-ci/
             docs/audits/section-heldout-hatch-ci/
             docs/audits/composer-pdf-ui/

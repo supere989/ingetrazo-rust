@@ -1,0 +1,108 @@
+{
+  "provenance": {
+    "rust_commit": "dbe99fc2abd071fe3eff9aceb259547a01041aa8",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "moved",
+      "original_runtime_endpoints": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "scaled",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          16,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "exploded",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          16,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "deleted",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          16,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "context",
+      "original_runtime_endpoints": [
+        [
+          10,
+          20,
+          30
+        ],
+        [
+          11,
+          20,
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "case": "outliner",
+      "original_runtime_endpoints": [
+        [
+          111,
+          222,
+          333
+        ],
+        [
+          112,
+          222,
+          333
+        ]
+      ],
+      "passed": true
+    }
+  ],
+  "scope": "Stable anchors refreshed at GUI frame boundaries: movement/group/scale/explode/deletion with source command-specific mesh shareback preserving annotations and replaced-vertex endpoint fallback; original native reopen and original live vertex/group endpoint rebinding. Translated-context world dimension creation and three-level outliner actual selection/edit/rename+UID retention/undo. Nested nonuniform/reflected world-frame measurement and rendered inspector remain separate."
+}

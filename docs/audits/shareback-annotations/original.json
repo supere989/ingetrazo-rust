@@ -1,0 +1,660 @@
+{
+  "provenance": {
+    "rust_commit": "dbe99fc2abd071fe3eff9aceb259547a01041aa8",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "finish": {
+      "mesh": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "dimensions": [
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            11.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "text": null,
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        },
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            14.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            2.0,
+            0.0
+          ],
+          "text": "Local <>",
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": true
+        }
+      ]
+    },
+    "undo0": {
+      "mesh": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "dimensions": [
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            11.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "text": null,
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        },
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            14.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            2.0,
+            0.0
+          ],
+          "text": "Local <>",
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        }
+      ]
+    },
+    "redo0": {
+      "mesh": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "dimensions": [
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            11.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "text": null,
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        },
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            14.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            2.0,
+            0.0
+          ],
+          "text": "Local <>",
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        }
+      ]
+    },
+    "undo1": {
+      "mesh": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "dimensions": [
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            11.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "text": null,
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        },
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            14.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            2.0,
+            0.0
+          ],
+          "text": "Local <>",
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        }
+      ]
+    },
+    "redo1": {
+      "mesh": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "dimensions": [
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            11.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "text": null,
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        },
+        {
+          "a": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "b": [
+            14.0,
+            20.0,
+            30.0
+          ],
+          "offset": [
+            0.0,
+            2.0,
+            0.0
+          ],
+          "text": "Local <>",
+          "axis": null,
+          "anchor_a": true,
+          "anchor_b": false
+        }
+      ]
+    },
+    "annotation_only_history": [
+      1,
+      0,
+      1
+    ],
+    "section_retained": [
+      1,
+      1,
+      1
+    ],
+    "nested_parked_and_root": [
+      {
+        "mesh": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            6.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "dimensions": [
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              112.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "text": null,
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          },
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              117.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Nested <>",
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": true
+          }
+        ]
+      },
+      {
+        "mesh": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "dimensions": [
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              112.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "text": null,
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          },
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              117.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Nested <>",
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          }
+        ]
+      },
+      {
+        "mesh": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            6.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "dimensions": [
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              112.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "text": null,
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          },
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              117.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Nested <>",
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          }
+        ]
+      },
+      {
+        "mesh": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            6.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "dimensions": [
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              112.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "text": null,
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          },
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              117.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Nested <>",
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          }
+        ]
+      },
+      {
+        "mesh": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "dimensions": [
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              112.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "text": null,
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          },
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              117.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Nested <>",
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          }
+        ]
+      },
+      {
+        "mesh": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            6.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "dimensions": [
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              112.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "text": null,
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          },
+          {
+            "a": [
+              111.0,
+              222.0,
+              333.0
+            ],
+            "b": [
+              117.0,
+              222.0,
+              333.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Nested <>",
+            "axis": null,
+            "anchor_a": true,
+            "anchor_b": false
+          }
+        ]
+      }
+    ]
+  }
+}

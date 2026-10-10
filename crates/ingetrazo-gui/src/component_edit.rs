@@ -53,6 +53,35 @@ impl SourceEntryBake {
     }
 }
 
+/// The source command restores only the prototype and its selected placement.
+/// All annotation/resource commands absorbed by it retain their current state.
+pub(crate) fn shareback_restore(current:&Scene,snapshot:&Scene)->Result<Scene,String> {
+    let id=snapshot.history_shareback.ok_or("Missing shareback target")?;
+    fn find(groups:&[ingetrazo_core::groups::Group],id:uuid::Uuid)->Option<&ingetrazo_core::groups::Group>{for group in groups {if group.id==id{return Some(group);}if let Some(found)=find(&group.children,id){return Some(found);}}None}
+    fn restore(groups:&mut [ingetrazo_core::groups::Group],id:uuid::Uuid,old:&ingetrazo_core::groups::Group){for group in groups {if group.id==id{group.mesh=old.mesh.clone();group.transform=old.transform;return;}restore(&mut group.children,id,old);}}
+    let old=find(&snapshot.groups,id).ok_or("Shareback target no longer exists")?;
+    let mut result=current.clone();
+    if let Some(token)=old.mesh_share {result.publish_mesh_share(token,old.mesh.clone())?;}
+    restore(&mut result.groups,id,old);
+    // restore_state replaces prototype vertex objects. Only anchors owned by
+    // that prototype die; source refresh_anchors retries their cached points.
+    fn affected(scene:&Scene,anchor:&ingetrazo_core::dimension_anchors::VertexAnchor,id:uuid::Uuid,token:Option<uuid::Uuid>)->bool {
+        let Some(last)=anchor.path.last() else{return false;};
+        *last==id || token.is_some_and(|token|find(&scene.groups,*last).is_some_and(|group|group.mesh_share==Some(token)))
+    }
+    let mut dimensions=std::mem::take(&mut result.dimensions);
+    for dimension in &mut dimensions {for (point,anchor) in [(&dimension.start,&mut dimension.anchor_a),(&dimension.end,&mut dimension.anchor_b)] {
+        if anchor.as_ref().is_some_and(|anchor|affected(current,anchor,id,old.mesh_share)) {*anchor=result.resolve_dimension_anchor(*point);}
+    }}
+    result.dimensions=dimensions;result.history_shareback=None;Ok(result)
+}
+
+fn shareback_snapshot(session:&ComponentEditSession,candidate:&Scene)->Result<Scene,String> {
+    let mut snapshot=session.original_scene.clone();snapshot.history_shareback=Some(session.group_id);
+    let mut restored=shareback_restore(candidate,&snapshot)?;
+    restored.history_shareback=Some(session.group_id);Ok(restored)
+}
+
 fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scene,bool),String> {
         let mut candidate=session.original_scene.clone();
         let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
@@ -125,13 +154,38 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             if scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.dimension_frame.inverse();
                 candidate.dimensions=scene.dimensions.clone();
-                for dimension in &mut candidate.dimensions{
-                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
+                let mut dimensions=std::mem::take(&mut candidate.dimensions);
+                for dimension in &mut dimensions{
+                    let held=(dimension.anchor_a.is_some(),dimension.anchor_b.is_some());
+                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.measurement_frame=candidate.dimension_frame;
+                    // Leaving an ancestor is a representation change, not a new
+                    // AddDimension command. Never revive a hold already lost
+                    // by a completed child shareback Undo.
+                    dimension.anchor_a=if held.0 {candidate.resolve_dimension_anchor(dimension.start)}else{None};
+                    dimension.anchor_b=if held.1 {candidate.resolve_dimension_anchor(dimension.end)}else{None};
                 }
-                candidate.bind_dimensions();
+                candidate.dimensions=dimensions;
             }
             if scene.section_planes!=session.section_baseline{let transform=candidate.dimension_frame.inverse();candidate.section_planes=scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
             candidate.show_section_cuts=scene.show_section_cuts;candidate.show_section_planes=scene.show_section_planes;candidate.show_section_fill=scene.show_section_fill;
+            if session.fold_history && session.mesh_baseline!=scene.mesh {
+                // The original edit view keeps pre-existing dimensions anchored
+                // to the parked prototype, not its temporary world mesh copy.
+                // Shareback replaces vertex objects; re-take only held endpoints
+                // at their cached pre-command coordinates, never follow Rust UID
+                // continuity across this source identity replacement boundary.
+                let mut dimensions=std::mem::take(&mut candidate.dimensions);
+                let token=session.original_scene.groups[group_index].mesh_share;
+                for dimension in &mut dimensions {
+                    if let Some(before)=session.original_scene.dimensions.iter().find(|d|d.id==dimension.id) {
+                        for (point,anchor,old_point,old_anchor) in [(&mut dimension.start,&mut dimension.anchor_a,before.start,&before.anchor_a),(&mut dimension.end,&mut dimension.anchor_b,before.end,&before.anchor_b)] {
+                            let affected=old_anchor.as_ref().is_some_and(|a|a.path.last().is_some_and(|id|*id==session.group_id || token.is_some_and(|token|session.original_scene.groups.iter().any(|g|g.id==*id && g.mesh_share==Some(token)))));
+                            if affected {*point=old_point;*anchor=candidate.resolve_dimension_anchor(*point);}
+                        }
+                    }
+                }
+                candidate.dimensions=dimensions;
+            }
             candidate.refresh_dimensions();
         }
         candidate.clear_selection();
@@ -181,7 +235,7 @@ impl IngeTrazoApp {
         let index=match self.component_history_target(redo){Ok(Some(index))=>index,Ok(None)=>return None,Err(error)=>{self.status_message=error;return Some(false);}};
         let next=if redo {self.redo_stack.last()}else{self.undo_stack.last()}.unwrap();
         let session=&self.component_edit_stack[index];
-        let mut replacement=next.clone();
+        let mut replacement=if next.history_shareback.is_some() {match shareback_restore(&session.original_scene,next){Ok(scene)=>scene,Err(error)=>{self.status_message=error;return Some(false);}}}else{next.clone()};
         // Adopt only existing placement identities, never deduplicate meshes
         // by equality. A pre-migration snapshot can target the parked loose
         // mesh without removing identities needed by the open edit session.
@@ -193,7 +247,7 @@ impl IngeTrazoApp {
                 }
             }
         }
-        let previous=session.original_scene.clone();
+        let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;
         if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
         let mut cancel_replacement=replacement.clone();
         if let Some(original)=session.cancel_scene.groups.iter().find(|g|g.id==session.group_id){
@@ -357,13 +411,15 @@ impl IngeTrazoApp {
         // Each snapshot receives the same source world/container publication
         // as Finish, while retaining its individual global chronological slot.
         let target=self.scene.history_context.clone();
+        let fold=session.fold_history && session.mesh_baseline!=finishing_scene.mesh;
+        let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(scene)=>Some(scene),Err(error)=>{self.status_message=error;return;}}}else{None};
         let mut lifted_undo=self.undo_stack.clone();let mut lifted_redo=self.redo_stack.clone();
-        if !session.fold_history || !changed {
+        if !fold || !changed {
             for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene
                     },Err(error)=>{self.status_message=error;return;}};
                 }
             }
@@ -410,12 +466,12 @@ impl IngeTrazoApp {
         for (parent,candidate) in self.component_edit_stack.iter_mut().zip(parked_candidates){parent.original_scene=candidate;}
         self.scene=candidate;self.bump_model_revision();self.camera=session.original_camera;
         self.undo_stack=lifted_undo;self.redo_stack=lifted_redo;
-        if session.fold_history && changed {
+        if fold && changed {
             // Sharing leaves fold only commands targeting this edit mesh.
             // Prior document commands retain their global positions.
             self.undo_stack.retain(|entry|!entry.history_context.starts_with(&target));
             self.redo_stack.retain(|entry|!entry.history_context.starts_with(&target));
-            if changed {self.undo_stack.push(session.original_scene);self.redo_stack.clear();}
+            if changed {self.undo_stack.push(folded_snapshot.unwrap());self.redo_stack.clear();}
         }
 
         self.status_message=if changed {"Committed group edit"} else {"Group edit unchanged; pending history targets validated"}.into();
@@ -445,6 +501,18 @@ mod tests {
         app.scene.select(SelectionItem::Group(0));app
     }
     #[test]
+    fn shareback_retains_annotations_and_ordinary_annotation_history_stays_reversible() {
+        let mut app=app();app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y));app.scene.bind_dimensions();
+        app.begin_component_edit();app.save_undo_state();app.scene.mesh.vertices[1].position.x=4.;app.scene.refresh_dimensions();
+        app.save_undo_state();let mut dimension=ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::new(4.,0.,0.),DVec3::Y*2.);dimension.text_override=Some("Local <>".into());let id=dimension.id;app.scene.dimensions.push(dimension);app.scene.bind_dimensions();app.finish_component_edit();
+        assert_eq!(app.undo_stack.len(),1);assert_eq!(app.scene.dimensions[0].end,DVec3::X);assert!(app.scene.dimensions[0].anchor_b.is_none());
+        for _ in 0..2 {app.undo();assert_eq!(app.scene.groups[0].mesh.vertices[1].position,DVec3::X);assert_eq!(app.scene.groups[1].mesh.vertices[1].position,DVec3::X);assert_eq!(app.scene.dimensions[1].id,id);assert_eq!(app.scene.dimensions[1].end,DVec3::new(4.,0.,0.));assert!(app.scene.dimensions[1].anchor_b.is_none());app.redo();assert_eq!(app.scene.groups[0].mesh.vertices[1].position,DVec3::new(4.,0.,0.));assert!(app.scene.dimensions[1].anchor_b.is_none());}
+        assert!(app.edit_dimension(1,Some("Independent".into()),None,None));app.undo();assert_eq!(app.scene.dimensions[1].text_override.as_deref(),Some("Local <>"));app.redo();assert_eq!(app.scene.dimensions[1].text_override.as_deref(),Some("Independent"));
+        app.undo();app.undo();assert!(app.scene.history_shareback.is_none());app.save_undo_state();app.scene.dimensions[1].text_override=Some("Branch".into());assert!(app.redo_stack.is_empty());assert!(app.undo_stack.last().unwrap().history_shareback.is_none());
+        let mut snapshot=app.scene.clone();snapshot.history_shareback=Some(app.scene.groups[0].id);let encoded=serde_json::to_value(&snapshot).unwrap();assert!(encoded.get("history_shareback").is_none());let decoded:Scene=serde_json::from_value(encoded).unwrap();assert!(decoded.history_shareback.is_none());
+    }
+
+    #[test]
     fn axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context() {
         let mut app=app();let transform=DMat4::from_translation(DVec3::new(3.,4.,5.))*DMat4::from_rotation_y(30_f64.to_radians())*DMat4::from_scale(DVec3::new(-2.,3.,4.));app.scene.groups[0].transform=transform;
         let start=transform.transform_point3(DVec3::ZERO);let end=transform.transform_point3(DVec3::X);
@@ -460,7 +528,7 @@ mod tests {
     fn world_dimensions_commit_without_second_placement_transform_and_cancel_restore() {
         let mut app=app();app.scene.clear_selection();app.scene.select(SelectionItem::Group(1));
         let original=app.scene.clone();app.begin_component_edit();
-        app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::new(3.,4.,5.),DVec3::new(4.,4.,5.),DVec3::Y));app.scene.bind_dimensions();
+        app.save_undo_state();app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::new(3.,4.,5.),DVec3::new(4.,4.,5.),DVec3::Y));app.scene.bind_dimensions();
         app.finish_component_edit();assert_eq!(app.component_edit_stack.len(),0);assert_eq!(app.scene.dimensions.len(),1);
         assert_eq!(app.scene.dimensions[0].start,DVec3::new(3.,4.,5.));assert_eq!(app.scene.dimensions[0].end,DVec3::new(4.,4.,5.));assert_eq!(app.scene.dimensions[0].offset,DVec3::Y);
         assert_eq!(app.scene.dimensions[0].anchor_a.as_ref().unwrap().path,vec![app.scene.groups[1].id]);
@@ -474,7 +542,11 @@ mod tests {
         app.finish_component_edit();assert!(app.component_edit_stack.is_empty());
         assert_eq!(app.undo_stack.len(),1);assert_eq!(app.scene.groups[0].mesh.vertices[0].position.z,7.);
         assert_eq!(app.scene.groups[1].mesh.vertices[0].position.z,7.);assert_eq!(app.scene.groups[1].transform,before.groups[1].transform);
-        let committed=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,committed);
+        let committed=app.scene.clone();app.undo();
+        // Source Reshare restores prototype geometry; it does not restore
+        // selection or rewind document version counters as a Scene snapshot.
+        let mut expected=before;expected.selection=app.scene.selection.clone();expected.selection_order=app.scene.selection_order.clone();expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);assert!(app.scene.history_shareback.is_none());
+        app.redo();let mut expected=committed;expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);assert!(app.scene.history_shareback.is_none());
     }
     #[test]
     fn cancel_and_fragment_save_preserve_document_and_history() {
@@ -512,7 +584,7 @@ mod tests {
         // Actual original nested-parent-bake-survives-undo-False control:
         // entry axes survive Undo of the shared leaf edit.
         expected.groups[2].native_document=serde_json::json!({"axes":DMat4::IDENTITY.to_cols_array()});
-        app.undo();assert_eq!(app.scene,expected);
+        app.undo();expected.selection=app.scene.selection.clone();expected.selection_order=app.scene.selection_order.clone();expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);assert!(app.scene.history_shareback.is_none());
     }
 
     #[test]

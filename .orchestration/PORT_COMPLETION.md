@@ -6,11 +6,11 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-Reviewed section painter c2fa4bb atop mainb5abb53:532 workspace tests pass/twoignored; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
+Reviewed shareback c9cab2f:533 canonical workspace tests pass/twoignored; eight exact original command cases, six anchor reopens and four negatives pass; narrow annotation Undo defect corrected; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
 
 | Worker | Isolated worktree | Current ownership | State |
 |---|---|---|---|
-| document_integrity | /tmp/ingetrazo-constructor-lifetime | Command-specific component shareback Undo parity; startup owners integrated | Running |
+| document_integrity | /tmp/ingetrazo-shareback-policies | Embedded texture/global entity publication and full command-specific history audit | Running |
 | geometry | /tmp/ingetrazo-sheet-view-pdf | Source section solid/hatch PDF painters; default/raster/text and complete paper scope retained | Running |
 | validation | /tmp/ingetrazo-metal-host | Direct Metal egui painter/shared app/CAMetalLayer, actual GPU and WSI controls, full native renderer | Running |
 
@@ -289,3 +289,5 @@ Public41a1 CI38045557038 completed SUCCESS across all configured jobs, freshly v
 Actual offscreen Metal Drop proof both architectures reviewed/integrateda2d3d1;531canonicalPASS2ignored. Isolated host530591d ARM WSI step failed bounded15s; no mainhostadoption. Root sectionfill isolated532PASS, freshsolid78exact, heldout-hatch replay31889live.
 
 Independent root section-fill review: fresh solid, savedtilteddefault hatch and heldoutscale20/color#dc9b4e/hatch0.7 each78exactpages;18exactsource controls pluscoordinate/validPDF negatives pass. Combined532PASS2ignored. Source grid300DPI failure retained bygeometry; native Metal WSIobserver0e0bb7c actualCI38046817228 live, boundedWSIfailurestillOPEN.
+
+Shareback reviewed c9cab2f:533canonicalPASS2ignored, retainedfresh8exact/fournegatives+sixoriginalanchors. Fullsource command families/resource publication remainopen. Rootgrid534workspace/defaultpageslive50346; native callbackobserveref689 CI38047180937 live.
