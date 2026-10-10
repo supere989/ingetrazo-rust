@@ -1,0 +1,114 @@
+{
+  "cases": [
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: missing field `source`",
+      "input": {}
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: missing field `zoom`",
+      "input": {
+        "source": "osm"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: missing field `zoom`",
+      "input": {
+        "source": "custom"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: missing field `zoom`",
+      "input": {
+        "name": "ignored",
+        "source": "esri_imagery",
+        "url_template": "ignored"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid type: sequence, expected a boolean",
+      "input": {
+        "opacity": 1.5,
+        "source": "custom",
+        "visible": [],
+        "zoom": "12"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid type: string \"42.5\", expected f64",
+      "input": {
+        "patches": [],
+        "radius_m": "42.5",
+        "source": "custom",
+        "zoom": true
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: missing field `zoom`",
+      "input": {
+        "opacity": -2,
+        "source": "custom"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid type: string \"1\", expected f64",
+      "input": {
+        "patches": [
+          [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        ],
+        "source": "custom"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid type: string \"12.8\", expected u8",
+      "input": {
+        "source": "custom",
+        "zoom": "12.8"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid type: null, expected f64",
+      "input": {
+        "radius_m": null,
+        "source": "custom"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid type: string \"bad\", expected f64",
+      "input": {
+        "patches": [
+          [
+            1,
+            "bad",
+            3,
+            4
+          ]
+        ],
+        "source": "custom"
+      }
+    },
+    {
+      "document_opened": false,
+      "error": "Invalid document structure: Invalid base-map capture: invalid value: integer `300`, expected u8",
+      "input": {
+        "source": "custom",
+        "zoom": 300
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+fn main(){let result:Vec<_>=std::env::args().skip(1).map(|p|ingetrazo_formats::geoimport::load_features(std::path::Path::new(&p)).unwrap()).collect();println!("{}",serde_json::to_string(&result).unwrap());}

@@ -71,10 +71,12 @@ fn main() {
         let draw = Draw {
             origin_mm: [20., 30.],
             text: Some(TextDraw {
+                bold: false,
                 font: font.clone(),
                 scale_mm: 14. * 25.4 / 72. / 100. * 0.75,
                 italic: call["font"]["italic"].as_bool().unwrap(),
                 glyphs,
+                decorations: Vec::new(),
             }),
             even_odd: true,
             path: Vec::new(),
@@ -132,6 +134,29 @@ fn main() {
     };
     let before = font.stats();
     assert!(ingetrazo_formats::sheet_pdf::save_original_qt_paper(&sentinel, &[bad_page]).is_err());
+    assert_eq!(std::fs::read(&sentinel).unwrap(), b"preserved");
+    assert_eq!(before, font.stats());
+    let mut invalid_decoration = Page {
+        device_dpi: pages[0].device_dpi,
+        size_mm: pages[0].size_mm,
+        media_box_points: pages[0].media_box_points,
+        origin_mm: pages[0].origin_mm,
+        draws: pages[0].draws.clone(),
+    };
+    invalid_decoration.draws[0]
+        .text
+        .as_mut()
+        .unwrap()
+        .decorations
+        .push(ingetrazo_formats::sheet_pdf::TextDecoration {
+            line_px: [0., 0., 10., 0.],
+            width_px: f64::NAN,
+        });
+    let before = font.stats();
+    assert!(
+        ingetrazo_formats::sheet_pdf::save_original_qt_paper(&sentinel, &[invalid_decoration])
+            .is_err()
+    );
     assert_eq!(std::fs::read(&sentinel).unwrap(), b"preserved");
     assert_eq!(before, font.stats());
     let mut other_cache = FontCache::default();

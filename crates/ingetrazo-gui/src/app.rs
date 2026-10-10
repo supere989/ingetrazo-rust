@@ -62,6 +62,9 @@ pub struct IngeTrazoApp {
     pub show_simplify_dialog: bool,
     pub simplify_angle: f64,
     pub show_open_dialog: bool,
+    pub show_geographic_import_dialog: bool,
+    pub base_map_requested_zoom:u8,
+    pub base_map_requested_visible:bool,
     pub show_save_dialog: bool,
     pub dialog_path_input: String,
     pub active_material: String,
@@ -157,6 +160,9 @@ impl IngeTrazoApp {
             show_simplify_dialog: false,
             simplify_angle: 1.0,
             show_open_dialog: false,
+            show_geographic_import_dialog: false,
+            base_map_requested_zoom:16,
+            base_map_requested_visible:true,
             show_save_dialog: false,
             dialog_path_input: String::new(),
             active_material: "Default Cream".to_string(),
@@ -271,6 +277,7 @@ impl IngeTrazoApp {
         match load_file(path) {
             Ok(loaded_scene) => {
                 self.save_undo_state();
+                if let Some(capture)=&loaded_scene.tile_layer{self.base_map_requested_zoom=capture.zoom.clamp(1,21) as u8;self.base_map_requested_visible=capture.visible;}
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
@@ -377,6 +384,9 @@ impl IngeTrazoApp {
             let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
+            // Source map capture is a runtime panel publication; model commands
+            // do not own it. Transfer the current capture through older history.
+            prev.tile_layer=self.scene.tile_layer.take();
             crate::document_presentation::preserve(&self.scene,&mut prev);
             self.scene = prev;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
@@ -404,6 +414,7 @@ impl IngeTrazoApp {
             }
             let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
+            next.tile_layer=self.scene.tile_layer.take();
             crate::document_presentation::preserve(&self.scene,&mut next);
             self.scene = next;self.bump_model_revision();
             self.camera = self.scene.camera.clone();

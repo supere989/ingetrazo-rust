@@ -1,0 +1,250 @@
+{
+  "cases": [
+    {
+      "input": {},
+      "document_opened": true,
+      "tile_capture": null
+    },
+    {
+      "input": {
+        "source": "osm"
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "osm",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "name": "OpenStreetMap (streets)",
+        "attribution": "\u00a9 OpenStreetMap contributors"
+      }
+    },
+    {
+      "input": {
+        "source": "custom"
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "input": {
+        "source": "esri_imagery",
+        "name": "ignored",
+        "url_template": "ignored"
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      }
+    },
+    {
+      "input": {
+        "source": "custom",
+        "zoom": "12",
+        "visible": [],
+        "opacity": 1.5
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 12,
+        "radius_m": 1200.0,
+        "visible": false,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "input": {
+        "source": "custom",
+        "zoom": true,
+        "radius_m": "42.5",
+        "patches": []
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 1,
+        "radius_m": 42.5,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            42.5,
+            42.5
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "input": {
+        "source": "custom",
+        "opacity": -2
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 0.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "input": {
+        "source": "custom",
+        "patches": [
+          [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        ]
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "input": {
+        "source": "custom",
+        "zoom": "12.8"
+      },
+      "document_opened": true,
+      "tile_capture": null
+    },
+    {
+      "input": {
+        "source": "custom",
+        "radius_m": null
+      },
+      "document_opened": true,
+      "tile_capture": null
+    },
+    {
+      "input": {
+        "source": "custom",
+        "patches": [
+          [
+            1,
+            "bad",
+            3,
+            4
+          ]
+        ]
+      },
+      "document_opened": true,
+      "tile_capture": null
+    },
+    {
+      "input": {
+        "source": "custom",
+        "zoom": 300
+      },
+      "document_opened": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 300,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    }
+  ]
+}

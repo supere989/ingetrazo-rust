@@ -596,6 +596,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     doc["geo_paths"] = serde_json::json!(scene.geo_paths.iter().map(|p|
         overlay(&p.native_document,&p.native_baseline,path_model(p))).collect::<Vec<_>>());
     doc["terrain"] = serde_json::json!(scene.terrain);
+    doc["tile_layer"] = serde_json::json!(scene.tile_layer);
     doc["compositions"] = serde_json::json!(scene.sheets.iter().map(sheet_to_json).collect::<Vec<_>>());
     doc["active_sheet_index"] = serde_json::json!(scene.active_sheet_index);
     doc
@@ -797,6 +798,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     scene.display_style=ingetrazo_core::presentation::DocumentStyle::try_from_json(&s_val["display_style"]).map_err(IgzError::InvalidDocument)?;
     scene.shadows=ingetrazo_core::presentation::ShadowSettings::try_from_json(&s_val["shadows"]).map_err(IgzError::InvalidDocument)?;
     scene.embedded_textures = embedded_textures;
+    scene.tile_layer=s_val.get("tile_layer").and_then(ingetrazo_core::georef::TileCapture::from_source_json);
     scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
 
@@ -1084,6 +1086,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             "in" => LengthUnit::Inches, "ft" => LengthUnit::Feet, _ => LengthUnit::Meters
         };
     }
+    scene.tile_layer=s_val.get("tile_layer").and_then(ingetrazo_core::georef::TileCapture::from_source_json);
     scene.native_document = s_val.clone();
     if s_val.get("display_style").is_some(){scene.show_section_fill=scene.display_style.section_fill;}else{scene.display_style.section_fill=scene.show_section_fill;}
     scene.native_baseline = scene_model(&scene);

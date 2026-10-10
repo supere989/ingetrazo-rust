@@ -1,0 +1,21 @@
+{
+  "original_document_opens": 12,
+  "native_document_opens": 0,
+  "different_cases": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "source_revision": "f385c550",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "claim": "retained actual loader failure baseline; no parity or rendering claim"
+}
