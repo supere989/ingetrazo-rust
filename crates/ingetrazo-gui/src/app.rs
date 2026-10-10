@@ -109,6 +109,7 @@ pub struct IngeTrazoApp {
     pub composer_state: crate::composer::ComposerState,
     pub composer_compute:crate::composer_compute::ComposerCompute,
     pub model_revision:u64,
+    pub native_geometry_revision:u64,
     pub blender_state: crate::blender::BlenderRenderState,
     pub show_render_dialog: bool,
 }
@@ -204,7 +205,7 @@ impl IngeTrazoApp {
             texture_opacity: 1.0,
             terrain_contour_interval: 1.0,
             composer_state: crate::composer::ComposerState::default(),
-            composer_compute:Default::default(),model_revision:0,
+            composer_compute:Default::default(),model_revision:0,native_geometry_revision:0,
             blender_state: crate::blender::BlenderRenderState::default(),
             show_render_dialog: false,
         };
@@ -235,8 +236,8 @@ impl IngeTrazoApp {
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
         self.paste_preview=None;
-        let version=self.scene.version;self.active_tool.on_deactivate(&mut self.scene);
-        if self.scene.version!=version{self.bump_model_revision();}
+        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
         self.active_tool = create_tool(tool_type);
@@ -360,7 +361,8 @@ impl IngeTrazoApp {
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
         self.change_layer_visibility(index,visible)
     }
-    pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
+    pub(crate) fn bump_model_revision(&mut self){self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
+    pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
