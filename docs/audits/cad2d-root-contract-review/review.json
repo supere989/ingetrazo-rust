@@ -19,7 +19,7 @@
     "full shape AA parity",
     "native Metal consumer"
   ],
-  "canonical_promotion": false,
+  "canonical_promotion": true,
   "combined_regression": "isolatedtargetfullworkspacepassed;sharedtargetfailedimportretained",
   "source": "native3cef03f and5softwarecontrols3d5f8be nowreviewbranch",
   "isolated_workspace_counts": [
@@ -32,5 +32,6 @@
     0,
     2
   ],
-  "hardware": "5mandatorycontrols/10ownedclientcaptures/NVIDIAdeviceanddimensionsstrictPASS"
+  "hardware": "5mandatorycontrols/10ownedclientcaptures/NVIDIAdeviceanddimensionsstrictPASS",
+  "status": "accepted_bounded_native_cad2d_api"
 }
