@@ -24,3 +24,6 @@ mod span_plan;
 pub mod native_input;
 
 pub mod cad_callback_painter;
+
+#[cfg(target_os = "macos")]
+pub mod cad_compute_painter;
