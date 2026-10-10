@@ -1,0 +1,7 @@
+{
+  "reviewed_file_sha256": "2490a54d344642d1b05ec44b0e492a3d739ef3b220ec7d36b7cb09c2e3dfa53d",
+  "status": "uncommitted candidate held for correction",
+  "finding": "Thread-local STAGED transaction is cleared only on normal return. Rust unwind during compile/native execution/commit can leave staging retained and block subsequent controllers on the thread.",
+  "required": "RAII discard guard and actual unwind control; reset only after discard; do not assume poisoned VM can safely resume.",
+  "additional": "Explicit poisoned state should refuse commit defensively. Production staging/history and resource limits remain open."
+}
