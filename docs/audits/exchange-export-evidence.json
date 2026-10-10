@@ -1,12 +1,12 @@
 {
   "provenance": {
-    "rust_commit": "60bc05d21eac2edeb47560b2d80fab9b83d2a939",
+    "rust_commit": "c14fb1615ad3dfe28976cc32f5e4568fbda5cfa6",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "passed": true,
-  "negative_controls_detected": 1,
+  "negative_controls_detected": 2,
   "original_export_reference": {
     "obj": {
       "area": 12.0,
@@ -27,6 +27,19 @@
       "triangles": 8,
       "negative_z_winding": 0,
       "errors": [],
+      "material_checks": {
+        "affine_vertex_uv_checks": 24,
+        "asset_hashes": [
+          "56c876a2af80284ee409e23de3aefd28576d828399368b2a259f8ead960c623b"
+        ],
+        "original_python_reopened_faces": 1,
+        "color": [
+          0.2,
+          0.4,
+          0.8
+        ],
+        "opacity": 0.6
+      },
       "format": "obj",
       "exit_code": 0
     },
@@ -47,5 +60,5 @@
       "exit_code": 0
     }
   ],
-  "scope": "World-space holed reflected nested surface, hidden top-level object; OBJ/STL original export comparison and external DXF parsing. Rust +Z reflected winding is a correction to original -Z open-face winding; materials/textures, loose wires, broad importer entities and sheet DXF remain open."
+  "scope": "World-space holed reflected nested surface, hidden top-level object; OBJ/STL original export comparison and external DXF parsing. Rust +Z reflected winding is a correction to original -Z open-face winding; OBJ named color/opacity raw MTL, exact texture asset hashes/local affine UVs and original-runtime color-only/texture-UV reopen checked (original loader ignores d and textured Kd); loose wires, broad importer entities and sheet DXF remain open."
 }
