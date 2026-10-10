@@ -1,0 +1,14 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+Renderer device: {"name":"NVIDIA GeForce RTX 5090","vendor_id":4318,"device_id":11141,"device_type":"DISCRETE_GPU"}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+
+thread 'main' (112) panicked at crates/ingetrazo-gui/examples/native_vulkan_opaque_order_fixture.rs:22:37:
+OPAQUE_ADMISSION_REFUSAL: Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+CAD2D metrics: Stats { callbacks: 0, binds: 0, draws: 0, uploads: 0, upload_bytes: 0, cache_hits: 0, cached_bytes: 0, rolled_back_buffers: 0 }
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0
