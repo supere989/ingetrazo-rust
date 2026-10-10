@@ -1,0 +1,9 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+PASS ordinary GPU buffer rejects undeclared readback before staging allocation
+
+thread 'main' (1) panicked at crates/ingetrazo-gui/examples/native_vulkan_headless_probe.rs:30:2:
+assertion `left == right` failed: Repeated buffer upload recreated command buffer
+  left: 2
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
