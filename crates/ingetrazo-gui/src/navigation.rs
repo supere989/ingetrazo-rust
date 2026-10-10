@@ -121,7 +121,6 @@ fn position_snap(app:&mut crate::IngeTrazoApp,rect:egui::Rect,p:DVec2,time:f64)-
 pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response)->Option<ingetrazo_core::snap::SnapResult>{
  if app.navigation_suspended(){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
  let Some(mode)=app.navigation.mode else{return None};
- let pointer=ui.input(|i|i.pointer.clone());
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
  // Pointer final state is already released when move+release share one frame.
  // Consume original event order so the last motion, and a complete short drag,
@@ -146,7 +145,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  if matches!(mode,Mode::Position|Mode::Walk|Mode::FirstPerson){app.navigation.prepare_collision(&app.scene,app.model_revision);}
  if mode==Mode::FirstPerson {
   if ui.ctx().wants_keyboard_input(){app.navigation.held=[false;6];}
-  else {let events=ui.input(|i|i.events.clone());for event in events{if let egui::Event::Key{key,pressed,modifiers,..}=event{app.navigation.key_event(key,pressed,modifiers);}}}
+  else {ui.input(|i|for event in &i.events{if let egui::Event::Key{key,pressed,modifiers,..}=event{app.navigation.key_event(*key,*pressed,*modifiers);}});}
   let axes=app.navigation.axes();
   let time=ui.input(|i|i.time);
   if app.navigation.held.iter().any(|held|*held){
@@ -187,7 +186,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
    }
    }
   });
-  if !pointer.primary_down()&&!pointer.secondary_down(){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
+  if ui.input(|i|!i.pointer.primary_down()&&!i.pointer.secondary_down()){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
   app.navigation.sync_cursor(ui.ctx());
   return None;
  }
@@ -205,9 +204,10 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
     },_=>{},
    }
   });
-  if !moved&&app.navigation.mode==Some(Mode::Position){if let Some(pos)=pointer.hover_pos(){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();snap=position_snap(app,rect,p,time);}}
+  if !moved&&app.navigation.mode==Some(Mode::Position){if let Some(pos)=ui.input(|i|i.pointer.hover_pos()){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();snap=position_snap(app,rect,p,time);}}
   return snap;
  }
+ let pointer=ui.input(|i|i.pointer.clone());
  let position=pointer.hover_pos().map(|p|DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64));
  if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
   if let Some(p)=position {{
