@@ -284,6 +284,8 @@ fn geometry(n: &Node<'_>, d: &mut Definition) -> Result<(), SkpError> {
                 .insert(
                     id,
                     Face {
+                        uv_projected: false,
+                        uv_projected_back: false,
                         uv_transform: uv_matrix(n, [0x11, 0x27])?,
                         uv_transform_back: uv_matrix(n, [0x12, 0x27])?,
                         normal: n.child([0xad, 0x0d]).map(|n| vec3(n.body)).transpose()?,

@@ -288,11 +288,22 @@ pub(super) fn bake(
         } else {
             face.uv_transform
         },
-        projected,
+        if flip {
+            face.uv_projected_back
+        } else {
+            face.uv_projected || projected
+        },
     )?;
     if let Some(back) = entry.get_mut("back") {
         if back.is_object() {
-            bake_entry(back, &raw, &world, n, face.uv_transform_back, false)?;
+            bake_entry(
+                back,
+                &raw,
+                &world,
+                n,
+                face.uv_transform_back,
+                face.uv_projected_back,
+            )?;
         }
     }
     *attrs = serde_json::from_value(entry).map_err(|e| SkpError::Invalid(e.to_string()))?;

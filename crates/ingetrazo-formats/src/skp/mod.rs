@@ -37,6 +37,10 @@ pub struct Edge {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Face {
     #[serde(default)]
+    pub uv_projected: bool,
+    #[serde(default)]
+    pub uv_projected_back: bool,
+    #[serde(default)]
     pub uv_transform: Option<[f64; 9]>,
     #[serde(default)]
     pub uv_transform_back: Option<[f64; 9]>,
@@ -85,6 +89,8 @@ pub struct TextureRecord {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Payload {
+    #[serde(default)]
+    pub legacy_pages: Vec<LegacyPage>,
     pub name: String,
     pub version: String,
     pub root: Definition,
@@ -94,6 +100,11 @@ pub struct Payload {
     pub materials: BTreeMap<String, MaterialRecord>,
     pub back_color: Option<[f64; 3]>,
     pub unsupported: BTreeSet<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LegacyPage {
+    pub name: String,
+    pub hidden_layer_ids: Vec<u32>,
 }
 /// No Python interpreter, converter, application mutation, or external file extraction.
 pub fn parse_skp_bytes(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
@@ -209,6 +220,93 @@ fn attrs(p: &Payload, id: Option<u64>) -> Result<HashMap<String, serde_json::Val
     }
     Ok(a)
 }
+// Frozen Qt mesh registry: float32 positions, ties-even integer cells and
+// float32 neighbour-distance arithmetic. Isolated from the global CAD weld.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+enum WeldAxis {
+    Exact(i64),
+    Wide(u64),
+}
+impl WeldAxis {
+    fn new(value: f64) -> Self {
+        let rounded = (value * 10000.).round_ties_even();
+        // Beyond 2^53, each representable integer key is separated by >=2.
+        // Python's arbitrary integers preserve that key; its +/-1 neighbours
+        // cannot be keys of any other finite float32 coordinate.
+        if rounded.abs() <= 9007199254740992. {
+            Self::Exact(rounded as i64)
+        } else {
+            Self::Wide(rounded.to_bits())
+        }
+    }
+    fn neighbour(self, delta: i64) -> Option<Self> {
+        match self {
+            Self::Exact(v) => Some(Self::Exact(v + delta)),
+            Self::Wide(_) => {
+                if delta == 0 {
+                    Some(self)
+                } else {
+                    None
+                }
+            }
+        }
+    }
+}
+#[derive(Default)]
+struct ImportWeld {
+    cells: HashMap<[WeldAxis; 3], usize>,
+}
+impl ImportWeld {
+    fn key(p: DVec3) -> [WeldAxis; 3] {
+        [p.x, p.y, p.z].map(WeldAxis::new)
+    }
+    fn from_mesh(mesh: &Mesh) -> Self {
+        let mut result = Self::default();
+        for (id, v) in mesh.vertices.iter().enumerate() {
+            result.cells.insert(Self::key(v.position), id);
+        }
+        result
+    }
+    fn lookup(&self, mesh: &Mesh, p: DVec3) -> Option<usize> {
+        let k = Self::key(p);
+        if let Some(&id) = self.cells.get(&k) {
+            return Some(id);
+        }
+        for dx in -1..=1 {
+            for dy in -1..=1 {
+                for dz in -1..=1 {
+                    if dx == 0 && dy == 0 && dz == 0 {
+                        continue;
+                    }
+                    let (Some(x), Some(y), Some(z)) =
+                        (k[0].neighbour(dx), k[1].neighbour(dy), k[2].neighbour(dz))
+                    else {
+                        continue;
+                    };
+                    if let Some(&id) = self.cells.get(&[x, y, z]) {
+                        let q = mesh.vertices[id].position;
+                        let a = (q.x as f32) - (p.x as f32);
+                        let b = (q.y as f32) - (p.y as f32);
+                        let c = (q.z as f32) - (p.z as f32);
+                        if (((a * a + b * b) + c * c) as f64) < 1e-8 {
+                            return Some(id);
+                        }
+                    }
+                }
+            }
+        }
+        None
+    }
+    fn vertex(&mut self, mesh: &mut Mesh, p: DVec3) -> usize {
+        if let Some(id) = self.lookup(mesh, p) {
+            return id;
+        }
+        let id = mesh.vertices.len();
+        mesh.vertices.push(ingetrazo_core::mesh::MeshVertex::new(p));
+        self.cells.insert(Self::key(p), id);
+        id
+    }
+}
 fn collect(
     p: &Payload,
     d: &Definition,
@@ -236,6 +334,7 @@ fn collect(
     if d.billboard {
         return Err(SkpError::Unsupported("face-camera component".into()));
     }
+    let mut weld = ImportWeld::from_mesh(mesh);
     for (face_id, face) in &d.faces {
         let flip = face.flags.material.is_none() && face.back_material.is_some();
         let material = face.flags.material.or(face.back_material).or(inh);
@@ -275,7 +374,7 @@ fn collect(
         for lp in &face.loops {
             let mut vertices = ring(d, lp)?
                 .into_iter()
-                .map(|v| mesh.add_vertex(point(v, x)))
+                .map(|v| weld.vertex(mesh, point(v, x)))
                 .collect::<Vec<_>>();
             if flip {
                 vertices.reverse();
@@ -318,14 +417,15 @@ fn collect(
                 .ok_or_else(|| SkpError::Invalid("Dangling soft edge vertex".into()))?,
             x,
         );
-        let va = mesh.vertices.iter().position(|v| v.position == a);
-        let vb = mesh.vertices.iter().position(|v| v.position == b);
+        let va = weld.lookup(mesh, a);
+        let vb = weld.lookup(mesh, b);
         if let (Some(a), Some(b)) = (va, vb) {
             if let Some(e) = mesh.find_edge(a, b) {
                 mesh.edges[e].soft = true;
             }
         }
     }
+    mesh.rebuild_spatial_index();
     Ok(())
 }
 /// Prepare privately and reject unsupported required data before any caller Scene mutation.
@@ -462,4 +562,27 @@ pub fn replace_from_skp(destination: &mut Scene, path: &Path) -> Result<(), SkpE
     let candidate = load_skp(path)?;
     *destination = candidate;
     Ok(())
+}
+
+#[cfg(test)]
+mod import_weld_tests {
+    use super::*;
+    #[test]
+    fn source_keys_neighbour_distance_and_wide_identity() {
+        let mut mesh = Mesh::new();
+        let mut w = ImportWeld::default();
+        let a = w.vertex(&mut mesh, DVec3::new(0.000049, 0., 0.));
+        assert_eq!(a, w.vertex(&mut mesh, DVec3::new(0.000051, 0., 0.)));
+        assert_ne!(a, w.vertex(&mut mesh, DVec3::new(0.000151, 0., 0.)));
+        assert_eq!(WeldAxis::new(0.00005), WeldAxis::Exact(0));
+        assert_eq!(WeldAxis::new(0.00015), WeldAxis::Exact(1)); // actual binary product is below 1.5
+        let big = DVec3::new(f32::MAX as f64, 0., 0.);
+        let id = w.vertex(&mut mesh, big);
+        assert_eq!(Some(id), w.lookup(&mesh, big));
+        assert_ne!(id, w.vertex(&mut mesh, -big));
+        assert_ne!(
+            id,
+            w.vertex(&mut mesh, DVec3::new((f32::MAX / 2.) as f64, 0., 0.))
+        );
+    }
 }

@@ -4,6 +4,7 @@
 // Geometry/annotation readers are required next; never publish a truncated entity walk.
 use super::*;
 use std::sync::Arc;
+mod records;
 #[derive(Clone)]
 enum Object {
     Vertex([f64; 3]),
@@ -14,7 +15,13 @@ enum Object {
     Material(String, [f64; 4], Option<TextureRecord>, bool),
     Dib(Arc<[u8]>),
     Layer(String, bool),
-    Attributes,
+    Attributes(Vec<u32>),
+    Named(String, serde_json::Map<String, serde_json::Value>),
+    Definition(records::DefinitionRecord),
+    Instance(Instance),
+    Auxiliary,
+    Curve(Option<[f64; 14]>),
+    TextureCoordinates([f64; 9], [f64; 9], bool, bool),
     Premodel,
 }
 #[derive(Clone)]
@@ -88,6 +95,8 @@ struct Archive<'a> {
     next: u32,
     slots: BTreeMap<u32, Slot>,
     classes: HashMap<String, u32>,
+    object_classes: HashMap<u32, String>,
+    class_schemas: HashMap<String, u16>,
     depth: usize,
     current_loop: Option<u32>,
     decoded_bytes: usize,
@@ -101,6 +110,8 @@ impl<'a> Archive<'a> {
             next: base,
             slots: BTreeMap::new(),
             classes: HashMap::new(),
+            object_classes: HashMap::new(),
+            class_schemas: HashMap::new(),
             depth: 0,
             current_loop: None,
             decoded_bytes: 0,
@@ -147,7 +158,7 @@ impl<'a> Archive<'a> {
             return Ok(None);
         }
         if tag == 65535 {
-            self.r.u16()?;
+            let schema = self.r.u16()?;
             let len = self.r.u16()? as usize;
             if len > 40 {
                 return Err(SkpError::Invalid("Legacy class name admission".into()));
@@ -157,6 +168,7 @@ impl<'a> Archive<'a> {
                 .to_owned();
             let slot = self.allocate(Slot::Class(name.clone()))?;
             self.classes.insert(name.clone(), slot);
+            self.class_schemas.insert(name.clone(), schema);
             return self.new_object(&name);
         }
         let reference = if tag == 32767 {
@@ -197,12 +209,17 @@ impl<'a> Archive<'a> {
         }
     }
     fn preamble(&mut self) -> Result<(), SkpError> {
-        self.object(Some("CAttributeContainer"))?;
+        self.preamble_data().map(|_| ())
+    }
+    fn preamble_data(&mut self) -> Result<Option<Arc<Object>>, SkpError> {
+        let attributes = self
+            .object(Some("CAttributeContainer"))?
+            .map(|(_, value)| value);
         if self.ver >= 17 {
             let mask = self.r.u8()?;
             self.r.raw(mask.count_ones() as usize)?;
         }
-        Ok(())
+        Ok(attributes)
     }
     fn drawbase(&mut self) -> Result<EntityFlags, SkpError> {
         let b = self.r.raw(8)?.to_vec();
@@ -234,7 +251,10 @@ impl<'a> Archive<'a> {
         let material = u16::from_le_bytes([b[0], b[1]]);
         Ok(EntityFlags {
             hidden: b[2] != 0,
-            display: 6 | if b[5] != 0 { 16 } else { 0 } | if b[6] != 0 { 32 } else { 0 },
+            display: 6
+                | if b[2] != 0 { 1 } else { 0 }
+                | if b[5] != 0 { 8 } else { 0 }
+                | if b[6] != 0 { 16 } else { 0 },
             material: (material != 0).then_some(material as u64),
             layer: (layer != 0).then_some(layer as u64),
         })
@@ -310,6 +330,7 @@ impl<'a> Archive<'a> {
     }
     fn new_object(&mut self, name: &str) -> Result<Option<(u32, Arc<Object>)>, SkpError> {
         let slot = self.allocate(Slot::Object(Arc::new(Object::Premodel)))?;
+        self.object_classes.insert(slot, name.to_owned());
         let value = match name {
             "CDib" => {
                 self.r.u32()?; // Source subtype retained only for record framing; codec is from payload bytes.
@@ -328,13 +349,17 @@ impl<'a> Archive<'a> {
                 self.preamble()?;
                 let flags = self.drawbase()?;
                 let vertices = [self.vertex_ref()?, self.vertex_ref()?];
-                if self.object(None)?.is_some() {
-                    return Err(SkpError::Unsupported("legacy curve/arc reader".into()));
+                let curve = self.object(None)?;
+                if curve
+                    .as_ref()
+                    .is_some_and(|(_, value)| !matches!(value.as_ref(), Object::Curve(_)))
+                {
+                    return Err(SkpError::Invalid("Legacy edge curve class mismatch".into()));
                 }
                 Object::Edge(Edge {
                     vertices,
                     flags,
-                    curve: None,
+                    curve: curve.map(|(id, _)| id as u64),
                 })
             }
             "CEdgeUse" => {
@@ -392,7 +417,7 @@ impl<'a> Archive<'a> {
                 Object::Loop(uses)
             }
             "CFace" => {
-                self.preamble()?;
+                let attributes = self.preamble_data()?;
                 let flags = self.drawbase()?;
                 let normal = [self.r.f64()?, self.r.f64()?, self.r.f64()?];
                 self.r.f64()?;
@@ -412,13 +437,35 @@ impl<'a> Archive<'a> {
                     loops.push(ring.clone())
                 }
                 let back = self.r.u16()?;
+                let mut uv_transform = None;
+                let mut uv_transform_back = None;
+                let mut uv_projected = false;
+                let mut uv_projected_back = false;
+                if let Some(attributes) = attributes {
+                    if let Object::Attributes(children) = attributes.as_ref() {
+                        for id in children {
+                            if let Some(Slot::Object(value)) = self.slots.get(id) {
+                                if let Object::TextureCoordinates(front, back, fp, bp) =
+                                    value.as_ref()
+                                {
+                                    uv_transform = Some(*front);
+                                    uv_transform_back = Some(*back);
+                                    uv_projected = *fp;
+                                    uv_projected_back = *bp;
+                                }
+                            }
+                        }
+                    }
+                }
                 Object::Face(Face {
+                    uv_projected,
+                    uv_projected_back,
                     normal: Some(normal),
                     loops,
                     flags,
                     back_material: (back != 0).then_some(back as u64),
-                    uv_transform: None,
-                    uv_transform_back: None,
+                    uv_transform,
+                    uv_transform_back,
                 })
             }
             "CMaterial" => {
@@ -476,14 +523,74 @@ impl<'a> Archive<'a> {
                 }
                 Object::Layer(name, flags.first().is_some_and(|b| *b != 0))
             }
-            "CAttributeContainer" => {
+            "CFaceTextureCoords" => {
                 self.preamble()?;
-                if self.r.u16()? != 0 {
+                self.r.u32()?;
+                let mut values = [0.; 24];
+                for value in &mut values {
+                    *value = self.r.f64()?;
+                }
+                for _ in 0..2 {
+                    let count = self.r.u32()?;
+                    if count > 100_000 {
+                        return Err(SkpError::Invalid("Legacy texture pin admission".into()));
+                    }
+                    self.r.raw(count as usize * 32)?;
+                }
+                let front = self.r.u32()?;
+                let back = self.r.u32()?;
+                Object::TextureCoordinates(
+                    values[..9].try_into().unwrap(),
+                    values[12..21].try_into().unwrap(),
+                    front & 2 != 0,
+                    back & 2 != 0,
+                )
+            }
+            "CAttributeContainer" => Object::Attributes(self.read_attributes()?),
+            "CAttributeNamed" => {
+                let (name, entries) = self.read_named()?;
+                Object::Named(name, entries)
+            }
+            "CComponentDefinition" => Object::Definition(self.read_definition()?),
+            "CComponentInstance" | "CGroup" => Object::Instance(self.read_instance()?),
+            "CCamera" => {
+                self.r.raw(137)?;
+                self.r.u16()?;
+                self.r.utf16()?;
+                self.r.raw(33)?;
+                Object::Auxiliary
+            }
+            "CThumbnail" => {
+                self.preamble()?;
+                self.object(Some("CCamera"))?;
+                self.object(Some("CDib"))?;
+                Object::Auxiliary
+            }
+            "CRelationship" => {
+                self.preamble()?;
+                self.entity_ref()?;
+                self.entity_ref()?;
+                Object::Auxiliary
+            }
+            "CCurve" => {
+                self.preamble()?;
+                self.r.u8()?;
+                self.r.u32()?;
+                Object::Curve(None)
+            }
+            "CArcCurve" => {
+                if self.class_schemas.get(name) != Some(&3) {
                     return Err(SkpError::Unsupported(
-                        "legacy named attribute reader".into(),
+                        "Legacy arc schema other than pinned schema 3".into(),
                     ));
                 }
-                Object::Attributes
+                self.preamble()?;
+                self.r.raw(5)?;
+                let mut frame = [0.; 14];
+                for v in &mut frame {
+                    *v = self.r.f64()?;
+                }
+                Object::Curve(Some(frame))
             }
             other => {
                 return Err(SkpError::Unsupported(format!(
@@ -666,13 +773,27 @@ fn model(
             "Legacy definition-list anchor class".into(),
         ));
     }
-    let definitions = ar.r.u32()?;
-    if definitions != 0 {
-        return Err(SkpError::Unsupported(
-            "legacy definition/geometry readers".into(),
+    let mut definitions = ar.r.u32()?;
+    if definitions > 1_000_000 {
+        definitions = ar
+            .retry_filler(ar.r.pos - 4, 1_000_000)?
+            .unwrap_or(definitions);
+    }
+    if definitions > 1_000_000 {
+        return Err(SkpError::Invalid(
+            "Legacy definition count admission".into(),
         ));
     }
-    let root = ar.r.u32()?;
+    for _ in 0..definitions {
+        ar.object(Some("CComponentDefinition"))?;
+    }
+    while ar.next_class_is("CComponentDefinition") {
+        ar.object(Some("CComponentDefinition"))?;
+    }
+    let mut root = ar.r.u32()?;
+    if root > 5_000_000 {
+        root = ar.retry_filler(ar.r.pos - 4, 5_000_000)?.unwrap_or(root);
+    }
     if root > 5_000_000 {
         return Err(SkpError::Invalid("Legacy entity count admission".into()));
     }
@@ -687,13 +808,12 @@ fn model(
             }
         }
     }
-    if bytes.windows(9).any(|b| b == b"CViewPage") {
-        return Err(SkpError::Unsupported("legacy saved page records".into()));
-    }
+    let legacy_pages = ar.scan_pages()?;
     ar.charge(ar.decoded_bytes)?; // Candidate output clones coexist with immutable archive.
     let mut p = Payload {
         name: name.into(),
         version: version.into(),
+        legacy_pages,
         ..Payload::default()
     };
     let mut tint_cache = HashMap::<(String, [u8; 3]), Option<Arc<Vec<u8>>>>::new();
@@ -764,8 +884,55 @@ fn model(
             }
         }
     }
-    for id in roots {
-        let Some(Slot::Object(value)) = ar.slots.get(&id) else {
+    for (&id, slot) in &ar.slots {
+        if let Slot::Object(object) = slot {
+            if let Object::Definition(definition) = object.as_ref() {
+                let mut def = Definition {
+                    name: definition.name.clone(),
+                    billboard: definition.billboard,
+                    ..Definition::default()
+                };
+                charge_output(
+                    &mut ar.decoded_bytes,
+                    definition.name.capacity().saturating_add(512),
+                )?;
+                fill_definition(
+                    &mut def,
+                    &definition.roots,
+                    &ar.slots,
+                    &mut ar.decoded_bytes,
+                )?;
+                p.definitions.insert(id as u64, def);
+            }
+        }
+    }
+    fill_definition(&mut p.root, &roots, &ar.slots, &mut ar.decoded_bytes)?;
+    Ok(p)
+}
+
+fn charge_output(decoded: &mut usize, bytes: usize) -> Result<(), SkpError> {
+    *decoded = decoded
+        .checked_add(bytes)
+        .filter(|&n| n <= 256 * 1024 * 1024)
+        .ok_or_else(|| SkpError::Invalid("Legacy aggregate decoded output admission".into()))?;
+    Ok(())
+}
+fn fill_definition(
+    def: &mut Definition,
+    roots: &[u32],
+    slots: &BTreeMap<u32, Slot>,
+    decoded: &mut usize,
+) -> Result<(), SkpError> {
+    let mut ids = HashSet::new();
+    for &id in roots {
+        if ids.contains(&id) {
+            continue;
+        }
+        charge_output(decoded, 64)?;
+        if !ids.insert(id) {
+            continue;
+        }
+        let Some(Slot::Object(value)) = slots.get(&id) else {
             return Err(SkpError::Invalid(
                 "Legacy root references unresolved premodel object".into(),
             ));
@@ -774,25 +941,39 @@ fn model(
             Object::Face(face) => {
                 for ring in &face.loops {
                     for &(edge, _) in ring {
-                        add_edge(&mut p.root, edge, &ar.slots)?;
+                        add_edge(def, edge, slots, decoded)?;
                     }
                 }
-                if !p.root.faces.contains_key(&(id as u64)) {
-                    p.root.faces.insert(id as u64, face.clone());
-                    p.root.face_order.push(id as u64);
+                let bytes = face
+                    .loops
+                    .iter()
+                    .try_fold(512_usize, |total, ring| {
+                        total.checked_add(ring.len().saturating_mul(32).saturating_add(64))
+                    })
+                    .ok_or_else(|| SkpError::Invalid("Legacy output size overflow".into()))?;
+                charge_output(decoded, bytes)?;
+                if def.faces.insert(id as u64, face.clone()).is_none() {
+                    def.face_order.push(id as u64);
                 }
             }
-            Object::Edge(_) => add_edge(&mut p.root, id as u64, &ar.slots)?,
-            other => {
-                let _ = other;
-                return Err(SkpError::Unsupported("legacy root entity kind".into()));
+            Object::Edge(_) => add_edge(def, id as u64, slots, decoded)?,
+            Object::Instance(instance) => {
+                charge_output(decoded, instance.name.capacity().saturating_add(512))?;
+                def.instances.push(instance.clone());
             }
+            Object::Curve(_) => {} // Analytic frame remains in archive; frontend imports polygon faces/soft edges.
+            _ => return Err(SkpError::Unsupported("legacy root entity kind".into())),
         }
     }
-    Ok(p)
+    Ok(())
 }
 
-fn add_edge(def: &mut Definition, id: u64, slots: &BTreeMap<u32, Slot>) -> Result<(), SkpError> {
+fn add_edge(
+    def: &mut Definition,
+    id: u64,
+    slots: &BTreeMap<u32, Slot>,
+    decoded: &mut usize,
+) -> Result<(), SkpError> {
     let Some(Slot::Object(object)) = slots.get(&(id as u32)) else {
         return Err(SkpError::Invalid("Legacy edge slot unresolved".into()));
     };
@@ -806,9 +987,15 @@ fn add_edge(def: &mut Definition, id: u64, slots: &BTreeMap<u32, Slot>) -> Resul
         let Object::Vertex(position) = object.as_ref() else {
             return Err(SkpError::Invalid("Legacy vertex slot unresolved".into()));
         };
-        def.vertices.entry(vertex).or_insert(*position);
+        if !def.vertices.contains_key(&vertex) {
+            charge_output(decoded, 128)?;
+            def.vertices.insert(vertex, *position);
+        }
     }
-    def.edges.entry(id).or_insert_with(|| edge.clone());
+    if !def.edges.contains_key(&id) {
+        charge_output(decoded, 256)?;
+        def.edges.insert(id, edge.clone());
+    }
     Ok(())
 }
 
