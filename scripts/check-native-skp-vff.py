@@ -13,20 +13,25 @@ from core.scene import Scene
 from formats.skp import load_skp
 from formats.igz import load_into
 mandatory=['hole-paint-layer','single-definition','small-two-flat','shared-eight','inherited-paint','texture-refusal']
-manifest=json.loads((inputs/'manifest.json').read_text());assert [r['name']for r in manifest['cases']]==mandatory
+manifest=json.loads((inputs/'manifest.json').read_text());
+if manifest.get('stage')=='nested-v1':mandatory+=['nested-single-container','nested-shared-child','nested-shared-parent','nested-proto-in-proto','nested-tagged-flat','nested-tagged-shared','nested-inherited-paint','nested-reflected-scaled','nested-equal-paint-protos','nested-fractional-transform']
+assert [r['name']for r in manifest['cases']]==mandatory
 for row in manifest['cases']:assert hashlib.sha256((inputs/(row['name']+'.skp')).read_bytes()).hexdigest()==row['sha256']
 def ring(vertices):
  points=[tuple(v.position.toTuple())for v in vertices];return min(tuple(points[i:]+points[:i])for i in range(len(points)))
 def face(f):return(ring(f.loop),tuple(sorted(ring(h)for h in(f.hole_loops or[]))),json.dumps(f.attrs,sort_keys=True,separators=(',',':')))
 def edge(e):return(tuple(sorted((tuple(e.v0.position.toTuple()),tuple(e.v1.position.toTuple())))),e.soft)
 def scene(s):
+ from PySide6.QtGui import QMatrix4x4
  groups=[];shares={}
- for g in s.groups:
-  mesh=g.mesh;local=sorted(face(f)for f in mesh.faces);geometry=[]
+ def visit(g,parent,path):
+  mesh=g.mesh;world=parent*(g.xform if g.xform is not None else QMatrix4x4());local=sorted(face(f)for f in mesh.faces);geometry=[]
   for f in mesh.faces:
-   pts=[tuple((g.xform.map(v.position)if g.xform is not None else v.position).toTuple())for v in f.loop];geometry.append(min(tuple(pts[i:]+pts[:i])for i in range(len(pts))))
-  groups.append({'name':g.name,'layer':g.layer,'local':local,'world':sorted(geometry),'edges':sorted(edge(e)for e in mesh.edges),'counts':[len(mesh.vertices),len(mesh.edges),len(mesh.faces)]})
-  shares.setdefault(id(mesh),[]).append(g.name)
+   pts=[tuple(world.map(v.position).toTuple())for v in f.loop];geometry.append(min(tuple(pts[i:]+pts[:i])for i in range(len(pts))))
+  item={'name':g.name,'layer':g.layer,'path':path,'local':local,'world':sorted(geometry),'edges':sorted(edge(e)for e in mesh.edges),'counts':[len(mesh.vertices),len(mesh.edges),len(mesh.faces)],'children':len(g.children),'axes':list(g.axes.data())if g.axes is not None else None}
+  groups.append(item);shares.setdefault(id(mesh),[]).append(path)
+  for i,child in enumerate(g.children):visit(child,world,path+'/'+child.name+':'+str(i))
+ for i,g in enumerate(s.groups):visit(g,QMatrix4x4(),g.name+':'+str(i))
  return {'groups':sorted(groups,key=lambda g:json.dumps(g,sort_keys=True)),'shares':sorted(sorted(names)for names in shares.values()),'layers':sorted((l.name,l.visible)for l in s.layers),'materials':{k:v.to_dict()for k,v in s.materials.items()}}
 rows=[]
 for name,path in [('SU_File',root/'docs/audits/skp-native-vff/SU_File.skp')]+[(n,inputs/(n+'.skp'))for n in mandatory]:
@@ -37,9 +42,14 @@ for name,path in [('SU_File',root/'docs/audits/skp-native-vff/SU_File.skp')]+[(n
  assert r.returncode==0,(name,r.stderr)
  source=Scene();load_skp(source,path);native=Scene();load_into(native,output)
  a=scene(source);b=scene(native);(out/(name+'-comparison.json')).write_text(json.dumps({'original':a,'native':b},indent=2)+'\n');assert a==b,(name,'source/native document mismatch; retained')
- rows.append({'name':name,'passed':True,'groups':len(source.groups),'sharing_sizes':sorted(len(x)for x in a['shares']),'faces':sum(len(g.mesh.faces)for g in source.groups)})
+ rows.append({'name':name,'passed':True,'groups':len(source.groups),'sharing_sizes':sorted(len(x)for x in a['shares']),'faces':sum(g['counts'][2]for g in a['groups'])})
 # Literal altered-world geometry is not accepted by the equality law.
-source.groups[0].mesh.vertices[0].position.setX(source.groups[0].mesh.vertices[0].position.x()+1)
+def first_mesh(groups):
+ for g in groups:
+  if g.mesh.vertices:return g.mesh
+  child=first_mesh(g.children)
+  if child is not None:return child
+mesh=first_mesh(source.groups);assert mesh is not None;mesh.vertices[0].position.setX(mesh.vertices[0].position.x()+1)
 assert scene(source)!=b
 report={'passed':True,'cases':rows,'source_parser':pin,'source_app':subprocess.check_output(['git','-C',str(root/'ingetrazo'),'rev-parse','HEAD'],text=True).strip(),'native_source':subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(),'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'negative':'altered source world point rejected','scope':__doc__}
 (out/'report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))

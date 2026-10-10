@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Rust-only SketchUp import. Parse a neutral payload before preparing/applying a scene.
 //! VFF record interpretation ports the pinned MIT OpenSKP reader; see OPENSKP-LICENSE.
+mod placements;
 mod reader;
 use glam::{DMat4, DVec3};
 use ingetrazo_core::{groups::Group, layers::Layer, materials::Material, mesh::Mesh, scene::Scene};
@@ -188,7 +189,7 @@ fn collect(
     inh: Option<u64>,
     layer: Option<u64>,
     mesh: &mut Mesh,
-    stack: &mut HashSet<u64>,
+    _stack: &mut HashSet<u64>,
     depth: usize,
 ) -> Result<(), SkpError> {
     if d.vertices.values().any(|v| !point(*v, x).is_finite()) {
@@ -288,30 +289,6 @@ fn collect(
             }
         }
     }
-    for ins in &d.instances {
-        if !stack.insert(ins.definition) {
-            return Err(SkpError::Invalid("Cyclic definition placement".into()));
-        }
-        let child = p
-            .definitions
-            .get(&ins.definition)
-            .ok_or_else(|| SkpError::Invalid("Missing instance definition".into()))?;
-        let next = x * matrix(&ins.matrix);
-        if !next.is_finite() || next.determinant().abs() < 1e-16 {
-            return Err(SkpError::Invalid("Singular or nonfinite placement".into()));
-        }
-        collect(
-            p,
-            child,
-            next,
-            ins.flags.material.or(inh),
-            ins.flags.layer.or(layer),
-            mesh,
-            stack,
-            depth + 1,
-        )?;
-        stack.remove(&ins.definition);
-    }
     Ok(())
 }
 /// Prepare privately and reject unsupported required data before any caller Scene mutation.
@@ -385,12 +362,10 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         scene.display_style.back_color = Some(c);
     }
     if !p.root.faces.is_empty() {
-        let mut root = p.root.clone();
-        root.instances.clear();
         let mut mesh = Mesh::new();
         collect(
             p,
-            &root,
+            &p.root,
             DMat4::IDENTITY,
             None,
             None,
@@ -400,76 +375,7 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         )?;
         scene.groups.push(Group::with_mesh(&p.name, mesh));
     }
-    let mut prototypes = HashMap::<(u64, Option<u64>), (uuid::Uuid, Mesh)>::new();
-    let mut uses_by_definition = HashMap::<u64, usize>::new();
-    for ins in &p.root.instances {
-        *uses_by_definition.entry(ins.definition).or_default() += 1;
-    }
-    for ins in &p.root.instances {
-        let d = p
-            .definitions
-            .get(&ins.definition)
-            .ok_or_else(|| SkpError::Invalid("Root placement has no definition".into()))?;
-        if !d.instances.is_empty() {
-            return Err(SkpError::Unsupported(
-                "nested definition placement, tagged extraction and sharing".into(),
-            ));
-        }
-        let uses = uses_by_definition[&ins.definition];
-        let shared =
-            uses == 1 || (d.faces.len() >= 60 && d.faces.len().saturating_mul(uses - 1) >= 400);
-        let (mesh, share) = if shared {
-            let key = (ins.definition, ins.flags.material);
-            if !prototypes.contains_key(&key) {
-                let mut mesh = Mesh::new();
-                collect(
-                    p,
-                    d,
-                    DMat4::IDENTITY,
-                    ins.flags.material,
-                    None,
-                    &mut mesh,
-                    &mut HashSet::from([ins.definition]),
-                    0,
-                )?;
-                prototypes.insert(key, (uuid::Uuid::new_v4(), mesh));
-            }
-            let (id, mesh) = &prototypes[&key];
-            (mesh.clone(), Some(*id))
-        } else {
-            let mut mesh = Mesh::new();
-            collect(
-                p,
-                d,
-                matrix(&ins.matrix),
-                ins.flags.material,
-                ins.flags.layer,
-                &mut mesh,
-                &mut HashSet::from([ins.definition]),
-                0,
-            )?;
-            (mesh, None)
-        };
-        let name = if d.name.is_empty() {
-            &ins.name
-        } else {
-            &d.name
-        };
-        let mut group = Group::with_mesh(name, mesh);
-        group.mesh_share = share;
-        if let Some(id) = share {
-            group.transform = matrix(&ins.matrix);
-            scene
-                .register_mesh_share(id, group.mesh.clone())
-                .map_err(SkpError::Invalid)?;
-        }
-        group.layer = ins
-            .flags
-            .layer
-            .and_then(|id| p.layers.get(&id))
-            .map(|l| l.name.clone());
-        scene.groups.push(group);
-    }
+    placements::append(p, &mut scene)?;
     if scene.groups.is_empty() && !p.root.edges.is_empty() {
         return Err(SkpError::Unsupported("loose wire-only document".into()));
     }

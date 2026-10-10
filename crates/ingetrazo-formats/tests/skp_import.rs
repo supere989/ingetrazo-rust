@@ -58,3 +58,76 @@ fn invalid_neutral_payload_cannot_publish_partial_geometry() {
         Err(SkpError::Unsupported(_))
     ));
 }
+
+#[test]
+fn nested_prototypes_tags_and_equal_materials_retain_source_structure() {
+    let parse = |bytes: &[u8]| {
+        skp::scene_from_payload(&skp::parse_skp_bytes(bytes, "nested").unwrap()).unwrap()
+    };
+    let scene = parse(include_bytes!(
+        "../../../docs/audits/skp-native-vff/nested-controls/nested-proto-in-proto.skp"
+    ));
+    assert_eq!(scene.groups.len(), 8);
+    assert_eq!(scene.mesh_shares.len(), 2);
+    let parent = scene.groups[0].mesh_share;
+    let child = scene.groups[0].children[0].mesh_share;
+    assert!(scene.groups.iter().all(|g| g.mesh_share == parent
+        && g.children.len() == 1
+        && g.children[0].mesh_share == child));
+    assert_eq!(scene.groups[0].mesh.faces.len(), 1);
+    assert_eq!(scene.groups[0].children[0].mesh.faces.len(), 64);
+    let scene = parse(include_bytes!(
+        "../../../docs/audits/skp-native-vff/nested-controls/nested-tagged-shared.skp"
+    ));
+    assert_eq!(scene.groups.len(), 18);
+    assert_eq!(
+        scene
+            .groups
+            .iter()
+            .filter(|g| g.layer.as_deref() == Some("Hidden tag"))
+            .count(),
+        16
+    );
+    let scene = parse(include_bytes!(
+        "../../../docs/audits/skp-native-vff/nested-controls/nested-equal-paint-protos.skp"
+    ));
+    assert_eq!(scene.mesh_shares.len(), 1);
+}
+#[test]
+fn malformed_reachable_graph_and_unsupported_billboard_refuse_privately() {
+    let bytes = include_bytes!(
+        "../../../docs/audits/skp-native-vff/nested-controls/nested-single-container.skp"
+    );
+    let p = skp::parse_skp_bytes(bytes, "nested").unwrap();
+    let mut cycle = p.clone();
+    cycle.definitions.get_mut(&6000).unwrap().instances[0].definition = 6000;
+    assert!(matches!(
+        skp::scene_from_payload(&cycle),
+        Err(SkpError::Invalid(_))
+    ));
+    let mut missing = p.clone();
+    missing.definitions.remove(&5000);
+    assert!(matches!(
+        skp::scene_from_payload(&missing),
+        Err(SkpError::Invalid(_))
+    ));
+    let mut overflow = p.clone();
+    overflow.root.instances[0].matrix[0] = 1e38;
+    overflow
+        .definitions
+        .get_mut(&5000)
+        .unwrap()
+        .vertices
+        .values_mut()
+        .for_each(|v| v[0] = 1e38);
+    assert!(matches!(
+        skp::scene_from_payload(&overflow),
+        Err(SkpError::Invalid(_))
+    ));
+    let mut billboard = p.clone();
+    billboard.definitions.get_mut(&5000).unwrap().billboard = true;
+    assert!(matches!(
+        skp::scene_from_payload(&billboard),
+        Err(SkpError::Unsupported(_))
+    ));
+}
