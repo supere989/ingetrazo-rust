@@ -237,6 +237,7 @@ pub fn build_scene_render_data(
             &mut data.opaque_mesh,
             &mut data.transparent_mesh,
             &mut data.textured_meshes,
+            false,
         );
     }
 
@@ -260,6 +261,7 @@ pub fn build_scene_render_data(
             &mut data.billboards,
             &mut data.textured_meshes,
             true,
+            false,
         );
     }
 
@@ -314,8 +316,8 @@ pub fn build_scene_render_data(
 pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {
     let mut data=SceneRenderData::default();
     if style.visual_style!=VisualStyle::Wireframe {
-        build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes);
-        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false);}
+        build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);
+        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true);}
     }
     data
 }
@@ -327,6 +329,7 @@ fn build_mesh_buffers(
     opaque: &mut MeshRenderBuffer,
     transparent: &mut MeshRenderBuffer,
     textured_meshes: &mut crate::buffer::TextureBuffers,
+    native_texture_sides: bool,
 ) {
     for (f_id, face) in mesh.faces.iter().enumerate() {
         let face_layer = face.layer.as_deref().or_else(|| face.attrs.get("layer").and_then(|v| v.as_str()));
@@ -362,7 +365,7 @@ fn build_mesh_buffers(
             let order=textured_meshes.take_order();
             let buffer=textured_meshes.entry(tex_key).or_default();
             let first=buffer.indices.len();
-            for (p0, p1, p2) in tris {
+            for &(p0, p1, p2) in &tris {
                 let u0 = gu.dot(p0) + cu;
                 let v0 = gv.dot(p0) + cv;
                 let u1 = gu.dot(p1) + cu;
@@ -377,6 +380,7 @@ fn build_mesh_buffers(
                 buffer.push_triangle(v0, v1, v2);
             }
             record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity,order);
+            if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,&tris,DMat4::IDENTITY,false,false);}
         } else {
             let base_color = get_face_base_color(&face.attrs, scene, style);
             let shaded_color = [
@@ -389,7 +393,7 @@ fn build_mesh_buffers(
             let first=if is_xray||source_final_opacity<0.999{transparent.indices.len()}else{opaque.indices.len()};
             let tris = mesh.triangulate_face(f_id);
             if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
-            for (p0, p1, p2) in tris {
+            for &(p0, p1, p2) in &tris {
                 let v0 = Vertex::from_dvec3(p0, norm, shaded_color, [0.0, 0.0]);
                 let v1 = Vertex::from_dvec3(p1, norm, shaded_color, [0.0, 0.0]);
                 let v2 = Vertex::from_dvec3(p2, norm, shaded_color, [0.0, 0.0]);
@@ -405,6 +409,7 @@ fn build_mesh_buffers(
             record_source_back_paint(target,first,order,&face.attrs,shade);
             record_default_back(target,first,&face.attrs,source_final_opacity);
             if !(is_xray||source_final_opacity<0.999)&&!target.source_front_cull.last().is_some_and(|r|r.0==first){target.source_consolidated_opaque_count+=target.indices.len()-first;}
+            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,&tris,DMat4::IDENTITY,false,false);}
         }
     }
 }
@@ -422,6 +427,7 @@ fn build_group_buffers(
     billboards: &mut Vec<BillboardRenderItem>,
     textured_meshes: &mut crate::buffer::TextureBuffers,
     include_edges: bool,
+    native_texture_sides: bool,
 ) {
     if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
         return;
@@ -513,7 +519,7 @@ fn build_group_buffers(
             let order=textured_meshes.take_order();
             let buffer=textured_meshes.entry(tex_key).or_default();
             let first=buffer.indices.len();
-            for (p0, p1, p2) in tris {
+            for &(p0, p1, p2) in &tris {
                 let (p1, p2) = if reflected {(p2, p1)} else {(p1, p2)};
                 let wp0 = world_t.transform_point3(p0);
                 let wp1 = world_t.transform_point3(p1);
@@ -536,6 +542,7 @@ fn build_group_buffers(
                 buffer.push_triangle(v0, v1, v2);
             }
             record_source_texture(buffer,first,&attrs,shade,source_final_opacity,order);
+            if native_texture_sides {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,&tris,world_t,source_placement,reflected);}
         } else {
             let base_color = get_face_base_color(&attrs, scene, style);
             let shaded_color = [
@@ -548,7 +555,7 @@ fn build_group_buffers(
             let first=if is_xray||source_final_opacity<0.999{transparent.indices.len()}else{opaque.indices.len()};
             let tris = group.mesh.triangulate_face(f_id);
             if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
-            for (p0, p1, p2) in tris {
+            for &(p0, p1, p2) in &tris {
                 let (p1, p2) = if reflected {(p2, p1)} else {(p1, p2)};
                 let wp0 = world_t.transform_point3(p0);
                 let wp1 = world_t.transform_point3(p1);
@@ -568,6 +575,7 @@ fn build_group_buffers(
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
             record_source_back_paint(target,first,order,&attrs,shade);
             record_default_back(target,first,&attrs,source_final_opacity);
+            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,&tris,world_t,source_placement,reflected);}
         }
     }
 
@@ -636,6 +644,7 @@ fn build_group_buffers(
             billboards,
             textured_meshes,
             include_edges,
+            native_texture_sides,
         );
     }
     // Original _group_chunk flattens the entire adopted subtree into the
@@ -1434,7 +1443,7 @@ fn record_source_back_paint(buffer:&mut MeshRenderBuffer,first:usize,order:usize
  let count=buffer.indices.len()-first;if count==0{return;}let Some(back)=attrs.get("back").and_then(|v|v.as_object())else{return;};
  let opacity=back.get("opacity").and_then(|v|v.as_f64()).unwrap_or(1.);
  let color=back.get("color").and_then(|v|v.as_array()).filter(|c|c.len()>=3);
- let texture=back.get("texture").and_then(|v|v.get("path")).and_then(|v|v.as_str()).is_some();
+ let texture=back.get("texture").is_some_and(|v|["embed","path"].iter().any(|key|v.get(*key).and_then(|v|v.as_str()).is_some()));
  if color.is_some()||texture{buffer.source_back_override_count+=1;}
  if (color.is_some()||texture)&&opacity<0.999 {buffer.source_front_cull.push((first,count));}
  if let Some(c)=color {let color=[0,1,2].map(|i|(c[i].as_f64().unwrap_or(0.)as f32*shade).clamp(0.,1.));buffer.source_back_paints.push(crate::buffer::SourceBackPaint{first,count,order,color,opacity});}
@@ -1518,8 +1527,8 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
  record_source_back_paint(buffer,first,first,attrs,shade);
  if opacity>=0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first){buffer.source_front_cull.pop();}
  let front_cull=opacity<0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first);
- if let Some(last)=buffer.source_texture_runs.last_mut(){if last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
- buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{order,first,count,shade,opacity,front_cull});
+ if let Some(last)=buffer.source_texture_runs.last_mut(){if !last.back_side&&last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
+ buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{back_side:false,order,first,count,shade,opacity,front_cull});
 }
 
 #[cfg(test)]mod native_texture_regression{
@@ -1539,6 +1548,16 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
   for vertex in &texture.vertices{let p=transform.inverse().transform_point3(DVec3::from_array(vertex.position.map(|v|v as f64)));assert!((vertex.uv[0]as f64-(2.*p.x+0.25)).abs()<1e-5);assert!((vertex.uv[1]as f64-(3.*p.y+0.5)).abs()<1e-5);}
   assert_eq!(texture.source_consolidated_opaque_count,0,"Source texture triangles never enter plain opaque glass gate");
  }
+ #[test]fn distinct_back_texture_preserves_local_uv_and_native_only_geometry(){
+  let mut scene=Scene::new();let mut mesh=textured_mesh(0.5,false);
+  mesh.faces[0].attrs.insert("back".into(),serde_json::json!({"texture":{"embed":"back.png","uvw":[4.,0.,0.,0.75,0.,5.,0.,0.125]},"opacity":0.25}));
+  let mut group=Group::with_mesh("placed",mesh);group.native_document=serde_json::json!({"proto":0,"xform":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]});group.transform=DMat4::from_scale_rotation_translation(DVec3::new(-2.,3.,1.),glam::DQuat::IDENTITY,DVec3::new(20.,30.,40.));let transform=group.transform;scene.groups.push(group);
+  let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;
+  let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);let front=&data.textured_meshes["source.png"];let back=&data.textured_meshes["back.png"];
+  assert!(front.source_texture_runs[0].front_cull);assert!(!front.source_texture_runs[0].back_side);assert!(back.source_texture_runs[0].back_side);assert_eq!(back.source_texture_runs[0].opacity,0.25);assert_eq!(back.indices.len(),3);
+  for vertex in &back.vertices{let p=transform.inverse().transform_point3(DVec3::from_array(vertex.position.map(|v|v as f64)));assert!((vertex.uv[0]as f64-(4.*p.x+0.75)).abs()<1e-5);assert!((vertex.uv[1]as f64-(5.*p.y+0.125)).abs()<1e-5);}
+  let generic=build_scene_render_data(&scene,&OrbitCamera::default(),&style,None);assert!(!generic.textured_meshes.contains_key("back.png"),"Native side metadata must not introduce back triangles into generic front-only painter");
+ }
  #[test]fn texture_dictionary_first_occurrence_survives_interleaved_paths(){
   let mut scene=Scene::new();for (index,path)in ["A.png","B.png","A.png"].iter().enumerate(){let shift=DVec3::new(index as f64*2.,0.,0.);let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|scene.mesh.add_vertex(p+shift));let face=scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();scene.mesh.faces[face].attrs.insert("texture".into(),serde_json::json!({"path":path}));}
   let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);
@@ -1556,4 +1575,12 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
   let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;
   for (opacity,cull) in [(1.,false),(0.99899999999,true)]{let mut scene=Scene::new();scene.mesh=textured_mesh(opacity,true);let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);let texture=&data.textured_meshes["source.png"];let run=&texture.source_texture_runs[0];assert_eq!(run.opacity,opacity);assert_eq!(run.front_cull,cull);assert_eq!(texture.source_back_paints.len(),1);assert_eq!(texture.source_back_paints[0].opacity,0.5);}
  }
+}
+
+fn append_source_back_texture(buffers:&mut crate::buffer::TextureBuffers,attrs:&std::collections::HashMap<String,serde_json::Value>,normal:DVec3,shade:f32,tris:&[(DVec3,DVec3,DVec3)],transform:DMat4,local_uv:bool,reflected:bool){
+ let Some(back)=attrs.get("back").and_then(|v|v.as_object())else{return;};let Some(tex)=back.get("texture")else{return;};let Some(path)=tex.get("embed").and_then(|v|v.as_str()).or_else(||tex.get("path").and_then(|v|v.as_str()))else{return;};if tris.is_empty(){return;}
+ let opacity=back.get("opacity").and_then(|v|v.as_f64()).unwrap_or(1.);let(gu,cu,gv,cv)=face_uv_axes(tex,normal);let order=buffers.take_order();let buffer=buffers.entry(path.into()).or_default();let first=buffer.indices.len();
+ for &(p0,p1,p2)in tris{let(p1,p2)=if reflected{(p2,p1)}else{(p1,p2)};let vertices=[p0,p1,p2].map(|p|{let world=transform.transform_point3(p);let uvp=if local_uv{p}else{world};Vertex::from_dvec3(world,normal,[shade,shade,shade,opacity as f32],[(gu.dot(uvp)+cu)as f32,(gv.dot(uvp)+cv)as f32])});buffer.push_triangle(vertices[0],vertices[1],vertices[2]);}
+ let count=buffer.indices.len()-first;if let Some(last)=buffer.source_texture_runs.last_mut(){if last.back_side&&last.first+last.count==first&&last.shade==shade&&last.opacity==opacity{last.count+=count;return;}}
+ buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{back_side:true,order,first,count,shade,opacity,front_cull:false});
 }

@@ -73,7 +73,7 @@ pub struct SourceBackPaint {pub first:usize,pub count:usize,pub order:usize,pub 
 /// plus UV (20 bytes); shade/opacity/culling are per-draw state, never expanded
 /// into additional per-vertex uploaded color or normal attributes.
 #[derive(Clone, Debug, PartialEq)]
-pub struct SourceTextureRun {pub order:usize,pub first:usize,pub count:usize,pub shade:f32,pub opacity:f64,pub front_cull:bool}
+pub struct SourceTextureRun {pub back_side:bool,pub order:usize,pub first:usize,pub count:usize,pub shade:f32,pub opacity:f64,pub front_cull:bool}
 /// Mesh render buffer storing indexed triangle data.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MeshRenderBuffer {
