@@ -16,15 +16,15 @@
   ],
   "process_metrics": {
     "descriptor_bytes": 160,
-    "elapsed_ns": 136798,
+    "elapsed_ns": 156385,
     "input_bytes": 1472,
     "output_bytes": 208,
     "tasks": 1,
     "workers": 2
   },
   "worker_pids": [
-    875523,
-    875525
+    911734,
+    911736
   ],
   "world": [
     [
