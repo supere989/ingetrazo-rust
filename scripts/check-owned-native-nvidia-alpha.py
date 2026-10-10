@@ -60,7 +60,8 @@ instanced=["back-gate-instanced-only-front","back-gate-instanced-only-reversed"]
 shade=["group-rotated-prototype","group-nested-rotated-prototype","group-classic-baked-rotation"]
 paint=["paint-default-front","paint-default-reversed","paint-face-override","paint-explicit-back","paint-child-own","paint-top-owner-not-intermediate"]
 styles=[f"style-{mode}-{kind}"for mode in ["wireframe","hidden_line","monochrome","xray","shaded"]for kind in ["front","reverse","translucent","explicit-back"]]
-assert names in [base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint+styles],names
+authored=["authored-legacy-absent","authored-legacy-null","authored-legacy-null-nullxform","authored-legacy-null-component-true","authored-proto-zero-true","authored-proto-zero-false","authored-nested-numeric-adopt","authored-nested-null-adopt"]
+assert names in [authored,base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint+styles],names
 (out/"native-ui-results.json").write_text(json.dumps({"passed":False,"cases":[],"status":"starting"}))
 
 for row in original["cases"]:
