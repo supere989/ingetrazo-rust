@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-ai-interpreter/scripts/check-ai-editable-mesh.py", line 34, in <module>
+    assert source['states']==native['states'],'Required original wrapper replacement identity remains divergent'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Required original wrapper replacement identity remains divergent

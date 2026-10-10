@@ -1,0 +1,6 @@
+{
+  "pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "35ecbdd0a86e9c60e1dd2fad2747435042cf1b5e95b6f0a38f8abb0e6c3bf13c",
+  "command": "cargo run --manifest-path tools/ai-interpreter-proof/Cargo.toml --bin vm_editable_mesh -j2",
+  "scope": "real editable Mesh append/projection prerequisite; production disabled"
+}

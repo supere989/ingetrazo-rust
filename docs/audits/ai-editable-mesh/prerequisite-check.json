@@ -1,0 +1,1 @@
+{"append_states": 3, "negative_controls": ["position", "missing_state", "face_identity", "hidden_gap", "pressure", "production", "type"], "retained_required_identity_gaps": ["face_loop_preserved", "attrs_dict_preserved", "vertex_position_preserved"], "full_acceptance": false}

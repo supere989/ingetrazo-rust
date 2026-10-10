@@ -83,6 +83,9 @@ pub mod native_groups {
         #[pymethod] fn length(zelf:&Py<Self>)->f64 {Self::norm(*zelf.xyz.read()) as f64}
     }
     impl QVector3D {
+        pub(crate) fn magnitude(xyz:[f32;3])->f32{Self::norm(xyz)}
+        pub(crate) fn coordinates(&self)->[f32;3]{*self.xyz.read()}
+        pub(crate) fn from_coordinates(xyz:[f32;3])->Self{Self{xyz:PyRwLock::new(xyz)}}
         fn norm(a:[f32;3])->f32 {let x=a[0].abs();let y=a[1].abs();let z=a[2].abs();let m=if x<y{if y<z{z}else{y}}else if x<z{z}else{x};if m==0.{0.}else{m*((x/m)*(x/m)+(y/m)*(y/m)+(z/m)*(z/m)).sqrt()}}
         fn inplace(a:&rustpython_vm::PyObject,b:&rustpython_vm::PyObject,vm:&VirtualMachine,op:u8)->PyResult {
             let Some(xyz)=Self::components(a,b,vm,op)? else{return Ok(vm.ctx.not_implemented())};

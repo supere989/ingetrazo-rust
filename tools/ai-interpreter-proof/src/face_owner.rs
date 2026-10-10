@@ -49,6 +49,9 @@ impl FaceOwner{
 
 }
 impl FaceTransaction{
+ pub(crate) fn staged_face(&self,id:usize)->Result<&MeshFace,String>{self.drafts.get(id.checked_sub(self.base_faces).ok_or("Face is not staged")?).map(|d|&d.face).ok_or("Missing staged face".into())}
+ pub(crate) fn added_positions(&self)->&[DVec3]{&self.edge.journal.added_vertices}
+
  /// Takes an already-created native JSON map. Arbitrary VM objects/keys remain
  /// a separate required adapter; this API never recursively clones Value.
  pub fn set_face_attributes(&mut self,id:usize,attrs:HashMap<String,serde_json::Value>)->Result<(),String>{let result=(||{if self.failed{return Err("Face transaction previously refused".into());}if let Some(view)=&self.edge.journal.registry{view.check()?;}let offset=id.checked_sub(self.base_faces).ok_or("Face attributes require a staged face")?;let draft=self.drafts.get(offset).ok_or("Face attributes require a staged face")?;let old=attribute_payload(&draft.face.attrs)?;let new=attribute_payload(&attrs)?;let bytes=self.attribute_bytes.checked_sub(old).and_then(|n|n.checked_add(new)).ok_or("Face attribute byte overflow")?;self.attribute_charge.resize(bytes)?;self.drafts[offset].face.attrs=attrs;self.attribute_bytes=bytes;Ok(())})();if result.is_err(){self.failed=true;}result}
