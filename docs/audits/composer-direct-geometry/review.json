@@ -28,5 +28,12 @@
     0,
     1
   ],
-  "native_hook": "hostscopedFactory createscachedHandle; productioncomposeraddsinlinecallbackinoriginalsheetorder; mapboundedcurrentSheetItems and stalehandlesretiredbyrendererfences"
+  "native_hook": "hostscopedFactory createscachedHandle; productioncomposeraddsinlinecallbackinoriginalsheetorder; mapboundedcurrentSheetItems and stalehandlesretiredbyrendererfences",
+  "strict_rendered_shapes": {
+    "mandatory_cases": 9,
+    "passed": 0,
+    "failed": 9,
+    "evidence": "../composer-direct-shape-pixels/result.json",
+    "scope": "actual production painterhook directcallbacks, softwareGPU fixture"
+  }
 }
