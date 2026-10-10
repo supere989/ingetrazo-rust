@@ -265,6 +265,7 @@ fn group_model(g: &Group) -> serde_json::Value {
     obj["component"] = serde_json::json!(g.component_definition.is_some());
     // Internal comparison identity, removed before writing native groups.
     obj["_component_definition"] = serde_json::json!(g.component_definition);
+    obj["_mesh_share"] = serde_json::json!(g.mesh_share);
     obj["xform"] = serde_json::json!(g.transform.to_cols_array());
     obj["layer"] = serde_json::json!(g.layer);
     obj["ifc"] = serde_json::json!(g.ifc_tag);
@@ -274,15 +275,20 @@ fn group_model(g: &Group) -> serde_json::Value {
     obj
 }
 
-fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut std::collections::HashMap<uuid::Uuid,usize>) -> serde_json::Value {
+fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut std::collections::HashMap<(uuid::Uuid,bool),usize>, mesh_shares: &std::collections::HashMap<uuid::Uuid,Mesh>) -> serde_json::Value {
     let model = group_model(g);
     let mut obj = overlay(&g.native_document, &g.native_baseline, model.clone());
     // Rust meshes are independent copies. Editing an imported instance makes a
     // new definition; never mutate a retained prototype used by other instances.
     let geometry_changed = ["edges", "faces"].iter()
         .any(|k| g.native_baseline.get(*k) != model.get(*k));
-    if let Some(definition)=g.component_definition {
-        let idx=if let Some(idx)=shared.get(&definition) {*idx} else {
+    // Only published geometry retains shared identity. A direct placement edit
+    // must not overwrite or silently reuse another placement's prototype.
+    let published_share = g.mesh_share.filter(|id| mesh_shares.get(id)
+        .is_some_and(|mesh| mesh_to_json(mesh) == mesh_to_json(&g.mesh)));
+    if let Some(definition)=published_share.or(g.component_definition) {
+        let key=(definition,published_share.is_some());
+        let idx=if let Some(idx)=shared.get(&key) {*idx} else {
             let original_idx=g.native_document.get("proto").and_then(|v|v.as_u64()).map(|i|i as usize);
             let idx=if !geometry_changed && original_idx.is_some()
                 && !shared.values().any(|idx|Some(*idx)==original_idx) {original_idx.unwrap()} else {
@@ -291,13 +297,15 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
                 let mesh=overlay(original_mesh,&baseline_mesh,mesh_to_json(&g.mesh));
                 let idx=protos.len();protos.push(mesh);idx
             };
-            shared.insert(definition,idx);idx
+            shared.insert(key,idx);idx
         };
-        obj["proto"]=serde_json::json!(idx);obj["component"]=serde_json::json!(true);
+        obj["proto"]=serde_json::json!(idx);
+        obj["component"]=serde_json::json!(g.component_definition.is_some());
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
     } else if g.native_document.get("proto").is_some() && (geometry_changed
-        || g.native_baseline.get("component").and_then(|v|v.as_bool())==Some(true)) {
+        || g.native_baseline.get("component").and_then(|v|v.as_bool())==Some(true)
+        || g.native_baseline.get("_mesh_share").is_some_and(|v| !v.is_null())) {
         obj["proto"] = serde_json::json!(protos.len());
         let original_mesh = g.native_document.get("proto").and_then(|v| v.as_u64())
             .and_then(|i| protos.get(i as usize)).unwrap_or(&g.native_document);
@@ -320,11 +328,12 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
     }
-    let children = g.children.iter().map(|c| group_to_json(c, protos, shared)).collect::<Vec<_>>();
-    if g.native_baseline.get("children") != model.get("children") {
+    let children = g.children.iter().map(|c| group_to_json(c, protos, shared, mesh_shares)).collect::<Vec<_>>();
+    if !g.children.is_empty() || g.native_baseline.get("children") != model.get("children") {
         obj["children"] = serde_json::json!(children);
     }
     obj.as_object_mut().unwrap().remove("_component_definition");
+    obj.as_object_mut().unwrap().remove("_mesh_share");
     obj
 }
 
@@ -577,7 +586,7 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     if scene.native_baseline.get("groups") != current.get("groups") {
         let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
         let mut shared=std::collections::HashMap::new();
-        doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos, &mut shared)).collect::<Vec<_>>());
+        doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos, &mut shared, &scene.mesh_shares)).collect::<Vec<_>>());
         if !protos.is_empty() { doc["protos"] = serde_json::json!(protos); }
     }
     doc
@@ -774,6 +783,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     }
 
     let proto_ids:Vec<_>=proto_meshes.iter().map(|_|uuid::Uuid::new_v4()).collect();
+    scene.mesh_shares = proto_ids.iter().copied().zip(proto_meshes.iter().cloned()).collect();
     fn read_group(v: &serde_json::Value, protos: &[Mesh], proto_ids:&[uuid::Uuid], depth:usize) -> Result<Group, IgzError> {
         if depth>64 {return Err(IgzError::InvalidDocument("group nesting limit exceeded".into()));}
         let mut g = Group::new(v.get("name").and_then(|v| v.as_str()).unwrap_or("Group"));
@@ -783,6 +793,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
                 g.component_definition=proto_ids.get(idx as usize).copied();
             }
         }
+        g.mesh_share = v.get("proto").and_then(|v|v.as_u64()).and_then(|idx|proto_ids.get(idx as usize)).copied();
         g.mesh = if let Some(idx) = v.get("proto").and_then(|v| v.as_u64()) {
             protos.get(idx as usize).cloned().ok_or_else(||
                 IgzError::InvalidDocument(format!("missing component prototype {idx}")))?

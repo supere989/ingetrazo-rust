@@ -1,0 +1,25 @@
+{
+  "status": "held_pending_original_reopen",
+  "formats_tests": "pass",
+  "native_preservation": {
+    "passed": 16,
+    "failed": 0
+  },
+  "controls": [
+    "published proto identity includes component=false",
+    "equal distinct protos remain distinct",
+    "vendor prototype and placement metadata retained",
+    "direct unpub placement edits detach without discarding geometry",
+    "legacy component publication uses separate identity namespace"
+  ],
+  "retained_failures": [
+    "initial-tests.log",
+    "second-tests.log"
+  ],
+  "remaining": [
+    "fresh original Python load and object identity checks",
+    "full workspace regression",
+    "component Finish integration validation"
+  ],
+  "canonical_promotion": false
+}
