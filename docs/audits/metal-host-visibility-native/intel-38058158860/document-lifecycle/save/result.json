@@ -1,0 +1,36 @@
+{
+  "cancel_verified": false,
+  "choice": "save",
+  "close_events": 1,
+  "confirm_unsaved": true,
+  "current_output_has_modal": true,
+  "current_submission_floor": 4,
+  "displayed": 2,
+  "error": "Bounded Cocoa lifecycle deadline phase=1 close=1 move=0 press=0 release=0 displayed=2",
+  "last_modal_center": [
+    566.5,
+    424.6820068359375
+  ],
+  "modal_candidates": [
+    [
+      5,
+      [
+        566.5,
+        424.6820068359375
+      ]
+    ]
+  ],
+  "modal_label": "save",
+  "modal_submission": null,
+  "moves": 0,
+  "passed": false,
+  "pending": 3,
+  "phase": 1,
+  "physical_input_claim": false,
+  "physical_mac_claim": false,
+  "presentation_diagnostics": "extent=(1280, 800); visible=Some(false); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; hidden=false; drawable_size=CGSize { width: 1280.0, height: 800.0 }; presentsWithTransaction=false; submitted=5; retired=2; displayed=2; skipped=0; frames=[submission=1 id=0 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=566.192422245 gpuEnd=566.2012377110001 callback_seen=false callback_time=0; submission=4 id=3 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=569.1367714180001 gpuEnd=569.1380922520001 callback_seen=false callback_time=0; submission=5 id=4 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=570.1068709780001 gpuEnd=570.108396352 callback_seen=false callback_time=0]",
+  "presses": 0,
+  "releases": 0,
+  "skipped": 0,
+  "ui_turns": 5
+}
