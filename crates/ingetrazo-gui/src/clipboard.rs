@@ -10,8 +10,17 @@ pub(crate) fn merge_resources(destination:&mut Scene,source:&Scene)->Result<(),S
     for layer in &source.layers{if !destination.layers.iter().any(|existing|existing.name==layer.name){destination.layers.push(layer.clone());}}
     Ok(())
 }
+const CLIPBOARD_PREFIX:&str="IngeTrazo-Rust-geometry-v1\n";
 impl IngeTrazoApp {
+    pub(crate) fn write_system_clipboard(&mut self){
+        if let (Some(system),Some(payload))=(&mut self.system_clipboard,&self.clipboard){if let Ok(encoded)=serde_json::to_string(payload){let _=system.set_text(format!("{CLIPBOARD_PREFIX}{encoded}"));}}
+    }
+    pub(crate) fn read_system_clipboard(&mut self){
+        if let Some(system)=&mut self.system_clipboard{if let Ok(text)=system.get_text(){if let Some(encoded)=text.strip_prefix(CLIPBOARD_PREFIX){if let Ok(payload)=serde_json::from_str(encoded){self.clipboard=Some(payload);}}}}
+    }
+
     pub fn begin_paste_preview(&mut self) {
+        self.read_system_clipboard();
         let Some(clipboard)=self.clipboard.clone() else{return;};
         if clipboard.mesh.faces.is_empty()&&clipboard.mesh.edges.is_empty()&&clipboard.groups.is_empty(){return;}
         self.set_tool(ingetrazo_tools::base::ToolType::Select);
@@ -36,6 +45,12 @@ impl IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
+    #[test]
+    #[ignore="requires isolated X11 clipboard server"]
+    fn system_clipboard_transfers_geometry_between_native_owners(){
+        let mut source=IngeTrazoApp::new();source.system_clipboard=Some(arboard::Clipboard::new().unwrap());let a=source.scene.mesh.add_vertex(DVec3::ZERO);let b=source.scene.mesh.add_vertex(DVec3::X);source.scene.mesh.add_edge(a,b);source.scene.select(SelectionItem::Edge(0));source.copy_selection();
+        let mut destination=IngeTrazoApp::new();destination.system_clipboard=Some(arboard::Clipboard::new().unwrap());destination.read_system_clipboard();assert_eq!(destination.clipboard.as_ref().unwrap().mesh.edges.len(),1);destination.paste_in_place();assert_eq!(destination.scene.mesh.edges.len(),1);
+    }
     #[test]
     fn foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo(){
         let mut source=IngeTrazoApp::new();let a=source.scene.mesh.add_vertex(DVec3::ZERO);let b=source.scene.mesh.add_vertex(DVec3::X);source.scene.mesh.add_edge(a,b);source.scene.select(SelectionItem::Edge(0));source.scene.embedded_textures.insert("texture.png".into(),vec![1,2,3,4]);source.copy_selection();

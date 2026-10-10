@@ -65,6 +65,7 @@ pub struct IngeTrazoApp {
     pub icons: crate::icons::IconManager,
     pub recent_files: Vec<PathBuf>,
     pub clipboard: Option<GeometryClipboard>,
+    pub system_clipboard: Option<arboard::Clipboard>,
     pub selected_dimension: Option<usize>,
     pub dimension_text_input: Option<(usize,String)>,
     pub parts_options:crate::outliner::PartsOptions,
@@ -151,6 +152,7 @@ impl IngeTrazoApp {
             icons: crate::icons::IconManager::new(),
             recent_files: Vec::new(),
             clipboard: None,
+            system_clipboard: None,
             paste_preview: None,
             selected_saved_view: None,
             parts_options:crate::outliner::PartsOptions::default(),
@@ -411,7 +413,7 @@ impl IngeTrazoApp {
         let count=mesh.faces.len()+mesh.edges.len()+groups.len();
         if count==0{self.status_message="Nothing selected to copy".into();return;}
         let mut resources=Scene::new();resources.materials=self.scene.materials.clone();resources.layers=self.scene.layers.clone();resources.embedded_textures=self.scene.embedded_textures.clone();resources.component_definitions=self.scene.component_definitions.clone();
-        self.clipboard=Some(GeometryClipboard{mesh,reference,groups,resources});self.status_message=format!("Copied selection ({count} items)");
+        self.clipboard=Some(GeometryClipboard{mesh,reference,groups,resources});self.write_system_clipboard();self.status_message=format!("Copied selection ({count} items)");
     }
     pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
         let Some(cb)=self.clipboard.clone() else{return false;};
@@ -428,7 +430,7 @@ impl IngeTrazoApp {
         self.save_undo_state();candidate.bump_version();self.scene=candidate;true
     }
     pub fn paste_selection(&mut self) {self.begin_paste_preview();}
-    pub fn paste_in_place(&mut self) {self.paste_internal(DVec3::ZERO);self.status_message="Pasted in place".into();}
+    pub fn paste_in_place(&mut self) {self.read_system_clipboard();self.paste_internal(DVec3::ZERO);self.status_message="Pasted in place".into();}
 
     pub fn repeat_last_command(&mut self) {
         self.status_message = ingetrazo_core::i18n::tr("Repeated last command");
@@ -894,6 +896,9 @@ impl eframe::App for IngeTrazoApp {
             if ctx.input(|i| i.key_pressed(egui::Key::A)) {
                 self.select_all();
             }
+        }
+        if !ctx.wants_keyboard_input(){
+            let events=ctx.input(|i|i.events.clone());for event in events{match event{egui::Event::Copy=>self.copy_selection(),egui::Event::Cut=>self.cut_selection(),egui::Event::Paste(_)=>self.paste_selection(),_=>{}}}
         }
         if ctx.input(|i| i.key_pressed(egui::Key::Delete)) {
             self.delete_selection();

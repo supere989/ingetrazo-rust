@@ -38,6 +38,7 @@ pub fn run_gui(initial_file: Option<PathBuf>) -> Result<(), eframe::Error> {
         native_options,
         Box::new(move |_cc| {
             let mut app=IngeTrazoApp::new();
+            app.system_clipboard=arboard::Clipboard::new().ok();
             app.attach_session_store(crate::session_state::SessionStore::user_default());
             if let Some(path)=initial_file {app.open_document(&path);}
             Ok(Box::new(app))
