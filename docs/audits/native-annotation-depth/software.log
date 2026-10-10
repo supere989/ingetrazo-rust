@@ -1,0 +1,6 @@
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+{"scope":"actual retained depth sampling; not original MSAA resolve policy or annotation overlay proof","samples":4,"extent":[64,64],"flags":[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]],"warm_query_uploads":1,"invalid_sample_refused":true,"stale_target_refused":true,"final_ledger":0}

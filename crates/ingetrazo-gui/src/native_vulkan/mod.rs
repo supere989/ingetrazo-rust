@@ -3,6 +3,7 @@ pub mod resize;
 pub mod headless;
 pub mod world;
 mod annotation_visibility;
+mod annotation_visibility_gpu;
 pub mod resources;
 pub mod texture_cache;
 mod queues;

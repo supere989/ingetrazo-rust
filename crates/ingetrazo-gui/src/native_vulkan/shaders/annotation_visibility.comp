@@ -1,0 +1,33 @@
+#version 450
+#extension GL_EXT_samplerless_texture_functions : require
+// Retained multisample depth only. Selecting a GL-equivalent sample policy is
+// separately admitted; this shader does not assume that sample zero is parity.
+layout(local_size_x=64) in;
+layout(set=0,binding=0) uniform texture2DMS retained_depth;
+struct Query { ivec2 pixel; vec2 normalized; float threshold; uint enabled; uvec2 padding; };
+layout(std430,set=0,binding=1) readonly buffer Queries { Query queries[]; };
+layout(std430,set=0,binding=2) writeonly buffer Results { uint hidden[]; };
+layout(push_constant) uniform Parameters {
+    mat4 inverse_mvp; vec4 eye; vec4 forward; uvec4 extent_count_sample;
+} p;
+void main() {
+    uint id=gl_GlobalInvocationID.x;
+    if(id>=p.extent_count_sample.z)return;
+    Query query=queries[id];
+    if(query.enabled==0){hidden[id]=0;return;}
+    float depth=0.0;
+    ivec2 extent=ivec2(p.extent_count_sample.xy);
+    for(int y=max(query.pixel.y-1,0);y<=min(query.pixel.y+1,extent.y-1);++y)
+        for(int x=max(query.pixel.x-1,0);x<=min(query.pixel.x+1,extent.x-1);++x)
+            depth=max(depth,texelFetch(retained_depth,ivec2(x,y),int(p.extent_count_sample.w)).r);
+    if(depth>=1.0){hidden[id]=0;return;}
+    precise vec4 input_point=vec4(query.normalized,depth*2.0-1.0,1.0);
+    precise vec4 q;
+    for(int r=0;r<4;++r)
+        q[r]=p.inverse_mvp[0][r]*input_point.x+p.inverse_mvp[1][r]*input_point.y+
+             p.inverse_mvp[2][r]*input_point.z+p.inverse_mvp[3][r]*input_point.w;
+    if(abs(q.w)<uintBitsToFloat(0x2b8cbccdu)){hidden[id]=0;return;}
+    precise vec3 delta=q.xyz/q.w-p.eye.xyz;
+    precise float along=delta.x*p.forward.x+delta.y*p.forward.y+delta.z*p.forward.z;
+    hidden[id]=uint(along<query.threshold);
+}
