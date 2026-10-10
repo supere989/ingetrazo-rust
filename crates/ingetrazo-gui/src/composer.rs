@@ -944,9 +944,19 @@ pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_sha
  let prepared=commands.iter().map(|c|Ok((c.stroke.as_ref().map(|(s,w)|color(s,1.).map(|v|Stroke::new(*w as f32*zoom,v))).transpose()?.unwrap_or(Stroke::NONE),c.fill.as_ref().map(|(s,a)|color(s,*a)).transpose()?.unwrap_or(Color32::TRANSPARENT)))).collect::<Result<Vec<_>,String>>()?;
  for (command,(stroke,fill)) in commands.into_iter().zip(prepared) {
   match command.path {
-   ShapePath::RoundedRect{size,radius}=>{let rect=Rect::from_two_pos(point(glam::DVec2::ZERO),point(size));painter.rect(rect,(radius*f64::from(zoom))as f32,fill,stroke);},
-   ShapePath::Ellipse{size}=>{let center=size/2.;let points=(0..96).map(|i|{let t=std::f64::consts::TAU*f64::from(i)/96.;point(center+glam::DVec2::new(center.x*t.cos(),center.y*t.sin()))}).collect();painter.add(egui::Shape::convex_polygon(points,fill,stroke));},
-   ShapePath::Polygon(points)=>{painter.add(egui::Shape::convex_polygon(points.into_iter().map(point).collect(),fill,stroke));},
+   ShapePath::RoundedRect{size,radius}=>{
+    // QPainter strokes are centered on the physical path. egui RectShape
+    // and convex_polygon default to outside strokes, shifting the document ink.
+    let points=if radius<=0. {vec![point(glam::DVec2::ZERO),point(glam::DVec2::new(size.x,0.)),point(size),point(glam::DVec2::new(0.,size.y))]}else {
+     let mut points=Vec::with_capacity(100);
+     for (center,start) in [(glam::DVec2::new(size.x-radius,radius),-std::f64::consts::FRAC_PI_2),(size-glam::DVec2::splat(radius),0.),(glam::DVec2::new(radius,size.y-radius),std::f64::consts::FRAC_PI_2),(glam::DVec2::splat(radius),std::f64::consts::PI)] {
+      for i in 0..=24 {let angle=start+std::f64::consts::FRAC_PI_2*f64::from(i)/24.;points.push(point(center+glam::DVec2::new(angle.cos(),angle.sin())*radius));}
+     }points
+    };
+    painter.add(egui::epaint::PathShape{points,closed:true,fill,stroke:stroke.into()});
+   },
+   ShapePath::Ellipse{size}=>{let center=size/2.;let points=(0..96).map(|i|{let t=std::f64::consts::TAU*f64::from(i)/96.;point(center+glam::DVec2::new(center.x*t.cos(),center.y*t.sin()))}).collect();painter.add(egui::epaint::PathShape{points,closed:true,fill,stroke:stroke.into()});},
+   ShapePath::Polygon(points)=>{painter.add(egui::epaint::PathShape{points:points.into_iter().map(point).collect(),closed:true,fill,stroke:stroke.into()});},
    ShapePath::Line(mut a,mut b)=>{
     if let Some(clip)=command.clip {
      let delta=b-a;let mut lo=0_f64;let mut hi=1_f64;
