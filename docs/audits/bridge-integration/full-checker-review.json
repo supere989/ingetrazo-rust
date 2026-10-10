@@ -1,0 +1,20 @@
+{
+  "full_equal": true,
+  "bounded_equal": true,
+  "bounded_cases": 9,
+  "bounded_states": 21,
+  "full_mismatches": [],
+  "full_negative_rejections": [
+    "leaf-undo-wrong-state",
+    "leaf-state-missing",
+    "leaf-step-missing",
+    "leaf-case-missing"
+  ],
+  "negative_rejections": [
+    "local-groups-only",
+    "hidden-edge-excluded",
+    "wrong-instance-count",
+    "wrong-history-outcome",
+    "missing-case"
+  ]
+}

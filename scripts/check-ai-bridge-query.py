@@ -12,6 +12,7 @@ def validate(a,b,names=NAMES):
  assert a==b,"source/native query states mismatch"
 def main():
  p=Path(sys.argv[1]);a=json.loads((p/"original.json").read_text());b=json.loads((p/"native.json").read_text());equal=a==b
+ if equal:validate(a,b)
  for d in (a,b):assert [c["name"]for c in d["cases"]]==NAMES,"full source inventory"
  mismatches=[]
  for x,y in zip(a["cases"],b["cases"]):
@@ -30,6 +31,17 @@ def main():
   try:validate(aa,x,NAMES[:-1])
   except AssertionError:negative.append(name)
   else:raise AssertionError("negative accepted: "+name)
- print(json.dumps({"full_equal":equal,"bounded_equal":True,"bounded_cases":9,"bounded_states":sum(len(c["states"])for c in aa["cases"]),"full_mismatches":mismatches,"negative_rejections":negative},indent=2))
+ full_negative=[]
+ if equal:
+  for name in ["leaf-undo-wrong-state","leaf-state-missing","leaf-step-missing","leaf-case-missing"]:
+   x=copy.deepcopy(b)
+   if name=="leaf-undo-wrong-state":x["cases"][-1]["states"][3]["group_names"]=["wrong leaf undo"]
+   elif name=="leaf-state-missing":x["cases"][-1]["states"].pop()
+   elif name=="leaf-step-missing":x["cases"][-1]["steps"].pop()
+   else:x["cases"].pop()
+   try:validate(a,x)
+   except AssertionError:full_negative.append(name)
+   else:raise AssertionError("full negative accepted: "+name)
+ print(json.dumps({"full_equal":equal,"bounded_equal":True,"bounded_cases":9,"bounded_states":sum(len(c["states"])for c in aa["cases"]),"full_mismatches":mismatches,"full_negative_rejections":full_negative,"negative_rejections":negative},indent=2))
  if "--require-full"in sys.argv and not equal:raise SystemExit(1)
 if __name__=="__main__":main()
