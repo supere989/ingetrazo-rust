@@ -83,8 +83,24 @@ impl MetalPresentation {
         // This is an explicit foundation latency limitation, not a fast-path claim.
         layer.setAllowsNextDrawableTimeout(true);
         layer.setContentsScale(window.scale_factor());
-        view.setWantsLayer(true);
+        // A custom CAMetalLayer is layer-hosted, not AppKit's layer-backed
+        // drawing store. Apple's NSView.wantsLayer contract requires this order:
+        // install the supplied layer FIRST, then opt into layer hosting.
+        // https://developer.apple.com/documentation/appkit/nsview/wantslayer
+        let prior_wants_layer = view.wantsLayer();
         view.setLayer(Some(&layer));
+        view.setWantsLayer(true);
+        let view_layer_matches = view.layer().is_some_and(|actual| {
+            Retained::as_ptr(&actual).cast::<std::ffi::c_void>()
+                == Retained::as_ptr(&layer).cast::<std::ffi::c_void>()
+        });
+        if !view_layer_matches || !view.wantsLayer() {
+            return Err("AppKit did not retain the supplied Metal hosting layer".into());
+        }
+        eprintln!(
+            "Metal layer-hosting order: custom-layer-before-wantsLayer; prior_wantsLayer={prior_wants_layer}; actual_wantsLayer={}; view_layer_matches={view_layer_matches}",
+            view.wantsLayer()
+        );
         eprintln!(
             "Metal WSI attachment: view_bounds={:?}; layer_frame={:?}; layer_bounds={:?}; layer_hidden={}; window_visible={:?}; drawable_size={:?}",
             view.bounds(),
