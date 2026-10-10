@@ -39,7 +39,8 @@ fn terminal_proof(
 struct Frame {
     submission_id: u64,
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
-    drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
+    // Observation only; do not hold the application drawable until its callback.
+    drawable_id: usize,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
     _canvas:Option<std::sync::Arc<crate::compute_canvas::Lease>>,
     callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
@@ -193,7 +194,9 @@ impl MetalPresentation {
                     return Err(error);
                 }
             };
-            // Each immutable frame owns its drawable, command and paint.
+            // Each immutable frame retains its command, callback and paint.
+            // Metal owns scheduled presentation; the application drawable was
+            // released after commit, without weakening retirement proof.
             // A missing head callback cannot invalidate a later owner's actual
             // terminal proof. Never release the unresolved head by inference.
             if displayed {
@@ -287,12 +290,20 @@ impl MetalPresentation {
         unsafe {
             drawable.addPresentedHandler(block2::RcBlock::as_ptr(&callback));
         }
+        let drawable_id = drawable.drawableID();
         command.presentDrawable(ProtocolObject::from_ref(&*drawable));
         command.commit();
+        // Apple recommends releasing the application drawable immediately after
+        // CPU frame finalization. presentDrawable schedules presentation through
+        // the command buffer; no post-submit drawable queries require our own
+        // strong reference. Keep every command/callback/paint owner below until
+        // actual GPU completion AND terminal presentation callback.
+        // https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/Drawables.html
+        drop(drawable);
         self.owners.frames.push_back(Frame {
             submission_id: self.submitted + 1,
             command,
-            drawable,
+            drawable_id,
             callback_seen,
             callback_time,
             _callback: callback,
@@ -380,11 +391,10 @@ impl MetalPresentation {
             .iter()
             .map(|f| {
                 format!(
-                    "submission={} id={} command={:?} presentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
+                    "submission={} id={} command={:?} drawable_owner=released_after_commit gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
                     f.submission_id,
-                    f.drawable.drawableID(),
+                    f.drawable_id,
                     f.command.status(),
-                    f.drawable.presentedTime(),
                     f.command.GPUStartTime(),
                     f.command.GPUEndTime(),
                     f.callback_seen.load(Ordering::Acquire),
