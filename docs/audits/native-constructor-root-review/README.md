@@ -1,0 +1,3 @@
+# Independent startup-owner review
+Root rebuilt source through 0304355 in an isolated target and ran a fresh immutable binary on the actual RTX 5090 using a read-only, network-disabled CDI runtime and owned X11 windows. All eight exact created/destroyed inventories and real strict-adapter refusal pass. No queue submission occurs. Root then reviewed the graceful refusal-exit correction 7f295b8 and reran the complete candidate workspace: 531 passed, two ignored.
+Positive/refusal logs are fresh root executions. Old raw-owner negative and normal-factory refusal/baseline are retained owner evidence, independently checked, not fresh root reruns. Root source cherry revisions are 4009ed0, ef6cb5a, 9a18fee, 473b4a3. No actual device-loss or driver OOM/recovery claim is made.
