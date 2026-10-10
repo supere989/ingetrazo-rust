@@ -13,8 +13,13 @@
   "gui_change": "Replaces prompt-ignoring cube placeholder with local session staging",
   "limitations": [
     "No HTTP transport, persistent settings, recipe interpreter or live MCP operation acceptance",
-    "Checker mutation loop currently demonstrates inequality rather than invoking validator; follow-up requested",
     "No full P32 or release gate acceptance"
   ],
-  "repeated_build": false
+  "repeated_build": false,
+  "validator_review": {
+    "source": "c1f222d8",
+    "positive_cases": 41,
+    "malformed_controls_rejected_by_same_validator": 11,
+    "root_retained_data_recheck": true
+  }
 }

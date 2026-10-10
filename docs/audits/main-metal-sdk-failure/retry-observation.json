@@ -1,0 +1,67 @@
+{
+  "observed_utc": "2026-10-10T18:18:52.458433+00:00",
+  "runs": [
+    {
+      "run_id": 38074730037,
+      "head_sha": "3e1f12468478f220ad3a2dc3a2a41e9f5e8484de",
+      "jobs": [
+        {
+          "id": 114279211020,
+          "name": "Native Metal framework link (macos-15-intel)",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730037/job/114279211020"
+        },
+        {
+          "id": 114279211091,
+          "name": "compilation-and-tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730037/job/114279211091"
+        },
+        {
+          "id": 114279211102,
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730037/job/114279211102"
+        },
+        {
+          "id": 114279211145,
+          "name": "Native Metal framework link (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730037/job/114279211145"
+        },
+        {
+          "id": 114279211167,
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730037/job/114279211167"
+        }
+      ]
+    },
+    {
+      "run_id": 38074730060,
+      "head_sha": "3e1f12468478f220ad3a2dc3a2a41e9f5e8484de",
+      "jobs": [
+        {
+          "id": 114279211122,
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730060/job/114279211122"
+        },
+        {
+          "id": 114279211391,
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38074730060/job/114279211391"
+        }
+      ]
+    }
+  ],
+  "scope": "Job conclusions only; artifact inspection and remaining jobs pending"
+}
