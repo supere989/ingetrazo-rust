@@ -5,6 +5,9 @@ from pathlib import Path
 root=Path(sys.argv[1]);native=Path(sys.argv[2]);old=Path(sys.argv[3]);wrong=Path(sys.argv[4])
 s=json.loads((root/"original-alpha-results.json").read_text())["cases"]
 def load(p):return {r["case"]:r for r in json.loads((p/"native-alpha-results.json").read_text())["cases"]}
+device=json.loads((native/"native-alpha-results.json").read_text())["renderer_device"]
+assert device["vendor_id"]==0x10de and device["device_type"]=="DISCRETE_GPU" and "NVIDIA GeForce RTX 5090" in device["name"] and device["software_fixture_requested"] is False,"wrong or software native GPU"
+assert isinstance(device["device_id"],int) and device["device_id"]>0,"missing physical device identity"
 n=load(native);o=load(old);w=load(wrong)
 required={"image-"+v for v in ["quadrants","alpha","cutout","opacity-0999","opacity-below","reversed","wireframe","hidden-line","xray","hidden-layer","overlap","opaque-behind","faded-behind","threshold-behind","below-threshold-behind","coplanar-trace"]}
 assert {r["case"]for r in s}==set(n)==set(o)==set(w)==required,"missing mandatory rendered family"

@@ -18,6 +18,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         } else {
             DeviceRequest::nvidia_hardware()
         })?;
+    let properties = unsafe { context.instance.get_physical_device_properties(context.physical_device) };
+    let device_name = unsafe { std::ffi::CStr::from_ptr(properties.device_name.as_ptr()) }.to_string_lossy().into_owned();
+    let renderer_device = serde_json::json!({"name":device_name,"vendor_id":properties.vendor_id,"device_id":properties.device_id,"device_type":format!("{:?}",properties.device_type),"software_fixture_requested":args.iter().any(|a|a=="--software-fixture")});
     let budget = Arc::new(VulkanBudget::new(
         &context.instance,
         context.physical_device,
@@ -152,7 +155,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .free_command_buffers(context.command_pool, &commands);
         context.device.destroy_fence(fence, None);
     }
-    let result = serde_json::json!({"cases":rows,"scope":"Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"});
+    let result = serde_json::json!({"renderer_device":renderer_device,"cases":rows,"scope":"Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"});
     std::fs::write(
         out.join("native-alpha-results.json"),
         serde_json::to_vec_pretty(&result)?,
