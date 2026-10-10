@@ -384,16 +384,29 @@ impl ParagraphCache {
         let mut base = request.clone();
         base.required_chars.clear();
         let primary = resolver.resolve(base.clone())?.font;
+        let fixed_width = (width_px * 64.).floor() as i64;
+        // At most eight keys: avoid an authored-text allocation on every warm lookup.
+        if let Some((_, entry)) = self.entries.iter().find(|(key, _)| {
+            key.primary == primary.key()
+                && key.request == base
+                && key.text == text
+                && key.width_26_6 == fixed_width
+                && key.alignment == alignment
+        }) {
+            return Ok(entry.paragraph.clone());
+        }
+        let mut owned_text = String::new();
+        owned_text
+            .try_reserve_exact(text.len())
+            .map_err(|_| "Paper paragraph key allocation failed")?;
+        owned_text.push_str(text);
         let key = ParagraphKey {
             primary: primary.key(),
             request: base,
-            text: text.into(),
-            width_26_6: (width_px * 64.).floor() as i64,
+            text: owned_text,
+            width_26_6: fixed_width,
             alignment,
         };
-        if let Some(entry) = self.entries.get(&key) {
-            return Ok(entry.paragraph.clone());
-        }
         let paragraph = Rc::new(layout_paragraph(
             resolver, request, text, width_px, alignment,
         )?);

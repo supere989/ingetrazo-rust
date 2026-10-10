@@ -119,6 +119,12 @@ pub fn prepare_with_views<F>(sheet: &Sheet, views: &mut F) -> Result<Page, Strin
 where
     F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
 {
+    prepare_with_painters(sheet,views,&mut |_,_|Err("PDF painter for this sheet item remains unavailable".into()))
+}
+pub fn prepare_with_painters<F,T>(sheet:&Sheet,views:&mut F,texts:&mut T)->Result<Page,String>
+where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
+      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>
+{
     for key in [
         "images",
         "leyendas",
@@ -195,6 +201,14 @@ where
                     draws.push(next);
                 }
             }
+            SheetItem::Text(item)=>{
+                for next in texts(sheet,item)? {
+                    if draws.len()==crate::sheet_pdf::MAX_DRAWS {return Err("PDF draw budget exceeded".into());}
+                    path_commands=path_commands.checked_add(draw_command_count(&next)?).ok_or("PDF command count overflow")?;
+                    if path_commands>crate::sheet_pdf::MAX_COMMANDS {return Err("PDF aggregate command budget exceeded".into());}
+                    draws.push(next);
+                }
+            }
             _ => return Err("PDF painter for this sheet item remains unavailable".into()),
         }
     }
@@ -222,6 +236,12 @@ pub fn prepare_all_with_views<F>(sheets: &[Sheet], views: &mut F) -> Result<Vec<
 where
     F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
 {
+    prepare_all_with_painters(sheets,views,&mut |_,_|Err("PDF painter for this sheet item remains unavailable".into()))
+}
+pub fn prepare_all_with_painters<F,T>(sheets:&[Sheet],views:&mut F,texts:&mut T)->Result<Vec<Page>,String>
+where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
+      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>
+{
     if sheets.is_empty() || sheets.len() > 10_000 {
         return Err("PDF requires 1..10000 pages".into());
     }
@@ -229,7 +249,7 @@ where
     let mut draws = 0usize;
     let mut commands = 0usize;
     for sheet in sheets {
-        let page = prepare_with_views(sheet, views)?;
+        let page = prepare_with_painters(sheet, views, texts)?;
         draws = draws
             .checked_add(page.draws.len())
             .ok_or("PDF draw count overflow")?;
@@ -237,11 +257,7 @@ where
             return Err("PDF atlas draw budget exceeded".into());
         }
         for draw in &page.draws {
-            commands = commands
-                .checked_add(draw.path.len())
-                .and_then(|n| n.checked_add(draw.clip.as_ref().map_or(0, Vec::len)))
-                .and_then(|n| n.checked_add(draw.clip_intersection.as_ref().map_or(0, Vec::len)))
-                .ok_or("PDF command count overflow")?;
+            commands = commands.checked_add(draw_command_count(draw)?).ok_or("PDF command count overflow")?;
         }
         if commands > crate::sheet_pdf::MAX_COMMANDS {
             return Err("PDF atlas command budget exceeded".into());
@@ -249,4 +265,14 @@ where
         pages.push(page);
     }
     Ok(pages)
+}
+
+fn draw_command_count(draw:&Draw)->Result<usize,String>{
+    let mut count=draw.path.len().checked_add(draw.clip.as_ref().map_or(0,Vec::len))
+        .and_then(|n|n.checked_add(draw.clip_intersection.as_ref().map_or(0,Vec::len))).ok_or("PDF command count overflow")?;
+    if let Some(text)=&draw.text {
+        count=count.checked_add(text.glyphs.len().checked_mul(if text.bold {4}else{2}).ok_or("PDF glyph count overflow")?)
+            .and_then(|n|n.checked_add(text.decorations.len().checked_mul(2)?)).ok_or("PDF command count overflow")?;
+    }
+    Ok(count)
 }
