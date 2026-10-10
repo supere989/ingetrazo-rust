@@ -24,12 +24,18 @@ def check(source,native):
      if values!=got.get('metrics'):errors.append('exact source raw font metrics differ')
     ids=[g['id']for g in got.get('glyphs',[])]
     diagnostics['source_ids']=run['glyphs'];diagnostics['native_ids']=ids
-    if run['glyphs']!=ids:errors.append('source run glyph order/identity differs')
+    diagnostics['raw_storage_order_equal']=run['glyphs']==ids
+    source_pairs=sorted((glyph,position[0]*64,position[1]*64)for glyph,position in zip(run['glyphs'],run['positions']))
+    native_pairs=[];x=0
+    for glyph in got.get('glyphs',[]):
+     native_pairs.append((glyph['id'],x+glyph['offset'][0],got['metrics'][0]+glyph['offset'][1]));x+=glyph['advance'][0]
+    native_pairs.sort();diagnostics['source_glyph_position_pairs_26_6']=source_pairs;diagnostics['native_glyph_position_pairs_26_6']=native_pairs
+    if source_pairs!=native_pairs:errors.append('exact glyph-position pairs differ')
     diagnostics['source_raw_glyph_metrics']=run.get('glyph_metrics',[])
     diagnostics['source_positions']=run['positions'];diagnostics['native_shape']=got.get('glyphs',[])
     # Do not equate unkerned raw advances with shaped advances or supplementary
     # layout positions with operative painter positions. Retain both for diagnosis.
   rows.append({'case':src['name'],'passed':not errors,'errors':errors,'diagnostics':diagnostics})
- return {'passed':all(row['passed']for row in rows),'cases':rows,'scope':'Exact raw font metrics/glyph identities only; shaping positions, synthesis and actual Canvas/PDF pixels require separate gates'}
+ return {'passed':all(row['passed']for row in rows),'cases':rows,'scope':'Exact raw font metrics and supplementary glyph-position pairs; raw storage order retained without mistaking logical/visual ordering for pixel mismatch; operative painter/synthesis/Canvas/PDF separate'}
 if __name__=='__main__':
  result=check(json.loads(Path(sys.argv[1]).read_text()),json.loads(Path(sys.argv[2]).read_text()));print(json.dumps(result,indent=2,ensure_ascii=False));sys.exit(0 if result['passed']else 1)
