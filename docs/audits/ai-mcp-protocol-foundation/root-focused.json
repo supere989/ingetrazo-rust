@@ -1,0 +1,8 @@
+{
+  "source": "41851315dd5bb68281a5e94ef0ee93c9794d083b",
+  "command": "cargo test --locked -p ingetrazo-core ai_protocol --lib -j2",
+  "passed": 3,
+  "failed": 0,
+  "log_sha256": "f8482f44ba322c98e1a8947f66f3dd71519cc76b6af447875ac98374892d7305",
+  "scope": "Merged pure routing, unsupported screenshots, and all truthy unverified execution errors; live transport excluded"
+}
