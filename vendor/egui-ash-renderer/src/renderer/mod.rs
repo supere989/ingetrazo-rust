@@ -674,8 +674,21 @@ impl Renderer {
                     index_offset += index_count;
                     vertex_offset += m.vertices.len() as i32;
                 }
-                Primitive::Callback(_) => {
-                    log::warn!("Callback primitives not yet supported")
+                Primitive::Callback(callback) => {
+                    if let Some(callback_impl)=callback.callback.downcast_ref::<VulkanPaintCallback>(){
+                        let info=egui::PaintCallbackInfo{viewport:callback.rect,clip_rect,pixels_per_point,screen_size_px:[extent.width,extent.height]};
+                        callback_impl.0.paint(&info,&self.device,command_buffer)?;
+                        // Inline native paint can change all graphics state. Restore
+                        // UI vertex/index/projection and force texture/tag rebinding.
+                        unsafe {
+                            self.device.cmd_bind_pipeline(command_buffer,vk::PipelineBindPoint::GRAPHICS,self.pipeline);
+                            self.device.cmd_set_viewport(command_buffer,0,&[vk::Viewport{width:screen_width,height:screen_height,max_depth:1.,..Default::default()}]);
+                            self.device.cmd_push_constants(command_buffer,self.pipeline_layout,vk::ShaderStageFlags::VERTEX,0,any_as_u8_slice(&projection));
+                            self.device.cmd_bind_index_buffer(command_buffer,mesh.indices,0,vk::IndexType::UINT32);
+                            self.device.cmd_bind_vertex_buffers(command_buffer,0,&[mesh.vertices],&[0]);
+                        }
+                        current_texture_id=None;
+                    }else{log::warn!("Unsupported native paint callback type");}
                 }
             }
         }
@@ -946,3 +959,11 @@ fn encoded_image_pixel(c:egui::Color32)->[u8;4]{
   assert_eq!(encoded_image_pixel(egui::Color32::from_rgb_additive(10,20,30)),[10,20,30,0]);
  }
 }
+
+/// Inline native submission inside the existing UI render pass. Preparation
+/// and fence lifetime are owned by the native host, never by this draw hook.
+pub trait VulkanPaint:Send+Sync {
+ fn as_any(&self)->&dyn std::any::Any;
+ fn paint(&self,info:&egui::PaintCallbackInfo,device:&ash::Device,command:ash::vk::CommandBuffer)->RendererResult<()>;
+}
+pub struct VulkanPaintCallback(pub std::sync::Arc<dyn VulkanPaint>);
