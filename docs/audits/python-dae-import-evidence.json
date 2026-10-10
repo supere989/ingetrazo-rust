@@ -14,14 +14,14 @@
     }
   ],
   "provenance": {
-    "rust_commit": "baf50675983838f3d2493861d1e71f448aefa95b",
+    "rust_commit": "a8e7daf5f1f8fa1a58326b37c4839ac6a073550b",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
   "native_fixture_sha256": "4e566a46c9a610e3fe6da4b13b63c612b7b7aa2d6c7deed2e58ea2c93daa514a",
-  "native_source_revision": "af60462",
+  "native_source_revision": "4ab4945",
   "cases": [
     {
       "case": "painted-rectangle",
@@ -166,8 +166,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -176,8 +176,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -322,18 +322,18 @@
               30.0
             ],
             [
-              10.0,
-              20.0,
-              30.0
-            ],
-            [
-              10.0,
-              32.0,
-              30.0
-            ],
-            [
               2.0,
               32.0,
+              30.0
+            ],
+            [
+              10.0,
+              32.0,
+              30.0
+            ],
+            [
+              10.0,
+              20.0,
               30.0
             ]
           ]
@@ -397,7 +397,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "georeferenced",
@@ -432,8 +432,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -442,8 +442,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -517,7 +517,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-uv",
@@ -586,8 +586,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -596,8 +596,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -695,7 +695,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "textured-missing-uv",
@@ -717,7 +717,7 @@
           ]
         ],
         "color_area": {
-          "[0.7960784435272217, 0.27843138575553894, 0.11372549086809158]": 16.0
+          "[0.79608, 0.27843, 0.11373]": 16.0
         },
         "loose_faces": 1,
         "groups": 0,
@@ -769,7 +769,227 @@
           ]
         ],
         "color_area": {
-          "[0.796078431372549, 0.2784313725490196, 0.11372549019607843]": 16.0
+          "[0.79608, 0.27843, 0.11373]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": true,
+      "strict_oriented_rings_match": true
+    },
+    {
+      "case": "textured-missing-uv-pattern",
+      "original": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.49804, 0.49804, 0.49804]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.50196, 0.50196, 0.50196]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": false,
+      "editable_schema_match": false,
+      "strict_oriented_rings_match": false
+    },
+    {
+      "case": "textured-missing-uv-alpha",
+      "original": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.56863, 0.28627, 0.1451]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.50196, 0.50196, 0.50196]": 16.0
         },
         "loose_faces": 1,
         "groups": 0,
