@@ -2,6 +2,7 @@ pub mod cad2d;
 pub mod resize;
 pub mod headless;
 pub mod world;
+mod annotation_visibility;
 pub mod resources;
 pub mod texture_cache;
 mod queues;
