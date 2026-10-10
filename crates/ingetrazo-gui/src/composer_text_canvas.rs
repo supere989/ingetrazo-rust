@@ -5,7 +5,7 @@ use egui::{Color32,Pos2,Rect,Vec2,TextureHandle};
 use ingetrazo_core::composition::{Sheet,TextItem};
 use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Painter,sheet_pdf::{Draw,PathOp}};
 #[derive(Clone)]struct Layout {text:String,draws:Arc<Vec<Draw>>,bytes:usize,fonts:Vec<(FontKey,usize)>}
-#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],italic:bool,color:[u8;4]}
+#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],bold:bool,italic:bool,color:[u8;4]}
 #[derive(Clone)]struct GlyphImage {pixels:Arc<Vec<u8>>,left:i32,top:i32,width:usize,height:usize,bytes:usize}
 #[derive(Clone)]struct Tile{draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
@@ -35,10 +35,10 @@ impl CanvasPainter {
  }
  fn retire_layout(&mut self,id:uuid::Uuid){if let Some(layout)=self.layouts.remove(&id){self.layout_bytes-=layout.bytes;for (key,_)in layout.fonts{if let Some(entry)=self.font_refs.get_mut(&key){entry.0-=1;if entry.0==0{let (_,bytes)=self.font_refs.remove(&key).unwrap();self.font_bytes-=bytes;}}}}}
 
- fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],italic:bool,color:Color32)->Result<GlyphImage,String>{
-  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,italic,color:color.to_array()};
+ fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool,color:Color32)->Result<GlyphImage,String>{
+  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,bold,italic,color:color.to_array()};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
-  let bitmap=font.rasterize_glyph(glyph,scale,phase,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
+  let bitmap=font.rasterize_styled_glyph(glyph,scale,phase,bold,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
   if bytes>16*1024*1024{return Err("Canvas glyph texture budget exceeded".into());}
   self.glyphs.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;self.order.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;
   let mut pixels=Vec::new();pixels.try_reserve_exact(bytes).map_err(|_|"Canvas glyph coverage allocation failed")?;
@@ -56,7 +56,7 @@ impl CanvasPainter {
   for draw in draws.iter(){let pos=origin+Vec2::new(draw.origin_mm[0]as f32*zoom,draw.origin_mm[1]as f32*zoom);let scale=draw.text.as_ref().map_or(1.,|t|t.scale_mm)*density;let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
    let mut clip=[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2];if let Some(path)=&draw.clip{let mut min=[f64::INFINITY;2];let mut max=[f64::NEG_INFINITY;2];for op in path{if let PathOp::Move(p)|PathOp::Line(p)=op{for axis in 0..2{let value=if axis==0{f64::from(pos.x)}else{f64::from(pos.y)}*ppp+p[axis]*density;min[axis]=min[axis].min(value);max[axis]=max[axis].max(value);}}}clip=[min[0].floor()as i64,min[1].floor()as i64,max[0].ceil()as i64,max[1].ceil()as i64];}
    let Some(text)=&draw.text else{let mut rect=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in &draw.path{if let PathOp::Move(p)|PathOp::Line(p)=op{let point=[f64::from(pos.x)*ppp+p[0]*density,f64::from(pos.y)*ppp+p[1]*density];rect[0]=rect[0].min(point[0]);rect[1]=rect[1].min(point[1]);rect[2]=rect[2].max(point[0]);rect[3]=rect[3].max(point[1]);}}if let Some(sample)=rectangle_sample(rect,rgba,clip)?{include_sample(&mut samples,&mut extent,&mut working_bytes,sample)?;}continue;};
-   for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let(fx,fy,phase)=device_position((x*64.)as i64,(y*64.)as i64);let image=self.image(&text.font,glyph.glyph,scale,phase,text.italic,color)?;
+   for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let(fx,fy,phase)=device_position((x*64.)as i64,(y*64.)as i64);let image=self.image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color)?;
     working_bytes=working_bytes.checked_add(image.bytes).filter(|&n|n<=32*1024*1024).ok_or("Canvas glyph working budget exceeded")?;
     let x=fx as i64+i64::from(image.left);let y=fy as i64-i64::from(image.top);let bounds=[x.max(clip[0]),y.max(clip[1]),(x+image.width as i64).min(clip[2]),(y+image.height as i64).min(clip[3])];if bounds[0]>=bounds[2]||bounds[1]>=bounds[3]{continue;}
     extent=Some(if let Some(old)=extent{[old[0].min(bounds[0]),old[1].min(bounds[1]),old[2].max(bounds[2]),old[3].max(bounds[3])]}else{bounds});samples.push(Sample{x,y,image,clip});
@@ -76,7 +76,7 @@ impl CanvasPainter {
   if !zoom.is_finite()||zoom<=0.||!origin.x.is_finite()||!origin.y.is_finite(){return Err("Invalid canvas text transform".into());}
   let draws=self.prepare(sheet,item,text,model,scene,resources)?;let count=draws.iter().map(|d|d.text.as_ref().map_or(usize::from(!d.path.is_empty()),|t|t.glyphs.len()+t.decorations.len())).sum::<usize>();if self.frame_ops.checked_add(count).is_none_or(|n|n>262144){return Err("Canvas glyph frame budget exceeded".into());}self.frame_textures.try_reserve(1).map_err(|_|"Canvas glyph lifetime allocation failed")?;
   let mut bounds=Rect::NOTHING;
-  for draw in draws.iter(){if let Some(text)=&draw.text{if text.font.synthetic_bold_offset_px(text.bold)?>0.{return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}}}
+  for draw in draws.iter(){if let Some(text)=&draw.text{if text.font.synthetic_bold_offset_px(text.bold)?>0. && !text.font.supports_synthetic_bold_rasterization(){return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}}}
   // Publish one complete cached item only after all source paints/resources validate.
   if let Some((texture,rect))=self.tile(painter,&draws,item,zoom,origin)?{painter.image(texture.id(),rect,Rect::from_min_max(Pos2::ZERO,Pos2::new(1.,1.)),Color32::WHITE);self.frame_textures.push(texture);bounds=bounds.union(rect);}self.frame_ops+=count;Ok(bounds)
  }
@@ -104,7 +104,7 @@ fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
   let warm=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&warm));assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));
   let huge="X".repeat(20*1024);assert!(cache.prepare(&sheet,&item,&huge,1,1,&mut resources).is_err());assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));assert_eq!(cache.layout_order.iter().filter(|&&id|id==item.id).count(),1);
   let restored=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&restored));
-  let text=first.iter().find_map(|d|d.text.as_ref()).unwrap();let glyph=text.glyphs[0].glyph;let a=cache.image(&text.font,glyph,1.,[0,0],false,Color32::BLACK).unwrap();let b=cache.image(&text.font,glyph,1.+1e-7,[0,0],false,Color32::BLACK).unwrap();assert!(!Arc::ptr_eq(&a.pixels,&b.pixels));assert_eq!(cache.glyphs.len(),2);
+  let text=first.iter().find_map(|d|d.text.as_ref()).unwrap();let glyph=text.glyphs[0].glyph;let a=cache.image(&text.font,glyph,1.,[0,0],false,false,Color32::BLACK).unwrap();let b=cache.image(&text.font,glyph,1.+1e-7,[0,0],false,false,Color32::BLACK).unwrap();assert!(!Arc::ptr_eq(&a.pixels,&b.pixels));assert_eq!(cache.glyphs.len(),2);
   cache.retire_layout(item.id);assert_eq!((cache.layout_bytes,cache.font_bytes,cache.font_refs.len()),(0,0,0));
  }
 }
@@ -149,4 +149,11 @@ fn thin_line_sample(line:[f64;3],width:f64,color:[f32;4],clip:[i64;4])->Result<O
 
 #[cfg(test)]mod source_thin_line_tests{use super::*;
  #[test]fn actual_qt_thin_line_clip_branch_controls(){let data:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/paper-canvas-background-underline/qt-thin-line-controls.json")).unwrap();for case in data["cases"].as_array().unwrap(){let line=std::array::from_fn(|i|case["line"][i].as_f64().unwrap());let clip=if case["clipped"].as_bool().unwrap(){[0,0,8,8]}else{[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2]};let sample=thin_line_sample(line,case["width"].as_f64().unwrap(),[30./255.,36./255.,44./255.,1.],clip).unwrap().unwrap();let mut pixels=vec![0u8;8*8*4];for y in 0..sample.image.height{for x in 0..sample.image.width{let dst=((sample.y as usize+y)*8+sample.x as usize+x)*4;let src=(y*sample.image.width+x)*4;pixels[dst..dst+4].copy_from_slice(&sample.image.pixels[src..src+4]);}}let expected=case["pixels"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()as u8).collect::<Vec<_>>();assert_eq!(pixels,expected,"line {:?} width {} clipped {}",line,case["width"],case["clipped"]);}}
+}
+
+#[cfg(target_os="macos")]
+#[path="composer_text_canvas_probe.rs"] mod native_font_probe;
+#[cfg(target_os="macos")]
+pub(super) fn run_native_font_tiles(root: &std::path::Path) -> Result<(), String> {
+    native_font_probe::run(root)
 }

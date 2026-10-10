@@ -162,6 +162,13 @@ extern "C" fn path_element(info: *mut c_void, e: *const Element) {
 pub(crate) fn synthetic_italic_shear() -> f64 {
     (14f32 * 0f32.acos() / 90f32).tan() as f64
 }
+// 32-bit big-endian + premultiplied FIRST alpha is byte-addressed ARGB.
+// Coverage extraction is Qt qGray of RGB, never the opaque alpha byte.
+const NATIVE_BITMAP_ARGB: u32 = 0x4000 | 2;
+fn native_argb_coverage(p: &[u8]) -> u8 {
+    255 - ((11 * u32::from(p[1]) + 16 * u32::from(p[2]) + 5 * u32::from(p[3])) / 32) as u8
+}
+
 fn subset_metric(value: f64, em: f64) -> f64 {
     (fixed_metric(fixed_metric(value) * em / 100.) * 2048. / em).round()
 }
@@ -418,12 +425,14 @@ impl NativeFont {
         scale: f64,
         phase: [u8; 2],
         shear: f64,
+        bold_offset: f64,
     ) -> Result<crate::paper_text::RasterGlyph, String> {
         if !scale.is_finite()
             || scale <= 0.
             || scale > 32.
             || phase.iter().any(|p| *p >= 64)
             || !shear.is_finite()
+            || !bold_offset.is_finite() || bold_offset < 0. || bold_offset > 1e6
         {
             return Err("Native raster transform refused".into());
         }
@@ -451,6 +460,7 @@ impl NativeFont {
             (-rect.origin.y - rect.size.height) * scale,
             (rect.size.width + rect.size.height * shear) * scale,
             rect.size.height * scale,
+            bold_offset * scale,
         ];
         if expressions
             .iter()
@@ -491,7 +501,7 @@ impl NativeFont {
                 8,
                 width * 4,
                 space,
-                0x4000 | 2,
+                NATIVE_BITMAP_ARGB,
             )
         };
         unsafe { CGColorSpaceRelease(space) };
@@ -519,15 +529,21 @@ impl NativeFont {
                 height as f64 + y - f64::from(phase[1]) / 64.,
             );
             CTFontDrawGlyphs(self.owner.0, &g, &Point::default(), 1, ctx);
+            // QCoreTextFontEngine::imageForGlyph paints the second pass to
+            // the RIGHT. The separate PDF writer policy shifts LEFT.
+            if bold_offset > 0. {
+                CGContextSetTextPosition(ctx,
+                    -x.trunc() + f64::from(phase[0]) / 64. + bold_offset * scale,
+                    height as f64 + y - f64::from(phase[1]) / 64.);
+                CTFontDrawGlyphs(self.owner.0, &g, &Point::default(), 1, ctx);
+            }
             CGContextRelease(ctx)
         };
         let mut coverage = Vec::new();
         coverage
             .try_reserve_exact(pixels)
             .map_err(|_| "Native coverage allocation failed")?;
-        coverage.extend(rgba.chunks_exact(4).map(|p| {
-            255 - ((11 * u32::from(p[0]) + 16 * u32::from(p[1]) + 5 * u32::from(p[2])) / 32) as u8
-        }));
+        coverage.extend(rgba.chunks_exact(4).map(native_argb_coverage));
         Ok(crate::paper_text::RasterGlyph {
             left: x.trunc() as i32,
             top: -y.trunc() as i32,
@@ -541,6 +557,14 @@ impl NativeFont {
 #[cfg(test)]
 mod synthesis_metric_tests {
     use super::*;
+    #[test]
+    fn opaque_argb_decodes_rgb_coverage_without_alpha_alias() {
+        assert_eq!(native_argb_coverage(&[255, 0, 0, 0]), 255);
+        assert_eq!(native_argb_coverage(&[255, 255, 255, 255]), 0);
+        assert_eq!(native_argb_coverage(&[255, 255, 0, 0]), 168);
+        assert_eq!(native_argb_coverage(&[255, 0, 0, 255]), 216);
+        assert_ne!(native_argb_coverage(&[255, 0, 0, 0]), 168);
+    }
     #[test]
     fn subset_uses_quantized_native_bearing_not_outline_minimum() {
         let c_bearing = 90. * 100. / 2048.;

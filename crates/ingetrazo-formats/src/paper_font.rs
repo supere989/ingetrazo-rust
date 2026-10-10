@@ -240,8 +240,9 @@ impl CachedFont {
         }
         Ok([thickness, adjusted])
     }
-    /// Source QPdf synthetic-bold second pass: shift left by half native line thickness.
+    /// Immutable HarfBuzz shaping context; zero means unspecified.
     pub fn shaping_point_size(&self) -> f32 { self.shaper.shaping_point_size() }
+    /// Source QPdf synthetic-bold second pass: shift left by half native line thickness.
     pub fn synthetic_bold_offset_px(&self, requested: bool) -> Result<f64, String> {
         if requested && !self.bold {
             Ok(f64::from(self.decoration_metrics()?[0]) / 128.)
@@ -260,11 +261,21 @@ impl CachedFont {
         #[cfg(target_os="macos")]if let Some(n)=&self.native{return Ok(n.decoration())}
         self.shaper.decoration_metrics_26_6()
     }
+    pub fn supports_synthetic_bold_rasterization(&self) -> bool {
+        #[cfg(target_os="macos")] { self.native.is_some() }
+        #[cfg(not(target_os="macos"))] { false }
+    }
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
+        self.rasterize_styled_glyph(glyph,scale,phase,false,italic)
+    }
+    /// Native Canvas style is distinct from PDF stroke/synthesis policy.
+    pub fn rasterize_styled_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
+        let bold_offset=self.synthetic_bold_offset_px(bold)?;
         #[cfg(target_os="macos")]if let Some(n)=&self.native {
             let shear=if italic && !self.italic {crate::paper_coretext_glyph::synthetic_italic_shear()}else{0.};
-            return n.raster(glyph,scale,phase,shear)
+            return n.raster(glyph,scale,phase,shear,bold_offset)
         }
+        if bold_offset>0. {return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}
         self.shaper.rasterize_glyph(glyph,scale,phase,self.synthetic_italic_shear(italic))
     }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
