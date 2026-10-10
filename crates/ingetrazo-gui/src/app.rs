@@ -300,6 +300,7 @@ impl IngeTrazoApp {
 
     pub fn undo(&mut self) {
         if let Some(prev) = self.undo_stack.pop() {
+            self.scene.camera = self.camera.clone();
             self.redo_stack.push(self.scene.clone());
             self.scene = prev;
             self.camera = self.scene.camera.clone();
@@ -309,6 +310,7 @@ impl IngeTrazoApp {
 
     pub fn redo(&mut self) {
         if let Some(next) = self.redo_stack.pop() {
+            self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());
             self.scene = next;
             self.camera = self.scene.camera.clone();
