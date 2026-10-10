@@ -166,10 +166,6 @@ impl Resolver {
     pub fn stats(&self) -> (usize, u64, (usize, usize, u64)) {
         (self.requests.len(), self.matches, self.fonts.stats())
     }
-    #[cfg(target_os = "macos")]
-    fn match_native(&self, request: &Request, _: &CString) -> Result<(PathBuf, i32, FtPolicy, Option<Arc<[u8]>>), String> {
-        coretext::match_font(request)
-    }
     #[cfg(not(target_os = "macos"))]
     fn match_native(&self, request: &Request, family: &CString) -> Result<(PathBuf, i32, FtPolicy, Option<Arc<[u8]>>), String> {
         let pattern = Pattern {
@@ -281,7 +277,12 @@ impl Resolver {
                 });
             }
         }
+        #[cfg(not(target_os="macos"))]
         let (path, index, policy, matched_bytes) = self.match_native(&request, &family)?;
+        #[cfg(target_os="macos")]
+        let (path,index,native)=coretext::match_font(&request)?;
+        #[cfg(target_os="macos")]
+        let policy=FtPolicy{hinting:Hinting::None,force_auto_hint:false};
         // Stable physical identity across FIFO/font eviction and external retained owners.
         // No geometry equality deduplication or growing historical identity map.
         let mut identity_name = Vec::new();
@@ -296,12 +297,15 @@ impl Resolver {
             Hinting::Full => 2,
         });
         identity_name.push(u8::from(policy.force_auto_hint));
+        #[cfg(target_os="macos")]
+        {identity_name.try_reserve_exact(native.instance_identity.len()).map_err(|_|"Native identity allocation failed")?;identity_name.extend_from_slice(&native.instance_identity);}
         let identity = uuid::Uuid::new_v5(&self.namespace, &identity_name);
         let key = FontKey {
             identity,
             face_index: index as u32,
             policy,
         };
+        #[cfg(not(target_os="macos"))]
         let font = if let Some(font) = self.fonts.get(key) {
             font
         } else if let Some(bytes) = matched_bytes {
@@ -324,6 +328,8 @@ impl Resolver {
                 .map_err(|e| e.to_string())?;
             self.fonts.load(key, Arc::from(bytes))?
         };
+        #[cfg(target_os="macos")]
+        let font=self.fonts.load_coretext(FontKey{face_index:0,..key},native)?;
         let found = Match {
             path,
             index: index as u32,

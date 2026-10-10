@@ -352,6 +352,13 @@ impl PaperFont {
             })
         }
     }
+    #[cfg(target_os="macos")]
+    pub(crate) fn new_coretext(native:&crate::paper_coretext_glyph::NativeFont)->Result<Self,String>{
+        let mut font=Self::new(native.bytes.clone(),0)?;
+        let metrics=native.metrics();let data=unsafe{font.data.as_mut()};
+        for (id,width)in data.widths.iter_mut().enumerate(){*width=(native.advance(id as u32)?*64.)as i32;}
+        data.metrics=[metrics[0],metrics[1],metrics[2]];font.ascent_26_6=metrics[0];font.descent_26_6=metrics[1];font.leading_26_6=metrics[2];Ok(font)
+    }
     /// Render an existing pixel100 glyph at the actual canvas device transform.
     /// Phases are 1/64 device pixel; this does not modify shaping/outline caches.
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic_shear:f64)->Result<RasterGlyph,String>{

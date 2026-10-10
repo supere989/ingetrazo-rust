@@ -1,92 +1,292 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Native CoreText matching; all CF Create/Copy results have scoped ownership.
-use super::{Request, FtPolicy, Hinting};
+use super::Request;
 use std::{ffi::c_void, path::PathBuf};
 type Ref = *const c_void;
-struct Owned(Ref);
-impl Owned { fn new(p: Ref) -> Result<Self,String> { if p.is_null(){Err("CoreText resource unavailable".into())}else{Ok(Self(p))} } }
-impl Drop for Owned {fn drop(&mut self){unsafe{CFRelease(self.0)}}}
-#[link(name="CoreFoundation",kind="framework")]
+pub(crate) struct Owned(pub(crate) Ref);
+impl Owned {
+    pub(crate) fn new(p: Ref) -> Result<Self, String> {
+        if p.is_null() {
+            Err("CoreText resource unavailable".into())
+        } else {
+            Ok(Self(p))
+        }
+    }
+}
+impl Drop for Owned {
+    fn drop(&mut self) {
+        unsafe { CFRelease(self.0) }
+    }
+}
+#[link(name = "CoreFoundation", kind = "framework")]
 unsafe extern "C" {
- fn CFRelease(p:Ref);
- fn CFStringCreateWithBytes(a:Ref,b:*const u8,n:isize,encoding:u32,external:u8)->Ref;
- fn CFStringGetLength(s:Ref)->isize;
- fn CFStringGetMaximumSizeForEncoding(n:isize,e:u32)->isize;
- fn CFStringGetCString(s:Ref,b:*mut i8,n:isize,e:u32)->u8;
- fn CFURLGetFileSystemRepresentation(u:Ref,absolute:u8,b:*mut u8,n:isize)->u8;
- fn CFArrayGetCount(a:Ref)->isize;
- fn CFArrayGetValueAtIndex(a:Ref,i:isize)->Ref;
- fn CFCharacterSetIsLongCharacterMember(s:Ref,c:u32)->u8;
+    fn CFRelease(p: Ref);
+    fn CFStringCreateWithBytes(a: Ref, b: *const u8, n: isize, encoding: u32, external: u8) -> Ref;
+    fn CFStringGetLength(s: Ref) -> isize;
+    fn CFStringGetMaximumSizeForEncoding(n: isize, e: u32) -> isize;
+    fn CFStringGetCString(s: Ref, b: *mut i8, n: isize, e: u32) -> u8;
+    fn CFURLGetFileSystemRepresentation(u: Ref, absolute: u8, b: *mut u8, n: isize) -> u8;
+    fn CFArrayGetCount(a: Ref) -> isize;
+    fn CFArrayGetValueAtIndex(a: Ref, i: isize) -> Ref;
+    fn CFCharacterSetIsLongCharacterMember(s: Ref, c: u32) -> u8;
+    fn CFLocaleCopyPreferredLanguages() -> Ref;
+    fn CFDictionaryCreate(
+        a: Ref,
+        keys: *const Ref,
+        values: *const Ref,
+        n: isize,
+        k: Ref,
+        v: Ref,
+    ) -> Ref;
+    fn CFDictionaryGetValue(d: Ref, key: Ref) -> Ref;
+    fn CFNumberGetValue(n: Ref, kind: i32, out: *mut c_void) -> u8;
+    static kCFTypeDictionaryKeyCallBacks: u8;
+    static kCFTypeDictionaryValueCallBacks: u8;
 }
-#[link(name="CoreText",kind="framework")]
+#[link(name = "CoreText", kind = "framework")]
 unsafe extern "C" {
- fn CTFontCreateWithName(n:Ref,size:f64,matrix:Ref)->Ref;
- fn CTFontCreateCopyWithSymbolicTraits(f:Ref,size:f64,matrix:Ref,value:u32,mask:u32)->Ref;
- fn CTFontGetSymbolicTraits(f:Ref)->u32;
- fn CTFontCopyCharacterSet(f:Ref)->Ref;
- fn CTFontCopyDefaultCascadeListForLanguages(f:Ref,languages:Ref)->Ref;
- fn CTFontCreateWithFontDescriptor(d:Ref,size:f64,matrix:Ref)->Ref;
- fn CTFontCopyAttribute(f:Ref,key:Ref)->Ref;
- fn CTFontCopyPostScriptName(f:Ref)->Ref;
- static kCTFontURLAttribute:Ref;
+    fn CTFontCreateWithName(n: Ref, size: f64, matrix: Ref) -> Ref;
+    fn CTFontGetSymbolicTraits(f: Ref) -> u32;
+    fn CTFontCopyCharacterSet(f: Ref) -> Ref;
+    fn CTFontCopyDefaultCascadeListForLanguages(f: Ref, languages: Ref) -> Ref;
+    fn CTFontCreateWithFontDescriptor(d: Ref, size: f64, matrix: Ref) -> Ref;
+    fn CTFontCopyAttribute(f: Ref, key: Ref) -> Ref;
+    fn CTFontCopyPostScriptName(f: Ref) -> Ref;
+    static kCTFontURLAttribute: Ref;
+    static kCTFontFamilyNameAttribute: Ref;
+    static kCTFontTraitsAttribute: Ref;
+    static kCTFontWeightTrait: Ref;
+    static kCTFontStyleNameAttribute: Ref;
+    static kCTFontSlantTrait: Ref;
+    fn CTFontManagerCopyAvailableFontFamilyNames() -> Ref;
+    fn CTFontDescriptorCreateWithAttributes(a: Ref) -> Ref;
+    fn CTFontDescriptorCreateMatchingFontDescriptors(d: Ref, mandatory: Ref) -> Ref;
+    fn CTFontDescriptorCopyAttribute(d: Ref, key: Ref) -> Ref;
 }
-const UTF8:u32=0x08000100;
-fn text(s:Ref)->Result<String,String>{unsafe{
- let n=CFStringGetMaximumSizeForEncoding(CFStringGetLength(s),UTF8);
- if !(0..=4096).contains(&n){return Err("CoreText name budget exceeded".into())}
- let mut b=vec![0u8;n as usize+1];
- if CFStringGetCString(s,b.as_mut_ptr().cast(),b.len() as isize,UTF8)==0{return Err("Invalid CoreText name".into())}
- let end=b.iter().position(|v|*v==0).ok_or("Invalid CoreText name")?;
- String::from_utf8(b[..end].to_vec()).map_err(|_|"Invalid CoreText UTF-8 name".into())
-}}
-fn covers(font:Ref, chars:&[char])->Result<bool,String>{let set=Owned::new(unsafe{CTFontCopyCharacterSet(font)})?;Ok(chars.iter().all(|c|unsafe{CFCharacterSetIsLongCharacterMember(set.0,*c as u32)!=0}))}
-fn styled(font:Ref, request:&Request)->Result<Owned,String>{
- let traits=u32::from(request.italic)| (u32::from(request.bold)<<1);
- let out=Owned::new(unsafe{CTFontCreateCopyWithSymbolicTraits(font,100.,std::ptr::null(),traits,3)})?;
- if unsafe{CTFontGetSymbolicTraits(out.0)}&3!=traits{return Err("CoreText requested style requires unsupported synthetic traits".into())}
- Ok(out)
+const UTF8: u32 = 0x08000100;
+pub(crate) fn text(s: Ref) -> Result<String, String> {
+    unsafe {
+        let n = CFStringGetMaximumSizeForEncoding(CFStringGetLength(s), UTF8);
+        if !(0..=4096).contains(&n) {
+            return Err("CoreText name budget exceeded".into());
+        }
+        let mut b = vec![0u8; n as usize + 1];
+        if CFStringGetCString(s, b.as_mut_ptr().cast(), b.len() as isize, UTF8) == 0 {
+            return Err("Invalid CoreText name".into());
+        }
+        let end = b
+            .iter()
+            .position(|v| *v == 0)
+            .ok_or("Invalid CoreText name")?;
+        String::from_utf8(b[..end].to_vec()).map_err(|_| "Invalid CoreText UTF-8 name".into())
+    }
 }
-pub(super) fn match_font(request:&Request)->Result<(PathBuf,i32,FtPolicy,Option<std::sync::Arc<[u8]>>),String>{unsafe{
- // Generic Qt sans family maps to the native system sans rather than a Linux family.
- let family=if request.family=="Sans Serif"{"Helvetica"}else{&request.family};
- let name=Owned::new(CFStringCreateWithBytes(std::ptr::null(),family.as_ptr(),family.len() as isize,UTF8,0))?;
- let base=Owned::new(CTFontCreateWithName(name.0,100.,std::ptr::null()))?;
- let mut selected=styled(base.0,request)?;
- if !covers(selected.0,&request.required_chars)?{
-  let cascade=Owned::new(CTFontCopyDefaultCascadeListForLanguages(selected.0,std::ptr::null()))?;
-  let count=CFArrayGetCount(cascade.0);
-  if !(0..=512).contains(&count){return Err("CoreText cascade budget exceeded".into())}
-  let mut found=None;
-  for i in 0..count{
-   let candidate=Owned::new(CTFontCreateWithFontDescriptor(CFArrayGetValueAtIndex(cascade.0,i),100.,std::ptr::null()))?;
-   if let Ok(candidate)=styled(candidate.0,request){if covers(candidate.0,&request.required_chars)?{found=Some(candidate);break}}
-  }
-  selected=found.ok_or("No CoreText fallback covers the requested characters/style")?;
- }
- let url=Owned::new(CTFontCopyAttribute(selected.0,kCTFontURLAttribute))?;
- let mut path=[0u8;4097];
- if CFURLGetFileSystemRepresentation(url.0,1,path.as_mut_ptr(),path.len() as isize)==0{return Err("CoreText font file path unavailable".into())}
- let len=path.iter().position(|v|*v==0).ok_or("CoreText font path budget exceeded")?;
- use std::os::unix::ffi::OsStrExt;
- let path=PathBuf::from(std::ffi::OsStr::from_bytes(&path[..len]));
- let postscript=Owned::new(CTFontCopyPostScriptName(selected.0))?;
- let postscript=text(postscript.0)?;
- let metadata=std::fs::metadata(&path).map_err(|e|format!("CoreText font file unavailable: {e}"))?;
- if !metadata.is_file()||metadata.len()>crate::paper_text::MAX_FONT_BYTES as u64{return Err(format!("CoreText font file budget exceeded: selected {postscript:?} at {}, file_bytes={}, limit={}",path.display(),metadata.len(),crate::paper_text::MAX_FONT_BYTES))}
- // The collection's actual SFNT identity decides the index; never assume face zero.
- use std::io::Read;
- let mut bytes=Vec::new();bytes.try_reserve_exact(metadata.len() as usize).map_err(|_|"CoreText font file allocation failed")?;
- std::fs::File::open(&path).map_err(|e|e.to_string())?.take(crate::paper_text::MAX_FONT_BYTES as u64+1).read_to_end(&mut bytes).map_err(|e|e.to_string())?;
- if bytes.len()>crate::paper_text::MAX_FONT_BYTES{return Err("CoreText font grew beyond byte budget".into())}
- let count=ttf_parser::fonts_in_collection(&bytes).unwrap_or(1);
- if count>4096{return Err("CoreText font collection budget exceeded".into())}
- for index in 0..count{
-  let face=ttf_parser::Face::parse(&bytes,index).map_err(|_|"Invalid CoreText font face")?;
-  if face.names().into_iter().any(|n|super::sfnt_postscript_name(n).as_deref()==Some(postscript.as_str())){
-   if face.is_bold()!=request.bold||face.is_italic()!=request.italic{return Err(format!("CoreText selected {postscript:?} at {} face {index}: requested bold={} italic={}, file bold={} italic={}, OS/2 present={}, italic_angle={}; synthetic or variable traits remain unsupported",path.display(),request.bold,request.italic,face.is_bold(),face.is_italic(),face.tables().os2.is_some(),face.italic_angle()))}
-   if !request.required_chars.iter().all(|ch|face.glyph_index(*ch).is_some()){return Err("CoreText file face does not cover its matched character set".into())}
-   return Ok((path,index as i32,FtPolicy{hinting:Hinting::None,force_auto_hint:false},Some(std::sync::Arc::from(bytes))))
-  }
- }
- Err(format!("CoreText face {postscript:?} cannot be mapped to font collection {} ({count} faces)",path.display()))
-}}
+fn covers(font: Ref, chars: &[char]) -> Result<bool, String> {
+    let set = Owned::new(unsafe { CTFontCopyCharacterSet(font) })?;
+    Ok(chars
+        .iter()
+        .all(|c| unsafe { CFCharacterSetIsLongCharacterMember(set.0, *c as u32) != 0 }))
+}
+fn family_name(descriptor: Ref) -> Result<String, String> {
+    let name = Owned::new(unsafe {
+        CTFontDescriptorCopyAttribute(descriptor, kCTFontFamilyNameAttribute)
+    })?;
+    text(name.0)
+}
+fn match_family(family: &str, request: &Request) -> Result<Option<Owned>, String> {
+    unsafe {
+        let name = Owned::new(CFStringCreateWithBytes(
+            std::ptr::null(),
+            family.as_ptr(),
+            family.len() as isize,
+            UTF8,
+            0,
+        ))?;
+        let key = kCTFontFamilyNameAttribute;
+        let value = name.0;
+        let attributes = Owned::new(CFDictionaryCreate(
+            std::ptr::null(),
+            &key,
+            &value,
+            1,
+            (&kCFTypeDictionaryKeyCallBacks as *const u8).cast(),
+            (&kCFTypeDictionaryValueCallBacks as *const u8).cast(),
+        ))?;
+        let descriptor = Owned::new(CTFontDescriptorCreateWithAttributes(attributes.0))?;
+        let raw = CTFontDescriptorCreateMatchingFontDescriptors(descriptor.0, std::ptr::null());
+        if raw.is_null() {
+            return Ok(None);
+        }
+        let matches = Owned::new(raw)?;
+        let count = CFArrayGetCount(matches.0);
+        if !(0..=512).contains(&count) {
+            return Err("Native family descriptor budget exceeded".into());
+        }
+        let mut slots: Vec<(i32, bool, String, Owned)> = Vec::new();
+        for i in 0..count {
+            let d = CFArrayGetValueAtIndex(matches.0, i);
+            if family_name(d)?.to_lowercase() != family.to_lowercase() {
+                continue;
+            }
+            let font = Owned::new(CTFontCreateWithFontDescriptor(d, 100., std::ptr::null()))?;
+            let traits = Owned::new(CTFontCopyAttribute(font.0, kCTFontTraitsAttribute))?;
+            let number = CFDictionaryGetValue(traits.0, kCTFontWeightTrait);
+            let mut weight = 0.;
+            if !number.is_null() {
+                CFNumberGetValue(number, 13, (&mut weight as *mut f64).cast());
+            }
+            // Qt converts native weight to nearest QFont weight before matching family styles.
+            let weights: [(f64, i32); 9] = [
+                (-0.8, 100),
+                (-0.6, 200),
+                (-0.4, 300),
+                (0., 400),
+                (0.23, 500),
+                (0.3, 600),
+                (0.4, 700),
+                (0.56, 800),
+                (0.62, 900),
+            ];
+            let qt = weights
+                .iter()
+                .min_by(|a, b| (a.0 - weight).abs().total_cmp(&(b.0 - weight).abs()))
+                .unwrap()
+                .1;
+            let number = CFDictionaryGetValue(traits.0, kCTFontSlantTrait);
+            let mut slant = 0.;
+            if !number.is_null() {
+                CFNumberGetValue(number, 13, (&mut slant as *mut f64).cast());
+            }
+            let italic = slant > 0.;
+            let style = Owned::new(CTFontDescriptorCopyAttribute(d, kCTFontStyleNameAttribute))?;
+            let style = text(style.0)?;
+            if let Some(slot) = slots
+                .iter_mut()
+                .find(|(w, i, s, _)| *w == qt && *i == italic && *s == style)
+            {
+                slot.3 = font
+            } else {
+                slots
+                    .try_reserve(1)
+                    .map_err(|_| "Native style registry allocation failed")?;
+                slots.push((qt, italic, style, font));
+            }
+        }
+        // Source bestStyle takes first minimum; equivalent registered slots replace handles.
+        let mut best = None;
+        let mut score = i32::MAX;
+        for (weight, italic, _, font) in slots {
+            let next = ((weight - if request.bold { 700 } else { 400 }) / 10).abs()
+                + if italic != request.italic { 0x1000 } else { 0 };
+            if next < score {
+                score = next;
+                best = Some(font)
+            }
+        }
+        if let Some(font) = best {
+            if covers(font.0, &request.required_chars)? {
+                Ok(Some(font))
+            } else {
+                Ok(None)
+            }
+        } else {
+            Ok(None)
+        }
+    }
+}
+pub(super) fn match_font(
+    request: &Request,
+) -> Result<
+    (
+        PathBuf,
+        i32,
+        std::rc::Rc<crate::paper_coretext_glyph::NativeFont>,
+    ),
+    String,
+> {
+    unsafe {
+        // Generic Qt sans family maps to the native system sans rather than a Linux family.
+        let family = if request.family == "Sans Serif" {
+            "Helvetica"
+        } else {
+            &request.family
+        };
+        let name = Owned::new(CFStringCreateWithBytes(
+            std::ptr::null(),
+            family.as_ptr(),
+            family.len() as isize,
+            UTF8,
+            0,
+        ))?;
+        let base = Owned::new(CTFontCreateWithName(name.0, 100., std::ptr::null()))?;
+        let available = Owned::new(CTFontManagerCopyAvailableFontFamilyNames())?;
+        let count = CFArrayGetCount(available.0);
+        if !(0..=8192).contains(&count) {
+            return Err("Native family inventory budget exceeded".into());
+        }
+        let registered = (0..count).any(|i| {
+            text(CFArrayGetValueAtIndex(available.0, i))
+                .is_ok_and(|n| n.eq_ignore_ascii_case(family))
+        });
+        let mut selected = if registered {
+            match_family(family, request)?
+        } else {
+            None
+        };
+        if selected.is_none() {
+            let languages = Owned::new(CFLocaleCopyPreferredLanguages())?;
+            let cascade = Owned::new(CTFontCopyDefaultCascadeListForLanguages(
+                base.0,
+                languages.0,
+            ))?;
+            let count = CFArrayGetCount(cascade.0);
+            if !(0..=512).contains(&count) {
+                return Err("CoreText cascade budget exceeded".into());
+            }
+            for i in 0..count {
+                let descriptor = CFArrayGetValueAtIndex(cascade.0, i);
+                let name = family_name(descriptor)?;
+                // Qt private cascade families register exactly their provided descriptor, not synthesized variants.
+                let candidate = if name.starts_with('.') || name == "LastResort" {
+                    Some(Owned::new(CTFontCreateWithFontDescriptor(
+                        descriptor,
+                        100.,
+                        std::ptr::null(),
+                    ))?)
+                } else {
+                    match_family(&name, request)?
+                };
+                if let Some(candidate) = candidate {
+                    if covers(candidate.0, &request.required_chars)? {
+                        selected = Some(candidate);
+                        break;
+                    }
+                }
+            }
+        }
+        let selected =
+            selected.ok_or("No source-style native fallback covers the requested characters")?;
+        let url = Owned::new(CTFontCopyAttribute(selected.0, kCTFontURLAttribute))?;
+        let mut path = [0u8; 4097];
+        if CFURLGetFileSystemRepresentation(url.0, 1, path.as_mut_ptr(), path.len() as isize) == 0 {
+            return Err("CoreText font file path unavailable".into());
+        }
+        let len = path
+            .iter()
+            .position(|v| *v == 0)
+            .ok_or("CoreText font path budget exceeded")?;
+        use std::os::unix::ffi::OsStrExt;
+        let path = PathBuf::from(std::ffi::OsStr::from_bytes(&path[..len]));
+        let postscript = Owned::new(CTFontCopyPostScriptName(selected.0))?;
+        let postscript = text(postscript.0)?;
+        // Native CTFont retains the selected instance. Full TTC bytes are never read.
+        let mut file = std::fs::File::open(&path)
+            .map_err(|e| format!("CoreText font identity file unavailable: {e}"))?;
+        let index = crate::paper_font_sfnt::collection_index(&mut file, &postscript)?;
+        let ptr = selected.0;
+        std::mem::forget(selected);
+        let font =
+            crate::paper_coretext_glyph::NativeFont::from_raw(ptr, CTFontGetSymbolicTraits(ptr))?;
+        Ok((path, index as i32, font))
+    }
+}

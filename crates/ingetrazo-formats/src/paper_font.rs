@@ -82,6 +82,7 @@ pub struct FontStats {
 pub struct CachedFont {
     key: FontKey,
     shaper: PaperFont,
+    #[cfg(target_os="macos")]native:Option<Rc<crate::paper_coretext_glyph::NativeFont>>,
     geometry: RefCell<subset::GlyphStore>,
     subsets: RefCell<SubsetCache>,
     reverse: Vec<Option<u16>>,
@@ -104,6 +105,9 @@ impl CachedFont {
         self.key
     }
     fn new(key: FontKey, bytes: Arc<[u8]>) -> Result<Self, String> {
+        Self::new_backend(key,bytes,#[cfg(target_os="macos")]None)
+    }
+    fn new_backend(key:FontKey,bytes:Arc<[u8]>,#[cfg(target_os="macos")]native:Option<Rc<crate::paper_coretext_glyph::NativeFont>>)->Result<Self,String>{
         if bytes.is_empty() || bytes.len() > crate::paper_text::MAX_FONT_BYTES {
             return Err("Paper font byte budget exceeded".into());
         }
@@ -160,6 +164,7 @@ impl CachedFont {
         }
         let italic = face.is_italic();
         let bold = face.is_bold();
+        #[cfg(target_os="macos")]let (italic,bold)=native.as_ref().map_or((italic,bold),|n|(n.traits&1!=0,n.traits&2!=0));
         let count = face.number_of_glyphs() as usize;
         let mut reverse = Vec::new();
         reverse
@@ -178,13 +183,19 @@ impl CachedFont {
                 }
             }
         }
-        let shaper =
-            PaperFont::new_with_outline_policy(bytes.clone(), key.face_index, Some(key.policy))?;
-        let cap_height_26_6 = shaper.cap_height_26_6(face.capital_height())?;
-        let geometry = subset::GlyphStore::new(bytes, key.face_index)?;
+        #[cfg(not(target_os="macos"))]
+        let shaper=PaperFont::new_with_outline_policy(bytes.clone(),key.face_index,Some(key.policy))?;
+        #[cfg(target_os="macos")]
+        let shaper=if let Some(n)=&native{PaperFont::new_coretext(n)?}else{PaperFont::new_with_outline_policy(bytes.clone(),key.face_index,Some(key.policy))?};
+        let cap_height_26_6=shaper.cap_height_26_6(face.capital_height());
+        #[cfg(not(target_os="macos"))]let cap_height_26_6=cap_height_26_6?;
+        #[cfg(target_os="macos")]let cap_height_26_6=if let Some(n)=&native{n.metrics()[3]}else{cap_height_26_6?};
+        #[cfg(not(target_os="macos"))]let geometry=subset::GlyphStore::new(bytes,key.face_index)?;
+        #[cfg(target_os="macos")]let geometry=if let Some(n)=&native{subset::GlyphStore::new_coretext(n.clone())?}else{subset::GlyphStore::new(bytes,key.face_index)?};
         Ok(Self {
             key,
             shaper,
+            #[cfg(target_os="macos")]native,
             geometry: RefCell::new(geometry),
             subsets: RefCell::new(SubsetCache {
                 entries: HashMap::new(),
@@ -219,7 +230,7 @@ impl CachedFont {
     }
     /// Source QPainter antialiased underline: ceil FT offset plus half thickness, capped at descent.
     pub fn underline_metrics_px(&self) -> Result<[f64; 2], String> {
-        let [thickness, offset] = self.shaper.decoration_metrics_26_6()?;
+        let [thickness, offset] = self.decoration_metrics()?;
         let thickness = f64::from(thickness) / 64.;
         let offset = f64::from(offset) / 64.;
         let descent = f64::from(self.descent_26_6()) / 64.;
@@ -232,7 +243,7 @@ impl CachedFont {
     /// Source QPdf synthetic-bold second pass: shift left by half native line thickness.
     pub fn synthetic_bold_offset_px(&self, requested: bool) -> Result<f64, String> {
         if requested && !self.bold {
-            Ok(f64::from(self.shaper.decoration_metrics_26_6()?[0]) / 128.)
+            Ok(f64::from(self.decoration_metrics()?[0]) / 128.)
         } else {
             Ok(0.)
         }
@@ -244,7 +255,12 @@ impl CachedFont {
             0.
         }
     }
+    fn decoration_metrics(&self)->Result<[i32;2],String>{
+        #[cfg(target_os="macos")]if let Some(n)=&self.native{return Ok(n.decoration())}
+        self.shaper.decoration_metrics_26_6()
+    }
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
+        #[cfg(target_os="macos")]if let Some(n)=&self.native{return n.raster(glyph,scale,phase,self.synthetic_italic_shear(italic))}
         self.shaper.rasterize_glyph(glyph,scale,phase,self.synthetic_italic_shear(italic))
     }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
@@ -364,6 +380,17 @@ impl FontCache {
         self.fonts.insert(key, font.clone());
         self.loads = self.loads.saturating_add(1);
         Ok(font)
+    }
+    #[cfg(target_os="macos")]
+    pub(crate) fn load_coretext(&mut self,key:FontKey,native:Rc<crate::paper_coretext_glyph::NativeFont>)->Result<Rc<CachedFont>,String>{
+        if let Some(font)=self.get(key){return Ok(font)}
+        let bytes=native.bytes.clone();let font=Rc::new(CachedFont::new_backend(key,bytes,Some(native))?);
+        self.order.try_reserve(1).map_err(|_|"Native font queue allocation failed")?;
+        self.fonts.try_reserve(1).map_err(|_|"Native font map allocation failed")?;
+        while self.fonts.len()>=MAX_CACHED_FONTS||self.bytes+font.shared_bytes().len()>MAX_CACHED_FONT_BYTES{
+            let old=self.order.pop_front().ok_or("Native font cache budget exceeded")?;if let Some(old)=self.fonts.remove(&old){self.bytes-=old.shared_bytes().len();}
+        }
+        self.bytes+=font.shared_bytes().len();self.order.push_back(key);self.fonts.insert(key,font.clone());self.loads=self.loads.saturating_add(1);Ok(font)
     }
     pub fn get(&self, key: FontKey) -> Option<Rc<CachedFont>> {
         self.fonts.get(&key).cloned()

@@ -221,8 +221,9 @@ pub(crate) struct SubsetGlyph {
 }
 /// Thread-confined cached face, sharing immutable input bytes with the shaping face.
 pub(crate) struct GlyphStore {
-    face: NonNull<ft::FT_FaceRec>,
-    library: NonNull<ft::FT_LibraryRec>,
+    face: Option<NonNull<ft::FT_FaceRec>>,
+    library: Option<NonNull<ft::FT_LibraryRec>>,
+    #[cfg(target_os="macos")]native:Option<std::rc::Rc<crate::paper_coretext_glyph::NativeFont>>,
     _bytes: Arc<[u8]>,
     em: u16,
     count: u16,
@@ -232,8 +233,8 @@ pub(crate) struct GlyphStore {
 impl Drop for GlyphStore {
     fn drop(&mut self) {
         unsafe {
-            ft::FT_Done_Face(self.face.as_ptr());
-            ft::FT_Done_FreeType(self.library.as_ptr());
+            if let Some(face)=self.face{ft::FT_Done_Face(face.as_ptr());}
+            if let Some(library)=self.library{ft::FT_Done_FreeType(library.as_ptr());}
         }
     }
 }
@@ -282,8 +283,9 @@ impl GlyphStore {
                 return Err("Paper subset scale failed".into());
             }
             Ok(Self {
-                face,
-                library,
+                face:Some(face),
+                library:Some(library),
+                #[cfg(target_os="macos")]native:None,
                 _bytes: bytes,
                 em,
                 count,
@@ -291,6 +293,29 @@ impl GlyphStore {
                 points: 0,
             })
         }
+    }
+    #[cfg(target_os="macos")]
+    pub(crate) fn new_coretext(native:std::rc::Rc<crate::paper_coretext_glyph::NativeFont>)->Result<Self,String>{
+        Ok(Self{face:None,library:None,em:100,count:native.count,_bytes:native.bytes.clone(),native:Some(native),glyphs:HashMap::new(),points:0})
+    }
+    #[cfg(target_os="macos")]
+    fn load_coretext(&mut self,id:u32)->Result<Arc<SubsetGlyph>,String>{
+        use crate::paper_coretext_glyph::PathOp;
+        let n=self.native.as_ref().expect("Native backend");let mut outline=Outline::default();let mut first=[0.;2];
+        for op in n.outline(id)?{match op{
+            PathOp::Move(p)=>{first=p;outline.last=p;outline.push(Op::Move(p));},
+            PathOp::Line(p)=>{outline.last=p;outline.push(Op::Line(p));},
+            PathOp::Quad([c,e])=>{let a=outline.last;outline.push(Op::Cubic([[(a[0]+2.*c[0])/3.,(a[1]+2.*c[1])/3.],[(e[0]+2.*c[0])/3.,(e[1]+2.*c[1])/3.],e]));outline.last=e;},
+            PathOp::Cubic(p)=>{outline.push(Op::Cubic(p));outline.last=p[2];},
+            PathOp::Close=>{if outline.last!=first{outline.push(Op::Line(first));}outline.last=first;}
+        }}
+        if outline.failed{return Err("Native subset outline refused".into())}
+        let(points,ends)=convert(&outline.ops,100.)?;
+        let advance=u16::try_from((n.advance(id)?*2048./100.).round()as i64).map_err(|_|"Native subset advance invalid")?;
+        let lsb=points.iter().map(|p|p[0]).min().unwrap_or(0);let lsb=i16::try_from(lsb).map_err(|_|"Native subset bearing invalid")?;
+        let glyph=Arc::new(SubsetGlyph{points,ends,advance,lsb});let total=self.points.checked_add(glyph.points.len()).ok_or("Native point overflow")?;
+        if self.glyphs.len()<MAX_CACHED_GLYPHS&&total<=MAX_SUBSET_POINTS{self.glyphs.try_reserve(1).map_err(|_|"Native glyph cache allocation failed")?;self.glyphs.insert(id,glyph.clone());self.points=total;}
+        Ok(glyph)
     }
     pub fn stats(&self) -> (usize, usize) {
         (self.glyphs.len(), self.points)
@@ -302,11 +327,12 @@ impl GlyphStore {
         if id >= u32::from(self.count) {
             return Err("Paper subset glyph identity invalid".into());
         }
+        #[cfg(target_os="macos")]if self.native.is_some(){return self.load_coretext(id)}
         unsafe {
-            if ft::FT_Load_Glyph(self.face.as_ptr(), id, ft::FT_LOAD_NO_BITMAP) != 0 {
+            if ft::FT_Load_Glyph(self.face.expect("FreeType backend").as_ptr(), id, ft::FT_LOAD_NO_BITMAP) != 0 {
                 return Err("Paper subset glyph load failed".into());
             }
-            let slot = (*self.face.as_ptr()).glyph;
+            let slot = (*self.face.expect("FreeType backend").as_ptr()).glyph;
             if slot.is_null() {
                 return Err("Paper subset glyph slot unavailable".into());
             }
