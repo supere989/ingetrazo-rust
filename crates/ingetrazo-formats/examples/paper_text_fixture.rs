@@ -33,7 +33,15 @@ fn main() {
             .unwrap()
             .into();
         let weak = Arc::downgrade(&bytes);
-        let font = ingetrazo_formats::paper_text::PaperFont::new(bytes.clone(), 0).unwrap();
+        let font = ingetrazo_formats::paper_text::PaperFont::new_with_outline_policy(
+            bytes.clone(),
+            0,
+            Some(ingetrazo_formats::paper_text::FtPolicy {
+                hinting: ingetrazo_formats::paper_text::Hinting::Vertical,
+                force_auto_hint: false,
+            }),
+        )
+        .unwrap();
         assert!(Arc::ptr_eq(font.shared_bytes(), &bytes));
         drop(bytes); // font must keep the READONLY blob storage alive
         assert!(font
@@ -45,7 +53,19 @@ fn main() {
         assert!(font.shape_run("", None).unwrap().is_empty());
         let text = call["text"].as_str().unwrap();
         let run = font.shape_run(text, None).unwrap();
+        let cache = font.outline_cache_stats();
+        if name == "combining" {
+            assert!(
+                cache.0 > 0 && cache.1 > 0,
+                "GPOS contour callback exercised"
+            );
+        }
         assert_eq!(run, font.shape_run(text, None).unwrap(), "warm reused face");
+        assert_eq!(
+            cache,
+            font.outline_cache_stats(),
+            "warm contours reused without allocation"
+        );
         let expected = &call["supplementary_qtextlayout"]["runs"][0];
         assert_eq!(
             run.len(),
@@ -101,5 +121,5 @@ fn main() {
         .iter()
         .any(|v| v["name"] == "combining");
     assert_eq!(count, if expanded { 10 } else { 7 });
-    println!("PASS seven actual Qt supplementary glyph runs exact native fixedadvance shaping; PDF/layout still OPEN");
+    println!("PASS {count} actual Qt supplementary glyph runs exact native fixedadvance shaping; PDF/layout still OPEN");
 }

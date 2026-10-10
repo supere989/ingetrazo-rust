@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Direct paper font shaping foundation. No Qt, worker or runtime subprocess.
 //! Not yet a full text painter: wrapping, bidi runs, fallback and embedding are separate.
+use freetype_sys as ft;
 use harfbuzz_sys as hb;
+use std::{
+    cell::{Cell, RefCell},
+    collections::HashMap,
+};
 use std::{ffi::c_void, ptr::NonNull, sync::Arc};
 pub const MAX_FONT_BYTES: usize = 16 * 1024 * 1024;
 pub const MAX_TEXT_BYTES: usize = 16 * 1024;
@@ -29,6 +34,7 @@ impl<T> Drop for Handle<T> {
 struct Advances {
     widths: Vec<i32>,
     metrics: [i32; 3],
+    geometry: Option<FtGeometry>,
 }
 unsafe extern "C" fn advance(
     _: *mut hb::hb_font_t,
@@ -36,7 +42,8 @@ unsafe extern "C" fn advance(
     glyph: u32,
     data: *mut c_void,
 ) -> i32 {
-    // HarfBuzz owns this immutable Box through the font-function destroy hook.
+    // HarfBuzz owns the callback data through its font-function destroy hook.
+    // Metrics are immutable; optional contours use a bounded thread-local cache.
     if data.is_null() {
         return 0;
     }
@@ -60,6 +67,149 @@ unsafe extern "C" fn horizontal_extents(
     }
     1
 }
+
+#[derive(Clone, Copy, Debug)]
+pub enum Hinting {
+    None,
+    Vertical,
+    Full,
+}
+#[derive(Clone, Copy, Debug)]
+pub struct FtPolicy {
+    pub hinting: Hinting,
+    pub force_auto_hint: bool,
+}
+struct FtGeometry {
+    face: Handle<ft::FT_FaceRec>, // drops before library and shared input bytes
+    _library: Handle<ft::FT_LibraryRec>,
+    points: RefCell<HashMap<u32, Arc<[[i32; 2]]>>>,
+    total_points: Cell<usize>,
+    failed: Cell<bool>,
+    flags: i32,
+}
+unsafe extern "C" fn release_ft_face(p: *mut ft::FT_FaceRec) {
+    unsafe {
+        ft::FT_Done_Face(p);
+    }
+}
+unsafe extern "C" fn release_ft_library(p: *mut ft::FT_LibraryRec) {
+    unsafe {
+        ft::FT_Done_FreeType(p);
+    }
+}
+impl FtGeometry {
+    unsafe fn new(bytes: &[u8], index: u32, policy: FtPolicy) -> Result<Self, String> {
+        let mut library = std::ptr::null_mut();
+        if unsafe { ft::FT_Init_FreeType(&mut library) } != 0 {
+            return Err("Paper font outline library failed".into());
+        }
+        let library = Handle::new(library, release_ft_library)?;
+        let mut face = std::ptr::null_mut();
+        if unsafe {
+            ft::FT_New_Memory_Face(
+                library.raw(),
+                bytes.as_ptr(),
+                bytes.len() as _,
+                index as _,
+                &mut face,
+            )
+        } != 0
+        {
+            return Err("Paper font outline face failed".into());
+        }
+        let face = Handle::new(face, release_ft_face)?;
+        if unsafe { ft::FT_Set_Char_Size(face.raw(), 6400, 6400, 0, 0) } != 0 {
+            return Err("Paper font outline scale failed".into());
+        }
+        let flags = match policy.hinting {
+            Hinting::None => ft::FT_LOAD_NO_HINTING,
+            Hinting::Vertical => ft::FT_LOAD_TARGET_LIGHT,
+            Hinting::Full => ft::FT_LOAD_TARGET_NORMAL,
+        } | if policy.force_auto_hint {
+            ft::FT_LOAD_FORCE_AUTOHINT
+        } else {
+            0
+        };
+        Ok(Self {
+            face,
+            _library: library,
+            points: RefCell::new(HashMap::new()),
+            total_points: Cell::new(0),
+            failed: Cell::new(false),
+            flags,
+        })
+    }
+    fn point(&self, glyph: u32, index: u32) -> Option<[i32; 2]> {
+        if let Some(p) = self.points.borrow().get(&glyph) {
+            let v = p.get(index as usize).copied();
+            if v.is_none() {
+                self.failed.set(true);
+            }
+            return v;
+        }
+        unsafe {
+            if ft::FT_Load_Glyph(self.face.raw(), glyph, self.flags) != 0 {
+                self.failed.set(true);
+                return None;
+            }
+            let slot = (*self.face.raw()).glyph;
+            if slot.is_null() || (*slot).format != ft::FT_GLYPH_FORMAT_OUTLINE {
+                return None;
+            }
+            let outline = &(*slot).outline;
+            if outline.n_points <= 0 {
+                return None;
+            }
+            let count = outline.n_points as usize;
+            if outline.points.is_null() || self.total_points.get() + count > 256 * 1024 {
+                self.failed.set(true);
+                return None;
+            }
+            let raw = std::slice::from_raw_parts(outline.points, count);
+            let mut points = Vec::new();
+            if points.try_reserve_exact(count).is_err() {
+                self.failed.set(true);
+                return None;
+            }
+            for v in raw {
+                let (Ok(x), Ok(y)) = (i32::try_from(v.x), i32::try_from(v.y)) else {
+                    self.failed.set(true);
+                    return None;
+                };
+                points.push([x, y]);
+            }
+            let answer = points.get(index as usize).copied();
+            if answer.is_none() {
+                self.failed.set(true);
+            }
+            self.total_points.set(self.total_points.get() + count);
+            self.points.borrow_mut().insert(glyph, points.into());
+            answer
+        }
+    }
+}
+unsafe extern "C" fn contour_point(
+    _: *mut hb::hb_font_t,
+    _: *mut c_void,
+    glyph: u32,
+    index: u32,
+    x: *mut i32,
+    y: *mut i32,
+    data: *mut c_void,
+) -> hb::hb_bool_t {
+    if data.is_null() || x.is_null() || y.is_null() {
+        return 0;
+    }
+    let data = unsafe { &*data.cast::<Advances>() };
+    let Some(point) = data.geometry.as_ref().and_then(|g| g.point(glyph, index)) else {
+        return 0;
+    };
+    unsafe {
+        *x = point[0];
+        *y = point[1];
+    }
+    1
+}
 unsafe extern "C" fn release_advances(data: *mut c_void) {
     if !data.is_null() {
         drop(unsafe { Box::from_raw(data.cast::<Advances>()) });
@@ -71,6 +221,7 @@ unsafe extern "C" fn release_advances(data: *mut c_void) {
 pub struct PaperFont {
     font: Handle<hb::hb_font_t>,
     bytes: Arc<[u8]>,
+    data: NonNull<Advances>,
     pub units_per_em: u16,
     /// Pixel100 baseline metrics in QFixed units (1/64px).
     pub ascent_26_6: i32,
@@ -86,6 +237,13 @@ pub struct Glyph {
 }
 impl PaperFont {
     pub fn new(bytes: Arc<[u8]>, face_index: u32) -> Result<Self, String> {
+        Self::new_with_outline_policy(bytes, face_index, None)
+    }
+    pub fn new_with_outline_policy(
+        bytes: Arc<[u8]>,
+        face_index: u32,
+        policy: Option<FtPolicy>,
+    ) -> Result<Self, String> {
         if bytes.is_empty() || bytes.len() > MAX_FONT_BYTES {
             return Err("Paper font byte budget exceeded".into());
         }
@@ -149,6 +307,9 @@ impl PaperFont {
             let data = Box::into_raw(Box::new(Advances {
                 widths,
                 metrics: [ascent_26_6, descent_26_6, leading_26_6],
+                geometry: policy
+                    .map(|p| FtGeometry::new(&bytes, face_index, p))
+                    .transpose()?,
             }))
             .cast();
             hb::hb_font_funcs_set_glyph_h_advance_func(
@@ -163,17 +324,36 @@ impl PaperFont {
                 data,
                 None,
             );
+            if policy.is_some() {
+                hb::hb_font_funcs_set_glyph_contour_point_func(
+                    funcs.raw(),
+                    Some(contour_point),
+                    data,
+                    None,
+                );
+            }
             hb::hb_font_funcs_make_immutable(funcs.raw());
             hb::hb_font_set_funcs(font.raw(), funcs.raw(), std::ptr::null_mut(), None);
             hb::hb_font_make_immutable(font.raw());
             Ok(Self {
                 font,
                 bytes,
+                data: NonNull::new(data.cast::<Advances>()).unwrap(),
                 units_per_em: upem,
                 ascent_26_6,
                 descent_26_6,
                 leading_26_6,
             })
+        }
+    }
+    /// Cached outline points/glyphs, useful for warm font-publication accounting.
+    pub fn outline_cache_stats(&self) -> (usize, usize) {
+        unsafe {
+            self.data
+                .as_ref()
+                .geometry
+                .as_ref()
+                .map_or((0, 0), |g| (g.points.borrow().len(), g.total_points.get()))
         }
     }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
@@ -189,6 +369,9 @@ impl PaperFont {
             return Ok(vec![]);
         }
         unsafe {
+            if let Some(g) = self.data.as_ref().geometry.as_ref() {
+                g.failed.set(false);
+            }
             let buffer = Handle::new(hb::hb_buffer_create(), hb::hb_buffer_destroy)?;
             hb::hb_buffer_add_utf8(
                 buffer.raw(),
@@ -214,6 +397,17 @@ impl PaperFont {
             hb::hb_shape(self.font.raw(), buffer.raw(), std::ptr::null(), 0);
             if hb::hb_buffer_allocation_successful(buffer.raw()) == 0 {
                 return Err("Paper text shaping allocation failed".into());
+            }
+            if self
+                .data
+                .as_ref()
+                .geometry
+                .as_ref()
+                .is_some_and(|g| g.failed.get())
+            {
+                return Err(
+                    "Paper font contour callback refused invalid outline publication".into(),
+                );
             }
             let mut count = 0;
             let infos = hb::hb_buffer_get_glyph_infos(buffer.raw(), &mut count);
