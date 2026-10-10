@@ -1,0 +1,48 @@
+{
+  "source": "a3c2dd6a0dff4d0f14c1360995281434d0d2b7c9",
+  "binary_sha256": "af3264092c5b718433d511c5a613ce709e9495331ba117a828ee5c4cee1c952a",
+  "driver_sha256": "78c337b72cc6c724f67285669aa1f9537b78bf1768e7c137c172d04833fcce48",
+  "adapters_and_msaa": {
+    "closed": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "shared-slab": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "shared-slab-reversed": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "transparent": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "duplicate": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "coplanar-backface": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "closed-iso": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "shared-slab-iso": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "shared-slab-reversed-iso": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ],
+    "closed-front": [
+      "Native Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true",
+      "Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)"
+    ]
+  },
+  "limits": "software Vulkan ten bounded fixtures; exact zero and 5% positive; native post-fill contours/hardware/Metal remain open"
+}

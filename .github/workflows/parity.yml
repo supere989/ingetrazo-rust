@@ -389,3 +389,4 @@ jobs:
             docs/audits/native-stencil-ci/provenance.json
             docs/audits/native-stencil-ci/*/*.png
             docs/audits/native-stencil-ci/*/startup.log
+            docs/audits/native-stencil-ci/*/xvfb-cleanup.json
