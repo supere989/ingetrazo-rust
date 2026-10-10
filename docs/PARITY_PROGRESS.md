@@ -1,0 +1,99 @@
+# Rust parity progress tracker
+
+Audited: 2026-10-09 (America/Los_Angeles). Baseline Rust commit: `68368964fd5625f96ab5c705c43cdc13e402a6bd`. Original Python baseline: submodule `6be29fe437a7cd992d4e079f71720821b25216b9`, version 0.3.15. This compares the pinned original, not today's upstream HEAD.
+
+## Outcome and evidence
+
+The Rust workspace is a substantial implementation, not a parity-complete replacement. **Full feature parity is not verified.** Earlier conversational estimates of 40–60% remaining are superseded by this evidence-based inventory; feature rows have unequal effort and should not be converted into an overall percentage.
+
+`cargo test --workspace --locked`: **108 passed, 0 failed**. `cargo build --locked -p ingetrazo-cli` and `--check` succeeded inside `ingetrazo-publish` devbox. Four original IGZ examples convert successfully, but **all four lose nonempty document fields**. A zero converter exit code does not establish compatibility.
+
+Evidence: [machine-readable results](audits/parity-evidence.json), [test log](audits/test-results.txt), [build log](audits/build-results.txt), [reproduction script](../scripts/audit-parity.py). The example load test can skip its body when the fixture is absent; initialize submodules before testing. Existing tests are bounded implementation checks, not an independent Python/Rust parity corpus.
+
+Scope: original README feature inventory plus Rust source, dispatch, GUI handlers, persistence and selected test inspection. No interactive GUI, screenshots, Python reopen, external IFC/PDF readers, live Blender, cross-platform package or large-scene performance acceptance was performed. “Missing” means absent in the reviewed Rust implementation, not proof from exhaustive execution. The field comparison is shallow; preserved counts do not imply preserved geometry or metadata. Original documents were never overwritten.
+
+## Status and priorities
+
+- **Verified**: original/Rust semantic comparison and user workflow evidence satisfy the row's acceptance criteria.
+- **Implemented**: meaningful implementation exists; full behavioral parity remains unverified.
+- **Partial**: incomplete implementation, disconnected UI, placeholder behavior or known preservation gap.
+- **Missing**: no operative implementation found for the required behavior.
+- **P0**: document integrity or geometry correctness blockers. **P1**: core parity/release requirements. **P2**: remaining integration and platform polish.
+
+No row is Verified in this initial audit. All rows remain open until their acceptance criteria are met; Implemented is not a completed checkbox.
+
+## Feature inventory
+
+| ID | Priority | Feature | Status | Evidence and observed gap | Acceptance criterion |
+|---|---|---|---|---|---|
+| P01 | P0 | Native document preservation | Partial | [formats/igz.rs](../crates/ingetrazo-formats/src/igz.rs): All four fixtures lose nonempty fields; saved views, compositions, section planes and component prototypes are omitted. | Preserve every supported scene field; Python→Rust→Python semantic comparison including nested geometry, transforms, materials and embedded textures. |
+| P02 | P0 | Solid boolean operations | Partial | [core/solids.rs](../crates/ingetrazo-core/src/solids.rs): Union concatenates faces; Subtract, Trim and Intersect copy A; Split concatenates. GUI removes input groups. | Overlapping/disjoint/transformed solid tests with independently checked volumes, watertightness, attributes and undo. |
+| P03 | P0 | Push/Pull solid correctness | Partial | [tools/pushpull.rs](../crates/ingetrazo-tools/src/pushpull.rs): Straight extrusion implementation and basic tests; no equivalent of the original robust recess/through-hole hermeticity pipeline established. | Port original extrusion/recess/step/through-hole regression corpus; reject invalid topology without mutation. |
+| P04 | P0 | Undo and redo across all edits | Partial | [gui/app.rs](../crates/ingetrazo-gui/src/app.rs): GUI uses up to 50 full-scene snapshots; core command history exists separately. Every mutation path has not been verified. | Every tool, tray, composer, script and import is one reversible transaction; cancellations preserve state. |
+| P05 | P1 | Mesh/math/triangulation/topology | Implemented | [core/mesh.rs](../crates/ingetrazo-core/src/mesh.rs): Shared vertices, geometry and topology code with bounded unit tests. Robustness and original-corpus equivalence unverified. | Port degenerate, holes, non-manifold and large-scene cases; compare outputs/invariants against Python. |
+| P06 | P1 | Basic drafting tools | Implemented | [tools/lib.rs](../crates/ingetrazo-tools/src/lib.rs): Line, rectangle, rotated rectangle, circle, polygon, freehand and arc implementations exist. | Interactive workflows on arbitrary planes; VCB input, cancel/repeat and inference match baseline. |
+| P07 | P1 | Snap/inference/guides/units | Implemented | [core/snap.rs](../crates/ingetrazo-core/src/snap.rs): Snap engine, locks, guides and units exist; viewport starts with ground-plane intersection. | Verify full 3D drawing planes, guide intersections, pixel tolerances and locale-specific input against baseline. |
+| P08 | P1 | Select/move/rotate/scale/offset/paint/erase | Implemented | [tools/lib.rs](../crates/ingetrazo-tools/src/lib.rs): Tool implementations and selected bounded tests exist. | Verify nested/transformed groups, copied arrays, angled rotations, face holes and cancellations interactively. |
+| P09 | P1 | Fillet | Partial | [tools/fillet.rs](../crates/ingetrazo-tools/src/fillet.rs): Sets edge.soft=true; radius/segments do not create rounded geometry. | Generate proper rounded corners using radius/segments; topology, volume and undo tests. |
+| P10 | P1 | Follow Me sweep | Partial | [tools/followme.rs](../crates/ingetrazo-tools/src/followme.rs): Extrudes profile along one displacement; does not follow a multi-edge path. | Sweep straight/bent/closed paths with correct frames, joins and manifold topology. |
+| P11 | P1 | Intersect/heal/rebuild/pieces | Partial | [gui/app.rs](../crates/ingetrazo-gui/src/app.rs): Intersect menu only reports success; rebuild_planar_faces rebuilds spatial index; healing deduplicates vertex sets; pieces counts connectivity. | Actual face intersections, cap rebuilding and separated piece outputs; regression corpus and undo. |
+| P12 | P1 | Groups/components/clipboard | Partial | [core/groups.rs](../crates/ingetrazo-core/src/groups.rs): Groups own independent meshes; no component-definition registry. Make Component routes through grouping; prototypes lost on save. | Shared definitions, nested edit context, instance transforms, linked copies and paste preview preserved across saves. |
+| P13 | P1 | Layers and saved scenes | Partial | [core/saved_views.rs](../crates/ingetrazo-core/src/saved_views.rs): Layer visibility and view types exist; IGZ omits saved views; locked-layer interaction not established. | Saved camera/style/visibility roundtrips; locked-layer picking/edit rejection; create/update/delete scene workflows. |
+| P14 | P1 | Materials/textures/component library | Partial | [gui/tray.rs](../crates/ingetrazo-gui/src/tray.rs): Material/texture rendering exists; no full library/parity validation; texture archive preservation needs audit. | Names, both face sides, UV projection, tile size, opacity, edit-and-restamp and portable archives preserved. |
+| P15 | P1 | Dimensions and leader labels | Implemented | [core/dimensions.rs](../crates/ingetrazo-core/src/dimensions.rs): Annotation types/rendering exist; fixture counts preserved in shallow check. | Verify values, glyph picking, moves, editing, styles, occlusion and original schema semantics. |
+| P16 | P1 | Camera and viewport navigation | Implemented | [gui/viewport.rs](../crates/ingetrazo-gui/src/viewport.rs): Orbit/pan/zoom and standard projection code exist; opening resets app camera. | Saved views restored; cursor pivot, zoom extents and perspective modes verified with reference sessions. |
+| P17 | P1 | Walk/position camera/look around | Partial | [gui/menu.rs](../crates/ingetrazo-gui/src/menu.rs): Commands only set status messages. | Actual eye-height navigation modes, input mapping and cancellation match baseline. |
+| P18 | P1 | Visual styles and hidden lines | Implemented | [render/hlr.rs](../crates/ingetrazo-render/src/hlr.rs): Edge classification and egui rendering implemented; comments about GPU batching do not prove a dedicated GPU pipeline. | Image comparisons for occlusion, silhouettes, soft edges, nested groups and styles; large-scene timing. |
+| P19 | P1 | Section cuts/fill | Partial | [gui/viewport.rs](../crates/ingetrazo-gui/src/viewport.rs): Plane outlines and toggles exist; no render-pipeline cutting/fill consumer found; section state lost in IGZ. | True clipped geometry, closed cut fill and sheet section marks with preservation and tests. |
+| P20 | P1 | Solar shadows | Partial | [gui/tray.rs](../crates/ingetrazo-gui/src/tray.rs): Shadow checkbox exists; shadows_enabled has no rendering consumer found. | Date/location sun positioning and visible geometry shadows verified against reference scenes. |
+| P21 | P1 | SKP import | Missing | [formats/lib.rs](../crates/ingetrazo-formats/src/lib.rs): No SKP loader; advertised menu opens generic dialog. | Import baseline-supported eras with groups, instances, textures, annotations, layers and views; no SKP export required by baseline. |
+| P22 | P1 | OBJ/STL/DXF exchange | Implemented | [formats/lib.rs](../crates/ingetrazo-formats/src/lib.rs): Import/export dispatch and bounded tests exist. | Original fixture comparisons including transforms, materials, coplanar merging, DXF entity coverage and external reopen. |
+| P23 | P1 | COLLADA/GLB import | Missing | [formats/lib.rs](../crates/ingetrazo-formats/src/lib.rs): Only export paths exist. | Parse baseline-supported DAE/GLB structures and preserve mesh/material/transform semantics. |
+| P24 | P1 | DAE/glTF/GLB export | Partial | [formats/lib.rs](../crates/ingetrazo-formats/src/lib.rs): Export functions exist; .gltf also writes binary GLB. | Correct extension/container behavior, hierarchy, textures/PBR/geolocation and independent external-reader validation. |
+| P25 | P1 | DWG/image/GeoTIFF/KML/GeoJSON imports | Missing | [gui/menu.rs](../crates/ingetrazo-gui/src/menu.rs): Import entries route to generic loader that supports only IGZ/OBJ/STL/DXF. | Implement baseline-supported import workflows and dependency/error handling; format fixtures. |
+| P26 | P1 | BIM tagging and IFC quantities | Partial | [formats/ifc.rs](../crates/ingetrazo-formats/src/ifc.rs): Tagging and IFC STEP generation exist; independent IFC schema/quantity validation absent; group metadata omitted in IGZ. | Validate IFC externally; transformed nested objects, correct classes, quantities and refusal of invalid volumes. |
+| P27 | P1 | Georeferencing/survey/paths/terrain | Partial | [core/georef.rs](../crates/ingetrazo-core/src/georef.rs): UTM, CSV, profile, tile-coordinate and terrain algorithms exist with tests; menu wiring and persistence incomplete. | Complete import/datum/path/profile/DEM/basemap workflows with persistence and real survey fixtures. |
+| P28 | P1 | Sheet composer | Partial | [gui/composer.rs](../crates/ingetrazo-gui/src/composer.rs): Paper canvas, projected view frames, title blocks and layout elements exist; original compositions discarded. | Load/save original sheets; exact scale, view style, vector HLR, section marks, dimensions, callouts and title blocks match. |
+| P29 | P1 | PDF/sheet DXF/image export | Missing | [gui/composer.rs](../crates/ingetrazo-gui/src/composer.rs): No PDF writer or composer export path found; image export goes to unsupported generic saver; model DXF exists separately. | Scaled vector PDF and layer-class sheet DXF independently reopened; actual PNG/JPG capture. |
+| P30 | P2 | Blender rendering bridge | Implemented | [gui/blender.rs](../crates/ingetrazo-gui/src/blender.rs): Job configuration, subprocess and progress code exist with selected core tests; live Blender render untested. | Render a retained fixture in actual Blender; camera/material/lighting consistency, cancel, errors and output verification. |
+| P31 | P1 | Plugin API/Python console | Partial | [gui/app.rs](../crates/ingetrazo-gui/src/app.rs): Extension Manager only sets status; console recognizes cube/select_all/stats and reports OK for other commands. | Actual extension loading/isolation and executable scripting with transactions; never report execution for ignored commands. |
+| P32 | P2 | AI Assistant and MCP bridge | Missing | [gui/menu.rs](../crates/ingetrazo-gui/src/menu.rs): Original core/ai.py and plugins have no corresponding Rust integration found. | Chat providers and live MCP document operations with approved configuration, validation and atomic undo. |
+| P33 | P1 | Autosave/recovery/preferences/session | Partial | [gui/menu.rs](../crates/ingetrazo-gui/src/menu.rs): Recovery reports no autosaves; recent files are memory state; durable recovery/preferences parity not established. | Crash/restart recovery, unsaved-close safeguards and persisted settings/recent files tested. |
+| P34 | P2 | Localization and accessibility | Partial | [core/i18n.rs](../crates/ingetrazo-core/src/i18n.rs): Translation helpers read original assets; no language-wide UI or accessibility acceptance evidence. | Verify language catalogs, shortcuts, numeric locales, keyboard navigation and screen scaling. |
+| P35 | P2 | 3D text/images/axes/advanced placement | Partial | [gui/menu.rs](../crates/ingetrazo-gui/src/menu.rs): 3D Text only reports dialog status; original dedicated image/change_axes/placement tools lack Rust equivalents. | Port actual geometry/image plane and placement workflows; preserve attributes and undo. |
+| P36 | P1 | Packaging/platform integration | Partial | [package.sh](../package.sh): Linux packaging/install scripts exist; no current clean package or Windows/macOS acceptance run. | Clean recursive clone builds and installs on each claimed OS; associations, icons, startup and dependency diagnostics. |
+| P37 | P1 | CI/performance/parity acceptance | Missing | [repository root](../): No root CI workflows; 108 bounded Rust tests versus a much broader Python regression tree; no rendered audit performed. | CI builds/tests with submodules; baseline regression corpus, semantic document checks, rendered workflows and performance budgets. |
+
+Inventory: **9 Implemented**, **6 Missing**, **22 Partial**. **0 Verified**. These are status counts, not effort percentages.
+
+## Observed document losses
+
+| Fixture | Missing nonempty top-level fields after Rust roundtrip |
+|---|---|
+| arco-yanque.igz | `back_face_color`, `compositions`, `custom_scales`, `dimension_style`, `protos`, `saved_views`, `section_planes`, `section_view` |
+| banca-pergola-yanque.igz | `compositions`, `custom_scales`, `dimension_style`, `display_style`, `protos`, `saved_views`, `section_planes`, `section_view` |
+| luminaria-solar-yanque.igz | `compositions`, `custom_scales`, `dimension_style`, `display_style`, `saved_views`, `section_planes` |
+| pileta-fuente-yanque.igz | `compositions`, `custom_scales`, `dimension_style`, `protos`, `saved_views`, `section_planes`, `section_view`, `shadows` |
+
+For example, `arco-yanque.igz` loses 28 component prototypes, 7 saved views, its composition and its section plane. Group counts remain 30, but this does not prove instance geometry survives. Material list-to-map changes require a semantic checker rather than treating container type changes as data loss.
+
+## Dependency-ordered completion plan
+
+- [ ] **Gate 1 — preserve documents (P01, P12–P15, P19, P26–P28):** define schema mapping, retain unsupported fields or reject lossy saves, compare all four original examples in both applications, and add texture/nested-instance/georeference fixtures. No release claim of safe original-document editing before this gate.
+- [ ] **Gate 2 — trustworthy geometry (P02–P04, P09–P11):** port critical original regression cases, check actual boolean volumes/topology and sweep/fillet geometry, validate every operation's undo/cancel behavior.
+- [ ] **Gate 3 — complete workflows (P05–P08, P12–P20, P21–P29, P33, P35):** replace status-only actions, finish loaders and outputs, and retain rendered end-to-end acceptance sessions.
+- [ ] **Gate 4 — integrations (P30–P32, P34):** independently verify Blender, plugin/scripting, AI/MCP and localized UI behavior.
+- [ ] **Gate 5 — public release (P36–P37):** add CI and clean-clone checks, validate all claimed platforms, package/install tests and representative performance budgets.
+
+## Maintenance protocol
+
+This file is the canonical parity tracker. Keep IDs stable. For each change, update status, observed gap and evidence; record the tested commit, command, fixture and retained result in `docs/audits/`. Mark Verified only after the entire acceptance criterion is demonstrated. Split a row when partial completion makes its state ambiguous. Unchecked gates remain open even when code exists.
+
+Reproduce bounded evidence inside devbox from repository root:
+
+```bash
+git submodule update --init --recursive
+python3 scripts/audit-parity.py
+```
+
+The script exits nonzero on test/build/conversion failure. It deliberately does **not** return a parity verdict: inspect `missing_nonempty_fields` and complete the semantic and interactive gates. Repeated runs replace the current bounded evidence; preserve a dated snapshot when it supports a milestone. Progress must be reported by verified criteria, not source-line counts, menus or absence of TODO markers.

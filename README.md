@@ -112,6 +112,6 @@ To install IngeTrazo into your local user applications menu with `.igz` desktop 
 
 ## Verification & Parity
 
-- **Zero Unsafe Code**: 100% safe Rust.
-- **All 65 automated tests passing**: Geometry primitives, polygon triangulation, shared-vertex welding, non-manifold topology, cycle detection, all 13 tools, all 5 file format roundtrips, render pipeline buffers, and GUI state transitions.
-- **Real Engineering Document Compatibility**: Verified against real-world IngeTrazo `.igz` documents (e.g., Yanque plaza models).
+See the [parity progress tracker](docs/PARITY_PROGRESS.md) for the audited inventory, open gaps, release gates and reproducible evidence.
+
+The initial audit passed 108 Rust tests and built the CLI. All four bundled original engineering documents converted successfully, but each lost nonempty document fields during a Rust IGZ roundtrip. Full compatibility and interactive feature parity remain unverified. See the tracker before using the port to edit original documents.

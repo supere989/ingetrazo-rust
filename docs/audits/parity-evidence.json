@@ -1,0 +1,248 @@
+{
+  "test_exit_code": 0,
+  "test_summaries": [
+    "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+  ],
+  "fixtures": [
+    {
+      "name": "arco-yanque.igz",
+      "exit_code": 0,
+      "output": "Successfully converted ingetrazo/examples/arco-yanque.igz -> /tmp/tmp0xtxvv_4/arco-yanque.igz\n",
+      "missing_nonempty_fields": [
+        "back_face_color",
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "protos",
+        "saved_views",
+        "section_planes",
+        "section_view"
+      ],
+      "list_counts": {
+        "edges": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "faces": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "groups": {
+          "original": 30,
+          "roundtrip": 30
+        },
+        "protos": {
+          "original": 28,
+          "roundtrip": 0
+        },
+        "layers": {
+          "original": 11,
+          "roundtrip": 11
+        },
+        "saved_views": {
+          "original": 7,
+          "roundtrip": 0
+        },
+        "compositions": {
+          "original": 1,
+          "roundtrip": 0
+        },
+        "materials": {
+          "original": 13,
+          "roundtrip": null
+        },
+        "custom_scales": {
+          "original": 2,
+          "roundtrip": 0
+        },
+        "back_face_color": {
+          "original": 3,
+          "roundtrip": 0
+        },
+        "section_planes": {
+          "original": 1,
+          "roundtrip": 0
+        }
+      }
+    },
+    {
+      "name": "banca-pergola-yanque.igz",
+      "exit_code": 0,
+      "output": "Successfully converted ingetrazo/examples/banca-pergola-yanque.igz -> /tmp/tmp0xtxvv_4/banca-pergola-yanque.igz\n",
+      "missing_nonempty_fields": [
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "display_style",
+        "protos",
+        "saved_views",
+        "section_planes",
+        "section_view"
+      ],
+      "list_counts": {
+        "edges": {
+          "original": 1,
+          "roundtrip": 1
+        },
+        "faces": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "groups": {
+          "original": 9,
+          "roundtrip": 9
+        },
+        "protos": {
+          "original": 2,
+          "roundtrip": 0
+        },
+        "saved_views": {
+          "original": 5,
+          "roundtrip": 0
+        },
+        "compositions": {
+          "original": 1,
+          "roundtrip": 0
+        },
+        "dimensions": {
+          "original": 4,
+          "roundtrip": 4
+        },
+        "materials": {
+          "original": 3,
+          "roundtrip": null
+        },
+        "custom_scales": {
+          "original": 2,
+          "roundtrip": 0
+        },
+        "section_planes": {
+          "original": 1,
+          "roundtrip": 0
+        }
+      }
+    },
+    {
+      "name": "luminaria-solar-yanque.igz",
+      "exit_code": 0,
+      "output": "Successfully converted ingetrazo/examples/luminaria-solar-yanque.igz -> /tmp/tmp0xtxvv_4/luminaria-solar-yanque.igz\n",
+      "missing_nonempty_fields": [
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "display_style",
+        "saved_views",
+        "section_planes"
+      ],
+      "list_counts": {
+        "edges": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "faces": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "groups": {
+          "original": 60,
+          "roundtrip": 60
+        },
+        "saved_views": {
+          "original": 4,
+          "roundtrip": 0
+        },
+        "compositions": {
+          "original": 1,
+          "roundtrip": 0
+        },
+        "custom_scales": {
+          "original": 2,
+          "roundtrip": 0
+        },
+        "section_planes": {
+          "original": 1,
+          "roundtrip": 0
+        }
+      }
+    },
+    {
+      "name": "pileta-fuente-yanque.igz",
+      "exit_code": 0,
+      "output": "Successfully converted ingetrazo/examples/pileta-fuente-yanque.igz -> /tmp/tmp0xtxvv_4/pileta-fuente-yanque.igz\n",
+      "missing_nonempty_fields": [
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "protos",
+        "saved_views",
+        "section_planes",
+        "section_view",
+        "shadows"
+      ],
+      "list_counts": {
+        "edges": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "faces": {
+          "original": 0,
+          "roundtrip": 0
+        },
+        "groups": {
+          "original": 39,
+          "roundtrip": 39
+        },
+        "protos": {
+          "original": 19,
+          "roundtrip": 0
+        },
+        "saved_views": {
+          "original": 4,
+          "roundtrip": 0
+        },
+        "compositions": {
+          "original": 1,
+          "roundtrip": 0
+        },
+        "dimensions": {
+          "original": 4,
+          "roundtrip": 4
+        },
+        "materials": {
+          "original": 3,
+          "roundtrip": null
+        },
+        "custom_scales": {
+          "original": 2,
+          "roundtrip": 0
+        },
+        "section_planes": {
+          "original": 1,
+          "roundtrip": 0
+        },
+        "text_labels": {
+          "original": 6,
+          "roundtrip": 6
+        }
+      }
+    }
+  ],
+  "limitations": "Shallow field/count comparison only; no semantic, visual, or Python-reopen validation.",
+  "build_exit_code": 0,
+  "diagnostics": {
+    "exit_code": 0,
+    "output": "IngeTrazo 0.3.15\n  packaged   : yes (compiled Rust binary)\n  runtime    : Rust native (eframe/egui + wgpu)\n  formats: igz   : found (native JSON/ZIP format 1 & 2)\n  formats: obj   : found (Wavefront OBJ import & export)\n  formats: stl   : found (Stereolithography binary & ASCII)\n  formats: dxf   : found (AutoCAD DXF 3DFACE)\n  formats: gltf  : found (glTF 2.0 binary GLB)\n  render engine  : found (HLR, wireframe, visual styles)\n  tools engine   : found (select, line, rect, pushpull, etc.)\n  topology       : found (shared-vertex manifold solid)\n\nOK\n"
+  }
+}

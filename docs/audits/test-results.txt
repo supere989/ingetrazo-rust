@@ -1,0 +1,186 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running unittests src/main.rs (target/debug/deps/ingetrazo-e643d5b804e5ca28)
+
+running 2 tests
+test tests::test_cli_self_check ... ok
+test tests::test_cli_convert_headless ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_core-eb989bcf43427f8b)
+
+running 40 tests
+test camera::tests::test_camera_orbit_and_view ... ok
+test camera::tests::test_compare_lookat ... ok
+test composition::tests::test_paper_dimensions ... ok
+test composition::tests::test_sacred_equation_cube_at_scale ... ok
+test composition::tests::test_scale_formatting_and_parsing ... ok
+test composition::tests::test_sheet_creation_and_bounds ... ok
+test dimensions::tests::test_dimension_deserialize_ab_format ... ok
+test geometry::tests::test_edge_length_and_closest_point ... ok
+test geometry::tests::test_face_normal_and_area ... ok
+test georef::tests::test_datum_derives_zone_and_hemisphere ... ok
+test georef::tests::test_geopath_area_and_length ... ok
+test georef::tests::test_north_angle_rotation ... ok
+test georef::tests::test_profile_sampling ... ok
+test georef::tests::test_round_trip_under_1mm_city_scale ... ok
+test georef::tests::test_utm_forward_inverse_round_trip ... ok
+test georef::tests::test_survey_point_csv_parsing ... ok
+test georef::tests::test_zone_for_lon ... ok
+test history::tests::test_composite_transaction ... ok
+test history::tests::test_add_and_delete_face_command ... ok
+test history::tests::test_geopath_command_undo_redo ... ok
+test history::tests::test_geopoints_command_undo_redo ... ok
+test history::tests::test_move_command_undo_redo ... ok
+test math::tests::test_newell_normal_and_area ... ok
+test math::tests::test_point_key_welding ... ok
+test mesh::tests::test_mesh_vertex_welding ... ok
+test mesh::tests::test_mesh_cube_volume ... ok
+test render_blender::tests::test_command_building ... ok
+test render_blender::tests::test_kelvin_to_rgb_values ... ok
+test render_blender::tests::test_progress_parsing ... ok
+test section::tests::test_section_clipping ... ok
+test section::tests::test_section_symbols ... ok
+test snap::tests::test_encouraged_point_tracking_guide ... ok
+test snap::tests::test_parallel_reference_inference ... ok
+test snap::tests::test_snap_endpoints_and_midpoints ... ok
+test snap::tests::test_two_point_crossing ... ok
+test triangulate::tests::test_convex_quad_fan ... ok
+test topology::tests::test_find_cycle ... ok
+test units::tests::test_parse_length_units ... ok
+test triangulate::tests::test_holed_polygon ... ok
+test solids::tests::test_solid_report_and_union ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_i18n.rs (target/debug/deps/test_i18n-fd7b6e344fe6e147)
+
+running 1 test
+test test_i18n_all_languages_and_fallbacks ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_formats-ccff1bbbf83e96a5)
+
+running 7 tests
+test ifc::tests::test_ifc_guid_length_and_validity ... ok
+test dae::tests::test_dae_export_basic_cube ... ok
+test ifc::tests::test_ifc_export_basic_structure ... ok
+test tests::test_stl_export_and_import ... ok
+test tests::test_convert_file ... ok
+test tests::test_obj_export_and_import ... ok
+test tests::test_igz_save_and_load ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/roundtrips.rs (target/debug/deps/roundtrips-7f7a5751d9769477)
+
+running 9 tests
+test test_stl_binary_roundtrip ... ok
+test test_glb_export ... ok
+test test_obj_export_and_import_roundtrip ... ok
+test test_dxf_export_and_import ... ok
+test test_stl_ascii_roundtrip ... ok
+test test_stl_auto_detect ... ok
+test test_igz_format1_roundtrip ... ok
+test test_igz_format2_zip_roundtrip ... ok
+test test_load_example_banca_pergola ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_gui-d711fbaa4d1e4a68)
+
+running 10 tests
+test blender::tests::test_resolution_presets ... ok
+test blender::tests::test_blender_state_initialization ... ok
+test tests::test_app_camera_presets ... ok
+test tests::test_app_initialization ... ok
+test tests::test_app_delete_and_select_all ... ok
+test tests::test_app_tool_switching ... ok
+test app::tests::test_cad_clipboard_and_group_operations ... ok
+test tests::test_app_undo_redo ... ok
+test app::tests::test_load_example_pergola ... ok
+test app::tests::test_group_3_colors ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_render-23f2805d9ed1e9ef)
+
+running 5 tests
+test tests::test_buffer_creation_and_append ... ok
+test tests::test_visual_styles_presets ... ok
+test tests::test_snap_marker_glyphs ... ok
+test tests::test_edge_classification_and_hlr ... ok
+test tests::test_selection_buffers ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_tools-47164da4345ac861)
+
+running 34 tests
+test arc::tests::test_2point_arc_tool ... ok
+test circle::tests::test_circle_tool_segments_and_vcb ... ok
+test arc::tests::test_3point_arc_tool ... ok
+test circle::tests::test_circle_tool_two_clicks ... ok
+test freehand::tests::test_rdp_simplification ... ok
+test eraser::tests::test_eraser_tool_erase_edge ... ok
+test eraser::tests::test_eraser_tool_soften_toggle ... ok
+test line::tests::test_line_tool_draw_and_rubber_band ... ok
+test line::tests::test_line_tool_closing_cycle_creates_face ... ok
+test line::tests::test_line_tool_vcb_input ... ok
+test move_tool::tests::test_move_tool_array_repeat ... ok
+test move_tool::tests::test_move_tool_copy_mode ... ok
+test move_tool::tests::test_move_tool_translation ... ok
+test offset::tests::test_offset_tool_inward ... ok
+test paint::tests::test_paint_tool_apply_and_sample ... ok
+test pushpull::tests::test_pushpull_extrude_cube ... ok
+test rectangle::tests::test_rectangle_tool_two_clicks ... ok
+test pushpull::tests::test_pushpull_vcb_and_repeat ... ok
+test rectangle::tests::test_rectangle_tool_vcb_input ... ok
+test rectangle::tests::test_rectangle_tool_xz_plane ... ok
+test rotate_tool::tests::test_rotate_tool_90_degrees ... ok
+test rotate_tool::tests::test_rotate_tool_vcb_degrees ... ok
+test scale_tool::tests::test_scale_tool_uniform ... ok
+test select::tests::test_select_tool_double_click ... ok
+test select::tests::test_select_tool_single_click ... ok
+test tape::tests::test_tape_tool_measurement_and_guides ... ok
+test tape::tests::test_tape_tool_vcb ... ok
+test tests::test_create_tools ... ok
+test select::tests::test_select_tool_triple_click_all_connected ... ok
+test tests::test_dimension_tool ... ok
+test tests::test_line_tool_drawing ... ok
+test tests::test_polygon_tool ... ok
+test tests::test_section_plane_tool ... ok
+test tests::test_rectangle_tool_drawing ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_formats
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_gui
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_render
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_tools
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
