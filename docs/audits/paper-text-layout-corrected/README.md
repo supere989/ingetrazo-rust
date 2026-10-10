@@ -1,0 +1,7 @@
+Corrected experimental paragraph/bidi/fallback recipe
+
+Retains all five initial failures in paper-text-layout-initial. The d99e89f0 fixture now uses pinned unicode-bidi0.3.18 (MIT/Apache2) visual directional runs followed by native HarfBuzz per-run shaping, native charset matching for a missing whole run, source physical text rectangle clip when layout overflows, and QFixed integer-half center offset. There are no case-name rules or injected original glyph positions. All19 frozen original input recipes remain mandatory. Fresh unchanged original helper generates actual19PDFs; full images match57/57 and actual reader text19/19. Parse-valid same-size PDF negatives catch1/64px center misalignment173pixels and omitted source clip1071pixels at300dpi.
+
+The fallback probe only resolves a whole text run; mixed-primary/fallback clusters are not a production completed algorithm. Word-wrap currently implements the observed simple words and typed newlines, not full Qt linebreak/space/tab/script policy. This remains experimental and must become a bounded typed production layout/cache with generic held-out controls and actual Text/UI before broader promotion. Native font resolution uses direct library/cache with no resolver process; Python source/reader invocations are engineering validation only. No Scene clone, image-text substitute, or outlines as glyph drawing fallback.
+
+Primary API mapping: https://docs.rs/unicode-bidi/0.3.18/unicode_bidi/struct.BidiInfo.html . Actual original Qt6.12 helper pages are the acceptance oracle, not Unicode library compliance alone.

@@ -1,0 +1,7 @@
+Native paper-font matching stage
+
+Uses installed libfontconfig.so.1 directly with owned FcConfig and RAII pattern/config destructors. Matches source family/style at pixel100, obtains face index and font hinting policy; bounded font bytes are read once cold into Arc and native typed cache. There is no resolver subprocess, wrapper or per-frame file read. Request cache has64 entries with weak font ownership, resource identity map prunes unused entries at128; font-cache-owned bytes remain16 fonts/32MiB. Alias requests for the same physical path/index/policy share identity. Installed font changes require explicit refresh epoch; live automatic font mutation detection remains open. Charset matching resolves one face and is not paragraph fallback segmentation.
+
+Function/property contracts: https://fontconfig.pages.freedesktop.org/fontconfig/fontconfig-devel/ . Actual original source views/composer.py _draw_text_mm requests QFont family, bold/italic at100pixel; nineteen frozen original observer records remain in the source text audit. No font files or extracted source glyph programs are redistributed. This exact path proof is environment-specific, not portable font equality. Mac/Windows provider, broader fonts/aliases and fallback layout remain required scope.
+
+Replay cargo run -p ingetrazo-formats --example paper_font_resolver_fixture -- <original-font-observations.json> <new-report.json>.

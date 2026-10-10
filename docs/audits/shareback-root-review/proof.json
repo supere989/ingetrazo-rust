@@ -1,0 +1,33 @@
+{
+  "source": [
+    "a1ffc5d",
+    "dbe99fc"
+  ],
+  "root_base": "39d13be",
+  "tests": [
+    533,
+    0,
+    2
+  ],
+  "native_sha256": "537fcaa61fb9ffc6cf0013f585592534e0c2ddb22769460f5f36bf63e5a8c7b6",
+  "retained_fresh": {
+    "status": "PASS",
+    "cases": [
+      "finish",
+      "undo0",
+      "redo0",
+      "undo1",
+      "redo1",
+      "annotation_only_history",
+      "section_retained",
+      "nested_parked_and_root"
+    ],
+    "negative_controls": [
+      "literal-old-scene-snapshot",
+      "restore-dead-anchor",
+      "discard-added-annotation",
+      "follow-temporary-edit-vertex"
+    ],
+    "scope": "Original Viewport/History command behavior versus Rust application API; no key dispatch/rendered UI, complete annotation family or Metal claim."
+  }
+}

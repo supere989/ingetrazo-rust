@@ -1,0 +1,45 @@
+[
+  {
+    "case": "accents",
+    "fails": []
+  },
+  {
+    "case": "bold",
+    "fails": []
+  },
+  {
+    "case": "combining",
+    "fails": [
+      {
+        "index": 5,
+        "gid": 697,
+        "source_n": 8,
+        "native_n": 9
+      }
+    ]
+  },
+  {
+    "case": "italic",
+    "fails": []
+  },
+  {
+    "case": "kerns",
+    "fails": []
+  },
+  {
+    "case": "latin",
+    "fails": []
+  },
+  {
+    "case": "mono",
+    "fails": []
+  },
+  {
+    "case": "serif",
+    "fails": []
+  },
+  {
+    "case": "serif_bold",
+    "fails": []
+  }
+]

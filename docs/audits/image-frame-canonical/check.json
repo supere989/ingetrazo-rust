@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "states": 60,
+  "negative_controls": 6,
+  "comparison": "exact Python/Qt f32 values and command-held lifetime/history",
+  "boundary": "controller commands; interactive dispatch and GPU image planes still open"
+}

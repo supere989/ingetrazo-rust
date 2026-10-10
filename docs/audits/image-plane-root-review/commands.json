@@ -1,0 +1,55 @@
+[
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-image-planes.py",
+      "docs/audits/image-plane-root-review/original"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "image_plane_acceptance_fixture",
+      "--",
+      "docs/audits/image-plane-root-review/original",
+      "docs/audits/image-plane-root-review/native"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-image-plane-ownership.py",
+      "docs/audits/image-plane-root-review/original/original.json",
+      "docs/audits/image-plane-root-review/native/native.json",
+      "docs/audits/image-plane-runtime-baseline/native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/reopen-python-image-planes.py",
+      "docs/audits/image-plane-root-review/original/original.json",
+      "docs/audits/image-plane-root-review/native",
+      "docs/audits/image-plane-root-review/original/scan.png"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--offline"
+    ],
+    "returncode": 0
+  }
+]

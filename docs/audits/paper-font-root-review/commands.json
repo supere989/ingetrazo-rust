@@ -1,0 +1,74 @@
+[
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-paper-text.py",
+      "docs/audits/paper-font-root-review/original"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-formats",
+      "--example",
+      "paper_text_production_fixture",
+      "--",
+      "docs/audits/paper-font-root-review/original/font-observations.json",
+      "docs/audits/paper-font-root-review/native"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-paper-text-pages.py",
+      "docs/audits/paper-font-root-review/original",
+      "docs/audits/paper-font-root-review/native",
+      "72"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-paper-text-pages.py",
+      "docs/audits/paper-font-root-review/original",
+      "docs/audits/paper-font-root-review/native",
+      "144"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-paper-text-pages.py",
+      "docs/audits/paper-font-root-review/original",
+      "docs/audits/paper-font-root-review/native",
+      "300"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-paper-text-unicode.py",
+      "docs/audits/paper-font-root-review/original",
+      "docs/audits/paper-font-root-review/native"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--offline"
+    ],
+    "returncode": 0
+  }
+]

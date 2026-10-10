@@ -13,6 +13,11 @@ jobs:
         with:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
+      - name: Native paper font dependency build and library tests
+        run: |
+          mkdir -p docs/audits/paper-font-native-ci
+          cargo test --locked -p ingetrazo-formats --lib > docs/audits/paper-font-native-ci/tests.log 2>&1
+          cargo run --locked -p ingetrazo-formats --example native_font_resource_probe -- /System/Library/Fonts/Supplemental/Arial.ttf > docs/audits/paper-font-native-ci/font-resource.log 2>&1
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
@@ -59,7 +64,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: native-metal-link-${{ matrix.runner }}
-          path: docs/audits/metal-native-link-ci/
+          path: |
+            docs/audits/metal-native-link-ci/
+            docs/audits/paper-font-native-ci/
           if-no-files-found: error
   metal-cross-compilation:
     name: Native Metal compile (${{ matrix.target }})
@@ -94,7 +101,7 @@ jobs:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
       - name: Install native build dependencies
-        run: sudo apt-get update && sudo apt-get install -y file libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 libfreetype6 libfontconfig1 libx11-6 libxrandr2 libxcursor1 libxi6 libxinerama1 libxkbcommon-x11-0 xvfb xauth imagemagick pkg-config libxtst6 libgl1-mesa-dri libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libvulkan1 mesa-vulkan-drivers zenity
+        run: sudo apt-get update && sudo apt-get install -y file libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 libfreetype6 libfontconfig1 fontconfig libx11-6 libxrandr2 libxcursor1 libxi6 libxinerama1 libxkbcommon-x11-0 xvfb xauth imagemagick pkg-config libxtst6 libgl1-mesa-dri libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libvulkan1 mesa-vulkan-drivers zenity
       - name: Check mandatory original fixtures
         run: python3 -c "from pathlib import Path; names = [\"arco-yanque\", \"banca-pergola-yanque\", \"luminaria-solar-yanque\", \"pileta-fuente-yanque\"]; assert all((Path(\"ingetrazo/examples\") / (n + \".igz\")).is_file() for n in names), \"Missing original fixtures\""
       - run: cargo test --workspace --locked
@@ -137,6 +144,11 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Original native Fontconfig request matching and ownership
+        run: |
+          mkdir -p docs/audits/font-resolver-ci
+          python scripts/probe-python-paper-text.py docs/audits/font-resolver-ci/original
+          cargo run --locked -p ingetrazo-formats --example paper_font_resolver_fixture -- docs/audits/font-resolver-ci/original/font-observations.json docs/audits/font-resolver-ci/native.json
       - name: Original and native strict vector View PDF pages
         run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci
       - name: Original and native saved-view PDF state against opposed live state
@@ -150,6 +162,15 @@ jobs:
         run: INGETRAZO_VIEW_PDF_FILL=solid QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-solid-ci
       - name: Original and native saved tilted cropped colored hatch PDF pages
         run: INGETRAZO_VIEW_PDF_FILL=hatch INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 INGETRAZO_VIEW_PDF_SCALE=20 INGETRAZO_VIEW_PDF_HATCH=0.7 INGETRAZO_VIEW_PDF_FILL_COLOR="#dc9b4e" QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-heldout-hatch-ci
+      - name: Actual source grid cutoff spacing and perspective suppression
+        run: |
+          mkdir -p docs/audits/grid-source-ci
+          python scripts/probe-python-paper-grid.py docs/audits/grid-source-ci/source.json
+          python -c "import json; assert json.load(open('docs/audits/grid-source-ci/source.json')) == json.load(open('docs/audits/sheet-view-grid-pdf/source-grid-controls.json'))"
+      - name: Original and native strict physical grid and hatch pages
+        run: INGETRAZO_VIEW_PDF_GRID=0.7 INGETRAZO_VIEW_PDF_FILL=hatch QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-default-ci
+      - name: Original and native noninteger grid saved tilted solid pages
+        run: INGETRAZO_VIEW_PDF_GRID=0.3317 INGETRAZO_VIEW_PDF_FILL=solid INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-heldout-ci
       - name: Actual composer PDF save dialogs and refusal preservation
         run: |
           cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
@@ -224,6 +245,43 @@ jobs:
         run: python scripts/check-python-pieces.py
       - name: Original runtime nested world dimension measurement
         run: python scripts/check-python-dimension-world.py
+      - name: Original terrain runtime visibility and owned command footprint
+        run: |
+          mkdir -p docs/audits/terrain-membership-ci
+          python scripts/probe-python-presentation-history.py docs/audits/terrain-membership-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example presentation_history_fixture -- docs/audits/terrain-membership-ci/native
+          python scripts/check-terrain-command-ownership.py docs/audits/terrain-membership-ci/original.json docs/audits/terrain-membership-ci/native/native.json docs/audits/saved-view-command-ownership/native.json docs/audits/terrain-command-ownership/bool-only-negative.json
+      - name: Original saved-view command membership and object lifetime
+        run: |
+          mkdir -p docs/audits/savedview-membership-ci
+          python scripts/probe-python-presentation-history.py docs/audits/savedview-membership-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example presentation_history_fixture -- docs/audits/savedview-membership-ci/native
+          python scripts/check-saved-view-membership.py docs/audits/savedview-membership-ci/original.json docs/audits/savedview-membership-ci/native/native.json docs/audits/presentation-history/native-baseline.json
+      - name: Original parked-context layer deletion ownership
+        run: |
+          mkdir -p docs/audits/layer-context-ci
+          python scripts/probe-python-layer-context-delete.py docs/audits/layer-context-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example layer_context_delete_fixture -- docs/audits/layer-context-ci/native
+          python scripts/check-layer-context-delete.py docs/audits/layer-context-ci/original.json docs/audits/layer-context-ci/native/native.json docs/audits/layer-context-deletion/baseline-native.json
+      - name: Original layer panel and command ownership
+        run: |
+          mkdir -p docs/audits/layer-membership-ci
+          python scripts/probe-python-layer-history.py docs/audits/layer-membership-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example layer_history_fixture -- docs/audits/layer-membership-ci/native
+          python scripts/check-layer-command-ownership.py docs/audits/layer-membership-ci/original.json docs/audits/layer-membership-ci/native/native.json docs/audits/layer-command-ownership/baseline-native.json
+      - name: Original global entities survive nested edit history
+        run: |
+          mkdir -p docs/audits/context-globals-ci
+          python scripts/probe-python-context-globals.py docs/audits/context-globals-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example context_globals_fixture -- docs/audits/context-globals-ci/native
+          python scripts/check-context-globals.py docs/audits/context-globals-ci/original.json docs/audits/context-globals-ci/native/native.json docs/audits/context-global-publication/literal-old-entry-failure.log
+      - name: Original referenced textures survive nested context history
+        run: |
+          python scripts/probe-python-context-textures.py docs/audits/context-textures-ci/original
+          cargo run --locked -p ingetrazo-gui --example context_texture_clipboard_fixture -- docs/audits/context-textures-ci/original docs/audits/context-textures-ci/native
+          python scripts/check-context-textures.py docs/audits/context-textures-ci/original docs/audits/context-textures-ci/native docs/audits/context-texture-history/missing-image-baseline
+      - name: Original command-specific annotation shareback Undo and anchor lifetimes
+        run: INGETRAZO_SHAREBACK_EVIDENCE=docs/audits/shareback-annotations-ci python scripts/check-python-shareback-annotations.py
       - name: Original runtime dimension anchors and nested outliner
         run: python scripts/check-python-dimension-anchors.py
       - name: Original runtime planar healing
@@ -252,6 +310,30 @@ jobs:
         run: python scripts/check-python-offset.py
       - name: Original Offset hard-edge display semantics
         run: python scripts/check-python-offset-display.py
+      - name: Original and native presentation controllers contexts and IGZ adapters
+        run: python scripts/check-presentation-runtime.py
+      - name: Original image plane ownership and native archive reopening
+        run: |
+          mkdir -p docs/audits/image-plane-ci
+          python scripts/probe-python-image-planes.py docs/audits/image-plane-ci/original
+          cargo run --locked -p ingetrazo-gui --example image_plane_acceptance_fixture -- docs/audits/image-plane-ci/original docs/audits/image-plane-ci/native
+          python scripts/check-image-plane-ownership.py docs/audits/image-plane-ci/original/original.json docs/audits/image-plane-ci/native/native.json docs/audits/image-plane-runtime-baseline/native.json
+          python scripts/reopen-python-image-planes.py docs/audits/image-plane-ci/original/original.json docs/audits/image-plane-ci/native docs/audits/image-plane-ci/original/scan.png
+      - name: Original image layer command ownership and branch lifetime
+        run: |
+          mkdir -p docs/audits/image-ownership-ci
+          python scripts/probe-python-image-layer-ownership.py docs/audits/image-ownership-ci/original-layers.json
+          cargo run --locked -p ingetrazo-gui --example image_layer_ownership > docs/audits/image-ownership-ci/native-layers.json
+          python scripts/check-image-layer-ownership.py docs/audits/image-ownership-ci/original-layers.json docs/audits/image-ownership-ci/native-layers.json docs/audits/image-layer-command-ownership/literal-old-native.json
+          python scripts/probe-python-image-object-lifetime.py docs/audits/image-ownership-ci/original-lifetime.json
+          cargo run --locked -p ingetrazo-gui --example image_object_lifetime > docs/audits/image-ownership-ci/native-lifetime.json
+          python scripts/check-image-object-lifetime.py docs/audits/image-ownership-ci/original-lifetime.json docs/audits/image-ownership-ci/native-lifetime.json docs/audits/image-object-branch-lifetime/literal-old-native.json
+      - name: Original command-held image frame semantics
+        run: |
+          mkdir -p docs/audits/image-ownership-ci
+          python scripts/probe-python-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json
+          cargo run --locked -p ingetrazo-gui --example image_frame_commands > docs/audits/image-ownership-ci/native-frames.json
+          python scripts/check-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json docs/audits/image-ownership-ci/native-frames.json docs/audits/image-frame-command-ownership/literal-old-native.json
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
@@ -280,6 +362,10 @@ jobs:
         with:
           name: semantic-parity-evidence
           path: |
+            docs/audits/image-ownership-ci/
+            docs/audits/font-resolver-ci/
+            docs/audits/image-plane-ci/
+            docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*
             docs/audits/python-*-evidence.json
             docs/audits/render-pergola.png
@@ -306,6 +392,17 @@ jobs:
             docs/audits/vector-view-ci/
             docs/audits/saved-vector-view-ci/
             docs/audits/section-numerics-ci/
+            docs/audits/grid-source-ci/
+            docs/audits/grid-default-ci/
+            docs/audits/grid-heldout-ci/
+            docs/audits/terrain-membership-ci/
+            docs/audits/savedview-membership-ci/
+            docs/audits/layer-context-ci/
+            docs/audits/layer-membership-ci/
+            docs/audits/context-globals-ci/
+            docs/audits/context-textures-ci/
+            docs/audits/shareback-annotations-ci/
+            docs/audits/python-shareback-annotations-current.json
             docs/audits/section-solid-ci/
             docs/audits/section-heldout-hatch-ci/
             docs/audits/composer-pdf-ui/
@@ -329,3 +426,4 @@ jobs:
             docs/audits/native-stencil-ci/provenance.json
             docs/audits/native-stencil-ci/*/*.png
             docs/audits/native-stencil-ci/*/startup.log
+            docs/audits/native-stencil-ci/*/xvfb-cleanup.json

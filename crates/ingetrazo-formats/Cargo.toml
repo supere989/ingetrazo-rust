@@ -14,8 +14,12 @@ serde_json.workspace = true
 zip.workspace = true
 thiserror.workspace = true
 log.workspace = true
-uuid.workspace = true
+uuid = { workspace = true, features = ["v5"] }
 gltf = { version = "1.4.1", default-features = false, features = ["import", "utils", "names", "KHR_texture_transform", "KHR_materials_pbrSpecularGlossiness", "extras"] }
 base64 = "0.22.1"
 roxmltree = "0.20"
 image.workspace = true
+harfbuzz-sys = { version = "=0.8.0", default-features = false, features = ["bundled"] }
+ttf-parser = "=0.25.1"
+freetype-sys = { version = "=0.23.0", features = ["bundled"] }
+libloading = "=0.8.9"

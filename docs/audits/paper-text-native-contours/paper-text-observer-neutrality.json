@@ -1,0 +1,196 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "accents.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "accents.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "arabic.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "arabic.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "arabic_run.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "arabic_run.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "bold.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "bold.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "center.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "center.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "cjk.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "cjk.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "combining.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "combining.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "hebrew.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "hebrew.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "hebrew_run.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "hebrew_run.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "italic.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "italic.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "kerns.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "kerns.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "latin.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "latin.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "mono.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "mono.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "newlines.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "newlines.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "right.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "right.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "serif.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "serif.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "serif_bold.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "serif_bold.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "underline.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "underline.original",
+      "dpi": 300,
+      "different_pixels": 0
+    },
+    {
+      "case": "wrap.original",
+      "dpi": 72,
+      "different_pixels": 0
+    },
+    {
+      "case": "wrap.original",
+      "dpi": 300,
+      "different_pixels": 0
+    }
+  ],
+  "scope": "Original forwarding font/layout observer neutrality versus plain original painter, not native PDF proof"
+}

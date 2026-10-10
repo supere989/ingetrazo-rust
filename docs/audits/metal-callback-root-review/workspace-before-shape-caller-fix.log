@@ -1,0 +1,99 @@
+   Compiling approx v0.5.1
+   Compiling aho-corasick v1.1.5
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling regex-syntax v0.8.11
+   Compiling utf8parse v0.2.2
+   Compiling anstyle-query v1.1.5
+   Compiling colorchoice v1.0.5
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling anstyle v1.0.14
+   Compiling jiff-core v0.1.1
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-metal-callback-root/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-metal-callback-root/crates/ingetrazo-tools)
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-metal-callback-root/crates/ingetrazo-render)
+   Compiling anstyle-parse v1.0.0
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-metal-callback-root/crates/ingetrazo-core)
+   Compiling anstream v1.0.0
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-metal-callback-root/crates/ingetrazo-gui)
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-callback-root/crates/ingetrazo-metal)
+warning: struct `SpanPlan` is never constructed
+  --> crates/ingetrazo-metal/src/span_plan.rs:21:19
+   |
+21 | pub(crate) struct SpanPlan {
+   |                   ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `compile` is never used
+  --> crates/ingetrazo-metal/src/span_plan.rs:26:15
+   |
+26 | pub(crate) fn compile(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan, String> {
+   |               ^^^^^^^
+
+   Compiling jiff v0.2.37
+warning: `ingetrazo-metal` (lib) generated 2 warnings
+   Compiling regex-automata v0.4.18
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling regex v1.13.1
+   Compiling env_filter v2.0.0
+   Compiling env_logger v0.11.11
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+error[E0308]: mismatched types
+ --> crates/ingetrazo-gui/examples/sheet_shape_render_fixture.rs:6:272
+  |
+6 | ...factory=Some(system.enable_cad2d().unwrap().factory());}Self {native,stats:Default::default(),shapes:serde_json::from_slice(&std::...
+  |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `ingetrazo_gui::composer_backend::Factory`, found `Factory`
+  |            |
+  |            arguments to this enum variant are incorrect
+  |
+help: the type constructed contains `ingetrazo_gui::native_vulkan::cad2d::Factory` due to the type of the argument passed
+ --> crates/ingetrazo-gui/examples/sheet_shape_render_fixture.rs:6:267
+  |
+6 | ...me(){native.factory=Some(system.enable_cad2d().unwrap().factory());}Self {native,stats:Default::default(),shapes:serde_json::from_...
+  |                        ^^^^^----------------------------------------^
+  |                             |
+  |                             this argument influences the type of `Some`
+note: tuple variant defined here
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/option.rs:608:4
+help: try wrapping the expression in `ingetrazo_gui::composer_backend::Factory::Vulkan`
+  |
+6 |  fn new(system: &mut System,_:Option<std::path::PathBuf>)->Self {let input=std::env::var("INGETRAZO_SHAPE_RECIPES").unwrap();let mut native=ingetrazo_gui::composer_cad::NativeComposer::default();if std::env::var_os("INGETRAZO_SHAPE_DIRECT").is_some(){native.factory=Some(ingetrazo_gui::composer_backend::Factory::Vulkan(system.enable_cad2d().unwrap().factory()));}Self {native,stats:Default::default(),shapes:serde_json::from_slice(&std::fs::read(input).unwrap()).unwrap(),out:std::env::var("INGETRAZO_SHAPE_OUT").unwrap().into()}}
+  |                                                                                                                                                                                                                                                                                +++++++++++++++++++++++++++++++++++++++++++++++++                                        +
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `ingetrazo-gui` (example "sheet_shape_render_fixture") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)

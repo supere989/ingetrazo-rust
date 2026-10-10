@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "actual_processes": 3,
+  "independent_sentinel_survived": true,
+  "states": [
+    {
+      "pid": 3682068,
+      "terminate_timeout": false,
+      "kill_sent": false,
+      "returncode": -15
+    },
+    {
+      "pid": 3682069,
+      "terminate_timeout": true,
+      "kill_sent": true,
+      "returncode": -9
+    },
+    {
+      "pid": 3682070,
+      "terminate_timeout": false,
+      "kill_sent": false,
+      "returncode": 0
+    }
+  ]
+}

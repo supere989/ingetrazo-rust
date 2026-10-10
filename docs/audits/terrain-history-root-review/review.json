@@ -1,0 +1,10 @@
+{
+  "base": "7ac38f98603b7c270ef71a3324e90dfef22b1009",
+  "source": "4d666db",
+  "passed": 539,
+  "ignored": 2,
+  "binary_sha256": "c79c023c55fd57f1e11d0b8ed473702bbd8f476d237ae5f432281112bafeb039",
+  "owned_states": 6,
+  "full_straighten_model": false,
+  "full_P15": false
+}

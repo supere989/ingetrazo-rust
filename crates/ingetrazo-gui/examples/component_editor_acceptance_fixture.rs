@@ -64,11 +64,24 @@ fn main() {
     }
     let committed = app.scene.clone();
     app.save_to_path(&dir.join("editor-committed.igz"));
+    assert!(app.scene.selection.is_empty() && app.scene.selection_order.is_empty());
+    let committed_version=app.scene.version;
     app.undo();
+    // Source ReshareInstanceCommand restores mesh/placement only: entry clears
+    // selection, and Undo advances invalidation rather than restoring counters.
+    assert!(app.scene.selection.is_empty() && app.scene.selection_order.is_empty());
+    assert!(app.scene.version>committed_version);
+    undo_before.selection.clear();undo_before.selection_order.clear();
+    undo_before.version=app.scene.version;undo_before.view_version=app.scene.view_version;
     assert_eq!(app.scene, undo_before);
     app.save_to_path(&dir.join("editor-undone.igz"));
+    let undo_version=app.scene.version;
     app.redo();
-    assert_eq!(app.scene, committed);
+    assert!(app.scene.selection.is_empty() && app.scene.selection_order.is_empty());
+    assert!(app.scene.version>undo_version);
+    let mut redo_expected=committed;
+    redo_expected.version=app.scene.version;redo_expected.view_version=app.scene.view_version;
+    assert_eq!(app.scene, redo_expected);
     let mut unique_parent_app = IngeTrazoApp::new();
     unique_parent_app.scene = app.scene.clone();
     unique_parent_app.scene.clear_selection();

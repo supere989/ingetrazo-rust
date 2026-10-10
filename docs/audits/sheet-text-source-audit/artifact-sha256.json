@@ -1,0 +1,21 @@
+{
+  "latin.original.pdf": "23c4b0ce4695446236a4c7160bf905357b078e3e1d571d48858221d117bacb9f",
+  "accents.original.pdf": "5d0c4058731d7a64ff246e69cb680aac27368211ef9f7e58dc37c59f45df3abe",
+  "bold.original.pdf": "0c114625a7402db17c4577bae27ad3b4e544663fdd1d702a303f3e7e76b0667f",
+  "italic.original.pdf": "2e91fd8c488550b6e42a2b25b6669b7a7bed67adcafd8c58c987217834c9ea2f",
+  "underline.original.pdf": "e865eda4eb8dbcc49e3fdc87e279c0cdd62319fefd87fca80183cdf5f71dcb03",
+  "wrap.original.pdf": "60b96fd61e8f8ce944b2f3f6336fc1f13f241c4d63506f02d9f32c567ca919c3",
+  "newlines.original.pdf": "5597c66d751fe5d58d2f0ccc2b14c4686ffeae7f79d8b16f13ce66cba46c07cc",
+  "center.original.pdf": "987ed1615a3fdf69600ac418a67af0a8fcdd0bc34f09af54d69feecc2ccb69b3",
+  "right.original.pdf": "00c6dfdb5f27e396cf0ed131eb0986daf444d607601e459590eb58975dd2b881",
+  "serif.original.pdf": "620fc8ec98c94968729a9c41d2efd0a0bdb8a8ec787c3e455546a2bda3c65eaf",
+  "mono.original.pdf": "7b281a7040981908673f07f2e6759459e20c853fa7d61e2fee1746489cc48a08",
+  "arabic.original.pdf": "1c4d6e3cbe1df876fefb5010c5c1c9150faddef8051575b23a17038dcad7a100",
+  "hebrew.original.pdf": "dd5d71b1bcb8eaf3b23a67f27b873d9778c87804a4d81c967277010c892c732c",
+  "cjk.original.pdf": "c474af21300e58d028dbe0f9f0d22b5a12041ef353a55d4a4e636bb06c749262",
+  "font-observations.json": "7e4d3bd103cf17a7369727ebebebf57cc81bce96d03aedc27d0bcf7a792cbbe7",
+  "paper-text-original-audit-final.log": "7316c7b0ca4bd740a860c3c706eb46604625b8f86dc8a2a03953892c8a5d4539",
+  "paper-font-shaping-experiment-final.json": "60147d1ecce8a98bad2e02e57f9f06884d4f890eb96cee6c2d2d6cc8aa3f4e4d",
+  "paper-font-shaping-experiment-final.log": "e0a54ee7fbad4f21325d5e48ed3a7d13b42e317260c34e080c81a9079b286c61",
+  "README.md": "41ba550dc070d9c073abe15ca86622497743fde09ac43c39b0d43c70df0b06bb"
+}

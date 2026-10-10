@@ -1,0 +1,6 @@
+{
+  "actual_source_mutation": "remove cold metadata collection",
+  "mutated_controller_exit": 0,
+  "branch_dead_metadata_detected": true,
+  "restored_exact": true
+}

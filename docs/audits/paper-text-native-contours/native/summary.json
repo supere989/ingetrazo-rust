@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "source_sha256": "88c30c47150dc50145204e01a7a8dbc98f21ae97724e11554a0da17933f485cc",
+  "native_sha256": "0c6f3f0ed1be992aa8b9ce288437e8c59a502ddbebe9a8ee62493c3f9483237a",
+  "exact_supplementary_qt_runs": 10,
+  "negative": "1/64glyphposition perturbation rejected",
+  "scope": "Direct native fixedadvance shaping foundation only; no wrapping/bidi/fontfallback/PDF/UI parity"
+}

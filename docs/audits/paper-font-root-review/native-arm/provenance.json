@@ -1,0 +1,8 @@
+{
+  "run": 38053914636,
+  "job": 114218397361,
+  "artifact": 11670048234,
+  "source": "0b9d085c",
+  "archive_sha256": "8434fa8468dd7a3456845a66fbf1481ee36e6a49cd1670b6b3c999e81e99aeb9",
+  "scope": "actual ARM native bundled font dependencies and formats library tests, no rendered Text UI"
+}

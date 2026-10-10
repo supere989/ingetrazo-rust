@@ -36,13 +36,6 @@ pub(super) fn view_draws(
     {
         return Err("PDF view title/scale text painter remains unavailable".into());
     }
-    if metadata
-        .and_then(|v| v.get("grid_m"))
-        .and_then(|v| v.as_f64())
-        .is_some_and(|v| v != 0.)
-    {
-        return Err("PDF view grid painter remains unavailable".into());
-    }
     if frame.annotations
         && (!scene.dimensions.is_empty()
             || !scene.text_labels.is_empty()
@@ -169,6 +162,8 @@ pub(super) fn view_draws(
         fill: Some([1.; 4]),
         clip: None,
         clip_intersection: None,
+        text: None,
+        flatten_transform: false,
     }];
     if let Some(fill) = section_fill(frame, &drawing.section_loops, &point)? {
         draws.push(fill);
@@ -201,8 +196,11 @@ pub(super) fn view_draws(
             fill: None,
             clip: Some(rect(frame.rect.w, frame.rect.h)),
             clip_intersection: None,
+            text: None,
+            flatten_transform: false,
         });
     }
+    draws.extend(view_grid(frame, metadata)?);
     if frame.border {
         let width = metadata
             .and_then(|v| v.get("border_mm"))
@@ -228,6 +226,8 @@ pub(super) fn view_draws(
             fill: None,
             clip: None,
             clip_intersection: None,
+            text: None,
+            flatten_transform: false,
         });
     }
     Ok(draws)
@@ -289,6 +289,8 @@ fn section_fill(
         fill: Some(color),
         clip: Some(rect(frame.rect.w, frame.rect.h)),
         clip_intersection: None,
+        text: None,
+        flatten_transform: false,
     };
     if frame.cut_fill == "hatch" {
         if !frame.cut_hatch_mm.is_finite() {
@@ -336,4 +338,120 @@ fn section_fill(
         });
     }
     Ok(Some(draw))
+}
+
+// views/composer.py paint_frame_mm: physical graticule after ink, before border.
+fn view_grid(frame: &ViewFrame, metadata: Option<&serde_json::Value>) -> Result<Vec<Draw>, String> {
+    let grid = metadata
+        .and_then(|v| v.get("grid_m"))
+        .and_then(|v| v.as_f64())
+        .unwrap_or(0.);
+    if !grid.is_finite() {
+        return Err("Invalid PDF model grid spacing".into());
+    }
+    if frame.perspective || grid <= 0. {
+        return Ok(vec![]);
+    }
+    let model_h = frame.rect.h * frame.scale_n / 1000.;
+    let step = grid * frame.rect.h / model_h;
+    if !step.is_finite() {
+        return Err("Invalid PDF physical grid spacing".into());
+    }
+    if step < 2. {
+        return Ok(vec![]);
+    }
+    let mut draws = Vec::new();
+    for (limit, vertical) in [(frame.rect.w, true), (frame.rect.h, false)] {
+        let mut value = step;
+        while value < limit {
+            if draws.len() >= MAX_COMMANDS / 15 {
+                return Err("PDF grid command budget exceeded".into());
+            }
+            // Source paints each translucent line separately; an aggregate
+            // stroke would blend grid intersections only once.
+            let h = 0.06;
+            // QPdfEngine expands nonopaque QPen into the Qt stroker outline.
+            // Preserve its side/cap vertices and paint each line independently.
+            let points = if vertical {
+                [
+                    [value + h, 0.],
+                    [value + h, frame.rect.h],
+                    [value + h, frame.rect.h + h],
+                    [value - h, frame.rect.h + h],
+                    [value - h, frame.rect.h],
+                    [value - h, 0.],
+                    [value - h, -h],
+                    [value + h, -h],
+                    [value + h, 0.],
+                ]
+            } else {
+                [
+                    [0., value - h],
+                    [frame.rect.w, value - h],
+                    [frame.rect.w + h, value - h],
+                    [frame.rect.w + h, value + h],
+                    [frame.rect.w, value + h],
+                    [0., value + h],
+                    [-h, value + h],
+                    [-h, value - h],
+                    [0., value - h],
+                ]
+            };
+            let mut outline = vec![PathOp::Move(points[0])];
+            outline.extend(points[1..].iter().copied().map(PathOp::Line));
+            outline.push(PathOp::Close);
+            draws.push(Draw {
+                origin_mm: [frame.rect.x, frame.rect.y],
+                path: outline,
+                stroke: None,
+                stroke_options: None,
+                fill: Some([90. / 255., 140. / 255., 190. / 255., 120. / 255.]),
+                clip: Some(rect(frame.rect.w, frame.rect.h)),
+                clip_intersection: None,
+                text: None,
+                flatten_transform: true,
+                even_odd: false,
+            });
+            let next = value + step;
+            if next <= value {
+                return Err("PDF grid spacing cannot advance".into());
+            }
+            value = next;
+        }
+    }
+    Ok(draws)
+}
+
+#[cfg(test)]
+mod grid_tests {
+    use super::*;
+    #[test]
+    fn literal_original_grid_cutoff_and_perspective_controls() {
+        let source: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../docs/audits/sheet-view-grid-pdf/source-grid-controls.json"
+        ))
+        .unwrap();
+        for case in source["cases"].as_array().unwrap() {
+            let mut frame = ViewFrame::default();
+            frame.rect.w = 100.;
+            frame.rect.h = 100.;
+            frame.scale_n = 100.;
+            frame.perspective = case["perspective"].as_bool().unwrap();
+            let metadata = serde_json::json!({"grid_m":case["grid_m"]});
+            let draws = view_grid(&frame, Some(&metadata)).unwrap();
+            let lines = case["lines"].as_array().unwrap();
+            assert_eq!(draws.len(), lines.len(), "original cutoff {:?}", case);
+            for (draw, line) in draws.iter().zip(lines) {
+                let a = [line[0][0].as_f64().unwrap(), line[0][1].as_f64().unwrap()];
+                let b = [line[1][0].as_f64().unwrap(), line[1][1].as_f64().unwrap()];
+                let first = if a[0] == b[0] {
+                    [a[0] + 0.06, a[1]]
+                } else {
+                    [a[0], a[1] - 0.06]
+                };
+                assert!(matches!(draw.path[0],PathOp::Move(p) if p == first));
+                assert!(draw.flatten_transform && draw.stroke.is_none());
+            }
+        }
+    }
 }

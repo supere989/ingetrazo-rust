@@ -1,0 +1,224 @@
+{
+  "provenance": {
+    "rust_commit": "3a68c2713d855d4ad4686c3908f45d5fff9cdb70",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "panel_state_across_model_history": [
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Layer 1",
+            false,
+            true
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Layer 1",
+            false,
+            true
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Layer 1",
+            false,
+            true
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 1,
+        "redo": 0
+      }
+    ],
+    "assign_created_rename_lookup": [
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Renamed",
+            true,
+            false
+          ]
+        ],
+        "edge": "Renamed",
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Renamed",
+            true,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Renamed",
+            true,
+            false
+          ],
+          [
+            "Assigned",
+            true,
+            false
+          ]
+        ],
+        "edge": "Assigned",
+        "undo": 1,
+        "redo": 0
+      }
+    ],
+    "purge_held_object_visibility": [
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Unused",
+            false,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Unused",
+            false,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 0,
+        "redo": 1
+      }
+    ],
+    "import_deleted_held_object": [
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          [
+            "Layer 0",
+            true,
+            false
+          ],
+          [
+            "Renamed import",
+            true,
+            false
+          ]
+        ],
+        "edge": "Layer 0",
+        "undo": 1,
+        "redo": 0
+      }
+    ]
+  }
+}

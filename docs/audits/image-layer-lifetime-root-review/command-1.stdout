@@ -1,0 +1,313 @@
+{
+  "rename": [
+    {
+      "layers": [
+        "Layer 0",
+        "Images"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": "Images",
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Renamed"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": "Images",
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Renamed"
+      ],
+      "planes": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Renamed",
+        "Images"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": "Images",
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Renamed"
+      ],
+      "planes": [],
+      "undo": 0,
+      "redo": 1
+    }
+  ],
+  "existing_redo": [
+    {
+      "layers": [
+        "Layer 0",
+        "Images"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": "Images",
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Images"
+      ],
+      "planes": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Images"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": "Images",
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Images"
+      ],
+      "planes": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Images"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": "Images",
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    }
+  ],
+  "delete": [
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            2.0,
+            3.0,
+            4.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            2.0,
+            3.0,
+            4.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            2.0,
+            3.0,
+            4.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    }
+  ],
+  "nested_delete": [
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            2.0,
+            3.0,
+            4.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            2.0,
+            3.0,
+            4.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "layers": [
+        "Layer 0"
+      ],
+      "planes": [
+        {
+          "name": "New",
+          "layer": null,
+          "origin": [
+            2.0,
+            3.0,
+            4.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    }
+  ]
+}

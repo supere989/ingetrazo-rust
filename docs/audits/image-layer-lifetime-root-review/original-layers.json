@@ -1,0 +1,321 @@
+{
+  "provenance": {
+    "rust_commit": "9dc9f01f3dd42c400a5341487db6dba101d6d97f",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "rename": [
+      {
+        "layers": [
+          "Layer 0",
+          "Images"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": "Images",
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Renamed"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": "Images",
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Renamed"
+        ],
+        "planes": [],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Renamed",
+          "Images"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": "Images",
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Renamed"
+        ],
+        "planes": [],
+        "undo": 0,
+        "redo": 1
+      }
+    ],
+    "existing_redo": [
+      {
+        "layers": [
+          "Layer 0",
+          "Images"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": "Images",
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Images"
+        ],
+        "planes": [],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Images"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": "Images",
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Images"
+        ],
+        "planes": [],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          "Layer 0",
+          "Images"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": "Images",
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      }
+    ],
+    "delete": [
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      }
+    ],
+    "nested_delete": [
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "planes": [
+          {
+            "name": "New",
+            "layer": null,
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "undo": 1,
+        "redo": 0
+      }
+    ]
+  }
+}

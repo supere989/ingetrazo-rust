@@ -1,0 +1,28 @@
+{
+  "provenance": {
+    "rust_commit": "9dc9f01f3dd42c400a5341487db6dba101d6d97f",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "states": [
+    {
+      "old_alive": true,
+      "live": 1,
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "old_alive": true,
+      "live": 0,
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "old_alive": false,
+      "live": 1,
+      "undo": 1,
+      "redo": 0
+    }
+  ]
+}

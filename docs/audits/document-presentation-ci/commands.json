@@ -1,0 +1,133 @@
+[
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-document-presentation.py",
+      "docs/audits/document-presentation-ci/original"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-presentation-contexts.py",
+      "docs/audits/document-presentation-ci/original",
+      "docs/audits/document-presentation-ci/contexts-original.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "document_presentation_fixture",
+      "--",
+      "docs/audits/document-presentation-ci/original",
+      "docs/audits/document-presentation-ci/native"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "presentation_context_fixture",
+      "--",
+      "docs/audits/document-presentation-ci/original",
+      "docs/audits/document-presentation-ci/contexts-native"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-document-presentation.py",
+      "docs/audits/document-presentation-ci/original/original.json",
+      "docs/audits/document-presentation-ci/native/native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-presentation-contexts.py",
+      "docs/audits/document-presentation-ci/contexts-original.json",
+      "docs/audits/document-presentation-ci/contexts-native/native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-presentation-codec.py",
+      "docs/audits/document-presentation-ci/codec-original.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "-p",
+      "ingetrazo-core",
+      "--example",
+      "presentation_codec",
+      "--",
+      "docs/audits/document-presentation-ci/codec-original.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-presentation-codec.py",
+      "docs/audits/document-presentation-ci/codec-original.json",
+      "docs/audits/document-presentation-ci/codec-native.json",
+      "docs/audits/presentation-root-review/final-codec/old-grammar.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-presentation-files.py",
+      "generate",
+      "docs/audits/document-presentation-ci/files",
+      "docs/audits/document-presentation-ci/codec-original.json",
+      "docs/audits/document-presentation-ci/original/input.igz"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "-p",
+      "ingetrazo-formats",
+      "--example",
+      "presentation_file_codec",
+      "--",
+      "docs/audits/document-presentation-ci/files"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-presentation-files.py",
+      "reopen",
+      "docs/audits/document-presentation-ci/files"
+    ],
+    "returncode": 0
+  }
+]

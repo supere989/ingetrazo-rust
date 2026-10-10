@@ -1,0 +1,17 @@
+2026-10-10T12:45:04.3668918Z PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/native-stencil-ci/msaa-closed
+2026-10-10T12:45:04.3711579Z Traceback (most recent call last):
+2026-10-10T12:45:04.3758461Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-vulkan-startup.py", line 54, in <module>
+2026-10-10T12:45:04.3759705Z     lib.XCloseDisplay(d);x.terminate();x.wait(timeout=5)
+2026-10-10T12:45:04.3760125Z                                        ~~~~~~^^^^^^^^^^^
+2026-10-10T12:45:04.3760756Z   File "/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/subprocess.py", line 1281, in wait
+2026-10-10T12:45:04.3761346Z     return self._wait(timeout=timeout)
+2026-10-10T12:45:04.3761657Z            ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+2026-10-10T12:45:04.3762229Z   File "/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/subprocess.py", line 2078, in _wait
+2026-10-10T12:45:04.3762862Z     raise TimeoutExpired(self.args, timeout)
+2026-10-10T12:45:04.3763526Z subprocess.TimeoutExpired: Command '['Xvfb', '-displayfd', '1', '-screen', '0', '1400x1000x24']' timed out after 5 seconds
+2026-10-10T12:45:04.3955574Z Traceback (most recent call last):
+2026-10-10T12:45:04.3985398Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-vulkan-stencil-suite.py", line 15, in <module>
+2026-10-10T12:45:04.3986405Z     if code:raise subprocess.CalledProcessError(code,process.args)
+2026-10-10T12:45:04.3986914Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-10T12:45:04.3988447Z subprocess.CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.13.16/x64/bin/python', 'scripts/check-native-vulkan-startup.py', 'target/debug/examples/native_vulkan_section_fixture', 'docs/audits/native-stencil-ci/msaa-closed']' returned non-zero exit status 1.
+2026-10-10T12:45:04.4073731Z ##[error]Process completed with exit code 1.

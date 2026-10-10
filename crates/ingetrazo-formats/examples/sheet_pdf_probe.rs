@@ -20,6 +20,8 @@ fn page(size: [f64; 2]) -> Page {
             stroke_options: None,
             clip: None,
             clip_intersection: None,
+            text: None,
+            flatten_transform: false,
         }],
     }
 }

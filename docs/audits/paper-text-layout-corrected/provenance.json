@@ -1,0 +1,16 @@
+{
+  "source_commit": "d99e89f0",
+  "negative_protocol": "680a33eb",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sha256": {
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/probe-python-paper-text.py": "af09aa0d35ad68764a57edc149572b12a9f4d0fc23794fd515db9e2c5899a652",
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-text-layout-pages.py": "ab76e107e69cb1ff9ab628800bca851aaf3ad664fb0f25fb70a3269d1ac66888",
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-text-layout-unicode.py": "b84ab9db09a8e60a89b7ad6c45b03ce8c1347d5930dbfa128570554d618e5369",
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-text-layout-negatives.py": "2324441942b318eb305192b59fc6e638fc887738fe332c975e983f97f5d2149f",
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/examples/paper_text_layout_fixture.rs": "45c82807aeadcfa1e68fc3fe9ddde6fb7e23f28681cfac09dd1486409efb99de",
+    "/tmp/ingetrazo-paper-text-subset-clean-target/debug/examples/paper_text_layout_fixture": "fbbdc99905ae826a656be1884504789679eee64f28a013d21fe1c88b8a1bfaea",
+    "/tmp/ingetrazo-paper-text-layout-fresh-original/font-observations.json": "6afa9a64142933e81311b74176a1e187747c80028e71170d4fba8aec292b5fef"
+  },
+  "result": "57/57 exact19helperpages x72/144/300;19readertext exact; parsevalid same-size center1/64px changes173pixels/clip removal1071pixels rejected",
+  "scope": "Experimental layout fixture; generic paragraph API, mixed-font segmentation, arbitrary scripts/spacing/fields, actual composer Text/UI/title/platforms still required"
+}
