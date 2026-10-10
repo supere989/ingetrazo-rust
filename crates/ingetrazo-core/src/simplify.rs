@@ -65,7 +65,11 @@ fn source_normal(mesh: &Mesh, id: usize) -> DVec3 {
             ((a.x - b.x) * (a.y + b.y)) as f32,
         );
     }
-    let length = n.length();
+    let maximum = n.abs().max_element();
+    let scaled = if maximum > 0. { n / maximum } else { n };
+    // Qt qHypot(float,float,float) uses the scaled std::hypot path,
+    // not sqrt(dot(n,n)); that rounding matters at the source threshold.
+    let length = maximum * (scaled.x * scaled.x + scaled.y * scaled.y + scaled.z * scaled.z).sqrt();
     if length < 1e-10 {
         DVec3::ZERO
     } else {
@@ -73,7 +77,8 @@ fn source_normal(mesh: &Mesh, id: usize) -> DVec3 {
     }
 }
 fn source_dot(a: DVec3, b: DVec3) -> f64 {
-    a.as_vec3().dot(b.as_vec3()) as f64
+    let (a, b) = (a.as_vec3(), b.as_vec3());
+    (a.x * b.x + a.y * b.y + a.z * b.z) as f64
 }
 
 fn root(parent: &mut [usize], mut i: usize) -> usize {
@@ -83,6 +88,138 @@ fn root(parent: &mut [usize], mut i: usize) -> usize {
     }
     i
 }
+// CPython's numeric tuple/frozenset iteration determines where the source
+// boundary walk starts. Corner collapse is order-dependent on curved loops,
+// so retain that deterministic source order rather than substituting a new one.
+fn float_hash(x: f64) -> u64 {
+    let x = (x * 10000.).round() / 10000.;
+    if x == 0. {
+        return 0;
+    }
+    let bits = x.abs().to_bits();
+    let exp = ((bits >> 52) & 0x7ff) as i32;
+    let mantissa = (bits & ((1u64 << 52) - 1)) | if exp == 0 { 0 } else { 1u64 << 52 };
+    let exponent = if exp == 0 { -1074 } else { exp - 1023 - 52 };
+    let shift = exponent.rem_euclid(61) as u32;
+    let modulus = (1u64 << 61) - 1;
+    let value = mantissa % modulus;
+    let hash = if shift == 0 {
+        value
+    } else {
+        ((value << shift) & modulus) | (value >> (61 - shift))
+    };
+    let hash = if x < 0. {
+        (hash as i64).wrapping_neg() as u64
+    } else {
+        hash
+    };
+    if hash == u64::MAX {
+        u64::MAX - 1
+    } else {
+        hash
+    }
+}
+fn point_hash(p: DVec3) -> u64 {
+    let mut acc = 2870177450012600261u64;
+    for x in p.to_array() {
+        acc = acc.wrapping_add(float_hash(x).wrapping_mul(14029467366897019727));
+        acc = acc.rotate_left(31).wrapping_mul(11400714785074694791);
+    }
+    acc = acc.wrapping_add(3 ^ (2870177450012600261u64 ^ 3527539));
+    if acc == u64::MAX {
+        1546275796
+    } else {
+        acc
+    }
+}
+fn edge_hash(a: u64, b: u64) -> u64 {
+    let shuffle = |h: u64| ((h ^ 89869747) ^ (h << 16)).wrapping_mul(3644798167);
+    let mut h = shuffle(a) ^ shuffle(b);
+    h ^= 3u64.wrapping_mul(1927868237);
+    h ^= (h >> 11) ^ (h >> 25);
+    h = h.wrapping_mul(69069).wrapping_add(907133923);
+    if h == u64::MAX {
+        590923713
+    } else {
+        h
+    }
+}
+fn insert_slot(table: &mut [Option<usize>], hashes: &[u64], key: usize) {
+    let mask = table.len() - 1;
+    let mut perturb = hashes[key];
+    let mut i = perturb as usize & mask;
+    loop {
+        let probes = if i + 9 <= mask { 9 } else { 0 };
+        for j in i..=i + probes {
+            if table[j].is_none() {
+                table[j] = Some(key);
+                return;
+            }
+        }
+        perturb >>= 5;
+        i = (i
+            .wrapping_mul(5)
+            .wrapping_add(1)
+            .wrapping_add(perturb as usize))
+            & mask;
+    }
+}
+fn source_set_slots(hashes: &[u64]) -> Vec<usize> {
+    let mut table = vec![None; 8];
+    for key in 0..hashes.len() {
+        insert_slot(&mut table, hashes, key);
+        let used = key + 1;
+        if used * 5 >= (table.len() - 1) * 3 {
+            let mut size = 8;
+            while size <= used * 4 {
+                size *= 2;
+            }
+            let mut next = vec![None; size];
+            for key in table.into_iter().flatten() {
+                insert_slot(&mut next, hashes, key);
+            }
+            table = next;
+        }
+    }
+    let mut slots = vec![0; hashes.len()];
+    for (slot, key) in table.iter().enumerate() {
+        if let Some(key) = key {
+            slots[*key] = slot;
+        }
+    }
+    slots
+}
+fn source_walk_start(
+    mut ring: Vec<DVec3>,
+    boundary: &[(DVec3, DVec3)],
+    slots: &[usize],
+) -> Vec<DVec3> {
+    let edge = boundary
+        .iter()
+        .enumerate()
+        .filter_map(|(i, &(a, b))| {
+            let x = ring.iter().position(|p| p.distance(a) < 1e-7)?;
+            let y = ring.iter().position(|p| p.distance(b) < 1e-7)?;
+            if (x + 1) % ring.len() != y && (y + 1) % ring.len() != x {
+                return None;
+            }
+            Some((slots[i], a, b, x, y))
+        })
+        .min_by_key(|x| x.0);
+    if let Some((_, a, b, x, y)) = edge {
+        let h = [point_hash(a), point_hash(b)];
+        let tiny = source_set_slots(&h);
+        let (first, second) = if tiny[0] < tiny[1] { (x, y) } else { (y, x) };
+        let start = if (first + 1) % ring.len() == second {
+            first
+        } else {
+            (first + 1) % ring.len()
+        };
+        ring.rotate_left(start);
+    }
+    ring
+}
+
 fn collapse(mut ring: Vec<DVec3>) -> Vec<DVec3> {
     loop {
         if ring.len() <= 3 {
@@ -197,13 +334,28 @@ pub fn simplify_mesh(
     for ids in regions.values() {
         let source = &mesh.faces[ids[0]];
         let mut boundary = HashMap::<(usize, usize), usize>::new();
+        let mut boundary_order = vec![];
         for &id in ids {
             let ring = &mesh.faces[id].vertices;
             for i in 0..ring.len() {
                 let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
-                *boundary.entry((a.min(b), a.max(b))).or_default() += 1;
+                let key = (a.min(b), a.max(b));
+                if !boundary.contains_key(&key) {
+                    boundary_order.push((a, b));
+                }
+                *boundary.entry(key).or_default() += 1;
             }
         }
+        let source_boundary: Vec<_> = boundary_order
+            .iter()
+            .filter(|&&(a, b)| boundary[&(a.min(b), a.max(b))] == 1)
+            .map(|&(a, b)| (mesh.vertices[a].position, mesh.vertices[b].position))
+            .collect();
+        let hashes: Vec<_> = source_boundary
+            .iter()
+            .map(|&(a, b)| edge_hash(point_hash(a), point_hash(b)))
+            .collect();
+        let slots = source_set_slots(&hashes);
         let f = Frame::new(&planar::rings(mesh, source)[0])?;
         let segs: Vec<_> = boundary
             .iter()
@@ -235,7 +387,11 @@ pub fn simplify_mesh(
                                 .ok_or("Simplification introduced a crossing vertex")
                         })
                         .collect::<Result<Vec<_>, _>>()?;
-                    rings.push(collapse(points));
+                    rings.push(collapse(source_walk_start(
+                        points,
+                        &source_boundary,
+                        &slots,
+                    )));
                 }
                 cells.push(rings);
             }
