@@ -1,0 +1,92 @@
+[
+  {
+    "role": "original",
+    "name": "bg_basic.original.pdf",
+    "sha256": "7572c2cef4e9e78bd5fb6f168e785ea580202bd835789bf207138bf53e54a6ac"
+  },
+  {
+    "role": "original",
+    "name": "bg_bold.original.pdf",
+    "sha256": "137f6ae9c0c751861ba459c8cb22862758c6d740cb6a8e6d1ce674bb12b4966d"
+  },
+  {
+    "role": "original",
+    "name": "bg_cjk.original.pdf",
+    "sha256": "afc5a921315a1aaa75837db609c0c30d5a99346cc9c49767dc31b10c4486eae0"
+  },
+  {
+    "role": "original",
+    "name": "bg_empty.original.pdf",
+    "sha256": "6cfc37362db7f58c5e63ad2f3c388c40319d37e27f1a1250889648886b548d88"
+  },
+  {
+    "role": "original",
+    "name": "bg_italic.original.pdf",
+    "sha256": "1f38eda631f33e56aea779430109c6c2edca8048a12de436c84109d867e949f5"
+  },
+  {
+    "role": "original",
+    "name": "bg_rtl.original.pdf",
+    "sha256": "86d0a622c89dbc87cba8becad6db06bb3192589db2d553c116168ca599ef7976"
+  },
+  {
+    "role": "original",
+    "name": "bg_serif.original.pdf",
+    "sha256": "fb5132edb30f2c80e4036348f26e2b29bb58db7f816d4b82c0a00ff2ebc425fb"
+  },
+  {
+    "role": "original",
+    "name": "bg_transparent.original.pdf",
+    "sha256": "e73ba18f3928b80cc07a964eb51e5dfb55ea2f170bf41f5e8918511142dfeeb8"
+  },
+  {
+    "role": "original",
+    "name": "bg_wrapped.original.pdf",
+    "sha256": "6e8cf5d13d9a2d1ace7b0cec7381574cb25b903e8b533542e4a4187c91968eaf"
+  },
+  {
+    "role": "native",
+    "name": "bg_basic.native.pdf",
+    "sha256": "966b97c45257bbc7b7f90a26525f731ed2e029a78ee5e955bc5a5e41d6aae829"
+  },
+  {
+    "role": "native",
+    "name": "bg_bold.native.pdf",
+    "sha256": "87b78140fc9dfb2b34fb4b51c6206dda7e3a090651631f07ad907e22706962fa"
+  },
+  {
+    "role": "native",
+    "name": "bg_cjk.native.pdf",
+    "sha256": "c16a85497795890a2b195be4c83c25bac45e6b0f94646793723770d4c4f77408"
+  },
+  {
+    "role": "native",
+    "name": "bg_empty.native.pdf",
+    "sha256": "be260c6b72c9c9c5db984817fdeaa39a0eef9ca7a098cf8164c1261d221f9560"
+  },
+  {
+    "role": "native",
+    "name": "bg_italic.native.pdf",
+    "sha256": "68af2e33071287894dca39275c2d33ecd157569afc9c3d5b0b4804013ca85179"
+  },
+  {
+    "role": "native",
+    "name": "bg_rtl.native.pdf",
+    "sha256": "5a1d1354c7ba21f8f0f24d0f768ae165fe73c07c24a5dad54a6639a86c869b22"
+  },
+  {
+    "role": "native",
+    "name": "bg_serif.native.pdf",
+    "sha256": "57bfd78bfe7ca667a67e0d99c1a1a844b6537127921b6cd8b0ff06246c9d6f0b"
+  },
+  {
+    "role": "native",
+    "name": "bg_transparent.native.pdf",
+    "sha256": "9fb3295ac0d1ba64babd074b6c73ed8b4df9417607192d24ce6b729f19b8d563"
+  },
+  {
+    "role": "native",
+    "name": "bg_wrapped.native.pdf",
+    "sha256": "1854274fa00282987808788585ab9c36a2455f61b4c8144be6b79743bc842d45"
+  }
+]

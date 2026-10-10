@@ -1,0 +1,64 @@
+{
+  "text_frozen_source_cases": 9,
+  "text_source_exact_pages": 30,
+  "text_reader_exact_pages": 10,
+  "actual_x11_pointer_buttons_passed": true,
+  "current": {
+    "current_button": [
+      689.0,
+      39.0
+    ],
+    "all_button": [
+      810.0,
+      39.0
+    ],
+    "current_clicks": 1,
+    "all_clicks": 0,
+    "status": "Exported sheets: 1 \u2014 /tmp/composer-background-root-ui-fresh/current.pdf",
+    "error_dialog": null,
+    "error_ok": null,
+    "export_result": "Exported sheets: 1 \u2014 /tmp/composer-background-root-ui-fresh/current.pdf",
+    "sheets": 9
+  },
+  "all": {
+    "current_button": [
+      689.0,
+      39.0
+    ],
+    "all_button": [
+      810.0,
+      39.0
+    ],
+    "current_clicks": 1,
+    "all_clicks": 1,
+    "status": "Exported sheets: 9 \u2014 /tmp/composer-background-root-ui-fresh/all.pdf",
+    "error_dialog": null,
+    "error_ok": null,
+    "export_result": "Exported sheets: 9 \u2014 /tmp/composer-background-root-ui-fresh/all.pdf",
+    "sheets": 9
+  },
+  "dialog_acceptance": "Actual genuine Zenity GTK save dialogs entered with XTEST keyboard",
+  "successful_ui_pdf_export": true,
+  "pdf_page_counts": [
+    1,
+    9
+  ],
+  "page_nonwhite_pixels": [
+    3575,
+    3575,
+    5985,
+    3250,
+    3575,
+    3724,
+    6175,
+    6175,
+    3575,
+    192
+  ],
+  "error_dialog_dismissed": null,
+  "error_popup_dark_pixels": null,
+  "dismissed_popup_dark_pixels": null,
+  "unsupported_destination_ui": "Separately exercised in unsupported scenario",
+  "binary_sha256": "41666bdc9b652970d04acc1b4eacb00da86ac377f4e547b4871c30e516d30fdd",
+  "scope": "Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."
+}

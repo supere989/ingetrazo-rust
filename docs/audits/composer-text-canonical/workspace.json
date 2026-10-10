@@ -1,0 +1,7 @@
+{
+  "command": "cargo test --locked --workspace -j 2",
+  "source_commit": "d725f27199aff2fc36cab0615ee748f457ef387c",
+  "passed": 566,
+  "ignored": 2,
+  "failed": 0
+}

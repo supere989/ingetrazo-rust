@@ -356,6 +356,31 @@ impl PaperFont {
                 .map_or((0, 0), |g| (g.points.borrow().len(), g.total_points.get()))
         }
     }
+    /// Qt FT source uses OS/2 sCapHeight when present; otherwise the hinted H glyph box.
+    pub fn cap_height_26_6(&self, cap_units: Option<i16>) -> Result<i32, String> {
+        unsafe {
+            let geometry = self
+                .data
+                .as_ref()
+                .geometry
+                .as_ref()
+                .ok_or("Paper cap height requires native outline policy")?;
+            let face = geometry.face.raw();
+            if (*face).size.is_null() {
+                return Err("Invalid paper cap-height face".into());
+            }
+            if let Some(units) = cap_units {
+                return i32::try_from(ft::FT_MulFix(units as _, (*(*face).size).metrics.y_scale))
+                    .map_err(|_| "Paper cap-height outside fixed domain".into());
+            }
+            let glyph = ft::FT_Get_Char_Index(face, 'H' as _);
+            if ft::FT_Load_Glyph(face, glyph, geometry.flags) != 0 || (*face).glyph.is_null() {
+                return Err("Paper capital glyph load failed".into());
+            }
+            i32::try_from((*(*face).glyph).metrics.height)
+                .map_err(|_| "Paper capital box outside fixed domain".into())
+        }
+    }
     /// Source FT line thickness / underline offset, both in pixel100 QFixed units.
     pub fn decoration_metrics_26_6(&self) -> Result<[i32; 2], String> {
         unsafe {
