@@ -292,14 +292,61 @@ fn prepare_sweep(
     {
         return Err("Invalid profile boundary".into());
     }
-    if scene
-        .mesh
-        .edges
-        .iter()
-        .any(|e| e.faces.contains(&face_id) && e.faces.len() > 1)
-    {
-        return Err("Follow Me currently requires a free-standing profile".into());
+    // An attached profile sweeps material onto its own closed solid. Derive
+    // adjacency from face rings, not potentially stale edge-face caches.
+    let mut boundary_faces = BTreeMap::<(usize, usize), Vec<usize>>::new();
+    for (id, face) in scene.mesh.faces.iter().enumerate() {
+        for ring in std::iter::once(&face.vertices).chain(&face.holes) {
+            for i in 0..ring.len() {
+                let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
+                boundary_faces
+                    .entry((a.min(b), a.max(b)))
+                    .or_default()
+                    .push(id);
+            }
+        }
     }
+    let attached = boundary_faces
+        .values()
+        .any(|faces| faces.contains(&face_id) && faces.len() > 1);
+    let mut consumed = HashSet::from([face_id]);
+    let body = if attached && validate {
+        let mut queue = std::collections::VecDeque::from([face_id]);
+        while let Some(id) = queue.pop_front() {
+            let face = &scene.mesh.faces[id];
+            for ring in std::iter::once(&face.vertices).chain(&face.holes) {
+                for i in 0..ring.len() {
+                    let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
+                    for &other in &boundary_faces[&(a.min(b), a.max(b))] {
+                        if consumed.insert(other) {
+                            queue.push_back(other);
+                        }
+                    }
+                }
+            }
+        }
+        let mut faces: Vec<_> = consumed.iter().copied().collect();
+        faces.sort_unstable();
+        let edges = scene
+            .mesh
+            .edges
+            .iter()
+            .enumerate()
+            .filter(|(_, edge)| {
+                !edge.faces.is_empty() && edge.faces.iter().any(|id| consumed.contains(id))
+            })
+            .map(|(id, _)| id)
+            .collect();
+        let body = ingetrazo_core::pieces::copy_part(
+            &scene.mesh,
+            &ingetrazo_core::pieces::Piece { faces, edges },
+        )?;
+        ingetrazo_core::solids::validate_solid_mesh(&body)
+            .map_err(|e| format!("Attached profile needs a closed solid: {e}"))?;
+        Some(body)
+    } else {
+        None
+    };
     if path.len() < if closed { 3 } else { 2 } || path.iter().any(|p| !p.is_finite()) {
         return Err("Sweep needs a finite connected path".into());
     }
@@ -432,9 +479,16 @@ fn prepare_sweep(
             }
         }
     }
+    if let Some(body) = body {
+        sweep = ingetrazo_core::solids::perform_solid_op(
+            ingetrazo_core::solids::SolidOp::Union,
+            &body,
+            &sweep,
+        )?;
+    }
     let mut result = sweep;
     for (id, face) in scene.mesh.faces.iter().enumerate() {
-        if id == face_id {
+        if consumed.contains(&id) {
             continue;
         }
         let ring: Vec<_> = face
@@ -947,6 +1001,66 @@ mod tests {
             .attrs
             .insert("mat".into(), "stone".into());
         scene
+    }
+
+    #[test]
+    fn attached_cap_sweep_unions_closed_body_and_declines_open_attachment_atomically() {
+        let mut scene = Scene::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::new(1., 1., 0.), DVec3::Y]
+            .into_iter()
+            .map(|p| scene.mesh.add_vertex(p))
+            .collect();
+        scene.mesh.add_face(ids, vec![]);
+        crate::pushpull::PushPullTool::extrude_face(&mut scene, 0, 1.).unwrap();
+        let face = scene
+            .mesh
+            .faces
+            .iter()
+            .position(|f| {
+                f.vertices
+                    .iter()
+                    .all(|&v| (scene.mesh.vertices[v].position.z - 1.).abs() < 1e-8)
+            })
+            .unwrap();
+        let mut bent = scene.clone();
+        sweep_profile(
+            &mut scene,
+            face,
+            &[DVec3::new(0.5, 0.5, 1.), DVec3::new(0.5, 0.5, 2.)],
+            false,
+        )
+        .unwrap();
+        assert!(scene.mesh.is_manifold_solid());
+        assert!((scene.mesh.volume().unwrap() - 2.).abs() < 1e-8);
+        sweep_profile(
+            &mut bent,
+            face,
+            &[
+                DVec3::new(0.5, 0.5, 1.),
+                DVec3::new(0.5, 0.5, 2.),
+                DVec3::new(1.5, 0.5, 2.),
+            ],
+            false,
+        )
+        .unwrap();
+        assert!(bent.mesh.is_manifold_solid());
+        assert!((bent.mesh.volume().unwrap() - 3.).abs() < 1e-8);
+        let mut open = profile(1., false);
+        let ids = [
+            DVec3::ZERO,
+            DVec3::X,
+            DVec3::new(1., -1., 0.),
+            DVec3::new(0., -1., 0.),
+        ]
+        .into_iter()
+        .map(|p| open.mesh.add_vertex(p))
+        .collect();
+        open.mesh.add_face(ids, vec![]);
+        let before = open.clone();
+        assert!(
+            sweep_profile(&mut open, 0, &[DVec3::ZERO, DVec3::new(0., 2., 0.)], false).is_err()
+        );
+        assert_eq!(open, before);
     }
 
     #[test]
