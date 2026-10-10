@@ -1,0 +1,42 @@
+   Compiling syn v3.0.7
+   Compiling libc v0.2.190
+   Compiling getrandom v0.4.3
+   Compiling memchr v2.8.3
+   Compiling serde_json v1.0.152
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling thiserror v2.0.21
+   Compiling uuid v1.28.0
+   Compiling num-bigint v0.4.8
+   Compiling serde v1.0.229
+   Compiling glam v0.29.3
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-next-integration/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-next-integration/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-next-integration/tools/ai-interpreter-proof)
+warning: field `charge` is never read
+  --> src/bin/../owner.rs:14:131
+   |
+14 | ...ct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize,charge:Le...
+   |       ----- field in this struct                                                                                                 ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-ai-interpreter-proof` (bin "owner" test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 5.47s
+     Running unittests src/bin/owner.rs (/tmp/ingetrazo-root-vm-budget-target/debug/deps/owner-075d90e64a9bbe2b)
+
+running 3 tests
+test owner::tests::shared_budget_staging_and_commit_refusals_release_candidate_only ... ok
+test owner::tests::shared_budget_constructor_and_preparation_refusals_preserve_owner ... ok
+test owner::tests::shared_budget_two_owners_and_existing_redo_survive_refused_commit ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

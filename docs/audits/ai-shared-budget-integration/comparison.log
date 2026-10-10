@@ -1,0 +1,21 @@
+{
+  "source_history_states": 12,
+  "history_depth": 96,
+  "observed_growth_bytes": 65559,
+  "negative_rejections": [
+    "base-per-command",
+    "quadratic-memory-growth",
+    "history-not-reclaimed"
+  ],
+  "allocation_scope": "live Rust allocator request bytes, not RSS",
+  "production": false
+}
+{
+  "shared_budget_negative_rejections": [
+    "history-charge-lost",
+    "staging-leak",
+    "false-vm-coverage"
+  ],
+  "logical_budget_not_allocator_cap": true,
+  "production": false
+}

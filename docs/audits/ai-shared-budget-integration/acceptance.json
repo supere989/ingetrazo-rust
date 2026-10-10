@@ -1,0 +1,12 @@
+{
+  "source_commit": "71695923",
+  "focused_tests": 3,
+  "source_history_states": 12,
+  "negative_controls": 6,
+  "original_evidence_reused_from": "docs/audits/ai-shared-owner-budget/original.json",
+  "binary_sha256": {
+    "owner": "0ddc7fc76a75a60e38a41b2669c4a7d9b6819424d2bb14ee34b596074e3170b7",
+    "owner_history": "4430f3bcb0c81bd87c404031e1130db2081c2aaa15e36c347f76bbbfafc36a1c"
+  },
+  "scope": "Fresh merged owner-only replay, optional VM dependency disabled. Logical owner payload admission only; exclusions in shared-owner README remain applicable. Production scripting and allocator-enforced memory cap not established."
+}

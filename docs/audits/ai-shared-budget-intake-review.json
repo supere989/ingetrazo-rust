@@ -1,5 +1,5 @@
 {
-  "status": "review_in_progress_not_accepted",
+  "status": "resolved_by_fresh_merged_owner_checks",
   "reviewed_worktree": "/tmp/ingetrazo-ai-interpreter",
   "base_commit": "0302a272",
   "candidate": "uncommitted owner.rs and owner_budget.rs changes; must recheck frozen commit",
@@ -14,5 +14,6 @@
     "Add refused-commit control preserving existing Redo and history charges.",
     "Explicitly retain logical-slot versus allocator/RSS distinction and native BigInt allocation failure exclusion."
   ],
-  "scope": "Standalone append proof only; production full Python scripting and complete memory admission remain open."
+  "scope": "Standalone append proof only; production full Python scripting and complete memory admission remain open.",
+  "resolution": "ai-shared-budget-integration/acceptance.json"
 }
