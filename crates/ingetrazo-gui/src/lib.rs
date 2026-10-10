@@ -26,6 +26,7 @@ use std::path::PathBuf;
 /// Launch the desktop GUI application.
 pub fn run_gui(initial_file: Option<PathBuf>) -> Result<(), eframe::Error> {
     let native_options = eframe::NativeOptions {
+        renderer: eframe::Renderer::Glow,
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([1280.0, 800.0])
             .with_min_inner_size([640.0, 480.0])
@@ -36,7 +37,17 @@ pub fn run_gui(initial_file: Option<PathBuf>) -> Result<(), eframe::Error> {
     eframe::run_native(
         "IngeTrazo",
         native_options,
-        Box::new(move |_cc| {
+        Box::new(move |cc| {
+            use eframe::glow::HasContext;
+            if let Some(gl) = &cc.gl {
+                // This identifies the actual native renderer used at startup.
+                unsafe {
+                    log::info!("Graphics backend: OpenGL; vendor={}; renderer={}; version={}",
+                        gl.get_parameter_string(eframe::glow::VENDOR),
+                        gl.get_parameter_string(eframe::glow::RENDERER),
+                        gl.get_parameter_string(eframe::glow::VERSION));
+                }
+            }
             let mut app=IngeTrazoApp::new();
             app.system_clipboard=arboard::Clipboard::new().ok();
             app.attach_session_store(crate::session_state::SessionStore::user_default());

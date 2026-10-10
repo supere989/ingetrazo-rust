@@ -4,7 +4,7 @@
 //! Mesh, wireframe, and point render buffers.
 //!
 //! Vertex layouts are binary-compatible (`bytemuck::Pod` and `Zeroable`)
-//! for direct GPU buffer upload (wgpu, OpenGL, Vulkan) as well as software/egui drawing.
+//! for direct GPU buffer upload (OpenGL, Vulkan) as well as software/egui drawing.
 
 use bytemuck::{Pod, Zeroable};
 use glam::{DVec3, Vec2, Vec3, Vec4};

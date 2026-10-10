@@ -20,7 +20,7 @@ trap cleanup EXIT
 export XDG_RUNTIME_DIR="$render_runtime"
 export XDG_CONFIG_HOME="$render_runtime/config"
 export XDG_DATA_HOME="$render_runtime/data"
-WGPU_BACKEND=gl LIBGL_ALWAYS_SOFTWARE=1 "$1" "$2" > "$3/render-startup.log" 2>&1 &
+LIBGL_ALWAYS_SOFTWARE=1 "$1" "$2" > "$3/render-startup.log" 2>&1 &
 app_pid=$!
 # Wait for a rendered frame, not a fixed startup delay. Cold CI runners can
 # spend longer than five seconds initializing software GL and loading textures.

@@ -30,5 +30,4 @@ uuid = { version = "1.10", features = ["v4", "serde"] }
 bytemuck = { version = "1.19", features = ["derive"] }
 image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
 egui = "0.30"
-eframe = { version = "0.30", default-features = false, features = ["default_fonts", "wgpu", "wayland", "x11"] }
-wgpu = "24.0"
+eframe = { version = "0.30", default-features = false, features = ["default_fonts", "glow", "wayland", "x11"] }

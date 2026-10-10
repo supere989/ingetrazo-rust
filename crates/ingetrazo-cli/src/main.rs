@@ -34,7 +34,7 @@ fn print_help() {
 fn self_check() -> i32 {
     println!("IngeTrazo {}", VERSION);
     println!("  packaged   : yes (compiled Rust binary)");
-    println!("  runtime    : Rust native (eframe/egui + wgpu)");
+    println!("  runtime    : Rust native (eframe/egui + OpenGL)");
 
     let checks = [
         ("formats: igz", "found (native JSON/ZIP format 1 & 2)"),
