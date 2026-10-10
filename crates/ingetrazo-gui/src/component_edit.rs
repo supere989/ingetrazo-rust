@@ -11,6 +11,7 @@ pub struct ComponentEditSession {
     group_id: uuid::Uuid,
     private_container_mesh: Option<uuid::Uuid>,
     container_bake: Option<glam::DMat4>,
+    container_axes: Option<glam::DMat4>,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
@@ -70,6 +71,7 @@ impl IngeTrazoApp {
             original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
             group_id:group.id,
             private_container_mesh:if !group.children.is_empty() && !group.mesh.vertices.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(uuid::Uuid::new_v4())} else {None},
+            container_axes:if !group.children.is_empty() && (group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array())) {Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))} else {None},
             container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
             dimension_baseline:vec![],section_baseline:vec![],
         };
@@ -109,13 +111,13 @@ impl IngeTrazoApp {
         };
         let old=&candidate.groups[group_index];
         let edit_transform=old.transform;
-        let changed=session.container_bake.is_some() || session.private_container_mesh.is_some() || old.mesh!=self.scene.mesh || old.children!=self.scene.groups
+        let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
             || candidate.component_definitions!=self.scene.component_definitions
             || candidate.mesh_shares!=self.scene.mesh_shares
             || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
-        if changed {
+        if changed || session.container_axes.is_some() || session.container_bake.is_some() || session.private_container_mesh.is_some() {
             let mut replacement=ComponentDefinition{mesh_share:None,mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
             if let Some(world_frame)=session.container_bake {
                 replacement.mesh=match ingetrazo_core::containers::transform_mesh(&replacement.mesh,world_frame) {Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}};
@@ -124,10 +126,11 @@ impl IngeTrazoApp {
                 // tools remain local during preview, then express that same
                 // world-owned prototype in the enclosing native edit frame.
                 candidate.groups[group_index].transform=candidate.dimension_frame.inverse();
-                let axes=candidate.groups[group_index].native_document.get("axes").and_then(|value|value.as_array()).filter(|array|array.len()==16)
-                    .and_then(|array|array.iter().map(|value|value.as_f64()).collect::<Option<Vec<_>>>()).map(|values|{let mut array=[0.;16];array.copy_from_slice(&values);glam::DMat4::from_cols_array(&array)}).unwrap_or(glam::DMat4::IDENTITY);
+
+            }
+            if let Some(axes)=session.container_axes {
                 if !candidate.groups[group_index].native_document.is_object() {candidate.groups[group_index].native_document=serde_json::json!({});}
-                candidate.groups[group_index].native_document["axes"]=serde_json::json!((world_frame*axes).to_cols_array());
+                candidate.groups[group_index].native_document["axes"]=serde_json::json!(axes.to_cols_array());
             }
             // Mesh publication and placement authoring are separate operations:
             // the original container owns its child list, while placed leaves
@@ -182,6 +185,7 @@ impl IngeTrazoApp {
             candidate.show_section_cuts=self.scene.show_section_cuts;candidate.show_section_planes=self.scene.show_section_planes;candidate.show_section_fill=self.scene.show_section_fill;
             candidate.refresh_dimensions();
         }
+        candidate.clear_selection();
         let session=self.component_edit_stack.pop().unwrap();
         self.scene=candidate;self.bump_model_revision();self.camera=session.original_camera;
         self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;

@@ -141,3 +141,17 @@ fn root_and_nested_empty_container_world_authoring_matches_original_prototype_su
   assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
  }
 }
+
+#[test]
+fn no_edit_container_bake_preserves_source_zero_history_and_clears_selection() {
+ let source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-reentry-source.json")).unwrap();
+ for row in source["cases"].as_array().unwrap() {
+  let kind=row["kind"].as_str().unwrap();let mut app=IngeTrazoApp::new();let mut parent=Group::new(kind);
+  if kind!="identity-empty" {parent.transform=DMat4::from_translation(DVec3::new(1.,-1.,2.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(if kind=="reflected-nonempty" {-2.} else {2.},3.,1.));}
+  if kind=="reflected-nonempty"||kind=="custom-axes" {parent.mesh=mesh();}
+  if kind=="custom-axes" {parent.native_document=serde_json::json!({"axes":(DMat4::from_translation(DVec3::new(4.,-2.,1.))*DMat4::from_rotation_y(17f64.to_radians())).to_cols_array()});}
+  parent.children.push(Group::new("child"));app.scene.groups.push(parent);app.scene.make_component(app.scene.groups[0].id).unwrap();app.scene.groups.push(app.scene.groups[0].duplicate_instance());app.scene.select(SelectionItem::Group(0));
+  let sibling=app.scene.groups[1].clone();app.begin_component_edit();app.finish_component_edit();assert!(app.scene.selection.is_empty());assert_eq!(app.undo_stack.len(),row["history_after_no_edit"].as_u64().unwrap()as usize);assert_eq!(app.scene.groups[1],sibling);
+  if let Some(stored)=row["stored_axes_after_exit"].as_array() {let actual=app.scene.groups[0].native_document["axes"].as_array().unwrap();for (a,b) in actual.iter().zip(stored){assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<4e-6);}} else {assert!(app.scene.groups[0].native_document.get("axes").is_none());}
+ }
+}

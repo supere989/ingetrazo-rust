@@ -98,3 +98,20 @@ Prior four own-Mesh controls now use inverse-native-frame inputs for the same
 world numeric points instead of conflating world and local input recipes.
 This is bounded command/controller proof. Rendered nested authoring, reentry axes,
 material/texture image comparison and broad component editing remain open.
+
+## No-edit History and stored axes
+
+Frozen original `component-reentry-source.json` controls identity/placed empty,
+reflected nonempty and custom nonprincipal axes. A no-edit container exit has
+zero History entries and clears selection. The encoded stored axes are the raw
+`xform * axes` affine frame, including identity, scale and reflection; they are
+not an invented normalized basis. Reentry's raw drawing frame equals entry's.
+
+Native Finish still applies the source representation/prototype bake, but now
+records Undo only for authored changes. It clears selection on exit, including
+nested exit. Identity component containers retain an encoded identity axes
+matrix as the original does. `Group.axes_matrix()` reads this original raw
+matrix. Eleven Move/component integration tests pass including four no-edit
+source controls with stored-axis comparisons. Runtime inference/shape/VCB
+consumption of those axes remains the next stage; metadata proof does not
+claim actual axes-aware drawing or snapping.

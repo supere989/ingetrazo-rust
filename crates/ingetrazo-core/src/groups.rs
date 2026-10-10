@@ -81,6 +81,14 @@ impl Group {
             hidden: false,
         }
     }
+    /// Original stored axes live in the Mesh coordinate space; retain their
+    /// affine matrix (including scale/reflection), not a normalized basis.
+    pub fn axes_matrix(&self)->Option<DMat4> {
+        let values=self.native_document.get("axes")?.as_array()?;
+        if values.len()!=16 {return None;}
+        let mut array=[0.;16];for (index,value) in values.iter().enumerate(){array[index]=value.as_f64()?;}
+        Some(DMat4::from_cols_array(&array))
+    }
     /// The persisted placement identity, including legacy non-UUID names.
     pub fn native_uid(&self)->String {
         let current=self.id.simple().to_string();
