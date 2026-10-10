@@ -122,5 +122,7 @@
       "original_draft": null,
       "native_draft": null
     }
-  ]
+  ],
+  "production_commit": "dfd7b5f3",
+  "native_command_binary_sha256": "21a9cf2bb4300f7a5315f047a5d2d765d1436ba8c17d574b1bc5ab2113ee21e2"
 }
