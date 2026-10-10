@@ -29,6 +29,25 @@ impl PixelViewport {
             height,
         }
     }
+    pub fn ray(&self, cursor: DVec2) -> Option<Ray> {
+        if self.width <= 0. || self.height <= 0. {
+            return None;
+        }
+        let inv = self.matrix.inverse();
+        if !inv.is_finite() {
+            return None;
+        }
+        let x = 2. * cursor.x / self.width - 1.;
+        let y = 1. - 2. * cursor.y / self.height;
+        let a = inv * glam::DVec4::new(x, y, 0., 1.);
+        let b = inv * glam::DVec4::new(x, y, 1., 1.);
+        if a.w.abs() < 1e-12 || b.w.abs() < 1e-12 {
+            return None;
+        }
+        let a = a.truncate() / a.w;
+        let b = b.truncate() / b.w;
+        Some(Ray::new(a, (b - a).normalize_or_zero()))
+    }
     pub fn project(&self, point: DVec3) -> Option<DVec2> {
         if self.width <= 0. || self.height <= 0. || !point.is_finite() {
             return None;
