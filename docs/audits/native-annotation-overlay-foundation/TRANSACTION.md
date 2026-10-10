@@ -1,0 +1,7 @@
+# Coordinated preparation source
+
+The private World/Renderer path stages immutable query buffers with a separately owned complete annotation mesh. Old and new paint locks and the pipeline lock are acquired before GPU allocation. Gate inventory, ordered geometry/pose, buffers, ownership, actual descriptor range and completed retirement proofs are admitted before publication. The final section consumes the staged query commit, updates its matching visibility binding, retires old proven mesh IDs, and switches Ready/owner without another recoverable operation. An abandoned query stage leaves the old inventory unchanged. The ordinary CAD cache/pipeline remains unchanged; a distinct annotation callback wrapper is skipped by ordinary CAD preparation.
+
+Production query snapshots can now be Arc-owned and passed via stage_shared. Equal immutable identity avoids query scans/copies and descriptor rewrites on warm unchanged frames. Diagnostic slice preparation preserves exact equality behavior. Replaced annotation callback owners have their stale Ready cleared only in the committed publication section; retained previous GPU use is fence-admitted first.
+
+Focused annotation regressions13 pass and producer/font tests pass. This is source/preparation verification, not yet actual transaction GPU failure/pixel proof. Application dispatch, admission-refusal full-frame GPU capture, real Python rendered cases and source-resolve mapping remain required before activation/promotion.

@@ -185,6 +185,26 @@ impl World {
   self.annotation_parameters=Some(super::annotation_visibility_gpu::Parameters{inverse,eye:[eye[0],eye[1],eye[2],0.],forward:[forward[0],forward[1],forward[2],0.],extent_count_sample:[extent[0],extent[1],points.len() as u32,sample]});
   Ok(())
  }
+ /// Publish one cached overlay mesh and immutable CPU-prepared query snapshot
+ /// together. Actual MSAA selection is supplied only by an admitted policy.
+ pub(crate) fn prepare_annotation_overlay(&mut self,renderer:&mut super::cad2d::Renderer,handle:&super::cad2d::Handle,
+  context:&VulkanContext,queries:Arc<[super::annotation_visibility::Query]>,
+  inverse:[f32;16],eye:[f32;3],forward:[f32;3],sample:u32,fence:vk::Fence,completed:u64,next:u64,density:f32)->Result<(),String>{
+  self.resources.publication_preflight(context,fence,completed,&[],&[])?;
+  let target=self.target.as_ref().ok_or("Annotation target absent")?;
+  let view=target._depth.sampled_depth_view.ok_or("Annotation sampled depth absent")?;
+  let samples=self.samples.as_raw();
+  if sample>=samples||queries.is_empty(){return Err("Annotation depth/query policy absent".into());}
+  if !inverse.iter().chain(eye.iter()).chain(forward.iter()).all(|v|v.is_finite()){return Err("Nonfinite annotation inverse snapshot".into());}
+  let parameters=super::annotation_visibility_gpu::Parameters{inverse,eye:[eye[0],eye[1],eye[2],0.],forward:[forward[0],forward[1],forward[2],0.],extent_count_sample:[target.extent.width,target.extent.height,queries.len() as u32,sample]};
+  if self.annotation_visibility.is_none(){self.annotation_visibility=Some(super::annotation_visibility_gpu::Evaluator::new(context,self.budget.clone(),samples>1)?);}
+  let staged=self.annotation_visibility.as_mut().unwrap().stage_shared(context,queries,view,&target.identity,fence,completed)?;
+  renderer.prepare_annotation(context,handle,staged,fence,completed,next,density)?;
+  self.annotation_depth_binding=Some(target.identity.clone());self.annotation_parameters=Some(parameters);Ok(())
+ }
+ pub(crate) fn record_annotations_if_prepared(&mut self,command:vk::CommandBuffer,serial:u64)->Result<(),String>{
+  if self.annotation_parameters.is_some(){self.record_annotation_queries_for_probe(command,serial)}else{Ok(())}
+ }
  /// Invoke after World::record ends its render pass, before native annotation
  /// draws. Resized/replaced depth targets must be prepared again.
  pub fn record_annotation_queries_for_probe(&mut self,command:vk::CommandBuffer,serial:u64)->Result<(),String>{

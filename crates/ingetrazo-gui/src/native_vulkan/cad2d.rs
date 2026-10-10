@@ -278,6 +278,15 @@ fn admit_gates(gates:Option<&[ingetrazo_render::annotations::Gate]>,batches:usiz
  Ok(())
 }
 fn prepare_palette(batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{batches.iter().map(|b|b.color.qt_premultiplied8()).collect::<Result<Vec<_>,_>>().map(Arc::from)}
+/// A distinct callback type prevents the ordinary CAD preparation cache from
+/// consuming or publishing annotation geometry.
+struct AnnotationPaint(Arc<NativePaint>);
+impl VulkanPaint for AnnotationPaint{
+ fn as_any(&self)->&dyn Any{self}
+ fn paint(&self,info:&egui::PaintCallbackInfo,device:&Device,command:vk::CommandBuffer)->RendererResult<()>{
+  self.0.paint(info,device,command)
+ }
+}
 struct Cached {
     vertex: BufferId,
     index: BufferId,
@@ -294,8 +303,9 @@ impl Factory{
  pub(crate) fn annotation_handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<Handle,String>{
   if !self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.annotations {return Err("Annotation factory requires gated pipeline".into());}
   if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
-  let handle=self.handle(geometry,batches,pose)?;
+  let mut handle=self.handle(geometry,batches,pose)?;
   handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?.gates=Some(gates);
+  handle.callback=Arc::new(VulkanPaintCallback(Arc::new(AnnotationPaint(handle.inner.clone()))));
   Ok(handle)
  }
 }
@@ -308,6 +318,8 @@ pub struct Renderer {
     pipeline: Arc<Mutex<Pipeline>>,
     resources: Resources,
     arena:arena::Gpu,
+    annotation_buffers:Option<(u64,Cached)>,
+    annotation_owner:Option<std::sync::Weak<NativePaint>>,
     cache: HashMap<u64, Cached>,
     active: HashSet<u64>,
     pending: HashMap<u64, Cached>,
@@ -361,6 +373,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             arena:Default::default(),
+            annotation_buffers:None,annotation_owner:None,
             cache: HashMap::new(),
             active: HashSet::new(),
             pending: HashMap::new(),
@@ -370,6 +383,99 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             upload_bytes: 0,
             cache_hits: 0,
         })
+    }
+    /// One complete ordered annotation mesh and its staged visibility inventory.
+    /// All locks, validation, uploads and retirement proofs precede either live
+    /// descriptor/Ready change. The final publication section is infallible.
+    pub(crate) fn prepare_annotation(
+        &mut self,context:&VulkanContext,handle:&Handle,
+        queries:super::annotation_visibility_gpu::PreparedVisibility<'_>,
+        fence:vk::Fence,completed:u64,next:u64,pixels_per_point:f32,
+    )->Result<(),String>{
+        if next<=completed{return Err("Annotation submission serial must advance".into());}
+        if !Arc::ptr_eq(&handle.inner.pipeline,&self.pipeline){return Err("Annotation callback belongs to another pipeline".into());}
+        self.resources.publication_preflight(context,fence,completed,&[],&[])?;
+        let (visibility,count,identity)=queries.output()?;
+        if count==0||visibility==vk::Buffer::null(){return Err("Annotation visibility inventory empty".into());}
+        let identity=identity.clone();
+        let range=u64::from(count)*4;
+        if range>u64::from(unsafe{context.instance.get_physical_device_properties(context.physical_device)}.limits.max_storage_buffer_range){return Err("Annotation visibility storage range exceeded".into());}
+        let mut pipeline=self.pipeline.lock().map_err(|_|"Annotation pipeline poisoned")?;
+        if !pipeline.annotations||!pipeline.integer||pipeline.descriptor_sets.is_empty(){return Err("Annotation integer pipeline not ready".into());}
+        let old_owner=self.annotation_owner.as_ref().and_then(std::sync::Weak::upgrade);
+        let mut old_state=if let Some(old)=old_owner.as_ref().filter(|old|!Arc::ptr_eq(old,&handle.inner)){
+            Some(old.state.lock().map_err(|_|"Previous annotation state poisoned")?)
+        }else{None};
+        let mut state=handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?;
+        state.geometry.validate_batches(&state.batches)?;state.pose.validate()?;
+        admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
+        if !state.geometry.is_opaque(&state.batches){
+            state.geometry.validate_ordered_pose(state.pose,pixels_per_point)?;
+            let ranges=state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;
+            let mut end=0;
+            for batch in state.batches.iter().filter(|batch|batch.count>0){
+                if batch.first!=end{return Err("Annotation batches do not partition geometry".into());}
+                end=batch.first+batch.count;
+                if !ranges.iter().any(|range|range.end==end){return Err("Annotation palette splits ordered draw".into());}
+            }
+            if end as usize!=state.geometry.indices().len(){return Err("Annotation palette does not cover geometry".into());}
+        }
+        let id=state.geometry.id();
+        let warm=self.annotation_buffers.as_ref().is_some_and(|(old,_)|*old==id);
+        let mut fresh=None;
+        let admission=(||{
+            if !warm&&!state.geometry.indices().is_empty(){
+                let vertex=self.resources.upload(context,bytemuck::cast_slice(state.geometry.vertices()),vk::BufferUsageFlags::VERTEX_BUFFER,false)?;
+                let restore=if self.pressure_after_vertex{
+                    self.pressure_after_vertex=false;
+                    let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;
+                    ledger.total_limit=Some(ledger.total_committed());
+                    Some(PressureRestore{budget:self.budget.clone(),previous})
+                }else{None};
+                let index=self.resources.upload(context,bytemuck::cast_slice(state.geometry.indices()),vk::BufferUsageFlags::INDEX_BUFFER,false);
+                drop(restore);
+                let index=match index{Ok(index)=>index,Err(error)=>{self.resources.retire(vertex)?;self.rolled_back_buffers+=1;return Err(error);}};
+                fresh=Some(Cached{vertex,index,bytes:state.geometry.logical_bytes()});
+            }
+            let candidate=if warm{self.annotation_buffers.as_ref().map(|(_,buffers)|buffers)}else{fresh.as_ref()};
+            let old_ids=if warm{None}else{self.annotation_buffers.as_ref().map(|(_,buffers)|[buffers.vertex,buffers.index])};
+            let next_ids=candidate.map(|buffers|[buffers.vertex,buffers.index]);
+            let proof=self.resources.publication_preflight(context,fence,completed,
+                old_ids.as_ref().map_or(&[][..],|ids|ids.as_slice()),
+                next_ids.as_ref().map_or(&[][..],|ids|ids.as_slice()))?;
+            let ready=if let Some(buffers)=candidate{
+                let vertex=self.resources.buffer(buffers.vertex).ok_or("Annotation vertex owner missing")?;
+                let index=self.resources.buffer(buffers.index).ok_or("Annotation index owner missing")?;
+                self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
+                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,
+                    batches:state.batches.clone(),premultiplied:state.premultiplied.clone(),pose:state.pose,
+                    ordered_draws:state.geometry.ordered_draws(),opaque:state.geometry.is_opaque(&state.batches)})
+            }else{None};
+            Ok((proof,ready))
+        })();
+        let (proof,ready)=match admission{Ok(value)=>value,Err(error)=>{
+            if let Some(buffers)=fresh.take(){
+                self.resources.retire(buffers.vertex)?;self.resources.retire(buffers.index)?;self.rolled_back_buffers+=2;
+            }
+            self.resources.collect(fence,completed)?;return Err(error);
+        }};
+        // No recoverable operation below. In-flight old uses were acknowledged
+        // before staging. Query commit never exposes a new inventory to old Ready.
+        queries.commit();
+        if !pipeline.visibility.as_ref().is_some_and(|old|old.0==visibility&&old.1==count&&Arc::ptr_eq(&old.2,&identity)){
+            let info=[vk::DescriptorBufferInfo::default().buffer(visibility).offset(0).range(range)];
+            for set in &pipeline.descriptor_sets{unsafe{self.device.update_descriptor_sets(&[
+                vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(&info)],&[]);}}
+            pipeline.visibility=Some((visibility,count,identity));
+        }
+        self.resources.retire_completed(proof);
+        if !warm{
+            self.annotation_buffers=fresh.take().map(|buffers|(id,buffers));
+            if let Some((_,buffers))=&self.annotation_buffers{self.uploads+=1;self.upload_bytes+=buffers.bytes;}
+        }else{self.cache_hits+=1;}
+        if let Some(old)=old_state.as_mut(){old.ready=None;}
+        state.ready=ready;self.annotation_owner=Some(Arc::downgrade(&handle.inner));
+        Ok(())
     }
     pub(crate) fn bind_annotation_visibility(&mut self,context:&VulkanContext,buffer:vk::Buffer,count:u32,identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<(),String>{
         self.resources.publication_preflight(context,fence,completed,&[],&[])?;
@@ -694,7 +800,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             uploads: self.uploads,
             upload_bytes: self.upload_bytes,
             cache_hits: self.cache_hits,
-            cached_bytes: self.cache.values().map(|c| c.bytes).sum(),
+            cached_bytes: self.cache.values().map(|c| c.bytes).sum::<u64>()+self.annotation_buffers.as_ref().map_or(0,|(_,buffers)|buffers.bytes),
             rolled_back_buffers: self.rolled_back_buffers,
         }
     }

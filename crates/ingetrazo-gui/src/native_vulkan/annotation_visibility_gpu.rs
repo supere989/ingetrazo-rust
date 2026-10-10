@@ -10,14 +10,14 @@ pub(crate) struct Parameters {
 pub(crate) struct Evaluator {
  device:Device,resources:Resources,layout:vk::PipelineLayout,pipeline:vk::Pipeline,
  set_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,set:vk::DescriptorSet,
- output_identity:Arc<()>,query:Option<BufferId>,output:Option<BufferId>,count:u32,multisampled:bool,cached_queries:Vec<Query>,uploads:u64,depth_identity:Option<Arc<()>>,
+ output_identity:Arc<()>,query:Option<BufferId>,output:Option<BufferId>,count:u32,multisampled:bool,cached_queries:Arc<[Query]>,uploads:u64,depth_identity:Option<Arc<()>>,
 }
 impl Evaluator {
  pub(crate) fn new(context:&VulkanContext,budget:Arc<VulkanBudget>,multisampled:bool)->Result<Self,String> {
   let families=unsafe{context.instance.get_physical_device_queue_family_properties(context.physical_device)};
   if !families[context.graphics_q_index as usize].queue_flags.contains(vk::QueueFlags::COMPUTE){return Err("Annotation visibility requires compute-capable graphics queue".into());}
   let device=context.device.clone();
-  let mut owner=Self{device,resources:Resources::new(context,budget),layout:vk::PipelineLayout::null(),pipeline:vk::Pipeline::null(),set_layout:vk::DescriptorSetLayout::null(),pool:vk::DescriptorPool::null(),set:vk::DescriptorSet::null(),output_identity:Arc::new(()),query:None,output:None,count:0,multisampled,cached_queries:Vec::new(),uploads:0,depth_identity:None};
+  let mut owner=Self{device,resources:Resources::new(context,budget),layout:vk::PipelineLayout::null(),pipeline:vk::Pipeline::null(),set_layout:vk::DescriptorSetLayout::null(),pool:vk::DescriptorPool::null(),set:vk::DescriptorSet::null(),output_identity:Arc::new(()),query:None,output:None,count:0,multisampled,cached_queries:Arc::from([]),uploads:0,depth_identity:None};
   let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).descriptor_count(1).stage_flags(vk::ShaderStageFlags::COMPUTE),
    vk::DescriptorSetLayoutBinding::default().binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::COMPUTE),
    vk::DescriptorSetLayoutBinding::default().binding(2).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::COMPUTE)];
@@ -45,22 +45,30 @@ impl Evaluator {
  /// Stage all query/output ownership without touching live descriptors or retiring
  /// the previous inventory. The overlay mesh must also be admitted before commit.
  pub(crate) fn stage<'a>(&'a mut self,context:&VulkanContext,queries:&[Query],depth:vk::ImageView,depth_identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<PreparedVisibility<'a>,String>{
-  let bytes=bytemuck::cast_slice(queries);
+  let cached=if self.cached_queries.as_ref()==queries{self.cached_queries.clone()}else{
+   let mut cached=Vec::new();cached.try_reserve_exact(queries.len()).map_err(|_|"Annotation query cache admission failed")?;cached.extend_from_slice(queries);cached.into()
+  };
+  self.stage_shared(context,cached,depth,depth_identity,fence,completed)
+ }
+ /// Immutable production query snapshot; unchanged identity avoids scanning or
+ /// copying query arrays on warm frames.
+ pub(crate) fn stage_shared<'a>(&'a mut self,context:&VulkanContext,queries:Arc<[Query]>,depth:vk::ImageView,depth_identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<PreparedVisibility<'a>,String>{
+  let bytes=bytemuck::cast_slice(queries.as_ref());
   let limits=unsafe{context.instance.get_physical_device_properties(context.physical_device)}.limits;
   let max=limits.max_storage_buffer_range as usize;
   if queries.is_empty()||queries.len()>u32::MAX as usize||queries.len().div_ceil(64)>limits.max_compute_work_group_count[0] as usize||bytes.len()>max{return Err("Annotation query storage admission failed".into());}
   self.resources.publication_preflight(context,fence,completed,&[],&[])?;
-  if self.cached_queries==queries {
+  if Arc::ptr_eq(&self.cached_queries,&queries) {
    return Ok(PreparedVisibility{owner:self,depth,depth_identity:depth_identity.clone(),candidate:None,fence,completed});
   }
   if self.query.is_some()!=self.output.is_some(){return Err("Inconsistent annotation buffer owner".into());}
   let old_ids=self.query.zip(self.output).map(|(q,o)|[q,o]);
   let old=old_ids.as_ref().map_or(&[][..],|ids|ids.as_slice());
-  let mut cached=Vec::new();cached.try_reserve_exact(queries.len()).map_err(|_|"Annotation query cache admission failed")?;cached.extend_from_slice(queries);
   let identity=Arc::new(());
   let query=self.resources.upload(context,bytes,vk::BufferUsageFlags::STORAGE_BUFFER,false)?;
   let output=match self.resources.allocate_buffer(queries.len() as u64*4,vk::BufferUsageFlags::STORAGE_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC){Ok(id)=>id,Err(e)=>{self.resources.retire(query)?;self.resources.collect(fence,completed)?;return Err(e);}};
   let proof=match self.resources.publication_preflight(context,fence,completed,old,&[query,output]){Ok(p)=>p,Err(e)=>{self.resources.retire(query)?;self.resources.retire(output)?;self.resources.collect(fence,completed)?;return Err(e);}};
+  let cached=queries;
   let query_buffer=self.resources.buffer(query).expect("preflight admitted query buffer");
   let output_buffer=self.resources.buffer(output).expect("preflight admitted output buffer");
   Ok(PreparedVisibility{owner:self,depth,depth_identity:depth_identity.clone(),candidate:Some(StagedBuffers{query,output,query_buffer,output_buffer,cached,identity,proof}),fence,completed})
@@ -92,7 +100,7 @@ impl Evaluator {
 }
 struct StagedBuffers {
  query:BufferId,output:BufferId,query_buffer:vk::Buffer,output_buffer:vk::Buffer,
- cached:Vec<Query>,identity:Arc<()>,proof:CompletedRetirement,
+ cached:Arc<[Query]>,identity:Arc<()>,proof:CompletedRetirement,
 }
 /// Borrowed RAII candidate: abandonment releases only unsubmitted candidate
 /// ownership and leaves the old descriptor set, identities and counters intact.
