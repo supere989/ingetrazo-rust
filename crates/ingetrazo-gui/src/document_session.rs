@@ -37,7 +37,8 @@ fn same_model(a:&Scene,b:&Scene)->bool {
     a.sheets==b.sheets &&
     a.native_document==b.native_document &&
     a.native_baseline==b.native_baseline &&
-    a.component_definitions==b.component_definitions
+    a.component_definitions==b.component_definitions &&
+    a.mesh_shares==b.mesh_shares
 }
 impl IngeTrazoApp {
     pub fn mark_document_clean(&mut self) {self.document_session.clean=Some(self.scene.clone());self.document_session.autosaved=None;self.document_session.last_autosave=Instant::now();}
@@ -144,6 +145,21 @@ mod tests {
     use super::*;use glam::DVec3;
     fn root()->PathBuf {std::env::temp_dir().join(format!("ingetrazo-lifecycle-{}",uuid::Uuid::new_v4()))}
     fn triangle(app:&mut IngeTrazoApp,p:DVec3) {let ids=[p,p+DVec3::X,p+DVec3::Y].map(|v|app.scene.mesh.add_vertex(v));app.scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();}
+    #[test]
+    fn mesh_prototype_registry_changes_require_unsaved_close_confirmation() {
+        let mut app=IngeTrazoApp::default();
+        app.mark_document_clean();
+        let token=uuid::Uuid::new_v4();
+        app.scene.register_mesh_share(token,ingetrazo_core::mesh::Mesh::new()).unwrap();
+        assert!(app.document_dirty());
+        app.request_document_action(DocumentAction::Close);
+        assert!(app.document_session.confirm_unsaved);
+        assert!(!app.document_session.close_allowed);
+        app.cancel_document_action();
+        assert!(app.scene.mesh_shares.contains_key(&token));
+        app.scene.mesh_shares.remove(&token);
+        assert!(!app.document_dirty());
+    }
     #[test]
     fn unsaved_actions_cancel_failed_save_and_successful_save_are_atomic() {
         let root=root();std::fs::create_dir_all(&root).unwrap();

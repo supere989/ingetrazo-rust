@@ -34,5 +34,6 @@
     432,
     0,
     2
-  ]
+  ],
+  "document_lifecycle": "mesh registry included in dirty/autosave comparison; focused lifecycle suite passes"
 }
