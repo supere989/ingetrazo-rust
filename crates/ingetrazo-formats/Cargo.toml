@@ -19,3 +19,5 @@ gltf = { version = "1.4.1", default-features = false, features = ["import", "uti
 base64 = "0.22.1"
 roxmltree = "0.20"
 image.workspace = true
+harfbuzz-sys = { version = "=0.8.0", default-features = false, features = ["bundled"] }
+ttf-parser = "=0.25.1"
