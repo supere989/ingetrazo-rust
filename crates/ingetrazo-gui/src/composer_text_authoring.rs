@@ -1,7 +1,8 @@
 //! Original Texto placement and InlineTextEditor command boundaries.
 use crate::app::IngeTrazoApp;
+#[path="composer_text_history.rs"]mod history;
 use ingetrazo_core::composition::{SheetItem,TextItem};
-#[derive(Debug,Clone)]pub struct InlineText{pub sheet:uuid::Uuid,pub item:uuid::Uuid,pub original:String,pub draft:String,pub focus:bool}
+#[derive(Debug,Clone)]pub struct InlineText{pub sheet:uuid::Uuid,pub item:uuid::Uuid,pub original:String,pub draft:String,pub focus:bool,history:history::History}
 impl IngeTrazoApp{
  pub fn place_composer_text(&mut self,sheet_idx:usize,point:(f64,f64))->Result<uuid::Uuid,String>{
   if !point.0.is_finite()||!point.1.is_finite(){return Err("Text position must be finite".into());}
@@ -13,7 +14,7 @@ impl IngeTrazoApp{
   let sheet=self.scene.sheets.get(sheet_idx).ok_or("Text sheet is no longer available")?;
   if sheet.native_items.get(&item_id).and_then(|v|v.get("locked")).and_then(|v|v.as_bool()).unwrap_or(false){return Err("Locked text cannot be edited".into());}
   let item=sheet.items.iter().find_map(|i|if let SheetItem::Text(t)=i{(t.id==item_id).then_some(t)}else{None}).ok_or("Text item is no longer available")?;
-  self.composer_state.inline_text=Some(InlineText{sheet:sheet.id,item:item.id,original:item.text.clone(),draft:item.text.clone(),focus:true});Ok(())
+  self.composer_state.inline_text=Some(InlineText{sheet:sheet.id,item:item.id,original:item.text.clone(),draft:item.text.clone(),focus:true,history:history::History::new(&item.text)});Ok(())
  }
  pub fn finish_composer_text_edit(&mut self,commit:bool)->Result<(),String>{
   let Some(edit)=self.composer_state.inline_text.as_ref()else{return Ok(());};
@@ -50,7 +51,7 @@ pub(super)fn render(app:&mut IngeTrazoApp,ui:&mut egui::Ui,_painter:&egui::Paint
 
  let cancel=false;let enter=ui.input_mut(|i|i.consume_key(egui::Modifiers::CTRL,egui::Key::Enter));let edit=app.composer_state.inline_text.as_mut().unwrap();let first=edit.focus;let mut outside=false;
  egui::Area::new(egui::Id::new(("composer-inline-text",edit.item))).order(egui::Order::Foreground).fixed_pos(paper.min+egui::vec2(x as f32,y as f32)*zoom).show(ui.ctx(),|ui|{
-  egui::Frame::none().fill(egui::Color32::WHITE).stroke(egui::Stroke::new(1.,egui::Color32::from_rgb(58,110,165))).inner_margin(0.).show(ui,|ui|{let r=ui.add(egui::TextEdit::multiline(&mut edit.draft).desired_width(w as f32*zoom).font(egui::FontId::proportional(font_size)).margin(egui::Vec2::ZERO));if first{r.request_focus();edit.focus=false;}let blank=window_has_focus&&r.lost_focus()&&pointer_position.is_some_and(|pos|response.rect.contains(pos)&&!toolbar.contains(pos)&&!app.scene.sheets[index].visible_item_indices().into_iter().any(|n|{let q=app.scene.sheets[index].items[n].rect();egui::Rect::from_min_size(paper.min+egui::vec2(q.x as f32,q.y as f32)*zoom,egui::vec2(q.w as f32,q.h as f32)*zoom).contains(pos)}));let retained=window_has_focus&&r.lost_focus()&&(blank||pointer_position.is_some_and(|pos|r.rect.contains(pos)));outside=!first&&r.lost_focus()&&!retained;if retained{r.request_focus();}if blank{app.scene.sheets[index].selected_item=None;}if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-inline-text-rect"),r.rect));}});
+  egui::Frame::none().fill(egui::Color32::WHITE).stroke(egui::Stroke::new(1.,egui::Color32::from_rgb(58,110,165))).inner_margin(0.).show(ui,|ui|{let id=egui::Id::new(("composer-inline-document",edit.item));let redo=ui.input_mut(|i|i.consume_key(egui::Modifiers::CTRL|egui::Modifiers::SHIFT,egui::Key::Z));let undo=ui.input_mut(|i|i.consume_key(egui::Modifiers::CTRL,egui::Key::Z));if let Some(snapshot)=if redo{edit.history.redo()}else if undo{edit.history.undo()}else{None}{edit.draft=snapshot.text;let mut state=egui::text_edit::TextEditState::load(ui.ctx(),id).unwrap_or_default();state.cursor.set_char_range(Some(egui::text::CCursorRange::two(egui::text::CCursor::new(snapshot.cursor.0),egui::text::CCursor::new(snapshot.cursor.1))));state.store(ui.ctx(),id);}let mut output=egui::TextEdit::multiline(&mut edit.draft).id(id).desired_width(w as f32*zoom).font(egui::FontId::proportional(font_size)).margin(egui::Vec2::ZERO).show(ui);if let Some(cursor)=output.state.cursor.char_range(){let position=(cursor.primary.index,cursor.secondary.index);if output.response.changed()||edit.history.cursor()!=position{edit.history.observe(&edit.draft,position);}}output.state.clear_undoer();output.state.clone().store(ui.ctx(),id);let r=output.response;if first{r.request_focus();edit.focus=false;}let blank=window_has_focus&&r.lost_focus()&&pointer_position.is_some_and(|pos|response.rect.contains(pos)&&!toolbar.contains(pos)&&!app.scene.sheets[index].visible_item_indices().into_iter().any(|n|{let q=app.scene.sheets[index].items[n].rect();egui::Rect::from_min_size(paper.min+egui::vec2(q.x as f32,q.y as f32)*zoom,egui::vec2(q.w as f32,q.h as f32)*zoom).contains(pos)}));let retained=window_has_focus&&r.lost_focus()&&(blank||pointer_position.is_some_and(|pos|r.rect.contains(pos)));outside=!first&&r.lost_focus()&&!retained;if retained{r.request_focus();}if blank{app.scene.sheets[index].selected_item=None;}if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-inline-text-rect"),r.rect));}});
  });
  if cancel||enter||outside{if let Err(e)=app.finish_composer_text_edit(!cancel){app.status_message=e;}}true
 }
