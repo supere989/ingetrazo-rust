@@ -10,7 +10,7 @@ This section distinguishes published Rust code from isolated review work. Dated 
 | Vulkan model rendering | Source texture decoding, average shading and failure-safe publication reviewed on RTX 5090 | All four strict full-model comparisons still differ: 78 / 351 / 4832 / 3723 pixels; annotations and remaining raster differences open |
 | Native annotations, review branch | D24/MSAA4 RTX controls, 15 source operation inventories and 4,360 formatting comparisons pass; coordinated mesh/query publication, immutable admission cache and empty-overlay clearing are source-reviewed | Actual GPU deletion/refusal preservation, source depth sample-policy equivalence, application integration and full-image comparisons |
 | Scripting, review branch | Persistent Group/Mesh ownership, ten native vector source cases, and exclusive multi-owner prepare/apply prerequisites have scoped comparisons | Complete editable object semantics, mutation journal/rollback, VM/native resource bounds and production scene integration |
-| Native Metal, separate review branch | Last full pixel run `1f44d9d7`: all 18 PDFs exact on ARM and Intel; Canvas residuals 0/0/1/0/0/12 on both; Intel presentation passes. Exact premultiplied palette prerequisite reviewed | Ordered Canvas backend layout correction is source-reviewed; allocation accounting and native full-image proof remain required; ARM presentation and physical Mac acceptance |
+| Native Metal, separate review branch | Ninth run `d74058cd`: ARM has all nine actual GPU Canvas images exact, including three held-out cases; all 18 PDFs exact. Warm measured uploads and deep admissions remain unchanged | ARM presentation still fails (0 displayed, 3 pending); ninth Intel run pending. Physical Mac, broader rendered workflows and performance acceptance remain open |
 | Release | 10 Implemented / 27 Partial / 0 Verified across 37 areas; all five release gates open | Full Python behavioral/rendered parity and representative platform/performance evidence |
 
 Current CI observations are [retained with exact source revisions](audits/current-ci-20261010.json). Main validation: [38089335853](https://github.com/supere989/ingetrazo-rust/actions/runs/38089335853). Latest Metal review validation: [38091398188](https://github.com/supere989/ingetrazo-rust/actions/runs/38091398188). These observations are time-specific; active jobs are not acceptance.
@@ -18,6 +18,8 @@ Current CI observations are [retained with exact source revisions](audits/curren
 Independent latest ARM evidence: [all eighteen PDF pages exact; two Canvas cases and presentation still fail](audits/coretext-native-eighth/arm-root-review.json).
 
 ## Dated implementation and verification evidence
+
+Ninth ARM Metal review (2026-10-10): root independently decoded all nine complete GPU Canvas images exactly against source; ordered records also match and prior aggregate negatives still differ. Six base and three held-out cases retain warm counters. [Root evidence](audits/coretext-native-ninth/arm-root-review.json). Reviewer retains all eighteen exact PDFs and strict negatives. ARM presentation still fails despite completed GPU commands; Intel ninth run remains pending. No release gate is promoted.
 
 Review CI completion (2026-10-10): public review source `70320e11` passes all five configured jobs, including Linux original-runtime checks and both native Apple SDK jobs. [Exact revision evidence](audits/review-70320-ci-completion.json). Later local integration changes and strict rendered parity remain separately unaccepted; no release gate is promoted.
 
