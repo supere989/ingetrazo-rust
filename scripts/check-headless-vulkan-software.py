@@ -5,6 +5,7 @@ from pathlib import Path
 from png_capture import valid_png
 p=argparse.ArgumentParser(); p.add_argument('binary'); p.add_argument('output'); a=p.parse_args()
 binary=Path(a.binary).resolve(); out=Path(a.output).resolve(); out.mkdir(parents=True,exist_ok=True)
+(out/'depth.png').unlink(missing_ok=True)
 rows=[]
 for name,extra,expected in [('positive',['--software-fixture','--output',str(out/'depth.png')],0),('wrong-vendor',['--software-fixture','--vendor','0x10de'],1),('unsignaled-timeout',['--software-fixture','--timeout-control'],124)]:
  command=[str(binary),*extra]; started=time.monotonic()
