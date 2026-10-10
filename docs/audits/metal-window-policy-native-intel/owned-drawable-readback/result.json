@@ -1,0 +1,89 @@
+{
+  "passed": false,
+  "presentation_passed": true,
+  "physical_mac_claim": false,
+  "source_revision": "0d278eafb8e9f5c10c7e1a5def7e5f61e1372a91",
+  "binary_sha256": "f103702de5196ee4ae7ba184f46be862639427cf9e92a7061ce4d13244c59cfe",
+  "presentation_command": [
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/target/debug/examples/presentation_probe",
+    "--automatic",
+    "--owned-window-id=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-drawable-readback/own-window.json",
+    "--owned-window-ack=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-drawable-readback/capture-finished",
+    "--diagnostic-drawable-readback"
+  ],
+  "native_snapshot": {
+    "window_id": 53,
+    "submitted": 5,
+    "retired": 4,
+    "pending": 1,
+    "displayed": 0,
+    "skipped": 4,
+    "completed_inflight": 0,
+    "actual_drawable_center": {
+      "submission": 4,
+      "rgba": [
+        20,
+        51,
+        89,
+        255
+      ]
+    }
+  },
+  "capture_command": [
+    "/usr/sbin/screencapture",
+    "-x",
+    "-o",
+    "-l53",
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-drawable-readback/own-window.png"
+  ],
+  "capture_returncode": 0,
+  "capture": {
+    "width": 800,
+    "height": 628,
+    "points": [
+      [
+        400,
+        314
+      ],
+      [
+        200,
+        314
+      ],
+      [
+        600,
+        314
+      ],
+      [
+        400,
+        471
+      ]
+    ],
+    "rgb": [
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ]
+    ],
+    "visible_clear": false
+  },
+  "image_sha256": "354df19150509db460b805875acf34011e73554596ee69dee2d59626ad3b81b3",
+  "capture_acknowledged": true,
+  "presentation_returncode": 0,
+  "elapsed_seconds": 2.0071291559997917
+}
