@@ -14,7 +14,7 @@
     }
   ],
   "provenance": {
-    "rust_commit": "b4fca1fa1ec031c3023bf4a40b5ac99230791eed",
+    "rust_commit": "3c8b8f72e5c275dc88770fcdcc4514387addf0ce",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
