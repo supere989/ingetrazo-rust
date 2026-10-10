@@ -13,17 +13,20 @@ struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMem
 pub struct Resources {lifetime:Arc<super::lifetime::Lifetime>,device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
 impl Resources {
  pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {budget.bind_lifetime(context.lifetime.clone());Self {lifetime:context.lifetime.clone(),device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
+ // Admit the immutable device/lifetime owner before allocating or using context handles.
+ fn admit_context(&self,context:&super::VulkanContext)->Result<(),String>{
+  if !Arc::ptr_eq(&self.lifetime,&context.lifetime)||self.device.handle()!=context.device.handle(){return Err("Upload context differs from resource owner".into());}
+  self.lifetime.check()
+ }
  // One direct command/fence owner is reused only after each upload completes.
  fn transfer_handles(&mut self,context:&super::VulkanContext)->Result<(vk::CommandBuffer,vk::Fence),String>{
-  self.lifetime.check()?;
-  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  self.admit_context(context)?;
   if self.image_transfer.is_none(){self.image_transfer=Some(image_upload::Transfer::new(context)?);self.stats.transfer_command_allocations+=1;self.stats.transfer_fence_creations+=1;}
   Ok(self.image_transfer.as_ref().unwrap().handles())
  }
  // The synchronous transfer fence makes one bounded host allocation reusable.
  fn staging_buffer(&mut self,context:&super::VulkanContext,capacity:u64)->Result<BufferId,String>{
-  self.lifetime.check()?;
-  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  self.admit_context(context)?;
   if capacity==0||capacity>UPLOAD_CHUNK{return Err("Invalid bounded staging capacity".into());}
   if self.image_staging.and_then(|id|self.logical_bytes(id)).is_none_or(|n|n<capacity){
    if let Some(old)=self.image_staging.take(){self.destroy(old);}
@@ -86,8 +89,7 @@ impl Resources {
  /// in-flight or pending-retirement range. Publication must follow successful
  /// completion of every candidate transfer. Failed candidates stay unpublished.
  pub unsafe fn upload_fresh_range(&mut self,context:&super::VulkanContext,id:BufferId,offset:u64,data:&[u8])->Result<(),String>{
-  self.lifetime.check()?;
-  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  self.admit_context(context)?;
   let buffer=self.buffers.get(&id).ok_or("Unknown arena buffer")?;
   let end=offset.checked_add(data.len()as u64).ok_or("Arena range overflow")?;
   if data.is_empty()||offset%4!=0||data.len()%4!=0||end>buffer.logical_bytes||buffer.retire_after.is_some()||!buffer.usage.contains(vk::BufferUsageFlags::TRANSFER_DST){return Err("Invalid or retired arena upload range".into());}
@@ -97,8 +99,7 @@ impl Resources {
  }
  /// Returns only after transfer completion; no scene serialization or IPC on upload path.
  pub fn upload(&mut self,context:&super::VulkanContext,data:&[u8],usage:vk::BufferUsageFlags,force_staging:bool)->Result<BufferId,String> {
-  self.lifetime.check()?;
-  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  self.admit_context(context)?;
   self.stats.upload_calls+=1;
   if data.len()%4!=0{return Err("Vulkan buffer upload must be a multiple of four bytes".into());}
   let destination=self.allocate(data.len() as u64,usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)?;
@@ -116,8 +117,7 @@ impl Resources {
  /// All input validation happens before allocations; one staging buffer and command/fence
  /// are retained across <=8MiB submissions and subsequent uploads.
  pub fn upload_many(&mut self,context:&super::VulkanContext,inputs:&[(&[u8],vk::BufferUsageFlags)])->Result<Vec<BufferId>,String>{
-  self.lifetime.check()?;
-  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  self.admit_context(context)?;
   let supported=vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::INDEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER|vk::BufferUsageFlags::UNIFORM_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC|vk::BufferUsageFlags::TRANSFER_DST;
   let mut total=0u64;
   for (data,usage) in inputs{
@@ -226,6 +226,7 @@ impl Resources {
   })
  }
  fn read_chunks(&mut self,context:&super::VulkanContext,bytes:u64,row:u64,mut record:impl FnMut(&Device,vk::CommandBuffer,vk::Buffer,u64,u64))->Result<Vec<u8>,String> {
+  self.admit_context(context)?;
   if bytes==0||row==0||row>UPLOAD_CHUNK||bytes%row!=0{return Err("Invalid GPU readback extent".into());}
   let chunk=(UPLOAD_CHUNK/row*row).min(bytes);
   let staging=self.allocate(chunk,vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::HOST_VISIBLE)?;

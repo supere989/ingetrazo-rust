@@ -61,7 +61,7 @@ impl Resources {
         data: &[u8],
         mip_levels: u32,
     ) -> Result<(), String> {
-        self.lifetime.check()?;
+        self.admit_context(context)?;
         let layout = ingetrazo_render::texture_layout::Layout::new(
             ingetrazo_render::texture_layout::Format::Rgba8,
             extent.width,
@@ -358,6 +358,7 @@ impl TextureImage {
         mips: bool,
         diagnostic_readback: bool,
     ) -> Result<Self, String> {
+        resources.admit_context(context)?;
         use egui_ash_renderer::MemoryObserver;
         let layout = ingetrazo_render::texture_layout::Layout::full(
             ingetrazo_render::texture_layout::Format::Rgba8,
@@ -561,6 +562,12 @@ impl Resources {
         texture: &TextureImage,
         level: u32,
     ) -> Result<Vec<u8>, String> {
+        self.admit_context(context)?;
+        if !std::sync::Arc::ptr_eq(&self.lifetime, &texture.lifetime)
+            || self.device.handle() != texture.device.handle()
+        {
+            return Err("Texture differs from resource owner".into());
+        }
         if !texture.readback_enabled {
             return Err("Texture diagnostic readback usage was not requested".into());
         }
