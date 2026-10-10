@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "reader": "QtPdf/PDFium",
+  "cases": [
+    {
+      "file": "native-vector.pdf",
+      "pages_points": [
+        [
+          595.275634765625,
+          841.8897705078125
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "file": "native-atlas.pdf",
+      "pages_points": [
+        [
+          595.275634765625,
+          841.8897705078125
+        ],
+        [
+          1190.55126953125,
+          841.8897705078125
+        ],
+        [
+          3370.393798828125,
+          2383.93701171875
+        ]
+      ],
+      "passed": true
+    }
+  ],
+  "scope": "Direct vector writer physical page metrics, mixed atlas and visible literal fill; not full source page/item/AA parity"
+}

@@ -1,0 +1,5 @@
+# Direct vector PDF foundation
+
+Direct pdf-writer0.15 buffer authoring supports physical top-left page coordinates, explicit origin, vector paths/cubics, clipping, encoded RGB/alpha, round caps and bevel joins, and mixed-size page trees. No screenshot, CPU raster image, render process or extra GPU pass is used. Aggregate command/draw/page budgets are checked before writing. Invalid geometry/width/empty atlas refuses; transactional save preserves destination.
+
+Three focused tests pass. Independent QtPdf/PDFium loads a native single page and three-page atlas, checks physical dimensions and literal visible fill. The rendered native page was visually inspected. This is an isolated foundation: all item painters, original QPageSize integer-point page quantization, UI routing, PDF/image/atlas workflow, source whole-image correspondence and complete performance corpus remain open. Current generic page extents preserve true supplied millimetres; caller integration must follow the frozen original standard paper metrics.

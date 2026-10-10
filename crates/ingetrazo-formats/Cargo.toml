@@ -6,6 +6,7 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+pdf-writer = "=0.15.0"
 ingetrazo-core = { path = "../ingetrazo-core" }
 glam.workspace = true
 serde.workspace = true
