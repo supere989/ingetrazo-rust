@@ -1,0 +1,52 @@
+{
+  "source": "d74058cd4ba4873a55489416b368395a90b5257a",
+  "run": 38093876455,
+  "artifact_sha256": "76786df36efcb438a2374cb9ff4008b31e8a91de23b1d2a38eb00e080823e49d",
+  "root_independent_gpu_image_decode": [
+    {
+      "name": "helvetica",
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-bold",
+      "changed_pixels": 0
+    },
+    {
+      "name": "helvetica-italic",
+      "changed_pixels": 0
+    },
+    {
+      "name": "times-bold-italic",
+      "changed_pixels": 0
+    },
+    {
+      "name": "cjk",
+      "changed_pixels": 0
+    },
+    {
+      "name": "arabic",
+      "changed_pixels": 0
+    },
+    {
+      "name": "italic-overlap",
+      "changed_pixels": 0
+    },
+    {
+      "name": "arabic-marks",
+      "changed_pixels": 0
+    },
+    {
+      "name": "times-overlap",
+      "changed_pixels": 0
+    }
+  ],
+  "presentation": {
+    "passed": true,
+    "displayed": 19,
+    "skipped": 2,
+    "pending": 0,
+    "canvas_warm_frames": 20,
+    "canvas_cancelled": 2
+  },
+  "scope": "Nine complete GPU Canvas images independently exact; measured warm admission unchanged. Presenter report passes on Intel virtual runner. Physical Mac and broader workflows remain open; PDF decode retained by independent reviewer."
+}
