@@ -1,0 +1,12 @@
+{
+  "source_revision": "c78e0dd3d1b418fefca7d65020f46e66c1d8fa6a",
+  "binary_sha256": "b1e2584172ae0a878d4cd3131b0e74fed9f4aafc28ca009c022ee22523afbf2f",
+  "shaderc_version": "0.8.3",
+  "shader_files": {
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_visibility.comp": "71da1b8e7273f5faacc1ca88006abeb6c0906eadf31913599a9938ca4f4d5bb4",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_visibility.comp.spv": "0b2424cfb802e1d94e34528a23fca2f16dc6895ea24c11ebb0fa40949a7cfab6",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_visibility_single.comp": "1124463632284d8b3a9d11aaa8f18acd6b2c0ccc5b6efbb61b3b6a46901a83ed",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_visibility_single.comp.spv": "065be9a2e16eeafd4e432591ca5c1c364afeb8a358963f06a98f69316ae70271"
+  },
+  "scope": "llvmpipe retained-depth evaluator/resource execution; no GL MSAA resolve policy or production overlay claim"
+}
