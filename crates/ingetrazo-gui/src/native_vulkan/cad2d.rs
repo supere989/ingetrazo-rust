@@ -368,7 +368,7 @@ impl Renderer {
         pixels_per_point:f32,
     ) -> Result<(), String> {
         self.resources.collect(fence, completed)?;
-        self.arena.prepare(context,&mut self.resources,&self.budget,&self.pipeline,primitives,completed,next)?;
+        self.arena.prepare(context,&mut self.resources,&self.budget,&self.pipeline,primitives,completed,next,fence)?;
         self.active.clear();
         self.pending.clear();
         let result = (|| {

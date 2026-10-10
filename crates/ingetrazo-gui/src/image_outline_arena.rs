@@ -11,6 +11,8 @@ struct Page{bytes:u64,free:BTreeMap<u64,u64>}
 #[derive(Debug,Default,PartialEq,Eq)]pub struct Metrics{pub page_bytes:u64,pub pending_bytes:u64,pub published_bytes:u64,pub retired_bytes:u64}
 impl Planner{
  pub fn add_page(&mut self,id:u64,bytes:u64)->Result<(),String>{if bytes==0||self.pages.contains_key(&id){return Err("Invalid or duplicate arena page".into());}self.pages.insert(id,Page{bytes,free:BTreeMap::from([(0,bytes)])});Ok(())}
+ /// Only fully free pages qualify; pending and unacknowledged retired owners exclude them.
+ pub fn empty_pages(&self)->impl Iterator<Item=(u64,u64)>+'_ {self.pages.iter().filter_map(|(&id,p)|(p.free.len()==1&&p.free.get(&0)==Some(&p.bytes)).then_some((id,p.bytes)))}
  pub fn remove_empty_page(&mut self,id:u64)->Result<(),String>{if self.allocations.values().any(|a|a.range.page==id){return Err("Arena page still owns ranges".into());}self.pages.remove(&id).ok_or("Unknown arena page")?;Ok(())}
  pub fn reserve(&mut self,bytes:u64,alignment:u64)->Result<Option<Ticket>,String>{
   if bytes==0||alignment==0{return Err("Arena reservation needs nonzero size/alignment".into());}
@@ -36,4 +38,9 @@ impl Planner{
  #[test]fn failed_candidates_rollback_without_touching_published_ranges(){let mut p=Planner::default();p.add_page(1,96).unwrap();let old=p.reserve(16,16).unwrap().unwrap();p.publish(old).unwrap();p.mark_used(old,2).unwrap();let before=p.metrics();let a=p.reserve(17,32).unwrap().unwrap();assert_eq!(a.range.offset,32);let b=p.reserve(48,16).unwrap();assert!(b.is_none());p.rollback(a).unwrap();assert_eq!(p.metrics(),before);let all=p.reserve(80,16).unwrap().unwrap();assert_eq!(all.range.offset,16);assert!(p.mark_used(all,3).is_err());assert!(p.reserve(1,0).is_err());assert!(p.add_page(1,99).is_err());}
  #[test]fn packed_vertex_stride_reservations_are_exact(){let mut p=Planner::default();p.add_page(1,1024).unwrap();let a=p.reserve(96,12).unwrap().unwrap();let b=p.reserve(120,12).unwrap().unwrap();assert_eq!(a.range.offset%12,0);assert_eq!(b.range.offset%12,0);assert_eq!(b.range.offset,96);p.rollback(a).unwrap();p.rollback(b).unwrap();p.remove_empty_page(1).unwrap();assert_eq!(p.metrics().page_bytes,0);}
 
+}
+
+#[cfg(test)]mod capacity_tests{use super::*;
+ #[test]fn large_shared_budget_pages_and_completed_reclamation(){let mut p=Planner::default();p.add_page(1,96*1024*1024).unwrap();let a=p.reserve(40*1024*1024,12).unwrap().unwrap();assert_eq!(p.empty_pages().count(),0);p.publish(a).unwrap();p.mark_used(a,8).unwrap();p.retire(a).unwrap();p.collect(7).unwrap();assert_eq!(p.empty_pages().count(),0);p.collect(8).unwrap();assert_eq!(p.empty_pages().collect::<Vec<_>>(),vec![(1,96*1024*1024)]);p.remove_empty_page(1).unwrap();}
+ #[test]fn pending_fragmented_pages_never_reclaim(){let mut p=Planner::default();p.add_page(1,128).unwrap();let a=p.reserve(32,4).unwrap().unwrap();let b=p.reserve(32,4).unwrap().unwrap();p.rollback(a).unwrap();assert_eq!(p.empty_pages().count(),0);assert!(p.remove_empty_page(1).is_err());p.rollback(b).unwrap();assert_eq!(p.empty_pages().count(),1);}
 }

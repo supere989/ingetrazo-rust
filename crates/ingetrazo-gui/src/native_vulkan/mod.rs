@@ -294,6 +294,7 @@ impl System {
         Ok(self.cad2d.as_ref().unwrap())
     }
 
+    pub fn verify_outline_budget_for_probe(&mut self)->Result<serde_json::Value,String>{if !self.wait_gpu_completion(){return Err("Outline budget probe requires acknowledged GPU completion".into());}self.cad2d.as_mut().ok_or("CAD renderer absent")?.verify_outline_budget_for_probe(&self.vulkan_context,self.fence,self.draw_serial)}
     pub fn verify_outline_candidate_rollback_for_probe(&mut self,handle:&cad2d::arena::Handle)->Result<(),String>{if !self.wait_gpu_completion(){return Err("Outline rollback probe requires acknowledged GPU completion".into());}self.cad2d.as_mut().ok_or("CAD renderer absent")?.verify_outline_candidate_rollback_for_probe(&self.vulkan_context,self.fence,self.draw_serial,handle)}
     pub fn verify_cad2d_rollback_for_probe(&mut self)->Result<(),String>{
         self.enable_cad2d()?;
