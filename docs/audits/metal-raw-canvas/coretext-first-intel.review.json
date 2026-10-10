@@ -1,0 +1,9 @@
+{
+  "run": 38078042002,
+  "job": 114289041293,
+  "artifact": 11679569708,
+  "sha256": "3aaf8695a40bb71719d7a25345f8b7423dbc50ee7bc29cb069599ed9bfd8ce08",
+  "revision": "64c4ccb5a51276fde941e91da72bcebe91954556",
+  "provider_failure": " crates/ingetrazo-formats/examples/paper_coretext_provider_fixture.rs:9:49:\nnative face/style/coverage: \"CoreText face identity cannot be mapped to its font collection\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+  "canvas": "NOT RUN after provider failure"
+}
