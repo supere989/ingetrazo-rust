@@ -1,0 +1,157 @@
+{
+  "provenance": {
+    "rust_commit": "3037c1cda4679058ab2a4d07e688e816a7445fcf",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cue": {
+    "axis": null,
+    "click": [
+      396.79236990846954,
+      350.0
+    ],
+    "cue": [
+      603.2076300915305,
+      346.9037758220817
+    ],
+    "edges": 0,
+    "faces": 0,
+    "preview": [
+      [
+        [
+          2.0020117707513125,
+          2.9999999999999982,
+          0.0
+        ],
+        [
+          3.997988229248686,
+          3.0290676626847244,
+          0.0
+        ]
+      ]
+    ],
+    "undo": 0,
+    "wander": [
+      603.2076300915305,
+      246.7925274027198
+    ]
+  },
+  "locked": {
+    "axis": null,
+    "click": [
+      396.79236990846954,
+      350.0
+    ],
+    "cue": [
+      603.2076300915305,
+      346.9037758220817
+    ],
+    "edges": 0,
+    "faces": 0,
+    "preview": [
+      [
+        [
+          2.0020117707513125,
+          2.9999999999999982,
+          0.0
+        ],
+        [
+          3.9979882292486857,
+          2.9999999999999982,
+          0.0
+        ]
+      ]
+    ],
+    "undo": 0,
+    "wander": [
+      603.2076300915305,
+      246.7925274027198
+    ]
+  },
+  "released": {
+    "axis": null,
+    "click": [
+      396.79236990846954,
+      350.0
+    ],
+    "cue": [
+      603.2076300915305,
+      346.9037758220817
+    ],
+    "edges": 0,
+    "faces": 0,
+    "preview": [
+      [
+        [
+          2.0020117707513125,
+          2.9999999999999982,
+          0.0
+        ],
+        [
+          3.9979882292486857,
+          3.9979897521753163,
+          0.0
+        ]
+      ]
+    ],
+    "undo": 0,
+    "wander": [
+      603.2076300915305,
+      246.7925274027198
+    ]
+  },
+  "arrow_preserved": {
+    "axis": "x",
+    "click": [
+      396.79236990846954,
+      350.0
+    ],
+    "cue": [
+      603.2076300915305,
+      346.9037758220817
+    ],
+    "edges": 0,
+    "faces": 0,
+    "preview": [
+      [
+        [
+          2.0020117707513125,
+          2.9999999999999982,
+          0.0
+        ],
+        [
+          3.9979882292486857,
+          2.9999999999999982,
+          0.0
+        ]
+      ]
+    ],
+    "undo": 0,
+    "wander": [
+      603.2076300915305,
+      246.7925274027198
+    ]
+  },
+  "cancelled": {
+    "axis": null,
+    "click": [
+      396.79236990846954,
+      350.0
+    ],
+    "cue": [
+      603.2076300915305,
+      346.9037758220817
+    ],
+    "edges": 0,
+    "faces": 0,
+    "preview": [],
+    "undo": 0,
+    "wander": [
+      603.2076300915305,
+      246.7925274027198
+    ]
+  },
+  "scope": "Actual production viewport XTEST Shift press/wander/release without mouse movement, arrow lock preservation and Escape atomic preview cancellation; existing software GL engineering backend, independent original controller evidence not implied."
+}
