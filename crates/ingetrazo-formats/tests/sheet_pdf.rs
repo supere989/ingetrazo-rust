@@ -20,6 +20,7 @@ fn page() -> Page {
             stroke_options: None,
             clip: None,
             clip_intersection: None,
+            text: None,
             flatten_transform: false,
         }],
     }
