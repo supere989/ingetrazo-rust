@@ -47,6 +47,7 @@ fn indices(node: Node<'_, '_>) -> Result<Vec<usize>> {
         .collect()
 }
 struct Polygon {
+    uv: Option<Vec<glam::DVec2>>,
     points: Vec<DVec3>,
     material: Option<String>,
 }
@@ -124,6 +125,48 @@ fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
             .unwrap_or(0)
             .checked_add(1)
             .ok_or_else(|| invalid("index stride overflow"))?;
+        let uv_input = inputs
+            .iter()
+            .find(|n| n.attribute("semantic") == Some("TEXCOORD"));
+        let uv_source = if let Some(input) = uv_input {
+            let offset = integer(*input, "offset", 0)?;
+            let source = input
+                .attribute("source")
+                .and_then(|s| sources.get(s.trim_start_matches('#')))
+                .ok_or_else(|| invalid("unresolved texture coordinate source"))?;
+            let array = child(*source, "float_array")
+                .ok_or_else(|| invalid("missing texture float_array"))?;
+            let values = numbers(array)?;
+            if integer(array, "count", values.len())? != values.len() {
+                return Err(invalid("texture array count mismatch"));
+            }
+            let accessor = child(*source, "technique_common").and_then(|n| child(n, "accessor"));
+            let step = accessor.map_or(Ok(2), |n| integer(n, "stride", 2))?;
+            if step < 2 {
+                return Err(invalid("texture stride below2"));
+            }
+            let start = accessor.map_or(Ok(0), |n| integer(n, "offset", 0))?;
+            let count = accessor.map_or(Ok(values.len() / step), |n| {
+                integer(n, "count", values.len() / step)
+            })?;
+            let mut coordinates = vec![];
+            for i in 0..count {
+                let index = i
+                    .checked_mul(step)
+                    .and_then(|n| n.checked_add(start))
+                    .ok_or_else(|| invalid("texture accessor overflow"))?;
+                let end = index
+                    .checked_add(2)
+                    .ok_or_else(|| invalid("texture accessor overflow"))?;
+                let pair = values
+                    .get(index..end)
+                    .ok_or_else(|| invalid("texture accessor exceeds array"))?;
+                coordinates.push(glam::DVec2::new(pair[0], pair[1]));
+            }
+            Some((offset, coordinates))
+        } else {
+            None
+        };
         let mut emit = |stream: &[usize], count: usize| -> Result<()> {
             if count < 3
                 || stream.len()
@@ -141,7 +184,21 @@ fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
                         .ok_or_else(|| invalid("vertex index outside position accessor"))
                 })
                 .collect::<Result<Vec<_>>>()?;
+            let uv = uv_source
+                .as_ref()
+                .map(|(offset, coordinates)| {
+                    (0..count)
+                        .map(|i| {
+                            coordinates
+                                .get(stream[i * stride + offset])
+                                .copied()
+                                .ok_or_else(|| invalid("texture index outside accessor"))
+                        })
+                        .collect::<Result<Vec<_>>>()
+                })
+                .transpose()?;
             loops.push(Polygon {
+                uv,
                 points: polygon,
                 material: primitive.attribute("material").map(str::to_owned),
             });
@@ -467,6 +524,21 @@ mod tests {
                 .any(|v| (v.position - p).length() < 1e-10));
         }
         assert!(mesh.face_normal(0).y < 0.);
+    }
+    #[test]
+    fn interleaved_texture_coordinates_keep_authored_indices_and_reject_truncation() {
+        let xml=document().replace("<vertices id=\"v\">",r##"<source id="uv"><float_array count="9">0 0 9 1 0 9 0 1 9</float_array><technique_common><accessor count="3" stride="3"/></technique_common></source><vertices id="v">"##).replace("semantic=\"NORMAL\" offset=\"0\"","semantic=\"TEXCOORD\" offset=\"0\" source=\"#uv\"").replace("<p>0 0 0 1 0 2</p>","<p>2 0 0 1 1 2</p>");
+        let doc = roxmltree::Document::parse(&xml).unwrap();
+        let mesh = doc.descendants().find(|n| n.has_tag_name("mesh")).unwrap();
+        let polygons = geometry(mesh).unwrap();
+        assert_eq!(
+            polygons[0].uv.as_ref().unwrap(),
+            &vec![glam::DVec2::Y, glam::DVec2::ZERO, glam::DVec2::X]
+        );
+        let broken = xml.replace("<p>2 0 0 1 1 2</p>", "<p>9 0 0 1 1 2</p>");
+        assert!(scene_from_xml(&broken).is_err());
+        let truncated = xml.replace("count=\"3\" stride=\"3\"", "count=\"4\" stride=\"3\"");
+        assert!(scene_from_xml(&truncated).is_err());
     }
     #[test]
     fn diffuse_effect_is_bound_by_primitive_symbol_not_global_material_order() {
