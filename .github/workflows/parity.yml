@@ -298,6 +298,8 @@ jobs:
         run: python scripts/check-python-offset.py
       - name: Original Offset hard-edge display semantics
         run: python scripts/check-python-offset-display.py
+      - name: Original and native presentation controllers contexts and IGZ adapters
+        run: python scripts/check-presentation-runtime.py
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
@@ -326,6 +328,7 @@ jobs:
         with:
           name: semantic-parity-evidence
           path: |
+            docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*
             docs/audits/python-*-evidence.json
             docs/audits/render-pergola.png
