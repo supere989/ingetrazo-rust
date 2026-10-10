@@ -363,6 +363,8 @@ pub fn worker_main(path: &Path) -> io::Result<()> {
     // SAFETY: fixed-length worker-exclusive result mapping, parent reads only after DONE.
     let mut output = unsafe { MmapMut::map_mut(&f)? };
     let mut geometry: Option<Mmap> = None;
+    let mut index: Option<crate::triangle_index::TriangleIndex> = None;
+    let mut candidates = vec![];
     let stdin = io::stdin();
     let mut stdout = io::stdout();
     writeln!(stdout, "READY")?;
@@ -372,6 +374,7 @@ pub fn worker_main(path: &Path) -> io::Result<()> {
         let response = (|| -> io::Result<String> {
             if line == "UNLOAD" {
                 geometry = None;
+                index = None;
                 return Ok("UNLOADED".into());
             }
             if let Some(path) = line.strip_prefix("LOAD ") {
@@ -391,6 +394,18 @@ pub fn worker_main(path: &Path) -> io::Result<()> {
                 if size != map.len() as u64 {
                     return Err(invalid("invalid geometry size"));
                 }
+                let offset = 32 + n as usize * 48;
+                index = Some(crate::triangle_index::TriangleIndex::new(
+                    (0..t as usize).map(|i| {
+                        let at = offset + i * 72;
+                        // Header length validation proves these fixed records are in bounds.
+                        [
+                            point(&map, at).unwrap(),
+                            point(&map, at + 24).unwrap(),
+                            point(&map, at + 48).unwrap(),
+                        ]
+                    }),
+                ));
                 geometry = Some(map);
                 return Ok("LOADED".into());
             }
@@ -415,7 +430,7 @@ pub fn worker_main(path: &Path) -> io::Result<()> {
                 .as_ref()
                 .ok_or_else(|| invalid("no geometry loaded"))?;
             let n = word(b, 8)? as usize;
-            let t = word(b, 16)? as usize;
+            let _t = word(b, 16)? as usize;
             if begin > end || end > n {
                 return Err(invalid("range exceeds geometry"));
             }
@@ -430,7 +445,15 @@ pub fn worker_main(path: &Path) -> io::Result<()> {
                 let mut count = 0u64;
                 let a = point(b, 32 + edge * 48)?;
                 let c = point(b, 56 + edge * 48)?;
-                for i in 0..t {
+                index
+                    .as_ref()
+                    .ok_or_else(|| invalid("missing triangle index"))?
+                    .query(
+                        a.truncate().min(c.truncate()),
+                        a.truncate().max(c.truncate()),
+                        &mut candidates,
+                    );
+                for &i in &candidates {
                     let base = 32 + n * 48 + i * 72;
                     let tri = [point(b, base)?, point(b, base + 24)?, point(b, base + 48)?];
                     if let Some((lo, hi)) = crate::vector_hlr::occluded_interval(a, c, tri, epsilon)

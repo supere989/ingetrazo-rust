@@ -205,8 +205,9 @@ fn bary(q: DVec2, t: [DVec3; 3]) -> Option<[f64; 3]> {
         cross(p[0] - q, p[1] - q) / area,
     ])
 }
-fn surface_at(p: DVec2, depth: f64, triangles: &[[DVec3; 3]], tolerance: f64) -> bool {
-    triangles.iter().any(|&t| {
+fn surface_at(p: DVec2, depth: f64, triangles: &[[DVec3; 3]], index:&crate::triangle_index::TriangleIndex, tolerance: f64) -> bool {
+    let mut candidates=vec![];index.query(p,p,&mut candidates);
+    candidates.into_iter().any(|id| {let t=triangles[id];
         bary(p, t).is_some_and(|w| {
             w.iter().all(|&v| v >= -1e-9)
                 && w[0] * t[0].z + w[1] * t[1].z + w[2] * t[2].z <= depth + tolerance
@@ -416,6 +417,7 @@ fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool
         })
         .map(|v| [v[0], v[1], v[2]])
         .collect::<Vec<_>>();
+    let triangle_index=crate::triangle_index::TriangleIndex::new(triangles.iter().copied());
     let boundary = cap_boundary(&caps, camera);
     let cap_plane = caps
         .iter()
@@ -489,8 +491,8 @@ fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool
                 let mid = a.lerp(b, (lo + hi) / 2.);
                 let direction = (b - a).truncate().normalize();
                 let normal = DVec2::new(-direction.y, direction.x) * delta;
-                if !surface_at(mid.truncate() + normal, mid.z, &triangles, ptol)
-                    || !surface_at(mid.truncate() - normal, mid.z, &triangles, ptol)
+                if !surface_at(mid.truncate() + normal, mid.z, &triangles,&triangle_index, ptol)
+                    || !surface_at(mid.truncate() - normal, mid.z, &triangles,&triangle_index, ptol)
                 {
                     kind = LineKind::Profile;
                 }
