@@ -946,10 +946,10 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     }
     bind_members(&mut scene.groups,&scene.component_definitions);
 
-    if let Some(layers_arr) = s_val.get("layers").and_then(|l| l.as_array()) {
+    if let Some(layers_arr) = s_val.get("layers").and_then(|l| l.as_array()).filter(|a| !a.is_empty()) {
         scene.layers.clear();
         for l_val in layers_arr {
-            let name = l_val.get("name").and_then(|n| n.as_str()).unwrap_or("Layer0").to_string();
+            let name = l_val.get("name").and_then(|n| n.as_str()).unwrap_or(ingetrazo_core::layers::DEFAULT_LAYER).to_string();
             let visible = l_val.get("visible").and_then(|v| v.as_bool()).unwrap_or(true);
             let locked = l_val.get("locked").and_then(|l| l.as_bool()).unwrap_or(false);
             scene.layers.push(Layer {
@@ -960,6 +960,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
                 color: l_val.get("color").and_then(|v| serde_json::from_value(v.clone()).ok()),
             });
         }
+        if !scene.layers.iter().any(|layer|layer.name==ingetrazo_core::layers::DEFAULT_LAYER){scene.layers.insert(0,Layer::default());}
     }
 
     if let Some(cam) = s_val.get("camera") {

@@ -5,7 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 
-pub const DEFAULT_LAYER: &str = "Layer0";
+pub const DEFAULT_LAYER: &str = "Layer 0";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Layer {

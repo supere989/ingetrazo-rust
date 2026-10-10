@@ -1,0 +1,12 @@
+{
+  "equal": true,
+  "codec_cases": 7,
+  "assignment_states": 5,
+  "negative_rejections": [
+    "old-default",
+    "rename-authored",
+    "wrong-default-visibility",
+    "lose-default-clearing",
+    "missing-case"
+  ]
+}

@@ -218,7 +218,7 @@ impl Scene {
             }
             None => {
                 for l in &self.layers {
-                    if l.name == crate::layers::DEFAULT_LAYER || l.name == "Capa 0" || l.name == "Layer0" || l.name == "Layer 0" {
+                    if l.name == crate::layers::DEFAULT_LAYER {
                         return l.visible;
                     }
                 }
@@ -233,28 +233,29 @@ impl Scene {
         let mut used=HashSet::new();mesh(&self.mesh,&mut used);groups(&self.groups,&mut used);
         for d in &self.dimensions{if let Some(name)=&d.layer{used.insert(name.clone());}}for t in &self.text_labels{if let Some(name)=&t.layer{used.insert(name.clone());}}for p in &self.section_planes{if let Some(name)=p.native_document.get("layer").and_then(|v|v.as_str()){used.insert(name.into());}}for v in &self.saved_views{used.extend(v.hidden_layers.iter().cloned());}used
     }
-    pub fn purge_unused_layers(&mut self)->usize{let used=self.used_layer_names();let before=self.layers.len();self.layers.retain(|l|matches!(l.name.as_str(),"Layer0"|"Layer 0"|"Capa 0")||used.contains(&l.name));let count=before-self.layers.len();if count>0{self.bump_version();}count}
+    pub fn purge_unused_layers(&mut self)->usize{let used=self.used_layer_names();let before=self.layers.len();self.layers.retain(|l|l.name==crate::layers::DEFAULT_LAYER||used.contains(&l.name));let count=before-self.layers.len();if count>0{self.bump_version();}count}
 
     pub fn assign_selection_to_layer(&mut self, layer_name: &str) -> usize {
         let mut count = 0;
+        let assigned=(layer_name!=crate::layers::DEFAULT_LAYER).then(||layer_name.to_owned());
         for item in &self.selection {
             match item {
                 SelectionItem::Face(f_id) => {
                     if *f_id < self.mesh.faces.len() {
-                        self.mesh.faces[*f_id].layer = Some(layer_name.to_string());
-                        self.mesh.faces[*f_id].attrs.insert("layer".to_string(), serde_json::Value::String(layer_name.to_string()));
+                        self.mesh.faces[*f_id].layer = assigned.clone();
+                        if let Some(name)=&assigned{self.mesh.faces[*f_id].attrs.insert("layer".into(),name.clone().into());}else{self.mesh.faces[*f_id].attrs.remove("layer");}
                         count += 1;
                     }
                 }
                 SelectionItem::Edge(e_id) => {
                     if *e_id < self.mesh.edges.len() {
-                        self.mesh.edges[*e_id].layer = Some(layer_name.to_string());
+                        self.mesh.edges[*e_id].layer = assigned.clone();
                         count += 1;
                     }
                 }
                 SelectionItem::Group(g_id) => {
                     if *g_id < self.groups.len() {
-                        self.groups[*g_id].layer = Some(layer_name.to_string());
+                        self.groups[*g_id].layer = assigned.clone();
                         count += 1;
                     }
                 }

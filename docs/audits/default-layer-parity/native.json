@@ -1,0 +1,114 @@
+{
+  "new_scene": {
+    "names": [
+      "Layer 0"
+    ],
+    "default_visible": true
+  },
+  "cases": [
+    {
+      "names": [
+        "Layer 0"
+      ],
+      "default_visible": true,
+      "name": "omitted"
+    },
+    {
+      "names": [
+        "Layer 0"
+      ],
+      "default_visible": true,
+      "name": "empty"
+    },
+    {
+      "names": [
+        "Layer 0",
+        "Layer0"
+      ],
+      "default_visible": true,
+      "name": "authored-Layer0"
+    },
+    {
+      "names": [
+        "Layer 0",
+        "Untagged"
+      ],
+      "default_visible": true,
+      "name": "authored-Untagged"
+    },
+    {
+      "names": [
+        "Layer 0"
+      ],
+      "default_visible": false,
+      "name": "explicit-default"
+    },
+    {
+      "names": [
+        "Layer0",
+        "Layer 0"
+      ],
+      "default_visible": true,
+      "name": "authored-first"
+    },
+    {
+      "names": [
+        "Layer 0"
+      ],
+      "default_visible": true,
+      "name": "missing-name"
+    }
+  ],
+  "assignment": [
+    {
+      "layers": [
+        "Layer 0",
+        "Layer0",
+        "Untagged"
+      ],
+      "face": null,
+      "edge": null,
+      "group": null
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Layer0",
+        "Untagged"
+      ],
+      "face": "Layer0",
+      "edge": "Layer0",
+      "group": "Layer0"
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Layer0",
+        "Untagged"
+      ],
+      "face": null,
+      "edge": null,
+      "group": null
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Layer0",
+        "Untagged"
+      ],
+      "face": "Layer0",
+      "edge": "Layer0",
+      "group": "Layer0"
+    },
+    {
+      "layers": [
+        "Layer 0",
+        "Layer0",
+        "Untagged"
+      ],
+      "face": null,
+      "edge": null,
+      "group": null
+    }
+  ]
+}

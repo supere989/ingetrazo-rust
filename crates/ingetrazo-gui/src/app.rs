@@ -649,8 +649,8 @@ impl IngeTrazoApp {
 
     pub fn purge_unused_layers(&mut self) {
         let mut used=self.scene.used_layer_names();for session in &self.component_edit_stack{used.extend(session.original_scene.used_layer_names());}
-        let purged=self.scene.layers.iter().filter(|l|!matches!(l.name.as_str(),"Layer0"|"Layer 0"|"Capa 0")&&!used.contains(&l.name)).count();
-        if purged>0{self.save_undo_state();self.scene.layers.retain(|l|matches!(l.name.as_str(),"Layer0"|"Layer 0"|"Capa 0")||used.contains(&l.name));self.scene.bump_version();}
+        let purged=self.scene.layers.iter().filter(|l|l.name!=ingetrazo_core::layers::DEFAULT_LAYER&&!used.contains(&l.name)).count();
+        if purged>0{self.save_undo_state();self.scene.layers.retain(|l|l.name==ingetrazo_core::layers::DEFAULT_LAYER||used.contains(&l.name));self.scene.bump_version();}
         if self.active_layer_idx>=self.scene.layers.len(){self.active_layer_idx=0;}self.status_message=format!("Purged {purged} unused layer(s)");
     }
 

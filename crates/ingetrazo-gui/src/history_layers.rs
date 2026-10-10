@@ -232,7 +232,7 @@ impl IngeTrazoApp {
             return false;
         };
         let old = layer.name.clone();
-        if matches!(old.as_str(), "Layer0" | "Layer 0" | "Capa 0")
+        if old==ingetrazo_core::layers::DEFAULT_LAYER
             || name.trim().is_empty()
             || old == name
             || self.scene.layers.iter().any(|l| l.name == name)
@@ -301,7 +301,7 @@ impl IngeTrazoApp {
             return false;
         };
         let name = layer.name.clone();
-        if matches!(name.as_str(), "Layer0" | "Layer 0" | "Capa 0") {
+        if name==ingetrazo_core::layers::DEFAULT_LAYER {
             return false;
         }
         self.seal_layer_history();
