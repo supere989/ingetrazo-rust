@@ -38,6 +38,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    ShapePath::Polygon(points) if convex_outline(points)=>Some(points.clone()),
    _=>None,
   };
+  let original_line=if let ShapePath::Line(a,b)=&command.path{Some((*a,*b))}else{None};
   let (points,closed)=match command.path {
    ShapePath::RoundedRect{size,radius}=>{
     let points=if radius<=0.{vec![DVec2::ZERO,DVec2::new(size.x,0.),size,DVec2::new(0.,size.y)]}else{
@@ -49,16 +50,11 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    },
    ShapePath::Ellipse{size}=>{let c=size/2.;((0..96).map(|i|{let a=std::f64::consts::TAU*f64::from(i)/96.;c+DVec2::new(c.x*a.cos(),c.y*a.sin())}).collect(),true)},
    ShapePath::Polygon(points)=>(points,true),
-   ShapePath::Line(mut a,mut b)=>{
-    if let Some(ref clip)=command.clip{
-     let delta=b-a;let mut lo=0_f64;let mut hi=1_f64;
-     let sign=clip.iter().zip(clip.iter().cycle().skip(1)).map(|(a,b)|a.perp_dot(*b)).sum::<f64>().signum();
-     for i in 0..clip.len(){let e=clip[(i+1)%clip.len()]-clip[i];let base=sign*e.perp_dot(a-clip[i]);let slope=sign*e.perp_dot(delta);if slope.abs()<1e-12{if base<0.{lo=1.;hi=0.;break;}}else{let t=-base/slope;if slope>0.{lo=lo.max(t);}else{hi=hi.min(t);}}}
-     if lo>hi{continue;}b=a+delta*hi;a+=delta*lo;
-    }(vec![a,b],false)
+   ShapePath::Line(a,b)=>{
+    (vec![a,b],false)
    }
   };
-  let exact_line=if !closed&&points.len()==2&&command.clip.is_none(){Some((points[0],points[1]))}else{None};
+  let exact_line=original_line;
   let points=points.into_iter().map(|p|Pos2::new(p.x as f32,p.y as f32)).collect::<Vec<_>>();
   if points.iter().any(|p|!p.x.is_finite()||!p.y.is_finite()){return Err("Composer CAD coordinate overflow".into());}
   for (color,fill) in [(fill_color,true),(stroke_color,false)]{
@@ -76,7 +72,8 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
     ingetrazo_render::qt_gray::rasterize(&contours,250_000,100_000)?
     }else{
      let(a,b)=exact_line.unwrap();let Some(path)=round_cap_outline(a,b,radius)else{continue;};
-     ingetrazo_render::qt_gray::rasterize_transformed_paths(&[path],f64::from(density),[phase.x,phase.y],250_000,100_000)?
+     let spans=ingetrazo_render::qt_gray::rasterize_transformed_paths(&[path],f64::from(density),[phase.x,phase.y],250_000,100_000)?;
+     if let Some(clip)=&command.clip{let contour=clip.iter().map(|p|[p.x*f64::from(density)+phase.x,p.y*f64::from(density)+phase.y]).collect::<Vec<_>>();let clip=ingetrazo_render::qt_gray::rasterize(&[contour],250_000,100_000)?;ingetrazo_render::qt_gray::intersect_spans(&spans,&clip,100_000)?}else{spans}
     };
     let byte_count=vertices.len().checked_mul(12).and_then(|v|indices.len().checked_mul(4).and_then(|i|v.checked_add(i))).and_then(|old|spans.len().checked_mul(72).and_then(|new|old.checked_add(new))).ok_or("Composer span byte overflow")?;
     if byte_count>8*1024*1024{return Err("Composer exact span geometry exceeds8MiB admission".into());}

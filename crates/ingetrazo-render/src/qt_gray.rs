@@ -111,8 +111,24 @@ pub fn rasterize_transformed_paths(paths:&[PathContour],scale:f64,translation:[f
  for path in paths{fixed(path.start)?;let mut current=path.start;let mut contour=vec![transform(current)];for segment in &path.segments{let points=match segment{Segment::Line(to)=>{fixed(*to)?;vec![*to]},Segment::Cubic{control1,control2,to}=>{fixed(*control1)?;fixed(*control2)?;fixed(*to)?;flatten_cubic(current,*control1,*control2,*to,0.25/scale)}};count=count.checked_add(points.len()).ok_or("Gray flattened path count overflow")?;if count>max_cells{return Err("Gray flattened path admission exceeded".into());}current=*points.last().unwrap();contour.extend(points.into_iter().map(transform));}contours.push(contour);}
  rasterize(&contours,max_cells,max_runs)
 }
+/// Source qt_intersect_spans: ordered interval intersection and qt_div_255 coverage.
+pub fn intersect_spans(spans:&[Span],clip:&[Span],limit:usize)->Result<Vec<Span>,String>{
+ let(mut i,mut j)=(0usize,0usize);let mut out=Vec::new();
+ while i<spans.len()&&j<clip.len(){let a=spans[i];let b=clip[j];if a.y<b.y{i+=1;continue;}if b.y<a.y{j+=1;continue;}
+  let ax=i64::from(a.x)+i64::from(a.len);let bx=i64::from(b.x)+i64::from(b.len);let x=i64::from(a.x.max(b.x));let len=ax.min(bx)-x;
+  if len>0{let t=u32::from(a.coverage)*u32::from(b.coverage);let coverage=((t+(t>>8)+128)>>8)as u8;append(&mut out,x,i64::from(a.y),len,coverage,limit)?;}
+  if ax<bx{i+=1;}else{j+=1;}
+ }Ok(out)
+}
 #[cfg(test)]mod tests {
  use super::*;
+ #[test]fn clipped_runs_use_source_byte_product_and_bound_output(){
+  let a=vec![Span{x:0,y:0,len:4,coverage:128},Span{x:8,y:0,len:4,coverage:255}];
+  let b=vec![Span{x:2,y:0,len:8,coverage:128}];
+  let out=intersect_spans(&a,&b,10).unwrap();assert_eq!(out,vec![Span{x:2,y:0,len:2,coverage:64},Span{x:8,y:0,len:2,coverage:128}]);
+  assert!(intersect_spans(&a,&b,1).is_err());assert!(intersect_spans(&a,&[],1).unwrap().is_empty());
+ }
+
  #[test]fn cubic_path_admission_and_finite_controls(){
   let path=PathContour{start:[0.,0.],segments:vec![Segment::Cubic{control1:[10.,20.],control2:[20.,20.],to:[30.,0.]}]};
   assert!(!rasterize_paths(&[path.clone()],10000,10000).unwrap().is_empty());
