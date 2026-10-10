@@ -5,7 +5,13 @@ from pathlib import Path
 original=json.loads(Path(sys.argv[1]).read_text())['cases']
 native=json.loads(Path(sys.argv[2]).read_text())['cases']
 baseline=json.loads(Path(sys.argv[3]).read_text())['cases']
-assert len(original)==len(native)>=10 and len(baseline)>=10
+base=["red-half-white","red-half-black","opacity-bucket-order","opaque-front","opaque-back","equal-opacity-forward","equal-opacity-reversed","opacity-995","opacity-zero","section-clipped"]
+rounding=["rgb-tie-even","rgb-tie-odd","opacity-round-5005","opacity-round-1255"]
+expected_names=base if len(original)==10 else base+rounding
+assert len(original)==len(native)==len(expected_names)
+assert [r["case"]for r in original]==expected_names
+assert [r["case"]for r in native]==expected_names
+assert len(baseline)in(10,14) and [r["case"]for r in baseline]==(base if len(baseline)==10 else base+rounding)
 for o,n in zip(original,native):
  assert o['case']==n['case']
  assert o['center_rgba']==n['center_rgba'],(o['case'],o['center_rgba'],n['center_rgba'])
@@ -23,5 +29,7 @@ assert sum(o['center_rgba']!=b['center_rgba'] for o,b in zip(original,baseline))
 # A reversed same-opacity draw order and a linear-light blend must be rejected.
 rows={n['case']:n for n in native}
 assert rows['equal-opacity-forward']['center_rgba']!=rows['equal-opacity-reversed']['center_rgba']
-assert rows['red-half-black']['center_rgba'][0]==124 and rows['red-half-black']['center_rgba'][0]!=183
+source_rows={r['case']:r for r in original}
+assert rows['red-half-black']['center_rgba']==source_rows['red-half-black']['center_rgba']
+assert rows['red-half-black']['center_rgba'][0]!=183
 print(f'PASS {len(original)} exact actual Qt alpha pixels, cached bucket order, 24B shared vertices, no duplicate positions, stale opaque/linear/order negative controls')
