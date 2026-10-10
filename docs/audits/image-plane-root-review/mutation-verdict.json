@@ -1,0 +1,6 @@
+{
+  "mutation": "production image-plane move skips origin change",
+  "actual_mutated_controller_exit": 0,
+  "checker_rejection_exit": 1,
+  "restored_controller_and_checker": 0
+}
