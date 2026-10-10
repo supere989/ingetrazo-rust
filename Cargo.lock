@@ -1351,6 +1351,7 @@ dependencies = [
  "base64 0.22.1",
  "glam",
  "gltf",
+ "image",
  "ingetrazo-core",
  "log",
  "roxmltree",

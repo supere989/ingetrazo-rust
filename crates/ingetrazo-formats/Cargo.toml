@@ -17,3 +17,4 @@ uuid.workspace = true
 gltf = { version = "1.4.1", default-features = false, features = ["import", "utils", "names", "KHR_texture_transform", "KHR_materials_pbrSpecularGlossiness", "extras"] }
 base64 = "0.22.1"
 roxmltree = "0.20"
+image.workspace = true

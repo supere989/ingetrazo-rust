@@ -422,11 +422,18 @@ fn material_colors<'a, 'i>(
                 let symbol = binding
                     .attribute("symbol")
                     .ok_or_else(|| invalid("missing material symbol"))?;
+                let fallback = image::load_from_memory(&bytes).ok().map(|decoded| {
+                    let decoded = decoded.to_rgb8();
+                    let mut sums = [0_u64; 3];
+                    for pixel in decoded.pixels() { for i in 0..3 { sums[i] += u64::from(pixel[i]); } }
+                    let count = u64::from(decoded.width()) * u64::from(decoded.height());
+                    sums.map(|sum| ((sum + count / 2) / count.max(1)) as f64 / 255.)
+                });
                 assets.insert(key.clone(), bytes);
                 colors.insert(
                     symbol.to_owned(),
                     DaeMaterial {
-                        color: None,
+                        color: fallback,
                         image: Some(key),
                     },
                 );
@@ -615,7 +622,7 @@ pub(crate) fn scene_from_xml_at(
                 .iter()
                 .map(|p| world.transform_point3(*p))
                 .collect();
-            let mut vertices: Vec<_> = polygon
+            let vertices: Vec<_> = polygon
                 .points
                 .into_iter()
                 .map(|p| mesh.add_vertex(world.transform_point3(p)))
@@ -630,16 +637,12 @@ pub(crate) fn scene_from_xml_at(
                 .as_ref()
                 .and_then(|symbol| colors.get(symbol))
             {
-                if let Some(color) = material.color {
+                if let Some(color) = material.color.filter(|_| material.image.is_none() || polygon.uv.is_none()) {
                     mesh.faces[id]
                         .attrs
                         .insert("color".into(), serde_json::json!(color));
                 }
-                if let Some(image) = &material.image {
-                    let uv = polygon
-                        .uv
-                        .as_ref()
-                        .ok_or_else(|| invalid("textured COLLADA polygon lacks UV coordinates"))?;
+                if let (Some(image), Some(uv)) = (&material.image, &polygon.uv) {
                     let map = affine_uv(&points, uv)?;
                     let gu = DVec3::new(map[0], map[1], map[2]).length();
                     let gv = DVec3::new(map[4], map[5], map[6]).length();
