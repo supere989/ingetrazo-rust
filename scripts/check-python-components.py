@@ -23,10 +23,24 @@ def main():
         unique=Scene();igz.load_into(unique,directory/"unique.igz")
         assert unique.groups[0].mesh is not unique.groups[1].mesh,"Make Unique remained linked"
         assert [g.mesh.vertices[0].position.z() for g in unique.groups]==[3,2,0]
+        subprocess.run(["cargo","run","--locked","-p","ingetrazo-gui","--example","component_editor_acceptance_fixture","--",temp],check=True)
+        def reopen(name):
+            scene=Scene();igz.load_into(scene,directory/(name+".igz"));return scene
+        committed=reopen("editor-committed")
+        assert [g.mesh.vertices[0].position.z() for g in committed.groups[:3]]==[5,5,0]
+        assert committed.groups[3].children[0].mesh is committed.groups[0].mesh
+        assert committed.groups[4].children[0].mesh is committed.groups[0].mesh
+        assert [g.mesh.vertices[0].position.z() for g in reopen("editor-undone").groups[:3]]==[0,0,0]
+        unique_editor=reopen("editor-unique")
+        assert [g.mesh.vertices[0].position.z() for g in unique_editor.groups[:3]]==[7,5,0]
+        assert unique_editor.groups[3].children[0].mesh.vertices[0].position.z()==5
+        pasted=reopen("editor-pasted")
+        assert pasted.groups[0].mesh is pasted.groups[5].mesh
+        assert pasted.groups[0].uid!=pasted.groups[5].uid
         for suffix in ("linked","unique"):
             path=directory/(suffix+".igz");raw=json.loads(path.read_text())["scene"]
             assert [g["uid"] for g in raw["groups"]]==["persisted-first","persisted-second","persisted-plain"]
             assert [g["opaque_instance"] for g in raw["groups"]]==[67,71,73]
-    report={"provenance":context(),"passed":True,"checks":["linked definitions reopen as same Python mesh identity","plain component=false stays independent","shared edit updates both linked instances","Make Unique detaches even identical geometry before later shared edit","instance UID and opaque attributes retained"],"scope":"One shared triangle definition and plain group; no nested instance/editor/clipboard/undo proof."}
+    report={"provenance":context(),"passed":True,"checks":["linked definitions reopen as same Python mesh identity","plain component=false stays independent","shared edit updates both linked instances","Make Unique detaches even identical geometry before later shared edit","instance UID and opaque attributes retained","nested editor commit propagates and Python preserves shared child identity","exact controller undo/redo and cancel preserve document; fragment save blocked","Make Unique edit and clipboard maintain intended linkage with distinct instance IDs"],"scope":"Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; no rendered UI gesture proof."}
     Path("docs/audits/python-component-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()
