@@ -1,3 +1,4 @@
+#[path="../source_holes.rs"]mod source_holes;
 #[path="../owner_registry.rs"]mod owner_registry;#[path="../owner_budget.rs"]mod owner_budget;#[path="../journal.rs"]mod journal;#[path="../owner.rs"]mod owner;#[path="../face_owner.rs"]mod face_owner;
 use ingetrazo_core::mesh::Mesh;use glam::DVec3;use serde_json::json;
 fn state(o:&face_owner::FaceOwner,name:&str)->serde_json::Value{let m=o.mesh();json!({"name":name,"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":m.edges.iter().map(|e|json!({"vertices":[e.v0,e.v1],"faces":e.faces})).collect::<Vec<_>>(),"faces":m.faces.iter().map(|f|json!({"outer":f.vertices,"holes":f.holes})).collect::<Vec<_>>()})}

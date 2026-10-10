@@ -1,3 +1,4 @@
+#[path="../source_holes.rs"]mod source_holes;
 #[path="../owner_registry.rs"]mod owner_registry;#[path="../owner_budget.rs"]mod owner_budget;#[path="../journal.rs"]mod journal;#[path="../owner.rs"]mod owner;#[path="../face_owner.rs"]mod face_owner;
 use std::alloc::{GlobalAlloc,Layout,System};use std::sync::atomic::{AtomicBool,Ordering};use glam::DVec3;use ingetrazo_core::mesh::Mesh;
 static FAIL:AtomicBool=AtomicBool::new(false);struct Fault;unsafe impl GlobalAlloc for Fault{unsafe fn alloc(&self,l:Layout)->*mut u8{if l.size()==3*std::mem::size_of::<Vec<usize>>()&&FAIL.swap(false,Ordering::SeqCst){std::ptr::null_mut()}else{System.alloc(l)}}unsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self,p:*mut u8,l:Layout,n:usize)->*mut u8{System.realloc(p,l,n)}}#[global_allocator]static ALLOC:Fault=Fault;
