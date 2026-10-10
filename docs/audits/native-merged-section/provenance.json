@@ -1,0 +1,10 @@
+{
+  "checkout": "4b487e5",
+  "environment": {
+    "INGETRAZO_VULKAN_WORLD": "1",
+    "INGETRAZO_WORLD_SECTION": "per-directory mode"
+  },
+  "binary_sha256": "3c69899754c422e6512a9b141731c747e5160f04ec0ed40372ad9f4e79a64c49",
+  "result": "4 clipping pixel controls and startup/two-resizes/close pass",
+  "limits": "software llvmpipe, no stencil fill or Metal acceptance"
+}
