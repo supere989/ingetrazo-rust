@@ -27,7 +27,11 @@ impl IngeTrazoApp{
   for p in self.scene.geo_paths.iter().chain(&imported).flat_map(|p|&p.points){min=min.min(*p);max=max.max(*p)}
   min.z=0.;max.z=0.;
   camera.target=((min+max)*0.5).as_vec3().as_dvec3();
-  let diagonal=(max-min).as_vec3().length().max(0.02) as f64;
+  // Source QVector3D::length uses the scaled three-argument float hypot.
+  // Keep its f32 operation order; glam's unscaled dot/sqrt rounds differently.
+  let span=(max-min).as_vec3().abs();let scale=span.max_element();
+  let length=if scale==0. {0.}else{let q=span/scale;scale*((q.x*q.x+q.y*q.y)+q.z*q.z).sqrt()};
+  let diagonal=length.max(0.02) as f64;
   camera.distance=(diagonal*1.3/(2.*(camera.fov_deg.to_radians()*0.5).tan())).max(0.02);
   // Source datum initialization and viewport framing are outside the path command.
   // Validate first, then retain both in the command's before-state.

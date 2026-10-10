@@ -1,0 +1,452 @@
+[
+  [
+    {
+      "phase": "import",
+      "datum": [
+        -13.515,
+        -71.975,
+        0.0,
+        0.0
+      ],
+      "paths": [
+        {
+          "name": "Existing",
+          "closed": false,
+          "points": [
+            [
+              4.0,
+              5.0,
+              6.0
+            ],
+            [
+              7.0,
+              8.0,
+              9.0
+            ]
+          ]
+        },
+        {
+          "name": "Lot 1",
+          "closed": true,
+          "points": [
+            [
+              -534.9861450195312,
+              -560.2099609375,
+              0.0
+            ],
+            [
+              548.4345703125,
+              -547.0463256835938,
+              0.0
+            ],
+            [
+              535.0090942382812,
+              560.1942138671875,
+              0.0
+            ],
+            [
+              -548.45703125,
+              547.0396118164062,
+              0.0
+            ]
+          ]
+        }
+      ],
+      "vertices": 1,
+      "tile_layer": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            -0.01123046875,
+            -0.00787353515625,
+            716.5064270019532,
+            728.2627136230469
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      },
+      "camera": {
+        "target": [
+          -0.01123046875,
+          -0.00787353515625,
+          0.0
+        ],
+        "distance": 2460.4927131437075,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.5707963267948966,
+        "perspective": true
+      }
+    },
+    {
+      "phase": "undo",
+      "datum": [
+        -13.515,
+        -71.975,
+        0.0,
+        0.0
+      ],
+      "paths": [
+        {
+          "name": "Existing",
+          "closed": false,
+          "points": [
+            [
+              4.0,
+              5.0,
+              6.0
+            ],
+            [
+              7.0,
+              8.0,
+              9.0
+            ]
+          ]
+        }
+      ],
+      "vertices": 1,
+      "tile_layer": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            -0.01123046875,
+            -0.00787353515625,
+            716.5064270019532,
+            728.2627136230469
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      },
+      "camera": {
+        "target": [
+          -0.01123046875,
+          -0.00787353515625,
+          0.0
+        ],
+        "distance": 2460.4927131437075,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.5707963267948966,
+        "perspective": true
+      }
+    },
+    {
+      "phase": "redo",
+      "datum": [
+        -13.515,
+        -71.975,
+        0.0,
+        0.0
+      ],
+      "paths": [
+        {
+          "name": "Existing",
+          "closed": false,
+          "points": [
+            [
+              4.0,
+              5.0,
+              6.0
+            ],
+            [
+              7.0,
+              8.0,
+              9.0
+            ]
+          ]
+        },
+        {
+          "name": "Lot 1",
+          "closed": true,
+          "points": [
+            [
+              -534.9861450195312,
+              -560.2099609375,
+              0.0
+            ],
+            [
+              548.4345703125,
+              -547.0463256835938,
+              0.0
+            ],
+            [
+              535.0090942382812,
+              560.1942138671875,
+              0.0
+            ],
+            [
+              -548.45703125,
+              547.0396118164062,
+              0.0
+            ]
+          ]
+        }
+      ],
+      "vertices": 1,
+      "tile_layer": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            -0.01123046875,
+            -0.00787353515625,
+            716.5064270019532,
+            728.2627136230469
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      },
+      "camera": {
+        "target": [
+          -0.01123046875,
+          -0.00787353515625,
+          0.0
+        ],
+        "distance": 2460.4927131437075,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.5707963267948966,
+        "perspective": true
+      }
+    }
+  ],
+  [
+    {
+      "phase": "import",
+      "datum": [
+        -13.5,
+        -71.9,
+        1234.0,
+        23.0
+      ],
+      "paths": [
+        {
+          "name": "Existing",
+          "closed": false,
+          "points": [
+            [
+              4.0,
+              5.0,
+              6.0
+            ],
+            [
+              7.0,
+              8.0,
+              9.0
+            ]
+          ]
+        },
+        {
+          "name": "Lot 1",
+          "closed": true,
+          "points": [
+            [
+              -8859.8837890625,
+              1242.1568603515625,
+              0.0
+            ],
+            [
+              -7857.4462890625,
+              830.94775390625,
+              0.0
+            ],
+            [
+              -7437.1708984375,
+              1855.413818359375,
+              0.0
+            ],
+            [
+              -8439.646484375,
+              2266.64892578125,
+              0.0
+            ]
+          ]
+        }
+      ],
+      "vertices": 1,
+      "tile_layer": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            -4426.44189453125,
+            1135.824462890625,
+            5763.474462890625,
+            2460.8570312499996
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      },
+      "camera": {
+        "target": [
+          -4426.44189453125,
+          1135.824462890625,
+          0.0
+        ],
+        "distance": 14359.75040282016,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.5707963267948966,
+        "perspective": true
+      }
+    },
+    {
+      "phase": "undo",
+      "datum": [
+        -13.5,
+        -71.9,
+        1234.0,
+        23.0
+      ],
+      "paths": [
+        {
+          "name": "Existing",
+          "closed": false,
+          "points": [
+            [
+              4.0,
+              5.0,
+              6.0
+            ],
+            [
+              7.0,
+              8.0,
+              9.0
+            ]
+          ]
+        }
+      ],
+      "vertices": 1,
+      "tile_layer": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            -4426.44189453125,
+            1135.824462890625,
+            5763.474462890625,
+            2460.8570312499996
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      },
+      "camera": {
+        "target": [
+          -4426.44189453125,
+          1135.824462890625,
+          0.0
+        ],
+        "distance": 14359.75040282016,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.5707963267948966,
+        "perspective": true
+      }
+    },
+    {
+      "phase": "redo",
+      "datum": [
+        -13.5,
+        -71.9,
+        1234.0,
+        23.0
+      ],
+      "paths": [
+        {
+          "name": "Existing",
+          "closed": false,
+          "points": [
+            [
+              4.0,
+              5.0,
+              6.0
+            ],
+            [
+              7.0,
+              8.0,
+              9.0
+            ]
+          ]
+        },
+        {
+          "name": "Lot 1",
+          "closed": true,
+          "points": [
+            [
+              -8859.8837890625,
+              1242.1568603515625,
+              0.0
+            ],
+            [
+              -7857.4462890625,
+              830.94775390625,
+              0.0
+            ],
+            [
+              -7437.1708984375,
+              1855.413818359375,
+              0.0
+            ],
+            [
+              -8439.646484375,
+              2266.64892578125,
+              0.0
+            ]
+          ]
+        }
+      ],
+      "vertices": 1,
+      "tile_layer": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            -4426.44189453125,
+            1135.824462890625,
+            5763.474462890625,
+            2460.8570312499996
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      },
+      "camera": {
+        "target": [
+          -4426.44189453125,
+          1135.824462890625,
+          0.0
+        ],
+        "distance": 14359.75040282016,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.5707963267948966,
+        "perspective": true
+      }
+    }
+  ]
+]

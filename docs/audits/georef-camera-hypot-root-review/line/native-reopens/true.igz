@@ -1,0 +1,192 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 28256.391459881583,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 1.5707963267948966,
+      "target": [
+        8312.708984375,
+        3472.45458984375,
+        0.0
+      ],
+      "yaw": -1.5707963267948966
+    },
+    "compositions": [
+      {
+        "cajetin": {
+          "autor": "IngeTrazo Cad Engine",
+          "campos": [
+            [
+              "PROYECTO",
+              "Active-iQ Architecture"
+            ],
+            [
+              "AUTOR",
+              "IngeTrazo Cad Engine"
+            ],
+            [
+              "FECHA",
+              "2026-10-07"
+            ],
+            [
+              "ESCALA",
+              "1:100"
+            ],
+            [
+              "LÁMINA",
+              "A-01"
+            ],
+            [
+              "TÍTULO",
+              "General Plan"
+            ]
+          ],
+          "drawing_title": "General Plan",
+          "escala": "1:100",
+          "fecha": "2026-10-07",
+          "h_mm": 50.0,
+          "lamina": "A-01",
+          "proyecto": "Active-iQ Architecture",
+          "w_mm": 140.0,
+          "x_mm": 270.0,
+          "y_mm": 237.0
+        },
+        "frames": [
+          {
+            "annotations": true,
+            "border": true,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "cut_fill": "solid",
+            "cut_fill_color": "#595e69",
+            "cut_hatch_mm": 1.5,
+            "h_mm": 207.0,
+            "hidden_lines": false,
+            "paper_bg": false,
+            "pen_cut_mm": 0.5,
+            "pen_edge_mm": 0.18,
+            "pen_profile_mm": 0.35,
+            "perspective": false,
+            "profiles": true,
+            "rot_deg": 0.0,
+            "scale_n": 100.0,
+            "section_marks": true,
+            "show_title": true,
+            "style": "vectorial",
+            "title_text": "Top Plan (1:100)",
+            "uid": "957bb75b7f77454098b07dd030e0ea9e",
+            "view_key": "std:top",
+            "w_mm": 380.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          }
+        ],
+        "landscape": true,
+        "margin_mm": 10.0,
+        "name": "Sheet 1",
+        "nortes": [],
+        "paper": "A3",
+        "scalebars": [],
+        "shapes": [],
+        "texts": []
+      }
+    ],
+    "dimensions": [],
+    "edges": [],
+    "faces": [],
+    "geo_paths": [
+      {
+        "closed": false,
+        "name": "Existing",
+        "points": [
+          [
+            4.0,
+            5.0,
+            6.0
+          ],
+          [
+            7.0,
+            8.0,
+            9.0
+          ]
+        ],
+        "surface": null
+      },
+      {
+        "closed": false,
+        "name": "",
+        "points": [
+          [
+            16619.994140625,
+            6939.29736328125,
+            0.0
+          ],
+          [
+            16621.41796875,
+            6939.9091796875,
+            0.0
+          ]
+        ],
+        "surface": null
+      }
+    ],
+    "geo_points": [],
+    "georef": {
+      "datum": {
+        "alt": 1234.0,
+        "lat": -13.5,
+        "lon": -71.9,
+        "north": 23.0
+      }
+    },
+    "groups": [],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "tile_layer": {
+      "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community",
+      "name": "Esri World Imagery (satellite)",
+      "opacity": 1.0,
+      "patches": [
+        [
+          8312.708984375,
+          3472.45458984375,
+          10801.3216796875,
+          5960.06728515625
+        ]
+      ],
+      "radius_m": 1200.0,
+      "source": "esri_imagery",
+      "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "visible": true,
+      "zoom": 15
+    },
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}
