@@ -2,6 +2,13 @@
   "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "cases": [
     {
+      "history_presentation": {
+        "initial_version": 0,
+        "committed_version": 5,
+        "undo_version": 6,
+        "redo_version": 7,
+        "selection_empty_after_commit_undo_redo": true
+      },
       "name": "translated",
       "parent_drawing_frame": [
         1.0,
@@ -394,6 +401,13 @@
       }
     },
     {
+      "history_presentation": {
+        "initial_version": 0,
+        "committed_version": 5,
+        "undo_version": 6,
+        "redo_version": 7,
+        "selection_empty_after_commit_undo_redo": true
+      },
       "name": "rotated",
       "parent_drawing_frame": [
         0.0,
@@ -786,6 +800,13 @@
       }
     },
     {
+      "history_presentation": {
+        "initial_version": 0,
+        "committed_version": 5,
+        "undo_version": 6,
+        "redo_version": 7,
+        "selection_empty_after_commit_undo_redo": true
+      },
       "name": "tilted_scaled",
       "parent_drawing_frame": [
         2.0,
