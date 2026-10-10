@@ -15,6 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         frames: u64,
         automatic: bool,
         display_sync: bool,
+        drawable_readback: bool,
         started: std::time::Instant,
         resized: bool,
         resized_display_baseline: u64,
@@ -40,7 +41,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "Native Metal WSI: device={}; unified={}; FOUNDATION ONLY",
                     metal.info.name, metal.info.unified_memory
                 );
-                self.gpu = Some(MetalPresentation::attach_with_display_sync(window.clone(), metal, self.display_sync)?);
+                let mut gpu = MetalPresentation::attach_with_display_sync(window.clone(), metal, self.display_sync)?;
+                if self.drawable_readback { gpu.enable_center_readback_for_probe()?; }
+                self.gpu = Some(gpu);
                 self.window = Some(window);
                 Ok(())
             })();
@@ -121,8 +124,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 let id = gpu.native_window_id()?;
                                 let (submitted, retired, pending) = gpu.counters();
                                 let (displayed, skipped) = gpu.presentation_counters();
+                                let center = gpu.center_readback_for_probe().map(|(id, pixel)| format!("{{\"submission\":{id},\"rgba\":{pixel:?}}}")).unwrap_or_else(|| "null".into());
                                 let body = format!(
-                                    "{{\"window_id\":{id},\"submitted\":{submitted},\"retired\":{retired},\"pending\":{pending},\"displayed\":{displayed},\"skipped\":{skipped},\"completed_inflight\":{}}}",
+                                    "{{\"window_id\":{id},\"submitted\":{submitted},\"retired\":{retired},\"pending\":{pending},\"displayed\":{displayed},\"skipped\":{skipped},\"completed_inflight\":{},\"actual_drawable_center\":{center}}}",
                                     gpu.completed_inflight_for_probe()
                                 );
                                 let temp = path.with_extension("tmp");
@@ -211,6 +215,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         frames: 0,
         automatic: std::env::args().any(|s| s == "--automatic"),
         display_sync: !std::env::args().any(|s| s == "--diagnostic-no-vsync"),
+        drawable_readback: std::env::args().any(|s| s == "--diagnostic-drawable-readback"),
         started: std::time::Instant::now(),
         resized: false,
         resized_display_baseline: 0,

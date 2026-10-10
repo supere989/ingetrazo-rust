@@ -110,7 +110,7 @@ def main():
         print(json.dumps(self_test(),indent=2));return 0
     if sys.argv[1:]==["--capture-failure-self-test"]:
         print(json.dumps(capture_failure_self_test(),indent=2));return 0
-    parser=argparse.ArgumentParser();parser.add_argument("binary",type=pathlib.Path);parser.add_argument("output",type=pathlib.Path);parser.add_argument("--source-revision",required=True);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument("binary",type=pathlib.Path);parser.add_argument("output",type=pathlib.Path);parser.add_argument("--source-revision",required=True);parser.add_argument("--drawable-readback",action="store_true");args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
     if any(args.output.iterdir()):raise ValueError("fresh diagnostic directory required")
     report={"passed":False,"presentation_passed":False,"physical_mac_claim":False,"source_revision":args.source_revision,"binary_sha256":hashlib.sha256(args.binary.read_bytes()).hexdigest()}
@@ -122,6 +122,7 @@ def main():
         identity=args.output/"own-window.json";log=(args.output/"presentation.log").open("wb")
         acknowledgment=args.output/"capture-finished"
         command=[str(args.binary.resolve()),"--automatic","--owned-window-id="+str(identity.resolve()),"--owned-window-ack="+str(acknowledgment.resolve())];report["presentation_command"]=command
+        if args.drawable_readback:command.append("--diagnostic-drawable-readback")
         native_started=time.monotonic();proc=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
         capture=pathlib.Path("/usr/sbin/screencapture")
         help_result=subprocess.run([str(capture),"-h"],capture_output=True,text=True,timeout=2)
@@ -132,7 +133,9 @@ def main():
             if identity.is_file():
                 try:
                     candidate=json.loads(identity.read_text())
-                    if candidate.get("submitted",0)>0 and (candidate.get("completed_inflight",0)>0 or candidate.get("retired",0)>0):snapshot=candidate;break
+                    readback=candidate.get("actual_drawable_center")
+                    sample_ready=not args.drawable_readback or (isinstance(readback,dict) and type(readback.get("submission"))==int and readback["submission"]>0 and isinstance(readback.get("rgba"),list) and len(readback["rgba"])==4 and all(type(v)==int and 0<=v<=255 for v in readback["rgba"]))
+                    if sample_ready and candidate.get("submitted",0)>0 and (candidate.get("completed_inflight",0)>0 or candidate.get("retired",0)>0):snapshot=candidate;break
                 except (ValueError,OSError):pass
             time.sleep(.02)
         if snapshot is None:raise RuntimeError("no own native window with actual completed GPU command")

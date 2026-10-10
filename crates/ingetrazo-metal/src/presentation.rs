@@ -41,6 +41,7 @@ struct Frame {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
+    _center_readback: Option<crate::Buffer>,
     callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
     callback_time: std::sync::Arc<std::sync::atomic::AtomicU64>,
     _callback: block2::RcBlock<dyn Fn(std::ptr::NonNull<ProtocolObject<dyn MTLDrawable>>)>,
@@ -64,6 +65,8 @@ pub struct MetalPresentation {
     displayed_submissions: [u64; 32],
     displayed_cursor: usize,
     extent: (u32, u32),
+    diagnostic_center_readback: bool,
+    last_center_readback: Option<(u64, [u8; 4])>,
 }
 impl MetalPresentation {
     pub fn attach(window: std::sync::Arc<Window>, metal: NativeMetal) -> Result<Self, String> {
@@ -157,10 +160,25 @@ impl MetalPresentation {
             displayed_submissions: [0; 32],
             displayed_cursor: 0,
             extent: (0, 0),
+            diagnostic_center_readback: false,
+            last_center_readback: None,
         };
         let size = window.inner_size();
         result.resize(size.width, size.height, window.scale_factor())?;
         Ok(result)
+    }
+    /// Diagnostic only: enable actual drawable transfer before first acquisition.
+    /// Default production keeps framebufferOnly true and allocates no readbacks.
+    pub fn enable_center_readback_for_probe(&mut self) -> Result<(), String> {
+        if self.submitted != 0 || !self.owners.frames.is_empty() {
+            return Err("Drawable readback must be selected before first submission".into());
+        }
+        self.owners.layer.setFramebufferOnly(false);
+        self.diagnostic_center_readback = true;
+        Ok(())
+    }
+    pub fn center_readback_for_probe(&self) -> Option<(u64, [u8; 4])> {
+        self.last_center_readback
     }
     pub fn resize(&mut self, width: u32, height: u32, density: f64) -> Result<(), String> {
         if !density.is_finite() || density <= 0.0 || width > 16384 || height > 16384 {
@@ -177,6 +195,21 @@ impl MetalPresentation {
     /// presentation can still own the drawable after rendering has completed.
     pub fn poll(&mut self) -> Result<usize, String> {
         let mut count = 0;
+        if self.diagnostic_center_readback {
+            for frame in &self.owners.frames {
+                if frame.command.status() != MTLCommandBufferStatus::Completed
+                    || self.last_center_readback.is_some_and(|(id, _)| id >= frame.submission_id)
+                { continue; }
+                if let Some(readback) = frame._center_readback.as_ref() {
+                    // Shared storage becomes readable only after real GPU completion.
+                    // This sample never proves presentation or releases the frame.
+                    let bgra = unsafe { std::slice::from_raw_parts(readback.raw.contents().as_ptr().cast::<u8>(), 4) };
+                    let rgba = [bgra[2], bgra[1], bgra[0], bgra[3]];
+                    self.last_center_readback = Some((frame.submission_id, rgba));
+                    eprintln!("ACTUAL drawable GPU center readback: submission={} BGRA8Unorm rgba={rgba:?}", frame.submission_id);
+                }
+            }
+        }
         loop {
             let terminal = next_terminal(&self.owners.frames, |frame| {
                 if frame.command.status() == MTLCommandBufferStatus::Error {
@@ -267,6 +300,20 @@ impl MetalPresentation {
             }
         }
         encoder.endEncoding();
+        let center_readback = if self.diagnostic_center_readback {
+            if drawable.texture().pixelFormat() != MTLPixelFormat::BGRA8Unorm {
+                return Err("Diagnostic drawable format differs from declared BGRA8Unorm".into());
+            }
+            let readback = self.owners.metal.buffer(256, true)?;
+            let blit = command.blitCommandEncoder().ok_or("Drawable diagnostic blit encoder failed")?;
+            unsafe {
+                blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(
+                    &drawable.texture(), 0, 0, MTLOrigin{x:self.extent.0 as usize / 2,y:self.extent.1 as usize / 2,z:0},
+                    MTLSize{width:1,height:1,depth:1}, &readback.raw, 0, 256, 256);
+            }
+            blit.endEncoding();
+            Some(readback)
+        } else { None };
         let callback_seen = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
         let callback_time = std::sync::Arc::new(std::sync::atomic::AtomicU64::new(0));
         let seen = callback_seen.clone();
@@ -292,6 +339,7 @@ impl MetalPresentation {
             callback_time,
             _callback: callback,
             _paint: paint.map(|p| p as std::sync::Arc<dyn std::any::Any>),
+            _center_readback: center_readback,
         });
         self.submitted += 1;
         Ok(true)
