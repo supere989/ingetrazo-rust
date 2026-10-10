@@ -2,7 +2,7 @@
 use crate::{scene::Scene,math::{Ray,ray_triangle_intersect}};
 use glam::DVec3;
 #[derive(Clone,Copy)]
-struct Triangle { vertices:[DVec3;3], lo:DVec3,hi:DVec3 }
+struct Triangle { order:usize, vertices:[DVec3;3], lo:DVec3,hi:DVec3 }
 struct Node { lo:DVec3,hi:DVec3,begin:usize,end:usize,children:Option<(usize,usize)> }
 pub struct VisibleRayIndex {triangles:Vec<Triangle>,nodes:Vec<Node>}
 impl VisibleRayIndex {
@@ -26,7 +26,7 @@ impl VisibleRayIndex {
      let pad=(hi-lo).max_element()*1e-9+lo.abs().max(hi.abs()).max_element()*f64::EPSILON*64.+1e-12;
      let lo=lo-DVec3::splat(pad);let hi=hi+DVec3::splat(pad);
      if !lo.is_finite()||!hi.is_finite(){error=Some("Collision bounds exceed finite range");return;}
-     triangles.push(Triangle{vertices,lo,hi});
+     let order=triangles.len();triangles.push(Triangle{order,vertices,lo,hi});
     }
    }
   });
@@ -52,21 +52,22 @@ impl VisibleRayIndex {
  }
  pub fn triangle_count(&self)->usize{self.triangles.len()}
  /// Reuses triangulation and traverses nodes without allocations. Section state is authoritative at query.
- pub fn distance(&self,scene:&Scene,ray:&Ray)->Option<f64>{
+ pub fn distance(&self,scene:&Scene,ray:&Ray)->Option<f64>{self.hit(scene,ray).map(|hit|hit.2)}
+ pub fn hit(&self,scene:&Scene,ray:&Ray)->Option<(DVec3,DVec3,f64)>{
   if !ray.origin.is_finite()||!ray.dir.is_finite()||self.nodes.is_empty(){return None;}
-  let mut best=f64::INFINITY;self.query(0,scene,ray,&mut best);if best.is_finite(){Some(best)}else{None}
+  let mut best=f64::INFINITY;let mut normal=DVec3::ZERO;let mut order=usize::MAX;self.query(0,scene,ray,&mut best,&mut normal,&mut order);if best.is_finite(){Some((ray.at(best),normal,best))}else{None}
  }
- fn query(&self,id:usize,scene:&Scene,ray:&Ray,best:&mut f64){
+ fn query(&self,id:usize,scene:&Scene,ray:&Ray,best:&mut f64,normal:&mut DVec3,order:&mut usize){
   let node=&self.nodes[id];let mut near=0_f64;let mut far=*best;
   for axis in 0..3{
    let o=ray.origin[axis];let d=ray.dir[axis];
    if d==0.{if o<node.lo[axis]||o>node.hi[axis]{return;}}
    else{let a=(node.lo[axis]-o)/d;let b=(node.hi[axis]-o)/d;near=near.max(a.min(b));far=far.min(a.max(b));if near>far{return;}}
   }
-  if let Some((left,right))=node.children{self.query(left,scene,ray,best);self.query(right,scene,ray,best);}
+  if let Some((left,right))=node.children{self.query(left,scene,ray,best,normal,order);self.query(right,scene,ray,best,normal,order);}
   else{for triangle in &self.triangles[node.begin..node.end]{
    let [a,b,c]=triangle.vertices;
-   if let Some((t,p))=ray_triangle_intersect(ray,a,b,c){if t<*best&&scene.section_point_visible(p)&&(b-a).cross(c-a).normalize_or_zero().length_squared()>0.{*best=t;}}
+   if let Some((t,p))=ray_triangle_intersect(ray,a,b,c){if (t<*best||(t==*best&&triangle.order<*order))&&scene.section_point_visible(p)&&(b-a).cross(c-a).normalize_or_zero().length_squared()>0.{*best=t;*order=triangle.order;*normal=(b-a).cross(c-a).normalize_or_zero();}}
   }}
  }
 }
@@ -118,6 +119,16 @@ impl VisibleRayIndex {
   scene.groups[0].children[0].mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));
   assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().distance(&scene,&ray),None);
   scene.groups[0].hidden=true;assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().triangle_count(),0);
+ }
+
+ #[test]fn equal_depth_normals_keep_original_face_order_after_bvh_partition(){
+  let mut scene=Scene::new();
+  for slope in 0..20 {
+   let k=slope as f64/20.;
+   let ids=[DVec3::new(-1.,-1.,-k),DVec3::new(1.,-1.,k),DVec3::new(1.,1.,k),DVec3::new(-1.,1.,-k)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);
+  }
+  let index=VisibleRayIndex::new(&scene,1024*1024).unwrap();let ray=Ray::new(DVec3::Z*3.,-DVec3::Z);
+  assert_eq!(index.hit(&scene,&ray),crate::screen_pick::hover_face(&scene,&ray));assert_eq!(index.hit(&scene,&ray).unwrap().1,DVec3::Z);
  }
 
 }

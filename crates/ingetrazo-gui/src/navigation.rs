@@ -24,9 +24,10 @@ impl Navigation {
    Ok(index)=>self.collision=Some(index),Err(error)=>self.collision_error=Some(error),
   }
  }
- fn distance(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<f64>{
-  match &self.collision {Some(index)=>index.distance(scene,ray),None=>screen_pick::hover_face(scene,ray).map(|h|h.2)}
+ fn hit(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<(DVec3,DVec3,f64)>{
+  match &self.collision {Some(index)=>index.hit(scene,ray),None=>screen_pick::hover_face(scene,ray)}
  }
+ fn distance(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<f64>{self.hit(scene,ray).map(|hit|hit.2)}
  pub fn sync_cursor(&mut self,ctx:&egui::Context){
   let captured=self.mouse_captured&&self.mode==Some(Mode::FirstPerson);
   if captured==self.cursor_locked_sent{return;}
@@ -116,19 +117,27 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   return;
  }
  let position=pointer.hover_pos().map(|p|DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64));
- let world=position.filter(|_|mode==Mode::Position).map(|p|{
+ let world=position.filter(|_|mode==Mode::Position).and_then(|p|{
   let ray=app.camera.screen_to_ray(p.x,p.y,rect.width()as f64,rect.height()as f64);
-  app.navigation.distance(&app.scene,&ray).map(|t|ray.at(t)).or_else(||Plane::new(DVec3::ZERO,DVec3::Z).intersect_ray(&ray).filter(|t|*t>0.).map(|t|ray.at(t)))
+  let hit=app.navigation.hit(&app.scene,&ray);
+  let normal=hit.map(|hit|hit.1).unwrap_or(DVec3::Z);
+  if ray.dir.dot(normal).abs()<6_f64.to_radians().sin(){return None;}
+  let candidate=hit.map(|hit|hit.0).or_else(||Plane::new(DVec3::ZERO,DVec3::Z).intersect_ray(&ray).filter(|t|*t>=0.).map(|t|ray.at(t)))?;
+  app.snap_engine.note_model_revision(app.model_revision);
+  let context=ingetrazo_core::snap_screen::ScreenSnapContext{viewport:screen_pick::PixelViewport::new(&app.camera,rect.width()as f64,rect.height()as f64),cursor:p,candidate,plane_normal:normal};
+  let result=app.snap_engine.snap_screen_with_policy(&ray,&app.scene,None,None,&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{face_under_cursor:hit.is_some(),..Default::default()});
+  app.snap_engine.note_screen_result(&result,false,ui.input(|i|i.time));
+  Some(result.point)
  });
  if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
-  if let Some(p)=position {if mode!=Mode::Position||world.flatten().is_some(){
-   app.navigation.press=Some((p,world.flatten().unwrap_or(DVec3::ZERO)));app.navigation.last=Some(p);app.navigation.dragged=false;app.navigation.accumulator=0.;
+  if let Some(p)=position {if mode!=Mode::Position||world.is_some(){
+   app.navigation.press=Some((p,world.unwrap_or(DVec3::ZERO)));app.navigation.last=Some(p);app.navigation.dragged=false;app.navigation.accumulator=0.;
   }}
  }
  if pointer.primary_down(){
   if let (Some((anchor,_)),Some(p))=(app.navigation.press,position){
    match mode{
-    Mode::Position=>{if p.distance(anchor)>6.{app.navigation.dragged=true;}if app.navigation.dragged{app.navigation.look_at=world.flatten();}},
+    Mode::Position=>{if p.distance(anchor)>6.{app.navigation.dragged=true;}if app.navigation.dragged{app.navigation.look_at=world;}},
     Mode::Look=>{if let Some(last)=app.navigation.last{
      let d=p-last;app.camera.turn(d.x*180./rect.width().max(1.)as f64,-d.y*90./rect.height().max(1.)as f64);
     }app.navigation.last=Some(p);},
@@ -228,7 +237,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  fn frame(app:&mut crate::IngeTrazoApp,ctx:&egui::Context,time:f64,focused:bool,events:Vec<egui::Event>){
   let raw=egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.))),time:Some(time),focused,events,..Default::default()};
   let _=ctx.run(raw,|ctx|{egui::CentralPanel::default().show(ctx,|ui|{
-   let rect=ui.available_rect_before_wrap();let response=ui.allocate_rect(rect,egui::Sense::click_and_drag());input(app,ui,rect,&response);
+   let rect=ui.available_rect_before_wrap();ctx.data_mut(|d|d.insert_temp(egui::Id::new("navigation-test-rect"),rect));let response=ui.allocate_rect(rect,egui::Sense::click_and_drag());input(app,ui,rect,&response);
   });});
  }
  fn key(key:egui::Key,pressed:bool,modifiers:egui::Modifiers)->egui::Event{egui::Event::Key{key,physical_key:None,pressed,repeat:false,modifiers}}
@@ -277,6 +286,18 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
    assert_eq!(app.camera,before);assert_eq!(app.navigation.axes(),[0,0,0]);assert!(!app.navigation.mouse_captured);
    assert!(!app.navigation_claims_key(egui::Key::W,egui::Modifiers::NONE));
   }
+ }
+
+ #[test]fn position_click_snaps_endpoint_and_hands_off_to_look(){
+  let ctx=egui::Context::default();let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;
+  let endpoint=DVec3::new(1.,1.,0.);let a=app.scene.mesh.add_vertex(endpoint);let b=app.scene.mesh.add_vertex(DVec3::new(3.,1.,0.));app.scene.mesh.add_edge(a,b);
+  app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);app.camera.target=DVec3::ZERO;app.camera.distance=10.;app.activate_navigation(Mode::Position);
+  frame(&mut app,&ctx,0.,true,vec![]);let rect=ctx.data(|d|d.get_temp::<egui::Rect>(egui::Id::new("navigation-test-rect"))).unwrap();
+  let pixel=screen_pick::PixelViewport::new(&app.camera,rect.width()as f64,rect.height()as f64).project_for_snapping(endpoint).unwrap();
+  let p=egui::pos2(rect.min.x+pixel.x as f32+3.,rect.min.y+pixel.y as f32);
+  frame(&mut app,&ctx,0.016,true,vec![egui::Event::PointerMoved(p),egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:true,modifiers:egui::Modifiers::NONE}]);
+  frame(&mut app,&ctx,0.032,true,vec![egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:false,modifiers:egui::Modifiers::NONE}]);
+  assert_eq!(app.navigation.mode,Some(Mode::Look));assert!(app.camera.eye().distance(endpoint+DVec3::Z*1.68)<1e-10);assert!(app.camera.perspective);assert!(app.undo_stack.is_empty());
  }
 
 }
