@@ -1,0 +1,69 @@
+{
+  "cases": [
+    {
+      "case": "closed",
+      "original": 20164,
+      "native": 20736,
+      "sha256": "824935a037290eb499264f03d14f17ede6b398eecca3101bae106f537acbbb61"
+    },
+    {
+      "case": "shared-slab",
+      "original": 0,
+      "native": 0,
+      "sha256": "4b0262a76ac48fd340b950d174f3d65b20c2d292d24d72fdf43dbcb81d0d81d9"
+    },
+    {
+      "case": "shared-slab-reversed",
+      "original": 20164,
+      "native": 20736,
+      "sha256": "824935a037290eb499264f03d14f17ede6b398eecca3101bae106f537acbbb61"
+    },
+    {
+      "case": "transparent",
+      "original": 0,
+      "native": 0,
+      "sha256": "d518c8b0aef2fe5451d44534af9cc3f1a7e2ffa4095664438b6077d0e43968be"
+    },
+    {
+      "case": "duplicate",
+      "original": 20164,
+      "native": 20736,
+      "sha256": "824935a037290eb499264f03d14f17ede6b398eecca3101bae106f537acbbb61"
+    },
+    {
+      "case": "coplanar-backface",
+      "original": 0,
+      "native": 0,
+      "sha256": "37551398eafc784e845c0e0d3be26ef6cf4972e867bfb96a71b58d16288e92f4"
+    },
+    {
+      "case": "closed-iso",
+      "original": 9925,
+      "native": 10093,
+      "sha256": "bacecb71059c3a655d63ef0a610d49241e335ee9d87753419efda09611cf7df1"
+    },
+    {
+      "case": "shared-slab-iso",
+      "original": 8519,
+      "native": 8497,
+      "sha256": "f8319886f6cb3ec8b080dce52801ad7f7b1e93a92e91e6a884b0124987dad0eb"
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "original": 9925,
+      "native": 10093,
+      "sha256": "814a06c5a3450ba50a1ed9202eab16c326c92af77ba3bbb30bef4f3aa2534ccf"
+    },
+    {
+      "case": "closed-front",
+      "original": 0,
+      "native": 0,
+      "sha256": "4f708f890e3669308fd9dca2b4fb21feb96f6dc6bb37de2af3d21bdbe5193bfd"
+    }
+  ],
+  "negative_controls": {
+    "actual_wrong_winding_closed": 0,
+    "physical_fill_in_zero_case_rejected": true
+  },
+  "scope": "Linux software-native Vulkan bounded stencil, exact zero and established 5% positive tolerance; not full rendering parity"
+}
