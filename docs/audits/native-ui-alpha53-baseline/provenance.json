@@ -1,0 +1,8 @@
+{
+  "source_commit": "a1d46a67a2df51d31625156602ccced01e032631",
+  "renderer_candidate": "53bbca3",
+  "binary_sha256": "45c31c94250b1e8916674ab60328094d01147ed9400dbc4172a6d96f4ffb335e",
+  "original": "Actual PySide6 6.12 QImage/QPainter CPU raster, source-over",
+  "native": "Actual NVIDIA RTX5090 Vulkan UNORM swapchain, only newly created owned client capture",
+  "scope": "12 panels, 4 interior samples each, baseline and partial texture update; 17/24 strict comparison failures retained. No UI generalization or Metal claim."
+}
