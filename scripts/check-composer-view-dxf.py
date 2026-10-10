@@ -6,7 +6,7 @@ import ezdxf
 from acceptance_context import context
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
 from formats.dxf_out import save_dxf_layers
-root=Path("docs/audits/sheet-view-production")
+root=Path(os.environ.get("INGETRAZO_DXF_OUTPUT","docs/audits/sheet-view-production"))
 root.mkdir(parents=True,exist_ok=True)
 subprocess.run([sys.executable,"scripts/reference-composer-hlr-fixture.py","--original",str(Path("ingetrazo").resolve()),"--output",str(root)],check=True)
 subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","composer_dxf_export_fixture","-p","ingetrazo-render","--bin","ingetrazo-render-worker"],check=True)

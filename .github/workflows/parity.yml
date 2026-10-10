@@ -52,6 +52,15 @@ jobs:
         run: cargo build --locked -p ingetrazo-gui --example composer_native_cache
       - name: Native Vulkan composer cache edit history context and recovery
         run: python scripts/check-native-composer-cache.py target/debug/examples/composer_native_cache target/debug/ingetrazo-render-worker docs/audits/native-composer-ci
+      - name: Classified composer view DXF and transactional writer acceptance
+        run: |
+          python scripts/check-sheet-view-dxf.py
+          INGETRAZO_DXF_OUTPUT=docs/audits/sheet-export-ci QT_QPA_PLATFORM=offscreen python scripts/check-composer-view-dxf.py
+      - name: Original Move policy and short rendered drag controls
+        run: |
+          QT_QPA_PLATFORM=offscreen python scripts/check-python-move-inference.py
+          INGETRAZO_MOVE_DISTANCE=.05 INGETRAZO_CENTER_RUN_SUFFIX=-short-ci python scripts/check-native-center-tracking.py
+          INGETRAZO_MOVE_DISTANCE=.05 INGETRAZO_CENTER_RUN_SUFFIX=-short-ci INGETRAZO_CENTER_ORIGINAL=1 python scripts/check-native-center-tracking.py
       - name: Original orthographic screen snapping controls
         run: python scripts/check-python-screen-snap.py
       - name: Original perspective snapping and eye boundary controls
@@ -173,6 +182,9 @@ jobs:
             docs/audits/native-composer-ci/*.png
             docs/audits/native-composer-ci/native.log
             docs/audits/native-composer-ci/result.json
+            docs/audits/sheet-export-ci/*
+            docs/audits/sheet-view-dxf/*
+            docs/audits/move-inference-source-evidence.json
             docs/audits/center-tracking-*-ci-evidence.json
             docs/audits/center-tracking-*-ci/*.png
             docs/audits/center-tracking-*-ci/runtime.log
