@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "comparisons": 23,
+  "cases": [
+    "legacy-dib-empty",
+    "legacy-dib-fully-transparent",
+    "legacy-dib-greedy-average",
+    "legacy-dib-guard-large",
+    "legacy-dib-guard-small",
+    "legacy-dib-tint-alpha",
+    "legacy-dib-tint-green",
+    "legacy-dib-tint-odd",
+    "legacy-dib-unflagged",
+    "legacy-real-capilla-21",
+    "legacy-real-capilla-23",
+    "legacy-real-capilla-27",
+    "legacy-real-capilla-30",
+    "legacy-real-legacy-16",
+    "legacy-real-legacy-18",
+    "legacy-real-legacy-20",
+    "legacy-real-legacy-22",
+    "legacy-real-legacy-24",
+    "legacy-real-legacy-26",
+    "legacy-real-legacy-28",
+    "legacy-real-legacy-30",
+    "legacy-real-legacy-32",
+    "legacy-real-legacy-34"
+  ],
+  "method": "Independent complete retained JSON equality and QImage-decoded full RGBA equality for every paired texture asset",
+  "scope": "Authored MFC geometry with real asset recipes; not full real-model or rendered import acceptance",
+  "source": "cd80927a",
+  "remaining": "Combined compilation and fresh merged-source replay pending"
+}
