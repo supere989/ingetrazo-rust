@@ -90,11 +90,17 @@ impl Probe {
             }));
             app.scene.sheets = vec![sheet];
             app.scene.active_sheet_index = Some(0);
-            ingetrazo_formats::igz::save_igz(&app.scene, &self.document)
-                .map_err(|e| e.to_string())?;
+            // Save through the application so the authored fixture becomes the
+            // clean baseline before guarded Open. A raw writer leaves it dirty
+            // and Open correctly queues an unsaved-document confirmation.
+            app.save_to_path(&self.document);
+            if app.document_dirty() { return Err("Canvas fixture save did not establish clean document".into()); }
             self.initial_bytes = std::fs::read(&self.document).map_err(|e| e.to_string())?;
             app.open_document(&self.document);
             app.scene.active_sheet_index = Some(0);
+            if app.document_dirty() || app.document_session.pending.is_some() || app.document_session.confirm_unsaved {
+                return Err("Canvas fixture did not reopen cleanly".into());
+            }
             return Ok(());
         }
         let ids = [
