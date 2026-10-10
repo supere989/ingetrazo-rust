@@ -13,6 +13,9 @@ struct Frame {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
+    callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    callback_time: std::sync::Arc<std::sync::atomic::AtomicU64>,
+    _callback: block2::RcBlock<dyn Fn(std::ptr::NonNull<ProtocolObject<dyn MTLDrawable>>)>,
 }
 struct Owners {
     frames: VecDeque<Frame>,
@@ -161,11 +164,29 @@ impl MetalPresentation {
             }
         }
         encoder.endEncoding();
+        let callback_seen = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let callback_time = std::sync::Arc::new(std::sync::atomic::AtomicU64::new(0));
+        let seen = callback_seen.clone();
+        let time = callback_time.clone();
+        let callback = block2::RcBlock::new(
+            move |received: std::ptr::NonNull<ProtocolObject<dyn MTLDrawable>>| {
+                // Metal guarantees its callback argument is valid during invocation.
+                let drawable = unsafe { received.as_ref() };
+                time.store(drawable.presentedTime().to_bits(), Ordering::Release);
+                seen.store(true, Ordering::Release);
+            },
+        );
+        unsafe {
+            drawable.addPresentedHandler(block2::RcBlock::as_ptr(&callback));
+        }
         command.presentDrawable(ProtocolObject::from_ref(&*drawable));
         command.commit();
         self.owners.frames.push_back(Frame {
             command,
             drawable,
+            callback_seen,
+            callback_time,
+            _callback: callback,
             _paint: paint.map(|p| p as std::sync::Arc<dyn std::any::Any>),
         });
         self.submitted += 1;
@@ -202,12 +223,14 @@ impl MetalPresentation {
             .iter()
             .map(|f| {
                 format!(
-                    "id={} command={:?} presentedTime={} gpuStart={} gpuEnd={}",
+                    "id={} command={:?} presentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
                     f.drawable.drawableID(),
                     f.command.status(),
                     f.drawable.presentedTime(),
                     f.command.GPUStartTime(),
-                    f.command.GPUEndTime()
+                    f.command.GPUEndTime(),
+                    f.callback_seen.load(Ordering::Acquire),
+                    f64::from_bits(f.callback_time.load(Ordering::Acquire))
                 )
             })
             .collect();
