@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "owned_client_only": true,
+  "clean_close": true,
+  "cases": [
+    {
+      "name": "rect",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 1,
+      "gpu_cached_bytes": 15120
+    },
+    {
+      "name": "rounded",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 2,
+      "gpu_cached_bytes": 37584
+    },
+    {
+      "name": "ellipse",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 3,
+      "gpu_cached_bytes": 52560
+    },
+    {
+      "name": "polygon-clamped",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 4,
+      "gpu_cached_bytes": 51408
+    },
+    {
+      "name": "line-inverted",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 5,
+      "gpu_cached_bytes": 11808
+    },
+    {
+      "name": "arrow",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 6,
+      "gpu_cached_bytes": 13680
+    },
+    {
+      "name": "terrain-ticks",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 7,
+      "gpu_cached_bytes": 27216
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 8,
+      "gpu_cached_bytes": 63576
+    },
+    {
+      "name": "terrain-band",
+      "warm_zero_uploads": true,
+      "gpu_uploads": 9,
+      "gpu_cached_bytes": 35496
+    }
+  ]
+}

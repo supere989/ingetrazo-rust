@@ -1,0 +1,26 @@
+{
+  "source": "21bf58c",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12",
+  "software_whole_images_exact": 45,
+  "rtx_whole_images_exact": 9,
+  "old_order_negative_pixel": [
+    28,
+    12
+  ],
+  "source_rgba": [
+    114,
+    118,
+    124,
+    255
+  ],
+  "old_native_rgba": [
+    114,
+    119,
+    124,
+    255
+  ],
+  "workspace_passed": 521,
+  "ignored": 2,
+  "full_aa_parity": false
+}
