@@ -49,6 +49,7 @@ pub struct IngeTrazoApp {
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
     pub camera: OrbitCamera,
+    pub navigation: crate::navigation::Navigation,
     pub active_tool_type: ToolType,
     pub active_tool: Box<dyn Tool>,
     pub style: StyleConfig,
@@ -147,6 +148,7 @@ impl IngeTrazoApp {
             component_edit_stack: Vec::new(),
             scene,
             camera,
+            navigation: Default::default(),
             active_tool_type: ToolType::Select,
             active_tool: create_tool(ToolType::Select),
             style: StyleConfig::default_shaded(),
@@ -234,6 +236,7 @@ impl IngeTrazoApp {
     }
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        self.navigation.cancel(); self.navigation.mode=None;
         self.paste_preview=None;
         let version=self.scene.version;self.active_tool.on_deactivate(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}

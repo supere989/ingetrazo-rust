@@ -499,15 +499,15 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.separator();
 
             if ui.button(tr("Position Camera")).clicked() {
-                app.status_message = tr("Position Camera — click where observer stands");
+                app.activate_navigation(crate::navigation::Mode::Position);
                 ui.close_menu();
             }
             if ui.button(tr("Walk")).clicked() {
-                app.status_message = tr("Walk tool active");
+                app.activate_navigation(crate::navigation::Mode::Walk);
                 ui.close_menu();
             }
             if ui.button(tr("Look Around")).clicked() {
-                app.status_message = tr("Look Around tool active");
+                app.activate_navigation(crate::navigation::Mode::Look);
                 ui.close_menu();
             }
         });
