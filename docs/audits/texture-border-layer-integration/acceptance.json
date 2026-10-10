@@ -1,0 +1,26 @@
+{
+  "source": "01685cd9e66a9dfc1a62ae74dae8293150b8f0a1",
+  "accepted": true,
+  "aggregate_passed": 661,
+  "ignored": 2,
+  "unresolved_test_failures": 0,
+  "evidence": [
+    {
+      "path": "workspace.log",
+      "source": "fd8962675618db5a1775fa7c51abdf86f4705e58",
+      "passed": 660,
+      "failed": 1,
+      "ignored": 2
+    },
+    {
+      "path": "skp-focused.log",
+      "source": "01685cd9e66a9dfc1a62ae74dae8293150b8f0a1",
+      "passed": 5,
+      "failed": 0,
+      "sha256": "18e25bcb97e864a158f4b356c784b261b907440199c3a6e16a4690f9b855d748"
+    }
+  ],
+  "reuse_basis": "Only the stale refusal test input changed after the completed workspace run; production source/dependencies unchanged. Four already-passing SKP tests overlap, so aggregate is660-4+5=661. No claim of a fresh all-green broad rerun.",
+  "initial_failure": "Earlier layer positional assertion corrected to authored identity plus exact default assertions; failure retained.",
+  "scope": "Reviewed nested/default/positioned/projected/fallback SKP; Canvas border; exact/empty layer semantics; MCP protocol. No full feature gate closure."
+}
