@@ -13,6 +13,8 @@ pub(super) struct Probe {
     label: String,
     center: Option<[f64; 2]>,
     modal_submission: Option<u64>,
+    current_submission_floor: u64,
+    current_output_has_modal: bool,
     modal_candidates: std::collections::VecDeque<(u64, [f64; 2])>,
     ui_turns: u64,
     observed_turn: u64,
@@ -50,6 +52,8 @@ impl Probe {
             label: choice.to_ascii_lowercase(),
             center: None,
             modal_submission: None,
+            current_submission_floor: 0,
+            current_output_has_modal: false,
             modal_candidates: std::collections::VecDeque::with_capacity(32),
             ui_turns: 0,
             observed_turn: 0,
@@ -97,8 +101,16 @@ impl Probe {
             _ => {}
         }
     }
-    pub fn observe(&mut self, app: &IngeTrazoApp, shapes: &[ClippedShape], displayed: u64) {
+    pub fn observe(
+        &mut self,
+        app: &IngeTrazoApp,
+        shapes: &[ClippedShape],
+        submitted_before_ui: u64,
+    ) {
         self.ui_turns += 1;
+        self.current_submission_floor = submitted_before_ui;
+        self.current_output_has_modal = false;
+        self.center = None;
         if !app.document_session.confirm_unsaved {
             return;
         }
@@ -114,12 +126,17 @@ impl Probe {
         }
         if let Some(center) = shapes.iter().find_map(|s| find(&s.shape, &self.label)) {
             self.center = Some(center);
+            self.current_output_has_modal = true;
         }
     }
     /// Called only after present_paint reports an actual submitted command for
     /// this UI output containing the modal, not merely after a redraw attempt.
     pub fn submitted(&mut self, app: &IngeTrazoApp, submission: u64) {
-        if self.phase == 1 && app.document_session.confirm_unsaved {
+        if self.phase == 1
+            && app.document_session.confirm_unsaved
+            && self.current_output_has_modal
+            && submission > self.current_submission_floor
+        {
             if let Some(center) = self.center {
                 if self.modal_candidates.len() == 32 {
                     self.modal_candidates.pop_front();
@@ -285,6 +302,32 @@ impl Probe {
 mod tests {
     use super::*;
     use crate::document_session::DocumentAction;
+    #[test]
+    fn previous_submission_or_current_output_without_modal_cannot_label_a_frame() {
+        let root =
+            std::env::temp_dir().join(format!("metal-modal-identity-{}", uuid::Uuid::new_v4()));
+        let mut probe = Probe::new(root.clone(), "discard").unwrap();
+        let mut app = IngeTrazoApp::new();
+        app.document_session.confirm_unsaved = true;
+        probe.phase = 1;
+        // A stale center and a prior successful GPU submission are not evidence
+        // for this ctx.run output, even if the native modal state is stilltrue.
+        probe.center = Some([10., 10.]);
+        probe.observe(&app, &[], 7);
+        assert!(probe.center.is_none());
+        probe.submitted(&app, 7);
+        probe.submitted(&app, 8);
+        assert!(probe.modal_candidates.is_empty());
+        // The per-output callback must advance beyond the recorded preparation
+        // floor; same-ID hook at can_prepare reproduced the rejected regression.
+        probe.current_output_has_modal = true;
+        probe.center = Some([10., 10.]);
+        probe.submitted(&app, 7);
+        assert!(probe.modal_candidates.is_empty());
+        probe.submitted(&app, 8);
+        assert_eq!(probe.modal_candidates.front(), Some(&(8, [10., 10.])));
+        std::fs::remove_dir_all(root).unwrap();
+    }
     #[test]
     fn actual_document_cancel_then_discard_does_not_repeat_cancel_assertion() {
         let root =

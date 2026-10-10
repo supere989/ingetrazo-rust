@@ -80,11 +80,7 @@ impl Host {
         // backpressure; native close requests still enter application guards.
         if !state.close_requested {
             match state.gpu.can_prepare() {
-                Ok(true) => {
-                    if let Some(probe) = self.probe.as_mut() {
-                        probe.submitted(&state.app, state.gpu.counters().0);
-                    }
-                }
+                Ok(true) => {}
                 Ok(false) => {
                     self.repaint = Instant::now() + Duration::from_millis(8);
                     return;
@@ -107,11 +103,7 @@ impl Host {
         }
         let output = self.ctx.run(raw, |ctx| state.app.update_ui(ctx));
         if let Some(probe) = self.probe.as_mut() {
-            probe.observe(
-                &state.app,
-                &output.shapes,
-                state.gpu.presentation_counters().0,
-            );
+            probe.observe(&state.app, &output.shapes, state.gpu.counters().0);
         }
         state
             .input
@@ -174,7 +166,11 @@ impl Host {
             state.gpu.present_paint(paint)
         })();
         match result {
-            Ok(true) => {}
+            Ok(true) => {
+                if let Some(probe) = self.probe.as_mut() {
+                    probe.submitted(&state.app, state.gpu.counters().0);
+                }
+            }
             Ok(false) => {
                 self.repaint = Instant::now() + Duration::from_millis(8);
             }
