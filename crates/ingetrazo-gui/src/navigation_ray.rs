@@ -123,27 +123,13 @@ fn map(m: &Matrix, p: Vec3) -> Vec3 {
         v / out[3]
     }
 }
-/// Reproduce the original viewport's float near/far unprojection, including
-/// QVector3D's final float plane intersection. No rounded-position fitting.
-pub fn cursor_ray(camera: &OrbitCamera, x: f64, y: f64, width: f64, height: f64) -> Option<Ray> {
-    if ![
-        x,
-        y,
-        width,
-        height,
-        camera.distance,
-        camera.fov_deg,
-        camera.aspect,
-        camera.znear,
-        camera.zfar,
-    ]
-    .iter()
-    .all(|v| v.is_finite())
-        || width <= 0.
-        || height <= 0.
-    {
-        return None;
-    }
+/// Source Qt-f32 camera values for bounded annotation preparation. Ordinary
+/// rendering retains its existing camera path; inverse is computed only on cold use.
+#[derive(Clone,Copy)]
+pub struct CameraSnapshot{pub projection:[[f32;4];4],pub view:[[f32;4];4],pub matrix:[[f32;4];4],pub eye:[f32;3],pub forward:[f32;3],affine:bool}
+impl CameraSnapshot{pub fn inverse(&self)->Option<[[f32;4];4]>{inverse(self.matrix,self.affine)}}
+pub fn camera_snapshot(camera:&OrbitCamera)->Option<CameraSnapshot>{
+ if !camera.target.is_finite()||!camera.up.is_finite()||![camera.distance,camera.yaw,camera.pitch,camera.fov_deg,camera.aspect,camera.znear,camera.zfar].iter().all(|v|v.is_finite()){return None;}
     let target = camera.target.as_vec3();
     let offset = Vec3::new(
         (camera.distance * camera.pitch.cos() * camera.yaw.cos()) as f32,
@@ -215,7 +201,35 @@ pub fn cursor_ray(camera: &OrbitCamera, x: f64, y: f64, width: f64, height: f64)
         projection[2][2] = -2. / (far - (-far));
         projection[3][3] = 1.;
     }
-    let inv = inverse(multiply(projection, view), !camera.perspective)?;
+    let matrix=multiply(projection,view);
+    if !projection.iter().chain(view.iter()).chain(matrix.iter()).flatten().all(|v|v.is_finite())||!eye.is_finite()||!f.is_finite(){return None;}
+    Some(CameraSnapshot{projection,view,matrix,eye:eye.to_array(),forward:f.to_array(),affine:!camera.perspective})
+
+ }
+
+/// Reproduce the original viewport's float near/far unprojection, including
+/// QVector3D's final float plane intersection. No rounded-position fitting.
+pub fn cursor_ray(camera: &OrbitCamera, x: f64, y: f64, width: f64, height: f64) -> Option<Ray> {
+    if ![
+        x,
+        y,
+        width,
+        height,
+        camera.distance,
+        camera.fov_deg,
+        camera.aspect,
+        camera.znear,
+        camera.zfar,
+    ]
+    .iter()
+    .all(|v| v.is_finite())
+        || width <= 0.
+        || height <= 0.
+    {
+        return None;
+    }
+    let snapshot=camera_snapshot(camera)?;
+    let inv=snapshot.inverse()?;
     let ndc = Vec3::new(
         (2. * x / width - 1.) as f32,
         (1. - 2. * y / height) as f32,
@@ -301,4 +315,16 @@ mod tests {
         invalid.distance = f64::INFINITY;
         assert!(cursor_ray(&invalid, 0., 0., 800., 600.).is_none());
     }
+}
+
+#[cfg(test)]
+mod annotation_camera_admission {
+ use super::*;
+ #[test] fn singular_source_camera_refuses_inverse_before_publication(){
+  let mut camera=OrbitCamera::default();camera.up=glam::DVec3::ZERO;
+  let snapshot=camera_snapshot(&camera).expect("finite singular snapshot");
+  assert!(snapshot.inverse().is_none());
+  camera.target.x=f64::MAX;
+  assert!(camera_snapshot(&camera).is_none());
+ }
 }

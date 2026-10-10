@@ -12,16 +12,19 @@ impl ViewportAnnotations{
  pub fn prepare<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32)->Result<Option<&'a Prepared>,String>{
   if !density.is_finite()||density<=0.||!rect.min.is_finite()||!rect.max.is_finite()||rect.width()<=0.||rect.height()<=0.{return Err("Annotation viewport/density outside admission".into());}
   let bypass_depth=matches!(app.style.visual_style,ingetrazo_render::style::VisualStyle::XRay|ingetrazo_render::style::VisualStyle::Wireframe);
-  let mut matrix=(app.camera.projection_matrix()*app.camera.view_matrix()).as_mat4().to_cols_array();
-  for c in 0..4{matrix[c*4+2]=2.*matrix[c*4+2]-matrix[c*4+3];}
+  let snapshot=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Annotation camera arithmetic outside admission")?;
+  let matrix=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
   let key=Key{revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth};
   let raw=&app.scene.native_document["dimension_style"];
   let style_unchanged=self.style==*raw;
   if style_unchanged&&self.empty.as_ref()==Some(&key){return Ok(None);}
   if style_unchanged&&self.current.as_ref().is_some_and(|(old,_)|*old==key){return Ok(self.current.as_ref().map(|(_,ready)|ready));}
+  // Invert only on a changed immutable camera key, before changing any ready owner.
+  let inverse_columns=snapshot.inverse().ok_or("Annotation camera inverse is singular")?;
+  let inverse=std::array::from_fn(|i|inverse_columns[i/4][i%4]);
   let project=|point:glam::Vec3|{
    let q=super::annotation_visibility::map(&matrix,[point.x,point.y,point.z,1.]);
-   if !q.iter().all(|v|v.is_finite())||q[3] as f64<=1e-9{return None;}
+   if !q.iter().all(|v|v.is_finite())||q[3]<=0.{return None;}
    Some([rect.min.x as f64+(q[0] as f64/q[3] as f64+1.)*0.5*rect.width() as f64,
     rect.min.y as f64+(1.-q[1] as f64/q[3] as f64)*0.5*rect.height() as f64])
   };
@@ -47,7 +50,7 @@ impl ViewportAnnotations{
   let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
   let mesh=self.cache.prepare_clipped(plan.clone(),density,96.,clip)?;
   let extent=[(rect.width()*density).ceil().max(1.)as u32,(rect.height()*density).ceil().max(1.)as u32];
-  let eye=app.camera.eye().as_vec3().to_array();let forward=app.camera.forward().as_vec3().to_array();
+  let eye=snapshot.eye;let forward=snapshot.forward;
   let mut queries=Vec::new();queries.try_reserve_exact(plan.queries.len().max(1)).map_err(|_|"Annotation query CPU admission failed")?;
   for &point in &plan.queries{let mut query=prepare_query(&matrix,point,eye,forward,extent)?;if bypass_depth{query.active=0;}queries.push(query);}
   // Always-visible text with an unprojectable anchor has no source depth query.
@@ -57,7 +60,7 @@ impl ViewportAnnotations{
    old.handle.update_annotation(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),mesh.gates.clone())?;old.handle.clone()
   }else{factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),mesh.gates.clone())?};
   self.style=raw.clone();
-  self.current=Some((key,Prepared{handle,queries:queries.into(),inverse:glam::Mat4::from_cols_array(&matrix).inverse().to_cols_array(),eye,forward}));
+  self.current=Some((key,Prepared{handle,queries:queries.into(),inverse,eye,forward}));
   Ok(self.current.as_ref().map(|(_,ready)|ready))
  }
 }
