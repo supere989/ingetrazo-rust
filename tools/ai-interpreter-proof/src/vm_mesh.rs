@@ -128,7 +128,7 @@ pub mod editable_mesh {
     use super::*;
     use crate::vm_groups::native_groups::QVector3D;
     use rustpython_vm::{
-        builtins::{PyListRef, PyType},
+        builtins::{PyListRef, PySet, PyType},
         common::lock::PyRwLock,
         function::{OptionalArg, PosArgs},
         pyclass,
@@ -140,12 +140,173 @@ pub mod editable_mesh {
     #[derive(Debug, PyPayload)]
     pub struct Vertex {
         pub(super) position: PyRwLock<PyRef<QVector3D>>,
+        pub(super) edges: PyRwLock<PyObjectRef>,
     }
-    #[pyclass]
+    impl Constructor for Vertex {
+        type Args = PyRef<QVector3D>;
+        fn py_new(_cls: &Py<PyType>, position: Self::Args, vm: &VirtualMachine) -> PyResult<Self> {
+            vm.host_budget_tick()?;
+            Ok(Self {
+                position: PyRwLock::new(
+                    QVector3D::from_coordinates(position.coordinates()).into_ref(&vm.ctx),
+                ),
+                edges: PyRwLock::new(PySet::default().into_ref(&vm.ctx).into()),
+            })
+        }
+    }
+    #[pyclass(with(Constructor))]
     impl Vertex {
         #[pygetset]
         fn position(zelf: &Py<Self>) -> PyRef<QVector3D> {
             zelf.position.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_position(zelf: &Py<Self>, position: PyRef<QVector3D>) {
+            let old = std::mem::replace(&mut *zelf.position.write(), position);
+            drop(old);
+        }
+        #[pygetset]
+        fn edges(zelf: &Py<Self>) -> PyObjectRef {
+            zelf.edges.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_edges(zelf: &Py<Self>, edges: PyObjectRef) {
+            let old = std::mem::replace(&mut *zelf.edges.write(), edges);
+            drop(old);
+        }
+        #[pymethod]
+        fn faces(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<PyObjectRef> {
+            vm.host_budget_tick()?;
+            let edges = zelf.edges.read().clone();
+            let out = PySet::default().into_ref(&vm.ctx);
+            for edge in vm.extract_elements_with(&edges, Ok)? {
+                let radial = edge.get_attr("faces", vm)?;
+                for face in vm.extract_elements_with(&radial, Ok)? {
+                    vm.host_budget_tick()?;
+                    out.add(face, vm)?;
+                }
+            }
+            Ok(out.into())
+        }
+    }
+    #[pyattr]
+    #[pyclass(name = "Edge", traverse)]
+    #[derive(Debug, PyPayload)]
+    pub struct Edge {
+        v0: PyRwLock<PyRef<Vertex>>,
+        v1: PyRwLock<PyRef<Vertex>>,
+        faces: PyRwLock<PyObjectRef>,
+        soft: PyRwLock<PyObjectRef>,
+        hidden: PyRwLock<PyObjectRef>,
+        layer: PyRwLock<PyObjectRef>,
+        curve: PyRwLock<PyObjectRef>,
+    }
+    impl Constructor for Edge {
+        type Args = (PyRef<Vertex>, PyRef<Vertex>);
+        fn py_new(_cls: &Py<PyType>, (v0, v1): Self::Args, vm: &VirtualMachine) -> PyResult<Self> {
+            vm.host_budget_tick()?;
+            Ok(Self {
+                v0: PyRwLock::new(v0),
+                v1: PyRwLock::new(v1),
+                faces: PyRwLock::new(vm.ctx.new_list(vec![]).into()),
+                soft: PyRwLock::new(vm.ctx.new_bool(false).into()),
+                hidden: PyRwLock::new(vm.ctx.new_bool(false).into()),
+                layer: PyRwLock::new(vm.ctx.none()),
+                curve: PyRwLock::new(vm.ctx.none()),
+            })
+        }
+    }
+    #[pyclass(with(Constructor))]
+    impl Edge {
+        #[pygetset]
+        fn v0(zelf: &Py<Self>) -> PyRef<Vertex> {
+            zelf.v0.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_v0(zelf: &Py<Self>, v: PyRef<Vertex>) {
+            let old = std::mem::replace(&mut *zelf.v0.write(), v);
+            drop(old);
+        }
+        #[pygetset]
+        fn v1(zelf: &Py<Self>) -> PyRef<Vertex> {
+            zelf.v1.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_v1(zelf: &Py<Self>, v: PyRef<Vertex>) {
+            let old = std::mem::replace(&mut *zelf.v1.write(), v);
+            drop(old);
+        }
+        #[pygetset]
+        fn a(zelf: &Py<Self>) -> PyRef<QVector3D> {
+            zelf.v0.read().position.read().clone()
+        }
+        #[pygetset]
+        fn b(zelf: &Py<Self>) -> PyRef<QVector3D> {
+            zelf.v1.read().position.read().clone()
+        }
+        #[pygetset]
+        fn faces(zelf: &Py<Self>) -> PyObjectRef {
+            zelf.faces.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_faces(zelf: &Py<Self>, v: PyObjectRef) {
+            let old = std::mem::replace(&mut *zelf.faces.write(), v);
+            drop(old);
+        }
+        #[pygetset]
+        fn soft(zelf: &Py<Self>) -> PyObjectRef {
+            zelf.soft.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_soft(zelf: &Py<Self>, v: PyObjectRef) {
+            let old = std::mem::replace(&mut *zelf.soft.write(), v);
+            drop(old);
+        }
+        #[pygetset]
+        fn hidden(zelf: &Py<Self>) -> PyObjectRef {
+            zelf.hidden.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_hidden(zelf: &Py<Self>, v: PyObjectRef) {
+            let old = std::mem::replace(&mut *zelf.hidden.write(), v);
+            drop(old);
+        }
+        #[pygetset]
+        fn layer(zelf: &Py<Self>) -> PyObjectRef {
+            zelf.layer.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_layer(zelf: &Py<Self>, v: PyObjectRef) {
+            let old = std::mem::replace(&mut *zelf.layer.write(), v);
+            drop(old);
+        }
+        #[pygetset]
+        fn curve(zelf: &Py<Self>) -> PyObjectRef {
+            zelf.curve.read().clone()
+        }
+        #[pygetset(setter)]
+        fn set_curve(zelf: &Py<Self>, v: PyObjectRef) {
+            let old = std::mem::replace(&mut *zelf.curve.write(), v);
+            drop(old);
+        }
+        #[pymethod]
+        fn other(zelf: &Py<Self>, vertex: PyObjectRef) -> PyRef<Vertex> {
+            if zelf.v0.read().is(&vertex) {
+                zelf.v1.read().clone()
+            } else {
+                zelf.v0.read().clone()
+            }
+        }
+        #[pymethod]
+        fn has(zelf: &Py<Self>, vertex: PyObjectRef) -> bool {
+            zelf.v0.read().is(&vertex) || zelf.v1.read().is(&vertex)
+        }
+        #[pymethod]
+        fn length(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<f64> {
+            vm.host_budget_tick()?;
+            let a = zelf.v0.read().position.read().coordinates();
+            let b = zelf.v1.read().position.read().coordinates();
+            Ok(QVector3D::magnitude(std::array::from_fn(|i| b[i] - a[i])) as f64)
         }
     }
     #[pyattr]
@@ -414,6 +575,7 @@ pub mod editable_mesh {
                             QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
                         let vertex = Vertex {
                             position: PyRwLock::new(position),
+                            edges: PyRwLock::new(PySet::default().into_ref(&vm.ctx).into()),
                         }
                         .into_ref(&vm.ctx);
                         entry.vertices_created.push(vertex.clone());
@@ -1196,7 +1358,7 @@ impl Controller {
             .add_native_module(vectors)
             .add_native_module(meshes)
             .interpreter();
-        let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Face",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
+        let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Edge,Face",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
         let budget = OwnerBudget::new(None);
         let mut controller = Self {
             undo_slots: budget.reserve(Kind::History, 0).unwrap(),

@@ -1,0 +1,31 @@
+{
+  "positive": true,
+  "negative_controls": {
+    "coordinate-equality-as-identity": {
+      "original_exit": 1,
+      "native_exit": 101
+    },
+    "constructor-inserts-incidence": {
+      "original_exit": 1,
+      "native_exit": 101
+    },
+    "position-copy-instead-of-alias": {
+      "original_exit": 1,
+      "native_exit": 101
+    },
+    "foreign-other-refused": {
+      "original_exit": 1,
+      "native_exit": 101
+    },
+    "radial-value-copy": {
+      "original_exit": 1,
+      "native_exit": 101
+    },
+    "slot-json-copy": {
+      "original_exit": 1,
+      "native_exit": 101
+    }
+  },
+  "scope": "standalone-constructor-and-incidence-objects",
+  "production_enabled": false
+}

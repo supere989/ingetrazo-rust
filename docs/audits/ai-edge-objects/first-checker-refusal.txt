@@ -1,0 +1,1 @@
+Checker rejected coordinate-equality-as-identity negative: original exit1 but native exit0. Initial engineering fixture ignored CLI and ran built-in positive recipe. Corrected fixture consumes explicit path; source/API code unchanged. Corrected checker invokes six mutated recipes in both executables and requires AssertionError/nonzero exits.
