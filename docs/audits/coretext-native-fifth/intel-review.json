@@ -1,0 +1,126 @@
+{
+  "artifact": 11682896691,
+  "zip_sha256": "e4cbe0c54b76cc2368385c09bfab24406efaf489915a7ce9f7470c54c5801904",
+  "decode": "Independent actualQImageRGBA NumPy zero-tolerance comparison",
+  "cases": [
+    {
+      "name": "helvetica",
+      "pdf": [
+        0,
+        0,
+        0
+      ],
+      "tile": 179
+    },
+    {
+      "name": "helvetica-bold",
+      "pdf": [
+        0,
+        0,
+        0
+      ],
+      "tile": 174
+    },
+    {
+      "name": "helvetica-italic",
+      "pdf": [
+        0,
+        0,
+        0
+      ],
+      "tile": 181
+    },
+    {
+      "name": "times-bold-italic",
+      "pdf": [
+        0,
+        0,
+        0
+      ],
+      "tile": 159
+    },
+    {
+      "name": "cjk",
+      "pdf": [
+        62,
+        0,
+        309
+      ],
+      "tile": 214
+    },
+    {
+      "name": "arabic",
+      "pdf": [
+        0,
+        0,
+        0
+      ],
+      "tile": 158
+    }
+  ],
+  "canvas_host": {
+    "passed": true,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "216d92bbcab473e14e25d5672507dd2313e2e14609e7208d062cc52c94b01e2d",
+    "snapshot": {
+      "window_id": 27,
+      "submitted": 4,
+      "displayed": 1,
+      "completed_inflight": 1,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "texture_uploads": 56,
+      "warm_frames": 3,
+      "cancelled_uploads": 1
+    },
+    "image_sha256": "4b29cd7c75801ff9ec635c98ab1ff6951820e44a40f43828ebbacbf0e1374909",
+    "exit_code": 0,
+    "host": {
+      "passed": true,
+      "choice": "canvas",
+      "phase": 4,
+      "close_events": 1,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 13,
+      "skipped": 1,
+      "pending": 0,
+      "error": null,
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 14,
+      "canvas_warm_frames": 13,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  }
+}
