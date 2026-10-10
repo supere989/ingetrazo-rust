@@ -48,7 +48,15 @@ fn embedded_pocket_and_through_cut_have_analytic_removed_volume() {
         let actual=scene.mesh.faces.iter().map(|f|{let v=ring_volume(&f.vertices);v-f.holes.iter().map(|h|v.signum()*ring_volume(h).abs()).sum::<f64>()}).sum::<f64>().abs();
         assert!((actual-expected).abs()<1e-8,"expected pocket/through-cut volume {expected}, got {actual}");
         // A through-cut must leave no cap anywhere inside its column.
-        if distance==-1. {assert!(!scene.mesh.faces.iter().any(|f|f.holes.is_empty() && f.vertices.iter().all(|&v|{let p=scene.mesh.vertices[v].position;p.x>=0.25&&p.x<=0.75&&p.y>=0.25&&p.y<=0.75}) && (f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z.abs()<1e-8)||f.vertices.iter().all(|&v|(scene.mesh.vertices[v].position.z-1.).abs()<1e-8)))),"through cut retained cap");}
+        if distance==-1. {
+            let cap=scene.mesh.faces.iter().any(|f| {
+                let inside=f.vertices.iter().all(|&v| {let p=scene.mesh.vertices[v].position;p.x>=0.25&&p.x<=0.75&&p.y>=0.25&&p.y<=0.75});
+                let planar=f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z.abs()<1e-8)
+                    ||f.vertices.iter().all(|&v|(scene.mesh.vertices[v].position.z-1.).abs()<1e-8);
+                f.holes.is_empty()&&inside&&planar
+            });
+            assert!(!cap,"through cut retained cap");
+        }
     }
 }
 #[test]
