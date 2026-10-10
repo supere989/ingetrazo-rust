@@ -2,7 +2,7 @@
 """Capture only newly created owned native proof windows on authorized Xwayland."""
 import ctypes as C,ctypes.util,json,os,subprocess,sys,time
 from pathlib import Path
-from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QGuiApplication,QImage
 app=QGuiApplication([])
 x=C.CDLL(ctypes.util.find_library("X11"))
 x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p
@@ -20,6 +20,7 @@ def prop(w,name):
  finally:
   if p:x.XFree(p)
 def clients():return set(prop(root,"_NET_CLIENT_LIST"))
+x.XMapRaised.argtypes=[C.c_void_p,C.c_ulong]
 x.XResizeWindow.argtypes=[C.c_void_p,C.c_ulong,C.c_uint,C.c_uint];x.XFlush.argtypes=[C.c_void_p]
 class Data(C.Union):_fields_=[("l",C.c_long*5)]
 class Message(C.Structure):_fields_=[("type",C.c_int),("serial",C.c_ulong),("send_event",C.c_int),("display",C.c_void_p),("window",C.c_ulong),("message_type",C.c_ulong),("format",C.c_int),("data",Data)]
@@ -35,6 +36,20 @@ def wait(fn,timeout=8):
   if value:return value
   app.processEvents();time.sleep(.05)
  raise TimeoutError("Owned proof window readiness timed out")
+class XImage(C.Structure):
+ _fields_=[("width",C.c_int),("height",C.c_int),("xoffset",C.c_int),("format",C.c_int),("data",C.c_void_p),("byte_order",C.c_int),("bitmap_unit",C.c_int),("bitmap_bit_order",C.c_int),("bitmap_pad",C.c_int),("depth",C.c_int),("bytes_per_line",C.c_int),("bits_per_pixel",C.c_int),("red_mask",C.c_ulong),("green_mask",C.c_ulong),("blue_mask",C.c_ulong)]
+x.XGetImage.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_ulong,C.c_int];x.XGetImage.restype=C.POINTER(XImage)
+x.XDestroyImage.argtypes=[C.POINTER(XImage)]
+def capture_owned(w):
+ # Capture only exact newly created owned client; never root or other clients.
+ p=x.XGetImage(d,w,0,0,800,600,C.c_ulong(-1).value,2)
+ if not p:return None
+ try:
+  im=p.contents
+  assert im.width==800 and im.height==600 and im.bits_per_pixel==32 and im.byte_order==0
+  assert (im.red_mask,im.green_mask,im.blue_mask)==(0xff0000,0xff00,0xff)
+  return QImage(C.string_at(im.data,im.bytes_per_line*im.height),800,600,im.bytes_per_line,QImage.Format.Format_RGB32).copy()
+ finally:x.XDestroyImage(p)
 binary=Path(sys.argv[1]);inputs=Path(sys.argv[2]);out=Path(sys.argv[3]);out.mkdir(parents=True,exist_ok=True)
 original=json.loads((inputs/"original-alpha-results.json").read_text());rows=[]
 base=["red-half-white","red-half-black","opacity-bucket-order","opaque-front","opaque-back","equal-opacity-forward","equal-opacity-reversed","opacity-995","opacity-zero","section-clipped"]
@@ -55,8 +70,8 @@ for row in original["cases"]:
     matches=[w for w in clients()-old if prop(w,"_NET_WM_NAME")==b"IngeTrazo native transparent fixture"]
     assert len(matches)<=1,"Multiple own proof windows"
     return matches[0]if matches else None
-   w=wait(owned);x.XResizeWindow(d,w,800,600);x.XFlush(d);time.sleep(.6)
-   image=wait(lambda:app.primaryScreen().grabWindow(w).toImage())
+   w=wait(owned);x.XMapRaised(d,w);x.XFlush(d);time.sleep(1);x.XResizeWindow(d,w,800,600);x.XFlush(d);time.sleep(.6)
+   image=wait(lambda:capture_owned(w))
    assert not image.isNull() and image.width()==800 and image.height()==600
    assert image.save(str(out/(name+".png")))
    text=log.read_text();assert "NVIDIA GeForce RTX 5090"in text and "llvmpipe"not in text

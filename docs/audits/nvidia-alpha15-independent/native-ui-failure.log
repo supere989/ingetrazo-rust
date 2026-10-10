@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/probe/check-owned-native-nvidia-alpha.py", line 74, in <module>
+    image=wait(lambda:capture_owned(w))
+  File "/probe/check-owned-native-nvidia-alpha.py", line 38, in wait
+    raise TimeoutError("Owned proof window readiness timed out")
+TimeoutError: Owned proof window readiness timed out
+Fontconfig error: Cannot load default config file: No such file: (null)
