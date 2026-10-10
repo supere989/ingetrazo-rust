@@ -2,8 +2,17 @@
 use crate::georef::TileCapture;
 use serde_json::Value;
 fn truth(v:&Value)->bool{match v{Value::Null=>false,Value::Bool(b)=>*b,Value::Number(n)=>n.as_f64()!=Some(0.),Value::String(s)=>!s.is_empty(),Value::Array(a)=>!a.is_empty(),Value::Object(o)=>!o.is_empty()}}
-fn float(v:&Value)->Option<f64>{match v{Value::Bool(b)=>Some(if *b{1.}else{0.}),Value::Number(n)=>n.as_f64(),Value::String(s)=>s.trim().parse().ok(),_=>None}.filter(|v|v.is_finite())}
-fn integer(v:&Value)->Option<i64>{match v{Value::Bool(b)=>Some(i64::from(*b)),Value::Number(n)=>n.as_i64().or_else(||n.as_f64().filter(|v|v.is_finite()&&*v>=i64::MIN as f64&&*v<i64::MAX as f64).map(|v|v.trunc()as i64)),Value::String(s)=>s.trim().parse().ok(),_=>None}}
+
+// Decimal ranges captured from the pinned original Python Unicode database 15.1.0.
+fn numeric_text(s:&str)->Option<String>{
+ let bases:&[u32]=&[48, 1632, 1776, 1984, 2406, 2534, 2662, 2790, 2918, 3046, 3174, 3302, 3430, 3558, 3664, 3792, 3872, 4160, 4240, 6112, 6160, 6470, 6608, 6784, 6800, 6992, 7088, 7232, 7248, 42528, 43216, 43264, 43472, 43504, 43600, 44016, 65296, 66720, 68912, 69734, 69872, 69942, 70096, 70384, 70736, 70864, 71248, 71360, 71472, 71904, 72016, 72784, 73040, 73120, 73552, 92768, 92864, 93008, 120782, 120792, 120802, 120812, 120822, 123200, 123632, 124144, 125264, 130032];
+ let mut text=String::new();
+ for c in s.trim().chars(){let n=c as u32; if let Some(base)=bases.iter().find(|base|n>=**base&&n<**base+10){text.push(char::from(b'0'+(n-*base)as u8));}else{text.push(c);}}
+ let b=text.as_bytes(); if b.iter().enumerate().any(|(i,c)|*c==b'_'&&(i==0||i+1==b.len()||!b[i-1].is_ascii_digit()||!b[i+1].is_ascii_digit())){return None;}
+ Some(text.replace("_",""))
+}
+fn float(v:&Value)->Option<f64>{match v{Value::Bool(b)=>Some(if *b{1.}else{0.}),Value::Number(n)=>n.as_f64(),Value::String(s)=>numeric_text(s)?.parse().ok(),_=>None}.filter(|v|v.is_finite())}
+fn integer(v:&Value)->Option<i64>{match v{Value::Bool(b)=>Some(i64::from(*b)),Value::Number(n)=>n.as_i64().or_else(||n.as_f64().filter(|v|v.is_finite()&&*v>=i64::MIN as f64&&*v<i64::MAX as f64).map(|v|v.trunc()as i64)),Value::String(s)=>numeric_text(s)?.parse().ok(),_=>None}}
 
 fn elements(v:&Value)->Option<Vec<Value>>{match v { Value::Array(a)=>Some(a.clone()), Value::String(s)=>Some(s.chars().map(|c|Value::String(c.to_string())).collect()), Value::Object(o)=>Some(o.keys().map(|k|Value::String(k.clone())).collect()), _=>None }}
 impl TileCapture{
