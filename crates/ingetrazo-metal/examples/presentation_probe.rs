@@ -17,6 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         started: std::time::Instant,
         resized: bool,
         resize_requested: bool,
+        resize_target: Option<winit::dpi::PhysicalSize<u32>>,
     }
     impl ApplicationHandler for Probe {
         fn resumed(&mut self, ev: &ActiveEventLoop) {
@@ -52,7 +53,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Ok(())
                 }
                 WindowEvent::Resized(size) => {
-                    if self.resize_requested { self.resized = true; }
+                    if self.resize_requested && Some(size) == self.resize_target { self.resized = true; }
                     gpu.resize(
                     size.width,
                     size.height,
@@ -94,7 +95,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     let (_, retired, pending) = gpu.counters();
                     if retired >= 2 && !self.resize_requested {
                         self.resize_requested = true;
-                        let _ = self.window.as_ref().unwrap().request_inner_size(winit::dpi::LogicalSize::new(640., 480.));
+                        let window = self.window.as_ref().unwrap();
+                        let logical = winit::dpi::LogicalSize::new(640., 480.);
+                        self.resize_target = Some(logical.to_physical(window.scale_factor()));
+                        let _ = window.request_inner_size(logical);
                     }
                     if self.resized && retired >= 6 && pending == 0 {
                         eprintln!("PASS actual CAMetalLayer presented retirement and resize {:?}", gpu.counters());
@@ -126,6 +130,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         started: std::time::Instant::now(),
         resized: false,
         resize_requested: false,
+        resize_target: None,
     };
     event.run_app(&mut probe)?;
     if let Some(e) = probe.error {
