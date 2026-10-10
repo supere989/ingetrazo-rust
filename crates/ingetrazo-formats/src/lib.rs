@@ -15,6 +15,7 @@ pub mod gltf;
 pub mod gltf_import;
 pub mod ifc;
 pub mod igz;
+pub mod geoimport;
 pub mod obj;
 pub mod stl;
 

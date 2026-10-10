@@ -123,7 +123,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("Georeference (KML / GeoJSON)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.show_geographic_import_dialog = true;
                     ui.close_menu();
                 }
                 if ui.button(tr("Survey points CSV (UTM)…")).clicked() {

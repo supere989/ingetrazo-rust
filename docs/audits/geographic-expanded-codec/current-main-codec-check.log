@@ -1,0 +1,1 @@
+{"passed": true, "load_cases": 23, "actual_original_reopens": 23, "rejected_controls": ["missing-case", "custom-provider-coercion", "numeric-conversion", "iterable-patches"], "scope": "source map metadata only; broad numeric/provider/fetch/cache/UI/GPU required"}

@@ -1,0 +1,3 @@
+# Source file and KMZ replay
+Seven fresh original load_features/native comparisons pass: KML uppercase extension, content sniffing, GeoJSON, malformed JSON, preferred doc.kml, first uppercase KML entry fallback and empty KMZ. Wrong preferred-member and lat/lon-order controls reject.
+This is file parsing only. Original app import initializes missing datum before AddGeoPathCommand/CompoundCommand history; Undo removes imported paths and retains datum. App integration must preserve this ownership, exact float32 QVector3D projection, no replacement of the current model, imported path framing and base-map reference. These remain pending. No P25/P27 promotion.

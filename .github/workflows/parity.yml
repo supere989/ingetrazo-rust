@@ -308,6 +308,12 @@ jobs:
         run: python scripts/check-rendered-composer-ink.py .
       - name: Original Line Rectangle Freehand drafting semantics
         run: python scripts/check-python-drafting.py
+      - name: Original map metadata codec and actual source reopens
+        run: |
+          mkdir -p docs/audits/map-codec-ci
+          python scripts/probe-python-tile-capture.py docs/audits/map-codec-ci/original
+          cargo run --locked -p ingetrazo-formats --example tile_capture_baseline -- docs/audits/map-codec-ci/original docs/audits/map-codec-ci/native-files > docs/audits/map-codec-ci/native.json
+          python scripts/check-tile-capture-codec.py docs/audits/map-codec-ci/original docs/audits/map-codec-ci/native.json docs/audits/map-codec-ci/native-files | tee docs/audits/map-codec-ci/check.log
       - name: Original geographic path conversion topology
         run: python scripts/check-python-geopath-conversion.py
       - name: Ctrl PushPull literal success and intentional safety boundaries
@@ -375,6 +381,7 @@ jobs:
             docs/audits/image-ownership-ci/
             docs/audits/font-resolver-ci/
             docs/audits/paragraph-ci/
+            docs/audits/map-codec-ci/
             docs/audits/image-plane-ci/
             docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*

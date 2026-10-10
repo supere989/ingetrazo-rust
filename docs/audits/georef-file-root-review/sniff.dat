@@ -1,0 +1,8 @@
+  <?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"><Document>
+  <Placemark><name>Lot 1</name>
+    <Polygon><outerBoundaryIs><LinearRing><coordinates>
+      -71.98,-13.52 -71.97,-13.52 -71.97,-13.51 -71.98,-13.51 -71.98,-13.52
+    </coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Document></kml>

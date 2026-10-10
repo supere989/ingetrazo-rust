@@ -1,0 +1,26 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "dimension_style": {
+      "base_step_mm": 8.0,
+      "color": [
+        45,
+        55,
+        75
+      ],
+      "decimals": 2,
+      "ends": "arrow",
+      "font_size": 9,
+      "norma": "iso",
+      "units": "m"
+    },
+    "edges": [],
+    "faces": [],
+    "tile_layer": {
+      "name": "ignored",
+      "source": "esri_imagery",
+      "url_template": "ignored"
+    }
+  }
+}

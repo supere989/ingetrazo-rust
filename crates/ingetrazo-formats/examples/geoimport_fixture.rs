@@ -1,0 +1,2 @@
+use std::io::Read;
+fn main(){let mut s=String::new();std::io::stdin().read_to_string(&mut s).unwrap();let v:serde_json::Value=serde_json::from_str(&s).unwrap();let result:Vec<_>=v.as_array().unwrap().iter().map(|c|{let text=c["text"].as_str().unwrap();if c["format"]=="kml"{ingetrazo_formats::geoimport::parse_kml(text)}else{ingetrazo_formats::geoimport::parse_geojson(text).unwrap()}}).collect();println!("{}",serde_json::to_string(&result).unwrap());}
