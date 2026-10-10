@@ -1,0 +1,6 @@
+{
+  "method": "Two diagnostic shader variants encode red float32 bits into RGB bytes with opaque alpha. Low/high captures agree in overlapping bytes.",
+  "result": "At588,340 samples are0.421875,0.421875,0.40625,0.421875, matching selected source vertex colors.",
+  "boundary": "Edges disabled and output shader changed. Expected full-reference rejection retained; this does not establish unchanged production output or GPU equivalence.",
+  "next": "Investigate framebuffer conversion/sample storage and actual unchanged draw state; no surface recoloring justified."
+}

@@ -1,0 +1,212 @@
+{
+  "diagnostic_float_color_bits": true,
+  "diagnostic_float_high_byte": true,
+  "extraction_state": "explicit shader, VAO, sampler binding each sample; dither/sRGB/scissor disabled; full color mask",
+  "diagnostic_primitive_id": false,
+  "diagnostic_surface_path": false,
+  "diagnostic_edges_disabled": true,
+  "diagnostic_flat_face_color": false,
+  "integer_half_down_is_acceptance_rule": false,
+  "dither_before": true,
+  "dither_after": true,
+  "raw_reconstruction_different_pixels": 1,
+  "raw_vs_qimage_scene_different_pixels": 0,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "fresh_full_image_exact": false,
+  "fresh_different_pixels": 91234,
+  "reconstructed_resolve_different_pixels": 1,
+  "scene_vs_widget_different_pixels": 0,
+  "edge_pixels": [
+    {
+      "xy": [
+        586,
+        340
+      ],
+      "resolved": [
+        62,
+        0,
+        208,
+        255
+      ],
+      "samples": [
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ]
+      ]
+    },
+    {
+      "xy": [
+        587,
+        340
+      ],
+      "resolved": [
+        62,
+        0,
+        208,
+        255
+      ],
+      "samples": [
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ]
+      ]
+    },
+    {
+      "xy": [
+        588,
+        340
+      ],
+      "resolved": [
+        62,
+        0,
+        214,
+        255
+      ],
+      "samples": [
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          208,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ]
+      ]
+    },
+    {
+      "xy": [
+        589,
+        340
+      ],
+      "resolved": [
+        62,
+        0,
+        216,
+        255
+      ],
+      "samples": [
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ]
+      ]
+    },
+    {
+      "xy": [
+        590,
+        340
+      ],
+      "resolved": [
+        62,
+        0,
+        216,
+        255
+      ],
+      "samples": [
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ],
+        [
+          62,
+          0,
+          216,
+          255
+        ]
+      ]
+    }
+  ],
+  "scope": "Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet."
+}
