@@ -49,3 +49,5 @@ Partsindependent91a2c58 integrated d652a09. Original ft/in formatting corrected(
 Offsetca21984 integrated; fullworkspacePASS;9 original orderedregion/chain cases and2negativecontrols PASS canonical3427942. CI38013592441 nowpassedrenderstartup, installingoriginalruntime (verifiedlive). Clipboardcollisionremapffd3b40 andoverlapadapterpendingreview.
 
 CI38013592441 SUCCESS verified publishedb01dbcf. Local84e7d72 clipboardremap integrated243RusttestsPASS; reviewed multiincomingaliasallocation/opaque metadata problems pendingworkerfix, notpublishuntilreviewed. AttachedFollowMe original17caseoraclePASS combined83bab02. Offsetcontroller195865c readyreview.
+
+Clipboardb9 allocatorreservednames/opaque preservation/overlap andOffset195workflow integrated8d9c279; fullworkspacePASS; currentmandatoryclipboard+9offsetoraclePASS. Sourceplane cap corrected24 in29f4336. Independentvalidator retained opaque-corruption baseline ffd; correctedboundary/OS/paintprecedence neworacle underway.
