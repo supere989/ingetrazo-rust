@@ -1,0 +1,10 @@
+{
+  "source": "2a99d30f00b24522d04e43e9ddce2ea04f9bb83b",
+  "passed": 696,
+  "failed": 0,
+  "ignored": 2,
+  "summaries": 35,
+  "log_sha256": "d812baec72bf64b606b5d72dc1f7c7af30d8a767af7f8eb821a4df16bd9adf94",
+  "scope": "Combined workspace validation for spatial-delta, production outline dispatch and opaque shading correction. Standalone face interpreter prerequisite separately validated in ai-face-root-review.",
+  "remaining": "Strict whole-model GPU comparisons fail; production scripting disabled; all release gates OPEN."
+}
