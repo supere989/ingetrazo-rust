@@ -364,6 +364,7 @@ fn sheet_item_model(item: &ingetrazo_core::composition::SheetItem) -> (uuid::Uui
             "scale_n":f.scale_n,"view_key":f.view_key,"style":match f.style.as_str() {"technical"=>"vectorial","wireframe"=>"lineas",s=>s},
             "show_title":f.show_title,"title_text":f.title_text,"border":f.border,
             "perspective":f.perspective,"rot_deg":f.rot_deg,"annotations":f.annotations,
+            "cam_target":f.cam_target,"cam_yaw":f.cam_yaw,"cam_pitch":f.cam_pitch,"cam_distance":f.cam_distance,"cam_fov":f.cam_fov,
             "section_marks":f.section_marks,"uid":f.id.simple().to_string()
         })),
         SheetItem::TitleBlock(f) => (f.id,"cajetin",serde_json::json!({
@@ -453,6 +454,9 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
                     f.style=txt(v,"style","sombreado");f.show_title=flag(v,"show_title",false);
                     f.title_text=txt(v,"title_text","");f.border=flag(v,"border",false);
                     f.perspective=flag(v,"perspective",false);f.rot_deg=num(v,"rot_deg",0.);
+                    f.cam_target=v.get("cam_target").and_then(|v|serde_json::from_value(v.clone()).ok());
+                    f.cam_yaw=v.get("cam_yaw").and_then(|v|v.as_f64());f.cam_pitch=v.get("cam_pitch").and_then(|v|v.as_f64());
+                    f.cam_distance=v.get("cam_distance").and_then(|v|v.as_f64());f.cam_fov=v.get("cam_fov").and_then(|v|v.as_f64());
                     f.annotations=flag(v,"annotations",false);f.section_marks=flag(v,"section_marks",false);
                     SheetItem::ViewFrame(f)
                 },

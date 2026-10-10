@@ -375,10 +375,22 @@ fn section_projected_edges(scene:&Scene)->Vec<(DVec3,DVec3)>{fn mesh(mesh:&inget
     }fn groups(groups:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;mesh(&group.mesh,transform,scene,edges);children(&group.children,transform,scene,edges);}}fn children(children:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){groups(children,parent,scene,edges)}let mut edges=vec![];mesh(&scene.mesh,glam::DMat4::IDENTITY,scene,&mut edges);groups(&scene.groups,glam::DMat4::IDENTITY,scene,&mut edges);edges}
 
 /// Projects and renders the 3D model inside the ViewFrame at exact scale 1:N.
+fn frame_bounds(scene:&Scene)->Option<(DVec3,DVec3)>{
+ let mut points=vec![];for edge in &scene.mesh.edges{if !edge.hidden&&scene.is_layer_visible(edge.layer.as_deref()){points.extend([scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position]);}}for(id,face)in scene.mesh.faces.iter().enumerate(){if scene.mesh_face_visible(&scene.mesh,id){points.extend(face.vertices.iter().map(|&i|scene.mesh.vertices[i].position));}}
+ fn groups(items:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in items{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().map(|v|transform.transform_point3(v.position)));groups(&group.children,transform,scene,points);}}
+ groups(&scene.groups,glam::DMat4::IDENTITY,scene,&mut points);if points.is_empty(){None}else{Some(points.into_iter().fold((DVec3::splat(f64::INFINITY),DVec3::splat(f64::NEG_INFINITY)),|(a,b),p|(a.min(p),b.max(p))))}
+}
+/// Resolve a frame without changing the live document or visible camera.
+pub fn camera_for_frame(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{let snapshot=frame_scene(scene,frame);frame_camera(&snapshot,frame)}
 fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{
- use ingetrazo_core::camera::{OrbitCamera,StandardView};
- if frame.view_key=="__current__"||frame.view_key.starts_with("scene:"){return scene.camera.clone();}
- let mut camera=OrbitCamera::default();camera.target=DVec3::ZERO;camera.distance=100.;camera.set_standard_view(match frame.view_key.as_str(){"std:front"=>StandardView::Front,"std:right"=>StandardView::Right,"std:back"=>StandardView::Back,"std:left"=>StandardView::Left,"std:iso"=>StandardView::Iso,_=>StandardView::Top});camera
+ use ingetrazo_core::camera::StandardView;
+ let mut camera=scene.camera.clone();let bound=frame.view_key.starts_with("scene:")&&scene.saved_views.iter().any(|v|Some(v.name.as_str())==frame.view_key.strip_prefix("scene:"));
+ if frame.view_key.starts_with("std:"){camera.set_standard_view(match frame.view_key.as_str(){"std:front"=>StandardView::Front,"std:right"=>StandardView::Right,"std:back"=>StandardView::Back,"std:left"=>StandardView::Left,"std:iso"=>StandardView::Iso,"std:bottom"=>StandardView::Bottom,_=>StandardView::Top});if matches!(frame.view_key.as_str(),"std:top"|"std:bottom"){camera.pitch=if frame.view_key=="std:top"{std::f64::consts::FRAC_PI_2}else{-std::f64::consts::FRAC_PI_2};camera.up=DVec3::Y;}if let Some((lo,hi))=frame_bounds(scene){camera.target=(lo+hi)/2.;}}
+ if let Some(yaw)=frame.cam_yaw{camera.yaw=yaw;}if let Some(pitch)=frame.cam_pitch{camera.pitch=pitch;if pitch.abs()<89.5_f64.to_radians(){camera.up=DVec3::Z;}}if let Some(target)=frame.cam_target{camera.target=DVec3::from_array(target);}
+ let right=camera.right();let up=right.cross(camera.forward());let angle=frame.rot_deg.to_radians();camera.up=up*angle.cos()-right*angle.sin();camera.aspect=frame.rect.w/frame.rect.h;
+ camera.perspective=frame.perspective;camera.two_point=false;
+ if frame.perspective{if let Some(fov)=frame.cam_fov{camera.fov_deg=fov.clamp(5.,120.);}camera.distance=frame.cam_distance.or_else(||bound.then_some(camera.distance)).unwrap_or_else(||frame_bounds(scene).map(|(lo,hi)|(hi-lo).length()/2./(camera.fov_deg.to_radians()/2.).tan().max(1e-6)*1.15).filter(|d|*d>0.).unwrap_or(30.)).max(0.001);}else{camera.distance=ingetrazo_core::composition::ortho_distance_for_height(model_height_for_frame(frame.rect.h,frame.scale_n),camera.fov_deg);}
+ camera
 }
 fn render_model_projection(
     scene: &Scene,
@@ -396,14 +408,14 @@ fn render_model_projection(
     let model_h_m = model_height_for_frame(frame.rect.h, frame.scale_n);
     let model_w_m = model_h_m * (frame.rect.w / frame.rect.h);
 
-    let proj_mat = glam::DMat4::orthographic_rh(
+    let proj_mat = if camera.perspective{camera.projection_matrix()}else{glam::DMat4::orthographic_rh(
         -model_w_m * 0.5,
         model_w_m * 0.5,
         -model_h_m * 0.5,
         model_h_m * 0.5,
         -camera.zfar,
         camera.zfar,
-    );
+    )};
     let view_proj = proj_mat * view_mat;
 
     // Line stroke for technical plan rendering
@@ -574,8 +586,12 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
  #[test]fn hidden_face_boundaries_and_contours_are_absent_from_sheet(){
   let mut scene=Scene::new();let ids=[DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(-1.,1.,0.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.section_planes.push(ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"Cut","A"));scene.show_section_cuts=true;assert!(!section_projected_edges(&scene).is_empty());scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));assert!(section_projected_edges(&scene).is_empty());
  }
+ #[test]fn frame_overrides_roll_scale_and_perspective_have_original_camera_semantics(){
+  let mut scene=Scene::new();let ids=[DVec3::new(10.,20.,0.),DVec3::new(12.,20.,0.),DVec3::new(10.,24.,2.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);let mut frame=ViewFrame::default();frame.scale_n=20.;frame.rot_deg=90.;let camera=camera_for_frame(&scene,&frame);assert_eq!(camera.target,DVec3::new(11.,22.,1.));assert!((camera.pitch-std::f64::consts::FRAC_PI_2).abs()<1e-12);assert!((camera.up+DVec3::X).length()<1e-12);assert!((camera.distance-ingetrazo_core::composition::ortho_distance_for_height(3.,45.)).abs()<1e-12);
+  frame.perspective=true;frame.cam_yaw=Some(-1.2);frame.cam_pitch=Some(0.3);frame.cam_target=Some([4.,5.,6.]);frame.cam_distance=Some(7.);frame.cam_fov=Some(200.);let camera=camera_for_frame(&scene,&frame);assert_eq!(camera.target,DVec3::new(4.,5.,6.));assert_eq!(camera.distance,7.);assert_eq!(camera.fov_deg,120.);assert!(camera.perspective);frame.cam_fov=Some(60.);let camera=camera_for_frame(&scene,&frame);let matrix=camera.projection_matrix()*camera.view_matrix();let near=camera.eye()+camera.forward()*2.+camera.right();let far=camera.eye()+camera.forward()*4.+camera.right();let a=matrix*near.extend(1.);let b=matrix*far.extend(1.);assert!((a.x/a.w-2.*b.x/b.w).abs()<1e-12,"perspective must foreshorten far geometry");
+ }
  #[test]fn saved_section_view_uses_original_camera_direction_without_mutating_live_state(){
-  let mut scene=Scene::new();scene.camera.yaw=-1.1;scene.camera.pitch=0.42;scene.camera.target=DVec3::new(4.,5.,6.);scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Cut",&scene,&scene.camera));let captured=scene.camera.clone();scene.camera.yaw=0.3;let original=scene.clone();let mut frame=ViewFrame::default();frame.view_key="scene:Cut".into();let snapshot=frame_scene(&scene,&frame);assert_eq!(frame_camera(&snapshot,&frame).view_matrix(),captured.view_matrix());assert_eq!(scene,original);
+  let mut scene=Scene::new();scene.camera.yaw=-1.1;scene.camera.pitch=0.42;scene.camera.target=DVec3::new(4.,5.,6.);scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Cut",&scene,&scene.camera));let captured=scene.camera.clone();scene.camera.yaw=0.3;let original=scene.clone();let mut frame=ViewFrame::default();frame.view_key="scene:Cut".into();let snapshot=frame_scene(&scene,&frame);let camera=frame_camera(&snapshot,&frame);assert_eq!(camera.target,captured.target);assert!((camera.forward()-captured.forward()).length()<1e-12);assert!(!camera.perspective);assert_eq!(scene,original);
   frame.view_key="std:front".into();assert!(frame_camera(&scene,&frame).eye().y<0.);frame.view_key="std:right".into();assert!(frame_camera(&scene,&frame).eye().x>0.);
  }
 }
