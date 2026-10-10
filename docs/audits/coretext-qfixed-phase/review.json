@@ -1,0 +1,196 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "reference": "Actual unmodified QFixed class and QFontEngine::subPixelPositionFor phase lambda extracted from retained Qt sources; only Qt primitive typedefs/CLI loop added",
+  "production": "device_position_with_count extracted verbatim from current composer_text_canvas.rs",
+  "inventory": {
+    "counts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "fractions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "pixel_positions": [
+      -4,
+      -1,
+      0,
+      1,
+      4
+    ],
+    "baseline_fixed_y": [
+      -33,
+      -32,
+      -1,
+      0,
+      31,
+      32,
+      63
+    ]
+  },
+  "comparisons": 26880,
+  "native_changed": 0,
+  "old_changed": 7000,
+  "old_changed_by_count": {
+    "1": 0,
+    "2": 0,
+    "3": 735,
+    "4": 0,
+    "5": 910,
+    "6": 770,
+    "7": 945,
+    "8": 0,
+    "9": 980,
+    "10": 910,
+    "11": 1050,
+    "12": 700
+  },
+  "old_first_counterexamples": [
+    {
+      "original": "-214,-33,3,-4,-1,43",
+      "old": "-214,-33,3,-4,-1,42"
+    },
+    {
+      "original": "-214,-32,3,-4,0,43",
+      "old": "-214,-32,3,-4,0,42"
+    },
+    {
+      "original": "-214,-1,3,-4,0,43",
+      "old": "-214,-1,3,-4,0,42"
+    },
+    {
+      "original": "-214,0,3,-4,0,43",
+      "old": "-214,0,3,-4,0,42"
+    },
+    {
+      "original": "-214,31,3,-4,0,43",
+      "old": "-214,31,3,-4,0,42"
+    },
+    {
+      "original": "-214,32,3,-4,1,43",
+      "old": "-214,32,3,-4,1,42"
+    },
+    {
+      "original": "-214,63,3,-4,1,43",
+      "old": "-214,63,3,-4,1,42"
+    },
+    {
+      "original": "-213,-33,3,-4,-1,43",
+      "old": "-213,-33,3,-4,-1,42"
+    },
+    {
+      "original": "-213,-32,3,-4,0,43",
+      "old": "-213,-32,3,-4,0,42"
+    },
+    {
+      "original": "-213,-1,3,-4,0,43",
+      "old": "-213,-1,3,-4,0,42"
+    },
+    {
+      "original": "-213,0,3,-4,0,43",
+      "old": "-213,0,3,-4,0,42"
+    },
+    {
+      "original": "-213,31,3,-4,0,43",
+      "old": "-213,31,3,-4,0,42"
+    },
+    {
+      "original": "-213,32,3,-4,1,43",
+      "old": "-213,32,3,-4,1,42"
+    },
+    {
+      "original": "-213,63,3,-4,1,43",
+      "old": "-213,63,3,-4,1,42"
+    }
+  ],
+  "output_sha256": {
+    "original": "bbcbb6d46507f83283694bff6da00bd2e733485a7bc2c6a8f5caa57d7f957eff",
+    "native": "bbcbb6d46507f83283694bff6da00bd2e733485a7bc2c6a8f5caa57d7f957eff",
+    "old": "e1f3a1595e3796ab949c092ce01089bc7c3dce7aac2c19281ad5fd0600c2ea40"
+  },
+  "binary_sha256": {
+    "original": "368c40a28078ef6005778311b02f9ea90142bf63edade19db63aa4933fc44f45",
+    "native": "636f5417f666a442072e2daf5da90ddfed47635e51ab49e83e687d7829ce9adf",
+    "old": "bc273b124adcb4d41cc94712c2444d210f4c9ae4c137346177327997b8495d0e"
+  },
+  "sources_sha256": {
+    "qfixed_p.h": "48d3b750415c99e4d9118a9ca1d212ca15d5ca1094dcfb4a63766c2d01ad6651",
+    "original-qfixed-phase.cpp": "e255ab2df3316ae6e0f2d42dacfbcef6fbf05e8acbd27f806ccfbcce07a877e9",
+    "native-qfixed-phase.rs": "d0cfa174acd8eb5f250d5ff1a40d8a4518d2d8d50dc7d15154991d0cc1bcf338",
+    "old-qfixed-phase.rs": "0307b918aeb4327331cb75f4f6c3b0d94781690dfccaf8cf2f3fed2df8dd51d6"
+  },
+  "native_pixel_proof": "Pending next reviewed Mac replay. Retained Helvetica third-glyph/Arabic/italic residuals are consistent with wrong rounded phase; scalar match alone does not close tile gate."
+}

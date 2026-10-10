@@ -87,13 +87,16 @@ impl CanvasPainter {
 #[cfg(test)]
 fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){device_position_with_count(x,y,4)}
 fn device_position_with_count(x:i64,y:i64,count:u8)->(f64,f64,[u8;2]){
- let phase=if count<=1{0}else{let count=i64::from(count);((x.rem_euclid(64)+1)*count/64)*64/count};
+ // QFontEngine divides by QFixed(count), whose division rounds nearest.
+ // Integer division here incorrectly maps phase2/3 to42 instead of43.
+ let phase=if count<=1{0}else{let count=i64::from(count);let bucket=(x.rem_euclid(64)+1)*count/64;(bucket*128+count)/(count*2)};
  (x.div_euclid(64)as f64+(phase/64)as f64,(y+32).div_euclid(64)as f64,[(phase%64)as u8,0])
 }
 #[cfg(test)]mod device_position_tests{use super::*;
  #[test]fn native_dynamic_phase_count_preserves_qfixed_fraction_and_negative_floor(){
   assert_eq!(device_position_with_count(21,31,3),(0.,0.,[21,0]));
-  assert_eq!(device_position_with_count(14,32,12),(0.,1.,[10,0]));
+  assert_eq!(device_position_with_count(59,31,3),(0.,0.,[43,0]));
+  assert_eq!(device_position_with_count(14,32,12),(0.,1.,[11,0]));
   assert_eq!(device_position_with_count(-1,-33,3),(0.,-1.,[0,0]));
   assert_eq!(device_position_with_count(63,0,3),(1.,0.,[0,0]));
   assert_eq!(device_position_with_count(21,31,1),(0.,0.,[0,0]));
