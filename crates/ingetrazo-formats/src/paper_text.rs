@@ -98,7 +98,7 @@ unsafe extern "C" fn release_ft_library(p: *mut ft::FT_LibraryRec) {
     }
 }
 impl FtGeometry {
-    unsafe fn new(bytes: &[u8], index: u32, policy: FtPolicy) -> Result<Self, String> {
+    unsafe fn new(bytes: &[u8], index: u32, policy: FtPolicy, pixels: u32) -> Result<Self, String> {
         let mut library = std::ptr::null_mut();
         if unsafe { ft::FT_Init_FreeType(&mut library) } != 0 {
             return Err("Paper font outline library failed".into());
@@ -118,7 +118,7 @@ impl FtGeometry {
             return Err("Paper font outline face failed".into());
         }
         let face = Handle::new(face, release_ft_face)?;
-        if unsafe { ft::FT_Set_Char_Size(face.raw(), 6400, 6400, 0, 0) } != 0 {
+        if unsafe { ft::FT_Set_Char_Size(face.raw(), (pixels * 64) as _, (pixels * 64) as _, 0, 0) } != 0 {
             return Err("Paper font outline scale failed".into());
         }
         let flags = match policy.hinting {
@@ -229,7 +229,7 @@ pub struct PaperFont {
     bytes: Arc<[u8]>,
     data: NonNull<Advances>,
     pub units_per_em: u16,
-    /// Pixel100 baseline metrics in QFixed units (1/64px).
+    /// Resolved face-size metrics in QFixed units (1/64px).
     pub ascent_26_6: i32,
     pub descent_26_6: i32,
     pub leading_26_6: i32,
@@ -250,6 +250,20 @@ impl PaperFont {
         face_index: u32,
         policy: Option<FtPolicy>,
     ) -> Result<Self, String> {
+        Self::new_at_pixel_size(bytes, face_index, policy, 100)
+    }
+    /// Native viewport font at its resolved physical size. Existing paper
+    /// callers retain the pixel100 face and transform policy.
+    pub fn new_at_pixel_size(
+        bytes: Arc<[u8]>,
+        face_index: u32,
+        policy: Option<FtPolicy>,
+        pixels: u32,
+    ) -> Result<Self, String> {
+        if pixels == 0 || pixels > 4096 {
+            return Err("Native font pixel size outside admission".into());
+        }
+        let fixed_size = i64::from(pixels) * 64;
         if bytes.is_empty() || bytes.len() > MAX_FONT_BYTES {
             return Err("Paper font byte budget exceeded".into());
         }
@@ -261,7 +275,7 @@ impl PaperFont {
         if upem == 0 || face.number_of_glyphs() == 0 {
             return Err("Invalid paper font metrics".into());
         }
-        let fixed = |units: i16| (i64::from(units) * 6400 / i64::from(upem)) as i32;
+        let fixed = |units: i16| (i64::from(units) * fixed_size / i64::from(upem)) as i32;
         let ascent_26_6 = fixed(face.ascender());
         let descent_26_6 = -fixed(face.descender());
         let leading_26_6 = fixed(face.line_gap()).max(0);
@@ -274,7 +288,7 @@ impl PaperFont {
                 .glyph_hor_advance(ttf_parser::GlyphId(id))
                 .ok_or("Missing paper horizontal advance")?;
             // QFontEngine's pixel100 QFixed horizontal advances truncate at1/64.
-            widths.push((u64::from(width) * 6400 / u64::from(upem)) as i32);
+            widths.push((u64::from(width) * fixed_size as u64 / u64::from(upem)) as i32);
         }
         // All temporary HB objects are RAII; the font references its parent's
         // face/blob. READONLY never duplicates or modifies the shared font bytes.
@@ -298,8 +312,8 @@ impl PaperFont {
             }
             let parent = Handle::new(hb::hb_font_create(hbface.raw()), hb::hb_font_destroy)?;
             hb::hb_ot_font_set_funcs(parent.raw());
-            hb::hb_font_set_scale(parent.raw(), 6400, -6400);
-            hb::hb_font_set_ppem(parent.raw(), 100, 100);
+            hb::hb_font_set_scale(parent.raw(), fixed_size as i32, -(fixed_size as i32));
+            hb::hb_font_set_ppem(parent.raw(), pixels, pixels);
             let font = Handle::new(
                 hb::hb_font_create_sub_font(parent.raw()),
                 hb::hb_font_destroy,
@@ -314,7 +328,7 @@ impl PaperFont {
                 widths,
                 metrics: [ascent_26_6, descent_26_6, leading_26_6],
                 geometry: policy
-                    .map(|p| FtGeometry::new(&bytes, face_index, p))
+                    .map(|p| FtGeometry::new(&bytes, face_index, p, pixels))
                     .transpose()?,
             }))
             .cast();
