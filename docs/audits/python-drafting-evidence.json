@@ -1,4 +1,5 @@
 {
+  "binary_sha256": "03285d760624c8154e0e33c4d91956aaef553502e0b421242b8359aebe320f75",
   "negative_controls": [
     {
       "case": "lost-region",
@@ -14,7 +15,7 @@
     }
   ],
   "provenance": {
-    "rust_commit": "2a55b7f5ec17c8bc2b12efef775c3da8a1e7effa",
+    "rust_commit": "fedcce41f7835c12088bd26b0ca953410c9d4d49",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -119,6 +120,36 @@
     },
     {
       "case": "angled-holed-freehand-chord",
+      "match": true,
+      "original_faces": 4,
+      "rust_faces": 4
+    },
+    {
+      "case": "holed-outside-void-chord",
+      "match": true,
+      "original_faces": 3,
+      "rust_faces": 3
+    },
+    {
+      "case": "two-hole-chord-locality",
+      "match": true,
+      "original_faces": 4,
+      "rust_faces": 4
+    },
+    {
+      "case": "angled-holed-outside-void-chord",
+      "match": true,
+      "original_faces": 3,
+      "rust_faces": 3
+    },
+    {
+      "case": "holed-sequential-chords",
+      "match": true,
+      "original_faces": 5,
+      "rust_faces": 5
+    },
+    {
+      "case": "old-curve-holed-chord",
       "match": true,
       "original_faces": 4,
       "rust_faces": 4
