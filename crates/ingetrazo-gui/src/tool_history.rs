@@ -46,6 +46,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
+        if self.section_name_prompt.is_some(){return;}
         let plane_count=self.scene.section_planes.len();
         let before = self.tool_snapshot();
         self.active_tool.on_click(&mut self.scene, context);
@@ -58,6 +59,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_release(&mut self, context: &ToolContext, drag_distance: f64) {
+        if self.section_name_prompt.is_some(){return;}
         let before = self.tool_snapshot();
         self.active_tool.on_release(&mut self.scene, context, drag_distance);
         self.status_message = self.active_tool.error_message().map(|e| format!("Tool error: {e}")).unwrap_or_default();
@@ -65,6 +67,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_double_click(&mut self, context: &ToolContext) {
+        if self.section_name_prompt.is_some(){return;}
         let before = self.tool_snapshot();
         self.active_tool.on_double_click(&mut self.scene, context);
         self.status_message = self
@@ -76,6 +79,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
+        if self.section_name_prompt.is_some(){return Err("Finish the section naming dialog first".into());}
         let before = self.tool_snapshot();
         match self.active_tool.on_vcb_input(&mut self.scene, text) {
             Ok(()) => {
