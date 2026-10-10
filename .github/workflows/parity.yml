@@ -22,7 +22,7 @@ jobs:
       - name: Persistent shared-buffer HLR and worker deadline controls
         run: cargo run --locked -p ingetrazo-render --example process_hlr_acceptance -- target/debug/ingetrazo-render-worker
       - name: Build direct Vulkan host and allocation probe
-        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe
+        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe --example native_vulkan_upload_churn
       - name: Direct Vulkan virtual-display lifecycle
         run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan docs/audits/native-vulkan-ci-host
       - name: Actual Vulkan image and staging denial rollback
@@ -33,6 +33,10 @@ jobs:
         run: |
           mkdir -p docs/audits/contour-chunks-ci
           timeout 30s target/debug/examples/native_vulkan_contour_chunks_probe --software-fixture --output docs/audits/contour-chunks-ci/hollow.png > docs/audits/contour-chunks-ci/probe.log 2>&1
+      - name: Batched transfer readback and transactional ownership controls
+        run: |
+          mkdir -p docs/audits/upload-many-ci
+          timeout 30s target/debug/examples/native_vulkan_upload_churn --software-fixture > docs/audits/upload-many-ci/result.json 2> docs/audits/upload-many-ci/runtime.log
       - name: Software-rendered virtual-display startup
         run: scripts/render-smoke.sh
       - name: Semantic document acceptance
@@ -165,6 +169,7 @@ jobs:
             docs/audits/native-vulkan-ci-budget/*
             docs/audits/headless-vulkan-ci/*
             docs/audits/contour-chunks-ci/*
+            docs/audits/upload-many-ci/*
             docs/audits/native-composer-ci/*.png
             docs/audits/native-composer-ci/native.log
             docs/audits/native-composer-ci/result.json
