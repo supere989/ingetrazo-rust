@@ -25,6 +25,8 @@ def check(source,native):
     ids=[g['id']for g in got.get('glyphs',[])]
     diagnostics['source_ids']=run['glyphs'];diagnostics['native_ids']=ids
     diagnostics['raw_storage_order_equal']=run['glyphs']==ids
+    if len(run['glyphs'])!=len(run['positions']):
+     raise ValueError('Source glyph/position inventory lengths differ')
     source_pairs=sorted((glyph,position[0]*64,position[1]*64)for glyph,position in zip(run['glyphs'],run['positions']))
     native_pairs=[];x=0
     for glyph in got.get('glyphs',[]):
