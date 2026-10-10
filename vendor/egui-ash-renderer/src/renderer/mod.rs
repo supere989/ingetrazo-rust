@@ -12,7 +12,7 @@ use egui::{
 use mesh::*;
 use vulkan::*;
 
-use self::allocator::Allocator;
+use self::allocator::{Allocator,Allocate};
 
 #[cfg(not(any(feature = "gpu-allocator", feature = "vk-mem")))]
 use ash::Instance;
@@ -712,6 +712,7 @@ impl Renderer {
 impl Drop for Renderer {
     fn drop(&mut self) {
         log::debug!("Destroying egui renderer");
+        if !self.allocator.can_destroy(){return;}
         let device = &self.device;
 
         unsafe {

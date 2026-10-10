@@ -238,6 +238,7 @@ impl World {
   let state=[opacity.to_bits(),mode];self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,84,bytemuck::cast_slice(&state));
  }}
  pub fn record(&mut self,command:vk::CommandBuffer,serial:u64)->Result<(),String> {
+  self.resources.check_submission()?;
   let Some(target)=&self.target else{return Ok(());};
   let mut clears=vec![vk::ClearValue{color:vk::ClearColorValue{float32:self.background}}];
   if self.samples!=vk::SampleCountFlags::TYPE_1{clears.push(vk::ClearValue::default());}
@@ -317,7 +318,7 @@ impl World {
   Ok(())
  }
 }
-impl Drop for World {fn drop(&mut self){let _=unsafe {self.device.device_wait_idle()};drop(self.target.take());drop(self.contours.take());drop(self.textures.take());unsafe {for pipeline in self.paint_pipelines{self.device.destroy_pipeline(pipeline,None);}self.device.destroy_pipeline(self.transparent_pipeline,None);self.device.destroy_pipeline(self.cap_pipeline,None);self.device.destroy_pipeline(self.mask_pipeline,None);self.device.destroy_pipeline(self.pipeline,None);self.device.destroy_pipeline_layout(self.layout,None);self.device.destroy_render_pass(self.render_pass,None);self.device.destroy_descriptor_pool(self.pool,None);self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}
+impl Drop for World {fn drop(&mut self){if !self.resources.drain_graphics(){if let Some(target)=self.target.take(){std::mem::forget(target);}if let Some(contours)=self.contours.take(){std::mem::forget(contours);}if let Some(textures)=self.textures.take(){std::mem::forget(textures);}return;}drop(self.target.take());drop(self.contours.take());drop(self.textures.take());unsafe {for pipeline in self.paint_pipelines{self.device.destroy_pipeline(pipeline,None);}self.device.destroy_pipeline(self.transparent_pipeline,None);self.device.destroy_pipeline(self.cap_pipeline,None);self.device.destroy_pipeline(self.mask_pipeline,None);self.device.destroy_pipeline(self.pipeline,None);self.device.destroy_pipeline_layout(self.layout,None);self.device.destroy_render_pass(self.render_pass,None);self.device.destroy_descriptor_pool(self.pool,None);self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}
 #[derive(Clone,Copy)]enum WorldPass {Surface,Mask,Cap,Contour,Transparent,FrontSurface,TransparentFront,TransparentBack,OpaqueBack,DefaultBack,XRaySurface,XRayFront,Edge,DepthOnly,HiddenEdge}
 fn make_pipeline(device:&Device,render_pass:vk::RenderPass,layout:vk::PipelineLayout,pass:WorldPass,samples:vk::SampleCountFlags,clip_distance:bool)->Result<vk::Pipeline,String> {
  let code=|bytes:&[u8]|ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e|e.to_string());

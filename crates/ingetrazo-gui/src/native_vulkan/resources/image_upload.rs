@@ -5,6 +5,7 @@ use super::{Resources, UPLOAD_CHUNK};
 use crate::native_vulkan::VulkanContext;
 use ash::{vk, Device};
 pub(super) struct Transfer {
+    lifetime: std::sync::Arc<super::super::lifetime::Lifetime>,
     device: Device,
     pool: vk::CommandPool,
     command: vk::CommandBuffer,
@@ -30,6 +31,7 @@ impl Transfer {
             }
         };
         Ok(Self {
+            lifetime:context.lifetime.clone(),
             device,
             pool: context.command_pool,
             command,
@@ -39,6 +41,7 @@ impl Transfer {
 }
 impl Drop for Transfer {
     fn drop(&mut self) {
+        if self.lifetime.uncertain(){return;}
         unsafe {
             self.device.destroy_fence(self.fence, None);
             self.device.free_command_buffers(self.pool, &[self.command]);
@@ -57,6 +60,7 @@ impl Resources {
         data: &[u8],
         mip_levels: u32,
     ) -> Result<(), String> {
+        self.lifetime.check()?;
         let layout = ingetrazo_render::texture_layout::Layout::new(
             ingetrazo_render::texture_layout::Format::Rgba8,
             extent.width,
@@ -198,7 +202,7 @@ impl Resources {
                             &[vk::SubmitInfo::default().command_buffers(&[command])],
                             fence,
                         )
-                        .map_err(|e| e.to_string())?;
+                        .map_err(|e| {self.lifetime.quarantine();e.to_string()})?;
                     submitted = true;
                     self.stats.transfer_submissions += 1;
                 }
@@ -210,7 +214,7 @@ impl Resources {
             Ok(())
         })();
         if submitted {
-            let _ = unsafe { self.device.device_wait_idle() };
+            self.lifetime.quarantine();
         }
         result?;
         self.stats.image_upload_calls += 1;
@@ -366,6 +370,7 @@ fn finish_mips(
 /// their last GPU submission fence signals; construction completes its own
 /// transfer fence before publishing the image. No implicit global idle on drop.
 pub struct TextureImage {
+    lifetime: std::sync::Arc<super::super::lifetime::Lifetime>,
     device: Device,
     budget: std::sync::Arc<super::VulkanBudget>,
     pub image: vk::Image,
@@ -537,6 +542,7 @@ impl TextureImage {
             resources.upload_rgba8_image(context, image, extent, data, levels)
         })();
         if let Err(e) = result {
+            if context.lifetime.uncertain(){return Err(e);}
             unsafe {
                 if sampler != vk::Sampler::null() {
                     device.destroy_sampler(sampler, None)
@@ -553,6 +559,7 @@ impl TextureImage {
             return Err(e);
         }
         Ok(Self {
+            lifetime:context.lifetime.clone(),
             device,
             budget,
             image,
@@ -569,6 +576,7 @@ impl TextureImage {
 impl Drop for TextureImage {
     fn drop(&mut self) {
         use egui_ash_renderer::MemoryObserver;
+        if self.lifetime.uncertain(){return;}
         unsafe {
             self.device.destroy_sampler(self.sampler, None);
             self.device.destroy_image_view(self.view, None);

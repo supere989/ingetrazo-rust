@@ -4,6 +4,7 @@ pub mod world;
 pub mod resources;
 pub mod texture_cache;
 mod queues;
+pub mod lifetime;
 pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
 
@@ -121,7 +122,7 @@ pub struct System {
 
     pub egui_ctx: Context,
     pub egui_winit: State,
-    pub renderer: Renderer,
+    pub renderer: std::mem::ManuallyDrop<Renderer>,
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
     pub world: Option<world::World>,
     pub cad2d: Option<cad2d::Renderer>,
@@ -184,6 +185,7 @@ impl System {
         );
 
         let memory_budget=std::sync::Arc::new(budget::VulkanBudget::new(&vulkan_context.instance,vulkan_context.physical_device)?);
+        memory_budget.bind_lifetime(vulkan_context.lifetime.clone());
         let renderer = Renderer::with_memory_observer(
             &vulkan_context.instance,
             vulkan_context.physical_device,
@@ -209,7 +211,7 @@ impl System {
 
             egui_ctx,
             egui_winit,
-            renderer,
+            renderer:std::mem::ManuallyDrop::new(renderer),
             memory_budget,
             world:None,cad2d:None,draw_serial:0,
             textures_to_free: None,
@@ -257,12 +259,11 @@ impl System {
             return;
         }
 
-        unsafe {
-            self.vulkan_context
-                .device
-                .wait_for_fences(&[self.fence], true, std::u64::MAX)
-                .expect("Failed to wait ")
-        };
+        if let Err(error)=self.vulkan_context.wait_transfer(self.fence){
+            egui_app.gpu_error(&format!("GPU draw completion unknown: {error}; resources quarantined"));
+            self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
+            return;
+        }
 
         // Free last frames textures after the previous frame is done rendering
         if let Some(textures) = self.textures_to_free.take() {
@@ -272,6 +273,7 @@ impl System {
         }
 
         egui_app.prepare_gpu(self,true);
+        if self.vulkan_context.lifetime.uncertain(){return;}
 
         // Generate UI
         let mut raw_input = self.egui_winit.take_egui_input(&window);
@@ -288,6 +290,7 @@ impl System {
         });
 
         egui_app.prepare_gpu(self,false);
+        if self.vulkan_context.lifetime.uncertain(){return;}
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
             let canceled=output.commands.iter().any(|c|matches!(c,egui::ViewportCommand::CancelClose));
@@ -376,12 +379,9 @@ impl System {
             .wait_dst_stage_mask(&wait_stages)
             .command_buffers(&command_buffers)
             .signal_semaphores(&signal_semaphores)];
-        unsafe {
-            self.vulkan_context
-                .device
-                .queue_submit(self.vulkan_context.graphics_queue, &submit_info, self.fence)
-                .expect("Failed to submit work to gpu.")
-        };
+        if let Err(error)=unsafe {self.vulkan_context.device.queue_submit(self.vulkan_context.graphics_queue,&submit_info,self.fence)}{
+            self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&format!("GPU submission failed: {error}; resources quarantined"));return;
+        }
 
         self.draw_serial+=1;
         let swapchains = [self.swapchain.khr];
@@ -403,7 +403,7 @@ impl System {
             Err(vk::Result::ERROR_OUT_OF_DATE_KHR) => {
                 self.dirty_swapchain = true;
             }
-            Err(error) => panic!("Failed to present queue. Cause: {}", error),
+            Err(error) => {self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&format!("GPU presentation failed: {error}; resources quarantined"));},
             _ => {}
         }
     }
@@ -434,6 +434,7 @@ impl System {
 
     fn on_exit<A: App>(&mut self, egui_app: &mut A) {
         log::info!("Stopping application");
+        if self.vulkan_context.lifetime.uncertain(){eprintln!("GPU shutdown quarantined: pending ownership retained");return;}
         eprintln!("{}",self.memory_budget.diagnostics());
 
         unsafe {
@@ -463,6 +464,8 @@ impl System {
     }
 }
 
+impl Drop for System {fn drop(&mut self){if self.vulkan_context.lifetime.drain_graphics(){unsafe{std::mem::ManuallyDrop::drop(&mut self.renderer)}}else{eprintln!("Retaining quarantined egui renderer resources");}}}
+
 fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semaphore>,vk::Result> {
     let mut semaphores=Vec::with_capacity(count);
     for _ in 0..count { match unsafe {device.create_semaphore(&vk::SemaphoreCreateInfo::default(),None)} {
@@ -473,7 +476,8 @@ fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semapho
 }
 
 pub struct VulkanContext {
-    _entry: Entry,
+    _entry: Option<Entry>,
+    pub lifetime: std::sync::Arc<lifetime::Lifetime>,
     pub instance: Instance,
     debug_utils: debug_utils::Instance,
     debug_utils_messenger: vk::DebugUtilsMessengerEXT,
@@ -492,7 +496,7 @@ pub struct VulkanContext {
 
 impl VulkanContext {
     pub fn wait_transfer(&self,fence:vk::Fence)->Result<(),vk::Result> {
-        let result=unsafe {self.device.wait_for_fences(&[fence],true,self.transfer_timeout_ns)};
+        let result=self.lifetime.wait(fence,self.transfer_timeout_ns);
         if result==Err(vk::Result::TIMEOUT)&&self.diagnostic_fail_fast {
             eprintln!("GPU diagnostic fence exceeded {}ns; exiting without freeing potentially pending resources",self.transfer_timeout_ns);
             std::process::exit(124);
@@ -543,7 +547,8 @@ impl VulkanContext {
         };
 
         Ok(Self {
-            _entry: entry,
+            lifetime:std::sync::Arc::new(lifetime::Lifetime::new(device.clone(),graphics_queue)),
+            _entry: Some(entry),
             instance,
             debug_utils,
             debug_utils_messenger,
@@ -556,7 +561,7 @@ impl VulkanContext {
             graphics_queue,
             present_queue,
             command_pool,
-            transfer_timeout_ns:u64::MAX,
+            transfer_timeout_ns:lifetime::WAIT_NS,
             diagnostic_fail_fast:false,
         })
     }
@@ -565,6 +570,7 @@ impl VulkanContext {
 impl Drop for VulkanContext {
     fn drop(&mut self) {
         log::debug!("Destroying Vulkan Context");
+        if self.lifetime.uncertain(){eprintln!("Retaining quarantined Vulkan device, instance and loader; GPU completion unknown");if let Some(entry)=self._entry.take(){std::mem::forget(entry);}return;}
         unsafe {
             self.device.destroy_command_pool(self.command_pool, None);
             self.device.destroy_device(None);

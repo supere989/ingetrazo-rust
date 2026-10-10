@@ -7,13 +7,14 @@ use super::Allocate;
 pub type Memory = vk::DeviceMemory;
 
 pub struct Allocator {
+    uncertain:std::sync::atomic::AtomicBool,
     pub memory_properties: vk::PhysicalDeviceMemoryProperties,
     observer: Option<std::sync::Arc<dyn crate::MemoryObserver>>,
 }
 
 impl Allocator {
     pub fn new(memory_properties: vk::PhysicalDeviceMemoryProperties) -> Self {
-        Self { memory_properties, observer:None }
+        Self { memory_properties, observer:None,uncertain:std::sync::atomic::AtomicBool::new(false) }
     }
 
     pub fn with_observer(mut self,observer:std::sync::Arc<dyn crate::MemoryObserver>)->Self { self.observer=Some(observer);self }
@@ -50,6 +51,9 @@ impl Allocator {
 
 impl Allocate for Allocator {
     type Memory = Memory;
+    fn can_destroy(&self)->bool{!self.uncertain.load(std::sync::atomic::Ordering::Acquire)&&self.observer.as_ref().is_none_or(|o|o.can_destroy())}
+    fn gpu_wait_failed(&self){self.uncertain.store(true,std::sync::atomic::Ordering::Release);if let Some(o)=&self.observer{o.gpu_wait_failed();}}
+
 
     fn create_buffer(
         &mut self,
