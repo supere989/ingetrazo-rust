@@ -287,8 +287,10 @@ impl System {
     // Callback texture ownership is opaque: defer those frames to post-fence retirement.
     fn cancel_unpainted_releases(&mut self,freed:&[egui::TextureId],paint:&[egui::ClippedPrimitive])->Result<(),String>{
         if freed.is_empty()||paint.iter().any(|p|matches!(p.primitive,egui::epaint::Primitive::Callback(_))){return Ok(());}
-        let dead=freed.iter().copied().filter(|id|!paint.iter().any(|p|matches!(&p.primitive,egui::epaint::Primitive::Mesh(mesh) if mesh.texture_id==*id))).collect::<Vec<_>>();
-        crate::paper_raw_texture::cancel(&self.egui_ctx,&dead,&mut self.pending_texture_updates)
+        let mut dead=std::collections::HashSet::new();dead.try_reserve(freed.len()).map_err(|_|"Released texture identity admission failed")?;dead.extend(freed.iter().copied());
+        for p in paint{if let egui::epaint::Primitive::Mesh(mesh)=&p.primitive{dead.remove(&mesh.texture_id);}}
+        let mut ids=Vec::new();ids.try_reserve(dead.len()).map_err(|_|"Released texture list admission failed")?;ids.extend(dead);
+        crate::paper_raw_texture::cancel(&self.egui_ctx,&ids,&mut self.pending_texture_updates)
     }
 
     fn upload_pending_textures(&mut self)->Result<(),String>{

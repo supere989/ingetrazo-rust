@@ -28,9 +28,11 @@ pub(crate)fn acknowledge(ctx:&Context,id:TextureId)->Result<(),String>{let provi
 /// Retire unsubmitted raw bytes and queued sets together when egui releases an ID.
 /// Submitted GPU textures remain on the host's existing post-fence free path.
 pub(crate)fn cancel(ctx:&Context,ids:&[TextureId],sets:&mut std::collections::VecDeque<(TextureId,egui::epaint::ImageDelta)>)->Result<(),String>{
+ if ids.is_empty(){return Ok(());}
+ let mut released=std::collections::HashSet::new();released.try_reserve(ids.len()).map_err(|_|"Source texture release identity admission failed")?;released.extend(ids.iter().copied());
  let provider=provider(ctx)?;let mut pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;
- for id in ids{if let Some(image)=pending.images.remove(id){pending.bytes-=image.pixels.len();}}
- sets.retain(|(id,_)|!ids.contains(id));Ok(())
+ for id in &released{if let Some(image)=pending.images.remove(id){pending.bytes-=image.pixels.len();}}
+ sets.retain(|(id,_)|!released.contains(id));Ok(())
 }
 
 #[cfg(test)]mod tests{use super::*;
