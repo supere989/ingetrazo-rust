@@ -15,6 +15,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         frames: u64,
         automatic: bool,
         display_sync: bool,
+        diagnostic_poll: bool,
+        loop_turns: u64,
     window_color_space: bool,
         drawable_readback: bool,
         started: std::time::Instant,
@@ -113,6 +115,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
         fn about_to_wait(&mut self, ev: &ActiveEventLoop) {
+            self.loop_turns += 1;
             if let Some(gpu) = self.gpu.as_mut() {
                 if let Err(e) = gpu.poll() {
                     self.error = Some(e);
@@ -149,6 +152,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     if self.diagnostics_at.elapsed()>=std::time::Duration::from_secs(1){self.diagnostics_at=std::time::Instant::now();}
                 }
                 if self.started.elapsed() > std::time::Duration::from_secs(15) {
+                    eprintln!("WSI bounded scheduling diagnostic: poll={} loop_turns={}", self.diagnostic_poll, self.loop_turns);
                     self.error = Some("bounded WSI probe missed presented completion".into());
                     ev.exit();
                     return;
@@ -187,9 +191,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             // Probe cadence only; production repaint scheduling belongs to egui.
-            ev.set_control_flow(ControlFlow::WaitUntil(
-                std::time::Instant::now() + std::time::Duration::from_millis(16),
-            ));
+            // Isolated scheduling attribution; unchanged GPU owners and15s gate.
+            ev.set_control_flow(if self.diagnostic_poll { ControlFlow::Poll } else {
+                ControlFlow::WaitUntil(std::time::Instant::now() + std::time::Duration::from_millis(16))
+            });
             if let Some(w) = self.window.as_ref() {
                 let target = if self.resized {
                     self.resized_display_baseline + 4
@@ -220,6 +225,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         frames: 0,
         automatic: std::env::args().any(|s| s == "--automatic"),
         display_sync: !std::env::args().any(|s| s == "--diagnostic-no-vsync"),
+        diagnostic_poll: std::env::args().any(|s| s == "--diagnostic-event-loop-poll"),
+        loop_turns: 0,
         window_color_space: std::env::args().any(|s| s == "--diagnostic-window-colorspace"),
         drawable_readback: std::env::args().any(|s| s == "--diagnostic-drawable-readback"),
         started: std::time::Instant::now(),

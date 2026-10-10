@@ -76,6 +76,11 @@ jobs:
         if: always()
         run: |
           cargo run --locked -p ingetrazo-metal --example presentation_probe -- --automatic --diagnostic-no-vsync > docs/audits/metal-native-link-ci/presentation-no-vsync.log 2>&1
+      - name: Bounded event-loop scheduling attribution (unchanged presentation gate)
+        if: always()
+        run: |
+          mkdir -p docs/audits/metal-native-link-ci
+          cargo run --locked -p ingetrazo-metal --example presentation_probe -- --automatic --diagnostic-event-loop-poll > docs/audits/metal-native-link-ci/presentation-event-loop-poll.log 2>&1
       - name: Actual shared application Cocoa document lifecycle
         if: always()
         run: |
