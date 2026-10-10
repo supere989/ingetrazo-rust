@@ -135,3 +135,5 @@ pub mod native_edges;
 /// Precise backend-neutral authored2D paint/geometry contract.
 pub mod cad2d;
 pub mod texture_layout;
+
+pub mod native_textures;
