@@ -16,7 +16,8 @@ vec3 SRGBtoLINEAR(vec3 color){return mix(color/12.92,pow((color+0.055)/1.055,vec
 void main() {
     // Managed images are UNORM encoded RGBA; the native world texture uses
     // the same encoded contract. Blend directly into UNORM presentation.
-    vec4 encodedColor = oColor * texture(fontsSampler, oUV);
+    vec2 uv = (encoding.encoded_opaque & 2u) != 0u ? vec2(oUV.x,1.0-oUV.y) : oUV;
+    vec4 encodedColor = oColor * texture(fontsSampler, uv);
     finalColor = SRGB_FRAMEBUFFER
         ? vec4(SRGBtoLINEAR(encodedColor.rgb), encodedColor.a)
         : encodedColor;

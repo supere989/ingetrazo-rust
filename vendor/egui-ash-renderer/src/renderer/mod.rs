@@ -93,6 +93,7 @@ pub struct Renderer {
     managed_textures: HashMap<TextureId, Texture>,
     textures: HashMap<TextureId, vk::DescriptorSet>,
     encoded_opaque_textures: std::collections::HashSet<TextureId>,
+    bottom_origin_textures: std::collections::HashSet<TextureId>,
     next_user_texture_id: u64,
     options: Options,
     frames: Option<Frames>,
@@ -264,6 +265,7 @@ impl Renderer {
             next_user_texture_id: 0,
             textures,
             encoded_opaque_textures: std::collections::HashSet::new(),
+            bottom_origin_textures: std::collections::HashSet::new(),
             options,
             frames: None,
         })
@@ -487,6 +489,12 @@ impl Renderer {
         let id=self.add_user_texture(set);self.encoded_opaque_textures.insert(id);id
     }
 
+    /// Native CAD attachment uses bottom-origin rasterization so physical MSAA
+    /// locations match the source GL pass. Flip sampling, without another pass.
+    pub fn add_bottom_origin_encoded_opaque_texture(&mut self,set:vk::DescriptorSet)->TextureId {
+        let id=self.add_encoded_opaque_texture(set);self.bottom_origin_textures.insert(id);id
+    }
+
     /// Remove a user managed texture.
     ///
     /// This *does not* free the resources, it just _forgets_ about the texture.
@@ -497,6 +505,7 @@ impl Renderer {
     pub fn remove_user_texture(&mut self, id: TextureId) {
         self.textures.remove(&id);
         self.encoded_opaque_textures.remove(&id);
+        self.bottom_origin_textures.remove(&id);
     }
 
     /// Record commands to render the [`egui::Ui`].
@@ -636,7 +645,7 @@ impl Renderer {
                                 &[],
                             )
                         };
-                        let encoded=u32::from(self.encoded_opaque_textures.contains(&m.texture_id));
+                        let encoded=u32::from(self.encoded_opaque_textures.contains(&m.texture_id))|if self.bottom_origin_textures.contains(&m.texture_id){2}else{0};
                         unsafe{self.device.cmd_push_constants(command_buffer,self.pipeline_layout,vk::ShaderStageFlags::FRAGMENT,64,any_as_u8_slice(&encoded));}
                         current_texture_id = Some(m.texture_id);
                     }
