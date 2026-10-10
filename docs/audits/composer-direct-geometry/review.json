@@ -1,0 +1,19 @@
+{
+  "status": "isolated_geometry_adapter",
+  "test": "white-only tessellation yields independent vertex coverage and precise authored alpha uniform",
+  "physical_geometry": "millimetres; tessellation densityzoom*pixelsperpoint; pose translation/zoom remain separate",
+  "supported_paths": [
+    "roundedrectangle",
+    "ellipse",
+    "polygon",
+    "line including terrainclip and roundcaps"
+  ],
+  "limitations": [
+    "currentcurvesandcoverageinheritexistingeguiapproximation",
+    "notyetproductioncomposerhooked",
+    "cachekey/lifetimehookpending",
+    "strictnineimageparitypending",
+    "expandedCADdarkcolorprecisionFAILretainedindependently"
+  ],
+  "canonical_promotion": false
+}
