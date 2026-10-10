@@ -98,6 +98,8 @@ pub struct IngeTrazoApp {
     pub texture_opacity: f32,
     pub terrain_contour_interval: f64,
     pub composer_state: crate::composer::ComposerState,
+    pub composer_compute:crate::composer_compute::ComposerCompute,
+    pub model_revision:u64,
     pub blender_state: crate::blender::BlenderRenderState,
     pub show_render_dialog: bool,
 }
@@ -188,6 +190,7 @@ impl IngeTrazoApp {
             texture_opacity: 1.0,
             terrain_contour_interval: 1.0,
             composer_state: crate::composer::ComposerState::default(),
+            composer_compute:Default::default(),model_revision:0,
             blender_state: crate::blender::BlenderRenderState::default(),
             show_render_dialog: false,
         };
@@ -234,7 +237,7 @@ impl IngeTrazoApp {
         }
         self.save_undo_state();
         self.retire_current_recovery();
-        self.scene = Scene::new();
+        self.scene = Scene::new();self.bump_model_revision();
         self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();
         self.camera = self.scene.camera.clone();
@@ -259,7 +262,7 @@ impl IngeTrazoApp {
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
-                self.scene = loaded_scene;self.clipboard_document=uuid::Uuid::new_v4();
+                self.scene = loaded_scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();
@@ -319,6 +322,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_undo_state(&mut self) {
+        self.bump_model_revision();
         self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
@@ -328,6 +332,7 @@ impl IngeTrazoApp {
         }
     }
 
+    pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
@@ -337,7 +342,7 @@ impl IngeTrazoApp {
             self.redo_stack.push(self.scene.clone());
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
-            self.scene = prev;
+            self.scene = prev;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
         }
@@ -350,7 +355,7 @@ impl IngeTrazoApp {
             self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
-            self.scene = next;
+            self.scene = next;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
         }

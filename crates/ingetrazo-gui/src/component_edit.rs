@@ -75,7 +75,7 @@ impl IngeTrazoApp {
         edit.bind_dimensions();session.dimension_baseline=edit.dimensions.clone();
         self.camera.target=group.transform.inverse().transform_point3(self.camera.target);
         edit.camera=self.camera.clone();
-        self.scene=edit;self.component_edit_stack.push(session);
+        self.scene=edit;self.bump_model_revision();self.component_edit_stack.push(session);
         self.status_message="Editing group in local coordinates; Finish commits, Cancel restores".into();
     }
 
@@ -130,7 +130,7 @@ impl IngeTrazoApp {
             candidate.refresh_dimensions();
         }
         let session=self.component_edit_stack.pop().unwrap();
-        self.scene=candidate;self.camera=session.original_camera;
+        self.scene=candidate;self.bump_model_revision();self.camera=session.original_camera;
         self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
         if changed {self.undo_stack.push(session.original_scene);self.redo_stack.clear();}
         self.status_message=if changed {"Committed group edit"} else {"Group edit unchanged"}.into();
@@ -139,7 +139,7 @@ impl IngeTrazoApp {
     pub fn cancel_component_edit(&mut self) {
         if let Some(session)=self.component_edit_stack.pop() {
             self.set_tool(ToolType::Select);
-            self.scene=session.original_scene;self.camera=session.original_camera;
+            self.scene=session.original_scene;self.bump_model_revision();self.camera=session.original_camera;
             self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
             self.status_message="Cancelled group edit".into();
         } else {self.status_message="No group edit is active".into();}
