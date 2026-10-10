@@ -1,0 +1,23 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "production_commit": "1c93b767",
+  "source_recipe_commit": "4334fde5",
+  "executable_sha256": "ab9f0920a05336192865bdbd9b81aca823949e2313f96a8491eabe9fc5ac6d0d",
+  "source_observations_sha256": "6dab5d0deebb67730ef7d49d9703a802c69010b46ab77bb952c39d619d89c718",
+  "source_env": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "INGETRAZO_TEXT_EXPANDED": "1",
+    "INGETRAZO_TEXT_PARAGRAPHS": "1"
+  },
+  "reader_env": {
+    "INGETRAZO_TEXT_PARAGRAPHS": "1"
+  },
+  "retained_original": "/tmp/ingetrazo-paper-paragraph-source",
+  "native": "/tmp/ingetrazo-paper-paragraph-final",
+  "checker_sha256": {
+    "probe-python-paper-text.py": "a65f8cf8f59d4870f88807e6243c04d0520103ab97e4fbbdbf338b3e4f96ce40",
+    "check-paper-text-layout-pages.py": "8fd2ab08bf619c06b2ff8bd1760927a521f491d067739c288dbb675087fda0af",
+    "check-paper-text-layout-unicode.py": "1d4f46ff1c1b959b9ef913f5ed708cc0bbbb9906d23b707df63521968bc0e1a0",
+    "check-paper-text-layout-negatives.py": "9ed6f67882407896a254fcf60714dbdfa2874372a0a536b5b41f043e5d3a74ca"
+  }
+}

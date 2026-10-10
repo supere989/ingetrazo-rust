@@ -28,12 +28,19 @@ pub struct TextGlyph {
     pub position_px: [f64; 2],
 }
 #[derive(Clone, Debug)]
+pub struct TextDecoration {
+    pub line_px: [f64; 4],
+    pub width_px: f64,
+}
+#[derive(Clone, Debug)]
 pub struct TextDraw {
     pub font: std::rc::Rc<crate::paper_font::CachedFont>,
     /// Millimetres per source pixel100 layout unit.
     pub scale_mm: f64,
     pub italic: bool,
+    pub bold: bool,
     pub glyphs: Vec<TextGlyph>,
+    pub decorations: Vec<TextDecoration>,
 }
 #[derive(Clone, Debug)]
 pub struct Draw {
@@ -279,12 +286,38 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     .checked_add(
                         text.glyphs
                             .len()
-                            .checked_mul(2)
+                            .checked_mul(if text.bold { 4 } else { 2 })
                             .ok_or("PDF glyph count overflow")?,
                     )
                     .ok_or("PDF glyph count overflow")?;
                 if path_commands > MAX_COMMANDS {
                     return Err("PDF aggregate command budget exceeded".into());
+                }
+                path_commands = path_commands
+                    .checked_add(
+                        text.decorations
+                            .len()
+                            .checked_mul(2)
+                            .ok_or("PDF decoration count overflow")?,
+                    )
+                    .ok_or("PDF decoration count overflow")?;
+                if path_commands > MAX_COMMANDS {
+                    return Err("PDF aggregate command budget exceeded".into());
+                }
+                for d in &text.decorations {
+                    if !d.width_px.is_finite() || d.width_px <= 0. || d.width_px > 10_000. {
+                        return Err("Invalid physical PDF decoration width".into());
+                    }
+                    for (i, v) in d.line_px.iter().enumerate() {
+                        if !v.is_finite()
+                            || v.abs() > 1_000_000.
+                            || (*v * text.scale_mm + draw.origin_mm[i % 2]).abs()
+                                + d.width_px * text.scale_mm / 2.
+                                > 1_000_000.
+                        {
+                            return Err("Invalid physical PDF decoration position".into());
+                        }
+                    }
                 }
                 let key = text.font.key();
                 let index = if let Some(index) = font_indices.get(&key).copied() {
@@ -399,7 +432,8 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                         .cid(glyph.glyph)
                         .ok_or("PDF glyph absent from prepared font resource")?;
                     let b = resource.bounds_px[cid as usize];
-                    for x in [b[0], b[2]] {
+                    let bold_offset = text.font.synthetic_bold_offset_px(text.bold)?;
+                    for x in [b[0] - bold_offset, b[2]] {
                         for y in [b[1], b[3]] {
                             let px = draw.origin_mm[0]
                                 + (glyph.position_px[0] + x + shear * y) * text.scale_mm;
@@ -521,7 +555,35 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     .unwrap();
                     previous = desired;
                 }
-                content.extend_from_slice(b"ET\nQ\n");
+                let bold_offset = text.font.synthetic_bold_offset_px(text.bold)?;
+                if bold_offset > 0. && !text.glyphs.is_empty() {
+                    writeln!(content, "1 0 {} -1 0 0 Tm\n/Span << /ActualText <> >> BDC", number(shear)).unwrap();
+                    let mut previous = [bold_offset, 0.];
+                    for glyph in &text.glyphs {
+                        let desired = [glyph.position_px[0] + shear * glyph.position_px[1], -glyph.position_px[1]];
+                        let cid = resource.cid(glyph.glyph).ok_or("PDF glyph absent from prepared font resource")?;
+                        writeln!(content, "{} {} Td <{:04X}> Tj", number(desired[0]-previous[0]), number(desired[1]-previous[1]), cid).unwrap();
+                        previous = desired;
+                    }
+                    content.extend_from_slice(b"EMC\n");
+                }
+                content.extend_from_slice(b"ET\n");
+                for d in &text.decorations {
+                    writeln!(
+                        content,
+                        "{} {} {} RG\n{} w 0 J 2 j [] 0 d\n{} {} m\n{} {} l\nS",
+                        number(c[0] as f64),
+                        number(c[1] as f64),
+                        number(c[2] as f64),
+                        number(d.width_px),
+                        number(d.line_px[0]),
+                        number(d.line_px[1]),
+                        number(d.line_px[2]),
+                        number(d.line_px[3])
+                    )
+                    .unwrap();
+                }
+                content.extend_from_slice(b"Q\n");
                 continue;
             }
             let flatten = draw.flatten_transform && original_qt;

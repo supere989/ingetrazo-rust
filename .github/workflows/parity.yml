@@ -149,6 +149,16 @@ jobs:
           mkdir -p docs/audits/font-resolver-ci
           python scripts/probe-python-paper-text.py docs/audits/font-resolver-ci/original
           cargo run --locked -p ingetrazo-formats --example paper_font_resolver_fixture -- docs/audits/font-resolver-ci/original/font-observations.json docs/audits/font-resolver-ci/native.json
+      - name: Actual original paragraph layout and direct PDF text
+        run: |
+          mkdir -p docs/audits/paragraph-ci
+          INGETRAZO_TEXT_EXPANDED=1 INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/probe-python-paper-text.py docs/audits/paragraph-ci/original
+          cargo run --locked -p ingetrazo-formats --example paper_paragraph_fixture -- docs/audits/paragraph-ci/original/font-observations.json docs/audits/paragraph-ci/native
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 72
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 144
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 300
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
       - name: Original and native strict vector View PDF pages
         run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci
       - name: Original and native saved-view PDF state against opposed live state
@@ -364,6 +374,7 @@ jobs:
           path: |
             docs/audits/image-ownership-ci/
             docs/audits/font-resolver-ci/
+            docs/audits/paragraph-ci/
             docs/audits/image-plane-ci/
             docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*

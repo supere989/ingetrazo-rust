@@ -87,6 +87,7 @@ pub struct CachedFont {
     reverse: Vec<Option<u16>>,
     metadata: Metadata,
     italic: bool,
+    bold: bool,
     builds: Cell<u64>,
 }
 impl std::fmt::Debug for CachedFont {
@@ -158,6 +159,7 @@ impl CachedFont {
             return Err("Invalid paper font resource metrics".into());
         }
         let italic = face.is_italic();
+        let bold = face.is_bold();
         let count = face.number_of_glyphs() as usize;
         let mut reverse = Vec::new();
         reverse
@@ -191,11 +193,15 @@ impl CachedFont {
             reverse,
             metadata,
             italic,
+            bold,
             builds: Cell::new(0),
         })
     }
     pub fn shape_run(&self, text: &str, direction: Option<bool>) -> Result<Vec<Glyph>, String> {
         self.shaper.shape_run(text, direction)
+    }
+    pub fn covers_character(&self, ch: char) -> bool {
+        self.shaper.covers_character(ch)
     }
     pub fn ascent_26_6(&self) -> i32 {
         self.shaper.ascent_26_6
@@ -205,6 +211,26 @@ impl CachedFont {
     }
     pub fn leading_26_6(&self) -> i32 {
         self.shaper.leading_26_6
+    }
+    /// Source QPainter antialiased underline: ceil FT offset plus half thickness, capped at descent.
+    pub fn underline_metrics_px(&self) -> Result<[f64; 2], String> {
+        let [thickness, offset] = self.shaper.decoration_metrics_26_6()?;
+        let thickness = f64::from(thickness) / 64.;
+        let offset = f64::from(offset) / 64.;
+        let descent = f64::from(self.descent_26_6()) / 64.;
+        let mut adjusted = offset.ceil() + thickness / 2.;
+        if offset <= descent {
+            adjusted = adjusted.min(descent - thickness / 2.);
+        }
+        Ok([thickness, adjusted])
+    }
+    /// Source QPdf synthetic-bold second pass: shift left by half native line thickness.
+    pub fn synthetic_bold_offset_px(&self, requested: bool) -> Result<f64, String> {
+        if requested && !self.bold {
+            Ok(f64::from(self.shaper.decoration_metrics_26_6()?[0]) / 128.)
+        } else {
+            Ok(0.)
+        }
     }
     pub fn synthetic_italic_shear(&self, requested: bool) -> f64 {
         if requested && !self.italic {
