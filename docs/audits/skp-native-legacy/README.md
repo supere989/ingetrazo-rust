@@ -1,0 +1,7 @@
+# Native legacy SKP archive foundation
+
+Ports pinned MIT OpenSKP legacy.py at291700bc213655a00461838de71e5f206311e619. The real single_material_v17.skp is copied unchanged from that pinned fixture; controls retain its actual MFC prefix and use real v17 class schemas from capilla_quiroz_v17. These are explicitly authored record controls, not real-user geometry-era proof.
+
+Supported foundation: bounded binary/UTF16 cursor, global class/object store references, one/two-material anchor bootstrap, PID preambles, plain material/layer managers, vertices/edges/loops/coedges/faces, parent-loop integrity and root entity lists. Primitive controls cover painted quad/hole/multiple faces/hidden recipe/reversed senses/null entries. Actual frozen application and native both refuse the real empty fixture; raw OpenSKP/native metadata matches. A transient empty-admission experiment was rejected after the original frontend raised NeedsConverter; native refusal was restored before this source freeze.
+
+Nonempty definitions/shared instances, DIB/textures, curves/arcs, typed attributes, annotations/burn bands, guides/images/sections/saved pages and newer legacy filler variants remain required readers. Unknown/unsupported records refuse before scene publication; the parser never adopts source root-list truncation on read error. Geometry eras7/16/17/18/20 need real supported model proof. Full P21 remains Partial.

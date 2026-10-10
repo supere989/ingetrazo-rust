@@ -421,12 +421,12 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
     if !bytes.starts_with(&[0xff, 0xfe, 0xff, 0x0e]) {
         return Err(SkpError::Invalid("Not a SketchUp container".into()));
     }
-    let offset = bytes[..bytes.len().min(4096)]
+    let Some(offset) = bytes[..bytes.len().min(4096)]
         .windows(4)
         .position(|s| s == b"PK\x03\x04")
-        .ok_or_else(|| {
-            SkpError::Unsupported("legacy MFC CArchive era (required next parser stage)".into())
-        })?;
+    else {
+        return legacy::parse(bytes, name);
+    };
     let header = &bytes[..offset];
     let decoded = String::from_utf16_lossy(
         &header

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Rust-only SketchUp import. Parse a neutral payload before preparing/applying a scene.
 //! VFF record interpretation ports the pinned MIT OpenSKP reader; see OPENSKP-LICENSE.
+mod legacy;
 mod placements;
 mod reader;
 mod textures;

@@ -1,0 +1,30 @@
+{
+  "source_sha256": "8a4619b39eaaa41725ef5dde415c61c116369fff4c190e88b8d63176b097e5a4",
+  "openskp_revision": "291700bc213655a00461838de71e5f206311e619",
+  "cases": [
+    {
+      "name": "legacy-v17-painted-quad",
+      "sha256": "5e17bae8d48ab3206d9be9c073473be43f99720fc5a9c0c3a9d31196a0c06564"
+    },
+    {
+      "name": "legacy-v17-painted-hole",
+      "sha256": "46243f48e19a4d5c69352ac837ff2156b5f27b78160d96dfaf455012432f509f"
+    },
+    {
+      "name": "legacy-v17-two-faces",
+      "sha256": "9cd4875c6b55fb843eab6de87f23c4fbb06dbb55631b9104f8a874230225185a"
+    },
+    {
+      "name": "legacy-v17-hidden-face",
+      "sha256": "7596473512dfffdf6dfab70fb522007c289393fa461f9e7c7596f7c9b3263909"
+    },
+    {
+      "name": "legacy-v17-reversed-coedges",
+      "sha256": "fffdb5076cc5145174050558e9245e436eca88a49c33a4601bd115b339b7c239"
+    },
+    {
+      "name": "legacy-v17-null-list-item",
+      "sha256": "0e7ac08cb72cd288febd57e06dbc3ed3190f38d4ff4716f6a527816a59168157"
+    }
+  ]
+}
