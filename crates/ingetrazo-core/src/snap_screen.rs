@@ -40,7 +40,7 @@ fn visible(scene: &Scene, context: &ScreenSnapContext, p: DVec3) -> bool {
     if !scene.section_point_visible(p) {
         return false;
     }
-    let Some(pixel) = context.viewport.project(p) else {
+    let Some(pixel) = context.viewport.project_for_snapping(p) else {
         return false;
     };
     let Some(ray) = context.viewport.ray(pixel) else {
@@ -96,10 +96,13 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext) -> Vec<Edge> {
         if scene.section_segment(a, b).is_none() {
             return;
         }
-        let (Some(pa), Some(pb)) = (ctx.viewport.project(a), ctx.viewport.project(b)) else {
-            return;
+        let distance = match (ctx.viewport.project_for_snapping(a),ctx.viewport.project_for_snapping(b)) {
+            (Some(pa),Some(pb)) => pixel_segment_distance(ctx.cursor,pa,pb).0,
+            // Source small loose scenes consider each endpoint independently.
+            // A segment crossing the eye must retain its front endpoint without
+            // offering an invalid projected segment for line/intersection snaps.
+            _ => f64::INFINITY,
         };
-        let (distance, _) = pixel_segment_distance(ctx.cursor, pa, pb);
         if (group && distance >= 48.)
             || (!group && !guide && scene.mesh.edges.len() > 3000 && distance >= 64.)
         {
@@ -163,7 +166,7 @@ fn from_point(
 ) -> Option<SnapResult> {
     let pixels = |p: DVec3| {
         ctx.viewport
-            .project(p)
+            .project_for_snapping(p)
             .map(|q| q.distance(ctx.cursor))
             .unwrap_or(f64::INFINITY)
     };
@@ -222,7 +225,7 @@ fn memory_snap(
 ) -> Option<SnapResult> {
     let pixels = |p: DVec3| {
         ctx.viewport
-            .project(p)
+            .project_for_snapping(p)
             .map(|q| q.distance(ctx.cursor))
             .unwrap_or(f64::INFINITY)
     };
@@ -339,7 +342,7 @@ fn curve_center(
 }
 impl SnapEngine {
     fn update_center(&mut self, scene: &Scene, ray: &Ray, ctx: &ScreenSnapContext) {
-        use crate::screen_pick::{hover_edge_placement, hover_face_placement, visit_placements};
+        use crate::screen_pick::{hover_edge_placement_for_snapping, hover_face_placement, visit_placements};
         self.hovered_center = None;
         if self
             .center_reference
@@ -389,7 +392,7 @@ impl SnapEngine {
         }
         self.center_cache_dirty = false;
         let mut found = None;
-        if let Some(hit) = hover_edge_placement(scene, &ctx.viewport, ctx.cursor, 8.) {
+        if let Some(hit) = hover_edge_placement_for_snapping(scene, &ctx.viewport, ctx.cursor, 8.) {
             let edge = &hit.mesh.edges[hit.edge];
             if let Some(curve) = edge.curve_id {
                 if let Some((point, radius)) = curve_center(hit.mesh, curve, hit.world) {
@@ -416,7 +419,7 @@ impl SnapEngine {
                 centers.sort_by(|(a, _, _), (b, _, _)| {
                     let d = |p| {
                         ctx.viewport
-                            .project(p)
+                            .project_for_snapping(p)
                             .map(|p| p.distance(ctx.cursor))
                             .unwrap_or(f64::INFINITY)
                     };
@@ -507,7 +510,7 @@ impl SnapEngine {
         let edges = edges(scene, ctx);
         let pixels = |p: DVec3| {
             ctx.viewport
-                .project(p)
+                .project_for_snapping(p)
                 .map(|q| q.distance(ctx.cursor))
                 .unwrap_or(f64::INFINITY)
         };
@@ -534,12 +537,12 @@ impl SnapEngine {
         // Stable half-pixel buckets preserve source loose-context tie precedence.
         let mut points = vec![];
         if let Some(reference) = &self.center_reference {
-            if let Some(pixel) = ctx.viewport.project(reference.point) {
+            if let Some(pixel) = ctx.viewport.project_for_snapping(reference.point) {
                 let radius_px = [DVec3::X, DVec3::Y]
                     .into_iter()
                     .filter_map(|axis| {
                         ctx.viewport
-                            .project(reference.point + axis * reference.radius)
+                            .project_for_snapping(reference.point + axis * reference.radius)
                     })
                     .map(|p| p.distance(pixel))
                     .fold(0., f64::max);

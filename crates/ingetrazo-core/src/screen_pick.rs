@@ -48,16 +48,25 @@ impl PixelViewport {
         let b = b.truncate() / b.w;
         Some(Ray::new(a, (b - a).normalize_or_zero()))
     }
+    /// Visible render/pick projection, clipped to the camera depth volume.
     pub fn project(&self, point: DVec3) -> Option<DVec2> {
+        self.project_with_depth_clip(point,true)
+    }
+    /// Original Viewport._world_to_pixel snapping policy: positive eye depth,
+    /// including authored points before the near plane. Rendering stays clipped.
+    pub fn project_for_snapping(&self, point: DVec3) -> Option<DVec2> {
+        self.project_with_depth_clip(point,false)
+    }
+    fn project_with_depth_clip(&self, point:DVec3, depth_clip:bool)->Option<DVec2> {
         if self.width <= 0. || self.height <= 0. || !point.is_finite() {
             return None;
         }
         let clip = self.matrix * point.extend(1.);
-        if !clip.is_finite() || clip.w <= 1e-12 {
+        if !clip.is_finite() || clip.w <= 0. {
             return None;
         }
         let p = clip.truncate() / clip.w;
-        if p.z < 0. || p.z > 1. {
+        if depth_clip && (p.z < 0. || p.z > 1.) {
             return None;
         }
         Some(DVec2::new(
@@ -137,6 +146,18 @@ pub fn hover_edge_placement<'a>(
     cursor: DVec2,
     threshold: f64,
 ) -> Option<EdgePlacement<'a>> {
+    hover_edge_placement_projected(scene,viewport,cursor,threshold,false)
+}
+/// Curve-reference acquisition uses the same projection as its snapping targets.
+pub fn hover_edge_placement_for_snapping<'a>(
+    scene:&'a Scene,viewport:&PixelViewport,cursor:DVec2,threshold:f64,
+)->Option<EdgePlacement<'a>> {
+    hover_edge_placement_projected(scene,viewport,cursor,threshold,true)
+}
+fn hover_edge_placement_projected<'a>(
+    scene:&'a Scene,viewport:&PixelViewport,cursor:DVec2,threshold:f64,snapping:bool,
+)->Option<EdgePlacement<'a>> {
+    let project=|p|if snapping {viewport.project_for_snapping(p)}else{viewport.project(p)};
     let mut distance = threshold;
     let mut result = None;
     visit_placements(scene, |mesh, world, path| {
@@ -149,7 +170,7 @@ pub fn hover_edge_placement<'a>(
             let Some((a, b)) = scene.section_segment(a, b) else {
                 continue;
             };
-            let (Some(pa), Some(pb)) = (viewport.project(a), viewport.project(b)) else {
+            let (Some(pa), Some(pb)) = (project(a), project(b)) else {
                 continue;
             };
             let (d, _) = pixel_segment_distance(cursor, pa, pb);
@@ -345,5 +366,30 @@ mod tests {
         assert_eq!((b - a).normalize(), DVec3::Y);
         s.groups[0].children[0].mesh.edges[0].soft = true;
         assert!(hover_edge(&s, &v, p, 8.).is_none());
+    }
+}
+
+#[cfg(test)]
+mod snap_projection_boundary_tests {
+    use super::*;
+    use crate::snap::{SnapEngine,SnapKind};
+    use crate::snap_screen::ScreenSnapContext;
+    #[test]
+    fn snapping_accepts_before_near_and_rejects_behind_without_changing_render_clip() {
+        let mut camera=OrbitCamera::new();camera.target=DVec3::new(2.,3.,0.);camera.distance=10.;camera.aspect=1000./700.;
+        let viewport=PixelViewport::new(&camera,1000.,700.);
+        let point=camera.eye()+camera.forward()*0.05;
+        assert!(viewport.project(point).is_none(),"render and ordinary pick remain near-clipped");
+        let pixel=viewport.project_for_snapping(point).unwrap();
+        let behind=camera.eye()-camera.forward()*0.5;
+        assert!(viewport.project_for_snapping(behind).is_none());
+        let mut scene=Scene::new();let a=scene.mesh.add_vertex(point);let b=scene.mesh.add_vertex(behind+DVec3::X*0.1);scene.mesh.add_edge(a,b);
+        let before=scene.clone();let ray=camera.screen_to_ray(pixel.x,pixel.y,1000.,700.);
+        let context=ScreenSnapContext{viewport,cursor:pixel,candidate:camera.target,plane_normal:DVec3::Z};
+        let snapped=SnapEngine::default().snap_screen(&ray,&scene,None,None,&context);
+        assert_eq!(snapped.kind,SnapKind::Endpoint);assert!(snapped.point.distance(point)<1e-9);
+        assert_eq!(scene,before,"projection and inference never mutate model geometry");
+        scene.mesh.clear();let a=scene.mesh.add_vertex(behind);let b=scene.mesh.add_vertex(behind+DVec3::X*0.1);scene.mesh.add_edge(a,b);
+        assert_eq!(SnapEngine::default().snap_screen(&ray,&scene,None,None,&context).kind,SnapKind::None);
     }
 }
