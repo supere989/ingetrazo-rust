@@ -20,6 +20,7 @@ def main():
  if not original:subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","center_tracking_native_fixture"],check=True)
  native_binary=Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/center_tracking_native_fixture"
  mode=os.environ.get("INGETRAZO_CENTER_MODE","curve")
+ requested_delta=[float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0]
  suffix=os.environ.get("INGETRAZO_CENTER_RUN_SUFFIX","")
  directory=Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix);directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
@@ -97,9 +98,9 @@ def main():
     ctrl_key(0x61);key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"]);click(initial["move_target"])
     moved=wait(lambda:state() if state()["undo"]==1 else None)
     actual_delta=[moved["center"][i]-expected[i] for i in range(3)]
-    assert .5<actual_delta[0]<1.5 and abs(actual_delta[1])<1e-6 and abs(actual_delta[2])<1e-6,moved
-    move_parity=close(actual_delta,[1,0,0])
-    pointer_quantized_move_matches=sum((a-b)**2 for a,b in zip(actual_delta,[1,0,0]))**.5<.01
+    assert abs(actual_delta[1])<1e-6 and abs(actual_delta[2])<1e-6,moved
+    move_parity=close(actual_delta,requested_delta)
+    pointer_quantized_move_matches=sum((a-b)**2 for a,b in zip(actual_delta,requested_delta))**.5<.01
     assert pointer_quantized_move_matches,actual_delta
     key(0x6c)
     # Move ends at its new rim. Original hover is event-driven: create actual
@@ -111,7 +112,7 @@ def main():
     move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
     deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
     assert deleted["undo"]==2;capture("deleted-center")
-    report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":[1,0,0],"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":approach_green<=5,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
+    report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":approach_green<=5,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
    report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
    if original:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select shortcuts wired to original public actions, Move/Delete original geometry/history, software GL Xvfb."
    Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Actual center gesture PASS",mode,"original" if original else "native")

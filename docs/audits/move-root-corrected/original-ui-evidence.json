@@ -1,0 +1,454 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "68310197b34453a9ce81ff4172cf2dea0e36e20e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "early": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 127192.787738142,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      611.1808589954518,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "acquired": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 127193.027777983,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      611.1808589954518,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "centered": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 127193.408276095,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      611.1808589954518,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "anchor": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 127193.788042117,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      611.1808589954518,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ]
+  },
+  "moved": {
+    "mode": "curve",
+    "tool": "MoveTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 127195.788047891,
+    "center": [
+      2.0479929447174072,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      611.0023713360464,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      504.2687211017889,
+      272.97163030005703
+    ],
+    "move_target": [
+      615.4496051939307,
+      272.97163030005703
+    ],
+    "kind": "FromPoint",
+    "inference_point": [
+      3.247993230819702,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null
+  },
+  "moved_hint": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 127196.488008954,
+    "center": [
+      2.0479929447174072,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      611.0023713360464,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      504.2687211017889,
+      272.97163030005703
+    ],
+    "move_target": [
+      615.4496051939307,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      2.0479931831359863,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0479931831359863,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null
+  },
+  "deleted": {
+    "mode": "curve",
+    "tool": "LineTool",
+    "curves": [],
+    "time": 127197.528120792,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "move_target": [
+      611.1808589954518,
+      272.97163030005703
+    ],
+    "kind": "FromPoint",
+    "inference_point": [
+      2.056213140487671,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0479931831359863,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 0,
+    "faces": 0,
+    "undo": 2,
+    "anchor": null
+  },
+  "requested_move_delta": [
+    0.05,
+    0,
+    0
+  ],
+  "actual_move_delta": [
+    0.04799306392669678,
+    0.0,
+    0.0
+  ],
+  "move_coordinate_parity": false,
+  "pointer_quantized_move_matches": true,
+  "approach_green_pixels": 112,
+  "approach_hint_visual_parity_open": false,
+  "elapsed_wall_seconds": 0.30137529398780316,
+  "scope": "Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select shortcuts wired to original public actions, Move/Delete original geometry/history, software GL Xvfb.",
+  "executable_sha256": "4e8ce95e7b00035dc32f99ff793b41673593c05f708e393b43f25202e931361c"
+}

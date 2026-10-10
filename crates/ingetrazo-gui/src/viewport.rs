@@ -139,7 +139,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),
                     cursor:glam::DVec2::new(rel_x,rel_y),candidate:cursor_world_pos,plane_normal,
                 };
-                let result=app.snap_engine.snap_screen(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context);
+                let result=app.snap_engine.snap_screen_with_policy(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&cursor_ray).is_some()});
                 app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));
                 if result.kind!=ingetrazo_core::snap::SnapKind::Center || app.native_gpu_viewport_enabled {
                     active_center_hint=app.snap_engine.center_hint_pixel(&context.viewport,context.cursor);
@@ -394,7 +394,27 @@ fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,D
             // faces the camera heading, except within 15 degrees of top view.
             let heading=DVec3::new(forward.x,forward.y,0.);
             let normal=if heading.length()>=15_f64.to_radians().sin(){heading.normalize()}else{DVec3::Z};
-            return(point,normal);
+            let base=(point,normal);
+            // Original _current_work_plane/_hover_face_plane: an unlocked
+            // second point may land on another, unselected face. Axis-aligned
+            // movement keeps its grab plane; selected faces never offer it.
+            if app.snap_engine.locked_axis.is_none(){
+                if let Some(hit)=ingetrazo_core::screen_pick::hover_face_placement(&app.scene,ray){
+                    let selected=if hit.group_path.is_empty(){
+                        app.scene.selection.contains(&ingetrazo_core::scene::SelectionItem::Face(hit.face))
+                    }else{
+                        app.scene.selection.iter().any(|item|if let ingetrazo_core::scene::SelectionItem::Group(id)=item{
+                            app.scene.groups.get(*id).is_some_and(|g|hit.group_path.first()==Some(&g.id))
+                        }else{false})
+                    };
+                    let alignment=Plane::new(point,normal).intersect_ray(ray).filter(|t|*t>=0.).map(|t|{
+                        let delta=ray.at(t)-point;let length=delta.length();
+                        length>=1e-6 && delta.abs().max_element()/length>=app.active_tool.magnetic_axis_deg().unwrap_or(3.).to_radians().cos()
+                    }).unwrap_or(false);
+                    if !selected&&!alignment{return(hit.point,hit.normal);}
+                }
+            }
+            return base;
         }
         return(point,if near_horizon{vertical}else{DVec3::Z});
     }
@@ -418,6 +438,21 @@ fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,D
 
 #[cfg(test)]mod move_plane_tests{
  use super::*;use ingetrazo_core::{math::Ray,scene::{Scene,SelectionItem}};
+ #[test]fn move_second_point_yields_to_unselected_face_but_axis_and_selection_keep_grab_plane(){
+  let mut app=IngeTrazoApp::new();app.scene=Scene::new();
+  let point=DVec3::new(0.,0.,2.);let v=app.scene.mesh.add_vertex(point);
+  let ring=[DVec3::new(-20.,-20.,0.),DVec3::new(20.,-20.,0.),DVec3::new(20.,20.,0.),DVec3::new(-20.,20.,0.)].map(|p|app.scene.mesh.add_vertex(p));
+  let face=app.scene.mesh.add_face(ring.to_vec(),vec![]).unwrap();
+  app.scene.select(SelectionItem::Vertex(v));app.set_tool(ToolType::Move);app.camera.pitch=30_f64.to_radians();app.camera.yaw=0.;
+  app.dispatch_tool_click(&ToolContext::new(point,Ray::new(DVec3::new(0.,0.,10.),-DVec3::Z)));
+  let ray=Ray::new(DVec3::new(10.,10.,10.),DVec3::new(-6.,-1.,-10.).normalize());
+  let (origin,normal)=cursor_work_plane(&app,&ray);assert!(origin.z.abs()<1e-10);assert_eq!(normal,DVec3::Z);
+  let magnetic_ray=Ray::new(DVec3::new(10.,10.,10.),DVec3::new(-6.,-5.,-10.).normalize());
+  assert_eq!(cursor_work_plane(&app,&magnetic_ray),(point,-DVec3::X));
+  app.snap_engine.locked_axis=Some('x');assert_eq!(cursor_work_plane(&app,&ray),(point,-DVec3::X));app.snap_engine.locked_axis=None;
+  let axis_ray=Ray::new(DVec3::new(10.,0.,10.),DVec3::new(-1.,0.,-1.).normalize());assert_eq!(cursor_work_plane(&app,&axis_ray),(point,-DVec3::X));
+  app.scene.select(SelectionItem::Face(face));assert_eq!(cursor_work_plane(&app,&ray),(point,-DVec3::X));
+ }
  #[test]fn move_grab_uses_camera_heading_plane_and_top_view_fallback(){
   let mut app=IngeTrazoApp::new();app.scene=Scene::new();
   let point=DVec3::new(3.,4.,7.);let v=app.scene.mesh.add_vertex(point);

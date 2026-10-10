@@ -1,0 +1,11 @@
+{
+  "source": "09018eb",
+  "workspace_passed": 396,
+  "ignored": 2,
+  "controller_original_native_passed": 7,
+  "perspective_passed": 11,
+  "heldout_depth_passed": 6,
+  "orthographic_passed": false,
+  "blocker": "Existing occluded-endpoint original None changed to native OnFace by unconditional new fallback. Preserve baseline oracle and audit source/tool context before canonical promotion.",
+  "scope": "Fresh private target binaries executed and hashed by corrected checker; no canonical Move promotion."
+}

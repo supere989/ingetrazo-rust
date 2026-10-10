@@ -6,7 +6,7 @@
 use crate::{
     math::Ray,
     scene::Scene,
-    screen_pick::{hover_face, pixel_segment_distance, visit_meshes, PixelViewport},
+    screen_pick::{hover_face, pixel_segment_distance, visit_placements, PixelViewport},
     snap::*,
 };
 use glam::{DVec2, DVec3};
@@ -17,6 +17,22 @@ pub struct ScreenSnapContext {
     pub cursor: DVec2,
     pub candidate: DVec3,
     pub plane_normal: DVec3,
+}
+#[derive(Debug,Default)]
+pub struct ScreenSnapPolicy<'a>{
+    pub exclusions:Option<&'a SnapExclusions>,
+    pub magnetic_axis_deg:Option<f64>,
+    pub screen_axis_px:Option<f64>,
+    /// Source compute_snap defaults this false; only a viewport caller with
+    /// an actual face hit opts into the OnFace fallback.
+    pub face_under_cursor:bool,
+}
+/// Geometry currently moved by a transform is absent from source inference.
+/// Group identities exclude their entire nested placement subtree.
+#[derive(Debug,Default,Clone)]
+pub struct SnapExclusions {
+    pub loose_edges: std::collections::HashSet<usize>,
+    pub groups: std::collections::HashSet<uuid::Uuid>,
 }
 #[derive(Clone, Copy)]
 struct Edge {
@@ -89,7 +105,7 @@ fn crossing(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
     }
     Some((p + q) * 0.5)
 }
-fn edges(scene: &Scene, ctx: &ScreenSnapContext) -> Vec<Edge> {
+fn edges(scene: &Scene, ctx: &ScreenSnapContext, exclusions: Option<&SnapExclusions>) -> Vec<Edge> {
     let mut loose = vec![];
     let mut groups = vec![];
     let mut append = |a: DVec3, b: DVec3, group: bool, guide: bool| {
@@ -121,8 +137,11 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext) -> Vec<Edge> {
             loose.push(edge)
         }
     };
-    visit_meshes(scene, |m, world, group| {
+    visit_placements(scene, |m, world, path| {
+        let group=!path.is_empty();
+        if exclusions.is_some_and(|exclude|path.iter().any(|id|exclude.groups.contains(id))){return;}
         for (id, e) in m.edges.iter().enumerate() {
+            if !group && exclusions.is_some_and(|exclude|exclude.loose_edges.contains(&id)){continue;}
             if scene.mesh_edge_visible(m, id) && (!group || !e.soft) {
                 append(
                     world.transform_point3(m.vertices[e.v0].position),
@@ -518,8 +537,22 @@ impl SnapEngine {
         close: Option<DVec3>,
         ctx: &ScreenSnapContext,
     ) -> SnapResult {
+        self.snap_screen_excluding(ray,scene,start,close,ctx,None)
+    }
+
+    /// Same source inference with a borrowed transform exclusion set; no scene
+    /// clone, geometry rewrite, or per-frame identity allocation is required.
+    pub fn snap_screen_excluding(
+        &mut self,ray:&Ray,scene:&Scene,start:Option<DVec3>,close:Option<DVec3>,
+        ctx:&ScreenSnapContext,exclusions:Option<&SnapExclusions>,
+    )->SnapResult {
+        self.snap_screen_with_policy(ray,scene,start,close,ctx,&ScreenSnapPolicy{exclusions,..Default::default()})
+    }
+    pub fn snap_screen_with_policy(
+        &mut self,ray:&Ray,scene:&Scene,start:Option<DVec3>,close:Option<DVec3>,ctx:&ScreenSnapContext,policy:&ScreenSnapPolicy,
+    )->SnapResult{
         self.update_center(scene, ray, ctx);
-        let edges = edges(scene, ctx);
+        let edges = edges(scene, ctx, policy.exclusions);
         let pixels = |p: DVec3| {
             ctx.viewport
                 .project_for_snapping(p)
@@ -728,7 +761,8 @@ impl SnapEngine {
                 }
             }
         }
-        if let Some(r) = memory_snap(self, scene, ctx, hover_face(scene, ray).is_some()) {
+        let face_under_cursor=hover_face(scene,ray).is_some();
+        if let Some(r) = memory_snap(self, scene, ctx, face_under_cursor) {
             return r;
         }
         // Weak angular cues preserve the raw candidate, as source rule9 does.
@@ -736,6 +770,26 @@ impl SnapEngine {
             let d = ctx.candidate - start;
             if d.length() > 1e-6 {
                 let n = d.normalize();
+                let axes=[('x',DVec3::X,COLOR_AXIS_X),('y',DVec3::Y,COLOR_AXIS_Y),('z',DVec3::Z,COLOR_AXIS_Z)];
+                if let Some(angle)=policy.magnetic_axis_deg {
+                    if let Some(&(axis,dir,color))=axes.iter().find(|(_,dir,_)|n.dot(*dir).abs()>=angle.to_radians().cos()){
+                        let point=project_line(ray,start,dir);
+                        let mut r=result(point,SnapKind::AxisLock,color,"Axis");r.axis=Some(axis);r.guides.push((start,point,color));return r;
+                    }
+                }
+                if let (Some(threshold),Some(pixel))=(policy.screen_axis_px,ctx.viewport.project_for_snapping(start)){
+                    let mut best=None;
+                    for (axis,dir,color) in axes {
+                        let Some(other)=ctx.viewport.project_for_snapping(start+dir*d.length())else{continue;};
+                        let heading=other-pixel;let span=heading.length();if span<12.{continue;}
+                        let cursor=ctx.cursor-pixel;let distance=(cursor.x*heading.y-cursor.y*heading.x).abs()/span;
+                        if distance<=threshold&&best.is_none_or(|(old,_,_,_)|distance<old){best=Some((distance,axis,dir,color));}
+                    }
+                    if let Some((_,axis,dir,color))=best{
+                        let point=project_line(ray,start,dir);
+                        if point.distance(start)<=5.*d.length(){let mut r=result(point,SnapKind::AxisLock,color,"Axis");r.axis=Some(axis);r.guides.push((start,point,color));return r;}
+                    }
+                }
                 for (axis, dir, color) in [
                     ('x', DVec3::X, COLOR_AXIS_X),
                     ('y', DVec3::Y, COLOR_AXIS_Y),
@@ -755,6 +809,7 @@ impl SnapEngine {
                 }
             }
         }
+        if policy.face_under_cursor {return result(ctx.candidate,SnapKind::OnFace,COLOR_ON_FACE,"On Face");}
         result(ctx.candidate, SnapKind::None, [0.; 3], "")
     }
 }
@@ -841,6 +896,36 @@ mod tests {
         )
         .is_none());
     }
+    #[test]
+    fn face_fallback_reports_surface_but_not_a_hole(){
+        let c=camera(10.);let mut scene=Scene::new();
+        let outer=[DVec3::new(1.,1.,0.),DVec3::new(5.,1.,0.),DVec3::new(5.,5.,0.),DVec3::new(1.,5.,0.)].map(|p|scene.mesh.add_vertex(p));
+        scene.mesh.add_face(outer.to_vec(),vec![]);
+        let (ray,ctx)=context(&c,DVec3::new(3.,3.,0.),DVec2::ZERO);
+        let mut engine=SnapEngine::default();
+        assert_eq!(engine.snap_screen(&ray,&scene,None,None,&ctx).kind,SnapKind::None,"standalone source caller defaults face_under_cursor to false");
+        let r=engine.snap_screen_with_policy(&ray,&scene,None,None,&ctx,&ScreenSnapPolicy{face_under_cursor:true,..Default::default()});
+        assert_eq!(r.kind,SnapKind::OnFace);assert_eq!(r.point,ctx.candidate);
+        let hole=[DVec3::new(2.,2.,0.),DVec3::new(2.,4.,0.),DVec3::new(4.,4.,0.),DVec3::new(4.,2.,0.)].map(|p|scene.mesh.add_vertex(p));
+        scene.mesh.faces.clear();scene.mesh.add_face(outer.to_vec(),vec![hole.to_vec()]);engine.note_model_revision(2);
+        assert_eq!(engine.snap_screen(&ray,&scene,None,None,&ctx).kind,SnapKind::None);
+    }
+
+    #[test]
+    fn transform_exclusions_leave_independent_endpoint_and_copy_restores_original(){
+        let c=camera(10.);let mut scene=Scene::new();
+        let a=scene.mesh.add_vertex(DVec3::new(2.,3.,0.));let b=scene.mesh.add_vertex(DVec3::new(4.,3.,0.));
+        let d=scene.mesh.add_vertex(DVec3::new(2.,3.05,0.));let e=scene.mesh.add_vertex(DVec3::new(2.,4.,0.));
+        let moving=scene.mesh.add_edge(a,b).unwrap();scene.mesh.add_edge(d,e);
+        let (ray,ctx)=context(&c,DVec3::new(2.02,3.,0.),DVec2::ZERO);
+        let exclude=SnapExclusions{loose_edges:std::collections::HashSet::from([moving]),groups:Default::default()};
+        let mut engine=SnapEngine::default();
+        let r=engine.snap_screen_excluding(&ray,&scene,Some(scene.mesh.vertices[a].position),None,&ctx,Some(&exclude));
+        assert_eq!(r.kind,SnapKind::Endpoint);assert_eq!(r.point,scene.mesh.vertices[d].position);
+        let r=engine.snap_screen(&ray,&scene,Some(scene.mesh.vertices[a].position),None,&ctx);
+        assert_eq!(r.kind,SnapKind::Endpoint);assert_eq!(r.point,scene.mesh.vertices[a].position);
+    }
+
     #[test]
     fn perspective_on_edge_is_camera_ray_projection_not_pixel_lerp() {
         let mut c = crate::camera::OrbitCamera::new();

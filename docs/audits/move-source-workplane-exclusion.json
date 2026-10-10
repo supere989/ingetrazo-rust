@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "scope": "Actual original _current_work_plane/_hover_face_plane with controlled cursor ray and face placement; Move.on_click/snap_excluded operative source. Controller recipes, not actual GUI picking acceptance.",
+  "cases": {
+    "unselected-face-outside15": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "unselected-face-within15": [
+      [
+        0.0,
+        0.0,
+        2.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "arrow-lock": [
+      [
+        0.0,
+        0.0,
+        2.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "axis-aligned": [
+      [
+        0.0,
+        0.0,
+        2.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "selected-face": [
+      [
+        0.0,
+        0.0,
+        2.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "excluded-edge-source-indices": [
+      0,
+      1
+    ],
+    "copy-exclusion": null
+  }
+}
