@@ -5,6 +5,7 @@ from pathlib import Path
 s=json.loads(Path(sys.argv[1]).read_text());n=json.loads(Path(sys.argv[2]).read_text())
 required={"horizontal","horizontal-reversed","vertical","vertical-reversed","diagonal","diagonal-reversed","negative-slope","negative-slope-reversed","short","fractional"}
 if "--clipped" in sys.argv[3:]:required|={"clip-left","clip-left-reversed","clip-right","clip-bottom","clip-corner","clip-outside","clip-short"}
+if "--extended" in sys.argv[3:]:required|={"point","near-horizontal","near-vertical"}|{"sweep-"+str(i)for i in range(64)}
 def check(candidate):
  assert {r["name"]for r in s["cases"]}=={r["name"]for r in candidate["cases"]}==required
  for row in s["cases"]:
@@ -22,4 +23,4 @@ for mutate in ("coverage","missing","phase"):
  try:check(bad)
  except AssertionError:pass
  else:raise AssertionError("mutation accepted: "+mutate)
-print(json.dumps({"cases":len(required),"coverage_exact":True,"negative_controls":3,"scope":"Independent device-clipped width-one antialiased DashLine. Front clipping, selected width-two outlines, native overlay and Metal remain open."}))
+print(json.dumps({"cases":len(required),"coverage_exact":True,"negative_controls":3,"scope":"Actual Qt selected width-two SquareCap line coverage"if "--selected" in sys.argv[3:]else "Actual Qt width-one DashLine coverage; front clipping/native overlay/Metal remain open."}))
