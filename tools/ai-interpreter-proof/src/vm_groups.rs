@@ -42,7 +42,7 @@ fn abort() {
 #[pymodule]
 pub mod native_groups {
     use glam::DVec3;
-    use rustpython_vm::types::{Constructor,AsNumber};
+    use rustpython_vm::types::{Constructor,AsNumber,Comparable};
     use ingetrazo_core::mesh::Mesh as NativeMesh;
     use rustpython_vm::{
         Py, PyObjectRef, PyPayload, PyRef, PyResult, Traverse, VirtualMachine, builtins::PyListRef,
@@ -66,7 +66,7 @@ pub mod native_groups {
             Ok(Self{xyz:PyRwLock::new(xyz)})
         }
     }
-    #[pyclass(with(Constructor, AsNumber))]
+    #[pyclass(with(Constructor, AsNumber, Comparable))]
     impl QVector3D {
         #[pymethod] fn x(zelf:&Py<Self>)->f64 {zelf.xyz.read()[0] as f64}
         #[pymethod] fn y(zelf:&Py<Self>)->f64 {zelf.xyz.read()[1] as f64}
@@ -74,20 +74,40 @@ pub mod native_groups {
         #[pymethod(name="setX")] fn set_x(zelf:&Py<Self>,v:ArgIntoFloat,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;zelf.xyz.write()[0]=v.into_float() as f32;Ok(())}
         #[pymethod(name="setY")] fn set_y(zelf:&Py<Self>,v:ArgIntoFloat,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;zelf.xyz.write()[1]=v.into_float() as f32;Ok(())}
         #[pymethod(name="setZ")] fn set_z(zelf:&Py<Self>,v:ArgIntoFloat,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;zelf.xyz.write()[2]=v.into_float() as f32;Ok(())}
+        #[pymethod(name="isNull")] fn is_null(zelf:&Py<Self>)->bool {*zelf.xyz.read()==[0.;3]}
+        #[pymethod] fn normalized(zelf:&Py<Self>,vm:&VirtualMachine)->PyResult<Self> {vm.host_budget_tick()?;let a=*zelf.xyz.read();let n=Self::norm(a);let xyz=if (n-1.).abs()<=0.00001{a}else if n.abs()<=0.00001{[0.;3]}else{a.map(|v|v/n)};Ok(Self{xyz:PyRwLock::new(xyz)})}
+        #[pymethod] fn normalize(zelf:&Py<Self>,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;let mut a=zelf.xyz.write();let n=Self::norm(*a);if (n-1.).abs()>0.00001 && n.abs()>0.00001 {*a=a.map(|v|v/n)};Ok(())}
+        #[pystaticmethod(name="dotProduct")] fn dot(a:PyRef<Self>,b:PyRef<Self>,vm:&VirtualMachine)->PyResult<f64>{vm.host_budget_tick()?;let x=*a.xyz.read();let y=*b.xyz.read();Ok((x[0]*y[0]+x[1]*y[1]+x[2]*y[2]) as f64)}
+        #[pystaticmethod(name="crossProduct")] fn cross(a:PyRef<Self>,b:PyRef<Self>,vm:&VirtualMachine)->PyResult<Self>{vm.host_budget_tick()?;let x=*a.xyz.read();let y=*b.xyz.read();Ok(Self{xyz:PyRwLock::new([x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0]])})}
         #[pymethod(name="lengthSquared")] fn length_squared(zelf:&Py<Self>)->f64 {let a=*zelf.xyz.read();(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]) as f64}
-        #[pymethod] fn length(zelf:&Py<Self>)->f64 {let a=*zelf.xyz.read();{let x=a[0].abs();let y=a[1].abs();let z=a[2].abs();let m=if x<y{if y<z{z}else{y}}else if x<z{z}else{x};if m==0.{0.}else{(m*((x/m)*(x/m)+(y/m)*(y/m)+(z/m)*(z/m)).sqrt()) as f64}}}
+        #[pymethod] fn length(zelf:&Py<Self>)->f64 {Self::norm(*zelf.xyz.read()) as f64}
     }
     impl QVector3D {
+        fn norm(a:[f32;3])->f32 {let x=a[0].abs();let y=a[1].abs();let z=a[2].abs();let m=if x<y{if y<z{z}else{y}}else if x<z{z}else{x};if m==0.{0.}else{m*((x/m)*(x/m)+(y/m)*(y/m)+(z/m)*(z/m)).sqrt()}}
+        fn inplace(a:&rustpython_vm::PyObject,b:&rustpython_vm::PyObject,vm:&VirtualMachine,op:u8)->PyResult {
+            let Some(xyz)=Self::components(a,b,vm,op)? else{return Ok(vm.ctx.not_implemented())};
+            let Some(v)=a.downcast_ref::<Self>()else{return Ok(vm.ctx.not_implemented())};
+            *v.xyz.write()=xyz;Ok(a.to_owned())
+        }
         fn binary(a:&rustpython_vm::PyObject,b:&rustpython_vm::PyObject,vm:&VirtualMachine,op:u8)->PyResult {
+            let Some(xyz)=Self::components(a,b,vm,op)? else{return Ok(vm.ctx.not_implemented())};
+            Ok(Self{xyz:PyRwLock::new(xyz)}.into_ref(&vm.ctx).into())
+        }
+        fn components(a:&rustpython_vm::PyObject,b:&rustpython_vm::PyObject,vm:&VirtualMachine,op:u8)->PyResult<Option<[f32;3]>> {
             vm.host_budget_tick()?;
             let (v,w)=if op==2 && a.downcast_ref::<Self>().is_none() {(b,a)} else {(a,b)};
-            let Some(v)=v.downcast_ref::<Self>() else{return Ok(vm.ctx.not_implemented())};
+            let Some(v)=v.downcast_ref::<Self>() else{return Ok(None)};
             let x=*v.xyz.read();
             let xyz=if op<2 {
-                let Some(w)=w.downcast_ref::<Self>() else{return Ok(vm.ctx.not_implemented())};let y=*w.xyz.read();
+                let Some(w)=w.downcast_ref::<Self>() else{return Ok(None)};let y=*w.xyz.read();
                 std::array::from_fn(|i|if op==0{x[i]+y[i]}else{x[i]-y[i]})
-            }else{let k=w.try_float(vm)?.to_f64() as f32;std::array::from_fn(|i|if op==2{x[i]*k}else{x[i]/k})};
-            Ok(Self{xyz:PyRwLock::new(xyz)}.into_ref(&vm.ctx).into())
+            }else{let y=if let Some(w)=w.downcast_ref::<Self>(){*w.xyz.read()}else{[w.try_float(vm)?.to_f64() as f32;3]};std::array::from_fn(|i|if op==2{x[i]*y[i]}else{x[i]/y[i]})};
+            Ok(Some(xyz))
+        }
+    }
+    impl Comparable for QVector3D {
+        fn cmp(zelf:&Py<Self>,other:&rustpython_vm::PyObject,op:rustpython_vm::types::PyComparisonOp,_vm:&VirtualMachine)->PyResult<rustpython_vm::function::PyComparisonValue>{
+            op.eq_only(||Ok(match other.downcast_ref::<Self>(){Some(v)=>rustpython_vm::function::PyComparisonValue::Implemented(*zelf.xyz.read()==*v.xyz.read()),None=>rustpython_vm::function::PyComparisonValue::NotImplemented}))
         }
     }
     impl rustpython_vm::types::AsNumber for QVector3D {
@@ -96,6 +116,11 @@ pub mod native_groups {
                 add:Some(|a,b,vm|QVector3D::binary(a,b,vm,0)),
                 subtract:Some(|a,b,vm|QVector3D::binary(a,b,vm,1)),
                 multiply:Some(|a,b,vm|QVector3D::binary(a,b,vm,2)),
+                inplace_add:Some(|a,b,vm|QVector3D::inplace(a,b,vm,0)),
+                inplace_subtract:Some(|a,b,vm|QVector3D::inplace(a,b,vm,1)),
+                inplace_multiply:Some(|a,b,vm|QVector3D::inplace(a,b,vm,2)),
+                inplace_true_divide:Some(|a,b,vm|QVector3D::inplace(a,b,vm,3)),
+                negative:Some(|v,vm|{vm.host_budget_tick()?;let a=v.downcast_ref::<QVector3D>().unwrap();Ok(QVector3D{xyz:PyRwLock::new(a.xyz.read().map(|x|-x))}.into_ref(&vm.ctx).into())}),
                 true_divide:Some(|a,b,vm|QVector3D::binary(a,b,vm,3)),
                 ..rustpython_vm::protocol::PyNumberMethods::NOT_IMPLEMENTED
             }; &METHODS

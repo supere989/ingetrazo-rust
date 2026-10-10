@@ -1,1 +1,1 @@
-{"passed":["integer","fractional","large","tiny","signed","zero"],"production_enabled":false}
+{"passed":["integer","fractional","large","tiny","signed","zero","fuzzy-small","fuzzy-above","unit-below","unit-above"],"production_enabled":false}

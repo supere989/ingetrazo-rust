@@ -1,7 +1,8 @@
 {
   "pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "binary_sha256": "51ce1458eab2c9b169ad9b35cbf0a62ec233d090a9dd3e1aad845904392032a2",
+  "binary_sha256": "c6db5ca402dc9c9fe9b39d2feeca6e10a3e34a142d4513418a00d4a999c0d2dc",
   "qt_source": "https://github.com/qt/qtbase/blob/6.10/src/gui/math3d/qvectornd.h",
   "qmath_source": "https://github.com/qt/qtbase/blob/6.10/src/corelib/kernel/qmath.h",
-  "native_command": "/tmp/ingetrazo-ai-registry-target/debug/vm_vector docs/audits/ai-vector/original-recipes.json"
+  "native_command": "/tmp/ingetrazo-ai-registry-target/debug/vm_vector docs/audits/ai-vector/original-recipes.json",
+  "expanded_controls": "normalization thresholds, dot/cross, equality, componentwise multiplication/division, unary negative and in-place identity"
 }
