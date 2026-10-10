@@ -117,6 +117,17 @@ impl Handle {
         }
         .into()
     }
+    /// Cold producer admission: Rust-visible callback/state records (including
+    /// inline Ready storage) and distinct resolved palette payloads. Geometry,
+    /// batch/range owners, shared pipeline/counters, Arc allocator headers and
+    /// GPU residency are accounted separately; this is not total process RSS.
+    pub fn retained_cpu_bytes(&self)->Result<usize,String>{
+        let state=self.inner.state.lock().map_err(|_|"CAD2D state poisoned")?;
+        let mut bytes=std::mem::size_of::<NativePaint>()+std::mem::size_of::<VulkanPaintCallback>();
+        bytes=bytes.checked_add(state.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD palette byte overflow")?).ok_or("CAD retained byte overflow")?;
+        if let Some(ready)=&state.ready{if !Arc::ptr_eq(&ready.premultiplied,&state.premultiplied){bytes=bytes.checked_add(ready.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD old palette byte overflow")?).ok_or("CAD retained byte overflow")?;}}
+        Ok(bytes)
+    }
     pub fn update(
         &self,
         geometry: Arc<Geometry>,
@@ -130,7 +141,7 @@ impl Handle {
             .state
             .lock()
             .map_err(|_| "CAD2D state poisoned")?;
-        if !Arc::ptr_eq(&s.batches,&batches){s.premultiplied=prepare_palette(&batches)?;}
+        if !Arc::ptr_eq(&s.batches,&batches)||s.geometry.palette_cache_identity()!=geometry.palette_cache_identity(){s.premultiplied=prepare_palette(&geometry,&batches)?;}
         s.geometry = geometry;
         s.batches = batches;
         s.pose = pose;
@@ -229,6 +240,7 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
         }
         let mut bound=None;
         for r in ready { unsafe {
+            let mut ordered_cursor=0;
             if bound!=Some((r.vertex,r.index)) {device.cmd_bind_vertex_buffers(command,0,&[r.vertex],&[0]);device.cmd_bind_index_buffer(command,r.index,0,vk::IndexType::UINT32);bound=Some((r.vertex,r.index));counters.binds.fetch_add(1,Ordering::Relaxed);}
             for (batch,rgba) in r.batches.iter().zip(r.premultiplied.iter()).filter(|(b,_)| b.count > 0) {
                 device.cmd_push_constants(
@@ -240,18 +252,29 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                 );
                 if p.integer&&!r.opaque{
                     let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
-                    for range in ranges.iter().filter(|range|range.start>=batch.first&&range.end<=batch.first+batch.count){
-                        let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
-                        device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);
+                    ordered_intersections(batch.first..batch.first+batch.count,ranges,&mut ordered_cursor,|range,starts_layer|{
+                        if starts_layer{let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
+                        device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);}
                         device.cmd_draw_indexed(command,range.end-range.start,1,r.first_index+range.start,r.base_vertex,0);counters.draws.fetch_add(1,Ordering::Relaxed);
-                    }
+                    });
                 }else{device.cmd_draw_indexed(command, batch.count, 1, r.first_index+batch.first, r.base_vertex, 0);counters.draws.fetch_add(1, Ordering::Relaxed);}
             }
         }        }
         Ok(())
 }
 
-fn prepare_palette(batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{batches.iter().map(|b|b.color.qt_premultiplied8()).collect::<Result<Vec<_>,_>>().map(Arc::from)}
+/// Palette records may split a disjoint source layer. Index partitions retain
+/// source order; synchronization is required once on entry to each new layer,
+/// never between its nonoverlapping color runs. The cursor advances monotonically.
+fn ordered_intersections(batch:std::ops::Range<u32>,ranges:&[std::ops::Range<u32>],cursor:&mut usize,mut draw:impl FnMut(std::ops::Range<u32>,bool)){
+ while let Some(range)=ranges.get(*cursor){
+  if range.start>=batch.end{break;}
+  let start=range.start.max(batch.start);let end=range.end.min(batch.end);
+  if start<end{draw(start..end,start==range.start);}
+  if range.end<=batch.end{*cursor+=1;}else{break;}
+ }
+}
+fn prepare_palette(geometry:&Geometry,batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{geometry.resolve_batch_colors(batches).map(Arc::from)}
 struct Cached {
     vertex: BufferId,
     index: BufferId,
@@ -260,9 +283,16 @@ struct Cached {
 /// Cheap host-scoped callback factory; GPU ownership stays in Renderer.
 #[derive(Clone)]pub struct Factory{device:vk::Device,pipeline:Arc<Mutex<Pipeline>>,counters:Arc<Counters>}
 impl Factory{
+ /// Fresh ordinary callback payload bound; shared geometry/batch/pipeline owners,
+ /// allocator metadata and independently ledgered GPU storage are separate.
+ pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{
+  (std::mem::size_of::<NativePaint>()+std::mem::size_of::<VulkanPaintCallback>())
+   .checked_add(palette_len.checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD palette byte overflow")?).ok_or_else(||"CAD retained byte overflow".into())
+ }
+
  pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
   geometry.validate_batches(&batches)?;pose.validate()?;
-  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{geometry,premultiplied:prepare_palette(&batches)?,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
+  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{premultiplied:prepare_palette(&geometry,&batches)?,geometry,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
   let callback=Arc::new(VulkanPaintCallback(inner.clone()));Ok(Handle{inner,callback})
  }
 }
@@ -394,7 +424,7 @@ impl Renderer {
                 if self.pipeline.lock().unwrap().integer&&!s.geometry.is_opaque(&s.batches){
                     s.geometry.validate_ordered_pose(s.pose,pixels_per_point)?;
                     let ranges=s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
-                    let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;if !ranges.iter().any(|r|r.end==end){return Err("Exact integer CAD2D palette boundary splits a disjoint draw".into());}}
+                    let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;}
                     if end as usize!=s.geometry.indices().len(){return Err("Exact integer CAD2D palette does not cover ordered geometry".into());}
                 }
                 let id = s.geometry.id();
@@ -766,4 +796,14 @@ fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageVi
  let layouts=vec![layout;views.len()];let sets=match unsafe{device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&layouts))}{Ok(v)=>v,Err(e)=>{unsafe{device.destroy_descriptor_pool(pool,None)};return Err(e.into())}};
  for (set,view) in sets.iter().zip(views){let images=[vk::DescriptorImageInfo::default().image_view(*view).image_layout(vk::ImageLayout::GENERAL)];let write=[vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).image_info(&images)];unsafe{device.update_descriptor_sets(&write,&[])}}
  Ok((pool,sets))
+}
+
+#[cfg(test)]mod palette_intersection_tests{use super::*;
+ #[test]fn palette_splits_draw_intersections_without_reordering_or_extra_layer_barriers(){
+  let ranges=[0..18,18..30,30..42];let batches=[0..6,6..24,24..42];let mut cursor=0;let mut calls=Vec::new();
+  for batch in batches{ordered_intersections(batch,&ranges,&mut cursor,|range,barrier|calls.push((range,barrier)));}
+  assert_eq!(calls,vec![(0..6,true),(6..18,false),(18..24,true),(24..30,false),(30..42,true)]);
+  assert_eq!(cursor,ranges.len());
+  let mut indices=Vec::new();for(range,_)in calls{indices.extend(range);}assert_eq!(indices,(0..42).collect::<Vec<_>>());
+ }
 }
