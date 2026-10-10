@@ -16,11 +16,13 @@ jobs:
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe > docs/audits/metal-native-link-ci/build.log 2>&1
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
         run: target/debug/examples/device_probe > docs/audits/metal-native-link-ci/device-and-allocation.log 2>&1
+      - name: Execute native Metal GPU submission and retirement probe
+        run: target/debug/examples/submission_probe > docs/audits/metal-native-link-ci/gpu-submission.log 2>&1
       - name: Retain native linking evidence
         if: always()
         uses: actions/upload-artifact@v4
