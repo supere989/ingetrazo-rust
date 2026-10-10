@@ -1,0 +1,11 @@
+{
+  "source": "e207bc0a",
+  "upstream": "c6b8fd1b",
+  "command": "cargo test -j2 -p ingetrazo-gui --lib palette_splits_draw_intersections -- --nocapture",
+  "passed": 1,
+  "failed": 0,
+  "exit_code": 0,
+  "binary_sha256": "2d100ad69b1c66accee6aa456809e9e065a91cce5e397f39d7e84520a45d44db",
+  "review": "Renderer checks s.pose.validate every frame before cache lookup; validate_ordered_pose density/physical bounds every applicable integer nonopaque frame after immutable layout lookup. Arc geometry/batch identity changes re-admit deep topology/palette/opacity partition; unchanged identities reuse admitted opacity.",
+  "scope": "Focused Linux compilation+existing range/order unit; actual Vulkan GPU corpus remains separate required gate"
+}
