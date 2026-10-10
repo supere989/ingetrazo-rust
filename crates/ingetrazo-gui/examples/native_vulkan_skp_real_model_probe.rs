@@ -199,8 +199,54 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 retry, pixels,
                 "retry after refusal must restore exact full image"
             );
+            let average_decodes = world.texture_stats().0.average_decodes;
+            style.show_textures = true;
+            world.set_scene(&context, &scene, &camera, &style, fence, 3, 2)?;
+            let sampled = capture(&context, &mut world, commands[0], fence, 4)?;
+            assert_ne!(
+                sampled, pixels,
+                "sampled real textures must differ from their constant means"
+            );
+            let sampled_stats = world.texture_stats();
+            assert!(sampled_stats.1.decodes > 0 && sampled_stats.1.uploads > 0);
+            assert_eq!(
+                sampled_stats.0.average_decodes, average_decodes,
+                "sampled switch must not compute means"
+            );
+            let sampled_counts = (
+                sampled_stats.1.hashes,
+                sampled_stats.1.decodes,
+                sampled_stats.1.uploads,
+                sampled_stats.0.average_decodes,
+            );
+            style.visual_style = ingetrazo_render::style::VisualStyle::Monochrome;
+            style.show_textures = false;
+            world.set_scene(&context, &scene, &camera, &style, fence, 4, 2)?;
+            let monochrome = capture(&context, &mut world, commands[0], fence, 5)?;
+            assert_ne!(
+                monochrome, sampled,
+                "monochrome must not reuse sampled texture drawing"
+            );
+            let mono_stats = world.texture_stats();
+            assert_eq!(
+                sampled_counts,
+                (
+                    mono_stats.1.hashes,
+                    mono_stats.1.decodes,
+                    mono_stats.1.uploads,
+                    mono_stats.0.average_decodes
+                ),
+                "monochrome must not hash, decode or upload surface textures"
+            );
+            style.visual_style = ingetrazo_render::style::VisualStyle::ShadedWithTextures;
+            world.set_scene(&context, &scene, &camera, &style, fence, 5, 2)?;
+            let returned = capture(&context, &mut world, commands[0], fence, 6)?;
+            assert_eq!(
+                returned, pixels,
+                "returning to average mode must reproduce initial full frame"
+            );
             replacement_control = Some(
-                serde_json::json!({"error":error,"old_frame_exact":true,"old_entries_preserved":true,"retry_exact":true}),
+                serde_json::json!({"error":error,"old_frame_exact":true,"old_entries_preserved":true,"retry_exact":true,"sampled_mode_exercised":true,"monochrome_no_surface_texture_work":true,"style_roundtrip_exact":true}),
             );
         }
         rows.push(serde_json::json!({"name":name,"geometry_uploads":world.uploads,"warm_uploads":0,"warm_frames":3,"replacement_control":replacement_control,"cold_texture_stats":{"geometry_uploads":cold.0,"hashes":cold.1,"sampled_decodes":cold.2,"sampled_uploads":cold.3,"average_decodes":cold.4,"average_hits":cold.5,"average_entries":cold.6},"hard_edge_bytes":world.edge_geometry_bytes(),"dimensions":scene.dimensions.len(),"text_labels":scene.text_labels.len(),"scope":"production native World; annotation overlays not rendered"}));
