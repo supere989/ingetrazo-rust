@@ -523,8 +523,49 @@ fn raster_triangle(
     height: usize,
     mut visit: impl FnMut(usize, f64, bool),
 ) {
-    let clips = points.map(|p| matrix * p.extend(1.));
-    if clips.iter().any(|p| p.w <= 1e-9) {
+    let mut polygon = points.map(|p| matrix * p.extend(1.)).to_vec();
+    for axis in 0..6 {
+        let distance = |p: glam::DVec4| match axis {
+            0 => p.w + p.x,
+            1 => p.w - p.x,
+            2 => p.w + p.y,
+            3 => p.w - p.y,
+            4 => p.z,
+            _ => p.w - p.z,
+        };
+        let old = std::mem::take(&mut polygon);
+        if old.is_empty() {
+            return;
+        }
+        for i in 0..old.len() {
+            let a = old[i];
+            let b = old[(i + 1) % old.len()];
+            let da = distance(a);
+            let db = distance(b);
+            if da >= 0. {
+                polygon.push(a);
+            }
+            if (da >= 0.) != (db >= 0.) {
+                polygon.push(a + (b - a) * (da / (da - db)));
+            }
+        }
+    }
+    for i in 1..polygon.len().saturating_sub(1) {
+        raster_projected(
+            [polygon[0], polygon[i], polygon[i + 1]],
+            width,
+            height,
+            &mut visit,
+        );
+    }
+}
+fn raster_projected(
+    clips: [glam::DVec4; 3],
+    width: usize,
+    height: usize,
+    visit: &mut impl FnMut(usize, f64, bool),
+) {
+    if clips.iter().any(|p| p.w <= 1e-12) {
         return;
     }
     let p = clips.map(|c| {
@@ -580,5 +621,43 @@ fn raster_triangle(
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod raster_tests {
+    use super::*;
+    #[test]
+    fn triangle_crossing_near_plane_retains_visible_pixels() {
+        let matrix = glam::DMat4::perspective_rh(60_f64.to_radians(), 1., 0.1, 10.);
+        let mut hits = vec![];
+        raster_triangle(
+            [
+                DVec3::new(-0.5, -0.5, -1.),
+                DVec3::new(0.5, -0.5, -1.),
+                DVec3::new(0., 0.5, 0.2),
+            ],
+            matrix,
+            100,
+            100,
+            |i, z, _| {
+                assert!((0. ..=1.).contains(&z));
+                hits.push(i);
+            },
+        );
+        assert!(hits.len() > 1000);
+        let mut invisible = 0;
+        raster_triangle(
+            [
+                DVec3::new(-0.5, -0.5, 1.),
+                DVec3::new(0.5, -0.5, 1.),
+                DVec3::new(0., 0.5, 1.),
+            ],
+            matrix,
+            100,
+            100,
+            |_, _, _| invisible += 1,
+        );
+        assert_eq!(invisible, 0);
     }
 }
