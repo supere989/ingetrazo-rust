@@ -1,0 +1,7 @@
+# Current viewport extent and stable texture identity
+
+The OS resize event arrives before the UI has computed its new viewport rectangle. Gating World.resize on that event froze the attachment at the old dimensions, stretching its resolved image through a linear sampler. Dock/layout changes had the same problem without an OS resize. Always compare the current UI rectangle with the target extent; the existing O(1) equal-extent branch returns its cached texture without GPU allocation, upload, pass or image copy.
+
+A fresh real resize exposed a second lifecycle defect: replacing TextureId between UI primitive construction and submission removed the ID those primitives already referenced. Retained `rejected-resize.log` contains the actual Bad texture ID failure. Rebind the caller-owned descriptor behind the stable User TextureId only after a complete replacement target is constructed and the previous GPU fence is complete. Failure leaves the old target and mapping intact; origin/encoding tags survive successful rebinding. The target owns its descriptor lifetime.
+
+Actual disposable native UI tests pass startup, two native window/swapchain resizes and clean OS close. At matched 800x600 dimensions the reflected hard-line and XRay depth-faded line screenshots now match source original whole RGBA images exactly; old target stretching differed by 522/3181 pixels. Edge pipelines are a separate source stage, not part of this lifecycle commit. Hardware and allocation-pressure resize failure controls remain independent gates.

@@ -1057,7 +1057,7 @@ impl App for crate::IngeTrazoApp {
         if let Some(path)=initial_file { app.open_document(&path); }
         app
     }
-    fn prepare_gpu(&mut self,system:&mut System,resize:bool) {
+    fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
         if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){return;}
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
         let result=(|| {

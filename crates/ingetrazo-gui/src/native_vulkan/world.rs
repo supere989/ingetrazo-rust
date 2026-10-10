@@ -112,8 +112,10 @@ impl World {
  pub fn resize(&mut self,context:&VulkanContext,renderer:&mut egui_ash_renderer::Renderer,extent:vk::Extent2D)->Result<egui::TextureId,String> {
   if let Some(target)=&self.target {if target.extent==extent {if let Some(texture)=target.texture{return Ok(texture);}}}
   let mut target=self.create_target(context,extent)?;
-  let texture=renderer.add_bottom_origin_encoded_opaque_texture(target.set);target.texture=Some(texture);
-  if let Some(old)=self.target.take(){if let Some(texture)=old.texture{renderer.remove_user_texture(texture);}drop(old);}
+  // UI primitives may already hold this TextureId. Replace its descriptor
+  // only after the complete new target exists; preserve old drawable on error.
+  let texture=if let Some(id)=self.target.as_ref().and_then(|t|t.texture){renderer.update_user_texture(id,target.set).map_err(|e|e.to_string())?;id}else{renderer.add_bottom_origin_encoded_opaque_texture(target.set)};target.texture=Some(texture);
+  if let Some(old)=self.target.take(){drop(old);}
   self.target=Some(target);Ok(texture)
  }
  /// Headless target uses the identical image/render pass/pipeline owner without egui registration.

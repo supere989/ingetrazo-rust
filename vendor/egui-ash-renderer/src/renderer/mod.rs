@@ -483,6 +483,15 @@ impl Renderer {
         id
     }
 
+    /// Rebind a caller-owned descriptor while retaining the TextureId already
+    /// referenced by tessellated UI meshes. Call only after previous draw fence.
+    /// The caller owns both descriptor lifetimes; encoding/origin tags survive.
+    pub fn update_user_texture(&mut self,id:TextureId,set:vk::DescriptorSet)->RendererResult<()> {
+        if !matches!(id,TextureId::User(_)){return Err(RendererError::BadTexture(id));}
+        let entry=self.textures.get_mut(&id).ok_or(RendererError::BadTexture(id))?;
+        *entry=set;Ok(())
+    }
+
     /// Register an opaque encoded-RGB CAD viewport image. Draw with egui WHITE tint.
     /// This bypasses the normal UI texture gamma transfer without an extra image/pass/copy.
     pub fn add_encoded_opaque_texture(&mut self, set: vk::DescriptorSet) -> TextureId {
