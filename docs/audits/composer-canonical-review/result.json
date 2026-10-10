@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_checkpoint": "e2abbae890bee0634489bc5927c2c828d26c01f6",
+  "workspace_passed": 415,
+  "workspace_ignored": 2,
+  "raw_log_sha256": "b118f2de77bea6d43fc8554cc42551e568bdd1e73a6cbb22373137605aaf1e6b",
+  "retained_log_sha256": "e17970a48dc80c627e8daeb8660c9b3ce45429ef4098432616f64ffb6fd42d00",
+  "boundary": "Current Move/backpaint plus accepted camera/stacking source; isolated unfinished sheet_shape excluded"
+}
