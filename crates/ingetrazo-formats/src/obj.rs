@@ -345,7 +345,9 @@ pub fn save_obj(scene: &Scene, path: &Path) -> Result<(), ObjError> {
                 rgba[0], rgba[1], rgba[2], opacity
             )?;
         }
-        if let Some(tex) = texture {
+        // An explicit null texture suppresses registry fallback, as when an
+        // imported OBJ face has no UVs despite a textured material.
+        if let Some(tex) = texture.filter(|value| !value.is_null()) {
             let embed = tex.get("embed").and_then(|v| v.as_str());
             let source = tex.get("path").and_then(|v| v.as_str());
             let bytes = if let Some(data) = embed.and_then(|e| scene.embedded_textures.get(e)) {
