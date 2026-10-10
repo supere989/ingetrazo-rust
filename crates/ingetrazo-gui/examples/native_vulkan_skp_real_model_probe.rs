@@ -201,8 +201,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             );
             let average_decodes = world.texture_stats().0.average_decodes;
             style.show_textures = true;
-            world.set_scene(&context, &scene, &camera, &style, fence, 3, 2)?;
-            let sampled = capture(&context, &mut world, commands[0], fence, 4)?;
+            let published_uploads = world.uploads;
+            let published_means = world.texture_stats().0.average_entries;
+            world.set_texture_publication_entry_limit(Some(0));
+            let publication_error = world
+                .set_scene(&context, &scene, &camera, &style, fence, 3, 2)
+                .expect_err("real sampled candidate must refuse publication entry admission");
+            assert_eq!(world.uploads, published_uploads);
+            assert_eq!(world.texture_stats().0.average_entries, published_means);
+            let after_publication_refusal = capture(&context, &mut world, commands[0], fence, 4)?;
+            assert_eq!(
+                after_publication_refusal, pixels,
+                "publication refusal must preserve the complete previous average frame"
+            );
+            world.set_texture_publication_entry_limit(None);
+            world.set_scene(&context, &scene, &camera, &style, fence, 4, 2)?;
+            let sampled = capture(&context, &mut world, commands[0], fence, 5)?;
             assert_ne!(
                 sampled, pixels,
                 "sampled real textures must differ from their constant means"
@@ -221,8 +235,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             );
             style.visual_style = ingetrazo_render::style::VisualStyle::Monochrome;
             style.show_textures = false;
-            world.set_scene(&context, &scene, &camera, &style, fence, 4, 2)?;
-            let monochrome = capture(&context, &mut world, commands[0], fence, 5)?;
+            world.set_scene(&context, &scene, &camera, &style, fence, 5, 2)?;
+            let monochrome = capture(&context, &mut world, commands[0], fence, 6)?;
             assert_ne!(
                 monochrome, sampled,
                 "monochrome must not reuse sampled texture drawing"
@@ -239,14 +253,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "monochrome must not hash, decode or upload surface textures"
             );
             style.visual_style = ingetrazo_render::style::VisualStyle::ShadedWithTextures;
-            world.set_scene(&context, &scene, &camera, &style, fence, 5, 2)?;
-            let returned = capture(&context, &mut world, commands[0], fence, 6)?;
+            world.set_scene(&context, &scene, &camera, &style, fence, 6, 2)?;
+            let returned = capture(&context, &mut world, commands[0], fence, 7)?;
             assert_eq!(
                 returned, pixels,
                 "returning to average mode must reproduce initial full frame"
             );
             replacement_control = Some(
-                serde_json::json!({"error":error,"old_frame_exact":true,"old_entries_preserved":true,"retry_exact":true,"sampled_mode_exercised":true,"monochrome_no_surface_texture_work":true,"style_roundtrip_exact":true}),
+                serde_json::json!({"error":error,"old_frame_exact":true,"old_entries_preserved":true,"retry_exact":true,"publication_error":publication_error,"publication_refusal_old_frame_exact":true,"publication_retry_succeeded":true,"sampled_mode_exercised":true,"monochrome_no_surface_texture_work":true,"style_roundtrip_exact":true}),
             );
         }
         rows.push(serde_json::json!({"name":name,"geometry_uploads":world.uploads,"warm_uploads":0,"warm_frames":3,"replacement_control":replacement_control,"cold_texture_stats":{"geometry_uploads":cold.0,"hashes":cold.1,"sampled_decodes":cold.2,"sampled_uploads":cold.3,"average_decodes":cold.4,"average_hits":cold.5,"average_entries":cold.6},"hard_edge_bytes":world.edge_geometry_bytes(),"dimensions":scene.dimensions.len(),"text_labels":scene.text_labels.len(),"scope":"production native World; annotation overlays not rendered"}));
