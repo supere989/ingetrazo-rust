@@ -1,0 +1,35 @@
+{
+  "observed_utc": "2026-10-10T23:13:31.194133+00:00",
+  "run": 38092513811,
+  "source": "70320e11dcd5c95c7115b2c0050c699084f22192",
+  "conclusion": "success",
+  "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38092513811",
+  "jobs": [
+    {
+      "name": "Native Metal framework link (macos-15-intel)",
+      "conclusion": "success",
+      "completed_at": "2026-10-10T23:00:59Z"
+    },
+    {
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "conclusion": "success",
+      "completed_at": "2026-10-10T22:44:54Z"
+    },
+    {
+      "name": "compilation-and-tests",
+      "conclusion": "success",
+      "completed_at": "2026-10-10T23:11:39Z"
+    },
+    {
+      "name": "Native Metal framework link (macos-15)",
+      "conclusion": "success",
+      "completed_at": "2026-10-10T22:48:50Z"
+    },
+    {
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "conclusion": "success",
+      "completed_at": "2026-10-10T22:44:53Z"
+    }
+  ],
+  "scope": "All configured jobs pass for public review source70320e11 only. Later local integration commits and strict parity/release gates are not accepted by this run."
+}
