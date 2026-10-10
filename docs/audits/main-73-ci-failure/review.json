@@ -1,0 +1,10 @@
+{
+  "run": 38080259865,
+  "source": "73e0ab8f",
+  "job": 114295532704,
+  "artifact": 11680805581,
+  "artifact_sha256": "ceeee2a6b579c72e03f5c2fce77dc57a126599f449c803b0485658197e18e8bd",
+  "failure": "ModuleNotFoundError: defusedxml during pinned OpenSKP reference import",
+  "correction": "Pin all four missing declared OpenSKP dependencies to versions from successful local oracle environment. numpy already pinned.",
+  "scope": "Oracle environment correction only; fresh cloud completion pending."
+}

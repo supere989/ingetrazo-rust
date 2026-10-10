@@ -15,3 +15,7 @@ pyparsing==3.3.3
 pytest==9.1.1
 shiboken6==6.12.0
 typing_extensions==4.16.0
+defusedxml==0.7.1
+trimesh==4.11.2
+shapely==2.1.2
+mapbox_earcut==2.0.0
