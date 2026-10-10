@@ -1,0 +1,3 @@
+# Actual native Metal CAD Drop ownership
+Reviewed source6d8bbc6 polls actual completion without blocking before deciding quarantine. Actual AppleParavirtual ARM and Intel jobs each passed both GPU controls: a submitted completed command is collected on Drop without caller polling and its ledger reaches zero; a real shared-event-gated pending command retains device/queue/owners and its charged ledger after Drop, including after subsequent event signaling/completion. Root downloaded and inspected both original job artifacts, retained here.
+Sourceab370eb, run38046278347. This is offscreen completion ownership proof; physical Mac, shared application WSI and full renderer parity remain open. Pending work uses process-lifetime quarantine, not inferred completion.
