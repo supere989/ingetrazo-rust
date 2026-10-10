@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "sides": 3,
+      "reverse": false,
+      "different_pixels": 0
+    },
+    {
+      "sides": 3,
+      "reverse": true,
+      "different_pixels": 0
+    },
+    {
+      "sides": 4,
+      "reverse": false,
+      "different_pixels": 0
+    },
+    {
+      "sides": 4,
+      "reverse": true,
+      "different_pixels": 0
+    },
+    {
+      "sides": 7,
+      "reverse": false,
+      "different_pixels": 0
+    },
+    {
+      "sides": 7,
+      "reverse": true,
+      "different_pixels": 0
+    },
+    {
+      "sides": 24,
+      "reverse": false,
+      "different_pixels": 0
+    },
+    {
+      "sides": 24,
+      "reverse": true,
+      "different_pixels": 0
+    }
+  ],
+  "scope": "Actual QPainterPathStroker BevelJoin plus Qt winding raster vs native convex beveloutline and graycells."
+}
