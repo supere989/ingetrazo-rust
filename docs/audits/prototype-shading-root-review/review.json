@@ -1,0 +1,9 @@
+{
+  "candidate": "f99a816",
+  "passed": 400,
+  "failed": 0,
+  "ignored": 2,
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-backpaint-review-target cargo test --locked --workspace",
+  "retained_log_sha256": "d6861f38da561beae27005937c05b904e800b68ee02eb0e4c60a510440756b46",
+  "remaining": "Independent sameGPU prototype shade/allprior controls and inheritedmaterial/texture/style boundaries open."
+}
