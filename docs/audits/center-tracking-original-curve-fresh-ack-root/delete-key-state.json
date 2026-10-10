@@ -1,0 +1,149 @@
+{
+  "mouse_events": [
+    {
+      "point": [
+        607.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141511.723795113
+    },
+    {
+      "point": [
+        520.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141512.051404561
+    },
+    {
+      "point": [
+        500.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141512.238312502
+    },
+    {
+      "point": [
+        607.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141513.971820286
+    },
+    {
+      "point": [
+        696.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141514.372488266
+    },
+    {
+      "point": [
+        716.0,
+        293.0
+      ],
+      "edges": 24,
+      "at": 141515.073729835
+    },
+    {
+      "point": [
+        696.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141515.124011698
+    },
+    {
+      "point": [
+        589.0,
+        273.0
+      ],
+      "edges": 24,
+      "at": 141515.375051186
+    }
+  ],
+  "scene_version": 6,
+  "selection_count": 0,
+  "rendered_wire_segments": [],
+  "viewport_preview_offset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "viewport_preview_group_count": 0,
+  "viewport_rect": [
+    0,
+    0,
+    1000,
+    700
+  ],
+  "committed_wire_segments": [],
+  "preview_wire_segments": [],
+  "component_construction": "copy_group_fixture",
+  "active_world_centers": [],
+  "root_child_counts": [],
+  "root_child_world_centers": [],
+  "context_depth": 0,
+  "group_mesh_identity": [],
+  "buffers": [],
+  "value_buffer": "",
+  "array_window": false,
+  "group_centers": [],
+  "group_ids": [],
+  "group_count": 0,
+  "mode": "curve",
+  "vertices": 0,
+  "unused_vertices": 0,
+  "copy_probe_pixel": null,
+  "copy_center": null,
+  "preview_lines": 0,
+  "tool": "LineTool",
+  "curves": [],
+  "time": 141516.352245764,
+  "center": [
+    2.0,
+    3.0,
+    1.0
+  ],
+  "rim": [
+    606.7336502342575,
+    272.97163030005703
+  ],
+  "center_pixel": [
+    500.0,
+    272.97163030005703
+  ],
+  "move_target": [
+    695.6783022952529,
+    272.97163030005703
+  ],
+  "kind": "Center",
+  "inference_point": [
+    3.0036284923553467,
+    3.0,
+    1.0
+  ],
+  "memory": [
+    [
+      3.0036284923553467,
+      3.0,
+      1.0
+    ]
+  ],
+  "edges": 0,
+  "faces": 0,
+  "undo": 2,
+  "anchor": null,
+  "center_hint_observation": {
+    "valid_reference": false,
+    "radius_px": 0.0,
+    "pointer": [
+      589.0,
+      273.0
+    ],
+    "allowed": false
+  }
+}

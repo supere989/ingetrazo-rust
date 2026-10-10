@@ -1,0 +1,98 @@
+{
+  "head_sha": "96fa5411bd84825c7bffed37e80b29f8cb46080a",
+  "status": "in_progress",
+  "conclusion": null,
+  "jobs": [
+    {
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "active_steps": [],
+      "completed_success": [
+        "Set up job",
+        "Run actions/checkout@v4",
+        "Run dtolnay/rust-toolchain@stable",
+        "Check native Metal library and device probe",
+        "Retain compile evidence",
+        "Post Run actions/checkout@v4",
+        "Complete job"
+      ]
+    },
+    {
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success",
+      "active_steps": [],
+      "completed_success": [
+        "Set up job",
+        "Run actions/checkout@v4",
+        "Run dtolnay/rust-toolchain@stable",
+        "Link native device probe against Apple frameworks",
+        "Retain native linking evidence",
+        "Post Run actions/checkout@v4",
+        "Complete job"
+      ]
+    },
+    {
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "active_steps": [],
+      "completed_success": [
+        "Set up job",
+        "Run actions/checkout@v4",
+        "Run dtolnay/rust-toolchain@stable",
+        "Check native Metal library and device probe",
+        "Retain compile evidence",
+        "Post Run actions/checkout@v4",
+        "Complete job"
+      ]
+    },
+    {
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "success",
+      "active_steps": [],
+      "completed_success": [
+        "Set up job",
+        "Run actions/checkout@v4",
+        "Run dtolnay/rust-toolchain@stable",
+        "Link native device probe against Apple frameworks",
+        "Retain native linking evidence",
+        "Post Run actions/checkout@v4",
+        "Complete job"
+      ]
+    },
+    {
+      "name": "compilation-and-tests",
+      "status": "in_progress",
+      "conclusion": null,
+      "active_steps": [
+        "Install pinned original runtime in CI environment"
+      ],
+      "completed_success": [
+        "Set up job",
+        "Run actions/checkout@v4",
+        "Run dtolnay/rust-toolchain@stable",
+        "Install native build dependencies",
+        "Check mandatory original fixtures",
+        "Run cargo test --workspace --locked",
+        "Native isolated X11 clipboard acceptance",
+        "Native rendered Offset viewport gestures",
+        "Build native launcher and minimal render worker",
+        "Persistent shared-buffer HLR and worker deadline controls",
+        "Build direct Vulkan host and allocation probe",
+        "Direct Vulkan virtual-display lifecycle",
+        "Actual Vulkan image and staging denial rollback",
+        "Headless software Vulkan resource depth refusal and timeout controls",
+        "Headless contour chunk equality and allocation rollback",
+        "Batched transfer readback and transactional ownership controls",
+        "Native texture image mip staging and pressure controls",
+        "Software-rendered virtual-display startup",
+        "Semantic document acceptance",
+        "Independent export buffer acceptance",
+        "Run actions/setup-python@v5"
+      ]
+    }
+  ]
+}

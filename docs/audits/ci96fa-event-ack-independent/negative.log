@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-ci96fa-independent/scripts/check-native-center-tracking.py", line 227, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-ci96fa-independent/scripts/check-native-center-tracking.py", line 179, in main
+    wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-ci96fa-independent/scripts/check-native-center-tracking.py", line 16, in wait
+    raise AssertionError("Timed out awaiting rendered event/state")
+AssertionError: Timed out awaiting rendered event/state
