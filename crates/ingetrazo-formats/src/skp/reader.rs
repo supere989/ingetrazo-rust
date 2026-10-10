@@ -3,6 +3,7 @@
 // Copyright (c) 2024-2026 Ahsan Mehmood. MIT notice: OPENSKP-LICENSE.
 use super::*;
 use std::io::{Cursor, Read};
+mod annotations;
 const MAX_FILE: usize = 512 * 1024 * 1024;
 const MAX_MODEL: usize = 256 * 1024 * 1024;
 const MAX_NODES: usize = 2_000_000;
@@ -466,6 +467,7 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
         ..Default::default()
     };
     let mut retained_texture_bytes = 0u64;
+    let mut material_folders=HashMap::new();
     for i in 0..zip.len() {
         let mut entry = zip
             .by_index(i)
@@ -501,6 +503,7 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
                 .find(|n| n.tag_name().name() == "material")
                 .ok_or_else(|| SkpError::Invalid("Material XML lacks recipe".into()))?;
             let mat_name = m.attribute("name").unwrap_or("unknown").to_owned();
+            if let Some(folder)=filename.split('/').nth(1){material_folders.insert(folder.to_owned(),mat_name.clone());}
             let mut rgba = [0.; 4];
             for (i, attr) in ["colorRed", "colorGreen", "colorBlue"].iter().enumerate() {
                 let c = m
@@ -666,34 +669,13 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
         }
     }
     let data = model.ok_or_else(|| SkpError::Invalid("Missing model.dat".into()))?;
-    // Match the source's bounded structural recognition, not a byte-pair
-    // false positive inside a coordinate or unrelated opaque payload.
-    for (offset, pair) in data.windows(2).enumerate() {
-        if pair != [0xcc, 0x5b] || offset + 6 > data.len() {
-            continue;
-        }
-        let size = u32::from_le_bytes(data[offset + 2..offset + 6].try_into().unwrap()) as usize;
-        if size < 40 {
-            continue;
-        }
-        let Some(end) = offset
-            .checked_add(6)
-            .and_then(|n| n.checked_add(size))
-            .filter(|&n| n <= data.len())
-        else {
-            continue;
-        };
-        if let Ok(block) = raw_nodes(&data[offset + 6..end]) {
-            if block.iter().any(|n| n.tag == [0xcd, 0x5b])
-                && block.iter().any(|n| n.tag == [0xce, 0x5b])
-            {
-                p.unsupported.insert("linear dimensions".into());
-            }
-        }
-    }
-    let top = nodes(&data, 0, &mut 0)?;
+    let top=nodes(&data,0,&mut 0)?;
+    p.legacy_dimensions=annotations::dimensions(&data,&top)?;
     for n in &top {
         inspect(n, &mut p)?;
+    }
+    for name in p.material_names.values_mut(){
+        if !p.materials.contains_key(name){if let Some(actual)=material_folders.get(name){*name=actual.clone();}}
     }
     p.layers.entry(1).or_insert_with(|| LayerRecord {
         name: "Layer0".into(),

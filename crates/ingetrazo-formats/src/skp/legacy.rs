@@ -995,6 +995,7 @@ fn model(
                             a,
                             b,
                             offset: *offset,
+                            normal:None,
                             text: text.clone(),
                         });
                     }

@@ -115,6 +115,8 @@ pub struct LegacyDimension {
     pub a: [f64; 3],
     pub b: [f64; 3],
     pub offset: f64,
+    #[serde(default)]
+    pub normal:Option<[f64;3]>,
     pub text: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -584,9 +586,13 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         if delta.length() < 1e-9 {
             continue;
         }
-        let mut perpendicular = DVec3::Z.cross(delta).map(|v| (v as f32) as f64);
+        let normal=d.normal.map(|p|DVec3::from_array(p).map(|v|(v as f32) as f64)).unwrap_or(DVec3::Z);
+        if !normal.is_finite(){return Err(SkpError::Invalid("Annotation normal float32 overflow".into()));}
+        let cross=|a:DVec3,b:DVec3|DVec3::new(((a.y as f32)*(b.z as f32)-(a.z as f32)*(b.y as f32)) as f64,((a.z as f32)*(b.x as f32)-(a.x as f32)*(b.z as f32)) as f64,((a.x as f32)*(b.y as f32)-(a.y as f32)*(b.x as f32)) as f64);
+        let mut perpendicular=cross(normal,delta);
+        if perpendicular.length()<1e-9 {perpendicular=cross(DVec3::Z,delta);}
         if perpendicular.length() < 1e-9 {
-            perpendicular = DVec3::X.cross(delta).map(|v| (v as f32) as f64);
+            perpendicular = cross(DVec3::X,delta);
         }
         // QVector3D normalizes using its float32 hypot, then float32 division.
         let length = (perpendicular.x as f32)
@@ -671,6 +677,7 @@ mod import_weld_tests {
                 b,
                 offset,
                 text: String::new(),
+                normal:None,
             });
             assert!(matches!(scene_from_payload(&p), Err(SkpError::Invalid(_))));
         }
