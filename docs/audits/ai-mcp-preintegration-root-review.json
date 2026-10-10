@@ -1,0 +1,25 @@
+{
+  "source": "36fc8caf22be5ec4ebfb5e6c3eaf50d09d2043fd",
+  "evidence": "ff18b471",
+  "metadata_matches_frozen_original_runtime": true,
+  "tool_count": 5,
+  "retained_routing_validation": {
+    "passed": true,
+    "cases": 9,
+    "negative_controls_rejected": [
+      "empty-native",
+      "empty-source",
+      "wrong-protocol",
+      "renamed-python-tool",
+      "notification-replied",
+      "changed-delegation"
+    ],
+    "scope": "Pure routing; source tool calls use explicit test stub, not script execution or document edits"
+  },
+  "required_before_runtime_use": [
+    "Never report document unchanged on script failure without proven atomic rollback",
+    "Native captured screenshot transport",
+    "Real document UI-thread execution and transport lifecycle"
+  ],
+  "adopted": false
+}
