@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "file": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf",
+      "sha256": "3a3c502eeff669a231549e80df9f7c49de109bafe303170409e905d0b31a38fe"
+    },
+    {
+      "file": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-BoldOblique.ttf",
+      "sha256": "a5251173370e30760e6919711dcd33e149d216ca4814eb74332bda03fcc7e834"
+    },
+    {
+      "file": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Oblique.ttf",
+      "sha256": "3d7955616e69721f7edb8e1b7a580f8fbd7d737111c6b54266ddc1d9ef13202f"
+    }
+  ],
+  "scope": "Local raw SFNT table and streaming digest validation only, not macOS matching"
+}
