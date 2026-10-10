@@ -1,6 +1,31 @@
 name: Rust and semantic acceptance
 on: [push, pull_request]
 jobs:
+  metal-cross-compilation:
+    name: Native Metal compile (${{ matrix.target }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-apple-darwin, x86_64-apple-darwin]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Check native Metal library and device probe
+        run: |
+          mkdir -p docs/audits/metal-cross-ci
+          cargo check --locked -p ingetrazo-metal --all-targets --target ${{ matrix.target }} > docs/audits/metal-cross-ci/check.log 2>&1
+      - name: Retain compile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-compile-${{ matrix.target }}
+          path: docs/audits/metal-cross-ci/
+          if-no-files-found: error
   compilation-and-tests:
     runs-on: ubuntu-24.04
     steps:
