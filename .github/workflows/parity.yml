@@ -233,6 +233,12 @@ jobs:
         run: python scripts/check-python-pieces.py
       - name: Original runtime nested world dimension measurement
         run: python scripts/check-python-dimension-world.py
+      - name: Original global entities survive nested edit history
+        run: |
+          mkdir -p docs/audits/context-globals-ci
+          python scripts/probe-python-context-globals.py docs/audits/context-globals-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example context_globals_fixture -- docs/audits/context-globals-ci/native
+          python scripts/check-context-globals.py docs/audits/context-globals-ci/original.json docs/audits/context-globals-ci/native/native.json docs/audits/context-global-publication/literal-old-entry-failure.log
       - name: Original referenced textures survive nested context history
         run: |
           python scripts/probe-python-context-textures.py docs/audits/context-textures-ci/original
@@ -325,6 +331,7 @@ jobs:
             docs/audits/grid-source-ci/
             docs/audits/grid-default-ci/
             docs/audits/grid-heldout-ci/
+            docs/audits/context-globals-ci/
             docs/audits/context-textures-ci/
             docs/audits/shareback-annotations-ci/
             docs/audits/python-shareback-annotations-current.json

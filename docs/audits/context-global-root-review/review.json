@@ -1,0 +1,9 @@
+{
+  "base": "99823f462bad9840b220f74bce22e1ca88eb79e1",
+  "source": "f463bf4",
+  "passed": 535,
+  "ignored": 2,
+  "binary_sha256": "910059953a624cd2a5ca387189c8c3b3b506c1e5f584382e62075c887eb222fb",
+  "exact_states": 20,
+  "entries": 4
+}
