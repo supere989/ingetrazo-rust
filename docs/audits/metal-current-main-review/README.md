@@ -1,0 +1,3 @@
+Root independently re-executed strict actualGPU/actualQt retained artifacts for8c540f73:ARM+Intel7wholeimages eachexact, twoactualGPUnegatives eachreject; warm33/reuse43/plan3/palette7/upload12704/view4/image4/ledger0 exact. ARM336SDK allGUIalltargets+nativeexamplesbuild/link passed; Intelpending. Currentmain merged a5a5e469 requires newnativeSDK replay. Fullapp/WSI/physicalGPU/performance/all37rows/fivegates OPEN.
+
+Merged canonical606 source at a5a5e469:Linuxworkspace[569, 0, 2]PASS. Prior336SDK nativeARM114231106265 andIntel114231106088 bothterminalSUCCESS verified API; Intelartifact retention pending. Newmerged native SDK/compute replay pending, no broadpromotion.
