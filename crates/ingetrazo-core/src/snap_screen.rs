@@ -624,7 +624,7 @@ impl SnapEngine {
                 Some('z') => COLOR_AXIS_Z,
                 _ => COLOR_REFERENCE,
             };
-            let mut r = result(p, SnapKind::AxisLock, color, "Locked Line");
+            let mut r = result(p, if axis.is_some() { SnapKind::AxisLock } else { SnapKind::Reference }, color, "Locked Line");
             r.axis = axis;
             r.guides
                 .push((origin - dir * 100., origin + dir * 100., color));
