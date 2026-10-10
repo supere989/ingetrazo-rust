@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "be94ddc719aec4ffe8aec8b6ddc16d3275070bea",
+    "rust_commit": "1e0c33e5316c1ccb4b2b91c6a527ca7ba0152547",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -42,6 +42,50 @@
       "name": "plain-edge-crossing",
       "edges": 5,
       "crossing_incidence": 4
+    },
+    {
+      "name": "array-complete-face-retyping",
+      "states": [
+        {
+          "count": 3,
+          "mode": "x",
+          "faces": 4,
+          "edges": 16,
+          "face_start_x": [
+            0.0,
+            6.0,
+            12.0,
+            18.0
+          ],
+          "undo": 1
+        },
+        {
+          "count": 3,
+          "mode": "/",
+          "faces": 4,
+          "edges": 24,
+          "face_start_x": [
+            0.0,
+            2.0,
+            4.0,
+            6.0
+          ],
+          "undo": 1
+        },
+        {
+          "count": 2,
+          "mode": "x",
+          "faces": 3,
+          "edges": 24,
+          "face_start_x": [
+            0.0,
+            6.0,
+            12.0
+          ],
+          "undo": 1
+        }
+      ],
+      "undo_restores_original": true
     },
     {
       "name": "control-key-toggle",

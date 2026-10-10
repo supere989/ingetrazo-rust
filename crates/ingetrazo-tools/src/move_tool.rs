@@ -14,6 +14,8 @@ struct CopyAssets{
     isolated:Vec<DVec3>,
     groups:Vec<ingetrazo_core::groups::Group>,
 }
+#[derive(Debug,Clone)]
+struct ArrayBase { mesh:ingetrazo_core::mesh::Mesh, groups:usize, version:u64 }
 /// Move and Copy tool supporting vector translations, Ctrl-copy, and linear array repeats.
 #[derive(Debug, Default, Clone)]
 pub struct MoveTool {
@@ -30,6 +32,9 @@ pub struct MoveTool {
     copy_assets:CopyAssets,
     last_error:Option<String>,
     control_down:bool,
+    array_base:Option<ArrayBase>,
+    replace_history:bool,
+    array_history_revision:Option<u64>,
 }
 
 impl MoveTool {
@@ -49,6 +54,7 @@ impl MoveTool {
     /// Resolve targets from selection or mouse click.
     pub fn gather_targets(&mut self, scene: &Scene, ctx: &ToolContext) {
         self.last_error=None;
+        self.array_base=None;self.replace_history=false;
         let mut vert_set = HashSet::new();
         let mut copy_edges=HashSet::new();let mut copy_faces=HashSet::new();let mut isolated=vec![];
         let mut group_set = HashSet::new();let mut plane_set=HashSet::new();
@@ -141,7 +147,7 @@ impl MoveTool {
                 let groups=self.copy_assets.groups.iter().map(|g|{let mut copy=g.duplicate_instance();copy.transform=DMat4::from_translation(delta)*copy.transform;copy}).collect::<Vec<_>>();
                 Ok((mesh,vertices,groups))
             })();
-            match result{Ok((mesh,vertices,groups))=>{scene.mesh=mesh;scene.groups.extend(groups);self.last_moved_verts=vertices;},Err(error)=>{self.last_error=Some(error);return;}}
+            match result{Ok((mesh,vertices,groups))=>{let base=std::mem::replace(&mut scene.mesh,mesh);self.array_base=Some(ArrayBase{mesh:base,groups:scene.groups.len(),version:scene.version.wrapping_add(1)});scene.groups.extend(groups);self.last_moved_verts=vertices;},Err(error)=>{self.last_error=Some(error);return;}}
         } else {
             // Translate original vertices
             for &vid in &self.target_vertices {
@@ -170,6 +176,12 @@ impl Tool for MoveTool {
     }
 
     fn error_message(&self)->Option<&str>{self.last_error.as_deref()}
+    fn take_history_replacement(&mut self)->bool{std::mem::take(&mut self.replace_history)}
+    fn note_history_revision(&mut self,revision:u64,committed:bool){
+        if committed{self.array_history_revision=self.array_base.as_ref().map(|_|revision);}
+        else if self.array_history_revision.is_some_and(|old|old!=revision){self.array_base=None;self.array_history_revision=None;}
+    }
+    fn prepare_undo(&mut self,_available:bool)->bool{self.array_base=None;false}
 
     fn note_control_state(&mut self,held:bool){
         if held&&!self.control_down{self.is_copy_mode=!self.is_copy_mode;}
@@ -209,10 +221,12 @@ impl Tool for MoveTool {
     }
 
     fn on_deactivate(&mut self, _scene: &mut Scene) {
+        self.array_base=None;
         self.reset();
     }
 
     fn on_cancel(&mut self, _scene: &mut Scene) {
+        self.array_base=None;
         self.reset();
     }
 
@@ -240,42 +254,38 @@ impl Tool for MoveTool {
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
         let trimmed = text.trim();
 
-        // 1. Array repeat: e.g. "5x", "*5", "/5", "5/"
-        if (trimmed.ends_with('x') || trimmed.ends_with('X') || trimmed.starts_with('*'))
-            && self.last_delta.is_some()
-        {
-            let num_str = trimmed.trim_matches(|c| c == 'x' || c == 'X' || c == '*');
-            let count: usize = num_str.trim().parse().map_err(|e| format!("Invalid count: {e}"))?;
-            let delta = self.last_delta.unwrap();
-
-            // Create (count - 1) additional copies along delta
-            for k in 2..=count {
-                for &vid in &self.last_targets {
-                    let old_pos = scene.mesh.vertices[vid].position;
-                    scene.mesh.add_vertex(old_pos + delta * (k as f64));
-                }
+        self.replace_history=false;
+        // Retyping rebuilds the complete copied topology from the pre-copy
+        // mesh, as original History.undo + copy-builder replaces one command.
+        let lower=trimmed.to_ascii_lowercase();
+        let array=if let Some(n)=lower.strip_prefix('/') {Some((n,'/'))}
+            else if let Some(n)=lower.strip_suffix('/') {Some((n,'/'))}
+            else if let Some(n)=lower.strip_suffix('x') {Some((n,'x'))}
+            else if let Some(n)=lower.strip_prefix('*') {Some((n,'x'))}else{None};
+        if let Some((number,mode))=array {
+            let count:usize=number.trim().parse().map_err(|_|"Invalid array count")?;
+            if count==0{return Err("Count must be greater than zero".into());}
+            if self.start_point.is_some(){return Err("Commit a copy before entering an array".into());}
+            let base=self.array_base.as_ref().ok_or("No completed copy available for an array")?;
+            if scene.version!=base.version {self.array_base=None;return Err("Array window closed by another model edit".into());}
+            let delta=self.last_delta.ok_or("No copy displacement")?;
+            let mut mesh=base.mesh.clone();let mut groups=vec![];
+            for k in 1..=count {
+                let offset=delta*if mode=='/' {k as f64/count as f64}else{k as f64};
+                if !offset.is_finite(){return Err("Array displacement must be finite".into());}
+                mesh=ingetrazo_core::containers::paste_mesh(&mesh,&self.copy_assets.mesh,offset)?.0;
+                for point in &self.copy_assets.isolated {mesh.add_vertex(*point+offset);}
+                groups.extend(self.copy_assets.groups.iter().map(|g|{let mut copy=g.duplicate_instance();copy.transform=DMat4::from_translation(offset)*copy.transform;copy}));
             }
-            scene.bump_version();
-            return Ok(());
-        }
-
-        if (trimmed.starts_with('/') || trimmed.ends_with('/')) && self.last_delta.is_some() {
-            let num_str = trimmed.trim_matches('/');
-            let count: usize = num_str.trim().parse().map_err(|e| format!("Invalid count: {e}"))?;
-            if count == 0 {
-                return Err("Count must be greater than zero".into());
-            }
-            let delta = self.last_delta.unwrap();
-
-            // Internal division copies
-            for k in 1..count {
-                let frac = k as f64 / count as f64;
-                for &vid in &self.last_targets {
-                    let old_pos = scene.mesh.vertices[vid].position;
-                    scene.mesh.add_vertex(old_pos + delta * frac);
-                }
-            }
-            scene.bump_version();
+            // Original builder stamps every face before planning all hard lines.
+            let segments=(1..=count).flat_map(|k|{
+                let offset=delta*if mode=='/' {k as f64/count as f64}else{k as f64};
+                self.copy_assets.plain.iter().map(move |&(a,b)|(a+offset,b+offset))
+            }).collect::<Vec<_>>();
+            if !segments.is_empty(){mesh=ingetrazo_core::drafting::add_segments(&mesh,&segments,None,None)?;}
+            let group_count=base.groups;
+            scene.mesh=mesh;scene.groups.truncate(group_count);scene.groups.extend(groups);scene.bump_version();
+            self.array_base.as_mut().unwrap().version=scene.version;self.replace_history=true;
             return Ok(());
         }
 
@@ -361,6 +371,19 @@ mod tests {
         let copied=&scene.mesh.faces[1];assert_eq!(copied.holes.len(),1);assert_eq!(copied.attrs["vendor"],serde_json::json!(71));assert_eq!(copied.attrs["texture"]["uvw"][3],serde_json::json!(-8.));
         assert!(scene.mesh.edges[..8].iter().all(|e|e.soft));assert!(scene.mesh.edges[8..].iter().all(|e|!e.soft&&!e.attrs.contains_key("edge-vendor")));
         assert_eq!(scene.mesh.vertices[0].uid,before.vertices[0].uid);assert_ne!(scene.mesh.vertices[8].uid,before.vertices[0].uid);
+    }
+    #[test]fn array_retyping_rebuilds_full_faces_and_groups_and_rejects_external_edits(){
+        let mut scene=Scene::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|scene.mesh.add_vertex(p));let f=scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();scene.mesh.faces[f].attrs.insert("vendor".into(),serde_json::json!(71));
+        scene.groups.push(ingetrazo_core::groups::Group::new("private"));scene.select(SelectionItem::Face(f));scene.select(SelectionItem::Group(0));
+        let mut tool=copy_at(&mut scene,DVec3::X*6.);tool.on_vcb_input(&mut scene,"3x").unwrap();
+        assert_eq!(scene.mesh.faces.len(),4);assert_eq!(scene.mesh.edges.len(),16);assert_eq!(scene.groups.len(),4);
+        assert!(scene.mesh.faces.iter().all(|f|f.attrs["vendor"]==serde_json::json!(71)));
+        tool.on_vcb_input(&mut scene,"/3").unwrap();assert_eq!(scene.mesh.faces.len(),4);assert_eq!(scene.groups.len(),4);
+        assert_eq!(scene.groups.iter().map(|g|g.transform.w_axis.x).collect::<Vec<_>>(),vec![0.,2.,4.,6.]);
+        tool.on_vcb_input(&mut scene,"2x").unwrap();assert_eq!(scene.mesh.faces.len(),3);assert_eq!(scene.groups.len(),3);
+        assert_eq!(scene.groups.iter().map(|g|g.transform.w_axis.x).collect::<Vec<_>>(),vec![0.,6.,12.]);
+        let before=scene.clone();assert!(tool.on_vcb_input(&mut scene,"0x").is_err());assert_eq!(scene,before);
+        scene.bump_version();let before=scene.clone();assert!(tool.on_vcb_input(&mut scene,"4x").is_err());assert_eq!(scene,before);
     }
     #[test]fn copied_plain_edge_splits_existing_crossing_without_repainting_source(){
         let mut scene=Scene::new();let a=scene.mesh.add_vertex(-DVec3::X);let b=scene.mesh.add_vertex(DVec3::X);let edge=scene.mesh.add_edge(a,b).unwrap();

@@ -106,6 +106,10 @@ pub trait Tool: Send + Sync {
     fn on_release(&mut self, _scene: &mut Scene, _ctx: &ToolContext, _drag_distance: f64) {}
     /// Update transient tool state before undo. True consumes undo without a document edit.
     fn prepare_undo(&mut self, _available: bool) -> bool { false }
+    /// A successful retype replaces the immediately preceding tool transaction.
+    fn take_history_replacement(&mut self)->bool{false}
+    /// Application transaction identity, independent of restored Scene.version.
+    fn note_history_revision(&mut self,_revision:u64,_committed:bool){}
     fn note_cursor_plane(&mut self,_point:DVec3,_normal:DVec3){}
     fn snap_anchor(&self)->Option<DVec3>{self.rubber_band().map(|(a,_)|a)}
     fn snap_exclusions(&self)->Option<&ingetrazo_core::snap_screen::SnapExclusions>{None}

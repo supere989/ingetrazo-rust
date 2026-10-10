@@ -26,6 +26,18 @@ vp=Viewport();edge=vp.scene.mesh.add_edge(V(-1,0,0),V(1,0,0));vp.scene.mesh.add_
 assert len(m.edges)==5
 incident=sum((e.a-V(0,2,0)).length()<1e-6 or(e.b-V(0,2,0)).length()<1e-6 for e in m.edges);assert incident==4
 rows.append({"name":"plain-edge-crossing","edges":len(m.edges),"crossing_incidence":incident})
+vp=Viewport();vp.flash_status=lambda text:None
+face=vp.scene.mesh.add_face([V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0)]);face.attrs["vendor"]=71
+t=copy(vp,[face],(6.,0.,0.));states=[]
+for count,mode in [(3,"x"),(3,"/"),(2,"x")]:
+ assert t.on_array_value(vp,count,mode)
+ starts=sorted(min(p.x() for p in f.vertices) for f in vp.scene.mesh.faces)
+ expected=[0.,2.,4.,6.] if mode=="/" else [6.*i for i in range(count+1)]
+ assert starts==expected and len(vp.history.undo_stack)==1
+ assert all(f.attrs["vendor"]==71 for f in vp.scene.mesh.faces)
+ states.append({"count":count,"mode":mode,"faces":len(vp.scene.mesh.faces),"edges":len(vp.scene.mesh.edges),"face_start_x":starts,"undo":len(vp.history.undo_stack)})
+vp.history.undo();assert len(vp.scene.mesh.faces)==1
+rows.append({"name":"array-complete-face-retyping","states":states,"undo_restores_original":True})
 vp=Viewport();vp.flash_status=lambda text:None;t=MoveTool();vp.set_active_tool(t)
 assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier) and t._copy
 assert t.on_key(vp,Qt.Key_Control,Qt.ControlModifier) and not t._copy

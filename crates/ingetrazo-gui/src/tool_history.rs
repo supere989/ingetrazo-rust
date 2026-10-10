@@ -37,7 +37,8 @@ impl IngeTrazoApp {
         }
         if changed_model(&before, &self.scene) {
             self.bump_model_revision();
-            self.undo_stack.push(before);
+            if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
+            self.active_tool.note_history_revision(self.model_revision,true);
             self.redo_stack.clear();
             if self.undo_stack.len() > 50 {
                 self.undo_stack.remove(0);
@@ -82,6 +83,7 @@ impl IngeTrazoApp {
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
         if self.section_name_prompt.is_some(){return Err("Finish the section naming dialog first".into());}
         let before = self.tool_snapshot();
+        self.active_tool.note_history_revision(self.model_revision,false);
         match self.active_tool.on_vcb_input(&mut self.scene, text) {
             Ok(()) => {
                 self.record_tool_commit(before)
@@ -120,6 +122,17 @@ mod tests {
         )
     }
 
+    #[test]fn move_array_retyping_replaces_one_undo_and_document_replacement_closes_window(){
+        let mut app=app();app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));let before=app.scene.clone();let mut first=context(0.);first.ctrl_held=true;
+        app.dispatch_tool_click(&first);app.dispatch_tool_vcb("6;0;0").unwrap();assert_eq!(app.undo_stack.len(),1);
+        for text in ["3x","/3","2x"]{app.dispatch_tool_vcb(text).unwrap();assert_eq!(app.undo_stack.len(),1);}
+        assert_eq!(app.scene.mesh.faces.len(),3);let after=app.scene.clone();app.undo();assert_eq!(app.scene.mesh,before.mesh);app.redo();assert_eq!(app.scene.mesh,after.mesh);
+        assert!(app.dispatch_tool_vcb("4x").is_err());
+        app.set_tool(ToolType::Move);app.scene.clear_selection();app.scene.select(SelectionItem::Face(0));app.dispatch_tool_click(&first);app.dispatch_tool_vcb("6;0;0").unwrap();
+        // Replacement can restore the same Scene.version; application identity
+        // must still close the source array command window.
+        let restored=app.scene.clone();app.scene=restored;app.bump_model_revision();let before=app.scene.clone();assert!(app.dispatch_tool_vcb("4x").is_err());assert_eq!(app.scene,before);
+    }
     #[test]fn nested_mirrored_component_drafting_commits_shared_definition_once(){
         use ingetrazo_core::{groups::Group,scene::SelectionItem};use glam::DMat4;
         let mut app=app();let mesh=app.scene.mesh.clone();app.scene=Scene::new();let child=Group::with_mesh("nested",mesh);let child_id=child.id;let mut parent=Group::new("outer");parent.transform=DMat4::from_translation(DVec3::new(9.,3.,2.))*DMat4::from_rotation_z(0.4)*DMat4::from_scale(DVec3::new(-2.,3.,1.));parent.children.push(child);app.scene.groups.push(parent);app.scene.make_component(child_id).unwrap();let mut copy=app.scene.groups[0].children[0].duplicate_instance();copy.transform=DMat4::from_translation(DVec3::new(3.,0.,0.));app.scene.groups[0].children.push(copy);app.scene.select(SelectionItem::Group(0));let original=app.scene.clone();
