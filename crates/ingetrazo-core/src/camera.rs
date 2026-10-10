@@ -7,9 +7,9 @@
 //! Spherical coordinates (target, distance, yaw, pitch).
 //! Supports perspective, orthographic (parallel), and two-point perspective.
 
-use std::f64::consts::PI;
 use glam::{DMat4, DVec3};
 use serde::{Deserialize, Serialize};
+use std::f64::consts::PI;
 
 use crate::math::Ray;
 
@@ -71,11 +71,12 @@ impl OrbitCamera {
         let sp = self.pitch.sin();
         let cy = self.yaw.cos();
         let sy = self.yaw.sin();
-        self.target + DVec3::new(
-            self.distance * cp * cy,
-            self.distance * cp * sy,
-            self.distance * sp,
-        )
+        self.target
+            + DVec3::new(
+                self.distance * cp * cy,
+                self.distance * cp * sy,
+                self.distance * sp,
+            )
     }
 
     /// Unit view direction eye -> target.
@@ -217,36 +218,64 @@ impl OrbitCamera {
         self.distance = distance.clamp(MIN_DISTANCE, MAX_DISTANCE);
     }
 
+    /// Original two-point projection levels the view unless the pitch is too steep.
+    fn level_forward(&self) -> Option<DVec3> {
+        if !self.two_point || !self.perspective {
+            return None;
+        }
+        let f = self.forward();
+        let h = DVec3::new(f.x, f.y, 0.);
+        if h.length() < 0.2 {
+            None
+        } else {
+            Some(h.normalize())
+        }
+    }
     /// View transformation matrix (World -> Camera).
     pub fn view_matrix(&self) -> DMat4 {
-        DMat4::look_at_rh(self.eye(), self.target, self.up_vector())
+        if let Some(level) = self.level_forward() {
+            let eye = self.eye();
+            DMat4::look_at_rh(eye, eye + level, DVec3::Z)
+        } else {
+            DMat4::look_at_rh(self.eye(), self.target, self.up_vector())
+        }
     }
 
     /// Projection transformation matrix (Camera -> Clip).
     pub fn projection_matrix(&self) -> DMat4 {
         if self.perspective {
-            DMat4::perspective_rh(
-                self.fov_deg.to_radians(),
-                self.aspect,
-                self.znear,
-                self.zfar,
-            )
+            let near = self.znear.min((self.distance * 0.02).max(1e-4));
+            if let Some(level) = self.level_forward() {
+                let half_h = near * (self.fov_deg.to_radians() / 2.).tan();
+                let half_w = half_h * self.aspect;
+                let relative = self.target - self.eye();
+                let depth = relative.dot(level);
+                let shift = relative.z * near / depth;
+                // Off-centre RH frustum, with glam's depth interval [0,1].
+                DMat4::from_cols(
+                    glam::DVec4::new(near / half_w, 0., 0., 0.),
+                    glam::DVec4::new(0., near / half_h, 0., 0.),
+                    glam::DVec4::new(0., shift / half_h, self.zfar / (near - self.zfar), -1.),
+                    glam::DVec4::new(0., 0., near * self.zfar / (near - self.zfar), 0.),
+                )
+            } else {
+                DMat4::perspective_rh(self.fov_deg.to_radians(), self.aspect, near, self.zfar)
+            }
         } else {
             let half_h = self.distance * (self.fov_deg.to_radians() * 0.5).tan();
             let half_w = half_h * self.aspect;
-            DMat4::orthographic_rh(
-                -half_w,
-                half_w,
-                -half_h,
-                half_h,
-                -self.zfar,
-                self.zfar,
-            )
+            DMat4::orthographic_rh(-half_w, half_w, -half_h, half_h, -self.zfar, self.zfar)
         }
     }
 
     /// Construct a 3D ray through screen coordinates (x, y) given viewport dimensions.
-    pub fn screen_to_ray(&self, screen_x: f64, screen_y: f64, vp_width: f64, vp_height: f64) -> Ray {
+    pub fn screen_to_ray(
+        &self,
+        screen_x: f64,
+        screen_y: f64,
+        vp_width: f64,
+        vp_height: f64,
+    ) -> Ray {
         // Convert screen coordinates to NDC [-1, 1]
         let ndc_x = (2.0 * screen_x / vp_width) - 1.0;
         let ndc_y = 1.0 - (2.0 * screen_y / vp_height);
@@ -293,9 +322,71 @@ mod tests {
     }
 }
 
-#[cfg(test)]mod original_ortho_tests{
- use super::*;
- #[test]fn orthographic_depth_matches_original_symmetric_range_even_inside_model(){
-  let mut camera=OrbitCamera::default();camera.perspective=false;camera.target=DVec3::ZERO;camera.distance=0.2;camera.pitch=std::f64::consts::FRAC_PI_2;camera.up=DVec3::Y;let matrix=camera.projection_matrix()*camera.view_matrix();for point in [camera.eye()+camera.forward(),camera.eye()-camera.forward()]{let clip=matrix*point.extend(1.);assert!((0. ..1.).contains(&(clip.z/clip.w)),"parallel sourceview includes geometry on either side of its eye");}let near=matrix*(camera.eye()-camera.forward()*camera.zfar).extend(1.);let far=matrix*(camera.eye()+camera.forward()*camera.zfar).extend(1.);assert!((near.z/near.w).abs()<1e-12);assert!((far.z/far.w-1.).abs()<1e-12);
- }
+#[cfg(test)]
+mod original_ortho_tests {
+    use super::*;
+    #[test]
+    fn orthographic_depth_matches_original_symmetric_range_even_inside_model() {
+        let mut camera = OrbitCamera::default();
+        camera.perspective = false;
+        camera.target = DVec3::ZERO;
+        camera.distance = 0.2;
+        camera.pitch = std::f64::consts::FRAC_PI_2;
+        camera.up = DVec3::Y;
+        let matrix = camera.projection_matrix() * camera.view_matrix();
+        for point in [
+            camera.eye() + camera.forward(),
+            camera.eye() - camera.forward(),
+        ] {
+            let clip = matrix * point.extend(1.);
+            assert!(
+                (0. ..1.).contains(&(clip.z / clip.w)),
+                "parallel sourceview includes geometry on either side of its eye"
+            );
+        }
+        let near = matrix * (camera.eye() - camera.forward() * camera.zfar).extend(1.);
+        let far = matrix * (camera.eye() + camera.forward() * camera.zfar).extend(1.);
+        assert!((near.z / near.w).abs() < 1e-12);
+        assert!((far.z / far.w - 1.).abs() < 1e-12);
+    }
+}
+
+#[cfg(test)]
+mod original_perspective_tests {
+    use super::*;
+    #[test]
+    fn two_point_levels_verticals_centres_target_and_falls_back_when_steep() {
+        let mut camera = OrbitCamera::default();
+        camera.two_point = true;
+        camera.pitch = 0.6;
+        camera.yaw = -1.1;
+        camera.target = DVec3::new(2., 3., 4.);
+        let matrix = camera.projection_matrix() * camera.view_matrix();
+        let target = matrix * camera.target.extend(1.);
+        assert!((target.x / target.w).abs() < 1e-12);
+        assert!((target.y / target.w).abs() < 1e-12);
+        let p = camera.target + DVec3::X;
+        let a = matrix * p.extend(1.);
+        let b = matrix * (p + DVec3::Z * 3.).extend(1.);
+        assert!((a.x / a.w - b.x / b.w).abs() < 1e-12);
+        assert!((a.y / a.w - b.y / b.w).abs() > 0.1);
+        camera.pitch = 1.5;
+        let mut ordinary = camera.clone();
+        ordinary.two_point = false;
+        assert_eq!(camera.view_matrix(), ordinary.view_matrix());
+        assert_eq!(camera.projection_matrix(), ordinary.projection_matrix());
+    }
+    #[test]
+    fn perspective_near_plane_follows_close_eye_original_distance_rule() {
+        let mut camera = OrbitCamera::default();
+        camera.distance = 0.001;
+        let near = 0.0001;
+        let p = camera.eye() + camera.forward() * near;
+        let matrix = camera.projection_matrix() * camera.view_matrix();
+        let clip = matrix * p.extend(1.);
+        assert!((clip.z / clip.w).abs() < 1e-10);
+        let p = camera.eye() + camera.forward() * 0.01;
+        let clip = matrix * p.extend(1.);
+        assert!((0. ..1.).contains(&(clip.z / clip.w)));
+    }
 }
