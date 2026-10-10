@@ -1,0 +1,7 @@
+{
+  "source_before_probe": "70320e11dcd5c95c7115b2c0050c699084f22192",
+  "source_reference": "../gondola-vertex-inputs/ordinary-vertex-inputs.json",
+  "result": "Both selected triangles match position and RGB float32 bits with same primitive and vertex order.",
+  "boundary": "Only selected opaque surface inputs; no shader, transform, sample coverage or whole-image acceptance.",
+  "next": "Investigate downstream shader/raster/sample extraction behavior; do not modify surface colors or resolve rounding based on this residual."
+}

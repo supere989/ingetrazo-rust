@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all eighteen PDF pages exact; two Canvas cases
 
 ## Dated implementation and verification evidence
 
+Gondola surface-input review (2026-10-10): freshly built production Rust surfaces match the two selected original GPU triangles at the disputed edge exactly in float32 positions, RGB values, primitive order and vertex order. [Evidence](audits/gondola-native-vertex-inputs/review.json). This narrows the local investigation to downstream rendering; all four strict full-model comparisons remain OPEN.
+
 Annotation publication review (2026-10-10, review branch): mesh buffers and depth-query inventory now share staged admission before descriptor/ready-state publication. Cache corrections avoid no-pressure eviction scans and reclaim unused sized faces. [Source review](audits/native-annotation-overlay-foundation/root-review.json). Warm transaction validation, empty-overlay clearing, actual GPU refusal proof and application image comparisons remain OPEN.
 
 Editable scripting review (2026-10-10, review branch): root freshly reproduces four original rollback states and compares them exactly with the corrected retained native report; nine rejecting mutations and the literal old failure are retained. Reviewed fixes admit loop references before allocation and poison VM execution before discarded payload release. [Review boundary](audits/ai-editable-root-review/review.json). Fresh merged native replay now passes four exact states, nine rollback negatives and three finalizer negatives. [Merged execution](audits/ai-editable-root-execution/acceptance.json). Mutation projection, Undo/Redo, efficient baseline observation and full callback/resource safety remain OPEN; production scripting stays disabled.
