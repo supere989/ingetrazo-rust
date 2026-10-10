@@ -154,5 +154,6 @@ pub mod composer_compute;
 
 mod history_views;
 mod history_layers;
+mod document_presentation;
 
 mod history_terrain;

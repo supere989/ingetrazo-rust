@@ -87,6 +87,7 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
         let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
             return Err("Edited instance no longer exists".into());
         };
+        let presentation_changed=candidate.display_style!=scene.display_style || candidate.shadows!=scene.shadows;
         let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
             || candidate.materials!=scene.materials || candidate.layers!=scene.layers
             || candidate.embedded_textures!=scene.embedded_textures
@@ -195,8 +196,9 @@ fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scen
             }
             candidate.refresh_dimensions();
         }
+        candidate.display_style=scene.display_style.clone();candidate.shadows=scene.shadows.clone();
         candidate.clear_selection();
-        Ok((candidate,changed))
+        Ok((candidate,changed||presentation_changed))
 }
 
 impl IngeTrazoApp {
@@ -254,6 +256,7 @@ impl IngeTrazoApp {
                 }
             }
         }
+        crate::document_presentation::preserve(&self.scene,&mut replacement);
         let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;
         if next.history_shareback.is_none(){previous.layers=self.scene.layers.clone();previous.history_layers.0=crate::history_layers::restore(&self.scene,&mut replacement);self.scene.layers=replacement.layers.clone();previous.saved_views=self.scene.saved_views.clone();previous.history_views.0=crate::history_views::restore(&self.scene,&mut replacement);self.scene.saved_views=replacement.saved_views.clone();crate::history_terrain::restore(&mut self.scene,&mut replacement,&mut previous);self.scene.terrain=replacement.terrain.clone();}
         if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
@@ -310,6 +313,7 @@ impl IngeTrazoApp {
     }
 
     pub fn begin_component_edit(&mut self) {
+        self.sync_document_presentation();
         let selected:Vec<_>=self.scene.selection.iter().filter_map(|s|if let SelectionItem::Group(i)=s {Some(*i)} else {None}).collect();
         if selected.len()!=1 {self.status_message="Select one group or component to edit".into();return;}
         let Some(group)=self.scene.groups.get(selected[0]).cloned() else {return;};
@@ -386,6 +390,7 @@ impl IngeTrazoApp {
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
+        edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
         edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
         edit.mesh_shares=self.scene.mesh_shares.clone();
@@ -403,6 +408,7 @@ impl IngeTrazoApp {
     }
 
     pub fn finish_component_edit(&mut self) {
+        self.sync_document_presentation();
         if self.component_edit_stack.is_empty() {self.status_message="No group edit is active".into();return;}
         // Validate the model after retiring transient preview without changing
         // the live tool, Scene, inference state, or history on refusal.
@@ -484,9 +490,10 @@ impl IngeTrazoApp {
     }
 
     pub fn cancel_component_edit(&mut self) {
-        if let Some(session)=self.component_edit_stack.pop() {
+        self.sync_document_presentation();
+        if let Some(mut session)=self.component_edit_stack.pop() {
             self.set_tool(ToolType::Select);
-            self.scene=session.cancel_scene;self.bump_model_revision();self.camera=session.original_camera;
+            crate::document_presentation::preserve(&self.scene,&mut session.cancel_scene);self.scene=session.cancel_scene;self.bump_model_revision();self.camera=session.original_camera;
             self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
             self.status_message="Cancelled group edit".into();
         } else {self.status_message="No group edit is active".into();}

@@ -533,6 +533,8 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     }
 
     let mut doc = loose;
+    doc["display_style"]=serde_json::to_value(&scene.display_style).unwrap();
+    doc["shadows"]=serde_json::to_value(&scene.shadows).unwrap();
     doc["groups"] = serde_json::json!(groups_json);
     doc["layers"] = serde_json::json!(layers_json);
     let mut names: Vec<_> = scene.materials.keys().collect();
@@ -773,6 +775,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
 
     // Standard IngeTrazo format
     let mut scene = Scene::new();
+    scene.display_style=ingetrazo_core::presentation::DocumentStyle::from_json(&s_val["display_style"]);
+    scene.shadows=ingetrazo_core::presentation::ShadowSettings::from_json(&s_val["shadows"]);
     scene.embedded_textures = embedded_textures;
     scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
@@ -1062,6 +1066,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         };
     }
     scene.native_document = s_val.clone();
+    if s_val.get("display_style").is_some(){scene.show_section_fill=scene.display_style.section_fill;}else{scene.display_style.section_fill=scene.show_section_fill;}
     scene.native_baseline = scene_model(&scene);
     scene.mesh.rebuild_spatial_index();
     for g in &mut scene.groups {

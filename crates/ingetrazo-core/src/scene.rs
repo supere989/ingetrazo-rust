@@ -31,6 +31,10 @@ pub enum SelectionItem {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Scene {
+    #[serde(default)]
+    pub display_style:crate::presentation::DocumentStyle,
+    #[serde(default)]
+    pub shadows:crate::presentation::ShadowSettings,
     #[serde(skip)]
     pub dimension_frame:glam::DMat4,
     /// Original world-space context frame; runtime only, independent of the
@@ -106,7 +110,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
