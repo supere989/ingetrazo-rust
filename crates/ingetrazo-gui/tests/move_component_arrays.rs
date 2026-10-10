@@ -238,6 +238,10 @@ fn actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition() {
   let selected=if kind.starts_with("nested") {&reopened.groups[0].children[0]} else {&reopened.groups[0]};
   assert_eq!(selected.mesh.faces[0].attrs["vendor"],row["after_attrs"]["vendor"]);
   if row["source_unique_on_entry"]==true {assert_eq!(selected.transform,DMat4::IDENTITY);assert!(selected.axes_matrix().is_some());}
+  if let Some(directory)=std::env::var_os("INGETRAZO_ENTRY_REOPEN_DIR") {
+   let directory=std::path::PathBuf::from(directory);std::fs::create_dir_all(&directory).unwrap();
+   std::fs::copy(&path,directory.join(format!("{kind}.igz"))).unwrap();
+  }
   std::fs::remove_file(path).unwrap();
 
  }
