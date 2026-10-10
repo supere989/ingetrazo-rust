@@ -1058,6 +1058,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "47e94df223e4ffb8b147a9d16331b68396d8e824c9f262455b0cb45ab295affd"
     },
     {
@@ -2091,6 +2092,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "031c4d0b53245d6b5e7bb7f6fde18d245e55fedbe37f7a64282b7260c960bdaf"
     },
     {
@@ -3086,6 +3088,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "43f16cdc8d0f2b127749e82ee4f5daa411e7f7f600a5c7bbf435d61ef4f87d4c"
     },
     {
@@ -3949,6 +3952,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "bbdd9a04b7b2db714b17e24fcbb6999df56ef319892259d65fd5da2b74479678"
     },
     {
@@ -3989,6 +3993,7 @@
       "controlled_occlusion": false,
       "reject_negative_x_projection": false,
       "operations": [],
+      "font_metrics": [],
       "image_sha256": "368bd85152f71f06455b22c734840a72d9feb2e810312fdafb03dac366fdf8fd"
     },
     {
@@ -4434,6 +4439,23 @@
             "Sans Serif",
             11.0,
             true
+          ]
+        }
+      ],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": [
+            {
+              "text": "First line",
+              "value": 75
+            },
+            {
+              "text": "Second line",
+              "value": 98
+            }
           ]
         }
       ],
@@ -4885,6 +4907,23 @@
           ]
         }
       ],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": [
+            {
+              "text": "First line",
+              "value": 75
+            },
+            {
+              "text": "Second line",
+              "value": 98
+            }
+          ]
+        }
+      ],
       "image_sha256": "9c77827d9c99f7a2036ad13e0527480d1e7985c09642e95d04e730f17468d639"
     },
     {
@@ -5194,6 +5233,23 @@
           ]
         }
       ],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": [
+            {
+              "text": "First line",
+              "value": 75
+            },
+            {
+              "text": "Second line",
+              "value": 98
+            }
+          ]
+        }
+      ],
       "image_sha256": "02c0e743ec6e1b042666d1f967f57cc02123fd33af75ae5f0b19052f8ca5b2d2"
     },
     {
@@ -5228,6 +5284,14 @@
       "controlled_occlusion": false,
       "reject_negative_x_projection": false,
       "operations": [],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": []
+        }
+      ],
       "image_sha256": "368bd85152f71f06455b22c734840a72d9feb2e810312fdafb03dac366fdf8fd"
     },
     {
@@ -5631,6 +5695,19 @@
             "Sans Serif",
             11.0,
             true
+          ]
+        }
+      ],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": [
+            {
+              "text": "",
+              "value": 0
+            }
           ]
         }
       ],
@@ -6691,6 +6768,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "dd671dfd60b79f849f181d93c3d4cc9267c0e9751026c9b051b165293a46e2c8"
     },
     {
@@ -7724,6 +7802,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "0e6a747d7702dbe99c24c4cb1cb00218de773b5e956149b5260b0cc9675bd93e"
     },
     {
@@ -8719,6 +8798,7 @@
           ]
         }
       ],
+      "font_metrics": [],
       "image_sha256": "d8e6d397baf6e0771d74ee215655fd0d289658fb781335016afa9852915d52b7"
     },
     {
@@ -9164,6 +9244,23 @@
             "Sans Serif",
             11.0,
             true
+          ]
+        }
+      ],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": [
+            {
+              "text": "First line",
+              "value": 75
+            },
+            {
+              "text": "Second line",
+              "value": 98
+            }
           ]
         }
       ],
@@ -9654,6 +9751,27 @@
             "Sans Serif",
             11.0,
             true
+          ]
+        }
+      ],
+      "font_metrics": [
+        {
+          "height": 18,
+          "ascent": 14,
+          "descent": 4,
+          "advances": [
+            {
+              "text": "A",
+              "value": 12
+            },
+            {
+              "text": "B",
+              "value": 11
+            },
+            {
+              "text": "C",
+              "value": 11
+            }
           ]
         }
       ],

@@ -27,7 +27,18 @@ SourceMethods = namespace["SourceMethods"]
 def point(p): return [p.x(), p.y()]
 class Painter(QPainter):
     def __init__(self, image):
-        super().__init__(image); self.ops=[]
+        super().__init__(image); self.ops=[]; self.metrics=[]
+    def fontMetrics(self):
+        actual = super().fontMetrics()
+        row = dict(height=actual.height(), ascent=actual.ascent(), descent=actual.descent(), advances=[])
+        self.metrics.append(row)
+        class RecordedMetrics:
+            def horizontalAdvance(self, text):
+                value = actual.horizontalAdvance(text)
+                row["advances"].append(dict(text=text, value=value))
+                return value
+            def __getattr__(self, name): return getattr(actual, name)
+        return RecordedMetrics()
     def entry(self, kind, **data):
         self.ops.append(dict(kind=kind, pen=list(self.pen().color().getRgb()), width=self.pen().widthF(), pen_style=self.pen().style().value, **data))
     def drawLine(self, a, b):
@@ -74,7 +85,7 @@ for name,kind,ends,selected,hidden,occluded,reject in [
     image=QImage(640,400,QImage.Format_RGBA8888);image.fill(QColor("white"));painter=Painter(image);painter.setRenderHint(QPainter.Antialiasing)
     view._draw_dimensions(painter);view._draw_text_labels(painter);ops=painter.ops;painter.end()
     assert image.save(str(output/(name+".png")))
-    rows.append(dict(name=name,style=view.scene.dimension_style,entity=({"a":entity.a.toTuple(),"b":entity.b.toTuple(),"offset":entity.offset.toTuple(),"axis":entity.axis,"text":entity.text} if kind=="dim" else entity.to_dict()),selected=selected,hovered=view._hover_entity is entity,hidden=hidden,controlled_occlusion=occluded,reject_negative_x_projection=reject,operations=ops,image_sha256=hashlib.sha256((output/(name+".png")).read_bytes()).hexdigest()))
+    rows.append(dict(name=name,style=view.scene.dimension_style,entity=({"a":entity.a.toTuple(),"b":entity.b.toTuple(),"offset":entity.offset.toTuple(),"axis":entity.axis,"text":entity.text} if kind=="dim" else entity.to_dict()),selected=selected,hovered=view._hover_entity is entity,hidden=hidden,controlled_occlusion=occluded,reject_negative_x_projection=reject,operations=ops,font_metrics=painter.metrics,image_sha256=hashlib.sha256((output/(name+".png")).read_bytes()).hexdigest()))
 assert len(rows[0]["operations"])==52
 assert rows[4]["operations"]==[] and rows[8]["operations"]==[]
 assert not any(o["kind"]=="ellipse" for o in rows[7]["operations"])
