@@ -1,0 +1,18 @@
+{
+  "provenance": {
+    "rust_commit": "314b54b0be7940b88e591ed934cbe39b77196ddc",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "excluded_edges": 24,
+  "remaining_edges": 1,
+  "center_pseudoedges": 1,
+  "kind": "center",
+  "point": [
+    2.0,
+    3.0,
+    1.0
+  ],
+  "scope": "Actual original Move.on_click/snap_excluded and Viewport center acquisition/snap-scene assembly, controlled hovered edge; no actual pointer or timer acceptance"
+}

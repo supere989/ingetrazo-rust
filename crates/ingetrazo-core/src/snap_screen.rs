@@ -979,6 +979,25 @@ mod tests {
         assert_eq!(r.point, candidate);
     }
     #[test]
+    fn moving_curve_exclusion_keeps_source_center_and_dwell_reference() {
+        let c=camera(10.);let mut scene=Scene::new();let center=DVec3::new(3.,2.,0.);
+        let ids=(0..24).map(|i|{let a=std::f64::consts::TAU*i as f64/24.;scene.mesh.add_vertex(center+DVec3::new(a.cos(),a.sin(),0.))}).collect::<Vec<_>>();
+        for i in 0..24 {let e=scene.mesh.add_edge(ids[i],ids[(i+1)%24]).unwrap();scene.mesh.edges[e].curve_id=Some(71);}
+        let exclusions=SnapExclusions{loose_edges:(0..24).collect(),groups:Default::default()};
+        let policy=ScreenSnapPolicy{exclusions:Some(&exclusions),..Default::default()};
+        let mut engine=SnapEngine::default();let before=scene.clone();
+        let (ray,ctx)=context(&c,center+DVec3::X,DVec2::ZERO);
+        let rim=engine.snap_screen_with_policy(&ray,&scene,None,None,&ctx,&policy);
+        assert_ne!(rim.kind,SnapKind::Endpoint,"moving rim edges are excluded");
+        assert!(engine.hovered_center.is_some(),"source acquires center before edge exclusion");
+        engine.note_screen_result(&rim,true,0.);engine.note_screen_result(&rim,true,0.3);
+        assert_eq!(engine.encouraged_points,vec![center]);
+        let (ray,ctx)=context(&c,center,DVec2::ZERO);
+        let r=engine.snap_screen_with_policy(&ray,&scene,None,None,&ctx,&policy);
+        assert_eq!(r.kind,SnapKind::Center);assert!(r.point.distance(center)<1e-6);
+        assert_eq!(scene,before);
+    }
+    #[test]
     fn center_reference_refreshes_with_same_scene_version_and_retires_after_deletion() {
         let c = camera(10.);
         let mut scene = Scene::new();
