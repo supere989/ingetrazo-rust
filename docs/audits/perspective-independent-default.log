@@ -1,0 +1,13 @@
+perspective-ray-edge [True]
+perspective-endpoint-within-9px [True]
+perspective-midpoint [True]
+perspective-crossing [True]
+perspective-skew-crossing [True]
+eye-depth-0.01 [False]
+eye-depth-0.05 [False]
+eye-depth-0.2 [True]
+curve-center-radius-1.2 [True, True, True, True, True]
+curve-center-radius-0.01 [True, True, True]
+malformed-circle-spur [True, True]
+Retained failures: ['eye-depth-0.01', 'eye-depth-0.05']
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
