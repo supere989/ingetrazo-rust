@@ -77,7 +77,7 @@ impl Textures{
   self.references.publish(&mut self.cache,candidate,scene.image_planes.publication_revision())?;
   self.image_key=Some(key);let active=self.draws.iter().map(|d|d.asset).chain(self.references.assets()).collect::<HashSet<_>>();self.cache.collect_unused(context,&active,fence,completed)?;Ok(())
  }
- pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16],height:u32)->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp,height)}
+ pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16])->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp)}
  pub fn image_stats(&self)->super::reference_images::Stats{self.references.stats}
  pub fn set_pressure_for_probe(&mut self,enabled:bool){self.probe_pressure=enabled;}
  pub fn cache_stats(&self)->&super::texture_cache::TextureStats{&self.cache.stats}
