@@ -1,0 +1,15 @@
+{
+  "source": "a0244425a1efc5060a5fa65cf735c20900f7b354",
+  "run": 38042865280,
+  "arm_job": 114186435472,
+  "intel_job": 114186435577,
+  "arm_artifact": 11665529800,
+  "intel_artifact": 11665624668,
+  "adapter": "Apple Paravirtual device",
+  "gpu_fill_blit_every_byte_readback_passed": true,
+  "readback_bytes": 17825792,
+  "physical_gpu": false,
+  "rendering_parity": false,
+  "driver_stall_proven": false,
+  "whole_workflow": "in_progress_at_review"
+}
