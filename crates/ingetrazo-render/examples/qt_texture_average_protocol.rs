@@ -1,5 +1,11 @@
 use ingetrazo_render::source_texture_average::source_average_pixels;
 fn main() {
+    let args=std::env::args().collect::<Vec<_>>();
+    if args.len()==5 {
+        let raw=std::fs::read(&args[1]).unwrap();
+        println!("{:?}",source_average_pixels(&raw,args[2].parse().unwrap(),args[3].parse().unwrap(),args[4].parse().unwrap()).unwrap());
+        return;
+    }
     for alpha in [true, false] {
         for w in [1, 2, 3, 4, 5, 7, 8, 9, 13, 32] {
             for h in [1, 2, 3, 4, 5, 7, 8, 9, 13, 32] {
