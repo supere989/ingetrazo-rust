@@ -1,0 +1,9 @@
+{
+  "source": "4588b5b",
+  "prefix": "/tmp/ingetrazo-install-acceptance",
+  "binary_sha256": {
+    "ingetrazo": "602e29208d77ed6a5e1c14701627413ef00bc4759ed87e6b436a5daef08634ba",
+    "ingetrazo-render-worker": "354a99a2fd30cbe28c68e4af3e5f1cd0764627778551f7143f12c59f7046bc93"
+  },
+  "limits": "isolated Linux userspace prefix install, launcher diagnostics and installed worker production-panel acceptance; no AppImage, desktop launch or other-platform proof"
+}
