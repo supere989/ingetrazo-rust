@@ -33,7 +33,7 @@ def main():
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["VK_DRIVER_FILES"]="/usr/share/vulkan/icd.d/lvp_icd.json";env["INGETRAZO_VULKAN_DEVICE"]="llvmpipe";env.pop("WAYLAND_DISPLAY",None)
    log=open(directory/"runtime.log","w");command=[sys.executable,os.environ.get("INGETRAZO_ORIGINAL_UI_FIXTURE","scripts/original_center_ui_fixture.py"),str(directory.resolve())] if original else [str(native_binary),str(directory.resolve())];app=subprocess.Popen(command,env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
-   initial=wait(lambda:state() if state()["edges"]>0 else None)
+   initial=wait(lambda:state() if (state().get("entry_pixel") is not None if os.environ.get("INGETRAZO_CONTEXT_ENTRY_UI")=="1" else state()["edges"]>0) else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
    x.XDefaultRootWindow.argtypes=[C.c_void_p];x.XDefaultRootWindow.restype=C.c_ulong;root=x.XDefaultRootWindow(d)
    x.XQueryTree.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(C.c_ulong),C.POINTER(C.c_ulong),C.POINTER(C.POINTER(C.c_ulong)),C.POINTER(C.c_uint)]
@@ -64,6 +64,21 @@ def main():
    def ctrl_key(symbol):
     control=x.XKeysymToKeycode(d,0xffe3);event(2,control,None,1);key(symbol);event(3,control,None,2)
    assert mode=="group"
+   entry_before=None;entry_after=None
+   if os.environ.get("INGETRAZO_CONTEXT_ENTRY_UI")=="1":
+    time.sleep(.5);initial=state() # Existing viewport warmup must precede first entry capture.
+    entry_before=initial;assert initial["context_depth"]==0 and initial["entry_pixel"] is not None
+    capture("before-actual-context-entry")
+    import importlib.util
+    spec=importlib.util.spec_from_file_location("entry_pixels",Path("scripts/check-component-entry-pixels.py"));entry_pixels=importlib.util.module_from_spec(spec);spec.loader.exec_module(entry_pixels)
+    entry_pixels.inspect_one(directory,"before-actual-context-entry")
+    move(initial["entry_pixel"])
+    for _ in range(2):
+     assert xt.XTestFakeButtonEvent(d,1,1,0);x.XFlush(d);time.sleep(.04)
+     assert xt.XTestFakeButtonEvent(d,1,0,0);x.XFlush(d);time.sleep(.04)
+    entry_after=wait(lambda:state() if state()["context_depth"]==1 else None);capture("after-actual-context-entry");entry_pixels.inspect_one(directory,"after-actual-context-entry")
+    assert entry_after["undo"]==0 and entry_after["root_ids"]==entry_before["root_ids"],entry_after
+    key(0x6d);initial=wait(lambda:state() if state()["tool"]in ["Move","MoveTool"] else None)
    baseline_groups=initial["group_count"]
    time.sleep(.5);capture("group-before")
    move(initial["rim"]);click(initial["rim"]);move(initial["move_target"])
@@ -148,7 +163,7 @@ def main():
     capture("finished-global-redo")
     assert finished_redo["root_ids"]==published["root_ids"] and finished_redo["root_child_counts"]==published["root_child_counts"],finished_redo
     assert all(close(a[0],b[0]) for a,b in zip(finished_redo["root_child_world_centers"],published["root_child_world_centers"])),finished_redo
-   report={"finished_undo":finished_undo,"finished_redo":finished_redo,"original_mainwindow":original and bool(finished_redo and finished_redo.get("main_window_actions")),"published":published,"cancelled_preview":cancelled,"nested_local":os.environ.get("INGETRAZO_GROUP_NESTED")=="1","linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
+   report={"entry_before":entry_before,"entry_after":entry_after,"finished_undo":finished_undo,"finished_redo":finished_redo,"original_mainwindow":original and bool(finished_redo and finished_redo.get("main_window_actions")),"published":published,"cancelled_preview":cancelled,"nested_local":os.environ.get("INGETRAZO_GROUP_NESTED")=="1","linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
    report["world_visibility_acceptance"]="Pending independent projected-segment pixel controls; state transitions and captures alone do not prove committed world wire rendering."
    report["checker_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()

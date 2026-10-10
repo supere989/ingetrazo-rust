@@ -1,0 +1,62 @@
+[
+  {
+    "kind": "original",
+    "control": "black-world-images",
+    "rejected": true
+  },
+  {
+    "kind": "original",
+    "control": "black-before-actual-context-entry",
+    "rejected": true
+  },
+  {
+    "kind": "original",
+    "control": "black-after-actual-context-entry",
+    "rejected": true
+  },
+  {
+    "kind": "original",
+    "control": "missing-image",
+    "rejected": true
+  },
+  {
+    "kind": "original",
+    "control": "duplicate-wire-id",
+    "rejected": true
+  },
+  {
+    "kind": "original",
+    "control": "outside-viewport",
+    "rejected": true
+  },
+  {
+    "kind": "native",
+    "control": "black-world-images",
+    "rejected": true
+  },
+  {
+    "kind": "native",
+    "control": "black-before-actual-context-entry",
+    "rejected": true
+  },
+  {
+    "kind": "native",
+    "control": "black-after-actual-context-entry",
+    "rejected": true
+  },
+  {
+    "kind": "native",
+    "control": "missing-image",
+    "rejected": true
+  },
+  {
+    "kind": "native",
+    "control": "duplicate-wire-id",
+    "rejected": true
+  },
+  {
+    "kind": "native",
+    "control": "outside-viewport",
+    "rejected": true
+  }
+]

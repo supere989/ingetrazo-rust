@@ -38,9 +38,10 @@ if mode=='group':
   if os.environ.get('INGETRAZO_CONTEXT_EXIT'):outer.xform.translate(1,-1,0)
   vp.scene.groups[:]=[outer,copy_group(outer,V(10,0,0))]
  vp.scene.select([group])
-vp.set_active_tool(MoveTool() if mode=='group' else LineTool())
+from tools.select import SelectTool
+vp.set_active_tool(SelectTool() if os.environ.get('INGETRAZO_CONTEXT_ENTRY_UI') else MoveTool() if mode=='group' else LineTool())
 window.show()
-if os.environ.get('INGETRAZO_GROUP_NESTED')=='1':
+if os.environ.get('INGETRAZO_GROUP_NESTED')=='1' and not os.environ.get('INGETRAZO_CONTEXT_ENTRY_UI'):
  vp.begin_group_edit(outer);vp.scene.select([outer.children[0]])
 vp.setFocus();directory=Path(sys.argv[1]);timer=QTimer()
 def pixel(point):
@@ -105,6 +106,16 @@ def state():
  pc=pixel(ref[0]) if ref is not None else None
  pointer=vp._last_mouse_pos
  hint_radius=vp._center_hint_px(ref,pc) if pc is not None else 0.
+ def entry_point(group,parent):
+  matrix=QMatrix4x4(parent)
+  if group.xform is not None:matrix=matrix*group.xform
+  for edge in group.mesh.edges:
+   if not edge.hidden:return matrix.map(edge.a)
+  for child in group.children:
+   point=entry_point(child,matrix)
+   if point is not None:return point
+ point=entry_point(vp.scene.groups[0],QMatrix4x4()) if vp.scene.groups else None
+ result['entry_pixel']=pixel(point) if point is not None else None
  result['action_observation']={'redo_shortcuts':[k.toString() for k in window._redo_action.shortcuts()],'undo_enabled':window._undo_action.isEnabled(),'redo_enabled':window._redo_action.isEnabled()}
  for top_action in window.menuBar().actions():
   if top_action.menu() and any(a is window._redo_action for a in top_action.menu().actions()):
