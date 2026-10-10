@@ -6,7 +6,7 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-Reviewed canonical code65951ac:531 workspace tests pass/twoignored; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
+Reviewed section painter c2fa4bb atop mainb5abb53:532 workspace tests pass/twoignored; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
 
 | Worker | Isolated worktree | Current ownership | State |
 |---|---|---|---|
@@ -287,3 +287,5 @@ Reviewed startup ownership65951ac integrated: root fresh actual RTX eight exact 
 Public41a1 CI38045557038 completed SUCCESS across all configured jobs, freshly verified. Startup-owner ca846cc run38046222715 and isolated Metal Drop ab370eb run38046278347 are currently live; no premature cloud/nativeDrop adoption claim.
 
 Actual offscreen Metal Drop proof both architectures reviewed/integrateda2d3d1;531canonicalPASS2ignored. Isolated host530591d ARM WSI step failed bounded15s; no mainhostadoption. Root sectionfill isolated532PASS, freshsolid78exact, heldout-hatch replay31889live.
+
+Independent root section-fill review: fresh solid, savedtilteddefault hatch and heldoutscale20/color#dc9b4e/hatch0.7 each78exactpages;18exactsource controls pluscoordinate/validPDF negatives pass. Combined532PASS2ignored. Source grid300DPI failure retained bygeometry; native Metal WSIobserver0e0bb7c actualCI38046817228 live, boundedWSIfailurestillOPEN.
