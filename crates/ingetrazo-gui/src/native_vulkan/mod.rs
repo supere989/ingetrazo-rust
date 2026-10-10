@@ -161,7 +161,7 @@ impl System {
     fn new_controlled(title:&str,window:&Window,control:&resize::Control)->Result<Self,Box<dyn Error>>{
         log::info!("Create application");
 
-        let vulkan_context = VulkanContext::new(&window, title)?;
+        let vulkan_context = VulkanContext::new_controlled(&window, title,control)?;
 
         let mut startup=UnpublishedStartup{device:vulkan_context.device.clone(),pool:vulkan_context.command_pool,command:None,acquire:None,fence:None,control:control.clone()};
         let command_buffer = {
@@ -601,6 +601,7 @@ fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semapho
 }
 
 pub struct VulkanContext {
+    startup_audit:resize::Control,
     _entry: Option<Entry>,
     pub lifetime: std::sync::Arc<lifetime::Lifetime>,
     pub instance: Instance,
@@ -630,11 +631,15 @@ impl VulkanContext {
         result
     }
     pub fn new(window: &Window, name: &str) -> Result<Self, Box<dyn Error>> {
+        Self::new_controlled(window,name,&resize::Control::default())
+    }
+    fn new_controlled(window:&Window,name:&str,control:&resize::Control)->Result<Self,Box<dyn Error>>{
         // Vulkan instance
         let entry = unsafe { Entry::load()? };
         let (instance, debug_utils, debug_utils_messenger) =
             create_vulkan_instance(&entry, window, name)?;
-
+        let mut pending=UnpublishedContext{instance:Some(instance.clone()),debug:Some((debug_utils.clone(),debug_utils_messenger)),surface:None,device:None,pool:None,control:control.clone()};
+        control.created(resize::Kind::Instance,1);control.created(resize::Kind::DebugMessenger,1);control.checkpoint(resize::Stage::StartupInstance)?;
         // Vulkan surface
         let surface = surface::Instance::new(&entry, &instance);
         let surface_khr = unsafe {
@@ -647,6 +652,7 @@ impl VulkanContext {
             )?
         };
 
+        pending.surface=Some((surface.clone(),surface_khr));control.created(resize::Kind::Surface,1);control.checkpoint(resize::Stage::StartupSurface)?;
         // Vulkan physical device and queue families indices (graphics and present)
         let (physical_device, graphics_q_index, present_q_index) =
             create_vulkan_physical_device_and_get_graphics_and_present_qs_indices(
@@ -665,6 +671,7 @@ impl VulkanContext {
                 surface_maintenance_supported(&entry)?,
             )?;
 
+        pending.device=Some(device.clone());control.created(resize::Kind::Device,1);control.checkpoint(resize::Stage::StartupDevice)?;
         // Command pool & buffer
         let command_pool = {
             let command_pool_info = vk::CommandPoolCreateInfo::default()
@@ -673,7 +680,10 @@ impl VulkanContext {
             unsafe { device.create_command_pool(&command_pool_info, None)? }
         };
 
+        pending.pool=Some(command_pool);control.created(resize::Kind::CommandPool,1);control.checkpoint(resize::Stage::StartupPool)?;
+        pending.instance=None;pending.debug=None;pending.surface=None;pending.device=None;pending.pool=None;
         Ok(Self {
+            startup_audit:control.clone(),
             lifetime:std::sync::Arc::new(lifetime::Lifetime::new(device.clone(),graphics_queue)),
             _entry: Some(entry),
             instance,
@@ -695,16 +705,25 @@ impl VulkanContext {
     }
 }
 
+// No queues have been submitted during context construction. Guard every raw
+// object before the next fallible call, keeping the loaded Entry alive until last.
+struct UnpublishedContext{instance:Option<Instance>,debug:Option<(debug_utils::Instance,vk::DebugUtilsMessengerEXT)>,surface:Option<(surface::Instance,vk::SurfaceKHR)>,device:Option<Device>,pool:Option<vk::CommandPool>,control:resize::Control}
+impl Drop for UnpublishedContext{fn drop(&mut self){unsafe{
+ if let Some(device)=self.device.take(){if let Some(pool)=self.pool.take(){device.destroy_command_pool(pool,None);self.control.destroyed(resize::Kind::CommandPool,1);}device.destroy_device(None);self.control.destroyed(resize::Kind::Device,1);}
+ if let Some((surface,handle))=self.surface.take(){surface.destroy_surface(handle,None);self.control.destroyed(resize::Kind::Surface,1);}
+ if let Some((debug,handle))=self.debug.take(){debug.destroy_debug_utils_messenger(handle,None);self.control.destroyed(resize::Kind::DebugMessenger,1);}
+ if let Some(instance)=self.instance.take(){instance.destroy_instance(None);self.control.destroyed(resize::Kind::Instance,1);}
+}}}
 impl Drop for VulkanContext {
     fn drop(&mut self) {
         log::debug!("Destroying Vulkan Context");
         if self.lifetime.uncertain(){eprintln!("Retaining quarantined Vulkan device, instance and loader; GPU completion unknown");if let Some(entry)=self._entry.take(){std::mem::forget(entry);}return;}
         unsafe {
-            self.device.destroy_command_pool(self.command_pool, None);
-            self.device.destroy_device(None);
-            if self.surface_khr!=vk::SurfaceKHR::null(){self.surface.destroy_surface(self.surface_khr, None);}
-            if self.debug_utils_messenger!=vk::DebugUtilsMessengerEXT::null(){self.debug_utils.destroy_debug_utils_messenger(self.debug_utils_messenger, None);}
-            self.instance.destroy_instance(None);
+            self.device.destroy_command_pool(self.command_pool, None);self.startup_audit.destroyed(resize::Kind::CommandPool,1);
+            self.device.destroy_device(None);self.startup_audit.destroyed(resize::Kind::Device,1);
+            if self.surface_khr!=vk::SurfaceKHR::null(){self.surface.destroy_surface(self.surface_khr, None);self.startup_audit.destroyed(resize::Kind::Surface,1);}
+            if self.debug_utils_messenger!=vk::DebugUtilsMessengerEXT::null(){self.debug_utils.destroy_debug_utils_messenger(self.debug_utils_messenger, None);self.startup_audit.destroyed(resize::Kind::DebugMessenger,1);}
+            self.instance.destroy_instance(None);self.startup_audit.destroyed(resize::Kind::Instance,1);
         }
     }
 }
@@ -830,8 +849,9 @@ fn create_vulkan_instance(
         )
         .pfn_user_callback(Some(vulkan_debug_callback));
     let debug_utils = debug_utils::Instance::new(entry, &instance);
-    let debug_utils_messenger =
-        unsafe { debug_utils.create_debug_utils_messenger(&create_info, None)? };
+    let debug_utils_messenger = match unsafe{debug_utils.create_debug_utils_messenger(&create_info,None)}{
+        Ok(value)=>value,Err(error)=>{unsafe{instance.destroy_instance(None)};return Err(error.into());}
+    };
 
     Ok((instance, debug_utils, debug_utils_messenger))
 }

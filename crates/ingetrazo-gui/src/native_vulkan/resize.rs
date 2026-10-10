@@ -1,9 +1,9 @@
 //! Cold resize preparation controls; no fake Vulkan return values.
 use std::{collections::BTreeMap,sync::{Arc,Mutex}};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
-pub enum Stage {StartupCommand,StartupSwapchain,StartupSync,StartupRenderer,BeforeCreate,ImageView(usize),RenderPass,Framebuffer(usize),EguiPipeline,CadPipeline,Sync,BeforeCommit}
+pub enum Stage {StartupInstance,StartupSurface,StartupDevice,StartupPool,StartupCommand,StartupSwapchain,StartupSync,StartupRenderer,BeforeCreate,ImageView(usize),RenderPass,Framebuffer(usize),EguiPipeline,CadPipeline,Sync,BeforeCommit}
 #[derive(Clone,Copy,Debug,PartialEq,Eq,PartialOrd,Ord,serde::Serialize)]
-pub enum Kind {CommandBuffer,AcquireSemaphore,GraphicsFence,Swapchain,ImageView,RenderPass,Framebuffer,EguiPipeline,CadPipeline,CadPool,Semaphore,PresentFence}
+pub enum Kind {Instance,DebugMessenger,Surface,Device,CommandPool,CommandBuffer,AcquireSemaphore,GraphicsFence,Swapchain,ImageView,RenderPass,Framebuffer,EguiPipeline,CadPipeline,CadPool,Semaphore,PresentFence}
 #[derive(Clone,Default,Debug,PartialEq,Eq,serde::Serialize)]
 pub struct Audit {pub created:BTreeMap<Kind,u64>,pub destroyed:BTreeMap<Kind,u64>}
 #[derive(Clone,Default)]
