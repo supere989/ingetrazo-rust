@@ -1,0 +1,32 @@
+{
+  "coverage2457": {
+    "cutout": true,
+    "height": 64,
+    "width": 64
+  },
+  "coverage2458": {
+    "cutout": false,
+    "height": 64,
+    "width": 64
+  },
+  "mixed65x97": {
+    "cutout": true,
+    "height": 97,
+    "width": 65
+  },
+  "mixed7x5": {
+    "cutout": true,
+    "height": 5,
+    "width": 7
+  },
+  "threshold128": {
+    "cutout": true,
+    "height": 7,
+    "width": 3
+  },
+  "threshold129": {
+    "cutout": false,
+    "height": 7,
+    "width": 3
+  }
+}

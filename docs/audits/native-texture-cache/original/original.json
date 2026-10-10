@@ -1,0 +1,61 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "gl_info": {
+    "vendor": "Mesa",
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "version": "4.5 (Compatibility Profile) Mesa 25.2.8-0ubuntu0.24.04.4",
+    "software": true
+  },
+  "cases": {
+    "mixed7x5": {
+      "width": 7,
+      "height": 5,
+      "cutout": true,
+      "wrap": "WrapMode.Repeat",
+      "min": "Filter.Linear",
+      "mag": "Filter.Linear"
+    },
+    "mixed65x97": {
+      "width": 65,
+      "height": 97,
+      "cutout": true,
+      "wrap": "WrapMode.Repeat",
+      "min": "Filter.Linear",
+      "mag": "Filter.Linear"
+    },
+    "threshold128": {
+      "width": 3,
+      "height": 7,
+      "cutout": true,
+      "wrap": "WrapMode.Repeat",
+      "min": "Filter.Linear",
+      "mag": "Filter.Linear"
+    },
+    "threshold129": {
+      "width": 3,
+      "height": 7,
+      "cutout": false,
+      "wrap": "WrapMode.Repeat",
+      "min": "Filter.LinearMipMapLinear",
+      "mag": "Filter.Linear"
+    },
+    "coverage2457": {
+      "width": 64,
+      "height": 64,
+      "cutout": true,
+      "wrap": "WrapMode.Repeat",
+      "min": "Filter.Linear",
+      "mag": "Filter.Linear"
+    },
+    "coverage2458": {
+      "width": 64,
+      "height": 64,
+      "cutout": false,
+      "wrap": "WrapMode.Repeat",
+      "min": "Filter.LinearMipMapLinear",
+      "mag": "Filter.Linear"
+    }
+  },
+  "case_count": 6
+}

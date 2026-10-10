@@ -2,6 +2,7 @@ pub mod cad2d;
 pub mod headless;
 pub mod world;
 pub mod resources;
+pub mod texture_cache;
 mod queues;
 pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
