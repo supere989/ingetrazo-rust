@@ -660,6 +660,24 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
                 group.mesh.edges[i].soft = soft;
             }
         }
+        let mut fused_definitions: HashMap<uuid::Uuid, ingetrazo_core::mesh::Mesh> = HashMap::new();
+        for group in &mut scene.groups {
+            if let Some(id) = group.component_definition {
+                group.mesh = fused_definitions
+                    .entry(id)
+                    .or_insert_with(|| group.mesh.clone())
+                    .clone();
+            }
+        }
+        for (id, mesh) in fused_definitions {
+            scene.component_definitions.insert(
+                id,
+                ingetrazo_core::components::ComponentDefinition {
+                    mesh,
+                    children: vec![],
+                },
+            );
+        }
         scene.bump_version();
     }
     Ok(scene)
@@ -774,6 +792,34 @@ pub(crate) fn scene_from_xml_at(
         }
         Ok(Group::with_mesh(name, mesh))
     }
+    struct ReferenceInstance {
+        start: usize,
+        end: usize,
+        key: roxmltree::NodeId,
+        name: String,
+        placement: DMat4,
+    }
+    fn combine_meshes(groups: &[Group]) -> Result<Mesh> {
+        let mut mesh = Mesh::new();
+        for group in groups {
+            for face in &group.mesh.faces {
+                let rings = std::iter::once(&face.vertices)
+                    .chain(face.holes.iter())
+                    .map(|ring| {
+                        ring.iter()
+                            .map(|&v| mesh.add_vertex(group.mesh.vertices[v].position))
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>();
+                let id = mesh
+                    .add_face(rings[0].clone(), rings[1..].to_vec())
+                    .ok_or_else(|| invalid("invalid reference assembly face"))?;
+                mesh.faces[id].attrs = face.attrs.clone();
+                mesh.faces[id].layer = face.layer.clone();
+            }
+        }
+        Ok(mesh)
+    }
     fn walk<'a, 'i>(
         node: Node<'a, 'i>,
         parent: DMat4,
@@ -781,6 +827,8 @@ pub(crate) fn scene_from_xml_at(
         stack: &mut Vec<roxmltree::NodeId>,
         scene: &mut Scene,
         base: Option<&std::path::Path>,
+        basis: DMat4,
+        instances: &mut Vec<ReferenceInstance>,
     ) -> Result<()> {
         if stack.len() >= 64 || stack.contains(&node.id()) {
             return Err(invalid("cyclic or excessive node hierarchy"));
@@ -793,14 +841,22 @@ pub(crate) fn scene_from_xml_at(
             .unwrap_or("COLLADA part");
         for el in node.children().filter(|n| n.is_element()) {
             match el.tag_name().name() {
-                "node" => walk(el, world, ids, stack, scene, base)?,
+                "node" => walk(el, world, ids, stack, scene, base, basis, instances)?,
                 "instance_node" => {
                     let target = el
                         .attribute("url")
                         .filter(|s| s.starts_with('#'))
                         .and_then(|s| ids.get(&s[1..]))
                         .ok_or_else(|| invalid("unresolved instance_node"))?;
-                    walk(*target, world, ids, stack, scene, base)?;
+                    let start = scene.groups.len();
+                    walk(*target, world, ids, stack, scene, base, basis, instances)?;
+                    instances.push(ReferenceInstance {
+                        start,
+                        end: scene.groups.len(),
+                        key: target.id(),
+                        name: name.to_owned(),
+                        placement: world * basis.inverse(),
+                    });
                 }
                 "instance_geometry" => {
                     let target = el
@@ -833,6 +889,7 @@ pub(crate) fn scene_from_xml_at(
                 .filter(|c| c.is_element() && c.tag_name().name() == "node")
         })
         .collect();
+    let mut instances = vec![];
     if nodes.is_empty() {
         for geometry_node in root
             .descendants()
@@ -854,11 +911,68 @@ pub(crate) fn scene_from_xml_at(
         }
     } else {
         for node in nodes {
-            walk(node, world, &ids, &mut vec![], &mut scene, base)?;
+            walk(
+                node,
+                world,
+                &ids,
+                &mut vec![],
+                &mut scene,
+                base,
+                world,
+                &mut instances,
+            )?;
         }
     }
     if scene.groups.is_empty() {
         return Err(invalid("no geometry"));
+    }
+    if scene
+        .groups
+        .iter()
+        .map(|g| g.mesh.faces.len())
+        .sum::<usize>()
+        > 400
+        && !instances.is_empty()
+    {
+        let groups = std::mem::take(&mut scene.groups);
+        let mut prototypes: HashMap<roxmltree::NodeId, (uuid::Uuid, Mesh)> = HashMap::new();
+        let mut index = 0;
+        while index < groups.len() {
+            // An outer reused assembly owns its nested geometry as one prototype.
+            if let Some(instance) = instances
+                .iter()
+                .filter(|i| i.start == index && i.end > i.start)
+                .max_by_key(|i| i.end)
+            {
+                if !prototypes.contains_key(&instance.key) {
+                    let world_mesh = combine_meshes(&groups[instance.start..instance.end])?;
+                    let mesh = ingetrazo_core::containers::transform_mesh(
+                        &world_mesh,
+                        instance.placement.inverse(),
+                    )
+                    .map_err(invalid)?;
+                    prototypes.insert(instance.key, (uuid::Uuid::new_v4(), mesh));
+                }
+                let (definition, mesh) = &prototypes[&instance.key];
+                let mut group = Group::with_mesh(&instance.name, mesh.clone());
+                group.transform = instance.placement;
+                group.component_definition = Some(*definition);
+                scene.groups.push(group);
+                index = instance.end;
+            } else {
+                scene.groups.push(groups[index].clone());
+                index += 1;
+            }
+        }
+        for (_, (id, mesh)) in prototypes {
+            scene.component_definitions.insert(
+                id,
+                ingetrazo_core::components::ComponentDefinition {
+                    mesh,
+                    children: vec![],
+                },
+            );
+        }
     }
     scene.bump_version();
     Ok(scene)
