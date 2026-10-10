@@ -49,14 +49,15 @@ impl MeshJournal {
  }
  /// UI owner admission precedes every mutation. Version must cover all writers.
  /// This proof supports only appended unpainted edges: richer writes are refused.
- pub fn publish(self,mesh:&mut Mesh,version:u64)->Result<bool,String>{
+ pub fn publish(self,mesh:&mut Mesh,version:u64)->Result<bool,String>{Ok(self.publish_owned(mesh,version)?.is_some())}
+ pub fn publish_owned(self,mesh:&mut Mesh,version:u64)->Result<Option<AppendUndo>,String>{
   if version!=self.base_version||mesh.vertices.len()!=self.base_vertices||mesh.edges.len()!=self.base_edges{return Err("Stale transaction base".into());}
   // Public vertex arrays can have duplicate keys or a stale private spatial
   // index. Never ask add_vertex to reinterpret already planned real IDs.
   validate_base(mesh)?;
   if mesh.vertices.iter().zip(&self.base_positions).any(|(v,p)|v.position!=*p)
    || mesh.edges.iter().enumerate().any(|(id,e)|self.edges.get(&ordered(e.v0,e.v1))!=Some(&(id,e.v0,e.v1))){return Err("Changed transaction base".into());}
-  if self.added_edges.is_empty(){return Ok(false);}
+  if self.added_edges.is_empty(){return Ok(None);}
   let total=self.base_vertices.checked_add(self.added_vertices.len()).ok_or("Vertex extent overflow")?;
   let mut vertices:Vec<MeshVertex>=self.added_vertices.into_iter().map(MeshVertex::new).collect();
   let mut edges=Vec::new();
@@ -75,10 +76,43 @@ impl MeshJournal {
    let v=if id<self.base_vertices{&mut mesh.vertices[id]}else{&mut vertices[id-self.base_vertices]};
    v.edges.try_reserve(ids.len()).map_err(|_|"Adjacency allocation refused")?;
   }
+  for (&id,ids) in &adjacency{if id>=self.base_vertices{vertices[id-self.base_vertices].edges.extend(ids);}}
+  let command=AppendUndo{base_vertices:self.base_vertices,base_edges:self.base_edges,
+   base_uids:mesh.vertices.iter().map(|v|v.uid).collect(),base_positions:self.base_positions,vertices:vertices.clone(),edges:edges.clone(),applied:true};
   mesh.vertices.extend(vertices);mesh.edges.extend(edges);
-  for (id,ids) in adjacency{mesh.vertices[id].edges.extend(ids);}
+  for (id,ids) in adjacency{if id<self.base_vertices{mesh.vertices[id].edges.extend(ids);}}
   mesh.rebuild_spatial_index();
-  Ok(true)
+  Ok(Some(command))
+ }
+}
+/// Only appended records are copied; no Scene or base Mesh snapshot.
+pub struct AppendUndo{
+ base_vertices:usize,base_edges:usize,base_uids:Vec<uuid::Uuid>,base_positions:Vec<DVec3>,
+ vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,applied:bool,
+}
+impl AppendUndo{
+ fn base_matches(&self,m:&Mesh)->bool{m.vertices.len()>=self.base_vertices&&m.vertices[..self.base_vertices].iter().zip(&self.base_uids).all(|(v,id)|v.uid==*id)&&m.vertices[..self.base_vertices].iter().zip(&self.base_positions).all(|(v,p)|v.position==*p)}
+ pub fn undo(&mut self,m:&mut Mesh)->Result<(),String>{
+  if !self.applied||!self.base_matches(m)||m.vertices.len()!=self.base_vertices+self.vertices.len()||m.edges.len()!=self.base_edges+self.edges.len()
+   ||m.vertices[self.base_vertices..]!=self.vertices||m.edges[self.base_edges..]!=self.edges{return Err("Changed append command ownership".into());}
+  validate_base(m)?;
+  // No faces may acquire the appended vertices/edges behind this command.
+  if m.faces.iter().any(|f|f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|v>=self.base_vertices))||m.edges[self.base_edges..].iter().any(|e|!e.faces.is_empty()){return Err("Append records acquired external owners".into());}
+  m.edges.truncate(self.base_edges);m.vertices.truncate(self.base_vertices);
+  for edge in &self.edges{for id in [edge.v0,edge.v1]{if id<self.base_vertices{m.vertices[id].edges.retain(|&e|e<self.base_edges);}}}
+  m.rebuild_spatial_index();self.applied=false;Ok(())
+ }
+ pub fn redo(&mut self,m:&mut Mesh)->Result<(),String>{
+  if self.applied||!self.base_matches(m)||m.vertices.len()!=self.base_vertices||m.edges.len()!=self.base_edges{return Err("Changed redo base".into());}
+  validate_base(m)?;
+  m.vertices.try_reserve(self.vertices.len()).map_err(|_|"Redo vertex allocation refused")?;
+  m.edges.try_reserve(self.edges.len()).map_err(|_|"Redo edge allocation refused")?;
+  let mut additions=HashMap::<usize,Vec<usize>>::new();
+  for (i,e) in self.edges.iter().enumerate(){for id in [e.v0,e.v1]{if id<self.base_vertices{additions.entry(id).or_default().push(self.base_edges+i);}}}
+  for (&id,edges) in &additions{m.vertices[id].edges.try_reserve(edges.len()).map_err(|_|"Redo adjacency allocation refused")?;}
+  m.vertices.extend(self.vertices.iter().cloned());m.edges.extend(self.edges.iter().cloned());
+  for (id,edges) in additions{m.vertices[id].edges.extend(edges);}
+  m.rebuild_spatial_index();self.applied=true;Ok(())
  }
 }
 fn validate_base(mesh:&Mesh)->Result<(),String>{
@@ -102,6 +136,15 @@ fn validate_base(mesh:&Mesh)->Result<(),String>{
 fn ordered(a:usize,b:usize)->(usize,usize){if a<b{(a,b)}else{(b,a)}}
 #[cfg(test)] mod tests{
  use super::*;
+ #[test]fn append_history_preserves_uid_and_refuses_external_ownership(){
+  let mut mesh=Mesh::new();let v=mesh.add_vertex(DVec3::ZERO);let base_uid=mesh.vertices[v].uid;
+  let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();let mut c=j.publish_owned(&mut mesh,1).unwrap().unwrap();
+  let expected=mesh.clone();for _ in 0..3{c.undo(&mut mesh).unwrap();assert_eq!(mesh.vertices.len(),1);assert_eq!(mesh.vertices[0].uid,base_uid);c.redo(&mut mesh).unwrap();assert_eq!(mesh,expected);}
+  mesh.faces.push(ingetrazo_core::mesh::MeshFace::new(vec![0,1,0]));let old=mesh.clone();assert!(c.undo(&mut mesh).is_err());assert_eq!(mesh,old);
+ }
+ #[test]fn redo_changed_base_refuses_without_mutation(){
+  let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();let mut c=j.publish_owned(&mut mesh,1).unwrap().unwrap();c.undo(&mut mesh).unwrap();mesh.vertices[0].position=DVec3::Y;let old=mesh.clone();assert!(c.redo(&mut mesh).is_err());assert_eq!(mesh,old);
+ }
  #[test]fn stale_private_index_cannot_redirect_appended_ids(){
   let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);
   mesh.vertices[0].position=DVec3::Y; // private index still maps zero -> 0

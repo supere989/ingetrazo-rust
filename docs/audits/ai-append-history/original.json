@@ -1,0 +1,182 @@
+[
+  {
+    "name": "append",
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "undo": 1,
+    "redo": 0
+  },
+  {
+    "name": "undo",
+    "vertices": [],
+    "edges": [],
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "name": "noop-with-redo",
+    "vertices": [],
+    "edges": [],
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "name": "failure-with-redo",
+    "vertices": [],
+    "edges": [],
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "name": "redo",
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "undo": 1,
+    "redo": 0
+  },
+  {
+    "name": "repeat-undo-0",
+    "vertices": [],
+    "edges": [],
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "name": "repeat-redo-0",
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "undo": 1,
+    "redo": 0
+  },
+  {
+    "name": "repeat-undo-1",
+    "vertices": [],
+    "edges": [],
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "name": "repeat-redo-1",
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "undo": 1,
+    "redo": 0
+  },
+  {
+    "name": "branch-undo",
+    "vertices": [],
+    "edges": [],
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "name": "branch-new",
+    "vertices": [
+      [
+        3.0,
+        0.0,
+        0.0
+      ],
+      [
+        4.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "undo": 1,
+    "redo": 0
+  },
+  {
+    "name": "branch-redo-refused",
+    "vertices": [
+      [
+        3.0,
+        0.0,
+        0.0
+      ],
+      [
+        4.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "undo": 1,
+    "redo": 0
+  }
+]

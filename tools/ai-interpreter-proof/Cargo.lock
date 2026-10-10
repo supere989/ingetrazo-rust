@@ -728,6 +728,7 @@ dependencies = [
  "num-traits",
  "rustpython-vm",
  "serde_json",
+ "uuid",
 ]
 
 [[package]]

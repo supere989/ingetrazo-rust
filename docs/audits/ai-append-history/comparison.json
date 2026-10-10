@@ -1,0 +1,11 @@
+{
+  "states": 12,
+  "exact": true,
+  "negative_rejections": [
+    "orphan-on-snapshot-undo",
+    "lost-redo-on-noop",
+    "partial-failure-published",
+    "branch-redo-retained"
+  ],
+  "scope": "append-only topology/history, no VM deadline"
+}
