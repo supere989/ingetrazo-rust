@@ -1,0 +1,15 @@
+{
+  "source_revision": "0d278eafb8e9f5c10c7e1a5def7e5f61e1372a91",
+  "run": 38063644531,
+  "job": 114246776754,
+  "job_name": "Native Metal framework link (macos-15-intel)",
+  "job_conclusion": "failure",
+  "artifact": 11674440896,
+  "archive_verified_sha256": "74d42006c646c06d086c2f1cb6a25e5721e147a575ab4fde927462baaa2bb2f8",
+  "same_binary": true,
+  "cold_window_policy_strict_capture_pass": true,
+  "authored_srgb_strict_capture_pass": false,
+  "gpu_bytes_unchanged": true,
+  "both_presentation_pass": true,
+  "physical_mac_claim": false
+}
