@@ -1,0 +1,231 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 20.0,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 0.5235987755982988,
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": -0.7853981633974483
+    },
+    "compositions": [
+      {
+        "cajetin": {
+          "autor": "IngeTrazo Cad Engine",
+          "campos": [
+            [
+              "PROYECTO",
+              "Active-iQ Architecture"
+            ],
+            [
+              "AUTOR",
+              "IngeTrazo Cad Engine"
+            ],
+            [
+              "FECHA",
+              "2026-10-07"
+            ],
+            [
+              "ESCALA",
+              "1:100"
+            ],
+            [
+              "LÁMINA",
+              "A-01"
+            ],
+            [
+              "TÍTULO",
+              "General Plan"
+            ]
+          ],
+          "drawing_title": "General Plan",
+          "escala": "1:100",
+          "fecha": "2026-10-07",
+          "h_mm": 50.0,
+          "lamina": "A-01",
+          "proyecto": "Active-iQ Architecture",
+          "w_mm": 140.0,
+          "x_mm": 270.0,
+          "y_mm": 237.0
+        },
+        "frames": [
+          {
+            "annotations": true,
+            "border": true,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "cut_fill": "solid",
+            "cut_fill_color": "#595e69",
+            "cut_hatch_mm": 1.5,
+            "h_mm": 207.0,
+            "hidden_lines": false,
+            "paper_bg": false,
+            "pen_cut_mm": 0.5,
+            "pen_edge_mm": 0.18,
+            "pen_profile_mm": 0.35,
+            "perspective": false,
+            "profiles": true,
+            "rot_deg": 0.0,
+            "scale_n": 100.0,
+            "section_marks": true,
+            "show_title": true,
+            "style": "vectorial",
+            "title_text": "Top Plan (1:100)",
+            "uid": "fadca99ee51b491ea8c329251b09a33b",
+            "view_key": "std:top",
+            "w_mm": 380.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          }
+        ],
+        "landscape": true,
+        "margin_mm": 10.0,
+        "name": "Sheet 1",
+        "nortes": [],
+        "paper": "A3",
+        "scalebars": [],
+        "texts": []
+      }
+    ],
+    "dimensions": [],
+    "edges": [
+      {
+        "a": [
+          3.9495421987026735,
+          3.7742638832305695,
+          0.5006433449453953
+        ],
+        "b": [
+          2.5,
+          3.9972703753386734,
+          0.8351530831075511
+        ]
+      },
+      {
+        "a": [
+          2.5,
+          3.9972703753386734,
+          0.8351530831075511
+        ],
+        "b": [
+          2.5,
+          3.0,
+          1.5
+        ]
+      },
+      {
+        "a": [
+          2.5,
+          3.0,
+          1.5
+        ],
+        "b": [
+          3.949542198702674,
+          2.776993507891896,
+          1.1654902618378442
+        ]
+      },
+      {
+        "a": [
+          3.949542198702674,
+          2.776993507891896,
+          1.1654902618378442
+        ],
+        "b": [
+          3.9495421987026735,
+          3.7742638832305695,
+          0.5006433449453953
+        ]
+      },
+      {
+        "a": [
+          2.0,
+          2.0,
+          0.0
+        ],
+        "b": [
+          2.5,
+          3.0,
+          1.5
+        ]
+      },
+      {
+        "a": [
+          2.5,
+          3.0,
+          1.5
+        ],
+        "b": [
+          3.0,
+          4.0,
+          3.0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "vertices": [
+          [
+            3.9495421987026735,
+            3.7742638832305695,
+            0.5006433449453953
+          ],
+          [
+            2.5,
+            3.9972703753386734,
+            0.8351530831075511
+          ],
+          [
+            2.5,
+            3.0,
+            1.5
+          ],
+          [
+            3.949542198702674,
+            2.776993507891896,
+            1.1654902618378442
+          ]
+        ]
+      }
+    ],
+    "geo_paths": [],
+    "geo_points": [],
+    "georef": {
+      "datum": null
+    },
+    "groups": [],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "provenance": {
+    "rust_commit": "0bd56f6fc763a39bb251e9c859b9537b9f3a489e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "native_events": "XTEST pointer/button/Down/Escape events on isolated Xvfb",
+  "preview_changed_pixels": 1772,
+  "committed_changed_pixels": 16506,
+  "preview_plane_error": 1.1102230246251565e-16,
+  "committed_normal_alignment": 1.0000000000000002,
+  "initial": {
+    "click": [
+      448.3961849542348,
+      349.7298031942218
+    ],
+    "edges": 1,
+    "face_areas": [],
+    "face_normals": [],
+    "faces": 0,
+    "move": [
+      597.5762262493743,
+      269.8119617486613
+    ],
+    "normal": [
+      0.2672612419124244,
+      0.5345224838248488,
+      0.8017837257372732
+    ],
+    "origin": [
+      2.5,
+      3.0,
+      1.5
+    ],
+    "pointer": null,
+    "preview": [],
+    "undo": 0,
+    "vertices": [
+      [
+        2.0,
+        2.0,
+        0.0
+      ],
+      [
+        3.0,
+        4.0,
+        3.0
+      ]
+    ]
+  },
+  "preview": {
+    "click": [
+      448.3961849542348,
+      349.7298031942218
+    ],
+    "edges": 1,
+    "face_areas": [],
+    "face_normals": [],
+    "faces": 0,
+    "move": [
+      597.5762262493743,
+      269.8119617486613
+    ],
+    "normal": [
+      0.2672612419124244,
+      0.5345224838248488,
+      0.8017837257372732
+    ],
+    "origin": [
+      2.5,
+      3.0,
+      1.5
+    ],
+    "pointer": [
+      598.0,
+      270.0
+    ],
+    "preview": [
+      [
+        [
+          2.5,
+          3.0,
+          1.5
+        ],
+        [
+          3.949542198702674,
+          2.776993507891896,
+          1.1654902618378444
+        ]
+      ],
+      [
+        [
+          3.949542198702674,
+          2.776993507891896,
+          1.1654902618378444
+        ],
+        [
+          3.949542198702674,
+          3.77426388323057,
+          0.5006433449453953
+        ]
+      ],
+      [
+        [
+          3.949542198702674,
+          3.77426388323057,
+          0.5006433449453953
+        ],
+        [
+          2.5,
+          3.997270375338674,
+          0.8351530831075509
+        ]
+      ],
+      [
+        [
+          2.5,
+          3.997270375338674,
+          0.8351530831075509
+        ],
+        [
+          2.5,
+          3.0,
+          1.5
+        ]
+      ]
+    ],
+    "undo": 0,
+    "vertices": [
+      [
+        2.0,
+        2.0,
+        0.0
+      ],
+      [
+        3.0,
+        4.0,
+        3.0
+      ]
+    ]
+  },
+  "committed": {
+    "click": [
+      448.3961849542348,
+      349.7298031942218
+    ],
+    "edges": 6,
+    "face_areas": [
+      1.802961878828591
+    ],
+    "face_normals": [
+      [
+        0.2672612419124245,
+        0.5345224838248488,
+        0.8017837257372732
+      ]
+    ],
+    "faces": 1,
+    "move": [
+      597.5762262493743,
+      269.8119617486613
+    ],
+    "normal": [
+      0.2672612419124244,
+      0.5345224838248488,
+      0.8017837257372732
+    ],
+    "origin": [
+      2.5,
+      3.0,
+      1.5
+    ],
+    "pointer": [
+      598.0,
+      270.0
+    ],
+    "preview": [],
+    "undo": 1,
+    "vertices": [
+      [
+        3.9495421987026735,
+        3.7742638832305695,
+        0.5006433449453953
+      ],
+      [
+        2.5,
+        3.9972703753386734,
+        0.8351530831075511
+      ],
+      [
+        2.5,
+        3.0,
+        1.5
+      ],
+      [
+        3.949542198702674,
+        2.776993507891896,
+        1.1654902618378442
+      ],
+      [
+        2.0,
+        2.0,
+        0.0
+      ],
+      [
+        3.0,
+        4.0,
+        3.0
+      ]
+    ]
+  },
+  "scope": "Actual production render_viewport Rectangle Down-before-first-click on nonprincipal edge; pixel midpoint snapping; moving coplanar preview; Escape leaves mesh/undo unchanged; second click authors one face and one undo. Bounded engineering proof using existing software-GL test backend, not Vulkan/native GPU parity or full app menu/keyboard proof."
+}
