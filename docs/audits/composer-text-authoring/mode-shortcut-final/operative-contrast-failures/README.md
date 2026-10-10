@@ -1,0 +1,1 @@
+Historical rejected alias-positive protocol: actual XCB original AltBackspace leaves draft unchanged; overbroad native alias handling formerly passed this incorrect expectation. These are contrast/failure evidence, not source-parity acceptance. Final production follows XCB delivered keybindings.

@@ -1,0 +1,1938 @@
+{
+  "passed": true,
+  "binary_sha256": "a88c9a116db2f7120fc0cf01dd628b79b53cbedea9e211b5da08b576453a06f0",
+  "original_fixture_sha256": null,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual normal Composer button/pointer/double-click/keyboard Text placement/edit/CtrlEnter/UndoRedo/Escape/outside through native Vulkan public update_ui; editor typography not pixel-compared",
+  "states": [
+    {
+      "label": "placed",
+      "state": {
+        "serial": 24,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": null,
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": 0,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "draft",
+      "state": {
+        "serial": 74,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo-world",
+      "state": {
+        "serial": 91,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\n",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo-newline",
+      "state": {
+        "serial": 106,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "undo-replacement",
+      "state": {
+        "serial": 120,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "Text",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo-replacement",
+      "state": {
+        "serial": 134,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo-newline",
+      "state": {
+        "serial": 148,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\n",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "redo-world",
+      "state": {
+        "serial": 164,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-replacement",
+      "state": {
+        "serial": 181,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-replacement-undo",
+      "state": {
+        "serial": 197,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "hello\nworld",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-replacement-redo",
+      "state": {
+        "serial": 215,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-cursor-insert",
+      "state": {
+        "serial": 232,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bexta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-cursor-undo",
+      "state": {
+        "serial": 248,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-cursor-redo",
+      "state": {
+        "serial": 266,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bexta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-backspace",
+      "state": {
+        "serial": 283,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-backspace-undo",
+      "state": {
+        "serial": 300,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-backspace-redo",
+      "state": {
+        "serial": 317,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-alt-undo",
+      "state": {
+        "serial": 332,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-ctrl-y-redo",
+      "state": {
+        "serial": 349,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-standard-undo",
+      "state": {
+        "serial": 365,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha beta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-alt-redo",
+      "state": {
+        "serial": 382,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": "alpha bta",
+        "text_tool": false,
+        "history": [
+          1,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "Text",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "held-commit",
+      "state": {
+        "serial": 399,
+        "pointer_events": [
+          {
+            "at": 0.235981801,
+            "clicked": true,
+            "double": true,
+            "triple": false,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": true,
+            "inline": false
+          },
+          {
+            "at": 0.60495964,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              506.0,
+              423.0
+            ],
+            "tool": false,
+            "inline": false
+          },
+          {
+            "at": 0.715252996,
+            "clicked": true,
+            "double": false,
+            "triple": true,
+            "pos": [
+              306.0,
+              323.0
+            ],
+            "tool": false,
+            "inline": false
+          }
+        ],
+        "close": [
+          60.5,
+          11.0
+        ],
+        "paper_transform": [
+          201.0,
+          203.06875610351562,
+          1.5
+        ],
+        "add_text": [
+          449.5,
+          113.0
+        ],
+        "add_shape": [
+          504.5,
+          113.0
+        ],
+        "add_rect": null,
+        "shape_tool": null,
+        "shape_start": false,
+        "shapes": 0,
+        "inline_rect": [
+          306.0,
+          323.0,
+          426.0,
+          348.5365295410156
+        ],
+        "inline": null,
+        "text_tool": false,
+        "history": [
+          2,
+          0
+        ],
+        "selected": null,
+        "status": "",
+        "texts": [
+          {
+            "id": "c48575ff-8453-4bb8-b3b0-4e918f636ca1",
+            "text": "alpha bta",
+            "pos": [
+              70.0,
+              79.95416259765625
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
