@@ -1,0 +1,13 @@
+{
+  "cases": 9,
+  "poison_controls_pass": true,
+  "literal_nohook_timeout_rejected": true,
+  "negative_rejections": [
+    "caught-poison",
+    "published-after-poison",
+    "recovery-not-checked",
+    "missing-finalizer"
+  ],
+  "wall_time_bound": false,
+  "production": false
+}

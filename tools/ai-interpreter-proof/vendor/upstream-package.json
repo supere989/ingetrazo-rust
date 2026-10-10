@@ -1,0 +1,9 @@
+{
+  "name": "rustpython-vm",
+  "version": "0.6.0",
+  "crates_io_archive_sha256": "0f5e6290260601ddbba6cbe917df9d24725aa6664f61c5bdc1ba24db9c81f346",
+  "upstream_commit": "b2626c56dedfbd7d6f516e53f2fc392a514a0b31",
+  "license": "MIT",
+  "license_source": "https://raw.githubusercontent.com/RustPython/RustPython/b2626c56dedfbd7d6f516e53f2fc392a514a0b31/LICENSE",
+  "license_sha256": "385e274c083706f04b7079c878385785b772cdf5fc90ed85b1d13f190b5880c9"
+}

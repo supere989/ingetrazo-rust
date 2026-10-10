@@ -1,0 +1,113 @@
+--- upstream/src/vm/mod.rs
++++ prototype/src/vm/mod.rs
+@@ -96,6 +96,9 @@
+     pub profile_func: RefCell<PyObjectRef>,
+     pub trace_func: RefCell<PyObjectRef>,
+     pub use_tracing: Cell<bool>,
++    // Standalone IngeTrazo prototype: host-owned, never Python-visible.
++    host_fuel: Cell<Option<u64>>,
++    host_poison: Cell<bool>,
+     /// Event currently being monitored (`tstate->what_event`).
+     /// `None` when not in a monitoring callback.
+     pub(crate) what_event: Cell<Option<crate::stdlib::sys::monitoring::MonitoringEvent>>,
+@@ -1263,6 +1266,8 @@
+             profile_func,
+             trace_func,
+             use_tracing: Cell::new(false),
++            host_fuel: Cell::new(None),
++            host_poison: Cell::new(false),
+             what_event: Cell::new(None),
+             tracing_depth: Cell::new(0),
+             recursion_limit: Cell::new(if cfg!(debug_assertions) { 256 } else { 1000 }),
+@@ -3562,6 +3567,26 @@
+         }
+     }
+ 
++    /// Arm host-only bytecode fuel. Exhaustion remains poisoned until host reset.
++    pub fn host_budget_arm(&self, fuel: u64) -> Result<(), &'static str> {
++        if self.host_poison.get() || self.host_fuel.get().is_some() { return Err("Host execution requires journal discard/reset"); }
++        self.host_fuel.set(Some(fuel)); Ok(())
++    }
++    pub fn host_budget_poisoned(&self) -> bool { self.host_poison.get() }
++    pub fn host_budget_active(&self) -> bool { self.host_fuel.get().is_some() }
++    /// Host obligation: discard staged document mutations before this reset.
++    /// No Python binding exists. This prototype does not bound native builtins.
++    pub fn host_budget_reset_after_discard(&self) { self.host_fuel.set(None); self.host_poison.set(false); }
++    #[inline]
++    pub fn host_budget_tick(&self) -> PyResult<()> {
++        if self.host_poison.get() { return Err(self.new_runtime_error("Host bytecode budget exhausted".to_owned())); }
++        if let Some(fuel) = self.host_fuel.get() {
++            if fuel == 0 { self.host_poison.set(true); return Err(self.new_runtime_error("Host bytecode budget exhausted".to_owned())); }
++            self.host_fuel.set(Some(fuel - 1));
++        }
++        Ok(())
++    }
++
+     #[inline]
+     /// Checks for triggered signals and calls the appropriate handlers. A no-op on
+     /// platforms where signals are not supported.
+--- upstream/src/vm/thread.rs
++++ prototype/src/vm/thread.rs
+@@ -1469,6 +1469,8 @@
+             profile_func: RefCell::new(global_profile.unwrap_or_else(|| self.ctx.none())),
+             trace_func: RefCell::new(global_trace.unwrap_or_else(|| self.ctx.none())),
+             use_tracing: Cell::new(use_tracing),
++            host_fuel: Cell::new(None),
++            host_poison: Cell::new(false),
+             what_event: Cell::new(None),
+             tracing_depth: Cell::new(0),
+             recursion_limit: self.recursion_limit.clone(),
+--- upstream/src/frame.rs
++++ prototype/src/frame.rs
+@@ -2780,7 +2780,7 @@
+ /// and rewrites the very opcodes the `yield from` shape is recognized by.
+ #[inline]
+ pub(crate) fn gen_collapse_allowed(vm: &VirtualMachine) -> bool {
+-    !vm.use_tracing.get() && vm.state.monitoring_events.load() == 0
++    !vm.host_budget_active() && !vm.use_tracing.get() && vm.state.monitoring_events.load() == 0
+ }
+ 
+ /// The sub-generator a frame suspended in a `yield from` / `await` is
+@@ -3565,6 +3565,9 @@
+         #[cfg(feature = "opcode-histogram")]
+         let mut prev_op: u8 = 0;
+         loop {
++            // Bypass local Python exception handling. Poison remains active in
++            // caller frames before their next opcode, including catch/finally.
++            vm.host_budget_tick()?;
+             // Advance lasti past the current instruction BEFORE firing the
+             // line event.  This ensures that f_lineno (which reads
+             // locations[lasti - 1]) returns the line of the instruction
+--- upstream/src/lib.rs
++++ prototype/src/lib.rs
+@@ -129,3 +129,7 @@
+ pub mod __exports {
+     pub use paste;
+ }
++
++// Isolated host-budget prototype has no threaded/JIT budget propagation.
++#[cfg(any(feature = "threading", feature = "jit"))]
++compile_error!("IngeTrazo host-budget prototype forbids threading and JIT");
+--- upstream/src/stdlib/mod.rs
++++ prototype/src/stdlib/mod.rs
+@@ -135,16 +135,16 @@
+         _sre::module_def(ctx),
+         _stat::module_def(ctx),
+         _string::module_def(ctx),
+-        _testinternalcapi::module_def(ctx),
++        // Host-budget prototype refuses _testinternalcapi (fresh VM/native bypass scope).
+         #[cfg(feature = "compiler")]
+         _symtable::module_def(ctx),
+         _sysconfigdata::module_def(ctx),
+         _sysconfig::module_def(ctx),
+         #[cfg(feature = "threading")]
+         _thread::module_def(ctx),
+-        _interpchannels::module_def(ctx),
+-        _interpqueues::module_def(ctx),
+-        _interpreters::module_def(ctx),
++        // Host-budget prototype refuses _interpchannels (fresh VM/native bypass scope).
++        // Host-budget prototype refuses _interpqueues (fresh VM/native bypass scope).
++        // Host-budget prototype refuses _interpreters (fresh VM/native bypass scope).
+         time::module_def(ctx),
+         _typing::module_def(ctx),
+         _warnings::module_def(ctx),

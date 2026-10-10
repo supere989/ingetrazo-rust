@@ -15,3 +15,6 @@ uuid = "1"
 [profile.dev]
 debug = 0
 incremental = false
+
+[patch.crates-io]
+rustpython-vm = { path = "vendor/rustpython-vm" }

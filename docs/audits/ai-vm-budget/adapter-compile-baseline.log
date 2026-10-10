@@ -1,0 +1,77 @@
+   Compiling rustpython-vm v0.6.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof/vendor/rustpython-vm)
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-ai-interpreter/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof)
+error[E0283]: type annotations needed
+    --> src/bin/budget.rs:7:241
+     |
+   7 | ...let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner".into()))?;j.add_edge(super::DVec3::ZERO,super::DVe...
+     |                                     -----------------                           ^^^^
+     |                                     |
+     |                                     required by a bound introduced by this call
+     |
+     = note: the type must implement `Into<Wtf8Buf>`
+note: required by a bound in `vm::vm_new::<impl VirtualMachine>::new_runtime_error`
+    --> vendor/rustpython-vm/src/vm/vm_new.rs:44:42
+     |
+  44 |         pub fn $fn_name(&self, msg: impl Into<Wtf8Buf>) -> $crate::builtins::PyBaseExceptionRef {
+     |                                          ^^^^^^^^^^^^^ required by this bound in `vm::vm_new::<impl VirtualMachine>::new_runtime_error`
+...
+1191 |     define_exception_fn!(fn new_runtime_error, runtime_error, RuntimeError);
+     |     -----------------------------------------------------------------------
+     |     |                       |
+     |     |                       required by a bound in this associated function
+     |     in this macro invocation
+     = note: this error originates in the macro `define_exception_fn` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: try using a fully qualified path to specify the expected types
+     |
+   7 -  #[pyfunction]fn stage_edge(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner".into()))?;j.add_edge(super::DVec3::ZERO,super::DVec3::X).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+   7 +  #[pyfunction]fn stage_edge(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error(<&str as Into<T>>::into("No staged journal owner")))?;j.add_edge(super::DVec3::ZERO,super::DVec3::X).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+     |
+help: consider removing this method call, as the receiver has type `&'static str` and `&'static str: Into<Wtf8Buf>` trivially holds
+     |
+   7 -  #[pyfunction]fn stage_edge(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner".into()))?;j.add_edge(super::DVec3::ZERO,super::DVec3::X).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+   7 +  #[pyfunction]fn stage_edge(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner"))?;j.add_edge(super::DVec3::ZERO,super::DVec3::X).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+     |
+
+error[E0283]: type annotations needed
+    --> src/bin/budget.rs:8:239
+     |
+   8 | ...let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner".into()))?;j.add_edge(super::DVec3::Y,super::DVec3:...
+     |                                     -----------------                           ^^^^
+     |                                     |
+     |                                     required by a bound introduced by this call
+     |
+     = note: the type must implement `Into<Wtf8Buf>`
+note: required by a bound in `vm::vm_new::<impl VirtualMachine>::new_runtime_error`
+    --> vendor/rustpython-vm/src/vm/vm_new.rs:44:42
+     |
+  44 |         pub fn $fn_name(&self, msg: impl Into<Wtf8Buf>) -> $crate::builtins::PyBaseExceptionRef {
+     |                                          ^^^^^^^^^^^^^ required by this bound in `vm::vm_new::<impl VirtualMachine>::new_runtime_error`
+...
+1191 |     define_exception_fn!(fn new_runtime_error, runtime_error, RuntimeError);
+     |     -----------------------------------------------------------------------
+     |     |                       |
+     |     |                       required by a bound in this associated function
+     |     in this macro invocation
+     = note: this error originates in the macro `define_exception_fn` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: try using a fully qualified path to specify the expected types
+     |
+   8 -  #[pyfunction]fn finalize(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner".into()))?;j.add_edge(super::DVec3::Y,super::DVec3::Z).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+   8 +  #[pyfunction]fn finalize(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error(<&str as Into<T>>::into("No staged journal owner")))?;j.add_edge(super::DVec3::Y,super::DVec3::Z).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+     |
+help: consider removing this method call, as the receiver has type `&'static str` and `&'static str: Into<Wtf8Buf>` trivially holds
+     |
+   8 -  #[pyfunction]fn finalize(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner".into()))?;j.add_edge(super::DVec3::Y,super::DVec3::Z).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+   8 +  #[pyfunction]fn finalize(vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<()>{vm.host_budget_tick()?;super::ACTIVE.with(|a|{let mut a=a.borrow_mut();let j=a.as_mut().ok_or_else(||vm.new_runtime_error("No staged journal owner"))?;j.add_edge(super::DVec3::Y,super::DVec3::Z).map_err(|e|vm.new_runtime_error(e))?;Ok(())})}
+     |
+
+For more information about this error, try `rustc --explain E0283`.
+error: could not compile `ingetrazo-ai-interpreter-proof` (bin "budget") due to 2 previous errors

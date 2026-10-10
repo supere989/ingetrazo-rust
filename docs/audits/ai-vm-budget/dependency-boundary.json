@@ -1,0 +1,26 @@
+{
+  "package": "rustpython-vm",
+  "version": "0.6.0",
+  "features": [
+    "ast",
+    "codegen",
+    "compiler",
+    "gc",
+    "importlib",
+    "parser",
+    "ruff_python_ast",
+    "ruff_text_size",
+    "rustpython-codegen",
+    "rustpython-compiler",
+    "stdio"
+  ],
+  "production_workspace_unchanged": true,
+  "real_threading_and_jit_not_enabled": true,
+  "fresh_interpreter_modules_refused": [
+    "_interpreters",
+    "_testinternalcapi",
+    "_interpchannels",
+    "_interpqueues"
+  ],
+  "thread_module": "frozen synchronous Python dummy, callback consumes same VM budget"
+}
