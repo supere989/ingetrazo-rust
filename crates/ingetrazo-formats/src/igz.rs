@@ -331,6 +331,12 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
     }
+    // The source reader only resolves proto geometry with a placement matrix.
+    // Creating a component from an imported baked group must therefore replace
+    // its preserved null xform; ordinary baked groups remain matrix-free.
+    if obj.get("proto").is_some_and(|v|v.is_number()) && obj["xform"].is_null() {
+        obj["xform"] = model["xform"].clone();
+    }
     let children = g.children.iter().map(|c| group_to_json(c, protos, shared, mesh_shares)).collect::<Vec<_>>();
     if !g.children.is_empty() || g.native_baseline.get("children") != model.get("children") {
         obj["children"] = serde_json::json!(children);

@@ -753,6 +753,35 @@ mod import_weld_tests {
         let mut old=scene.clone();old.native_baseline=serde_json::Value::Null;assert!(crate::igz::save_igz_format1(&old,&path).is_err());assert!(!path.exists());
     }
     #[test]
+    fn baked_and_shared_runtime_metadata_survive_codec_and_typed_edits() {
+        let flat:Payload=serde_json::from_str(include_str!("../../../../docs/audits/skp-native-legacy/component-proof/vff35/hole-paint-layer-payload.json")).unwrap();
+        let mut scene=scene_from_payload(&flat).unwrap();
+        let raw=crate::igz::scene_to_igz_document(&scene);
+        assert_eq!(raw["groups"][0]["xform"],serde_json::Value::Null);
+        assert_eq!(raw["groups"][0]["component"],serde_json::json!(true));
+        assert!(raw["groups"][0].get("proto").is_none());
+        let id=scene.groups[0].id;
+        scene.make_component(id).unwrap();
+        let made=crate::igz::scene_to_igz_document(&scene);
+        assert!(made["groups"][0]["proto"].is_number());
+        assert!(made["groups"][0]["xform"].is_array());
+        scene.make_component_unique(id).unwrap();
+        let edited=crate::igz::scene_to_igz_document(&scene);
+        assert_eq!(edited["groups"][0]["component"],serde_json::json!(true));
+        assert!(edited["groups"][0].get("proto").is_none());
+        assert!(edited["groups"][0]["xform"].is_null());
+        let shared:Payload=serde_json::from_str(include_str!("../../../../docs/audits/skp-real-model-qt-runtime-replay/shared-eight-payload.json")).unwrap();
+        let mut scene=scene_from_payload(&shared).unwrap();
+        let raw=crate::igz::scene_to_igz_document(&scene);
+        for g in raw["groups"].as_array().unwrap(){assert_eq!(g["component"],serde_json::json!(true));assert!(g["proto"].is_number());assert!(g["xform"].is_array());}
+        let old=scene.groups[0].mesh.vertices[0].position;
+        scene.groups[0].mesh.vertices[0].position.x+=1.;
+        let changed=crate::igz::scene_to_igz_document(&scene);
+        assert_ne!(changed["groups"][0]["proto"],changed["groups"][1]["proto"]);
+        assert_eq!(scene.groups[1].mesh.vertices[0].position,old);
+    }
+
+    #[test]
     fn source_keys_neighbour_distance_and_wide_identity() {
         let mut mesh = Mesh::new();
         let mut w = ImportWeld::default();
