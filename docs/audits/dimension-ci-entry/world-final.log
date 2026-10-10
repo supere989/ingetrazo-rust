@@ -1,0 +1,331 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running `/tmp/ingetrazo-dimension-ci-target/debug/examples/dimension_world_acceptance_fixture /tmp/tmp5x8qk426`
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+{
+  "provenance": {
+    "rust_commit": "53997493521b169d6991e2f767ca805e090b7f39",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": 12,
+  "maximum_world_line_coordinate_error": 8.463795921898054e-06,
+  "source_edit_entry_observations": [
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.704769492149353,
+        0.25651511549949646,
+        0.0,
+        0.0,
+        -0.6840403079986572,
+        1.879385232925415,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.704769492149353,
+        0.25651511549949646,
+        0.0,
+        0.0,
+        -0.6840403079986572,
+        1.879385232925415,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.704769492149353,
+        0.25651511549949646,
+        0.0,
+        0.0,
+        -0.6840403079986572,
+        1.879385232925415,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.704769492149353,
+        0.25651511549949646,
+        0.0,
+        0.0,
+        -0.6840403079986572,
+        1.879385232925415,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        -1.7320507764816284,
+        -0.704769492149353,
+        -0.25651511549949646,
+        0.0,
+        -1.5,
+        1.8310447931289673,
+        0.666445791721344,
+        0.0,
+        0.0,
+        -0.3420201539993286,
+        0.9396926164627075,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        -1.7320507764816284,
+        -0.704769492149353,
+        -0.25651511549949646,
+        0.0,
+        -1.5,
+        1.8310447931289673,
+        0.666445791721344,
+        0.0,
+        0.0,
+        -0.3420201539993286,
+        0.9396926164627075,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        -1.7320507764816284,
+        -0.704769492149353,
+        -0.25651511549949646,
+        0.0,
+        -1.5,
+        1.8310447931289673,
+        0.666445791721344,
+        0.0,
+        0.0,
+        -0.3420201539993286,
+        0.9396926164627075,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        -1.7320507764816284,
+        -0.704769492149353,
+        -0.25651511549949646,
+        0.0,
+        -1.5,
+        1.8310447931289673,
+        0.666445791721344,
+        0.0,
+        0.0,
+        -0.3420201539993286,
+        0.9396926164627075,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        0.129409521818161,
+        0.3403775095939636,
+        0.12388728559017181,
+        0.0,
+        1.9318516254425049,
+        -0.36481553316116333,
+        -0.1327819973230362,
+        0.0,
+        0.0,
+        -2.736161231994629,
+        7.51754093170166,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        0.129409521818161,
+        0.3403775095939636,
+        0.12388728559017181,
+        0.0,
+        1.9318516254425049,
+        -0.36481553316116333,
+        -0.1327819973230362,
+        0.0,
+        0.0,
+        -2.736161231994629,
+        7.51754093170166,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        0.129409521818161,
+        0.3403775095939636,
+        0.12388728559017181,
+        0.0,
+        1.9318516254425049,
+        -0.36481553316116333,
+        -0.1327819973230362,
+        0.0,
+        0.0,
+        -2.736161231994629,
+        7.51754093170166,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    },
+    {
+      "world_annotation_preserved": true,
+      "parent_baked": true,
+      "leaf_baked": true,
+      "drawing_frame": [
+        0.129409521818161,
+        0.3403775095939636,
+        0.12388728559017181,
+        0.0,
+        1.9318516254425049,
+        -0.36481553316116333,
+        -0.1327819973230362,
+        0.0,
+        0.0,
+        -2.736161231994629,
+        7.51754093170166,
+        0.0,
+        11.0,
+        19.357418060302734,
+        36.15118408203125,
+        1.0
+      ]
+    }
+  ],
+  "scope": "Actual two-level GUI edit contexts with rotated/reflected/nonuniform parent-child transforms: world-axis x/y/z and aligned measurement, line endpoints and cursor placement against original Dimension APIs. Rendered labels remain separate."
+}

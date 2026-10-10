@@ -16,13 +16,42 @@ jobs:
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-native-link-ci/build.log 2>&1
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
         run: target/debug/examples/device_probe > docs/audits/metal-native-link-ci/device-and-allocation.log 2>&1
       - name: Execute native Metal GPU submission and retirement probe
         run: target/debug/examples/submission_probe > docs/audits/metal-native-link-ci/gpu-submission.log 2>&1
+      - name: Execute strict source-ordered Metal compute rendering
+        run: |
+          target/debug/examples/cad2d_probe --compute --output=docs/audits/metal-native-link-ci/compute > docs/audits/metal-native-link-ci/compute-render.log 2>&1
+      - name: Execute Apple framebuffer-fetch rendering or explicit capability refusal
+        run: |
+          target/debug/examples/cad2d_probe --allow-unsupported --output=docs/audits/metal-native-link-ci/fetch > docs/audits/metal-native-link-ci/fetch-render.log 2>&1
+      - name: Reject literal old GPU byte multiplication
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ('cad2d.metal','cad2d_spans.metal'):
+              p=Path('crates/ingetrazo-metal/src/shaders')/name
+              s=p.read_text()
+              old='(t+(t>>8)+128)>>8'
+              assert s.count(old)==1
+              p.write_text(s.replace(old,'(t+128)>>8'))
+          PY
+          cargo build --locked -p ingetrazo-metal --example cad2d_probe > docs/audits/metal-native-link-ci/negative-build.log 2>&1
+          if target/debug/examples/cad2d_probe --compute --output=docs/audits/metal-native-link-ci/negative-compute > docs/audits/metal-native-link-ci/negative-compute.log 2>&1; then
+            echo "Old shader law unexpectedly passed"; exit 1
+          fi
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('docs/audits/metal-native-link-ci/negative-compute.log').read_text()
+          assert 'backend=exact source-ordered span compute' in s
+          assert 'Strict actualQPainter whole-image comparison failed' in s
+          assert 'different_pixels=' in s
+          assert 'Metal shader compile:' not in s
+          PY
       - name: Retain native linking evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -106,6 +135,10 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Original and native strict vector View PDF pages
+        run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci
+      - name: Original and native saved-view PDF state against opposed live state
+        run: INGETRAZO_VIEW_PDF_SAVED=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/saved-vector-view-ci
       - name: Actual composer PDF save dialogs and refusal preservation
         run: |
           cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
@@ -259,6 +292,8 @@ jobs:
             docs/audits/move-inference-source-evidence.json
             docs/audits/texture-upload-ci/
             docs/audits/cad2d-color-ci/
+            docs/audits/vector-view-ci/
+            docs/audits/saved-vector-view-ci/
             docs/audits/composer-pdf-ui/
             docs/audits/composer-pdf-ui-unsupported/
             docs/audits/center-tracking-*-ci-evidence.json

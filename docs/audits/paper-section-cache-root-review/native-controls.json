@@ -1,0 +1,184 @@
+[
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "wall_hidden",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594159,
+      2594161
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "section_board",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": false,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594163,
+      2594165
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "hollow_cap",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": false,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594167,
+      2594169
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "top_box",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594171,
+      2594173
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "iso_box",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594175,
+      2594177
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "front_box",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594179,
+      2594181
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "partial_rear_line",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594183,
+      2594185
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "open_cut_chain",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": false,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594187,
+      2594189
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "nested_reflected_box",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594191,
+      2594193
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "hidden_layer_group",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594195,
+      2594197
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "hidden_layer_face",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594199,
+      2594201
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "soft_cylinder_silhouette",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594203,
+      2594205
+    ]
+  },
+  {
+    "cache_policy_separation": true,
+    "cached_section_admission": true,
+    "name": "soft_reflected_silhouette",
+    "operative_camera_basis": true,
+    "operative_hard_world_exact": true,
+    "pages": 2,
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      2594207,
+      2594209
+    ]
+  }
+]

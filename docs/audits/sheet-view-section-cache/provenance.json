@@ -1,0 +1,8 @@
+{
+  "source_commit": "8ac2afd",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "target": "/tmp/ingetrazo-sheet-view-state-target",
+  "fixture_sha256": "fda876985aab239d0efab15807dbce7d1bf0b11af297991b11b10a5a18acd153",
+  "worker_sha256": "ffaada2fa19496966b3ba4e2eaa2d534e127f324b5e40d433dc589a199f41828",
+  "scope": "Warm current-view closed section admission only; fills and saved-view adapter remain unsupported. 13 complete-record cache identity/material equivalence controls; unsupported cut-fill error retains sentinel and incurs no extra jobs; 78 unchanged whole-page strict RGBA comparisons; render45 passed. Existing frozen original pages reused; native private binary freshly rebuilt."
+}

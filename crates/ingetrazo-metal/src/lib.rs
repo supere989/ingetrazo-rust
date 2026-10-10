@@ -12,6 +12,10 @@ pub use submission::*;
 
 #[cfg(target_os = "macos")]
 pub mod presentation;
-
 #[cfg(target_os = "macos")]
 pub mod egui_painter;
+#[cfg(target_os = "macos")]
+mod cad2d;
+#[cfg(target_os = "macos")]
+pub use cad2d::*;
+mod span_plan;

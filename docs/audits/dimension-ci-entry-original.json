@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "rust_commit": "d066d4f0fddd2ae6a582f936a913fa1525299298",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": {
+    "translated": {
+      "entered_vertices": [
+        [
+          10.0,
+          20.0,
+          30.0
+        ],
+        [
+          11.0,
+          20.0,
+          30.0
+        ]
+      ],
+      "local_vertex_negative_rejected": true,
+      "shareback_local_vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "original_undo_redo_dimension_count": [
+        2,
+        2
+      ],
+      "source_annotation_not_folded_into_mesh_undo": true
+    },
+    "nested": {
+      "entered_vertices": [
+        [
+          111.0,
+          222.0,
+          333.0
+        ],
+        [
+          112.0,
+          222.0,
+          333.0
+        ]
+      ],
+      "container_bakes_survive_undo": true,
+      "undo_preserves_prior_rename": true,
+      "separate_rename_undo_redo": true,
+      "leaf_restored_placement": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        111.0,
+        222.0,
+        333.0,
+        1.0
+      ]
+    }
+  },
+  "scope": "Actual original Viewport begin/end and History commands, no rendered UI or key dispatch claim"
+}

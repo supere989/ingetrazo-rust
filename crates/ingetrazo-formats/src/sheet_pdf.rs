@@ -11,11 +11,21 @@ pub enum PathOp {
     Close,
 }
 #[derive(Clone, Debug)]
+pub struct StrokeOptions {
+    /// PDF cap: 0 flat, 1 round, 2 square.
+    pub cap: u8,
+    /// PDF join: 0 miter, 1 round, 2 bevel.
+    pub join: u8,
+    /// Physical paper millimetres, independently of stroke width.
+    pub dash: Vec<f64>,
+}
+#[derive(Clone, Debug)]
 pub struct Draw {
     pub origin_mm: [f64; 2],
     pub even_odd: bool,
     pub path: Vec<PathOp>,
     pub stroke: Option<([f32; 4], f64)>,
+    pub stroke_options: Option<StrokeOptions>,
     pub fill: Option<[f32; 4]>,
     pub clip: Option<Vec<PathOp>>,
 }
@@ -29,14 +39,47 @@ pub struct Page {
 }
 // Emit finite physical coordinates without f32 narrowing. Fixed decimal PDF
 // numbers avoid exponential notation and preserve authored double precision.
-pub(crate) const MAX_DRAWS: usize = 100_000;
-pub(crate) const MAX_COMMANDS: usize = 500_000;
-struct Number(f64);
-fn number(value: f64) -> Number {
-    Number(value)
-}
+pub const MAX_DRAWS: usize = 100_000;
+pub const MAX_COMMANDS: usize = 500_000;
+struct Number(f64, bool);
 impl std::fmt::Display for Number {
     fn fmt(&self, out: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.1 {
+            // Qt QPdfEngine qt_real_to_string (qtbase qpdf.cpp): truncate the
+            // fractional part according to the integer digit count. Scoped to
+            // original paper serialization; authored geometry remains f64.
+            let negative = self.0 < 0.;
+            let value = self.0.abs();
+            let mut integer = value.trunc() as u32;
+            let mut fraction = ((value - value.trunc()) * 1_000_000_000.) as u32;
+            if fraction == 1_000_000_000 {
+                integer += 1;
+                fraction = 0;
+            }
+            let mut digits = 0;
+            let mut count = integer;
+            while count > 0 {
+                digits += 1;
+                count /= 10;
+            }
+            let mut factor = 100_000_000u32;
+            for _ in 0..digits {
+                factor /= 10;
+                fraction /= 10;
+            }
+            if negative {
+                out.write_str("-")?;
+            }
+            write!(out, "{integer}")?;
+            if fraction != 0 {
+                out.write_str(".")?;
+                while factor > 0 {
+                    write!(out, "{}", (fraction / factor) % 10)?;
+                    factor /= 10;
+                }
+            }
+            return Ok(());
+        }
         // Every operand has passed bounded finite-domain admission. The largest
         // derived transform is <4e8; 64 bytes comfortably holds fixed .12 text.
         struct Buffer {
@@ -69,7 +112,8 @@ impl std::fmt::Display for Number {
         out.write_str(if text == "-0" { "0" } else { text })
     }
 }
-fn path(content: &mut Vec<u8>, ops: &[PathOp]) {
+fn path(content: &mut Vec<u8>, ops: &[PathOp], original_qt: bool) {
+    let number = |v| Number(v, original_qt);
     for op in ops {
         match *op {
             PathOp::Move([x, y]) => writeln!(content, "{} {} m", number(x), number(y)).unwrap(),
@@ -131,6 +175,15 @@ fn validate_path(ops: &[PathOp]) -> Result<(), String> {
 /// Validates every page before authoring. Millimetres use top-left coordinates.
 /// Origin is explicit because original PDF and image export have different margins.
 pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
+    encode_policy(pages, false)
+}
+/// Original Qt paper numeral policy. Generic vector exports retain fixed12.
+/// This affects serialization only, never Scene coordinates or general HLR.
+pub fn encode_original_qt_paper(pages: &[Page]) -> Result<Vec<u8>, String> {
+    encode_policy(pages, true)
+}
+fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
+    let number = |v| Number(v, original_qt);
     if pages.is_empty() || pages.len() > 10_000 {
         return Err("PDF requires 1..10000 pages".into());
     }
@@ -193,6 +246,19 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
                     return Err("Invalid PDF encoded color".into());
                 }
             }
+            if let Some(options) = &draw.stroke_options {
+                if draw.stroke.is_none()
+                    || options.cap > 2
+                    || options.join > 2
+                    || options.dash.len() > 32
+                    || options
+                        .dash
+                        .iter()
+                        .any(|v| !v.is_finite() || *v <= 0. || *v > 1_000_000.)
+                {
+                    return Err("Invalid physical PDF stroke options".into());
+                }
+            }
             if let Some((_, width)) = draw.stroke {
                 if !width.is_finite() || width <= 0. || width > 10_000. {
                     return Err("Invalid physical PDF stroke width".into());
@@ -251,7 +317,7 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
             )
             .unwrap();
             if let Some(clip) = &draw.clip {
-                path(&mut content, clip);
+                path(&mut content, clip, original_qt);
                 content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
             }
             if let Some(c) = draw.fill {
@@ -267,7 +333,7 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
             if let Some((c, width)) = draw.stroke {
                 writeln!(
                     content,
-                    "{} {} {} RG\n{} w\n1 J\n2 j",
+                    "{} {} {} RG\n{} w",
                     number(c[0] as f64),
                     number(c[1] as f64),
                     number(c[2] as f64),
@@ -275,7 +341,24 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
                 )
                 .unwrap();
             }
-            path(&mut content, &draw.path);
+            if draw.stroke.is_some() {
+                if let Some(options) = &draw.stroke_options {
+                    writeln!(content, "{} J\n{} j", options.cap, options.join).unwrap();
+                    if !options.dash.is_empty() {
+                        content.extend_from_slice(b"[");
+                        for (i, dash) in options.dash.iter().enumerate() {
+                            if i > 0 {
+                                content.push(b' ');
+                            }
+                            write!(content, "{}", number(*dash)).unwrap();
+                        }
+                        content.extend_from_slice(b"] 0 d\n");
+                    }
+                } else {
+                    content.extend_from_slice(b"1 J\n2 j\n");
+                }
+            }
+            path(&mut content, &draw.path, original_qt);
             content.extend_from_slice(
                 match (draw.fill.is_some(), draw.stroke.is_some(), draw.even_odd) {
                     (true, true, true) => b"B*\n",
@@ -311,6 +394,13 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
 /// Same-directory atomic replacement; invalid input never touches destination.
 pub fn save(path: &Path, pages: &[Page]) -> Result<(), String> {
     let bytes = encode(pages)?;
+    save_bytes(path, &bytes)
+}
+pub fn save_original_qt_paper(path: &Path, pages: &[Page]) -> Result<(), String> {
+    let bytes = encode_original_qt_paper(pages)?;
+    save_bytes(path, &bytes)
+}
+fn save_bytes(path: &Path, bytes: &[u8]) -> Result<(), String> {
     let parent = path
         .parent()
         .filter(|p| !p.as_os_str().is_empty())

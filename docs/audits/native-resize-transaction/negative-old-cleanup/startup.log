@@ -1,0 +1,17 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION BeforeCreate published_owners_preserved=true retired_retry=true audit={"created":{},"destroyed":{}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+
+thread 'main' (54) panicked at crates/ingetrazo-gui/examples/native_vulkan_resize_transaction_probe.rs:25:94:
+called `Result::unwrap()` on an `Err` value: "Resize cancellation replaced or destroyed published owners"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+CAD2D metrics: Stats { callbacks: 4, binds: 4, draws: 4, uploads: 1, upload_bytes: 72, cache_hits: 3, cached_bytes: 72, rolled_back_buffers: 0 }
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0

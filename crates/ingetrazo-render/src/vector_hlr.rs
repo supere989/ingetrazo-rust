@@ -15,14 +15,65 @@ pub struct VectorSegment {
     pub b: DVec3,
     pub kind: LineKind,
 }
-fn project(p: DVec3, camera: &OrbitCamera) -> DVec3 {
-    let p = p - camera.eye();
-    DVec3::new(
-        p.dot(camera.right()),
-        p.dot(camera.right().cross(camera.forward())),
-        p.dot(camera.forward()),
-    )
+/// Paper-only precision boundary of the pinned original Qt HLR camera.
+/// This does not alter the Scene, viewport projection, or general f64 HLR API.
+/// Offset construction and target addition are separate QVector3D f32 boundaries;
+/// camera_basis then performs its cross products and normalization in f64.
+#[derive(Clone, Copy, Debug)]
+pub struct OriginalQtPaperBasis {
+    pub eye: DVec3,
+    pub right: DVec3,
+    pub up: DVec3,
+    pub forward: DVec3,
 }
+impl OriginalQtPaperBasis {
+    pub fn from_camera(camera: &OrbitCamera) -> Self {
+        let target = camera.target.as_vec3();
+        let offset = DVec3::new(
+            camera.distance * camera.pitch.cos() * camera.yaw.cos(),
+            camera.distance * camera.pitch.cos() * camera.yaw.sin(),
+            camera.distance * camera.pitch.sin(),
+        )
+        .as_vec3();
+        let eye = (target + offset).as_dvec3();
+        let delta = target.as_dvec3() - eye;
+        let forward = delta / delta.length().max(1e-12);
+        let qt_forward = (target - (target + offset)).normalize_or_zero();
+        let mut up = camera.up.as_vec3();
+        if qt_forward.dot(up).abs() >= 0.9999 {
+            let sign = if camera.pitch > 0. { -1. } else { 1. };
+            up = DVec3::new(sign * camera.yaw.cos(), sign * camera.yaw.sin(), 0.).as_vec3();
+        }
+        let right = forward.cross(up.as_dvec3());
+        let right = right / right.length().max(1e-12);
+        let up = right.cross(forward);
+        Self {
+            eye,
+            right,
+            up,
+            forward,
+        }
+    }
+    pub fn project(&self, point: DVec3) -> DVec3 {
+        let delta = point - self.eye;
+        DVec3::new(
+            delta.dot(self.right),
+            delta.dot(self.up),
+            delta.dot(self.forward),
+        )
+    }
+}
+trait PaperProjection { fn project_point(&self, p: DVec3) -> DVec3; }
+impl PaperProjection for OrbitCamera {
+    fn project_point(&self, p: DVec3) -> DVec3 {
+        let p = p-self.eye();
+        DVec3::new(p.dot(self.right()),p.dot(self.right().cross(self.forward())),p.dot(self.forward()))
+    }
+}
+impl PaperProjection for OriginalQtPaperBasis {
+    fn project_point(&self,p:DVec3)->DVec3 { self.project(p) }
+}
+fn project(p:DVec3,camera:&impl PaperProjection)->DVec3 { camera.project_point(p) }
 fn gather_edges(scene: &Scene, camera: &OrbitCamera) -> Vec<VectorSegment> {
     fn mesh(
         out: &mut Vec<VectorSegment>,
@@ -214,7 +265,7 @@ fn surface_at(p: DVec2, depth: f64, triangles: &[[DVec3; 3]], index:&crate::tria
         })
     })
 }
-fn cap_boundary(caps: &[[DVec3; 3]], camera: &OrbitCamera) -> Vec<(DVec3, DVec3)> {
+fn cap_boundary(caps: &[[DVec3; 3]], camera: &impl PaperProjection) -> Vec<(DVec3, DVec3)> {
     let mut mesh = Mesh::new();
     for tri in caps {
         let ids = tri.map(|p| mesh.add_vertex(p));
@@ -312,7 +363,7 @@ fn complement(mut intervals: Vec<(f64, f64)>) -> Vec<(f64, f64)> {
 /// Return only visible portions; split edges remain referenced to world coordinates.
 // Remove coincident dashed ink under any solid ink, then deduplicate
 // projected hidden lines even if the corresponding world edges differ in depth.
-fn drop_hidden_under_visible(lines:Vec<VectorSegment>,camera:&OrbitCamera,tol:f64)->Vec<VectorSegment> {
+fn drop_hidden_under_visible(lines:Vec<VectorSegment>,camera:&impl PaperProjection,tol:f64)->Vec<VectorSegment> {
     let mut result=lines.iter().filter(|e|e.kind!=LineKind::Hidden).cloned().collect::<Vec<_>>();
     // Retain exact source projection arithmetic once per accepted segment.
     let mut projected=result.iter().map(|e|(project(e.a,camera).truncate(),project(e.b,camera).truncate())).collect::<Vec<_>>();
@@ -336,7 +387,7 @@ fn drop_hidden_under_visible(lines:Vec<VectorSegment>,camera:&OrbitCamera,tol:f6
     result
 }
 #[cfg(test)]
-fn exhaustive_hidden_ink_reference(lines:Vec<VectorSegment>,camera:&OrbitCamera,tol:f64)->Vec<VectorSegment> {
+fn exhaustive_hidden_ink_reference(lines:Vec<VectorSegment>,camera:&impl PaperProjection,tol:f64)->Vec<VectorSegment> {
     let mut result=lines.iter().filter(|e|e.kind!=LineKind::Hidden).cloned().collect::<Vec<_>>();
     for line in lines.iter().filter(|e|e.kind==LineKind::Hidden) {
         let a=project(line.a,camera).truncate(); let b=project(line.b,camera).truncate();
@@ -444,21 +495,258 @@ pub fn paper_section_triangles(scene:&Scene)->Vec<[DVec3;3]> {
     let cuts=crate::section_clip::cap_segments(std::iter::once(surfaces),plane);
     cap_triangles(&cuts,plane)
 }
+/// Observe the source Qt point mapping independently of HLR and the page writer.
+/// Small leaf meshes use QMatrix4x4::map scalar float operations; nested containers
+/// and larger leaves use the source NumPy affine path, rounded at QVector3D storage.
+pub fn original_qt_paper_point(matrix: DMat4, point: DVec3, bulk: bool) -> DVec3 {
+    let m = matrix.to_cols_array().map(|v| v as f32);
+    let p = point.as_vec3().to_array();
+    let component = |row: usize| {
+        if bulk {
+            ((m[row] as f64 * p[0] as f64
+                + m[4 + row] as f64 * p[1] as f64
+                + m[8 + row] as f64 * p[2] as f64)
+                + m[12 + row] as f64) as f32
+        } else {
+            ((m[row] * p[0] + m[4 + row] * p[1]) + m[8 + row] * p[2]) + m[12 + row]
+        }
+    };
+    DVec3::new(
+        component(0) as f64,
+        component(1) as f64,
+        component(2) as f64,
+    )
+}
+fn original_qt_matrix_product(a: DMat4, b: DMat4) -> DMat4 {
+    let a = a.to_cols_array().map(|v| v as f32);
+    let b = b.to_cols_array().map(|v| v as f32);
+    let mut out = [0.; 16];
+    for col in 0..4 {
+        for row in 0..4 {
+            out[col * 4 + row] = (((a[row] * b[col * 4] + a[4 + row] * b[col * 4 + 1])
+                + a[8 + row] * b[col * 4 + 2])
+                + a[12 + row] * b[col * 4 + 3]) as f64;
+        }
+    }
+    DMat4::from_cols_array(&out)
+}
+fn original_qt_paper_geometry(
+    scene: &crate::paper_scene::PaperSceneView<'_>,
+    basis: &OriginalQtPaperBasis,
+) -> (
+    crate::buffer::MeshRenderBuffer,
+    Vec<VectorSegment>,
+    Vec<[DVec3; 3]>,
+) {
+    fn add(
+        scene: &crate::paper_scene::PaperSceneView<'_>,
+        mesh: &Mesh,
+        matrix: DMat4,
+        bulk: bool,
+        basis: &OriginalQtPaperBasis,
+        surfaces: &mut crate::buffer::MeshRenderBuffer,
+        edges: &mut Vec<VectorSegment>,
+        triangles: &mut Vec<[DVec3; 3]>,
+    ) {
+        let mapped = mesh
+            .vertices
+            .iter()
+            .map(|v| original_qt_paper_point(matrix, v.position, bulk))
+            .collect::<Vec<_>>();
+        for id in 0..mesh.faces.len() {
+            if !scene.mesh_face_visible(mesh, id) {
+                continue;
+            }
+            for (a, b, c) in mesh.triangulate_face(id) {
+                let base = surfaces.vertices.len() as u32;
+                let m = DMat4::from_cols_array(&matrix.to_cols_array().map(|v| v as f32 as f64));
+                let a = a.as_vec3().as_dvec3();
+                let b = b.as_vec3().as_dvec3();
+                let c = c.as_vec3().as_dvec3();
+                let origin = m.transform_point3(a);
+                triangles.push([
+                    origin,
+                    origin + m.transform_vector3(b - a),
+                    origin + m.transform_vector3(c - a),
+                ]);
+                if scene.active_section().is_some() {
+                    for p in [a, b, c] {
+                        surfaces.vertices.push(crate::buffer::Vertex::from_dvec3(
+                            original_qt_paper_point(matrix, p, bulk),
+                            DVec3::ZERO,
+                            [1.; 4],
+                            [0.; 2],
+                        ));
+                    }
+                    surfaces.indices.extend([base, base + 1, base + 2]);
+                }
+            }
+        }
+        let normal = |id: usize| {
+            let face = &mesh.faces[id];
+            let mut n = DVec3::ZERO;
+            for i in 0..face.vertices.len() {
+                let a = mesh.vertices[face.vertices[i]]
+                    .position
+                    .as_vec3()
+                    .as_dvec3();
+                let b = mesh.vertices[face.vertices[(i + 1) % face.vertices.len()]]
+                    .position
+                    .as_vec3()
+                    .as_dvec3();
+                n += DVec3::new(
+                    (a.y - b.y) * (a.z + b.z),
+                    (a.z - b.z) * (a.x + b.x),
+                    (a.x - b.x) * (a.y + b.y),
+                );
+            }
+            let n = n.as_vec3();
+            let n = n.normalize_or_zero().as_dvec3();
+            let m = DMat4::from_cols_array(&matrix.to_cols_array().map(|v| v as f32 as f64));
+            m.inverse()
+                .transpose()
+                .transform_vector3(n)
+                .normalize_or_zero()
+        };
+        for (id, e) in mesh.edges.iter().enumerate() {
+            if !scene.mesh_edge_visible(mesh, id) {
+                continue;
+            }
+            let kind = if e.soft {
+                let faces = e
+                    .faces
+                    .iter()
+                    .copied()
+                    .filter(|&id| scene.mesh_face_visible(mesh, id))
+                    .collect::<Vec<_>>();
+                if faces.is_empty() {
+                    continue;
+                }
+                if faces.len() > 1
+                    && (normal(faces[0]).dot(basis.forward) < 0.)
+                        == (normal(faces[1]).dot(basis.forward) < 0.)
+                {
+                    continue;
+                }
+                LineKind::Profile
+            } else {
+                LineKind::Edge
+            };
+            if let Some((a, b)) = scene.section_segment(mapped[e.v0], mapped[e.v1]) {
+                edges.push(VectorSegment { a, b, kind });
+            }
+        }
+    }
+    fn group(
+        scene: &crate::paper_scene::PaperSceneView<'_>,
+        g: &Group,
+        parent: DMat4,
+        _in_container: bool,
+        basis: &OriginalQtPaperBasis,
+        s: &mut crate::buffer::MeshRenderBuffer,
+        e: &mut Vec<VectorSegment>,
+        t: &mut Vec<[DVec3; 3]>,
+    ) {
+        if !scene.group_visible(g) {
+            return;
+        }
+        let matrix = original_qt_matrix_product(parent, g.transform);
+        let bulk = true; // Actual Viewport._instance_entry cached arrays use NumPy affine for every placement.
+        add(scene, &g.mesh, matrix, bulk, basis, s, e, t);
+        for c in &g.children {
+            group(scene, c, matrix, true, basis, s, e, t);
+        }
+    }
+    let mut surfaces = crate::buffer::MeshRenderBuffer::new();
+    let mut edges = vec![];
+    let mut triangles = vec![];
+    add(
+        scene,
+        &scene.mesh,
+        DMat4::IDENTITY,
+        false,
+        basis,
+        &mut surfaces,
+        &mut edges,
+        &mut triangles,
+    );
+    for g in &scene.groups {
+        group(
+            scene,
+            g,
+            DMat4::IDENTITY,
+            false,
+            basis,
+            &mut surfaces,
+            &mut edges,
+            &mut triangles,
+        );
+    }
+    (surfaces, edges, triangles)
+}
+/// Observation of precisely the WORLD arrays consumed by the paper interval
+/// publication path. No Scene copies or worker jobs are performed by this probe.
+pub fn original_qt_paper_observation(
+    scene: &Scene,
+    camera: &OrbitCamera,
+) -> (Vec<[DVec3; 3]>, Vec<VectorSegment>) {
+    let (_, edges, triangles) =
+        original_qt_paper_geometry(&crate::paper_scene::PaperSceneView::new(scene, None), &OriginalQtPaperBasis::from_camera(camera));
+    (triangles, edges)
+}
 pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<VectorSegment> {
     parallel_segments(scene, camera, true, false)
 }
 /// Paper HLR options match original profiles and hidden-line controls.
 pub fn parallel_segments(scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool) -> Vec<VectorSegment> {
-    segments_impl(scene,camera,profiles,hidden,None).expect("serial HLR has no process errors")
+    segments_impl(scene,camera,profiles,hidden,None,false).expect("serial HLR has no process errors")
 }
 /// Production HLR using persistent native CPU processes for quadratic edge/triangle work.
 /// Caller retains the pool across frames; process failure is explicit, never silent fallback.
 pub fn parallel_segments_with_pool(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:&mut crate::process_hlr::HlrProcessPool)->std::io::Result<Vec<VectorSegment>> {
-    segments_impl(scene,camera,profiles,hidden,Some(pool))
+    segments_impl(scene,camera,profiles,hidden,Some(pool),false)
 }
-fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>)->std::io::Result<Vec<VectorSegment>> {
-    let mut surfaces = crate::section_clip::contour_geometry(scene);
-    let mut edges = gather_edges(scene, camera);
+/// Pinned-original Qt WORLD precision for physical paper only. The binary interval
+/// protocol is unchanged: projected f64 data is published to the caller's same pool.
+pub fn parallel_original_qt_paper_with_pool(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:&mut crate::process_hlr::HlrProcessPool)->std::io::Result<Vec<VectorSegment>> {
+    segments_impl(scene,camera,profiles,hidden,Some(pool),true)
+}
+/// Completed paper ink and the closed section material computed by the same cold
+/// geometry pass. Callers can cache admission/fill data without rebuilding contours.
+pub struct OriginalQtPaperDrawing {
+    pub segments: Vec<VectorSegment>,
+    pub section_material: Vec<[DVec3; 3]>,
+}
+pub fn original_qt_paper_drawing_with_pool(
+    scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool,
+    pool: &mut crate::process_hlr::HlrProcessPool,
+) -> std::io::Result<OriginalQtPaperDrawing> {
+    original_qt_paper_drawing_for_view_with_pool(
+        &crate::paper_scene::PaperSceneView::new(scene, None), camera, profiles, hidden, pool)
+}
+pub fn original_qt_paper_drawing_for_view_with_pool(
+    scene: &crate::paper_scene::PaperSceneView<'_>, camera: &OrbitCamera,
+    profiles: bool, hidden: bool, pool: &mut crate::process_hlr::HlrProcessPool,
+) -> std::io::Result<OriginalQtPaperDrawing> {
+    let basis = OriginalQtPaperBasis::from_camera(camera);
+    let (surfaces, edges, triangles) = original_qt_paper_geometry(scene, &basis);
+    let mut section_material = Vec::new();
+    let segments = segments_projected(scene, &basis, profiles, hidden, Some(pool),
+        surfaces, edges, triangles, true, Some(&mut section_material))?;
+    Ok(OriginalQtPaperDrawing { segments, section_material })
+}
+fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,original_qt:bool)->std::io::Result<Vec<VectorSegment>> {
+    let view = crate::paper_scene::PaperSceneView::new(scene, None);
+    if original_qt {
+        let basis=OriginalQtPaperBasis::from_camera(camera);
+        let(surfaces,edges,triangles)=original_qt_paper_geometry(&view,&basis);
+        segments_projected(&view,&basis,profiles,hidden,pool,surfaces,edges,triangles,true,None)
+    }else{
+        segments_projected(&view,camera,profiles,hidden,pool,crate::section_clip::contour_geometry(scene),gather_edges(scene,camera),vec![],false,None)
+    }
+}
+fn segments_projected(scene:&crate::paper_scene::PaperSceneView<'_>,camera:&impl PaperProjection,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,mut surfaces:crate::buffer::MeshRenderBuffer,edges:Vec<VectorSegment>,original_triangles:Vec<[DVec3;3]>,original_qt:bool,section_material:Option<&mut Vec<[DVec3;3]>>)->std::io::Result<Vec<VectorSegment>>{
+    let mut edges=edges;
     let mut caps = vec![];
     if let Some(plane) = scene.active_section() {
         let cuts = crate::section_clip::cap_segments(std::iter::once(surfaces.clone()), plane);
@@ -472,7 +760,8 @@ fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool
         }
         crate::section_clip::mesh(&mut surfaces, plane);
     }
-    let triangles = surfaces
+    if let Some(material)=section_material { material.extend_from_slice(&caps); }
+    let triangles = if original_qt&&scene.active_section().is_none() {original_triangles.into_iter().map(|t|t.map(|p|project(p,camera))).collect::<Vec<_>>()} else {surfaces
         .indices
         .chunks_exact(3)
         .map(|ids| {
@@ -486,7 +775,7 @@ fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool
                 .collect::<Vec<_>>()
         })
         .map(|v| [v[0], v[1], v[2]])
-        .collect::<Vec<_>>();
+        .collect::<Vec<_>>()};
     let triangle_index=crate::triangle_index::TriangleIndex::new(triangles.iter().copied());
     let boundary = cap_boundary(&caps, camera);
     let cap_plane = caps

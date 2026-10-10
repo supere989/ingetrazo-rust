@@ -1,4 +1,5 @@
 pub mod cad2d;
+pub mod resize;
 pub mod headless;
 pub mod world;
 pub mod resources;
@@ -253,18 +254,12 @@ impl System {
         if self.dirty_swapchain {
             let PhysicalSize { width, height } = window.inner_size();
             if width > 0 && height > 0 {
-                if !self.wait_gpu_completion(){egui_app.gpu_error("Swapchain ownership remains pending; GPU resources quarantined");return;}
-                if let Err(error)=self.swapchain.recreate(&self.vulkan_context){self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
-                unsafe{for p in self.present_fences.drain(..){self.vulkan_context.device.destroy_fence(p.fence,None);}}
-                self.present_fences=match create_present_fences(&self.vulkan_context,self.swapchain.images.len()){Ok(p)=>p,Err(e)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&e.to_string());return;}};
-                // Graphics and presentation fences completed before replacing WSI owners.
-                unsafe { for semaphore in self.render_finished_semaphores.drain(..) { self.vulkan_context.device.destroy_semaphore(semaphore,None); } }
-                self.render_finished_semaphores=match create_present_semaphores(&self.vulkan_context.device,self.swapchain.images.len()){Ok(s)=>s,Err(error)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}};
-                if let Err(error)=self.renderer.set_render_pass(self.swapchain.render_pass){self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
-                if let Some(cad)=&mut self.cad2d{
-                    if let Err(error)=cad.set_render_pass(self.swapchain.render_pass,&self.swapchain.image_views){egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
+                if let Err(error)=self.resize_transaction(){
+                    egui_app.gpu_error(&error);
+                    self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
+                    return;
                 }
-                self.dirty_swapchain = false;
+
             } else {
                 return;
             }
@@ -456,6 +451,61 @@ impl System {
         }
     }
 
+    /// Cold actual-allocation cancellation control. Does not synthesize Vulkan errors.
+    pub fn verify_resize_cancellation_for_probe(&mut self,stage:resize::Stage)->Result<resize::Audit,String>{
+        let old=(self.swapchain.khr,self.swapchain.render_pass,self.swapchain.image_views.clone(),self.swapchain.framebuffers.clone(),self.render_finished_semaphores.clone());
+        let old_pipeline=self.renderer.pipeline_identity_for_probe();
+        let old_cad=self.cad2d.as_ref().map(|c|c.descriptor_owner_weak_for_probe().state());
+        let bytes=self.memory_budget.ledger.lock().map_err(|_|"Budget lock poisoned")?.total_committed();
+        let audit=std::sync::Arc::new(std::sync::Mutex::new(resize::Audit::default()));
+        self.dirty_swapchain=true;
+        let result=self.resize_transaction_controlled(&resize::Control{cancel:Some(stage),audit:Some(audit.clone())});
+        let error=result.err().ok_or("Expected engineering cancellation")?;
+        if !error.starts_with("Engineering resize cancellation"){return Err(error);}
+        let now=(self.swapchain.khr,self.swapchain.render_pass,self.swapchain.image_views.clone(),self.swapchain.framebuffers.clone(),self.render_finished_semaphores.clone());
+        if old!=now||old_pipeline!=self.renderer.pipeline_identity_for_probe()||old_cad!=self.cad2d.as_ref().map(|c|c.descriptor_owner_weak_for_probe().state()){
+            return Err("Resize cancellation replaced or destroyed published owners".into());
+        }
+        if self.vulkan_context.lifetime.uncertain(){return Err("Preparation cancellation poisoned completed device".into());}
+        if bytes!=self.memory_budget.ledger.lock().map_err(|_|"Budget lock poisoned")?.total_committed(){return Err("Cancellation changed committed resource ledger".into());}
+        if self.swapchain.retired!=(stage!=resize::Stage::BeforeCreate){return Err("Incorrect old-swapchain retirement state".into());}
+        let observed=audit.lock().map_err(|_|"Audit lock poisoned")?.clone();
+        if observed.created!=observed.destroyed{return Err(format!("Unpublished owner leak: {observed:?}"));}
+        // Old owner/last frame retained; acquisition is forbidden after retirement.
+        // A successful replacement with oldSwapchain=NULL re-establishes acquisition.
+        self.resize_transaction()?;
+        if self.swapchain.retired||self.dirty_swapchain{return Err("Retry left retired acquisition state".into());}
+        Ok(observed)
+    }
+
+    fn resize_transaction(&mut self)->Result<(),String>{self.resize_transaction_controlled(&resize::Control::default())}
+    fn resize_transaction_controlled(&mut self,control:&resize::Control)->Result<(),String>{
+        if !self.wait_gpu_completion(){return Err("Swapchain completion unknown; owners quarantined".into());}
+        control.checkpoint(resize::Stage::BeforeCreate)?;
+        let mut next=self.swapchain.prepare_replacement(&self.vulkan_context,control).map_err(|e|e.to_string())?;
+        let candidate=next.value.as_ref().unwrap();
+        let mut egui_pipeline=resize::Tracked::new(self.renderer.prepare_render_pass(candidate.render_pass).map_err(|e|e.to_string())?,control,vec![(resize::Kind::EguiPipeline,1)]);
+        control.checkpoint(resize::Stage::EguiPipeline)?;
+        let mut cad_pipeline=if let Some(cad)=&self.cad2d{Some(resize::Tracked::new(cad.prepare_render_pass(candidate.render_pass,&candidate.image_views)?,control,vec![(resize::Kind::CadPipeline,1),(resize::Kind::CadPool,u64::from(candidate.integer_cad))]))}else{None};
+        control.checkpoint(resize::Stage::CadPipeline)?;
+        let mut sync=UnpublishedSync{device:self.vulkan_context.device.clone(),semaphores:create_present_semaphores(&self.vulkan_context.device,candidate.images.len()).map_err(|e|e.to_string())?,present_fences:Vec::new(),control:control.clone()};
+        control.created(resize::Kind::Semaphore,sync.semaphores.len()as u64);
+        sync.present_fences=create_present_fences(&self.vulkan_context,candidate.images.len()).map_err(|e|e.to_string())?;
+        control.created(resize::Kind::PresentFence,sync.present_fences.len()as u64);
+        control.checkpoint(resize::Stage::Sync)?;control.checkpoint(resize::Stage::BeforeCommit)?;
+        // CAD lock acquisition is the last fallible publication step. All remaining
+        // swaps are infallible; old submitted uses completed before preparation.
+        if let (Some(cad),Some(prepared))=(&mut self.cad2d,&mut cad_pipeline){cad.commit_render_pass(prepared.take())?;}
+        self.renderer.commit_render_pass(egui_pipeline.take());
+        let mut previous=std::mem::replace(&mut self.swapchain,next.take());
+        let old_semaphores=std::mem::replace(&mut self.render_finished_semaphores,std::mem::take(&mut sync.semaphores));
+        let old_fences=std::mem::replace(&mut self.present_fences,std::mem::take(&mut sync.present_fences));
+        unsafe{for semaphore in old_semaphores{self.vulkan_context.device.destroy_semaphore(semaphore,None);}for fence in old_fences{self.vulkan_context.device.destroy_fence(fence.fence,None);}}
+        previous.destroy(&self.vulkan_context.device);
+        self.dirty_swapchain=false;
+        Ok(())
+    }
+
     fn wait_gpu_completion(&self)->bool{
         if self.presented_without_fence{self.vulkan_context.lifetime.quarantine();eprintln!("Bounded presentation cleanup unavailable: device lacks enabled present-fence feature; retaining WSI ownership");return false;}
         let pending=self.present_fences.iter().filter(|p|p.used).map(|p|p.fence).collect::<Vec<_>>();
@@ -475,7 +525,7 @@ impl System {
             self.vulkan_context.device.destroy_semaphore(self.image_available_semaphore,None);
             for semaphore in self.render_finished_semaphores.drain(..){self.vulkan_context.device.destroy_semaphore(semaphore,None);}
             for present in self.present_fences.drain(..){self.vulkan_context.device.destroy_fence(present.fence,None);}
-            self.swapchain.destroy(&self.vulkan_context);
+            self.swapchain.destroy(&self.vulkan_context.device);
             self.vulkan_context.device.free_command_buffers(self.vulkan_context.command_pool,&[self.command_buffer]);
         }
         self.exited=true;
@@ -490,6 +540,9 @@ impl System {
 }
 
 impl Drop for System {fn drop(&mut self){self.clean_gpu();if !self.exited{eprintln!("Retaining quarantined egui renderer and WSI resources");self.vulkan_context.lifetime.retain(self.memory_budget.clone());self.vulkan_context.lifetime.retain(unsafe{std::mem::ManuallyDrop::take(&mut self.renderer)});self.vulkan_context.lifetime.retain((self.swapchain.loader.clone(),self.swapchain.khr,self.swapchain.render_pass,std::mem::take(&mut self.swapchain.framebuffers),std::mem::take(&mut self.swapchain.image_views),std::mem::take(&mut self.render_finished_semaphores),std::mem::take(&mut self.present_fences),self.image_available_semaphore,self.fence,self.command_buffer));}}}
+struct UnpublishedSync{device:Device,semaphores:Vec<vk::Semaphore>,present_fences:Vec<PresentFence>,control:resize::Control}
+impl Drop for UnpublishedSync{fn drop(&mut self){let sem=self.semaphores.len();let fences=self.present_fences.len();unsafe{for semaphore in self.semaphores.drain(..){self.device.destroy_semaphore(semaphore,None);}for fence in self.present_fences.drain(..){self.device.destroy_fence(fence.fence,None);}}self.control.destroyed(resize::Kind::Semaphore,sem as u64);self.control.destroyed(resize::Kind::PresentFence,fences as u64);}}
+
 struct PresentFence{fence:vk::Fence,used:bool}
 fn create_present_fences(context:&VulkanContext,count:usize)->Result<Vec<PresentFence>,vk::Result>{
  if !context.present_fences_enabled{return Ok(Vec::new());}
@@ -620,83 +673,54 @@ struct Swapchain {
     khr: vk::SwapchainKHR,
     images: Vec<vk::Image>,
     srgb: bool,
+    format:vk::Format,
+    retired:bool,
     image_views: Vec<vk::ImageView>,
     render_pass: vk::RenderPass,
     framebuffers: Vec<vk::Framebuffer>,
     integer_cad:bool,
 }
 
+struct UnpublishedSwapchain{device:Device,value:Option<Swapchain>,control:resize::Control}
+impl UnpublishedSwapchain{fn take(&mut self)->Swapchain{self.value.take().unwrap()}}
+impl Drop for UnpublishedSwapchain{fn drop(&mut self){if let Some(value)=&mut self.value{
+ let counts=[(resize::Kind::Swapchain,u64::from(value.khr!=vk::SwapchainKHR::null())),(resize::Kind::ImageView,value.image_views.len()as u64),(resize::Kind::RenderPass,u64::from(value.render_pass!=vk::RenderPass::null())),(resize::Kind::Framebuffer,value.framebuffers.len()as u64)];
+ value.destroy(&self.device);for(k,n)in counts{self.control.destroyed(k,n);}
+}}}
+
 impl Swapchain {
-    fn new(vulkan_context: &VulkanContext) -> Result<Self, Box<dyn Error>> {
-        let integer_cad=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
-        // Swapchain
-        let (loader, khr, extent, format, images, image_views) =
-            create_vulkan_swapchain(&vulkan_context,integer_cad)?;
-
-        // Renderpass
-        let render_pass = create_vulkan_render_pass(&vulkan_context.device, format,integer_cad)?;
-
-        // Framebuffers
-        let framebuffers =
-            create_vulkan_framebuffers(&vulkan_context.device, render_pass, extent, &image_views)?;
-
-        Ok(Self {
-            loader,
-            extent,
-            khr,
-            images,
-            srgb: matches!(format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB),
-            image_views,
-            render_pass,
-            framebuffers,integer_cad,
-        })
+    fn new(context:&VulkanContext)->Result<Self,Box<dyn Error>>{
+        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+        let mut unused=false;
+        Ok(Self::build(context,integer,vk::SwapchainKHR::null(),&mut unused,None,&resize::Control::default())?.take())
+    }
+    fn build(context:&VulkanContext,integer:bool,old:vk::SwapchainKHR,retired:&mut bool,format:Option<vk::Format>,control:&resize::Control)->Result<UnpublishedSwapchain,Box<dyn Error>>{
+        let mut pending=create_vulkan_swapchain(context,integer,old,retired,format,control)?;
+        let value=pending.value.as_mut().unwrap();
+        value.render_pass=create_vulkan_render_pass(&context.device,value.format,integer)?;
+        control.created(resize::Kind::RenderPass,1);control.checkpoint(resize::Stage::RenderPass)?;
+        value.framebuffers=create_vulkan_framebuffers(&context.device,value.render_pass,value.extent,&value.image_views,control)?;
+        Ok(pending)
+    }
+    fn prepare_replacement(&mut self,context:&VulkanContext,control:&resize::Control)->Result<UnpublishedSwapchain,Box<dyn Error>>{
+        // Vulkan retires oldSwapchain at creation, including failed creation.
+        let old=if self.retired{vk::SwapchainKHR::null()}else{self.khr};
+        Self::build(context,self.integer_cad,old,&mut self.retired,Some(self.format),control)
     }
 
-    fn recreate(&mut self, vulkan_context: &VulkanContext) -> Result<(), Box<dyn Error>> {
-        log::debug!("Recreating the swapchain");
-
-        // System has completed all graphics and actual present fences before this call.
-
-        self.destroy(vulkan_context);
-
-        // Swapchain
-        let (loader, khr, extent, format, images, image_views) =
-            create_vulkan_swapchain(vulkan_context,self.integer_cad)?;
-
-        // Renderpass
-        let render_pass = create_vulkan_render_pass(&vulkan_context.device, format,self.integer_cad)?;
-
-        // Framebuffers
-        let framebuffers =
-            create_vulkan_framebuffers(&vulkan_context.device, render_pass, extent, &image_views)?;
-
-        self.loader = loader;
-        self.extent = extent;
-        self.khr = khr;
-        self.images = images;
-        let srgb=matches!(format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB);
-        if srgb!=self.srgb { return Err("Swapchain framebuffer color space changed; renderer recreation required".into()); }
-        self.image_views = image_views;
-        self.render_pass = render_pass;
-        self.framebuffers = framebuffers;
-
-        Ok(())
-    }
-
-    fn destroy(&mut self, vulkan_context: &VulkanContext) {
+    fn destroy(&mut self, device: &Device) {
         unsafe {
             self.framebuffers
                 .iter()
-                .for_each(|fb| vulkan_context.device.destroy_framebuffer(*fb, None));
+                .for_each(|fb| device.destroy_framebuffer(*fb, None));
             self.framebuffers.clear();
-            vulkan_context
-                .device
-                .destroy_render_pass(self.render_pass, None);
+            if self.render_pass!=vk::RenderPass::null(){device.destroy_render_pass(self.render_pass, None);}
             self.image_views
                 .iter()
-                .for_each(|v| vulkan_context.device.destroy_image_view(*v, None));
+                .for_each(|v| device.destroy_image_view(*v, None));
             self.image_views.clear();
-            self.loader.destroy_swapchain(self.khr, None);
+            if self.khr!=vk::SwapchainKHR::null(){self.loader.destroy_swapchain(self.khr, None);self.khr=vk::SwapchainKHR::null();}
+            self.render_pass=vk::RenderPass::null();
         }
     }
 }
@@ -892,18 +916,8 @@ fn create_vulkan_device_and_graphics_and_present_qs(
 
 fn create_vulkan_swapchain(
     vulkan_context: &VulkanContext,
-    integer_cad:bool,
-) -> Result<
-    (
-        swapchain::Device,
-        vk::SwapchainKHR,
-        vk::Extent2D,
-        vk::Format,
-        Vec<vk::Image>,
-        Vec<vk::ImageView>,
-    ),
-    Box<dyn Error>,
-> {
+    integer_cad:bool,old:vk::SwapchainKHR,retired:&mut bool,expected_format:Option<vk::Format>,control:&resize::Control,
+) -> Result<UnpublishedSwapchain, Box<dyn Error>> {
     log::debug!("Creating vulkan swapchain");
     // Swapchain format
     let format = {
@@ -918,6 +932,7 @@ fn create_vulkan_swapchain(
             .ok_or("Surface provides no encoded UNORM/SRGB_NONLINEAR presentation format; linear sRGB blending cannot reproduce document composition")?
 
     };
+    if expected_format.is_some_and(|expected|expected!=format.format){return Err("Swapchain format changed; backend recreation required".into());}
     log::debug!("Swapchain format: {format:?}");
 
     // Swapchain present mode
@@ -974,7 +989,7 @@ fn create_vulkan_swapchain(
     ];
     let create_info = {
         let mut builder = vk::SwapchainCreateInfoKHR::default()
-            .surface(vulkan_context.surface_khr)
+            .surface(vulkan_context.surface_khr).old_swapchain(old)
             .min_image_count(image_count)
             .image_format(format.format)
             .image_color_space(format.color_space)
@@ -998,37 +1013,25 @@ fn create_vulkan_swapchain(
     };
 
     let swapchain = swapchain::Device::new(&vulkan_context.instance, &vulkan_context.device);
+    if old!=vk::SwapchainKHR::null(){*retired=true;}
     let swapchain_khr = unsafe { swapchain.create_swapchain(&create_info, None)? };
 
-    // Swapchain images and image views
-    let images = unsafe { swapchain.get_swapchain_images(swapchain_khr)? };
-    let views = images
-        .iter()
-        .map(|image| {
-            let create_info = vk::ImageViewCreateInfo::default()
-                .image(*image)
-                .view_type(vk::ImageViewType::TYPE_2D)
-                .format(format.format)
-                .subresource_range(vk::ImageSubresourceRange {
-                    aspect_mask: vk::ImageAspectFlags::COLOR,
-                    base_mip_level: 0,
-                    level_count: 1,
-                    base_array_layer: 0,
-                    layer_count: 1,
-                });
-
-            unsafe { vulkan_context.device.create_image_view(&create_info, None) }
-        })
-        .collect::<Result<Vec<_>, _>>()?;
-
-    Ok((
-        swapchain,
-        swapchain_khr,
-        extent,
-        format.format,
-        images,
-        views,
-    ))
+    // Guard every created view and swapchain before the next fallible call.
+    let mut pending=UnpublishedSwapchain{device:vulkan_context.device.clone(),control:control.clone(),value:Some(Swapchain{
+        loader:swapchain,khr:swapchain_khr,extent,format:format.format,
+        srgb:matches!(format.format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB),retired:false,
+        integer_cad,images:Vec::new(),image_views:Vec::new(),render_pass:vk::RenderPass::null(),framebuffers:Vec::new(),
+    })};
+    control.created(resize::Kind::Swapchain,1);
+    let value=pending.value.as_mut().unwrap();
+    value.images=unsafe{value.loader.get_swapchain_images(value.khr)?};
+    for image in &value.images{
+        let info=vk::ImageViewCreateInfo::default().image(*image).view_type(vk::ImageViewType::TYPE_2D)
+            .format(format.format).subresource_range(vk::ImageSubresourceRange{aspect_mask:vk::ImageAspectFlags::COLOR,base_mip_level:0,level_count:1,base_array_layer:0,layer_count:1});
+        value.image_views.push(unsafe{vulkan_context.device.create_image_view(&info,None)?});
+        control.created(resize::Kind::ImageView,1);control.checkpoint(resize::Stage::ImageView(value.image_views.len()))?;
+    }
+    Ok(pending)
 }
 
 fn create_vulkan_render_pass(
@@ -1078,22 +1081,20 @@ fn create_vulkan_framebuffers(
     device: &Device,
     render_pass: vk::RenderPass,
     extent: vk::Extent2D,
-    image_views: &[vk::ImageView],
+    image_views: &[vk::ImageView],control:&resize::Control,
 ) -> Result<Vec<vk::Framebuffer>, Box<dyn Error>> {
     log::debug!("Creating vulkan framebuffers");
-    Ok(image_views
-        .iter()
-        .map(|view| [*view])
-        .map(|attachments| {
-            let framebuffer_info = vk::FramebufferCreateInfo::default()
-                .render_pass(render_pass)
-                .attachments(&attachments)
-                .width(extent.width)
-                .height(extent.height)
-                .layers(1);
-            unsafe { device.create_framebuffer(&framebuffer_info, None) }
-        })
-        .collect::<Result<Vec<_>, _>>()?)
+    let mut framebuffers=Vec::new();
+    for view in image_views{
+        let attachments=[*view];
+        let info=vk::FramebufferCreateInfo::default().render_pass(render_pass).attachments(&attachments).width(extent.width).height(extent.height).layers(1);
+        match unsafe{device.create_framebuffer(&info,None)}{
+            Ok(framebuffer)=>{framebuffers.push(framebuffer);control.created(resize::Kind::Framebuffer,1);
+                if let Err(error)=control.checkpoint(resize::Stage::Framebuffer(framebuffers.len())){let n=framebuffers.len();unsafe{for framebuffer in framebuffers{device.destroy_framebuffer(framebuffer,None);}}control.destroyed(resize::Kind::Framebuffer,n as u64);return Err(error.into());}},
+            Err(error)=>{let n=framebuffers.len();unsafe{for framebuffer in framebuffers{device.destroy_framebuffer(framebuffer,None);}}control.destroyed(resize::Kind::Framebuffer,n as u64);return Err(error.into());}
+        }
+    }
+    Ok(framebuffers)
 }
 
 fn record_command_buffers(

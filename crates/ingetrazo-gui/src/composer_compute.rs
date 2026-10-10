@@ -3,15 +3,27 @@
 use ingetrazo_core::{camera::OrbitCamera, scene::Scene};
 use ingetrazo_render::{
     process_hlr::{HlrProcessPool, ProcessMetrics},
-    vector_hlr::{parallel_segments_with_pool, VectorSegment},
+    vector_hlr::{
+        original_qt_paper_drawing_for_view_with_pool, parallel_segments_with_pool,
+        OriginalQtPaperBasis, VectorSegment,
+    },
 };
 use std::{
     collections::VecDeque,
     path::{Path, PathBuf},
     sync::Arc,
 };
+/// Cache identity includes the geometry/projection publication policy. Worker wire
+/// protocol remains f64 projected intervals; geometry from different policies can
+/// never reuse completed ink, even with otherwise identical document/camera keys.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum InkPolicy {
+    NativeF64,
+    OriginalQtPaperV1,
+}
 #[derive(Clone, PartialEq, Eq)]
 struct Key {
+    policy: InkPolicy,
     document: uuid::Uuid,
     revision: u64,
     scene: u64,
@@ -20,11 +32,28 @@ struct Key {
     profiles: bool,
     hidden: bool,
     view_key: String,
+    paper_state: String,
+}
+pub struct PaperDrawing {
+    pub segments: Arc<Vec<VectorSegment>>,
+    pub section_material: Vec<[glam::DVec3; 3]>,
+}
+impl PaperDrawing {
+    fn bytes(&self) -> usize {
+        self.segments
+            .capacity()
+            .saturating_mul(std::mem::size_of::<VectorSegment>())
+            .saturating_add(
+                self.section_material
+                    .capacity()
+                    .saturating_mul(std::mem::size_of::<[glam::DVec3; 3]>()),
+            )
+    }
 }
 pub struct ComposerCompute {
     pool: Option<HlrProcessPool>,
     failure: Option<String>,
-    cache: VecDeque<(Key, Arc<Vec<VectorSegment>>)>,
+    cache: VecDeque<(Key, Arc<PaperDrawing>)>,
     cache_bytes: usize,
     worker: Option<PathBuf>,
     pub completed_jobs: u64,
@@ -87,15 +116,130 @@ impl ComposerCompute {
         profiles: bool,
         hidden: bool,
     ) -> Result<Arc<Vec<VectorSegment>>, String> {
+        self.segments_policy(
+            scene,
+            camera,
+            document,
+            revision,
+            view_key,
+            profiles,
+            hidden,
+            InkPolicy::NativeF64,
+            None,
+        )
+        .map(|drawing| drawing.segments.clone())
+    }
+    pub fn original_qt_paper_segments(
+        &mut self,
+        scene: &Scene,
+        camera: &OrbitCamera,
+        document: uuid::Uuid,
+        revision: u64,
+        view_key: &str,
+        profiles: bool,
+        hidden: bool,
+    ) -> Result<Arc<Vec<VectorSegment>>, String> {
+        self.segments_policy(
+            scene,
+            camera,
+            document,
+            revision,
+            view_key,
+            profiles,
+            hidden,
+            InkPolicy::OriginalQtPaperV1,
+            None,
+        )
+        .map(|drawing| drawing.segments.clone())
+    }
+    /// Returns cached cut material with ink; a warm admission check performs no
+    /// contour construction, triangulation, projection or worker publication.
+    pub fn original_qt_paper_drawing(
+        &mut self,
+        scene: &Scene,
+        camera: &OrbitCamera,
+        document: uuid::Uuid,
+        revision: u64,
+        view_key: &str,
+        profiles: bool,
+        hidden: bool,
+    ) -> Result<Arc<PaperDrawing>, String> {
+        self.segments_policy(
+            scene,
+            camera,
+            document,
+            revision,
+            view_key,
+            profiles,
+            hidden,
+            InkPolicy::OriginalQtPaperV1,
+            None,
+        )
+    }
+    pub fn original_qt_paper_drawing_for_view(
+        &mut self,
+        view: &ingetrazo_render::paper_scene::PaperSceneView<'_>,
+        camera: &OrbitCamera,
+        document: uuid::Uuid,
+        revision: u64,
+        view_key: &str,
+        profiles: bool,
+        hidden: bool,
+    ) -> Result<Arc<PaperDrawing>, String> {
+        self.segments_policy(
+            view.scene,
+            camera,
+            document,
+            revision,
+            view_key,
+            profiles,
+            hidden,
+            InkPolicy::OriginalQtPaperV1,
+            view.saved,
+        )
+    }
+    fn segments_policy(
+        &mut self,
+        scene: &Scene,
+        camera: &OrbitCamera,
+        document: uuid::Uuid,
+        revision: u64,
+        view_key: &str,
+        profiles: bool,
+        hidden: bool,
+        policy: InkPolicy,
+        saved: Option<&ingetrazo_core::saved_views::SavedView>,
+    ) -> Result<Arc<PaperDrawing>, String> {
         let key = Key {
+            policy,
             document,
             revision,
             scene: scene.version,
             view: scene.view_version,
-            camera: camera.view_matrix().to_cols_array().map(f64::to_bits),
+            camera: match policy {
+                InkPolicy::NativeF64 => camera.view_matrix().to_cols_array().map(f64::to_bits),
+                InkPolicy::OriginalQtPaperV1 => {
+                    let b = OriginalQtPaperBasis::from_camera(camera);
+                    let mut key = [0; 16];
+                    for (i, v) in [b.eye, b.right, b.up, b.forward].iter().enumerate() {
+                        for axis in 0..3 {
+                            key[i * 3 + axis] = v[axis].to_bits();
+                        }
+                    }
+                    key
+                }
+            },
             profiles,
             hidden,
             view_key: view_key.into(),
+            // Only paper geometry state participates: ghost/selectability flags
+            // never make hidden entities visible in source paper output.
+            paper_state: saved
+                .map(|v| {
+                    serde_json::to_string(&(&v.hidden_layers, &v.hidden_objects, &v.section))
+                        .unwrap()
+                })
+                .unwrap_or_default(),
         };
         if let Some((_, ink)) = self.cache.iter().find(|(k, _)| *k == key) {
             return Ok(ink.clone());
@@ -118,13 +262,31 @@ impl ComposerCompute {
                 }
             }
         }
-        let ink = match parallel_segments_with_pool(
-            scene,
-            camera,
-            profiles,
-            hidden,
-            self.pool.as_mut().unwrap(),
-        ) {
+        let result = match policy {
+            InkPolicy::NativeF64 => parallel_segments_with_pool(
+                scene,
+                camera,
+                profiles,
+                hidden,
+                self.pool.as_mut().unwrap(),
+            )
+            .map(|segments| PaperDrawing {
+                segments: Arc::new(segments),
+                section_material: Vec::new(),
+            }),
+            InkPolicy::OriginalQtPaperV1 => original_qt_paper_drawing_for_view_with_pool(
+                &ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved),
+                camera,
+                profiles,
+                hidden,
+                self.pool.as_mut().unwrap(),
+            )
+            .map(|drawing| PaperDrawing {
+                segments: Arc::new(drawing.segments),
+                section_material: drawing.section_material,
+            }),
+        };
+        let ink = match result {
             Ok(ink) => Arc::new(ink),
             Err(e) => {
                 let error = format!("Drawing computation failed: {e}");
@@ -134,18 +296,13 @@ impl ComposerCompute {
             }
         };
         self.completed_jobs = self.completed_jobs.saturating_add(1);
-        let bytes = ink
-            .capacity()
-            .saturating_mul(std::mem::size_of::<VectorSegment>());
+        let bytes = ink.bytes();
         const BUDGET: usize = 32 * 1024 * 1024;
         while !self.cache.is_empty()
             && (self.cache_bytes.saturating_add(bytes) > BUDGET || self.cache.len() >= 32)
         {
             let (_, old) = self.cache.pop_front().unwrap();
-            self.cache_bytes = self.cache_bytes.saturating_sub(
-                old.capacity()
-                    .saturating_mul(std::mem::size_of::<VectorSegment>()),
-            );
+            self.cache_bytes = self.cache_bytes.saturating_sub(old.bytes());
         }
         if bytes <= BUDGET {
             self.cache_bytes += bytes;

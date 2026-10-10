@@ -1,0 +1,37 @@
+{
+  "native_base": "d73f78b",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "workspace_counts": {
+    "passed": 507,
+    "ignored": 2
+  },
+  "sha256": {
+    "target/debug/examples/sheet_view_pdf_fixture": "bb88e303431f61db7cdc29c653d46853f05b09cf506dc1ea76c485a0fd1bbb53",
+    "target/debug/ingetrazo-render-worker": "db65e85543d862709748cbe3acdd46a2c64a766e6f80e848941d5a26b2abbcca",
+    "target/debug/examples/paper_boundary_fixture": "9a0af42ec39bbc147cac476fc019c6c9ceb437c0a3cc79771a4127deab80e210",
+    "target/debug/examples/qt_paper_numeral_fixture": "5854ffc58736d318ff48e02708020720c78dde8001f32fe400d516bb6589cfba",
+    "scripts/probe-python-sheet-view-pdf.py": "ba81821ebaace2288ecaa683cd747d223b370e7405d9b7e70651d62c8b95d5fa",
+    "scripts/probe-python-paper-boundary.py": "290a5559b881c58e57d7d7d897516f6b04d86c8b4efba2dc8e15014496bf0ab8",
+    "scripts/probe-qt-paper-numerals.py": "ffc89e2430d5415a8e8b9a493d540e800f07f8c9868e5c1758a04909b3325cac",
+    "scripts/check-sheet-view-vector-pdf.py": "28716d8d3844582ff33cca488167d877f7ed61b82065a90e5af398604205283f",
+    "scripts/check-composer-vector-view-pdf.py": "8ffaf87dc1aaaa38fe0c2c79c2b448bf51ca5837e1f72e25301bb22c4b51a545"
+  },
+  "native_tip": "d98b4e5",
+  "production_commit": "1c8f0c3",
+  "protocol_commit": "d734cfd",
+  "fresh_full_gate": {
+    "evidence_path": "/tmp/ingetrazo-view-pdf-fresh-gate",
+    "passed": true,
+    "strict_pages": 78,
+    "runner_commit": "d98b4e5"
+  },
+  "color_negative": {
+    "changed_pages": 2,
+    "pixel_counts": [
+      2011,
+      3000
+    ],
+    "expected_exit": 1,
+    "mutation": "Same-length valid PDF ink color substitution 0.117647059 ->1.000000000"
+  }
+}

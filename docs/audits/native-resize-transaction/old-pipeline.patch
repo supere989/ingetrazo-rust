@@ -1,0 +1,20 @@
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/mod.rs b/crates/ingetrazo-gui/src/native_vulkan/mod.rs
+index 9d6e7b4..fb6abe4 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/mod.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/mod.rs
+@@ -485,6 +485,7 @@ impl System {
+         let mut next=self.swapchain.prepare_replacement(&self.vulkan_context,control).map_err(|e|e.to_string())?;
+         let candidate=next.value.as_ref().unwrap();
+         let mut egui_pipeline=resize::Tracked::new(self.renderer.prepare_render_pass(candidate.render_pass).map_err(|e|e.to_string())?,control,vec![(resize::Kind::EguiPipeline,1)]);
++        self.renderer.commit_render_pass(egui_pipeline.take()); // literal early pipeline publication negative
+         control.checkpoint(resize::Stage::EguiPipeline)?;
+         let mut cad_pipeline=if let Some(cad)=&self.cad2d{Some(resize::Tracked::new(cad.prepare_render_pass(candidate.render_pass,&candidate.image_views)?,control,vec![(resize::Kind::CadPipeline,1),(resize::Kind::CadPool,u64::from(candidate.integer_cad))]))}else{None};
+         control.checkpoint(resize::Stage::CadPipeline)?;
+@@ -496,7 +497,6 @@ impl System {
+         // CAD lock acquisition is the last fallible publication step. All remaining
+         // swaps are infallible; old submitted uses completed before preparation.
+         if let (Some(cad),Some(prepared))=(&mut self.cad2d,&mut cad_pipeline){cad.commit_render_pass(prepared.take())?;}
+-        self.renderer.commit_render_pass(egui_pipeline.take());
+         let mut previous=std::mem::replace(&mut self.swapchain,next.take());
+         let old_semaphores=std::mem::replace(&mut self.render_finished_semaphores,std::mem::take(&mut sync.semaphores));
+         let old_fences=std::mem::replace(&mut self.present_fences,std::mem::take(&mut sync.present_fences));

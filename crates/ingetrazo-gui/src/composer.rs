@@ -17,6 +17,7 @@ use ingetrazo_core::scene::Scene;
 use ingetrazo_render::pipeline::project_point;
 
 use crate::app::IngeTrazoApp;
+#[path="composer_pdf.rs"] mod pdf;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
@@ -1108,9 +1109,12 @@ pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_sha
 impl IngeTrazoApp {
     /// Prepare every page before opening the destination. Unsupported visible
     /// painters report an error rather than silently exporting incomplete sheets.
-    pub fn export_composer_pdf(&self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
+    pub fn export_composer_pdf(&mut self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
         let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
-        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all(sheets)?;
-        ingetrazo_formats::sheet_pdf::save(path,&pages)?;Ok(pages.len())
+        let scene=&self.scene;let camera=&self.camera;let compute=&mut self.composer_compute;let document=self.clipboard_document;let revision=self.model_revision;
+        let mut painter=|frame:&ViewFrame|pdf::view_draws(scene,camera,compute,document,revision,frame);
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_views(sheets,&mut painter)?;
+        let has_view=sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::ViewFrame(_))));
+        if has_view{ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
     }
 }

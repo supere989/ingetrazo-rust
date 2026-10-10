@@ -1,0 +1,18 @@
+{
+  "missing_checkpoint": {
+    "rejected": true,
+    "reason": "Missing/reordered actual cancellation checkpoints: ['BeforeCreate', 'ImageView(1)', 'RenderPass', 'Framebuffer(1)', 'EguiPipeline', 'CadPipeline', 'BeforeCommit']"
+  },
+  "zero_allocations": {
+    "rejected": true,
+    "reason": "No actual created image views"
+  },
+  "candidate_leak": {
+    "rejected": true,
+    "reason": "Candidate leak at ImageView(1)"
+  },
+  "nonzero_shutdown": {
+    "rejected": true,
+    "reason": ""
+  }
+}

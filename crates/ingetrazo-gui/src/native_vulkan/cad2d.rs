@@ -85,6 +85,13 @@ impl DescriptorOwnerWeakForProbe {
     }
     pub fn strong_count(&self)->usize{self.0.strong_count()}
 }
+pub(crate) struct PreparedRenderPass {
+    device:Device,pipeline:vk::Pipeline,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>,
+}
+impl Drop for PreparedRenderPass{fn drop(&mut self){unsafe{
+    if self.pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.pipeline,None)}
+    if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None)}
+}}}
 struct NativePaint {
     device: vk::Device,
     state: Mutex<State>,
@@ -309,11 +316,23 @@ impl Renderer {
         DescriptorOwnerWeakForProbe(Arc::downgrade(&self.pipeline))
     }
     pub fn set_render_pass(&mut self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<(),String>{
-        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        let prepared=self.prepare_render_pass(pass,views)?;self.commit_render_pass(prepared)
+    }
+    pub(crate) fn prepare_render_pass(&self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<PreparedRenderPass,String>{
+        self.resources.check_submission()?;
+        let p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
         let replacement=make_pipeline(&self.device,pass,p.layout,p.integer)?;
-        let inputs=if p.integer{match make_inputs(&self.device,p.descriptor_layout,views){Ok(v)=>v,Err(e)=>{unsafe{self.device.destroy_pipeline(replacement,None)};return Err(e)}}}else{(vk::DescriptorPool::null(),Vec::new())};
-        unsafe{self.device.destroy_pipeline(p.pipeline,None);if p.descriptor_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(p.descriptor_pool,None)}};
-        p.pipeline=replacement;p.descriptor_pool=inputs.0;p.descriptor_sets=inputs.1;p.active_set=None;Ok(())
+        let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,pool:vk::DescriptorPool::null(),sets:Vec::new()};
+        if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
+        Ok(prepared)
+    }
+    pub(crate) fn commit_render_pass(&mut self,mut prepared:PreparedRenderPass)->Result<(),String>{
+        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        let previous=std::mem::replace(&mut p.pipeline,std::mem::replace(&mut prepared.pipeline,vk::Pipeline::null()));
+        let previous_pool=std::mem::replace(&mut p.descriptor_pool,std::mem::replace(&mut prepared.pool,vk::DescriptorPool::null()));
+        p.descriptor_sets=std::mem::take(&mut prepared.sets);p.active_set=None;
+        unsafe{self.device.destroy_pipeline(previous,None);if previous_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(previous_pool,None)}};
+        Ok(())
     }
     /// Called after the previous submitted frame fence, before recording this image.
     pub fn set_input_image(&mut self,index:usize)->Result<(),String>{let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;if p.integer{p.active_set=Some(*p.descriptor_sets.get(index).ok_or("CAD2D input image index invalid")?);}Ok(())}

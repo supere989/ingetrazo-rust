@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "actual_checkpoints": [
+    "BeforeCreate",
+    "ImageView(1)",
+    "RenderPass",
+    "Framebuffer(1)",
+    "EguiPipeline",
+    "CadPipeline",
+    "Sync",
+    "BeforeCommit"
+  ],
+  "cached_geometry_uploads": 1,
+  "tracked_ledger_shutdown": 0,
+  "actual_old_source_negatives_rejected": [
+    "old-cleanup",
+    "old-pipeline"
+  ],
+  "scope": "Engineering cancellation after real allocations, not native driver OOM/device-loss or total implicit VRAM accounting"
+}

@@ -50,6 +50,7 @@ fn main() {
             path,
             stroke: Some(([0.1, 0.2, 0.3, 0.4], 0.35)),
             fill: None,
+            stroke_options: None,
             clip: None,
         }],
     }];

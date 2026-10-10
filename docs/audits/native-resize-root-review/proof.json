@@ -1,0 +1,11 @@
+{
+  "source_revision": "249cdafe5fa57feaff14ea541ac0f59c24efa6d9",
+  "binary_sha256": "0e76aa996854c34425fe6d64c1467831ef9b4d7eb088bcbaf924ea384858f742",
+  "independent_rtx_checkpoints": 8,
+  "checker_corruptions_rejected": 4,
+  "prior_actual_source_negatives_revalidated": 2,
+  "workspace_passed": 525,
+  "ignored": 2,
+  "physical_gpu": "NVIDIA RTX 5090",
+  "scope": "Transactional candidate allocation/publication, legal retired retry; no real driver OOM/device-loss/global call timeout proof"
+}

@@ -1,0 +1,19 @@
+{
+  "source_revision": "53997493521b169d6991e2f767ca805e090b7f39",
+  "baseline_revision": "2f66f1e29d5f992379d64ec5e001b967b84a69ea",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "public_ci_failure": {
+    "run": 38043968319,
+    "job": 114189643241,
+    "fixture_line": 8
+  },
+  "native_original_reopen_anchor_cases": 6,
+  "original_world_frame_cases": 12,
+  "original_entry_history_controls": 2,
+  "production_changes": false,
+  "tolerance_changes": false,
+  "retained_boundaries": [
+    "Rust atomic annotation Undo differs from original mesh-only shareback Undo",
+    "Controlled Viewport/History calls, no actual key or rendered label proof"
+  ]
+}

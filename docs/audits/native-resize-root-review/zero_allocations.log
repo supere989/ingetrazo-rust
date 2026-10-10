@@ -1,0 +1,36 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION BeforeCreate published_owners_preserved=true retired_retry=true audit={"created":{},"destroyed":{}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION ImageView(1) published_owners_preserved=true retired_retry=true audit={"created":{},"destroyed":{}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION RenderPass published_owners_preserved=true retired_retry=true audit={"created":{"Swapchain":1,"ImageView":3,"RenderPass":1},"destroyed":{"Swapchain":1,"ImageView":3,"RenderPass":1}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION Framebuffer(1) published_owners_preserved=true retired_retry=true audit={"created":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":1},"destroyed":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":1}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION EguiPipeline published_owners_preserved=true retired_retry=true audit={"created":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1},"destroyed":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION CadPipeline published_owners_preserved=true retired_retry=true audit={"created":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"CadPipeline":1,"CadPool":1},"destroyed":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"CadPipeline":1,"CadPool":1}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION Sync published_owners_preserved=true retired_retry=true audit={"created":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"CadPipeline":1,"CadPool":1,"Semaphore":3,"PresentFence":3},"destroyed":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"CadPipeline":1,"CadPool":1,"Semaphore":3,"PresentFence":3}}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+RESIZE_CANCELLATION BeforeCommit published_owners_preserved=true retired_retry=true audit={"created":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"CadPipeline":1,"CadPool":1,"Semaphore":3,"PresentFence":3},"destroyed":{"Swapchain":1,"ImageView":3,"RenderPass":1,"Framebuffer":3,"EguiPipeline":1,"CadPipeline":1,"CadPool":1,"Semaphore":3,"PresentFence":3}}
+RESIZE_TRANSACTION_ALL_8_PASS
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+GPU allocation budget: 525824 committed bytes; peakcommitted 1049088; peakadmitted 1049088; globalcap None; heaps [HeapBudget { capacity: 34190917632, limit: 27352734104, live_budget: Some(26225108577), live_usage: 7208960, reserved: 0, committed: 524880 }, HeapBudget { capacity: 99445232640, limit: 79556186112, live_budget: Some(89500709376), live_usage: 4247552, reserved: 0, committed: 944 }]
+CAD2D metrics: Stats { callbacks: 13, binds: 13, draws: 13, uploads: 1, upload_bytes: 72, cache_hits: 12, cached_bytes: 72, rolled_back_buffers: 0 }
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0
