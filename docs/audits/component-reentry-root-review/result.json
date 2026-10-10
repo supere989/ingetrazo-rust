@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "source_cases": 4,
+  "core_axes_controls": 2,
+  "gui_tests": 101,
+  "gui_ignored": 1,
+  "scope": "no-edit history and runtime axes derived from original raw frames; initial active edit world-coordinate parity pending"
+}
