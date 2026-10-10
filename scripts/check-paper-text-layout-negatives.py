@@ -16,7 +16,13 @@ for name in ["center","wrap"]:
   m=re.search(rb"(-?\d+\.\d+) (-?\d+\.\d+) Td ",raw);assert m
   value=format(float(m[1])+1/64,"."+str(len(m[1].split(b".")[1]))+"f").encode();assert len(value)<=len(m[1]);value=value.ljust(len(m[1]),b" ");changed=raw[:m.start(1)]+value+raw[m.end(1):]
  else:
-  assert raw.count(b"W* n")==1;changed=raw.replace(b"W* n",b"n   ",1)
+  if os.environ.get("INGETRAZO_TEXT_PARAGRAPHS")=="1":
+   # Typed paragraph writer restores clip per independent font/line draw.
+   # Remove every occurrence so this remains a missing-rectangle-clip counterexample.
+   assert raw.count(b"W* n")==5
+   changed=raw.replace(b"W* n",b"n   ")
+  else:
+   assert raw.count(b"W* n")==1;changed=raw.replace(b"W* n",b"n   ",1)
  assert len(changed)==len(raw);mutated=native/(name+".valid-mutated.pdf");mutated.write_bytes(changed)
  a=render(original/(name+".original.pdf"));b=render(mutated);assert len(a)==len(b);count=sum(a[i:i+4]!=b[i:i+4]for i in range(0,len(a),4));assert count>0,name+" mutation must be rejected"
  rows.append(dict(case=name,changed_pixels=count,parse_valid=True,same_size=True,passed=True))
