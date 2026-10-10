@@ -7,6 +7,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[1];oracle=Path(sys.argv[1]);binary=Path(sys.argv[2]);inputs=Path(sys.argv[3]);out=Path(sys.argv[4]);out.mkdir(parents=True,exist_ok=True)
 pin='291700bc213655a00461838de71e5f206311e619'
 assert subprocess.check_output(['git','-C',str(oracle),'rev-parse','HEAD'],text=True).strip()==pin
+assert subprocess.check_output(['git','-C',str(root/'ingetrazo'),'rev-parse','HEAD'],text=True).strip()=='6be29fe437a7cd992d4e079f71720821b25216b9'
 sys.path[:0]=[str(oracle/'packages/python/src'),str(root/'ingetrazo')]
 from core.scene import Scene
 from formats.skp import load_skp

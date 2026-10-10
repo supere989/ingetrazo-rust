@@ -401,6 +401,10 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
         scene.groups.push(Group::with_mesh(&p.name, mesh));
     }
     let mut prototypes = HashMap::<(u64, Option<u64>), (uuid::Uuid, Mesh)>::new();
+    let mut uses_by_definition = HashMap::<u64, usize>::new();
+    for ins in &p.root.instances {
+        *uses_by_definition.entry(ins.definition).or_default() += 1;
+    }
     for ins in &p.root.instances {
         let d = p
             .definitions
@@ -411,12 +415,7 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
                 "nested definition placement, tagged extraction and sharing".into(),
             ));
         }
-        let uses = p
-            .root
-            .instances
-            .iter()
-            .filter(|i| i.definition == ins.definition)
-            .count();
+        let uses = uses_by_definition[&ins.definition];
         let shared =
             uses == 1 || (d.faces.len() >= 60 && d.faces.len().saturating_mul(uses - 1) >= 400);
         let (mesh, share) = if shared {
