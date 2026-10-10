@@ -16,6 +16,7 @@ if sys.argv[1:]==['--self-test']:
 else:
     root=Path(sys.argv[1])
     for i,size in enumerate(SIZES):verify_mip((root/f'mip-{i}.rgba').read_bytes(),size)
+    for i,size in enumerate(((8,4),(4,2),(2,1),(1,1))):verify_mip((root/f'batch-mip-{i}.rgba').read_bytes(),size)
     assert (root/'checker-minified.rgba').read_bytes()==bytes((128,128,128,255)), 'mip LOD missing/wrong'
-    assert json.loads((root/'result.json').read_text())=={'passed':True,'mips':3,'warm_generation_jobs':0,'transactional_refusal':True,'pending_drop_retained':True,'physical_mac_claim':False}
+    assert json.loads((root/'result.json').read_text())=={'passed':True,'mips':3,'batch_images':2,'batch_commands':1,'warm_generation_jobs':0,'transactional_refusal':True,'pending_drop_retained':True,'physical_mac_claim':False}
     print('PASS GPU mip producer, minified sampler, warm/cache/ownership protocol')
