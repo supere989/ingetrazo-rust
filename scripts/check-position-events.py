@@ -7,6 +7,8 @@ def check(n):
  assert [r['name']for r in n['cases']]==names==[r['name']for r in s['cases']]
  for a,b in zip(s['cases'],n['cases']):
   assert b['mode']=='Some(Look)'and a['mode']=='LookAroundTool'and a['undo']==b['undo']==0
+  assert all(len(r[k])==3 for r in (a,b)for k in ('eye','forward')),'camera vectors must contain three coordinates'
+  assert all(math.isfinite(v)for r in (a,b)for k in ('eye','forward')for v in r[k])
   assert all(math.isfinite(y)and abs(x-y)<=2e-5 for k in ['eye','forward']for x,y in zip(a[k],b[k])),a['name']
 check(n)
 for index in [1,2]:
@@ -18,4 +20,8 @@ m=json.loads(json.dumps(n));m['cases'].pop()
 try:check(m)
 except AssertionError:pass
 else:raise AssertionError('missing threshold control admitted')
-print(json.dumps(dict(passed=True,cases=4,compiled_old_rejected=2,missing_case_rejected=True,camera_bound='existing Qt/native 2e-5, unchanged',scope='source contexts/tool event order versus native queued egui events; rendered separately')))
+m=json.loads(json.dumps(n));m['cases'][0]['eye']=[]
+try:check(m)
+except AssertionError:pass
+else:raise AssertionError('truncated eye admitted')
+print(json.dumps(dict(passed=True,cases=4,compiled_old_rejected=2,missing_case_rejected=True,truncated_vector_rejected=True,camera_bound='existing Qt/native 2e-5, unchanged',scope='source contexts/tool event order versus native queued egui events; rendered separately')))
