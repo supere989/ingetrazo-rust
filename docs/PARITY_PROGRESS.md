@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Merged Vertex/Edge object prerequisite (2026-10-10): fresh merged RustPython build and original Python execute the same constructor/incidence recipe; six assertion mutations reject in both runtimes. Persistent endpoint/radial/slot identities and source float32 length behavior pass. [Independent comparison](audits/ai-edge-objects-root/result.json). Mesh-generated topology, detached graph/history, resource bounds and production scripting remain OPEN.
+
 Combined native-font integration (2026-10-10): merged `3f3a16bf` passes **735 workspace library/integration tests, zero failures, 2 ignored**. [Retained result](audits/native-font-merged-workspace/acceptance.json). Native CoreText and ordered Canvas now coexist with current annotation/authoring/retirement behavior in the review branch. Merged native Apple runtime and full parity remain OPEN.
 
 Merged membership permutation (2026-10-10): fresh integrated RustPython replay matches six freshly regenerated original states; fourteen negative controls reject. Genuine object identity and source weld-key lookup survive reordering and Undo/Redo; error/quota history controls and final logical charge pass. [Independent execution](audits/ai-membership-permutation-root/acceptance.json). General deletion/replacement, simultaneous reorder+append, Edge APIs, efficient history/resource bounds and production integration remain OPEN.

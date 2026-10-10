@@ -1,0 +1,7 @@
+{
+  "source": "86b0c3db",
+  "native_build_and_comparison_exit": 0,
+  "binary_sha256": "3b2c5b3987f6fa1ad7859d142d019689029a9eaab416b81f1f3cfa50d382fd11",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Fresh merged standalone Vertex/Edge constructor and incidence objects pass identical actual Python and RustPython recipe; six assertion negatives reject in both. Mesh-generated incidence, detached graph projection/history, resource bounds and production integration remain open."
+}
