@@ -1,0 +1,538 @@
+{
+  "provenance": {
+    "rust_commit": "6132f0757da149bef8bd652e3938303cbafac7e1",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "red-half-white",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "4002a19f6c31b11d1f4480683329f8d9239b0d04a46f5051673f20766f497ac3",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "red-half-black",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "background": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "4002a19f6c31b11d1f4480683329f8d9239b0d04a46f5051673f20766f497ac3",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opacity-bucket-order",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ]
+      ],
+      "native_input_sha256": "a44e7414a5c07d9e13d2bb8e3f81d564d1a0331e319cff8b560f3e1bc95b2e6f",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          0,
+          6
+        ],
+        [
+          0.5,
+          false,
+          6,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opaque-front",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ],
+        [
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          1.0,
+          0.3
+        ]
+      ],
+      "native_input_sha256": "e0b4117e647b149b0ab301ea5c0b7952f1b12cdb5c6a057ae6467168214a0068",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          6,
+          6
+        ],
+        [
+          0.5,
+          false,
+          12,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opaque-back",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ],
+        [
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          1.0,
+          -0.3
+        ]
+      ],
+      "native_input_sha256": "154f7e6d4789f9d7fd3b4bdc161928845d33addd1f9dba3614f099ea4d4451f3",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          6,
+          6
+        ],
+        [
+          0.5,
+          false,
+          12,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "equal-opacity-forward",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.5,
+          0.2
+        ]
+      ],
+      "native_input_sha256": "902b08a5e68b495dbceafb142601b4decc360a4919b1267bb5218dbd6252dc16",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          12
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.5,
+          0.2
+        ],
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "e167012aefba09cae6c8345681d37879b411b7c848d7b7b4cbf96b76402a01fe",
+      "cached_opacity_runs": [
+        [
+          0.5,
+          false,
+          0,
+          12
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opacity-995",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.995,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "1ad384b1f9a3a4254bb24ac91d80c4aa068771dbbbff97c2b05541492a9da638",
+      "cached_opacity_runs": [
+        [
+          0.995,
+          false,
+          0,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "opacity-zero",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.0,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "2148ef715dd0dacf10ee8e09be76f78dcc7dc90001a8820aa1d6caf0d2d9173d",
+      "cached_opacity_runs": [
+        [
+          0.0,
+          false,
+          0,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "section-clipped",
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          0.5,
+          0.0
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          0.3,
+          0.2
+        ]
+      ],
+      "native_input_sha256": "8a8378d7a8af694f8ce57c8a200a81134d31b47028d6591d2ab62cf80ca2d65e",
+      "cached_opacity_runs": [
+        [
+          0.3,
+          false,
+          0,
+          6
+        ],
+        [
+          0.5,
+          false,
+          6,
+          6
+        ]
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    }
+  ],
+  "scope": "Actual original Qt OpenGL encoded-RGB blend, depth-write-off, cached opacity run order; colored untextured front surfaces only. Not texture/back-side/instancing/Xray coverage."
+}
+Fontconfig error: Cannot load default config file: No such file: (null)

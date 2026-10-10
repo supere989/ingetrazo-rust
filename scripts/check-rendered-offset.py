@@ -14,7 +14,7 @@ def wait(fn,seconds=20):
  raise AssertionError("Timed out awaiting rendered event/state")
 def main():
  subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","offset_render_acceptance_fixture"],check=True)
- directory=Path("docs/audits/offset-render");directory.mkdir(exist_ok=True)
+ directory=Path(os.environ.get("INGETRAZO_RENDER_AUDIT_DIR","docs/audits/offset-render"));directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
   if p.name in ("state.json","capture.txt","before.png","preview.png","cancelled.png","committed.png","committed.igz"):p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-offset-x11-") as t:
@@ -87,7 +87,7 @@ def main():
    dark=lambda p:5<p[0]<180 and 5<p[1]<180 and 5<p[2]<180
    committed_dark=sum(dark(b) and not dark(a) for a,b in zip(before,committed_image));assert committed_dark>1000,"committed hard inset must remain visibly rendered"
    report={"provenance":context(),"passed":True,"native_events":"X11 pointer warp and XTEST native button/escape key synthesis on disposable Xvfb","preview_changed_pixels":changed,"preview_added_red_pixels":added_red,"cancel_changed_pixels":cancel_changed,"committed_added_dark_pixels":committed_dark,"initial":initial,"preview":preview,"committed":committed,"scope":"Production render_viewport within native eframe harness: face pointer pick, perpendicular moving preview rendered, Escape cancel no model/history mutation, second-click commit one undo and visible hard inner boundary. This isolates viewport gestures; full app menus/tool selection/VCB/undo keyboard routing and other display platforms remain open."}
-   Path("docs/audits/offset-render-semantic-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
+   Path(os.environ.get("INGETRAZO_RENDER_AUDIT_REPORT","docs/audits/offset-render-semantic-evidence.json")).write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
   finally:
    if app:app.terminate();app.wait(timeout=5)
    server.terminate();server.communicate(timeout=5)

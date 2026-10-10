@@ -47,7 +47,7 @@ pub(crate) fn create_vulkan_pipeline_layout(
         stage_flags: vk::ShaderStageFlags::VERTEX,
         offset: 0,
         size: mem::size_of::<[f32; 16]>() as u32,
-    }];
+    },vk::PushConstantRange{stage_flags:vk::ShaderStageFlags::FRAGMENT,offset:64,size:4}];
 
     let descriptor_set_layouts = [descriptor_set_layout];
     let layout_info = vk::PipelineLayoutCreateInfo::default()

@@ -1,0 +1,10 @@
+{
+  "cloud_run": 38026550115,
+  "cloud_revision": "8ac926d",
+  "failure": "Original probe JSONDecodeError empty state.json during timer write",
+  "correction": "Fixture writes same-directory state.tmp then atomic Path.replace; original application/submodule unchanged",
+  "local_acceptance": "Actual original curve hover/dwell/Move/Delete gesture PASS; positive assertions unchanged",
+  "second_cloud_run": 38026821339,
+  "second_cloud_revision": "cbcc152",
+  "native_correction": "Native fixture also writes state.tmp then same-directory rename; actual curve dwell/Move/Delete gesture PASS"
+}

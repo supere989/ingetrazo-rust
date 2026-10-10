@@ -1,0 +1,8 @@
+{
+  "candidate": "0bf92ed47bc99baf767fa4b5939907c599f9e8e9",
+  "command": "cargo test --locked --workspace",
+  "passed": 402,
+  "ignored": 2,
+  "log_sha256": "b8838f07dacaeafa5ecad5bbabe39bd7d095099a12f3307c4caca0ecb56f0631",
+  "retained_log_sha256": "3920dbd6ea171855c31bd281085505aab9e101a83b5b6b694f564af858273be9"
+}

@@ -1,0 +1,9 @@
+# Native transparent front surface checkpoint
+
+The production native World draws translucent untextured front surfaces after opaque stencil fill and before un-clipped cut contours. Original viewport.py lines1783-1848 uses LEQUAL, depth writes off, polygon offset1/1, SrcAlpha/OneMinusSrcAlpha encoded RGB, and cached sorted round(opacity,3) buckets preserving traversal order within each bucket; it does not depth sort each frame. Alpha of the offscreen viewport remains1 for opaque image composition, matching Qt RGB32 capture.
+
+One cached 24-byte position/RGB vertex stream supports both surfaces and the contour SSBO. Normal storage range needs zero duplicate position bytes; only oversized SSBO ranges use bounded compact XYZ chunks. Source threshold is opacity<.999, including .995. Shader/GLSL is checked in; no runtime shader compilation.
+
+Fresh actual original Qt IGZ inputs and production native software Vulkan ten-case renders have exact center RGBA, opacity bucket/order/triangle counts, one upload on repeat calls, and 24B/vertex surface accounting. Checker rejects the retained opaque-only baseline, incorrect linear-light red blend, and reversed equal-opacity order. Original opaque buffer prefixes are normalized when comparing native transparent-only run offsets. Fourteen original IGZ normal vs forced36B contour paths have exact whole-image equality; actual two-chunk pressure rollback preserves old image/budget and restores cap.17MiB production GPU readback/depth/cache and seven lifecycle tests pass.
+
+This is bounded Linux software proof; independent RTX and real native UI transparent composition remain pending. Separately painted back faces, textured translucency, XRay/edit fade/style visibility, arbitrary alpha rounding ties, broad layer/material cache invalidation, depth/performance corpus, Windows WSI and native Metal hardware remain open. No full rendering parity claim.

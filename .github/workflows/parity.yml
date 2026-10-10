@@ -67,10 +67,12 @@ jobs:
         run: |
           QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-eye-boundary.py
           QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-heldout-depth.py
+      - name: Independently calibrated center glyph positive and negative controls
+        run: python scripts/check-center-hint-glyph-calibration.py docs/audits/center-hint-classification-independent
       - name: Actual original and native center hint and Move UI controls
         run: |
           for mode in curve tiny malformed; do
-            INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_RUN_SUFFIX=-ci python scripts/check-native-center-tracking.py
+            INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_EXPECT_HINT=1 INGETRAZO_CENTER_RUN_SUFFIX=-ci python scripts/check-native-center-tracking.py
             INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_RUN_SUFFIX=-ci INGETRAZO_CENTER_ORIGINAL=1 python scripts/check-native-center-tracking.py
           done
       - name: Rendered software OpenGL drawing reference gestures

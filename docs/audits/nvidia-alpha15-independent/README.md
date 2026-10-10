@@ -1,0 +1,19 @@
+# Independent same-GPU source opacity acceptance
+
+Original frozen commit `6be29fe437a7cd992d4e079f71720821b25216b9`; Python3.13.13/PySide6.12.0. Fresh actual original viewport ran on NVIDIA GeForce RTX5090/PCIe/SSE2, NVIDIA GL3.3 driver615.71.09. Each source framebuffer is captured from its own newly created proof viewport.
+
+Native source includes f96ec35 opacity f64 threshold/source-span preprocessing plus independent bounded upload_many integration. Build checkout c8e230d, locked debug build; exact executable SHA256 `a332e0695e5a196cc3fbde5635d01ad60d5c1b563f5fc63fc4ae9d3cd7c0fd6f`. Strict NVIDIA discrete production World GPU offscreen probe: all15 exact RGBA, opacity bucket ordering, one geometry upload, shared24-byte position/RGB vertices and zero duplicate XYZ. Mandatory cases include10base+4rounding+f64 opacity threshold. The stale opaque and incorrect linear blend controls remain rejected.
+
+Both runs use immutable dev-base image `a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c`, readonly CDI gpu0, no network and externally bounded runs. The headless probe has128MiB GPU admission; WSI uses production heap-budget admission (no global128MiB override). Source Xwayland uses readonly own authorized display/socket/auth; auth contents are not recorded. Native headless selects explicit NVIDIA EGL Vulkan ICD and reports driver/API/adapter in retained log.
+
+Earlier Mesa-source versus NVIDIA-native seven one-byte mismatches remain preserved in prior audits. Same hardware source/native matches; no byte tolerance or shader compensation is introduced.
+
+Actual native swapchain/encoded egui composition is **OPEN**. The fixture SHA256 is `6b0ad9aa063ad0c72f3dbd92f4772eb2343b2863fbb3284525b45c427ea944d6`. A new owned client appeared, but own-client capture remained unavailable and adapter diagnostics did not appear before bounded timeout; retained failure is not a passed window proof. Capture examines only the exact newly created named client, never a desktop/root image. Linux NVIDIA headless proof does not establish Windows/macOS hardware, native Metal, general material/texture rendering, or all transparency semantics.
+
+## Actual native window proof
+
+The final fresh run passes15/15 exact own-client center RGBA including four rounding cases and f64 threshold. All15 actual native windows record strict NVIDIA GeForce RTX5090 graphics/present queues and actual production Vulkan World, 4xMSAA, encoded egui adapter and swapchain. Each own client is resized800x600, captured only by its exact newly created ID using XGetImage, and cleanly closed with its own WM_DELETE_WINDOW; all children exit0. No desktop/root image is captured. Peak native admission in the base case is63,930,616 bytes; this is a bounded pixel proof, not throughput/platform/general transparency completion.
+
+The earlier window failure is now attributed to the headless-oriented `libEGL_nvidia.so.0` ICD: with an actual authorized Xwayland display, `libGLX_nvidia.so.0` provides working presentation. Source Qt uses NVIDIA GLX; native headless retains explicit EGL ICD. The earlier readiness failures remain historical under native-ui-failure. The successful WSI command additionally mounts only readonly `/usr/share/X11/xkb`; no host packages or config are changed.
+
+Window command boundary: externally `timeout100s podman run --rm --read-only --network none --device nvidia.com/gpu=0 --userns keep-id:uid=1000,gid=1000 --user1000:1000 --security-opt label=disable --tmpfs /tmp:rw`, immutable image above; readonly binary, original inputs, Qt runtime library mounts, own authorized Xwayland socket/auth; fresh0700 writable output. `VK_ICD_FILENAMES=/probe/wsi-icd.json`, `QT_QPA_PLATFORM=xcb`, `QT_OPENGL=desktop`; invoke `/venv/bin/python /probe/check-owned-native-nvidia-alpha.py /probe/transparent15-window /input /out`. WSI ICD library path is `/usr/lib/libGLX_nvidia.so.0`, API1.4.351. No auth contents are retained.

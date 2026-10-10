@@ -1,0 +1,311 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "eeb0774b798e0a4c55a12ea28ebc56e10b5b596e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "early": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.149778646,
+    "tool": "Line",
+    "undo": 0
+  },
+  "acquired": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.402518059,
+    "tool": "Line",
+    "undo": 0
+  },
+  "centered": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.820802281,
+    "tool": "Line",
+    "undo": 0
+  },
+  "anchor": {
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Close",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 1.236796895,
+    "tool": "Line",
+    "undo": 0
+  },
+  "moved": {
+    "anchor": null,
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "revision": 1,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "time": 3.236795217,
+    "tool": "Move",
+    "undo": 1
+  },
+  "moved_hint": {
+    "anchor": null,
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.9962494373321533,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "revision": 1,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "time": 3.690694332,
+    "tool": "Line",
+    "undo": 1
+  },
+  "deleted": {
+    "anchor": null,
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "edges": 0,
+    "faces": 0,
+    "inference_point": [
+      3.246844449038087,
+      5.156175152661698,
+      0.0
+    ],
+    "kind": "None",
+    "memory": [
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "revision": 2,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "time": 4.753128438,
+    "tool": "Line",
+    "undo": 2
+  },
+  "requested_move_delta": [
+    1.0,
+    0,
+    0
+  ],
+  "actual_move_delta": [
+    0.9962495075927937,
+    0.0,
+    0.0
+  ],
+  "move_coordinate_parity": false,
+  "pointer_quantized_move_matches": true,
+  "approach_hint_metrics": {
+    "filled_center": true,
+    "core_green": 24,
+    "outer_green": 62,
+    "core_samples": 25,
+    "majority_threshold": 13
+  },
+  "approach_green_pixels": 62,
+  "approach_hint_visual_parity_open": false,
+  "elapsed_wall_seconds": 0.3023491999920225,
+  "scope": "Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending.",
+  "executable_sha256": "044881a9ee8d1284157cf700e2529b56b51d36ca27076db3a80634fd0898a6b5"
+}

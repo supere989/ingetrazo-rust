@@ -1,0 +1,115 @@
+{
+  "cases": [
+    {
+      "case": "red-half-white",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 72, batches: 1, cold_build_ms: 0.08992, compact_preprocess_ms: 0.0012020000000000002, warm_cache_ms: 0.001443, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "red-half-black",
+      "center_rgba": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 72, batches: 1, cold_build_ms: 0.050926, compact_preprocess_ms: 0.001343, warm_cache_ms: 0.001423, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "opacity-bucket-order",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 144, batches: 1, cold_build_ms: 0.051026999999999996, compact_preprocess_ms: 0.001182, warm_cache_ms: 0.001302, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "opaque-front",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 144, batches: 2, cold_build_ms: 0.06809799999999999, compact_preprocess_ms: 0.001042, warm_cache_ms: 0.001193, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "opaque-back",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 144, batches: 2, cold_build_ms: 0.064272, compact_preprocess_ms: 0.001062, warm_cache_ms: 0.001042, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "equal-opacity-forward",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 144, batches: 1, cold_build_ms: 0.04248, compact_preprocess_ms: 0.0012020000000000002, warm_cache_ms: 0.001012, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 144, batches: 1, cold_build_ms: 0.042429999999999995, compact_preprocess_ms: 0.001112, warm_cache_ms: 0.001062, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "opacity-995",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        254
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.044323999999999995, compact_preprocess_ms: 0.0, warm_cache_ms: 0.001102, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "opacity-zero",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 72, batches: 1, cold_build_ms: 0.037891, compact_preprocess_ms: 0.001463, warm_cache_ms: 0.001102, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    },
+    {
+      "case": "section-clipped",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 144, batches: 1, cold_build_ms: 0.07923, compact_preprocess_ms: 0.0012920000000000002, warm_cache_ms: 0.0024040000000000003, cache_hits: 1, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"
+}

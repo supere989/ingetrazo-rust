@@ -33,6 +33,11 @@ def state():
  lines=getattr(vp.active_tool,'rubber_band_lines',None)
  copy_probe=vp._world_to_pixel(current+vp.active_tool.hover_point-vp.active_tool.grab+V(0,radius,0)) if getattr(vp.active_tool,'_copy',False) and anchor is not None and vp.active_tool.hover_point is not None else None
  result=dict(mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ ref=vp._valid_center_ref()
+ pc=vp._world_to_pixel(ref[0]) if ref is not None else None
+ pointer=vp._last_mouse_pos
+ hint_radius=vp._center_hint_px(ref,pc) if pc is not None else 0.
+ result['center_hint_observation']=dict(radius_px=hint_radius,pointer=[pointer.x(),pointer.y()] if pointer is not None else None,allowed=bool(ref is not None and vp.active_tool is not None and vp.active_tool.uses_snap and not (snap is not None and snap.kind=='center') and pointer is not None and pc is not None and hint_radius>0 and math.hypot(pc[0]-pointer.x(),pc[1]-pointer.y())<=hint_radius))
  temporary=directory/'state.tmp'
  temporary.write_text(json.dumps(result))
  temporary.replace(directory/'state.json')

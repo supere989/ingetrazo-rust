@@ -1,0 +1,69 @@
+{
+  "cases": [
+    {
+      "case": "closed",
+      "original": 20164,
+      "native": 20164,
+      "sha256": "40267181f0f08036c4541aef20c9f24159861d84685c10c55a5f219f32c57c8c"
+    },
+    {
+      "case": "shared-slab",
+      "original": 0,
+      "native": 0,
+      "sha256": "177c7555f11738c5c8c98e0fec22a97a9b46899a6976558318e751b3c4b59f60"
+    },
+    {
+      "case": "shared-slab-reversed",
+      "original": 20164,
+      "native": 20164,
+      "sha256": "40267181f0f08036c4541aef20c9f24159861d84685c10c55a5f219f32c57c8c"
+    },
+    {
+      "case": "transparent",
+      "original": 0,
+      "native": 0,
+      "sha256": "714ccaba27860b7e55aa0e0561df5441bc3bf9b3fb1839c53816cf8a5aea4c7f"
+    },
+    {
+      "case": "duplicate",
+      "original": 20164,
+      "native": 20164,
+      "sha256": "40267181f0f08036c4541aef20c9f24159861d84685c10c55a5f219f32c57c8c"
+    },
+    {
+      "case": "coplanar-backface",
+      "original": 0,
+      "native": 0,
+      "sha256": "8461df8290417f345beedb71316c0a90c5cac2ee944b80c8ca28ca82beebf098"
+    },
+    {
+      "case": "closed-iso",
+      "original": 9925,
+      "native": 9978,
+      "sha256": "c70689fb04a3653ba69294e36ceaae547aef7dd2e1bfabc54effddc95102ddc0"
+    },
+    {
+      "case": "shared-slab-iso",
+      "original": 8519,
+      "native": 8490,
+      "sha256": "7b9fb9912e0b7620e6da151186664dfbce83fe43f5446f75c9161b71921befdf"
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "original": 9925,
+      "native": 9978,
+      "sha256": "1bb91f4dd701b9424fb76d15db6c0c0b6cc41ea5321dba36c35aecf60e46d4c8"
+    },
+    {
+      "case": "closed-front",
+      "original": 0,
+      "native": 0,
+      "sha256": "4f16e4bd530dbcd7ecfaad3ed156e8118ef325490b40dd8749785d32c90d43ae"
+    }
+  ],
+  "negative_controls": {
+    "actual_wrong_winding_closed": 0,
+    "physical_fill_in_zero_case_rejected": true
+  },
+  "scope": "Linux software-native Vulkan bounded stencil, exact zero and established 5% positive tolerance; not full rendering parity"
+}

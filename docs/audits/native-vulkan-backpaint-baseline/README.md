@@ -1,0 +1,7 @@
+# Actual original backpaint controls: retained missing behavior
+
+Set INGETRAZO_ALPHA_BACK_CASES=1 when running the pinned original helper to capture eight additional front/back paint controls in original Qt GL. Each toggles reversed winding and front/back opacity pairs(.5,.3),(1,.3),(.5,1),(1,1). Both actual source pixels and front/back opacity runs are recorded; current native backpaint baseline deliberately fails five of eight additional cases.
+
+Source viewport.py5148 _bucket_back_face emits separately front-culled back color copies. Translucent back implies back-cull front-copy, including opaque front. Color translucency loops1783-1848 draw all sorted front buckets, then sorted back buckets. Front culled ordinary solid copies are in _fvcol_run1593, under the opaque pass condition _faces_count>0 at1544. Thus with only an opaque-front/translucent-back face, FRONT view is original background white: the front-only run exists but never draws. Reversed view still blends the blue back. Adding an ordinary opaque face can activate that pass and must be another control before implementation. Preserve this original behavior explicitly rather than assuming physically correct single-face rendering.
+
+This is a source baseline milestone, not implemented native backpaint parity. Planned native cache has per-face front-cull metadata, separate back opacity/color draw runs and direct front/back cull pipelines; front and back pass ordering must stay source-backed, with opaque mask/depth controls and no per-frame CPU sort.

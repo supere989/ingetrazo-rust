@@ -90,6 +90,7 @@ pub struct Renderer {
     descriptor_pool: vk::DescriptorPool,
     managed_textures: HashMap<TextureId, Texture>,
     textures: HashMap<TextureId, vk::DescriptorSet>,
+    encoded_opaque_textures: std::collections::HashSet<TextureId>,
     next_user_texture_id: u64,
     options: Options,
     frames: Option<Frames>,
@@ -260,6 +261,7 @@ impl Renderer {
             managed_textures,
             next_user_texture_id: 0,
             textures,
+            encoded_opaque_textures: std::collections::HashSet::new(),
             options,
             frames: None,
         })
@@ -477,6 +479,12 @@ impl Renderer {
         id
     }
 
+    /// Register an opaque encoded-RGB CAD viewport image. Draw with egui WHITE tint.
+    /// This bypasses the normal UI texture gamma transfer without an extra image/pass/copy.
+    pub fn add_encoded_opaque_texture(&mut self, set: vk::DescriptorSet) -> TextureId {
+        let id=self.add_user_texture(set);self.encoded_opaque_textures.insert(id);id
+    }
+
     /// Remove a user managed texture.
     ///
     /// This *does not* free the resources, it just _forgets_ about the texture.
@@ -486,6 +494,7 @@ impl Renderer {
     /// * `id` - The id of the texture to remove.
     pub fn remove_user_texture(&mut self, id: TextureId) {
         self.textures.remove(&id);
+        self.encoded_opaque_textures.remove(&id);
     }
 
     /// Record commands to render the [`egui::Ui`].
@@ -625,6 +634,8 @@ impl Renderer {
                                 &[],
                             )
                         };
+                        let encoded=u32::from(self.encoded_opaque_textures.contains(&m.texture_id));
+                        unsafe{self.device.cmd_push_constants(command_buffer,self.pipeline_layout,vk::ShaderStageFlags::FRAGMENT,64,any_as_u8_slice(&encoded));}
                         current_texture_id = Some(m.texture_id);
                     }
 
