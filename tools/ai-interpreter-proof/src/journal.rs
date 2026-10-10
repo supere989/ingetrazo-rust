@@ -19,7 +19,7 @@ pub struct MeshJournal {
 impl MeshJournal {
  pub fn begin(mesh:&Mesh,version:u64)->Self {
   Self {base_version:version,base_vertices:mesh.vertices.len(),base_edges:mesh.edges.len(),
-   vertices:mesh.vertices.iter().enumerate().map(|(id,v)|(SourceKey::new(v.position),id)).collect(),
+   vertices:mesh.vertices.iter().enumerate().filter(|(_,v)|v.position.is_finite()&&(v.position*10000.).is_finite()).map(|(id,v)|(SourceKey::new(v.position),id)).collect(),
    edges:mesh.edges.iter().enumerate().map(|(id,e)|(ordered(e.v0,e.v1),(id,e.v0,e.v1))).collect(),base_positions:mesh.vertices.iter().map(|v|v.position).collect(),added_vertices:vec![],added_edges:vec![]}
  }
  pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(usize,DVec3,DVec3),String>{
@@ -111,6 +111,11 @@ fn ordered(a:usize,b:usize)->(usize,usize){if a<b{(a,b)}else{(b,a)}}
   assert_eq!(mesh.vertices.len(),4);assert_eq!((mesh.edges[0].v0,mesh.edges[0].v1),(2,3));
   assert_eq!(mesh.vertices[2].position,DVec3::ZERO);assert_eq!(mesh.vertices[0].position,DVec3::Y);
   assert_eq!(mesh.vertices[2].edges,vec![0]);assert_eq!(mesh.vertices[3].edges,vec![0]);
+ }
+ #[test]fn nonfinite_base_is_refused_without_key_panic(){
+  let mut mesh=Mesh::new();mesh.vertices.push(MeshVertex::new(DVec3::splat(f64::NAN)));
+  let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::Y,DVec3::X).unwrap();
+  assert!(j.publish(&mut mesh,1).is_err());assert_eq!(mesh.vertices.len(),1);assert!(mesh.edges.is_empty());assert!(mesh.vertices[0].position.x.is_nan());
  }
  #[test]fn malformed_base_refused_before_semantic_mutation(){
   let mut mesh=Mesh::new();mesh.vertices.push(MeshVertex::new(DVec3::ZERO));
