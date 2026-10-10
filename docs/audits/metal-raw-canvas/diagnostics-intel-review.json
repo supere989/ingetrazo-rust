@@ -89,5 +89,6 @@
     "physical_input_claim": false,
     "physical_mac_claim": false
   },
-  "scope": "Intel repeats ARM provider and original inventory failures; no full Canvas presentation acceptance"
+  "scope": "Intel repeats ARM provider and original inventory failures; no full Canvas presentation acceptance",
+  "next_action": "Intel has 315 positive displayed frames, unlike ARM zero; inspect Canvas capture readiness/warm predicate rather than treating Intel as no-presentation. Full capture and physical Mac remain unproved."
 }
