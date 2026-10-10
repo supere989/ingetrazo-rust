@@ -114,17 +114,26 @@ pub fn save_obj(scene: &Scene, path: &Path) -> Result<(), ObjError> {
     writeln!(obj,"# IngeTrazo OBJ Export\nmtllib {}",mtl_path.file_name().unwrap().to_string_lossy())?;
     for triangle in &triangles {for p in triangle.points {writeln!(obj,"v {:.6} {:.6} {:.6}",p.x,p.y,p.z)?;}}
     let mut uv_indices=Vec::new();let mut uv_count=0;
-    for (i,t) in triangles.iter().enumerate() {
+    let mut recipes=std::collections::HashMap::<String,String>::new();let mut material_names=Vec::new();
+    for t in &triangles {
         let named=t.attrs.get("mat").and_then(|v|v.as_str());
         let registered=named.and_then(|name|scene.materials.get(name));
         let color=t.attrs.get("color").and_then(|v|v.as_array());
         let rgba=std::array::from_fn::<_,4,_>(|j|color.and_then(|c|c.get(j)).and_then(|v|v.as_f64()).unwrap_or_else(||registered.map_or([0.96,0.95,0.925,1.][j],|m|m.color[j] as f64)));
         let opacity=t.attrs.get("opacity").and_then(|v|v.as_f64()).unwrap_or_else(||registered.map_or(rgba[3],|m|m.opacity as f64));
         let label=named.unwrap_or("paint").chars().map(|c|if c.is_alphanumeric() || c=='_' {c} else {'_'}).collect::<String>();
-        writeln!(mtl,"newmtl {label}_{i}\nKd {:.6} {:.6} {:.6}\nd {:.6}",rgba[0],rgba[1],rgba[2],opacity)?;
         let texture=t.attrs.get("texture").cloned().or_else(||registered.and_then(|m| {
             m.texture_embed.as_ref().map(|e|serde_json::json!({"embed":e})).or_else(||m.texture_path.as_ref().map(|p|serde_json::json!({"path":p})))
         }));
+        let key=serde_json::json!([named,rgba,opacity,texture]).to_string();
+        let new_material=!recipes.contains_key(&key);
+        let material=if let Some(name)=recipes.get(&key) {name.clone()} else {
+            let mut name=if named.is_some(){label.clone()}else{format!("paint{}",recipes.len())};
+            if recipes.values().any(|existing|existing==&name) {name=format!("{name}_{}",recipes.len());}
+            recipes.insert(key,name.clone());name
+        };
+        material_names.push(material.clone());
+        if new_material {writeln!(mtl,"newmtl {material}\nKd {:.6} {:.6} {:.6}\nd {:.6}",rgba[0],rgba[1],rgba[2],opacity)?;}
         if let Some(tex)=texture {
             let embed=tex.get("embed").and_then(|v|v.as_str());
             let source=tex.get("path").and_then(|v|v.as_str());
@@ -133,7 +142,7 @@ pub fn save_obj(scene: &Scene, path: &Path) -> Result<(), ObjError> {
                 else {return Err(ObjError::Parse(0,"Texture has no readable embedded asset or path".into()));};
             let extension=Path::new(source.or(embed).unwrap_or("texture.png")).extension().and_then(|e|e.to_str()).filter(|e|e.chars().all(|c|c.is_ascii_alphanumeric())).unwrap_or("png");
             let filename=format!("{}_texture_{}.{}",stem.replace(['\n','\r'],"_"),uuid::Uuid::new_v4(),extension);
-            writeln!(mtl,"map_Kd {filename}")?;assets.push((filename,bytes));
+            if new_material {writeln!(mtl,"map_Kd {filename}")?;assets.push((filename,bytes));}
             let explicit=tex.get("uvw").and_then(|v|v.as_array()).filter(|a|a.len()==8);
             let [a,b,c]=t.points;let normal=(b-a).cross(c-a).normalize_or_zero();
             let (u,v)=uv_basis(normal);
@@ -151,11 +160,10 @@ pub fn save_obj(scene: &Scene, path: &Path) -> Result<(), ObjError> {
             }
             uv_indices.push(Some(first));
         } else {uv_indices.push(None);}
-        writeln!(mtl)?;
+        if new_material {writeln!(mtl)?;}
     }
-    for (i,t) in triangles.iter().enumerate() {
-        let label=t.attrs.get("mat").and_then(|v|v.as_str()).unwrap_or("paint").chars().map(|c|if c.is_alphanumeric()||c=='_' {c} else {'_'}).collect::<String>();
-        writeln!(obj,"usemtl {label}_{i}")?;
+    for (i,_) in triangles.iter().enumerate() {
+        writeln!(obj,"usemtl {}",material_names[i])?;
         let first=i*3+1;
         if let Some(uv)=uv_indices[i] {writeln!(obj,"f {first}/{uv} {}/{} {}/{}",first+1,uv+1,first+2,uv+2)?;}
         else {writeln!(obj,"f {first} {} {}",first+1,first+2)?;}
@@ -195,7 +203,7 @@ mod asset_tests {
         let mut scene=Scene::new();scene.groups.push(group);scene.embedded_textures.insert("images/test.png".into(),vec![1,2,3,4]);
         scene.materials.insert("Blue Paint".into(),Material::new("Blue Paint",[0.1,0.2,0.8,0.6]));
         let path=directory.join("model.obj");save_obj(&scene,&path).unwrap();
-        let text=std::fs::read_to_string(&path).unwrap();assert!(text.contains("vt 0.250000000 0.500000000"));assert!(text.contains("mtllib model.mtl"));assert!(text.contains("usemtl Blue_Paint_0"));
+        let text=std::fs::read_to_string(&path).unwrap();assert!(text.contains("vt 0.250000000 0.500000000"));assert!(text.contains("mtllib model.mtl"));assert!(text.contains("usemtl Blue_Paint"));
         let mtl=std::fs::read_to_string(directory.join("model.mtl")).unwrap();assert!(mtl.contains("Kd 0.100000 0.200000 0.800000"));assert!(mtl.contains("d 0.600000"));
         let image=mtl.lines().find_map(|l|l.strip_prefix("map_Kd ")).unwrap();assert_eq!(std::fs::read(directory.join(image)).unwrap(),vec![1,2,3,4]);
         std::fs::remove_dir_all(directory).unwrap();
