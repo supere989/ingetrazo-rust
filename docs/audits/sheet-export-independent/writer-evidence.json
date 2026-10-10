@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "f6a1b15ac4d51c4baa0dea270d05ccf45501fa64",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "reader": "ezdxf 1.4.4",
+  "decoded": {
+    "layers": [
+      [
+        "PLANTA_GENERAL",
+        "CONTINUOUS"
+      ],
+      [
+        "PLANTA_GENERAL-PERFIL",
+        "CONTINUOUS"
+      ],
+      [
+        "PLANTA_GENERAL-CORTE",
+        "CONTINUOUS"
+      ],
+      [
+        "PLANTA_GENERAL-OCULTAS",
+        "DASHED"
+      ]
+    ],
+    "lines": [
+      [
+        "PLANTA_GENERAL",
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.23456789,
+          -2.0,
+          0.0
+        ]
+      ],
+      [
+        "PLANTA_GENERAL",
+        [
+          1e-10,
+          -10000000000.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      [
+        "PLANTA_GENERAL-OCULTAS",
+        [
+          2.0,
+          3.0,
+          0.0
+        ],
+        [
+          4.0,
+          5.0,
+          0.0
+        ]
+      ]
+    ],
+    "dash_pattern": [
+      [
+        72,
+        65
+      ],
+      [
+        73,
+        2
+      ],
+      [
+        40,
+        0.75
+      ],
+      [
+        49,
+        0.5
+      ],
+      [
+        49,
+        -0.25
+      ]
+    ]
+  },
+  "scope": "Actual original/Rust format writer equality; real composer geometry and rendered export gestures remain pending. Negative nonfinite input before any bytes also asserted by native fixture."
+}
