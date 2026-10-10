@@ -130,11 +130,11 @@ impl OrbitCamera {
         match view {
             StandardView::Top => {
                 self.yaw = (-90.0_f64).to_radians();
-                self.pitch = 89.9_f64.to_radians();
+                self.pitch = 90.0_f64.to_radians();
             }
             StandardView::Bottom => {
                 self.yaw = (-90.0_f64).to_radians();
-                self.pitch = -89.9_f64.to_radians();
+                self.pitch = -90.0_f64.to_radians();
             }
             StandardView::Front => {
                 self.yaw = (-90.0_f64).to_radians();
@@ -389,4 +389,11 @@ mod original_perspective_tests {
         let clip = matrix * p.extend(1.);
         assert!((0. ..1.).contains(&(clip.z / clip.w)));
     }
+}
+
+#[cfg(test)]mod straight_standard_view_tests {
+ use super::*;
+ #[test]fn top_bottom_collapse_vertical_edge_and_keep_finite_basis(){
+  for view in [StandardView::Top,StandardView::Bottom]{let mut camera=OrbitCamera::default();camera.set_standard_view(view);camera.perspective=false;let m=camera.projection_matrix()*camera.view_matrix();let a=m*DVec3::new(0.3,0.9,-0.2).extend(1.);let b=m*DVec3::new(0.3,0.9,0.2).extend(1.);assert!((a.x-b.x).abs()<1e-12&&(a.y-b.y).abs()<1e-12,"Architectural plan projects a vertical edge as a line");assert!(m.is_finite());assert!((camera.pitch.abs()-std::f64::consts::FRAC_PI_2).abs()<1e-12);}
+ }
 }
