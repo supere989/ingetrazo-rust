@@ -51,6 +51,47 @@ struct Polygon {
     points: Vec<DVec3>,
     material: Option<String>,
 }
+/// Fit a world-space affine UV map, retaining every authored polygon sample.
+fn affine_uv(points: &[DVec3], uv: &[glam::DVec2]) -> Result<[f64; 8]> {
+    if points.len() != uv.len()
+        || points.len() < 3
+        || points.iter().any(|p| !p.is_finite())
+        || uv.iter().any(|p| !p.is_finite())
+    {
+        return Err(invalid("invalid polygon UV samples"));
+    }
+    let mut basis = None;
+    for i in 1..points.len() {
+        for j in i + 1..points.len() {
+            let a = points[i] - points[0];
+            let b = points[j] - points[0];
+            let n = a.cross(b);
+            if n.length_squared() > 1e-24 {
+                basis = Some((
+                    i,
+                    j,
+                    glam::DMat3::from_cols(a, b, n.normalize()).transpose(),
+                ));
+                break;
+            }
+        }
+        if basis.is_some() {
+            break;
+        }
+    }
+    let (i, j, m) = basis.ok_or_else(|| invalid("degenerate polygon UV plane"))?;
+    let gu = m.inverse() * DVec3::new(uv[i].x - uv[0].x, uv[j].x - uv[0].x, 0.);
+    let gv = m.inverse() * DVec3::new(uv[i].y - uv[0].y, uv[j].y - uv[0].y, 0.);
+    let u0 = uv[0].x - gu.dot(points[0]);
+    let v0 = uv[0].y - gv.dot(points[0]);
+    for (p, t) in points.iter().zip(uv) {
+        let predicted = glam::DVec2::new(gu.dot(*p) + u0, gv.dot(*p) + v0);
+        if predicted.distance(*t) > 1e-6 * (1. + t.length()) {
+            return Err(invalid("non-affine polygon UV mapping"));
+        }
+    }
+    Ok([gu.x, gu.y, gu.z, u0, gv.x, gv.y, gv.z, v0])
+}
 fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
     let sources: HashMap<_, _> = mesh
         .children()
@@ -563,5 +604,30 @@ mod tests {
             &xml.replace("<scale>-2 3 4</scale>", "<instance_node url=\"#shared\"/>")
         )
         .is_err());
+    }
+}
+
+#[cfg(test)]
+mod uv_affine_tests {
+    use super::*;
+    use glam::DVec2;
+    #[test]
+    fn translated_reflected_world_uv_and_non_affine_rejection() {
+        let p = [
+            DVec3::new(10., 20., 30.),
+            DVec3::new(8., 20., 30.),
+            DVec3::new(8., 23., 30.),
+            DVec3::new(10., 23., 30.),
+        ];
+        let mut uv = [DVec2::ZERO, DVec2::X, DVec2::ONE, DVec2::Y];
+        let m = affine_uv(&p, &uv).unwrap();
+        for (p, t) in p.iter().zip(uv) {
+            assert!((DVec3::new(m[0], m[1], m[2]).dot(*p) + m[3] - t.x).abs() < 1e-10);
+            assert!((DVec3::new(m[4], m[5], m[6]).dot(*p) + m[7] - t.y).abs() < 1e-10);
+        }
+        uv[3].x = 0.5;
+        assert!(affine_uv(&p, &uv).is_err());
+        assert!(affine_uv(&[DVec3::ZERO; 3], &[DVec2::ZERO; 3]).is_err());
+        assert!(affine_uv(&p, &uv[..3]).is_err());
     }
 }
