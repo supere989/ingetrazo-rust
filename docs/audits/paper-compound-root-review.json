@@ -1,0 +1,90 @@
+{
+  "status": "Artifact review PASS; frozen source handoff and integration still pending",
+  "rows": [
+    {
+      "case": "fractional-paper",
+      "equal": true,
+      "scope": "full cold image",
+      "source_sha256": "aa886e6ab13f51c5cc3ef568888c65082a50db779828c80158cbd6578990fc13",
+      "native_sha256": "aa886e6ab13f51c5cc3ef568888c65082a50db779828c80158cbd6578990fc13"
+    },
+    {
+      "case": "thin-paper",
+      "equal": true,
+      "scope": "full cold image",
+      "source_sha256": "e7cf68c655410ff6fc5d320783b4f90f4c2b36cdd1cba37b42242c8e8af77243",
+      "native_sha256": "e7cf68c655410ff6fc5d320783b4f90f4c2b36cdd1cba37b42242c8e8af77243"
+    },
+    {
+      "case": "integer-paper",
+      "equal": true,
+      "scope": "full cold image",
+      "source_sha256": "9d648299a8ba395f11a53424bc2151448d8efa50bba95ba2c6dab7699973f3d0",
+      "native_sha256": "9d648299a8ba395f11a53424bc2151448d8efa50bba95ba2c6dab7699973f3d0"
+    },
+    {
+      "case": "wide-page",
+      "equal": true,
+      "scope": "full cold image",
+      "source_sha256": "3b8e0e3356b87827c1be4d30a03f925bcadb3ca633ad0c75f0712524da077544",
+      "native_sha256": "3b8e0e3356b87827c1be4d30a03f925bcadb3ca633ad0c75f0712524da077544"
+    },
+    {
+      "case": "wide-guide",
+      "equal": true,
+      "scope": "full cold image",
+      "source_sha256": "d6528df01e5e933e5c2ccc5ea8b0bb2fd52bbda738c4e8de8a7de6bdbdc6b3f6",
+      "native_sha256": "d6528df01e5e933e5c2ccc5ea8b0bb2fd52bbda738c4e8de8a7de6bdbdc6b3f6"
+    },
+    {
+      "case": "native/production-sharp",
+      "changed": 0,
+      "scope": "actual production ROI",
+      "source_sha256": "153abfa8a8e1f0533c85a388c11fc58d4b4831e80ef149e230c834c097940be1",
+      "native_sha256": "14f71fbe07f140b06cf0920566e8b548f4fdecced10051f1d632d15a1a1e8d47"
+    },
+    {
+      "case": "native/production-rounded-double",
+      "changed": 0,
+      "scope": "actual production ROI",
+      "source_sha256": "c43ddb21b3596d45aa6fc05665f25514d56461899b01499eca14ca46da1c3265",
+      "native_sha256": "18f436aec94824c843a7bf4fbe4aa270ff9eeba4c9b6a9d330a0d41143ab979c"
+    },
+    {
+      "case": "native/production-straight-dash",
+      "changed": 0,
+      "scope": "actual production ROI",
+      "source_sha256": "573432b1d0b8f90dc0fd072478aa0b3f10ea40f61aacc0be695d4317a562f820",
+      "native_sha256": "2e753bbed4dbac180cf5b30de6ed38f5c4a947204aaad2317db44a790b0a8c4f"
+    },
+    {
+      "case": "restored-native/production-sharp",
+      "changed": 0,
+      "scope": "actual production ROI",
+      "source_sha256": "153abfa8a8e1f0533c85a388c11fc58d4b4831e80ef149e230c834c097940be1",
+      "native_sha256": "14f71fbe07f140b06cf0920566e8b548f4fdecced10051f1d632d15a1a1e8d47"
+    },
+    {
+      "case": "missing-guide-negative/production-sharp",
+      "changed": 762,
+      "scope": "actual production ROI",
+      "source_sha256": "153abfa8a8e1f0533c85a388c11fc58d4b4831e80ef149e230c834c097940be1",
+      "native_sha256": "8e7527fc1e7cc72df2b32af316be0b22a779ef62be00938a2ee3ccba0a328ee6"
+    },
+    {
+      "case": "missing-guide-negative/production-rounded-double",
+      "changed": 601,
+      "scope": "actual production ROI",
+      "source_sha256": "c43ddb21b3596d45aa6fc05665f25514d56461899b01499eca14ca46da1c3265",
+      "native_sha256": "21f4c08e171bb37f3889dd77524ccf27449015a989a10908c1944bf047dcb48e"
+    },
+    {
+      "case": "missing-guide-negative/production-straight-dash",
+      "changed": 1316,
+      "scope": "actual production ROI",
+      "source_sha256": "573432b1d0b8f90dc0fd072478aa0b3f10ea40f61aacc0be695d4317a562f820",
+      "native_sha256": "b9db5c8154d9db403837f96c7c21721370d96248b94653bb99afa2608c3d34f5"
+    }
+  ],
+  "scope": "Empty-item compound paper/shadow/guide/border. Does not prove arbitrary content, Metal, thick curved dashed border or full composer parity."
+}
