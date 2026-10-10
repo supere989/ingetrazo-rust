@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "states": 56,
+  "negative_controls": 7,
+  "boundary": "actual pinned image commands versus app-controller valid reference model/history; GPU picking/draw/UI image-tool coverage separate"
+}

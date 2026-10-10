@@ -1,0 +1,76 @@
+:34:51.1155974Z     [1m[94m|[0m
+2026-10-10T10:34:51.1156230Z [1m[94m340[0m [1m[94m|[0m                 egui::Stroke::new(2.0, egui::Color32::from_rgb(255, 60, 60)),
+2026-10-10T10:34:51.1156593Z     [1m[94m|[0m                                   [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `2.0_f32`[0m
+2026-10-10T10:34:51.1156837Z     [1m[94m|[0m
+2026-10-10T10:34:51.1157177Z     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+2026-10-10T10:34:51.1157649Z     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+2026-10-10T10:34:51.1157860Z 
+2026-10-10T10:34:51.1158042Z [1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+2026-10-10T10:34:51.1158330Z    [1m[94m--> [0mcrates/ingetrazo-gui/src/viewport.rs:372:48
+2026-10-10T10:34:51.1158511Z     [1m[94m|[0m
+2026-10-10T10:34:51.1159029Z [1m[94m372[0m [1m[94m|[0m                 let stroke = egui::Stroke::new(1.8, egui::Color32::from_rgb(243, 115, 41));
+2026-10-10T10:34:51.1159469Z     [1m[94m|[0m                                                [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.8_f32`[0m
+2026-10-10T10:34:51.1159723Z     [1m[94m|[0m
+2026-10-10T10:34:51.1160060Z     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+2026-10-10T10:34:51.1160533Z     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+2026-10-10T10:34:51.1160745Z 
+2026-10-10T10:34:51.1160941Z [1m[33mwarning[0m[1m: function `build` is never used[0m
+2026-10-10T10:34:51.1161183Z    [1m[94m--> [0mcrates/ingetrazo-gui/src/composer_cad.rs:182:4
+2026-10-10T10:34:51.1161370Z     [1m[94m|[0m
+2026-10-10T10:34:51.1161787Z [1m[94m182[0m [1m[94m|[0m fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_[1m[94m...[0m
+2026-10-10T10:34:51.1162168Z     [1m[94m|[0m    [1m[33m^^^^^[0m
+2026-10-10T10:34:51.1162322Z     [1m[94m|[0m
+2026-10-10T10:34:51.1162543Z     [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+2026-10-10T10:34:51.1162708Z 
+2026-10-10T10:34:51.1162964Z [1m[33mwarning[0m: `ingetrazo-gui` (lib) generated 22 warnings (run `cargo fix --lib -p ingetrazo-gui` to apply 20 suggestions)
+2026-10-10T10:34:51.1163431Z [1m[92m   Compiling[0m ingetrazo-gui v0.3.15 (/home/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-gui)
+2026-10-10T10:34:52.1377675Z [1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 1.23s
+2026-10-10T10:35:00.4822425Z {"actual_x11_pointer_buttons_passed": true, "current": {"all_button": [824.0, 39.0], "all_clicks": 0, "current_button": [703.0, 39.0], "current_clicks": 1, "error_dialog": null, "error_ok": null, "export_result": "Exported sheets: 1 \u2014 /home/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/composer-pdf-ui/current.pdf", "sheets": 9, "status": "Exported sheets: 1 \u2014 /home/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/composer-pdf-ui/current.pdf"}, "all": {"all_button": [824.0, 39.0], "all_clicks": 1, "current_button": [703.0, 39.0], "current_clicks": 1, "error_dialog": null, "error_ok": null, "export_result": "Exported sheets: 9 \u2014 /home/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/composer-pdf-ui/all.pdf", "sheets": 9, "status": "Exported sheets: 9 \u2014 /home/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/composer-pdf-ui/all.pdf"}, "dialog_acceptance": "Actual genuine Zenity GTK save dialogs entered with XTEST keyboard", "successful_ui_pdf_export": true, "pdf_page_counts": [1, 9], "page_nonwhite_pixels": [520, 520, 4035, 3385, 3353, 224, 246, 375, 934, 1317], "error_dialog_dismissed": null, "error_popup_dark_pixels": null, "dismissed_popup_dark_pixels": null, "unsupported_destination_ui": "Separately exercised in unsupported scenario", "binary_sha256": "cc0e9d90a02bf7ee4113713fed7d6642136cd63a18d467fad40c961e60206ee9", "scope": "Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."}
+2026-10-10T10:35:10.1557492Z Traceback (most recent call last):
+2026-10-10T10:35:10.1573835Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-composer-pdf-ui.py", line 95, in <module>
+2026-10-10T10:35:10.1574360Z     assert current["export_result"]==atlas["export_result"]=="PDF painter for this sheet item remains unavailable",atlas
+2026-10-10T10:35:10.1574732Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-10T10:35:10.1576072Z AssertionError: {'all_button': [824.0, 39.0], 'all_clicks': 1, 'current_button': [703.0, 39.0], 'current_clicks': 1, 'error_dialog': 'PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported', 'error_ok': [494.5, 431.6820068359375], 'export_result': 'PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported', 'sheets': 1, 'status': 'PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported'}
+2026-10-10T10:35:10.1743342Z ##[error]Process completed with exit code 1.
+2026-10-10T10:35:10.1897225Z ##[group]Run actions/upload-artifact@v4
+2026-10-10T10:35:10.1897390Z with:
+2026-10-10T10:35:10.1897514Z   name: semantic-parity-evidence
+2026-10-10T10:35:10.1900951Z   path: docs/audits/*semantic-evidence.*
+docs/audits/python-*-evidence.json
+docs/audits/render-pergola.png
+docs/audits/render-startup.log
+docs/audits/exchange-*-evidence.json
+docs/audits/dxf-curve-evidence.json
+docs/audits/section-original-gl/*
+docs/audits/section-rust-render/*
+docs/audits/offset-render/*.png
+docs/audits/offset-render/runtime.log
+docs/audits/native-vulkan-ci-host/*
+docs/audits/native-vulkan-ci-budget/*
+docs/audits/headless-vulkan-ci/*
+docs/audits/contour-chunks-ci/*
+docs/audits/upload-many-ci/*
+docs/audits/native-composer-ci/*.png
+docs/audits/native-composer-ci/native.log
+docs/audits/native-composer-ci/result.json
+docs/audits/sheet-export-ci/*
+docs/audits/sheet-view-dxf/*
+docs/audits/move-inference-source-evidence.json
+docs/audits/texture-upload-ci/
+docs/audits/cad2d-color-ci/
+docs/audits/vector-view-ci/
+docs/audits/composer-pdf-ui/
+docs/audits/composer-pdf-ui-unsupported/
+docs/audits/center-tracking-*-ci-evidence.json
+docs/audits/center-tracking-*-ci/*.png
+docs/audits/center-tracking-*-ci/runtime.log
+docs/audits/center-tracking-*-ci/*state.json
+docs/audits/center-tracking-*-ci/failure.json
+docs/audits/python-screen-snap-evidence.json
+docs/audits/python-perspective-screen-evidence.json
+docs/audits/python-snap-eye-boundary-evidence.json
+docs/audits/python-snap-heldout-depth-evidence.json
+docs/audits/drawing-reference-render-evidence.json
+docs/audits/drawing-reference-render/*.png
+docs/audits/drawing-reference-render/runtime.log
+docs/audits/shift-inference-render-evidenc

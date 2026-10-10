@@ -1,0 +1,2812 @@
+{
+  "provenance": {
+    "rust_commit": "775436d6b41c1deab27ed2310a8e92973784da01",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "ordinary": [
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "New"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 2,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 1,
+        "redo": 2
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 0,
+        "redo": 3
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 1,
+        "redo": 2
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 2,
+        "redo": 1
+      },
+      {
+        "selected_images": [
+          "New"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "Survey"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 4,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 4,
+        "redo": 0
+      }
+    ],
+    "folded": [
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "New"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "Survey"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 2,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 2,
+        "redo": 0
+      }
+    ],
+    "nested_ordinary": [
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "New"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 2,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 1,
+        "redo": 2
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 0,
+        "redo": 3
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 1,
+        "redo": 2
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 2,
+        "redo": 1
+      },
+      {
+        "selected_images": [
+          "New"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "Survey"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 4,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 4,
+        "redo": 0
+      }
+    ],
+    "nested_folded": [
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              2.0,
+              3.0,
+              4.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.75,
+            "layer": null,
+            "locked": true
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference"
+        ],
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "New"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 3,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 0,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null,
+            "locked": true
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [
+          "Survey"
+        ],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 2,
+        "redo": 0
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              3.0,
+              5.0,
+              7.0
+            ],
+            "u": [
+              5.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              0.0,
+              3.0
+            ],
+            "aspect": 0.6,
+            "name": "Survey",
+            "opacity": 0.375,
+            "layer": null
+          },
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 1,
+        "redo": 1
+      },
+      {
+        "selected_images": [],
+        "planes": [
+          {
+            "texture": {
+              "path": "scan.png"
+            },
+            "origin": [
+              8.0,
+              9.0,
+              10.0
+            ],
+            "u": [
+              2.0,
+              0.0,
+              0.0
+            ],
+            "v": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "aspect": 0.5,
+            "name": "New"
+          }
+        ],
+        "layers": [
+          "Layer 0",
+          "Reference",
+          "Images"
+        ],
+        "undo": 2,
+        "redo": 0
+      }
+    ]
+  }
+}

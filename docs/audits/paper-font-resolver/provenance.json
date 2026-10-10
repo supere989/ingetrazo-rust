@@ -1,0 +1,12 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sha256": {
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/src/paper_font_resolver.rs": "783d7a550d1de7ed2afaa5afeea1ab85a33b1fe7095afa4c5706d127327adb1f",
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/examples/paper_font_resolver_fixture.rs": "9be88b73ef5ffabb3869a5f8a42df626f3fecc074c20fabf3d9672e8844a536e",
+    "/tmp/ingetrazo-paper-text-subset-clean-target/debug/examples/paper_font_resolver_fixture": "fde1946ec57f7ec678e4b7e8f8d1258e437e2194dc46b8ddad3c51dab2ef6c48",
+    "/tmp/ingetrazo-paper-text-expanded-source/font-observations.json": "88c30c47150dc50145204e01a7a8dbc98f21ae97724e11554a0da17933f485cc"
+  },
+  "result": "19 actual source request records exact file/ascent/descent; warm same Rc/no match/load; NUL request refuses unchanged; refresh retains resource",
+  "tests": "75 formats passed",
+  "scope": "Linux request resolver only; paragraph fallback/bidi and non-Linux provider OPEN"
+}

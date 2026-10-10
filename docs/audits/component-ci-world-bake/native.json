@@ -203,6 +203,13 @@
         6.0
       ]
     ],
+    "history_presentation": {
+      "committed_version": 4,
+      "initial_version": 2,
+      "redo_version": 6,
+      "selection_empty_after_commit_undo_redo": true,
+      "undo_version": 5
+    },
     "name": "translated",
     "parent_drawing_frame": [
       1.0,
@@ -483,6 +490,13 @@
         6.0
       ]
     ],
+    "history_presentation": {
+      "committed_version": 4,
+      "initial_version": 2,
+      "redo_version": 6,
+      "selection_empty_after_commit_undo_redo": true,
+      "undo_version": 5
+    },
     "name": "rotated",
     "parent_drawing_frame": [
       0.0,
@@ -763,6 +777,13 @@
         12.0
       ]
     ],
+    "history_presentation": {
+      "committed_version": 4,
+      "initial_version": 2,
+      "redo_version": 6,
+      "selection_empty_after_commit_undo_redo": true,
+      "undo_version": 5
+    },
     "name": "tilted_scaled",
     "parent_drawing_frame": [
       2.0,

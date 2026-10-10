@@ -1,0 +1,4 @@
+# Combined canonical acceptance
+Reviewed production integration f20a7c1 (58fc0a1 adds the explicit annotation defect record) passes530 Rust workspace tests with two ignored. Fresh actual original/native mandatory PDF protocols both pass: current78 and saved78 strict whole pages, each at72/144/300DPI, with inventory negatives, source camera/geometry/numeral observations and persistent cache/destination controls. Native fixture/worker hashes are retained per gate; saved mode is explicit.
+
+Native Metal rendering GPU acceptance and older-shader negatives are retained separately in metal-cad2d-native-ci. RTX5090 resize acceptance is retained separately in native-resize-root-review. These combined checks do not close all37 parity rows or any release gate; default raster/text/title, sections/full workflows, broad renderer/material/texture/RT, native application Metal/physical Mac and cross-platform release acceptance remain OPEN.

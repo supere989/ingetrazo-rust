@@ -1,0 +1,38 @@
+[
+  {
+    "name": "accents",
+    "changed": 612
+  },
+  {
+    "name": "bold",
+    "changed": 443
+  },
+  {
+    "name": "combining",
+    "changed": 137
+  },
+  {
+    "name": "italic",
+    "changed": 525
+  },
+  {
+    "name": "kerns",
+    "changed": 239
+  },
+  {
+    "name": "latin",
+    "changed": 480
+  },
+  {
+    "name": "mono",
+    "changed": 503
+  },
+  {
+    "name": "serif",
+    "changed": 499
+  },
+  {
+    "name": "serif_bold",
+    "changed": 185
+  }
+]

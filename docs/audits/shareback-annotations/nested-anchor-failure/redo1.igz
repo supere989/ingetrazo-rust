@@ -1,0 +1,142 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 20.0,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 0.5235987755982988,
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": -0.7853981633974483
+    },
+    "compositions": [],
+    "dimensions": [
+      {
+        "a": [
+          10.0,
+          20.0,
+          30.0
+        ],
+        "axis": null,
+        "b": [
+          11.0,
+          20.0,
+          30.0
+        ],
+        "layer": null,
+        "offset": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "text": null
+      },
+      {
+        "a": [
+          10.0,
+          20.0,
+          30.0
+        ],
+        "axis": null,
+        "b": [
+          14.0,
+          20.0,
+          30.0
+        ],
+        "layer": null,
+        "offset": [
+          0.0,
+          2.0,
+          0.0
+        ],
+        "text": "Local <>"
+      }
+    ],
+    "edges": [],
+    "faces": [],
+    "geo_paths": [],
+    "geo_points": [],
+    "georef": {
+      "datum": null
+    },
+    "groups": [
+      {
+        "billboard": false,
+        "children": [],
+        "component": false,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "Translated",
+        "proto": 0,
+        "uid": "611bb5b1aafd42b1895d3360075c110c",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          10.0,
+          20.0,
+          30.0,
+          1.0
+        ]
+      }
+    ],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "protos": [
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              4.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "faces": []
+      }
+    ],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}

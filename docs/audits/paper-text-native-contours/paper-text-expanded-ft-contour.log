@@ -1,0 +1,62 @@
+   Compiling vcpkg v0.2.15
+   Compiling freetype-sys v0.23.0
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-core)
+   Compiling libz-sys v1.1.29
+error: failed to run custom build command for `freetype-sys v0.23.0`
+
+Caused by:
+  process didn't exit successfully: `/tmp/ingetrazo-sheet-view-state-target/debug/build/freetype-sys-9ba45a2333b8d9f8/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-env-changed=FREETYPE2_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=FREETYPE2_STATIC
+  cargo:rerun-if-env-changed=FREETYPE2_DYNAMIC
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+
+  --- stderr
+
+  thread 'main' (3173885) panicked at /home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/freetype-sys-0.23.0/build.rs:21:18:
+  called `Result::unwrap()` on an `Err` value: 
+  pkg-config exited with status code 1
+  > PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 pkg-config --libs --cflags freetype2 'freetype2 >= 24.3.18'
+
+  pkg-config output:
+    Package freetype2 was not found in the pkg-config search path.
+    Perhaps you should add the directory containing `freetype2.pc'
+    to the PKG_CONFIG_PATH environment variable
+    Package 'freetype2', required by 'virtual:world', not found
+    Package 'freetype2', required by 'virtual:world', not found
+
+  The system library `freetype2` required by crate `freetype-sys` was not found.
+  The file `freetype2.pc` needs to be installed and the PKG_CONFIG_PATH environment variable must contain its parent directory.
+  The PKG_CONFIG_PATH environment variable is not set.
+
+  HINT: if you have installed the library, try setting PKG_CONFIG_PATH to the directory containing `freetype2.pc`.
+
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+warning: build failed, waiting for other jobs to finish...
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning

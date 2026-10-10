@@ -1,0 +1,170 @@
+[
+  {
+    "case": "wall_hidden",
+    "visible_segments": 4,
+    "with_hidden_segments": 7
+  },
+  {
+    "case": "section_board",
+    "visible_segments": 6,
+    "with_hidden_segments": 6
+  },
+  {
+    "case": "hollow_cap",
+    "visible_segments": 12,
+    "with_hidden_segments": 12
+  },
+  {
+    "case": "top_box",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "iso_box",
+    "visible_segments": 12,
+    "with_hidden_segments": 15
+  },
+  {
+    "case": "front_box",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "partial_rear_line",
+    "visible_segments": 6,
+    "with_hidden_segments": 7
+  },
+  {
+    "case": "open_cut_chain",
+    "visible_segments": 2,
+    "with_hidden_segments": 2
+  },
+  {
+    "case": "nested_reflected_box",
+    "visible_segments": 12,
+    "with_hidden_segments": 15
+  },
+  {
+    "case": "hidden_layer_group",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "hidden_layer_face",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "soft_cylinder_silhouette",
+    "visible_segments": 28,
+    "with_hidden_segments": 36
+  },
+  {
+    "case": "soft_reflected_silhouette",
+    "visible_segments": 28,
+    "with_hidden_segments": 36
+  }
+]
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+PASS original13scenes×2hidden/penpages PDF exported
+PASS actual original Qt paper boundary observations 13
+PASS actual Qt PDF numeral observations 8
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-gui)
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.95s
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/tmp/ingetrazo-sheet-view-state-target/debug/examples/paper_boundary_fixture /tmp/ingetrazo-section-grid-first`
+PASS 13 actual original paper camera bases (eye exact; f64 normalization 2e-15)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/tmp/ingetrazo-sheet-view-state-target/debug/examples/qt_paper_numeral_fixture /tmp/ingetrazo-section-grid-first/qt-number-observations.json`
+PASS eight actual Qt PDF numeral controls
+{"passed": false, "dpi": 72, "reader": "QtPdf/PDFium", "strict_rgba": true, "inventory_negatives_rejected": 4, "cases": [{"case": "front_box", "hidden": false, "different_pixels": 15090, "passed": false}, {"case": "front_box", "hidden": true, "different_pixels": 15090, "passed": false}, {"case": "hidden_layer_face", "hidden": false, "different_pixels": 15090, "passed": false}, {"case": "hidden_layer_face", "hidden": true, "different_pixels": 15089, "passed": false}, {"case": "hidden_layer_group", "hidden": false, "different_pixels": 15090, "passed": false}, {"case": "hidden_layer_group", "hidden": true, "different_pixels": 15089, "passed": false}, {"case": "hollow_cap", "hidden": false, "different_pixels": 15086, "passed": false}, {"case": "hollow_cap", "hidden": true, "different_pixels": 15083, "passed": false}, {"case": "iso_box", "hidden": false, "different_pixels": 15088, "passed": false}, {"case": "iso_box", "hidden": true, "different_pixels": 15086, "passed": false}, {"case": "nested_reflected_box", "hidden": false, "different_pixels": 15087, "passed": false}, {"case": "nested_reflected_box", "hidden": true, "different_pixels": 15080, "passed": false}, {"case": "open_cut_chain", "hidden": false, "different_pixels": 15089, "passed": false}, {"case": "open_cut_chain", "hidden": true, "different_pixels": 15088, "passed": false}, {"case": "partial_rear_line", "hidden": false, "different_pixels": 15090, "passed": false}, {"case": "partial_rear_line", "hidden": true, "different_pixels": 15088, "passed": false}, {"case": "section_board", "hidden": false, "different_pixels": 15088, "passed": false}, {"case": "section_board", "hidden": true, "different_pixels": 15087, "passed": false}, {"case": "soft_cylinder_silhouette", "hidden": false, "different_pixels": 15087, "passed": false}, {"case": "soft_cylinder_silhouette", "hidden": true, "different_pixels": 15087, "passed": false}, {"case": "soft_reflected_silhouette", "hidden": false, "different_pixels": 15089, "passed": false}, {"case": "soft_reflected_silhouette", "hidden": true, "different_pixels": 15087, "passed": false}, {"case": "top_box", "hidden": false, "different_pixels": 15090, "passed": false}, {"case": "top_box", "hidden": true, "different_pixels": 15090, "passed": false}, {"case": "wall_hidden", "hidden": false, "different_pixels": 15089, "passed": false}, {"case": "wall_hidden", "hidden": true, "different_pixels": 15089, "passed": false}], "scope": "Actual original ComposerWindow whole-page PDF versus native cached persistent HLR/direct vector writer, mixed shape/view item order, source caps/joins/hidden dashes/pen widths and clip. No font/raster style/UI parity claim."}
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-composer-vector-view-pdf.py", line 19, in <module>
+    for dpi in (72,144,300):run([sys.executable,"scripts/check-sheet-view-vector-pdf.py",root,dpi])
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-composer-vector-view-pdf.py", line 7, in run
+    def run(args):subprocess.run([str(v)for v in args],check=True)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/ingetrazo-parity-python/bin/python', 'scripts/check-sheet-view-vector-pdf.py', '/tmp/ingetrazo-section-grid-first', '72']' returned non-zero exit status 1.

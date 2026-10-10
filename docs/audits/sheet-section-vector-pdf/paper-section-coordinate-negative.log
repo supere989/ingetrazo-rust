@@ -1,0 +1,6 @@
+
+thread 'main' (2786452) panicked at crates/ingetrazo-render/examples/paper_section_fixture.rs:28:9:
+assertion `left == right` failed: source closed loop "ring"
+  left: [[DVec3(2.384185791015625e-7, 0.0, 0.0), DVec3(4.0, 0.0, 0.0), DVec3(4.0, 4.0, 0.0), DVec3(0.0, 4.0, 0.0)]]
+ right: [[DVec3(0.0, 0.0, 0.0), DVec3(4.0, 0.0, 0.0), DVec3(4.0, 4.0, 0.0), DVec3(0.0, 4.0, 0.0)]]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

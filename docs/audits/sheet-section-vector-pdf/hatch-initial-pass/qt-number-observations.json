@@ -1,0 +1,45 @@
+{
+  "qt_version": "6.12.0",
+  "rows": [
+    {
+      "value": 55.11536795523,
+      "encoded": "55.1153679",
+      "pdf_sha256": "aaa3f0ed99576994e82b0400ace1a24a6689877676e79721c39892d827d759da"
+    },
+    {
+      "value": -0.1234567899,
+      "encoded": "-0.123456789",
+      "pdf_sha256": "4e7fd3d396326ee5acb64c55253be9a25214430b5d54c9a16559544cf4e193a0"
+    },
+    {
+      "value": -1e-10,
+      "encoded": "-0",
+      "pdf_sha256": "2330865006b82f7a0dffacdf03c1cd623e2e4d5ac18f915da9faa83fdee70a68"
+    },
+    {
+      "value": 999.9999999999,
+      "encoded": "999.999999",
+      "pdf_sha256": "831da597b8a369f8fd75fb96bed6b5b2adcbde93565afbfe31c089a9ef817d7b"
+    },
+    {
+      "value": 1.2345e-08,
+      "encoded": "0.000000012",
+      "pdf_sha256": "d784047c93706ff1741ada81871322ca97117f28da42c0abbd4dc6ed47e710c5"
+    },
+    {
+      "value": 123456.789999999,
+      "encoded": "123456.789",
+      "pdf_sha256": "1a25e9734cc6675d8b4f15f203de2d2e3577ad834c3d19ec6eecfa60e1b4b630"
+    },
+    {
+      "value": 1.0000000001,
+      "encoded": "1",
+      "pdf_sha256": "da83c9458b39274a08360499f9ad882df4c811cf0b14f541050a06d32fdc85c4"
+    },
+    {
+      "value": -1000.123456789,
+      "encoded": "-1000.12345",
+      "pdf_sha256": "f663128b6044196b57d42e75506e615a272f9946bd54f013d058a1dc312f4858"
+    }
+  ]
+}

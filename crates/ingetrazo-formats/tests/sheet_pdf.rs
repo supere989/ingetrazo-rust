@@ -19,6 +19,9 @@ fn page() -> Page {
             fill: Some([37. / 255., 147. / 255., 93. / 255., 1.]),
             stroke_options: None,
             clip: None,
+            clip_intersection: None,
+            text: None,
+            flatten_transform: false,
         }],
     }
 }
@@ -279,5 +282,39 @@ fn invalid_qt_paper_export_preserves_destination_and_rejects_stroke_options() {
         assert!(sheet_pdf::save_original_qt_paper(&dest, &[p]).is_err());
         assert_eq!(std::fs::read(&dest).unwrap(), b"original");
     }
+    std::fs::remove_file(dest).unwrap();
+}
+
+#[test]
+fn second_physical_clip_is_admitted_before_atomic_destination_write() {
+    let destination =
+        std::env::temp_dir().join(format!("clip-admission-{}.pdf", uuid::Uuid::new_v4()));
+    std::fs::write(&destination, b"sentinel").unwrap();
+    for clip in [
+        vec![PathOp::Move([f64::NAN, 0.])],
+        vec![PathOp::Move([0., 0.]); sheet_pdf::MAX_COMMANDS],
+    ] {
+        let mut p = page();
+        p.draws[0].clip_intersection = Some(clip);
+        assert!(sheet_pdf::save_original_qt_paper(&destination, &[p]).is_err());
+        assert_eq!(std::fs::read(&destination).unwrap(), b"sentinel");
+    }
+    std::fs::remove_file(destination).unwrap();
+}
+
+#[test]
+fn source_device_outlines_refuse_wrong_policy_without_touching_destination() {
+    let dest = std::env::temp_dir().join(format!("device-outline-{}.pdf", uuid::Uuid::new_v4()));
+    std::fs::write(&dest, b"sentinel").unwrap();
+    let mut p = page();
+    p.draws[0].flatten_transform = true;
+    assert!(sheet_pdf::save_original_qt_paper(&dest, std::slice::from_ref(&p)).is_err());
+    p.device_dpi = Some(300.);
+    assert!(sheet_pdf::save_original_qt_paper(&dest, std::slice::from_ref(&p)).is_err());
+    p.draws[0].stroke = None;
+    assert!(sheet_pdf::save(&dest, std::slice::from_ref(&p)).is_err());
+    assert_eq!(std::fs::read(&dest).unwrap(), b"sentinel");
+    let encoded = sheet_pdf::encode_original_qt_paper(&[p]).unwrap();
+    assert!(String::from_utf8_lossy(&encoded).contains("1 0 0 1 0 0 cm"));
     std::fs::remove_file(dest).unwrap();
 }

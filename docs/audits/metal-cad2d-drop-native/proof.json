@@ -1,0 +1,15 @@
+{
+  "source": "ab370eb445dd19fbc1f55deb77036ba4dd7eb8aa",
+  "run": 38046278347,
+  "arm": {
+    "job": 114196362146,
+    "artifact": 11666993651,
+    "passed": 2
+  },
+  "intel": {
+    "job": 114196362225,
+    "artifact": 11666709165,
+    "passed": 2
+  },
+  "physical_mac_claim": false
+}

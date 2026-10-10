@@ -1,0 +1,63 @@
+[
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-image-layer-ownership.py",
+      "docs/audits/image-layer-lifetime-root-review/original-layers.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "image_layer_ownership"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-image-layer-ownership.py",
+      "docs/audits/image-layer-lifetime-root-review/original-layers.json",
+      "docs/audits/image-layer-lifetime-root-review/native-layers.json",
+      "docs/audits/image-layer-command-ownership/literal-old-native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-image-object-lifetime.py",
+      "docs/audits/image-layer-lifetime-root-review/original-lifetime.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "image_object_lifetime"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--offline"
+    ],
+    "returncode": 0
+  }
+]

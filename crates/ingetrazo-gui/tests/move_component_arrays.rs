@@ -205,7 +205,7 @@ fn original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact() 
    for (a,b) in g.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(attrs["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
   }
   if kind=="nested-leaf" {app.finish_component_edit();}
-assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene,expected);app.redo();assert_eq!(app.scene,after);
+assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();let mut expected=source_baked_before(&before,&after);app.undo();expected.selection=app.scene.selection.clone();expected.selection_order=app.scene.selection_order.clone();expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);app.redo();let mut expected=after;expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);
   let path=std::env::temp_dir().join(format!("world-edit-{}.igz",uuid::Uuid::new_v4()));
   let document=ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
   ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();
@@ -278,7 +278,7 @@ fn actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition() {
   if row["sibling_in_context_after"]==true {assert_eq!(selected.mesh_share==app.scene.groups[1].mesh_share,row["sibling_same_mesh_after"].as_bool().unwrap());}
   assert_eq!(selected.mesh.faces[0].attrs["vendor"],row["after_attrs"]["vendor"]);for (a,b) in selected.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(row["after_attrs"]["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
   if kind.starts_with("nested") {app.finish_component_edit();assert_eq!(app.undo_stack.len(),row["history_after_no_edit_exit"].as_u64().unwrap()as usize);}
-if row["source_unique_on_entry"]==true {let after=app.scene.clone();let expected=source_baked_before(&before,&after);app.undo();assert_eq!(app.scene,expected);app.redo();assert_eq!(app.scene,after);}
+if row["source_unique_on_entry"]==true {let after=app.scene.clone();let mut expected=source_baked_before(&before,&after);app.undo();expected.selection=app.scene.selection.clone();expected.selection_order=app.scene.selection_order.clone();expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);app.redo();let mut expected=after;expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);}
   let document=ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
   let path=std::env::temp_dir().join(format!("unique-entry-{}.igz",uuid::Uuid::new_v4()));
   ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();

@@ -1,0 +1,1380 @@
+{
+  "cases": {
+    "folded": {
+      "entry": {
+        "datum": null,
+        "guides": [
+          {
+            "point": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "points": [
+          {
+            "desc": "Survey",
+            "name": "Existing",
+            "position": [
+              8.0,
+              9.0,
+              10.0
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "anchor": [
+              5.0,
+              6.0,
+              7.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Existing"
+          }
+        ]
+      },
+      "states": [
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        }
+      ]
+    },
+    "nested_folded": {
+      "entry": {
+        "datum": null,
+        "guides": [
+          {
+            "point": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "points": [
+          {
+            "desc": "Survey",
+            "name": "Existing",
+            "position": [
+              8.0,
+              9.0,
+              10.0
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "anchor": [
+              5.0,
+              6.0,
+              7.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Existing"
+          }
+        ]
+      },
+      "states": [
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        }
+      ]
+    },
+    "nested_ordinary": {
+      "entry": {
+        "datum": null,
+        "guides": [
+          {
+            "point": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "points": [
+          {
+            "desc": "Survey",
+            "name": "Existing",
+            "position": [
+              8.0,
+              9.0,
+              10.0
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "anchor": [
+              5.0,
+              6.0,
+              7.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Existing"
+          }
+        ]
+      },
+      "states": [
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        }
+      ]
+    },
+    "ordinary": {
+      "entry": {
+        "datum": null,
+        "guides": [
+          {
+            "point": [
+              2.0,
+              3.0,
+              4.0
+            ]
+          }
+        ],
+        "points": [
+          {
+            "desc": "Survey",
+            "name": "Existing",
+            "position": [
+              8.0,
+              9.0,
+              10.0
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "anchor": [
+              5.0,
+              6.0,
+              7.0
+            ],
+            "offset": [
+              0.0,
+              2.0,
+              0.0
+            ],
+            "text": "Existing"
+          }
+        ]
+      },
+      "states": [
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            }
+          ]
+        },
+        {
+          "datum": null,
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        },
+        {
+          "datum": [
+            37.0,
+            -122.0,
+            15.0,
+            20.0
+          ],
+          "guides": [
+            {
+              "point": [
+                2.0,
+                3.0,
+                4.0
+              ]
+            },
+            {
+              "point": [
+                20.0,
+                21.0,
+                22.0
+              ]
+            }
+          ],
+          "points": [
+            {
+              "desc": "Survey",
+              "name": "Existing",
+              "position": [
+                8.0,
+                9.0,
+                10.0
+              ]
+            },
+            {
+              "desc": "Survey",
+              "name": "Added",
+              "position": [
+                26.0,
+                27.0,
+                28.0
+              ]
+            }
+          ],
+          "texts": [
+            {
+              "anchor": [
+                5.0,
+                6.0,
+                7.0
+              ],
+              "offset": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "text": "Existing"
+            },
+            {
+              "anchor": [
+                23.0,
+                24.0,
+                25.0
+              ],
+              "offset": [
+                0.0,
+                3.0,
+                0.0
+              ],
+              "text": "Added"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

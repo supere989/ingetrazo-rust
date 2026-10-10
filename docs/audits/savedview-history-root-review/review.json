@@ -1,0 +1,9 @@
+{
+  "base": "86bc778a2b085438c2b4387a2e4beb06a0d83726",
+  "source": "620054c",
+  "passed": 537,
+  "ignored": 2,
+  "binary_sha256": "9250bac90cbf16259c7f435da9fab8f9e3d2816ac8c5b3d3717c0891fbc4ac3a",
+  "ordinary_terrain_parity": false,
+  "full_presentation_parity": false
+}

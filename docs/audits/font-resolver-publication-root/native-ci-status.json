@@ -1,0 +1,8 @@
+{
+  "compute_run": 38055468236,
+  "ARM": "failure: actual GPU consumer",
+  "Intel": "failure: actual GPU consumer",
+  "host_run": 38055273897,
+  "clear_quantization": "both actual native steps success",
+  "presentation_and_lifecycle": "not accepted"
+}

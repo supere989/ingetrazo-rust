@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "strict_pages": 78,
+  "native_fixture_sha256": "b21f36704ad5a72d3d7bad0f402ccc954201ec8b9f19c8648e267982e381d376",
+  "worker_sha256": "97bd8da8882e13d7ac597b0c6ba0df4a176a62d31e278bf7f06d5ff22ecb3685",
+  "saved_view_mode": true,
+  "section_fill_mode": "solid",
+  "section_tilt": true,
+  "scope": "Orthographic current/saved View vector line and requested section fill painter plus controls; no UI/default raster/text/title/full P29 claim."
+}

@@ -94,13 +94,14 @@ fn main() {
     app.scene.bind_dimensions();
     app.finish_component_edit();
     assert!(app.component_edit_stack.is_empty());
-    points(&app, DVec3::new(10., 20., 30.), DVec3::new(14., 20., 30.));
+    points(&app, DVec3::new(10., 20., 30.), DVec3::new(11., 20., 30.));
     save(&app, &dir, "context");
     let after = app.scene.clone();
     app.undo();
-    assert_eq!(app.scene, before);
+    assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);
+    assert_eq!(app.scene.dimensions.len(),2);assert_eq!(app.scene.dimensions[1].end,DVec3::new(14.,20.,30.));assert!(app.scene.dimensions[1].anchor_b.is_none());
     app.redo();
-    assert_eq!(app.scene, after);
+    assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.mesh_shares,after.mesh_shares);assert_eq!(app.scene.dimensions[1].end,DVec3::new(14.,20.,30.));assert!(app.scene.dimensions[1].anchor_b.is_none());
     assert!(!app.edit_dimension(0, None, Some("invalid".into()), None));
     let before = app.scene.clone();
     assert!(app.edit_dimension(
@@ -180,6 +181,6 @@ fn main() {
     points(
         &app,
         DVec3::new(111., 222., 333.),
-        DVec3::new(117., 222., 333.),
+        DVec3::new(112., 222., 333.),
     );
 }

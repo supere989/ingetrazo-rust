@@ -41,6 +41,7 @@ fn main() {
         app.scene.groups.push(sibling);
         app.scene.select(SelectionItem::Group(3));
         let before = app.scene.clone();
+        let initial_version=app.scene.version;
         app.begin_component_edit();
         let parent_drawing_frame=app.scene.drawing_frame.unwrap();let combined = app.scene.groups[0].transform;
         app.scene.select(SelectionItem::Group(0));
@@ -65,11 +66,12 @@ fn main() {
                 before.groups[index].children[0].id
             );
         }
-        app.undo();
+        let committed_version=app.scene.version;assert!(app.scene.selection.is_empty());
+        app.undo();let undo_version=app.scene.version;assert!(app.scene.selection.is_empty()&&undo_version>committed_version);
         let undone = serde_json::json!({"selected":app.scene.groups[3].transform.to_cols_array(),"child":app.scene.groups[3].children[0].transform.to_cols_array(),"points":points(&app.scene.groups[0])});
-        app.redo();
+        app.redo();let redo_version=app.scene.version;assert!(app.scene.selection.is_empty()&&redo_version>undo_version);
         assert_eq!(points(&app.scene.groups[0])[0], [0., 0., 5.]);
-        rows.push(serde_json::json!({"name":case["name"],"parent_drawing_frame":parent_drawing_frame.to_cols_array(),"child_drawing_frame":child_drawing_frame.to_cols_array(),"entry_world_points":entry,"authored_world_point":target.to_array(),"committed":committed,"undone":undone,"placement_ids_preserved":true}));
+        rows.push(serde_json::json!({"name":case["name"],"parent_drawing_frame":parent_drawing_frame.to_cols_array(),"child_drawing_frame":child_drawing_frame.to_cols_array(),"entry_world_points":entry,"authored_world_point":target.to_array(),"committed":committed,"undone":undone,"placement_ids_preserved":true,"history_presentation":{"initial_version":initial_version,"committed_version":committed_version,"undo_version":undo_version,"redo_version":redo_version,"selection_empty_after_commit_undo_redo":true}}));
     }
     std::fs::write(
         dir.join("native.json"),

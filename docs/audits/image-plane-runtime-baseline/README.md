@@ -1,0 +1,1 @@
+Operative pinned original image-plane Add/Move/Opacity/Delete, direct/nested Finish and Undo/Redo corpus. Native production open retains image_planes in opaque raw JSON but runtime_planes is null: current implementation cannot operate on these objects. This baseline is a retained failure, not parity. No rendered plane claim.

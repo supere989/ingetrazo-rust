@@ -1,0 +1,10 @@
+{
+  "states": 16,
+  "cases": 4,
+  "ownership_negatives": 3,
+  "prior_layer_states": 13,
+  "workspace_passed": 542,
+  "workspace_ignored": 2,
+  "binary_sha256": "a60a8308a0cfff663dd9b2bade2abe4550263730ec29bc3a6aeebed309c58a07",
+  "full_layer_parity": false
+}

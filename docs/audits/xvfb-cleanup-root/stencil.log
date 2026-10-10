@@ -1,0 +1,80 @@
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-closed
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-shared-slab
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-shared-slab-reversed
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-transparent
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-duplicate
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-coplanar-backface
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-closed-iso
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-shared-slab-iso
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-shared-slab-reversed-iso
+PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures docs/audits/xvfb-cleanup-root/stencil/msaa-closed-front
+{
+  "cases": [
+    {
+      "case": "closed",
+      "original": 20164,
+      "native": 20164,
+      "sha256": "575f96288a074abcdda41bba7ea6ef5ba6e428c9e250c442d609e2a216f3bc7f"
+    },
+    {
+      "case": "shared-slab",
+      "original": 0,
+      "native": 0,
+      "sha256": "36ab318bd3eeaa09e931694b46917cd0fcb58d1c3cbc3f130b9207fa5a6e822e"
+    },
+    {
+      "case": "shared-slab-reversed",
+      "original": 20164,
+      "native": 20164,
+      "sha256": "575f96288a074abcdda41bba7ea6ef5ba6e428c9e250c442d609e2a216f3bc7f"
+    },
+    {
+      "case": "transparent",
+      "original": 0,
+      "native": 0,
+      "sha256": "1c02e3feca09018c04cf4ac6fe1ec766175badbd51f11200a33e3887d5c9e296"
+    },
+    {
+      "case": "duplicate",
+      "original": 20164,
+      "native": 20164,
+      "sha256": "575f96288a074abcdda41bba7ea6ef5ba6e428c9e250c442d609e2a216f3bc7f"
+    },
+    {
+      "case": "coplanar-backface",
+      "original": 0,
+      "native": 0,
+      "sha256": "c2e59f1fbaab81fe1cc0cb76f9844cc314e8292ae841ab6c722afd51e9d1438a"
+    },
+    {
+      "case": "closed-iso",
+      "original": 9925,
+      "native": 9925,
+      "sha256": "0b903dc77a45168024fe52ca56e65bea058be1e7fae7249dfc4e2d70fc177370"
+    },
+    {
+      "case": "shared-slab-iso",
+      "original": 8519,
+      "native": 8519,
+      "sha256": "72fabf178198744de3a83c10271dcd102db5babcb573391d51ae37d159d0a434"
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "original": 9925,
+      "native": 9925,
+      "sha256": "0b903dc77a45168024fe52ca56e65bea058be1e7fae7249dfc4e2d70fc177370"
+    },
+    {
+      "case": "closed-front",
+      "original": 0,
+      "native": 0,
+      "sha256": "46f3cc61ab6de94549e0cc0ddf2233ec3ee9ccbe337a53e288cc60068ce03098"
+    }
+  ],
+  "negative_controls": {
+    "actual_wrong_winding_closed": 0,
+    "physical_fill_in_zero_case_rejected": true
+  },
+  "scope": "Linux software-native Vulkan bounded stencil, exact zero and established 5% positive tolerance; not full rendering parity"
+}
+

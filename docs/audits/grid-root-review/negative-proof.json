@@ -1,0 +1,18 @@
+{
+  "exit": 1,
+  "rejected_pages": [
+    {
+      "case": "front_box",
+      "hidden": false,
+      "different_pixels": 10143,
+      "passed": false
+    },
+    {
+      "case": "front_box",
+      "hidden": true,
+      "different_pixels": 10143,
+      "passed": false
+    }
+  ],
+  "same_length_valid_pdf": true
+}

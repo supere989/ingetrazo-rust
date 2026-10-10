@@ -3,7 +3,7 @@
 import os,json,subprocess,tempfile,time,select,ctypes as C,ctypes.util,shutil,hashlib
 from pathlib import Path
 unsupported=os.environ.get("INGETRAZO_PDF_UI_UNSUPPORTED")=="1"
-out=Path("docs/audits/composer-pdf-ui"+("-unsupported" if unsupported else ""));out.mkdir(exist_ok=True);(out/"state.json").unlink(missing_ok=True)
+out=Path(os.environ.get("INGETRAZO_PDF_UI_EVIDENCE","docs/audits/composer-pdf-ui"+("-unsupported" if unsupported else "")));out.mkdir(exist_ok=True);(out/"state.json").unlink(missing_ok=True)
 def wait(fn):
  end=time.monotonic()+20
  while time.monotonic()<end:
@@ -92,7 +92,7 @@ with tempfile.TemporaryDirectory() as runtime:
   if unsupported:
    assert atlas["sheets"]==initial["sheets"]==1
    assert current_path.read_bytes()==b"existing destination current" and all_path.read_bytes()==b"existing destination all"
-   assert current["export_result"]==atlas["export_result"]=="PDF painter for this sheet item remains unavailable",atlas
+   assert current["export_result"]==atlas["export_result"]=="PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported",atlas
    counts=[]
   else:
    assert atlas["sheets"]==initial["sheets"]==9

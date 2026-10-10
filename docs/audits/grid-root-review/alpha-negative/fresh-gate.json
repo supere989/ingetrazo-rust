@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "strict_pages": 78,
+  "native_fixture_sha256": "597c57d15372d2ec5a3f4a76759be5bcb543f7b9ee5a8cb054be5956a33a6182",
+  "worker_sha256": "85f2dbb36265de49245e0cced4fc37a28cb35023bf50f4496839e008a3409a57",
+  "saved_view_mode": false,
+  "section_fill_mode": "hatch",
+  "section_tilt": false,
+  "grid_m": "0.7",
+  "scope": "Orthographic current/saved View vector line, requested section fill and grid painters plus controls; no UI/default raster/text/title/full P29 claim."
+}

@@ -1,0 +1,6 @@
+
+thread 'main' (3258008) panicked at crates/ingetrazo-formats/examples/paper_text_fixture.rs:98:13:
+assertion `left == right` failed: position latin
+  left: [0.0, 92.8125]
+ right: [0.015625, 92.8125]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

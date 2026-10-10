@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "cases": 16,
+  "negative_controls": 12,
+  "boundary": "JSON source from_dict accepted recipes and refusals; no rendered malformed recipes; Python nonfinite/arbitrary precision beyond JSON numeric range remains open"
+}
