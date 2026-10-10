@@ -1,0 +1,14 @@
+{
+  "cases": 7,
+  "negative_rejections": [
+    "early-reset",
+    "partial-publication",
+    "poison-lost",
+    "missing-case"
+  ],
+  "production": false,
+  "source": "16fafa33",
+  "binary_sha256": "84ff59885356afcf08045b36d94e0a664a4ffbc6b394ad572613cc410b482f9f",
+  "unwind_test": "PASS: stage discarded, live mesh/history unchanged, same VM reuse refused, fresh controller works",
+  "scope": "Fresh standalone integrated reset/discard boundary; no production scripting or complete runtime resource bound"
+}

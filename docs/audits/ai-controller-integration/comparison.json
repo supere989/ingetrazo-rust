@@ -1,0 +1,10 @@
+{
+  "cases": 7,
+  "negative_rejections": [
+    "early-reset",
+    "partial-publication",
+    "poison-lost",
+    "missing-case"
+  ],
+  "production": false
+}
