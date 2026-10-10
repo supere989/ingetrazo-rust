@@ -1,0 +1,82 @@
+{
+  "passed": false,
+  "literal_pixel_failures": [
+    {
+      "case": "back-reflected-group",
+      "point": [
+        400,
+        300
+      ],
+      "source": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "native": [
+        179,
+        179,
+        253,
+        255
+      ]
+    },
+    {
+      "case": "back-reflected-group",
+      "point": [
+        500,
+        300
+      ],
+      "source": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "native": [
+        179,
+        179,
+        253,
+        255
+      ]
+    },
+    {
+      "case": "back-reflected-group",
+      "point": [
+        400,
+        400
+      ],
+      "source": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "native": [
+        179,
+        179,
+        253,
+        255
+      ]
+    },
+    {
+      "case": "back-reflected-group",
+      "point": [
+        300,
+        300
+      ],
+      "source": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "native": [
+        179,
+        179,
+        253,
+        255
+      ]
+    }
+  ],
+  "source_reference": "viewport.py8035-8061 tp32 mirror triangle swap"
+}

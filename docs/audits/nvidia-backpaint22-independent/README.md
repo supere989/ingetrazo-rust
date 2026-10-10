@@ -7,3 +7,7 @@ Combined963993c source is c5da026 on f96 plus accepted bounded upload_many. Head
 Checker now requires exact22 orderedcase names for source/native/oldbaseline, prevents omitted/duplicated corpus acceptance and compares gateRGBA to actualsource instead of Mesa247 literal. The old owner negative corpus had18cases and is rejected by this mandatory guard. The retained old pre-backpaint binary was freshly executed against all22 same actualNVIDIA inputs to preserve a complete failurebaseline. Explicit missing/duplicate/closedgate controls also fail.
 
 This proves bounded untextured planar front/back opacity/gate/culling/order. Slanted/hole/group geometry controls, texture/back-material broad scope, hardware other than this LinuxNVIDIA device, nativeMetal and complete renderer behavior remain open. Historical opposite-driver quantization failures remain unchanged.
+
+## Required rounding union preserved
+
+Same exact backpaint candidate freshly executed again against actual NVIDIA source15:15/15 headless literalRGBA/runs and15/15 actual swapchain/encoded-egui captures pass. Retained native-alpha15-same-candidate and native-alpha15-ui-same-candidate, using source15 under ../nvidia-alpha15-independent/original. Union with22 is27 distinct mandatory cases; rounding and f64 opacity threshold are retained rather than dropped. The reflected-group held-out failure lives separately under ../nvidia-backpaint-heldout and remains open.
