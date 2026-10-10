@@ -358,6 +358,16 @@ impl MetalPresentation {
     }
     /// Read-only native diagnostics. Completed is never substituted for displayed.
     pub fn diagnostics(&self) -> String {
+        // Visibility alone does not establish that the compositor can display
+        // this window. Inspect AppKit only on its owning main thread.
+        let appkit = MainThreadMarker::new().and_then(|_| {
+            let handle = self.owners._window.window_handle().ok()?;
+            let RawWindowHandle::AppKit(handle) = handle.as_raw() else { return None; };
+            let view = unsafe { handle.ns_view.cast::<NSView>().as_ref() };
+            let window = view.window()?;
+            Some(format!("number={} visible={} active_space={} occlusion={:?}",
+                window.windowNumber(), window.isVisible(), window.isOnActiveSpace(), window.occlusionState()))
+        });
         let frames: Vec<_> = self
             .owners
             .frames
@@ -377,7 +387,8 @@ impl MetalPresentation {
             })
             .collect();
         format!(
-            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            "appkit={:?}; extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            appkit,
             self.extent,
             self.owners._window.is_visible(),
             self.owners.layer.frame(),
