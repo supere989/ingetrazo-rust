@@ -62,9 +62,12 @@ with (out/"backend.log").open("w")as stream:
    assert len(hits)<=1
    return hits[0]if hits else None
   w=wait(owned);x.XMapRaised(d,w);x.XResizeWindow(d,w,800,600);x.XFlush(d);time.sleep(1)
+  def phase_ready(phase):
+   try:return json.loads(state.read_text())["phase"]==phase
+   except (FileNotFoundError,json.JSONDecodeError):return False
   for phase in ["baseline","partial"]:
    if phase=="partial":command.write_text("partial")
-   wait(lambda:state.is_file()and json.loads(state.read_text())["phase"]==phase);time.sleep(.5)
+   wait(lambda:phase_ready(phase));time.sleep(.5)
    image=wait(lambda:capture_owned(w));assert not image.isNull();assert image.save(str(out/(phase+".png")))
    values=[]
    for case in data["cases"]:
