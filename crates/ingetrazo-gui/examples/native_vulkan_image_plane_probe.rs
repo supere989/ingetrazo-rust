@@ -67,12 +67,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
         world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
         assert_eq!(world.uploads, 1);
+        let mut warm_pose_metrics=serde_json::Value::Null;
         if !scene.image_planes.is_empty(){
             let frame=[scene.image_planes[0].origin,scene.image_planes[0].u,scene.image_planes[0].v];
-            let uploads=world.texture_stats().1.uploads;let geometry=world.uploads;
+            let uploads=world.texture_stats().1.uploads;let geometry=world.uploads;let hashes=world.texture_stats().1.hashes;let decodes=world.texture_stats().1.decodes;
             for i in 1..11{scene.image_planes.pose_mut(0).unwrap().set_origin(frame[0]+DVec3::X*(i as f64/10.));world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;}
             scene.image_planes.pose_mut(0).unwrap().set_frame(frame);world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;
-            assert_eq!(world.uploads,geometry,"pose-only image update rebuilt geometry");assert_eq!(world.texture_stats().1.uploads,uploads,"pose-only image update uploaded image");
+            assert_eq!(world.uploads,geometry,"pose-only image update rebuilt geometry");assert_eq!(world.texture_stats().1.uploads,uploads,"pose-only image update uploaded image");warm_pose_metrics=serde_json::json!({"pose_updates":11,"geometry_uploads":world.uploads-geometry,"image_uploads":world.texture_stats().1.uploads-uploads,"hashes":world.texture_stats().1.hashes-hashes,"decodes":world.texture_stats().1.decodes-decodes});
         }
 
         if name.starts_with("style-") {
@@ -141,7 +142,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         let samples=case["points"].as_array().unwrap().iter().map(|p|{let x=p[0].as_u64().unwrap()as usize;let y=p[1].as_u64().unwrap()as usize;let i=(y*800+x)*4;image[i..i+4].to_vec()}).collect::<Vec<_>>();
         let offset = (300 * 800 + 400) * 4;
-        rows.push(serde_json::json!({"case":name,"center_rgba":&image[offset..offset+4],"samples":samples,"texture_stats":format!("{:?}",world.texture_stats()),"reference_image_stats":format!("{:?}",world.reference_image_stats()),"geometry_uploads":world.uploads,"hard_edge_bytes":world.edge_geometry_bytes(),"hard_edge_endpoint_count":world.edge_endpoint_count(),"opacity_runs":world.transparent_runs(),"paint_runs":world.paint_runs(),"ordinary_runs":world.ordinary_paint_runs(),"consolidated_opaque_count":world.consolidated_opaque_count(),"surface_bytes":world.transparent_surface_bytes(),"contour_metrics":format!("{:?}",world.contour_metrics())}));
+        rows.push(serde_json::json!({"case":name,"center_rgba":&image[offset..offset+4],"samples":samples,"texture_stats":format!("{:?}",world.texture_stats()),"warm_pose_metrics":warm_pose_metrics,"reference_image_stats":format!("{:?}",world.reference_image_stats()),"geometry_uploads":world.uploads,"hard_edge_bytes":world.edge_geometry_bytes(),"hard_edge_endpoint_count":world.edge_endpoint_count(),"opacity_runs":world.transparent_runs(),"paint_runs":world.paint_runs(),"ordinary_runs":world.ordinary_paint_runs(),"consolidated_opaque_count":world.consolidated_opaque_count(),"surface_bytes":world.transparent_surface_bytes(),"contour_metrics":format!("{:?}",world.contour_metrics())}));
         drop(world);
         assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
     }
