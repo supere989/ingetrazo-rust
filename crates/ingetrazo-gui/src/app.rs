@@ -42,6 +42,7 @@ pub struct GeometryClipboard {
 pub struct IngeTrazoApp {
     /// Runtime-only native GPU viewport state; never serialized into the document.
     pub native_composer:crate::composer_cad::NativeComposer,
+    pub image_outlines:crate::image_outlines::ImageOutlineCache,
     pub native_gpu_viewport_enabled: bool,
     pub native_gpu_viewport_rect: Option<egui::Rect>,
     pub native_gpu_viewport_texture: Option<egui::TextureId>,
@@ -144,7 +145,7 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
-            native_composer:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
+            native_composer:Default::default(),image_outlines:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
             component_edit_stack: Vec::new(),
             scene,
             camera,
