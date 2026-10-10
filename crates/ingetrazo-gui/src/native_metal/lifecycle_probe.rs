@@ -288,7 +288,7 @@ impl Probe {
             }
             Ok(())
         })();
-        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
+        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"modal_candidates":self.modal_candidates,"modal_label":self.label,"last_modal_center":self.center,"current_output_has_modal":self.current_output_has_modal,"current_submission_floor":self.current_submission_floor,"ui_turns":self.ui_turns,"confirm_unsaved":app.document_session.confirm_unsaved,"presentation_diagnostics":gpu.diagnostics(),"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
         std::fs::write(
             self.root.join("result.json"),
             serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
