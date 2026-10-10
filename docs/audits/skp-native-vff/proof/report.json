@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "SU_File",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 32
+    },
+    {
+      "name": "hole-paint-layer",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "single-definition",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "small-two-flat",
+      "passed": true,
+      "groups": 2,
+      "sharing_sizes": [
+        1,
+        1
+      ],
+      "faces": 2
+    },
+    {
+      "name": "shared-eight",
+      "passed": true,
+      "groups": 8,
+      "sharing_sizes": [
+        8
+      ],
+      "faces": 512
+    },
+    {
+      "name": "inherited-paint",
+      "passed": true,
+      "groups": 1,
+      "sharing_sizes": [
+        1
+      ],
+      "faces": 1
+    },
+    {
+      "name": "texture-refusal",
+      "passed": true,
+      "expected_refusal": "Error: Unsupported(\"material textures (decode, UV and tint required)\")"
+    }
+  ],
+  "source_parser": "291700bc213655a00461838de71e5f206311e619",
+  "source_app": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source": "79b043014d0d9d6b1477d71223ac6badd9673b7d",
+  "binary_sha256": "8b170aeecaac443eb7b4b89602428b8f8304a01fb4b5175b3623fc32d735f10f",
+  "negative": "altered source world point rejected",
+  "scope": "Strict actual pinned OpenSKP/IngeTrazo comparison of a real SKP and record controls.\nPython is frozen reference only; imported application path is native Rust.\n"
+}

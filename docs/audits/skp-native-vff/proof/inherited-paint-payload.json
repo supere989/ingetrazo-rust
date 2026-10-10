@@ -1,0 +1,186 @@
+{
+  "name": "inherited-paint",
+  "version": "{25.0.575}",
+  "root": {
+    "name": "",
+    "vertices": {},
+    "edges": {},
+    "faces": {},
+    "instances": [
+      {
+        "definition": 5000,
+        "name": "placement-1",
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          100.0,
+          0.0,
+          0.0
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 99
+        }
+      }
+    ],
+    "billboard": false,
+    "unsupported": []
+  },
+  "definitions": {
+    "5000": {
+      "name": "Painted",
+      "vertices": {
+        "10": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "11": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "12": [
+          10.0,
+          10.0,
+          0.0
+        ],
+        "13": [
+          0.0,
+          10.0,
+          0.0
+        ]
+      },
+      "edges": {
+        "100": {
+          "vertices": [
+            10,
+            11
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 30,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "101": {
+          "vertices": [
+            11,
+            12
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "102": {
+          "vertices": [
+            12,
+            13
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        },
+        "103": {
+          "vertices": [
+            13,
+            10
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "curve": null
+        }
+      },
+      "faces": {
+        "1000": {
+          "loops": [
+            [
+              [
+                100,
+                true
+              ],
+              [
+                101,
+                true
+              ],
+              [
+                102,
+                true
+              ],
+              [
+                103,
+                true
+              ]
+            ]
+          ],
+          "flags": {
+            "hidden": false,
+            "display": 6,
+            "layer": null,
+            "material": null
+          },
+          "back_material": null
+        }
+      },
+      "instances": [],
+      "billboard": false,
+      "unsupported": []
+    }
+  },
+  "layers": {
+    "1": {
+      "name": "Layer0",
+      "visible": true
+    }
+  },
+  "material_names": {
+    "99": "Green"
+  },
+  "materials": {
+    "Green": {
+      "color": [
+        0.047058823529411764,
+        0.34901960784313724,
+        0.592156862745098,
+        0.75
+      ]
+    },
+    "Layer_Layer0": {
+      "color": [
+        0.5333333333333333,
+        0.5333333333333333,
+        0.5333333333333333,
+        1.0
+      ]
+    }
+  },
+  "back_color": [
+    0.8156862745098039,
+    0.8196078431372549,
+    0.7411764705882353
+  ],
+  "unsupported": []
+}
