@@ -1,0 +1,16 @@
+{
+  "source": "4062d4d30c1286a3d71d7f02b1bcb5d7b146a567",
+  "run": 38064941727,
+  "job": 114250570090,
+  "job_name": "Native Metal framework link (macos-15)",
+  "artifact": 11674122606,
+  "archive_sha256": "913f3ea53f1ebfcf1a7a6bc6673b27454585b9dbb74c1ea9c077d431d0f21505",
+  "loop_turns": 156627,
+  "submitted": 7,
+  "retired": 4,
+  "displayed": 0,
+  "skipped": 4,
+  "unknown_owners_retained": 3,
+  "passed": false,
+  "interpretation": "Poll does not resolve actual ARM positive presentation callbacks; no production event-loop change justified."
+}

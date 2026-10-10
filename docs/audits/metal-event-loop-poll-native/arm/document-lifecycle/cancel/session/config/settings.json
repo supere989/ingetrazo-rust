@@ -1,0 +1,21 @@
+{
+  "language": "en",
+  "new_document_unit": "Meters",
+  "autosave": true,
+  "autosave_minutes": 5,
+  "undo_steps": 200,
+  "visual_style": "shaded",
+  "profile_width": 2.0,
+  "line_width": 1.0,
+  "shadows": false,
+  "show_toolbar": true,
+  "show_tray": true,
+  "recent_files": [
+    "docs/audits/metal-native-link-ci/document-lifecycle/cancel/document.igz"
+  ],
+  "section_fill_color": [
+    0.3499999940395355,
+    0.3700000047683716,
+    0.4099999964237213
+  ]
+}
