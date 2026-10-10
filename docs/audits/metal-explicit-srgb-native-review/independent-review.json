@@ -1,0 +1,38 @@
+{
+  "source": "047ccec834b10e4c89ca278bebb9c13380dee95f",
+  "run": 38060146863,
+  "rows": [
+    {
+      "architecture": "arm",
+      "qt_rgb": [
+        20,
+        51,
+        89
+      ],
+      "metal_rgb": [
+        20,
+        51,
+        89
+      ],
+      "metal_presentation_passed": false,
+      "strict_capture_passed": false
+    },
+    {
+      "architecture": "intel",
+      "qt_rgb": [
+        20,
+        51,
+        89
+      ],
+      "metal_rgb": [
+        21,
+        51,
+        89
+      ],
+      "metal_presentation_passed": true,
+      "strict_capture_passed": false
+    }
+  ],
+  "causal_hypothesis_resolved": false,
+  "tolerance_changed": false
+}

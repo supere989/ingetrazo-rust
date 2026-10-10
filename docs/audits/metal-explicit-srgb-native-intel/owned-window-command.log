@@ -1,0 +1,79 @@
+{
+  "passed": false,
+  "presentation_passed": true,
+  "physical_mac_claim": false,
+  "source_revision": "047ccec834b10e4c89ca278bebb9c13380dee95f",
+  "binary_sha256": "31f02719be9a19ae1f8979a7787bab11f18385c79edf4a05168ec9a7846bbe71",
+  "presentation_command": [
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/target/debug/examples/presentation_probe",
+    "--automatic",
+    "--owned-window-id=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-window/own-window.json",
+    "--owned-window-ack=/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-window/capture-finished"
+  ],
+  "native_snapshot": {
+    "window_id": 44,
+    "submitted": 5,
+    "retired": 3,
+    "pending": 2,
+    "displayed": 0,
+    "skipped": 3,
+    "completed_inflight": 1
+  },
+  "capture_command": [
+    "/usr/sbin/screencapture",
+    "-x",
+    "-o",
+    "-l44",
+    "/Users/runner/work/ingetrazo-rust/ingetrazo-rust/docs/audits/metal-native-link-ci/owned-window/own-window.png"
+  ],
+  "capture_returncode": 0,
+  "capture": {
+    "width": 800,
+    "height": 628,
+    "points": [
+      [
+        400,
+        314
+      ],
+      [
+        200,
+        314
+      ],
+      [
+        600,
+        314
+      ],
+      [
+        400,
+        471
+      ]
+    ],
+    "rgb": [
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ],
+      [
+        21,
+        51,
+        89
+      ]
+    ],
+    "visible_clear": false
+  },
+  "image_sha256": "354df19150509db460b805875acf34011e73554596ee69dee2d59626ad3b81b3",
+  "capture_acknowledged": true,
+  "presentation_returncode": 0,
+  "elapsed_seconds": 1.6826382099999933
+}
