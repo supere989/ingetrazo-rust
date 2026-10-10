@@ -19,6 +19,7 @@ pub struct MoveTool {
     pub last_targets: Vec<usize>,
     pub last_delta: Option<DVec3>,
     pub last_moved_verts: Vec<usize>,
+    exclusions: ingetrazo_core::snap_screen::SnapExclusions,
 }
 
 impl MoveTool {
@@ -30,6 +31,7 @@ impl MoveTool {
         self.start_point = None;
         self.hover_point = None;
         self.is_copy_mode = false;
+        self.exclusions=Default::default();
         self.target_vertices.clear();
         self.target_groups.clear();self.target_planes.clear();
     }
@@ -81,6 +83,10 @@ impl MoveTool {
             }
         }
 
+        self.exclusions.loose_edges=scene.mesh.edges.iter().enumerate()
+            .filter(|(_,edge)|vert_set.contains(&edge.v0)||vert_set.contains(&edge.v1))
+            .map(|(id,_)|id).collect();
+        self.exclusions.groups=group_set.iter().filter_map(|&id|scene.groups.get(id).map(|g|g.id)).collect();
         self.target_vertices = vert_set.into_iter().collect();
         self.target_groups = group_set.into_iter().collect();self.target_planes=plane_set.into_iter().collect();
     }
@@ -149,6 +155,12 @@ impl Tool for MoveTool {
     }
 
     fn prefers_vertical_drag(&self) -> bool { true }
+    fn magnetic_axis_deg(&self)->Option<f64>{Some(15.)}
+    fn screen_axis_px(&self)->Option<f64>{Some(9.)}
+
+    fn snap_exclusions(&self)->Option<&ingetrazo_core::snap_screen::SnapExclusions>{
+        (self.start_point.is_some()&&!self.is_copy_mode).then_some(&self.exclusions)
+    }
 
     fn on_activate(&mut self, _scene: &mut Scene) {
         self.reset();
@@ -266,6 +278,24 @@ impl Tool for MoveTool {
 mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
+
+    #[test]
+    fn inference_excludes_incident_edges_and_nested_groups_but_copy_keeps_them(){
+        let mut scene=Scene::new();
+        let a=scene.mesh.add_vertex(DVec3::new(2.,3.,1.));let b=scene.mesh.add_vertex(DVec3::new(4.,3.,1.));
+        let c=scene.mesh.add_vertex(DVec3::new(4.,4.,1.));let d=scene.mesh.add_vertex(DVec3::new(8.,4.,1.));
+        let selected=scene.mesh.add_edge(a,b).unwrap();let incident=scene.mesh.add_edge(b,c).unwrap();let untouched=scene.mesh.add_edge(c,d).unwrap();
+        scene.groups.push(ingetrazo_core::groups::Group::new("moving parent"));
+        scene.groups[0].children.push(ingetrazo_core::groups::Group::new("nested child"));
+        scene.select(SelectionItem::Edge(selected));scene.select(SelectionItem::Group(0));
+        let ctx=ToolContext::new(DVec3::new(2.,3.,1.),Ray::new(DVec3::new(2.,3.,10.),-DVec3::Z));
+        let mut tool=MoveTool::new();tool.on_click(&mut scene,&ctx);
+        let excluded=tool.snap_exclusions().unwrap();
+        assert_eq!(excluded.loose_edges,HashSet::from([selected,incident]));assert!(!excluded.loose_edges.contains(&untouched));
+        assert_eq!(excluded.groups,HashSet::from([scene.groups[0].id]));
+        tool.is_copy_mode=true;assert!(tool.snap_exclusions().is_none());
+        tool.on_cancel(&mut scene);assert!(tool.snap_exclusions().is_none());
+    }
 
     #[test]
     fn test_move_tool_translation() {

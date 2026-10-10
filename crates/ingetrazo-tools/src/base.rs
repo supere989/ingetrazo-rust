@@ -108,6 +108,9 @@ pub trait Tool: Send + Sync {
     fn prepare_undo(&mut self, _available: bool) -> bool { false }
     fn note_cursor_plane(&mut self,_point:DVec3,_normal:DVec3){}
     fn snap_anchor(&self)->Option<DVec3>{self.rubber_band().map(|(a,_)|a)}
+    fn snap_exclusions(&self)->Option<&ingetrazo_core::snap_screen::SnapExclusions>{None}
+    fn magnetic_axis_deg(&self)->Option<f64>{None}
+    fn screen_axis_px(&self)->Option<f64>{None}
     fn snap_close(&self)->Option<DVec3>{None}
     fn lock_drawing_plane(&mut self,_normal:DVec3)->bool{false}
     /// Consume an inferred-shape lock key without changing model geometry.
