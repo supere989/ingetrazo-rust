@@ -27,10 +27,13 @@ fn main() {
             let frame = ViewFrame {
                 rect: RectMm::new(20., 30., 100., 100.),
                 style: "vectorial".into(),
-                view_key: "__current__".into(),
                 hidden_lines: hidden,
                 annotations: false,
                 section_marks: false,
+                view_key: reference["paper_view_key"]
+                    .as_str()
+                    .unwrap_or("__current__")
+                    .into(),
                 cut_fill: "none".into(),
                 border: true,
                 pen_edge_mm: if hidden { 0.37 } else { 0.18 },
@@ -78,6 +81,22 @@ fn main() {
             ];
             app.scene.sheets.push(sheet);
         }
+        // Test-only application copy independently checks the borrowed production
+        // adapter against the model's saved-view application contract.
+        let mut observation_scene = app.scene.clone();
+        if let Some(name) = reference["paper_view_key"]
+            .as_str()
+            .and_then(|s| s.strip_prefix("scene:"))
+        {
+            let saved = app
+                .scene
+                .saved_views
+                .iter()
+                .find(|s| s.name == name)
+                .unwrap();
+            let mut camera = app.camera.clone();
+            saved.apply_scene(&mut observation_scene, &mut camera);
+        }
         let operative: serde_json::Value = serde_json::from_slice(
             &std::fs::read(root.join(format!("{name}.operative-paper.json"))).unwrap(),
         )
@@ -94,10 +113,12 @@ fn main() {
                 );
             }
         }
-        let (_, observed) =
-            ingetrazo_render::vector_hlr::original_qt_paper_observation(&app.scene, &app.camera);
+        let (_, observed) = ingetrazo_render::vector_hlr::original_qt_paper_observation(
+            &observation_scene,
+            &app.camera,
+        );
         let source_hard = operative["geometry"][1].as_array().unwrap();
-        if app.scene.active_section().is_none() {
+        if observation_scene.active_section().is_none() {
             let mut native = observed
                 .iter()
                 .filter(|e| e.kind == ingetrazo_render::vector_hlr::LineKind::Edge)
@@ -312,6 +333,98 @@ fn main() {
                 b"section admission sentinel"
             );
             std::fs::remove_file(sentinel).unwrap();
+        }
+        if let Some(name) = reference["paper_view_key"]
+            .as_str()
+            .and_then(|s| s.strip_prefix("scene:"))
+        {
+            let saved = app
+                .scene
+                .saved_views
+                .iter()
+                .find(|v| v.name == name)
+                .unwrap();
+            let view = ingetrazo_render::paper_scene::PaperSceneView::new(&app.scene, Some(saved));
+            let record = app
+                .composer_compute
+                .original_qt_paper_drawing_for_view(
+                    &view,
+                    &app.camera,
+                    app.clipboard_document,
+                    app.model_revision,
+                    name,
+                    true,
+                    false,
+                )
+                .unwrap();
+            let source_caps =
+                ingetrazo_render::vector_hlr::paper_section_triangles(&observation_scene);
+            assert_eq!(record.section_material, source_caps);
+            let mut ghosts = saved.clone();
+            ghosts.hidden_shown = Some(serde_json::json!({"objects":false,"geometry":false}));
+            let ghost_view =
+                ingetrazo_render::paper_scene::PaperSceneView::new(&app.scene, Some(&ghosts));
+            let unchanged = app
+                .composer_compute
+                .original_qt_paper_drawing_for_view(
+                    &ghost_view,
+                    &app.camera,
+                    app.clipboard_document,
+                    app.model_revision,
+                    name,
+                    true,
+                    false,
+                )
+                .unwrap();
+            assert!(
+                std::sync::Arc::ptr_eq(&record, &unchanged),
+                "ghost presentation flags do not alter paper visibility or cache identity"
+            );
+            let original_jobs = app.composer_compute.completed_jobs;
+            let mut altered = saved.clone();
+            altered.hidden_layers = app.scene.layers.iter().map(|l| l.name.clone()).collect();
+            let altered_view =
+                ingetrazo_render::paper_scene::PaperSceneView::new(&app.scene, Some(&altered));
+            let changed = app
+                .composer_compute
+                .original_qt_paper_drawing_for_view(
+                    &altered_view,
+                    &app.camera,
+                    app.clipboard_document,
+                    app.model_revision,
+                    name,
+                    true,
+                    false,
+                )
+                .unwrap();
+            assert_eq!(
+                app.composer_compute.completed_jobs,
+                original_jobs + 1,
+                "saved visibility must not reuse old ink at unchanged model revision"
+            );
+            assert!(
+                changed.segments.is_empty(),
+                "hidden layers remain hidden despite ghost flags"
+            );
+            assert!(!std::sync::Arc::ptr_eq(&record, &changed));
+            let restored = app
+                .composer_compute
+                .original_qt_paper_drawing_for_view(
+                    &view,
+                    &app.camera,
+                    app.clipboard_document,
+                    app.model_revision,
+                    name,
+                    true,
+                    false,
+                )
+                .unwrap();
+            assert!(std::sync::Arc::ptr_eq(&record, &restored));
+            assert_eq!(app.composer_compute.completed_jobs, original_jobs + 1);
+            assert_eq!(
+                app.scene, before,
+                "borrowed saved-view computations cannot mutate scene"
+            );
         }
         rows.push(serde_json::json!({"name":name,"pages":2,"warm_cache_no_jobs":true,"worker_pids":pids,"scene_unchanged":true,"cache_policy_separation":true,"cached_section_admission":true,"operative_camera_basis":true,"operative_hard_world_exact":app.scene.active_section().is_none()}));
     }
