@@ -15,7 +15,8 @@ impl eframe::App for Harness {
  let origin=DVec3::new(2.5,3.,1.5);let normal=DVec3::new(1.,2.,3.).normalize();let u=(DVec3::X-normal*normal.x).normalize();let v=normal.cross(u).normalize();
  let rows=serde_json::json!({"faces":self.app.scene.mesh.faces.len(),"edges":self.app.scene.mesh.edges.len(),"undo":self.app.undo_stack.len(),"preview":self.app.active_tool.rubber_band_lines().iter().map(|(a,b)|[a.to_array(),b.to_array()]).collect::<Vec<_>>(),"click":project(origin),"move":project(origin+u*1.5+v*1.2),"origin":origin.to_array(),"normal":normal.to_array(),"face_areas":(0..self.app.scene.mesh.faces.len()).map(|id|self.app.scene.mesh.face_area(id)).collect::<Vec<_>>(),"face_normals":(0..self.app.scene.mesh.faces.len()).map(|id|self.app.scene.mesh.face_normal(id).to_array()).collect::<Vec<_>>(),"vertices":self.app.scene.mesh.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"pointer":ctx.input(|i|i.pointer.hover_pos().map(|p|[p.x,p.y]))});
  if self.app.scene.mesh.faces.len()==1&&!self.dir.join("committed.igz").exists(){ingetrazo_formats::igz::save_igz(&self.app.scene,&self.dir.join("committed.igz")).unwrap();}
- std::fs::write(self.dir.join("state.json"),serde_json::to_vec(&rows).unwrap()).unwrap();
+ std::fs::write(self.dir.join("state.tmp"),serde_json::to_vec(&rows).unwrap()).unwrap();
+ std::fs::rename(self.dir.join("state.tmp"),self.dir.join("state.json")).unwrap();
  });
         if let Ok(name) = std::fs::read_to_string(self.dir.join("capture.txt")) {
             if name != self.capture {

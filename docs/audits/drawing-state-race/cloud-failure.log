@@ -1,0 +1,384 @@
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	﻿2026-10-10T04:48:45.4816782Z ##[group]Run python scripts/check-rendered-drawing-reference.py
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4817291Z ^[[36;1mpython scripts/check-rendered-drawing-reference.py^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4887740Z shell: /usr/bin/bash -e {0}
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4888002Z env:
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4888225Z   CARGO_HOME: /home/runner/.cargo
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4888499Z   CARGO_INCREMENTAL: 0
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4888722Z   CARGO_TERM_COLOR: always
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4889014Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4889459Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4889886Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4890590Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4890990Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4891407Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.4891733Z ##[endgroup]
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6761116Z ^[[1m^[[33mwarning^[[0m^[[1m: function `scene_from_xml` is never used^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6762363Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-formats/src/dae_import.rs:757:15
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6763101Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6764152Z ^[[1m^[[94m757^[[0m ^[[1m^[[94m|^[[0m pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6765376Z     ^[[1m^[[94m|^[[0m               ^[[1m^[[33m^^^^^^^^^^^^^^^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6766071Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6766915Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6767618Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6768395Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6769327Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:707:35
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6769996Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6771161Z ^[[1m^[[94m707^[[0m ^[[1m^[[94m|^[[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 185, 190)),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6772514Z     ^[[1m^[[94m|^[[0m                                   ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6773542Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6775037Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6776477Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6777724Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6778324Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6778818Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6779649Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1031:35
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6780427Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6781170Z ^[[1m^[[94m1031^[[0m ^[[1m^[[94m|^[[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 180, 190)),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6782193Z      ^[[1m^[[94m|^[[0m                                   ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6782876Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6783812Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6785150Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6785749Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6786237Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6787105Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1053:71
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6787932Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6788931Z ^[[1m^[[94m1053^[[0m ^[[1m^[[94m|^[[0m             painter.line_segment([p_anchor, p_pos], egui::Stroke::new(1.2, egui::Color32::from_rgb(45, 55, 75)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6790541Z      ^[[1m^[[94m|^[[0m                                                                       ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6791497Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6792410Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6794235Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6795049Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6795763Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6796900Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1119:66
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6797656Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6798723Z ^[[1m^[[94m1119^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], egui::Stroke::new(1.5, stroke_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6801029Z      ^[[1m^[[94m|^[[0m                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6801603Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6802261Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6803198Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6803625Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6803963Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6804544Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1144:78
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6804908Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6805473Z ^[[1m^[[94m1144^[[0m ^[[1m^[[94m|^[[0m                         painter.line_segment([start, end], egui::Stroke::new(1.5, stroke_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6806490Z      ^[[1m^[[94m|^[[0m                                                                              ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6806999Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6807633Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6808542Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6808964Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6809299Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6809866Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1170:43
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6810645Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6811218Z ^[[1m^[[94m1170^[[0m ^[[1m^[[94m|^[[0m                         egui::Stroke::new(1.0, egui::Color32::BLACK),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6811904Z      ^[[1m^[[94m|^[[0m                                           ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6812371Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6812999Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6813933Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6814340Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6814672Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6815411Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1175:69
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6815765Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6816318Z ^[[1m^[[94m1175^[[0m ^[[1m^[[94m|^[[0m                     painter.circle_stroke(pos, s, egui::Stroke::new(1.0, egui::Color32::BLACK));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6817126Z      ^[[1m^[[94m|^[[0m                                                                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6817629Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6818258Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6819156Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6819562Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6819893Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6820773Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1184:97
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6821120Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6821763Z ^[[1m^[[94m1184^[[0m ^[[1m^[[94m|^[[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6822707Z      ^[[1m^[[94m|^[[0m                                                                                                 ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6823236Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6823857Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6824750Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6825155Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6825482Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6826043Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1187:114
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6826411Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6827252Z ^[[1m^[[94m1187^[[0m ^[[1m^[[94m|^[[0m                     painter.line_segment([pos - egui::vec2(s, 0.0), pos + egui::vec2(s, 0.0)], egui::Stroke::new(2.0, glyph_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6828230Z      ^[[1m^[[94m|^[[0m                                                                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `2.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6828781Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6829409Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6830634Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6831058Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6831810Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6832732Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1188:114
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6833344Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6834464Z ^[[1m^[[94m1188^[[0m ^[[1m^[[94m|^[[0m                     painter.line_segment([pos - egui::vec2(0.0, s), pos + egui::vec2(0.0, s)], egui::Stroke::new(2.0, glyph_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6836136Z      ^[[1m^[[94m|^[[0m                                                                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `2.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6837057Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6837852Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6839011Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6839488Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6839832Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6840733Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1196:97
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6841091Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6841768Z ^[[1m^[[94m1196^[[0m ^[[1m^[[94m|^[[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6842710Z      ^[[1m^[[94m|^[[0m                                                                                                 ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6843269Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6843901Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6844815Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6845227Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6845553Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6846105Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1283:66
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6846451Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6846946Z ^[[1m^[[94m1283^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6847716Z      ^[[1m^[[94m|^[[0m                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `0.7_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6848207Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6848834Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6849731Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6850528Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6850875Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6851431Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1292:66
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6851780Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6852273Z ^[[1m^[[94m1292^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6853022Z      ^[[1m^[[94m|^[[0m                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `0.7_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6853512Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6854134Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6855037Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6855447Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6855768Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6856328Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1313:69
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6856673Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6857161Z ^[[1m^[[94m1313^[[0m ^[[1m^[[94m|^[[0m             painter.line_segment([s_orig, s_pos], egui::Stroke::new(1.8, col));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6857922Z      ^[[1m^[[94m|^[[0m                                                                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.8_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6858432Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6859199Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6860327Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6860754Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6861091Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6861644Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1328:68
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6861989Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6862460Z ^[[1m^[[94m1328^[[0m ^[[1m^[[94m|^[[0m                     painter.line_segment([a, b], egui::Stroke::new(1.2, col));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6863198Z      ^[[1m^[[94m|^[[0m                                                                    ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6863693Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6864319Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6865221Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6865629Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6865853Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-formats` (lib) generated 1 warning
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6866579Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-render` (lib) generated 15 warnings (run `cargo fix --lib -p ingetrazo-render` to apply 15 suggestions)
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6867508Z ^[[1m^[[33mwarning^[[0m^[[1m: use of deprecated constant `std::u32::MAX`: replaced by the `MAX` associated constant on this type^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6868165Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/native_vulkan/mod.rs:863:59
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6868530Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6868972Z ^[[1m^[[94m863^[[0m ^[[1m^[[94m|^[[0m         if capabilities.current_extent.width != std::u32::MAX {
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6869508Z     ^[[1m^[[94m|^[[0m                                                           ^[[1m^[[33m^^^^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6869856Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6870407Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(deprecated)]` on by default
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6870791Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6871271Z ^[[1m^[[33mwarning^[[0m^[[1m: use of deprecated constant `std::u64::MAX`: replaced by the `MAX` associated constant on this type^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6871921Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/native_vulkan/mod.rs:247:65
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6872282Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6872702Z ^[[1m^[[94m247^[[0m ^[[1m^[[94m|^[[0m                 .wait_for_fences(&[self.fence], true, std::u64::MAX)
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6873229Z     ^[[1m^[[94m|^[[0m                                                                 ^[[1m^[[33m^^^^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6873484Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6873934Z ^[[1m^[[33mwarning^[[0m^[[1m: use of deprecated constant `std::u64::MAX`: replaced by the `MAX` associated constant on this type^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6874584Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/native_vulkan/mod.rs:308:27
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6874942Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6875266Z ^[[1m^[[94m308^[[0m ^[[1m^[[94m|^[[0m                 std::u64::MAX,
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6875671Z     ^[[1m^[[94m|^[[0m                           ^[[1m^[[33m^^^^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6875880Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6876206Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6876741Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:140:54
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6877071Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6877620Z ^[[1m^[[94m140^[[0m ^[[1m^[[94m|^[[0m     painter.rect_stroke(paper_rect, 0.0, Stroke::new(1.0, Color32::from_rgb(180, 180, 185)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6878400Z     ^[[1m^[[94m|^[[0m                                                      ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6878998Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6879623Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6880827Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6881635Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6882035Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6882370Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6882916Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:148:21
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6883244Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6883721Z ^[[1m^[[94m148^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::from_rgba_unmultiplied(160, 175, 200, 150)),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6884396Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6884833Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6885450Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6886350Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6886753Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6887073Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6887604Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:187:62
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6887931Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6888462Z ^[[1m^[[94m187^[[0m ^[[1m^[[94m|^[[0m                     painter.rect_stroke(fr, 0.0, Stroke::new(1.2, Color32::from_rgb(40, 40, 45)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6889244Z     ^[[1m^[[94m|^[[0m                                                              ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6889736Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6890671Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6891758Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6892165Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6892488Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6893024Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:659:60
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6893355Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6893897Z ^[[1m^[[94m659^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], Stroke::new(1.8, Color32::from_rgb(20, 100, 200)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6894674Z     ^[[1m^[[94m|^[[0m                                                            ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.8_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6895153Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6895769Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6896664Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6897074Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6897397Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6897927Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:668:48
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6898253Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6898707Z ^[[1m^[[94m668^[[0m ^[[1m^[[94m|^[[0m     painter.rect_stroke(rect, 0.0, Stroke::new(1.4, Color32::BLACK));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6899409Z     ^[[1m^[[94m|^[[0m                                                ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.4_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6899994Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6900920Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6901833Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6902233Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6902558Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6903087Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:677:21
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6903411Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6903770Z ^[[1m^[[94m677^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6904504Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6904972Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6905587Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6906483Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6906882Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6907209Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6907743Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:683:21
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6908074Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6908425Z ^[[1m^[[94m683^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6908993Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6909428Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6910312Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6911273Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6911832Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6912171Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6912714Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:736:50
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6913055Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6913540Z ^[[1m^[[94m736^[[0m ^[[1m^[[94m|^[[0m     painter.circle_stroke(center, r, Stroke::new(1.2, Color32::BLACK));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6914259Z     ^[[1m^[[94m|^[[0m                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6914735Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6915360Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6916267Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6916679Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6917003Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6917546Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:747:21
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6917879Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6918229Z ^[[1m^[[94m747^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6918799Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6919231Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6919855Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6921321Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6921747Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6922081Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6922634Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:753:21
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6922980Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6923354Z ^[[1m^[[94m753^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6923938Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6924374Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6925000Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6925927Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6926332Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6926662Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6927221Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:773:56
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6927555Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6928053Z ^[[1m^[[94m773^[[0m ^[[1m^[[94m|^[[0m         painter.rect_stroke(div_rect, 0.0, Stroke::new(1.0, Color32::BLACK));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6928811Z     ^[[1m^[[94m|^[[0m                                                        ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6929287Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6929914Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6930960Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6931370Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6931701Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6932394Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:790:48
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6932732Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6933212Z ^[[1m^[[94m790^[[0m ^[[1m^[[94m|^[[0m     painter.rect_stroke(rect, 0.0, Stroke::new(1.5, highlight_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6933926Z     ^[[1m^[[94m|^[[0m                                                ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6934403Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6935022Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6935926Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6936325Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6936654Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6937245Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:803:54
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6937573Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6938071Z ^[[1m^[[94m803^[[0m ^[[1m^[[94m|^[[0m         painter.rect_stroke(h_rect, 0.0, Stroke::new(1.2, highlight_color));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6938838Z     ^[[1m^[[94m|^[[0m                                                      ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6939314Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6939993Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6941372Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6941788Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6942126Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6942672Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/tray.rs:270:47
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6942998Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6943528Z ^[[1m^[[94m270^[[0m ^[[1m^[[94m|^[[0m ^[[1m^[[94m...^[[0m                   egui::Stroke::new(1.0, egui::Color32::from_rgb(100, 105, 115)),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6944263Z     ^[[1m^[[94m|^[[0m                                         ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6944732Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6945362Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6946297Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6946707Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6947036Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6947575Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/tray.rs:345:87
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6947898Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6948545Z ^[[1m^[[94m345^[[0m ^[[1m^[[94m|^[[0m ^[[1m^[[94m...^[[0m                   ui.painter().rect_stroke(rect, 2.0, egui::Stroke::new(1.0, egui::Color32::from_rgb(90, 95, 105)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6949451Z     ^[[1m^[[94m|^[[0m                                                                             ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6949955Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6950728Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6951643Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6952048Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6952506Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6953051Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:310:39
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6953388Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6953920Z ^[[1m^[[94m310^[[0m ^[[1m^[[94m|^[[0m                     egui::Stroke::new(1., egui::Color32::from_rgba_unmultiplied(255, 180, 60, 150)),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6954654Z     ^[[1m^[[94m|^[[0m                                       ^[[1m^[[33m^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6955108Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6955723Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6956620Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6957020Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6957341Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6957883Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:323:56
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6958211Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6958764Z ^[[1m^[[94m323^[[0m ^[[1m^[[94m|^[[0m         painter.circle_stroke(pos,4.,egui::Stroke::new(3.,egui::Color32::from_white_alpha(230)));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6959548Z     ^[[1m^[[94m|^[[0m                                                        ^[[1m^[[33m^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `3_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6960223Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6961004Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6962065Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6962473Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6962810Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6963349Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:324:56
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6963688Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6964146Z ^[[1m^[[94m324^[[0m ^[[1m^[[94m|^[[0m         painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6964857Z     ^[[1m^[[94m|^[[0m                                                        ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6965334Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6965954Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6966856Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6967250Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6967585Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6968120Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:336:35
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6968446Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6968893Z ^[[1m^[[94m336^[[0m ^[[1m^[[94m|^[[0m                 egui::Stroke::new(2.0, egui::Color32::from_rgb(255, 60, 60)),
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6969560Z     ^[[1m^[[94m|^[[0m                                   ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `2.0_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6970015Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6970943Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6971848Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6972244Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6972571Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6973253Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:368:48
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6973581Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6974092Z ^[[1m^[[94m368^[[0m ^[[1m^[[94m|^[[0m                 let stroke = egui::Stroke::new(1.8, egui::Color32::from_rgb(243, 115, 41));
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6974831Z     ^[[1m^[[94m|^[[0m                                                ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.8_f32`^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6975297Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6975915Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6976815Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6977234Z
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6977682Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-gui` (lib) generated 23 warnings (run `cargo fix --lib -p ingetrazo-gui` to apply 20 suggestions)
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:45.6978541Z ^[[1m^[[92m   Compiling^[[0m ingetrazo-gui v0.3.15 (/home/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-gui)
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:46.6224673Z ^[[1m^[[92m    Finished^[[0m `dev` profile [unoptimized + debuginfo] target(s) in 1.07s
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6007751Z Traceback (most recent call last):
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6059269Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-rendered-drawing-reference.py", line 93, in <module>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6060355Z     if __name__=="__main__":main()
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6060697Z                             ~~~~^^
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6061438Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-rendered-drawing-reference.py", line 60, in main
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6062828Z     capture("preview");key(0xff1b);wait(lambda:not state()["preview"]);assert state()["faces"]==0 and state()["edges"]==1 and state()["undo"]==0;capture("cancelled")
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6063649Z                                                                               ~~~~~^^
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6064425Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-rendered-drawing-reference.py", line 28, in <lambda>
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6065193Z     state=lambda:json.loads((directory/"state.json").read_text())
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6065631Z                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6066234Z   File "/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/json/__init__.py", line 352, in loads
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6066820Z     return _default_decoder.decode(s)
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6067132Z            ~~~~~~~~~~~~~~~~~~~~~~~^^^
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6067679Z   File "/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/json/decoder.py", line 345, in decode
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6068283Z     obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6068644Z                ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6069239Z   File "/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/json/decoder.py", line 363, in raw_decode
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6069954Z     raise JSONDecodeError("Expecting value", s, err.value) from None
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6070688Z json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+compilation-and-tests	Rendered software OpenGL drawing reference gestures	2026-10-10T04:48:49.6152560Z ##[error]Process completed with exit code 1.

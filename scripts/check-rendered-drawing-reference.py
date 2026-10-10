@@ -24,7 +24,7 @@ def main():
   try:
    assert select.select([server.stdout],[],[],10)[0];display=server.stdout.readline().strip();assert display.isdigit()
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["LIBGL_ALWAYS_SOFTWARE"]="1";env.pop("WAYLAND_DISPLAY",None)
-   log=open(directory/"runtime.log","w");app=subprocess.Popen(["target/debug/examples/drawing_reference_render_fixture",str(directory.resolve())],env=env,stdout=log,stderr=log)
+   log=open(directory/"runtime.log","w");app=subprocess.Popen([str((Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/drawing_reference_render_fixture").resolve()),str(directory.resolve())],env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
    initial=wait(lambda:state() if state()["faces"]==0 else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
