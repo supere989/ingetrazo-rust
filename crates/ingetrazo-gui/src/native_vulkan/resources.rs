@@ -9,7 +9,7 @@ use super::budget::VulkanBudget;
 const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
 struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>,persistent_map:Option<usize>}
-#[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64,pub image_upload_calls:u64,pub image_bytes:u64,pub image_mips_generated:u64,pub image_staging_maps:u64,pub image_staging_unmaps:u64}
+#[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64,pub image_upload_calls:u64,pub image_bytes:u64,pub image_mips_generated:u64,pub upload_staging_maps:u64,pub upload_staging_unmaps:u64}
 pub struct Resources {lifetime:Arc<super::lifetime::Lifetime>,device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
 impl Resources {
  pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {budget.bind_lifetime(context.lifetime.clone());Self {lifetime:context.lifetime.clone(),device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
@@ -31,7 +31,7 @@ impl Resources {
    let b=&self.buffers[&id];
    let mapped=match unsafe{self.device.map_memory(b.memory,0,b.allocation_bytes,vk::MemoryMapFlags::empty())}{Ok(p)=>p,Err(e)=>{self.destroy(id);return Err(e.to_string());}};
    self.buffers.get_mut(&id).unwrap().persistent_map=Some(mapped as usize);
-   self.stats.image_staging_maps+=1;
+   self.stats.upload_staging_maps+=1;
    self.stats.staging_allocations+=1;
    self.stats.staging_peak=self.stats.staging_peak.max(self.buffers[&id].allocation_bytes);
    self.image_staging=Some(id);
@@ -63,7 +63,7 @@ impl Resources {
   let (memory,properties)=match result {Ok(memory)=>memory,Err(error)=>{unsafe {self.device.destroy_buffer(buffer,None)};return Err(error);}};
   self.stats.buffer_allocations+=1;self.stats.allocation_bytes_total+=requirements.size;let id=BufferId(self.next);self.next+=1;self.buffers.insert(id,Buffer {handle:buffer,usage,memory,logical_bytes:bytes,allocation_bytes:requirements.size,properties,last_use:0,retire_after:None,persistent_map:None});Ok(id)
  }
- fn destroy(&mut self,id:BufferId) {if self.lifetime.uncertain(){return;}if let Some(buffer)=self.buffers.remove(&id) {self.stats.buffer_destructions+=1;unsafe {if buffer.persistent_map.is_some(){self.device.unmap_memory(buffer.memory);self.stats.image_staging_unmaps+=1;}self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
+ fn destroy(&mut self,id:BufferId) {if self.lifetime.uncertain(){return;}if let Some(buffer)=self.buffers.remove(&id) {self.stats.buffer_destructions+=1;unsafe {if buffer.persistent_map.is_some(){self.device.unmap_memory(buffer.memory);self.stats.upload_staging_unmaps+=1;}self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
  fn write(&self,id:BufferId,data:&[u8])->Result<(),String> {
   self.lifetime.check()?;
   let buffer=self.buffers.get(&id).ok_or("Unknown GPU upload buffer")?;

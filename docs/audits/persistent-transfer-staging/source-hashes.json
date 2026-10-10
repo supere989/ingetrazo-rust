@@ -1,0 +1,6 @@
+{
+  "crates/ingetrazo-gui/examples/native_vulkan_resources_probe.rs": "775a7a76f230ffac26529b39f3aec12896308c5b647d0c06e75dc2a2e3ceb212",
+  "crates/ingetrazo-gui/examples/native_vulkan_texture_upload_probe.rs": "19472671a4998f5f0cde9b6113caee2bdedfb87a1ef907bbb8f9f7f32e3c3595",
+  "crates/ingetrazo-gui/examples/native_vulkan_upload_churn.rs": "378fd187c9a7f478fc0b4c15b734695ccb06685050339ad698c7bfd8bf485eec",
+  "crates/ingetrazo-gui/src/native_vulkan/resources.rs": "404640fa449db821a27cc52666223f0c1c2fed6c15b0484cdd21c554149ca132"
+}

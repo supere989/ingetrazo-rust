@@ -34,9 +34,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert!(result == bytes, "Actual17MiB GPU image readback differs");
     assert_eq!(resources.stats.image_bytes, 17 * 1024 * 1024);
     assert!(resources.image_staging_bytes() <= 8 * 1024 * 1024);
+    // Interleave buffer and batch writes with the retained image staging owner.
+    let allocations_before = resources.stats.staging_allocations;
+    let maps_before = resources.stats.upload_staging_maps;
+    let buffer_data = (0..17*1024*1024).map(|i| (i%197) as u8).collect::<Vec<_>>();
+    let usage = vk::BufferUsageFlags::STORAGE_BUFFER | vk::BufferUsageFlags::TRANSFER_SRC;
+    let large = resources.upload(&context,&buffer_data,usage,true)?;
+    assert_eq!(resources.readback_buffer(&context,large)?,buffer_data);
+    let small = [93u8;1024];
+    let batch = resources.upload_many(&context,&[(&small,usage),(&small[..512],usage)])?;
+    assert_eq!(resources.readback_buffer(&context,batch[0])?,small);
+    assert_eq!(resources.readback_buffer(&context,batch[1])?,small[..512]);
+    assert_eq!(resources.readback_texture_mip(&context,&image,0)?,bytes,"Buffer staging reuse corrupted original image");
+    assert_eq!(resources.stats.staging_allocations,allocations_before);
+    assert_eq!(resources.stats.upload_staging_maps,maps_before);
+    assert_eq!(resources.stats.transfer_command_allocations,1);
+    assert_eq!(resources.stats.transfer_fence_creations,1);
+    let done=unsafe{context.device.create_fence(&vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED),None)}?;
+    resources.retire(large)?;
+    for id in batch {resources.retire(id)?;}
+    assert_eq!(resources.collect(done,0)?,3);
+    unsafe{context.device.destroy_fence(done,None)};
     drop(image);
-    assert_eq!(resources.stats.image_staging_maps,1,"Large upload mapped staging per chunk");
-    assert_eq!(resources.stats.image_staging_unmaps,0,"Staging prematurely unmapped");
+    assert_eq!(resources.stats.upload_staging_maps,1,"Large upload mapped staging per chunk");
+    assert_eq!(resources.stats.upload_staging_unmaps,0,"Staging prematurely unmapped");
     let allocations = resources.stats.staging_allocations;
     let commands = resources.stats.transfer_command_allocations;
     let fences = resources.stats.transfer_fence_creations;
@@ -58,7 +79,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         resources.stats.staging_allocations, allocations,
         "Repeated images allocated new staging"
     );
-    assert_eq!(resources.stats.image_staging_maps,1,"Repeated image remapped retained staging");
+    assert_eq!(resources.stats.upload_staging_maps,1,"Repeated image remapped retained staging");
     assert_eq!(resources.stats.transfer_command_allocations, commands);
     assert_eq!(resources.stats.transfer_fence_creations, fences);
     assert!(resources
@@ -111,7 +132,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     drop(mip);
     resources.release_image_staging();
     assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
-    assert_eq!(resources.stats.image_staging_maps,resources.stats.image_staging_unmaps,"Retained staging mapping leaked");
+    assert_eq!(resources.stats.upload_staging_maps,resources.stats.upload_staging_unmaps,"Retained staging mapping leaked");
     eprintln!("PASS17MiB optimal GPU texture/readback upload{upload_ms:.3}ms; constant7x5 mip chain; persistentstaging/command/fence; actualbudgetdenial oldimage preserved; ledgerzero; {:?}",resources.stats);
     Ok(())
 }

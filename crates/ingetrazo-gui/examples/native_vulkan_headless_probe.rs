@@ -61,7 +61,7 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  let device=&context.device;let fence=unsafe {device.create_fence(&vk::FenceCreateInfo::default(),None)}?;
  resources.mark_used(buffer,7)?;resources.retire(buffer)?;let charged=budget.ledger.lock().unwrap().total_committed();assert_eq!(resources.collect(fence,7)?,0);assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged);
  unsafe {device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default()],fence)?;}
- context.wait_transfer(fence)?;assert_eq!(resources.collect(fence,7)?,1);assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);
+ context.wait_transfer(fence)?;assert_eq!(resources.collect(fence,7)?,1);assert!(budget.ledger.lock().unwrap().total_committed()>0);resources.release_image_staging();assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);
  eprintln!("PASS17MiB actualGPUcopy/readback; upload{upload_ms:.3}ms readback{readback_ms:.3}ms; stats{:?}; fence-delayed actualfree",resources.stats);
  let mut scene=Scene::new();
  for (points,color) in [([DVec3::new(-1.,-1.,1.),DVec3::new(1.,-1.,-1.),DVec3::new(0.,1.,0.)],[1.,0.,0.,1.]),([DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(0.,1.,0.)],[0.,0.,1.,1.])] {
