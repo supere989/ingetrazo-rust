@@ -4,7 +4,7 @@ import sys,time,json,hashlib,os
 from pathlib import Path
 from acceptance_context import context
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
-from PySide6.QtGui import QSurfaceFormat,QVector3D
+from PySide6.QtGui import QSurfaceFormat,QVector3D,QMatrix4x4
 from PySide6.QtWidgets import QApplication
 fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CoreProfile);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8);QSurfaceFormat.setDefaultFormat(fmt)
 app=QApplication([])
@@ -29,6 +29,10 @@ if os.environ.get("INGETRAZO_ALPHA_BACK_CASES")=="1":
   cases["back-gate-activated-reversed"]=([(*glass[:4],True),([0.,1.,0.],1.,0.,{},False,10.)],[1.,1.,1.])
   cases["back-order-translucent-opaque"]=([([1.,0.,0.],.5,0.,{"color":[0.,0.,1.],"opacity":.3},True),([1.,0.,0.],1.,.2,{"color":[0.,1.,0.],"opacity":.3},True)],[1.,1.,1.])
   cases["back-order-opaque-translucent"]=([([1.,0.,0.],1.,0.,{"color":[0.,0.,1.],"opacity":.3},True),([1.,0.,0.],.5,.2,{"color":[0.,1.,0.],"opacity":.3},True)],[1.,1.,1.])
+if os.environ.get("INGETRAZO_ALPHA_INSTANCED_GATE")=="1":
+ glass=([1.,0.,0.],1.,0.,{"color":[0.,0.,1.],"opacity":.3},False)
+ cases["back-gate-instanced-only-front"]=([glass,([0.,1.,0.],1.,0.,{},False,10.)],[1.,1.,1.])
+ cases["back-gate-instanced-only-reversed"]=([(*glass[:4],True),([0.,1.,0.],1.,0.,{},False,10.)],[1.,1.,1.])
 for name,(faces,bg) in cases.items():
  vp=Viewport();vp.resize(800,600);mesh=Mesh()
  for spec in faces:
@@ -37,7 +41,12 @@ for name,(faces,bg) in cases.items():
   if len(spec)>4 and spec[4]:ring.reverse()
   face=mesh.add_face(ring);face.attrs.update(color=color,opacity=opacity)
   if len(spec)>3:face.attrs["back"]=spec[3]
- vp.scene=Scene(mesh=mesh)
+ groups=[]
+ if name.startswith("back-gate-instanced-only"):
+  from core.group import Group
+  f=mesh.faces[-1];group_mesh=Mesh();gface=group_mesh.add_face(f.vertices);gface.attrs.update(f.attrs);mesh.remove_face(f)
+  group=Group(group_mesh,"Opaque activator instance");group.component=True;group.xform=QMatrix4x4();groups=[group]
+ vp.scene=Scene(mesh=mesh,groups=groups)
  if name=="section-clipped":vp.scene.section_planes=[SectionPlane(QVector3D(0,0,.1),QVector3D(0,0,1),active=True)];vp.scene.show_section_cuts=True;vp.scene.show_section_planes=False
  vp.style_override=Style(face_mode="shaded",sky=False,edges=False,profiles=False,background=tuple(bg));vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D(0,0,0);vp.camera.distance=4.;vp.show()
  for _ in range(45):app.processEvents();time.sleep(.02)

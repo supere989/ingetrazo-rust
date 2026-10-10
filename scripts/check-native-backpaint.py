@@ -17,12 +17,17 @@ for a,b in zip(o,n):
    assert abs(x[0]-y[1])<1e-6 and count==y[3],(a['case'],x,y)
    if len(x)==4:assert int(x[1])==y[0]
  assert sum(r[3] for r in b['paint_runs'] if r[0]==3)==a['opaque_back_run'][1]
- assert sum(r[1] for r in b['ordinary_runs'] if not r[2])==a['ordinary_faces_count']
+ assert b.get('consolidated_opaque_count',sum(r[1] for r in b['ordinary_runs'] if not r[2]))==a['ordinary_faces_count']
  assert sum(r[1] for r in b['ordinary_runs'] if r[2])==a['front_culled_opaque_run'][1]
  assert b['surface_bytes']==24*sum(r[3] for r in b['paint_runs']) and b['geometry_uploads']==1
  assert 'additional_position_bytes: 0,' in b['contour_metrics']
-assert sum(a['center_rgba']!=b['center_rgba'] for a,b in zip(o,old))>=5
+old_by_name={r['case']:r for r in old}
+assert sum(max(abs(x-y) for x,y in zip(a['center_rgba'],old_by_name[a['case']]['center_rgba']))>8 for a in o if a['case'] in old_by_name)>=5
 rows={x['case']:x for x in n}
+if 'back-gate-instanced-only-front' in rows:
+ row=rows['back-gate-instanced-only-front']
+ assert row['consolidated_opaque_count']==0 and row['center_rgba']==[255,255,255,255]
+ assert any(not r[2] and r[1]>0 for r in row['ordinary_runs']), 'Previous flattened ordinary-face gate failure was not exercised'
 assert rows['back-1.0-0.3-front']['center_rgba']==[255,255,255,255]
 assert rows['back-gate-activated-front']['center_rgba']=={x['case']:x for x in o}['back-gate-activated-front']['center_rgba']
 assert rows['back-0.5-0.3-front']['center_rgba']!=rows['back-0.5-0.3-reversed']['center_rgba']

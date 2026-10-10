@@ -398,6 +398,7 @@ fn build_mesh_buffers(
             let order=opaque.indices.len()+transparent.indices.len();
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
             record_source_back_paint(target,first,order,&face.attrs,shade);
+            if !(is_xray||source_final_opacity<0.999)&&!target.source_front_cull.last().is_some_and(|r|r.0==first){target.source_consolidated_opaque_count+=target.indices.len()-first;}
         }
     }
 }
@@ -458,6 +459,7 @@ fn build_group_buffers(
         }
     }
 
+    let local_start=(opaque.indices.len(),transparent.indices.len(),opaque.source_front_cull.len(),opaque.source_back_override_count+transparent.source_back_override_count);
     for (f_id, face) in group.mesh.faces.iter().enumerate() {
         let face_layer = face.layer.as_deref().or_else(|| face.attrs.get("layer").and_then(|v| v.as_str()));
         if !scene.is_layer_visible(face_layer) {
@@ -540,6 +542,15 @@ fn build_group_buffers(
             record_source_back_paint(target,first,order,&face.attrs,shade);
         }
     }
+
+    // Original _instanced_eligible uses a prototype-local cache: transparent/back
+    // content stays consolidated. Counts/ranges already built above answer that
+    // question without another face traversal or a per-frame placement copy.
+    let source_placement=group.native_document.get("proto").is_some()||group.component_definition.is_some()||(group.native_document.is_null()&&!group.children.is_empty());
+    let local_transparent=transparent.indices.len()!=local_start.1;
+    let local_back=opaque.source_back_override_count+transparent.source_back_override_count!=local_start.3;
+    let instanced=source_placement&&!group.billboard&&!local_transparent&&!local_back&&!source_instancing_disabled();
+    if !instanced {let front_only:usize=opaque.source_front_cull[local_start.2..].iter().map(|r|r.1).sum();opaque.source_consolidated_opaque_count+=opaque.indices.len()-local_start.0-front_only;}
 
     let eye = camera.eye();
     if include_edges { for edge in &group.mesh.edges {
@@ -1368,6 +1379,8 @@ fn record_source_back_paint(buffer:&mut MeshRenderBuffer,first:usize,order:usize
  let opacity=back.get("opacity").and_then(|v|v.as_f64()).unwrap_or(1.);
  let color=back.get("color").and_then(|v|v.as_array()).filter(|c|c.len()>=3);
  let texture=back.get("texture").and_then(|v|v.get("path")).and_then(|v|v.as_str()).is_some();
+ if color.is_some()||texture{buffer.source_back_override_count+=1;}
  if (color.is_some()||texture)&&opacity<0.999 {buffer.source_front_cull.push((first,count));}
  if let Some(c)=color {let color=[0,1,2].map(|i|(c[i].as_f64().unwrap_or(0.)as f32*shade).clamp(0.,1.));buffer.source_back_paints.push(crate::buffer::SourceBackPaint{first,count,order,color,opacity});}
 }
+fn source_instancing_disabled()->bool {static DISABLED:std::sync::OnceLock<bool>=std::sync::OnceLock::new();*DISABLED.get_or_init(||std::env::var("INGETRAZO_NO_INSTANCING").as_deref()==Ok("1"))}
