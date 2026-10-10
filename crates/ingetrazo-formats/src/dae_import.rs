@@ -380,10 +380,17 @@ fn diffuse_image<'a, 'i>(
         .copied()
         .ok_or_else(|| invalid("unresolved texture image"))
 }
+#[derive(Default)]
+struct DaeMaterial {
+    color: Option<[f64; 3]>,
+    image: Option<String>,
+}
 fn material_colors<'a, 'i>(
     instance: Node<'a, 'i>,
     ids: &HashMap<&'i str, Node<'a, 'i>>,
-) -> Result<HashMap<String, [f64; 3]>> {
+    base: Option<&std::path::Path>,
+    assets: &mut HashMap<String, Vec<u8>>,
+) -> Result<HashMap<String, DaeMaterial>> {
     let mut colors = HashMap::new();
     for binding in instance
         .descendants()
@@ -408,8 +415,22 @@ fn material_colors<'a, 'i>(
                 continue;
             };
             if let Some(texture) = child(diffuse, "texture") {
-                let _image = diffuse_image(*effect, texture, ids)?;
-                return Err(invalid("COLLADA texture assembly is still unfinished"));
+                let image = diffuse_image(*effect, texture, ids)?;
+                let base =
+                    base.ok_or_else(|| invalid("textured COLLADA requires document directory"))?;
+                let (key, bytes) = image_bytes(image, base)?;
+                let symbol = binding
+                    .attribute("symbol")
+                    .ok_or_else(|| invalid("missing material symbol"))?;
+                assets.insert(key.clone(), bytes);
+                colors.insert(
+                    symbol.to_owned(),
+                    DaeMaterial {
+                        color: None,
+                        image: Some(key),
+                    },
+                );
+                break;
             }
             if let Some(color) = child(diffuse, "color") {
                 let values = numbers(color)?;
@@ -419,7 +440,13 @@ fn material_colors<'a, 'i>(
                 let symbol = binding
                     .attribute("symbol")
                     .ok_or_else(|| invalid("missing material symbol"))?;
-                colors.insert(symbol.to_owned(), [values[0], values[1], values[2]]);
+                colors.insert(
+                    symbol.to_owned(),
+                    DaeMaterial {
+                        color: Some([values[0], values[1], values[2]]),
+                        image: None,
+                    },
+                );
                 break;
             }
         }
@@ -475,6 +502,12 @@ fn transform(node: Node<'_, '_>) -> Result<glam::DMat4> {
     Ok(m)
 }
 pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    scene_from_xml_at(xml, None)
+}
+pub(crate) fn scene_from_xml_at(
+    xml: &str,
+    base: Option<&std::path::Path>,
+) -> Result<ingetrazo_core::scene::Scene> {
     use glam::{DMat4, DVec4};
     use ingetrazo_core::{groups::Group, mesh::Mesh, scene::Scene};
     let doc = roxmltree::Document::parse(xml).map_err(|e| invalid(e.to_string()))?;
@@ -517,10 +550,15 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
         node: Node<'_, '_>,
         world: DMat4,
         name: &str,
-        colors: &HashMap<String, [f64; 3]>,
+        colors: &HashMap<String, DaeMaterial>,
     ) -> Result<Group> {
         let mut mesh = Mesh::new();
         for polygon in geometry(node)? {
+            let points: Vec<_> = polygon
+                .points
+                .iter()
+                .map(|p| world.transform_point3(*p))
+                .collect();
             let mut vertices: Vec<_> = polygon
                 .points
                 .into_iter()
@@ -532,14 +570,26 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
             let id = mesh
                 .add_face(vertices, vec![])
                 .ok_or_else(|| invalid("invalid transformed polygon"))?;
-            if let Some(color) = polygon
+            if let Some(material) = polygon
                 .material
                 .as_ref()
                 .and_then(|symbol| colors.get(symbol))
             {
-                mesh.faces[id]
-                    .attrs
-                    .insert("color".into(), serde_json::json!(color));
+                if let Some(color) = material.color {
+                    mesh.faces[id]
+                        .attrs
+                        .insert("color".into(), serde_json::json!(color));
+                }
+                if let Some(image) = &material.image {
+                    let uv = polygon
+                        .uv
+                        .as_ref()
+                        .ok_or_else(|| invalid("textured COLLADA polygon lacks UV coordinates"))?;
+                    let map = affine_uv(&points, uv)?;
+                    let gu = DVec3::new(map[0], map[1], map[2]).length();
+                    let gv = DVec3::new(map[4], map[5], map[6]).length();
+                    mesh.faces[id].attrs.insert("texture".into(),serde_json::json!({"embed":image,"uvw":map,"sw":if gu>1e-9{1./gu}else{1.},"sh":if gv>1e-9{1./gv}else{1.}}));
+                }
                 mesh.faces[id]
                     .attrs
                     .insert("back".into(), serde_json::json!(true));
@@ -553,6 +603,7 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
         ids: &HashMap<&'i str, Node<'a, 'i>>,
         stack: &mut Vec<roxmltree::NodeId>,
         scene: &mut Scene,
+        base: Option<&std::path::Path>,
     ) -> Result<()> {
         if stack.len() >= 64 || stack.contains(&node.id()) {
             return Err(invalid("cyclic or excessive node hierarchy"));
@@ -565,14 +616,14 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
             .unwrap_or("COLLADA part");
         for el in node.children().filter(|n| n.is_element()) {
             match el.tag_name().name() {
-                "node" => walk(el, world, ids, stack, scene)?,
+                "node" => walk(el, world, ids, stack, scene, base)?,
                 "instance_node" => {
                     let target = el
                         .attribute("url")
                         .filter(|s| s.starts_with('#'))
                         .and_then(|s| ids.get(&s[1..]))
                         .ok_or_else(|| invalid("unresolved instance_node"))?;
-                    walk(*target, world, ids, stack, scene)?;
+                    walk(*target, world, ids, stack, scene, base)?;
                 }
                 "instance_geometry" => {
                     let target = el
@@ -582,7 +633,7 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
                         .ok_or_else(|| invalid("unresolved geometry"))?;
                     let mesh =
                         child(*target, "mesh").ok_or_else(|| invalid("geometry has no mesh"))?;
-                    let colors = material_colors(el, ids)?;
+                    let colors = material_colors(el, ids, base, &mut scene.embedded_textures)?;
                     let group = mesh_group(mesh, world, name, &colors)?;
                     if !group.mesh.faces.is_empty() {
                         scene.groups.push(group);
@@ -626,7 +677,7 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
         }
     } else {
         for node in nodes {
-            walk(node, world, &ids, &mut vec![], &mut scene)?;
+            walk(node, world, &ids, &mut vec![], &mut scene, base)?;
         }
     }
     if scene.groups.is_empty() {
@@ -641,6 +692,30 @@ mod tests {
     use super::*;
     fn document() -> String {
         r##"<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema"><asset><unit meter="0.01"/><up_axis>Y_UP</up_axis></asset><library_geometries><geometry id="g"><mesh><source id="p"><float_array count="12">99 0 0 0 9 1 0 0 9 0 1 0</float_array><technique_common><accessor count="3" offset="1" stride="4"/></technique_common></source><vertices id="v"><input semantic="POSITION" source="#p"/></vertices><triangles count="1"><input semantic="NORMAL" offset="0"/><input semantic="VERTEX" source="#v" offset="1"/><p>0 0 0 1 0 2</p></triangles></mesh></geometry></library_geometries><library_nodes><node id="shared"><scale>-2 3 4</scale><instance_geometry url="#g"/></node></library_nodes><library_visual_scenes><visual_scene><node name="parent"><translate>10 20 30</translate><instance_node url="#shared"/></node></visual_scene></library_visual_scenes></COLLADA>"##.to_owned()
+    }
+    #[test]
+    fn textured_scene_assembly_keeps_bytes_and_world_uv_through_reflection() {
+        let folder =
+            std::env::temp_dir().join(format!("ingetrazo-dae-assembly-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&folder).unwrap();
+        std::fs::write(folder.join("paint.png"), [1, 2, 3, 255]).unwrap();
+        let xml=document().replace("<vertices id=\"v\">",r##"<source id="uv"><float_array count="6">0 0 1 0 0 1</float_array><technique_common><accessor count="3" stride="2"/></technique_common></source><vertices id="v">"##).replace("semantic=\"NORMAL\" offset=\"0\"","semantic=\"TEXCOORD\" offset=\"0\" source=\"#uv\"").replace("<p>0 0 0 1 0 2</p>","<p>0 0 1 1 2 2</p>").replace("<triangles count=\"1\">","<triangles count=\"1\" material=\"paint\">").replace("<library_nodes>",r##"<image id="image"><init_from>paint.png</init_from></image><effect id="fx"><profile_COMMON><technique><lambert><diffuse><texture texture="image"/></diffuse></lambert></technique></profile_COMMON></effect><material id="mat"><instance_effect url="#fx"/></material><library_nodes>"##).replace("<instance_geometry url=\"#g\"/>",r##"<instance_geometry url="#g"><bind_material><technique_common><instance_material symbol="paint" target="#mat"/></technique_common></bind_material></instance_geometry>"##);
+        let scene = scene_from_xml_at(&xml, Some(&folder)).unwrap();
+        let texture = &scene.groups[0].mesh.faces[0].attrs["texture"];
+        assert_eq!(
+            scene.embedded_textures[texture["embed"].as_str().unwrap()],
+            [1, 2, 3, 255]
+        );
+        let m: Vec<_> = texture["uvw"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_f64().unwrap())
+            .collect();
+        let point = DVec3::new(0.08, -0.30, 0.20);
+        assert!((DVec3::new(m[0], m[1], m[2]).dot(point) + m[3] - 1.).abs() < 1e-10);
+        assert!(scene_from_xml(&xml).is_err());
+        std::fs::remove_dir_all(folder).unwrap();
     }
     #[test]
     fn strided_accessors_instances_units_upaxis_and_reflection_are_composed() {
