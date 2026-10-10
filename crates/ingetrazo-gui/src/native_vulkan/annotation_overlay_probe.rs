@@ -112,4 +112,40 @@ impl App for Probe{
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Annotation fixture GPU refusal: {error}");}
 }
-pub fn run()->Result<(),Box<dyn Error>>{run_app::<Probe>(None)}
+pub fn run()->Result<(),Box<dyn Error>>{if std::env::var_os("INGETRAZO_ANNOTATION_APP_CONTROL").is_some(){run_app::<ApplicationProbe>(None)}else{run_app::<Probe>(None)}}
+
+struct ApplicationProbe{app:crate::IngeTrazoApp,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>}
+impl App for ApplicationProbe{
+ fn title()->&'static str{"IngeTrazo actual application annotation probe"}
+ fn new(_: &mut System,_:Option<std::path::PathBuf>)->Self{
+  let mut app=crate::IngeTrazoApp::new();app.native_gpu_viewport_enabled=true;app.show_tray=false;
+  app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);app.camera.target=glam::DVec3::ZERO;app.camera.distance=5.;app.camera.perspective=false;app.mark_document_clean();
+  Self{app,nonce:0,held:false,pressure:false,texture:None}
+ }
+ fn build_ui(&mut self,ctx:&Context){
+  self.app.update_ui(ctx);ctx.request_repaint_after(std::time::Duration::from_millis(16));
+  // Mutate AFTER production render_viewport has collected the old membership.
+  let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());
+  if let Ok(file)=std::fs::File::open(dir.join("request.json")){use std::io::Read;let mut bytes=Vec::new();file.take(257).read_to_end(&mut bytes).unwrap();assert!(bytes.len()<=256);let row:serde_json::Value=serde_json::from_slice(&bytes).unwrap();let nonce=row["nonce"].as_u64().unwrap();if nonce>self.nonce{
+   match row["action"].as_str().unwrap(){
+    "add"=>{self.app.save_undo_state();self.app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(glam::DVec3::new(-1.,0.,0.),glam::DVec3::new(1.,0.,0.),glam::DVec3::Y));self.app.scene.bump_version();},
+    "delete"=>{assert!(self.app.remove_dimension(0));},
+    "refuse"=>{assert!(self.app.edit_dimension(0,Some("replacement <>".into()),None,None));self.pressure=true;self.texture=Some(ctx.load_texture("refused-new-managed-image",egui::ColorImage::new([2,2],vec![egui::Color32::RED;4]),egui::TextureOptions::NEAREST));},
+    "retry"=>self.held=false,
+    _=>panic!("Unknown actual app control"),
+   };self.app.mark_document_clean();self.nonce=nonce;
+  }}
+  if let(Some(texture),Some(rect))=(&self.texture,self.app.native_gpu_viewport_rect){let target=egui::Rect::from_min_size(rect.min+egui::vec2(20.,20.),egui::vec2(20.,20.));ctx.layer_painter(egui::LayerId::new(egui::Order::Foreground,egui::Id::new("actual-app-managed-control"))).image(texture.id(),target,egui::Rect::from_min_max(egui::Pos2::ZERO,egui::pos2(1.,1.)),egui::Color32::WHITE);}
+ }
+ fn prepare_gpu(&mut self,system:&mut System,resize:bool){
+  if self.held{system.annotation_prepare_error=Some("Actual app controlled refusal retained".into());}
+  else{
+   if self.pressure{system.annotation_cad.as_mut().expect("renderer created before controlled replacement").force_annotation_pressure_for_probe();}
+   App::prepare_gpu(&mut self.app,system,resize);
+   if self.pressure{assert!(system.annotation_prepare_error.is_some(),"Actual app pressure unexpectedly published");self.pressure=false;self.held=true;}
+  }
+  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len()});
+  let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());let temp=dir.join("state.tmp");std::fs::write(&temp,serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(temp,dir.join("state.json")).unwrap();
+ }
+ fn gpu_error(&mut self,error:&str){eprintln!("Actual annotation app refusal: {error}");}
+}

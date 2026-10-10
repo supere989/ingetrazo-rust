@@ -38,6 +38,10 @@ use winit::{
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 800;
 
+fn retain_frame_texture_deltas(pending:&mut std::collections::VecDeque<(egui::TextureId,egui::epaint::ImageDelta)>,free:&mut Option<Vec<egui::TextureId>>,set:Vec<(egui::TextureId,egui::epaint::ImageDelta)>,releases:&[egui::TextureId]){
+    pending.extend(set);
+    if !releases.is_empty(){free.get_or_insert_with(Vec::new).extend_from_slice(releases);}
+}
 /// UI-order slot resolved only after the current frame's GPU transaction succeeds.
 struct AnnotationSlot;
 fn annotation_slot()->egui::Shape{egui::Shape::Callback(egui::PaintCallback{rect:egui::Rect::NOTHING,callback:std::sync::Arc::new(AnnotationSlot)})}
@@ -491,10 +495,10 @@ impl System {
             egui_app.build_ui(ctx);
         });
 
+        // ctx.run has transferred texture ownership to this host. Retain it even
+        // when the subsequent World/annotation transaction refuses this frame.
+        retain_frame_texture_deltas(&mut self.pending_texture_updates,&mut self.textures_to_free,textures_delta.set,&textures_delta.free);
         egui_app.prepare_gpu(self,false);
-        if self.annotation_prepare_error.is_some(){self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
-        if self.vulkan_context.lifetime.uncertain(){return;}
-        resolve_annotation_slots(&mut shapes,self.annotation_ready_shape.as_ref());
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
             let canceled=output.commands.iter().any(|c|matches!(c,egui::ViewportCommand::CancelClose));
@@ -507,12 +511,10 @@ impl System {
         }
 
 
-        if !textures_delta.free.is_empty() {
-            self.textures_to_free = Some(textures_delta.free.clone());
-        }
-
+        if self.annotation_prepare_error.is_some(){self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
+        if self.vulkan_context.lifetime.uncertain(){return;}
+        resolve_annotation_slots(&mut shapes,self.annotation_ready_shape.as_ref());
         let clipped_primitives = self.egui_ctx.tessellate(shapes, pixels_per_point);
-        self.pending_texture_updates.extend(textures_delta.set);
         if let Err(error)=self.cancel_unpainted_releases(&textures_delta.free,&clipped_primitives){egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}
         // Current-frame set/use/free is legal: retire only at the next acknowledged
         // post-frame boundary, never discard a texture before its queued paint.
@@ -1483,6 +1485,15 @@ pub mod reference_images;
 
 #[cfg(test)]mod annotation_slot_tests{
  use super::*;
+
+ #[test]fn refused_frame_keeps_new_font_and_texture_updates_for_retry(){
+  let mut pending=std::collections::VecDeque::new();let mut free=None;
+  let delta=||egui::epaint::ImageDelta::full(egui::ColorImage::new([1,1],vec![egui::Color32::RED]),egui::TextureOptions::NEAREST);
+  retain_frame_texture_deltas(&mut pending,&mut free,vec![(egui::TextureId::Managed(0),delta()),(egui::TextureId::Managed(7),delta())],&[egui::TextureId::Managed(9)]);
+  // No GPU submission occurs. A second ctx.run cannot recreate the lost full atlas.
+  retain_frame_texture_deltas(&mut pending,&mut free,vec![],&[egui::TextureId::Managed(10)]);
+  assert_eq!(pending.len(),2);assert_eq!(pending[0].0,egui::TextureId::Managed(0));assert_eq!(pending[1].0,egui::TextureId::Managed(7));assert_eq!(free.unwrap(),vec![egui::TextureId::Managed(9),egui::TextureId::Managed(10)]);
+ }
  #[test]fn current_transaction_resolves_first_add_delete_and_replacement_at_original_ui_order(){
   let rect=egui::Rect::from_min_size(egui::pos2(20.,30.),egui::vec2(100.,80.));
   let slot=||{let egui::Shape::Callback(mut value)=annotation_slot()else{unreachable!()};value.rect=rect;egui::epaint::ClippedShape{clip_rect:rect,shape:egui::Shape::Callback(value)}};
