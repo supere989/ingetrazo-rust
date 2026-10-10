@@ -20,6 +20,24 @@ impl Resources {
   if self.image_transfer.is_none(){self.image_transfer=Some(image_upload::Transfer::new(context)?);self.stats.transfer_command_allocations+=1;self.stats.transfer_fence_creations+=1;}
   Ok(self.image_transfer.as_ref().unwrap().handles())
  }
+ // The synchronous transfer fence makes one bounded host allocation reusable.
+ fn staging_buffer(&mut self,context:&super::VulkanContext,capacity:u64)->Result<BufferId,String>{
+  self.lifetime.check()?;
+  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  if capacity==0||capacity>UPLOAD_CHUNK{return Err("Invalid bounded staging capacity".into());}
+  if self.image_staging.and_then(|id|self.logical_bytes(id)).is_none_or(|n|n<capacity){
+   if let Some(old)=self.image_staging.take(){self.destroy(old);}
+   let id=self.allocate(capacity,vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::HOST_VISIBLE)?;
+   let b=&self.buffers[&id];
+   let mapped=match unsafe{self.device.map_memory(b.memory,0,b.allocation_bytes,vk::MemoryMapFlags::empty())}{Ok(p)=>p,Err(e)=>{self.destroy(id);return Err(e.to_string());}};
+   self.buffers.get_mut(&id).unwrap().persistent_map=Some(mapped as usize);
+   self.stats.image_staging_maps+=1;
+   self.stats.staging_allocations+=1;
+   self.stats.staging_peak=self.stats.staging_peak.max(self.buffers[&id].allocation_bytes);
+   self.image_staging=Some(id);
+  }
+  Ok(self.image_staging.unwrap())
+ }
  pub fn check_submission(&self)->Result<(),String>{self.lifetime.check()}
  pub fn drain_graphics(&self)->bool{self.lifetime.drain_graphics()}
  pub(crate) fn retain_owner<T:std::any::Any+Send+Sync>(&self,owner:T){self.lifetime.retain(owner);}
@@ -57,6 +75,8 @@ impl Resources {
  }
  /// Returns only after transfer completion; no scene serialization or IPC on upload path.
  pub fn upload(&mut self,context:&super::VulkanContext,data:&[u8],usage:vk::BufferUsageFlags,force_staging:bool)->Result<BufferId,String> {
+  self.lifetime.check()?;
+  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
   self.stats.upload_calls+=1;
   if data.len()%4!=0{return Err("Vulkan buffer upload must be a multiple of four bytes".into());}
   let destination=self.allocate(data.len() as u64,usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)?;
@@ -64,17 +84,18 @@ impl Resources {
    if !force_staging&&self.buffers[&destination].properties.contains(vk::MemoryPropertyFlags::HOST_VISIBLE) {
     self.write(destination,data)?;self.stats.direct_mapped_bytes+=data.len() as u64;return Ok(());
    }
-   let staging=self.allocate(UPLOAD_CHUNK.min(data.len() as u64),vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::HOST_VISIBLE)?;
-   self.stats.staging_allocations+=1;self.stats.staging_peak=self.stats.staging_peak.max(self.buffers[&staging].allocation_bytes);
-   let transfer=self.transfer_chunks(context,destination,staging,data);self.destroy(staging);transfer
+   let staging=self.staging_buffer(context,UPLOAD_CHUNK.min(data.len() as u64))?;
+   self.transfer_chunks(context,destination,staging,data)
   })();
   if let Err(error)=result {self.destroy(destination);return Err(error);}
   self.stats.bytes+=data.len() as u64;Ok(destination)
  }
  /// Transactional bounded transfer batch; individual destination ownership is preserved.
  /// All input validation happens before allocations; one staging buffer and command/fence
- /// are reused across <=8MiB submissions. Existing upload() behavior is unchanged.
+ /// are retained across <=8MiB submissions and subsequent uploads.
  pub fn upload_many(&mut self,context:&super::VulkanContext,inputs:&[(&[u8],vk::BufferUsageFlags)])->Result<Vec<BufferId>,String>{
+  self.lifetime.check()?;
+  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
   let supported=vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::INDEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER|vk::BufferUsageFlags::UNIFORM_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC|vk::BufferUsageFlags::TRANSFER_DST;
   let mut total=0u64;
   for (data,usage) in inputs{
@@ -83,14 +104,12 @@ impl Resources {
    total=total.checked_add(data.len()as u64).ok_or("Batch byte count overflow")?;
   }
   if inputs.is_empty(){return Ok(Vec::new());}
-  let mut destinations=Vec::new();let mut staging=None;
+  let mut destinations=Vec::new();
   let result=(||->Result<(),String>{
    for (data,usage) in inputs{destinations.push(self.allocate(data.len()as u64,*usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)?);}
-   let id=self.allocate(total.min(UPLOAD_CHUNK),vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::HOST_VISIBLE)?;
-   staging=Some(id);self.stats.staging_allocations+=1;self.stats.staging_peak=self.stats.staging_peak.max(self.buffers[&id].allocation_bytes);
+   let id=self.staging_buffer(context,total.min(UPLOAD_CHUNK))?;
    self.transfer_many(context,&destinations,id,inputs)
   })();
-  if let Some(id)=staging{self.destroy(id);}
   if let Err(error)=result{for id in destinations{self.destroy(id);}return Err(error);}
   self.stats.upload_calls+=inputs.len()as u64;self.stats.bytes+=total;Ok(destinations)
  }
@@ -108,10 +127,10 @@ impl Resources {
     }
     // Scatter directly into mapped staging: no additional packed CPU byte buffer.
     let host=&self.buffers[&staging];
-    let pointer=unsafe{self.device.map_memory(host.memory,0,host.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
+    let pointer=host.persistent_map.ok_or("Transfer staging is not persistently mapped")? as *mut std::ffi::c_void;
     for &(index,start,target,length) in &pieces{unsafe{std::ptr::copy_nonoverlapping(inputs[index].0[start..start+length].as_ptr(),pointer.cast::<u8>().add(target),length)};}
     let flushed=if host.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT){Ok(())}else{unsafe{self.device.flush_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(host.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())};
-    unsafe{self.device.unmap_memory(host.memory)};flushed?;
+    flushed?;
     unsafe{
      self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
      self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;

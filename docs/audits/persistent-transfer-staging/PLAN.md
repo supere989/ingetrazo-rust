@@ -11,3 +11,5 @@ Acceptance must exercise increasing/smaller/interleaved image and buffer request
 Affected diagnostics identified: native_vulkan_upload_churn, native_vulkan_resources_probe, native_vulkan_headless_probe and native_vulkan_texture_upload_probe. Timeout quarantine and budget-denial controls must be rerun; the existing texture map counters must keep their declared meaning or be replaced with explicitly general staging counters. All parity rows/release gates remain OPEN.
 
 Build policy: debug=0, incremental=0, -j2; named diagnostics only. Commit evidence before purging terminal temporary outputs and targets.
+
+Draft implementation now shares the retained staging allocation across all upload paths and validates lifetime/context before buffer admission. Exact post-edit GUI library compile passes (compile-final.log); GPU readback/churn/quarantine acceptance is pending. Legacy image_staging_maps/unmaps counters currently count this shared upload staging, and must be renamed or explicitly documented before integration. No production/main adoption yet.
