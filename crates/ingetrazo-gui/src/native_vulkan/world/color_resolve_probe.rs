@@ -14,7 +14,10 @@ pub fn run_cases(context:&VulkanContext,budget:Arc<VulkanBudget>,cases:&[[[u8;4]
  if world.samples!=vk::SampleCountFlags::TYPE_4{return Err("Probe requires actual four-sample target".into());}
  let device=&context.device;
  let fence=unsafe{device.create_fence(&vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED),None)}.map_err(|e|e.to_string())?;
- let commands=unsafe{device.allocate_command_buffers(&vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).command_buffer_count(1))}.map_err(|e|e.to_string())?;
+ let commands=match unsafe{device.allocate_command_buffers(&vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).command_buffer_count(1))}{
+  Ok(commands)=>commands,
+  Err(error)=>{unsafe{device.destroy_fence(fence,None);}return Err(error.to_string());}
+ };
  let command=commands[0];
  let mut pipelines=Vec::new();
  let result:Result<Vec<serde_json::Value>,String>=(||{
