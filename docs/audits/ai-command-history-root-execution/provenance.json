@@ -1,0 +1,14 @@
+{
+  "integrated_source": "6f4abdde",
+  "binary_sha256": "d753f8d395506debd84dba708af9bffe3b355a87a44ce662d15cc645a3e5e2b7",
+  "fresh_build_and_execution": true,
+  "exit_code": 0,
+  "scope": "Standalone root editable command history prerequisite; production disabled.",
+  "remaining": [
+    "Mixed field and append atomic command",
+    "General membership mutations",
+    "Arbitrary attribute callbacks and native reentry",
+    "Efficient history journal and physical resource bounds",
+    "Production scene integration"
+  ]
+}
