@@ -21,8 +21,9 @@ deadline=time.monotonic()+3
 while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
 def pixels(image):
  im=image.convertToFormat(QImage.Format_RGBA8888);return np.frombuffer(im.constBits(),np.uint8).reshape(im.height(),im.bytesPerLine())[:,:im.width()*4].reshape(im.height(),im.width(),4).copy()
-image=vp.grabFramebuffer();assert image.save(str(out/'fresh.png'));a=pixels(image);expected=pixels(QImage(str(original/'gondola_v20-iso-source.png')));assert np.array_equal(a,expected),'Fresh source does not match retained reference'
+image=vp.grabFramebuffer();assert image.save(str(out/'fresh.png'));a=pixels(image);expected=pixels(QImage(str(original/'gondola_v20-iso-source.png')));fresh_exact=bool(np.array_equal(a,expected));fresh_different=int(np.any(a!=expected,axis=2).sum())
 vp.makeCurrent();gl=vp._gl;assert vp._scene_fbo.format().samples()==4
+scene_image=vp._scene_fbo.toImage();assert scene_image.save(str(out/'scene-resolved.png'));scene_pixels=pixels(scene_image)
 lib=ctypes.CDLL('libGL.so.1')
 def call(name,types,*args):
  fn=getattr(lib,name);fn.argtypes=types;fn.restype=None;fn(*args)
@@ -39,7 +40,10 @@ samples=[]
 for i in range(4):
  assert target.bind();gl.glUniform1i(program.uniformLocation('sample_index'),i);gl.glDrawArrays(0x0004,0,3);assert gl.glGetError()==0
  im=target.toImage();assert im.save(str(out/f'sample-{i}.png'));samples.append(pixels(im))
-reconstructed=((sum(x.astype(np.uint16) for x in samples)+1)//4).astype(np.uint8);different=int(np.any(reconstructed!=a,axis=2).sum())
-report={'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':True,'reconstructed_resolve_different_pixels':different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Actual original renderer sample-color inspection after exact retained full-image match. No Rust per-sample comparison yet.'}
+reconstructed=((sum(x.astype(np.uint16) for x in samples)+1)//4).astype(np.uint8);different=int(np.any(reconstructed!=scene_pixels,axis=2).sum());overlay_different=int(np.any(scene_pixels!=a,axis=2).sum())
+report={'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
 (out/'review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 vao.release();program.release();del target;del vao;del program;call('glDeleteFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glDeleteTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()
+
+assert fresh_exact, 'Fresh source does not match retained reference; diagnostic samples retained, acceptance refused'
+assert different == 0, 'Per-sample reconstruction differs from fresh frame'

@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "finding": "Fresh full widget capture matches retained reference. Extracted samples at x588 y340 are three edge samples [33,43,59,255] and one face sample [107,107,107,255], resolving to [51,59,71,255].",
+  "limitation": "Whole-image sample reconstruction fails at 1938 pixels. Some pixels have nonopaque alpha; QImage conversion and channel-dependent resolve rounding require isolation. Do not use the diagnostic as accepted whole-image sample equivalence or change production resolve.",
+  "next_action": "Read raw framebuffer bytes to separate QImage alpha conversion from multisample resolve; compare all channels and capture state."
+}
