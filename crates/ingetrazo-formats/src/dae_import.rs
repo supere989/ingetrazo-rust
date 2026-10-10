@@ -554,6 +554,71 @@ fn transform(node: Node<'_, '_>) -> Result<glam::DMat4> {
     }
     Ok(m)
 }
+// The original editable stitch collapses valence-two straight stations BEFORE
+// triangle fusion. Grid boundary vertices with interior spokes survive that
+// stage, so collapsing the final fused polygon would lose source topology.
+fn collapse_editable_stations(
+    source: &ingetrazo_core::mesh::Mesh,
+) -> Result<ingetrazo_core::mesh::Mesh> {
+    use ingetrazo_core::mesh::Mesh;
+    let mut mesh = source.clone();
+    loop {
+        let mut remove = None;
+        for v in 0..mesh.vertices.len() {
+            let edges = mesh
+                .edges
+                .iter()
+                .filter(|e| e.v0 == v || e.v1 == v)
+                .collect::<Vec<_>>();
+            if edges.len() != 2 {
+                continue;
+            }
+            let neighbor = |e: &ingetrazo_core::mesh::MeshEdge| if e.v0 == v { e.v1 } else { e.v0 };
+            let a = mesh.vertices[v].position - mesh.vertices[neighbor(edges[0])].position;
+            let b = mesh.vertices[neighbor(edges[1])].position - mesh.vertices[v].position;
+            let mut fa = edges[0].faces.clone();
+            let mut fb = edges[1].faces.clone();
+            fa.sort_unstable();
+            fb.sort_unstable();
+            if a.length() >= 1e-4
+                && b.length() >= 1e-4
+                && a.normalize().dot(b.normalize()) >= 0.999
+                && fa == fb
+            {
+                remove = Some(v);
+                break;
+            }
+        }
+        let Some(remove) = remove else {
+            return Ok(mesh);
+        };
+        let mut next = Mesh::new();
+        let mapping = mesh
+            .vertices
+            .iter()
+            .enumerate()
+            .map(|(i, v)| {
+                if i == remove {
+                    None
+                } else {
+                    Some(next.add_vertex(v.position))
+                }
+            })
+            .collect::<Vec<_>>();
+        for face in &mesh.faces {
+            let ring = |r: &Vec<usize>| r.iter().filter_map(|&v| mapping[v]).collect::<Vec<_>>();
+            let outer = ring(&face.vertices);
+            let holes = face.holes.iter().map(ring).collect();
+            let id = next
+                .add_face(outer, holes)
+                .ok_or_else(|| invalid("invalid editable station collapse"))?;
+            next.faces[id].attrs = face.attrs.clone();
+            next.faces[id].layer = face.layer.clone();
+        }
+        mesh = next;
+    }
+}
+
 pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> {
     let xml = std::fs::read_to_string(path)?;
     let mut scene = scene_from_xml_at(
@@ -586,6 +651,7 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
                 mesh.faces[id].layer = face.layer.clone();
             }
         }
+        let mesh = collapse_editable_stations(&mesh)?;
         let (mut fused, _) =
             ingetrazo_core::simplify::simplify_mesh(&mesh, 0., false).map_err(invalid)?;
         // Import stitching retains the source boundary stations even when
