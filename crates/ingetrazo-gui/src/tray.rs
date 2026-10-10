@@ -597,7 +597,15 @@ fn render_ai_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
     if ui.button("Clear conversation").clicked() {ai.messages.clear();ai.status.clear();}
     ui.label(&ai.status);
-    ui.label("Provider transport, live bridge and Python recipe execution are pending.");
+    ui.label("Provider transport and Python recipe execution are pending.");
+    ui.separator();
+    if let Some(bridge)=&app.ai_bridge {
+        ui.label(format!("Local document bridge: {}",bridge.address()));
+        if ui.button("Stop local bridge").clicked(){app.stop_ai_bridge();}
+    }else if ui.button("Start local bridge").clicked(){
+        let port=std::env::var("INGETRAZO_AI_PORT").ok().map(|s|s.parse::<u16>()).transpose();
+        match port {Ok(port)=>match app.start_ai_bridge(ui.ctx(),port.unwrap_or(4763)){Ok(port)=>app.ai_session.status=format!("Listening on 127.0.0.1:{port}"),Err(error)=>app.ai_session.status=error},Err(error)=>app.ai_session.status=format!("Invalid INGETRAZO_AI_PORT: {error}")}
+    }
 }
 
 fn render_render_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {

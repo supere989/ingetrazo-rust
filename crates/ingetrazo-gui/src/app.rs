@@ -100,6 +100,8 @@ pub struct IngeTrazoApp {
     pub command_search_query: String,
     pub console_input: String,
     pub ai_session: ingetrazo_core::ai::Session,
+    pub(crate) ai_bridge: Option<ingetrazo_core::ai_bridge::Bridge>,
+    pub(crate) ai_query_cache: crate::ai_bridge::QueryCache,
     pub console_logs: Vec<String>,
     pub bim_active_class: String,
     pub bim_name_input: String,
@@ -200,6 +202,8 @@ impl IngeTrazoApp {
             command_search_query: String::new(),
             console_input: String::new(),
             ai_session: Default::default(),
+            ai_bridge: None,
+            ai_query_cache: Default::default(),
             console_logs: vec!["IngeTrazo 0.3.15 Interactive Console initialized.".to_string()],
             bim_active_class: "IfcWall".to_string(),
             bim_name_input: String::new(),
@@ -369,25 +373,25 @@ impl IngeTrazoApp {
     }
     pub(crate) fn bump_model_revision(&mut self){self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
     pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
-    pub fn undo(&mut self) {
+    pub fn undo(&mut self) {self.undo_outcome();}
+    pub(crate) fn undo_outcome(&mut self)->bool {
         self.sync_document_presentation();
-        if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
+        if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return false;}
         self.finish_composer_edit();
-        if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
-        if self.refuse_component_history_step(false){return;}
+        if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return false;}
+        if self.refuse_component_history_step(false){return false;}
         self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();self.seal_image_history();
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
-        if self.component_history_step(false).is_some(){return;}
+        if let Some(changed)=self.component_history_step(false){return changed;}
         if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
             if prev.history_shareback.is_some() {
                 let mut inverse=self.scene.clone();inverse.history_shareback=prev.history_shareback;
-                match crate::component_edit::shareback_restore(&self.scene,&prev) {
-                    Ok(restored)=>{self.redo_stack.push(inverse);self.scene=restored;self.bump_model_revision();self.status_message="Undo".into();},
-                    Err(error)=>{self.undo_stack.push(prev);self.status_message=error;},
-                }
-                return;
+                return match crate::component_edit::shareback_restore(&self.scene,&prev) {
+                    Ok(restored)=>{self.redo_stack.push(inverse);self.scene=restored;self.bump_model_revision();self.status_message="Undo".into();true},
+                    Err(error)=>{self.undo_stack.push(prev);self.status_message=error;false},
+                };
             }
             let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
@@ -399,26 +403,28 @@ impl IngeTrazoApp {
             self.scene = prev;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
+            return true;
         }
+        false
     }
 
-    pub fn redo(&mut self) {
+    pub fn redo(&mut self) {self.redo_outcome();}
+    pub(crate) fn redo_outcome(&mut self)->bool {
         self.sync_document_presentation();
-        if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return;}
+        if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return false;}
         self.finish_composer_edit();
-        if self.refuse_component_history_step(true){return;}
+        if self.refuse_component_history_step(true){return false;}
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
-        if self.component_history_step(true).is_some(){return;}
+        if let Some(changed)=self.component_history_step(true){return changed;}
         if let Some(mut next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
             if next.history_shareback.is_some() {
                 let mut inverse=self.scene.clone();inverse.history_shareback=next.history_shareback;
-                match crate::component_edit::shareback_restore(&self.scene,&next) {
-                    Ok(restored)=>{self.undo_stack.push(inverse);self.scene=restored;self.bump_model_revision();self.status_message="Redo".into();},
-                    Err(error)=>{self.redo_stack.push(next);self.status_message=error;},
-                }
-                return;
+                return match crate::component_edit::shareback_restore(&self.scene,&next) {
+                    Ok(restored)=>{self.undo_stack.push(inverse);self.scene=restored;self.bump_model_revision();self.status_message="Redo".into();true},
+                    Err(error)=>{self.redo_stack.push(next);self.status_message=error;false},
+                };
             }
             let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
@@ -427,7 +433,9 @@ impl IngeTrazoApp {
             self.scene = next;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
+            return true;
         }
+        false
     }
 
     pub fn delete_selection(&mut self) {
@@ -967,6 +975,7 @@ impl IngeTrazoApp {
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
+        self.poll_ai_bridge();
         if self.navigation_suspended(){self.navigation.cancel();self.navigation.sync_cursor(ctx);}
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});

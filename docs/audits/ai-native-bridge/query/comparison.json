@@ -1,0 +1,47 @@
+{
+  "full_equal": false,
+  "bounded_equal": true,
+  "bounded_cases": 9,
+  "bounded_states": 21,
+  "full_mismatches": [
+    {
+      "case": "leaf-history",
+      "state": 3,
+      "fields": {
+        "bounds": {
+          "original": {
+            "min": [
+              4.0,
+              2.0,
+              1.0
+            ],
+            "max": [
+              104.0,
+              105.0,
+              106.0
+            ]
+          },
+          "native": {
+            "min": [
+              4.0,
+              2.0,
+              1.0
+            ],
+            "max": [
+              6.0,
+              3.0,
+              1.0
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "negative_rejections": [
+    "local-groups-only",
+    "hidden-edge-excluded",
+    "wrong-instance-count",
+    "wrong-history-outcome",
+    "missing-case"
+  ]
+}

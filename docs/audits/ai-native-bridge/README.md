@@ -1,0 +1,9 @@
+# Native live bridge foundation
+
+The loopback transport admits four persistent clients on a fixed worker pool and one pending UI-owned operation. It never gives socket threads scene ownership. Four focused transport tests establish owner-thread dispatch, queued cancellation, bounded frames/stop and idle-peer concurrency/refusal. The frozen Python bridge serves one persistent client until disconnect; bounded concurrency is an explicit native reliability improvement.
+
+Application integration starts/stops explicitly from the tray, polls through production update_ui, and exposes query_model plus idle Select model Undo/Redo. Two focused real-loopback tests exercise production update_ui and ensure unsupported/invalid requests do not mutate document/history. Active transform/composer/modal/navigation histories remain unsupported pending original controls.
+
+Operative original query corpus uses frozen6be29fe core scene/bridge and actual IGZ loads, context entry/exit and history commands. Nine named cases/21 states match; five mutations reject. Full ten-case comparison remains FALSE: leaf AddEdge Undo retains original orphan welded vertices, while native snapshot Undo deletes them. This is a required command-owned mesh lifetime defect, not a query alias. Initial baseline includes a corrected fixture action mismatch (end all contexts vs native end one) and old default-layer divergence; neither baseline is silently counted as acceptance.
+
+run_python retains its original tool name but is explicitly unsupported: an embedded compatible interpreter and complete staged mutation journal are not implemented. screenshot execution/transport and provider live requests also remain open. No external provider calls or messages were made; this foundation does not complete P32 or atomic scripting.

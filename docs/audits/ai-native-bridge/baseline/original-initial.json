@@ -1,0 +1,412 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    {
+      "name": "empty",
+      "steps": [],
+      "states": [
+        {
+          "faces": 0,
+          "edges": 0,
+          "groups": 0,
+          "component_instances": 0,
+          "group_names": [],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": null
+        }
+      ]
+    },
+    {
+      "name": "loose-hidden-wire-and-hole",
+      "steps": [],
+      "states": [
+        {
+          "faces": 1,
+          "edges": 7,
+          "groups": 0,
+          "component_instances": 0,
+          "group_names": [],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -3.0,
+              -1.0,
+              0.0
+            ],
+            "max": [
+              31.0,
+              31.0,
+              30.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "loose-attribute-visibility",
+      "steps": [],
+      "states": [
+        {
+          "faces": 0,
+          "edges": 3,
+          "groups": 0,
+          "component_instances": 0,
+          "group_names": [],
+          "materials": [],
+          "layers": [
+            "Layer 0",
+            "off"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              7.0,
+              8.0,
+              9.0
+            ],
+            "max": [
+              8.0,
+              9.0,
+              10.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "classic-and-hidden-placement",
+      "steps": [],
+      "states": [
+        {
+          "faces": 0,
+          "edges": 0,
+          "groups": 1,
+          "component_instances": 1,
+          "group_names": [
+            "Classic",
+            "Placed"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max": [
+              2.0,
+              1.0,
+              0.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hidden-nested-parent",
+      "steps": [],
+      "states": [
+        {
+          "faces": 0,
+          "edges": 0,
+          "groups": 0,
+          "component_instances": 1,
+          "group_names": [
+            "Outer"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              4.0,
+              2.0,
+              1.0
+            ],
+            "max": [
+              34.0,
+              7.0,
+              3.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "leaf-context",
+      "steps": [
+        "enter-root",
+        "leave"
+      ],
+      "states": [
+        {
+          "faces": 0,
+          "edges": 1,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable leaf",
+            "Sibling"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              26.0,
+              3.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "faces": 1,
+          "edges": 4,
+          "groups": 1,
+          "component_instances": 1,
+          "group_names": [
+            "Editable leaf",
+            "Sibling"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              26.0,
+              3.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "faces": 0,
+          "edges": 1,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable leaf",
+            "Sibling"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              26.0,
+              3.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "nested-context",
+      "steps": [
+        "enter-root",
+        "enter-child",
+        "leave",
+        "leave"
+      ],
+      "states": [
+        {
+          "faces": 0,
+          "edges": 1,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable outer",
+            "Other root"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              36.0,
+              5.0,
+              2.0
+            ]
+          }
+        },
+        {
+          "faces": 1,
+          "edges": 4,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable outer",
+            "Other root"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              36.0,
+              5.0,
+              2.0
+            ]
+          }
+        },
+        {
+          "faces": 1,
+          "edges": 4,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable outer",
+            "Other root"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              36.0,
+              5.0,
+              2.0
+            ]
+          }
+        },
+        {
+          "faces": 0,
+          "edges": 1,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable outer",
+            "Other root"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              36.0,
+              5.0,
+              2.0
+            ]
+          }
+        },
+        {
+          "faces": 0,
+          "edges": 1,
+          "groups": 0,
+          "component_instances": 2,
+          "group_names": [
+            "Editable outer",
+            "Other root"
+          ],
+          "materials": [],
+          "layers": [
+            "Layer 0"
+          ],
+          "dimensions": 0,
+          "section_planes": 0,
+          "selection": 0,
+          "bounds": {
+            "min": [
+              -9.0,
+              -8.0,
+              -7.0
+            ],
+            "max": [
+              36.0,
+              5.0,
+              2.0
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
