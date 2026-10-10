@@ -1,0 +1,1 @@
+{"passed": true, "named_cases": 9, "compiled_old_defects_rejected": 9, "missing_case_rejected": true, "scope": "actual source viewport QMouseEvent handlers/native egui events; XTEST separately, not hardware or fullnavigation parity"}

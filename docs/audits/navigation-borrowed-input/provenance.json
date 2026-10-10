@@ -1,0 +1,16 @@
+{
+  "source": "73c70fe030aaff1fbf43e1e0c56cfff0f8282d51",
+  "binaries": {
+    "first_person_look_event_acceptance": "189c16dec64a224a08443afba3dc5b93456916c963b96246b0bbbc8134e021c7",
+    "position_event_acceptance": "2c257a6300af87cebd006a22040f77590862150d87f55e5973ce04bd588d7822"
+  },
+  "scope": "FP9+Position4 unchanged strict comparisons and19navigation tests; no speedup measurement",
+  "terminal_duplicate_paths_removed": [
+    "/tmp/navigation-borrowed-input-build.log",
+    "/tmp/navigation-borrowed-fp.json",
+    "/tmp/navigation-borrowed-position.json",
+    "/tmp/navigation-borrowed-tests.log",
+    "/tmp/navigation-borrowed-fp-check.log",
+    "/tmp/navigation-borrowed-position-check.log"
+  ]
+}
