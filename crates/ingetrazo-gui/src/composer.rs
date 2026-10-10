@@ -21,6 +21,8 @@ use crate::app::IngeTrazoApp;
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
 pub struct ComposerState {
+    pub shape_tool:Option<String>,
+    pub shape_start:Option<glam::DVec2>,
     pub pan_offset: Vec2,
     pub zoom: f32, // pixels per mm
     pub dragging_item_idx: Option<usize>,
@@ -34,6 +36,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
+            shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
             zoom: 1.5, // 1.5 px per mm by default (~400mm A3 = 600px wide)
             dragging_item_idx: None,
@@ -48,9 +51,22 @@ fn sheet_model_equal(a:&[ingetrazo_core::composition::Sheet],b:&[ingetrazo_core:
  let mut a=a.to_vec();let mut b=b.to_vec();for s in a.iter_mut().chain(b.iter_mut()){s.selected_item=None;}a==b
 }
 impl IngeTrazoApp {
+ pub fn place_composer_shape(&mut self,kind:&str,start:glam::DVec2,end:glam::DVec2)->Result<uuid::Uuid,String>{
+  let mut shape=ingetrazo_core::sheet_shape::SheetShape::from_drag(kind,start,end)?;
+  let index=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len()).ok_or("No active sheet")?;
+  let sheet=&self.scene.sheets[index];
+  let zs=sheet.items.iter().map(|item|match item {SheetItem::Shape(f)=>f.shape.z,_=>sheet.native_items.get(&item.id()).and_then(|v|v.get("z")).and_then(|v|v.as_f64()).unwrap_or(0.)}).collect::<Vec<_>>();
+  if zs.iter().any(|z|!z.is_finite()){return Err("Non-finite sheet stacking order".into());}
+  shape.z=zs.into_iter().reduce(f64::max).map_or(0.,|z|z+1.);
+  if !shape.z.is_finite(){return Err("Sheet stacking order exceeds numeric range".into());}
+  self.finish_composer_edit();self.begin_composer_edit();
+  let id=uuid::Uuid::new_v4();let sheet=&mut self.scene.sheets[index];
+  sheet.add_item(SheetItem::Shape(ingetrazo_core::composition::ShapeItem{id,shape}));
+  sheet.selected_item=Some(sheet.items.len()-1);self.finish_composer_edit();Ok(id)
+ }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){if self.composer_state.edit_before.is_none(){self.composer_state.edit_before=Some(self.scene.sheets.clone());}}
  pub fn finish_composer_edit(&mut self){
@@ -73,7 +89,7 @@ impl IngeTrazoApp {
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
   if let Some(after)=history.1.pop(){history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}
  }
- pub fn cancel_composer_edit(&mut self){if let Some(sheets)=self.composer_state.edit_before.take(){let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
+ pub fn cancel_composer_edit(&mut self){self.composer_state.shape_start=None;self.composer_state.shape_tool=None;if let Some(sheets)=self.composer_state.edit_before.take(){let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
   self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
  }
 }
@@ -306,6 +322,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 ui.separator();
 
                 // Add Items Menu
+                ui.menu_button(tr("+ Shape"),|ui|{
+                    for (kind,label) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")] {
+                        if ui.button(tr(label)).clicked(){app.composer_state.shape_tool=Some(kind.into());app.composer_state.shape_start=None;ui.close_menu();}
+                    }
+                });
                 if ui.button(tr("+ View")).on_hover_text(tr("Add 3D model viewport")).clicked() {
                     let mut vf = ViewFrame::default();
                     vf.rect = RectMm::new(sheet.margin_mm + 10.0, sheet.margin_mm + 10.0, 160.0, 110.0);
@@ -416,6 +437,23 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         app.scene.bump_version();
     }
 
+    // Shape placement stays transient until a second click or a completed drag.
+    if let Some(kind)=app.composer_state.shape_tool.clone() {
+        if ui.input(|i|i.key_pressed(egui::Key::Escape)) {app.composer_state.shape_start=None;app.composer_state.shape_tool=None;}
+        else if let Some(hover)=pointer.hover_pos().filter(|p|paper_rect.contains(*p)&&!toolbar_rect.contains(*p)) {
+            let first_pass=ui.ctx().output(|o|o.num_completed_passes)==0;
+            let page=|p:Pos2|glam::DVec2::new(f64::from((p.x-paper_rect.min.x)/zoom),f64::from((p.y-paper_rect.min.y)/zoom));
+            if first_pass && response.drag_started() {if let Some(start)=pointer.press_origin(){app.composer_state.shape_start=Some(page(start));}}
+            if let Some(start)=app.composer_state.shape_start {
+                if let Ok(preview)=ingetrazo_core::sheet_shape::SheetShape::from_drag(&kind,start,page(hover)){let _=paint_sheet_shape(&painter,&preview,zoom,paper_rect.min);}
+                if first_pass && (response.drag_stopped()||response.clicked()){
+                    match app.place_composer_shape(&kind,start,page(hover)){Ok(_)=>{},Err(error)=>app.status_message=error}
+                    app.composer_state.shape_start=None;
+                }
+            } else if first_pass && response.clicked(){app.composer_state.shape_start=Some(page(hover));}
+        }
+        return;
+    }
     // Handle Item Selection & Dragging on Canvas
     if let Some(hover_pos) = pointer.hover_pos() {
         let sheet = &mut app.scene.sheets[sheet_idx];
@@ -970,4 +1008,29 @@ pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_sha
   }
  }
  Ok(())
+}
+
+#[cfg(test)]mod shape_authoring_tests {
+ use super::*;
+ #[test]fn shape_placement_is_atomic_undoable_and_invalid_input_preserves_history(){
+  let mut app=IngeTrazoApp::new();app.scene.sheets.push(ingetrazo_core::composition::Sheet::new("Shapes",PaperSize::A4,Orientation::Portrait));app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+  let before=app.scene.sheets.clone();let id=app.place_composer_shape("linea",glam::DVec2::new(2.,3.),glam::DVec2::new(8.,3.)).unwrap();
+  let after=app.scene.sheets.clone();let item=after[0].items.last().unwrap();assert_eq!(item.id(),id);let SheetItem::Shape(item)=item else{panic!()};assert_eq!(item.shape.h_mm,0.);assert_eq!(item.shape.z,1.);
+  assert_eq!(app.composer_state.sheet_history[&after[0].id].0.len(),1);
+  assert!(app.place_composer_shape("rect",glam::DVec2::splat(f64::NAN),glam::DVec2::ONE).is_err());assert_eq!(app.scene.sheets,after);
+  app.undo_composer_edit();assert_eq!(app.scene.sheets,before);app.redo_composer_edit();assert_eq!(app.scene.sheets,after);
+  let state=app.scene.clone();app.composer_state.shape_tool=Some("rect".into());app.composer_state.shape_start=Some(glam::DVec2::ZERO);app.cancel_composer_edit();assert_eq!(app.scene,state);assert!(app.composer_state.shape_start.is_none());assert!(app.composer_state.shape_tool.is_none());
+ }
+ #[test]fn real_composer_pointer_events_preview_then_commit_one_history_item(){
+  let mut app=IngeTrazoApp::new();let mut sheet=ingetrazo_core::composition::Sheet::new("Pointer",PaperSize::A4,Orientation::Portrait);sheet.items.clear();app.scene.sheets.push(sheet);app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);app.composer_state.shape_tool=Some("rect".into());
+  app.scene.sheets.remove(0);app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+  let ctx=egui::Context::default();
+  fn frame(ctx:&egui::Context,app:&mut IngeTrazoApp,events:Vec<egui::Event>){let _=ctx.run(egui::RawInput{screen_rect:Some(Rect::from_min_size(Pos2::ZERO,Vec2::new(1000.,800.))),events,..Default::default()},|ctx|{egui::CentralPanel::default().show(ctx,|ui|render_sheet_composer(app,ui,0));});}
+  fn click(p:Pos2)->Vec<egui::Event>{vec![egui::Event::PointerMoved(p),egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:true,modifiers:Default::default()},egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:false,modifiers:Default::default()}]}
+  frame(&ctx,&mut app,vec![]);frame(&ctx,&mut app,click(Pos2::new(430.,330.)));assert!(app.composer_state.shape_start.is_some());assert!(app.scene.sheets[0].items.is_empty(),"unexpected items {:?}",app.scene.sheets[0].items);assert!(app.composer_state.sheet_history.is_empty());
+  frame(&ctx,&mut app,vec![egui::Event::PointerMoved(Pos2::new(520.,420.))]);assert!(app.scene.sheets[0].items.is_empty());
+  frame(&ctx,&mut app,click(Pos2::new(520.,420.)));assert_eq!(app.scene.sheets[0].items.len(),1);assert_eq!(app.composer_state.sheet_history[&app.scene.sheets[0].id].0.len(),1);assert!(app.composer_state.shape_start.is_none());
+  app.undo_composer_edit();assert!(app.scene.sheets[0].items.is_empty());
+ }
+
 }
