@@ -92,13 +92,25 @@ impl Cache {
             return Ok(face.clone());
         }
         let bytes = matched.font.shared_bytes().len();
-        let next = self
-            .bytes
-            .checked_add(bytes)
-            .filter(|&n| n <= self.limits.retained_font_bytes)
-            .ok_or("Annotation retained font bytes exceeded")?;
-        if self.faces.len() >= self.limits.faces {
-            return Err("Annotation face count exceeded".into());
+        if bytes > self.limits.retained_font_bytes {
+            return Err("Annotation retained font bytes exceeded".into());
+        }
+        let mut next = self.bytes.checked_add(bytes).ok_or("Annotation font byte overflow")?;
+        let mut count = self.faces.len().checked_add(1).ok_or("Annotation face count overflow")?;
+        let mut retire = Vec::new();
+        if count > self.limits.faces || next > self.limits.retained_font_bytes {
+            retire.try_reserve_exact(self.faces.len()).map_err(|_|"Annotation font retirement admission failed")?;
+            for (key,face) in &self.faces {
+                if count <= self.limits.faces && next <= self.limits.retained_font_bytes { break; }
+                if Rc::strong_count(face) == 1 {
+                    retire.push(*key);
+                    next -= face.shared_bytes().len();
+                    count -= 1;
+                }
+            }
+            if count > self.limits.faces || next > self.limits.retained_font_bytes {
+                return Err("Annotation live font ownership exceeds admission".into());
+            }
         }
         self.faces
             .try_reserve(1)
@@ -114,6 +126,9 @@ impl Cache {
             pixels,
             font,
         });
+        // All admission/native construction succeeded before old cache-only
+        // faces are retired. A live plan/run owner is never selected.
+        for old in retire { self.faces.remove(&old); }
         self.faces.insert(key, face.clone());
         self.bytes = next;
         self.builds += 1;
@@ -211,6 +226,21 @@ mod tests {
         assert!(cache.resolve(request, 15).is_err());
         assert_eq!(cache.resolver_stats(), backing);
         assert_eq!(cache.stats(), (0, 0, 0));
+    }
+    #[test]
+    fn sized_face_churn_reclaims_only_cache_owned_faces() {
+        let mut cache = Cache::new(Limits { faces: 2, retained_font_bytes: 32*1024*1024 }).unwrap();
+        let request = Request { family: "DejaVu Sans".into(), bold: true, italic: false, required_chars: vec![] };
+        let retained = cache.resolve(request.clone(), 15).unwrap();
+        for pixels in [16,17,18,19,20,21] {
+            let face = cache.resolve(request.clone(), pixels).unwrap();
+            let before = cache.stats();
+            assert!(before.0<=2);
+            assert!(Rc::ptr_eq(&face,&cache.resolve(request.clone(),pixels).unwrap()));
+            assert_eq!(cache.stats(),before);
+            assert!(Rc::ptr_eq(&retained,&cache.resolve(request.clone(),15).unwrap()));
+        }
+        assert!(cache.stats().2>2);
     }
     #[test]
     fn refused_candidate_keeps_live_font_and_unused_retirement_is_bounded() {

@@ -40,22 +40,28 @@ impl Cache {
   if bytes>self.limits.glyph_bytes{return Err("Annotation retained glyph bytes exceeded".into());}
   let mut remaining_bytes=self.glyph_bytes.checked_add(bytes).ok_or("Annotation glyph byte overflow")?;
   let mut remaining_count=self.glyphs.len().checked_add(1).ok_or("Annotation glyph count overflow")?;
-  let mut removals=Vec::new();removals.try_reserve_exact(self.glyph_order.len()).map_err(|_|"Annotation glyph eviction admission failed")?;
-  for key in &self.glyph_order{
-   if remaining_count<=self.limits.glyphs&&remaining_bytes<=self.limits.glyph_bytes{break;}
-   if let Some(old)=self.glyphs.get(key).filter(|old|Arc::strong_count(old)==1){
-    remaining_bytes-=old.coverage.len();remaining_count-=1;removals.push(*key);
+  let pressure=remaining_count>self.limits.glyphs||remaining_bytes>self.limits.glyph_bytes;
+  let mut removals=Vec::new();
+  if pressure{
+   removals.try_reserve_exact(self.glyph_order.len()).map_err(|_|"Annotation glyph eviction admission failed")?;
+   for key in &self.glyph_order{
+    if remaining_count<=self.limits.glyphs&&remaining_bytes<=self.limits.glyph_bytes{break;}
+    if let Some(old)=self.glyphs.get(key).filter(|old|Arc::strong_count(old)==1){
+     remaining_bytes-=old.coverage.len();remaining_count-=1;removals.push(*key);
+    }
+   }
+   if remaining_count>self.limits.glyphs||remaining_bytes>self.limits.glyph_bytes{
+    return Err("Annotation live glyph ownership exceeds admission".into());
    }
   }
-  if remaining_count>self.limits.glyphs||remaining_bytes>self.limits.glyph_bytes{
-   return Err("Annotation live glyph ownership exceeds admission".into());
-  }
   let image=Arc::new(image);
-  for key in removals{
-   let old=self.glyphs.remove(&key).expect("admitted cache-only glyph eviction");
-   self.glyph_bytes-=old.coverage.len();
+  if pressure{
+   for key in removals{
+    let old=self.glyphs.remove(&key).expect("admitted cache-only glyph eviction");
+    self.glyph_bytes-=old.coverage.len();
+   }
+   self.glyph_order.retain(|key|self.glyphs.contains_key(key));
   }
-  self.glyph_order.retain(|key|self.glyphs.contains_key(key));
   self.glyphs.insert(key,image.clone());self.glyph_order.push_back(key);
   self.glyph_bytes=remaining_bytes;self.glyph_builds+=1;Ok(image)
  }
