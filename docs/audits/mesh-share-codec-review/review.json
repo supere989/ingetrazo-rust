@@ -17,8 +17,11 @@
     "second-tests.log"
   ],
   "remaining": [
-    "transformed-empty world authoring parity",
-    "rendered Finish workflow acceptance"
+    "source no-edit history equivalence",
+    "reentry drawing axes",
+    "fresh original reopen exact root/nested authored world surfaces",
+    "rendered Finish workflow acceptance",
+    "full workspace after latestworldauthoring changes"
   ],
   "canonical_promotion": false,
   "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, Make Unique detachment; unequal parent child counts2/1 with shared child Mesh; internal comparison keys absent",
@@ -45,5 +48,10 @@
     0,
     2
   ],
-  "private_container_codec": "originalPython actualobjectidentity PASS privatecomponent-marked ownMesh; children retainsharedMesh"
+  "private_container_codec": "originalPython actualobjectidentity PASS privatecomponent-marked ownMesh; children retainsharedMesh",
+  "world_authoring_controls": {
+    "passed": 10,
+    "failed": 0,
+    "scope": "root/nested source world-frame authoring and shared prototype surfaces; no rendered proof"
+  }
 }

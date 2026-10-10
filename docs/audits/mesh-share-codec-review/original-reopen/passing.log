@@ -16,13 +16,12 @@ warning: function `scene_from_xml` is never used
     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
 warning: `ingetrazo-formats` (lib) generated 1 warning
-   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-formats)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
      Running `/tmp/ingetrazo-mesh-share-codec-target/debug/examples/mesh_share_acceptance docs/audits/mesh-share-codec-review/original-reopen`
 {
   "passed": true,
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "candidate": "f7e995fb27699755e96803f8c7028407024fee5b",
+  "candidate": "4c698cf0088acef72691be94e604ac532ac4c19b",
   "checks": [
     "original source actual object identity",
     "published component-false shared Mesh",
@@ -36,9 +35,9 @@ warning: `ingetrazo-formats` (lib) generated 1 warning
   ],
   "files": {
     "source.igz": "5bc9dfbbcfa7faf5d4498fc5326bca40a8ef5005505c3f7df72cfb93bd91ecd1",
-    "published.igz": "04a238dd05e13a3b37c9198d860b3a3cb1d029c9af20b4609fffcf49724fbf6e",
-    "unique.igz": "0c40119676f54891fbd58e17780604d0ec435ad62963a6a5b1bbfb87ce2d31b3",
-    "private-container.igz": "e97d6357a0986551310ba45487c0ff3f798b6a21968b0504b4ef06f1282051c5"
+    "published.igz": "cb5574b2c706a14c9ab3acdbf73c4007db940dfb269ea20d4b249c5c10760268",
+    "unique.igz": "8dc2ab92eda47d85fe4dfcdca6d2a00e40cde866ad612ef8881d7d6555fe9fb0",
+    "private-container.igz": "1b8db6fe944b366be0a70cd151df44b6247190a14a29635caf63a48e1d60bd5c"
   },
   "scope": "Original actual loader and Mesh object identity; no rendered component Finish claim."
 }
