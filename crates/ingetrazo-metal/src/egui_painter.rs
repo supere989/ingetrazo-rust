@@ -782,12 +782,10 @@ impl EguiPainter {
                 || mesh.vertices.iter().any(|v| {
                     !v.pos.is_finite()
                         || !v.uv.is_finite()
-                        || v.pos.x.abs() > 1e6
-                        || v.pos.y.abs() > 1e6
                 })
                 || !valid_clip(primitive.clip_rect)
             {
-                return Err(format!("Invalid egui mesh geometry/clip: vertices={} indices={} valid_indices={} clip={:?} first_invalid_vertex={:?}", mesh.vertices.len(), mesh.indices.len(), mesh.is_valid(), primitive.clip_rect, mesh.vertices.iter().enumerate().find(|(_,v)| !v.pos.is_finite() || !v.uv.is_finite() || v.pos.x.abs() > 1e6 || v.pos.y.abs() > 1e6).map(|(index,v)|(index,v.pos,v.uv,!v.pos.is_finite(),!v.uv.is_finite(),v.pos.x.abs()>1e6||v.pos.y.abs()>1e6))));
+                return Err(format!("Invalid egui mesh geometry/clip: vertices={} indices={} valid_indices={} clip={:?} first_invalid_vertex={:?}", mesh.vertices.len(), mesh.indices.len(), mesh.is_valid(), primitive.clip_rect, mesh.vertices.iter().enumerate().find(|(_,v)| !v.pos.is_finite() || !v.uv.is_finite() ).map(|(index,v)|(index,v.pos,v.uv,!v.pos.is_finite(),!v.uv.is_finite(),v.pos.x.abs()>1e6||v.pos.y.abs()>1e6))));
             }
             let base = count;
             count = count
@@ -1107,6 +1105,17 @@ fn encoded_pixel(c: egui::Color32, font: bool) -> [u8; 4] {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn far_finite_source_positions_use_shader_domain_not_arbitrary_cap() {
+        use super::*;
+        let x=19_782_046_f32;let y=9_891_179_f32;
+        assert!(x.abs()>1e6&&y.abs()>1e6); // retained old admission rejects
+        for extent in [(1,1),(1280,800),(16384,16384)] {
+            assert!(shader_logical_size([[-x,x],[-y,y]],1.,extent).is_ok());
+        }
+        assert!(shader_logical_size([[0.,f32::MAX],[0.,64.]],1.,(64,64)).is_err());
+    }
+
     #[test]
     fn unbounded_clip_is_target_bounded_without_weakening_geometry() {
         use super::*;
