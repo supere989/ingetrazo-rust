@@ -218,6 +218,12 @@ unsafe extern "C" fn release_advances(data: *mut c_void) {
 /// Immutable read-only font bytes remain alive until AFTER the HarfBuzz font drops.
 /// Reuse this object for all strings of the same face; buffers are per shape call.
 /// Deliberately not Send/Sync: no unsafe cross-thread ownership promise.
+/// Device-resolution antialiased coverage, with FreeType baseline bearings.
+/// The font owner remains immutable; each operation restores the face transform.
+#[derive(Debug,Clone)]
+pub struct RasterGlyph {pub left:i32,pub top:i32,pub width:usize,pub height:usize,pub coverage:Vec<u8>}
+struct RestoreFaceTransform(ft::FT_Face);
+impl Drop for RestoreFaceTransform {fn drop(&mut self){unsafe{ft::FT_Set_Transform(self.0,std::ptr::null_mut(),std::ptr::null_mut());}}}
 pub struct PaperFont {
     font: Handle<hb::hb_font_t>,
     bytes: Arc<[u8]>,
@@ -344,6 +350,35 @@ impl PaperFont {
                 descent_26_6,
                 leading_26_6,
             })
+        }
+    }
+    /// Render an existing pixel100 glyph at the actual canvas device transform.
+    /// Phases are 1/64 device pixel; this does not modify shaping/outline caches.
+    pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic_shear:f64)->Result<RasterGlyph,String>{
+        if !scale.is_finite()||scale<=0.||scale>40.||phase.iter().any(|&p|p>=64)||!italic_shear.is_finite()||italic_shear.abs()>1.{return Err("Canvas glyph transform outside domain".into());}
+        unsafe{
+            let geometry=self.data.as_ref().geometry.as_ref().ok_or("Canvas glyph requires native font geometry")?;
+            let face=geometry.face.raw();if glyph>=(*face).num_glyphs as u32{return Err("Canvas glyph index outside font".into());}
+            let mut matrix=ft::FT_Matrix{xx:(scale*65536.).round()as _,xy:(scale*italic_shear*65536.).round()as _,yx:0,yy:(scale*65536.).round()as _};
+            let mut delta=ft::FT_Vector{x:phase[0]as _,y:-(phase[1]as ft::FT_Pos)};
+            ft::FT_Set_Transform(face,&mut matrix,&mut delta);let _restore=RestoreFaceTransform(face);
+            if ft::FT_Load_Glyph(face,glyph,geometry.flags|ft::FT_LOAD_NO_BITMAP)!=0||(*face).glyph.is_null(){return Err("Canvas glyph load failed".into());}
+            let slot=(*face).glyph;
+            if (*slot).format!=ft::FT_GLYPH_FORMAT_OUTLINE{return Err("Canvas glyph outline format unavailable".into());}
+            let mut bbox:ft::FT_BBox=std::mem::zeroed();ft::FT_Outline_Get_CBox(&(*slot).outline,&mut bbox);
+            let w=bbox.xMax.checked_sub(bbox.xMin).and_then(|v|v.checked_add(127)).map(|v|v/64+2).filter(|&v|(0..=4096).contains(&v)).ok_or("Canvas glyph dimension exceeded")?;
+            let h=bbox.yMax.checked_sub(bbox.yMin).and_then(|v|v.checked_add(127)).map(|v|v/64+2).filter(|&v|(0..=4096).contains(&v)).ok_or("Canvas glyph dimension exceeded")?;
+            if w.checked_mul(h).is_none_or(|n|n>4*1024*1024){return Err("Canvas glyph coverage budget exceeded".into());}
+            if ft::FT_Render_Glyph(slot,ft::FT_RENDER_MODE_NORMAL)!=0{return Err("Canvas glyph raster failed".into());}
+            let bitmap=&(*slot).bitmap;let width=bitmap.width as usize;let height=bitmap.rows as usize;
+            let bytes=width.checked_mul(height).filter(|&n|n<=4*1024*1024).ok_or("Canvas glyph coverage budget exceeded")?;
+            if width>4096||height>4096{return Err("Canvas glyph dimension exceeded".into());}
+            let mut coverage=Vec::new();coverage.try_reserve_exact(bytes).map_err(|_|"Canvas glyph coverage allocation failed")?;coverage.resize(bytes,0);
+            if bytes>0{
+                if bitmap.buffer.is_null()||bitmap.pixel_mode as u32!=ft::FT_PIXEL_MODE_GRAY||bitmap.num_grays!=256||(bitmap.pitch.unsigned_abs()as usize)<width{return Err("Invalid canvas glyph bitmap".into());}
+                for y in 0..height{let row=bitmap.buffer.offset((y as isize)*(bitmap.pitch as isize));coverage[y*width..(y+1)*width].copy_from_slice(std::slice::from_raw_parts(row,width));}
+            }
+            Ok(RasterGlyph{left:(*slot).bitmap_left,top:(*slot).bitmap_top,width,height,coverage})
         }
     }
     /// Cached outline points/glyphs, useful for warm font-publication accounting.
