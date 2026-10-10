@@ -1,0 +1,14 @@
+{
+  "candidate": "e71bc48def2a1cbbb9658758393ac9ec0db6b4d4",
+  "old_fixture_sha256": "6d43bb750b939c360e2444e403727725fdc5a38e940419916a1b63ac00c36cd2",
+  "fixed_fixture_sha256": "0e6ab9476d5d23379ad0bf6d1ad2ae48dd988876d617dbbc97e6d872e21fec08",
+  "root_fixed_binary_sha256": "279663b4b781da00f015d0dc6efd12c00e087ecc9cd27746a25ba238c4f1c5ab",
+  "root_fixed_binary_current_sha256": "279663b4b781da00f015d0dc6efd12c00e087ecc9cd27746a25ba238c4f1c5ab",
+  "same_root_binary": true,
+  "controls": 6,
+  "expected_negative_controls": 2,
+  "all_handles": "terminal",
+  "scope": "actual eframe screenshot callbacks through unchanged render_viewport; deterministic adversarial producer at callback delivery; not Offset geometry/full UI parity",
+  "build": "CARGO_TARGET_DIR=/tmp/ingetrazo-offset-capture-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo build --locked -j2 -p ingetrazo-gui --example offset_capture_race_fixture",
+  "replay": "QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=/tmp/ingetrazo-offset-capture-target INGETRAZO_CAPTURE_RACE_OUT=<fresh-owned-dir> /tmp/ingetrazo-parity-python/bin/python scripts/check-offset-capture-race.py"
+}

@@ -1,0 +1,135 @@
+{
+  "passed": true,
+  "candidate": "e71bc48def2a1cbbb9658758393ac9ec0db6b4d4",
+  "binary_sha256": "3b03609abc6808b9e602a2ebb68fb99a955fc4f3c069d8d8f38b4516cae33412",
+  "fixture_sha256": "8122885d6193870f5653ef084f24049790485b245ec62b458a32be9f6cc0ab53",
+  "checker_sha256": "2ab1a06881db9b3afd3902751b37c7d9f6d149a4e083287fe1dcdabe22415500",
+  "states": [
+    {
+      "legacy": false,
+      "mode": "normal",
+      "exit": 0,
+      "images": {
+        "A": {
+          "sha256": "083a7d8ca587debb920c3419aaa6cc82501f7b89a956dd302497da409f4e9e38",
+          "size": [
+            1000,
+            700
+          ]
+        }
+      },
+      "callbacks": {
+        "callbacks": 1,
+        "legacy": false,
+        "mode": "normal",
+        "injected": true
+      },
+      "scope": "real production eframe screenshot callback; observer stimulus only; no injected image/event",
+      "negative_reproduced": false
+    },
+    {
+      "legacy": false,
+      "mode": "interleaved",
+      "exit": 0,
+      "images": {
+        "A": {
+          "sha256": "083a7d8ca587debb920c3419aaa6cc82501f7b89a956dd302497da409f4e9e38",
+          "size": [
+            1000,
+            700
+          ]
+        },
+        "B": {
+          "sha256": "083a7d8ca587debb920c3419aaa6cc82501f7b89a956dd302497da409f4e9e38",
+          "size": [
+            1000,
+            700
+          ]
+        }
+      },
+      "callbacks": {
+        "callbacks": 2,
+        "legacy": false,
+        "mode": "interleaved",
+        "injected": true
+      },
+      "scope": "real production eframe screenshot callback; observer stimulus only; no injected image/event",
+      "negative_reproduced": false
+    },
+    {
+      "legacy": false,
+      "mode": "empty",
+      "exit": 0,
+      "images": {
+        "A": {
+          "sha256": "083a7d8ca587debb920c3419aaa6cc82501f7b89a956dd302497da409f4e9e38",
+          "size": [
+            1000,
+            700
+          ]
+        }
+      },
+      "callbacks": {
+        "callbacks": 1,
+        "legacy": false,
+        "mode": "empty",
+        "injected": true
+      },
+      "scope": "real production eframe screenshot callback; observer stimulus only; no injected image/event",
+      "negative_reproduced": false
+    },
+    {
+      "legacy": true,
+      "mode": "normal",
+      "exit": 0,
+      "images": {
+        "A": {
+          "sha256": "083a7d8ca587debb920c3419aaa6cc82501f7b89a956dd302497da409f4e9e38",
+          "size": [
+            1000,
+            700
+          ]
+        }
+      },
+      "callbacks": {
+        "callbacks": 1,
+        "legacy": true,
+        "mode": "normal",
+        "injected": true
+      },
+      "scope": "real production eframe screenshot callback; observer stimulus only; no injected image/event",
+      "negative_reproduced": false
+    },
+    {
+      "legacy": true,
+      "mode": "interleaved",
+      "exit": 0,
+      "images": {
+        "B": {
+          "sha256": "083a7d8ca587debb920c3419aaa6cc82501f7b89a956dd302497da409f4e9e38",
+          "size": [
+            1000,
+            700
+          ]
+        }
+      },
+      "callbacks": {
+        "callbacks": 2,
+        "legacy": true,
+        "mode": "interleaved",
+        "injected": true
+      },
+      "scope": "real production eframe screenshot callback; observer stimulus only; no injected image/event",
+      "negative_reproduced": true
+    },
+    {
+      "legacy": true,
+      "mode": "empty",
+      "exit": 101,
+      "images": {},
+      "callbacks": null,
+      "scope": "real production eframe screenshot callback; observer stimulus only; no injected image/event",
+      "negative_reproduced": true
+    }
+  ]
+}

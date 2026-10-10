@@ -1,0 +1,9 @@
+# Independent Offset capture race review
+
+Candidate e71bc48def2a1cbbb9658758393ac9ec0db6b4d4 read-only root source audit. Original retained cloud panic is Unsupported format Unknown at screenshot save. Python write_text truncated capture.txt before data publication; empty observed after a prior nonempty request changed mutable self.capture and attempted .png. Root fix atomically renames producer requests, rejects empty consumer requests, and carries filename in screenshot UserData.
+
+One named reduced-debug probe built with exclusively borrowed terminal root target. Original root-fixed binary hash is unchanged. All production code/root source unchanged; isolated new fixture copies actual original/fixed screenshot branches literally. It detects a genuine arriving egui Screenshot callback and adversarially publishes B or empty BEFORE ordinary capture request read. No image, screenshot event or callback is injected. This tests a deterministic possible interleaving instead of relying on scheduling luck.
+
+Six real application executions: fixed normal/interleaved/empty and old normal/interleaved/empty. Fixed controls exit0 and actual decoded PNGs A / A+B / A respectively. Both normal variants succeed, showing probe pipeline itself works. Old interleaved exits0 but saves only B, losing A; old empty exitsnonzero with the same Unsupported/Unknown image format panic. Positive candidate demands exact filename inventories and callback counts; expected old failures remain separate. Captures decode valid1000x700 images. This closes the bounded empty/interleaved capture handoff regression; it is not new geometry or broad renderer acceptance.
+
+No retries, tolerance widening or broad suite. Owned application/Xvfb processes terminated; evidence/hashes retained. Borrowed root target is not purged. Raw request files are committed regression evidence; temporary run outputs will be removed after handoff.

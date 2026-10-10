@@ -1,0 +1,4 @@
+
+thread 'main' (1165794) panicked at crates/ingetrazo-gui/examples/offset_capture_race_fixture.rs:21:307:
+called `Result::unwrap()` on an `Err` value: Unsupported(UnsupportedError { format: Unknown, kind: Format(Unknown) })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
