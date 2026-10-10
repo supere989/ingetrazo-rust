@@ -1,0 +1,162 @@
+{
+  "linked": [
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "redo": 0,
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": "Layer0",
+      "undo": 1
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 1,
+      "sibling": "Layer0",
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": "Layer0",
+      "undo": 1
+    }
+  ],
+  "nested_linked": [
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "redo": 0,
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": "Layer0",
+      "undo": 1
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 1,
+      "sibling": "Layer0",
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": "Layer0",
+      "undo": 1
+    }
+  ],
+  "nested_single": [
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "redo": 0,
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": null,
+      "undo": 1
+    },
+    {
+      "inside": "Tagged",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 1,
+      "sibling": null,
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": null,
+      "undo": 1
+    }
+  ],
+  "single": [
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "redo": 0,
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": null,
+      "undo": 1
+    },
+    {
+      "inside": "Tagged",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 1,
+      "sibling": null,
+      "undo": 0
+    },
+    {
+      "inside": "Layer0",
+      "layers": [
+        "Layer0"
+      ],
+      "outside": "Layer0",
+      "redo": 0,
+      "sibling": null,
+      "undo": 1
+    }
+  ]
+}
