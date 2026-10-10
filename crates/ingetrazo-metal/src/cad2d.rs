@@ -91,6 +91,9 @@ pub struct MetalCad2d {
 }
 impl Drop for MetalCad2d {
     fn drop(&mut self) {
+        // Observe real completed commands without waiting before deciding whether
+        // ownership is unknown. A caller need not explicitly poll before Drop.
+        let _=self.poll_completed();
         if !self.inner.frames.is_empty() {
             self.inner.metal.poisoned.store(true, Ordering::Release);
         }
@@ -693,5 +696,96 @@ impl MetalCad2d {
             output.extend_from_slice(&row[..self.inner.width * 4]);
         }
         Ok(Some(output))
+    }
+}
+
+#[cfg(test)]
+mod cad_drop_controls {
+    use super::*;
+    use ingetrazo_render::cad2d::Vertex;
+    fn geometry() -> Arc<Geometry> {
+        Geometry::new(
+            vec![
+                Vertex {
+                    position: [0., 0.],
+                    coverage: 1.,
+                },
+                Vertex {
+                    position: [8., 0.],
+                    coverage: 1.,
+                },
+                Vertex {
+                    position: [8., 8.],
+                    coverage: 1.,
+                },
+                Vertex {
+                    position: [0., 8.],
+                    coverage: 1.,
+                },
+            ],
+            vec![0, 1, 2, 0, 2, 3],
+        )
+        .unwrap()
+    }
+    fn batches() -> [Batch; 1] {
+        [Batch {
+            first: 0,
+            count: 6,
+            color: ingetrazo_render::cad2d::EncodedRgba([1., 0., 0., 1.]),
+        }]
+    }
+    fn await_actual(command: &ProtocolObject<dyn MTLCommandBuffer>) {
+        let start = std::time::Instant::now();
+        while command.status() != MTLCommandBufferStatus::Completed {
+            assert_ne!(command.status(), MTLCommandBufferStatus::Error);
+            assert!(start.elapsed() < Duration::from_secs(5));
+            std::thread::sleep(Duration::from_millis(1));
+        }
+    }
+    #[test]
+    fn completed_async_drop_collects_without_explicit_poll() {
+        let metal = NativeMetal::new().unwrap();
+        eprintln!("Native Metal completed Drop device={}", metal.info.name);
+        let budget = metal.budget.clone();
+        let mut cad = MetalCad2d::new_ordered_spans(metal, 8, 8).unwrap();
+        cad.render(&geometry(), &batches(), Pose::default(), [255; 4])
+            .unwrap();
+        assert_eq!(cad.inner.frames.len(), 1);
+        await_actual(&cad.inner.frames.front().unwrap().command);
+        assert_eq!(cad.inner.frames.len(), 1);
+        assert!(budget.lock().unwrap().total_committed() > 0);
+        drop(cad);
+        assert_eq!(budget.lock().unwrap().total_committed(), 0);
+        eprintln!("PASS completed async CAD Drop retires actual owners without caller poll");
+    }
+    #[test]
+    fn actual_pending_drop_quarantines_device_and_ledger() {
+        let metal = NativeMetal::new().unwrap();
+        eprintln!("Native Metal pending Drop device={}", metal.info.name);
+        let budget = metal.budget.clone();
+        let poisoned = metal.poisoned.clone();
+        let gate = metal
+            .device
+            .newSharedEvent()
+            .expect("Actual shared event required for pending control");
+        let queue = metal.queue.clone();
+        let mut cad = MetalCad2d::new_ordered_spans(metal, 8, 8).unwrap();
+        let blocker = queue.commandBuffer().unwrap();
+        blocker.encodeWaitForEvent_value(ProtocolObject::from_ref(&*gate), 1);
+        blocker.commit();
+        cad.render(&geometry(), &batches(), Pose::default(), [255; 4])
+            .unwrap();
+        let command = cad.inner.frames.front().unwrap().command.clone();
+        assert_ne!(command.status(), MTLCommandBufferStatus::Completed);
+        let committed = budget.lock().unwrap().total_committed();
+        drop(cad);
+        assert!(poisoned.load(Ordering::Acquire));
+        assert_eq!(budget.lock().unwrap().total_committed(), committed);
+        gate.setSignaledValue(1);
+        await_actual(&command);
+        assert_eq!(budget.lock().unwrap().total_committed(), committed);
+        eprintln!(
+            "PASS actual pending CAD Drop retains owners/ledger despite later actual completion; process-lifetime quarantine"
+        );
     }
 }
