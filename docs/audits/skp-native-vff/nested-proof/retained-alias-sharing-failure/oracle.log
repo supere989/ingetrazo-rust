@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/check-native-skp-vff.py", line 44, in <module>
+    a=scene(source);b=scene(native);(out/(name+'-comparison.json')).write_text(json.dumps({'original':a,'native':b},indent=2)+'\n');assert a==b,(name,'source/native document mismatch; retained')
+                                                                                                                                           ^^^^
+AssertionError: ('nested-equal-paint-protos', 'source/native document mismatch; retained')
