@@ -22,8 +22,8 @@ impl IngeTrazoApp {
             }
             self.save_undo_state();i
         } else {
-            let old=self.scene.groups.len();self.make_group();
-            if self.scene.groups.len()==old {return;}
+            let old_version=self.scene.version;self.make_group();
+            if self.scene.version==old_version {return;}
             self.scene.groups.len()-1
         };
         let id=self.scene.groups[index].id;
@@ -180,6 +180,23 @@ mod tests {
         assert_eq!(app.scene.groups[3].children[0].mesh.vertices[0].position.z,11.);
         assert_eq!(app.scene.groups[2].children[0].id,child_ids[0]);assert_eq!(app.scene.groups[3].children[0].id,child_ids[1]);
         app.undo();assert_eq!(app.scene,before);
+    }
+
+    #[test]
+    fn mixed_selection_component_creation_and_explosion_are_reversible() {
+        let mut app=app();
+        let verts=[DVec3::new(0.,0.,2.),DVec3::new(1.,0.,2.),DVec3::new(0.,1.,2.)].map(|p|app.scene.mesh.add_vertex(p));
+        let face=app.scene.mesh.add_face(verts.to_vec(),vec![]).unwrap();
+        app.scene.mesh.faces[face].attrs.insert("opaque".into(),serde_json::json!(23));
+        app.scene.select(SelectionItem::Face(face));let before=app.scene.clone();
+        app.make_component();assert_eq!(app.scene.groups.len(),2);
+        let index=app.scene.selection.iter().find_map(|s|if let SelectionItem::Group(i)=s{Some(*i)}else{None}).unwrap();
+        assert!(app.scene.groups[index].component_definition.is_some());
+        assert_eq!(app.scene.groups[index].children.len(),1);
+        assert_eq!(app.scene.groups[index].mesh.faces[0].attrs["opaque"],23);
+        let grouped=app.scene.clone();app.explode_group();
+        assert_eq!(app.scene.mesh.faces[0].attrs["opaque"],23);assert_eq!(app.scene.groups.len(),2);
+        app.undo();assert_eq!(app.scene,grouped);app.undo();assert_eq!(app.scene,before);
     }
 
 }

@@ -458,67 +458,20 @@ impl IngeTrazoApp {
     }
 
     pub fn make_group(&mut self) {
-        if self.scene.selection.is_empty() {
-            self.status_message = ingetrazo_core::i18n::tr("Select geometry to make a group");
-            return;
+        let before=self.scene.clone();
+        let name=format!("{} {}",ingetrazo_core::i18n::tr("Group"),self.scene.groups.len()+1);
+        match self.scene.group_selection(name) {
+            Ok(_)=>{self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Created group");},
+            Err(err)=>self.status_message=err,
         }
-        self.save_undo_state();
-        let idx = self.scene.groups.len() + 1;
-        let mut g = ingetrazo_core::groups::Group::new(format!("{} {idx}", ingetrazo_core::i18n::tr("Group")));
-        let mut f_ids: Vec<usize> = self.scene.selection.iter().filter_map(|s| match s {
-            SelectionItem::Face(id) => Some(*id),
-            _ => None,
-        }).collect();
-        f_ids.sort_unstable_by(|a, b| b.cmp(a));
-        for fid in f_ids {
-            if fid < self.scene.mesh.faces.len() {
-                let f = self.scene.mesh.faces.remove(fid);
-                let mut v_indices = Vec::new();
-                for vid in f.vertices {
-                    if vid < self.scene.mesh.vertices.len() {
-                        let pos = self.scene.mesh.vertices[vid].position;
-                        let n_vid = g.mesh.add_vertex(pos);
-                        v_indices.push(n_vid);
-                    }
-                }
-                g.mesh.add_face(v_indices, vec![]);
-            }
-        }
-        g.mesh.rebuild_spatial_index();
-        self.scene.groups.push(g);
-        self.scene.clear_selection();
-        self.scene.bump_version();
-        self.status_message = ingetrazo_core::i18n::tr("Created group");
     }
 
     pub fn explode_group(&mut self) {
-        let g_indices: Vec<usize> = self.scene.selection.iter().filter_map(|s| match s {
-            SelectionItem::Group(idx) => Some(*idx),
-            _ => None,
-        }).collect();
-        if g_indices.is_empty() {
-            self.status_message = ingetrazo_core::i18n::tr("Select a group to explode");
-            return;
+        let before=self.scene.clone();
+        match self.scene.explode_selected_groups() {
+            Ok(())=>{self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Exploded group");},
+            Err(err)=>self.status_message=err,
         }
-        self.save_undo_state();
-        for g_idx in g_indices {
-            if g_idx < self.scene.groups.len() {
-                let g = self.scene.groups.remove(g_idx);
-                for f in g.mesh.faces {
-                    let mut v_indices = Vec::new();
-                    for vid in f.vertices {
-                        let wp = g.transform.transform_point3(g.mesh.vertices[vid].position);
-                        let n_vid = self.scene.mesh.add_vertex(wp);
-                        v_indices.push(n_vid);
-                    }
-                    self.scene.mesh.add_face(v_indices, vec![]);
-                }
-            }
-        }
-        self.scene.clear_selection();
-        self.scene.mesh.rebuild_spatial_index();
-        self.scene.bump_version();
-        self.status_message = ingetrazo_core::i18n::tr("Exploded group");
     }
 
     pub fn hide_selection(&mut self) {
