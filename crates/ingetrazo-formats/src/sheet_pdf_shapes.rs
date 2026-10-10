@@ -103,6 +103,7 @@ fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
         stroke_options: None,
         clip: command.clip.as_ref().map(|p| polygon(p, offset)),
         clip_intersection: None,
+        flatten_transform: false,
     })
 }
 /// Partial painter integration: all visible unsupported content fails closed.
