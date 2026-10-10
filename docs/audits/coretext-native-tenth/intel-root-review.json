@@ -1,0 +1,16 @@
+{
+  "artifact_sha256": "3b1904191ecb26cce6ee213b726b0ee4c127219e4d41cb285eb1ebd8d9d0844d",
+  "source": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+  "gpu_images": {
+    "helvetica": "exact 800x300 RGBA",
+    "helvetica-bold": "exact 800x300 RGBA",
+    "helvetica-italic": "exact 800x300 RGBA",
+    "times-bold-italic": "exact 800x300 RGBA",
+    "cjk": "exact 800x300 RGBA",
+    "arabic": "exact 800x300 RGBA",
+    "italic-overlap": "exact 800x300 RGBA",
+    "arabic-marks": "exact 800x300 RGBA",
+    "times-overlap": "exact 800x300 RGBA"
+  },
+  "scope": "Independent root decoding of retained artifact; no new build/capture. Physical Mac and merged-source runtime remain open."
+}
