@@ -5,6 +5,7 @@ struct Probe;
 impl ApplicationHandler for Probe{
  fn resumed(&mut self,event:&ActiveEventLoop){
   let window=event.create_window(Window::default_attributes().with_title("IngeTrazo startup owner probe").with_inner_size(winit::dpi::PhysicalSize::new(800,600))).unwrap();
+  if std::env::var_os("INGETRAZO_STARTUP_EXPECT_REFUSAL").is_some(){let audit=System::verify_startup_refusal_for_probe("IngeTrazo startup owner probe",&window).unwrap();println!("STARTUP_ACTUAL_ADAPTER_REFUSAL_PASS audit={}",serde_json::to_string(&audit).unwrap());event.exit();return;}
   for stage in [Stage::StartupInstance,Stage::StartupSurface,Stage::StartupDevice,Stage::StartupPool,Stage::StartupCommand,Stage::StartupSwapchain,Stage::StartupSync,Stage::StartupRenderer]{
    let audit=System::verify_startup_cancellation_for_probe("IngeTrazo startup owner probe",&window,stage).unwrap();
    println!("STARTUP_CANCEL {stage:?} audit={}",serde_json::to_string(&audit).unwrap());

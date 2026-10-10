@@ -158,6 +158,15 @@ impl System {
         if observed.created!=observed.destroyed{return Err(format!("Unsubmitted startup owner leak: {observed:?}"));}
         Ok(observed)
     }
+    /// Observe a real strict-adapter refusal (no fabricated driver return).
+    pub fn verify_startup_refusal_for_probe(title:&str,window:&Window)->Result<resize::Audit,String>{
+        let audit=std::sync::Arc::new(std::sync::Mutex::new(resize::Audit::default()));
+        let error=match Self::new_controlled(title,window,&resize::Control{cancel:None,audit:Some(audit.clone())}){Err(error)=>error,Ok(_)=>return Err("Expected unmatched adapter override".into())};
+        if !error.to_string().starts_with("No suitable Vulkan adapter"){return Err(error.to_string());}
+        let observed=audit.lock().map_err(|_|"Audit lock poisoned")?.clone();
+        if observed.created!=observed.destroyed||observed.created.get(&resize::Kind::Surface)!=Some(&1)||observed.created.contains_key(&resize::Kind::Device){return Err(format!("Adapter refusal leaked unpublished context: {observed:?}"));}
+        Ok(observed)
+    }
     fn new_controlled(title:&str,window:&Window,control:&resize::Control)->Result<Self,Box<dyn Error>>{
         log::info!("Create application");
 
