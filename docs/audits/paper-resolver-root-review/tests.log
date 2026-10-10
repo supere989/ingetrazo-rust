@@ -1,0 +1,324 @@
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-paper-font-root/crates/ingetrazo-formats)
+warning: `ingetrazo-formats` (lib) generated 1 warning
+warning: function `main` is never used
+   --> crates/ingetrazo-formats/examples/paper_subset_fixture.rs:170:4
+    |
+170 | fn main() {
+    |    ^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (example "paper_text_pdf_fixture") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.94s
+     Running unittests src/lib.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/ingetrazo_formats-d1f233a28d1b5b0f)
+
+running 31 tests
+test dae_import::image_binding_tests::direct_image_and_scoped_sampler_chains_reject_broken_binding ... ok
+test dae::tests::test_dae_export_basic_cube ... ok
+test dae_import::uv_affine_tests::translated_reflected_world_uv_and_original_non_affine_fit ... ok
+test dae_import::image_file_tests::escaped_local_image_bytes_are_exact_and_remote_and_malformed_uris_refused ... ok
+test dae_import::tests::geographic_asset_preserves_site_anchor ... ok
+test dae_import::representative_image_tests::original_qt_opaque_fixed_point_and_alpha_weighted_controls ... ok
+test dae_import::tests::strided_accessors_instances_units_upaxis_and_reflection_are_composed ... ok
+test exchange::tests::nested_holes_reflections_and_hidden_containers_preserve_world_surface ... ok
+test gltf::tests::hidden_parent_suppresses_descendants_and_empty_has_no_accessors ... ok
+test dae_import::tests::diffuse_effect_is_bound_by_primitive_symbol_not_global_material_order ... ok
+test dae_import::tests::interleaved_texture_coordinates_keep_authored_indices_and_reject_truncation ... ok
+test dxf::tests::linework_layers_bulges_and_invalid_entities_are_transactional ... ok
+test dae_import::tests::truncated_indices_accessors_and_node_cycles_fail_without_partial_scene ... ok
+test gltf::tests::reflected_instance_retains_outward_winding ... ok
+test gltf::tests::nested_world_geometry_is_exported ... ok
+test ifc::tests::test_ifc_guid_length_and_validity ... ok
+test dae_import::tests::textured_scene_assembly_keeps_bytes_and_world_uv_through_reflection ... ok
+test ifc::tests::test_ifc_export_basic_structure ... ok
+test gltf::tests::textual_and_binary_containers_are_distinct ... ok
+test obj::import_tests::bad_indices_or_nonfinite_vertices_never_partially_modify_scene ... ok
+test obj::asset_tests::missing_texture_fails_before_destination_or_sidecar_mutation ... ok
+test obj::asset_tests::material_texture_bytes_and_local_affine_uv_survive_nested_export ... ok
+test igz::sheet_shape_roundtrip_tests::shape_edit_preserves_native_unknowns_and_other_categories ... ok
+test obj::import_tests::named_objects_negative_indices_and_linework_are_retained ... ok
+test tests::test_stl_export_and_import ... ok
+test tests::test_convert_file ... ok
+test tests::test_obj_export_and_import ... ok
+test gltf_import::tests::external_buffer_nested_transform_material_texture_uv_and_title ... ok
+test tests::test_igz_save_and_load ... ok
+test dae_import::reference_threshold_tests::original_editable_threshold_and_reference_boundary_stations ... ok
+test dae_import::reference_threshold_tests::reference_instances_preserve_names_shared_definition_and_placements ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/native_preservation.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/native_preservation-6c0c8866587eb280)
+
+running 17 tests
+test replacement_face_does_not_inherit_deleted_face_metadata ... ok
+test authored_f64_coordinates_survive_exact_native_document_reopen ... ok
+test renamed_and_reordered_views_and_sections_keep_identity_metadata ... ok
+test survey_points_and_paths_preserve_metadata_through_rename_reorder_and_edit ... ok
+test dimensions_use_original_schema_and_keep_identity_on_reorder_edits ... ok
+test fresh_rust_sheet_saves_in_python_composition_schema ... ok
+test native_camera_section_and_datum_edits_use_original_schema ... ok
+test original_composer_edits_preserve_unsupported_items_and_title_rows ... ok
+test texture_files_with_same_basename_get_distinct_archive_entries ... ok
+test frame_camera_native_edit_preserves_opaque_metadata_and_reopens_lens ... ok
+test edited_vector_ink_controls_reopen_with_original_field_names ... ok
+test fresh_saved_view_references_exact_persisted_group_and_section_uids ... ok
+test native_noop_preserves_every_nested_value_and_repeated_save ... ok
+test published_mesh_identity_includes_plain_placements_but_not_equal_prototypes ... ok
+test edited_nested_instance_detaches_geometry_preserving_original_definition_and_metadata ... ok
+test zip_embedded_texture_and_survey_bytes_survive_without_disk_files ... ok
+test explicit_components_share_updates_while_plain_proto_groups_remain_independent ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/preservation_acceptance.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/preservation_acceptance-89e136453aa6a9e1)
+
+running 3 tests
+test deleting_edge_does_not_strip_surviving_curve_metadata ... ok
+test renamed_material_retains_unknown_source_attributes ... ok
+test edited_geometry_material_layer_and_group_replace_raw_baseline ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/roundtrips.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/roundtrips-e4d21b48153027da)
+
+running 9 tests
+test test_dxf_export_and_import ... ok
+test test_glb_export ... ok
+test test_stl_binary_roundtrip ... ok
+test test_stl_ascii_roundtrip ... ok
+test test_obj_export_and_import_roundtrip ... ok
+test test_stl_auto_detect ... ok
+test test_igz_format1_roundtrip ... ok
+test test_igz_format2_zip_roundtrip ... ok
+test test_load_example_banca_pergola ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/sheet_pdf.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/sheet_pdf-1d866e653de07eb0)
+
+running 15 tests
+test empty_atlas_or_invalid_stroke_is_refused ... ok
+test invalid_export_preserves_existing_destination ... ok
+test invalid_qt_paper_export_preserves_destination_and_rejects_stroke_options ... ok
+test original_qt_paper_numerals_are_explicit_and_generic_precision_is_retained ... ok
+test shape_export_keeps_source_visibility_order_and_physical_origin ... ok
+test vector_coordinates_keep_authored_double_precision ... ok
+test valid_physical_vector_page_contains_no_image_or_process ... ok
+test visible_unsupported_items_refuse_but_hidden_items_do_not ... ok
+test source_device_outlines_refuse_wrong_policy_without_touching_destination ... ok
+test failed_destination_rename_leaves_directory_and_removes_temporary ... ok
+test second_physical_clip_is_admitted_before_atomic_destination_write ... ok
+test preparation_rejects_total_draws_across_individually_admitted_shapes ... ok
+test numeric_serialization_preserves_legacy_boundary_bytes ... ok
+test preparation_admits_aggregate_paths_before_returning_large_page ... ok
+test atlas_preparation_refuses_combined_draws_before_retaining_all_pages ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+   Doc-tests ingetrazo_formats
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

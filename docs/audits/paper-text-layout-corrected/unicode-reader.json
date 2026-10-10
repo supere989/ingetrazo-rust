@@ -1,0 +1,121 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "accents",
+      "original": "Planta \u2014 secci\u00f3n \u00f1 caf\u00e9",
+      "native": "Planta \u2014 secci\u00f3n \u00f1 caf\u00e9",
+      "passed": true
+    },
+    {
+      "case": "arabic",
+      "original": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629 123",
+      "native": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629 123",
+      "passed": true
+    },
+    {
+      "case": "arabic_run",
+      "original": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      "native": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      "passed": true
+    },
+    {
+      "case": "bold",
+      "original": "Office AVATAR",
+      "native": "Office AVATAR",
+      "passed": true
+    },
+    {
+      "case": "center",
+      "original": "Centered title",
+      "native": "Centered title",
+      "passed": true
+    },
+    {
+      "case": "cjk",
+      "original": "\u5e73\u9762\u56f3",
+      "native": "\u5e73\u9762\u56f3",
+      "passed": true
+    },
+    {
+      "case": "combining",
+      "original": "\u00c1 \u00e9 q\r\n\u0308",
+      "native": "\u00c1 \u00e9 q\r\n\u0308",
+      "passed": true
+    },
+    {
+      "case": "hebrew",
+      "original": "\u05e9\u05dc\u05d5\u05dd 123",
+      "native": "\u05e9\u05dc\u05d5\u05dd 123",
+      "passed": true
+    },
+    {
+      "case": "hebrew_run",
+      "original": "\u05e9\u05dc\u05d5\u05dd",
+      "native": "\u05e9\u05dc\u05d5\u05dd",
+      "passed": true
+    },
+    {
+      "case": "italic",
+      "original": "Office AVATAR",
+      "native": "Office AVATAR",
+      "passed": true
+    },
+    {
+      "case": "kerns",
+      "original": "To WA AV Yi",
+      "native": "To WA AV Yi",
+      "passed": true
+    },
+    {
+      "case": "latin",
+      "original": "Office AVATAR fi ffi",
+      "native": "Office AVATAR fi ffi",
+      "passed": true
+    },
+    {
+      "case": "mono",
+      "original": "Office ffi AVATAR",
+      "native": "Office ffi AVATAR",
+      "passed": true
+    },
+    {
+      "case": "newlines",
+      "original": "Floor 1\r\nSection A",
+      "native": "Floor 1\r\nSection A",
+      "passed": true
+    },
+    {
+      "case": "right",
+      "original": "Right title",
+      "native": "Right title",
+      "passed": true
+    },
+    {
+      "case": "serif",
+      "original": "Office ffi AVATAR",
+      "native": "Office ffi AVATAR",
+      "passed": true
+    },
+    {
+      "case": "serif_bold",
+      "original": "ff ffi fi fl",
+      "native": "ff ffi fi fl",
+      "passed": true
+    },
+    {
+      "case": "underline",
+      "original": "Ground level",
+      "native": "Ground level",
+      "passed": true
+    },
+    {
+      "case": "wrap",
+      "original": "Long project\r\nname with\r\nseveral words\r\nthat wrap onto a\r\nsecond line",
+      "native": "Long project\r\nname with\r\nseveral words\r\nthat wrap onto a\r\nsecond line",
+      "passed": true
+    }
+  ],
+  "negative": "same-size parse-valid ToUnicode mutation rejected",
+  "scope": "Nineteen retained actual helper pages; no application/UI or broader layout claim"
+}
