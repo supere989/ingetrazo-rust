@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all eighteen PDF pages exact; two Canvas cases
 
 ## Dated implementation and verification evidence
 
+Editable scripting review (2026-10-10, review branch): root freshly reproduces four original rollback states and compares them exactly with the corrected retained native report; nine rejecting mutations and the literal old failure are retained. Reviewed fixes admit loop references before allocation and poison VM execution before discarded payload release. [Review boundary](audits/ai-editable-root-review/review.json). Fresh merged native replay, mutation projection, Undo/Redo, efficient baseline observation and full callback/resource safety remain OPEN; production scripting stays disabled.
+
 Eighth native Metal review (2026-10-10): root independently decoded all 18 ARM PDF pages exactly and Canvas residuals 0/0/1/0/0/12. The opaque sRGB mask candidate removes all 43 Times Bold Italic differences. [Full-image review](audits/coretext-native-eighth/arm-root-review.json). ARM presentation still fails; Intel replay is pending. No full feature or release gate is promoted.
 
 Extracted color resolve comparison (2026-10-10, review branch): actual RTX 5090 Vulkan World matches all ten RGBA sample cases extracted from the original OpenGL framebuffer, including cases that invalidate universal integer half-down rounding. Final GPU ledger is zero. [Independent comparison](audits/native-rgba-resolve-root/review.json). The remaining edge investigation moves to per-sample face color and draw order; full-model parity remains OPEN.

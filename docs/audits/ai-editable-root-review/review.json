@@ -3,11 +3,26 @@
   "states": 4,
   "candidate": "ecc6b927209b17a300a5045c28673453407c6ca0",
   "root_native_replay": false,
-  "integration_status": "held pending admission and finalizer fixes",
+  "integration_status": "Source-review fixes integrated at d93e1513; fresh merged native execution pending",
   "findings": [
     "RootRestore outer and hole ring allocations precede corresponding logical admission.",
     "Hole-list slot capacity is omitted from logical reference charge.",
     "Restoration assigns arbitrary attrs under write lock, potentially releasing arbitrary payloads before poison; require poison and release outside lock."
   ],
-  "scope": "Fresh pinned original semantics and source review only; no full scripting acceptance."
+  "scope": "Fresh pinned original semantics and source review only; no full scripting acceptance.",
+  "followup_review": {
+    "candidate": "5660f1d370338a36cc0134c514050963147855f2",
+    "corrected": [
+      "Logical outer/hole/ring member admission precedes native allocation; actual slack reconciled before execution.",
+      "VM abort before discard sets poison and fuel zero.",
+      "Face field replacement payload destruction occurs after write guard release."
+    ],
+    "remaining": [
+      "Root membership list replacement/truncation can release arbitrary payloads under list borrow locks; full native callback/reentry remains open.",
+      "Logical budgets exclude VM allocation, native table storage and allocator overhead.",
+      "Successful existing mutation projection and controller history remain incomplete."
+    ],
+    "retained_native_against_fresh_original": "four states match; nine mutations and literal old candidate rejected",
+    "root_native_replay": false
+  }
 }
