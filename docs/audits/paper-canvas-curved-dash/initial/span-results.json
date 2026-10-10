@@ -1,0 +1,44 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "recipes_sha256": "15a93648925e4572876cfd453274b2e2bce48ff7e4da0dbb5d140feb7c9e36d0",
+  "binary_sha256": "4ed6709cf65252eed87e83b251cb9cfbc04b66ac8960450cd2f8102c13d64b40",
+  "scope": "Actual original border painter vs native CPU span geometry; rendered native canvas/cache still separate",
+  "cases": [
+    {
+      "name": "thin-rounded-dash",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thick-rounded-dash",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thick-clamped-dash",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thick-small-radius-dash",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thick-small-page-dash",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "dash-carry-corner",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+//! Frozen constructors and read-only observations; actual production Composer painter.
+#[cfg(any(target_os="linux",target_os="windows"))]mod native{
+use ingetrazo_gui::{app::IngeTrazoApp,native_vulkan::{App,System}};
+use ingetrazo_core::composition::{Sheet,PaperSize,Orientation,SourcePaperBorder};
+struct Fixture{app:IngeTrazoApp,index:usize,out:std::path::PathBuf,stats:serde_json::Value,serial:u64}
+impl Fixture{fn set_case(&mut self){let widths=[0.6,0.8,0.2,1.2];let radius=[3.,100.,3.,5.];let styles=["dashed";4];let s=&mut self.app.scene.sheets[0];s.set_source_border(SourcePaperBorder{on:true,mm:widths[self.index],radius_mm:radius[self.index],style:styles[self.index].into(),color:"#000000".into()}).unwrap();self.app.composer_state.zoom=[2.3,1.5,1.5,1.5][self.index];}}
+impl App for Fixture{
+fn title()->&'static str{"IngeTrazo actual Composer paper compound acceptance"}
+fn new(system:&mut System,_:Option<std::path::PathBuf>)->Self{let mut app=IngeTrazoApp::new();app.set_language("en");app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory().into());let mut sheet=Sheet::new("Paper",PaperSize::A4,Orientation::Landscape);sheet.items.clear();sheet.margin_mm=10.;app.scene.sheets=vec![sheet];app.scene.active_sheet_index=Some(0);let mut out=Self{app,index:0,out:std::env::var("INGETRAZO_BORDER_OUT").unwrap().into(),stats:serde_json::Value::Null,serial:0};out.set_case();out}
+fn prepare_gpu(&mut self,system:&mut System,_:bool){let s=system.enable_cad2d().unwrap().stats();self.stats=serde_json::json!({"uploads":s.uploads,"cache_hits":s.cache_hits,"cached_bytes":s.cached_bytes,"draws":s.draws});self.serial=system.submitted_frames_for_probe();}
+fn build_ui(&mut self,ctx:&egui::Context){let(mut next,mut close)=(egui::Pos2::ZERO,egui::Pos2::ZERO);egui::TopBottomPanel::top("controls").show(ctx,|ui|{ui.horizontal(|ui|{let b=ui.button("Next frozen compound");next=b.rect.center();if b.clicked(){self.index=(self.index+1)%4;self.set_case();}let b=ui.button("Finish");close=b.rect.center();if b.clicked(){ctx.send_viewport_cmd(egui::ViewportCommand::Close);}});});egui::CentralPanel::default().show(ctx,|ui|ingetrazo_gui::composer::render_sheet_composer(&mut self.app,ui,0));
+if let Some(t)=ctx.data(|d|d.get_temp::<[f32;3]>(egui::Id::new("pdf-ui-paper-transform"))){let s=&self.app.scene.sheets[0];let state=serde_json::json!({"index":self.index,"name":(["production-curved-dash","production-clamped-dash","production-thin-curved-dash","production-carry-dash"][self.index]),"origin":[f64::from(t[0]),f64::from(t[1])],"zoom":f64::from(t[2]),"ppp":f64::from(ctx.pixels_per_point()),"page":s.dimensions_mm(),"margin":s.margin_mm,"border":s.effective_source_border(),"cold_builds":ctx.data(|d|d.get_temp::<[u64;2]>(egui::Id::new("paper-cold-builds"))),"gpu":self.stats,"serial":self.serial,"status":self.app.status_message,"next":[next.x,next.y],"close":[close.x,close.y]});std::fs::write(self.out.join("state.tmp"),state.to_string()).unwrap();std::fs::rename(self.out.join("state.tmp"),self.out.join("state.json")).unwrap();}ctx.request_repaint_after(std::time::Duration::from_millis(30));}
+fn gpu_error(&mut self,e:&str){panic!("Actual Composer paper GPU failure: {e}");}
+}pub fn run()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+}
+#[cfg(any(target_os="linux",target_os="windows"))]fn main()->Result<(),Box<dyn std::error::Error>>{native::run()}
+#[cfg(not(any(target_os="linux",target_os="windows")))]fn main(){eprintln!("Actual native paper probe requires Vulkan host");}

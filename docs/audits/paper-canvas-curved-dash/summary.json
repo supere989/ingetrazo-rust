@@ -1,0 +1,63 @@
+{
+  "source_commit": "9e69db96",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "cold_initial_exact_cases": 6,
+  "production_exact_cases": [
+    {
+      "name": "production-curved-dash",
+      "changed_pixels": 0,
+      "cold_builds": [
+        1,
+        1
+      ],
+      "uploads": 2,
+      "cached_bytes": 740592,
+      "warm_stable": true
+    },
+    {
+      "name": "production-clamped-dash",
+      "changed_pixels": 0,
+      "cold_builds": [
+        2,
+        2
+      ],
+      "uploads": 4,
+      "cached_bytes": 471672,
+      "warm_stable": true
+    },
+    {
+      "name": "production-thin-curved-dash",
+      "changed_pixels": 0,
+      "cold_builds": [
+        2,
+        3
+      ],
+      "uploads": 5,
+      "cached_bytes": 359496,
+      "warm_stable": true
+    },
+    {
+      "name": "production-carry-dash",
+      "changed_pixels": 0,
+      "cold_builds": [
+        2,
+        4
+      ],
+      "uploads": 6,
+      "cached_bytes": 458928,
+      "warm_stable": true
+    }
+  ],
+  "production_binary_sha256": "14839e3627934aa60c5f572001b943abbefb40848e61a08d5e459976cc88b43b",
+  "negative_changed_pixels": [
+    1539,
+    0,
+    0,
+    0
+  ],
+  "negative_binary_sha256": "4c82ce30ff80d499cf320ff9be47de26608a13b4e338f3c8396a719e7c1b9c9d",
+  "restored_exact_cases": 1,
+  "restored_binary_sha256": "14839e3627934aa60c5f572001b943abbefb40848e61a08d5e459976cc88b43b",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter"
+}

@@ -1,0 +1,6 @@
+[('production-curved-dash', 1539), ('production-clamped-dash', 0), ('production-thin-curved-dash', 0), ('production-carry-dash', 0)]
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-canvas-curved-dash-native.py", line 57, in <module>
+    (out/'report.json').write_text(json.dumps(dict(binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),source_stack_sha256=hashlib.sha256(source_stack.encode()).hexdigest(),scope='Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter',cases=results),indent=2)+'\n');print([(r['name'],r['changed'])for r in results]);assert all(r['changed']==0 for r in results),'Actual border pixel discrepancy'
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Actual border pixel discrepancy

@@ -1,0 +1,17 @@
+{
+  "crates/ingetrazo-gui/src/composer_border.rs": "37b02dcbe723cd85eec1cbeec2fa377ee03d31ef19f2c5b2c3d738e40e9ac16b",
+  "crates/ingetrazo-gui/src/composer_border_dash.rs": "7e7263a8baa64fe79ea338443d693e4f50050aff4a0fbae44ebdbc13da6cb97a",
+  "crates/ingetrazo-gui/examples/paper_curved_border_native_fixture.rs": "ccc09687ff56119c0a4b605b96f6cc13b3c0af3cb3d35382f8ed321d00a7af41",
+  "scripts/check-paper-canvas-curved-dash.py": "74ad3a1ed0ac2a2c520082dd3ed3d9d8b49e090f1920485038bd4aaaef586d40",
+  "scripts/check-paper-canvas-curved-dash-native.py": "01c6c8ab09b964df1bf997ffa8a8ad2ca0cbc2c6adfc51b04b2d97ddf1a0819f",
+  "scripts/check-paper-canvas-curved-dash-mutation.py": "71e550421863c022ce02ae26d030463a470ab54361d1d7d4fca5898c1ab36de7",
+  "downloaded_qt_sources": {
+    "ingetrazo-geometry-qstroker.cpp": "3017a2f53dc6d94c5cb24436544e2b749f3de32900110c8fa3bf81fd3581ef7e",
+    "ingetrazo-geometry-qbezier.cpp": "3585115c984a81637ef43d6a12b0e885bfa542d0c1fbfc0f060ecaa431f6df58",
+    "ingetrazo-geometry-qbezier_p.h": "c8dfc8eac57220ade1bd4056c0448b3bff6c243397a2e46839ed76c1e09769f1",
+    "ingetrazo-geometry-qstroker_p.h": "94b0bb5876718cb52e5fbe98092d804086cedb7892a37dd60ac1422083894530",
+    "ingetrazo-geometry-qpaintengine_raster.cpp": "f52f54817e5f94955f2064553076f0f65a721fc21650db02ba81ef09a1cc092b",
+    "ingetrazo-geometry-qpainterpath.cpp": "39074bc23ba1760a9d99a0f6e2c82774f1dd097cf1a22f7e03a04720a41edf78",
+    "ingetrazo-geometry-qline.cpp": "75ec60bc817183c124ba73405cf0d5e8d04b00d7350d8c8e37383a1196c0752f"
+  }
+}

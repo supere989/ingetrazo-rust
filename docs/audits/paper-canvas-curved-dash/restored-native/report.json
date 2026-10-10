@@ -1,0 +1,188 @@
+{
+  "binary_sha256": "14839e3627934aa60c5f572001b943abbefb40848e61a08d5e459976cc88b43b",
+  "source_stack_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter",
+  "cases": [
+    {
+      "name": "production-curved-dash",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        297,
+        168,
+        988,
+        659
+      ],
+      "state": {
+        "index": 0,
+        "name": "production-curved-dash",
+        "origin": [
+          298.45001220703125,
+          169.5
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.6,
+          "color": "#000000",
+          "radius_mm": 3.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          1,
+          1
+        ],
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 12,
+          "cached_bytes": 740592,
+          "draws": 35
+        },
+        "serial": 7,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "production-curved-dash",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 38,
+            "cached_bytes": 740592,
+            "draws": 100
+          },
+          "serial": 20,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-curved-dash",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 46,
+            "cached_bytes": 740592,
+            "draws": 120
+          },
+          "serial": 24,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-curved-dash",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 52,
+            "cached_bytes": 740592,
+            "draws": 135
+          },
+          "serial": 27,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "binary_sha256": "4c82ce30ff80d499cf320ff9be47de26608a13b4e338f3c8396a719e7c1b9c9d",
+  "expected_exit": 1,
+  "changed": [
+    1539,
+    0,
+    0,
+    0
+  ],
+  "mutation": "Remove source transform-scaled dash curve threshold; exact actual source retained"
+}
