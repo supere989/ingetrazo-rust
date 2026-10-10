@@ -21,6 +21,9 @@ class Stub:
  _center_of_edge=Viewport._center_of_edge
  _valid_center_ref=Viewport._valid_center_ref
  _center_hint_px=Viewport._center_hint_px
+ _is_occluded=Viewport._is_occluded
+ _effective_style=lambda self:N(face_mode="shaded")
+ _pick_index=lambda self:N(tri_v0=None,own_spans=None)
  CENTER_MIN_RADIUS_PX=Viewport.CENTER_MIN_RADIUS_PX
  CENTER_HINT_PX=Viewport.CENTER_HINT_PX
  def __init__(self):
@@ -55,6 +58,11 @@ for radius in [1.2,.01]:
  if radius>1:
   steps.extend([step(v,center+V(1,0,0),move=[1,0,0]),step(v,center+V(1,0,0),delete=True)])
  add(f'curve-center-radius-{radius}',edges,steps,curve=True)
+# Held-out malformed curve: one shared-ID spur destroys the radial fit.
+pts=[center+V(1.2*math.cos(i*math.tau/24),1.2*math.sin(i*math.tau/24),0) for i in range(24)]
+edges=[[arr(p),arr(pts[(i+1)%24])] for i,p in enumerate(pts)]
+edges.append([arr(pts[0]),arr(center+V(3,0,0))])
+add('malformed-circle-spur',edges,[step(v,pts[0],acquire=True),step(v,center)],curve=True)
 Path('docs/audits/perspective-screen-inputs.json').write_text(json.dumps(cases,indent=2)+'\n')
 subprocess.run(['cargo','build','--locked','-p','ingetrazo-core','--example','perspective_screen_fixture'],check=True)
 native=json.loads(subprocess.check_output(['target/debug/examples/perspective_screen_fixture'],input=json.dumps(cases).encode()))
@@ -78,7 +86,7 @@ for case,n in zip(cases,native):
    px=stub._world_to_pixel(ref[0])
    if px is not None and stub._center_hint_px(ref,px)>0:edges.append(N(a=ref[0],b=ref[0],center=True))
   pixel=s['pixel']
-  snap=compute_snap(q(s['candidate']),pixel,N(edges=edges),stub._world_to_pixel,9,project_onto_line=lambda a,d:stub._project_to_lock_line(a,d,*pixel),edge_threshold_px=14)
+  snap=compute_snap(q(s['candidate']),pixel,N(edges=edges),stub._world_to_pixel,9,project_onto_line=lambda a,d:stub._project_to_lock_line(a,d,*pixel),edge_threshold_px=14,is_occluded=stub._is_occluded)
   point=snap.point if snap.kind in Viewport._ENCOURAGING_KINDS else None
   if hover is not None:point=hover[0]
   if point is None:dwell=None
@@ -93,6 +101,15 @@ for case,n in zip(cases,native):
  rows.append(dict(name=case['name'],original=original,native=n['steps'],matches=matches,clip_probe=case.get('clip_probe',False)))
  if not all(matches):failures.append(case['name'])
  print(case['name'],matches)
-report=dict(context=context(),cases=rows,failed=failures,scope='Actual original Qt perspective camera projection/ray/lock-line functions; center actual mesh curve fit/cache/hint, caller acquisition explicit recipe, timer modeled250ms; own-worker protocol, independent UI picking and wallclock validation pending')
+# Independent controls reject implementations using screen-linear interpolation
+# or indiscriminately offering the fitted centre of malformed/tiny curves.
+edge_case=rows[0]['native'][0];a,b=map(q,cases[0]['edges'][0]);pa,pb=map(v._world_to_pixel,(a,b));pixel=cases[0]['steps'][0]['pixel'];dx,dy=pb[0]-pa[0],pb[1]-pa[1];t=((pixel[0]-pa[0])*dx+(pixel[1]-pa[1])*dy)/(dx*dx+dy*dy);wrong=a+(b-a)*t
+assert (wrong-q(edge_case['point'])).length()>.02,'Screen-linear interpolation negative control did not separate perspective depth'
+assert rows[-1]['original'][-1]['kind']!='center' and rows[-1]['native'][-1]['kind']!='center'
+assert rows[-2]['original'][2]['kind']!='center' and rows[-2]['native'][2]['kind']!='center'
+report=dict(context=context(),cases=rows,failed=failures,passed=not failures,negative_controls=dict(screen_linear_distance=(wrong-q(edge_case['point'])).length(),malformed_circle_rejected=True,tiny_center_quiet=True),scope='Actual original Qt perspective camera projection/ray/lock-line functions; center actual mesh curve fit/cache/hint, caller acquisition explicit recipe, timer modeled250ms; own-worker protocol, independent UI picking and wallclock validation pending')
 Path('docs/audits/python-perspective-screen-evidence.json').write_text(json.dumps(report,indent=2)+'\n')
 print('Retained failures:',failures)
+
+if failures and '--retain-open' not in sys.argv:raise SystemExit(1)
+assert all(name.startswith('eye-depth-') for name in failures),failures
