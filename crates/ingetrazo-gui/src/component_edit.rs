@@ -108,22 +108,45 @@ impl IngeTrazoApp {
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed {
             let replacement=ComponentDefinition{mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
-            let updates:Vec<_>=self.scene.component_definitions.iter().filter(|(id,def)|
-                candidate.component_definitions.get(id)!=Some(*def)).map(|(id,def)|(*id,def.clone())).collect();
-            for (id,def) in &updates {candidate.component_definitions.entry(*id).or_insert_with(||def.clone());}
-            for (id,def) in updates {
-                if let Err(e)=candidate.replace_component_definition(id,def) {self.status_message=e;return;}
+            // Mesh publication and placement authoring are separate operations:
+            // the original container owns its child list, while placed leaves
+            // retain explicit prototype sharing (even component=false).
+            let mut meshes=std::collections::HashMap::new();
+            fn collect(groups:&[ingetrazo_core::groups::Group],baseline:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>,changed:&mut std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>)->Result<(),String> {
+                for group in groups {
+                    if let Some(token)=group.mesh_share {
+                        if baseline.get(&token)!=Some(&group.mesh) {
+                            if changed.get(&token).map(|m|m!=&group.mesh).unwrap_or(false) {return Err("Conflicting edits to shared mesh".into());}
+                            changed.insert(token,group.mesh.clone());
+                        }
+                    }
+                    collect(&group.children,baseline,changed)?;
+                }
+                Ok(())
             }
-            if let Some(id)=candidate.groups[group_index].component_definition {
-                if let Err(e)=candidate.replace_component_definition(id,replacement) {self.status_message=e;return;}
-                // The edited instance owns its child placements. Other copies
-                // received shared mesh changes while retaining their matrices.
-                candidate.groups[group_index].children=self.scene.groups.clone();
-            } else {
-                candidate.groups[group_index].mesh=replacement.mesh;
-                candidate.groups[group_index].children=replacement.children;
-                candidate.bump_version();
+            if let Err(error)=collect(&self.scene.groups,&candidate.mesh_shares,&mut meshes) {self.status_message=error;return;}
+            for (token,mesh) in &self.scene.mesh_shares {
+                if candidate.mesh_shares.get(token)!=Some(mesh) {meshes.insert(*token,mesh.clone());}
             }
+            let root_token=candidate.groups[group_index].mesh_share;
+            if let Some(token)=root_token {
+                if candidate.groups[group_index].mesh!=replacement.mesh {meshes.insert(token,replacement.mesh.clone());}
+            }
+            // Import newly authored identities, never infer them from equal meshes.
+            for (token,mesh) in &meshes {
+                if !candidate.mesh_shares.contains_key(token) {
+                    if let Err(error)=candidate.register_mesh_share(*token,mesh.clone()) {self.status_message=error;return;}
+                }
+            }
+            for (id,def) in &self.scene.component_definitions {
+                candidate.component_definitions.entry(*id).or_insert_with(||def.clone());
+            }
+            candidate.groups[group_index].mesh=replacement.mesh;
+            candidate.groups[group_index].children=replacement.children;
+            for (token,mesh) in meshes {
+                if let Err(error)=candidate.publish_mesh_share(token,mesh) {self.status_message=error;return;}
+            }
+            candidate.bump_version();
             candidate.materials=self.scene.materials.clone();candidate.layers=self.scene.layers.clone();
             if self.scene.dimensions!=session.dimension_baseline {
                 let transform=candidate.groups[group_index].transform;

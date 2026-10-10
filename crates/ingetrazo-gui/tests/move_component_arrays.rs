@@ -30,7 +30,7 @@ fn local_component_group_move_retains_sibling_placement_and_undo_restores(){
  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();assert_eq!(app.scene.groups.len(),1);
  app.scene.select(SelectionItem::Group(0));app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));app.dispatch_tool_click(&context(DVec3::Y*3.));
  assert_eq!(app.undo_stack.len(),1);app.finish_component_edit();assert_eq!(app.undo_stack.len(),1);
- assert_eq!(app.scene.component_definitions[&definition].children[0].transform.w_axis.y,3.);
+ assert_eq!(app.scene.component_definitions[&definition].children[0].transform.w_axis.y,0.,"definition template is not a shared placement matrix");
  assert_eq!(app.scene.groups[0].children[0].transform.w_axis.y,3.);assert_eq!(app.scene.groups[1].children[0].transform.w_axis.y,0.,"original shared meshes retain per-instance child placement matrices");assert_eq!(app.scene.groups[1].transform,before.groups[1].transform);
  let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.component_definitions,before.component_definitions);app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.component_definitions,after.component_definitions);
 }
@@ -81,4 +81,22 @@ fn shared_child_mesh_refresh_and_native_reopen_retain_independent_placements(){
  for (i,transform) in [DMat4::from_translation(DVec3::Y*3.),DMat4::from_translation(DVec3::Z*2.)].into_iter().enumerate(){assert_eq!(app.scene.groups[i].children[0].transform,transform);assert_eq!(app.scene.groups[i].children[0].id,ids[i]);assert_eq!(app.scene.groups[i].children[0].mesh.vertices[0].position.z,7.);}
  let path=std::env::temp_dir().join(format!("ingetrazo-placement-{}.igz",uuid::Uuid::new_v4()));ingetrazo_formats::igz::save_igz(&app.scene,&path).unwrap();let loaded=ingetrazo_formats::igz::load_igz(&path).unwrap();if let Some(artifact)=std::env::var_os("INGETRAZO_PLACEMENT_SAVE_ARTIFACT"){std::fs::copy(&path,artifact).unwrap();}std::fs::remove_file(path).unwrap();
  for i in 0..2{assert_eq!(loaded.groups[i].children[0].transform,app.scene.groups[i].children[0].transform);assert_eq!(loaded.groups[i].children[0].id,ids[i]);assert_eq!(loaded.groups[i].children[0].mesh.vertices[0].position.z,7.);}
+}
+
+#[test]
+fn container_finish_copy_array_delete_match_source_independent_lists() {
+ for action in ["copy","array","delete"] {
+  let mut app=IngeTrazoApp::new();let mut outer=Group::new("container");outer.transform=DMat4::from_translation(DVec3::new(1.,-1.,0.));outer.children.push(Group::with_mesh("ordinary child",mesh()));
+  app.scene.groups.push(outer);app.scene.make_component(app.scene.groups[0].id).unwrap();
+  let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);
+  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();app.scene.select(SelectionItem::Group(0));
+  if action=="delete" {app.delete_selection();} else {
+   app.active_tool=Box::new(MoveTool::new());let mut grab=context(DVec3::ZERO);grab.ctrl_held=true;app.dispatch_tool_click(&grab);app.dispatch_tool_move(&context(DVec3::X*2.));app.dispatch_tool_vcb(if action=="copy" {"1x200cm"} else {"3x200cm"}).unwrap();
+  }
+  app.finish_component_edit();assert!(app.component_edit_stack.is_empty());
+  assert_eq!(app.scene.groups[0].children.len(),match action {"copy"=>2,"array"=>4,_=>0});
+  assert_eq!(app.scene.groups[1],before.groups[1],"source sibling whole placement subtree must remain unchanged");
+  assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);
+  app.redo();assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.mesh_shares,after.mesh_shares);
+ }
 }

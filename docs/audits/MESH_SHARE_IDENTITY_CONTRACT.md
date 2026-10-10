@@ -30,3 +30,19 @@ prove selected child counts 2/4/0 for copy/array/delete while sibling count stay
 Mesh; classic unplaced copies do not. `mesh_share_acceptance` independently tests
 unequal placement topology, matrix/payload preservation, invalid atomic refusal,
 equal-but-independent meshes, Make Unique detachment and recovery identity.
+
+## Component Finish followup
+
+Finish now assigns only the selected container's authored child list and
+publishes changed explicit mesh tokens separately. Sibling placement topology
+is retained. Source-command controls and the GUI Move dispatcher now both yield
+selected child counts 2/4/0 for copy/array/delete, sibling count 1, and exact
+sibling Group preservation. Document Undo and Redo restore Groups and the mesh
+registry; existing nested leaf mesh edit tests continue propagating shared mesh
+changes in one outer history entry. Template placement matrices remain baseline
+metadata rather than being rewritten to the edited instance's matrix.
+
+This followup is tested on explicit identities produced by Make Component.
+Native-proto decoding and migration of older tokenless component recovery data
+remain required codec/compatibility followups. Actual rendered child-list exit
+proof remains pending; earlier rendered Move-only Finish evidence is retained.
