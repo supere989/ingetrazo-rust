@@ -756,7 +756,8 @@ impl IngeTrazoApp {
             self.console_logs.clear();
             return;
         }
-        if code.starts_with("add_cube") || code.starts_with("cube") {
+        if matches!(code, "add_cube" | "add_cube()" | "cube" | "cube()") {
+            self.save_undo_state();
             let s = 1.0;
             let v0 = self.scene.mesh.add_vertex(DVec3::new(0.0, 0.0, 0.0));
             let v1 = self.scene.mesh.add_vertex(DVec3::new(s, 0.0, 0.0));
@@ -788,7 +789,9 @@ impl IngeTrazoApp {
                 self.scene.layers.len()
             ));
         } else {
-            self.console_logs.push(format!("Command executed: {code} (OK)"));
+            let error = format!("Unsupported console command: {code}");
+            self.status_message = error.clone();
+            self.console_logs.push(error);
         }
     }
 
@@ -1568,4 +1571,48 @@ mod ordered_solid_selection_tests {
   app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("context",mesh));app.scene.selection.insert(SelectionItem::Group(0));let before=app.model_revision;
   app.begin_component_edit();assert_eq!(app.component_edit_stack.len(),1);assert!(app.model_revision>before);let entered=app.model_revision;app.cancel_component_edit();assert!(app.model_revision>entered);
  }
+}
+
+#[cfg(test)]
+mod console_transaction_tests {
+    use super::IngeTrazoApp;
+
+    #[test]
+    fn console_cube_is_one_reversible_transaction() {
+        let mut app = IngeTrazoApp::new();
+        let before = app.scene.mesh.clone();
+        app.run_script("add_cube");
+        assert_eq!(app.undo_stack.len(), 1);
+        let after = app.scene.mesh.clone();
+        assert_ne!(after, before);
+        assert_eq!(after.faces.len(), 6);
+        app.undo();
+        assert_eq!(app.scene.mesh, before);
+        assert_eq!(app.redo_stack.len(), 1);
+        app.redo();
+        assert_eq!(app.scene.mesh, after);
+    }
+
+    #[test]
+    fn console_refusals_and_inspection_preserve_model_and_redo() {
+        let mut app = IngeTrazoApp::new();
+        app.run_script("cube");
+        app.undo();
+        let before = app.scene.clone();
+        let undo = app.undo_stack.len();
+        let redo = app.redo_stack.len();
+        for command in ["cube_invalid", "add_cube(2)", "print(1)", "cube(); delete_all"] {
+            app.run_script(command);
+            assert_eq!(app.scene, before);
+            assert_eq!(app.undo_stack.len(), undo);
+            assert_eq!(app.redo_stack.len(), redo);
+            assert!(app.console_logs.last().unwrap().starts_with("Unsupported console command:"));
+        }
+        for command in ["stats", "clear", "", "  "] {
+            app.run_script(command);
+            assert_eq!(app.scene, before);
+            assert_eq!(app.undo_stack.len(), undo);
+            assert_eq!(app.redo_stack.len(), redo);
+        }
+    }
 }
