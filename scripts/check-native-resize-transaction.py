@@ -13,6 +13,19 @@ def check(root):
    stage,detail=line.removeprefix('RESIZE_CANCELLATION ').split(' published_owners_preserved=',1)
    assert detail.startswith('true retired_retry=true audit=')
    audit=json.loads(detail.split('audit=',1)[1]);assert audit['created']==audit['destroyed'],f"Candidate leak at {stage}"
+   created=audit['created']
+   if stage=='BeforeCreate':expected={}
+   else:
+    n=created.get('ImageView',0)
+    assert n>=1,'No actual created image views'
+    expected={'Swapchain':1,'ImageView':1 if stage=='ImageView(1)' else n}
+    if stage!='ImageView(1)':expected['RenderPass']=1
+    if stage in STAGES[3:]:expected['Framebuffer']=1 if stage=='Framebuffer(1)' else n
+    if stage in STAGES[4:]:expected['EguiPipeline']=1
+    if stage in STAGES[5:]:expected.update(CadPipeline=1,CadPool=1)
+    if stage in STAGES[6:]:expected.update(Semaphore=n,PresentFence=n)
+   assert created==expected,f'Missing or incorrect actual allocation counts at {stage}: {created}'
+
    observed.append(stage)
  assert observed==STAGES,f"Missing/reordered actual cancellation checkpoints: {observed}"
  assert 'RESIZE_TRANSACTION_ALL_8_PASS' in log

@@ -1,0 +1,6 @@
+# Independent resize integration review
+Root rebuilt the complete candidate on public2f66f1e, then executed a fresh readonly RTX5090 owned-window probe. All eight actual allocation cancellation checkpoints pass, published owners remain intact, each retired-swapchain retry succeeds, cached CAD geometry uploads once, and verified normal retirement ends with tracked ledger zero. Fresh 800x600/1100x700 captures pass strict color/texture/UI controls.
+
+The independent checker now requires the appropriate nonzero resource counts at every checkpoint, not just equal created/destroyed maps. Missing checkpoint, empty allocation maps, candidate leak and nonzero final-ledger records are rejected. Both previously captured literal unsafe-source variants also remain rejected. Whole-workspace review passes525 tests with two ignored. The owner's separate nine whole source images and five lifecycle cases remain retained in native-resize-transaction.
+
+Vulkan retirement forbids reacquiring old images after replacement creation; preserved handles and model/cache metadata do not guarantee continued display. Real allocation errors/device loss, implicit driver VRAM accounting and global driver-call bounds remain OPEN.
