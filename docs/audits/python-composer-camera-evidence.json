@@ -1,11 +1,11 @@
 {
   "provenance": {
-    "rust_commit": "4645b82a04ae3cf5a50039c2fcbd42869322c254",
+    "rust_commit": "360b6c8dfa25bb2538a263b5322d9a27e1544480",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "passed": false,
+  "passed": true,
   "cases": [
     {
       "case": "std-top",
@@ -34,7 +34,7 @@
     },
     {
       "case": "saved-perspective",
-      "camera_match": false,
+      "camera_match": true,
       "native_fresh_fields_reopened": true
     },
     {
@@ -44,7 +44,7 @@
     },
     {
       "case": "lens-low-distance",
-      "camera_match": false,
+      "camera_match": true,
       "native_fresh_fields_reopened": true
     },
     {
@@ -58,136 +58,6 @@
       "native_fresh_fields_reopened": true
     }
   ],
-  "failures": [
-    {
-      "case": "saved-perspective",
-      "fields": {},
-      "matrices": {
-        "view_matrix": {
-          "maximum_absolute_error": 2.323930363576218,
-          "original": [
-            0.9320392608642578,
-            0.0,
-            0.36235809326171875,
-            0.0,
-            0.36235809326171875,
-            0.0,
-            -0.9320392608642578,
-            0.0,
-            0.0,
-            1.0000005960464478,
-            0.0,
-            0.0,
-            -18.224308013916016,
-            -2.7318294048309326,
-            9.736536026000977,
-            1.0
-          ],
-          "rust": [
-            0.9320390859672263,
-            -0.0896487431241074,
-            0.35109292941562514,
-            0.0,
-            0.3623577544766737,
-            0.23059016004825847,
-            -0.9030642479134812,
-            0.0,
-            -1.3877787807814454e-17,
-            0.9689124217106448,
-            0.24740395925452296,
-            0.0,
-            -18.22430054412631,
-            -5.0557597684071505,
-            8.757987271270189,
-            1.0
-          ]
-        },
-        "projection_matrix": {
-          "maximum_absolute_error": 0.4249603748321533,
-          "original": [
-            1.664279580116272,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.664279580116272,
-            0.0,
-            0.0,
-            0.0,
-            -0.4249603748321533,
-            -1.000019907951355,
-            -1.0,
-            0.0,
-            0.0,
-            -0.20000198483467102,
-            0.0
-          ],
-          "rust": [
-            1.6642794823505183,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.6642794823505183,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            -1.000010000100001,
-            -1.0,
-            0.0,
-            0.0,
-            -0.1000010000100001,
-            0.0
-          ]
-        }
-      }
-    },
-    {
-      "case": "lens-low-distance",
-      "fields": {},
-      "matrices": {
-        "projection_matrix": {
-          "maximum_absolute_error": 0.19980200002505263,
-          "original": [
-            22.903766632080078,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            22.903766632080078,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            -1.0,
-            -1.0,
-            0.0,
-            0.0,
-            -0.00019999999494757503,
-            0.0
-          ],
-          "rust": [
-            22.9037655484312,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            22.9037655484312,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            -1.000010000100001,
-            -1.0,
-            0.0,
-            0.0,
-            -0.1000010000100001,
-            0.0
-          ]
-        }
-      }
-    }
-  ],
+  "failures": [],
   "scope": "Actual original apply_frame_camera on original authored IGZ versus Rust helper; transformed nested visible bounds, hidden distant group, current/saved/standard cameras, exact plans, roll, lens/distance clamps, scale and render-pixel aspect. View matrix compared at1e-4, projection/eye at2e-5 Qt float32 tolerance. Clip Z explicitly maps glam0..1 to Qt/OpenGL\u22121..1; up basis judged through view matrix, allowing equivalent Gram-Schmidt up vectors. Native fresh frame fields reopened in original. Renderer pixels, annotations, full composer interactions remain separate."
 }

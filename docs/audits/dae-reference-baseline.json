@@ -20,5 +20,13 @@
         "area": 256.0
       }
     ]
+  },
+  "provenance": {
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "native_source_revision": "f76308d",
+    "native_fixture_sha256": "a0e93c15daeb91701b12ae1c287c0e9c9cb84781c4178bb380494d3f32bff68b",
+    "original_input_path": "/tmp/dae-reference-grid.dae",
+    "input_sha256": "f5dfb3ded91ec02b58667aff26dc69f9414596638cf12e57c55535bfb9ab68f7",
+    "scope": "Manual source-authored 16 by 16 planar tile grid, 512 triangles, visual scene removed. Original and native reloaded actual IGZ via original runtime. Historical reference-fusion failure only; isolated corrected candidate not represented in this baseline."
   }
 }
