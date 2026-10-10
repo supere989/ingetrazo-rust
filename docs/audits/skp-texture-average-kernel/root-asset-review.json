@@ -1,0 +1,42 @@
+{
+  "fresh_cases": [
+    {
+      "asset": "legacy-dib-22.jpg",
+      "dimensions": [
+        600,
+        600
+      ],
+      "source_decode_hash_verified": true,
+      "native_kernel_exact_on_source_pixels": true
+    },
+    {
+      "asset": "legacy-dib-24.jpg",
+      "dimensions": [
+        443,
+        443
+      ],
+      "source_decode_hash_verified": true,
+      "native_kernel_exact_on_source_pixels": true
+    },
+    {
+      "asset": "legacy-dib-28.jpg",
+      "dimensions": [
+        150,
+        151
+      ],
+      "source_decode_hash_verified": true,
+      "native_kernel_exact_on_source_pixels": true
+    },
+    {
+      "asset": "legacy-dib-31.jpg",
+      "dimensions": [
+        1392,
+        1144
+      ],
+      "source_decode_hash_verified": true,
+      "native_kernel_exact_on_source_pixels": true
+    }
+  ],
+  "initial_review_failure": "Exit139 from temporary QImage lifetime before constBits copy. Corrected review keeps converted QImage alive; production unchanged.",
+  "scope": "Actual pinned Qt decoding and independent actual production kernel replay. Native JPEG decoder failure retained from agent; no fresh native decoder claim. Temporary successful raw files and binary purged."
+}
