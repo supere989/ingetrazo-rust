@@ -9,3 +9,6 @@ pub use device::*;
 mod submission;
 #[cfg(target_os = "macos")]
 pub use submission::*;
+
+#[cfg(target_os = "macos")]
+pub mod presentation;
