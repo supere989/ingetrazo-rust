@@ -7,3 +7,7 @@ First3x matches literally including40edge coordinates. Faces/holes/vendor/transl
 Source basis: tools/move.py430-447 retyping calls History.undo before newbuild; AddFaceCommand.undo core/history.py629-642 calls mesh.remove_face; core/mesh.py885-898 expressly retains boundary edges. Old copied face/hole wires remain after Undo, then retyping adds newgeometry. Native snapshot restoration removes the full copy, preserving10original edges on Undo and restoring30finaledges on Redo. This is a document-integrity correction boundary, not literal parity completion.
 
 Arrays with arbitrary crossing/overlap, spacing units during drag, pointer live preview, Ctrlgesture, context/componentarray edits and performance remain separate. No blanket Verified claim from facecounts or oneUndo-stack length.
+
+## Complete native integrity control
+
+The fresh native production GUI controller fixture additionally asserts exact baseline Mesh, Groups and Selection equality after Undo; exact final Mesh and Groups after Redo. Mesh equality includes opaque attrs/UVW/vertexIDs/edge flags and every topology entity. A subsequent stale4x array request refuses and leaves the entire Scene unchanged. These are source-user-integrity corrections documented separately from the retained literal source ghost-wire failure, not copied face-only counts. Native-integrity.json freezes the freshly executed executable hash.
