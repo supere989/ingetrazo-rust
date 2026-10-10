@@ -1,0 +1,154 @@
+   Compiling syn v3.0.6
+   Compiling libc v0.2.190
+   Compiling serde_json v1.0.151
+   Compiling memchr v2.8.3
+   Compiling log v0.4.34
+   Compiling getrandom v0.4.3
+   Compiling uuid v1.27.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling thiserror v2.0.21
+   Compiling serde v1.0.229
+   Compiling glam v0.29.3
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-tools)
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.04s
+     Running unittests src/lib.rs (/tmp/ingetrazo-move-copy-review-target/debug/deps/ingetrazo_tools-8e38a67638635cf8)
+
+running 81 tests
+test arc::tests::test_2point_arc_tool ... ok
+test arc::tests::test_3point_arc_tool ... ok
+test base::section_entity_tests::plane_frame_select_move_rotate_preserve_uid_and_leave_mesh_untouched ... ok
+test base::group_visibility_tests::hidden_or_attr_layer_faces_do_not_leave_pickable_group_boundaries ... ok
+test circle::tests::test_circle_tool_segments_and_vcb ... ok
+test base::section_pick_tests::hidden_front_face_does_not_mask_visible_rear_face ... ok
+test base::section_pick_tests::crossing_edge_can_only_be_picked_on_visible_portion ... ok
+test circle::tests::test_circle_tool_two_clicks ... ok
+test eraser::tests::test_eraser_tool_erase_edge ... ok
+test eraser::tests::test_eraser_tool_soften_toggle ... ok
+test followme::tests::invalid_path_and_axis_crossing_are_atomic ... ok
+test followme::tests::manual_paths_bridge_backtrack_and_start_at_plane_crossings ... ok
+test followme::tests::path_ordering_rejects_branches_and_disconnected_chains ... ok
+test freehand::tests::test_rdp_simplification ... ok
+test line::tests::test_line_tool_draw_and_rubber_band ... ok
+test move_tool::tests::control_press_toggles_once_release_keeps_mode_and_commit_consumes_it ... ok
+test line::tests::test_line_tool_vcb_input ... ok
+test followme::tests::selected_face_perimeter_and_alt_hover_supply_closed_paths_without_mutation ... ok
+test move_tool::tests::nonfinite_copy_is_atomic_and_actionable ... ok
+test move_tool::tests::group_copy_retains_private_semantics_nested_metadata_and_fresh_placements ... ok
+test move_tool::tests::live_preview_uses_absolute_delta_control_reverts_and_cancel_restores_exactly ... ok
+test line::tests::test_line_tool_closing_cycle_creates_face ... ok
+test move_tool::tests::copied_plain_edge_splits_existing_crossing_without_repainting_source ... ok
+test move_tool::tests::array_retyping_rebuilds_full_faces_and_groups_and_rejects_external_edits ... ok
+test followme::tests::manual_hover_is_immutable_release_commits_and_escape_discards_preview ... ok
+test paint::tests::test_paint_tool_apply_and_sample ... ok
+test move_tool::tests::test_move_tool_array_repeat ... ok
+test move_tool::tests::copy_holed_face_preserves_face_paint_uv_and_authors_fresh_boundaries ... ok
+test move_tool::tests::test_move_tool_copy_mode ... ok
+test move_tool::tests::spaced_array_during_copy_and_retyping_units_stays_atomic ... ok
+test move_tool::tests::placement_descriptor_is_borrowed_scoped_and_retires ... ok
+test move_tool::tests::test_move_tool_translation ... ok
+test freehand::tests::release_commits_one_curve_after_immutable_screen_preview ... ok
+test offset::tests::selected_chain_preview_cancel_and_outward_positive_vcb ... ok
+test followme::tests::straight_and_bent_paths_form_mitered_solids ... ok
+test offset::tests::straight_run_reports_failure_without_mutating_and_drag_is_perpendicular ... ok
+test offset::tests::test_offset_tool_inward ... ok
+test move_tool::tests::inference_excludes_incident_edges_and_nested_groups_but_copy_keeps_them ... ok
+test pushpull::tests::invalid_or_sub_weld_extrusion_is_atomic ... ok
+test rectangle::tests::first_face_pick_locks_a_vertical_work_plane ... ok
+test rotate_tool::tests::test_rotate_tool_90_degrees ... ok
+test rectangle::tests::reference_plane_lock_prefers_caller_edge_and_survives_first_click ... ok
+test pushpull::tests::test_pushpull_extrude_cube ... ok
+test rotate_tool::tests::test_rotate_tool_vcb_degrees ... ok
+test pushpull::tests::test_pushpull_vcb_and_repeat ... ok
+test tape::tests::test_tape_tool_measurement_and_guides ... ok
+test tape::tests::test_tape_tool_vcb ... ok
+test select::tests::test_select_tool_double_click ... ok
+test rectangle::tests::center_typed_dimensions_are_whole_width_and_height ... ok
+test select::tests::test_select_tool_triple_click_all_connected ... ok
+test tests::test_create_tools ... ok
+test rectangle::tests::test_rectangle_tool_vcb_input ... ok
+test rectangle::tests::test_rectangle_tool_xz_plane ... ok
+test rectangle::tests::test_rectangle_tool_two_clicks ... ok
+test rectangle::tests::down_latches_only_inferred_square_without_model_mutation ... ok
+test rectangle::tests::control_toggles_center_persistently_without_pointer_motion ... ok
+test select::tests::test_select_tool_single_click ... ok
+test scale_tool::tests::test_scale_tool_uniform ... ok
+test tests::test_rectangle_tool_drawing ... ok
+test fillet::tests::one_edge_creates_tangent_strip_caps_curves_and_analytic_volume ... ok
+test rectangle::tests::nonprincipal_axes_project_world_x_and_square_inference_keeps_typed_sizes ... ok
+test tests::test_dimension_tool ... ok
+test tests::test_line_tool_drawing ... ok
+test tests::test_section_plane_tool ... ok
+test tests::test_polygon_tool ... ok
+test fillet::tests::rounding_retains_uids_on_unchanged_vertices ... ok
+test fillet::tests::cursor_sizing_preview_and_second_click_commit_match_original_workflow ... ok
+test pushpull::tests::ctrl_copy_validates_its_body_and_retains_unrelated_open_geometry ... ok
+test pushpull::tests::repeated_cap_pushes_keep_whole_polygon_and_metadata ... ok
+test fillet::tests::transformed_solid_rounding_uses_world_radius ... ok
+test fillet::tests::selected_rim_accepts_segments_and_typed_radius_without_preview_mutation ... ok
+test pushpull::tests::repeated_ctrl_invalid_source_classification_is_rejected_atomically ... ok
+test fillet::tests::concave_edge_adds_material_and_invalid_radius_is_atomic ... ok
+test rectangle::tests::rectangle_band_splits_closed_body_and_remains_pushable ... ok
+test pushpull::tests::ctrl_cap_copy_retains_slab_belts_and_inward_material ... ok
+test followme::tests::attached_cap_sweep_unions_closed_body_and_preserves_open_attachment ... ok
+test followme::tests::holed_profile_and_closed_circular_path ... ok
+test fillet::tests::rim_and_all_edges_build_mitered_strips_and_spherical_corners ... ok
+test followme::tests::retained_equator_wires_soften_with_sphere_and_offset_profile_forms_torus ... ok
+test followme::tests::full_circles_revolve_once_into_closed_spheres_with_shared_poles ... ok
+test fillet::tests::squash_after_oblique_rotation_rounds_all_corners_in_varied_edge_orders ... ok
+
+test result: ok. 81 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/fillet_acceptance.rs (/tmp/ingetrazo-move-copy-review-target/debug/deps/fillet_acceptance-ac8d9ff7dccbfc7b)
+
+running 4 tests
+test invalid_radii_are_refused_atomically ... ok
+test original_cursor_sizing_and_typed_segment_workflow ... ok
+test radius_and_segments_create_tangent_cylinder_geometry ... ok
+test rim_and_spherical_joins_form_closed_oriented_boundaries ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/followme_acceptance.rs (/tmp/ingetrazo-move-copy-review-target/debug/deps/followme_acceptance-047c3968db647507)
+
+running 3 tests
+test branched_edge_network_is_rejected ... ok
+test malformed_paths_refuse_without_mutation ... ok
+test bent_path_has_corner_and_preserves_profile_material ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/followme_manual_acceptance.rs (/tmp/ingetrazo-move-copy-review-target/debug/deps/followme_manual_acceptance-3070bac45f098758)
+
+running 1 test
+test original_manual_drag_sequence_and_plane_crossing ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pushpull_acceptance.rs (/tmp/ingetrazo-move-copy-review-target/debug/deps/pushpull_acceptance-bf5d9b3be113aa19)
+
+running 6 tests
+test invalid_face_does_not_mutate_document ... ok
+test nonfinite_distance_is_rejected_atomically ... ok
+test standalone_holed_profile_creates_caps_and_inner_walls ... ok
+test attached_edit_preserves_unrelated_solid_and_loose_wire_metadata ... ok
+test existing_solid_cap_push_and_recess_preserve_single_closed_boundary ... ok
+test embedded_pocket_and_through_cut_have_analytic_removed_volume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ingetrazo_tools
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

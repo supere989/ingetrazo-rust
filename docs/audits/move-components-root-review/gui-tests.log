@@ -1,0 +1,32 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-tools)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-render)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-move-copy-review/crates/ingetrazo-gui)
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.55s
+     Running tests/move_component_arrays.rs (/tmp/ingetrazo-move-copy-review-target/debug/deps/move_component_arrays-95dce6883792475d)
+
+running 3 tests
+test local_component_group_move_commits_shared_definition_once_and_undo_restores ... ok
+test linked_nested_group_spaced_arrays_keep_definitions_and_atomic_history ... ok
+test crossing_and_exact_overlap_arrays_match_retained_original_segments ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
