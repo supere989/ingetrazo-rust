@@ -66,6 +66,8 @@ jobs:
         run: python scripts/check-python-clipboard.py
       - name: Clipboard context and resource boundary oracle
         run: python scripts/check-python-clipboard-boundary.py
+      - name: Original painted overlap paste oracle
+        run: python scripts/check-python-clipboard-overlap.py
       - name: Original Python versus Rust fillet geometry
         run: python scripts/check-python-fillet.py
       - name: Independent nested mesh exchange geometry

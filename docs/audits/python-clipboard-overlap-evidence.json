@@ -1,0 +1,12 @@
+{
+  "provenance": {
+    "rust_commit": "bd58fdd10254074ff9b43e6d8d3d5318c8369ef1",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "sampled_paint_coverage_comparisons": 1200,
+  "negative_controls_detected": 4,
+  "scope": "Actual original Copy/Paste plane merge: overlapping red source and blue destination, source hole, source-only paint and original destination overlap precedence and destination hole fill, selected pasted output and atomic exact undo/redo. Curved/nonplanar overlap remains separate."
+}
