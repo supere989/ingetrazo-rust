@@ -1,0 +1,16 @@
+{
+  "closed-front.png": "948a3cc48c789a738852457da37a87c0a61bb395546f6445353c30a4247bf7db",
+  "closed-iso.png": "59d6057aeb9f6a45cb97c972e1ceeac68dbd5661de48204eda387514dbcf0e6e",
+  "closed.png": "648c4a204819e5fc63201d34a31e2222a34fbd4f268804b81a507e23ea732c4d",
+  "coplanar-backface.png": "b17bdfd49aee82690321520bc85925060a0e84f803819dd9ae28241403e80d96",
+  "duplicate.png": "648c4a204819e5fc63201d34a31e2222a34fbd4f268804b81a507e23ea732c4d",
+  "hollow-iso.png": "0175d10c50db4cd13e57c74c4ada4c30236b8106c7b6de2edebd77e151b4aadf",
+  "hollow-seam.png": "fa56db6a33f1af1be80d42b18811fcd08f79bcf872f19a50fa2bcb3abdc107e9",
+  "hollow.png": "fb17c0c9a477f89aef1f5f2a09674bd63255dd46c37639208dedea9c20392aba",
+  "shared-slab-iso.png": "95986149c7217f94eb5e761479a72394cef1ca6dfef6bd5780bb4711000c7fb9",
+  "shared-slab-reversed-iso.png": "59d6057aeb9f6a45cb97c972e1ceeac68dbd5661de48204eda387514dbcf0e6e",
+  "shared-slab-reversed.png": "648c4a204819e5fc63201d34a31e2222a34fbd4f268804b81a507e23ea732c4d",
+  "shared-slab.png": "c15902aeb7db8f86e6a5bc66f8d68cc72e2cc80772e6f389e91fb6230dcc364f",
+  "transparent-hollow.png": "a4886a4a50d61deef7857a21ed2d34e404a93ff3c8e7e433f0779c8a63888916",
+  "transparent.png": "ee645458caabe00d2556311229a0b538e45a9886056e68004021943ba89c2594"
+}

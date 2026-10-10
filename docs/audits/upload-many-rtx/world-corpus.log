@@ -1,0 +1,100 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial1: 0.016640ms
+Corpus closed-front limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.57474, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial2: 0.012000ms
+Corpus closed-front limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.088620000000001, compact_preprocess_ms: 0.005871999999999999, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ closed-front: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial3: 0.015264ms
+Corpus closed-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.421831, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial4: 0.014976ms
+Corpus closed-iso limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.352588999999999, compact_preprocess_ms: 0.005299999999999997, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ closed-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial5: 0.012864ms
+Corpus closed limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.8687069999999997, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial6: 0.014016ms
+Corpus closed limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 4.3705430000000005, compact_preprocess_ms: 0.005581999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ closed: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial7: 0.011360ms
+Corpus coplanar-backface limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.617452, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial8: 0.011488ms
+Corpus coplanar-backface limitSome(36): ContourMetrics { additional_position_bytes: 72, batches: 2, cold_build_ms: 3.230299, compact_preprocess_ms: 0.002444, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ coplanar-backface: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial9: 0.013536ms
+Corpus duplicate limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.512594, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial10: 0.013984ms
+Corpus duplicate limitSome(36): ContourMetrics { additional_position_bytes: 1440, batches: 40, cold_build_ms: 4.853744, compact_preprocess_ms: 0.006153, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ duplicate: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial11: 0.013696ms
+Corpus shared-slab-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.416202, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial12: 0.015680ms
+Corpus shared-slab-iso limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 4.123886000000001, compact_preprocess_ms: 0.004450000000000001, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial13: 0.015840ms
+Corpus shared-slab-reversed-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.1165149999999997, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial14: 0.014976ms
+Corpus shared-slab-reversed-iso limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 4.491762, compact_preprocess_ms: 0.005109999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab-reversed-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial15: 0.014976ms
+Corpus shared-slab-reversed limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.1901439999999996, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial16: 0.014304ms
+Corpus shared-slab-reversed limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 4.722197, compact_preprocess_ms: 0.0061709999999999985, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab-reversed: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial17: 0.012128ms
+Corpus shared-slab limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 2.8270679999999997, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial18: 0.014080ms
+Corpus shared-slab limitSome(36): ContourMetrics { additional_position_bytes: 792, batches: 22, cold_build_ms: 4.740882, compact_preprocess_ms: 0.006521999999999999, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ shared-slab: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial19: 0.012288ms
+Corpus transparent limitNone: ContourMetrics { additional_position_bytes: 720, batches: 1, cold_build_ms: 2.402797, compact_preprocess_ms: 0.0055709999999999996, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial20: 0.013280ms
+Corpus transparent limitSome(36): ContourMetrics { additional_position_bytes: 720, batches: 20, cold_build_ms: 3.323114, compact_preprocess_ms: 0.005960999999999999, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ transparent: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial21: 0.015968ms
+Corpus hollow-iso limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 3.72332, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial22: 0.015840ms
+Corpus hollow-iso limitSome(36): ContourMetrics { additional_position_bytes: 1152, batches: 32, cold_build_ms: 5.668082, compact_preprocess_ms: 0.009496000000000006, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ hollow-iso: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial23: 0.014016ms
+Corpus hollow-seam limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 4.369009, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial24: 0.014272ms
+Corpus hollow-seam limitSome(36): ContourMetrics { additional_position_bytes: 1728, batches: 48, cold_build_ms: 8.456978000000001, compact_preprocess_ms: 0.011601000000000005, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ hollow-seam: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial25: 0.014176ms
+Corpus hollow limitNone: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 5.74601, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial26: 0.014336ms
+Corpus hollow limitSome(36): ContourMetrics { additional_position_bytes: 1152, batches: 32, cold_build_ms: 7.533635, compact_preprocess_ms: 0.021160999999999992, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ hollow: normal/36-byte GPU chunks exact whole-image equality
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial27: 0.013696ms
+Corpus transparent-hollow limitNone: ContourMetrics { additional_position_bytes: 1152, batches: 1, cold_build_ms: 2.302898, compact_preprocess_ms: 0.004248, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial28: 0.013600ms
+Corpus transparent-hollow limitSome(36): ContourMetrics { additional_position_bytes: 1152, batches: 32, cold_build_ms: 3.613483, compact_preprocess_ms: 0.005299999999999999, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }
+PASS source IGZ transparent-hollow: normal/36-byte GPU chunks exact whole-image equality
