@@ -102,4 +102,22 @@ impl VisibleRayIndex {
   }
  }
 
+ #[test]fn nested_reflection_hidden_faces_and_live_section_follow_visible_picker(){
+  use crate::{groups::Group,mesh::Mesh,section::SectionPlane};use glam::DMat4;
+  let mut mesh=Mesh::new();
+  let ids=[DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(1.,1.,0.),DVec3::new(-1.,1.,0.)].map(|p|mesh.add_vertex(p));
+  mesh.add_face(ids.to_vec(),vec![]);
+  let mut child=Group::with_mesh("floor",mesh);child.transform=DMat4::from_scale(DVec3::new(-2.,0.5,1.));
+  let mut parent=Group::new("translated");parent.transform=DMat4::from_translation(DVec3::new(3.,2.,1.));parent.children.push(child);
+  let mut scene=Scene::new();scene.groups.push(parent);
+  let index=VisibleRayIndex::new(&scene,1024*1024).unwrap();
+  for x in [0.,1.,2.,3.,4.,5.,6.] {let ray=Ray::new(DVec3::new(x,2.,4.),-DVec3::Z);assert_eq!(index.distance(&scene,&ray),crate::screen_pick::hover_face(&scene,&ray).map(|h|h.2));}
+  scene.section_planes.push(SectionPlane::new(DVec3::new(3.,2.,0.5),DVec3::Z,"cut","A"));
+  let ray=Ray::new(DVec3::new(3.,2.,4.),-DVec3::Z);assert_eq!(index.distance(&scene,&ray),None);
+  scene.section_planes[0].flip();assert_eq!(index.distance(&scene,&ray),Some(3.));
+  scene.groups[0].children[0].mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));
+  assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().distance(&scene,&ray),None);
+  scene.groups[0].hidden=true;assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().triangle_count(),0);
+ }
+
 }

@@ -58,6 +58,26 @@ pub fn step(camera:&mut OrbitCamera,dx:f64,dy:f64,dt:f64,height:f64,modifiers:Wa
     *camera!=before
 }
 
+/// Source FirstPersonTool.step; simultaneous axes share one normalized movement speed.
+/// Running uses Shift in the GUI; Ctrl shortcuts remain owned by the application.
+pub fn first_person_step(camera:&mut OrbitCamera,axes:[i8;3],dt:f64,height:f64,run:bool,through_walls:bool,
+ mut ray:impl FnMut(DVec3,DVec3)->Option<f64>)->bool {
+ if !dt.is_finite()||dt<0.||!height.is_finite()||height<=0. {return false;}
+ if axes==[0,0,0]{return false;}
+ let before=camera.clone();let forward=heading(camera);let right=forward.cross(DVec3::Z).normalize();
+ let direction=forward*axes[0]as f64+right*axes[1]as f64+DVec3::Z*axes[2]as f64;
+ let delta=direction.normalize_or_zero()*(1.5*if run{3.}else{1.}*dt);
+ if !through_walls&&blocked(&mut ray,camera.eye(),delta,height){return false;}
+ if !camera.move_eye(delta){return false;}
+ if !through_walls&&axes[2]==0 {
+  let eye=camera.eye();let z_from=eye.z-height+STEP_UP;
+  let floor=ray(DVec3::new(eye.x,eye.y,z_from),-DVec3::Z).map(|distance|z_from-distance).unwrap_or(0_f64.min(eye.z-height));
+  let target_z=floor+height;
+  if (target_z-eye.z).abs()>1e-6&&!camera.move_eye(DVec3::Z*(target_z-eye.z)){*camera=before;return false;}
+ }
+ *camera!=before
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
