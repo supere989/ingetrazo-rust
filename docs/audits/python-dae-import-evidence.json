@@ -14,14 +14,14 @@
     }
   ],
   "provenance": {
-    "rust_commit": "50ed574194c0fbe4e077c47995507f92fc4b0ebc",
+    "rust_commit": "85f273691d8f9b47ddfd419292e8b1284e9a76c7",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
-  "native_fixture_sha256": "43347e04bfbc411b709650275210bbefb78cf2d8c0d6f90b8a89f95cf63ca420",
-  "native_source_revision": "6bf3e22",
+  "native_fixture_sha256": "b1a9bc26e92e8eefe6fa7edb77c13bf34a14e3622e0d2c2ab849b64afac2b48e",
+  "native_source_revision": "45acf95",
   "cases": [
     {
       "case": "painted-rectangle",
@@ -59,8 +59,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -69,8 +69,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -137,7 +137,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "holed-surface",
@@ -175,8 +175,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -185,8 +185,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -200,8 +200,8 @@
                 0.0
               ],
               [
-                3.0,
                 1.0,
+                3.0,
                 0.0
               ],
               [
@@ -210,8 +210,8 @@
                 0.0
               ],
               [
-                1.0,
                 3.0,
+                1.0,
                 0.0
               ]
             ]
@@ -299,7 +299,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "nested-reflection",
@@ -453,8 +453,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -463,8 +463,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -541,7 +541,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "textured-uv",
@@ -763,8 +763,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -773,8 +773,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -841,7 +841,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-missing-uv-pattern",
@@ -1111,8 +1111,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -1121,8 +1121,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -1189,7 +1189,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "textured-missing-uv-gradient3x5",
@@ -1227,8 +1227,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -1237,8 +1237,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -1305,7 +1305,7 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-missing-uv-gradient5x3",

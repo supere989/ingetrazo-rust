@@ -21,7 +21,8 @@ def editable(a,b):
   s=copy.deepcopy(s);s["rings"]=sorted(unoriented(r)for r in s["rings"]);s["holes"]=sorted(tuple(sorted(unoriented(h)for h in hs))for hs in s["holes"]);return s
  return canonical(a)==canonical(b)
 def normalize(v):
- if isinstance(v,float):return round(v,5)
+ if isinstance(v,float):
+  rounded=round(v,5);return 0.0 if rounded==0 else rounded
  if isinstance(v,list):return [normalize(x)for x in v]
  if isinstance(v,dict):return {k:normalize(x)for k,x in v.items()}
  return v
