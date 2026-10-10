@@ -10,5 +10,8 @@
   ],
   "scope": "Fresh independently built actual GPU reset-event-held queue;50ms wait timeout preserves old buffer/new admission refusal/no pending frees, host event release then actual completion. Not hardware hang/device loss or automatic recovery.",
   "remaining": "Accounting lifetime strengthening and WSI presentation/queue submission bounds remain open; frozen stage not approved for release.",
-  "normal_resource_regression": "Fresh actualRTX5090 texture-upload probe passes whole17MiB readback, mip staging/pressurerollback/lifecycle; no full rendering or recovery claim."
+  "normal_resource_regression": "Fresh actualRTX5090 texture-upload probe passes whole17MiB readback, mip staging/pressurerollback/lifecycle; no full rendering or recovery claim.",
+  "strengthened_tested_commit": "4d47ff3",
+  "strengthened_binary_sha256": "5fcd0c91797a4f97d63b431dbfb32976f3b77392cbdef492b269effdf6ffe80f",
+  "strengthened_result": "Fresh actualRTX5090 four controls pass, including Weak upgrade proving charged budget remains owned after last external BudgetArc drop."
 }
