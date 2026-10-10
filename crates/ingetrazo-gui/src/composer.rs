@@ -130,7 +130,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 painter.rect_filled(fr, 0.0, Color32::WHITE);
 
                 // Render 3D model projection inside the view frame
-                render_model_projection(&app.scene, &painter, fr, frame);
+                render_model_projection_with_resources(&app.scene,&painter,fr,frame,&app.style,&app.textures.iter().map(|(k,v)|(k.clone(),v.id())).collect());
 
                 // View Frame border
                 if frame.border {
@@ -294,6 +294,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
                 if let Some(SheetItem::ViewFrame(frame))=sheet.selected_item.and_then(|i|sheet.items.get_mut(i)) {
                     ui.menu_button(tr("Ink"),|ui|{
+                        bump_needed |= ui.checkbox(&mut frame.paper_bg,tr("Paper background")).changed();
                         bump_needed |= ui.checkbox(&mut frame.profiles,tr("Profiles")).changed();
                         bump_needed |= ui.checkbox(&mut frame.hidden_lines,tr("Hidden lines")).changed();
                         egui::ComboBox::from_id_salt("paper-cut-fill").selected_text(&frame.cut_fill).show_ui(ui,|ui|{
@@ -407,6 +408,31 @@ fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCam
  if frame.perspective{if let Some(fov)=frame.cam_fov.or_else(||bound.then_some(camera.fov_deg)){camera.fov_deg=fov.clamp(5.,120.);}camera.distance=frame.cam_distance.or_else(||bound.then_some(camera.distance)).unwrap_or_else(||frame_bounds(scene).map(|(lo,hi)|(hi-lo).length()/2./(camera.fov_deg.to_radians()/2.).tan().max(1e-6)*1.15).filter(|d|*d>0.).unwrap_or(30.)).max(0.001);}else{camera.distance=ingetrazo_core::composition::ortho_distance_for_height(model_height_for_frame(frame.rect.h,frame.scale_n),camera.fov_deg);}
  camera
 }
+fn apply_frame_style(style:&mut ingetrazo_render::style::StyleConfig,value:&serde_json::Value) {
+ use ingetrazo_render::style::VisualStyle;
+ if let Some(mode)=value.get("face_mode").and_then(|v|v.as_str()) {
+  style.show_textures=mode!="shaded";
+  style.visual_style=match mode {"wireframe"=>VisualStyle::Wireframe,"hidden_line"=>VisualStyle::HiddenLine,"monochrome"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};
+ }
+ for(key,field)in [("edges",&mut style.show_edges),("profiles",&mut style.show_profiles),("sky",&mut style.show_sky),("back_edges",&mut style.back_edges_hidden)] {
+  if let Some(v)=value.get(key).and_then(|v|v.as_bool()){*field=v;}
+ }
+ for(key,field)in [("edge_color",&mut style.edge_color),("front_color",&mut style.front_color),("back_color",&mut style.back_color),("background",&mut style.background_color),("sky_color",&mut style.sky_color),("ground_color",&mut style.ground_color),("section_fill_color",&mut style.section_fill_color)] {
+  if let Some(v)=value.get(key).and_then(|v|v.as_array()).filter(|v|v.len()>=3){for i in 0..3 {if let Some(c)=v[i].as_f64(){field[i]=c as f32;}}}
+ }
+}
+fn style_for_frame(scene:&Scene,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig)->ingetrazo_render::style::StyleConfig {
+ use ingetrazo_render::style::{StyleConfig,VisualStyle};let mut style=base.clone();
+ if let Some(view)=frame.view_key.strip_prefix("scene:").and_then(|name|scene.saved_views.iter().find(|v|v.name==name)){if let Some(v)=&view.style {apply_frame_style(&mut style,v);}}
+ if matches!(frame.style.as_str(),"tecnico"|"lineas") {style=StyleConfig::default_shaded();style.visual_style=if frame.style=="tecnico" {VisualStyle::HiddenLine}else{VisualStyle::Wireframe};style.show_sky=false;style.background_color=[1.;4];style.front_color=[1.;4];}
+ else if let Some(name)=frame.style.strip_prefix("style:") {
+  let known=matches!(name,"Default"|"Architectural"|"Shaded"|"Hidden line"|"Monochrome"|"Wireframe"|"X-ray");
+  if known {style=StyleConfig::default_shaded();style.front_color=[1.;4];let mode=match name{"Shaded"=>"shaded","Hidden line"=>"hidden_line","Monochrome"=>"monochrome","Wireframe"=>"wireframe","X-ray"=>"xray",_=>"textures"};apply_frame_style(&mut style,&serde_json::json!({"face_mode":mode}));if matches!(name,"Architectural"|"Hidden line"|"Monochrome"|"Wireframe"){style.show_sky=false;style.background_color=[1.;4];}}
+ }
+ if frame.paper_bg&&!matches!(frame.style.as_str(),"tecnico"|"lineas"){style.show_sky=false;style.background_color=[1.;4];}
+ style.show_grid=false;style
+}
+
 fn paint_paper_cut(painter:&egui::Painter,rect:Rect,frame:&ViewFrame,scene:&Scene,matrix:&glam::DMat4) {
     if frame.cut_fill=="none" {return;}
     let color=frame.cut_fill_color.trim_start_matches('#');
@@ -451,6 +477,9 @@ pub fn render_model_projection(
     frame_rect: Rect,
     frame: &ViewFrame,
 ) {
+    render_model_projection_with_resources(scene,painter,frame_rect,frame,&ingetrazo_render::style::StyleConfig::default_shaded(),&std::collections::HashMap::new());
+}
+pub fn render_model_projection_with_resources(scene:&Scene,painter:&egui::Painter,frame_rect:Rect,frame:&ViewFrame,base:&ingetrazo_render::style::StyleConfig,textures:&std::collections::HashMap<String,egui::TextureId>) {
     let painter = painter.with_clip_rect(frame_rect);
     let snapshot=frame_scene(scene,frame);let scene=snapshot.as_ref();
 
@@ -473,6 +502,16 @@ pub fn render_model_projection(
 
     use ingetrazo_render::vector_hlr::LineKind;
     let vector=matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective;
+    if !vector {
+        let mut rendered=scene.clone();rendered.show_section_planes=false;rendered.clear_selection();
+        let mut style=style_for_frame(scene,frame,base);let pixel=frame_rect.width()/frame.rect.w as f32;
+        style.line_width=frame.pen_edge_mm.max(0.05)as f32*pixel;style.profile_width=frame.pen_profile_mm.max(0.05)as f32*pixel;
+        let mut data=ingetrazo_render::pipeline::build_scene_render_data(&rendered,&camera,&style,None);
+        data.guides=Default::default();data.dimension_lines=Default::default();data.dimension_labels.clear();data.text_labels.clear();data.snap_glyphs.clear();
+        painter.rect_filled(frame_rect,0.,Color32::from_rgb((style.background_color[0]*255.)as u8,(style.background_color[1]*255.)as u8,(style.background_color[2]*255.)as u8));
+        ingetrazo_render::pipeline::render_scene_to_egui(&data,&camera,&painter,frame_rect,&style,textures);
+        return;
+    }
     if vector {paint_paper_cut(&painter,frame_rect,frame,scene,&view_proj);}
     let mut segments=if vector {
         ingetrazo_render::vector_hlr::parallel_segments(scene,&camera,frame.profiles,frame.hidden_lines)
@@ -660,6 +699,13 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 
 #[cfg(test)]mod frame_camera_tests{
  use super::*;
+ #[test]fn raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation(){
+  use ingetrazo_render::style::{StyleConfig,VisualStyle};
+  let mut scene=Scene::new();let mut view=ingetrazo_core::saved_views::SavedView::capture_scene("Ink",&scene,&scene.camera);view.style=Some(serde_json::json!({"face_mode":"shaded","sky":true,"background":[0.2,0.3,0.4]}));scene.saved_views.push(view);let original=scene.clone();
+  let mut frame=ViewFrame::default();frame.view_key="scene:Ink".into();frame.style="sombreado".into();let base=StyleConfig::wireframe();let style=style_for_frame(&scene,&frame,&base);assert_eq!(style.visual_style,VisualStyle::ShadedWithTextures);assert!(!style.show_textures);assert!(style.show_sky);assert_eq!(style.background_color[0],0.2);
+  frame.paper_bg=true;let paper=style_for_frame(&scene,&frame,&base);assert!(!paper.show_sky);assert_eq!(paper.background_color,[1.;4]);
+  frame.style="tecnico".into();let plan=style_for_frame(&scene,&frame,&base);assert_eq!(plan.visual_style,VisualStyle::HiddenLine);assert!(!plan.show_sky);assert_eq!(plan.front_color,[1.;4]);assert_eq!(scene,original);assert_eq!(base.visual_style,VisualStyle::Wireframe);
+ }
  #[test]fn hidden_face_boundaries_and_contours_are_absent_from_sheet(){
   let mut scene=Scene::new();let ids=[DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(-1.,1.,0.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.section_planes.push(ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"Cut","A"));scene.show_section_cuts=true;assert!(!section_projected_edges(&scene).is_empty());scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));assert!(section_projected_edges(&scene).is_empty());
  }

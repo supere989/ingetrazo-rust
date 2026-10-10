@@ -41,6 +41,7 @@ impl VisualStyle {
 #[derive(Clone, Debug, PartialEq)]
 pub struct StyleConfig {
     pub visual_style: VisualStyle,
+    pub show_textures:bool,
     pub show_edges: bool,
     pub show_profiles: bool,
     pub show_soft_edges: bool,
@@ -70,6 +71,7 @@ impl StyleConfig {
     pub fn default_shaded() -> Self {
         Self {
             visual_style: VisualStyle::ShadedWithTextures,
+            show_textures:true,
             show_edges: true,
             show_profiles: true,
             show_soft_edges: false,

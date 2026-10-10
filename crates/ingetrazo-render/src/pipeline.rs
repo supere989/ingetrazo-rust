@@ -329,7 +329,7 @@ fn build_mesh_buffers(
         let is_xray = style.visual_style == VisualStyle::XRay;
         let final_opacity = if is_xray { style.xray_opacity } else { opacity };
 
-        let has_texture = (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
+        let has_texture = style.show_textures && (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
 
         if has_texture {
             let tex = tex_val.unwrap();
@@ -453,7 +453,7 @@ fn build_group_buffers(
         let is_xray = style.visual_style == VisualStyle::XRay;
         let final_opacity = if is_xray { style.xray_opacity } else { opacity };
 
-        let has_texture = (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
+        let has_texture = style.show_textures && (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
 
         if has_texture {
             let tex = tex_val.unwrap();
