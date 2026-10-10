@@ -47,6 +47,24 @@ jobs:
           python3 scripts/check-metal-egui-compressed.py docs/audits/metal-native-link-ci/egui-compressed > docs/audits/metal-native-link-ci/egui-compressed-check.log
       - name: Actual native CAMetalLayer presentation and requested resize
         run: target/debug/examples/presentation_probe --automatic > docs/audits/metal-native-link-ci/presentation.log 2>&1
+      - name: Actual shared application Cocoa document lifecycle
+        if: always()
+        run: |
+          cargo build --locked -p ingetrazo-gui --example native_metal_document_probe > docs/audits/metal-native-link-ci/document-build.log 2>&1
+          cargo test --locked -p ingetrazo-gui --lib lifecycle_probe::tests -- --nocapture > docs/audits/metal-native-link-ci/document-unit.log 2>&1
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess, json
+          root=Path('docs/audits/metal-native-link-ci/document-lifecycle')
+          root.mkdir()
+          rows=[]
+          for choice in ('save','discard','cancel'):
+              with (root/(choice+'.log')).open('w') as log:
+                  result=subprocess.run(['target/debug/examples/native_metal_document_probe','--output='+str(root/choice),'--choice='+choice],stdout=log,stderr=subprocess.STDOUT)
+              rows.append({'choice':choice,'returncode':result.returncode})
+          (root/'commands.json').write_text(json.dumps(rows,indent=2)+'\n')
+          assert all(row['returncode']==0 for row in rows), rows
+          PY
       - name: Actual completed and pending Metal CAD Drop ownership
         run: cargo test --locked -p ingetrazo-metal cad_drop_controls -- --nocapture > docs/audits/metal-native-link-ci/cad-drop.log 2>&1
       - name: Reject literal old GPU byte multiplication
