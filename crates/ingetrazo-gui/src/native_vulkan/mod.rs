@@ -465,6 +465,8 @@ impl System {
     fn clean_gpu(&mut self){
         if self.exited{return;}
         if !self.wait_gpu_completion(){return;}
+        if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
+        if let Some(cad)=&self.cad2d {eprintln!("CAD2D metrics: {:?}",cad.stats());}
         drop(self.world.take());drop(self.cad2d.take());
         if self.vulkan_context.lifetime.uncertain(){return;}
         unsafe{
