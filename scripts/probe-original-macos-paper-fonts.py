@@ -54,7 +54,7 @@ class Observe(QPainter):
    physical=identities.get(key,[])
    # Retain missing identities and subsequent cases; fail only after writing the report.
    runs.append({"family":raw.familyName(),"style":raw.styleName(),"glyphs":list(run.glyphIndexes()),"positions":[[v.x(),v.y()]for v in run.positions()],"physical_faces":physical,"table_hashes":key,"raw_head_hex":bytes(raw.fontTable("head")).hex()})
-  self.observed.append({"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"supplementary_qtextlayout_runs":runs})
+  self.observed.append({"requested_font":{"family":font.family(),"bold":font.bold(),"italic":font.italic(),"weight":int(font.weight())},"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"actual_painter_traits":{"bold":QFontInfo(font).bold(),"italic":QFontInfo(font).italic(),"weight":int(QFontInfo(font).weight()),"exact_match":QFontInfo(font).exactMatch()},"supplementary_qtextlayout_runs":runs})
   return super().drawText(rect,flags,text)
 for name,family,bold,italic,text in cases:
  image=QImage(800,300,QImage.Format_ARGB32_Premultiplied);image.fill(Qt.white)
