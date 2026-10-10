@@ -43,6 +43,8 @@ for path in sorted((out/"corpus").glob("*.reference.json")):
   ref["paper_view_key"]=view_key;path.write_text(json.dumps(ref,indent=2))
   igz.save_scene(vp.scene,out/"corpus"/(ref["name"]+".igz"))
  fill_mode=os.environ.get("INGETRAZO_VIEW_PDF_FILL","none")
+ grid=float(os.environ.get("INGETRAZO_VIEW_PDF_GRID","0"))
+ ref["paper_grid_m"]=grid
  ref["paper_cut_fill"]=fill_mode;path.write_text(json.dumps(ref,indent=2))
  igz.save_scene(vp.scene,out/"corpus"/(ref["name"]+".igz"))
  comps=[]
@@ -50,7 +52,7 @@ for path in sorted((out/"corpus").glob("*.reference.json")):
  intermediate=None
  for hidden in (False,True):
   comp=Composicion(name=str(hidden),paper="A4",landscape=False);comp.frames.clear()
-  frame=MarcoVista(x_mm=20,y_mm=30,w_mm=100,h_mm=100,view_key=view_key,style="vectorial",scale_n=scale,hidden_lines=hidden,profiles=True,cut_fill=fill_mode,cut_hatch_mm=hatch,cut_fill_color=fill_color,annotations=False,section_marks=False,border=True,border_mm=.43,border_color="#246891",show_title=False,pen_edge_mm=.37 if hidden else .18,pen_profile_mm=.62 if hidden else .35,pen_cut_mm=.83 if hidden else .5)
+  frame=MarcoVista(x_mm=20,y_mm=30,w_mm=100,h_mm=100,view_key=view_key,style="vectorial",scale_n=scale,hidden_lines=hidden,profiles=True,cut_fill=fill_mode,cut_hatch_mm=hatch,cut_fill_color=fill_color,annotations=False,section_marks=False,border=True,border_mm=.43,border_color="#246891",show_title=False,grid_m=grid,pen_edge_mm=.37 if hidden else .18,pen_profile_mm=.62 if hidden else .35,pen_cut_mm=.83 if hidden else .5)
   if intermediate is None:
    window_observer=ComposerWindow(host)
    def observe():

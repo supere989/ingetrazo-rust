@@ -30,6 +30,8 @@ pub struct Draw {
     pub clip: Option<Vec<PathOp>>,
     /// Second clip intersects the first in physical paper space (e.g. hatch ring and frame).
     pub clip_intersection: Option<Vec<PathOp>>,
+    /// Source QPdfEngine nonopaque pen outlines use already mapped device coordinates.
+    pub flatten_transform: bool,
 }
 pub struct Page {
     /// Source logical-device frame; paths remain physical mm. No rasterization.
@@ -114,21 +116,28 @@ impl std::fmt::Display for Number {
         out.write_str(if text == "-0" { "0" } else { text })
     }
 }
-fn path(content: &mut Vec<u8>, ops: &[PathOp], original_qt: bool) {
+fn path(
+    content: &mut Vec<u8>,
+    ops: &[PathOp],
+    original_qt: bool,
+    transform: Option<([f64; 2], f64)>,
+) {
     let number = |v| Number(v, original_qt);
+    let x = |v| number(transform.map_or(v, |(o, k)| v * k + o[0] * k));
+    let y = |v| number(transform.map_or(v, |(o, k)| v * k + o[1] * k));
     for op in ops {
         match *op {
-            PathOp::Move([x, y]) => writeln!(content, "{} {} m", number(x), number(y)).unwrap(),
-            PathOp::Line([x, y]) => writeln!(content, "{} {} l", number(x), number(y)).unwrap(),
+            PathOp::Move([xv, yv]) => writeln!(content, "{} {} m", x(xv), y(yv)).unwrap(),
+            PathOp::Line([xv, yv]) => writeln!(content, "{} {} l", x(xv), y(yv)).unwrap(),
             PathOp::Cubic(p) => writeln!(
                 content,
                 "{} {} {} {} {} {} c",
-                number(p[0]),
-                number(p[1]),
-                number(p[2]),
-                number(p[3]),
-                number(p[4]),
-                number(p[5])
+                x(p[0]),
+                y(p[1]),
+                x(p[2]),
+                y(p[3]),
+                x(p[4]),
+                y(p[5])
             )
             .unwrap(),
             PathOp::Close => content.extend_from_slice(b"h\n"),
@@ -222,6 +231,14 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             return Err("PDF draw budget exceeded".into());
         }
         for draw in &page.draws {
+            if draw.flatten_transform
+                && (!original_qt || page.device_dpi.is_none() || draw.stroke.is_some())
+            {
+                return Err(
+                    "Device-space PDF outlines require source paper policy and fill-only paths"
+                        .into(),
+                );
+            }
             path_commands = path_commands
                 .checked_add(draw.path.len())
                 .and_then(|n| n.checked_add(draw.clip.as_ref().map_or(0, Vec::len)))
@@ -312,22 +329,32 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
         )
         .unwrap();
         for (i, draw) in page.draws.iter().enumerate() {
+            let flatten = draw.flatten_transform && original_qt;
+            let transform = flatten.then_some((draw.origin_mm, local_scale));
             writeln!(
                 content,
                 "q\n/{} gs\n{} 0 0 {} {} {} cm",
                 names[i],
-                number(local_scale),
-                number(local_scale),
-                number(draw.origin_mm[0] * local_scale),
-                number(draw.origin_mm[1] * local_scale)
+                number(if flatten { 1. } else { local_scale }),
+                number(if flatten { 1. } else { local_scale }),
+                number(if flatten {
+                    0.
+                } else {
+                    draw.origin_mm[0] * local_scale
+                }),
+                number(if flatten {
+                    0.
+                } else {
+                    draw.origin_mm[1] * local_scale
+                })
             )
             .unwrap();
             if let Some(clip) = &draw.clip {
-                path(&mut content, clip, original_qt);
+                path(&mut content, clip, original_qt, transform);
                 content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
             }
             if let Some(clip) = &draw.clip_intersection {
-                path(&mut content, clip, original_qt);
+                path(&mut content, clip, original_qt, transform);
                 content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
             }
             if let Some(c) = draw.fill {
@@ -368,7 +395,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     content.extend_from_slice(b"1 J\n2 j\n");
                 }
             }
-            path(&mut content, &draw.path, original_qt);
+            path(&mut content, &draw.path, original_qt, transform);
             content.extend_from_slice(
                 match (draw.fill.is_some(), draw.stroke.is_some(), draw.even_odd) {
                     (true, true, true) => b"B*\n",

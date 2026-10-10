@@ -104,7 +104,7 @@ fn main() {
             };
             sheet.native_items.insert(
                 frame.id,
-                serde_json::json!({"border_mm":0.43,"border_color":"#246891","z":0.}),
+                serde_json::json!({"border_mm":0.43,"border_color":"#246891","grid_m":reference.get("paper_grid_m").and_then(|v| v.as_f64()).unwrap_or(0.),"z":0.}),
             );
             let behind = SheetShape {
                 kind: "rect".into(),
