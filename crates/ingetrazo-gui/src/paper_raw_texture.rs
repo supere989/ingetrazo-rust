@@ -23,7 +23,18 @@ pub(crate)fn create(ctx:&Context,size:[usize;2],pixels:Vec<u8>)->Result<TextureH
 pub(crate)fn peek(ctx:&Context,id:TextureId)->Result<Option<Image>,String>{let provider=provider(ctx)?;let pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;Ok(pending.images.get(&id).cloned())}
 pub(crate)fn acknowledge(ctx:&Context,id:TextureId)->Result<(),String>{let provider=provider(ctx)?;let mut pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;if let Some(image)=pending.images.remove(&id){pending.bytes-=image.pixels.len();pending.acknowledged+=1;}Ok(())}
 
+/// Retire unsubmitted raw bytes and queued sets together when egui releases an ID.
+/// Submitted GPU textures remain on the host's existing post-fence free path.
+pub(crate)fn cancel(ctx:&Context,ids:&[TextureId],sets:&mut std::collections::VecDeque<(TextureId,egui::epaint::ImageDelta)>)->Result<(),String>{
+ let provider=provider(ctx)?;let mut pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;
+ for id in ids{if let Some(image)=pending.images.remove(id){pending.bytes-=image.pixels.len();}}
+ sets.retain(|(id,_)|!ids.contains(id));Ok(())
+}
+
 #[cfg(test)]mod tests{use super::*;
+ #[test]fn failed_set_then_drop_retires_bytes_and_retry_identity(){
+  let ctx=Context::default();install(&ctx);let handle=create(&ctx,[1,1],vec![0;4]).unwrap();let id=handle.id();let frame=ctx.tex_manager().write().take_delta();let mut sets=std::collections::VecDeque::from(frame.set);assert!(peek(&ctx,id).unwrap().is_some());drop(handle);let freed=ctx.tex_manager().write().take_delta().free;assert_eq!(freed,vec![id]);cancel(&ctx,&freed,&mut sets).unwrap();assert!(sets.is_empty());assert!(peek(&ctx,id).unwrap().is_none());assert_eq!(provider(&ctx).unwrap().0.lock().unwrap().bytes,0);
+ }
  #[test]fn unavailable_queue_is_explicit_and_preserves_payload(){
   let ctx=Context::default();assert!(peek(&ctx,TextureId::Managed(1)).is_err());install(&ctx);let handle=create(&ctx,[1,1],vec![0;4]).unwrap();let queue=provider(&ctx).unwrap();let poisoned=queue.clone();let _=std::thread::spawn(move||{let _guard=poisoned.0.lock().unwrap();panic!("test queue refusal");}).join();assert!(peek(&ctx,handle.id()).is_err());assert!(acknowledge(&ctx,handle.id()).is_err());let pending=queue.0.lock().err().unwrap().into_inner();assert_eq!(pending.bytes,4);assert_eq!(pending.images.len(),1);
  }

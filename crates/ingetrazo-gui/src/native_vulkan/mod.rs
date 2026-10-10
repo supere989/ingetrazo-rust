@@ -327,6 +327,7 @@ impl System {
 
         // Free last frames textures after the previous frame is done rendering
         if let Some(textures) = self.textures_to_free.take() {
+            if let Err(error)=crate::paper_raw_texture::cancel(&self.egui_ctx,&textures,&mut self.pending_texture_updates){egui_app.gpu_error(&error);self.textures_to_free=Some(textures);return;}
             self.renderer
                 .free_textures(&textures)
                 .expect("Failed to free textures");
@@ -368,6 +369,7 @@ impl System {
         }
 
         self.pending_texture_updates.extend(textures_delta.set);
+        if let Err(error)=crate::paper_raw_texture::cancel(&self.egui_ctx,&textures_delta.free,&mut self.pending_texture_updates){egui_app.gpu_error(&error);return;}
         while let Some(delta)=self.pending_texture_updates.front() {
             let raw=match crate::paper_raw_texture::peek(&self.egui_ctx,delta.0){Ok(raw)=>raw,Err(error)=>{egui_app.gpu_error(&error);self.last_gpu_error=Some(error);return;}};
             let encoded=raw.as_ref().map(|image|(delta.0,egui_ash_renderer::EncodedRgbaImage{size:image.size,pixels:image.pixels.as_slice()}));
