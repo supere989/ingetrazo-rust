@@ -365,6 +365,14 @@ fn merge_collinear(lines: Vec<VectorSegment>, tolerance: f64) -> Vec<VectorSegme
     }
     result
 }
+/// Closed even-odd section material for paper poché. Unlike viewport stencil,
+/// paper fill is view-independent and deliberately ignores open cut chains.
+pub fn paper_section_triangles(scene:&Scene)->Vec<[DVec3;3]> {
+    let Some(plane)=scene.active_section() else{return vec![];};
+    let surfaces=crate::section_clip::contour_geometry(scene);
+    let cuts=crate::section_clip::cap_segments(std::iter::once(surfaces),plane);
+    cap_triangles(&cuts,plane)
+}
 pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<VectorSegment> {
     parallel_segments(scene, camera, true, false)
 }

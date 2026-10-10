@@ -296,6 +296,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     ui.menu_button(tr("Ink"),|ui|{
                         bump_needed |= ui.checkbox(&mut frame.profiles,tr("Profiles")).changed();
                         bump_needed |= ui.checkbox(&mut frame.hidden_lines,tr("Hidden lines")).changed();
+                        egui::ComboBox::from_id_salt("paper-cut-fill").selected_text(&frame.cut_fill).show_ui(ui,|ui|{
+                            for mode in ["solid","hatch","none"] {bump_needed |=ui.selectable_value(&mut frame.cut_fill,mode.into(),tr(mode)).changed();}
+                        });
+                        bump_needed |=ui.add(egui::DragValue::new(&mut frame.cut_hatch_mm).speed(0.1).range(0.3..=50.).suffix(" mm hatch")).changed();
+                        bump_needed |=ui.text_edit_singleline(&mut frame.cut_fill_color).changed();
                         for(label,value)in [("Cut",&mut frame.pen_cut_mm),("Profile",&mut frame.pen_profile_mm),("Edge",&mut frame.pen_edge_mm)] {
                             ui.horizontal(|ui|{ui.label(tr(label));bump_needed |=ui.add(egui::DragValue::new(value).speed(0.01).range(0.05..=5.).suffix(" mm")).changed();});
                         }
@@ -402,7 +407,45 @@ fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCam
  if frame.perspective{if let Some(fov)=frame.cam_fov.or_else(||bound.then_some(camera.fov_deg)){camera.fov_deg=fov.clamp(5.,120.);}camera.distance=frame.cam_distance.or_else(||bound.then_some(camera.distance)).unwrap_or_else(||frame_bounds(scene).map(|(lo,hi)|(hi-lo).length()/2./(camera.fov_deg.to_radians()/2.).tan().max(1e-6)*1.15).filter(|d|*d>0.).unwrap_or(30.)).max(0.001);}else{camera.distance=ingetrazo_core::composition::ortho_distance_for_height(model_height_for_frame(frame.rect.h,frame.scale_n),camera.fov_deg);}
  camera
 }
-fn render_model_projection(
+fn paint_paper_cut(painter:&egui::Painter,rect:Rect,frame:&ViewFrame,scene:&Scene,matrix:&glam::DMat4) {
+    if frame.cut_fill=="none" {return;}
+    let color=frame.cut_fill_color.trim_start_matches('#');
+    let rgb=u32::from_str_radix(color,16).unwrap_or(0x595e69);
+    let color=Color32::from_rgb((rgb>>16)as u8,(rgb>>8)as u8,rgb as u8);
+    let triangles=ingetrazo_render::vector_hlr::paper_section_triangles(scene).into_iter().filter_map(|tri|{
+        Some([project_point(tri[0],matrix,rect)?.0,project_point(tri[1],matrix,rect)?.0,project_point(tri[2],matrix,rect)?.0])
+    }).collect::<Vec<_>>();
+    if frame.cut_fill!="hatch" {
+        let mut mesh=egui::Mesh::default();for tri in triangles {
+            let base=mesh.vertices.len()as u32;for pos in tri {mesh.colored_vertex(pos,color);}mesh.add_triangle(base,base+1,base+2);
+        }painter.add(egui::Shape::mesh(mesh));return;
+    }
+    let pixel=rect.width()/frame.rect.w as f32;
+    let step=(if frame.cut_hatch_mm==0. {1.5}else{frame.cut_hatch_mm}).max(0.3)as f32*pixel;
+    let width=(if frame.pen_edge_mm==0. {0.18}else{frame.pen_edge_mm}).max(0.05)as f32*pixel;
+    let local=triangles.iter().map(|t|t.map(|p|p-rect.min)).collect::<Vec<_>>();
+    let lo=local.iter().flatten().map(|p|p.x+p.y).fold(f32::INFINITY,f32::min);
+    let hi=local.iter().flatten().map(|p|p.x+p.y).fold(f32::NEG_INFINITY,f32::max);
+    let mut c=(lo/step).floor()*step;
+    while c<=hi {
+        let mut intervals=vec![];
+        for tri in &local {
+            let mut xs=vec![];
+            for i in 0..3 {let a=tri[i];let b=tri[(i+1)%3];let sa=a.x+a.y-c;let sb=b.x+b.y-c;
+                if sa.abs()<1e-5 {xs.push(a.x);}
+                if (sa<0.)!=(sb<0.) {xs.push(a.x+(b.x-a.x)*sa/(sa-sb));}
+            }
+            if xs.len()>=2 {let min=xs.iter().copied().fold(f32::INFINITY,f32::min);let max=xs.iter().copied().fold(f32::NEG_INFINITY,f32::max);if max>min {intervals.push((min,max));}}
+        }
+        intervals.sort_by(|a,b|a.0.total_cmp(&b.0));let mut merged:Vec<(f32,f32)>=vec![];
+        for (a,b)in intervals {if let Some(last)=merged.last_mut(){if a<=last.1+1e-4 {last.1=last.1.max(b);continue;}}merged.push((a,b));}
+        for(a,b)in merged {painter.line_segment([rect.min+Vec2::new(a,c-a),rect.min+Vec2::new(b,c-b)],Stroke::new(width,color));}
+        c+=step;
+    }
+}
+
+/// Production composer model painter, also used by native acceptance fixtures.
+pub fn render_model_projection(
     scene: &Scene,
     painter: &egui::Painter,
     frame_rect: Rect,
@@ -430,6 +473,7 @@ fn render_model_projection(
 
     use ingetrazo_render::vector_hlr::LineKind;
     let vector=matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective;
+    if vector {paint_paper_cut(&painter,frame_rect,frame,scene,&view_proj);}
     let mut segments=if vector {
         ingetrazo_render::vector_hlr::parallel_segments(scene,&camera,frame.profiles,frame.hidden_lines)
             .into_iter().map(|s|(s.a,s.b,s.kind)).collect::<Vec<_>>()

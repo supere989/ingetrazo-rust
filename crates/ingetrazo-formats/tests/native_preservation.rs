@@ -296,10 +296,10 @@ fn edited_vector_ink_controls_reopen_with_original_field_names() {
  write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();
  let SheetItem::ViewFrame(frame)=&mut scene.sheets[0].items[0]else{panic!()};
  assert_eq!(frame.pen_cut_mm,0.7);assert!(!frame.profiles);assert!(frame.hidden_lines);
- frame.pen_cut_mm=0.9;frame.pen_profile_mm=0.6;frame.pen_edge_mm=0.15;frame.profiles=true;frame.hidden_lines=false;
+ frame.pen_cut_mm=0.9;frame.pen_profile_mm=0.6;frame.pen_edge_mm=0.15;frame.profiles=true;frame.hidden_lines=false;frame.cut_fill="hatch".into();frame.cut_fill_color="#123456".into();frame.cut_hatch_mm=2.3;
  save_igz(&scene,&dst).unwrap();let raw=scene_to_igz_document(&scene);
  assert_eq!(raw["compositions"][0]["frames"][0]["vendor_ink"],json!({"value":7}));
  let reopened=load_igz(&dst).unwrap();let SheetItem::ViewFrame(frame)=&reopened.sheets[0].items[0]else{panic!()};
- assert_eq!(frame.pen_cut_mm,0.9);assert_eq!(frame.pen_profile_mm,0.6);assert_eq!(frame.pen_edge_mm,0.15);assert!(frame.profiles);assert!(!frame.hidden_lines);
+ assert_eq!(frame.pen_cut_mm,0.9);assert_eq!(frame.pen_profile_mm,0.6);assert_eq!(frame.pen_edge_mm,0.15);assert!(frame.profiles);assert!(!frame.hidden_lines);assert_eq!(frame.cut_fill,"hatch");assert_eq!(frame.cut_fill_color,"#123456");assert_eq!(frame.cut_hatch_mm,2.3);
  std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
