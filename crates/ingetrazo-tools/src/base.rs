@@ -76,6 +76,18 @@ impl ToolContext {
     }
 }
 
+/// Borrowed groups-only translation preview for a placement-aware renderer.
+/// Scene already contains visible transforms; never suppress revision invalidation.
+/// Indices address the active editing Scene, including component-local scenes.
+/// Consumers validate frozen baseline against grab_version and retire on None.
+/// Rendering must preserve scene depth/alpha ordering across cached batches.
+#[derive(Debug, Clone, Copy)]
+pub struct PlacementPreview<'a> {
+    pub grab_version: u64,
+    pub groups: &'a [(usize, glam::DMat4)],
+    pub world_delta: DVec3,
+}
+
 pub trait Tool: Send + Sync {
     /// Actionable preparation error from the last pointer commit, if any.
     fn error_message(&self) -> Option<&str> {
@@ -131,6 +143,9 @@ pub trait Tool: Send + Sync {
     /// Move drags in a vertical plane facing the camera through its grab point.
     fn prefers_vertical_drag(&self) -> bool { false }
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }
+    /// Pure placement translation only, not mixed geometry, planes or copy.
+    /// This borrowed descriptor allocates no model snapshot.
+    fn placement_preview(&self) -> Option<PlacementPreview<'_>> { None }
     fn preview_mesh(&self) -> Option<&Mesh> {
         None
     }

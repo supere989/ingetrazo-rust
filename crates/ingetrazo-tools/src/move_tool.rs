@@ -201,6 +201,13 @@ impl MoveTool {
 }
 
 impl Tool for MoveTool {
+    fn placement_preview(&self)->Option<crate::base::PlacementPreview<'_>> {
+        if self.start_point.is_none() || self.is_copy_mode || self.original_groups.is_empty()
+            || !self.original_positions.is_empty() || !self.original_planes.is_empty() {return None;}
+        Some(crate::base::PlacementPreview {grab_version:self.original_version,
+            groups:&self.original_groups,world_delta:self.preview_delta})
+    }
+
     fn tool_type(&self) -> ToolType {
         ToolType::Move
     }
@@ -448,6 +455,27 @@ mod tests {
         let copied=&scene.mesh.faces[1];assert_eq!(copied.holes.len(),1);assert_eq!(copied.attrs["vendor"],serde_json::json!(71));assert_eq!(copied.attrs["texture"]["uvw"][3],serde_json::json!(-8.));
         assert!(scene.mesh.edges[..8].iter().all(|e|e.soft));assert!(scene.mesh.edges[8..].iter().all(|e|!e.soft&&!e.attrs.contains_key("edge-vendor")));
         assert_eq!(scene.mesh.vertices[0].uid,before.vertices[0].uid);assert_ne!(scene.mesh.vertices[8].uid,before.vertices[0].uid);
+    }
+    #[test]fn placement_descriptor_is_borrowed_scoped_and_retires(){
+        let mut scene=Scene::new();
+        let mut group=ingetrazo_core::groups::Group::new("placement");
+        group.transform=DMat4::from_translation(DVec3::Y*2.)*DMat4::from_rotation_z(0.3);
+        scene.groups.push(group);scene.select(SelectionItem::Group(0));
+        let original=scene.groups[0].transform;let version=scene.version;
+        let mut tool=MoveTool::new();let first=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));
+        assert!(tool.placement_preview().is_none());tool.on_click(&mut scene,&first);
+        let preview=tool.placement_preview().unwrap();assert_eq!(preview.grab_version,version);
+        assert_eq!(preview.groups,&[(0,original)]);let address=preview.groups.as_ptr();
+        tool.on_move(&mut scene,&ToolContext::new(DVec3::X*3.,first.ray));
+        let preview=tool.placement_preview().unwrap();assert_eq!(preview.groups.as_ptr(),address);
+        assert_eq!(preview.world_delta,DVec3::X*3.);assert_eq!(scene.groups[0].transform,DMat4::from_translation(preview.world_delta)*original);
+        assert!(scene.version>version,"real mutation must invalidate shared caches");
+        tool.on_control_state(&mut scene,true);assert!(tool.placement_preview().is_none());assert_eq!(scene.groups[0].transform,original);
+        tool.on_control_state(&mut scene,false);tool.on_control_state(&mut scene,true);assert!(tool.placement_preview().is_some());
+        tool.on_cancel(&mut scene);assert!(tool.placement_preview().is_none());assert_eq!(scene.groups[0].transform,original);
+        tool.on_click(&mut scene,&first);tool.on_click(&mut scene,&ToolContext::new(DVec3::X,first.ray));assert!(tool.placement_preview().is_none());
+        let a=scene.mesh.add_vertex(DVec3::ZERO);let b=scene.mesh.add_vertex(DVec3::Y);let edge=scene.mesh.add_edge(a,b).unwrap();scene.select(SelectionItem::Edge(edge));
+        tool.on_click(&mut scene,&first);assert!(tool.placement_preview().is_none(),"mixed geometry cannot use placement-only cache");
     }
     #[test]fn live_preview_uses_absolute_delta_control_reverts_and_cancel_restores_exactly(){
         let mut scene=Scene::new();let a=scene.mesh.add_vertex(DVec3::ZERO);let b=scene.mesh.add_vertex(DVec3::X);let e=scene.mesh.add_edge(a,b).unwrap();scene.select(SelectionItem::Edge(e));let before=scene.mesh.clone();
