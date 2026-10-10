@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "pairs": 65536,
+  "native_sha256": "418853ec87753026005a03396b5361073ee4c6a446aeb22d6ce917e3f4f50806",
+  "actual_qt_version": "6.12.0",
+  "negative_controls": {
+    "qrgb32_shortcut_mismatches": 24,
+    "one_byte_corruption_rejected": true
+  },
+  "scope": "production premultiplication operation against actual QPainter solid brush; coverage/composition geometry and actualGPU pixels separate"
+}

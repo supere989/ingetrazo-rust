@@ -1,0 +1,446 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "alpha0",
+      "rgba": [
+        17,
+        83,
+        211,
+        0
+      ],
+      "expected": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              255,
+              255,
+              255,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              255,
+              255,
+              255,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "alpha1",
+      "rgba": [
+        17,
+        83,
+        211,
+        1
+      ],
+      "expected": [
+        254,
+        254,
+        255,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              254,
+              254,
+              255,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              254,
+              254,
+              255,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "alpha127",
+      "rgba": [
+        17,
+        83,
+        211,
+        127
+      ],
+      "expected": [
+        136,
+        169,
+        233,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              136,
+              169,
+              233,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              136,
+              169,
+              233,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "alpha128",
+      "rgba": [
+        17,
+        83,
+        211,
+        128
+      ],
+      "expected": [
+        136,
+        169,
+        233,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              136,
+              169,
+              233,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              136,
+              169,
+              233,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "alpha254",
+      "rgba": [
+        17,
+        83,
+        211,
+        254
+      ],
+      "expected": [
+        18,
+        84,
+        211,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              18,
+              84,
+              211,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              18,
+              84,
+              211,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "alpha255",
+      "rgba": [
+        17,
+        83,
+        211,
+        255
+      ],
+      "expected": [
+        17,
+        83,
+        211,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              17,
+              83,
+              211,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              17,
+              83,
+              211,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "dark",
+      "rgba": [
+        1,
+        7,
+        19,
+        128
+      ],
+      "expected": [
+        128,
+        131,
+        137,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              128,
+              131,
+              137,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              128,
+              131,
+              137,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "light",
+      "rgba": [
+        251,
+        243,
+        229,
+        128
+      ],
+      "expected": [
+        253,
+        249,
+        242,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              253,
+              249,
+              242,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              253,
+              249,
+              242,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "unequal",
+      "rgba": [
+        5,
+        127,
+        250,
+        73
+      ],
+      "expected": [
+        183,
+        218,
+        254,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              183,
+              218,
+              254,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              183,
+              218,
+              254,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "terrain-override",
+      "rgba": [
+        37,
+        93,
+        157,
+        64
+      ],
+      "expected": [
+        200,
+        214,
+        230,
+        255
+      ],
+      "native": [
+        {
+          "size": "800x600",
+          "actual_rgba": [
+            [
+              200,
+              214,
+              230,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        },
+        {
+          "size": "1100x700",
+          "actual_rgba": [
+            [
+              200,
+              214,
+              230,
+              255
+            ]
+          ],
+          "pixels": 2500,
+          "exact": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "scope": "Constant 50x50 interiors at two sizes; terrain label is direct explicit alpha only, no terrain routing/AA/Metal closure."
+}

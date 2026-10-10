@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "scope": "literal Qt interior color, native software inline ordering/nearest texture/restored UI/scissor/uniform cache/error and pressure lifecycle; not shape AA/hardware/Metal",
+  "cases": [
+    {
+      "case": "baseline",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 6,
+        "binds": 6,
+        "draws": 6,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 5,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "callback-only",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 6,
+        "binds": 6,
+        "draws": 6,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 5,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "callback-error",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 6,
+        "binds": 6,
+        "draws": 6,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 5,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "pressure",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 6,
+        "binds": 6,
+        "draws": 6,
+        "uploads": 3,
+        "upload_bytes": 168,
+        "cache_hits": 5,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 1
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "uniform",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 12,
+        "binds": 12,
+        "draws": 12,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 11,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    }
+  ],
+  "negative_controls": [
+    {
+      "rejected": [
+        145,
+        173,
+        206,
+        255
+      ]
+    },
+    {
+      "rejected": [
+        37,
+        93,
+        157,
+        128
+      ]
+    },
+    {
+      "rejected": [
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  ]
+}

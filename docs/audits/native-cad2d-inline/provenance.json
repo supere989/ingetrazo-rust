@@ -1,0 +1,21 @@
+{
+  "native_source_commit": "3cef03f",
+  "contract_commit": "49d3075",
+  "binary_sha256": "3a59fdc77197923a46cf7354f692a0b25d964734fe1869bd0938689c1e4d15a1",
+  "platform": "Linux Xvfb / llvmpipe Vulkan; software fixture only",
+  "runtime": "production native Vulkan System / inline egui renderpass / CAD2D cached native vertex+index buffers",
+  "mandatory_cases": [
+    "baseline",
+    "callback-only",
+    "callback-error",
+    "pressure",
+    "uniform"
+  ],
+  "tests": "render cad2d focused2PASS; GUI87PASS1ignored",
+  "open": [
+    "actualRTX hardware review",
+    "full authored shape/AA geometry",
+    "full generic egui22/24 quantization residual",
+    "native Metal implementation and hardware"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "passed": false,
+  "error": "KeyError('center_hint_observation')",
+  "provenance": {
+    "rust_commit": "359d393550c585427b93f7f3a8de593675f8bbf5",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "tiny",
+  "original": true,
+  "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+  "last_state": {
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "tiny",
+    "vertices": 24,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 134470.563860662,
+    "center": [
+      2.000000476837158,
+      3.000000238418579,
+      1.0
+    ],
+    "rim": [
+      500.8894517909148,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.000037645035,
+      272.97163030005703
+    ],
+    "move_target": [
+      589.8341414969452,
+      272.97163030005703
+    ],
+    "kind": "FromPoint",
+    "inference_point": [
+      2.2810540199279785,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  }
+}

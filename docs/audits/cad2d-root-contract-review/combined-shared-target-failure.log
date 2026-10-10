@@ -1,0 +1,37 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling egui-ash-renderer v0.7.0 (/tmp/ingetrazo-coherent-native-edges/vendor/egui-ash-renderer)
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-coherent-native-edges/crates/ingetrazo-gui)
+error[E0432]: unresolved import `ingetrazo_render::cad2d`
+ --> crates/ingetrazo-gui/src/native_vulkan/cad2d.rs:9:23
+  |
+9 | use ingetrazo_render::cad2d::{Batch, Geometry, Pose};
+  |                       ^^^^^ could not find `cad2d` in `ingetrazo_render`
+
+error[E0432]: unresolved import `ingetrazo_render::cad2d`
+   --> crates/ingetrazo-gui/src/native_vulkan/cad2d.rs:432:31
+    |
+432 |         use ingetrazo_render::cad2d::{EncodedRgba, Vertex};
+    |                               ^^^^^ could not find `cad2d` in `ingetrazo_render`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `ingetrazo-gui` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `ingetrazo-gui` (lib test) due to 2 previous errors

@@ -1,3 +1,4 @@
+pub mod cad2d;
 pub mod headless;
 pub mod world;
 pub mod resources;
@@ -122,6 +123,7 @@ pub struct System {
     pub renderer: Renderer,
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
     pub world: Option<world::World>,
+    pub cad2d: Option<cad2d::Renderer>,
     draw_serial:u64,
 
     textures_to_free: Option<Vec<TextureId>>,
@@ -208,13 +210,23 @@ impl System {
             egui_winit,
             renderer,
             memory_budget,
-            world:None,draw_serial:0,
+            world:None,cad2d:None,draw_serial:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
             pending_texture_updates:std::collections::VecDeque::new(),
             last_gpu_error:None,
         })
+    }
+
+    pub fn enable_cad2d(&mut self)->Result<&cad2d::Renderer,String>{
+        if self.cad2d.is_none(){self.cad2d=Some(cad2d::Renderer::new(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass)?);}
+        Ok(self.cad2d.as_ref().unwrap())
+    }
+
+    pub fn verify_cad2d_rollback_for_probe(&mut self)->Result<(),String>{
+        self.enable_cad2d()?;
+        self.cad2d.as_mut().unwrap().verify_pressure_rollback_for_probe(&self.vulkan_context,self.fence,self.draw_serial)
     }
 
     fn draw<A: App>(&mut self, egui_app: &mut A, window: &Window) {
@@ -231,6 +243,9 @@ impl System {
                 self.renderer
                     .set_render_pass(self.swapchain.render_pass)
                     .expect("Failed to rebuild renderer pipeline");
+                if let Some(cad)=&mut self.cad2d{
+                    if let Err(error)=cad.set_render_pass(self.swapchain.render_pass){egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
+                }
                 self.dirty_swapchain = false;
             } else {
                 return;
@@ -300,6 +315,14 @@ impl System {
         }
 
         let clipped_primitives = self.egui_ctx.tessellate(shapes, pixels_per_point);
+
+        if let Some(cad)=&mut self.cad2d {
+            if let Err(error)=cad.prepare(&self.vulkan_context,&clipped_primitives,self.fence,self.draw_serial,self.draw_serial+1){
+                egui_app.gpu_error(&error);
+                self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);
+                // Old ready paint remains valid; continue presentation under pressure.
+            }
+        }
 
         // Drawing the frame
         let next_image_result = unsafe {
@@ -421,6 +444,8 @@ impl System {
             egui_app.clean(&self.vulkan_context);
             if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
             drop(self.world.take());
+            if let Some(cad)=&self.cad2d{eprintln!("CAD2D metrics: {:?}",cad.stats());}
+            drop(self.cad2d.take());
 
             self.vulkan_context.device.destroy_fence(self.fence, None);
             self.vulkan_context
@@ -1042,6 +1067,16 @@ fn record_command_buffers(
     };
 
     let draw_error=renderer.cmd_draw(command_buffer,extent,pixels_per_point,clipped_primitives).err().map(|e|e.to_string());
+    if draw_error.is_some() {
+        // Previous fence is complete and this command buffer has not submitted.
+        // Abort all partial callback commands, then consume the acquired frame
+        // through a clear-only pass. The host reports failure and retries.
+        unsafe {
+            device.reset_command_buffer(command_buffer,vk::CommandBufferResetFlags::empty())?;
+            device.begin_command_buffer(command_buffer,&command_buffer_begin_info)?;
+            device.cmd_begin_render_pass(command_buffer,&render_pass_begin_info,vk::SubpassContents::INLINE);
+        }
+    }
 
     unsafe { device.cmd_end_render_pass(command_buffer) };
 

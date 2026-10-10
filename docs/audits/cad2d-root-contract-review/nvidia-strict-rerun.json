@@ -1,0 +1,123 @@
+{
+  "status": "PASS",
+  "backend": "NVIDIA discrete Vulkan",
+  "scope": "literal Qt interior color, inline ordering/nearest texture/restored UI/scissor/uniform cache/error and pressure lifecycle; not full shape AA, general colors or Metal",
+  "cases": [
+    {
+      "case": "baseline",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 5,
+        "binds": 5,
+        "draws": 5,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 4,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "callback-only",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 5,
+        "binds": 5,
+        "draws": 5,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 4,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "callback-error",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 5,
+        "binds": 5,
+        "draws": 5,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 4,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "pressure",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 5,
+        "binds": 5,
+        "draws": 5,
+        "uploads": 3,
+        "upload_bytes": 168,
+        "cache_hits": 4,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 1
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "uniform",
+      "captures": [
+        "800x600",
+        "1100x700"
+      ],
+      "stats": {
+        "callbacks": 10,
+        "binds": 10,
+        "draws": 10,
+        "uploads": 1,
+        "upload_bytes": 72,
+        "cache_hits": 9,
+        "cached_bytes": 72,
+        "rolled_back_buffers": 0
+      },
+      "status": "PASS"
+    }
+  ],
+  "negative_controls": [
+    {
+      "rejected": [
+        145,
+        173,
+        206,
+        255
+      ]
+    },
+    {
+      "rejected": [
+        37,
+        93,
+        157,
+        128
+      ]
+    },
+    {
+      "rejected": [
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  ]
+}

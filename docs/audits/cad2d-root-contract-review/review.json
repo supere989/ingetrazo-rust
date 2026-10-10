@@ -1,0 +1,37 @@
+{
+  "candidate": "566a9b8",
+  "focused_tests": {
+    "passed": 2,
+    "failed": 0
+  },
+  "review": "Encoded straight RGBA independent of immutable geometry and pose. Inline callback preserves command order and resets UI descriptor/tag rebinding.",
+  "blocking_findings": [
+    {
+      "case": "callback-only first frame",
+      "path": "cmd_draw -> Frames::new -> Mesh::new -> create_and_fill_buffer(empty) -> default allocator create_buffer size=0",
+      "required": "Avoid UI buffer allocation/binding when no mesh is present; verify callback-only then mixed frames on actual GPU.",
+      "resolution": "3cef03f callback-only path skips Frames allocation;software actual control passes"
+    }
+  ],
+  "pending": [
+    "composer shape adapter integration",
+    "expanded authored RGBA/coverage precision",
+    "full shape AA parity",
+    "native Metal consumer"
+  ],
+  "canonical_promotion": true,
+  "combined_regression": "isolatedtargetfullworkspacepassed;sharedtargetfailedimportretained",
+  "source": "native3cef03f and5softwarecontrols3d5f8be nowreviewbranch",
+  "isolated_workspace_counts": [
+    430,
+    0,
+    2
+  ],
+  "latest_world_workspace_counts": [
+    430,
+    0,
+    2
+  ],
+  "hardware": "5mandatorycontrols/10ownedclientcaptures/NVIDIAdeviceanddimensionsstrictPASS",
+  "status": "accepted_bounded_native_cad2d_api"
+}
