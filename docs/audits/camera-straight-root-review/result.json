@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "workspace_passed": 425,
+  "ignored": 2,
+  "source_original_camera": "core/camera.py _STANDARD_VIEWS top90 bottom-90",
+  "source_stencil_control": "docs/audits/stencil-independent/provenance.json original_cut_contour_disabled20736",
+  "boundary": "Exact preset and CPU stencil fixture verified; new renderer edge/resize source remains separately gated."
+}
