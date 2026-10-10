@@ -1,0 +1,41 @@
+{
+  "provenance": {
+    "rust_commit": "77d921e41820e42c19bb94cc688f3d88df883caf",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "negative_controls_detected": 5,
+  "fixtures": [
+    {
+      "name": "arco-yanque.igz",
+      "errors": [],
+      "conversion_exit_code": 0,
+      "asset_errors": [],
+      "source_asset_count": 6
+    },
+    {
+      "name": "banca-pergola-yanque.igz",
+      "errors": [],
+      "conversion_exit_code": 0,
+      "asset_errors": [],
+      "source_asset_count": 4
+    },
+    {
+      "name": "luminaria-solar-yanque.igz",
+      "errors": [],
+      "conversion_exit_code": 0,
+      "asset_errors": [],
+      "source_asset_count": 1
+    },
+    {
+      "name": "pileta-fuente-yanque.igz",
+      "errors": [],
+      "conversion_exit_code": 0,
+      "asset_errors": [],
+      "source_asset_count": 2
+    }
+  ],
+  "scope": "Untouched recursive source field and archive asset preservation. Does not prove editable prototype semantics, Python reopen or GUI workflows.",
+  "passed": true
+}

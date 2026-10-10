@@ -114,4 +114,4 @@ To install IngeTrazo into your local user applications menu with `.igz` desktop 
 
 See the [parity progress tracker](docs/PARITY_PROGRESS.md) for the audited inventory, open gaps, release gates and reproducible evidence.
 
-The initial audit passed 108 Rust tests and built the CLI. All four bundled original engineering documents converted successfully, but each lost nonempty document fields during a Rust IGZ roundtrip. Full compatibility and interactive feature parity remain unverified. See the tracker before using the port to edit original documents.
+The first reviewed swarm milestone passes 145 Rust tests, preserves all four original engineering documents through original Python reopening, and checks booleans and Push/Pull against independent native shape oracles. Textured model startup has also been inspected in a virtual display. Full interactive and feature parity remains open; see the tracker for acceptance boundaries and current gaps.

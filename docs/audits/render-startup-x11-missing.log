@@ -1,0 +1,1 @@
+Error running IngeTrazo GUI: winit EventLoopError: os error at /home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/winit-0.30.13/src/platform_impl/linux/mod.rs:788: Failed to load one of xlib's shared libraries

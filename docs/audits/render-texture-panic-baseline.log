@@ -1,0 +1,5 @@
+error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+
+thread 'main' (67778) panicked at /home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/epaint-0.30.0/src/mesh.rs:151:9:
+assertion failed: self.texture_id == TextureId::default()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
