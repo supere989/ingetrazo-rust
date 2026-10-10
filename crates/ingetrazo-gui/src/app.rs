@@ -34,6 +34,7 @@ pub enum TrayTab {
 pub struct GeometryClipboard {
     pub mesh: ingetrazo_core::mesh::Mesh,
     pub reference: DVec3,
+    pub source_document: uuid::Uuid,
     pub resources: Scene,
     pub groups: Vec<ingetrazo_core::groups::Group>,
 }
@@ -66,6 +67,7 @@ pub struct IngeTrazoApp {
     pub recent_files: Vec<PathBuf>,
     pub clipboard: Option<GeometryClipboard>,
     pub system_clipboard: Option<arboard::Clipboard>,
+    pub clipboard_document: uuid::Uuid,
     pub selected_dimension: Option<usize>,
     pub dimension_text_input: Option<(usize,String)>,
     pub parts_options:crate::outliner::PartsOptions,
@@ -153,6 +155,7 @@ impl IngeTrazoApp {
             recent_files: Vec::new(),
             clipboard: None,
             system_clipboard: None,
+            clipboard_document: uuid::Uuid::new_v4(),
             paste_preview: None,
             selected_saved_view: None,
             parts_options:crate::outliner::PartsOptions::default(),
@@ -227,6 +230,7 @@ impl IngeTrazoApp {
         self.save_undo_state();
         self.retire_current_recovery();
         self.scene = Scene::new();
+        self.clipboard_document=uuid::Uuid::new_v4();
         self.camera = self.scene.camera.clone();
         self.scene.unit=self.document_session.preferences.new_document_unit;
         self.undo_stack.clear();self.redo_stack.clear();
@@ -248,7 +252,7 @@ impl IngeTrazoApp {
                 self.save_undo_state();
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
-                self.scene = loaded_scene;
+                self.scene = loaded_scene;self.clipboard_document=uuid::Uuid::new_v4();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();
@@ -413,12 +417,13 @@ impl IngeTrazoApp {
         let count=mesh.faces.len()+mesh.edges.len()+groups.len();
         if count==0{self.status_message="Nothing selected to copy".into();return;}
         let mut resources=Scene::new();resources.materials=self.scene.materials.clone();resources.layers=self.scene.layers.clone();resources.embedded_textures=self.scene.embedded_textures.clone();resources.component_definitions=self.scene.component_definitions.clone();
-        self.clipboard=Some(GeometryClipboard{mesh,reference,groups,resources});self.write_system_clipboard();self.status_message=format!("Copied selection ({count} items)");
+        self.clipboard=Some(GeometryClipboard{mesh,reference,groups,resources,source_document:self.clipboard_document});self.write_system_clipboard();self.status_message=format!("Copied selection ({count} items)");
     }
     pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
-        let Some(cb)=self.clipboard.clone() else{return false;};
+        let Some(mut cb)=self.clipboard.clone() else{return false;};
         if let Err(e)=crate::clipboard::validate_payload(&cb){self.status_message=e;return false;}
         if cb.mesh.faces.is_empty()&&cb.mesh.edges.is_empty()&&cb.groups.is_empty(){return false;}
+        crate::clipboard::remap_resources(&mut cb,&self.scene,self.clipboard_document);
         let inverse=self.scene.dimension_frame.inverse();
         let source=match ingetrazo_core::containers::transform_mesh(&cb.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return false;}};
         let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&source,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};

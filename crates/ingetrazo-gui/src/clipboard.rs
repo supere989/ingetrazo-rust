@@ -10,6 +10,28 @@ pub(crate) fn merge_resources(destination:&mut Scene,source:&Scene)->Result<(),S
     for layer in &source.layers{if !destination.layers.iter().any(|existing|existing.name==layer.name){destination.layers.push(layer.clone());}}
     Ok(())
 }
+pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destination:&Scene,document:uuid::Uuid){
+    use std::collections::HashMap;
+    if payload.source_document==document{
+        for(name,material)in &mut payload.resources.materials{if let Some(current)=destination.materials.get(name){*material=current.clone();}}
+        for(name,bytes)in &mut payload.resources.embedded_textures{if let Some(current)=destination.embedded_textures.get(name){*bytes=current.clone();}}
+        for(id,definition)in &mut payload.resources.component_definitions{if let Some(current)=destination.component_definitions.get(id){*definition=current.clone();}}
+    }
+    let mut assets=HashMap::new();let mut materials=HashMap::new();
+    for(name,bytes)in &payload.resources.embedded_textures{let mut target=name.clone();let mut i=1;while destination.embedded_textures.get(&target).is_some_and(|existing|existing!=bytes){target=format!("{name} (clipboard {i})");i+=1;}assets.insert(name.clone(),target);}
+    fn values(value:&mut serde_json::Value,assets:&HashMap<String,String>,materials:&HashMap<String,String>){match value{serde_json::Value::Object(object)=>for(key,value)in object{if let Some(name)=value.as_str(){let map=match key.as_str(){"mat"|"material"=>Some(materials),"embed"|"path"|"texture_embed"|"texture_path"=>Some(assets),_=>None};if let Some(target)=map.and_then(|map|map.get(name)){*value=serde_json::json!(target);}}values(value,assets,materials);},serde_json::Value::Array(array)=>for value in array{values(value,assets,materials);},_=>{}}}
+    for(name,material)in &mut payload.resources.materials{if let Some(embed)=&mut material.texture_embed{if let Some(target)=assets.get(embed){*embed=target.clone();}}if let Some(path)=&mut material.texture_path{if let Some(target)=assets.get(path){*path=target.clone();}}values(&mut material.native_document,&assets,&HashMap::new());let mut target=name.clone();let mut i=1;while destination.materials.get(&target).is_some_and(|existing|{let mut compared=material.clone();compared.name=target.clone();existing!=&compared}){target=format!("{name} (clipboard {i})");i+=1;}materials.insert(name.clone(),target);}
+    let mut definitions=HashMap::new();if payload.source_document!=document{for(id,definition)in &payload.resources.component_definitions{
+        use std::hash::{Hash,Hasher};let mut hash=std::collections::hash_map::DefaultHasher::new();serde_json::to_value(definition).unwrap_or_default().to_string().hash(&mut hash);let target=uuid::Uuid::from_u128(id.as_u128()^document.as_u128()^u128::from(hash.finish()));definitions.insert(*id,target);
+    }}
+    fn mesh(mesh:&mut ingetrazo_core::mesh::Mesh,assets:&HashMap<String,String>,materials:&HashMap<String,String>){for face in &mut mesh.faces{for(key,value)in &mut face.attrs{if key=="mat"||key=="material"{if let Some(target)=value.as_str().and_then(|name|materials.get(name)){*value=serde_json::json!(target);}}values(value,assets,materials);}}}
+    fn groups(groups:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>){for group in groups{if let Some(id)=group.component_definition{group.component_definition=Some(*defs.get(&id).unwrap_or(&id));}mesh(&mut group.mesh,assets,materials);values(&mut group.native_document,assets,materials);if let Some(texture)=&mut group.billboard_texture{if let Some(target)=assets.get(texture){*texture=target.clone();}}groups_children(&mut group.children,assets,materials,defs);}}
+    fn groups_children(children:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>){groups(children,assets,materials,defs)}
+    mesh(&mut payload.mesh,&assets,&materials);groups(&mut payload.groups,&assets,&materials,&definitions);
+    payload.resources.embedded_textures=std::mem::take(&mut payload.resources.embedded_textures).into_iter().map(|(name,bytes)|(assets[&name].clone(),bytes)).collect();
+    payload.resources.materials=std::mem::take(&mut payload.resources.materials).into_iter().map(|(name,mut material)|{let target=materials[&name].clone();material.name=target.clone();(target,material)}).collect();
+    payload.resources.component_definitions=std::mem::take(&mut payload.resources.component_definitions).into_iter().map(|(id,mut definition)|{mesh(&mut definition.mesh,&assets,&materials);groups(&mut definition.children,&assets,&materials,&definitions);(*definitions.get(&id).unwrap_or(&id),definition)}).collect();
+}
 pub(crate) fn validate_payload(payload:&crate::app::GeometryClipboard)->Result<(),String>{
     fn mesh(mesh:&ingetrazo_core::mesh::Mesh)->Result<(),String>{
         let n=mesh.vertices.len();if mesh.vertices.iter().any(|v|!v.position.is_finite())||mesh.edges.iter().any(|e|e.v0>=n||e.v1>=n)||mesh.faces.iter().any(|f|std::iter::once(&f.vertices).chain(&f.holes).any(|ring|ring.len()<3||ring.iter().any(|v|*v>=n))){return Err("Malformed clipboard geometry".into());}Ok(())
@@ -33,9 +55,10 @@ impl IngeTrazoApp {
 
     pub fn begin_paste_preview(&mut self) {
         self.read_system_clipboard();
-        let Some(clipboard)=self.clipboard.clone() else{return;};
+        let Some(mut clipboard)=self.clipboard.clone() else{return;};
         if let Err(e)=validate_payload(&clipboard){self.status_message=e;return;}
         if clipboard.mesh.faces.is_empty()&&clipboard.mesh.edges.is_empty()&&clipboard.groups.is_empty(){return;}
+        remap_resources(&mut clipboard,&self.scene,self.clipboard_document);
         self.set_tool(ingetrazo_tools::base::ToolType::Select);
         let inverse=self.scene.dimension_frame.inverse();
         let mesh=match ingetrazo_core::containers::transform_mesh(&clipboard.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
@@ -59,6 +82,12 @@ impl IngeTrazoApp {
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
     #[test]
+    fn foreign_component_material_and_asset_collisions_remap_with_shared_repeat_identity(){
+        use ingetrazo_core::{groups::Group,mesh::Mesh,materials::Material};
+        let mut source=IngeTrazoApp::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);mesh.faces[0].attrs.insert("mat".into(),serde_json::json!("Paint"));mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"embed":"same.png","unknown":17}));let group=Group::with_mesh("part",mesh);let uid=group.id;source.scene.groups.push(group);let definition=source.scene.make_component(uid).unwrap();let mut paint=Material::new("Paint",[1.,0.,0.,1.]);paint.texture_embed=Some("same.png".into());source.scene.materials.insert("Paint".into(),paint);source.scene.embedded_textures.insert("same.png".into(),vec![1,2]);source.scene.select(SelectionItem::Group(0));source.copy_selection();
+        let mut destination=IngeTrazoApp::new();destination.scene.materials.insert("Paint".into(),Material::new("Paint",[0.,0.,1.,1.]));destination.scene.embedded_textures.insert("same.png".into(),vec![9]);destination.scene.component_definitions.insert(definition,ingetrazo_core::components::ComponentDefinition{mesh:Mesh::new(),children:vec![]});destination.clipboard=source.clipboard.clone();assert!(destination.paste_internal(DVec3::ZERO));let pasted=&destination.scene.groups[0];let new_definition=pasted.component_definition.unwrap();assert_ne!(new_definition,definition);assert_eq!(pasted.mesh.faces[0].attrs["mat"],"Paint (clipboard 1)");assert_eq!(pasted.mesh.faces[0].attrs["texture"]["embed"],"same.png (clipboard 1)");assert_eq!(pasted.mesh.faces[0].attrs["texture"]["unknown"],17);assert_eq!(destination.scene.materials["Paint (clipboard 1)"].texture_embed.as_deref(),Some("same.png (clipboard 1)"));assert!(destination.paste_internal(DVec3::X));assert_eq!(destination.scene.groups[1].component_definition,Some(new_definition));assert_ne!(destination.scene.groups[0].id,destination.scene.groups[1].id);
+    }
+    #[test]
     fn malformed_mesh_and_recursive_definitions_leave_document_and_history_unchanged(){
         let mut app=IngeTrazoApp::new();let mut payload=crate::app::GeometryClipboard::default();payload.mesh.add_vertex(DVec3::ZERO);payload.mesh.add_vertex(DVec3::X);payload.mesh.add_edge(0,1);payload.mesh.edges[0].v1=999;app.clipboard=Some(payload.clone());let before=app.scene.clone();assert!(!app.paste_internal(DVec3::ZERO));assert_eq!(app.scene,before);assert!(app.undo_stack.is_empty());app.begin_paste_preview();assert!(app.paste_preview.is_none());
         payload.mesh.edges[0].v1=1;let id=uuid::Uuid::new_v4();let mut group=ingetrazo_core::groups::Group::new("recursive");group.component_definition=Some(id);payload.resources.component_definitions.insert(id,ingetrazo_core::components::ComponentDefinition{mesh:Default::default(),children:vec![group.clone()]});payload.groups.push(group);assert!(super::validate_payload(&payload).is_err());
@@ -73,7 +102,7 @@ mod tests {
     fn foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo(){
         let mut source=IngeTrazoApp::new();let a=source.scene.mesh.add_vertex(DVec3::ZERO);let b=source.scene.mesh.add_vertex(DVec3::X);source.scene.mesh.add_edge(a,b);source.scene.select(SelectionItem::Edge(0));source.scene.embedded_textures.insert("texture.png".into(),vec![1,2,3,4]);source.copy_selection();
         let encoded=serde_json::to_string(source.clipboard.as_ref().unwrap()).unwrap();let mut destination=IngeTrazoApp::new();destination.clipboard=Some(serde_json::from_str(&encoded).unwrap());let before=destination.scene.clone();destination.begin_paste_preview();assert_eq!(destination.paste_preview.as_ref().unwrap().scene.embedded_textures["texture.png"],vec![1,2,3,4]);assert_eq!(destination.scene,before);assert!(destination.commit_paste_preview());assert_eq!(destination.scene.embedded_textures["texture.png"],vec![1,2,3,4]);destination.undo();assert_eq!(destination.scene,before);
-        destination.scene.embedded_textures.insert("texture.png".into(),vec![9]);let before=destination.scene.clone();let depth=destination.undo_stack.len();assert!(!destination.paste_internal(DVec3::ZERO));assert_eq!(destination.scene,before);assert_eq!(destination.undo_stack.len(),depth);
+        destination.scene.embedded_textures.insert("texture.png".into(),vec![9]);let before=destination.scene.clone();let depth=destination.undo_stack.len();assert!(destination.paste_internal(DVec3::ZERO));assert_eq!(destination.scene.embedded_textures["texture.png"],vec![9]);assert_eq!(destination.scene.embedded_textures["texture.png (clipboard 1)"],vec![1,2,3,4]);assert_eq!(destination.undo_stack.len(),depth+1);destination.undo();assert_eq!(destination.scene,before);
     }
     #[test]
     fn copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture(){
