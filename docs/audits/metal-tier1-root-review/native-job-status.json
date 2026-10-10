@@ -1,0 +1,15 @@
+{
+  "run": 38056309963,
+  "head": "3401ebb59735d18bf5426fe54df7941f242df149",
+  "ARM": {
+    "job": 114225443809,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "Intel": {
+    "job": 114225443701,
+    "status": "in_progress",
+    "conclusion": null
+  },
+  "scope": "authoritative GitHub job verdict; artifact inspection pending; not full renderer acceptance"
+}
