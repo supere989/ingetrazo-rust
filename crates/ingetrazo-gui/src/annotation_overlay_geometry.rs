@@ -8,7 +8,7 @@ use ingetrazo_formats::{annotation_font, paper_font_resolver::Request};
 pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:Arc<[Gate]>}
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2]}
-pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,Arc<Mesh>)>,builds:u64,limits:Limits}
+pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
  pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
@@ -21,9 +21,12 @@ impl Cache {
   Ok((((line.ascent_26_6+63)/64+(line.descent_26_6+63)/64)as f64,(line.advance_26_6 as f64/64.+0.5).floor()))
  }
  pub fn prepare(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64)->Result<Arc<Mesh>,String>{
+  self.prepare_clipped(plan,density,font_dpi,[-1_000_000,-1_000_000,1_000_001,1_000_001])
+ }
+ pub fn prepare_clipped(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
   let density=f64::from(density);
   if !density.is_finite()||density<=0.||density>40.||!font_dpi.is_finite()||font_dpi<=0.{return Err("Annotation physical/font density outside admission".into());}
-  if let Some((old,d,dpi,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits(){return Ok(mesh.clone());}}
+  if let Some((old,d,dpi,old_clip,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits()&&*old_clip==clip{return Ok(mesh.clone());}}
   if plan.queries.len()>u32::MAX as usize||plan.queries.iter().flatten().any(|v|!v.is_finite()){
    return Err("Annotation plan query admission exceeded".into());
   }
@@ -32,8 +35,8 @@ impl Cache {
    Gate::Always=>{},Gate::Point(a) if a<count=>{},Gate::Both(a,b) if a<count&&b<count=>{},
    _=>return Err("Annotation plan references absent query".into()),
   }}
-  let mesh=Arc::new(self.build(&plan,density,font_dpi)?);
-  self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),mesh.clone()));self.builds+=1;Ok(mesh)
+  let mesh=Arc::new(self.build(&plan,density,font_dpi,clip)?);
+  self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),clip,mesh.clone()));self.builds+=1;Ok(mesh)
  }
  fn glyph(&mut self,face:&ingetrazo_formats::annotation_font::Face,glyph:u32,density:f64,phase:[u8;2])->Result<Arc<ingetrazo_formats::paper_text::RasterGlyph>,String>{
   let key=GlyphKey{font:face.key(),pixels:face.pixels(),glyph,density:density.to_bits(),phase};
@@ -72,14 +75,14 @@ impl Cache {
   self.glyphs.insert(key,image.clone());self.glyph_order.push_back(key);
   self.glyph_bytes=remaining_bytes;self.glyph_builds+=1;Ok(image)
  }
- fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64)->Result<Mesh,String>{
+ fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4])->Result<Mesh,String>{
   let mut writer=Writer::new(density,self.limits);
   for operation in &plan.operations {
    match &operation.primitive {
     Primitive::Line{a,b,width,color}=>{
      let path=PathContour{start:*a,segments:vec![Segment::Line(*b)]};
      let spans=if width*density<=1.{let path=transform_path(&path,density);ingetrazo_render::qt_cosmetic::rasterize_path(&path,false,width*density,self.limits.spans)?}
-      else{let a=DVec2::from_array(*a);let b=DVec2::from_array(*b);let d=b-a;let length=d.length();if length==0.{continue;}let u=d/length*(width/2.);let n=DVec2::new(u.y,-u.x);let points=[a-u+n,b+u+n,b+u-n,a-u-n].map(|p|[p.x*density,p.y*density]);qt_gray::rasterize(&[points.to_vec()],self.limits.cells,self.limits.spans)?};
+      else{ingetrazo_render::qt_line::rasterize(a.map(|v|v*density),b.map(|v|v*density),width*density,clip,self.limits.cells,self.limits.spans)?};
      writer.layer(spans,*color,operation.gate)?;
     }
     Primitive::Polygon{points,color}=>{let contour=points.map(|p|[p[0]*density,p[1]*density]);writer.layer(qt_gray::rasterize(&[contour.to_vec()],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;}

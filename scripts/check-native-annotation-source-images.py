@@ -9,8 +9,13 @@ root=Path(__file__).resolve().parents[1];out=Path(a.output);out.mkdir(parents=Tr
 oracle=root/"docs/audits/native-annotation-source/original.json";data=json.loads(oracle.read_text());assert data["source_pin"]=="6be29fe437a7cd992d4e079f71720821b25216b9"
 names=["arrow","tick-selected","none","partial-occlusion","hidden","leader-right","leader-left-selected","leader-anchor-unprojectable","leader-hidden","leader-empty","dim-hover","dim-mm-axis","dim-feet-fractional","leader-hover","leader-splitlines"]
 assert [r["name"]for r in data["cases"]]==names,"Mandatory source inventory changed"
-def pixels(path):
- im=QImage(str(path));assert not im.isNull()and im.width()>=640 and im.height()>=400
+def pixels(path,native=False):
+ im=QImage(str(path));assert not im.isNull()
+ if native:
+  assert im.width()==800 and im.height()==600,"Native canvas extent changed"
+  full=im.convertToFormat(QImage.Format_RGBA8888);array=np.frombuffer(full.constBits(),np.uint8).reshape(600,full.bytesPerLine())[:,:3200].reshape(600,800,4)
+  assert np.all(array[400:]==255)and np.all(array[:400,640:]==255),"Extra ink outside the declared source canvas"
+ else:assert im.width()==640 and im.height()==400,"Original canvas extent changed"
  im=im.copy(0,0,640,400).convertToFormat(QImage.Format_RGBA8888)
  return np.frombuffer(im.constBits(),np.uint8).reshape(400,im.bytesPerLine())[:,:2560].reshape(400,640,4).copy()
 rows=[]
@@ -20,7 +25,7 @@ try:
   result=subprocess.run(["python3",str(root/"scripts/check-native-vulkan-startup.py"),a.binary,str(case)],env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=30)
   case.mkdir(exist_ok=True);(case/"driver.log").write_text(result.stdout)
   assert result.returncode==0,f"Native case lifecycle failed: {name}"
-  source=root/"docs/audits/native-annotation-source"/(name+".png");native=case/"resize-800x600.png";s,n=pixels(source),pixels(native);diff=np.any(s!=n,axis=2);coords=np.argwhere(diff)
+  source=root/"docs/audits/native-annotation-source"/(name+".png");native=case/"resize-800x600.png";s,n=pixels(source),pixels(native,True);diff=np.any(s!=n,axis=2);coords=np.argwhere(diff)
   row=dict(name=name,source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),native_sha256=hashlib.sha256(native.read_bytes()).hexdigest(),different_pixels=len(coords),first=[dict(x=int(c[1]),y=int(c[0]),source=s[tuple(c)].tolist(),native=n[tuple(c)].tolist())for c in coords[:20]])
   rows.append(row);print(name,len(coords),flush=True)
 finally:

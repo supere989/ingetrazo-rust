@@ -156,3 +156,5 @@ pub mod qt_gl_image_line;
 pub mod source_texture_average;
 
 pub mod source_texture_decode;
+
+pub mod qt_line;

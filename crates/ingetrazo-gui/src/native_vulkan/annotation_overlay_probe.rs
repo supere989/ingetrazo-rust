@@ -99,7 +99,7 @@ impl App for Probe{
    if self.hold{return Err("Annotation controlled replacement held after actual admission refusal".into());}
    if self.cleared{system.clear_annotation_overlay()?;return Ok(());}
    if self.plan.operations.is_empty(){system.clear_annotation_overlay()?;return Ok(());}
-   if self.handle.is_none(){let mesh=if self.range_control{range_mesh(system.egui_ctx.pixels_per_point(),false)?}else{self.cache.prepare(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.)?};self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),mesh.gates.clone())?);}
+   if self.handle.is_none(){let mesh=if self.range_control{range_mesh(system.egui_ctx.pixels_per_point(),false)?}else{self.cache.prepare_clipped(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.,[0,0,640,400])?};self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),mesh.gates.clone())?);}
    system.prepare_annotation_overlay(self.handle.as_ref().unwrap(),self.queries.clone(),glam::Mat4::IDENTITY.to_cols_array(),[0.;3],[0.,0.,-1.],0)?;
    Ok::<(),String>(())
   })();self.failure=result.as_ref().err().cloned();system.annotation_prepare_error=self.failure.clone();
@@ -108,7 +108,7 @@ impl App for Probe{
  fn build_ui(&mut self,ctx:&Context){
   if std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").is_some(){ctx.request_repaint_after(std::time::Duration::from_millis(16));}
   let rect=ctx.screen_rect();let painter=ctx.layer_painter(egui::LayerId::background());painter.rect_filled(rect,0.,egui::Color32::WHITE);
-  if let Some(handle)=&self.handle{painter.add(handle.shape(rect));}
+  if let Some(handle)=&self.handle{let canvas=egui::Rect::from_min_size(rect.min,egui::vec2(640.,400.));painter.with_clip_rect(canvas).add(handle.shape(canvas));}
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Annotation fixture GPU refusal: {error}");}
 }

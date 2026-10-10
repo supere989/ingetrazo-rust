@@ -1,0 +1,8 @@
+{
+  "qt_version": "6.12.0",
+  "qrasterizer_sha256": "f5be4ad5d3312ecfe3793149f30bf952ceb019950c94f1c6a5c02cbb3c7a05cd",
+  "qpaintengine_raster_sha256": "f52f54817e5f94955f2064553076f0f65a721fc21650db02ba81ef09a1cc092b",
+  "license": "GPL-3.0-only selected from Qt GPL/LGPL/commercial alternatives",
+  "source_url": "https://code.qt.io/cgit/qt/qtbase.git/tree/src/gui/painting/qrasterizer.cpp?h=v6.12.0",
+  "scope": "AA QRasterizer rasterizeLine used by non-complex LinesHint; existing <=1 cosmetic policy remains separate"
+}
