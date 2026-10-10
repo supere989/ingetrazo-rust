@@ -1,0 +1,194 @@
+[
+  {
+    "case": "image-quadrants",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-alpha",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-cutout",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-opacity-0999",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-opacity-below",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-reversed",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-wireframe",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-hidden-line",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-xray",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-hidden-layer",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-overlap",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-opaque-behind",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-faded-behind",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-threshold-behind",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-below-threshold-behind",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-coplanar-trace",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-oblique",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-perspective",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-uv-asymmetric",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-uv-asymmetric-perspective",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-uv-negative-v",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-offscreen-clip",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-near-clipped",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "image-tinted-alpha",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  }
+]

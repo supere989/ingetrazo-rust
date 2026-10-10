@@ -8,6 +8,8 @@ source,native,old=map(Path,sys.argv[1:4])
 s=json.loads((source/"original-alpha-results.json").read_text())
 n=json.loads((native/"native-alpha-results.json").read_text())
 required={"image-"+v for v in ["quadrants","alpha","cutout","opacity-0999","opacity-below","reversed","wireframe","hidden-line","xray","hidden-layer","overlap","opaque-behind","faded-behind","threshold-behind","below-threshold-behind","coplanar-trace"]}
+if "--geometry" in sys.argv[4:]:
+ required|={"image-"+v for v in ["oblique","perspective","uv-asymmetric","uv-asymmetric-perspective","uv-negative-v","offscreen-clip","near-clipped","tinted-alpha"]}
 def device(d):
  assert d["vendor_id"]==0x10de and d["device_type"]=="DISCRETE_GPU" and d["software_fixture_requested"] is False and "NVIDIA GeForce RTX 5090" in d["name"],"wrong actual Vulkan device"
  assert isinstance(d["device_id"],int)and d["device_id"]>0
@@ -30,4 +32,4 @@ for row in s["cases"]:
  normative=pixels(source/"image-quadrants.png")
 assert not np.array_equal(normative,pixels(old/"image-quadrants.png")),"literal old inverse-V path incorrectly admitted"
 bad=normative.copy();bad[226,343,0]^=1;assert not np.array_equal(normative,bad),"interior one-channel mutation admitted"
-print(json.dumps({"cases":16,"whole_rgba_pixels":16*800*600,"exact":True,"literal_old_rejected":True,"device_mutations_rejected":3,"pixel_mutations_rejected":1,"scope":"Original GPU image surfaces only; QPainter outlines deliberately excluded, remaining full display/oblique/mixed transforms/Metal open"}))
+print(json.dumps({"cases":len(required),"whole_rgba_pixels":len(required)*800*600,"exact":True,"literal_old_rejected":True,"device_mutations_rejected":3,"pixel_mutations_rejected":1,"scope":"Original GPU image surfaces only; QPainter outlines deliberately excluded, remaining outlines/mixed transforms/Metal open"}))
