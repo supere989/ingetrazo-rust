@@ -1,0 +1,96 @@
+{
+  "validation_function": "scripts/check-macos-paper-font-tiles.py compare",
+  "controls": [
+    {
+      "name": "helvetica",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "helvetica",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "helvetica-bold",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "helvetica-bold",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "helvetica-italic",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "helvetica-italic",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "times-bold-italic",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "times-bold-italic",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "cjk",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "cjk",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "arabic",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "arabic",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "italic-overlap",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "italic-overlap",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "arabic-marks",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "arabic-marks",
+      "mutation": "one-pixel",
+      "rejected": true
+    },
+    {
+      "name": "times-overlap",
+      "mutation": "blank",
+      "rejected": true
+    },
+    {
+      "name": "times-overlap",
+      "mutation": "one-pixel",
+      "rejected": true
+    }
+  ],
+  "exact_threshold": true
+}

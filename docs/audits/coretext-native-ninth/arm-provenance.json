@@ -1,0 +1,15 @@
+{
+  "run_id": 38093876455,
+  "source_sha": "d74058cd4ba4873a55489416b368395a90b5257a",
+  "artifact_id": 11685825484,
+  "artifact_bytes": 357794,
+  "artifact_sha256": "7a00062586923e5afed0bdfeb29388ebf45a729ac0f4f4ccacd8bdaaf4e4c683",
+  "independent_decoder": "PySide6 QImage RGBA8888 + NumPy exact complete image inequality",
+  "actual_gpu_canvas_exact": 9,
+  "gpu_negative_controls_rejected": 18,
+  "pdf_exact": 18,
+  "raw_lifecycle_passed": false,
+  "cause": "Only actual host positive presentation gate fails: displayed0,skipped1,pending3,submitted4. GPU commands complete; final3 presentation callbacks unseen. Visible=true before exit; final visible=false is shutdown state, not cause. No workaround/threshold/timing change justified.",
+  "scope": "Native macOS ARM SDK+actual production Metal compute whole-image/cold-warm acceptance for nine frozen fonts. No physical Mac/WSI completion or full font parity claim.",
+  "cloud_dispatched": false
+}
