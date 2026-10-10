@@ -1,0 +1,1 @@
+5913d2fe2a4af178630bbc158f26ea172c53d3f2b87f08b85717979cff516c14  /tmp/ingetrazo-document-global-contracts-target/debug/examples/image_plane_acceptance_fixture
