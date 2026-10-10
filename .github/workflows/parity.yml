@@ -16,7 +16,7 @@ jobs:
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe --example egui_draw_probe --example presentation_probe --example egui_contract_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe --example egui_draw_probe --example presentation_probe --example egui_contract_probe --example egui_mip_probe > docs/audits/metal-native-link-ci/build.log 2>&1
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
@@ -37,6 +37,10 @@ jobs:
         run: |
           target/debug/examples/egui_contract_probe --output=docs/audits/metal-native-link-ci/egui-contract > docs/audits/metal-native-link-ci/egui-contract.log 2>&1
           python3 scripts/check-metal-egui-contract.py docs/audits/metal-native-link-ci/egui-contract > docs/audits/metal-native-link-ci/egui-contract-check.log
+      - name: Actual asynchronous GPU mip generation and ownership
+        run: |
+          target/debug/examples/egui_mip_probe --output=docs/audits/metal-native-link-ci/egui-mips > docs/audits/metal-native-link-ci/egui-mips.log 2>&1
+          python3 scripts/check-metal-egui-mips.py docs/audits/metal-native-link-ci/egui-mips > docs/audits/metal-native-link-ci/egui-mips-check.json
       - name: Actual native CAMetalLayer presentation and requested resize
         run: target/debug/examples/presentation_probe --automatic > docs/audits/metal-native-link-ci/presentation.log 2>&1
       - name: Actual completed and pending Metal CAD Drop ownership
