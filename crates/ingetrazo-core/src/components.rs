@@ -131,6 +131,22 @@ impl Scene {
                 .map(|v|{let mut a=[0.;16];a.copy_from_slice(&v);glam::DMat4::from_cols_array(&a)}).unwrap_or(glam::DMat4::IDENTITY);
             let frame=group.transform*axes;
             for vertex in &mut group.mesh.vertices {vertex.position=group.transform.transform_point3(vertex.position);}
+            // Texture world-to-UV affine covectors must follow the baked
+            // coordinates, including nonuniform scale, reflection and shear.
+            let inverse_transpose=group.transform.inverse().transpose();
+            let translation=group.transform.w_axis.truncate();
+            for face in &mut group.mesh.faces {
+                let Some(texture)=face.attrs.get_mut("texture") else {continue;};
+                let Some(uvw)=texture.get("uvw").and_then(|v|v.as_array()).filter(|a|a.len()==8)
+                    .and_then(|a|a.iter().map(|v|v.as_f64()).collect::<Option<Vec<_>>>()) else {continue;};
+                let mut mapped=uvw.clone();
+                for base in [0,4] {
+                    let gradient=inverse_transpose.transform_vector3(glam::DVec3::new(uvw[base],uvw[base+1],uvw[base+2]));
+                    mapped[base]=gradient.x;mapped[base+1]=gradient.y;mapped[base+2]=gradient.z;
+                    mapped[base+3]=uvw[base+3]-gradient.dot(translation);
+                }
+                texture["uvw"]=serde_json::json!(mapped);
+            }
             group.mesh.rebuild_spatial_index();group.transform=glam::DMat4::IDENTITY;
             if !group.native_document.is_object() {group.native_document=serde_json::json!({});}
             group.native_document["axes"]=serde_json::json!(frame.to_cols_array());
@@ -194,6 +210,28 @@ mod tests {
         assert_eq!(scene.groups[0].children[0].children[0].mesh.vertices[0].position.z,17.);
         assert_eq!(scene.groups[1].children[0].children[0].mesh.vertices[0].position.z,99.);
         assert_eq!(scene.groups[1].component_definition,Some(outer_def));
+    }
+    #[test]
+    fn unique_leaf_refits_texture_covectors_under_affine_transform() {
+        let mut scene=Scene::new();let mut mesh=Mesh::new();
+        let vertices=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));
+        mesh.add_face(vertices.to_vec(),vec![]).unwrap();
+        let uvw=[2.,3.,4.,5.,-1.,2.,0.,7.];
+        mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"uvw":uvw,"opaque":"retain"}));
+        let mut group=Group::with_mesh("textured",mesh);
+        group.transform=DMat4::from_cols(glam::DVec4::new(-2.,0.,0.,0.),glam::DVec4::new(1.,3.,0.,0.),glam::DVec4::new(0.,0.,4.,0.),glam::DVec4::new(8.,9.,10.,1.));
+        let source=group.clone();let id=group.id;scene.groups.push(group);scene.make_component(id).unwrap();
+        scene.make_component_unique(id).unwrap();let baked=&scene.groups[0];
+        let mapped=baked.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap();
+        for (before,after) in source.mesh.vertices.iter().zip(&baked.mesh.vertices) {
+            for base in [0,4] {
+                let expected=DVec3::new(uvw[base],uvw[base+1],uvw[base+2]).dot(before.position)+uvw[base+3];
+                let actual=DVec3::new(mapped[base].as_f64().unwrap(),mapped[base+1].as_f64().unwrap(),mapped[base+2].as_f64().unwrap()).dot(after.position)+mapped[base+3].as_f64().unwrap();
+                assert!((actual-expected).abs()<1e-10);
+            }
+        }
+        assert_eq!(baked.mesh.faces[0].attrs["texture"]["opaque"],"retain");
+        assert_eq!(baked.mesh.faces[0].vertices,source.mesh.faces[0].vertices);
     }
     #[test]
     fn recursive_replacements_and_missing_ids_are_atomic() {
