@@ -1,0 +1,5 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+{"scope":"actual retained depth sampling; not original MSAA resolve policy or annotation overlay proof","depth_format":"D24_UNORM_S8_UINT","samples":4,"extent":[64,64],"flags":[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]],"warm_query_uploads":1,"invalid_sample_refused":true,"stale_target_refused":true,"final_ledger":0}

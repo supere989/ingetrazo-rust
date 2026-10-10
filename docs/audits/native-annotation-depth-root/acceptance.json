@@ -1,0 +1,54 @@
+{
+  "source_revision": "ba4574560ec8dfccda9fe1d0052643c644879fe7",
+  "binary_sha256": "7cbb8ad5e6b19ddf83bc7f45cb187b15cedf3297a95eb04b699a17e5a734c461",
+  "hardware": "NVIDIA GeForce RTX 5090",
+  "result": {
+    "scope": "actual retained depth sampling; not original MSAA resolve policy or annotation overlay proof",
+    "depth_format": "D24_UNORM_S8_UINT",
+    "samples": 4,
+    "extent": [
+      64,
+      64
+    ],
+    "flags": [
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ]
+    ],
+    "warm_query_uploads": 1,
+    "invalid_sample_refused": true,
+    "stale_target_refused": true,
+    "final_ledger": 0
+  },
+  "focused_tests_passed": 6,
+  "scope": "Actual retained-depth interior query and resource ownership proof. No original MSAA edge resolve, complete overlay or complete frame parity acceptance.",
+  "files_sha256": {
+    "build.log": "4c4e5c3eabafefec708988c8776e9acae9f3ed8a3bb6869147941681a6665f62",
+    "focused-tests.log": "5ca5f63738b34686a7e9243e9014dd3f57576d5f125ffded4699f66ad87832b1",
+    "nvidia-egl-icd.json": "56308b7e2637544de6608d43469a797b8c2e7394c703c5a4fe823084c48ef5c7",
+    "run.log": "027e8e586a97ad5dcaed34487703066b23cc850ed6c3e872c0cc42f06526d7b5",
+    "transport.json": "ecd6e40200a7de6b6c2a1a9056d555e7ebcf30e9185d35be5976be3bc9e76f2a",
+    "transport.py": "ef3b0cce92d2c22bbede45bb517c06faee756ef5e576c03597f509ac3d38e0ea"
+  }
+}
