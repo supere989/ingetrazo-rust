@@ -19,5 +19,5 @@ for name in ["drop_panel_layer","stale_purge_visibility","remove_renamed_assignm
  else:bad["import_deleted_held_object"][-1]["layers"].pop()
  assert not accepts(bad);negative[name]="rejected"
 if len(sys.argv)>3:
- old=json.loads(Path(sys.argv[3]).read_text());assert not accepts(old)
+ old=json.loads(Path(sys.argv[3]).read_text());assert not accepts(old);assert norm(old["panel_state_across_model_history"])!=source["panel_state_across_model_history"];assert norm(old["purge_held_object_visibility"])==source["purge_held_object_visibility"]
 print(json.dumps({"passed":True,"cases":4,"states":13,"negative_controls":negative,"default_label_normalization":"native legacy Layer0 -> source Layer 0; all other strings exact","scope":"operative original Qt panel/History and native app controller; no rendered input proof or full layer parity"},indent=2))
