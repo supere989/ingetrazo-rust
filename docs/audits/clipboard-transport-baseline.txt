@@ -1,0 +1,1 @@
+Independent disposable Xvfb :187 native transport: cross-owner geometry transfer, unrelated text cache clearing, malformed JSON/topology atomicity PASS. Final assertion FAILED: new malformed request must retire previous valid preview. Source6496351 before repair.

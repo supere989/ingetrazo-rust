@@ -1,0 +1,8 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running `target/debug/examples/clipboard_boundary_fixture /tmp/clipboard-boundary`
+
+thread 'main' (355046) panicked at crates/ingetrazo-gui/examples/clipboard_boundary_fixture.rs:10:2:
+assertion `left == right` failed: opaque metadata must not be interpreted as resources
+  left: Object {"material": String("Paint (clipboard 1)"), "path": String("same.png (clipboard 1)")}
+ right: Object {"material": String("Paint"), "path": String("same.png")}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,11 @@
+{
+  "provenance": {
+    "rust_commit": "6496351b254bb8be8a21c50a7a093c274a03c2d6",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 1,
+  "scope": "Actual original world_mesh geometry/affine UV equivalence under reflected nonuniform source and nonuniform rotated destination edit frames; atomic history, foreign component repeat sharing, preserved destination materials/assets and schema-limited opaque metadata. System transport and overlapping planes are separate acceptance."
+}
