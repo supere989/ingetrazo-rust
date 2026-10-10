@@ -31,7 +31,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
  let density=zoom*pixels_per_point;if !density.is_finite(){return Err("Composer CAD scale overflow".into());}
  let commands=shape.paint_commands(100_000)?;
  let palette=crate::composer::precise_shape_palette(&commands)?;
- let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();let mut ordered_draws=Vec::new();let mut all_span_paths=true;
+ let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();let mut ordered_draws=Vec::new();let mut all_span_paths=true;let mut source_spans=Vec::new();
  for (command_index,(command,(stroke_color,fill_color))) in commands.into_iter().zip(palette).enumerate(){
   let closed_curve=source_closed_curve(&command.path);
   let straight_outline=match &command.path {
@@ -93,6 +93,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
     let ranges=ingetrazo_render::qt_cosmetic::disjoint_ranges(&spans,100_000)?;
     for range in ranges{ordered_draws.push(first+range.start as u32*6..first+range.end as u32*6);}
     for span in spans {
+     source_spans.push(ingetrazo_render::cad2d::SourceSpan{x:span.x,y:span.y,len:i32::try_from(span.len).map_err(|_|"Source span length exceeds signed domain")?,coverage:span.coverage});
      let base=u32::try_from(vertices.len()).map_err(|_|"Composer CAD vertex overflow")?;
      for position in [[span.x as f64,span.y as f64],[span.x as f64+span.len as f64,span.y as f64],[span.x as f64+span.len as f64,span.y as f64+1.],[span.x as f64,span.y as f64+1.]] {
       vertices.push(Vertex{position:[((position[0]-phase.x)/f64::from(density)) as f32,((position[1]-phase.y)/f64::from(density)) as f32],coverage:f32::from(span.coverage)/255.});
@@ -127,7 +128,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    if end>first{batches.push(Batch{first,count:end-first,color});mapping.push((command_index,fill));}
   }
  }
- let geometry=if all_span_paths{Geometry::new_with_ordered_draws(vertices,indices,ordered_draws)?}else{Geometry::new(vertices,indices)?};geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
+ let geometry=if all_span_paths{Geometry::new_with_source_spans(vertices,indices,ordered_draws,source_spans,zoom,pixels_per_point,[phase.x,phase.y])?}else{Geometry::new(vertices,indices)?};geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
 }
 pub type Cubic=[DVec2;4];
 fn cubic_split(q:Cubic)->(Cubic,Cubic){let ab=(q[0]+q[1])*0.5;let bc=(q[1]+q[2])*0.5;let cd=(q[2]+q[3])*0.5;let abc=(ab+bc)*0.5;let bcd=(bc+cd)*0.5;let m=(abc+bcd)*0.5;([q[0],ab,abc,m],[m,bcd,cd,q[3]])}
@@ -180,7 +181,7 @@ fn round_cap_outline(a:DVec2,b:DVec2,radius:f64)->Option<ingetrazo_render::qt_gr
  Segment::Cubic{control1:point(a-u+n*k),control2:point(a+n-u*k),to:point(a+n)}]})
 }
 fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_)=build_mapped(ctx,shape,zoom,pixels_per_point,DVec2::ZERO)?;Ok((g,b))}
-#[derive(Default)]pub struct Cache{shape:Option<SheetShape>,density:u32,phase:[u64;2],geometry:Option<Arc<Geometry>>,batches:Option<Arc<[Batch]>>,mapping:Vec<(usize,bool)>}
+#[derive(Default)]pub struct Cache{shape:Option<SheetShape>,density:u32,producer_scale:[u32;2],phase:[u64;2],geometry:Option<Arc<Geometry>>,batches:Option<Arc<[Batch]>>,mapping:Vec<(usize,bool)>}
 fn same_geometry(a:&SheetShape,b:&SheetShape)->bool{
  a.kind==b.kind&&a.w_mm==b.w_mm&&a.h_mm==b.h_mm&&a.stroke_mm==b.stroke_mm&&a.fill==b.fill&&a.invert==b.invert&&a.radius_mm==b.radius_mm&&a.sides==b.sides&&a.ground==b.ground&&a.tick_mm==b.tick_mm&&a.tick_step_mm==b.tick_step_mm&&a.band_mm==b.band_mm
 }
@@ -201,10 +202,10 @@ impl Cache{
   let phase=if !exact_rect{physical}else if physical.min_element()>extent+2. {DVec2::new(physical.x.fract(),physical.y.fract())}else{physical};
   let phase_key=[phase.x.to_bits(),phase.y.to_bits()];
   let density=(zoom*pixels_per_point).to_bits();
-  let geometry_matches=self.shape.as_ref().is_some_and(|s|same_geometry(s,shape))&&self.density==density&&self.phase==phase_key;
+  let geometry_matches=self.shape.as_ref().is_some_and(|s|same_geometry(s,shape))&&self.density==density&&self.producer_scale==[zoom.to_bits(),pixels_per_point.to_bits()]&&self.phase==phase_key;
   if !geometry_matches{
    let(g,b,m)=build_mapped(ctx,shape,zoom,pixels_per_point,phase)?;
-   self.geometry=Some(g);self.batches=Some(b);self.mapping=m;self.shape=Some(shape.clone());self.density=density;self.phase=phase_key;
+   self.geometry=Some(g);self.batches=Some(b);self.mapping=m;self.shape=Some(shape.clone());self.density=density;self.producer_scale=[zoom.to_bits(),pixels_per_point.to_bits()];self.phase=phase_key;
   }else if self.shape.as_ref().is_some_and(|s|s.color!=shape.color||s.fill_color!=shape.fill_color){
    let commands=shape.paint_commands(100_000)?;let palette=crate::composer::precise_shape_palette(&commands)?;
    let old=self.batches.as_ref().unwrap();let mut batches=Vec::with_capacity(old.len());
@@ -279,6 +280,12 @@ impl NativeComposer{
   let(g2,b2)=cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(70.25,90.25)).unwrap();assert!(Arc::ptr_eq(&g,&g2)&&Arc::ptr_eq(&b,&b2));
   let(g3,_)=cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(70.5,90.25)).unwrap();assert!(!Arc::ptr_eq(&g,&g3));
   let(g4,_)=cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(70.5,90.25)).unwrap();assert!(Arc::ptr_eq(&g3,&g4));
+  let original=g.source_spans().expect("actual source producer retains integer rows");
+  assert_eq!(original.translation(ingetrazo_render::cad2d::Pose{scale:[8.;2],translation:[70.25,90.25]},1.).unwrap(),[70,90]);
+  assert!(original.translation(ingetrazo_render::cad2d::Pose{scale:[8.;2],translation:[70.5,90.25]},1.).is_err());
+  let (density_changed,_)=cache.prepare_at(&ctx,&shape,4.,2.,egui::pos2(70.25,90.25)).unwrap();
+  assert!(!Arc::ptr_eq(&g4,&density_changed)); // Same product does not mean same producer mapping.
+  let (g4,_)=cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(70.5,90.25)).unwrap();
   shape.w_mm=1_000_000.;assert!(cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(70.5,90.25)).is_err());assert!(Arc::ptr_eq(cache.geometry.as_ref().unwrap(),&g4));
  }
  #[test]fn direct_geometry_separates_coverage_from_authored_alpha(){

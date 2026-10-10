@@ -24,9 +24,40 @@ impl EncodedRgba {
 #[derive(Clone,Copy,Debug,PartialEq)]pub struct Pose {pub scale:[f32;2],pub translation:[f32;2]}
 impl Default for Pose {fn default()->Self{Self{scale:[1.;2],translation:[0.;2]}}}
 impl Pose {pub fn validate(self)->Result<(),String>{if self.scale.iter().chain(&self.translation).all(|v|v.is_finite()){Ok(())}else{Err("CAD2D pose must be finite".into())}}}
+/// Original integer Qt coverage rows, before conversion to logical f32 vertices.
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+pub struct SourceSpan {pub x:i32,pub y:i32,pub len:i32,pub coverage:u8}
+#[derive(Debug)]
+pub struct SourceSpans {rows:Arc<[SourceSpan]>,zoom:f32,ppp:f32,phase:[f64;2]}
+impl SourceSpans {
+ pub fn rows(&self)->&[SourceSpan]{&self.rows}
+ pub fn zoom(&self)->f32{self.zoom}
+ pub fn ppp(&self)->f32{self.ppp}
+ pub fn phase(&self)->[f64;2]{self.phase}
+ pub fn logical_bytes(&self)->u64{(self.rows.len()*std::mem::size_of::<SourceSpan>())as u64}
+ pub fn translation(&self,pose:Pose,ppp:f32)->Result<[i32;2],String>{
+  pose.validate()?;
+  if pose.scale!=[self.zoom;2]||ppp!=self.ppp{return Err("Source span density/scale changed; producer rerasterization required".into());}
+  let mut result=[0;2];for axis in 0..2{let value=f64::from(pose.translation[axis])*f64::from(ppp)-self.phase[axis];if !value.is_finite()||value.fract()!=0.||value.abs()>1_000_000.{return Err("Source span phase changed; producer rerasterization required".into());}result[axis]=value as i32;}Ok(result)
+ }
+ fn validated(g:&Geometry,rows:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2])->Result<Self,String>{
+  let density=zoom*ppp;
+  if !zoom.is_finite()||zoom<=0.||!ppp.is_finite()||ppp<=0.||!density.is_finite()||density<=0.||phase.iter().any(|p|!p.is_finite()||p.abs()>1_000_000.)||rows.len()>100_000||g.indices.len()!=rows.len()*6{return Err("Invalid immutable source span admission".into());}
+  for (row,indices) in rows.iter().zip(g.indices.chunks_exact(6)){
+   let right=row.x.checked_add(row.len).ok_or("Source span integer overflow")?;let bottom=row.y.checked_add(1).ok_or("Source span integer overflow")?;
+   if row.len<=0||[row.x,row.y,right,bottom].iter().any(|p|p.unsigned_abs()>1_000_000)||indices[0]!=indices[3]||indices[2]!=indices[4]{return Err("Invalid source span quad topology/domain".into());}
+   let expected=[[row.x,row.y],[right,row.y],[right,bottom],[row.x,bottom]];
+   for (index,pixel) in [indices[0],indices[1],indices[2],indices[5]].into_iter().zip(expected){
+    let expected=[((f64::from(pixel[0])-phase[0])/f64::from(density))as f32,((f64::from(pixel[1])-phase[1])/f64::from(density))as f32];let vertex=g.vertices[index as usize];
+    if vertex.position!=expected||vertex.coverage!=f32::from(row.coverage)/255.{return Err("Source span metadata differs from immutable geometry".into());}
+   }
+  }
+  Ok(Self{rows:rows.into(),zoom,ppp,phase})
+ }
+}
 /// ID is allocated once for this immutable allocation. Changing palette/pose
 /// retains ID; changing geometry constructs a fresh ID, preventing stale cache.
-#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2]}
+#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2],source_spans:Option<Arc<SourceSpans>>}
 impl Geometry {
  pub fn new(vertices:Vec<Vertex>,indices:Vec<u32>)->Result<Arc<Self>,String>{
   if vertices.len()>u32::MAX as usize||indices.len()>u32::MAX as usize{return Err("CAD2D geometry exceeds index domain".into());}
@@ -34,7 +65,7 @@ impl Geometry {
   if vertices.iter().any(|v|!v.position.iter().all(|p|p.is_finite())||!v.coverage.is_finite()||!(0. ..=1.).contains(&v.coverage)){return Err("CAD2D vertex position/coverage invalid".into());}
   let mut bounds=[[0.;2];2];if let Some(first)=vertices.first(){bounds=[first.position;2];for v in &vertices{for axis in 0..2{bounds[0][axis]=bounds[0][axis].min(v.position[axis]);bounds[1][axis]=bounds[1][axis].max(v.position[axis]);}}}
   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
-  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds}))
+  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds,source_spans:None}))
  }
  /// Pixel-aligned source span producer declares nonoverlapping ordered draw ranges.
  /// Metadata partitions all indices; a caller must not use this for arbitrary
@@ -51,6 +82,12 @@ impl Geometry {
  pub fn validate_ordered_pose(&self,pose:Pose,ppp:f32)->Result<(),String>{
   pose.validate()?;if !ppp.is_finite()||ppp<=0.{return Err("Invalid CAD2D physical density".into());}
   if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let product=v[axis]*pose.scale[axis];let sum=product+pose.translation[axis];if !product.is_finite()||!sum.is_finite()||!(sum*2.).is_finite(){return Err("CAD2D pose overflows shader f32 intermediates".into());}let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
+ }
+ pub fn source_spans(&self)->Option<&Arc<SourceSpans>>{self.source_spans.as_ref()}
+ pub fn new_with_source_spans(vertices:Vec<Vertex>,indices:Vec<u32>,ranges:Vec<std::ops::Range<u32>>,spans:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2])->Result<Arc<Self>,String>{
+  let mut geometry=Self::new_with_ordered_draws(vertices,indices,ranges)?;
+  let source=SourceSpans::validated(&geometry,spans,zoom,ppp,phase)?;
+  Arc::get_mut(&mut geometry).unwrap().source_spans=Some(Arc::new(source));Ok(geometry)
  }
  pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
@@ -104,4 +141,34 @@ fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Resul
 
 #[cfg(test)]mod shader_pose_bounds{use super::*;
  #[test]fn physical_f64_bounds_do_not_hide_shader_intermediate_overflow(){let v=Vertex{position:[f32::MAX,0.],coverage:1.};let g=Geometry::new_with_ordered_draws(vec![v;3],vec![0,1,2],vec![0..3]).unwrap();assert!(g.validate_ordered_pose(Pose{scale:[2.,1.],translation:[-f32::MAX,0.]},1e-34).unwrap_err().contains("f32 intermediates"));}
+}
+
+#[cfg(test)] mod original_span_admission {
+ use super::*;
+ fn make(zoom:f32,ppp:f32,phase:[f64;2],coverage:u8)->(Vec<Vertex>,Vec<u32>,Vec<SourceSpan>){
+  let row=SourceSpan{x:2,y:3,len:4,coverage};let density=zoom*ppp;
+  let vertices=[[2,3],[6,3],[6,4],[2,4]].map(|p|Vertex{position:[((f64::from(p[0])-phase[0])/f64::from(density))as f32,((f64::from(p[1])-phase[1])/f64::from(density))as f32],coverage:f32::from(coverage)/255.}).to_vec();
+  (vertices,vec![0,1,2,0,2,3],vec![row])
+ }
+ #[test] fn exact_density_phase_and_original_bytes_are_immutable(){
+  let (v,i,s)=make(1.5,1.25,[0.125,0.375],127);
+  let g=Geometry::new_with_source_spans(v,i,vec![0..6],s,1.5,1.25,[0.125,0.375]).unwrap();let m=g.source_spans().unwrap();
+  assert_eq!(m.rows()[0].coverage,127);
+  let pose=Pose{scale:[1.5;2],translation:[8.1,16.3]};
+  // f32 translations carry their true phase, not decimal display rounding.
+  assert!(m.translation(pose,1.25).is_err());
+  let pose=Pose{scale:[1.5;2],translation:[0.1,0.3]};assert!(m.translation(pose,1.25).is_err());
+  let (v,i,s)=make(2.,1.5,[0.5,0.25],133);
+  let g=Geometry::new_with_source_spans(v,i,vec![0..6],s,2.,1.5,[0.5,0.25]).unwrap();let m=g.source_spans().unwrap();
+  assert_eq!(m.translation(Pose{scale:[2.;2],translation:[3.,1.5]},1.5).unwrap(),[4,2]);
+  assert!(m.translation(Pose{scale:[2.;2],translation:[3.000001,1.5]},1.5).is_err());
+  assert!(m.translation(Pose{scale:[2.;2],translation:[3.,1.5]},1.25).is_err());
+ }
+ #[test] fn altered_metadata_is_rejected_without_rounding(){
+  let (v,i,mut s)=make(1.5,1.25,[20.125,30.375],127);s[0].coverage=128;
+  assert!(Geometry::new_with_source_spans(v.clone(),i.clone(),vec![0..6],s,1.5,1.25,[20.125,30.375]).is_err());
+  let (_,_,s)=make(1.5,1.25,[20.125,30.375],127);let mut wrong=v.clone();wrong[0].position[0]=f32::from_bits(wrong[0].position[0].to_bits()+1);
+  assert!(Geometry::new_with_source_spans(wrong,i.clone(),vec![0..6],s.clone(),1.5,1.25,[20.125,30.375]).is_err());
+  assert!(Geometry::new_with_source_spans(v,i,vec![0..6],s,1.5,1.25,[20.125,30.375]).is_ok());
+ }
 }

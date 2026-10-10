@@ -67,6 +67,26 @@ pub(crate) fn compile(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan
             }
         }
     }
+    bin(spans)
+}
+
+/// Compiles the validated original rows, without recovering pixel positions from f32 geometry.
+pub(crate) fn compile_source(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan, String> {
+    geometry.validate_batches(batches)?;
+    if batches.len()>4096 {return Err("Metal span batch capacity4096 exceeded".into());}
+    let source=geometry.source_spans().ok_or("Metal compute requires original source span metadata")?;
+    let mut spans=Vec::new();
+    for (palette,batch) in batches.iter().enumerate() {
+        if batch.first%6!=0||batch.count%6!=0 {return Err("Metal source span batch partition invalid".into());}
+        for row in &source.rows()[batch.first as usize/6..(batch.first+batch.count) as usize/6] {
+            spans.push(Span{rect:[row.x,row.y,row.x+row.len,row.y+1],coverage:u32::from(row.coverage),palette:palette as u32});
+            if spans.len()>100_000 {return Err("Metal compute span capacity100000 exceeded".into());}
+        }
+    }
+    bin(spans)
+}
+
+fn bin(spans:Vec<Span>)->Result<SpanPlan,String>{
     if spans.is_empty() {
         return Err("Metal compute empty span plan refused".into());
     }
@@ -286,4 +306,18 @@ mod tests {
             assert_eq!(output, source, "actual QPainter alpha={alpha}");
         }
     }
+}
+
+#[cfg(test)] mod preserved_source_rows {
+ use super::*;
+ use ingetrazo_render::cad2d::{SourceSpan,Vertex,EncodedRgba};
+ #[test] fn fractional_logical_vertices_preserve_exact_source_pixels_and_order(){
+  let rows=vec![SourceSpan{x:2,y:3,len:4,coverage:127},SourceSpan{x:3,y:3,len:2,coverage:43}];
+  let phase=[0.125,0.375];let density=1.5f32*1.25;
+  let mut v=Vec::new();let mut i=Vec::new();
+  for row in &rows {let base=v.len()as u32;for p in [[row.x,row.y],[row.x+row.len,row.y],[row.x+row.len,row.y+1],[row.x,row.y+1]] {v.push(Vertex{position:[((f64::from(p[0])-phase[0])/f64::from(density))as f32,((f64::from(p[1])-phase[1])/f64::from(density))as f32],coverage:f32::from(row.coverage)/255.});}i.extend([base,base+1,base+2,base,base+2,base+3]);}
+  let g=Geometry::new_with_source_spans(v,i,vec![0..6,6..12],rows,1.5,1.25,phase).unwrap();
+  let color=EncodedRgba::from_bytes([1,7,19,128],1.).unwrap();let b=[Batch{first:6,count:6,color},Batch{first:0,count:6,color}];
+  assert!(compile(&g,&b).is_err());let plan=compile_source(&g,&b).unwrap();assert_eq!(plan.spans[0].rect,[3,3,5,4]);assert_eq!(plan.spans[0].coverage,43);assert_eq!(plan.spans[1].rect,[2,3,6,4]);assert_eq!(plan.references,[0,1]);
+ }
 }
