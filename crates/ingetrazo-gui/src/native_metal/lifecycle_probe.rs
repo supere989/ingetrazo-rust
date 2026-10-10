@@ -12,7 +12,8 @@ pub(super) struct Probe {
     phase: u8,
     label: String,
     center: Option<[f64; 2]>,
-    modal_presented: u64,
+    modal_submission: Option<u64>,
+    modal_candidates: std::collections::VecDeque<(u64, [f64; 2])>,
     ui_turns: u64,
     observed_turn: u64,
     close_events: u64,
@@ -48,7 +49,8 @@ impl Probe {
             phase: 0,
             label: choice.to_ascii_lowercase(),
             center: None,
-            modal_presented: 0,
+            modal_submission: None,
+            modal_candidates: std::collections::VecDeque::with_capacity(32),
             ui_turns: 0,
             observed_turn: 0,
             close_events: 0,
@@ -111,11 +113,27 @@ impl Probe {
             }
         }
         if let Some(center) = shapes.iter().find_map(|s| find(&s.shape, &self.label)) {
-            if self.center.is_none() {
-                self.modal_presented = displayed;
-            }
             self.center = Some(center);
         }
+    }
+    /// Called only after present_paint reports an actual submitted command for
+    /// this UI output containing the modal, not merely after a redraw attempt.
+    pub fn submitted(&mut self, app: &IngeTrazoApp, submission: u64) {
+        if self.phase == 1 && app.document_session.confirm_unsaved {
+            if let Some(center) = self.center {
+                if self.modal_candidates.len() == 32 {
+                    self.modal_candidates.pop_front();
+                }
+                self.modal_candidates.push_back((submission, center));
+            }
+        }
+    }
+    fn needs_cancel_verification(&self, app: &IngeTrazoApp) -> bool {
+        self.choice == "cancel"
+            && !self.cancel_verified
+            && self.releases > self.event_baseline.2
+            && !app.document_session.confirm_unsaved
+            && app.document_session.pending.is_none()
     }
     pub fn tick(
         &mut self,
@@ -142,8 +160,19 @@ impl Probe {
             1 if self.close_events > 0
                 && app.document_session.confirm_unsaved
                 && self.center.is_some()
-                && gpu.presentation_counters().0 > self.modal_presented =>
+                && self
+                    .modal_candidates
+                    .iter()
+                    .any(|(id, _)| gpu.was_displayed(*id)) =>
             {
+                let (id, center) = self
+                    .modal_candidates
+                    .iter()
+                    .copied()
+                    .find(|(id, _)| gpu.was_displayed(*id))
+                    .ok_or("Missing exact presented modal command")?;
+                self.modal_submission = Some(id);
+                self.center = Some(center);
                 self.event_baseline = (self.moves, self.presses, self.releases);
                 mouse_for_probe(
                     window,
@@ -175,11 +204,7 @@ impl Probe {
                 )?;
                 self.phase = 4;
             }
-            4 if self.choice == "cancel"
-                && self.releases > self.event_baseline.2
-                && !app.document_session.confirm_unsaved
-                && app.document_session.pending.is_none() =>
-            {
+            4 if self.needs_cancel_verification(app) => {
                 if !app.document_dirty()
                     || app.document_session.close_allowed
                     || std::fs::read(&self.document).map_err(|e| e.to_string())?
@@ -190,6 +215,8 @@ impl Probe {
                 self.cancel_verified = true;
                 self.label = "discard".into();
                 self.center = None;
+                self.modal_submission = None;
+                self.modal_candidates.clear();
                 self.moves = 0;
                 self.presses = 0;
                 self.releases = 0;
@@ -244,12 +271,46 @@ impl Probe {
             }
             Ok(())
         })();
-        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
+        let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
         std::fs::write(
             self.root.join("result.json"),
             serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
         )
         .map_err(|e| e.to_string())?;
         check
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::document_session::DocumentAction;
+    #[test]
+    fn actual_document_cancel_then_discard_does_not_repeat_cancel_assertion() {
+        let root =
+            std::env::temp_dir().join(format!("metal-cancel-guard-{}", uuid::Uuid::new_v4()));
+        let mut probe = Probe::new(root.clone(), "cancel").unwrap();
+        let mut app = IngeTrazoApp::new();
+        app.attach_session_store(SessionStore::isolated(&root.join("session")));
+        app.open_document(&probe.document);
+        probe.setup(&mut app).unwrap();
+        app.request_document_action(DocumentAction::Close);
+        assert!(!probe.needs_cancel_verification(&app));
+        app.cancel_document_action();
+        probe.phase = 4;
+        probe.releases = 1;
+        assert!(probe.needs_cancel_verification(&app));
+        assert!(app.document_dirty());
+        assert!(!app.document_session.close_allowed);
+        probe.cancel_verified = true;
+        app.request_document_action(DocumentAction::Close);
+        app.discard_document_action();
+        assert!(app.document_session.close_allowed);
+        assert!(app.document_dirty());
+        // Phase remains4 after second button release, exactly the former race.
+        assert_eq!(probe.phase, 4);
+        assert!(!probe.needs_cancel_verification(&app));
+        assert_eq!(std::fs::read(&probe.document).unwrap(), probe.initial_bytes);
+        std::fs::remove_dir_all(root).unwrap();
     }
 }

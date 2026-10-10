@@ -37,6 +37,7 @@ fn terminal_proof(
     Ok(Some(time > 0.))
 }
 struct Frame {
+    submission_id: u64,
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
@@ -60,6 +61,8 @@ pub struct MetalPresentation {
     retired: u64,
     displayed: u64,
     skipped: u64,
+    displayed_submissions: [u64; 32],
+    displayed_cursor: usize,
     extent: (u32, u32),
 }
 impl MetalPresentation {
@@ -130,6 +133,8 @@ impl MetalPresentation {
             retired: 0,
             displayed: 0,
             skipped: 0,
+            displayed_submissions: [0; 32],
+            displayed_cursor: 0,
             extent: (0, 0),
         };
         let size = window.inner_size();
@@ -174,6 +179,10 @@ impl MetalPresentation {
             // A missing head callback cannot invalidate a later owner's actual
             // terminal proof. Never release the unresolved head by inference.
             if displayed {
+                let submission = self.owners.frames[index].submission_id;
+                self.displayed_submissions[self.displayed_cursor] = submission;
+                self.displayed_cursor =
+                    (self.displayed_cursor + 1) % self.displayed_submissions.len();
                 self.displayed += 1;
             } else {
                 self.skipped += 1;
@@ -255,6 +264,7 @@ impl MetalPresentation {
         command.presentDrawable(ProtocolObject::from_ref(&*drawable));
         command.commit();
         self.owners.frames.push_back(Frame {
+            submission_id: self.submitted + 1,
             command,
             drawable,
             callback_seen,
@@ -296,7 +306,8 @@ impl MetalPresentation {
             .iter()
             .map(|f| {
                 format!(
-                    "id={} command={:?} presentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
+                    "submission={} id={} command={:?} presentedTime={} gpuStart={} gpuEnd={} callback_seen={} callback_time={}",
+                    f.submission_id,
                     f.drawable.drawableID(),
                     f.command.status(),
                     f.drawable.presentedTime(),
@@ -325,6 +336,11 @@ impl MetalPresentation {
     }
     /// Displayed frames require actual positive callback timestamps; skipped
     /// terminal callbacks are safe owner retirement, never visible proof.
+    /// Positive callback proof for an exact recent submitted command, never a
+    /// count-based approximation. Fixed-size diagnostic history, no warm alloc.
+    pub fn was_displayed(&self, submission: u64) -> bool {
+        submission > 0 && self.displayed_submissions.contains(&submission)
+    }
     pub fn presentation_counters(&self) -> (u64, u64) {
         (self.displayed, self.skipped)
     }

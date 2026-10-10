@@ -80,7 +80,11 @@ impl Host {
         // backpressure; native close requests still enter application guards.
         if !state.close_requested {
             match state.gpu.can_prepare() {
-                Ok(true) => {}
+                Ok(true) => {
+                    if let Some(probe) = self.probe.as_mut() {
+                        probe.submitted(&state.app, state.gpu.counters().0);
+                    }
+                }
                 Ok(false) => {
                     self.repaint = Instant::now() + Duration::from_millis(8);
                     return;
