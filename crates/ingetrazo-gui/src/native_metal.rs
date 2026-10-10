@@ -103,7 +103,10 @@ impl Host {
                 .events
                 .push(egui::ViewportEvent::Close);
         }
-        let output = self.ctx.run(raw, |ctx| state.app.update_ui(ctx));
+        let output = self.ctx.run(raw, |ctx| {
+            state.app.update_ui(ctx);
+            if let Some(probe) = self.probe.as_ref() { probe.paint_raw_swatch(ctx); }
+        });
         if let Some(probe) = self.probe.as_mut() {
             probe.observe(&state.app, &output.shapes, state.gpu.counters().0);
         }
@@ -255,6 +258,7 @@ impl ApplicationHandler for Host {
                 probe.setup(&mut app)?;
             }
             crate::paper_raw_texture::install(&self.ctx);
+            if let Some(probe) = self.probe.as_mut() { probe.setup_raw_swatch(&self.ctx)?; }
             let pointer_modifiers = crate::pointer_modifiers::install(&self.ctx);
             Ok(State {
                 painter,

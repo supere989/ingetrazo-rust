@@ -29,6 +29,7 @@ pub(super) struct Probe {
     canvas_last_raw: Option<[u64; 5]>,
     canvas_submission_observations: u64,
     canvas_cancelled: u64,
+    canvas_raw_swatch: Option<egui::TextureHandle>,
 }
 impl Probe {
     pub fn new(root: PathBuf, choice: &str) -> Result<Self, String> {
@@ -73,6 +74,7 @@ impl Probe {
             canvas_last_raw: None,
             canvas_submission_observations: 0,
             canvas_cancelled: 0,
+            canvas_raw_swatch: None,
         })
     }
     pub fn setup(&mut self, app: &mut IngeTrazoApp) -> Result<(), String> {
@@ -118,6 +120,24 @@ impl Probe {
         }
         Ok(())
     }
+    // Retain an independent raw-texture owner fixture when Text uses ordered CAD.
+    // This diagnostic does not alter the strict source/native font corpus.
+    pub fn setup_raw_swatch(&mut self, ctx: &egui::Context) -> Result<(), String> {
+        if self.choice != "canvas" { return Ok(()); }
+        self.canvas_raw_swatch = Some(crate::paper_raw_texture::create(ctx, [2, 2],
+            vec![255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255])?);
+        let cancelled = crate::paper_raw_texture::create(ctx, [1, 1], vec![17, 31, 63, 255])?;
+        drop(cancelled);
+        Ok(())
+    }
+    pub fn paint_raw_swatch(&self, ctx: &egui::Context) {
+        if let Some(texture) = &self.canvas_raw_swatch {
+            ctx.layer_painter(egui::LayerId::new(egui::Order::Foreground,
+                egui::Id::new("metal-lifecycle-raw-swatch"))).image(texture.id(),
+                egui::Rect::from_min_size(egui::pos2(8., 8.), egui::vec2(16., 16.)),
+                egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1., 1.)), egui::Color32::WHITE);
+        }
+    }
     /// Observe only successfully submitted application frames. No queue work is
     /// added to ordinary host rendering when the diagnostic is absent.
     pub fn canvas_submitted(&mut self, ctx: &egui::Context, painter: &EguiPainter) {
@@ -127,7 +147,7 @@ impl Probe {
         let Some(raw) = self.canvas_last_raw else { return; };
         self.canvas_cancelled = crate::paper_raw_texture::cancelled(ctx).unwrap_or(0);
         let uploads = painter.stats().texture_uploads;
-        if raw[0] != 0 || raw[1] != 0 || raw[4] == 0 || raw[2].checked_sub(self.canvas_cancelled) != Some(raw[4]) {
+        if self.canvas_raw_swatch.is_none() || self.canvas_cancelled == 0 || raw[0] != 0 || raw[1] != 0 || raw[4] == 0 || raw[2].checked_sub(self.canvas_cancelled) != Some(raw[4]) {
             self.canvas_warm_frames = 0;
             self.canvas_uploads = None;
             return;
@@ -245,7 +265,8 @@ impl Probe {
                     "raw_uploads": self.canvas_uploads.map(|v|v.0),
                     "texture_uploads": self.canvas_uploads.map(|v|v.1),
                     "warm_frames": self.canvas_warm_frames,
-                    "cancelled_uploads": self.canvas_cancelled
+                    "cancelled_uploads": self.canvas_cancelled,
+                    "raw_owner_fixture": "live-2x2-swatch-and-cancelled-1x1"
                 });
                 let pending = self.root.join("own-window.pending");
                 std::fs::write(&pending, serde_json::to_vec_pretty(&snapshot).map_err(|e| e.to_string())?)
