@@ -104,7 +104,7 @@ fn clip_linear(lo: &mut f64, hi: &mut f64, a: f64, b: f64) -> bool {
     }
     *lo < *hi
 }
-fn occluded_interval(a: DVec3, b: DVec3, triangle: [DVec3; 3], epsilon: f64) -> Option<(f64, f64)> {
+pub(crate) fn occluded_interval(a: DVec3, b: DVec3, triangle: [DVec3; 3], epsilon: f64) -> Option<(f64, f64)> {
     let p = triangle.map(|p| p.truncate());
     let cross = |a: DVec2, b: DVec2| a.x * b.y - a.y * b.x;
     let area = cross(p[1] - p[0], p[2] - p[0]);
@@ -378,6 +378,14 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
 }
 /// Paper HLR options match original profiles and hidden-line controls.
 pub fn parallel_segments(scene: &Scene, camera: &OrbitCamera, profiles: bool, hidden: bool) -> Vec<VectorSegment> {
+    segments_impl(scene,camera,profiles,hidden,None).expect("serial HLR has no process errors")
+}
+/// Production HLR using persistent native CPU processes for quadratic edge/triangle work.
+/// Caller retains the pool across frames; process failure is explicit, never silent fallback.
+pub fn parallel_segments_with_pool(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:&mut crate::process_hlr::HlrProcessPool)->std::io::Result<Vec<VectorSegment>> {
+    segments_impl(scene,camera,profiles,hidden,Some(pool))
+}
+fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>)->std::io::Result<Vec<VectorSegment>> {
     let mut surfaces = crate::section_clip::contour_geometry(scene);
     let mut edges = gather_edges(scene, camera);
     let mut caps = vec![];
@@ -442,17 +450,22 @@ pub fn parallel_segments(scene: &Scene, camera: &OrbitCamera, profiles: bool, hi
         - depths.iter().copied().fold(f64::INFINITY, f64::min))
         * 1e-4;
     let cap_eps = cap_eps.max(epsilon);
+    let process_intervals=if let Some(pool)=pool {
+        let projected=edges.iter().map(|e|(project(e.a,camera),project(e.b,camera))).collect::<Vec<_>>();
+        Some(pool.intervals(&projected,&triangles,epsilon)?)
+    } else {None};
+    let mut process_intervals=process_intervals.map(|rows|rows.into_iter());
     let mut result = vec![];
     for edge in edges {
+        let prepared=process_intervals.as_mut().map(|rows|rows.next().expect("one result per edge"));
         let a = project(edge.a, camera);
         let b = project(edge.b, camera);
         if (a.truncate() - b.truncate()).length() < 1e-10 {
             continue;
         }
-        let mut intervals = triangles
-            .iter()
-            .filter_map(|&tri| occluded_interval(a, b, tri, epsilon))
-            .collect::<Vec<_>>();
+        let mut intervals = if let Some(row)=prepared {row} else {
+            triangles.iter().filter_map(|&tri|occluded_interval(a,b,tri,epsilon)).collect::<Vec<_>>()
+        };
         let cap_hidden = cap_intervals(a, b, &boundary, cap_plane, cap_eps);
         if hidden && edge.kind == LineKind::Edge {
             for (lo, hi) in complement(complement(intervals.clone())) {
@@ -490,7 +503,7 @@ pub fn parallel_segments(scene: &Scene, camera: &OrbitCamera, profiles: bool, hi
         }
     }
     let result = merge_collinear(result, delta * 1e-5);
-    if hidden { drop_hidden_under_visible(result,camera,delta * 1e-2) } else { result }
+    Ok(if hidden { drop_hidden_under_visible(result,camera,delta * 1e-2) } else { result })
 }
 #[cfg(test)]
 mod tests {

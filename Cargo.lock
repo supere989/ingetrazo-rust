@@ -1390,6 +1390,7 @@ dependencies = [
  "glam",
  "ingetrazo-core",
  "log",
+ "memmap2",
  "serde_json",
  "thiserror 2.0.21",
 ]
