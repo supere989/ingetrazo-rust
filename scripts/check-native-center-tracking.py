@@ -101,13 +101,14 @@ def main():
     move_parity=close(actual_delta,[1,0,0])
     pointer_quantized_move_matches=sum((a-b)**2 for a,b in zip(actual_delta,[1,0,0]))**.5<.01
     assert pointer_quantized_move_matches,actual_delta
-    if original:
-     report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"requested_move_delta":[1,0,0],"actual_move_delta":actual_delta,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"scope":"Actual original Qt/OpenGL Viewport Move first/second clicks via XTEST. Standalone selection/tool shortcuts invoke original public actions. Move-center reacquisition pending separately.","executable_sha256":hashlib.sha256(Path("scripts/original_center_ui_fixture.py").read_bytes()).hexdigest()}
-     Path("docs/audits/center-tracking-original-"+mode+suffix+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Original actual Move gesture PASS",actual_delta);return
-    key(0x6c);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
+    key(0x6c)
+    # Move ends at its new rim. Original hover is event-driven: create actual
+    # pointer motion after switching tool rather than warping to the same pixel.
+    move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
     moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
     assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
     ctrl_key(0x61);key(0xffff)
+    move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
     deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
     assert deleted["undo"]==2;capture("deleted-center")
     report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":[1,0,0],"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":approach_green<=5,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
