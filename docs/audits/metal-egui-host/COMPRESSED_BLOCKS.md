@@ -1,0 +1,11 @@
+# Native compressed Metal block primitive (execution pending)
+
+BC1_RGBA admission queries actual MTLDevice.supportsBCTextureCompression. ASTC4x4LDR admission queries actual Apple2 family as required by Apple's feature tables. Capabilities are not successful decode proof. Unsupported formats fail before resource admission; no RGBA decompression fallback or translated backend.
+
+The immutable primitive admits whole4×4 blocks, extents≤4096, exact block bytes and bounded≤8MiB padded shared staging. A native private image reconciles actual Metal allocatedSize before a directly mapped staging allocation. One persistent-queue BLIT uploads compressed blocks without intermediate RGBA image decoding. Complete command/image/sampler/staging/CPUblock/device/queue owners are published before commit and retained until known GPU completion; existing three-job bounded admission and unknown Drop quarantine apply. Authored compressed mip chains/container decoders remain unsupported, and compressed GPU mip generation is explicitly refused.
+
+`egui_compressed_probe --output=FRESH_DIR` queries supported formats, uploads BC1 RGB565-red or ASTC LDR void-extent constant-red blocks, GPU-BLIT reads exact encoded blocks, and actually samples every4×4 decoded GPU pixel through the native painter. Five warm samples require zero new uploads. Real image and post-image staging admission denial preserve the previous sampled GPU image and ledger. Malformed block length, RGBA patch into compressed storage, and compressed mip request reject without changing cache. Final ledgerzero is mandatory per supported case. No supported format means explicit overall failure, not manifests-only success.
+
+The independent checker requires each declared-supported raw block and full decoded image; missing/zero/wrong-color controls cannot pass. Both Mac targets compile. Actual native execution, physical hardware families, heterogeneous compressed images, sRGB codecs, compressed authored mips, DDS/KTX/ASTC containers and native world integration remain open.
+
+Primary references: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf ; https://developer.apple.com/documentation/metal/mtldevice/supportsbctexturecompression ; https://github.com/KhronosGroup/DataFormat/blob/main/astc.txt (void extent all-ones coordinates and UNORM16 constant endpoints).
