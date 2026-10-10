@@ -1,0 +1,1 @@
+Actual pinned original IGZ loader expanded23cases against current native candidate. Retained seven accepted source representations differ: nonstring custom provider metadata, Python integer/float string grammar and iterable patch forms. This is a required codec gap; no narrowed acceptance or full parity claim. Existing prior12ordinary cases remain separate.

@@ -1,0 +1,215 @@
+[
+  {
+    "case": 12,
+    "input": {
+      "source": null
+    },
+    "original": {
+      "source": null,
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          0.0,
+          0.0,
+          1200.0,
+          1200.0
+        ]
+      ],
+      "url_template": "",
+      "name": null,
+      "attribution": ""
+    },
+    "native": null
+  },
+  {
+    "case": 13,
+    "input": {
+      "source": 7
+    },
+    "original": {
+      "source": 7,
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          0.0,
+          0.0,
+          1200.0,
+          1200.0
+        ]
+      ],
+      "url_template": "",
+      "name": 7,
+      "attribution": ""
+    },
+    "native": null
+  },
+  {
+    "case": 14,
+    "input": {
+      "source": "custom",
+      "name": null,
+      "url_template": 12,
+      "attribution": false
+    },
+    "original": {
+      "source": "custom",
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          0.0,
+          0.0,
+          1200.0,
+          1200.0
+        ]
+      ],
+      "url_template": 12,
+      "name": null,
+      "attribution": false
+    },
+    "native": null
+  },
+  {
+    "case": 15,
+    "input": {
+      "source": "custom",
+      "zoom": "1_2"
+    },
+    "original": {
+      "source": "custom",
+      "zoom": 12,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          0.0,
+          0.0,
+          1200.0,
+          1200.0
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    },
+    "native": null
+  },
+  {
+    "case": 16,
+    "input": {
+      "source": "custom",
+      "zoom": "\uff11\uff12"
+    },
+    "original": {
+      "source": "custom",
+      "zoom": 12,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          0.0,
+          0.0,
+          1200.0,
+          1200.0
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    },
+    "native": null
+  },
+  {
+    "case": 17,
+    "input": {
+      "source": "custom",
+      "radius_m": "1_200.5"
+    },
+    "original": {
+      "source": "custom",
+      "zoom": 16,
+      "radius_m": 1200.5,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          0.0,
+          0.0,
+          1200.5,
+          1200.5
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    },
+    "native": null
+  },
+  {
+    "case": 18,
+    "input": {
+      "source": "custom",
+      "patches": [
+        "1234"
+      ]
+    },
+    "original": {
+      "source": "custom",
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    },
+    "native": null
+  },
+  {
+    "case": 19,
+    "input": {
+      "source": "custom",
+      "patches": [
+        {
+          "1": 0,
+          "2": 0
+        }
+      ]
+    },
+    "original": {
+      "source": "custom",
+      "zoom": 16,
+      "radius_m": 1200.0,
+      "visible": true,
+      "opacity": 1.0,
+      "patches": [
+        [
+          1.0,
+          2.0
+        ]
+      ],
+      "url_template": "",
+      "name": "custom",
+      "attribution": ""
+    },
+    "native": null
+  }
+]
