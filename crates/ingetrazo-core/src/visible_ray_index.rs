@@ -1,6 +1,6 @@
 //! Immutable visible triangles and a direct balanced ray broad phase.
 use crate::{scene::Scene,math::{Ray,ray_triangle_intersect}};
-use glam::DVec3;
+use glam::{DVec3,DMat4};
 #[derive(Clone,Copy)]
 struct Triangle { order:usize, vertices:[DVec3;3], lo:DVec3,hi:DVec3 }
 struct Node { lo:DVec3,hi:DVec3,begin:usize,end:usize,children:Option<(usize,usize)> }
@@ -8,7 +8,7 @@ pub struct VisibleRayIndex {triangles:Vec<Triangle>,nodes:Vec<Node>}
 impl VisibleRayIndex {
  pub fn new(scene:&Scene,max_bytes:usize)->Result<Self,String>{
   let mut triangles=Vec::new();let mut error=None;
-  crate::screen_pick::visit_placements(scene,|mesh,world,_|{
+  visit_collision_meshes(scene,|mesh,world|{
    if error.is_some(){return;}
    for face in 0..mesh.faces.len(){
     if !scene.mesh_face_visible(mesh,face){continue;}
@@ -50,6 +50,20 @@ impl VisibleRayIndex {
   }
   id
  }
+ /// Direct correctness fallback after cache admission refusal; no retained index.
+ pub fn direct_hit(scene:&Scene,ray:&Ray)->Option<(DVec3,DVec3,f64)>{
+  if !ray.origin.is_finite()||!ray.dir.is_finite(){return None;}
+  let mut best=None;let mut nearest=f64::INFINITY;
+  visit_collision_meshes(scene,|mesh,world|{
+   for face in 0..mesh.faces.len(){if !scene.mesh_face_visible(mesh,face){continue;}
+    for (a,b,c) in mesh.triangulate_face(face){let [a,b,c]=[a,b,c].map(|p|world.transform_point3(p));
+     if let Some((t,p))=ray_triangle_intersect(ray,a,b,c){let normal=(b-a).cross(c-a).normalize_or_zero();
+      if t<nearest&&scene.section_point_visible(p)&&normal.length_squared()>0.{nearest=t;best=Some((p,normal,t));}
+     }
+    }
+   }
+  });best
+ }
  pub fn triangle_count(&self)->usize{self.triangles.len()}
  /// Reuses triangulation and traverses nodes without allocations. Section state is authoritative at query.
  pub fn distance(&self,scene:&Scene,ray:&Ray)->Option<f64>{self.hit(scene,ray).map(|hit|hit.2)}
@@ -70,6 +84,21 @@ impl VisibleRayIndex {
    if let Some((t,p))=ray_triangle_intersect(ray,a,b,c){if (t<*best||(t==*best&&triangle.order<*order))&&scene.section_point_visible(p)&&(b-a).cross(c-a).normalize_or_zero().length_squared()>0.{*best=t;*order=triangle.order;*normal=(b-a).cross(c-a).normalize_or_zero();}}
   }}
  }
+}
+// Frozen viewport pick index excludes a billboard's own static mesh but still
+// visits visible children. Hidden groups suppress the subtree. This differs
+// from Scene.placements bounds policy and from the generic edge picker.
+fn visit_collision_meshes(scene:&Scene,mut visit:impl FnMut(&crate::mesh::Mesh,DMat4)){
+ fn groups(scene:&Scene,items:&[crate::groups::Group],parent:DMat4,visit:&mut impl FnMut(&crate::mesh::Mesh,DMat4)){
+  for group in items{
+   if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}
+   let world=parent*group.transform;
+   if !group.billboard{visit(&group.mesh,world);}
+   groups(scene,&group.children,world,visit);
+  }
+ }
+ visit(&scene.mesh,DMat4::IDENTITY);
+ groups(scene,&scene.groups,DMat4::IDENTITY,&mut visit);
 }
 #[cfg(test)]mod tests {
  use super::*;
@@ -131,4 +160,15 @@ impl VisibleRayIndex {
   assert_eq!(index.hit(&scene,&ray),crate::screen_pick::hover_face(&scene,&ray));assert_eq!(index.hit(&scene,&ray).unwrap().1,DVec3::Z);
  }
 
+}
+
+#[cfg(test)]mod billboard_tests{
+ use super::*;
+ fn face(group:&mut crate::groups::Group){let ids=[DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(1.,1.,0.),DVec3::new(-1.,1.,0.)].map(|p|group.mesh.add_vertex(p));group.mesh.add_face(ids.to_vec(),vec![]);}
+ #[test]fn billboard_own_faces_do_not_collide_but_ordinary_children_do(){
+  let mut scene=Scene::new();let mut root=crate::groups::Group::new("billboard");root.billboard=true;face(&mut root);scene.groups.push(root);
+  let ray=Ray::new(DVec3::new(0.,0.,2.),-DVec3::Z);assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().distance(&scene,&ray),None);
+  let mut child=crate::groups::Group::new("child");face(&mut child);scene.groups[0].children.push(child);assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().distance(&scene,&ray),Some(2.));
+  scene.groups[0].hidden=true;assert_eq!(VisibleRayIndex::new(&scene,1024*1024).unwrap().distance(&scene,&ray),None);
+ }
 }

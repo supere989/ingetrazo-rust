@@ -26,7 +26,7 @@ impl Navigation {
   }
  }
  fn hit(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<(DVec3,DVec3,f64)>{
-  match &self.collision {Some(index)=>index.hit(scene,ray),None=>screen_pick::hover_face(scene,ray)}
+  match &self.collision {Some(index)=>index.hit(scene,ray),None=>VisibleRayIndex::direct_hit(scene,ray)}
  }
  fn distance(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<f64>{self.hit(scene,ray).map(|hit|hit.2)}
  pub fn sync_cursor(&mut self,ctx:&egui::Context){
