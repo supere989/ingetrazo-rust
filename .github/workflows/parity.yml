@@ -29,6 +29,13 @@ jobs:
         run: python scripts/check-python-edits.py
       - name: Original Python versus Rust boolean shape acceptance
         run: python scripts/check-python-booleans.py
+      - name: Original Python PushPull reference regressions
+        env:
+          QT_QPA_PLATFORM: offscreen
+          PYTHONPATH: ingetrazo
+        run: python -m pytest -q ingetrazo/tests/test_pushpull_subtractive.py ingetrazo/tests/test_pushpull_orient.py
+      - name: Original Python versus Rust PushPull shape acceptance
+        run: python scripts/check-python-pushpull.py
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4

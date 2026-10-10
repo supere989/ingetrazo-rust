@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "cap-out",
+      "original_volume": 1.5,
+      "rust_volume": 1.5,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "cap-in",
+      "original_volume": 0.5,
+      "rust_volume": 0.5,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "pocket",
+      "original_volume": 0.875,
+      "rust_volume": 0.875,
+      "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "through",
+      "original_volume": 0.75,
+      "rust_volume": 0.75,
+      "symmetric_difference_volume": 0.0
+    }
+  ],
+  "scope": "Closed cube cap extension/recess, blind square pocket and through-cut; original tool classify+commit and independent native manifold shape oracle. No arbitrary/GUI/undo parity claim."
+}
