@@ -1,0 +1,1 @@
+Retained literal pre-correction parser failure from source3e363a7d. Pinned originalfrom_dict exact JSON records accepted representations and TypeError/ValueError refusals. Cases include full four-channel tuple/nonstringname/stringtuple/dictiteration/invalidthfourthbackchannel, bool/int/string decimal conversion and large UTC integer. Baseline is not parity.
