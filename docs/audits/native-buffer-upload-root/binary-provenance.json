@@ -1,0 +1,27 @@
+[
+  {
+    "label": "first",
+    "source": "b988a309",
+    "binary_sha256": "dc57873b34759c82c3c92db1d536ddb18af00440dbe8a4acec7fe9744da500a3"
+  },
+  {
+    "label": "batch",
+    "source": "e17fc475",
+    "binary_sha256": "e7ebe72db499c72de15c2ab6681add2879312f3f3766abcfb816f854c30d4f39"
+  },
+  {
+    "label": "old-control",
+    "source": "e17fc475 probe plus b988a309 parent resource files",
+    "binary_sha256": "b72af8727a3fb84fff5a9c382ab430dc6ba66cdd404bb7f8493ac2f5ace7f9b7"
+  },
+  {
+    "label": "restored",
+    "source": "9c14a2f8",
+    "binary_sha256": "e7ebe72db499c72de15c2ab6681add2879312f3f3766abcfb816f854c30d4f39"
+  },
+  {
+    "label": "restored-images",
+    "source": "9c14a2f8",
+    "binary_sha256": "b20b7bae04c1ba5f8175f0c314fcfdf746d32b4736f0fb23e701451ee6b78299"
+  }
+]

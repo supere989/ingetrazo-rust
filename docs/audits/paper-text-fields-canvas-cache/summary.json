@@ -1,0 +1,22 @@
+{
+  "production_commit": "3b0955cd",
+  "observation_commit": "93842d92",
+  "pixel_checker_commit": "fea7ebf3",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_binary_sha256": "5405365c2ab94689898e6f0fe62b77aaf3135e557e80c4414b7b6e7cc3c15256",
+  "gui_tests": "143 passed, 1 ignored",
+  "actual_ui_two_macro_texts_per_sheet": true,
+  "actual_calendar_samples_per_paint_frame": 1,
+  "warm_expansion_counters_unchanged": true,
+  "original_native_calendar_timestamp_controls": 132,
+  "glyph_regions_exact": 6,
+  "pdf_comparisons_exact": 12,
+  "retained_raw_macro_failure_pixels": 1031,
+  "invalidation_unit_controls": [
+    "rename path with unchanged model/Scene revisions",
+    "next calendar day with unchanged model/Scene revisions",
+    "authored text and literal frame binding changes",
+    "invalid calendar/leap-day and bounded Text refusal preserves prior entry"
+  ],
+  "scope": "Actual native ash/Xvfb/llvmpipe production canvas, properties, Ctrl shortcuts and genuine Zenity dialogs; original source caller/painter PDF plus source-expanded native literal canvas controls. Original canvas font/layout pixel parity, property history equality, real Windows/macOS calendar execution and full P29 remain open. Calendar counter measures provider calls, not OS syscalls."
+}

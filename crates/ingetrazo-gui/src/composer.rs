@@ -23,6 +23,9 @@ use crate::app::IngeTrazoApp;
 #[derive(Debug, Clone)]
 pub struct ComposerState {
     pub pdf_export_error: Option<String>,
+    field_index_cache: Option<((u64,u64,uuid::Uuid,usize),Result<usize,String>)>,
+    field_index_computations:u64,
+    field_expansions:crate::composer_text_fields::CanvasExpansions,
     pub paper_text: std::rc::Rc<std::cell::RefCell<ingetrazo_formats::paper_text_painter::Painter>>,
     pub shape_tool:Option<String>,
     pub shape_start:Option<glam::DVec2>,
@@ -39,7 +42,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            pdf_export_error: None,
+            pdf_export_error: None,field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -50,6 +53,18 @@ impl Default for ComposerState {
             interaction_sheet:None,edit_before:None,sheet_history:Default::default(),
         }
     }
+}
+
+fn canvas_field_index(app:&mut IngeTrazoApp,sheet_idx:usize)->Result<usize,String> {
+    let sheet=&app.scene.sheets[sheet_idx];
+    let key=(app.model_revision,app.scene.version,sheet.id,app.scene.sheets.len());
+    if app.composer_state.field_index_cache.as_ref().map(|(k,_)|*k)!=Some(key) {
+        let result=crate::composer_text_fields::source_indices(&app.scene.sheets,&app.scene.sheets[sheet_idx..sheet_idx+1])
+            .and_then(|indices|indices.get(&(sheet as *const _)).copied().ok_or_else(||"Paper Text context no longer exists".into()));
+        app.composer_state.field_index_cache=Some((key,result));
+        app.composer_state.field_index_computations=app.composer_state.field_index_computations.wrapping_add(1);
+    }
+    app.composer_state.field_index_cache.as_ref().unwrap().1.clone()
 }
 
 fn sheet_model_equal(a:&[ingetrazo_core::composition::Sheet],b:&[ingetrazo_core::composition::Sheet])->bool {
@@ -138,6 +153,14 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let margin_mm = app.scene.sheets[sheet_idx].margin_mm;
     let selected_item = app.scene.sheets[sheet_idx].selected_item;
     let items = app.scene.sheets[sheet_idx].items.clone();
+    let field_index=if items.iter().any(|item|matches!(item,SheetItem::Text(t)if t.text.contains('{'))) {Some(canvas_field_index(app,sheet_idx))}else{None};
+    let calendar_before=crate::composer_text_fields::calendar_samples();
+    let calendar=field_index.as_ref().map(|_|crate::composer_text_fields::sample_calendar());
+    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{
+        d.insert_temp(egui::Id::new("pdf-ui-canvas-fields"),Vec::<String>::new());
+        d.insert_temp(egui::Id::new("pdf-ui-canvas-text-rects"),Vec::<egui::Rect>::new());
+        d.insert_temp(egui::Id::new("pdf-ui-field-index-computations"),app.composer_state.field_index_computations);
+    });}
     let zoom = app.composer_state.zoom;
 
     // Center paper on screen by default
@@ -250,13 +273,28 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
             SheetItem::Text(txt) => {
                 let p = mm_to_screen(txt.pos.0, txt.pos.1);
-                painter.text(
+                let cached=if txt.text.contains('{') {
+                    Some((||{
+                        let index=field_index.as_ref().unwrap().as_ref().map_err(Clone::clone)?;
+                        let date=calendar.as_ref().unwrap().as_ref().map_err(Clone::clone)?;
+                        app.composer_state.field_expansions.get(app.model_revision,app.scene.version,&app.scene.sheets[sheet_idx],txt,*index,app.scene.sheets.len(),app.current_file.as_deref(),*date)
+                    })())
+                }else{None};
+                let error;
+                let display=match &cached {
+                    Some(Ok(text))=>text.as_ref(),Some(Err(message))=>{error=format!("Text fields: {message}");error.as_str()},None=>txt.text.as_str(),
+                };
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{
+                    let mut strings=d.get_temp::<Vec<String>>(egui::Id::new("pdf-ui-canvas-fields")).unwrap_or_default();strings.push(display.to_string());d.insert_temp(egui::Id::new("pdf-ui-canvas-fields"),strings);
+                });}
+                let painted_rect=painter.text(
                     p,
                     egui::Align2::LEFT_TOP,
-                    &txt.text,
+                    display,
                     FontId::proportional((txt.font_size_pt as f32 * zoom * 0.4).max(10.0)),
                     Color32::from_rgb(15, 15, 20),
                 );
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{let mut rects=d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-canvas-text-rects")).unwrap_or_default();rects.push(painted_rect);d.insert_temp(egui::Id::new("pdf-ui-canvas-text-rects"),rects);});}
                 if is_selected {
                     let text_rect = Rect::from_min_size(p, Vec2::new(60.0 * zoom, 12.0 * zoom));
                     render_selection_box(&painter, text_rect);
@@ -284,6 +322,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             }
         }
     }
+
+    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
 
     // Top Floating Toolbar for Composer Controls
     let toolbar_rect = Rect::from_min_size(
@@ -934,6 +974,16 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 
 #[cfg(test)]mod frame_camera_tests{
  use super::*;
+ #[test]fn canvas_field_index_reuses_warm_context_and_invalidates_edit_history_replacement() {
+  let mut app=IngeTrazoApp::new();let mut a=ingetrazo_core::composition::Sheet::default();a.items.clear();let mut b=a.clone();b.id=uuid::Uuid::new_v4();app.scene.sheets=vec![a,b];
+  assert_eq!(canvas_field_index(&mut app,1).unwrap(),0);assert_eq!(app.composer_state.field_index_computations,1);
+  assert_eq!(canvas_field_index(&mut app,1).unwrap(),0);assert_eq!(app.composer_state.field_index_computations,1);
+  let mut border=app.scene.sheets[1].effective_source_border();border.color="#ffffff".into();app.scene.sheets[1].set_source_border(border).unwrap();app.scene.bump_version();
+  assert_eq!(canvas_field_index(&mut app,1).unwrap(),1);assert_eq!(app.composer_state.field_index_computations,2);
+  let id=app.scene.sheets[1].id;app.scene.sheets[1]=app.scene.sheets[0].clone();app.scene.sheets[1].id=id;app.bump_model_revision();
+  assert_eq!(canvas_field_index(&mut app,1).unwrap(),0);assert_eq!(app.composer_state.field_index_computations,3);
+ }
+
  #[test]fn dormant_border_edit_undo_redo_restores_runtime_and_metadata() {
   let mut app=IngeTrazoApp::new();app.scene.sheets=vec![ingetrazo_core::composition::Sheet::default()];app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
   let before=app.scene.sheets.clone();app.begin_composer_edit();
