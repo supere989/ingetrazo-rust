@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "opaque",
+      "passed": true,
+      "input_sha256": "fe44950a751ccd763486d44474b3613f44ca112a575a03f41cd4cd9ebd5eb599",
+      "groups": 2,
+      "materials": 1,
+      "inventory": {
+        "root_mesh": {
+          "faces": [],
+          "edges": [],
+          "vertices": []
+        },
+        "dimensions": [],
+        "texts": [],
+        "saved_views": [],
+        "section_planes": [],
+        "images": [],
+        "guides_count": 0,
+        "back_face_color": null
+      },
+      "comparison_raw_sha256": "3363f034119b8c790f3ae11567ec55aab2edd39ba3bcc38a52ea42c538a28f45",
+      "negative": "altered geometry rejected"
+    },
+    {
+      "name": "cutout",
+      "passed": true,
+      "input_sha256": "980c8e0aa4d51ee02e88a2c3f73c119f9505442be8f5d9cd84ce8a5e90c1d322",
+      "groups": 2,
+      "materials": 1,
+      "inventory": {
+        "root_mesh": {
+          "faces": [],
+          "edges": [],
+          "vertices": []
+        },
+        "dimensions": [],
+        "texts": [],
+        "saved_views": [],
+        "section_planes": [],
+        "images": [],
+        "guides_count": 0,
+        "back_face_color": null
+      },
+      "comparison_raw_sha256": "12faf484c16f3ac8181f3d1f795a4ba12ff16b5e50c42f6b5273452c6ad7b7f6",
+      "negative": "altered geometry rejected"
+    },
+    {
+      "name": "translucent",
+      "passed": true,
+      "input_sha256": "8e51c672b75f0f00bf0e12c9d087fb8fd38bc582250418fe29c19c9c0cf88d59",
+      "groups": 2,
+      "materials": 1,
+      "inventory": {
+        "root_mesh": {
+          "faces": [],
+          "edges": [],
+          "vertices": []
+        },
+        "dimensions": [],
+        "texts": [],
+        "saved_views": [],
+        "section_planes": [],
+        "images": [],
+        "guides_count": 0,
+        "back_face_color": null
+      },
+      "comparison_raw_sha256": "641c875e5af91e8a640671b4a55de3aa44005f39551bdba81a4f2675aa03cf30",
+      "negative": "altered geometry rejected"
+    }
+  ],
+  "parser_pin": "291700bc213655a00461838de71e5f206311e619",
+  "app_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source": "d79ab4cb6198529fac83f0278e90c8b64bfe8551",
+  "binary_sha256": "1fe5ff60290919d91aeb8e421a9d20bbfc76ee15301b0cca547a06986be487c2"
+}

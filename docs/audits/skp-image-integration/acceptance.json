@@ -1,0 +1,43 @@
+{
+  "source_commit": "d79ab4cb6198529fac83f0278e90c8b64bfe8551",
+  "binary_sha256": "1fe5ff60290919d91aeb8e421a9d20bbfc76ee15301b0cca547a06986be487c2",
+  "cases": [
+    "opaque",
+    "cutout",
+    "translucent"
+  ],
+  "fresh_original_native_comparison": true,
+  "purged_transports": [
+    {
+      "name": "cutout-payload.json",
+      "bytes": 7292,
+      "sha256": "0dacb7f1569a2d70478e1727cb264b24279e29a0d3d772eee56aef60c2c2b351"
+    },
+    {
+      "name": "cutout.igz",
+      "bytes": 1538,
+      "sha256": "cb1e5e06b815b93b49250846a95e3dbdfdf482e1585497906646fd4e7c636474"
+    },
+    {
+      "name": "opaque-payload.json",
+      "bytes": 7282,
+      "sha256": "0c3b42fa869a33c0dbf43887608a552f80e8e0adc094a57f67031722acc55524"
+    },
+    {
+      "name": "opaque.igz",
+      "bytes": 1519,
+      "sha256": "f523207c589039ea5daa2250d331701ee5bcee6bef798fcc214a6e6dad75b523"
+    },
+    {
+      "name": "translucent-payload.json",
+      "bytes": 7297,
+      "sha256": "43689b6e7fb4c45a1415b77af991fba0461b9c107fb2502078984b346ff03af2"
+    },
+    {
+      "name": "translucent.igz",
+      "bytes": 1521,
+      "sha256": "8cb923473ae17de8c886cc2430c38694248e4e926db2b488d8afb2b96b1f1763"
+    }
+  ],
+  "scope": "Fresh merged importer against pinned writer-produced MFC image controls. Exact retained source/native signatures and listed inventories. Does not prove SketchUp-authored schema calibration or native rendered billboard parity."
+}
