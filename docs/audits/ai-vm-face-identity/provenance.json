@@ -1,0 +1,7 @@
+{
+  "native_source": "0e930b24",
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "12acf6855d8e040672bbef5d6dc960b56904b20a1f9e02e8fcb00e5967f250f9",
+  "rustpython_vm": "0.6.0 pinned licensed host-budget patch",
+  "production_enabled": false
+}
