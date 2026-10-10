@@ -29,3 +29,9 @@ INGETRAZO_POSITION_ORIGINAL=1 INGETRAZO_POSITION_CANCEL=1 CARGO_TARGET_DIR=/path
 ```
 
 Full navigation, cursor capture/platform support, settings, wall/floor and visibility breadth, measurement text, source glyph/AA pixels and hardware remain required beyond this bounded stage. Existing billboard filtering in the shared ray index requires further audit. Earlier iso and two-point precision failures, fixture hosting/window-name mistakes and stale-build failure are retained without relabeling them as passes.
+
+## Timer-overrun followup
+
+`probe-python-navigation-timers.py` starts the frozen real Walk/FirstPerson QTimers through actual handlers, blocks the same Qt event loop for170ms, and processes one event dispatch. Both timers emit once. The old compiled native egui controller replayed five Walk/seven FirstPerson fixed steps; raw failures remain under `navigation-timer-coalescing`. Deadline scheduling now emits one due step, starts without immediate motion, requests remaining interval, and stops on release/focus/cancel. Fixed movement math is unchanged. This follows [Qt6.12 timer-overrun policy](https://doc.qt.io/qt-6/qtimer.html#accuracy-and-timer-resolution).
+
+Replay strict named controls with `python3 scripts/check-navigation-timers.py ORIGINAL.json FIXED.json OLD.json`. Both compiled old defects and a missing mandatory case must reject. This establishes controlled dispatch semantics, not rendered wall-clock cadence or complete Walk/FirstPerson parity.

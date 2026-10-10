@@ -1,0 +1,8 @@
+{
+  "source_revision": "748262e937edc1652c809a2f34cb930d3faa5166",
+  "binary_sha256": "a04b8c861c05ff1726d285d37c95179691e138f34d3b607de93a53ee7ecfe0bf",
+  "navigation_source_sha256": "aa51845fb65d936e66c204152ee980a8218d796db944a315cfe6d3581eaa0766",
+  "build": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo build --locked -j2 -p ingetrazo-gui --example navigation_timer_acceptance",
+  "tests": "151 GUI lib PASS/1ignored;18 navigation PASS",
+  "scope": "actual Qt blocked-event-loop dispatch and native egui controller, two literal cases; existing core one-step numeric boundary1e-6. Not wall-clock rendered timer cadence or complete navigation parity."
+}
