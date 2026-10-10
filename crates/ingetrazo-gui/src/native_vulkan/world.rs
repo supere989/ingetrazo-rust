@@ -178,6 +178,7 @@ impl World {
   let has_texture_sources=if self.revision==Some(revision){self.has_texture_sources}else{scene_has_textures(scene)};
   let texture_enabled=has_texture_sources&&(style.visual_style==ingetrazo_render::style::VisualStyle::XRay||(style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures));
   if self.revision==Some(revision)&&self.texture_enabled==texture_enabled{
+   self.textures.as_mut().unwrap().refresh_images(context,&mut self.resources,scene,fence,completed_serial)?;
    if cap_changed {let next=self.upload_cap(context,cap)?;if let Some(old)=self.cap_vertices.take(){self.resources.retire(old)?;self.resources.collect(fence,completed_serial)?;}self.cap_vertices=next;self.cap_signature=cap;}
    self.cap_key=Some(cap_key);self.contour_metrics.cache_hits+=1;self.contour_metrics.warm_cache_ms=started.elapsed().as_secs_f64()*1000.;return Ok(());
   }
@@ -208,13 +209,13 @@ impl World {
    }
    if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Contour cache replacement requires a completed draw fence".into());}
    if cap_changed{next_cap=Some(self.upload_cap(context,cap)?);}
-   let candidate=self.textures.as_mut().unwrap().prepare(context,&mut self.resources,&texture_buffers,&scene.embedded_textures,fence,completed_serial,limit)?;
+   let candidate=self.textures.as_mut().unwrap().prepare(context,&mut self.resources,&texture_buffers,&scene.embedded_textures,scene,fence,completed_serial,limit)?;
    for &(buffer,triangles,stride)in &candidate.contours{batches.push(ContourBatch{vertices:buffer,indices:buffer,triangles,compact:true,stride,owned:false});}
    next_textures=Some(candidate);
    self.contours.as_mut().unwrap().replace_batches(&self.resources,&batches)
   })();
   if let Err(error)=prepare {if let Some(candidate)=next_textures.take(){self.textures.as_mut().unwrap().abort(&mut self.resources,candidate,fence,completed_serial)?;}self.contour_metrics.failed_prepared_edge_bytes=next_edges.and_then(|id|self.resources.logical_bytes(id)).unwrap_or(0);self.contour_metrics.failed_prepared_chunks=batches.iter().filter(|b|b.owned).count();self.contour_metrics.rollbacks+=1;for id in batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([vertices,indices].into_iter().flatten()).chain(next_cap.into_iter().flatten()).chain(next_transparent).chain(next_edges){self.resources.retire(id)?;}self.resources.collect(fence,completed_serial)?;return Err(error);}
-  self.textures.as_mut().unwrap().publish(context,&mut self.resources,next_textures.unwrap(),fence,completed_serial)?;
+  self.textures.as_mut().unwrap().publish(context,&mut self.resources,next_textures.unwrap(),fence,completed_serial,scene)?;
   if let Some(next)=next_cap{if let Some(old)=self.cap_vertices.take(){self.resources.retire(old)?;}self.cap_vertices=next;self.cap_signature=cap;}self.cap_key=Some(cap_key);
   for old in self.contour_batches.iter().filter(|batch|batch.owned).map(|batch|batch.vertices).chain([self.vertices.take(),self.indices.take(),self.transparent_vertices.take(),self.edge_vertices.take()].into_iter().flatten()){self.resources.retire(old)?;}
   self.resources.collect(fence,completed_serial)?;self.contour_metrics.additional_position_bytes=batches.iter().filter(|b|b.owned).map(|b|self.resources.logical_bytes(b.vertices).unwrap()).sum();self.contour_metrics.batches=batches.len();self.contour_metrics.compact_preprocess_ms=preprocessing;self.contour_metrics.cold_build_ms=started.elapsed().as_secs_f64()*1000.;self.contour_batches=batches;
@@ -227,6 +228,7 @@ impl World {
  pub fn transparent_runs(&self)->Vec<(f32,u32,u32)>{self.opacity_runs.iter().filter(|r|r.kind!=3).map(|r|(r.opacity,r.first,r.count)).collect()}
  pub fn paint_runs(&self)->Vec<(u32,f32,u32,u32)>{self.opacity_runs.iter().map(|r|(r.kind,r.opacity,r.first,r.count)).collect()}
  pub fn set_texture_pressure_for_probe(&mut self,enabled:bool){self.textures.as_mut().unwrap().set_pressure_for_probe(enabled);}
+ pub fn reference_image_stats(&self)->super::reference_images::Stats{self.textures.as_ref().unwrap().image_stats()}
  pub fn texture_stats(&self)->(super::textures::Stats,&super::texture_cache::TextureStats){let textures=self.textures.as_ref().unwrap();(textures.stats,textures.cache_stats())}
  pub fn edge_geometry_bytes(&self)->u64{self.edge_vertices.and_then(|id|self.resources.logical_bytes(id)).unwrap_or(0)}
  pub fn edge_endpoint_count(&self)->u32{self.edge_count}
@@ -247,6 +249,8 @@ impl World {
    self.device.cmd_begin_render_pass(command,&vk::RenderPassBeginInfo::default().render_pass(self.render_pass).framebuffer(target.framebuffer).render_area(vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}).clear_values(&clears),vk::SubpassContents::INLINE);
    self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.pipeline);
    self.device.cmd_set_viewport(command,0,&[vk::Viewport{x:0.0,y:0.0,width:target.extent.width as f32,height:target.extent.height as f32,min_depth:0.0,max_depth:1.0}]);self.device.cmd_set_scissor(command,0,&[vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}]);
+   self.textures.as_mut().unwrap().record_images(command,serial,&self.mvp)?;
+   self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.pipeline);
    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,bytemuck::cast_slice(&self.mvp));
    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,64,bytemuck::cast_slice(&self.clip));
    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&self.clip_enabled));

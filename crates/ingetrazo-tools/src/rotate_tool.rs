@@ -324,7 +324,6 @@ impl RotateTool {
             }
         }
         if changed {
-            scene.bump_version();
             self.preview_version = scene.version;
         }
     }

@@ -55,9 +55,17 @@ impl IngeTrazoApp {
         Ok(())
     }
 
+    pub fn dispatch_tool_control_state(&mut self,held:bool){
+        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_control_state(&mut self.scene,held);
+        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+    }
+    pub fn dispatch_tool_cancel(&mut self){
+        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_cancel(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+    }
     pub fn dispatch_tool_move(&mut self,context:&ToolContext){
-        let version=self.scene.version;self.active_tool.on_move(&mut self.scene,context);
-        if self.scene.version!=version{self.bump_model_revision();}
+        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
+        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
@@ -335,3 +343,16 @@ mod tests {
 }
 
 #[cfg(test)]mod section_group_workflow{use crate::IngeTrazoApp;use glam::{DVec3,DMat4};use ingetrazo_core::{groups::Group,mesh::Mesh,math::Ray,scene::SelectionItem,section::SectionPlane};use ingetrazo_tools::base::ToolContext;#[test]fn clipped_front_group_does_not_block_rear_group_select_and_double_click(){let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();let ids=[DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(0.,1.,0.)].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);let mut child=Group::with_mesh("child",mesh.clone());child.transform=DMat4::from_translation(-DVec3::Z);let mut front=Group::new("front");front.transform=DMat4::from_translation(DVec3::Z*2.);front.children.push(child);let mut rear=Group::with_mesh("rear",mesh);rear.transform=DMat4::from_translation(-DVec3::Z);app.scene.groups.extend([front,rear]);app.scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));app.scene.show_section_cuts=true;app.scene.show_section_planes=false;let context=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z*3.,-DVec3::Z));app.dispatch_tool_click(&context);assert!(app.scene.selection.contains(&SelectionItem::Group(1)));assert!(app.undo_stack.is_empty());app.dispatch_tool_double_click(&context);assert_eq!(app.component_edit_stack.len(),1);assert_eq!(app.scene.mesh.faces.len(),1);assert!(app.scene.groups.is_empty());app.cancel_component_edit();app.scene.show_section_cuts=false;app.dispatch_tool_click(&context);assert!(app.scene.selection.contains(&SelectionItem::Group(0)));assert!(app.undo_stack.is_empty());}}
+
+#[cfg(test)]mod image_revision_tests {
+ use super::*;use ingetrazo_core::scene::SelectionItem;use ingetrazo_tools::base::ToolType;
+ #[test]fn image_only_preview_invalidates_document_without_geometry_cache(){
+  let mut app=IngeTrazoApp::new();app.system_clipboard=None;
+  app.scene.image_planes.push(ingetrazo_core::image_plane::ImagePlane::new("missing",glam::DVec3::ZERO,glam::DVec3::X,glam::DVec3::Y));app.scene.select(SelectionItem::ImagePlane(0));app.set_tool(ToolType::Move);
+  let ctx=|p|ToolContext::new(p,ingetrazo_core::math::Ray::new(glam::DVec3::new(0.5,0.5,10.),-glam::DVec3::Z));
+  app.dispatch_tool_click(&ctx(glam::DVec3::ZERO));let geometry=app.native_geometry_revision;let document=app.model_revision;let version=app.scene.version;
+  app.dispatch_tool_move(&ctx(glam::DVec3::X));assert_eq!(app.scene.version,version);assert_eq!(app.native_geometry_revision,geometry);assert!(app.model_revision>document);
+  let document=app.model_revision;app.dispatch_tool_move(&ctx(glam::DVec3::X));assert_eq!(app.model_revision,document);
+  app.scene.mesh.add_vertex(glam::DVec3::ZERO);app.scene.clear_selection();app.scene.select(SelectionItem::Vertex(0));app.set_tool(ToolType::Move);app.dispatch_tool_click(&ctx(glam::DVec3::ZERO));let geometry=app.native_geometry_revision;app.dispatch_tool_move(&ctx(glam::DVec3::Y));assert!(app.native_geometry_revision>geometry);
+ }
+}
