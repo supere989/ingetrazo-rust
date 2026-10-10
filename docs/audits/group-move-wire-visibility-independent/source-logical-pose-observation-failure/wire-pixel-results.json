@@ -1,0 +1,104 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "phase": "group-before",
+      "wire": "f7b2d0e840bc4849",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-live-preview",
+      "wire": "f7b2d0e840bc4849",
+      "passed": false,
+      "hit_segments": 2,
+      "segments": 24,
+      "fraction": 0.08333333333333333,
+      "quarters": [
+        0.16666666666666666,
+        0.0,
+        0.0,
+        0.16666666666666666
+      ]
+    },
+    {
+      "phase": "group-copy-preview",
+      "wire": "f7b2d0e840bc4849",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-preview",
+      "wire": "actual-preview",
+      "passed": true,
+      "hit_segments": 25,
+      "segments": 25,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-commit",
+      "wire": "f7b2d0e840bc4849",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-commit",
+      "wire": "f2c8fcbace49407a",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-array-undo",
+      "wire": "f7b2d0e840bc4849",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "scope": "Distributed visible ink on independently projected committed/preview wire paths; no state-transition-only acceptance"
+}

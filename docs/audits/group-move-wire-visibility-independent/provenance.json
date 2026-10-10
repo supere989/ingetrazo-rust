@@ -1,0 +1,11 @@
+{
+  "production_source": "7a6202c7bc6a9e60b72bf445359dba0f5f5d897b",
+  "native_executable_sha256": "c28526a07627aa162c6f85c22fc925d541f2b2c798fd3641fd1839bca5e69b46",
+  "observer_input": "a915d5b fixtures only; held7a child-list production NOTincluded",
+  "original_draw_pose_reference": "original views/viewport.py:_draw_groups_preview applies mvp*preview_matrix or translation for preview IDs; logicalMesh projections retained separately",
+  "backends": [
+    "actual originalQt OpenGLsoftware",
+    "actualnativeVulkan llvmpipe"
+  ],
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9"
+}

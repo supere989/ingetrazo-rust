@@ -1,0 +1,18 @@
+[
+  {
+    "negative": "black-world",
+    "rejected": true
+  },
+  {
+    "negative": "missing-committed-capture",
+    "rejected": true
+  },
+  {
+    "negative": "empty-capture",
+    "rejected": true
+  },
+  {
+    "negative": "wrong-world-region",
+    "rejected": true
+  }
+]
