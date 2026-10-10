@@ -45,3 +45,5 @@ pub mod pieces;
 
 pub mod parts;
 pub mod offset;
+
+pub mod simplify;

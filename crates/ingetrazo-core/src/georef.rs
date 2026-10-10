@@ -1049,3 +1049,48 @@ mod tests {
         }
     }
 }
+
+/// Bake selected georeferenced paths into welded drawing geometry atomically.
+/// Closed planar footprints detect faces; paths are consumed only after all
+/// coordinates and resulting geometry have passed validation.
+pub fn geopath_to_geometry(scene:&mut crate::scene::Scene,paths:&[usize])->Result<usize,String>{
+    let mut ids=paths.to_vec();ids.sort_unstable();ids.dedup();
+    if ids.is_empty(){return Err("Select a path to convert to geometry".into());}
+    if ids.iter().any(|&i|i>=scene.geo_paths.len()){return Err("Invalid selected path".into());}
+    if ids.iter().any(|&i|scene.geo_paths[i].points.iter().any(|p|!p.is_finite())){return Err("Path coordinates must be finite".into());}
+    let mut candidate=scene.clone();let mut added=0;
+    for &id in &ids {
+        let path=&scene.geo_paths[id];
+        for (a,b) in path.segments(){if a.distance(b)<1e-9{continue;}let a=candidate.mesh.add_vertex(a);let b=candidate.mesh.add_vertex(b);if candidate.mesh.find_edge(a,b).is_none(){candidate.mesh.add_edge(a,b).ok_or("Path edge collapsed at document precision")?;added+=1;}}
+        let normal=crate::math::newell_vector(&path.points).normalize_or_zero();
+        let plane=if normal.length_squared()>0.5&&path.points.iter().all(|&p|(p-path.points[0]).dot(normal).abs()<1e-6){Some((path.points[0],normal))}else{
+            candidate.mesh.faces.iter().enumerate().find_map(|(i,f)|{let p=candidate.mesh.vertices[f.vertices[0]].position;let n=candidate.mesh.face_normal(i);if path.points.iter().all(|&x|(x-p).dot(n).abs()<1e-6){Some((p,n))}else{None}})
+        };
+        if let Some((point,normal))=plane {
+            let selected:Vec<_>=candidate.mesh.faces.iter().enumerate().filter(|(_,f)|f.vertices.iter().all(|&v|(candidate.mesh.vertices[v].position-point).dot(normal).abs()<1e-6)).map(|(i,_)|i).collect();
+            if !selected.is_empty()||candidate.mesh.faces.is_empty(){candidate.mesh=crate::planar::rebuild_faces(&candidate.mesh,&selected)?;} else {
+                let mut plane_mesh=crate::mesh::Mesh::new();
+                for e in &candidate.mesh.edges {let a=candidate.mesh.vertices[e.v0].position;let b=candidate.mesh.vertices[e.v1].position;if (a-point).dot(normal).abs()<1e-6&&(b-point).dot(normal).abs()<1e-6 {let a=plane_mesh.add_vertex(a);let b=plane_mesh.add_vertex(b);plane_mesh.add_edge(a,b);}}
+                let rebuilt=crate::planar::rebuild_faces(&plane_mesh,&[])?;
+                for face in &rebuilt.faces {crate::planar::add_face(&mut candidate.mesh,&crate::planar::rings(&rebuilt,face),face)?;}
+            }
+        }
+    }
+    crate::heal::refresh_interior(&mut candidate.mesh)?;
+    for &i in ids.iter().rev(){candidate.geo_paths.remove(i);}
+    candidate.clear_selection();candidate.bump_version();*scene=candidate;Ok(added)
+}
+
+#[cfg(test)]
+mod conversion_tests {
+    use super::*;use crate::scene::{Scene,SelectionItem};
+    #[test]fn selected_footprint_bakes_welded_face_and_open_trace_keeps_existing_geometry(){
+        let mut scene=Scene::new();scene.geo_paths.push(GeoPath::new(vec![DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y],true,"footprint"));scene.geo_paths.push(GeoPath::new(vec![DVec3::Z,DVec3::new(2.,0.,1.)],false,"line"));
+        scene.select(SelectionItem::GeoPath(0));assert_eq!(geopath_to_geometry(&mut scene,&[0]).unwrap(),4);assert_eq!(scene.mesh.faces.len(),1);assert_eq!(scene.geo_paths.len(),1);assert!((scene.mesh.face_area(0)-1.).abs()<1e-9);
+        let ids:Vec<_>=scene.mesh.vertices.iter().map(|v|v.uid).collect();geopath_to_geometry(&mut scene,&[0]).unwrap();assert_eq!(scene.mesh.faces.len(),1);assert_eq!(scene.mesh.edges.len(),5);assert!(ids.iter().all(|id|scene.mesh.vertices.iter().any(|v|v.uid==*id)));assert!(scene.geo_paths.is_empty());
+    }
+    #[test]fn multiple_planes_and_invalid_selected_paths_are_atomic(){
+        let mut scene=Scene::new();for z in [0.,2.] {scene.geo_paths.push(GeoPath::new(vec![DVec3::new(0.,0.,z),DVec3::new(1.,0.,z),DVec3::new(1.,1.,z),DVec3::new(0.,1.,z)],true,"footprint"));}geopath_to_geometry(&mut scene,&[0,1]).unwrap();assert_eq!(scene.mesh.faces.len(),2);
+        scene.geo_paths.push(GeoPath::new(vec![DVec3::ZERO,DVec3::new(f64::INFINITY,0.,0.)],false,"bad"));let mesh=scene.mesh.clone();let paths=scene.geo_paths.len();assert!(geopath_to_geometry(&mut scene,&[0]).is_err());assert_eq!(scene.mesh,mesh);assert_eq!(scene.geo_paths.len(),paths);assert!(geopath_to_geometry(&mut scene,&[99]).is_err());
+    }
+}

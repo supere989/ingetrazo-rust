@@ -300,11 +300,11 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.close_menu();
             }
             if ui.button(tr("Simplify Mesh…")).clicked() {
-                app.heal_overlaps();
+                app.show_simplify_dialog = true;
                 ui.close_menu();
             }
             if ui.button(tr("Convert Path to Geometry")).clicked() {
-                app.status_message = tr("Converted path to geometry edges");
+                app.convert_paths_to_geometry();
                 ui.close_menu();
             }
             if ui.button(tr("Delete Guides")).clicked() {

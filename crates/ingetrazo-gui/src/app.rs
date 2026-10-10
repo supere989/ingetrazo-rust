@@ -54,6 +54,8 @@ pub struct IngeTrazoApp {
     pub show_tray: bool,
     pub shadows_enabled: bool,
     pub show_about_dialog: bool,
+    pub show_simplify_dialog: bool,
+    pub simplify_angle: f64,
     pub show_open_dialog: bool,
     pub show_save_dialog: bool,
     pub dialog_path_input: String,
@@ -142,6 +144,8 @@ impl IngeTrazoApp {
             show_tray: true,
             shadows_enabled: false,
             show_about_dialog: false,
+            show_simplify_dialog: false,
+            simplify_angle: 1.0,
             show_open_dialog: false,
             show_save_dialog: false,
             dialog_path_input: String::new(),
@@ -943,6 +947,8 @@ impl eframe::App for IngeTrazoApp {
                 self.set_tool(ToolType::Paint);
             }
         }
+
+        self.show_simplification_dialog(ctx);
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
