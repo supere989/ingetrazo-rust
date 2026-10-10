@@ -1,0 +1,9 @@
+{
+  "algorithm_revision": "d4c5120379e188bae99454b1aac14976b6d2b1f1",
+  "binary_boundary": "Worker frozen binary built before final unit test addition; same corrected algorithm. Independent root Qt replay, not root compilation.",
+  "checker": "docs/audits/annotation-line-root-heldout/reference.py",
+  "cases": 56,
+  "different_pixels": 0,
+  "prior_failure_retained": "docs/audits/annotation-line-root-heldout/result.json",
+  "integration": "Not yet integrated; millimetre annotation and merged application validation remain open"
+}
