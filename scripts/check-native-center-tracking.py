@@ -55,6 +55,12 @@ def main():
    x.XWarpPointer.argtypes=[C.c_void_p,C.c_ulong,C.c_ulong,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_int,C.c_int];x.XFlush.argtypes=[C.c_void_p];x.XSetInputFocus.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_ulong];x.XSetInputFocus(d,window,1,0)
    def move(point,pause=.05):
     x.XWarpPointer(d,0,window,0,0,0,0,round(point[0]),round(point[1]));x.XFlush(d);time.sleep(pause)
+   def latest_mouse_at():
+    events=state().get("mouse_events",[]);return events[-1]["at"] if events else -1
+   def delivered_mouse(point,after):
+    current=state();events=current.get("mouse_events",[])
+    if events and events[-1]["at"]>after and sum((a-b)**2 for a,b in zip(events[-1]["point"],map(round,point)))<1:return current
+    return None
    xt=C.CDLL(ctypes.util.find_library("Xtst"));xt.XTestFakeButtonEvent.argtypes=[C.c_void_p,C.c_uint,C.c_int,C.c_ulong];xt.XTestFakeKeyEvent.argtypes=[C.c_void_p,C.c_uint,C.c_int,C.c_ulong]
    def event(kind,code,point,mask):
     if kind in (4,5):assert xt.XTestFakeButtonEvent(d,code,kind==4,0)
@@ -162,11 +168,13 @@ def main():
       finally:os.kill(app.pid,signal.SIGCONT)
       observe("moved-coalesced-return")
      else:
+      before=latest_mouse_at() if original else -1
       move(away)
-      if original:wait(lambda:state() if state().get("mouse_events") and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,away)))<1 else None)
+      if original:wait(lambda:delivered_mouse(away,before))
       observe("moved-rim-away")
+      before=latest_mouse_at() if original else -1
       move(moved["rim"])
-      if original:wait(lambda:state() if state().get("mouse_events") and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,moved["rim"])))<1 else None)
+      if original:wait(lambda:delivered_mouse(moved["rim"],before))
       observe("moved-rim-return")
      wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
      moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
