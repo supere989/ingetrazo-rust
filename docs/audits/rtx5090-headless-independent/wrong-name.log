@@ -1,0 +1,2 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Error: "No headless adapter matches strict vendor/type/name request; software fallback refused"

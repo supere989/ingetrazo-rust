@@ -1,0 +1,41 @@
+{
+  "production_source": "0b44d7d",
+  "validator": "1367e6bacae87e3f75d92c77dcdae77a7d0f68e7",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "image_readback_samples": [
+    [
+      247,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      247
+    ]
+  ],
+  "image_sha256": "216b6d5d352b5d0f2d2b84f26af1cef518738f86c7b62476a844debcf0a254d4",
+  "audit": [
+    "Upload destination has TRANSFER_DST|TRANSFER_SRC plus requested VERTEX_BUFFER; actualDEVICE_LOCAL notmapped(force_staging=true)",
+    "readback copiesGPU\u2192bounded HOST_VISIBLE buffer,TRANSFER_WRITE\u2192HOST_READbarrier,actualfencewait,noncoherentinvalidate,unmap/free",
+    "resolved image actualTRANSFER_SRCusage andformatqueriedsupport; SHADER_READ\u2192TRANSFER_SRC\u2192SHADER_READ restoredperchunk",
+    "resources/commandbuffer/fence destruction occurs after completedtransfer; diagnostic5stimeout exits124 avoidinginflightfree",
+    "global128MiB cap; allocatorrequirementschargedbeforeallocate, peak25MiB; realunsignaledfenceretainscharge thencompletedcollectfrees"
+  ],
+  "initial_harness_failures": [
+    {
+      "case": "CDI defaultGLX ICD",
+      "result": "ERROR_INCOMPATIBLE_DRIVER; explicit EGL ICD required in read-only headless image"
+    },
+    {
+      "case": "first EGL output bind",
+      "result": "PermissionDenied writingPNG after17MiBresourceproof; ephemeralwritableoutputpermissionscorrected; notVulkanproductfailure"
+    }
+  ],
+  "limits": [
+    "hardwareheadless only, no actualRTX WSI/desktopUI",
+    "GPU RT extensions/BCtexturecompression not enabled/tested",
+    "Metal hardware remains pending",
+    "timings singleboundedprobe, not comparativeperformancebenchmark"
+  ]
+}
