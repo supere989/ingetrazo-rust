@@ -1,0 +1,26 @@
+[
+  {
+    "name": "integer",
+    "code": "v=QVector3D(1, 2, 3)\nw=v\nassert [w.x(),w.y(),w.z()]==[1.0, 2.0, 3.0]\nw=v+QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[1.2000000476837158, 1.7000000476837158, 3.4000000953674316]\nw=v-QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[0.800000011920929, 2.299999952316284, 2.5999999046325684]\nw=v*1.3\nassert [w.x(),w.y(),w.z()]==[1.2999999523162842, 2.5999999046325684, 3.8999998569488525]\nw=v/1.3\nassert [w.x(),w.y(),w.z()]==[0.7692307829856873, 1.5384615659713745, 2.307692289352417]\nassert v.length()==3.741657257080078\nassert v.lengthSquared()==14.0\ncopy=QVector3D(v)\nassert copy is not v\ncopy.setX(7.25)\ncopy.setY(-2.5)\ncopy.setZ(.125)\nassert [copy.x(),copy.y(),copy.z()]==[7.25,-2.5,.125]\n"
+  },
+  {
+    "name": "fractional",
+    "code": "v=QVector3D(0.1, 0.2, 0.3)\nw=v\nassert [w.x(),w.y(),w.z()]==[0.10000000149011612, 0.20000000298023224, 0.30000001192092896]\nw=v+QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[0.30000001192092896, -0.10000000894069672, 0.7000000476837158]\nw=v-QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[-0.10000000149011612, 0.5, -0.09999999403953552]\nw=v*1.3\nassert [w.x(),w.y(),w.z()]==[0.12999999523162842, 0.25999999046325684, 0.39000001549720764]\nw=v/1.3\nassert [w.x(),w.y(),w.z()]==[0.07692307978868484, 0.1538461595773697, 0.23076924681663513]\nassert v.length()==0.37416574358940125\nassert v.lengthSquared()==0.14000001549720764\ncopy=QVector3D(v)\nassert copy is not v\ncopy.setX(7.25)\ncopy.setY(-2.5)\ncopy.setZ(.125)\nassert [copy.x(),copy.y(),copy.z()]==[7.25,-2.5,.125]\n"
+  },
+  {
+    "name": "large",
+    "code": "v=QVector3D(1e+20, 1, 1)\nw=v\nassert [w.x(),w.y(),w.z()]==[1.0000000200408773e+20, 1.0, 1.0]\nw=v+QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[1.0000000200408773e+20, 0.699999988079071, 1.399999976158142]\nw=v-QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[1.0000000200408773e+20, 1.2999999523162842, 0.6000000238418579]\nw=v*1.3\nassert [w.x(),w.y(),w.z()]==[1.3000000084609545e+20, 1.2999999523162842, 1.2999999523162842]\nw=v/1.3\nassert [w.x(),w.y(),w.z()]==[7.692308252441811e+19, 0.7692307829856873, 0.7692307829856873]\nassert v.length()==1.0000000200408773e+20\nassert v.lengthSquared()==float('inf')\ncopy=QVector3D(v)\nassert copy is not v\ncopy.setX(7.25)\ncopy.setY(-2.5)\ncopy.setZ(.125)\nassert [copy.x(),copy.y(),copy.z()]==[7.25,-2.5,.125]\n"
+  },
+  {
+    "name": "tiny",
+    "code": "v=QVector3D(1e-30, 1e-30, 0)\nw=v\nassert [w.x(),w.y(),w.z()]==[1.0000000031710769e-30, 1.0000000031710769e-30, 0.0]\nw=v+QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[0.20000000298023224, -0.30000001192092896, 0.4000000059604645]\nw=v-QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[-0.20000000298023224, 0.30000001192092896, -0.4000000059604645]\nw=v*1.3\nassert [w.x(),w.y(),w.z()]==[1.2999999853144903e-30, 1.2999999853144903e-30, 0.0]\nw=v/1.3\nassert [w.x(),w.y(),w.z()]==[7.692308078391161e-31, 7.692308078391161e-31, 0.0]\nassert v.length()==1.4142135555081815e-30\nassert v.lengthSquared()==0.0\ncopy=QVector3D(v)\nassert copy is not v\ncopy.setX(7.25)\ncopy.setY(-2.5)\ncopy.setZ(.125)\nassert [copy.x(),copy.y(),copy.z()]==[7.25,-2.5,.125]\n"
+  },
+  {
+    "name": "signed",
+    "code": "v=QVector3D(-1.25, 0, 3.75)\nw=v\nassert [w.x(),w.y(),w.z()]==[-1.25, 0.0, 3.75]\nw=v+QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[-1.0499999523162842, -0.30000001192092896, 4.150000095367432]\nw=v-QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[-1.4500000476837158, 0.30000001192092896, 3.3499999046325684]\nw=v*1.3\nassert [w.x(),w.y(),w.z()]==[-1.625, 0.0, 4.875]\nw=v/1.3\nassert [w.x(),w.y(),w.z()]==[-0.9615384936332703, 0.0, 2.884615421295166]\nassert v.length()==3.9528470039367676\nassert v.lengthSquared()==15.625\ncopy=QVector3D(v)\nassert copy is not v\ncopy.setX(7.25)\ncopy.setY(-2.5)\ncopy.setZ(.125)\nassert [copy.x(),copy.y(),copy.z()]==[7.25,-2.5,.125]\n"
+  },
+  {
+    "name": "zero",
+    "code": "v=QVector3D(0, 0, 0)\nw=v\nassert [w.x(),w.y(),w.z()]==[0.0, 0.0, 0.0]\nw=v+QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[0.20000000298023224, -0.30000001192092896, 0.4000000059604645]\nw=v-QVector3D(.2,-.3,.4)\nassert [w.x(),w.y(),w.z()]==[-0.20000000298023224, 0.30000001192092896, -0.4000000059604645]\nw=v*1.3\nassert [w.x(),w.y(),w.z()]==[0.0, 0.0, 0.0]\nw=v/1.3\nassert [w.x(),w.y(),w.z()]==[0.0, 0.0, 0.0]\nassert v.length()==0.0\nassert v.lengthSquared()==0.0\ncopy=QVector3D(v)\nassert copy is not v\ncopy.setX(7.25)\ncopy.setY(-2.5)\ncopy.setZ(.125)\nassert [copy.x(),copy.y(),copy.z()]==[7.25,-2.5,.125]\n"
+  }
+]

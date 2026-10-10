@@ -1,0 +1,12 @@
+[
+  {
+    "name": "position",
+    "returncode": 101,
+    "stderr": "case \"integer\"\nTraceback (most recent call last):\n  File \"<ai>\", line 3, in <module>\nAssertionError\n\nthread 'main' (1264842) panicked at src/bin/vm_vector.rs:21:185:\nvector control rejected\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+  },
+  {
+    "name": "hypot",
+    "returncode": 101,
+    "stderr": "case \"integer\"\nTraceback (most recent call last):\n  File \"<ai>\", line 12, in <module>\nAssertionError\n\nthread 'main' (1264843) panicked at src/bin/vm_vector.rs:21:185:\nvector control rejected\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+  }
+]

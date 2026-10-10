@@ -42,11 +42,65 @@ fn abort() {
 #[pymodule]
 pub mod native_groups {
     use glam::DVec3;
+    use rustpython_vm::types::{Constructor,AsNumber};
     use ingetrazo_core::mesh::Mesh as NativeMesh;
     use rustpython_vm::{
         Py, PyObjectRef, PyPayload, PyRef, PyResult, Traverse, VirtualMachine, builtins::PyListRef,
         common::lock::PyRwLock, function::ArgIntoFloat, pyclass,
     };
+    #[pyattr]
+    #[pyclass(name = "QVector3D")]
+    #[derive(Debug, PyPayload)]
+    pub struct QVector3D { xyz: PyRwLock<[f32; 3]> }
+    impl rustpython_vm::types::Constructor for QVector3D {
+        type Args = rustpython_vm::function::PosArgs<PyObjectRef>;
+        fn py_new(_cls: &Py<rustpython_vm::builtins::PyType>, args: Self::Args, vm: &VirtualMachine) -> PyResult<Self> {
+            vm.host_budget_tick()?;
+            let args=args.into_vec();
+            let xyz=match args.as_slice() {
+                [] => [0.;3],
+                [v] => v.downcast_ref::<Self>().ok_or_else(||vm.new_type_error("QVector3D copy requires QVector3D"))?.xyz.read().to_owned(),
+                [x,y,z] => [x.try_float(vm)?.to_f64() as f32,y.try_float(vm)?.to_f64() as f32,z.try_float(vm)?.to_f64() as f32],
+                _ => return Err(vm.new_type_error("QVector3D requires zero, one vector, or three numeric arguments"))
+            };
+            Ok(Self{xyz:PyRwLock::new(xyz)})
+        }
+    }
+    #[pyclass(with(Constructor, AsNumber))]
+    impl QVector3D {
+        #[pymethod] fn x(zelf:&Py<Self>)->f64 {zelf.xyz.read()[0] as f64}
+        #[pymethod] fn y(zelf:&Py<Self>)->f64 {zelf.xyz.read()[1] as f64}
+        #[pymethod] fn z(zelf:&Py<Self>)->f64 {zelf.xyz.read()[2] as f64}
+        #[pymethod(name="setX")] fn set_x(zelf:&Py<Self>,v:ArgIntoFloat,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;zelf.xyz.write()[0]=v.into_float() as f32;Ok(())}
+        #[pymethod(name="setY")] fn set_y(zelf:&Py<Self>,v:ArgIntoFloat,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;zelf.xyz.write()[1]=v.into_float() as f32;Ok(())}
+        #[pymethod(name="setZ")] fn set_z(zelf:&Py<Self>,v:ArgIntoFloat,vm:&VirtualMachine)->PyResult<()> {vm.host_budget_tick()?;zelf.xyz.write()[2]=v.into_float() as f32;Ok(())}
+        #[pymethod(name="lengthSquared")] fn length_squared(zelf:&Py<Self>)->f64 {let a=*zelf.xyz.read();(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]) as f64}
+        #[pymethod] fn length(zelf:&Py<Self>)->f64 {let a=*zelf.xyz.read();{let x=a[0].abs();let y=a[1].abs();let z=a[2].abs();let m=if x<y{if y<z{z}else{y}}else if x<z{z}else{x};if m==0.{0.}else{(m*((x/m)*(x/m)+(y/m)*(y/m)+(z/m)*(z/m)).sqrt()) as f64}}}
+    }
+    impl QVector3D {
+        fn binary(a:&rustpython_vm::PyObject,b:&rustpython_vm::PyObject,vm:&VirtualMachine,op:u8)->PyResult {
+            vm.host_budget_tick()?;
+            let (v,w)=if op==2 && a.downcast_ref::<Self>().is_none() {(b,a)} else {(a,b)};
+            let Some(v)=v.downcast_ref::<Self>() else{return Ok(vm.ctx.not_implemented())};
+            let x=*v.xyz.read();
+            let xyz=if op<2 {
+                let Some(w)=w.downcast_ref::<Self>() else{return Ok(vm.ctx.not_implemented())};let y=*w.xyz.read();
+                std::array::from_fn(|i|if op==0{x[i]+y[i]}else{x[i]-y[i]})
+            }else{let k=w.try_float(vm)?.to_f64() as f32;std::array::from_fn(|i|if op==2{x[i]*k}else{x[i]/k})};
+            Ok(Self{xyz:PyRwLock::new(xyz)}.into_ref(&vm.ctx).into())
+        }
+    }
+    impl rustpython_vm::types::AsNumber for QVector3D {
+        fn as_number()-> &'static rustpython_vm::protocol::PyNumberMethods {
+            static METHODS:rustpython_vm::protocol::PyNumberMethods=rustpython_vm::protocol::PyNumberMethods {
+                add:Some(|a,b,vm|QVector3D::binary(a,b,vm,0)),
+                subtract:Some(|a,b,vm|QVector3D::binary(a,b,vm,1)),
+                multiply:Some(|a,b,vm|QVector3D::binary(a,b,vm,2)),
+                true_divide:Some(|a,b,vm|QVector3D::binary(a,b,vm,3)),
+                ..rustpython_vm::protocol::PyNumberMethods::NOT_IMPLEMENTED
+            }; &METHODS
+        }
+    }
     #[pyattr]
     #[pyclass(name = "Face", traverse)]
     #[derive(Debug, PyPayload)]
@@ -439,6 +493,7 @@ const SETUP: &str = r#"import native_groups
 Mesh=native_groups.Mesh
 Group=native_groups.Group
 Face=native_groups.Face
+QVector3D=native_groups.QVector3D
 def _finish(mesh,color,name):
     if color is not None:
         for f in mesh.faces:
@@ -472,6 +527,7 @@ pub struct Controller {
     limit: Option<usize>,
 }
 impl Controller {
+    pub fn print_failure(&self,f:&Failure){match f {Failure::Python(e)=>self.interpreter.enter(|vm|vm.print_exception(e)),Failure::Preparation(e)=>eprintln!("{e}")}}
     pub fn new() -> Self {
         let builder = InterpreterBuilder::new();
         let module = native_groups::module_def(&builder.ctx);
@@ -489,6 +545,7 @@ impl Controller {
                 "Mesh",
                 "Group",
                 "Face",
+                "QVector3D",
                 "extrude",
                 "_finish",
             ] {

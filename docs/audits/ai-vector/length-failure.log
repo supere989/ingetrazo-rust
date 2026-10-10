@@ -1,0 +1,8 @@
+
+Traceback (most recent call last):
+  File "<ai>", line 12, in <module>
+AssertionError
+
+thread 'main' (1263885) panicked at src/bin/vm_vector.rs:21:185:
+vector control rejected
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,5 @@
+# Real VM vector primitive prerequisite
+
+Six actual PySide recipes execute unchanged in real RustPython, asserting exact construction/copy, setter values, float32 addition/subtraction/scalar multiplication/division, length and squared length. Two mutated literal assertions execute through the same native fixture and fail. The initial length failure is retained: Qt qHypot uses scaled float32 std::hypot3 arithmetic (libstdc++), not a double sqrt or unscaled squared length. Official Qt source URLs are recorded in provenance.
+
+This is a partial genuine QVector3D payload, not full PySide compatibility or production scripting. Dot/cross/normalization, equality, in-place/unary operators, all overload/type/error behavior and platform-library hypot differences remain required. VM object/compiler/native-memory bounds are not completed by scalar fuel ticks. Editable Mesh/Vertex/Face projection, existing-state mutation rollback and full Group API remain the next required dependencies. Production execution stays disabled. Existing tuple helper geometry is deliberately unchanged until the editable adapter consumes real vector objects.
