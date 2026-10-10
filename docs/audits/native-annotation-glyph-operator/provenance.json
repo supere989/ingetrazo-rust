@@ -1,0 +1,11 @@
+{
+  "source_sha": "a92906f0ff4d67ec37fd47eb4f9f8cb4a155f751",
+  "binary_sha256": "bfae0bbd37549c7c8d513c92b168c27f942cfb3cf4d9526fa7aeb13707a6c3da",
+  "shaderc_version": "0.8.3",
+  "shaderc_crate_checksum": "27e07913ada18607bb60d12431cbe3358d3bbebbe95948e1618851dc01e63b7b",
+  "compiler_sha256": "8b1682be65e4e8ea80b4cdcabb2b24ba09fe7b9cb085392e0445ceeac94ca227",
+  "spirv_sha256": "e32f274f9e0737eb0971fc9f851e068c09615492f43eefcaa87ba6d385a057ac",
+  "spirv_replay_byte_identical": true,
+  "command": "/tmp/ingetrazo-skp-native-target/debug/ingetrazo-shader-build crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag.spv",
+  "scope": "Actual llvmpipe draw:15sourceimages+36coloredglyphcontrols exact; literalbyteoperator9pixelnegative; realprojection/depth/RTX/fullmodel remainrequired"
+}

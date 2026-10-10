@@ -1,0 +1,9 @@
+# Annotation glyph operator acceptance
+
+The original Qt6.12 RGBA8888 glyph alphamap blit uses QRgba64 source and destination, while ordinary spans retain their separate byte operator. A translucent glyph color first composes with the destination at full color alpha, then glyph coverage interpolates that result. Immutable Draw metadata retains straight source bytes and the selected operator before palette premultiplication. The producer charges the actual Draw array; cold admission rejects inconsistent Batch color. Warm Arc identity reuses admission and uploads.
+
+The GlyphRgba64Opaque operator is restricted to the native annotation pass over its opaque framebuffer: System clears alpha to1; world and UI SourceOver preserve it. It is not a generic transparent-target or Qt font target-format contract. Shader products and rounded division stay uint32, with maxima below2^32; original alpha is preserved during RGB premultiplication. Fully opaque covered fragments return before reading the attachment. Other fragments use the existing ordered input-attachment barriers.
+
+All15 original operation images match exactly on llvmpipe. Two packed images additionally cover36 real Qt glyph controls: alpha0/1/127/128/230/255, three unequal/dark/white RGB colors, light and dark opaque destinations. The private engineering byte-operator mutation preserves colors and geometry and reproduces the exact nine-pixel millimetre failure. Pixel mutation is independently detected; complete800x600 native captures require white outside the640x400 source domain. Each native run performs two resizes and bounded clean close; logs retain committed_bytes=0.
+
+These recorded-operation controls do not establish actual application projection, captured-depth selection, same-device RTX raster parity, all font providers, native Metal annotation consumption, or whole imported model overlay parity. Those remain required. The older raw failures remain in27069d24.

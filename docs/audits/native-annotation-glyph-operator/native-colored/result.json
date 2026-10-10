@@ -1,0 +1,26 @@
+{
+  "source_sha": "a92906f0ff4d67ec37fd47eb4f9f8cb4a155f751",
+  "binary_sha256": "bfae0bbd37549c7c8d513c92b168c27f942cfb3cf4d9526fa7aeb13707a6c3da",
+  "oracle_sha256": "5bdf8b53d9ca967eb2ec1071e40612f9eb7af7f3653e17087a402571591dd373",
+  "rows": [
+    {
+      "name": "glyph-light",
+      "different_pixels": 0,
+      "source_sha256": "c1aed2d7541a62f1b1558a0754333504cde2a30d54fca10677bc523787c8eaac",
+      "native_sha256": "b71f3dcd2721f27658f6dd971117b58b9a2979eb3c8d917d0d8747653ee412b9"
+    },
+    {
+      "name": "glyph-dark",
+      "different_pixels": 0,
+      "source_sha256": "623c464df839233fe4cea025697e0e58066e52e26218fb0ac21fda41f1a29d6b",
+      "native_sha256": "54aa5e7cd2c3277f60d5360dda08c89970626c4af5ae4f701420962c0532676a"
+    },
+    {
+      "name": "dim-mm-axis-byte-negative",
+      "different_pixels": 9,
+      "source_sha256": "0e6a747d7702dbe99c24c4cb1cb00218de773b5e956149b5260b0cc9675bd93e",
+      "native_sha256": "83f290e708805a04f77fb59c2e6f73df2fa782aebe33be5b969e391599a2216b"
+    }
+  ],
+  "passed": true
+}
