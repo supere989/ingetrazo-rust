@@ -344,7 +344,7 @@ impl SnapEngine {
         if self
             .center_reference
             .as_ref()
-            .is_some_and(|r| r.version != scene.version)
+            .is_some_and(|r| self.center_cache_dirty || r.version != scene.version)
         {
             let reference = self.center_reference.take().unwrap();
             let mut fresh = None;
@@ -387,6 +387,7 @@ impl SnapEngine {
             });
             self.center_reference = fresh;
         }
+        self.center_cache_dirty = false;
         let mut found = None;
         if let Some(hit) = hover_edge_placement(scene, &ctx.viewport, ctx.cursor, 8.) {
             let edge = &hit.mesh.edges[hit.edge];
@@ -887,7 +888,7 @@ mod tests {
         assert_eq!(r.point, candidate);
     }
     #[test]
-    fn center_reference_moves_with_source_and_retires_after_deletion() {
+    fn center_reference_refreshes_with_same_scene_version_and_retires_after_deletion() {
         let c = camera(10.);
         let mut scene = Scene::new();
         let center = DVec3::new(3., 2., 0.);
@@ -910,13 +911,13 @@ mod tests {
         for vertex in &mut scene.mesh.vertices {
             vertex.position += DVec3::X;
         }
-        scene.bump_version();
+        engine.note_model_revision(1);
         let (ray, ctx) = context(&c, center + DVec3::X, DVec2::ZERO);
         let r = engine.snap_screen(&ray, &scene, None, None, &ctx);
         assert_eq!(r.kind, SnapKind::Center);
         assert!(r.point.distance(center + DVec3::X) < 1e-6);
         scene.mesh.clear();
-        scene.bump_version();
+        engine.note_model_revision(2);
         assert_ne!(
             engine.snap_screen(&ray, &scene, None, None, &ctx).kind,
             SnapKind::Center
@@ -997,5 +998,31 @@ mod tests {
         let r = engine.snap_screen(&ray, &scene, Some(DVec3::ZERO), None, &ctx);
         assert_eq!(r.kind, SnapKind::AxisLock);
         assert!((r.point.x + 3.).abs() < 1e-8);
+    }
+}
+
+#[cfg(test)]
+mod operation_reset_tests {
+    use super::*;
+    #[test]
+    fn reset_retires_references_and_preserves_configuration() {
+        let mut engine = SnapEngine::new(0.123);
+        engine.max_encouraged = 7;
+        engine.locked_axis = Some('x');
+        engine.locked_line = Some((DVec3::ZERO,DVec3::X));
+        engine.reference_edge = Some((DVec3::ZERO,DVec3::Y));
+        engine.encouraged_points.push(DVec3::ONE);
+        engine.screen_dwell = Some((DVec3::ONE,1.));
+        engine.acquired_point = Some(DVec3::ONE);
+        engine.hovered_center = Some(DVec3::ONE);
+        engine.note_model_revision(42);
+        engine.reset_operation_state();
+        assert_eq!(engine.snap_distance,0.123);
+        assert_eq!(engine.max_encouraged,7);
+        assert_eq!(engine.model_revision,Some(42));
+        assert!(engine.locked_axis.is_none() && engine.locked_line.is_none());
+        assert!(engine.reference_edge.is_none() && engine.encouraged_points.is_empty());
+        assert!(engine.screen_dwell.is_none() && engine.acquired_point.is_none());
+        assert!(engine.hovered_center.is_none() && engine.center_reference.is_none());
     }
 }

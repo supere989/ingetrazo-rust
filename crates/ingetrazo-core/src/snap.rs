@@ -102,6 +102,8 @@ pub struct SnapEngine {
     pub(crate) hovered_center: Option<DVec3>,
     pub(crate) screen_dwell: Option<(DVec3,f64)>,
     pub(crate) acquired_point: Option<DVec3>,
+    pub(crate) model_revision: Option<u64>,
+    pub(crate) center_cache_dirty: bool,
 }
 
 impl Default for SnapEngine {
@@ -117,11 +119,33 @@ impl Default for SnapEngine {
             hovered_center: None,
             screen_dwell: None,
             acquired_point: None,
+            model_revision: None,
+            center_cache_dirty: false,
         }
     }
 }
 
 impl SnapEngine {
+    /// Retire operation references while retaining user snapping configuration.
+    pub fn reset_operation_state(&mut self) {
+        self.encouraged_points.clear();
+        self.reference_edge = None;
+        self.locked_axis = None;
+        self.locked_line = None;
+        self.center_reference = None;
+        self.hovered_center = None;
+        self.screen_dwell = None;
+        self.acquired_point = None;
+    }
+
+    /// Application identity is monotonic even when restored Scene versions repeat.
+    /// Call before screen snapping after document replacement or model mutation.
+    pub fn note_model_revision(&mut self, revision: u64) {
+        if self.model_revision != Some(revision) {
+            self.model_revision = Some(revision);
+            self.center_cache_dirty = true;
+        }
+    }
     pub fn new(snap_distance: f64) -> Self {
         Self {
             snap_distance,
