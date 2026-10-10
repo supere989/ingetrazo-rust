@@ -1,0 +1,42 @@
+{
+  "integrated_commit": "855def08",
+  "checks": [
+    {
+      "source": "capilla_quiroz_v17-asymmetric-source.png",
+      "native": "capilla_quiroz_v17-asymmetric-native-igz.png",
+      "decoded_pixel_differences": 0,
+      "width": 800,
+      "height": 600,
+      "source_sha256": "53f2a3d58f1fbd4f6714dbdff0c0a0d101f65d4dfed0e91f0d4c3ff884916c49",
+      "native_sha256": "53f2a3d58f1fbd4f6714dbdff0c0a0d101f65d4dfed0e91f0d4c3ff884916c49"
+    },
+    {
+      "source": "capilla_quiroz_v17-iso-source.png",
+      "native": "capilla_quiroz_v17-iso-native-igz.png",
+      "decoded_pixel_differences": 0,
+      "width": 800,
+      "height": 600,
+      "source_sha256": "dc70b0e54c570ee3a2f4b3d969e5bb73b49297c2d734564e4fb4e7477a08c19f",
+      "native_sha256": "dc70b0e54c570ee3a2f4b3d969e5bb73b49297c2d734564e4fb4e7477a08c19f"
+    },
+    {
+      "source": "gondola_v20-asymmetric-source.png",
+      "native": "gondola_v20-asymmetric-native-igz.png",
+      "decoded_pixel_differences": 0,
+      "width": 800,
+      "height": 600,
+      "source_sha256": "dc2be343f3166a5c6794f6293f1d4fffdf951bbeedc6e79fb713dec50b280b67",
+      "native_sha256": "dc2be343f3166a5c6794f6293f1d4fffdf951bbeedc6e79fb713dec50b280b67"
+    },
+    {
+      "source": "gondola_v20-iso-source.png",
+      "native": "gondola_v20-iso-native-igz.png",
+      "decoded_pixel_differences": 0,
+      "width": 800,
+      "height": 600,
+      "source_sha256": "45fcb70f9ef06e363a82940a0036eec9f3e51488fe33265300a82faa294052d4",
+      "native_sha256": "45fcb70f9ef06e363a82940a0036eec9f3e51488fe33265300a82faa294052d4"
+    }
+  ],
+  "scope": "Independent retained image decode, not fresh root renderer replay or native Vulkan acceptance"
+}
