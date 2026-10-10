@@ -1,0 +1,10 @@
+{
+  "source_commit": "97e0f3b4",
+  "binary_sha256": "dcaa816403ebea43a115e846d9d6f86f9ec94913fdfcd55845496752c27d72fb",
+  "passed": 566,
+  "ignored": 2,
+  "mixed_cases": 15,
+  "mixed_states": 105,
+  "literal_old_live_finish_rejections": 5,
+  "negative_controls": 4
+}
