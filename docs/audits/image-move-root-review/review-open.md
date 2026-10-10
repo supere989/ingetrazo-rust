@@ -1,1 +1,3 @@
 Root source review: restore_current_preview_model reconstructs grab baseline+delta rather than retained incremental frame. Exact failed-history fractional-preview restoration needs proof/correction before adoption. Component Finish/Cancel fractional preview interactions also remain required. Full workspace totals:[563, 0, 2]; tests do not settle this uncovered path.
+
+Correctionbdbc9a94 independently replayed:9actualMove families andgeometrymodifier controls exact; preallocatedcurrentpreview origins preserve refusal restoration. Originalreview issue fixed; plain-groupFinish activepreview divergence remains requiredOPEN and is not authorized deviation.
