@@ -6,13 +6,15 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-Third milestone published at7e0f8e7:200Rust tests, original document/reopen and textured virtual-render acceptance. Cloudrun38012356527 is live; previous milestone cloud passed. Fourth stage pending:clipboard preview, savedviews/outliner/dimensions, actualintersection/healing/rebuild/pieces, glTF import/material/axes oracle. No full parity claim; all tracker gates remain in scope.
+Reviewed canonical code f20a7c1, defect record58fc0a1:530 workspace tests pass/twoignored; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
 
-| Worker | Branch/worktree | Ownership | State |
+| Worker | Isolated worktree | Current ownership | State |
 |---|---|---|---|
-| document_integrity | swarm/document-integrity /tmp/ingetrazo-document | IGZ and coordinated Scene/Group schema | Running |
-| geometry | swarm/geometry /tmp/ingetrazo-geometry | Solid booleans and GUI integration | Running |
-| validation | swarm/validation /tmp/ingetrazo-validation | Independent checker, fixtures, CI | Running |
+| document_integrity | /tmp/ingetrazo-constructor-lifetime | Native Vulkan startup owners, typed errors; unapproved annotation Undo defect recorded | Running |
+| geometry | /tmp/ingetrazo-sheet-view-pdf | Source section solid/hatch PDF painters; default/raster/text and complete paper scope retained | Running |
+| validation | /tmp/ingetrazo-metal-host | Direct Metal egui painter/shared app/CAMetalLayer, actual GPU and WSI controls, full native renderer | Running |
+
+Root independently reviews candidates, retains negative/failure evidence, runs combined canonical checks and publishes tracker/CI updates. Native Metal window/physicalMac/general rendering, Vulkan default adoption/driver errors/latency, broad source workflows and release packaging remain required.
 
 ## Integration rules
 
