@@ -132,6 +132,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
             let screen_drawing=matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle);
+            app.snap_engine.note_model_revision(app.model_revision);
             let snap_res=if screen_drawing{
                 let context=ingetrazo_core::snap_screen::ScreenSnapContext{
                     viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),
