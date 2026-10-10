@@ -608,19 +608,20 @@ fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
             }
         }
     }
-    fn validate_components(groups:&[Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>)->Result<(),IgzError> {
+    fn validate_components(groups:&[Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>,shares:&std::collections::HashMap<uuid::Uuid,Mesh>)->Result<(),IgzError> {
         for group in groups {
             if let Some(id)=group.component_definition {
                 let def=defs.get(&id).ok_or_else(||IgzError::InvalidDocument("component definition not found".into()))?;
-                if mesh_to_json(&group.mesh)!=mesh_to_json(&def.mesh) {
+                let expected=if let Some(token)=group.mesh_share {shares.get(&token).ok_or_else(||IgzError::InvalidDocument("component mesh share not found".into()))?} else {&def.mesh};
+                if mesh_to_json(&group.mesh)!=mesh_to_json(expected) && mesh_to_json(&group.mesh)!=mesh_to_json(&def.mesh) {
                     return Err(IgzError::InvalidDocument("component instance geometry diverged; use a shared definition edit or Make Unique".into()));
                 }
             }
-            validate_components(&group.children,defs)?;
+            validate_components(&group.children,defs,shares)?;
         }
         Ok(())
     }
-    validate_components(&scene.groups,&scene.component_definitions)?;
+    validate_components(&scene.groups,&scene.component_definitions,&scene.mesh_shares)?;
     for sheet in &scene.sheets {
         for item in &sheet.items {
             if let ingetrazo_core::composition::SheetItem::GraphicScale(bar)=item {

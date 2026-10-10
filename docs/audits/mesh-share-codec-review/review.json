@@ -1,5 +1,5 @@
 {
-  "status": "held_pending_component_finish",
+  "status": "held_combined_component_regression_running",
   "formats_tests": "pass",
   "native_preservation": {
     "passed": 16,
@@ -17,7 +17,10 @@
     "second-tests.log"
   ],
   "remaining": [
-    "component Finish integration and transformed nonempty container ownMesh identity validation"
+    "combined workspace regression",
+    "transformed-empty world authoring parity",
+    "clipboard token propagation",
+    "rendered Finish workflow acceptance"
   ],
   "canonical_promotion": false,
   "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, Make Unique detachment; unequal parent child counts2/1 with shared child Mesh; internal comparison keys absent",
@@ -25,5 +28,6 @@
     428,
     0,
     2
-  ]
+  ],
+  "combined_source": "schema/Finish7029293 reviewed with own mesh token aware native save guard and explicit definition root identity"
 }
