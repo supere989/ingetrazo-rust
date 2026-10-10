@@ -8,7 +8,11 @@ Retain concise results, source identity, and necessary failure evidence. Purge o
 
 ## Current batch
 
-Base: a1f25b2bb67de5265f41c6fe8b9a6baaf209c5b6.
-Walk native modifier ingress and explicit missing-snapshot refusal have been brought into this review branch. Independent review tightened complete finite three-dimensional vector checks; retained strict source/native observations pass and a truncated vector is rejected without rebuilding the application. See navigation-walk-modifier-ingress/integration-checker-review.json.
+Base: public main `039a5b63d1160011faaa196bfb3cd69af4e5645c`.
+The review branch now contains nested/tagged/shared SKP placements, embedded default texture import with aggregate asset admission, and pure MCP protocol/error guards. Root has independently checked all 23 complete retained SKP document comparisons and their compressed/uncompressed hashes. The merged MCP protocol already passed its three focused tests.
 
-Combined build remains pending. Metal/Glow modifier ingress and real operating-system same-frame event coalescing remain open. This batch does not advance full-feature parity verification.
+Pending intake: source sheet-border rendering, exact default-layer behavior including paper visibility, and the live MCP application queue. Keep these coherent workstreams frozen before starting the one combined workspace run. Relevant focused source/reference results remain attached to their commits; do not repeat them merely to reproduce an unchanged result.
+
+Metal raw texture/host/font work remains in `review/metal-raw-canvas` and has separate actual macOS checks. Its successful raw-pixel fixture and host compilation are not Canvas text acceptance: the current Linux-only font provider is an explicit open dependency. Native CoreText matching and actual host rendered comparison remain required. Do not trigger broad CI for evidence-only updates to that isolated branch.
+
+After combined validation, retain the tested source revision, result log and scope, then purge only the owned terminal target. No full feature or release gate is promoted by compilation or a bounded fixture alone.
