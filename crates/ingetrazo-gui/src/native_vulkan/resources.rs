@@ -73,6 +73,28 @@ impl Resources {
   let result=if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT) {unsafe {self.device.flush_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(buffer.memory).offset(0).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())}else{Ok(())};
   if buffer.persistent_map.is_none(){unsafe {self.device.unmap_memory(buffer.memory)}};result
  }
+ /// Reserve an unpublished arena page; no initialization or transfer is implied.
+ pub fn allocate_buffer(&mut self,bytes:u64,usage:vk::BufferUsageFlags)->Result<BufferId,String>{
+  let supported=vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::INDEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER|vk::BufferUsageFlags::UNIFORM_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC|vk::BufferUsageFlags::TRANSFER_DST;
+  if bytes==0||bytes%4!=0||usage.is_empty()||!supported.contains(usage){return Err("Invalid arena buffer extent or usage".into());}
+  self.allocate(bytes,usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)
+ }
+ /// Transfer into a reserved, unpublished range, retaining the bounded staging owner.
+ ///
+ /// # Safety
+ /// The caller owns this range exclusively: it must not overlap any published,
+ /// in-flight or pending-retirement range. Publication must follow successful
+ /// completion of every candidate transfer. Failed candidates stay unpublished.
+ pub unsafe fn upload_fresh_range(&mut self,context:&super::VulkanContext,id:BufferId,offset:u64,data:&[u8])->Result<(),String>{
+  self.lifetime.check()?;
+  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  let buffer=self.buffers.get(&id).ok_or("Unknown arena buffer")?;
+  let end=offset.checked_add(data.len()as u64).ok_or("Arena range overflow")?;
+  if data.is_empty()||offset%4!=0||data.len()%4!=0||end>buffer.logical_bytes||buffer.retire_after.is_some()||!buffer.usage.contains(vk::BufferUsageFlags::TRANSFER_DST){return Err("Invalid or retired arena upload range".into());}
+  let staging=self.staging_buffer(context,UPLOAD_CHUNK.min(data.len()as u64))?;
+  self.transfer_chunks_at(context,id,staging,offset,data)?;
+  self.stats.upload_calls+=1;self.stats.bytes+=data.len()as u64;Ok(())
+ }
  /// Returns only after transfer completion; no scene serialization or IPC on upload path.
  pub fn upload(&mut self,context:&super::VulkanContext,data:&[u8],usage:vk::BufferUsageFlags,force_staging:bool)->Result<BufferId,String> {
   self.lifetime.check()?;
@@ -151,19 +173,21 @@ impl Resources {
   result
  }
  fn transfer_chunks(&mut self,context:&super::VulkanContext,destination:BufferId,staging:BufferId,data:&[u8])->Result<(),String> {
+  self.transfer_chunks_at(context,destination,staging,0,data)
+ }
+ fn transfer_chunks_at(&mut self,context:&super::VulkanContext,destination:BufferId,staging:BufferId,destination_offset:u64,data:&[u8])->Result<(),String> {
   let (command,fence)=self.transfer_handles(context)?;
   let mut submitted=false;
   let result=(|| {
-   let mut offset=0u64;
+   let mut offset=destination_offset;
    for chunk in data.chunks(UPLOAD_CHUNK as usize) {
     self.write(staging,chunk)?;
     unsafe {
      self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
      self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
      self.device.cmd_copy_buffer(command,self.buffers[&staging].handle,self.buffers[&destination].handle,&[vk::BufferCopy {src_offset:0,dst_offset:offset,size:chunk.len() as u64}]);
-     let storage=self.buffers[&destination].usage.contains(vk::BufferUsageFlags::STORAGE_BUFFER);
-     let access=vk::AccessFlags::VERTEX_ATTRIBUTE_READ|vk::AccessFlags::INDEX_READ|if storage{vk::AccessFlags::SHADER_READ}else{vk::AccessFlags::empty()};
-     let stages=vk::PipelineStageFlags::VERTEX_INPUT|if storage{vk::PipelineStageFlags::VERTEX_SHADER}else{vk::PipelineStageFlags::empty()};
+     let access=vk::AccessFlags::MEMORY_READ;
+     let stages=vk::PipelineStageFlags::ALL_COMMANDS;
      let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(access).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(self.buffers[&destination].handle).offset(offset).size(chunk.len() as u64);
      self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,stages,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
