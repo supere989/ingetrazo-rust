@@ -1,0 +1,201 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": 0,
+      "passed": true,
+      "tile_capture": null
+    },
+    {
+      "case": 1,
+      "passed": true,
+      "tile_capture": {
+        "source": "osm",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "name": "OpenStreetMap (streets)",
+        "attribution": "\u00a9 OpenStreetMap contributors"
+      }
+    },
+    {
+      "case": 2,
+      "passed": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "case": 3,
+      "passed": true,
+      "tile_capture": {
+        "source": "esri_imagery",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "name": "Esri World Imagery (satellite)",
+        "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community"
+      }
+    },
+    {
+      "case": 4,
+      "passed": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 12,
+        "radius_m": 1200.0,
+        "visible": false,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "case": 5,
+      "passed": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 1,
+        "radius_m": 42.5,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            42.5,
+            42.5
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "case": 6,
+      "passed": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 0.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "case": 7,
+      "passed": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 16,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    },
+    {
+      "case": 8,
+      "passed": true,
+      "tile_capture": null
+    },
+    {
+      "case": 9,
+      "passed": true,
+      "tile_capture": null
+    },
+    {
+      "case": 10,
+      "passed": true,
+      "tile_capture": null
+    },
+    {
+      "case": 11,
+      "passed": true,
+      "tile_capture": {
+        "source": "custom",
+        "zoom": 300,
+        "radius_m": 1200.0,
+        "visible": true,
+        "opacity": 1.0,
+        "patches": [
+          [
+            0.0,
+            0.0,
+            1200.0,
+            1200.0
+          ]
+        ],
+        "url_template": "",
+        "name": "custom",
+        "attribution": ""
+      }
+    }
+  ]
+}

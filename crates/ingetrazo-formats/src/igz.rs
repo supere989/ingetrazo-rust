@@ -775,7 +775,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     // Standard IngeTrazo format
     let mut scene = Scene::new();
     scene.embedded_textures = embedded_textures;
-    scene.tile_layer=s_val.get("tile_layer").filter(|v|!v.is_null()).map(|v|serde_json::from_value(v.clone())).transpose().map_err(|e|IgzError::InvalidDocument(format!("Invalid base-map capture: {e}")))?;
+    scene.tile_layer=s_val.get("tile_layer").and_then(ingetrazo_core::georef::TileCapture::from_source_json);
     scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
 
@@ -1063,7 +1063,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             "in" => LengthUnit::Inches, "ft" => LengthUnit::Feet, _ => LengthUnit::Meters
         };
     }
-    scene.tile_layer=s_val.get("tile_layer").filter(|v|!v.is_null()).map(|v|serde_json::from_value(v.clone())).transpose().map_err(|e|IgzError::InvalidDocument(format!("Invalid base-map capture: {e}")))?;
+    scene.tile_layer=s_val.get("tile_layer").and_then(ingetrazo_core::georef::TileCapture::from_source_json);
     scene.native_document = s_val.clone();
     scene.native_baseline = scene_model(&scene);
     scene.mesh.rebuild_spatial_index();

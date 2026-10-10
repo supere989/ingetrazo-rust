@@ -1116,8 +1116,8 @@ mod conversion_tests {
 
 #[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub struct TileCapture{
- pub source:String,pub zoom:u8,pub radius_m:f64,pub visible:bool,pub opacity:f64,
- pub patches:Vec<[f64;4]>,pub url_template:String,pub name:String,pub attribution:String,
+ pub source:String,pub zoom:i64,pub radius_m:f64,pub visible:bool,pub opacity:f64,
+ pub patches:Vec<Vec<f64>>,pub url_template:String,pub name:String,pub attribution:String,
 }
 impl TileCapture{
  pub fn import_reference(previous:Option<&Self>,datum:&SceneDatum,min:DVec3,max:DVec3,requested_zoom:u8,visible:bool)->Self{
@@ -1128,10 +1128,10 @@ impl TileCapture{
   });
   // Source creates a new layer from chosen source/zoom/visibility, resetting
   // radius/opacity while retaining the provider. No imagery is serialized.
-  capture.radius_m=1200.;capture.opacity=1.;capture.zoom=requested_zoom;capture.visible=visible;
+  capture.radius_m=1200.;capture.opacity=1.;capture.zoom=i64::from(requested_zoom);capture.visible=visible;
   let width=max.x-min.x;let length=max.y-min.y;
   let margin=0.15*width.max(length).max(200.);
-  capture.patches=vec![[(min.x+max.x)/2.,(min.y+max.y)/2.,(width+2.*margin)/2.,(length+2.*margin)/2.]];
+  capture.patches=vec![vec![(min.x+max.x)/2.,(min.y+max.y)/2.,(width+2.*margin)/2.,(length+2.*margin)/2.]];
   while capture.zoom>8&&capture.import_tile_count(datum)>500{capture.zoom-=1;}
   capture
  }
@@ -1145,7 +1145,7 @@ impl TileCapture{
    for (x,y) in [(p[0]-p[2],p[1]-p[3]),(p[0]+p[2],p[1]-p[3]),(p[0]+p[2],p[1]+p[3]),(p[0]-p[2],p[1]+p[3])]{
     let(lat,lon,_)=datum.local_to_geodetic(DVec3::new(x,y,0.).as_vec3().as_dvec3());lo_lat=lo_lat.min(lat);hi_lat=hi_lat.max(lat);lo_lon=lo_lon.min(lon);hi_lon=hi_lon.max(lon);
    }
-   let(x0,y0)=deg2num(hi_lat,lo_lon,self.zoom);let(x1,y1)=deg2num(lo_lat,hi_lon,self.zoom);let n=(1u64<<self.zoom)as f64;
+   let(x0,y0)=deg2num(hi_lat,lo_lon,self.zoom as u8);let(x1,y1)=deg2num(lo_lat,hi_lon,self.zoom as u8);let n=(1u64<<self.zoom)as f64;
    let nx=(x0.max(x1).floor().min(n-1.)-x0.min(x1).floor().max(0.)+1.).max(0.)as u64;
    let ny=(y0.max(y1).floor().min(n-1.)-y0.min(y1).floor().max(0.)+1.).max(0.)as u64;
    nx*ny

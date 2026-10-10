@@ -1,0 +1,8 @@
+{
+  "actual_original_native_loader_cases": 12,
+  "native_saves_original_reopens": 12,
+  "workspace_passed": 542,
+  "ignored": 2,
+  "baseline_failures_retained": 12,
+  "scope": "normal string provider/numeric recipes and map-only refusal; broad codecs/rendering/control parity open"
+}

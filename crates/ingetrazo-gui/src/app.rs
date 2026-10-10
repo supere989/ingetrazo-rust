@@ -276,7 +276,7 @@ impl IngeTrazoApp {
         match load_file(path) {
             Ok(loaded_scene) => {
                 self.save_undo_state();
-                if let Some(capture)=&loaded_scene.tile_layer{self.base_map_requested_zoom=capture.zoom;self.base_map_requested_visible=capture.visible;}
+                if let Some(capture)=&loaded_scene.tile_layer{self.base_map_requested_zoom=capture.zoom.clamp(1,21) as u8;self.base_map_requested_visible=capture.visible;}
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
