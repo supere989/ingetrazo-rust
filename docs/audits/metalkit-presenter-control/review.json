@@ -1,0 +1,31 @@
+{
+  "base_native_source": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+  "source_sha256": "d08d59feda4216d87bb599b01b6fa82c306c0ee2243fc1082aaa821adeac0b50",
+  "scope": "New diagnostic-only native framework lifecycle control, not a production fallback, no platform/physical-Mac acceptance yet.",
+  "official_sources": [
+    "https://developer.apple.com/documentation/metalkit/mtkview",
+    "https://developer.apple.com/documentation/metalkit/mtkviewdelegate",
+    "https://developer.apple.com/documentation/metal/mtldrawable/addpresentedhandler(_:)"
+  ],
+  "discriminating_change": "Same winit event loop/window and NativeMetal device/queue, but real system MTKView owns content view, drawable/pass vending and default timed delegate drawing. No custom CAMetalLayer attachment or request_redraw loop. This changes framework hosting/scheduling together and does not isolate those individually.",
+  "same_device_admission": "Framework layer.device.registryID must equal requested NativeMetal device registryID before drawing enabled. Complete owner is published before unpausing; body records both identities.",
+  "strict_proof": "At least2 actual positive presentedTime callbacks whose associated command reached Completed, then pause framework draws and require zero pending commands before success. Timestamp0 counts only skipped, never positive. Native15s bound. This is diagnostic initial-presentation control, not replacement/weakening of full production lifecycle/resize/Canvas gates.",
+  "owner_scope": "At most3 pending retained commands/callback blocks plus complete window/view/delegate/state/device/queue. Per-draw autoreleasepool, application drawable dropped after commit, framework owns its currentDrawable. Unknown completion quarantines the complete owner.",
+  "interpretation": {
+    "framework_positive_custom_failed": "Supports custom hosting/scheduling discrepancy in this same event loop/session; further discrimination needed before production change.",
+    "framework_failed_custom_failed": "Common event loop/session/device presentation contract remains unresolved; does NOT prove VM limitation.",
+    "both_positive": "ARM failure is not reproduced in that run; retain previous failures, no blanket closure."
+  },
+  "build_check": {
+    "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-metalkit-control-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo check -j2 -p ingetrazo-metal --example metalkit_presenter_control --target aarch64-apple-darwin",
+    "exit": 0,
+    "first_focused_build_seconds": 19.58,
+    "final_changed_source_check_seconds": 0.18,
+    "scope": "Rust Apple-target example/API metadata compilation only; system MetalKit SDK linking/runtime remains pending."
+  },
+  "future_native_command": "target/debug/examples/metalkit_presenter_control evidence/framework-presenter.json",
+  "unchanged_production_sources": true,
+  "cloud_dispatch": false,
+  "native_execution": false,
+  "terminal_target_cleanup": "Owned focused target purged after retained metadata proof; no root target touched."
+}
