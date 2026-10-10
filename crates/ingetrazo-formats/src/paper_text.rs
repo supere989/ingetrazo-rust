@@ -321,6 +321,11 @@ impl PaperFont {
                 hb::hb_font_create_sub_font(parent.raw()),
                 hb::hb_font_destroy,
             )?;
+            // Native CoreText paper fonts use the exact Qt tracking source policy.
+            // General FreeType shaping keeps its existing HarfBuzz behavior.
+            if point_size.is_some() && hb::ingetrazo_hb_font_set_qt_tracking(font.raw()) == 0 {
+                return Err("Paper font tracking policy admission failed".into());
+            }
             let funcs = Handle::new(hb::hb_font_funcs_create(), hb::hb_font_funcs_destroy)?;
             if hb::hb_font_is_immutable(font.raw()) != 0
                 || hb::hb_font_funcs_is_immutable(funcs.raw()) != 0

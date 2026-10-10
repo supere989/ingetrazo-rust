@@ -268,10 +268,11 @@ impl NativeFont {
                 instance_identity.extend_from_slice(&value.to_be_bytes());
             }
         }
-        // The same physical/native instance under a different HB point-size
-        // context must not reuse a paper layout/shape cache identity.
-        instance_identity.try_reserve_exact(8)
+        // Native tracking policy and HB point-size are part of instance identity;
+        // changing either cannot reuse an earlier paper layout/shape cache.
+        instance_identity.try_reserve_exact(16)
             .map_err(|_| "Native shaping identity allocation failed")?;
+        instance_identity.extend_from_slice(b"qtrk14.5");
         instance_identity.extend_from_slice(b"qptm");
         instance_identity.extend_from_slice(&crate::paper_text::QT_PAPER_SHAPING_POINT_SIZE.to_bits().to_be_bytes());
         let count = unsafe { CTFontGetGlyphCount(owner.0) };
