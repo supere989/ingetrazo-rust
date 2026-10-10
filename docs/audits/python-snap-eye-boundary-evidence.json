@@ -1,11 +1,11 @@
 {
   "context": {
-    "rust_commit": "e59aaa61cd6679c7a601dcf0bd54e1fd2f1c1925",
+    "rust_commit": "40ef985655261ea76905a5ab7a8064540538d393",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "native_sha256": "1333c980981a1d9caa6b2fe6854deed14c4287657e4330a594f4321dc1ebf7bc",
+  "native_sha256": "45bfd82a6b5fb5feec989aeb92f45e757e86fd3524070e84532ce6cbb5575dfb",
   "passed": true,
   "cases": [
     {

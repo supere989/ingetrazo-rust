@@ -1,0 +1,439 @@
+{
+  "context": {
+    "rust_commit": "40ef985655261ea76905a5ab7a8064540538d393",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "native_sha256": "45bfd82a6b5fb5feec989aeb92f45e757e86fd3524070e84532ce6cbb5575dfb",
+  "passed": true,
+  "cases": [
+    {
+      "input": {
+        "name": "held-out-depth-0.001",
+        "edges": [
+          [
+            [
+              2.0,
+              -5.659388542175293,
+              4.999499797821045
+            ],
+            [
+              2.0999999046325684,
+              -5.659388542175293,
+              4.999499797821045
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.16690510252744
+            ],
+            "candidate": [
+              2.0,
+              2.9960412979125977,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.659388542175293,
+          4.999499797821045
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.659388542175293,
+          4.999499797821045
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "held-out-depth-0.099",
+        "edges": [
+          [
+            [
+              2.0,
+              -5.574517726898193,
+              4.950500011444092
+            ],
+            [
+              2.0999999046325684,
+              -5.574517726898193,
+              4.950500011444092
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.0
+            ],
+            "candidate": [
+              2.0,
+              3.0000061988830566,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.574517726898193,
+          4.950500011444092
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.574517726898193,
+          4.950500011444092
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "held-out-depth-0.1",
+        "edges": [
+          [
+            [
+              2.0,
+              -5.5736517906188965,
+              4.949999809265137
+            ],
+            [
+              2.0999999046325684,
+              -5.5736517906188965,
+              4.949999809265137
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.0
+            ],
+            "candidate": [
+              2.0,
+              3.0000061988830566,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.5736517906188965,
+          4.949999809265137
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.5736517906188965,
+          4.949999809265137
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "held-out-depth-0.101",
+        "edges": [
+          [
+            [
+              2.0,
+              -5.5727858543396,
+              4.94950008392334
+            ],
+            [
+              2.0999999046325684,
+              -5.5727858543396,
+              4.94950008392334
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.0
+            ],
+            "candidate": [
+              2.0,
+              3.0000061988830566,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.5727858543396,
+          4.94950008392334
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.5727858543396,
+          4.94950008392334
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "held-out-depth-0.5",
+        "edges": [
+          [
+            [
+              2.0,
+              -5.227241516113281,
+              4.75
+            ],
+            [
+              2.0999999046325684,
+              -5.227241516113281,
+              4.75
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              349.9996662143076
+            ],
+            "candidate": [
+              2.0,
+              3.0000061988830566,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.227241516113281,
+          4.75
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "endpoint",
+        "point": [
+          2.0,
+          -5.227241516113281,
+          4.75
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "held-out-behind-eye",
+        "edges": [
+          [
+            [
+              2.0,
+              -6.093267440795898,
+              5.25
+            ],
+            [
+              2.0999999046325684,
+              -6.093267440795898,
+              5.25
+            ]
+          ]
+        ],
+        "steps": [
+          {
+            "pixel": [
+              500.0,
+              350.003337879207
+            ],
+            "candidate": [
+              2.0,
+              2.999919891357422,
+              0.0
+            ],
+            "time": 0
+          }
+        ],
+        "camera": {
+          "target": [
+            2.0,
+            3.0,
+            0.0
+          ],
+          "up": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "distance": 10,
+          "yaw": -1.5707963267948966,
+          "pitch": 0.5235987755982988,
+          "fov_deg": 45.0,
+          "aspect": 1.4285714285714286,
+          "znear": 0.1,
+          "zfar": 10000.0,
+          "perspective": true,
+          "two_point": false
+        }
+      },
+      "original": {
+        "kind": "none",
+        "point": [
+          2.0,
+          2.999919891357422,
+          0.0
+        ]
+      },
+      "native": {
+        "encouraged": [],
+        "kind": "none",
+        "point": [
+          2.0,
+          2.999919891357422,
+          0.0
+        ]
+      }
+    }
+  ],
+  "scope": "Six independent held-out near-plane depth controls plus unchanged eleven-case perspective gate; source actual Qt projection and empty-face occlusion method; no renderer clipping changes or independent UI claim"
+}
