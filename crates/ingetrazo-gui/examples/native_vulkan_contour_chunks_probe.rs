@@ -504,29 +504,28 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     changed.section_planes[0].normal = DVec3::X;
     changed.section_planes[0].point = DVec3::new(0.5, 0., 0.);
     changed.bump_version();
-    let mut partial_rollback = false;
-    for headroom in (0..65536u64).step_by(256) {
-        budget.ledger.lock().unwrap().total_limit = Some(before + headroom);
-        let result = world.set_scene(&context, &changed, &camera, &style, fence, serial, 2);
-        if result.is_ok() {
-            return Err("Quota sweep succeeded before exercising partial chunk rollback".into());
-        }
-        assert_eq!(
-            budget.ledger.lock().unwrap().total_committed(),
-            before,
-            "Failed model upload leaked allocations"
-        );
-        assert_eq!(world.uploads, baseline_uploads);
-        if world.contour_metrics().failed_prepared_chunks >= 2 {
-            partial_rollback = true;
-            break;
-        }
-    }
+    // Lower live admission only after actual chunk allocations, rather than assuming
+    // driver staging requirements allow a fixed-cap partial failure window.
+    world.set_contour_pressure_after_chunks_for_probe(Some(2))?;
+    let result = world.set_scene(&context, &changed, &camera, &style, fence, serial, 2);
     assert!(
-        partial_rollback,
-        "No actual partial chunk allocation denial exercised"
+        result.is_err(),
+        "Dynamic quota pressure unexpectedly admitted the next chunk"
     );
-    budget.ledger.lock().unwrap().total_limit = Some(128 * 1024 * 1024);
+    assert!(result.unwrap_err().contains("Contour chunk upload failed"));
+    assert_eq!(world.contour_metrics().failed_prepared_chunks, 2);
+    assert_eq!(
+        budget.ledger.lock().unwrap().total_committed(),
+        before,
+        "Actual partial chunk rollback leaked allocations"
+    );
+    assert_eq!(
+        budget.ledger.lock().unwrap().total_limit,
+        Some(128 * 1024 * 1024),
+        "Engineering pressure did not restore the original budget"
+    );
+    assert_eq!(world.uploads, baseline_uploads);
+    world.set_contour_pressure_after_chunks_for_probe(None)?;
     serial += 1;
     let restored = render(&context, timer.as_ref(), &mut world, fence, command, serial)?;
     assert_eq!(

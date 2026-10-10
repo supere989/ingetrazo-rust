@@ -72,7 +72,7 @@ impl Contours {
 
 }
 impl Drop for Contours {fn drop(&mut self){unsafe{if self.pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.pipeline,None);}if self.layout!=vk::PipelineLayout::null(){self.device.destroy_pipeline_layout(self.layout,None);}if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None);}if self.descriptor_layout!=vk::DescriptorSetLayout::null(){self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}}
-pub struct World {contour_metrics:ContourMetrics,contours:Option<Contours>,contour_batches:Vec<ContourBatch>,eye:[f32;3],width_factor:f32,display_scale:f32,edge_color:[f32;4],device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,mask_pipeline:vk::Pipeline,cap_pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,samples:vk::SampleCountFlags,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,cap_vertices:Option<BufferId>,cap_signature:Option<([[f32;3];4],[f32;4])>,cap_key:Option<((u64,u64,u64),[f32;4],bool,[f32;4])>,revision:Option<(u64,u64,u64)>,surface_color:Option<[f32;4]>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
+pub struct World {probe_pressure_after:Option<usize>,contour_metrics:ContourMetrics,contours:Option<Contours>,contour_batches:Vec<ContourBatch>,eye:[f32;3],width_factor:f32,display_scale:f32,edge_color:[f32;4],device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,mask_pipeline:vk::Pipeline,cap_pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,samples:vk::SampleCountFlags,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,cap_vertices:Option<BufferId>,cap_signature:Option<([[f32;3];4],[f32;4])>,cap_key:Option<((u64,u64,u64),[f32;4],bool,[f32;4])>,revision:Option<(u64,u64,u64)>,surface_color:Option<[f32;4]>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
 impl World {
  pub fn new(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<Self,String> {
   let device=context.device.clone();
@@ -102,7 +102,7 @@ impl World {
   let cap_pipeline=match make_pipeline(&device,render_pass,layout,WorldPass::Cap,samples) {Ok(p)=>p,Err(e)=>{unsafe {device.destroy_pipeline(mask_pipeline,None);device.destroy_pipeline(pipeline,None);device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e);}};
   let descriptor_layout=match egui_ash_renderer::vulkan::create_vulkan_descriptor_set_layout(&device) {Ok(l)=>l,Err(e)=>{unsafe {device.destroy_pipeline(cap_pipeline,None);device.destroy_pipeline(mask_pipeline,None);device.destroy_pipeline(pipeline,None);device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e.to_string());}};
   let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:4}];let pool=match unsafe {device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().flags(vk::DescriptorPoolCreateFlags::FREE_DESCRIPTOR_SET).max_sets(4).pool_sizes(&sizes),None)} {Ok(p)=>p,Err(e)=>{unsafe {device.destroy_descriptor_set_layout(descriptor_layout,None);device.destroy_pipeline(cap_pipeline,None);device.destroy_pipeline(mask_pipeline,None);device.destroy_pipeline(pipeline,None);device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e.to_string());}};
-  let mut world=Self{contour_metrics:ContourMetrics::default(),contours:None,contour_batches:Vec::new(),eye:[0.;3],width_factor:0.,display_scale:1.,edge_color:[0.;4],device,budget:budget.clone(),resources:Resources::new(context,budget),render_pass,pipeline,mask_pipeline,cap_pipeline,layout,descriptor_layout,pool,depth_format,samples,target:None,vertices:None,indices:None,count:0,cap_vertices:None,cap_signature:None,cap_key:None,revision:None,surface_color:None,mvp:[0.0;16],clip:[0.;4],clip_enabled:0,uploads:0};world.contours=Some(Contours::new(context,render_pass,samples)?);Ok(world)
+  let mut world=Self{probe_pressure_after:None,contour_metrics:ContourMetrics::default(),contours:None,contour_batches:Vec::new(),eye:[0.;3],width_factor:0.,display_scale:1.,edge_color:[0.;4],device,budget:budget.clone(),resources:Resources::new(context,budget),render_pass,pipeline,mask_pipeline,cap_pipeline,layout,descriptor_layout,pool,depth_format,samples,target:None,vertices:None,indices:None,count:0,cap_vertices:None,cap_signature:None,cap_key:None,revision:None,surface_color:None,mvp:[0.0;16],clip:[0.;4],clip_enabled:0,uploads:0};world.contours=Some(Contours::new(context,render_pass,samples)?);Ok(world)
  }
  /// Must be called after the previous UI/draw fence completes.
  pub fn resize(&mut self,context:&VulkanContext,renderer:&mut egui_ash_renderer::Renderer,extent:vk::Extent2D)->Result<egui::TextureId,String> {
@@ -135,6 +135,9 @@ impl World {
 
  /// Bounded engineering override exercises chunking on real GPU resources; never raises hardware limits.
  pub fn set_contour_storage_limit_for_probe(&mut self,bytes:u64)->Result<(),String>{if self.revision.is_some(){return Err("Set contour probe limit before model upload".into());}if bytes<36{return Err("Contour limit must hold a triangle".into());}let contours=self.contours.as_mut().unwrap();contours.limit=contours.limit.min(bytes);Ok(())}
+ /// Engineering-only dynamic pressure: actual admission is exhausted after this many new chunks.
+ /// Used because an initial discrete staging peak can exceed all later compact chunks.
+ pub fn set_contour_pressure_after_chunks_for_probe(&mut self,chunks:Option<usize>)->Result<(),String>{if chunks==Some(0){return Err("Pressure control must first allocate a chunk".into());}self.probe_pressure_after=chunks;Ok(())}
  pub fn contour_metrics(&self)->ContourMetrics{self.contour_metrics}
  pub fn contour_batch_count(&self)->usize{self.contour_batches.len()}
  pub fn set_display_scale(&mut self,scale:f32){self.display_scale=scale.max(0.01);}
@@ -177,9 +180,9 @@ impl World {
   let prepare=(||->Result<(),String>{
    if let(Some(v),Some(i))=(vertices,indices){
     if self.resources.logical_bytes(v).unwrap()<=limit&&self.resources.logical_bytes(i).unwrap()<=limit{batches.push(ContourBatch{vertices:v,indices:i,triangles:count/3,compact:false,owned:false});}
-    else{upload_contour_chunks(context,&mut self.resources,&mesh,limit,&mut batches,&mut preprocessing).map_err(|e|format!("Contour chunk upload failed: {e}"))?;}
+    else{upload_contour_chunks(context,&mut self.resources,&mesh,limit,&mut batches,&mut preprocessing,self.probe_pressure_after,&self.budget).map_err(|e|format!("Contour chunk upload failed: {e}"))?;}
    }
-   upload_contour_chunks(context,&mut self.resources,&transparent,limit,&mut batches,&mut preprocessing).map_err(|e|format!("Contour chunk upload failed: {e}"))?;
+   upload_contour_chunks(context,&mut self.resources,&transparent,limit,&mut batches,&mut preprocessing,self.probe_pressure_after,&self.budget).map_err(|e|format!("Contour chunk upload failed: {e}"))?;
    if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Contour cache replacement requires a completed draw fence".into());}
    if cap_changed{next_cap=Some(self.upload_cap(context,cap)?);}
    self.contours.as_mut().unwrap().replace_batches(&self.resources,&batches)
@@ -287,12 +290,15 @@ fn select_sample_count(global:vk::SampleCountFlags,color:vk::SampleCountFlags,de
 
 // Only oversized opaque geometry needs an extra position copy. Transparent contours never need
 // normal, color, or UV data. Temporary CPU storage is bounded to one <=8 MiB chunk.
-fn upload_contour_chunks(context:&VulkanContext,resources:&mut Resources,mesh:&ingetrazo_render::buffer::MeshRenderBuffer,limit:u64,batches:&mut Vec<ContourBatch>,preprocess_ms:&mut f64)->Result<(),String>{
+fn upload_contour_chunks(context:&VulkanContext,resources:&mut Resources,mesh:&ingetrazo_render::buffer::MeshRenderBuffer,limit:u64,batches:&mut Vec<ContourBatch>,preprocess_ms:&mut f64,pressure_after:Option<usize>,budget:&Arc<VulkanBudget>)->Result<(),String>{
  let triangles=contour_chunk_triangles(limit)?;
  for chunk in mesh.indices.chunks(triangles*3){
   let started=std::time::Instant::now();
   let positions:Vec<[f32;3]>=chunk.iter().map(|&index|mesh.vertices[index as usize].position).collect();
   *preprocess_ms+=started.elapsed().as_secs_f64()*1000.;
+  let _pressure=if pressure_after==Some(batches.iter().filter(|batch|batch.owned).count()){
+   let mut ledger=budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(ProbeBudgetRestore{budget:budget.clone(),previous})
+  }else{None};
   let buffer=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;
   batches.push(ContourBatch{vertices:buffer,indices:buffer,triangles:(chunk.len()/3)as u32,compact:true,owned:true});
  }Ok(())
@@ -303,3 +309,6 @@ fn contour_chunk_triangles(limit:u64)->Result<usize,String>{
 #[cfg(test)]mod contour_chunk_regression{use super::*;
  #[test]fn storage_chunks_fit_actual_range_and_preserve_complete_triangles(){assert!(contour_chunk_triangles(35).is_err());assert_eq!(contour_chunk_triangles(36).unwrap(),1);assert_eq!(contour_chunk_triangles(107).unwrap(),2);assert!(contour_chunk_triangles(u64::MAX).unwrap()*36<=8*1024*1024);}
 }
+
+struct ProbeBudgetRestore{budget:Arc<VulkanBudget>,previous:Option<u64>}
+impl Drop for ProbeBudgetRestore{fn drop(&mut self){self.budget.ledger.lock().unwrap().total_limit=self.previous;}}
