@@ -38,7 +38,7 @@ pub fn run(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<serde_json::
    }
    world.resources.mark_used(vertices,serial)?;world.resources.mark_used(indices,serial)?;
    unsafe{device.reset_fences(&[fence]).map_err(|e|e.to_string())?;device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&commands)],fence).map_err(|e|e.to_string())?;}
-   context.wait_transfer(fence)?;
+   context.wait_transfer(fence).map_err(|e|e.to_string())?;
    let rgba=world.readback(context)?;let first=&rgba[..4];if !rgba.chunks_exact(4).all(|p|p==first){return Err("Controlled sample color not uniform across target".into());}
    rows.push(serde_json::json!({"sample_red_bytes":values,"resolved_rgba":first}));
   }
