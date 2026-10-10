@@ -9,5 +9,7 @@
   "physical_hardware_claim": false,
   "application_presentation_claim": false,
   "intel_job": 114225443701,
-  "intel_verdict": "pending"
+  "intel_verdict": "PASS",
+  "intel_artifact": 11670986984,
+  "intel_github_archive_sha256": "cdc52f0d39eee5baa993572dcd53854eb0f76922d123551dd9d0eacddddeddac"
 }
