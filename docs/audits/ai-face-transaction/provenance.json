@@ -1,0 +1,11 @@
+{
+  "native_source": "35091480",
+  "frozen_original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_binary_sha256": "ea8e77fd81027f0eb14f870fdbac9ba148234218945a1eaa11a0b9bf7486c16f",
+  "original_files": {
+    "core/ai.py": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+  },
+  "original_helper_sha256": "ce81a5dd01a04373d44aab1cb3fcb23a45c8d9a6cd769246fd7d0b94c227f563"
+}

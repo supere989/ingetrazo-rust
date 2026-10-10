@@ -1,0 +1,57 @@
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-ai-interpreter/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof)
+warning: unused variable: `edge_total`
+  --> src/bin/../owner.rs:44:7
+   |
+44 |   let edge_total=base_edges.checked_add(j.added_edges.len()).ok_or("Edge extent overflow")?;
+   |       ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_edge_total`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `command`
+  --> src/bin/../face_owner.rs:34:55
+   |
+34 | ...lt<bool,String>{let Some(command)=self.undo.last()else{return Ok(false)};self.redo.try_reserve(1).map_err(|_|"Face redo history r...
+   |                             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_command`
+
+warning: field `cold_edge_rows` is never read
+ --> src/bin/../owner_registry.rs:7:78
+  |
+7 | #[derive(Clone,Copy,Debug)]pub struct Metrics{pub cold_vertex_rows:usize,pub cold_edge_rows:usize,pub lookup_calls:usize,pub publicat...
+  |                                       ------- field in this struct           ^^^^^^^^^^^^^^
+  |
+  = note: `Metrics` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `charge` is never read
+  --> src/bin/../owner.rs:15:131
+   |
+15 | ...ct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize,charge:Le...
+   |       ----- field in this struct                                                                                                 ^^^^^^
+
+warning: method `retained_baseline_entries` is never used
+  --> src/bin/../owner.rs:26:9
+   |
+17 | impl JournalOwner{
+   | ----------------- method in this implementation
+...
+26 |  pub fn retained_baseline_entries(&self)->usize{0}
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `ingetrazo-ai-interpreter-proof` (bin "face_history" test) generated 5 warnings (run `cargo fix --bin "face_history" -p ingetrazo-ai-interpreter-proof --tests` to apply 2 suggestions)
+    Finished `test` profile [unoptimized] target(s) in 0.32s
+     Running unittests src/bin/face_history.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/face_history-2d633adacb502a3a)
+
+running 1 test
+test face_owner::tests::new_radial_byte_refusal_precedes_edge_publication ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.00s
+
