@@ -9,7 +9,7 @@ jobs:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
       - name: Install native build dependencies
-        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 libfreetype6 libfontconfig1 libx11-6 libxrandr2 libxcursor1 libxi6 libxinerama1 libxkbcommon-x11-0 xvfb xauth imagemagick pkg-config libxtst6 libgl1-mesa-dri
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev libegl1 libgl1 libdbus-1-3 libfreetype6 libfontconfig1 libx11-6 libxrandr2 libxcursor1 libxi6 libxinerama1 libxkbcommon-x11-0 xvfb xauth imagemagick pkg-config libxtst6 libgl1-mesa-dri libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0
       - name: Check mandatory original fixtures
         run: python3 -c "from pathlib import Path; names = [\"arco-yanque\", \"banca-pergola-yanque\", \"luminaria-solar-yanque\", \"pileta-fuente-yanque\"]; assert all((Path(\"ingetrazo/examples\") / (n + \".igz\")).is_file() for n in names), \"Missing original fixtures\""
       - run: cargo test --workspace --locked
@@ -29,6 +29,10 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Original OpenGL section stencil controls
+        run: python scripts/check-original-section-gl.py
+      - name: Native rendered section stencil comparison
+        run: python scripts/check-rendered-section.py
       - name: Original Python runtime document reopen
         run: python scripts/check-python-reopen.py
       - name: Original Python runtime fresh and edited Rust interpretation
@@ -102,5 +106,7 @@ jobs:
             docs/audits/render-startup.log
             docs/audits/exchange-*-evidence.json
             docs/audits/dxf-curve-evidence.json
+            docs/audits/section-original-gl/*
+            docs/audits/section-rust-render/*
             docs/audits/offset-render/*.png
             docs/audits/offset-render/runtime.log

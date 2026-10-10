@@ -1,0 +1,42 @@
+{
+  "provenance": {
+    "rust_commit": "a3b2608351dbaaf183c682a72446ebcecbcd19d4",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "closed",
+      "original_magenta_pixels": 20164,
+      "rust_magenta_pixels": 20164,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "shared-slab",
+      "original_magenta_pixels": 0,
+      "rust_magenta_pixels": 0,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "shared-slab-reversed",
+      "original_magenta_pixels": 20164,
+      "rust_magenta_pixels": 20164,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "transparent",
+      "original_magenta_pixels": 0,
+      "rust_magenta_pixels": 0,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "duplicate",
+      "original_magenta_pixels": 20164,
+      "rust_magenta_pixels": 20164,
+      "coverage_within_five_percent": true
+    }
+  ],
+  "scope": "Actual native eframe production painter screenshot, equal800x600 Top orthographic camera and authoredtwo-storeygeometry versus real originalQtGL stencil. Five-percent cap coverage tolerance for raster/contour antialiasing; zero-fill cases exact. No full scene UI gesture or camera-generalization claim."
+}
