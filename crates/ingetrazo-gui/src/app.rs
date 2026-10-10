@@ -820,10 +820,7 @@ impl IngeTrazoApp {
     }
 
     pub fn perform_solid_boolean(&mut self, op: ingetrazo_core::solids::SolidOp) {
-        let mut indices: Vec<usize> = self.scene.selection.iter().filter_map(|item| {
-            if let SelectionItem::Group(idx) = item { Some(*idx) } else { None }
-        }).collect();
-        indices.sort_unstable();
+        let indices = self.scene.selected_groups_in_order();
         if indices.len() < 2 || indices.iter().any(|&i| i >= self.scene.groups.len()) {
             self.status_message = "Select at least two solid groups".into();
             return;
@@ -1497,5 +1494,39 @@ mod document_camera_tests {
         app.redo();
         assert_eq!(app.camera, OrbitCamera::new());
         std::fs::remove_file(path).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod ordered_solid_selection_tests {
+    use super::*;
+    #[test]
+    fn first_selected_group_is_cutter_even_when_scene_order_is_reversed() {
+        let mut mesh = ingetrazo_core::mesh::Mesh::new();
+        for p in [[0.,0.,0.],[1.,0.,0.],[1.,1.,0.],[0.,1.,0.],[0.,0.,1.],[1.,0.,1.],[1.,1.,1.],[0.,1.,1.]] {
+            mesh.add_vertex(DVec3::from_array(p));
+        }
+        for f in [[0,3,2,1],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]] { mesh.add_face(f.to_vec(),vec![]); }
+        let mut app = IngeTrazoApp::new();
+        let receiver = ingetrazo_core::groups::Group::with_mesh("receiver",mesh.clone());
+        let mut cutter = ingetrazo_core::groups::Group::with_mesh("cutter",mesh);
+        cutter.transform = glam::DMat4::from_translation(DVec3::new(0.5,0.,0.));
+        app.scene.groups=vec![receiver,cutter];
+        app.scene.select(SelectionItem::Group(1));
+        app.scene.select(SelectionItem::Group(0));
+        app.scene.select(SelectionItem::Group(1)); // Reselecting doesn't reorder.
+        assert_eq!(app.scene.selected_groups_in_order(),vec![1,0]);
+        app.perform_solid_boolean(ingetrazo_core::solids::SolidOp::Subtract);
+        assert_eq!(app.scene.groups.len(),1);
+        let result=&app.scene.groups[0];
+        assert!((result.mesh.volume().unwrap()-0.5).abs()<1e-8);
+        assert!(result.mesh.vertices.iter().all(|v| v.position.x <= 0.5+1e-8));
+        app.undo();
+        assert_eq!(app.scene.selected_groups_in_order(),vec![1,0]);
+        app.scene.deselect(&SelectionItem::Group(1));
+        app.scene.select(SelectionItem::Group(1));
+        assert_eq!(app.scene.selected_groups_in_order(),vec![0,1]);
+        app.scene.clear_selection();
+        assert!(app.scene.selection_order.is_empty());
     }
 }

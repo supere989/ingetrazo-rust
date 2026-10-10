@@ -39,6 +39,9 @@ pub struct Scene {
 
     pub mesh: Mesh,
     pub selection: HashSet<SelectionItem>,
+    /// View-only insertion order for directional operations such as cutter/target.
+    #[serde(default)]
+    pub selection_order: Vec<SelectionItem>,
     pub version: u64,
     pub view_version: u64,
     pub groups: Vec<Group>,
@@ -79,6 +82,7 @@ impl Scene {
             native_baseline: serde_json::Value::Null,
             mesh: Mesh::new(),
             selection: HashSet::new(),
+            selection_order: Vec::new(),
             version: 0,
             view_version: 0,
             groups: Vec::new(),
@@ -114,17 +118,41 @@ impl Scene {
 
     pub fn clear_selection(&mut self) {
         self.selection.clear();
+        self.selection_order.clear();
         self.bump_view_version();
     }
 
     pub fn select(&mut self, item: SelectionItem) {
-        self.selection.insert(item);
+        if self.selection.insert(item.clone()) {
+            self.selection_order.push(item);
+        }
         self.bump_view_version();
     }
 
     pub fn deselect(&mut self, item: &SelectionItem) {
         self.selection.remove(item);
+        self.selection_order.retain(|selected| selected != item);
         self.bump_view_version();
+    }
+
+    pub fn selected_groups_in_order(&self) -> Vec<usize> {
+        let mut result = Vec::new();
+        for item in &self.selection_order {
+            if self.selection.contains(item) {
+                if let SelectionItem::Group(index) = item {
+                    if !result.contains(index) { result.push(*index); }
+                }
+            }
+        }
+        // Legacy deserialization or callers inserting directly in the public set.
+        let mut remainder: Vec<_> = self.selection.iter().filter_map(|item| {
+            if let SelectionItem::Group(index) = item {
+                if !result.contains(index) { Some(*index) } else { None }
+            } else { None }
+        }).collect();
+        remainder.sort_unstable();
+        result.extend(remainder);
+        result
     }
 
     pub fn is_selected(&self, item: &SelectionItem) -> bool {
