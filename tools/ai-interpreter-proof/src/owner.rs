@@ -141,21 +141,19 @@ impl<'a> PreparedAppend<'a> {
         if positions.len() != self.base_vertices || loops.len() != self.owner.mesh.faces.len() {
             return Err("Mixed base membership mismatch".into());
         }
-        for (outer, holes) in &loops {
-            if outer
-                .iter()
-                .chain(holes.iter().flatten())
-                .any(|&id| id >= self.base_vertices)
-            {
-                return Err(
-                    "Mixed existing loop references appended vertex not yet supported".into(),
-                );
-            }
-        }
         let total = self
             .base_vertices
             .checked_add(self.vertices.len())
             .ok_or("Mixed extent overflow")?;
+        for (outer, holes) in &loops {
+            if outer
+                .iter()
+                .chain(holes.iter().flatten())
+                .any(|&id| id >= total)
+            {
+                return Err("Mixed loop vertex outside final membership".into());
+            }
+        }
         let preparation = self
             .owner
             .budget

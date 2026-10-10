@@ -521,13 +521,16 @@ impl Projection {
             .try_reserve_exact(vertices.len())
             .map_err(|_| "Projection positions refused")?;
         let mut changed = false;
-        for (id, value) in vertices.iter().take(native.vertices.len()).enumerate() {
-            let v = value
-                .downcast_ref::<editable_mesh::Vertex>()
-                .ok_or("Projection vertex requires Vertex")?;
+        for (id, value) in vertices.iter().enumerate() {
+            if value.downcast_ref::<editable_mesh::Vertex>().is_none() {
+                return Err("Projection vertex requires Vertex".into());
+            }
             if ids.insert(value.get_id(), id).is_some() {
                 return Err("Repeated Vertex membership projection unsupported".into());
             }
+        }
+        for (id, value) in vertices.iter().take(native.vertices.len()).enumerate() {
+            let v = value.downcast_ref::<editable_mesh::Vertex>().unwrap();
             let p = v.position.read().coordinates();
             let p = glam::DVec3::new(p[0] as f64, p[1] as f64, p[2] as f64);
             changed |= p != native.vertices[id].position;

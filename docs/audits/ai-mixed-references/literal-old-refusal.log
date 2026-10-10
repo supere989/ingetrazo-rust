@@ -1,0 +1,10 @@
+1468 |     pub fn observe(&self, name: &str) -> serde_json::Value {
+     |            ^^^^^^^
+
+warning: `ingetrazo-ai-interpreter-proof` (bin "vm_mixed_references") generated 23 warnings (run `cargo fix --bin "vm_mixed_references" -p ingetrazo-ai-interpreter-proof` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized] target(s) in 21.81s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/vm_mixed_references`
+
+thread 'main' (1300573) panicked at src/bin/../vm_mesh.rs:1465:13:
+Face loop references Vertex outside membership
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
