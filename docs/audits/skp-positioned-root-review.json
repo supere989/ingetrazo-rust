@@ -1,0 +1,7 @@
+{
+  "source": "356082057445a865acc356b1307228c5f6ee4c11",
+  "verified_artifact_digests": 96,
+  "complete_recursive_comparisons": 31,
+  "source_review": "Pinned original _mark_projected_faces matches grouping, first80 authored-face sampling, >=8 threshold and discontinuity tests. Cache computed once per definition in immutable planner.",
+  "scope": "Positioned front/back and projected VFF texture document semantics; rendered texture acceptance, legacy, tint and missing-image fallback remain OPEN."
+}
