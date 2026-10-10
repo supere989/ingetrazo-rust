@@ -1,0 +1,9 @@
+{
+  "candidate": "8b63593",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-move-copy-review-target cargo test --locked --workspace",
+  "passed": 405,
+  "failed": 0,
+  "ignored": 2,
+  "retained_log_sha256": "b4be123d65e26c37f359557189e02d63d51478ff074838c6aa36929cfdce7edc",
+  "scope": "Complete topology arrays/retyping/spacing candidate. Independent original/native arrays, actual gestures/live previews and broader performance remain pending."
+}
