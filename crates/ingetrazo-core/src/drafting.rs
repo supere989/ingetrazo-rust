@@ -548,29 +548,30 @@ fn explicit_source_stations(
         if !ring.iter().all(|&p| frame.on_plane(p)) {
             continue;
         }
-        for &(a, b) in &sources {
-            if !frame.on_plane(a) || !frame.on_plane(b) {
-                continue;
-            }
-            let qa = source_drawing_point(a, original, segments);
-            let qb = source_drawing_point(b, original, segments);
-            let aa = source_project_mode(&loops[0], qa, true);
-            let bb = source_project_mode(&loops[0], qb, true);
+        // Cache frame projections before the pairwise arrangement pass.
+        let projected: Vec<_> = sources
+            .iter()
+            .filter(|&&(a, b)| frame.on_plane(a) && frame.on_plane(b))
+            .map(|&(a, b)| {
+                (
+                    a,
+                    b,
+                    source_project_mode(
+                        &loops[0],
+                        source_drawing_point(a, original, segments),
+                        true,
+                    ),
+                    source_project_mode(
+                        &loops[0],
+                        source_drawing_point(b, original, segments),
+                        true,
+                    ),
+                )
+            })
+            .collect();
+        for &(a, b, aa, bb) in &projected {
             let r = bb - aa;
-            for &(c, d) in &sources {
-                if !frame.on_plane(c) || !frame.on_plane(d) {
-                    continue;
-                }
-                let cc = source_project_mode(
-                    &loops[0],
-                    source_drawing_point(c, original, segments),
-                    true,
-                );
-                let dd = source_project_mode(
-                    &loops[0],
-                    source_drawing_point(d, original, segments),
-                    true,
-                );
+            for &(_, _, cc, dd) in &projected {
                 let delta = cc - aa;
                 let s = dd - cc;
                 let det = r.perp_dot(s);
