@@ -1,0 +1,18 @@
+{
+  "source_revision": "a27f0e1ba4a98ea66864e907a62fb8828dd811a0",
+  "binary_sha256": "59553692e190fd5b7b81320e9f9d68ea2c5ba869475e9d1f5c4301f0bd2f2948",
+  "device": "NVIDIA GeForce RTX 5090",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "external_timeout_seconds": 40,
+  "budget_bytes": 134217728,
+  "passed": true,
+  "cold_edge_endpoints": 48,
+  "cold_edge_bytes": 576,
+  "warm_updates": 100,
+  "warm_edge_uploads": 0,
+  "failed_prepared_edge_bytes": 600,
+  "old_ledger_bytes_restored": 20487136,
+  "old_gpu_image_exactly_restored": true,
+  "final_ledger_bytes": 0,
+  "scope": "Actual discrete GPU cache allocation and rollback. Real budget admission denial after two prepared contour chunks follows successful replacement edge allocation; not driver OOM, independent hard-edge failure injection, or general renderer completion."
+}
