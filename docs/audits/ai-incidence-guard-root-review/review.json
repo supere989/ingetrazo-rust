@@ -1,12 +1,13 @@
 {
   "reviewed_candidate": "021a1584a4fd455d1a670a7d800cf922cee47cf9",
-  "integration_verdict": "held pending correction",
+  "integration_verdict": "held pending source-semantic comparison",
   "method": "Source review only; no new build or runtime parity claim",
   "findings": [
     {
       "location": "tools/ai-interpreter-proof/src/vm_mesh.rs RootRestore change detection",
       "finding": "Candidate validates PySet type and empty elements, but does not compare current set identity against pre-execution identity. Replacing edges with another empty set passes this guard; native geometry change detection need not mark a command changed.",
-      "required_followup": "Retain original set reference and reject identity replacement while incidence is unjournaled, or implement complete source-backed publication/history. Add actual empty-set replacement control."
+      "required_followup": "Compare actual original empty-set replacement, no-op history and later refusal/Undo behavior with native. If original preserves replacement without history, preserve that behavior rather than introducing incompatible refusal. Otherwise implement source-backed restoration/history.",
+      "classification": "Unverified semantic concern, not a demonstrated Python divergence"
     },
     {
       "location": "generated Vertex/Edge ownership graph",
@@ -14,5 +15,11 @@
       "required_followup": "Verify actual cycle reclamation and detached externally held lifetime, with repeated graph creation/drop and genuine source identity semantics."
     }
   ],
-  "scope": "Temporary refusal guard is not Python parity; full generated incidence and history remain required."
+  "scope": "Temporary refusal guard is not Python parity; full generated incidence and history remain required.",
+  "cycle_source_observation": {
+    "vm_version": "0.6.0",
+    "gc_feature_enabled": true,
+    "Vertex_and_Edge_traverse_annotations": true,
+    "conclusion": "Cycle collector support is present; runtime reclamation remains to be measured."
+  }
 }
