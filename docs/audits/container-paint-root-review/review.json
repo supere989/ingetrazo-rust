@@ -1,0 +1,10 @@
+{
+  "candidate": "bb311ed",
+  "passed": 401,
+  "failed": 0,
+  "ignored": 2,
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-backpaint-review-target cargo test --locked --workspace",
+  "retained_log_sha256": "4d7515fcf81aea170111a49c4fbc0fa43d347548c5754d366e6875b99fe7f347",
+  "source_review": "Original effective_material top-level owner and effective_attrs paint keys/default back; actual retained16 original/native software pixels/runs matched.",
+  "remaining": "Independent NVIDIA material corpus; allpriorcontrols/mirror/gate/style/texture/Metal remain open."
+}
