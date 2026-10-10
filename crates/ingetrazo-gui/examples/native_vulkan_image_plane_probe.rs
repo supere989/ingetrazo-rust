@@ -44,10 +44,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let name = case["case"].as_str().unwrap();
         let mut scene = ingetrazo_formats::igz::load_igz(&root.join(format!("{name}.igz")))?;
         let mut camera = ingetrazo_core::camera::OrbitCamera::default();
-        camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);
+        camera.set_standard_view(if case["camera_view"].as_str()==Some("iso"){ingetrazo_core::camera::StandardView::Iso}else{ingetrazo_core::camera::StandardView::Top});
         camera.target = DVec3::ZERO;
         camera.distance = 4.;
-        camera.perspective = false;
+        camera.perspective = case["camera_perspective"].as_bool().unwrap_or(false);
         camera.aspect = 800. / 600.;
         let mut style = ingetrazo_render::style::StyleConfig::default();
         for i in 0..3 {
