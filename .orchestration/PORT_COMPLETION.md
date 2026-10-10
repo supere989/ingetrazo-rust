@@ -31,3 +31,5 @@ Review actual diffs and acceptance evidence. Cherry-pick reviewed commits into c
 ## Integration checkpoint: stage 4
 
 Canonical source through dd17c2a passes 217 Rust workspace tests. Original-runtime saved-view recall, intersection segment/mutation, and eight healing cases pass on this combined checkout. Published milestone 3 CI run 38012356527 completed successfully. Stage 4 remains local pending broader format/document/render checks and tracker reconciliation; dimension anchors/context edits await review and independent validation. Full release gates remain open.
+
+Stage 4 checkpoint through959ed50:225 Rust tests pass; CLI rebuilt, combined glTF/export/clipboard/exchange oracles pass; virtual pergola textured rendering visually inspected with dimensions/outliner. Four original docs retain zero field/asset differences and reopenPython afteranchor schema integration. Pieces/world-frame source integrated; independent acceptance pending. DAE recursive geometry fix integrated; DAE material/import work remains.
