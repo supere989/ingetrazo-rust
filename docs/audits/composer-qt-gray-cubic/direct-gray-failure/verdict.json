@@ -1,0 +1,35 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "name": "ellipse",
+      "different_pixels": 213,
+      "passed": false
+    },
+    {
+      "name": "negative-ellipse",
+      "different_pixels": 137,
+      "passed": false
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 50,
+      "passed": false
+    },
+    {
+      "name": "round-horizontal",
+      "different_pixels": 6,
+      "passed": false
+    },
+    {
+      "name": "round-diagonal",
+      "different_pixels": 7,
+      "passed": false
+    },
+    {
+      "name": "round-reversed",
+      "different_pixels": 7,
+      "passed": false
+    }
+  ]
+}

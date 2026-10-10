@@ -1,6 +1,6 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // Copyright (C) 2000-2016 David Turner, Robert Wilhelm, Werner Lemberg.
-// SPDX-License-Identifier: FTL
+// SPDX-License-Identifier: FTL AND GPL-3.0-only
 // Rust adaptation of line/cell/sweep mathematics; see licenses/FTL.txt.
 //! Bounded native line-outline scan conversion matching Qt6.12 gray raster.
 //! Source: Qt qoutlinemapper.cpp (26.6 qRound), qgrayraster.c line/cell/sweep.
@@ -82,6 +82,8 @@ fn fixed(p:[f64;2])->Result<[i64;2],String>{
  if p.iter().any(|x|!x.is_finite()||x.abs()>1_000_000.){return Err("Gray raster input outside finite bounded coordinates".into());}
  Ok([(p[0]*64.).round()as i64*4,(p[1]*64.).round()as i64*4])
 }
+// QBezier::addToPolygon adaptation, Copyright (C) 2016 The Qt Company Ltd.
+// Used under GPL-3.0-only; repository LICENSE.
 fn flatten_cubic(a:[f64;2],c1:[f64;2],c2:[f64;2],b:[f64;2])->Vec<[f64;2]>{
  let mut stack=vec![([a,c1,c2,b],9usize)];let mut out=Vec::new();
  while let Some((q,level))=stack.pop(){let dx=q[3][0]-q[0][0];let dy=q[3][1]-q[0][1];let mut length=dx.abs()+dy.abs();
