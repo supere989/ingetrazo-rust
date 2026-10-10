@@ -5,15 +5,17 @@
     "six_retained_signature_pairs_equal": true,
     "scope": "Authored primitive controls; signature omits some document fields and does not establish full legacy model parity."
   },
-  "integration": "HELD",
-  "required_corrections": [
-    "Object reference lookup clones entire Face/Loop values, and roots retain those clones. Replace with stable IDs or shared immutable owners and bound aggregate decoded allocations to prevent reference amplification."
-  ],
+  "integration": "Integrated into review branch; combined workspace and fresh source replay pending",
+  "required_corrections": [],
   "remaining": [
     "Actual nonempty legacy models across supported eras",
     "DIB textures, definitions, annotations and full document/rendered comparisons"
   ],
   "source_resolved_findings": [
     "Pinned OpenSKP legacy.py _drawbase lines362-390 intentionally maps inline and escaped by-object layers to default0. Rust follows this source behavior; it is not a demonstrated parity defect."
+  ],
+  "corrections_reviewed": [
+    "621f45f3: Arc archive references, unique root IDs and aggregate decoded budget.",
+    "7c0b10eb: unresolved premodel roots explicitly refuse instead of panic; probe archive dropped before model assembly."
   ]
 }
