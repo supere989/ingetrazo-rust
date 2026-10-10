@@ -1,0 +1,7 @@
+{
+  "review": "Retained nine-case inventory and seeded orphan history independently inspected",
+  "states": 27,
+  "fresh_root_baseline_states": 24,
+  "seeded_orphan_undo_preserves_original_vertices": true,
+  "scope": "Seeded-case fixture reviewed against source constructor and actual records; prior root24state fresh replay retained separately. Production implementation unchanged by this fixture extension."
+}

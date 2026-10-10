@@ -18,4 +18,6 @@ for mutation in range(6):
  except AssertionError:pass
  else:raise AssertionError('negative accepted')
 a=json.loads((p/'original-error.json').read_text());b=json.loads((p/'native-error.json').read_text())
+if a['document']!=b['document']:raise AssertionError('failed operation rollback differs')
+if not a.get('raw_result',{}).get('error') or not b.get('raw_error'):raise AssertionError('missing retained refusal evidence')
 print('27 exact states; six mutations rejected; raw exception protocols intentionally unequal')
