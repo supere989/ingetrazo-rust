@@ -1,0 +1,71 @@
+{
+  "production_revision": "efddd76",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "private_target": "/tmp/ingetrazo-composer-byte-span-independent/target",
+  "binary_sha256": "4d9c66371b35c13f1b02c25ed326e367e5dcbe8ef1b49a14477fa1a9eb0be9c8",
+  "explicit_env": {
+    "INGETRAZO_SHAPE_DIRECT": "1",
+    "VK_DRIVER_FILES": "/usr/share/vulkan/icd.d/lvp_icd.json",
+    "INGETRAZO_VULKAN_DEVICE": "llvmpipe",
+    "original_QT_QPA_PLATFORM": "offscreen",
+    "original_INGETRAZO_SHAPE_ANTIALIAS": "1"
+  },
+  "fresh_original_png_byte_identical_to_retained": [
+    "rect.png",
+    "rounded.png",
+    "ellipse.png",
+    "polygon-clamped.png",
+    "line-inverted.png",
+    "arrow.png",
+    "terrain-ticks.png",
+    "terrain-hatch-inverted.png",
+    "terrain-band.png"
+  ],
+  "old_vs_new": [
+    {
+      "name": "rect",
+      "old_capsule_mismatches": 2084,
+      "new_byte_span_mismatches": 2084
+    },
+    {
+      "name": "rounded",
+      "old_capsule_mismatches": 1976,
+      "new_byte_span_mismatches": 1976
+    },
+    {
+      "name": "ellipse",
+      "old_capsule_mismatches": 1936,
+      "new_byte_span_mismatches": 1932
+    },
+    {
+      "name": "polygon-clamped",
+      "old_capsule_mismatches": 1785,
+      "new_byte_span_mismatches": 1744
+    },
+    {
+      "name": "line-inverted",
+      "old_capsule_mismatches": 1048,
+      "new_byte_span_mismatches": 1048
+    },
+    {
+      "name": "arrow",
+      "old_capsule_mismatches": 1119,
+      "new_byte_span_mismatches": 1115
+    },
+    {
+      "name": "terrain-ticks",
+      "old_capsule_mismatches": 1615,
+      "new_byte_span_mismatches": 1608
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "old_capsule_mismatches": 4056,
+      "new_byte_span_mismatches": 3936
+    },
+    {
+      "name": "terrain-band",
+      "old_capsule_mismatches": 1430,
+      "new_byte_span_mismatches": 1311
+    }
+  ]
+}

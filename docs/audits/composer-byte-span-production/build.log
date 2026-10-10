@@ -1,0 +1,25 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-composer-byte-span-independent/crates/ingetrazo-core)
+   Compiling egui-ash-renderer v0.7.0 (/tmp/ingetrazo-composer-byte-span-independent/vendor/egui-ash-renderer)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-composer-byte-span-independent/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-composer-byte-span-independent/crates/ingetrazo-tools)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-composer-byte-span-independent/crates/ingetrazo-render)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-composer-byte-span-independent/crates/ingetrazo-gui)
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.22s
