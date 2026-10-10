@@ -31,6 +31,8 @@ pub struct MetalPresentation {
     owners: ManuallyDrop<Owners>,
     submitted: u64,
     retired: u64,
+    displayed: u64,
+    skipped: u64,
     extent: (u32, u32),
 }
 impl MetalPresentation {
@@ -74,6 +76,8 @@ impl MetalPresentation {
             }),
             submitted: 0,
             retired: 0,
+            displayed: 0,
+            skipped: 0,
             extent: (0, 0),
         };
         let size = window.inner_size();
@@ -100,10 +104,26 @@ impl MetalPresentation {
                 self.owners.metal.poisoned.store(true, Ordering::Release);
                 return Err("Metal presentation command failed; owners quarantined".into());
             }
+            // GPU completion alone never retires a drawable. Apple's terminal
+            // presentation callback also arrives for skipped frames (actual
+            // ARM/Intel observer evidence). Positive timestamps alone count as
+            // display proof; zero callback times remain explicitly skipped.
             if frame.command.status() != MTLCommandBufferStatus::Completed
-                || frame.drawable.presentedTime() <= 0.0
+                || !frame.callback_seen.load(Ordering::Acquire)
             {
                 break;
+            }
+            let time = f64::from_bits(frame.callback_time.load(Ordering::Acquire));
+            if !time.is_finite() || time < 0. {
+                self.owners.metal.poisoned.store(true, Ordering::Release);
+                return Err(
+                    "Invalid native presentation completion timestamp; ownership retained".into(),
+                );
+            }
+            if time > 0. {
+                self.displayed += 1;
+            } else {
+                self.skipped += 1;
             }
             self.owners.frames.pop_front();
             self.retired += 1;
@@ -235,7 +255,7 @@ impl MetalPresentation {
             })
             .collect();
         format!(
-            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; frames=[{}]",
+            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
             self.extent,
             self.owners._window.is_visible(),
             self.owners.layer.frame(),
@@ -243,8 +263,17 @@ impl MetalPresentation {
             self.owners.layer.isHidden(),
             self.owners.layer.drawableSize(),
             self.owners.layer.presentsWithTransaction(),
+            self.submitted,
+            self.retired,
+            self.displayed,
+            self.skipped,
             frames.join("; ")
         )
+    }
+    /// Displayed frames require actual positive callback timestamps; skipped
+    /// terminal callbacks are safe owner retirement, never visible proof.
+    pub fn presentation_counters(&self) -> (u64, u64) {
+        (self.displayed, self.skipped)
     }
     pub fn counters(&self) -> (u64, u64, usize) {
         (self.submitted, self.retired, self.owners.frames.len())
