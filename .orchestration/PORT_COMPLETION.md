@@ -6,6 +6,8 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
+Reviewed global publicationc2dd3e8: fresh20 original/native states+fourentries exact for guides/text/geodata; referenced texture publication99823f4 six states exact with missing-image negative. Both stages535workspacePASS/twoignored, publicCIpending. Metal host remains isolated; actual native mip outputs independently pass both AppleParavirtual architectures at a610894, IntelWSI passes but ARMWSI failure retained; revised owner retirement and two-image batching still undergoing nativeCI. Compression source now independently reviewed/crosschecked, actual decode/stalled-owner acceptance pending. Broader history command families and direct text shaping workstreams remain running.
+
 Reviewed physical grid5998e02:535 canonical workspace tests pass/twoignored; two fresh78page modes, source spacing controls and PDFalpha negative pass; eight exact original command cases, six anchor reopens and four negatives pass; narrow annotation Undo defect corrected; native Vulkan startup eight actual RTX owner inventories/refusal pass, graceful failed initialization corrected; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
 
 | Worker | Isolated worktree | Current ownership | State |
