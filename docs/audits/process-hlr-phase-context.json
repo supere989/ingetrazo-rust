@@ -1,0 +1,37 @@
+{
+  "diagnostic_source": "73eff07",
+  "production": "f640537",
+  "native_sha256": "ba806eb50ac332afa14eda161ee8c0ab396db4775d39dbf95f8c675ec6aa6f20",
+  "worker_sha256": "b29281218661098e9ae3f3b7617a46cc9516c521cd057dea7322499506560fab",
+  "median_ms": {
+    "False": {
+      "contour_geometry_ms": 0.157596,
+      "drop_hidden_ms": 791.2925240000001,
+      "edge_loop_ms": 61.901789,
+      "edge_other_ms": 2.844517,
+      "gather_edges_ms": 0.11113899999999999,
+      "merge_collinear_ms": 31.953603999999995,
+      "pool_ms": 4e-05,
+      "profile_surface_at_ms": 8.725431,
+      "projection_ms": 1.005594,
+      "section_ms": 0.00015,
+      "serial_intervals_ms": 50.331841000000004,
+      "total_ms": 886.070467
+    },
+    "True": {
+      "contour_geometry_ms": 0.141848,
+      "drop_hidden_ms": 786.518879,
+      "edge_loop_ms": 11.658659,
+      "edge_other_ms": 2.931106,
+      "gather_edges_ms": 0.084479,
+      "merge_collinear_ms": 31.945078000000002,
+      "pool_ms": 60.357462,
+      "profile_surface_at_ms": 8.620664999999999,
+      "projection_ms": 0.998531,
+      "section_ms": 0.00017999999999999998,
+      "serial_intervals_ms": 0.075516,
+      "total_ms": 891.692723
+    }
+  },
+  "scope": "Isolated diagnostic timers added to unchanged algorithms;1024overlappingplates2048triangles,3serial+3process4children/grain256. Exact outputassertions retained. Largestcase hidden=true. Timeroverhead included; synthetic/concurrentenvironment not universalprofile."
+}
