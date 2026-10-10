@@ -26,6 +26,7 @@ pub struct ComposerState {
     pub dragging_item_idx: Option<usize>,
     pub drag_start_pos: Option<Pos2>,
     pub drag_item_orig_pos: Option<(f64, f64)>,
+    pub interaction_sheet:Option<uuid::Uuid>,
     pub edit_before:Option<Vec<ingetrazo_core::composition::Sheet>>,
     pub sheet_history:std::collections::HashMap<uuid::Uuid,(Vec<ingetrazo_core::composition::Sheet>,Vec<ingetrazo_core::composition::Sheet>)>,
 }
@@ -38,7 +39,7 @@ impl Default for ComposerState {
             dragging_item_idx: None,
             drag_start_pos: None,
             drag_item_orig_pos: None,
-            edit_before:None,sheet_history:Default::default(),
+            interaction_sheet:None,edit_before:None,sheet_history:Default::default(),
         }
     }
 }
@@ -47,8 +48,13 @@ fn sheet_model_equal(a:&[ingetrazo_core::composition::Sheet],b:&[ingetrazo_core:
  let mut a=a.to_vec();let mut b=b.to_vec();for s in a.iter_mut().chain(b.iter_mut()){s.selected_item=None;}a==b
 }
 impl IngeTrazoApp {
+ pub fn enter_composer_sheet(&mut self,index:usize){
+  let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.interaction_sheet=Some(id);}
+ }
  pub fn begin_composer_edit(&mut self){if self.composer_state.edit_before.is_none(){self.composer_state.edit_before=Some(self.scene.sheets.clone());}}
  pub fn finish_composer_edit(&mut self){
+  self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
   let Some(sheets)=self.composer_state.edit_before.take()else{return;};
   if sheet_model_equal(&sheets,&self.scene.sheets){return;}
   for before in sheets {if let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id){
@@ -79,6 +85,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         return;
     }
 
+    app.enter_composer_sheet(sheet_idx);
     let before_sheets=app.scene.sheets.clone();
     if ui.input(|i|i.key_pressed(egui::Key::Escape)){app.cancel_composer_edit();}
 
@@ -753,6 +760,14 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 
 #[cfg(test)]mod frame_camera_tests{
  use super::*;
+ #[test]fn model_history_preserves_later_sheet_edits_and_switch_retires_drag(){
+  use ingetrazo_core::composition::{Sheet,PaperSize,Orientation};let mut app=IngeTrazoApp::new();app.scene.sheets.clear();
+  let mut a=Sheet::new("A",PaperSize::A4,Orientation::Portrait);a.items.push(SheetItem::ViewFrame(ViewFrame::default()));let mut b=a.clone();b.id=uuid::Uuid::new_v4();b.name="B".into();app.scene.sheets=vec![a,b];
+  app.save_undo_state();app.scene.mesh.add_vertex(DVec3::new(7.,8.,9.));app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(33.,44.);
+  app.composer_state.dragging_item_idx=Some(0);app.composer_state.drag_item_orig_pos=Some((20.,20.));app.composer_state.drag_start_pos=Some(Pos2::ZERO);
+  let b=app.scene.sheets[1].clone();app.scene.active_sheet_index=Some(1);app.enter_composer_sheet(1);assert!(app.composer_state.dragging_item_idx.is_none());assert!(app.composer_state.edit_before.is_none());assert_eq!(app.scene.sheets[1],b);
+  let edited=app.scene.sheets.clone();app.scene.active_sheet_index=None;app.undo();assert!(app.scene.mesh.vertices.is_empty());assert_eq!(app.scene.sheets,edited);app.redo();assert_eq!(app.scene.mesh.vertices[0].position,DVec3::new(7.,8.,9.));assert_eq!(app.scene.sheets,edited);
+ }
  #[test]fn sheet_gestures_have_scoped_undo_and_cancel_or_selection_has_no_history(){
   use ingetrazo_core::composition::{Sheet,PaperSize,Orientation};
   let mut app=IngeTrazoApp::new();app.scene.sheets.clear();app.document_session.preferences.undo_steps=64;

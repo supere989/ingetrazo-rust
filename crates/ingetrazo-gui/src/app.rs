@@ -331,9 +331,11 @@ impl IngeTrazoApp {
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
-        if let Some(prev) = self.undo_stack.pop() {
+        if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.redo_stack.push(self.scene.clone());
+            // Model history cannot replace later independent composer edits.
+            prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
             self.scene = prev;
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
@@ -343,9 +345,10 @@ impl IngeTrazoApp {
     pub fn redo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return;}
         self.finish_composer_edit();
-        if let Some(next) = self.redo_stack.pop() {
+        if let Some(mut next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());
+            next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             self.scene = next;
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
