@@ -1138,6 +1138,8 @@ mod tests {
     fn annotation_entity_references_reject_class_tags() {
         let mut ar = Archive::new(&[255, 127, 0, 0, 0, 128], 17, 0, 1);
         assert!(matches!(ar.entity_ref(), Err(SkpError::Invalid(_))));
+        let mut short = Archive::new(&[1, 128], 17, 0, 1);
+        assert!(matches!(short.entity_ref(), Err(SkpError::Invalid(_))));
     }
     #[test]
     fn repeated_archive_references_share_owner_and_budget_refuses() {

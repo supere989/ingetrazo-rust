@@ -159,7 +159,7 @@ impl Archive<'_> {
         } else {
             tag as u32
         };
-        if id & 0x80000000 != 0 || tag == 65535 {
+        if id & 0x80000000 != 0 || tag == 65535 || (tag != 32767 && tag & 32768 != 0) {
             return Err(SkpError::Invalid("Legacy entity reference is class".into()));
         }
         Ok(id)
