@@ -70,12 +70,19 @@ pub(crate) fn create_vulkan_pipeline(
     let fragment_shader_source = std::include_bytes!("../shaders/shader.frag.spv");
 
     let vertex_source = read_shader_from_source(vertex_shader_source)?;
+    let fragment_source = read_shader_from_source(fragment_shader_source)?;
+    // Shader modules and partially successful pipeline handles are unpublished.
+    // Their lifetime must cover every driver error during cold preparation.
+    struct Modules<'a>{device:&'a Device,handles:Vec<vk::ShaderModule>}
+    impl Drop for Modules<'_>{fn drop(&mut self){unsafe{for module in self.handles.drain(..){self.device.destroy_shader_module(module,None)}}}}
+    let mut modules=Modules{device,handles:Vec::with_capacity(2)};
     let vertex_create_info = vk::ShaderModuleCreateInfo::default().code(&vertex_source);
     let vertex_module = unsafe { device.create_shader_module(&vertex_create_info, None)? };
 
-    let fragment_source = read_shader_from_source(fragment_shader_source)?;
+    modules.handles.push(vertex_module);
     let fragment_create_info = vk::ShaderModuleCreateInfo::default().code(&fragment_source);
     let fragment_module = unsafe { device.create_shader_module(&fragment_create_info, None)? };
+    modules.handles.push(fragment_module);
 
     let specialization_entries = [vk::SpecializationMapEntry {
         constant_id: 0,
@@ -222,13 +229,8 @@ pub(crate) fn create_vulkan_pipeline(
                 std::slice::from_ref(&pipeline_info),
                 None,
             )
-            .map_err(|e| e.1)?[0]
+            .map_err(|(partial,error)|{for pipeline in partial{if pipeline!=vk::Pipeline::null(){device.destroy_pipeline(pipeline,None);}}error})?[0]
     };
-
-    unsafe {
-        device.destroy_shader_module(vertex_module, None);
-        device.destroy_shader_module(fragment_module, None);
-    }
 
     Ok(pipeline)
 }
