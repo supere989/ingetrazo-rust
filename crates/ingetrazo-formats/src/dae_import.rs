@@ -46,7 +46,11 @@ fn indices(node: Node<'_, '_>) -> Result<Vec<usize>> {
         .map(|s| s.parse().map_err(|_| invalid("invalid or negative index")))
         .collect()
 }
-pub(crate) fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Vec<DVec3>>> {
+struct Polygon {
+    points: Vec<DVec3>,
+    material: Option<String>,
+}
+fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
     let sources: HashMap<_, _> = mesh
         .children()
         .filter(|n| n.is_element() && n.tag_name().name() == "source")
@@ -137,7 +141,10 @@ pub(crate) fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Vec<DVec3>>> {
                         .ok_or_else(|| invalid("vertex index outside position accessor"))
                 })
                 .collect::<Result<Vec<_>>>()?;
-            loops.push(polygon);
+            loops.push(Polygon {
+                points: polygon,
+                material: primitive.attribute("material").map(str::to_owned),
+            });
             Ok(())
         };
         if kind == "polygons" {
@@ -182,6 +189,51 @@ pub(crate) fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Vec<DVec3>>> {
     Ok(loops)
 }
 
+fn material_colors<'a, 'i>(
+    instance: Node<'a, 'i>,
+    ids: &HashMap<&'i str, Node<'a, 'i>>,
+) -> Result<HashMap<String, [f64; 3]>> {
+    let mut colors = HashMap::new();
+    for binding in instance
+        .descendants()
+        .filter(|n| n.is_element() && n.tag_name().name() == "instance_material")
+    {
+        let material = binding
+            .attribute("target")
+            .and_then(|s| ids.get(s.trim_start_matches('#')))
+            .ok_or_else(|| invalid("unresolved material binding"))?;
+        let effect = child(*material, "instance_effect")
+            .and_then(|n| n.attribute("url"))
+            .and_then(|s| ids.get(s.trim_start_matches('#')))
+            .ok_or_else(|| invalid("unresolved material effect"))?;
+        for shader in effect.descendants().filter(|n| {
+            n.is_element()
+                && matches!(
+                    n.tag_name().name(),
+                    "lambert" | "phong" | "blinn" | "constant"
+                )
+        }) {
+            let Some(diffuse) = child(shader, "diffuse") else {
+                continue;
+            };
+            if child(diffuse, "texture").is_some() {
+                return Err(invalid("COLLADA texture assembly is still unfinished"));
+            }
+            if let Some(color) = child(diffuse, "color") {
+                let values = numbers(color)?;
+                if values.len() < 3 {
+                    return Err(invalid("diffuse color requiresRGB"));
+                }
+                let symbol = binding
+                    .attribute("symbol")
+                    .ok_or_else(|| invalid("missing material symbol"))?;
+                colors.insert(symbol.to_owned(), [values[0], values[1], values[2]]);
+                break;
+            }
+        }
+    }
+    Ok(colors)
+}
 fn transform(node: Node<'_, '_>) -> Result<glam::DMat4> {
     use glam::DMat4;
     let mut m = DMat4::IDENTITY;
@@ -269,18 +321,37 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
     };
     let world = axis * DMat4::from_scale(DVec3::splat(unit));
     let mut scene = Scene::new();
-    fn mesh_group(node: Node<'_, '_>, world: DMat4, name: &str) -> Result<Group> {
+    fn mesh_group(
+        node: Node<'_, '_>,
+        world: DMat4,
+        name: &str,
+        colors: &HashMap<String, [f64; 3]>,
+    ) -> Result<Group> {
         let mut mesh = Mesh::new();
         for polygon in geometry(node)? {
             let mut vertices: Vec<_> = polygon
+                .points
                 .into_iter()
                 .map(|p| mesh.add_vertex(world.transform_point3(p)))
                 .collect();
             if world.determinant() < 0. {
                 vertices.reverse();
             }
-            mesh.add_face(vertices, vec![])
+            let id = mesh
+                .add_face(vertices, vec![])
                 .ok_or_else(|| invalid("invalid transformed polygon"))?;
+            if let Some(color) = polygon
+                .material
+                .as_ref()
+                .and_then(|symbol| colors.get(symbol))
+            {
+                mesh.faces[id]
+                    .attrs
+                    .insert("color".into(), serde_json::json!(color));
+                mesh.faces[id]
+                    .attrs
+                    .insert("back".into(), serde_json::json!(true));
+            }
         }
         Ok(Group::with_mesh(name, mesh))
     }
@@ -319,7 +390,8 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
                         .ok_or_else(|| invalid("unresolved geometry"))?;
                     let mesh =
                         child(*target, "mesh").ok_or_else(|| invalid("geometry has no mesh"))?;
-                    let group = mesh_group(mesh, world, name)?;
+                    let colors = material_colors(el, ids)?;
+                    let group = mesh_group(mesh, world, name, &colors)?;
                     if !group.mesh.faces.is_empty() {
                         scene.groups.push(group);
                     }
@@ -353,6 +425,7 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
                     geometry_node
                         .attribute("name")
                         .unwrap_or("COLLADA geometry"),
+                    &HashMap::new(),
                 )?;
                 if !group.mesh.faces.is_empty() {
                     scene.groups.push(group);
@@ -394,6 +467,17 @@ mod tests {
                 .any(|v| (v.position - p).length() < 1e-10));
         }
         assert!(mesh.face_normal(0).y < 0.);
+    }
+    #[test]
+    fn diffuse_effect_is_bound_by_primitive_symbol_not_global_material_order() {
+        let xml=document().replace("<library_nodes>",r##"<library_effects><effect id="fx"><profile_COMMON><technique><phong><diffuse><color>0.2 0.4 0.8 1</color></diffuse></phong></technique></profile_COMMON></effect></library_effects><library_materials><material id="blue"><instance_effect url="#fx"/></material></library_materials><library_nodes>"##).replace("<triangles count=\"1\">","<triangles count=\"1\" material=\"paint\">").replace("<instance_geometry url=\"#g\"/>",r##"<instance_geometry url="#g"><bind_material><technique_common><instance_material symbol="paint" target="#blue"/></technique_common></bind_material></instance_geometry>"##);
+        let scene = scene_from_xml(&xml).unwrap();
+        assert_eq!(
+            scene.groups[0].mesh.faces[0].attrs["color"],
+            serde_json::json!([0.2, 0.4, 0.8])
+        );
+        assert_eq!(scene.groups[0].mesh.faces[0].attrs["back"], true);
+        assert!(scene_from_xml(&xml.replace("target=\"#blue\"", "target=\"#missing\"")).is_err());
     }
     #[test]
     fn truncated_indices_accessors_and_node_cycles_fail_without_partial_scene() {
