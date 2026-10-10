@@ -1,0 +1,12 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-ai-foundation/crates/ingetrazo-core)
+    Finished `dev` profile [unoptimized] target(s) in 0.21s
+     Running `/tmp/ingetrazo-ai-protocol-target/debug/examples/ai_mcp_protocol_acceptance docs/audits/ai-mcp-protocol-foundation/original.json`

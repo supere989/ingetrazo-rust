@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "cases": 9,
+  "negative_controls_rejected": [
+    "empty-native",
+    "empty-source",
+    "wrong-protocol",
+    "renamed-python-tool",
+    "notification-replied",
+    "changed-delegation"
+  ],
+  "scope": "Pure routing; source tool calls use explicit test stub, not script execution or document edits"
+}

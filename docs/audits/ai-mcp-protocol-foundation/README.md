@@ -1,0 +1,7 @@
+# Pure MCP protocol foundation
+
+Frozen original6be29fe, Rust base2bf34317 plus provider foundation. Actual original scripts/ingetrazo_mcp.py handle matches native pure routing on9 cases: initialize, exact five tool schemas/reference instructions, ping, notification, unknown/missing method, and three tool delegations. Delegation uses an explicit scripted callback in BOTH original and native harnesses; it does not execute run_python, query a model or make external messages. Strict validator rejects six actual mutated corpora by invoking the same validation routine. Two focused Rust tests pass: notification/no tool execution, and refusing to fabricate a screenshot from a path.
+
+The frozen source recipe/reference metadata is included as a native compile-time JSON resource with existing project GPL licensing. All five original tool names and arbitrary Python description stay preserved. No narrower action DSL is renamed run_python. The pure protocol API is not registered as a live stdio/TCP endpoint yet; execution and native captured image transport are separately required. Known input defaults match source falsy argument fallback. Full malformed JSON/framing/lifetime/cancellation/native application tool integration remain open, as do HTTP provider transport, settings persistence and arbitrary interpreter/atomic journaling.
+
+No socket, provider call, new GPU capture or broad suite was run for this stage. Fresh code-specific focused build/tests only. See docs/design/ai-mcp-foundation.md for full source contracts and explicit execution limitations.

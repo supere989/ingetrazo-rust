@@ -1,0 +1,213 @@
+[
+  {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "initialize",
+      "params": {}
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {}
+        },
+        "serverInfo": {
+          "name": "ingetrazo",
+          "version": "1.0.0"
+        },
+        "instructions": "Estas herramientas operan el documento ABIERTO de IngeTrazo, en vivo: lo que escribas aparece en la pantalla del usuario y entra en su historial de deshacer.\nIngeTrazo es un modelador 3D libre de empujar/tirar: Z arriba, unidades en METROS, ángulos en RADIANES.\nEn el scope tienes: scene, mesh, selection, groups, layers, viewport, QVector3D, Mesh, Group, Edge, Face, bim.\nRecetario:\n- TORNO (prefiérelo para toda pieza redonda): g = revolve([(radio,z), ...], name=\"Columna\", color=(r,g,b,1.0), segments=32, scallop=None, closed=False) — perfil de abajo a arriba; abierto se tapa solo; closed=True si el perfil es una sección cerrada (p.ej. la pared de una taza); scallop=(profundidad, lóbulos) talla festones/gallones en el borde. Crea el grupo y lo agrega.\n- PRISMA: g = extrude([(x,y), ...], z0, z1, name=\"Base\", color=...) — contorno en planta extruido; crea el grupo y lo agrega. Una CAJA (tablero, pata, larguero, peldaño) es un extrude de cuatro puntos: no la armes cara por cara.\n- LOSA / PLANCHA: g = prism([puntos 3D de un polígono plano], (dx,dy,dz), holes=[[...]], name=..., color=...) — barre el polígono (con agujeros) a lo largo del vector.\n- MURO: g = wall((x,y), (x,y), height=3, thickness=0.2, openings=[(offset, alféizar, ancho, alto)], peak=None) — crece a la IZQUIERDA de a→b; alféizar 0 = puerta (muesca), >0 = ventana (agujero).\n- CASA COMPLETA: gs = house(width=6, depth=4, wall_height=3, thickness=0.2, roof=\"gable\"|\"hip\"|\"flat\", ridge_height=None, overhang=0.4, ridge=\"x\", doors=[(\"S\", offset, ancho, alto)], windows=[(\"S\", offset, alféizar, ancho, alto)], origin=(0,0), name=\"Casa\") — muros con espesor, puertas con hoja, ventanas con vidrio y techo, en grupos «Casa · Paredes/Techo/Carpintería». Lados S (frente, y=y0), E, N, W; offset a lo largo del muro en sentido antihorario desde su primera esquina. Medidas típicas: puerta 0.9×2.1, ventana 1.2×1.0 con alféizar 1.0, pendiente 30°.\n- Cara suelta: f = mesh.add_face([QVector3D(x,y,z), ...])  (lazo antihorario visto desde afuera); f.attrs[\"color\"] = (r, g, b, 1.0)  (0..1)\n- Arista: mesh.add_edge(QVector3D(...), QVector3D(...))\n- Grupo manual: m = Mesh(); m.add_face([...]); g = Group(m, name=\"...\"); groups.append(g)\n- Pintar un grupo entero: g.material = {\"color\": (r,g,b), \"opacity\": 1.0} — NO toques scene.materials (es el registro de materiales del documento).\n- Mover un grupo: for v in list(g.mesh.vertices): g.mesh.move_vertex(v, QVector3D(dx,dy,dz))  — y si g.xform is not None (instancia de componente), compón la traslación en g.xform en vez de tocar vértices.\n- Cámara: viewport.camera.target/distance/yaw/pitch (RADIANES); viewport.update()\n- print(...) para reportar datos (breve: el resultado viaja cada turno).\nCada llamada es UN paso de undo: si lanza una excepción se revierte POR COMPLETO, y el Ctrl+Z del usuario deshace tu paso entero. El scope PERSISTE entre llamadas: las variables y funciones que definas siguen disponibles — no las redefinas.\nNO explores la API con dir(), inspect ni dis: lo que necesitas está en este recetario, y cada sondeo es un turno perdido. Si algo falta, escríbelo directo y lee el error.\nUn pedido sencillo (una casa, una mesa, un poste) va COMPLETO de una sola vez, con detalles razonables aunque no te los pidan; los grandes, por pasos. Verifica con las capturas del viewport e itera.\nLa figura de persona de un documento nuevo se llama «Ingeniero» («Engineer» si la interfaz está en inglés) y es la ESCALA (1,70 m, un billboard): no la borres ni la muevas salvo que te lo pidan, y no la tomes por el modelo.\nEmpieza por query_model para ver qué hay, construye con run_python y MIRA el resultado con screenshot."
+      }
+    }
+  },
+  {
+    "request": {
+      "id": "tools",
+      "method": "tools/list"
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": "tools",
+      "result": {
+        "tools": [
+          {
+            "name": "run_python",
+            "description": "Execute Python against the LIVE IngeTrazo document (Z-up, metres). Returns stdout/stderr. The reference below is everything you need — read it instead of exploring the API.\n\nIngeTrazo es un modelador 3D libre de empujar/tirar: Z arriba, unidades en METROS, ángulos en RADIANES.\nEn el scope tienes: scene, mesh, selection, groups, layers, viewport, QVector3D, Mesh, Group, Edge, Face, bim.\nRecetario:\n- TORNO (prefiérelo para toda pieza redonda): g = revolve([(radio,z), ...], name=\"Columna\", color=(r,g,b,1.0), segments=32, scallop=None, closed=False) — perfil de abajo a arriba; abierto se tapa solo; closed=True si el perfil es una sección cerrada (p.ej. la pared de una taza); scallop=(profundidad, lóbulos) talla festones/gallones en el borde. Crea el grupo y lo agrega.\n- PRISMA: g = extrude([(x,y), ...], z0, z1, name=\"Base\", color=...) — contorno en planta extruido; crea el grupo y lo agrega. Una CAJA (tablero, pata, larguero, peldaño) es un extrude de cuatro puntos: no la armes cara por cara.\n- LOSA / PLANCHA: g = prism([puntos 3D de un polígono plano], (dx,dy,dz), holes=[[...]], name=..., color=...) — barre el polígono (con agujeros) a lo largo del vector.\n- MURO: g = wall((x,y), (x,y), height=3, thickness=0.2, openings=[(offset, alféizar, ancho, alto)], peak=None) — crece a la IZQUIERDA de a→b; alféizar 0 = puerta (muesca), >0 = ventana (agujero).\n- CASA COMPLETA: gs = house(width=6, depth=4, wall_height=3, thickness=0.2, roof=\"gable\"|\"hip\"|\"flat\", ridge_height=None, overhang=0.4, ridge=\"x\", doors=[(\"S\", offset, ancho, alto)], windows=[(\"S\", offset, alféizar, ancho, alto)], origin=(0,0), name=\"Casa\") — muros con espesor, puertas con hoja, ventanas con vidrio y techo, en grupos «Casa · Paredes/Techo/Carpintería». Lados S (frente, y=y0), E, N, W; offset a lo largo del muro en sentido antihorario desde su primera esquina. Medidas típicas: puerta 0.9×2.1, ventana 1.2×1.0 con alféizar 1.0, pendiente 30°.\n- Cara suelta: f = mesh.add_face([QVector3D(x,y,z), ...])  (lazo antihorario visto desde afuera); f.attrs[\"color\"] = (r, g, b, 1.0)  (0..1)\n- Arista: mesh.add_edge(QVector3D(...), QVector3D(...))\n- Grupo manual: m = Mesh(); m.add_face([...]); g = Group(m, name=\"...\"); groups.append(g)\n- Pintar un grupo entero: g.material = {\"color\": (r,g,b), \"opacity\": 1.0} — NO toques scene.materials (es el registro de materiales del documento).\n- Mover un grupo: for v in list(g.mesh.vertices): g.mesh.move_vertex(v, QVector3D(dx,dy,dz))  — y si g.xform is not None (instancia de componente), compón la traslación en g.xform en vez de tocar vértices.\n- Cámara: viewport.camera.target/distance/yaw/pitch (RADIANES); viewport.update()\n- print(...) para reportar datos (breve: el resultado viaja cada turno).\nCada llamada es UN paso de undo: si lanza una excepción se revierte POR COMPLETO, y el Ctrl+Z del usuario deshace tu paso entero. El scope PERSISTE entre llamadas: las variables y funciones que definas siguen disponibles — no las redefinas.\nNO explores la API con dir(), inspect ni dis: lo que necesitas está en este recetario, y cada sondeo es un turno perdido. Si algo falta, escríbelo directo y lee el error.\nUn pedido sencillo (una casa, una mesa, un poste) va COMPLETO de una sola vez, con detalles razonables aunque no te los pidan; los grandes, por pasos. Verifica con las capturas del viewport e itera.\nLa figura de persona de un documento nuevo se llama «Ingeniero» («Engineer» si la interfaz está en inglés) y es la ESCALA (1,70 m, un billboard): no la borres ni la muevas salvo que te lo pidan, y no la tomes por el modelo.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "query_model",
+            "description": "Model overview: entity counts, group/component names, materials, layers, bounds, selection size.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "screenshot",
+            "description": "Render the current viewport and LOOK at it — use after building to verify and iterate.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          {
+            "name": "undo",
+            "description": "Undo the last step in IngeTrazo.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "redo",
+            "description": "Redo the last undone step in IngeTrazo.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "request": {
+      "id": 0,
+      "method": "ping"
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 0,
+      "result": {}
+    }
+  },
+  {
+    "request": {
+      "method": "notifications/initialized"
+    },
+    "response": null
+  },
+  {
+    "request": {
+      "id": 4,
+      "method": "unknown"
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "error": {
+        "code": -32601,
+        "message": "unknown unknown"
+      }
+    }
+  },
+  {
+    "request": {
+      "id": 5
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 5,
+      "error": {
+        "code": -32601,
+        "message": "unknown None"
+      }
+    }
+  },
+  {
+    "request": {
+      "id": 6,
+      "method": "tools/call",
+      "params": {
+        "name": "run_python",
+        "arguments": {
+          "code": "print(1)"
+        }
+      }
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 6,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "run_python"
+          }
+        ],
+        "isError": false,
+        "arguments": {
+          "code": "print(1)"
+        }
+      }
+    }
+  },
+  {
+    "request": {
+      "id": 7,
+      "method": "tools/call",
+      "params": {
+        "name": "query_model",
+        "arguments": null
+      }
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 7,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "query_model"
+          }
+        ],
+        "isError": false,
+        "arguments": {}
+      }
+    }
+  },
+  {
+    "request": {
+      "id": 8,
+      "method": "tools/call",
+      "params": {
+        "name": "unknown",
+        "arguments": false
+      }
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 8,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "unknown"
+          }
+        ],
+        "isError": false,
+        "arguments": {}
+      }
+    }
+  }
+]
