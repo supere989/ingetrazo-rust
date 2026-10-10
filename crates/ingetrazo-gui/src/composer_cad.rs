@@ -153,11 +153,11 @@ pub fn source_closed_curve(path:&ShapePath)->Option<ingetrazo_render::qt_gray::P
  Segment::Cubic{control1:pt(c+DVec2::new(-rx*k,ry)),control2:pt(c+DVec2::new(-rx,ry*k)),to:pt(c-DVec2::new(rx,0.))},
  Segment::Cubic{control1:pt(c+DVec2::new(-rx,-ry*k)),control2:pt(c+DVec2::new(-rx*k,-ry)),to:pt(c-DVec2::new(0.,ry))},
  Segment::Cubic{control1:pt(c+DVec2::new(rx*k,-ry)),control2:pt(c+DVec2::new(rx,-ry*k)),to:pt(c+DVec2::new(rx,0.))}]})},
- ShapePath::RoundedRect{size,radius}if *radius>0.=>{let r=*radius;let w=size.x;let h=size.y;Some(PathContour{start:[0.,r],segments:vec![
- Segment::Cubic{control1:[0.,r-r*k],control2:[r-r*k,0.],to:[r,0.]},Segment::Line([w-r,0.]),
+ ShapePath::RoundedRect{size,radius}if *radius>0.=>{let r=*radius;let w=size.x;let h=size.y;Some(PathContour{start:[r,0.],segments:vec![
+ Segment::Line([w-r,0.]),
  Segment::Cubic{control1:[w-r+r*k,0.],control2:[w,r-r*k],to:[w,r]},Segment::Line([w,h-r]),
  Segment::Cubic{control1:[w,h-r+r*k],control2:[w-r+r*k,h],to:[w-r,h]},Segment::Line([r,h]),
- Segment::Cubic{control1:[r-r*k,h],control2:[0.,h-r+r*k],to:[0.,h-r]},Segment::Line([0.,r])]})},_=>None
+ Segment::Cubic{control1:[r-r*k,h],control2:[0.,h-r+r*k],to:[0.,h-r]},Segment::Line([0.,r]),Segment::Cubic{control1:[0.,r-r*k],control2:[r-r*k,0.],to:[r,0.]}]})},_=>None
  }
 }
 pub fn source_curve_stroke(path:&ingetrazo_render::qt_gray::PathContour,r:f64)->Result<Vec<ingetrazo_render::qt_gray::PathContour>,String>{

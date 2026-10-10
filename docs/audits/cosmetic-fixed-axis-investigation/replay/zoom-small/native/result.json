@@ -1,0 +1,81 @@
+{
+  "mandatory_cases": 9,
+  "inventory_negative_controls": 3,
+  "passed": true,
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 1,
+      "gpu_cached_bytes": 15120,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 2,
+      "gpu_cached_bytes": 37584,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 3,
+      "gpu_cached_bytes": 52560,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 4,
+      "gpu_cached_bytes": 51408,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 5,
+      "gpu_cached_bytes": 11808,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 6,
+      "gpu_cached_bytes": 13680,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 7,
+      "gpu_cached_bytes": 27216,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 8,
+      "gpu_cached_bytes": 63576,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 9,
+      "gpu_cached_bytes": 35496,
+      "warm_zero_uploads": true
+    }
+  ],
+  "binary_sha256": "589141980cd732d05a57d22e616bda179a1000788d3a8dc6ed35f3d4cd99edee",
+  "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+}
