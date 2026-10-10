@@ -19,6 +19,8 @@ Independent seventh ARM evidence: [all eighteen PDF pages exact; Canvas and pres
 
 ## Dated implementation and verification evidence
 
+Extracted color resolve comparison (2026-10-10, review branch): actual RTX 5090 Vulkan World matches all ten RGBA sample cases extracted from the original OpenGL framebuffer, including cases that invalidate universal integer half-down rounding. Final GPU ledger is zero. [Independent comparison](audits/native-rgba-resolve-root/review.json). The remaining edge investigation moves to per-sample face color and draw order; full-model parity remains OPEN.
+
 Published main completion (2026-10-10): `c73fe993` passes all five configured CI jobs. [Live completion evidence](audits/main-c73-ci-completion.json). Seventh Metal review independently decodes all eighteen Intel PDF pages exactly; Canvas residuals match ARM and Intel presentation reports 15 displayed, one skipped, zero pending. [Intel evidence](audits/coretext-native-seventh/intel-review.json). ARM presentation, three Canvas cases and physical-device acceptance remain OPEN. No feature or release gate is promoted.
 
 Native annotation depth prerequisite (2026-10-10, review branch): fresh integrated RTX 5090 execution uses D24 depth at four samples and matches visible/hidden/on-surface/background controls for every sample. Warm queries upload once; invalid sample and stale resized target refuse; final GPU ledger is zero. Six focused tests pass, including durable target identity. [Independent hardware acceptance](audits/native-annotation-depth-root/acceptance.json). Original edge-resolve policy, actual overlays and full rendered parity remain OPEN.

@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "source_revision": "0de90fbd",
+  "cases": 10,
+  "binary_sha256": "0eefc0eeb905040770b437858223301f5401ef02db7b63f8bbe47550450734cf",
+  "device": "RTX 5090",
+  "final_gpu_ledger": 0,
+  "scope": "Actual Vulkan World MSAA4 target matches all ten extracted original OpenGL RGBA sample cases, including rounding counterexamples and 107/108 gray edge neighbors. This is not full-model equivalence.",
+  "next_action": "Investigate differing per-sample face color or draw order; tested resolve behavior does not explain the retained edge difference."
+}
