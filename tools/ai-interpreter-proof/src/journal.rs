@@ -1,7 +1,7 @@
 //! Bounded append-only mesh transaction proof, not an all-document journal.
 use glam::DVec3;
 use ingetrazo_core::{mesh::{Mesh,MeshVertex,MeshEdge}};
-use std::collections::{HashMap};
+use std::collections::{HashMap,HashSet};
 use num_bigint::BigInt;
 use num_traits::FromPrimitive;
 #[derive(Clone,Eq,PartialEq,Hash)] struct SourceKey([BigInt;3]);
@@ -98,8 +98,9 @@ impl AppendUndo{
   validate_base(m)?;
   // No faces may acquire the appended vertices/edges behind this command.
   if m.faces.iter().any(|f|f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|v>=self.base_vertices))||m.edges[self.base_edges..].iter().any(|e|!e.faces.is_empty()){return Err("Append records acquired external owners".into());}
+  let touched:HashSet<usize>=self.edges.iter().flat_map(|e|[e.v0,e.v1]).filter(|&id|id<self.base_vertices).collect();
   m.edges.truncate(self.base_edges);m.vertices.truncate(self.base_vertices);
-  for edge in &self.edges{for id in [edge.v0,edge.v1]{if id<self.base_vertices{m.vertices[id].edges.retain(|&e|e<self.base_edges);}}}
+  for id in touched{m.vertices[id].edges.retain(|&e|e<self.base_edges);}
   m.rebuild_spatial_index();self.applied=false;Ok(())
  }
  pub fn redo(&mut self,m:&mut Mesh)->Result<(),String>{
