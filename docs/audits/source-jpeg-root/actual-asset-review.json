@@ -1,0 +1,20 @@
+{
+  "scope": "Independent cross-artifact review of retained four actual assets; no new asset binary execution",
+  "same_encoded_inputs": 4,
+  "new_source_decoder_matches_preexisting_qt_hashes": 4,
+  "new_source_average_matches_preexisting_qt_pixels": 4,
+  "default_decoder_matches_preexisting_native_hashes": 4,
+  "prior_changed_bytes": [
+    5298,
+    10118,
+    516,
+    259379
+  ],
+  "new_changed_bytes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "production_average_activation": false
+}
