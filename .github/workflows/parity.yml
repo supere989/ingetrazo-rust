@@ -16,9 +16,11 @@ jobs:
       - run: cargo build --locked -p ingetrazo-cli
       - name: Semantic document acceptance
         run: python3 scripts/check-document-parity.py
+      - name: Independent export buffer acceptance
+        run: python3 scripts/check-export-parity.py
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: semantic-parity-evidence
-          path: docs/audits/document-semantic-evidence.json
+          path: docs/audits/*semantic-evidence.*

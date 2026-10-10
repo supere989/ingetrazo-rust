@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "format": ".gltf",
+      "decoded_points": [
+        [
+          12.0,
+          23.0,
+          34.0
+        ],
+        [
+          12.0,
+          24.0,
+          34.0
+        ],
+        [
+          11.0,
+          23.0,
+          34.0
+        ]
+      ],
+      "winding_z": 1.0
+    },
+    {
+      "format": ".glb",
+      "decoded_points": [
+        [
+          12.0,
+          23.0,
+          34.0
+        ],
+        [
+          12.0,
+          24.0,
+          34.0
+        ],
+        [
+          11.0,
+          23.0,
+          34.0
+        ]
+      ],
+      "winding_z": 1.0
+    }
+  ],
+  "scope": "Single reflected nested triangle; no textures/material/hierarchy/full format acceptance."
+}

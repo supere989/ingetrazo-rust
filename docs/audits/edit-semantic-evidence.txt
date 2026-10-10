@@ -1,0 +1,34 @@
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-formats)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running tests/preservation_acceptance.rs (target/debug/deps/preservation_acceptance-2becd99ff3b50266)
+
+running 3 tests
+test deleting_edge_does_not_strip_surviving_curve_metadata ... FAILED
+test renamed_material_retains_unknown_source_attributes ... FAILED
+test edited_geometry_material_layer_and_group_replace_raw_baseline ... ok
+
+failures:
+
+---- deleting_edge_does_not_strip_surviving_curve_metadata stdout ----
+
+thread 'deleting_edge_does_not_strip_surviving_curve_metadata' (27950) panicked at crates/ingetrazo-formats/tests/preservation_acceptance.rs:44:79:
+assertion `left == right` failed
+  left: Null
+ right: Object {"id": String("second")}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- renamed_material_retains_unknown_source_attributes stdout ----
+
+thread 'renamed_material_retains_unknown_source_attributes' (27952) panicked at crates/ingetrazo-formats/tests/preservation_acceptance.rs:37:55:
+assertion `left == right` failed
+  left: Null
+ right: Object {"tile": Array [Number(2), Number(3)]}
+
+
+failures:
+    deleting_edge_does_not_strip_surviving_curve_metadata
+    renamed_material_retains_unknown_source_attributes
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p ingetrazo-formats --test preservation_acceptance`
