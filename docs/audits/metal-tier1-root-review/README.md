@@ -1,0 +1,3 @@
+Independent Tier1 candidate review
+
+Reviewed e79ded9f: R32Uint view creation occurs only on cold canvas allocation; parent identity/extent validation precedes budget publication; retained Image owns both view and parent and releases view first. Compute uses unchanged integer byte composition; generic render uses original RGBA canvas; encoder sequencing and final drawable draw remain unchanged. Linux package tests and both Apple all-target Rust checks passed. These checks do not compile runtime Metal shaders or prove GPU aliasing/order/image accuracy. Existing strict seven-image native CI remains required, and actual ARM-correction run38056009331 failed on both runners; diagnosis is ongoing. No full renderer/release acceptance claim.
