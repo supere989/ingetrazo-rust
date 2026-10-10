@@ -1,0 +1,8 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_class": "core.mesh.Mesh",
+  "repeated_faces_same_list": true,
+  "mutation_through_held_list_visible": true,
+  "list_identity_after_mutation": true,
+  "scope": "Original runtime ownership requirement; native Group implementation pending"
+}
