@@ -100,12 +100,22 @@ fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
         path: path(&command.path, offset),
         stroke,
         fill,
+        stroke_options: None,
         clip: command.clip.as_ref().map(|p| polygon(p, offset)),
     })
 }
 /// Partial painter integration: all visible unsupported content fails closed.
 /// Does not mutate the scene, use the UI raster cache, or start a worker.
 pub fn prepare(sheet: &Sheet) -> Result<Page, String> {
+    prepare_with_views(sheet, &mut |_| {
+        Err("PDF painter for this sheet item remains unavailable".into())
+    })
+}
+/// Scene-aware caller supplies actual cached view ink, preserving source item order.
+pub fn prepare_with_views<F>(sheet: &Sheet, views: &mut F) -> Result<Page, String>
+where
+    F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+{
     for key in [
         "images",
         "leyendas",
@@ -165,6 +175,21 @@ pub fn prepare(sheet: &Sheet) -> Result<Page, String> {
                     draws.push(next);
                 }
             }
+            SheetItem::ViewFrame(frame) => {
+                for next in views(frame)? {
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(next.path.len())
+                        .and_then(|n| n.checked_add(next.clip.as_ref().map_or(0, Vec::len)))
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
+                    draws.push(next);
+                }
+            }
             _ => return Err("PDF painter for this sheet item remains unavailable".into()),
         }
     }
@@ -183,16 +208,39 @@ pub fn prepare(sheet: &Sheet) -> Result<Page, String> {
 }
 
 /// Admit an atlas while retaining at most the global writer budgets.
-pub fn prepare_all(sheets:&[Sheet])->Result<Vec<Page>,String>{
- if sheets.is_empty()||sheets.len()>10_000{return Err("PDF requires 1..10000 pages".into());}
- let mut pages=Vec::new();let mut draws=0usize;let mut commands=0usize;
- for sheet in sheets{
-  let page=prepare(sheet)?;
-  draws=draws.checked_add(page.draws.len()).ok_or("PDF draw count overflow")?;
-  if draws>crate::sheet_pdf::MAX_DRAWS{return Err("PDF atlas draw budget exceeded".into());}
-  for draw in &page.draws{commands=commands.checked_add(draw.path.len()).and_then(|n|n.checked_add(draw.clip.as_ref().map_or(0,Vec::len))).ok_or("PDF command count overflow")?;}
-  if commands>crate::sheet_pdf::MAX_COMMANDS{return Err("PDF atlas command budget exceeded".into());}
-  pages.push(page);
- }
- Ok(pages)
+pub fn prepare_all(sheets: &[Sheet]) -> Result<Vec<Page>, String> {
+    prepare_all_with_views(sheets, &mut |_| {
+        Err("PDF painter for this sheet item remains unavailable".into())
+    })
+}
+pub fn prepare_all_with_views<F>(sheets: &[Sheet], views: &mut F) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+{
+    if sheets.is_empty() || sheets.len() > 10_000 {
+        return Err("PDF requires 1..10000 pages".into());
+    }
+    let mut pages = Vec::new();
+    let mut draws = 0usize;
+    let mut commands = 0usize;
+    for sheet in sheets {
+        let page = prepare_with_views(sheet, views)?;
+        draws = draws
+            .checked_add(page.draws.len())
+            .ok_or("PDF draw count overflow")?;
+        if draws > crate::sheet_pdf::MAX_DRAWS {
+            return Err("PDF atlas draw budget exceeded".into());
+        }
+        for draw in &page.draws {
+            commands = commands
+                .checked_add(draw.path.len())
+                .and_then(|n| n.checked_add(draw.clip.as_ref().map_or(0, Vec::len)))
+                .ok_or("PDF command count overflow")?;
+        }
+        if commands > crate::sheet_pdf::MAX_COMMANDS {
+            return Err("PDF atlas command budget exceeded".into());
+        }
+        pages.push(page);
+    }
+    Ok(pages)
 }

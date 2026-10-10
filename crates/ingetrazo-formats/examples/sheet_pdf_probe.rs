@@ -17,6 +17,7 @@ fn page(size: [f64; 2]) -> Page {
             ],
             stroke: Some(([7. / 255., 19. / 255., 25. / 255., 1.], 0.35)),
             fill: Some([37. / 255., 147. / 255., 93. / 255., 1.]),
+            stroke_options: None,
             clip: None,
         }],
     }

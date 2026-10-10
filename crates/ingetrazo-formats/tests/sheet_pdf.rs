@@ -17,6 +17,7 @@ fn page() -> Page {
             ],
             stroke: Some(([0., 0., 0., 1.], 0.35)),
             fill: Some([37. / 255., 147. / 255., 93. / 255., 1.]),
+            stroke_options: None,
             clip: None,
         }],
     }
@@ -207,9 +208,76 @@ fn preparation_rejects_total_draws_across_individually_admitted_shapes() {
 }
 
 #[test]
-fn atlas_preparation_refuses_combined_draws_before_retaining_all_pages(){
- use ingetrazo_core::{composition::{ShapeItem,SheetItem},sheet_shape::SheetShape};
- let mut sheet=shape_sheet();sheet.items.push(SheetItem::Shape(ShapeItem{id:uuid::Uuid::new_v4(),shape:SheetShape{kind:"terreno".into(),ground:"ticks".into(),w_mm:30_000.,h_mm:0.,tick_step_mm:0.5,band_mm:1.,..Default::default()}}));
- assert!(ingetrazo_formats::sheet_pdf_shapes::prepare(&sheet).is_ok());
- assert!(ingetrazo_formats::sheet_pdf_shapes::prepare_all(&[sheet.clone(),sheet]).err().unwrap().contains("atlas draw budget"));
+fn atlas_preparation_refuses_combined_draws_before_retaining_all_pages() {
+    use ingetrazo_core::{
+        composition::{ShapeItem, SheetItem},
+        sheet_shape::SheetShape,
+    };
+    let mut sheet = shape_sheet();
+    sheet.items.push(SheetItem::Shape(ShapeItem {
+        id: uuid::Uuid::new_v4(),
+        shape: SheetShape {
+            kind: "terreno".into(),
+            ground: "ticks".into(),
+            w_mm: 30_000.,
+            h_mm: 0.,
+            tick_step_mm: 0.5,
+            band_mm: 1.,
+            ..Default::default()
+        },
+    }));
+    assert!(ingetrazo_formats::sheet_pdf_shapes::prepare(&sheet).is_ok());
+    assert!(
+        ingetrazo_formats::sheet_pdf_shapes::prepare_all(&[sheet.clone(), sheet])
+            .err()
+            .unwrap()
+            .contains("atlas draw budget")
+    );
+}
+
+#[test]
+fn original_qt_paper_numerals_are_explicit_and_generic_precision_is_retained() {
+    let mut p = page();
+    p.draws[0].path = vec![
+        PathOp::Move([55.11536795523, -0.1234567899]),
+        PathOp::Line([-1e-10, 999.9999999999]),
+    ];
+    let native =
+        String::from_utf8_lossy(&sheet_pdf::encode(std::slice::from_ref(&p)).unwrap()).into_owned();
+    let qt = String::from_utf8_lossy(
+        &sheet_pdf::encode_original_qt_paper(std::slice::from_ref(&p)).unwrap(),
+    )
+    .into_owned();
+    assert!(native.contains("55.11536795523 -0.1234567899 m"));
+    assert!(qt.contains("55.1153679 -0.123456789 m"));
+    assert!(qt.contains("-0 999.999999 l"));
+    assert_ne!(native, qt);
+}
+#[test]
+fn invalid_qt_paper_export_preserves_destination_and_rejects_stroke_options() {
+    let dest = std::env::temp_dir().join(format!("qt-paper-{}.pdf", uuid::Uuid::new_v4()));
+    std::fs::write(&dest, b"original").unwrap();
+    for options in [
+        sheet_pdf::StrokeOptions {
+            cap: 3,
+            join: 1,
+            dash: vec![],
+        },
+        sheet_pdf::StrokeOptions {
+            cap: 0,
+            join: 1,
+            dash: vec![f64::NAN],
+        },
+        sheet_pdf::StrokeOptions {
+            cap: 0,
+            join: 1,
+            dash: vec![0.],
+        },
+    ] {
+        let mut p = page();
+        p.draws[0].stroke_options = Some(options);
+        assert!(sheet_pdf::save_original_qt_paper(&dest, &[p]).is_err());
+        assert_eq!(std::fs::read(&dest).unwrap(), b"original");
+    }
+    std::fs::remove_file(dest).unwrap();
 }
