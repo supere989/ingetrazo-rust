@@ -1,19 +1,21 @@
 {
   "passed": true,
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "candidate": "90b16830f346cbd81190b93d0124856af9b9e8d0",
+  "candidate": "241d2a1d0411520788a44b381b517da6b6cf36ba",
   "checks": [
     "original source actual object identity",
     "published component-false shared Mesh",
     "equal different prototypes independent",
     "published vertices and flags",
     "placement UID preservation",
-    "Make Unique object detachment"
+    "Make Unique object detachment",
+    "independent unequal parent child lists preserve shared child Mesh",
+    "internal codec comparison identities stripped"
   ],
   "files": {
-    "source.igz": "751097c75784b372431976c82e437e8f2b79878d29fe42bc557049eb4e6fb3c3",
-    "published.igz": "6886da2022181223653a22d11fc34c921a2d27dbf13de4472875000cdd69defe",
-    "unique.igz": "37aa28cfd2eebb4cebec630043d036f616abce13cc4d4030f89bba27f522cdef"
+    "source.igz": "5bc9dfbbcfa7faf5d4498fc5326bca40a8ef5005505c3f7df72cfb93bd91ecd1",
+    "published.igz": "d85261745b5b70fc8d92cde99c148a5fbc8114ec55e340c8cbc954c2a22e598c",
+    "unique.igz": "24c372237a2bae744a9a242ca12e465745f94e93ba2eb54e80e8eaba004d7dff"
   },
   "scope": "Original actual loader and Mesh object identity; no rendered component Finish claim."
 }

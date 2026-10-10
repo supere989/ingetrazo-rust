@@ -8,7 +8,7 @@
       {
         "component": true,
         "name": "component",
-        "proto": 2,
+        "proto": 3,
         "uid": "placement-component",
         "vendor_placement": 0,
         "xform": [
@@ -33,7 +33,7 @@
       {
         "component": false,
         "name": "plain",
-        "proto": 2,
+        "proto": 3,
         "uid": "placement-plain",
         "vendor_placement": 1,
         "xform": [
@@ -61,6 +61,133 @@
         "proto": 1,
         "uid": "placement-independent",
         "vendor_placement": 2,
+        "xform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "children": [
+          {
+            "component": false,
+            "name": "child",
+            "proto": 3,
+            "uid": "child0",
+            "vendor_child": 93,
+            "xform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "component": false,
+            "name": "child",
+            "proto": 3,
+            "uid": "4d862034dc2849c697b0dca8423d582c",
+            "vendor_child": 93,
+            "xform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "component": true,
+        "name": "parent0",
+        "proto": 2,
+        "uid": "parent0",
+        "xform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "children": [
+          {
+            "component": false,
+            "name": "child",
+            "proto": 3,
+            "uid": "child1",
+            "vendor_child": 94,
+            "xform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "component": true,
+        "name": "parent1",
+        "proto": 2,
+        "uid": "parent1",
         "xform": [
           1,
           0,
@@ -133,6 +260,11 @@
           }
         ],
         "vendor_mesh": 42
+      },
+      {
+        "edges": [],
+        "faces": [],
+        "vendor_container": 91
       },
       {
         "edges": [

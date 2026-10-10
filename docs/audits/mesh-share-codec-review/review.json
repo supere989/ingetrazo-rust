@@ -20,7 +20,7 @@
     "component Finish integration and transformed nonempty container ownMesh identity validation"
   ],
   "canonical_promotion": false,
-  "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, and Make Unique detachment",
+  "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, Make Unique detachment; unequal parent child counts2/1 with shared child Mesh; internal comparison keys absent",
   "workspace_counts": [
     428,
     0,

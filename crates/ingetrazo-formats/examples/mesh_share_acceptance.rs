@@ -7,6 +7,8 @@ fn main(){
  assert_ne!(scene.groups[2].mesh_share,Some(token));
  let mut mesh=scene.mesh_shares[&token].clone();mesh.vertices[0].position.z=7.;
  scene.publish_mesh_share(token,mesh).unwrap();
+ let copied=scene.groups[3].children[0].duplicate_instance();
+ scene.groups[3].children.push(copied);
  save_igz(&scene,&dir.join("published.igz")).unwrap();
  scene.make_component_unique(scene.groups[0].id).unwrap();
  save_igz(&scene,&dir.join("unique.igz")).unwrap();
