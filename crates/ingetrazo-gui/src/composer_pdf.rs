@@ -162,6 +162,7 @@ pub(super) fn view_draws(
         fill: Some([1.; 4]),
         clip: None,
         clip_intersection: None,
+        text: None,
         flatten_transform: false,
     }];
     if let Some(fill) = section_fill(frame, &drawing.section_loops, &point)? {
@@ -195,6 +196,7 @@ pub(super) fn view_draws(
             fill: None,
             clip: Some(rect(frame.rect.w, frame.rect.h)),
             clip_intersection: None,
+            text: None,
             flatten_transform: false,
         });
     }
@@ -224,6 +226,7 @@ pub(super) fn view_draws(
             fill: None,
             clip: None,
             clip_intersection: None,
+            text: None,
             flatten_transform: false,
         });
     }
@@ -286,6 +289,7 @@ fn section_fill(
         fill: Some(color),
         clip: Some(rect(frame.rect.w, frame.rect.h)),
         clip_intersection: None,
+        text: None,
         flatten_transform: false,
     };
     if frame.cut_fill == "hatch" {
@@ -404,6 +408,7 @@ fn view_grid(frame: &ViewFrame, metadata: Option<&serde_json::Value>) -> Result<
                 fill: Some([90. / 255., 140. / 255., 190. / 255., 120. / 255.]),
                 clip: Some(rect(frame.rect.w, frame.rect.h)),
                 clip_intersection: None,
+                text: None,
                 flatten_transform: true,
                 even_odd: false,
             });

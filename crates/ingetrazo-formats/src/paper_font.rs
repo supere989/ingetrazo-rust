@@ -1,0 +1,345 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+//! Bounded, thread-confined paper fonts and immutable direct-PDF resources.
+use crate::{
+    paper_font_subset as subset,
+    paper_text::{FtPolicy, Glyph, PaperFont},
+};
+use std::{
+    cell::{Cell, RefCell},
+    collections::{BTreeMap, HashMap, VecDeque},
+    rc::Rc,
+    sync::Arc,
+};
+use uuid::Uuid;
+pub const MAX_CACHED_FONTS: usize = 16;
+pub const MAX_CACHED_FONT_BYTES: usize = 32 * 1024 * 1024;
+pub const MAX_CACHED_SUBSETS: usize = 8;
+pub const MAX_CACHED_SUBSET_BYTES: usize = 2 * 1024 * 1024;
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct FontKey {
+    pub identity: Uuid,
+    pub face_index: u32,
+    pub policy: FtPolicy,
+}
+#[derive(Debug, Clone)]
+pub(crate) struct Metadata {
+    pub name: Vec<u8>,
+    pub bbox: [f32; 4],
+    pub ascent: f32,
+    pub descent: f32,
+    pub stem: f32,
+    pub italic: f32,
+}
+/// Identity cannot be forged by callers. Glyph maps/programs are validated before publication.
+pub struct PdfFont {
+    id: Uuid,
+    pub(crate) program: Arc<[u8]>,
+    pub(crate) cids: BTreeMap<u32, u16>,
+    pub(crate) widths: Vec<f32>,
+    pub(crate) metadata: Metadata,
+    pub(crate) unicode: Vec<Option<u16>>,
+    pub(crate) bounds_px: Vec<[f64; 4]>,
+}
+impl std::fmt::Debug for PdfFont {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("PdfFont")
+            .field("id", &self.id)
+            .field("bytes", &self.program.len())
+            .field("glyphs", &self.cids.len())
+            .finish()
+    }
+}
+impl PdfFont {
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+    pub fn cid(&self, glyph: u32) -> Option<u16> {
+        self.cids.get(&glyph).copied()
+    }
+    pub fn program_bytes(&self) -> usize {
+        self.program.len()
+    }
+    pub fn glyph_count(&self) -> usize {
+        self.widths.len()
+    }
+    pub fn unicode_for_cid(&self, cid: u16) -> Option<u16> {
+        self.unicode.get(cid as usize).copied().flatten()
+    }
+}
+struct SubsetCache {
+    entries: HashMap<Vec<u32>, Arc<PdfFont>>,
+    order: VecDeque<Vec<u32>>,
+    bytes: usize,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FontStats {
+    pub glyphs: usize,
+    pub points: usize,
+    pub subset_entries: usize,
+    pub subset_bytes: usize,
+    pub builds: u64,
+}
+pub struct CachedFont {
+    key: FontKey,
+    shaper: PaperFont,
+    geometry: RefCell<subset::GlyphStore>,
+    subsets: RefCell<SubsetCache>,
+    reverse: Vec<Option<u16>>,
+    metadata: Metadata,
+    italic: bool,
+    builds: Cell<u64>,
+}
+impl std::fmt::Debug for CachedFont {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CachedFont")
+            .field("key", &self.key)
+            .field("bytes", &self.shared_bytes().len())
+            .finish()
+    }
+}
+impl CachedFont {
+    pub fn key(&self) -> FontKey {
+        self.key
+    }
+    fn new(key: FontKey, bytes: Arc<[u8]>) -> Result<Self, String> {
+        if bytes.is_empty() || bytes.len() > crate::paper_text::MAX_FONT_BYTES {
+            return Err("Paper font byte budget exceeded".into());
+        }
+        let face =
+            ttf_parser::Face::parse(&bytes, key.face_index).map_err(|_| "Invalid paper font")?;
+        if !face.is_subsetting_allowed()
+            || !face.is_outline_embedding_allowed()
+            || matches!(
+                face.permissions(),
+                Some(ttf_parser::Permissions::Restricted)
+            )
+        {
+            return Err("Paper font requires an unavailable embedding policy".into());
+        }
+        let em = f32::from(face.units_per_em());
+        let scale = 1000. / em;
+        let bbox = face.global_bounding_box();
+        let bbox = [
+            bbox.x_min as f32 * scale,
+            bbox.y_min as f32 * scale,
+            bbox.x_max as f32 * scale,
+            bbox.y_max as f32 * scale,
+        ];
+        let name = face
+            .names()
+            .into_iter()
+            .filter(|n| n.name_id == ttf_parser::name_id::POST_SCRIPT_NAME)
+            .find_map(|n| n.to_string())
+            .unwrap_or_else(|| "NativePaperFont".into());
+        if name.len() > 256 || name.is_empty() {
+            return Err("Invalid paper font resource name".into());
+        }
+        let metadata = Metadata {
+            name: name.into_bytes(),
+            bbox,
+            ascent: face.ascender() as f32 * scale,
+            descent: face.descender() as f32 * scale,
+            stem: face
+                .underline_metrics()
+                .map_or(44., |v| v.thickness as f32 * scale),
+            italic: face.italic_angle(),
+        };
+        if metadata
+            .bbox
+            .iter()
+            .chain([
+                &metadata.ascent,
+                &metadata.descent,
+                &metadata.stem,
+                &metadata.italic,
+            ])
+            .any(|v| !v.is_finite() || v.abs() > 1_000_000.)
+        {
+            return Err("Invalid paper font resource metrics".into());
+        }
+        let italic = face.is_italic();
+        let count = face.number_of_glyphs() as usize;
+        let mut reverse = Vec::new();
+        reverse
+            .try_reserve_exact(count)
+            .map_err(|_| "Paper unicode map allocation failed")?;
+        reverse.resize(count, None);
+        // Literal source reverseMap policy: lowest nonzero BMP cmap character per glyph.
+        for u in 1..=u16::MAX {
+            if let Some(ch) = char::from_u32(u32::from(u)) {
+                if let Some(g) = face.glyph_index(ch) {
+                    if let Some(slot) = reverse.get_mut(g.0 as usize) {
+                        if slot.is_none() {
+                            *slot = Some(u);
+                        }
+                    }
+                }
+            }
+        }
+        let shaper =
+            PaperFont::new_with_outline_policy(bytes.clone(), key.face_index, Some(key.policy))?;
+        let geometry = subset::GlyphStore::new(bytes, key.face_index)?;
+        Ok(Self {
+            key,
+            shaper,
+            geometry: RefCell::new(geometry),
+            subsets: RefCell::new(SubsetCache {
+                entries: HashMap::new(),
+                order: VecDeque::new(),
+                bytes: 0,
+            }),
+            reverse,
+            metadata,
+            italic,
+            builds: Cell::new(0),
+        })
+    }
+    pub fn shape_run(&self, text: &str, direction: Option<bool>) -> Result<Vec<Glyph>, String> {
+        self.shaper.shape_run(text, direction)
+    }
+    pub fn ascent_26_6(&self) -> i32 {
+        self.shaper.ascent_26_6
+    }
+    pub fn descent_26_6(&self) -> i32 {
+        self.shaper.descent_26_6
+    }
+    pub fn leading_26_6(&self) -> i32 {
+        self.shaper.leading_26_6
+    }
+    pub fn synthetic_italic_shear(&self, requested: bool) -> f64 {
+        if requested && !self.italic {
+            0.3
+        } else {
+            0.
+        }
+    }
+    pub fn shared_bytes(&self) -> &Arc<[u8]> {
+        self.shaper.shared_bytes()
+    }
+    pub fn stats(&self) -> FontStats {
+        let (glyphs, points) = self.geometry.borrow().stats();
+        let cache = self.subsets.borrow();
+        FontStats {
+            glyphs,
+            points,
+            subset_entries: cache.entries.len(),
+            subset_bytes: cache.bytes,
+            builds: self.builds.get(),
+        }
+    }
+    pub fn subset(&self, glyphs: &[u32]) -> Result<Arc<PdfFont>, String> {
+        let ids = subset::ordered_ids(glyphs)?;
+        if let Some(font) = self.subsets.borrow().entries.get(&ids) {
+            return Ok(font.clone());
+        }
+        let built = subset::build(
+            &mut self.geometry.borrow_mut(),
+            self.shared_bytes(),
+            self.key.face_index,
+            ids.clone(),
+        )?;
+        let mut unicode = Vec::new();
+        unicode
+            .try_reserve_exact(built.ids.len())
+            .map_err(|_| "Paper unicode map allocation failed")?;
+        for (g, cid) in built.ids.iter().zip(0u16..) {
+            unicode.push(if cid == 0 {
+                Some(0)
+            } else {
+                self.reverse.get(*g as usize).copied().flatten()
+            });
+        }
+        let font = Arc::new(PdfFont {
+            id: Uuid::new_v4(),
+            program: built.bytes,
+            cids: built.cids,
+            widths: built.widths,
+            metadata: self.metadata.clone(),
+            unicode,
+            bounds_px: built.bounds_px,
+        });
+        // A valid very large subset can be emitted within document admission but is not cached.
+        let mut cache = self.subsets.borrow_mut();
+        if font.program.len() <= MAX_CACHED_SUBSET_BYTES {
+            while cache.entries.len() >= MAX_CACHED_SUBSETS
+                || cache.bytes + font.program.len() > MAX_CACHED_SUBSET_BYTES
+            {
+                if let Some(old) = cache.order.pop_front() {
+                    if let Some(old) = cache.entries.remove(&old) {
+                        cache.bytes -= old.program.len();
+                    }
+                } else {
+                    break;
+                }
+            }
+            cache
+                .entries
+                .try_reserve(1)
+                .map_err(|_| "Paper subset cache allocation failed")?;
+            cache
+                .order
+                .try_reserve(1)
+                .map_err(|_| "Paper subset cache allocation failed")?;
+            cache.order.push_back(ids.clone());
+            cache.bytes += font.program.len();
+            cache.entries.insert(ids, font.clone());
+        }
+        self.builds.set(self.builds.get().saturating_add(1));
+        Ok(font)
+    }
+}
+/// Caller-controlled resource identity must change when font bytes change; collisions refuse.
+/// No process/IPC, file reread, or font-byte duplication occurs on a warm cache hit.
+#[derive(Default)]
+pub struct FontCache {
+    fonts: HashMap<FontKey, Rc<CachedFont>>,
+    order: VecDeque<FontKey>,
+    bytes: usize,
+    loads: u64,
+}
+impl FontCache {
+    pub fn load(&mut self, key: FontKey, bytes: Arc<[u8]>) -> Result<Rc<CachedFont>, String> {
+        if let Some(font) = self.fonts.get(&key) {
+            if !Arc::ptr_eq(font.shared_bytes(), &bytes)
+                && font.shared_bytes().as_ref() != bytes.as_ref()
+            {
+                return Err("Paper font resource identity collision".into());
+            }
+            return Ok(font.clone());
+        }
+        let font = Rc::new(CachedFont::new(key, bytes)?);
+        self.order
+            .try_reserve(1)
+            .map_err(|_| "Paper font cache allocation failed")?;
+        while self.fonts.len() >= MAX_CACHED_FONTS
+            || self.bytes + font.shared_bytes().len() > MAX_CACHED_FONT_BYTES
+        {
+            if let Some(old) = self.order.pop_front() {
+                if let Some(old) = self.fonts.remove(&old) {
+                    self.bytes -= old.shared_bytes().len();
+                }
+            } else {
+                return Err("Paper font cache budget exceeded".into());
+            }
+        }
+        self.fonts
+            .try_reserve(1)
+            .map_err(|_| "Paper font cache allocation failed")?;
+        self.order.push_back(key);
+        self.bytes += font.shared_bytes().len();
+        self.fonts.insert(key, font.clone());
+        self.loads = self.loads.saturating_add(1);
+        Ok(font)
+    }
+    pub fn get(&self, key: FontKey) -> Option<Rc<CachedFont>> {
+        self.fonts.get(&key).cloned()
+    }
+    pub fn clear(&mut self) {
+        self.fonts.clear();
+        self.order.clear();
+        self.bytes = 0;
+    }
+    pub fn stats(&self) -> (usize, usize, u64) {
+        (self.fonts.len(), self.bytes, self.loads)
+    }
+}

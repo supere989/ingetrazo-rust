@@ -1,0 +1,120 @@
+{
+  "source": "views.composer.paint_text_mm / _draw_text_mm",
+  "scope": "Actual source PDFs and font records; supplementary Qt layout is not a Rust implementation or parity proof",
+  "cases": [
+    {
+      "name": "latin",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "accents",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "bold",
+      "properties": {
+        "bold": true
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "italic",
+      "properties": {
+        "italic": true
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "underline",
+      "properties": {
+        "underline": true
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "wrap",
+      "properties": {
+        "w_mm": 32
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "newlines",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "center",
+      "properties": {
+        "align": "center"
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "right",
+      "properties": {
+        "align": "right"
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "serif",
+      "properties": {
+        "family": "Serif"
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "mono",
+      "properties": {
+        "family": "Monospace"
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "arabic",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "hebrew",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "cjk",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "combining",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "kerns",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "serif_bold",
+      "properties": {
+        "family": "Serif",
+        "bold": true
+      },
+      "source_draw_calls": []
+    },
+    {
+      "name": "arabic_run",
+      "properties": {},
+      "source_draw_calls": []
+    },
+    {
+      "name": "hebrew_run",
+      "properties": {},
+      "source_draw_calls": []
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "production_commit": "45fd3787",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sha256": {
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/examples/paper_text_production_fixture.rs": "40b8372c48bd6aa5d21d412c15bf275971614edd8af0bff49a4eaa6dc0e6f92f",
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-text-pages.py": "9ca2ea9abf7b99a313fbb45614e992fa4867c9dbbf85c405477f3d5514b34003",
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-text-unicode.py": "a54ae559fc9c068bae6ca204d9a59d2b0ea20bba2be13ec906f2d27b534263ea",
+    "/tmp/ingetrazo-paper-text-subset-clean-target/debug/examples/paper_text_production_fixture": "54c97c508543dc9936ca1284dfeac4e5ccce0bbd5e60dd8f4adfd08dff71fdfc",
+    "/tmp/ingetrazo-paper-text-expanded-source/font-observations.json": "88c30c47150dc50145204e01a7a8dbc98f21ae97724e11554a0da17933f485cc"
+  },
+  "whole_pages": "27/27 exact; nine single-line cases x72/144/300 dpi unchanged strict reader",
+  "reader_text": "9/9 exact plus same-size valid ToUnicode corruption rejects",
+  "resource_controls": [
+    "warm byte/stats exact",
+    "same immutable subset Arc",
+    "valid different font forged identity refusal",
+    "invalid glyph ID destination preserved",
+    "nonfinite position refuses before font cold work",
+    "17 font identities retire oldest cache entry without invalidating retained owner",
+    "cache clear preserves retained page resource"
+  ],
+  "tests": "75 formats passed",
+  "open": [
+    "actual app font resolver",
+    "paragraph/wrap/bidi/fallback/underline",
+    "title/template",
+    "actual text PDF UI",
+    "untrusted font fuzzing",
+    "non-Linux font policies",
+    "general font/size/pages coverage",
+    "full P29 raster/default/style scope"
+  ],
+  "scope": "Production typed font/writer API, not production composer Text adoption or full P29 closure"
+}
