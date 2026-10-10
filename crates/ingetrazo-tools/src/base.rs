@@ -99,6 +99,7 @@ pub trait Tool: Send + Sync {
     fn on_move(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_release(&mut self, _scene: &mut Scene, _ctx: &ToolContext, _drag_distance: f64) {}
     fn preview_mesh(&self) -> Option<&Mesh> { None }
+    fn value_label(&self) -> Option<(String,DVec3)> { None }
     fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> { self.rubber_band().into_iter().collect() }
     fn on_cancel(&mut self, _scene: &mut Scene) {}
     fn on_vcb_input(&mut self, _scene: &mut Scene, _text: &str) -> Result<(), String> {

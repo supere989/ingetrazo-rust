@@ -230,6 +230,13 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
+    if let Some((label,point))=app.active_tool.value_label() {
+        let view_proj=app.camera.projection_matrix()*app.camera.view_matrix();
+        if let Some((position,_))=project_point(point,&view_proj,rect) {
+            painter.text(position+egui::vec2(8.,-8.),egui::Align2::LEFT_BOTTOM,label,egui::FontId::proportional(14.),egui::Color32::from_rgb(255,200,90));
+        }
+    }
+
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();

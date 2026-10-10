@@ -107,6 +107,18 @@ mod tests {
     }
 
     #[test]
+    fn fillet_sizing_preview_and_invalid_radius_do_not_create_history() {
+        let mut app=app();ingetrazo_tools::pushpull::PushPullTool::extrude_face(&mut app.scene,0,1.).unwrap();
+        app.active_tool=create_tool(ToolType::Fillet);app.active_tool_type=ToolType::Fillet;
+        let before=app.scene.mesh.clone();
+        let pick=ToolContext::new(DVec3::new(0.5,0.,1.),Ray::new(DVec3::new(0.5,-2.,1.),DVec3::Y));
+        app.active_tool.on_move(&mut app.scene,&pick);app.dispatch_tool_click(&pick);assert_eq!(app.scene.mesh,before);assert!(app.undo_stack.is_empty());
+        assert!(app.dispatch_tool_vcb("5").is_err());assert_eq!(app.scene.mesh,before);assert!(app.undo_stack.is_empty());
+        app.dispatch_tool_vcb("0.2").unwrap();assert_eq!(app.undo_stack.len(),1);let after=app.scene.mesh.clone();assert_ne!(before,after);
+        app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,after);
+    }
+
+    #[test]
     fn followme_preview_cancel_and_drag_release_history_are_atomic() {
         let mut app=app();app.scene=Scene::new();
         let vertices=[DVec3::ZERO,DVec3::X,DVec3::new(1.,0.,1.),DVec3::Z].into_iter().map(|p|app.scene.mesh.add_vertex(p)).collect();app.scene.mesh.add_face(vertices,vec![]);

@@ -304,6 +304,16 @@ pub fn fillet_edges(
     radius: f64,
     segments: usize,
 ) -> Result<(), String> {
+    prepare_fillet(scene, edges, radius, segments, true)
+}
+
+fn prepare_fillet(
+    scene: &mut Scene,
+    edges: &[usize],
+    radius: f64,
+    segments: usize,
+    validate: bool,
+) -> Result<(), String> {
     if !radius.is_finite() || radius <= 0.0 {
         return Err("Radius must be finite and positive".into());
     }
@@ -314,7 +324,23 @@ pub fn fillet_edges(
         return Err("Select at least one solid edge to round".into());
     }
     let mesh = &scene.mesh;
-    ingetrazo_core::solids::validate_solid_mesh(mesh)?;
+    if validate {
+        ingetrazo_core::solids::validate_solid_mesh(mesh)?;
+    } else if mesh.vertices.iter().any(|v| !v.position.is_finite())
+        || mesh.faces.iter().any(|f| {
+            f.vertices
+                .iter()
+                .chain(f.holes.iter().flatten())
+                .any(|&v| v >= mesh.vertices.len())
+        })
+        || mesh.edges.iter().any(|e| {
+            e.v0 >= mesh.vertices.len()
+                || e.v1 >= mesh.vertices.len()
+                || e.faces.iter().any(|&f| f >= mesh.faces.len())
+        })
+    {
+        return Err("Invalid mesh references for fillet preview".into());
+    }
     let mut unique = std::collections::HashSet::new();
     let mut rounds = Vec::new();
     let mut at_vertex = std::collections::BTreeMap::<usize, Vec<usize>>::new();
@@ -656,6 +682,10 @@ pub fn fillet_edges(
             add_polygon(&mut result, &triangle, &[], &source)?;
         }
     }
+    if !validate {
+        scene.mesh = result;
+        return Ok(());
+    }
     ingetrazo_core::solids::validate_solid_mesh(&result)?;
     let positions: HashMap<_, _> = result
         .vertices
@@ -738,23 +768,130 @@ pub fn fillet_edge(
 pub struct FilletTool {
     pub radius: f64,
     pub segments: usize,
-    selected_edge: Option<usize>,
+    pub sizing: bool,
+    edges: Vec<usize>,
+    hover_edge: Option<usize>,
     hover_point: Option<DVec3>,
+    preview: Option<Mesh>,
+    preview_key: Option<(Vec<usize>, u64, usize, u64)>,
+    label_point: Option<DVec3>,
     pub last_error: Option<String>,
 }
-
 impl Default for FilletTool {
     fn default() -> Self {
         Self {
             radius: 0.1,
             segments: 8,
-            selected_edge: None,
+            sizing: false,
+            edges: vec![],
+            hover_edge: None,
             hover_point: None,
+            preview: None,
+            preview_key: None,
+            label_point: None,
             last_error: None,
         }
     }
 }
-
+impl FilletTool {
+    fn selection(scene: &Scene) -> Vec<usize> {
+        let mut ids: Vec<_> = scene
+            .selection
+            .iter()
+            .filter_map(|i| {
+                if let ingetrazo_core::scene::SelectionItem::Edge(id) = i {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        ids.sort_unstable();
+        ids
+    }
+    fn reset(&mut self) {
+        self.edges.clear();
+        self.sizing = false;
+        self.hover_edge = None;
+        self.hover_point = None;
+        self.preview = None;
+        self.preview_key = None;
+        self.label_point = None;
+        self.last_error = None;
+    }
+    fn replan(&mut self, scene: &Scene) {
+        let edges = if self.edges.is_empty() {
+            self.hover_edge.into_iter().collect()
+        } else {
+            self.edges.clone()
+        };
+        let key = (
+            edges.clone(),
+            (self.radius * 1e6).round().to_bits(),
+            self.segments,
+            scene.version,
+        );
+        if self.preview_key.as_ref() == Some(&key) {
+            return;
+        }
+        self.preview_key = Some(key);
+        self.preview = None;
+        self.label_point = edges
+            .first()
+            .and_then(|&id| scene.mesh.edges.get(id))
+            .map(|e| {
+                (scene.mesh.vertices[e.v0].position + scene.mesh.vertices[e.v1].position) * 0.5
+            });
+        if edges.is_empty() {
+            return;
+        }
+        let mut temporary = Scene::new();
+        temporary.mesh = scene.mesh.clone();
+        match prepare_fillet(&mut temporary, &edges, self.radius, self.segments, false) {
+            Ok(()) => {
+                let mut preview = Mesh::new();
+                for face in temporary.mesh.faces.iter().skip(scene.mesh.faces.len()) {
+                    let points: Vec<_> = face
+                        .vertices
+                        .iter()
+                        .map(|&v| temporary.mesh.vertices[v].position)
+                        .collect();
+                    let holes: Vec<Vec<_>> = face
+                        .holes
+                        .iter()
+                        .map(|h| {
+                            h.iter()
+                                .map(|&v| temporary.mesh.vertices[v].position)
+                                .collect()
+                        })
+                        .collect();
+                    if add_polygon(&mut preview, &points, &holes, face).is_err() {
+                        return;
+                    }
+                }
+                self.preview = Some(preview);
+                self.last_error = None;
+            }
+            Err(e) => self.last_error = Some(e),
+        }
+    }
+    fn commit(&mut self, scene: &mut Scene) -> Result<(), String> {
+        if self.edges.is_empty() {
+            return Ok(());
+        }
+        fillet_edges(scene, &self.edges, self.radius, self.segments)?;
+        self.reset();
+        Ok(())
+    }
+    pub fn set_segments(&mut self, scene: &Scene, segments: usize) -> Result<(), String> {
+        if !(1..=256).contains(&segments) {
+            return Err("Fillet segments must be between 1 and 256".into());
+        }
+        self.segments = segments;
+        self.replan(scene);
+        Ok(())
+    }
+}
 impl Tool for FilletTool {
     fn error_message(&self) -> Option<&str> {
         self.last_error.as_deref()
@@ -762,94 +899,110 @@ impl Tool for FilletTool {
     fn tool_type(&self) -> ToolType {
         ToolType::Fillet
     }
-
     fn name(&self) -> &'static str {
         "Fillet"
     }
-
     fn description(&self) -> &'static str {
-        "Round the edges of geometry to the specified radius."
+        "Click an edge, size the radius with the cursor, then click to round."
     }
-
     fn vcb_label(&self) -> &'static str {
-        "Radius"
+        "Radius; Ns changes segments"
     }
-
+    fn on_activate(&mut self, scene: &mut Scene) {
+        self.reset();
+        self.edges = Self::selection(scene);
+        self.replan(scene);
+    }
+    fn on_deactivate(&mut self, _scene: &mut Scene) {
+        self.reset();
+    }
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.last_error = None;
-        let mut selected: Vec<_> = scene
-            .selection
-            .iter()
-            .filter_map(|item| {
-                if let ingetrazo_core::scene::SelectionItem::Edge(id) = item {
-                    Some(*id)
-                } else {
-                    None
-                }
-            })
-            .collect();
-        selected.sort_unstable();
-        if !selected.is_empty() {
-            self.last_error = fillet_edges(scene, &selected, self.radius, self.segments).err();
-            self.selected_edge = None;
+        if self.sizing {
+            self.last_error = self.commit(scene).err();
             return;
         }
-        if self.selected_edge.is_none() {
-            if let Some(edge_id) = pick_edge(&scene.mesh, &ctx.ray, 0.3) {
-                self.selected_edge = Some(edge_id);
-            }
-        } else {
-            if let Some(edge_id) = self.selected_edge {
-                self.last_error = fillet_edge(scene, edge_id, self.radius, self.segments).err();
-            }
-            self.selected_edge = None;
-            self.hover_point = None;
+        if self.edges.is_empty() {
+            let Some(edge) = pick_edge(&scene.mesh, &ctx.ray, 0.3) else {
+                return;
+            };
+            let selected = Self::selection(scene);
+            self.edges = if selected.contains(&edge) {
+                selected
+            } else {
+                vec![edge]
+            };
         }
-    }
-
-    fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
+        self.sizing = true;
         self.hover_point = Some(ctx.world);
+        self.replan(scene);
     }
-
+    fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        self.hover_point = Some(ctx.world);
+        if self.sizing {
+            let best = self
+                .edges
+                .iter()
+                .filter_map(|&id| scene.mesh.edges.get(id))
+                .filter_map(|e| {
+                    let a = scene.mesh.vertices[e.v0].position;
+                    let d = (scene.mesh.vertices[e.v1].position - a).normalize_or_zero();
+                    if d.length_squared() < 0.5 {
+                        return None;
+                    }
+                    let offset = ctx.world - a;
+                    Some((offset - d * offset.dot(d)).length())
+                })
+                .min_by(f64::total_cmp);
+            if let Some(r) = best {
+                if r >= 1e-4 && r.is_finite() {
+                    self.radius = r;
+                }
+            }
+        } else if self.edges.is_empty() {
+            self.hover_edge = pick_edge(&scene.mesh, &ctx.ray, 0.3);
+        }
+        self.replan(scene);
+    }
     fn on_cancel(&mut self, _scene: &mut Scene) {
-        self.selected_edge = None;
-        self.hover_point = None;
+        self.reset();
     }
-
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let radius: f64 = text
-            .trim()
-            .parse()
+        let text = text.trim();
+        if let Some(count) = text.strip_suffix('s') {
+            let count = count
+                .trim()
+                .parse::<usize>()
+                .map_err(|_| "Enter a segment count followed by s")?;
+            return self.set_segments(scene, count);
+        }
+        let radius = text
+            .parse::<f64>()
             .map_err(|_| "Enter a valid positive radius")?;
-        if !radius.is_finite() || radius <= 0.0 {
+        if !radius.is_finite() || radius <= 0. {
             return Err("Enter a finite radius >0".into());
         }
         self.radius = radius;
-        let mut selected: Vec<_> = scene
-            .selection
-            .iter()
-            .filter_map(|item| {
-                if let ingetrazo_core::scene::SelectionItem::Edge(id) = item {
-                    Some(*id)
-                } else {
-                    None
-                }
-            })
-            .collect();
-        selected.sort_unstable();
-        if !selected.is_empty() {
-            fillet_edges(scene, &selected, self.radius, self.segments)?;
-            self.selected_edge = None;
-        } else if let Some(edge) = self.selected_edge {
-            fillet_edge(scene, edge, self.radius, self.segments)?;
-            self.selected_edge = None;
+        if self.edges.is_empty() {
+            self.edges = Self::selection(scene);
         }
-        Ok(())
+        self.commit(scene)
     }
-
+    fn preview_mesh(&self) -> Option<&Mesh> {
+        self.preview.as_ref()
+    }
+    fn value_label(&self) -> Option<(String, DVec3)> {
+        self.label_point.map(|p| {
+            (
+                self.last_error.clone().unwrap_or_else(|| {
+                    format!("R {:.3} m ({} segments)", self.radius, self.segments)
+                }),
+                p,
+            )
+        })
+    }
     fn rubber_band(&self) -> Option<(DVec3, DVec3)> {
-        self.hover_point
-            .map(|h| (h, h + DVec3::new(self.radius, 0.0, 0.0)))
+        self.hover_point.map(|h| (h, h + DVec3::X * self.radius))
     }
 }
 
@@ -885,6 +1038,66 @@ mod tests {
         }
         scene
     }
+    #[test]
+    fn cursor_sizing_preview_and_second_click_commit_match_original_workflow() {
+        use ingetrazo_core::math::Ray;
+        let mut scene = box_scene();
+        let before = scene.mesh.clone();
+        let mut tool = FilletTool::default();
+        let edge = scene.mesh.find_edge(4, 5).unwrap();
+        let pick = ToolContext::new(
+            DVec3::new(1., 0., 1.),
+            Ray::new(DVec3::new(1., -2., 1.), DVec3::Y),
+        );
+        tool.on_move(&mut scene, &pick);
+        assert_eq!(tool.hover_edge, Some(edge));
+        assert_eq!(tool.preview_mesh().unwrap().faces.len(), 8);
+        assert_eq!(scene.mesh, before);
+        tool.on_click(&mut scene, &pick);
+        assert!(tool.sizing);
+        assert_eq!(scene.mesh, before);
+        let size = ToolContext::new(
+            DVec3::new(1., 0.25, 1.),
+            Ray::new(DVec3::new(1., 0.25, 3.), -DVec3::Z),
+        );
+        tool.on_move(&mut scene, &size);
+        assert!((tool.radius - 0.25).abs() < 1e-9);
+        assert_eq!(scene.mesh, before);
+        tool.on_click(&mut scene, &size);
+        assert!(!tool.sizing);
+        assert!(tool.last_error.is_none(), "{:?}", tool.last_error);
+        assert_eq!(scene.mesh.faces.len(), 14);
+        assert!(scene.mesh.is_manifold_solid());
+        assert!(tool.preview_mesh().is_none());
+    }
+
+    #[test]
+    fn selected_rim_accepts_segments_and_typed_radius_without_preview_mutation() {
+        use ingetrazo_core::scene::SelectionItem;
+        let mut scene = box_scene();
+        for (a, b) in [(4, 5), (5, 6), (6, 7), (7, 4)] {
+            let e = scene.mesh.find_edge(a, b).unwrap();
+            scene.selection.insert(SelectionItem::Edge(e));
+        }
+        let before = scene.mesh.clone();
+        let mut tool = FilletTool::default();
+        tool.on_activate(&mut scene);
+        assert_eq!(tool.edges.len(), 4);
+        tool.on_vcb_input(&mut scene, "6s").unwrap();
+        assert_eq!(tool.segments, 6);
+        assert_eq!(scene.mesh, before);
+        assert_eq!(tool.preview_mesh().unwrap().faces.len(), 24);
+        assert!(tool.on_vcb_input(&mut scene, "-1").is_err());
+        assert_eq!(scene.mesh, before);
+        assert!(tool.on_vcb_input(&mut scene, "5").is_err());
+        assert_eq!(scene.mesh, before);
+        tool.on_vcb_input(&mut scene, "0.15").unwrap();
+        assert_eq!(scene.mesh.faces.len(), 30);
+        assert!(scene.selection.is_empty());
+        assert!(!tool.sizing);
+        assert!(tool.edges.is_empty());
+    }
+
     #[test]
     fn one_edge_creates_tangent_strip_caps_curves_and_analytic_volume() {
         let mut scene = box_scene();
