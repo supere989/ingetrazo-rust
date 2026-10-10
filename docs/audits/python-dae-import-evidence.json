@@ -14,18 +14,21 @@
     }
   ],
   "provenance": {
-    "rust_commit": "f76308d3e9ba3db482be969a3e2fc90537fdb631",
+    "rust_commit": "568b52708fd898477a42475408bfd07834965adc",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "native_fixture": "target/debug/examples/dae_import_acceptance_fixture",
-  "native_fixture_sha256": "0bacdfc1b687a1d3f7938030d660a97314b1bc4fca1f1ae27165b279f2835305",
-  "native_source_revision": "f76308d3e9ba3db482be969a3e2fc90537fdb631",
+  "native_fixture": "/tmp/ingetrazo-import-target/debug/examples/dae_import_acceptance_fixture",
+  "native_fixture_sha256": "b19cd97ff0edef0a336601be02c12dd54a855e9cb608388002d211194ebe317b",
+  "native_source_revision": "39db6e8",
   "cases": [
     {
       "case": "painted-rectangle",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -56,8 +59,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ],
             [
@@ -66,8 +69,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ]
           ]
@@ -78,6 +81,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -131,11 +137,14 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "holed-surface",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [[[1.0, 1.0, 0.0], [1.0, 3.0, 0.0], [3.0, 3.0, 0.0], [3.0, 1.0, 0.0]]], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 12.0,
         "bounds": [
@@ -166,8 +175,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -176,8 +185,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -191,8 +200,8 @@
                 0.0
               ],
               [
-                3.0,
                 1.0,
+                3.0,
                 0.0
               ],
               [
@@ -201,8 +210,8 @@
                 0.0
               ],
               [
-                1.0,
                 3.0,
+                1.0,
                 0.0
               ]
             ]
@@ -211,6 +220,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [[[1.0, 1.0, 0.0], [1.0, 3.0, 0.0], [3.0, 3.0, 0.0], [3.0, 1.0, 0.0]]], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 12.0,
         "bounds": [
@@ -287,11 +299,14 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "nested-reflection",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[2.0, 20.0, 30.0], [2.0, 32.0, 30.0], [10.0, 32.0, 30.0], [10.0, 20.0, 30.0]]}"
+        ],
         "textures": [],
         "area": 96.0,
         "bounds": [
@@ -322,18 +337,18 @@
               30.0
             ],
             [
-              2.0,
-              32.0,
-              30.0
-            ],
-            [
-              10.0,
-              32.0,
-              30.0
-            ],
-            [
               10.0,
               20.0,
+              30.0
+            ],
+            [
+              10.0,
+              32.0,
+              30.0
+            ],
+            [
+              2.0,
+              32.0,
               30.0
             ]
           ]
@@ -344,6 +359,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[2.0, 20.0, 30.0], [2.0, 32.0, 30.0], [10.0, 32.0, 30.0], [10.0, 20.0, 30.0]]}"
+        ],
         "textures": [],
         "area": 96.0,
         "bounds": [
@@ -397,11 +415,14 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": true
+      "strict_oriented_rings_match": false
     },
     {
       "case": "georeferenced",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -432,8 +453,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -442,8 +463,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -459,6 +480,9 @@
         ]
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -517,97 +541,14 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-uv",
       "original": {
-        "textures": [
-          {
-            "hash": "8401c692461503369c95461923f07fc986e53781e397d88eb865bc1b04377729",
-            "points_uv": [
-              [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              [
-                0.0,
-                4.0,
-                0.0,
-                0.0,
-                1.0
-              ],
-              [
-                4.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                4.0,
-                4.0,
-                0.0,
-                1.0,
-                1.0
-              ]
-            ]
-          }
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"texture\": {\"image_sha256\": \"8401c692461503369c95461923f07fc986e53781e397d88eb865bc1b04377729\", \"sh\": 4.0, \"sw\": 4.0, \"uvw\": [0.25, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0]}}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
         ],
-        "area": 16.0,
-        "bounds": [
-          [
-            0.0,
-            4.0
-          ],
-          [
-            0.0,
-            4.0
-          ],
-          [
-            0.0,
-            0.0
-          ]
-        ],
-        "color_area": {
-          "null": 16.0
-        },
-        "loose_faces": 1,
-        "groups": 0,
-        "world_faces": 1,
-        "rings": [
-          [
-            [
-              0.0,
-              0.0,
-              0.0
-            ],
-            [
-              0.0,
-              4.0,
-              0.0
-            ],
-            [
-              4.0,
-              4.0,
-              0.0
-            ],
-            [
-              4.0,
-              0.0,
-              0.0
-            ]
-          ]
-        ],
-        "holes": [
-          []
-        ],
-        "georef": null
-      },
-      "rust": {
         "textures": [
           {
             "hash": "8401c692461503369c95461923f07fc986e53781e397d88eb865bc1b04377729",
@@ -693,66 +634,45 @@
         ],
         "georef": null
       },
-      "world_match": true,
-      "editable_schema_match": true,
-      "strict_oriented_rings_match": false
-    },
-    {
-      "case": "textured-missing-uv",
-      "original": {
-        "textures": [],
-        "area": 16.0,
-        "bounds": [
-          [
-            0.0,
-            4.0
-          ],
-          [
-            0.0,
-            4.0
-          ],
-          [
-            0.0,
-            0.0
-          ]
-        ],
-        "color_area": {
-          "[0.79608, 0.27843, 0.11373]": 16.0
-        },
-        "loose_faces": 1,
-        "groups": 0,
-        "world_faces": 1,
-        "rings": [
-          [
-            [
-              0.0,
-              0.0,
-              0.0
-            ],
-            [
-              4.0,
-              0.0,
-              0.0
-            ],
-            [
-              4.0,
-              4.0,
-              0.0
-            ],
-            [
-              0.0,
-              4.0,
-              0.0
-            ]
-          ]
-        ],
-        "holes": [
-          []
-        ],
-        "georef": null
-      },
       "rust": {
-        "textures": [],
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"texture\": {\"image_sha256\": \"8401c692461503369c95461923f07fc986e53781e397d88eb865bc1b04377729\", \"sh\": 4.0, \"sw\": 4.0, \"uvw\": [0.25, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0]}}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
+        "textures": [
+          {
+            "hash": "8401c692461503369c95461923f07fc986e53781e397d88eb865bc1b04377729",
+            "points_uv": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0,
+                1.0,
+                1.0
+              ]
+            ]
+          }
+        ],
         "area": 16.0,
         "bounds": [
           [
@@ -769,7 +689,7 @@
           ]
         ],
         "color_area": {
-          "[0.79608, 0.27843, 0.11373]": 16.0
+          "null": 16.0
         },
         "loose_faces": 1,
         "groups": 0,
@@ -808,8 +728,127 @@
       "strict_oriented_rings_match": true
     },
     {
+      "case": "textured-missing-uv",
+      "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.79608, 0.27843, 0.11373]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.79608, 0.27843, 0.11373]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.79608, 0.27843, 0.11373]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
+        "textures": [],
+        "area": 16.0,
+        "bounds": [
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            4.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color_area": {
+          "[0.79608, 0.27843, 0.11373]": 16.0
+        },
+        "loose_faces": 1,
+        "groups": 0,
+        "world_faces": 1,
+        "rings": [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ]
+        ],
+        "holes": [
+          []
+        ],
+        "georef": null
+      },
+      "world_match": true,
+      "editable_schema_match": true,
+      "strict_oriented_rings_match": false
+    },
+    {
       "case": "textured-missing-uv-pattern",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.49804, 0.49804, 0.49804]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -862,6 +901,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.49804, 0.49804, 0.49804]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -920,6 +962,9 @@
     {
       "case": "textured-missing-uv-alpha",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.56863, 0.28627, 0.1451]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -972,6 +1017,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.56863, 0.28627, 0.1451]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1030,6 +1078,9 @@
     {
       "case": "textured-missing-uv-gradient3x3",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.3451, 0.30588, 0.36863]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1060,8 +1111,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -1070,8 +1121,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -1082,6 +1133,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.3451, 0.30588, 0.36863]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1135,11 +1189,14 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-missing-uv-gradient3x5",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.41176, 0.51373, 0.48235]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1170,8 +1227,8 @@
               0.0
             ],
             [
-              0.0,
               4.0,
+              0.0,
               0.0
             ],
             [
@@ -1180,8 +1237,8 @@
               0.0
             ],
             [
-              4.0,
               0.0,
+              4.0,
               0.0
             ]
           ]
@@ -1192,6 +1249,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.41176, 0.51373, 0.48235]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1245,11 +1305,14 @@
       },
       "world_match": true,
       "editable_schema_match": true,
-      "strict_oriented_rings_match": false
+      "strict_oriented_rings_match": true
     },
     {
       "case": "textured-missing-uv-gradient5x3",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.45098, 0.33333, 0.53725]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1302,6 +1365,9 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.45098, 0.33333, 0.53725]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 4.0, 0.0], [4.0, 4.0, 0.0], [4.0, 0.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 16.0,
         "bounds": [
@@ -1360,6 +1426,14 @@
     {
       "case": "closed-cube",
       "original": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 1.0, 1.0], [0.0, 1.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [1.0, 0.0, 1.0], [1.0, 0.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 1.0, 0.0], [1.0, 0.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 1.0], [0.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 0.0, 1.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 1.0, 0.0], [0.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[1.0, 0.0, 0.0], [1.0, 0.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 6.0,
         "bounds": [
@@ -1527,6 +1601,14 @@
         "georef": null
       },
       "rust": {
+        "surface_recipes": [
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 1.0, 1.0], [0.0, 1.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [1.0, 0.0, 1.0], [1.0, 0.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 1.0, 0.0], [1.0, 0.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 0.0, 1.0], [0.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 0.0, 1.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[0.0, 1.0, 0.0], [0.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 0.0]]}",
+          "{\"attrs\": {\"back\": true, \"color\": [0.2, 0.4, 0.6]}, \"holes\": [], \"ring\": [[1.0, 0.0, 0.0], [1.0, 0.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 0.0]]}"
+        ],
         "textures": [],
         "area": 6.0,
         "bounds": [

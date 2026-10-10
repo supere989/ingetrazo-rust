@@ -20,6 +20,16 @@ def editable(a,b):
  def canonical(s):
   s=copy.deepcopy(s);s["rings"]=sorted(unoriented(r)for r in s["rings"]);s["holes"]=sorted(tuple(sorted(unoriented(h)for h in hs))for hs in s["holes"]);return s
  return canonical(a)==canonical(b)
+def normalize(v):
+ if isinstance(v,float):return round(v,5)
+ if isinstance(v,list):return [normalize(x)for x in v]
+ if isinstance(v,dict):return {k:normalize(x)for k,x in v.items()}
+ return v
+def recipe(f):
+ attrs=copy.deepcopy(f.attrs)
+ if attrs.get("texture",{}).get("path"):
+  path=attrs["texture"].pop("path");attrs["texture"]["image_sha256"]=hashlib.sha256(Path(path).read_bytes()).hexdigest()
+ return {"ring":unoriented([[v.x(),v.y(),v.z()]for v in f.vertices]),"holes":sorted(unoriented([[v.x(),v.y(),v.z()]for v in h])for h in f.holes),"attrs":normalize(attrs)}
 def signature(s):
  fs=list(s.mesh.faces)
  for g in s.groups:fs.extend(world_mesh(g).faces)
@@ -32,7 +42,7 @@ def signature(s):
    pts.extend([a,b,c]);n=V.crossProduct(b-a,c-a).length()/2;area+=n
    color=f.attrs.get("color");key=json.dumps(None if color is None else [round(float(v),5)for v in color],sort_keys=True);colors[key]=colors.get(key,0)+n
  bounds=[[round(min(getattr(p,axis)() for p in pts),5),round(max(getattr(p,axis)() for p in pts),5)] for axis in ["x","y","z"]]
- return {"textures":textures,"area":round(area,5),"bounds":bounds,"color_area":{k:round(v,5) for k,v in sorted(colors.items())},"loose_faces":len(s.mesh.faces),"groups":len(s.groups),"world_faces":len(fs),"rings":[[list(p) for p in ring([[v.x(),v.y(),v.z()] for v in f.vertices])] for f in fs],"holes":[[[list(p) for p in ring([[v.x(),v.y(),v.z()] for v in h])] for h in f.holes] for f in fs],"georef":None if s.georef is None else [s.georef.lat,s.georef.lon,s.georef.alt,s.georef.north]}
+ return {"surface_recipes":sorted(json.dumps(recipe(f),sort_keys=True)for f in fs),"textures":textures,"area":round(area,5),"bounds":bounds,"color_area":{k:round(v,5) for k,v in sorted(colors.items())},"loose_faces":len(s.mesh.faces),"groups":len(s.groups),"world_faces":len(fs),"rings":[[list(p) for p in ring([[v.x(),v.y(),v.z()] for v in f.vertices])] for f in fs],"holes":[[[list(p) for p in ring([[v.x(),v.y(),v.z()] for v in h])] for h in f.holes] for f in fs],"georef":None if s.georef is None else [s.georef.lat,s.georef.lon,s.georef.alt,s.georef.north]}
 def main():
  app=QApplication([]);exe=os.environ.get("INGETRAZO_DAE_FIXTURE")
  if exe is None:
