@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "dpi": 300,
+  "cases": [
+    {
+      "case": "different_frame_uid",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "different_text_position",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "equal_text_only",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "large_metadata_integer",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "same_literal_frame_uid",
+      "changed_pixels": 0,
+      "passed": true
+    }
+  ],
+  "wrong_index_mutation": {
+    "actual_source": "1/2",
+    "wrong_physical_index_mutation": "2/2",
+    "changed_pixels": 387,
+    "valid_pdf_rejected": true
+  },
+  "scope": "5 actual source field contexts vs production composer export; caller dataclass equivalence bounded controls, not full Text/UI"
+}
