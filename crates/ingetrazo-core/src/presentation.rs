@@ -66,7 +66,20 @@ fn number(v: &serde_json::Value) -> Option<f64> {
     v.as_bool()
         .map(|b| if b { 1. } else { 0. })
         .or_else(|| v.as_f64())
-        .or_else(|| v.as_str()?.trim().replace("_", "").parse().ok())
+        .or_else(|| {
+            let s = v.as_str()?.trim();
+            let bytes = s.as_bytes();
+            if bytes.iter().enumerate().any(|(i, b)| {
+                *b == b'_'
+                    && (i == 0
+                        || i + 1 == bytes.len()
+                        || !bytes[i - 1].is_ascii_digit()
+                        || !bytes[i + 1].is_ascii_digit())
+            }) {
+                return None;
+            }
+            s.replace("_", "").parse().ok()
+        })
         .filter(|v| v.is_finite())
 }
 fn rgb(v: &serde_json::Value) -> Option<[f64; 3]> {
@@ -108,8 +121,10 @@ fn integer(value: &serde_json::Value) -> Option<i128> {
             }),
         serde_json::Value::String(s) => {
             let s = s.trim();
-            let s = s.strip_prefix('+').unwrap_or(s);
-            let body = s.strip_prefix('-').unwrap_or(s);
+            let body = s
+                .strip_prefix('+')
+                .or_else(|| s.strip_prefix('-'))
+                .unwrap_or(s);
             if body.is_empty()
                 || !body.chars().all(|c| c.is_ascii_digit() || c == '_')
                 || body.starts_with('_')
@@ -325,6 +340,11 @@ mod tests {
         )
         .unwrap();
         assert_eq!(s.day, 21);
+        assert_eq!(
+            ShadowSettings::from_json(&serde_json::json!({"day":"+-5","darkness":"1__2"})).darkness,
+            0.55
+        );
+        assert!(ShadowSettings::try_from_json(&serde_json::json!({"utc_offset":"+-5"})).is_err());
         assert_eq!(s.minute, 1);
         assert_eq!(s.to_json()["utc_offset"], 4294967296_u64);
         assert!(DocumentStyle::try_from_json(&serde_json::json!({"edge_color":null})).is_err());
