@@ -69,8 +69,11 @@ impl Resources {
      self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
      self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
      self.device.cmd_copy_buffer(command,self.buffers[&staging].handle,self.buffers[&destination].handle,&[vk::BufferCopy {src_offset:0,dst_offset:offset,size:chunk.len() as u64}]);
-     let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(vk::AccessFlags::VERTEX_ATTRIBUTE_READ|vk::AccessFlags::INDEX_READ).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(self.buffers[&destination].handle).offset(offset).size(chunk.len() as u64);
-     self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::VERTEX_INPUT,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
+     let storage=self.buffers[&destination].usage.contains(vk::BufferUsageFlags::STORAGE_BUFFER);
+     let access=vk::AccessFlags::VERTEX_ATTRIBUTE_READ|vk::AccessFlags::INDEX_READ|if storage{vk::AccessFlags::SHADER_READ}else{vk::AccessFlags::empty()};
+     let stages=vk::PipelineStageFlags::VERTEX_INPUT|if storage{vk::PipelineStageFlags::VERTEX_SHADER}else{vk::PipelineStageFlags::empty()};
+     let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(access).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(self.buffers[&destination].handle).offset(offset).size(chunk.len() as u64);
+     self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,stages,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
      self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
      self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;submitted=true;
