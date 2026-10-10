@@ -1,0 +1,16 @@
+{
+  "method": "Independent retained complete image decoding and exterior check",
+  "results": [
+    {
+      "mode": "geometry",
+      "different_pixels": 0,
+      "native_exterior": "white"
+    },
+    {
+      "mode": "text",
+      "different_pixels": 0,
+      "native_exterior": "white"
+    }
+  ],
+  "boundary": "Isolates overlap composition; does not by itself establish exact glyph equation or merged renderer parity."
+}
