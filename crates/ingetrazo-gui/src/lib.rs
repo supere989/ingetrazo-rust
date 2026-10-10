@@ -37,11 +37,10 @@ pub fn run_gui(initial_file: Option<PathBuf>) -> Result<(), eframe::Error> {
         "IngeTrazo",
         native_options,
         Box::new(move |_cc| {
-            if let Some(path) = initial_file {
-                Ok(Box::new(IngeTrazoApp::with_file(&path)))
-            } else {
-                Ok(Box::new(IngeTrazoApp::new()))
-            }
+            let mut app=IngeTrazoApp::new();
+            app.attach_session_store(crate::session_state::SessionStore::user_default());
+            if let Some(path)=initial_file {app.open_document(&path);}
+            Ok(Box::new(app))
         }),
     )
 
@@ -120,3 +119,5 @@ mod tests {
 pub mod component_edit;
 
 pub mod session_state;
+
+pub mod document_session;

@@ -54,7 +54,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             });
 
             if ui.button(tr("Recover a discarded auto-save…")).clicked() {
-                app.status_message = tr("No discarded auto-saves found");
+                app.show_discarded_recovery();
                 ui.close_menu();
             }
 

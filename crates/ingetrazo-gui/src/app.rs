@@ -38,6 +38,7 @@ pub struct GeometryClipboard {
 }
 
 pub struct IngeTrazoApp {
+    pub document_session: crate::document_session::DocumentSession,
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
     pub camera: OrbitCamera,
@@ -116,6 +117,7 @@ impl IngeTrazoApp {
         ingetrazo_core::i18n::set_language(lang);
 
         let mut app = Self {
+            document_session: crate::document_session::DocumentSession::default(),
             component_edit_stack: Vec::new(),
             scene,
             camera,
@@ -173,6 +175,7 @@ impl IngeTrazoApp {
             ));
         }
 
+        app.mark_document_clean();
         app
     }
 
@@ -196,20 +199,28 @@ impl IngeTrazoApp {
         self.vcb_text.clear();
     }
 
-    pub fn new_document(&mut self) {
+    pub fn new_document(&mut self) {self.request_document_action(crate::document_session::DocumentAction::New);}
+
+    pub(crate) fn new_document_unchecked(&mut self) {
         if !self.component_edit_stack.is_empty() {
             self.status_message = "Finish or cancel the component edit before creating a document".into();
             return;
         }
         self.save_undo_state();
+        self.retire_current_recovery();
         self.scene = Scene::new();
         self.camera = self.scene.camera.clone();
+        self.scene.unit=self.document_session.preferences.new_document_unit;
+        self.undo_stack.clear();self.redo_stack.clear();
         self.current_file = None;
+        self.mark_document_clean();
         self.textures.clear();
         self.status_message.clear();
     }
 
-    pub fn open_document(&mut self, path: &Path) {
+    pub fn open_document(&mut self, path: &Path) {self.request_document_action(crate::document_session::DocumentAction::Open(path.to_path_buf()));}
+
+    pub(crate) fn open_document_unchecked(&mut self, path: &Path) {
         if !self.component_edit_stack.is_empty() {
             self.status_message = "Finish or cancel the component edit before opening a document".into();
             return;
@@ -218,7 +229,9 @@ impl IngeTrazoApp {
             Ok(loaded_scene) => {
                 self.save_undo_state();
                 self.camera = loaded_scene.camera.clone();
+                self.retire_current_recovery();
                 self.scene = loaded_scene;
+                self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();
                 self.recent_files.retain(|p| p != &pb);
@@ -227,6 +240,8 @@ impl IngeTrazoApp {
                     self.recent_files.truncate(10);
                 }
                 self.textures.clear();
+                self.mark_document_clean();
+                self.persist_preferences();
                 self.status_message.clear();
             }
             Err(err) => {
@@ -236,7 +251,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_document(&mut self) {
-        if let Some(path) = self.current_file.clone() {
+        if let Some(path) = self.current_file.clone().filter(|p|p.extension().and_then(|e|e.to_str()).map(|e|e.eq_ignore_ascii_case("igz")).unwrap_or(false)) {
             self.save_to_path(&path);
         } else {
             self.show_save_dialog = true;
@@ -249,15 +264,26 @@ impl IngeTrazoApp {
             self.status_message = "Finish or cancel the component edit before saving the document".into();
             return;
         }
+        if self.document_session.pending.is_some() && path.extension().and_then(|e|e.to_str()).map(|e|!e.eq_ignore_ascii_case("igz")).unwrap_or(true) {
+            self.status_message="Save an .igz document before continuing".into();self.document_session.confirm_unsaved=true;return;
+        }
         let mut document = self.scene.clone();
         document.camera = self.camera.clone();
         match save_file(&document, path) {
             Ok(()) => {
+                if !path.extension().and_then(|e|e.to_str()).map(|e|e.eq_ignore_ascii_case("igz")).unwrap_or(false) {
+                    self.status_message=format!("Exported: {}",path.display());return;
+                }
+                self.retire_current_recovery();
                 self.scene.camera = self.camera.clone();
                 self.current_file = Some(path.to_path_buf());
+                self.recent_files.retain(|p|p!=path);self.recent_files.insert(0,path.to_path_buf());self.recent_files.truncate(10);
+                self.mark_document_clean();self.persist_preferences();
+                self.finish_document_action();
                 self.status_message = format!("Saved: {}", path.display());
             }
             Err(err) => {
+                self.document_session.confirm_unsaved=self.document_session.pending.is_some();
                 self.status_message = format!("Save failed: {err}");
             }
         }
@@ -267,7 +293,7 @@ impl IngeTrazoApp {
         self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
         self.redo_stack.clear();
-        if self.undo_stack.len() > 50 {
+        if self.undo_stack.len() > self.document_session.preferences.undo_steps {
             self.undo_stack.remove(0);
         }
     }
@@ -922,6 +948,7 @@ impl IngeTrazoApp {
 
 impl eframe::App for IngeTrazoApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        self.document_session_ui(ctx);
         let title = if let Some(path) = &self.current_file {
             let filename = path.file_name().unwrap_or_default().to_string_lossy();
             format!("IngeTrazo — {filename}")

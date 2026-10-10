@@ -169,6 +169,7 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     }
                     if ui.button(tr("Cancel")).clicked() {
                         app.show_save_dialog = false;
+                        app.cancel_document_action();
                     }
                 });
             });
@@ -230,6 +231,13 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     ui.add(egui::Slider::new(&mut app.style.line_width, 0.5..=4.0).text("px"));
                     ui.end_row();
 
+                    ui.strong("Autosave");
+                    ui.checkbox(&mut app.document_session.preferences.autosave,"Enable recovery copies");ui.end_row();
+                    ui.strong("Autosave interval");
+                    ui.add(egui::Slider::new(&mut app.document_session.preferences.autosave_minutes,1..=60).text("minutes"));ui.end_row();
+                    ui.strong("Undo steps");
+                    ui.add(egui::Slider::new(&mut app.document_session.preferences.undo_steps,1..=1000));ui.end_row();
+
                     ui.strong(tr("Shadows"));
                     ui.checkbox(&mut app.shadows_enabled, tr("Enable real-time solar shading"));
                     ui.end_row();
@@ -239,6 +247,7 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                 ui.horizontal(|ui| {
                     if ui.button(tr("Close")).clicked() {
                         app.show_preferences_dialog = false;
+                        app.persist_preferences();
                     }
                 });
             });
