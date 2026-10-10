@@ -1,0 +1,24 @@
+Native Metal WSI: device=Apple Paravirtual device; unified=false; FOUNDATION ONLY
+Metal presentation source color space: sRGB
+Metal native display synchronization: true
+Metal layer-hosting order: backed-off-then-custom-layer-before-wantsLayer; prior_wantsLayer=true; actual_wantsLayer=true; view_layer_matches=true
+Metal WSI attachment: view_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; layer_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; layer_hidden=false; window_visible=Some(true); drawable_size=CGSize { width: 0.0, height: 0.0 }
+WSI actual Focused(false)
+WSI actual Focused(true)
+WSI actual Occluded(false)
+ACTUAL drawable GPU center readback: submission=1 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=2 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=3 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=4 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=5 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=6 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=7 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=8 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=9 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=10 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=11 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=12 BGRA8Unorm rgba=[20, 51, 89, 255]
+ACTUAL drawable GPU center readback: submission=13 BGRA8Unorm rgba=[20, 51, 89, 255]
+WSI observation: extent=(640, 480); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 640.0, height: 480.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 640.0, height: 480.0 } }; hidden=false; drawable_size=CGSize { width: 640.0, height: 480.0 }; presentsWithTransaction=false; displaySyncEnabled=true; submitted=13; retired=13; displayed=10; skipped=3; frames=[]
+WSI observation: extent=(640, 480); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 640.0, height: 480.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 640.0, height: 480.0 } }; hidden=false; drawable_size=CGSize { width: 640.0, height: 480.0 }; presentsWithTransaction=false; displaySyncEnabled=true; submitted=13; retired=13; displayed=10; skipped=3; frames=[]
+PASS actual CAMetalLayer displayed=10 skipped=3 and exact requested resize (13, 13, 0)

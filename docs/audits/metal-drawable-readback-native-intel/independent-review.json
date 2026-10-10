@@ -1,0 +1,16 @@
+{
+  "run": 38060828962,
+  "job": 114238569614,
+  "artifact": 11673530711,
+  "source": "acc6a4bf6313093b612975bef72afcf76b0b26ff",
+  "gpu_drawable_matches_actual_qt": true,
+  "owned_capture_matches_gpu": false,
+  "owned_capture_rgb": [
+    21,
+    51,
+    89
+  ],
+  "presentation_passed": true,
+  "strict_capture_passed": false,
+  "physical_mac_claim": false
+}

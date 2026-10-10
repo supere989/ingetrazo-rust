@@ -1,0 +1,15 @@
+Metal host visibility stage=window-created visible=Some(true)
+Graphics backend: native Metal; device=Apple Paravirtual device; unified=false; opt-in egui host
+Metal presentation source color space: sRGB
+Metal native display synchronization: true
+Metal layer-hosting order: backed-off-then-custom-layer-before-wantsLayer; prior_wantsLayer=true; actual_wantsLayer=true; view_layer_matches=true
+Metal WSI attachment: view_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; layer_bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; layer_hidden=false; window_visible=Some(true); drawable_size=CGSize { width: 0.0, height: 0.0 }
+Metal host visibility stage=layer-attached visible=Some(true)
+Metal host visibility stage=application-ready visible=Some(true)
+Metal host visibility event=Focused(false) visible=Some(true)
+Metal host visibility event=Focused(true) visible=Some(true)
+Metal host visibility event=Occluded(false) visible=Some(true)
+Metal lifecycle BEFORE event-loop exit: extent=(1280, 800); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; hidden=false; drawable_size=CGSize { width: 1280.0, height: 800.0 }; presentsWithTransaction=false; displaySyncEnabled=true; submitted=3; retired=0; displayed=0; skipped=0; frames=[submission=1 id=0 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=1266.983558264 gpuEnd=1266.995233799 callback_seen=false callback_time=0; submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=1268.402197755 gpuEnd=1268.4134726490001 callback_seen=false callback_time=0; submission=3 id=2 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=1269.7897296790002 gpuEnd=1269.7911808600002 callback_seen=false callback_time=0]
+Metal egui stats PainterStats { geometry_uploads: 1, texture_uploads: 55, gpu_geometry_bytes: 133848, cpu_texture_bytes: 1021952, retained_cpu_texture_bytes: 1021952, encoded_source_pixels: 255488, copied_snapshot_bytes: 0, texture_uploaded_bytes: 1021952, mip_generation_submissions: 0, generated_mip_levels: 0, compressed_upload_submissions: 0, compressed_uploaded_bytes: 0 }; presentation (3, 0, 3)
+Metal presentation ownership retained: 3 unresolved frames
+Error: "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0"
