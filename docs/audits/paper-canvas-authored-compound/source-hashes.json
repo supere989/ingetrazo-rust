@@ -1,0 +1,7 @@
+{
+  "crates/ingetrazo-gui/examples/paper_authored_compound_native_fixture.rs": "0e65d323d204a608d6805ea00db59cef451459689cc80c6b7df164798ba5cf8c",
+  "scripts/check-paper-canvas-authored-compound-native.py": "37799a7292820d80f6e93901dad71cb88b2585ff5f9c671fdfcb97579bc6aa65",
+  "scripts/check-paper-canvas-authored-compound-mutation.py": "259d44eab78dc4f9499c52002919cbe50d3e0ab4131e669ee8f4d0439319ad45",
+  "crates/ingetrazo-gui/src/composer.rs": "8f914df15144bddf7599d2f65790f1438215d363b30013790bb80997c8f2857f",
+  "docs/audits/paper-canvas-authored-compound/recipes.json": "a8e26ac99c248e7828273d3ba86c64bc26982b6aeb3cffb67f59991c046c784d"
+}

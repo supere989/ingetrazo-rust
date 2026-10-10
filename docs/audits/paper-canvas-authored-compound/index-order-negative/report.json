@@ -1,0 +1,1148 @@
+{
+  "binary_sha256": "ed1822cbe582ad7e47302a32e02ceb291da95ea469b84421718c47a1c6c18793",
+  "source_stack_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "recipe_sha256": "a8e26ac99c248e7828273d3ba86c64bc26982b6aeb3cffb67f59991c046c784d",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with authored Text backgrounds/underline and stacking order, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter",
+  "cases": [
+    {
+      "name": "text-margin-overlap",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 0,
+        "name": "text-margin-overlap",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "texts": [
+          {
+            "family": "DejaVu Sans",
+            "w_mm": 55.0,
+            "size_pt": 14.0,
+            "bold": false,
+            "italic": false,
+            "underline": true,
+            "color": "#1e242c",
+            "align": "left",
+            "bg_color": "#d85138",
+            "bg_opacity": 0.45,
+            "z": 0.0,
+            "x_mm": 8.0,
+            "y_mm": 10.0,
+            "text": "Canvas order"
+          },
+          {
+            "family": "DejaVu Sans",
+            "w_mm": 55.0,
+            "size_pt": 14.0,
+            "bold": false,
+            "italic": false,
+            "underline": false,
+            "color": "#1e242c",
+            "align": "left",
+            "bg_color": "#396db4",
+            "bg_opacity": 0.65,
+            "z": 0.0,
+            "x_mm": 18.0,
+            "y_mm": 12.0,
+            "text": "Second layer"
+          }
+        ],
+        "canvas_paint_stats": [
+          2,
+          17,
+          1112,
+          2,
+          17
+        ],
+        "raw_texture_stats": [
+          0,
+          0,
+          2,
+          6120,
+          2
+        ],
+        "cold_builds": [
+          1,
+          1
+        ],
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 8,
+          "cached_bytes": 375912,
+          "draws": 25
+        },
+        "serial": 5,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "text-margin-overlap",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 0.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": 0.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            17,
+            1112,
+            2,
+            17
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            2,
+            6120,
+            2
+          ],
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 30,
+            "cached_bytes": 375912,
+            "draws": 80
+          },
+          "serial": 16,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "text-margin-overlap",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 0.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": 0.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            17,
+            1112,
+            2,
+            17
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            2,
+            6120,
+            2
+          ],
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 38,
+            "cached_bytes": 375912,
+            "draws": 100
+          },
+          "serial": 20,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "text-margin-overlap",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 0.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": 0.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            17,
+            1112,
+            2,
+            17
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            2,
+            6120,
+            2
+          ],
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 44,
+            "cached_bytes": 375912,
+            "draws": 115
+          },
+          "serial": 23,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "text-border-overlap",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        297,
+        168,
+        988,
+        659
+      ],
+      "state": {
+        "index": 1,
+        "name": "text-border-overlap",
+        "origin": [
+          298.45001220703125,
+          169.5
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 2.5,
+          "style": "double"
+        },
+        "texts": [
+          {
+            "family": "DejaVu Sans",
+            "w_mm": 55.0,
+            "size_pt": 14.0,
+            "bold": false,
+            "italic": false,
+            "underline": true,
+            "color": "#1e242c",
+            "align": "left",
+            "bg_color": "#d85138",
+            "bg_opacity": 0.45,
+            "z": 0.0,
+            "x_mm": 8.0,
+            "y_mm": 10.0,
+            "text": "Canvas order"
+          },
+          {
+            "family": "DejaVu Sans",
+            "w_mm": 55.0,
+            "size_pt": 14.0,
+            "bold": false,
+            "italic": false,
+            "underline": false,
+            "color": "#1e242c",
+            "align": "left",
+            "bg_color": "#396db4",
+            "bg_opacity": 0.65,
+            "z": 0.0,
+            "x_mm": 18.0,
+            "y_mm": 12.0,
+            "text": "Second layer"
+          }
+        ],
+        "canvas_paint_stats": [
+          2,
+          38,
+          3596,
+          4,
+          38
+        ],
+        "raw_texture_stats": [
+          0,
+          0,
+          4,
+          19120,
+          4
+        ],
+        "cold_builds": [
+          2,
+          2
+        ],
+        "gpu": {
+          "uploads": 4,
+          "cache_hits": 112,
+          "cached_bytes": 782352,
+          "draws": 303
+        },
+        "serial": 58,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 1,
+          "name": "text-border-overlap",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 0.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": 0.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            38,
+            3596,
+            4,
+            38
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            4,
+            19120,
+            4
+          ],
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 140,
+            "cached_bytes": 782352,
+            "draws": 387
+          },
+          "serial": 72,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "text-border-overlap",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 0.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": 0.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            38,
+            3596,
+            4,
+            38
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            4,
+            19120,
+            4
+          ],
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 146,
+            "cached_bytes": 782352,
+            "draws": 405
+          },
+          "serial": 75,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "text-border-overlap",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 0.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": 0.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            38,
+            3596,
+            4,
+            38
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            4,
+            19120,
+            4
+          ],
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 154,
+            "cached_bytes": 782352,
+            "draws": 429
+          },
+          "serial": 79,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "text-explicit-z-overlap",
+      "changed": 420,
+      "first": [
+        [
+          443,
+          270
+        ],
+        [
+          444,
+          270
+        ],
+        [
+          445,
+          270
+        ],
+        [
+          446,
+          270
+        ],
+        [
+          447,
+          270
+        ]
+      ],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 2,
+        "name": "text-explicit-z-overlap",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "dashed"
+        },
+        "texts": [
+          {
+            "family": "DejaVu Sans",
+            "w_mm": 55.0,
+            "size_pt": 14.0,
+            "bold": false,
+            "italic": false,
+            "underline": true,
+            "color": "#1e242c",
+            "align": "left",
+            "bg_color": "#d85138",
+            "bg_opacity": 0.45,
+            "z": 10.0,
+            "x_mm": 8.0,
+            "y_mm": 10.0,
+            "text": "Canvas order"
+          },
+          {
+            "family": "DejaVu Sans",
+            "w_mm": 55.0,
+            "size_pt": 14.0,
+            "bold": false,
+            "italic": false,
+            "underline": false,
+            "color": "#1e242c",
+            "align": "left",
+            "bg_color": "#396db4",
+            "bg_opacity": 0.65,
+            "z": -5.0,
+            "x_mm": 18.0,
+            "y_mm": 12.0,
+            "text": "Second layer"
+          }
+        ],
+        "canvas_paint_stats": [
+          2,
+          38,
+          3596,
+          6,
+          38
+        ],
+        "raw_texture_stats": [
+          0,
+          0,
+          6,
+          25240,
+          6
+        ],
+        "cold_builds": [
+          3,
+          3
+        ],
+        "gpu": {
+          "uploads": 6,
+          "cache_hits": 218,
+          "cached_bytes": 446832,
+          "draws": 614
+        },
+        "serial": 112,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 2,
+          "name": "text-explicit-z-overlap",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 10.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": -5.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            38,
+            3596,
+            6,
+            38
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            6,
+            25240,
+            6
+          ],
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 242,
+            "cached_bytes": 446832,
+            "draws": 674
+          },
+          "serial": 124,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "text-explicit-z-overlap",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 10.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": -5.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            38,
+            3596,
+            6,
+            38
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            6,
+            25240,
+            6
+          ],
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 248,
+            "cached_bytes": 446832,
+            "draws": 689
+          },
+          "serial": 127,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "text-explicit-z-overlap",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "texts": [
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": true,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#d85138",
+              "bg_opacity": 0.45,
+              "z": 10.0,
+              "x_mm": 8.0,
+              "y_mm": 10.0,
+              "text": "Canvas order"
+            },
+            {
+              "family": "DejaVu Sans",
+              "w_mm": 55.0,
+              "size_pt": 14.0,
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "color": "#1e242c",
+              "align": "left",
+              "bg_color": "#396db4",
+              "bg_opacity": 0.65,
+              "z": -5.0,
+              "x_mm": 18.0,
+              "y_mm": 12.0,
+              "text": "Second layer"
+            }
+          ],
+          "canvas_paint_stats": [
+            2,
+            38,
+            3596,
+            6,
+            38
+          ],
+          "raw_texture_stats": [
+            0,
+            0,
+            6,
+            25240,
+            6
+          ],
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 256,
+            "cached_bytes": 446832,
+            "draws": 709
+          },
+          "serial": 131,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    }
+  ]
+}

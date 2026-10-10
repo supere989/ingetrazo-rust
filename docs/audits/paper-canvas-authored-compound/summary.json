@@ -1,0 +1,103 @@
+{
+  "baseline": "9ae7098a + curved stages b66248c2/ed03080e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "production_binary_sha256": "43f4bf38206c4f880a44cdc30e0b69d798be761b59391981fe0e95b5a410d1fb",
+  "exact_cases": [
+    {
+      "name": "text-margin-overlap",
+      "changed": 0,
+      "cold_builds": [
+        1,
+        1
+      ],
+      "gpu": {
+        "uploads": 2,
+        "cache_hits": 14,
+        "cached_bytes": 375912,
+        "draws": 40
+      },
+      "canvas_paint_stats": [
+        2,
+        17,
+        1112,
+        2,
+        17
+      ],
+      "raw_texture_stats": [
+        0,
+        0,
+        2,
+        6120,
+        2
+      ]
+    },
+    {
+      "name": "text-border-overlap",
+      "changed": 0,
+      "cold_builds": [
+        2,
+        2
+      ],
+      "gpu": {
+        "uploads": 4,
+        "cache_hits": 116,
+        "cached_bytes": 782352,
+        "draws": 312
+      },
+      "canvas_paint_stats": [
+        2,
+        38,
+        3596,
+        4,
+        38
+      ],
+      "raw_texture_stats": [
+        0,
+        0,
+        4,
+        19120,
+        4
+      ]
+    },
+    {
+      "name": "text-explicit-z-overlap",
+      "changed": 0,
+      "cold_builds": [
+        3,
+        3
+      ],
+      "gpu": {
+        "uploads": 6,
+        "cache_hits": 224,
+        "cached_bytes": 446832,
+        "draws": 628
+      },
+      "canvas_paint_stats": [
+        2,
+        38,
+        3596,
+        6,
+        38
+      ],
+      "raw_texture_stats": [
+        0,
+        0,
+        6,
+        25240,
+        6
+      ]
+    }
+  ],
+  "index_order_mutation": {
+    "binary_sha256": "ed1822cbe582ad7e47302a32e02ceb291da95ea469b84421718c47a1c6c18793",
+    "expected_exit": 1,
+    "changed": [
+      0,
+      0,
+      420
+    ],
+    "mutation": "Replace source z-sorted visible item order with authored index order",
+    "post_run_inventory_guard_correction": "Script initially had stale cloned literal names; retained actual checker rejected pixel mismatch; inventory correction checked against complete retained report without repeating captures"
+  },
+  "restored_binary_identical": true
+}

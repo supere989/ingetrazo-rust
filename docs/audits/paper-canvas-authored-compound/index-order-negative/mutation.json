@@ -1,0 +1,11 @@
+{
+  "binary_sha256": "ed1822cbe582ad7e47302a32e02ceb291da95ea469b84421718c47a1c6c18793",
+  "expected_exit": 1,
+  "changed": [
+    0,
+    0,
+    420
+  ],
+  "mutation": "Replace source z-sorted visible item order with authored index order",
+  "post_run_inventory_guard_correction": "Script initially had stale cloned literal names; retained actual checker rejected pixel mismatch; inventory correction checked against complete retained report without repeating captures"
+}

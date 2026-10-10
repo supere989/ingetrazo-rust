@@ -1,0 +1,140 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    {
+      "name": "text-margin-overlap",
+      "zoom": 1.5,
+      "border": {
+        "on": true,
+        "mm": 0.8,
+        "radius_mm": 0.0,
+        "style": "single",
+        "color": "#000000"
+      },
+      "texts": [
+        {
+          "family": "DejaVu Sans",
+          "w_mm": 55.0,
+          "size_pt": 14.0,
+          "bold": false,
+          "italic": false,
+          "underline": true,
+          "color": "#1e242c",
+          "align": "left",
+          "bg_color": "#d85138",
+          "bg_opacity": 0.45,
+          "z": 0.0,
+          "x_mm": 8.0,
+          "y_mm": 10.0,
+          "text": "Canvas order"
+        },
+        {
+          "family": "DejaVu Sans",
+          "w_mm": 55.0,
+          "size_pt": 14.0,
+          "bold": false,
+          "italic": false,
+          "underline": false,
+          "color": "#1e242c",
+          "align": "left",
+          "bg_color": "#396db4",
+          "bg_opacity": 0.65,
+          "z": 0.0,
+          "x_mm": 18.0,
+          "y_mm": 12.0,
+          "text": "Second layer"
+        }
+      ]
+    },
+    {
+      "name": "text-border-overlap",
+      "zoom": 2.3,
+      "border": {
+        "on": true,
+        "mm": 0.8,
+        "radius_mm": 2.5,
+        "style": "double",
+        "color": "#000000"
+      },
+      "texts": [
+        {
+          "family": "DejaVu Sans",
+          "w_mm": 55.0,
+          "size_pt": 14.0,
+          "bold": false,
+          "italic": false,
+          "underline": true,
+          "color": "#1e242c",
+          "align": "left",
+          "bg_color": "#d85138",
+          "bg_opacity": 0.45,
+          "z": 0.0,
+          "x_mm": 8.0,
+          "y_mm": 10.0,
+          "text": "Canvas order"
+        },
+        {
+          "family": "DejaVu Sans",
+          "w_mm": 55.0,
+          "size_pt": 14.0,
+          "bold": false,
+          "italic": false,
+          "underline": false,
+          "color": "#1e242c",
+          "align": "left",
+          "bg_color": "#396db4",
+          "bg_opacity": 0.65,
+          "z": 0.0,
+          "x_mm": 18.0,
+          "y_mm": 12.0,
+          "text": "Second layer"
+        }
+      ]
+    },
+    {
+      "name": "text-explicit-z-overlap",
+      "zoom": 1.5,
+      "border": {
+        "on": true,
+        "mm": 0.8,
+        "radius_mm": 0.0,
+        "style": "dashed",
+        "color": "#000000"
+      },
+      "texts": [
+        {
+          "family": "DejaVu Sans",
+          "w_mm": 55.0,
+          "size_pt": 14.0,
+          "bold": false,
+          "italic": false,
+          "underline": true,
+          "color": "#1e242c",
+          "align": "left",
+          "bg_color": "#d85138",
+          "bg_opacity": 0.45,
+          "z": 10.0,
+          "x_mm": 8.0,
+          "y_mm": 10.0,
+          "text": "Canvas order"
+        },
+        {
+          "family": "DejaVu Sans",
+          "w_mm": 55.0,
+          "size_pt": 14.0,
+          "bold": false,
+          "italic": false,
+          "underline": false,
+          "color": "#1e242c",
+          "align": "left",
+          "bg_color": "#396db4",
+          "bg_opacity": 0.65,
+          "z": -5.0,
+          "x_mm": 18.0,
+          "y_mm": 12.0,
+          "text": "Second layer"
+        }
+      ]
+    }
+  ]
+}
