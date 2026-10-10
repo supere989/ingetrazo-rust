@@ -1,0 +1,36 @@
+name: Native Metal encoded texture acceptance
+on:
+  push:
+    branches: [review/metal-raw-canvas]
+  workflow_dispatch:
+jobs:
+  raw-texture:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and execute bounded native raw texture fixture
+        run: |
+          mkdir -p raw-metal-evidence
+          git rev-parse HEAD > raw-metal-evidence/revision.txt
+          cargo build --locked -p ingetrazo-metal --example egui_raw_probe -j2 > raw-metal-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/egui_raw_probe > raw-metal-evidence/binary.sha256
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('raw-metal-evidence/execution.log','w') as log:
+              subprocess.run(['target/debug/examples/egui_raw_probe','--output=raw-metal-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-metal-${{ matrix.runner }}
+          path: raw-metal-evidence/
+          if-no-files-found: error
