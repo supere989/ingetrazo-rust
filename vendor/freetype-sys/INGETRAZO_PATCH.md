@@ -1,0 +1,3 @@
+# Narrow bundled-build patch
+
+Upstream PistonDevelopers/freetype-sys0.23.0, crates.io archive SHA256 eab537ce43cab850c64b4cdc390ce7e4f47f877485ddc323208e268280c308ae. Bundled FreeType2.13.2/libpng sources and upstream licenses retained unmodified. Only build.rs changes: libpng includes use Cargo libz-sys DEP_Z_INCLUDE rather than nonexistent packaged relative libz-sys/src/zlib path. No font files are redistributed. The wrapper's MIT and bundled library licenses remain in original files. Self-contained package build avoids engineering CPATH or host header installation. Native text/UI parity remains a separate bounded acceptance task.
