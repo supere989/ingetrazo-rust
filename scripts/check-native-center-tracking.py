@@ -153,7 +153,10 @@ def main():
      key(0x6c)
      # Move ends at its new rim. Original hover is event-driven: create actual
      # pointer motion after switching tool rather than warping to the same pixel.
-     move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
+     observe("moved-line-tool")
+     move([moved["rim"][0]+20,moved["rim"][1]+20]);observe("moved-rim-away")
+     move(moved["rim"]);observe("moved-rim-return")
+     wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
      moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
      assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
      ctrl_key(0x61);observe("delete-selected");key(0xffff);observe("delete-key")
