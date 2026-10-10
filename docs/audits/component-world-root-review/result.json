@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "source_controls": 6,
+  "integration_tests": 12,
+  "scope": "actual source world-coordinate Viewport and scalar/vector Move calls vs native component editing; shared leaves/private containers/UV/camera",
+  "remaining": [
+    "rendered pointer workflow",
+    "nested representation-only history",
+    "ordinary noncomponent MakeUnique-on-entry",
+    "exploded offset",
+    "drawing axes tool consumption"
+  ]
+}
