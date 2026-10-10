@@ -335,7 +335,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         }
     }
 
-    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-canvas-paint-stats"),app.composer_state.text_canvas.stats());d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
+    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){let raw_texture_stats=crate::paper_raw_texture::stats(ui.ctx());ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-canvas-paint-stats"),app.composer_state.text_canvas.stats());if let Some(stats)=raw_texture_stats{d.insert_temp(egui::Id::new("pdf-ui-raw-texture-stats"),stats);}d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
 
     // Top Floating Toolbar for Composer Controls
     let toolbar_rect = Rect::from_min_size(

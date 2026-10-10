@@ -4,7 +4,7 @@
 use std::{collections::HashMap,sync::{Arc,Mutex}};
 use egui::{Context,TextureHandle,TextureId};
 #[derive(Clone)]pub(crate) struct Image{pub size:[usize;2],pub pixels:Arc<Vec<u8>>}
-#[derive(Default)]struct Pending{images:HashMap<TextureId,Image>,bytes:usize}
+#[derive(Default)]struct Pending{images:HashMap<TextureId,Image>,bytes:usize,published:u64,published_bytes:u64,acknowledged:u64}
 #[derive(Clone,Default)]struct Uploads(Arc<Mutex<Pending>>);
 fn key()->egui::Id{egui::Id::new("source-paper-encoded-rgba8")}
 pub(crate)fn install(ctx:&Context){ctx.data_mut(|d|d.insert_temp(key(),Uploads::default()));}
@@ -18,10 +18,10 @@ pub(crate)fn create(ctx:&Context,size:[usize;2],pixels:Vec<u8>)->Result<TextureH
  // Four-byte logical registration only: raw dimensions/payload are supplied to
  // the managed uploader at this ID. Caller paints using actual bitmap bounds.
  let texture=ctx.load_texture("source-paper-rgba8",egui::ColorImage::new([1,1],egui::Color32::TRANSPARENT),egui::TextureOptions::NEAREST);
- pending.images.insert(texture.id(),Image{size,pixels:Arc::new(pixels)});pending.bytes+=count;Ok(texture)
+ pending.images.insert(texture.id(),Image{size,pixels:Arc::new(pixels)});pending.bytes+=count;pending.published+=1;pending.published_bytes+=count as u64;Ok(texture)
 }
 pub(crate)fn peek(ctx:&Context,id:TextureId)->Option<Image>{provider(ctx).ok()?.0.lock().ok()?.images.get(&id).cloned()}
-pub(crate)fn acknowledge(ctx:&Context,id:TextureId){if let Ok(provider)=provider(ctx){if let Ok(mut pending)=provider.0.lock(){if let Some(image)=pending.images.remove(&id){pending.bytes-=image.pixels.len();}}}}
+pub(crate)fn acknowledge(ctx:&Context,id:TextureId){if let Ok(provider)=provider(ctx){if let Ok(mut pending)=provider.0.lock(){if let Some(image)=pending.images.remove(&id){pending.bytes-=image.pixels.len();pending.acknowledged+=1;}}}}
 
 #[cfg(test)]mod tests{use super::*;
  #[test]fn bytes_shared_until_success_and_refusal_does_not_register_texture(){
@@ -32,3 +32,5 @@ pub(crate)fn acknowledge(ctx:&Context,id:TextureId){if let Ok(provider)=provider
   acknowledge(&ctx,handle.id());assert!(peek(&ctx,handle.id()).is_none());assert_eq!(before.0.lock().unwrap().bytes,0);assert_eq!(&**first.pixels,&[8,9,12,68]);
  }
 }
+
+pub(crate)fn stats(ctx:&Context)->Option<[u64;5]>{let provider=provider(ctx).ok()?;let p=provider.0.lock().ok()?;Some([p.images.len()as u64,p.bytes as u64,p.published,p.published_bytes,p.acknowledged])}
