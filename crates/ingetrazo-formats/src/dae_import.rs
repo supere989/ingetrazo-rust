@@ -620,9 +620,8 @@ pub(crate) fn scene_from_xml_at(
                 .into_iter()
                 .map(|p| mesh.add_vertex(world.transform_point3(p)))
                 .collect();
-            if world.determinant() < 0. {
-                vertices.reverse();
-            }
+            // The original COLLADA loader keeps authored loop order after
+            // transforms, including reflections; open sheets have no outward side.
             let id = mesh
                 .add_face(vertices, vec![])
                 .ok_or_else(|| invalid("invalid transformed polygon"))?;
@@ -798,7 +797,7 @@ mod tests {
                 .iter()
                 .any(|v| (v.position - p).length() < 1e-10));
         }
-        assert!(mesh.face_normal(0).y < 0.);
+        assert!(mesh.face_normal(0).y > 0.);
     }
     #[test]
     fn interleaved_texture_coordinates_keep_authored_indices_and_reject_truncation() {
