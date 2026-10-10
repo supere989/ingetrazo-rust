@@ -8,6 +8,7 @@ field_mode=bool(os.environ.get("INGETRAZO_PDF_UI_FIELD_OBSERVATIONS"))
 canvas_mode=os.environ.get('INGETRAZO_PDF_UI_CANVAS_FIELDS')=='1'
 literal_control=os.environ.get('INGETRAZO_PDF_UI_CANVAS_LITERAL_CONTROL')=='1'
 text_cases=json.loads(Path(text_source).read_text())["cases"] if text_source else None
+def expected_canvas(case):return [case['expanded']]+([case['secondary']['expanded']]if case.get('secondary')else [])
 unsupported=os.environ.get("INGETRAZO_PDF_UI_UNSUPPORTED")=="1"
 out=Path(os.environ.get("INGETRAZO_PDF_UI_EVIDENCE","docs/audits/composer-pdf-ui"+("-unsupported" if unsupported else "")));out.mkdir(exist_ok=True);(out/"state.json").unlink(missing_ok=True)
 def wait(fn):
@@ -84,8 +85,8 @@ with tempfile.TemporaryDirectory() as runtime:
    if canvas_mode:
     if not literal_control:
      expected=json.loads(Path(text_source).read_text())['before_equal_second']
-     click(before['sheet_tabs'][1]);canvas_before=wait(lambda:state()if state()['active_sheet']==1 and state()['canvas_text']==[expected]else None);capture('canvas-equal-second-before')
-     count=canvas_before['field_index_computations'];time.sleep(.15);assert state()['field_index_computations']==count
+     click(before['sheet_tabs'][1]);canvas_before=wait(lambda:state()if state()['active_sheet']==1 and state()['canvas_text']==[expected]+expected_canvas(text_cases[1])[1:]else None);capture('canvas-equal-second-before')
+     count=canvas_before['field_index_computations'];expansions=canvas_before['field_expansion_computations'];assert canvas_before['calendar_samples_per_frame']==1;time.sleep(.15);idle=state();assert idle['field_index_computations']==count and idle['field_expansion_computations']==expansions and idle['calendar_samples_per_frame']==1
      click(canvas_before['sheet_tabs'][0]);wait(lambda:state()['active_sheet']==0)
    click(before["border_menu"]);controls=wait(lambda:state().get("border_controls"));capture("border-menu-before")
    click(controls[0]);wait(lambda:state()["border"]["on"] is True)
@@ -103,8 +104,8 @@ with tempfile.TemporaryDirectory() as runtime:
    canvas_states=[]
    if canvas_mode:
     for i in [1,2,0]:
-     click(state()['sheet_tabs'][i]);observed=wait(lambda:state()if state()['active_sheet']==i and state()['canvas_text']==[text_cases[i]['expanded']]else None);capture('canvas-sheet-'+str(i+1));canvas_states.append(observed)
-     count=observed['field_index_computations'];time.sleep(.15);assert state()['field_index_computations']==count
+     click(state()['sheet_tabs'][i]);observed=wait(lambda:state()if state()['active_sheet']==i and state()['canvas_text']==expected_canvas(text_cases[i])else None);capture('canvas-sheet-'+str(i+1));canvas_states.append(observed)
+     count=observed['field_index_computations'];expansions=observed['field_expansion_computations'];assert observed['calendar_samples_per_frame']==1;time.sleep(.15);idle=state();assert idle['field_index_computations']==count and idle['field_expansion_computations']==expansions and idle['calendar_samples_per_frame']==1
     redone=state()
    border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"canvas_before":canvas_before,"canvas_states":canvas_states,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
   current_path=out.resolve()/"current.pdf";all_path=out.resolve()/"all.pdf"
