@@ -56,6 +56,7 @@ def main():
     move(point);event(4,1,point,4);event(5,1,point,8)
    def capture(name):
     subprocess.run(["import","-display",env["DISPLAY"],"-window",str(window),"-define","png:color-type=6",str(directory/(name+".png"))],check=True);assert valid_png(directory/(name+".png"))
+    snapshot=state();snapshot["capture_phase"]=name;(directory/(name+"-state.json")).write_text(json.dumps(snapshot,indent=2)+"\n")
    x.XKeysymToKeycode.argtypes=[C.c_void_p,C.c_ulong];x.XKeysymToKeycode.restype=C.c_uint
    def key(symbol):
     code=x.XKeysymToKeycode(d,symbol);event(2,code,None,1);event(3,code,None,2)
@@ -64,7 +65,7 @@ def main():
     control=x.XKeysymToKeycode(d,0xffe3);event(2,control,None,1);key(symbol);event(3,control,None,2)
    assert mode=="group"
    baseline_groups=initial["group_count"]
-   capture("group-before");time.sleep(.3)
+   time.sleep(.5);capture("group-before")
    move(initial["rim"]);click(initial["rim"]);move(initial["move_target"])
    live=wait(lambda:state() if state()["anchor"] and state()["undo"]==0 else None)
    assert sum((live["center"][i]-initial["center"][i]-requested_delta[i])**2 for i in range(3))**.5<.01,live
@@ -112,8 +113,25 @@ def main():
     assert initial["context_depth"]==1
     for observed in [live,preview,copied,spaced,retyped,undone]:assert observed["context_depth"]==1,observed
     if not original:assert undone["definitions"]==initial["definitions"],undone
-   report={"cancelled_preview":cancelled,"nested_local":os.environ.get("INGETRAZO_GROUP_NESTED")=="1","linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
+   published=None
+   if os.environ.get("INGETRAZO_CONTEXT_EXIT"):
+    key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"]);click(initial["move_target"])
+    edited=wait(lambda:state() if state()["undo"]==1 and state()["anchor"] is None else None)
+    if original:
+     key(0xff1b);key(0xff1b)
+    else:
+     click([51,10]);capture("edit-context-menu")
+     click([140,315 if os.environ.get("INGETRAZO_CONTEXT_EXIT")=="finish" else 337])
+    published=wait(lambda:state() if state()["context_depth"]==0 else None);capture("context-exit")
+    assert published["root_child_counts"]==[1,1],published
+    expected_world=edited["active_world_centers"][0] if os.environ.get("INGETRAZO_CONTEXT_EXIT")=="finish" else initial["active_world_centers"][0]
+    assert close(published["root_child_world_centers"][0][0],expected_world),published
+    expected_sibling=initial["root_child_world_centers"][1][0] if original else [initial["active_world_centers"][0][0]+10,initial["active_world_centers"][0][1],initial["active_world_centers"][0][2]]
+    assert close(published["root_child_world_centers"][1][0],expected_sibling),published
+    assert published["undo"]==(1 if os.environ.get("INGETRAZO_CONTEXT_EXIT")=="finish" else 0),published
+   report={"published":published,"cancelled_preview":cancelled,"nested_local":os.environ.get("INGETRAZO_GROUP_NESTED")=="1","linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
+   report["world_visibility_acceptance"]="Pending independent projected-segment pixel controls; state transitions and captures alone do not prove committed world wire rendering."
    report["checker_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
    report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
    if False:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select/Undo shortcuts wired to original public actions, software GL Xvfb. "+("Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy and Undo; arrays/othercopytypes separate." if os.environ.get("INGETRAZO_MOVE_COPY")=="1" else "Move/Delete original geometry/history, center acquisition and invalidation; broader Move workflow separate.")

@@ -27,7 +27,12 @@ if mode=='group':
   group.component=True;vp.scene.groups.append(copy_group(group,V(10,0,0)))
  if os.environ.get('INGETRAZO_GROUP_NESTED')=='1':
   from core.group import copy_group
-  outer=Group(name='linked outer context');outer.xform=QMatrix4x4();outer.component=True;outer.children.append(group)
+  if os.environ.get('INGETRAZO_SOURCE_COMPONENT_CONSTRUCTION')=='command':
+   from core.history import MakeComponentOfCommand
+   vp.scene.groups[:]=[group];command=MakeComponentOfCommand([],[],[group],name='linked outer context');vp.history.execute(command);outer=command.container;vp.history.undo_stack.clear();vp.history.redo_stack.clear()
+  else:
+   outer=Group(name='linked outer context');outer.xform=QMatrix4x4();outer.component=True;outer.children.append(group)
+  if os.environ.get('INGETRAZO_CONTEXT_EXIT'):outer.xform.translate(1,-1,0)
   vp.scene.groups[:]=[outer,copy_group(outer,V(10,0,0))]
  vp.scene.select([group])
 vp.set_active_tool(MoveTool() if mode=='group' else LineTool())
@@ -56,18 +61,40 @@ def state():
  positions=[v.position for v in vp.scene.mesh.vertices[:24]]
  current=V(*group_centers[0]) if mode=='group' and group_centers else sum(positions,V())/len(positions) if positions else center
  if mode=='group' and getattr(vp.active_tool,'_vp_preview',False):current=current+vp._preview_offset
- rim=positions[0] if positions else points[0]
+ rim=positions[0] if positions else current+V(radius,0,0)
  snap=vp.last_snap;anchor=getattr(vp.active_tool,'start_point',None)
  copy_vertices={id(v):v.position for e in vp.scene.mesh.edges if e.curve is not None and e.curve!=71 for v in(e.v0,e.v1)}
  copy_center=sum(copy_vertices.values(),V())/len(copy_vertices) if copy_vertices else None
  lines=getattr(vp.active_tool,'rubber_band_lines',None)
  copy_probe=vp._world_to_pixel(current+vp.active_tool.hover_point-vp.active_tool.grab+V(0,radius,0)) if getattr(vp.active_tool,'_copy',False) and anchor is not None and vp.active_tool.hover_point is not None else None
- result=dict(context_depth=len(vp.scene._edit_stack),group_mesh_identity=[id(g.mesh) for g in active_groups],buffers=buffers,value_buffer=vp._value_buffer,array_window=getattr(vp.active_tool,"_last",None) is not None,group_centers=group_centers,group_ids=[g.uid for g in active_groups],group_count=len(active_groups),mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges)+sum(len(g.mesh.edges) for g in active_groups),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
- ref=vp._valid_center_ref()
- pc=vp._world_to_pixel(ref[0]) if ref is not None else None
- pointer=vp._last_mouse_pos
- hint_radius=vp._center_hint_px(ref,pc) if pc is not None else 0.
- result['center_hint_observation']=dict(radius_px=hint_radius,pointer=[pointer.x(),pointer.y()] if pointer is not None else None,allowed=bool(ref is not None and vp.active_tool is not None and vp.active_tool.uses_snap and not (snap is not None and snap.kind=='center') and pointer is not None and pc is not None and hint_radius>0 and math.hypot(pc[0]-pointer.x(),pc[1]-pointer.y())<=hint_radius))
+ root_centers=[]
+ for parent in vp.scene.groups:
+  child_centers=[]
+  for child in parent.children:
+   local=sum((v.position for v in child.mesh.vertices),V())/max(len(child.mesh.vertices),1)
+   if child.xform is not None:local=child.xform.map(local)
+   if parent.xform is not None:local=parent.xform.map(local)
+   child_centers.append(a(local))
+  root_centers.append(child_centers)
+ committed_wire_segments=[]
+ rendered_wire_segments=[]
+ def projected_wires(group,parent,inherited_preview=False):
+  from PySide6.QtGui import QMatrix4x4
+  world=parent*group.xform if group.xform is not None else parent
+  committed_wire_segments.append(dict(group_id=group.uid,segments=[[vp._world_to_pixel(world.map(e.a)),vp._world_to_pixel(world.map(e.b))]for e in group.mesh.edges if not e.hidden]))
+  preview=inherited_preview or id(group)in(getattr(vp,"_preview_groups",None)or())
+  draw=QMatrix4x4(world)
+  if preview:
+   matrix=getattr(vp,"_preview_matrix",None)
+   if matrix is None:
+    matrix=QMatrix4x4();matrix.translate(getattr(vp,"_preview_offset",V()))
+   draw=matrix*draw
+  rendered_wire_segments.append(dict(group_id=group.uid,segments=[[vp._world_to_pixel(draw.map(e.a)),vp._world_to_pixel(draw.map(e.b))]for e in group.mesh.edges if not e.hidden]))
+  for child in group.children:projected_wires(child,world,preview)
+ from PySide6.QtGui import QMatrix4x4
+ for group in active_groups:projected_wires(group,QMatrix4x4())
+ preview_wire_segments=[[vp._world_to_pixel(first),vp._world_to_pixel(second)]for first,second in lines()] if callable(lines) else []
+ result=dict(rendered_wire_segments=rendered_wire_segments,viewport_preview_offset=a(getattr(vp,"_preview_offset",V())),viewport_preview_group_count=len(getattr(vp,"_preview_groups",None)or()),viewport_rect=[0,0,vp.width(),vp.height()],committed_wire_segments=committed_wire_segments,preview_wire_segments=preview_wire_segments,component_construction=os.environ.get("INGETRAZO_SOURCE_COMPONENT_CONSTRUCTION","copy_group_fixture"),active_world_centers=group_centers,root_child_counts=[len(g.children) for g in vp.scene.groups],root_child_world_centers=root_centers,context_depth=len(vp.scene._edit_stack),group_mesh_identity=[id(g.mesh) for g in active_groups],buffers=buffers,value_buffer=vp._value_buffer,array_window=getattr(vp.active_tool,"_last",None) is not None,group_centers=group_centers,group_ids=[g.uid for g in active_groups],group_count=len(active_groups),mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges)+sum(len(g.mesh.edges) for g in active_groups),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
  temporary=directory/'state.tmp'
  temporary.write_text(json.dumps(result))
  temporary.replace(directory/'state.json')
