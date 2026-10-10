@@ -330,6 +330,14 @@ impl RotateTool {
     }
 }
 impl Tool for RotateTool {
+    fn preserves_global_preview_on_context_exit(&self) -> bool {
+        // Original end_group_edit leaves the active Rotate and its global
+        // image object snapshot alive. Local geometry requires separate
+        // detached-object ownership rather than index rebinding.
+        self.center.is_some() && !self.is_copy_mode && !self.original_images.is_empty()
+            && self.target_vertices.is_empty() && self.target_groups.is_empty()
+            && self.target_planes.is_empty()
+    }
     fn snap_anchor(&self) -> Option<DVec3> {
         self.center
     }
