@@ -130,8 +130,7 @@ impl CachedFont {
         let name = face
             .names()
             .into_iter()
-            .filter(|n| n.name_id == ttf_parser::name_id::POST_SCRIPT_NAME)
-            .find_map(|n| n.to_string())
+            .find_map(crate::paper_font_resolver::sfnt_postscript_name)
             .unwrap_or_else(|| "NativePaperFont".into());
         if name.len() > 256 || name.is_empty() {
             return Err("Invalid paper font resource name".into());
