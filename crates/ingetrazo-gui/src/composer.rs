@@ -1236,3 +1236,10 @@ impl IngeTrazoApp {
         if has_view || sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::Text(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
     }
 }
+
+/// Engineering observation of production native Canvas tiles; no GPU/WSI claim.
+#[cfg(target_os="macos")]
+#[doc(hidden)]
+pub fn probe_native_font_tiles(root: &std::path::Path) -> Result<(), String> {
+    text_canvas::run_native_font_tiles(root)
+}
