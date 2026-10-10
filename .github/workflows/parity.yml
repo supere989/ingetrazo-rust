@@ -186,6 +186,14 @@ jobs:
           cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
           QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
           QT_QPA_PLATFORM=offscreen INGETRAZO_PDF_UI_UNSUPPORTED=1 CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
+      - name: Actual Text composer export source pages and save dialogs
+        run: |
+          mkdir -p docs/audits/composer-text-ci
+          cargo run --locked -p ingetrazo-gui --example composer_text_pdf_fixture -- docs/audits/paragraph-ci/original/font-observations.json docs/audits/composer-text-ci/native
+          for dpi in 72 144 300; do INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native "$dpi"; done
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
+          INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
+          QT_QPA_PLATFORM=offscreen INGETRAZO_PDF_UI_TEXT_OBSERVATIONS=docs/audits/paragraph-ci/original/font-observations.json INGETRAZO_PDF_UI_EVIDENCE=docs/audits/composer-text-ci/ui CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
       - name: Exact original Qt and production CAD color protocol
         run: |
           mkdir -p docs/audits/cad2d-color-ci
@@ -400,6 +408,7 @@ jobs:
             docs/audits/image-ownership-ci/
             docs/audits/font-resolver-ci/
             docs/audits/paragraph-ci/
+            docs/audits/composer-text-ci/
             docs/audits/map-codec-ci/
             docs/audits/image-tools-ci/
             docs/audits/image-plane-ci/

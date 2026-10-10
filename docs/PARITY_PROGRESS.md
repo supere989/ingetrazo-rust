@@ -388,3 +388,5 @@ Reviewed image tools currentmain04db692c:566PASS/twoignored;29picking/nineMove/s
 Canonical geographic codec2206d4e4:559PASS/twoignored;23exact actualsource/native cases and23actual original reopens, four negatives rejected. [Canonical evidence](audits/geographic-canonical/README.md). Fullgeographicnumeric/provider/fetch/cache/UI/GPU and all37rows/fivereleasegatesOPEN.
 
 Canonical image tool stagecb1bb646:566PASS/twoignored;29picking/nineMove/sixmodifiers/65Finishstates/twoheld-tool metadata controls exact against fresh root source corpus. [Canonical evidence](audits/image-tools-canonical/README.md). Mixedgeometry/image contexts/physicalpointer/directGPUdraw/Rotate/Scale/full37rows/fivereleasegates remainOPEN; cloudpending.
+
+Isolated composerText currentmain review:566workspacePASS/twoignored;fresh93production exportpages/31readertexts exact;genuinebutton/saveDialog exports1/31pages with96exactpages/32readertexts. Actualborrowedcache bypass rejects andrestoredpasses. [Root proof](audits/composer-text-root-review/README.md). Background/dynamicfields/fullTextUI/fontproviders/RTLbackgroundcounterexample/all37rows/fivegatesOPEN.

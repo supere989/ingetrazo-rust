@@ -1,0 +1,1 @@
+{"passed": true, "cases": [{"case": "center", "changed_pixels": 173, "parse_valid": true, "same_size": true, "passed": true}, {"case": "wrap", "changed_pixels": 1071, "parse_valid": true, "same_size": true, "passed": true}], "scope": "Actual reader, whole 300dpi pages; 1/64px alignment and removed rectangle clip controls"}

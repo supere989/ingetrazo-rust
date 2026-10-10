@@ -2,6 +2,7 @@
 """Actual native composer PDF button clicks; genuine backend absence is a blocker."""
 import os,json,subprocess,tempfile,time,select,ctypes as C,ctypes.util,shutil,hashlib
 from pathlib import Path
+os.environ.setdefault("QT_QPA_PLATFORM","offscreen")  # Reader stays headless; native Vulkan/XTEST use their owned X server.
 text_source=os.environ.get("INGETRAZO_PDF_UI_TEXT_OBSERVATIONS")
 text_cases=json.loads(Path(text_source).read_text())["cases"] if text_source else None
 unsupported=os.environ.get("INGETRAZO_PDF_UI_UNSUPPORTED")=="1"
@@ -117,6 +118,7 @@ with tempfile.TemporaryDirectory() as runtime:
      native=QPdfDocument();assert native.load(str(path))==QPdfDocument.Error.None_
      for index in range(native.pageCount()):
       name=text_cases[index]["name"];original=QPdfDocument();assert original.load(str(source_dir/(name+".original.pdf")))==QPdfDocument.Error.None_
+      assert native.pagePointSize(index)==original.pagePointSize(0),(name,"Actual PDF page dimensions differ from source")
       assert native.getAllText(index).text()==original.getAllText(0).text(),name
       for dpi in (72,144,300):
        size=original.pagePointSize(0);pixels=QSize(round(size.width()*dpi/72),round(size.height()*dpi/72))
