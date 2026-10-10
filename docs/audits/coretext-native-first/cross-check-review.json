@@ -1,0 +1,9 @@
+{
+  "check": "full GUI aarch64-apple-darwin from Linux",
+  "result": "FAILED in libz-sys native C build: host cc does not accept Apple -arch flag",
+  "rust_or_sdk_acceptance": false,
+  "next_validation": "coordinated native Apple SDK run after font corrections",
+  "diagnostic_python": "syntax compile PASS",
+  "purged_terminal_target": "/tmp/ingetrazo-metal-occlusion-check",
+  "purged_apparent_bytes": 559806325
+}
