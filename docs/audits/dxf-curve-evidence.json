@@ -1,0 +1,38 @@
+{
+  "provenance": {
+    "rust_commit": "1795a8c02fccf5ef836c35a55124bb8e1d1df14d",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "circle",
+      "bidirectional_sampled_curve_distance": 0.009766805309872182,
+      "tolerance_metres": 0.021
+    },
+    {
+      "case": "arc",
+      "bidirectional_sampled_curve_distance": 0.00935886840483136,
+      "tolerance_metres": 0.021
+    },
+    {
+      "case": "bulge",
+      "bidirectional_sampled_curve_distance": 0.008789339470104506,
+      "tolerance_metres": 0.021
+    },
+    {
+      "case": "block",
+      "explicit_refusal": "Conversion failed: DXF format error: Parse error: DXF entity INSERT is not yet supported; document unchanged",
+      "destination_preserved": true
+    },
+    {
+      "case": "ocs",
+      "explicit_refusal": "Conversion failed: DXF format error: Parse error: Non-Z DXF entity coordinate systems require OCS conversion",
+      "destination_preserved": true
+    }
+  ],
+  "units_acceptance": false,
+  "scope": "Circle/arc/bulge sampled spatial approximation to original within 2.1 cm; unsupported blocks/OCS refusal before destination mutation. Millimetre unit conversion remains open; refusal is not entity parity."
+}
