@@ -1,0 +1,18 @@
+{
+  "reviewed_source": "d8ff8bb1e350f9d4ccbf816131e4bcd7e0c87ef4",
+  "decision": "Hold texture integration pending asset admission review",
+  "findings": [
+    {
+      "location": "crates/ingetrazo-formats/src/skp/textures.rs:admit_assets",
+      "observation": "PNG/JPEG header dimensions are checked; pixel payload decode integrity is not established. Valid header is not proof of valid image payload.",
+      "required": "Compare production import of header-valid truncated image against pinned original; preserve source behavior and document display failures accurately."
+    },
+    {
+      "location": "crates/ingetrazo-formats/src/skp/reader.rs:material texture extraction",
+      "observation": "16MiB per asset and 64M pixel limits do not establish a combined retained asset byte budget. TextureRecord owns a Vec per material.",
+      "required": "Bound total retained asset memory and account for duplicate ownership; reuse identical asset validation rather than repeated decoding."
+    }
+  ],
+  "unchanged_evidence": "24 retained bounded comparisons remain useful; no full SKP parity claim. No broad test repeated for this review.",
+  "owner": "validation"
+}
