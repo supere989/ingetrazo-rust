@@ -1,0 +1,23 @@
+{
+  "source_commit": "2408934f",
+  "baseline": "eafc09c8 FIFO semantics plus observation-only queue counter; actual 24 font files,36 requests,324 FIFO entries expected assertion failure",
+  "corrected": "24 actual fonts; first cycle36request/FIFO36; held owner +80aliases pushes bothcounts64 and refresh changes epoch; actualoriginal19fontcontrolsPASS; formats75PASS",
+  "sha256": {
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/src/paper_font_resolver.rs": "ccd6e09f939e587841fadb75491117f3582cb79617a3fa55dea78ffa317dea27",
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/examples/paper_font_resolver_eviction_fixture.rs": "1e3579423ce04d9f7c8bf836b1b8f90a8adbfaf0a9ca63845ecdfa9f8e51fdc4",
+    "/tmp/ingetrazo-paper-text-subset-clean-target/debug/examples/paper_font_resolver_eviction_fixture": "afd99907e402ab44a053591836fb8c4e42ba660c6cb9f6b48e2f18bd50ca77fb",
+    "/tmp/paper-resolver-real-fonts/LiberationMono-Bold.ttf": "1d8d631105d4cb6c562a0d90f591d6393007d71350c089aec81c37dc8da293ed",
+    "/tmp/paper-resolver-real-fonts/LiberationMono-BoldItalic.ttf": "bac30bbb26308b1a925d233a520fa764c80526f632b75defbf2b37e402eb6b1a",
+    "/tmp/paper-resolver-real-fonts/LiberationMono-Italic.ttf": "02312ecd02a6b7a96db60deb20468430abb7d3a91974ef9a90bd46ff78ea338d",
+    "/tmp/paper-resolver-real-fonts/LiberationMono-Regular.ttf": "47ed5b5fcfe6b3c9228937b05de9c769f5fa55b777d539af0f65172f0a24c90b",
+    "/tmp/paper-resolver-real-fonts/LiberationSans-Bold.ttf": "769673c4355020b1e28a14c366a152da410ab6b16239fe883ebc35b73624835b",
+    "/tmp/paper-resolver-real-fonts/LiberationSans-BoldItalic.ttf": "4b3d18cbd1b8c068115be4072f43418b194994313f47dbfd3588808903a55d34",
+    "/tmp/paper-resolver-real-fonts/LiberationSans-Italic.ttf": "8649cf5f2cbe4727549d78b714a3a7ee540718a13557769c4612fea105294c7e",
+    "/tmp/paper-resolver-real-fonts/LiberationSans-Regular.ttf": "baccc64becc3eb7d104b7c84d99f5314a0a1f896e2b3ea6c2f22fc08d2003bee",
+    "/tmp/paper-resolver-real-fonts/LiberationSerif-Bold.ttf": "28f2d4300ee366d1ff9ca95df967a27e77987c87857fad0d9c85034405aae39d",
+    "/tmp/paper-resolver-real-fonts/LiberationSerif-BoldItalic.ttf": "8de6363e9ca6c1e6f539ab032bd9ad6abfe138638f4fc53f3c26ea788b7724c5",
+    "/tmp/paper-resolver-real-fonts/LiberationSerif-Italic.ttf": "c7681827cba3bddb54f4673d0052cb944bdeac0b83c29c238240617e699311da",
+    "/tmp/paper-resolver-real-fonts/LiberationSerif-Regular.ttf": "86b9ea1c2f41bed9d7c09ccad4abc2894b33df5de60e5bbbece5d48610911870"
+  },
+  "scope": "Cache ownership/identity under actual native Fontconfig; no font performance, broader source layout or non-Linux proof"
+}
