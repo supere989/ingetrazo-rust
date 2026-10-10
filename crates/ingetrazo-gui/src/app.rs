@@ -379,6 +379,9 @@ impl IngeTrazoApp {
             let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
+            // Source map capture is a runtime panel publication; model commands
+            // do not own it. Transfer the current capture through older history.
+            prev.tile_layer=self.scene.tile_layer.take();
             self.scene = prev;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
@@ -404,6 +407,7 @@ impl IngeTrazoApp {
             }
             let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);self.undo_stack.push(inverse);
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
+            next.tile_layer=self.scene.tile_layer.take();
             self.scene = next;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();

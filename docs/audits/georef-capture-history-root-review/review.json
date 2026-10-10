@@ -1,0 +1,15 @@
+{
+  "exact_capture_states": 5,
+  "path_counts": [
+    1,
+    4,
+    1,
+    0,
+    1
+  ],
+  "baseline_stale_capture_rejected": true,
+  "workspace_passed": 539,
+  "workspace_ignored": 2,
+  "binary_sha256": "9d45739d563031ce31fb8cbd973e529e390016e1a5143f681d793f8ea5b7794b",
+  "full_geographic_parity": false
+}
