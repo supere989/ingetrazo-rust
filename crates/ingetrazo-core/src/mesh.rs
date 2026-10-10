@@ -126,6 +126,14 @@ impl Mesh {
         }
     }
 
+    /// Retain existing vertex identity when a topology rebuild keeps its position.
+    /// New cut/extrusion stations receive fresh identities from add_vertex.
+    pub fn preserve_vertex_uids_from(&mut self, original:&Mesh) {
+        let mut identities=HashMap::new();
+        for vertex in &original.vertices {identities.entry(PointKey::from_vec3(vertex.position)).or_insert(vertex.uid);}
+        for vertex in &mut self.vertices {if let Some(&uid)=identities.get(&PointKey::from_vec3(vertex.position)){vertex.uid=uid;}}
+    }
+
     pub fn clear(&mut self) {
         self.vertices.clear();
         self.edges.clear();

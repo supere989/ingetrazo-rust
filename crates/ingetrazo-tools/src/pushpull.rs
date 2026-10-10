@@ -337,6 +337,7 @@ impl PushPullTool {
                 candidate.add_vertex(vertex.position);
             }
         }
+        candidate.preserve_vertex_uids_from(mesh);
         // No partial mutation or version bump escapes a failed preparation.
         scene.mesh = candidate;
         scene.clear_selection();

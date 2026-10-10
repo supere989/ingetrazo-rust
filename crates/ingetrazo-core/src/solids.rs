@@ -66,6 +66,7 @@ use manifold_rust::{
 use std::collections::HashSet;
 
 struct Sources {
+    vertex_uids: std::collections::HashMap<crate::math::PointKey, uuid::Uuid>,
     faces: Vec<MeshFace>,
     edges: Vec<(glam::DVec3, glam::DVec3, crate::mesh::MeshEdge)>,
     soft_pairs: HashSet<(usize, usize)>,
@@ -77,6 +78,12 @@ fn kernel(mesh: &Mesh, sources: &mut Sources) -> Result<Manifold, String> {
     }
     if mesh.vertices.iter().any(|v| !v.position.is_finite()) {
         return Err("Solid coordinates must be finite".into());
+    }
+    for vertex in &mesh.vertices {
+        sources
+            .vertex_uids
+            .entry(crate::math::PointKey::from_vec3(vertex.position))
+            .or_insert(vertex.uid);
     }
     let mut input = MeshGL64::default();
     input.num_prop = 3;
@@ -258,6 +265,14 @@ fn output(solid: &Manifold, sources: &Sources, outer_only: bool) -> Result<Mesh,
             return Err("Boolean result loses volume at the document welding tolerance".into());
         }
     }
+    for vertex in &mut result.vertices {
+        if let Some(&uid) = sources
+            .vertex_uids
+            .get(&crate::math::PointKey::from_vec3(vertex.position))
+        {
+            vertex.uid = uid;
+        }
+    }
     Ok(result)
 }
 
@@ -400,6 +415,7 @@ fn fuse_source_faces(mesh: &Mesh, provenance: &[usize]) -> Result<(Mesh, Vec<usi
 /// and exact self-intersection rejection, without mutating the mesh.
 pub fn validate_solid_mesh(mesh: &Mesh) -> Result<(), String> {
     let mut sources = Sources {
+        vertex_uids: std::collections::HashMap::new(),
         faces: vec![],
         edges: vec![],
         soft_pairs: HashSet::new(),
@@ -414,6 +430,7 @@ pub fn perform_solid_op(op: SolidOp, a: &Mesh, b: &Mesh) -> Result<Mesh, String>
         return Err("Split requires run_group_operation".into());
     }
     let mut sources = Sources {
+        vertex_uids: std::collections::HashMap::new(),
         faces: vec![],
         edges: vec![],
         soft_pairs: HashSet::new(),
@@ -445,6 +462,7 @@ pub fn run_group_operation(op: SolidOp, groups: &[Group]) -> Result<SolidGroupRe
         return Err("Subtract, Trim and Split require exactly two solids".into());
     }
     let mut sources = Sources {
+        vertex_uids: std::collections::HashMap::new(),
         faces: vec![],
         edges: vec![],
         soft_pairs: HashSet::new(),

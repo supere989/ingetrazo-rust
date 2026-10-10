@@ -490,6 +490,7 @@ fn prepare_sweep(
             result.add_vertex(vertex.position);
         }
     }
+    result.preserve_vertex_uids_from(&scene.mesh);
     scene.mesh = result;
     scene.clear_selection();
     scene.bump_version();

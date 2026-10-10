@@ -320,6 +320,7 @@ pub fn copy_part(mesh: &Mesh, part: &Piece) -> Result<Mesh, String> {
         out.edges[id].v1 = v1;
         out.edges[id].faces = faces;
     }
+    out.preserve_vertex_uids_from(mesh);
     Ok(out)
 }
 fn flatten(
@@ -441,6 +442,7 @@ fn flatten(
         mesh.edges[id].v1 = v1;
         mesh.edges[id].faces = faces;
     }
+    mesh.preserve_vertex_uids_from(&transformed);
     for child in &group.children {
         let mut child = child.clone();
         child.hidden |= group.hidden;

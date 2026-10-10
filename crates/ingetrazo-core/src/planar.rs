@@ -306,6 +306,7 @@ pub(crate) fn preserve_edges(mesh: &mut Mesh, original: &Mesh) {
             mesh.add_vertex(v.position);
         }
     }
+    mesh.preserve_vertex_uids_from(original);
 }
 /// Rebuild all coplanar regions on one selected plane, retaining other planes.
 pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
@@ -406,6 +407,38 @@ mod tests {
         .collect();
         mesh.add_face(r, vec![]).unwrap()
     }
+    #[test]
+    fn dimension_anchor_survives_move_rebuild_and_another_move() {
+        use crate::{dimensions::Dimension, scene::Scene};
+        let mut scene = Scene::new();
+        square(&mut scene.mesh, 0., 0., 2., 0.);
+        square(&mut scene.mesh, 1., 1., 2., 0.);
+        scene.dimensions.push(Dimension::new(
+            DVec3::ZERO,
+            DVec3::new(2., 2., 0.),
+            DVec3::Y,
+        ));
+        scene.bind_dimensions();
+        let held = scene.mesh.vertices[0].uid;
+        for vertex in &mut scene.mesh.vertices {
+            vertex.position.x += 5.;
+        }
+        scene.mesh.rebuild_spatial_index();
+        scene.refresh_dimensions();
+        assert_eq!(scene.dimensions[0].start.x, 5.);
+        scene.mesh = rebuild_faces(&scene.mesh, &[]).unwrap();
+        let vertex = scene
+            .mesh
+            .vertices
+            .iter_mut()
+            .find(|v| v.uid == held)
+            .unwrap();
+        assert_eq!(vertex.position, DVec3::new(5., 0., 0.));
+        vertex.position.x += 1.;
+        scene.refresh_dimensions();
+        assert_eq!(scene.dimensions[0].start.x, 6.);
+    }
+
     #[test]
     fn overlapping_squares_rebuild_into_three_regions_retaining_attributes() {
         let mut mesh = Mesh::new();

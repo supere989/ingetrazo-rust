@@ -749,6 +749,7 @@ fn prepare_fillet(
         }
         curve = curve.checked_add(1).ok_or("Curve identifiers exhausted")?;
     }
+    result.preserve_vertex_uids_from(mesh);
     scene.mesh = result;
     scene.clear_selection();
     scene.bump_version();
@@ -1038,6 +1039,27 @@ mod tests {
         }
         scene
     }
+    #[test]
+    fn rounding_retains_uids_on_unchanged_vertices() {
+        let mut scene = box_scene();
+        let originals = scene.mesh.vertices.clone();
+        let edge = scene.mesh.find_edge(4, 5).unwrap();
+        fillet_edge(&mut scene, edge, 0.2, 8).unwrap();
+        let mut kept = 0;
+        for original in originals {
+            if let Some(vertex) = scene
+                .mesh
+                .vertices
+                .iter()
+                .find(|v| v.position == original.position)
+            {
+                assert_eq!(vertex.uid, original.uid);
+                kept += 1;
+            }
+        }
+        assert_eq!(kept, 6);
+    }
+
     #[test]
     fn squash_after_oblique_rotation_rounds_all_corners_in_varied_edge_orders() {
         let mut original = box_scene();
