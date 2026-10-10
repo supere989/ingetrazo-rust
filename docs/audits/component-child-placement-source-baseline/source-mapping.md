@@ -1,0 +1,11 @@
+# Child placement source parity correction
+
+Actual original rendered exits using both manual copy_group fixture and operative MakeComponentOfCommand confirm selected nested child placement moves while other parent instance child placement stays unchanged. Parent transform is translated (1,-1,0); edited world child center approximately(3.996478,2,1), sibling remains(13,2,1). Former native globally moved sibling as well: this was a literal source parity failure, not an intentional enhancement. Strict failed states/logs and prior native result are retained.
+
+Original GroupToComponentCommand only enables component/identity placement. MakeComponentOfCommand wraps MakeNestedGroupCommand/adopt. copy_group recursively duplicates child objects/matrices while sharing meshes. Scene.begin_group_edit for containers bakes parent transform into children and does not set _edit_share; Viewport._leave_group_edit performs ReshareInstanceCommand only for leaf shared instances. Hence moving child placement under a container does not propagate its matrix to siblings.
+
+Correction: replace_component_definition preserves each existing child transform while refreshing linked mesh content by stable definition_member identity. Finish explicitly installs edited instance child placements. Shared mesh propagation remains operative; UID/native payload retained. Native tests assert distinct matrix retention through shared mesh refresh, IDs, Undo/Redo and Rust IGZ save/reopen.
+
+Fresh original IGZ reader sees saved child matrices Y3/Z2 and modified mesh position Z7, but child meshes become separate objects. This is a retained native-save sharing loss, not a passed original reopen proof. Native-independent-placements.igz retains exact source-reader counterexample. Full native save/component loss scope remains open and separately owned. Structural child additions/deletions sharing is not proven here; source child arrays are cloned, further corpus required.
+
+Projected wire observation additions and per-phase snapshots support independent committed world visibility checks. Older native edge-only group captures lacked persistent wires; controller state passes alone are insufficient visual acceptance. GPU hard-edge renderer stage and pixel checker remain pending; no descriptor/performance claim is made.

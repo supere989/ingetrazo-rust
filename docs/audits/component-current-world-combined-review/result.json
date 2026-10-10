@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "workspace_tests": 448,
+  "ignored": 2,
+  "source_nested_history_controls": 6,
+  "base_main": "40ac2b1",
+  "scope": "combined component sharing, world edit, nested representation history with current native CAD colors; rendered UI/ordinary leaf policy/runtime axes consumers still pending"
+}

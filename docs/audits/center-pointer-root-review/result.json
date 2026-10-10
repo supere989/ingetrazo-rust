@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "positive": "acknowledged original motion invalidates displayed stale Center",
+  "negative": "coalesced own-process motion leaves stale displayed Center despite removed geometry and invalid reference, strict checker exits1",
+  "scope": "input delivery correction; production source frozen; separate native Move timeout open"
+}

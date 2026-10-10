@@ -1,0 +1,29 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-render)
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-tools)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-gui)
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.22s
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-center-ui/scripts/check-component-global-history.py", line 18, in <module>
+    failures=[label for good,label in checks if not good];assert not failures,failures
+                                                                 ^^^^^^^^^^^^
+AssertionError: ['classic-local-two-undo-redo-exit Finish ordering', 'classic-local-two-undo-redo-exit closed Undo', 'container-local-two-undo-redo-exit Finish ordering', 'container-local-two-undo-redo-exit closed Undo', 'classic-undo-prior-loose-command parked target/global order', 'container-undo-prior-loose-command parked target/global order', 'placed-component-undo-prior-loose-command parked target/global order']

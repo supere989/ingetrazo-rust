@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "phase": "group-before",
+      "wire": "4a3dabc3-6087-42d0-b366-afcf47a2a154",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-live-preview",
+      "wire": "4a3dabc3-6087-42d0-b366-afcf47a2a154",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-preview",
+      "wire": "4a3dabc3-6087-42d0-b366-afcf47a2a154",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-preview",
+      "wire": "actual-tool-preview",
+      "passed": true,
+      "hit_segments": 25,
+      "segments": 25,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-commit",
+      "wire": "4a3dabc3-6087-42d0-b366-afcf47a2a154",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-commit",
+      "wire": "8943d543-5d0d-4232-8ab3-1b799e50082f",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-array-undo",
+      "wire": "4a3dabc3-6087-42d0-b366-afcf47a2a154",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "scope": "Distributed visible ink on independently projected committed/preview wire paths; no state-transition-only acceptance"
+}

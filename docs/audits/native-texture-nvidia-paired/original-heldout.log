@@ -1,0 +1,1101 @@
+{
+  "cases": [
+    {
+      "case": "tex-back-color-front",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          177,
+          42,
+          42,
+          255
+        ],
+        [
+          69,
+          206,
+          42,
+          255
+        ],
+        [
+          69,
+          42,
+          206,
+          255
+        ],
+        [
+          179,
+          206,
+          206,
+          255
+        ],
+        [
+          124,
+          124,
+          124,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "32697d6c0afc8bd782a362edefa906bfd459a2bc29fd21ff65290fb6287c6faf"
+    },
+    {
+      "case": "tex-back-color-reversed",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          124,
+          29,
+          103,
+          255
+        ],
+        [
+          48,
+          145,
+          103,
+          255
+        ],
+        [
+          48,
+          29,
+          218,
+          255
+        ],
+        [
+          126,
+          145,
+          218,
+          255
+        ],
+        [
+          87,
+          87,
+          161,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "8600ffd9ddbab9f01a9c98bab834e7195dd1b533464b54255f36b4c464e1f6d4"
+    },
+    {
+      "case": "tex-trans-back-color-front",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          216,
+          149,
+          149,
+          255
+        ],
+        [
+          162,
+          231,
+          149,
+          255
+        ],
+        [
+          162,
+          149,
+          231,
+          255
+        ],
+        [
+          217,
+          231,
+          231,
+          255
+        ],
+        [
+          190,
+          190,
+          190,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "dc7238668607ba0162f8c6f9b2b16569b6eae6568fbbf8ae17ce213974360ea4"
+    },
+    {
+      "case": "tex-trans-back-color-reversed",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "ebc4d3eb2964221c78732cf26a580d38fe404b4888a72bf9021b1c75c13845c5"
+    },
+    {
+      "case": "tex-back-opaque-color-reversed",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "84449ad32f9512b758a8dbf561487b2e807404c26a2121e0b5247d77ab18672f"
+    },
+    {
+      "case": "color-back-tex-reversed",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ],
+        [
+          179,
+          179,
+          253,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "861054726bb818adfb885c8ae9deb25e14d18be167f4dc8f37f88e09f82eb350"
+    },
+    {
+      "case": "color-back-tex-front",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "a2d10a4885dd62522ce781cddc2f5a2829ea2dfcf14298aeb69ed675582a2bfd"
+    },
+    {
+      "case": "tex-hole",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          177,
+          42,
+          42,
+          255
+        ],
+        [
+          69,
+          206,
+          42,
+          255
+        ],
+        [
+          69,
+          42,
+          206,
+          255
+        ],
+        [
+          179,
+          206,
+          206,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "68d732fc14428af179b95139244f6688f49e2e34583d8481920496c3734737d9"
+    },
+    {
+      "case": "tex-group-reflected",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          88,
+          202,
+          66,
+          255
+        ],
+        [
+          143,
+          99,
+          28,
+          255
+        ],
+        [
+          140,
+          146,
+          220,
+          255
+        ],
+        [
+          85,
+          43,
+          182,
+          255
+        ],
+        [
+          124,
+          123,
+          124,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "f9af7f39c8ca4e516d1ace7ea59b4753d75dbd26a44e1019d6b0966630a5cea2"
+    },
+    {
+      "case": "tex-group-slanted",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          200,
+          42,
+          9,
+          255
+        ],
+        [
+          47,
+          206,
+          9,
+          255
+        ],
+        [
+          47,
+          42,
+          240,
+          255
+        ],
+        [
+          202,
+          206,
+          240,
+          255
+        ],
+        [
+          124,
+          124,
+          124,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "844cf7d88f679948bfa706578002d41e3ee885e90b647248a06d1a8a7fb21d04"
+    },
+    {
+      "case": "tex-mixed-order-tex-first",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "5528712b636474835889ae86e0b7f92f72c3239ce868b925fad31d0eb6974cb3"
+    },
+    {
+      "case": "tex-mixed-order-color-first",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ],
+        [
+          197,
+          118,
+          134,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "82fcee4bacf4192c91eca60d6e2931da4a871facec97ace8990127f9b79b10f5"
+    },
+    {
+      "case": "tex-mixed-backcolor-phase",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          143,
+          157,
+          228,
+          255
+        ],
+        [
+          143,
+          157,
+          228,
+          255
+        ],
+        [
+          143,
+          157,
+          228,
+          255
+        ],
+        [
+          143,
+          157,
+          228,
+          255
+        ],
+        [
+          143,
+          157,
+          228,
+          255
+        ]
+      ],
+      "style_mode": "textures",
+      "show_textures": true,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "02a7266728e00cad46e9335198c109b22e2ad93962aefd5cb0f78b8af0773c2a"
+    },
+    {
+      "case": "tex-shaded-average",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          127,
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          127,
+          127,
+          255
+        ]
+      ],
+      "style_mode": "shaded",
+      "show_textures": false,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "81ee362ade79a3800293635ec1984cd3231fe47386c0edb67154773855ccd2fa"
+    },
+    {
+      "case": "tex-xray",
+      "background": [
+        1,
+        1,
+        1
+      ],
+      "points": [
+        [
+          340,
+          240
+        ],
+        [
+          460,
+          240
+        ],
+        [
+          340,
+          360
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          400,
+          300
+        ]
+      ],
+      "samples": [
+        [
+          208,
+          127,
+          127,
+          255
+        ],
+        [
+          143,
+          226,
+          127,
+          255
+        ],
+        [
+          143,
+          127,
+          226,
+          255
+        ],
+        [
+          209,
+          226,
+          226,
+          255
+        ],
+        [
+          176,
+          176,
+          176,
+          255
+        ]
+      ],
+      "style_mode": "xray",
+      "show_textures": false,
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "native_input_sha256": "81ee362ade79a3800293635ec1984cd3231fe47386c0edb67154773855ccd2fa"
+    }
+  ],
+  "scope": "Actual original fifteen texture heldout cases; colored back, holes, transformed groups, mixed order, texture-average Shaded and XRay. All failures retained."
+}
+Fontconfig error: Cannot load default config file: No such file: (null)

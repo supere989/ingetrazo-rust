@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "original_cases": 20,
+  "native_controls": 2,
+  "scope": "controller context planes, heading and VCB across five frames; camera/ground world fallbacks preserved, pointer/inference/other tools pending"
+}

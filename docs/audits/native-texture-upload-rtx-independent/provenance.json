@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "source_revision": "59469ac",
+  "binary_sha256": "4ea6efaf485c2e4853ca35bb8053dd42e2863fa6a9411ef71806e3a4a416f1ab",
+  "immutable_image": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "backend": "NVIDIA RTX5090 strictdiscrete headless Vulkan",
+  "external_timeout_seconds": 40,
+  "image_bytes_every_byte_checked": 17825792,
+  "mip_extent": [
+    7,
+    5
+  ],
+  "mip_levels": 3,
+  "warm_image_staging_maps": 1,
+  "warm_image_staging_unmaps": 0,
+  "final_image_staging_maps": 2,
+  "final_image_staging_unmaps": 2,
+  "staging_peak": 8388608,
+  "command_allocations": 1,
+  "fence_creations": 1,
+  "final_ledger_bytes": 0,
+  "real_image_admission_denial_preserves_old_image": true,
+  "real_staging_denial_after_image_admission_preserves_old_image": true,
+  "guards": "Malformedlength/out-of-range mipreject; reserved0 afterdenials; oldGPUreadbackexact; retry succeeds",
+  "scope": "Image/resource upload only; no sampledtexture/UV/renderedwholepixels/compression/Metal acceptance; fencefailure exception device_wait_idle remainsunbounded production gate."
+}

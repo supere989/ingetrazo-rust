@@ -31,9 +31,9 @@ def main():
   try:
    assert select.select([server.stdout],[],[],10)[0];display=server.stdout.readline().strip();assert display.isdigit()
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["VK_DRIVER_FILES"]="/usr/share/vulkan/icd.d/lvp_icd.json";env["INGETRAZO_VULKAN_DEVICE"]="llvmpipe";env.pop("WAYLAND_DISPLAY",None)
-   log=open(directory/"runtime.log","w");command=[sys.executable,"scripts/original_center_ui_fixture.py",str(directory.resolve())] if original else [str(native_binary),str(directory.resolve())];app=subprocess.Popen(command,env=env,stdout=log,stderr=log)
+   log=open(directory/"runtime.log","w");command=[sys.executable,os.environ.get("INGETRAZO_ORIGINAL_UI_FIXTURE","scripts/original_center_ui_fixture.py"),str(directory.resolve())] if original else [str(native_binary),str(directory.resolve())];app=subprocess.Popen(command,env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
-   initial=wait(lambda:state() if state()["edges"]>0 else None)
+   initial=wait(lambda:state() if (state().get("entry_pixel") is not None if os.environ.get("INGETRAZO_CONTEXT_ENTRY_UI")=="1" else state()["edges"]>0) else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
    x.XDefaultRootWindow.argtypes=[C.c_void_p];x.XDefaultRootWindow.restype=C.c_ulong;root=x.XDefaultRootWindow(d)
    x.XQueryTree.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(C.c_ulong),C.POINTER(C.c_ulong),C.POINTER(C.POINTER(C.c_ulong)),C.POINTER(C.c_uint)]
@@ -64,6 +64,21 @@ def main():
    def ctrl_key(symbol):
     control=x.XKeysymToKeycode(d,0xffe3);event(2,control,None,1);key(symbol);event(3,control,None,2)
    assert mode=="group"
+   entry_before=None;entry_after=None
+   if os.environ.get("INGETRAZO_CONTEXT_ENTRY_UI")=="1":
+    time.sleep(.5);initial=state() # Existing viewport warmup must precede first entry capture.
+    entry_before=initial;assert initial["context_depth"]==0 and initial["entry_pixel"] is not None
+    capture("before-actual-context-entry")
+    import importlib.util
+    spec=importlib.util.spec_from_file_location("entry_pixels",Path("scripts/check-component-entry-pixels.py"));entry_pixels=importlib.util.module_from_spec(spec);spec.loader.exec_module(entry_pixels)
+    entry_pixels.inspect_one(directory,"before-actual-context-entry")
+    move(initial["entry_pixel"])
+    for _ in range(2):
+     assert xt.XTestFakeButtonEvent(d,1,1,0);x.XFlush(d);time.sleep(.04)
+     assert xt.XTestFakeButtonEvent(d,1,0,0);x.XFlush(d);time.sleep(.04)
+    entry_after=wait(lambda:state() if state()["context_depth"]==1 else None);capture("after-actual-context-entry");entry_pixels.inspect_one(directory,"after-actual-context-entry")
+    assert entry_after["undo"]==0 and entry_after["root_ids"]==entry_before["root_ids"],entry_after
+    key(0x6d);initial=wait(lambda:state() if state()["tool"]in ["Move","MoveTool"] else None)
    baseline_groups=initial["group_count"]
    time.sleep(.5);capture("group-before")
    move(initial["rim"]);click(initial["rim"]);move(initial["move_target"])
@@ -113,7 +128,7 @@ def main():
     assert initial["context_depth"]==1
     for observed in [live,preview,copied,spaced,retyped,undone]:assert observed["context_depth"]==1,observed
     if not original:assert undone["definitions"]==initial["definitions"],undone
-   published=None
+   published=None;finished_undo=None;finished_redo=None
    if os.environ.get("INGETRAZO_CONTEXT_EXIT"):
     key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"]);click(initial["move_target"])
     edited=wait(lambda:state() if state()["undo"]==1 and state()["anchor"] is None else None)
@@ -129,11 +144,30 @@ def main():
     expected_sibling=initial["root_child_world_centers"][1][0] if original else [initial["active_world_centers"][0][0]+10,initial["active_world_centers"][0][1],initial["active_world_centers"][0][2]]
     assert close(published["root_child_world_centers"][1][0],expected_sibling),published
     assert published["undo"]==(1 if os.environ.get("INGETRAZO_CONTEXT_EXIT")=="finish" else 0),published
-   report={"published":published,"cancelled_preview":cancelled,"nested_local":os.environ.get("INGETRAZO_GROUP_NESTED")=="1","linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
+   if os.environ.get("INGETRAZO_CONTEXT_HISTORY")=="1":
+    assert os.environ.get("INGETRAZO_CONTEXT_EXIT")=="finish"
+    assert published["root_ids"]==initial["root_ids"],published
+    ctrl_key(0x7a)
+    finished_undo=wait(lambda:state() if state()["undo"]==0 and state()["redo"]==1 and state()["context_depth"]==0 else None)
+    capture("finished-global-undo")
+    assert finished_undo["root_ids"]==initial["root_ids"] and finished_undo["root_child_counts"]==[1,1],finished_undo
+    assert close(finished_undo["root_child_world_centers"][0][0],initial["active_world_centers"][0]),finished_undo
+    assert close(finished_undo["root_child_world_centers"][1][0],published["root_child_world_centers"][1][0]),finished_undo
+    if original and os.environ.get("INGETRAZO_REDO_MENU")=="1":
+     click(finished_undo["edit_menu_pixel"]);menu_state=wait(lambda:state() if state().get("redo_menu_pixel") else None);click(menu_state["redo_menu_pixel"])
+    elif original:
+     control=x.XKeysymToKeycode(d,0xffe3);shift=x.XKeysymToKeycode(d,0xffe1)
+     event(2,control,None,1);event(2,shift,None,1);key(0x7a);event(3,shift,None,2);event(3,control,None,2)
+    else:ctrl_key(0x79)
+    finished_redo=wait(lambda:state() if state()["undo"]==1 and state()["redo"]==0 and state()["context_depth"]==0 else None)
+    capture("finished-global-redo")
+    assert finished_redo["root_ids"]==published["root_ids"] and finished_redo["root_child_counts"]==published["root_child_counts"],finished_redo
+    assert all(close(a[0],b[0]) for a,b in zip(finished_redo["root_child_world_centers"],published["root_child_world_centers"])),finished_redo
+   report={"entry_before":entry_before,"entry_after":entry_after,"finished_undo":finished_undo,"finished_redo":finished_redo,"original_mainwindow":original and bool(finished_redo and finished_redo.get("main_window_actions")),"published":published,"cancelled_preview":cancelled,"nested_local":os.environ.get("INGETRAZO_GROUP_NESTED")=="1","linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
    report["world_visibility_acceptance"]="Pending independent projected-segment pixel controls; state transitions and captures alone do not prove committed world wire rendering."
    report["checker_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-   report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
+   report["executable_sha256"]=hashlib.sha256((Path(os.environ.get("INGETRAZO_ORIGINAL_UI_FIXTURE","scripts/original_center_ui_fixture.py")) if original else native_binary).read_bytes()).hexdigest()
    if False:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select/Undo shortcuts wired to original public actions, software GL Xvfb. "+("Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy and Undo; arrays/othercopytypes separate." if os.environ.get("INGETRAZO_MOVE_COPY")=="1" else "Move/Delete original geometry/history, center acquisition and invalidation; broader Move workflow separate.")
    Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Actual center gesture PASS",mode,"original" if original else "native")
   finally:

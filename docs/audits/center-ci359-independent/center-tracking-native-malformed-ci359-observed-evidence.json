@@ -1,0 +1,286 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "359d393550c585427b93f7f3a8de593675f8bbf5",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "malformed",
+  "early": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 25,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [],
+    "mode": "malformed",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 0.115907979,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 25,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "acquired": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 25,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        3.2,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "malformed",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 0.370619379,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 25,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "centered": {
+    "active_world_centers": [],
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "committed_wire_segments": [],
+    "context_depth": 0,
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "definitions": {},
+    "edges": 25,
+    "faces": 0,
+    "group_centers": [],
+    "group_count": 0,
+    "group_definitions": [],
+    "group_ids": [],
+    "inference_point": [
+      1.9999999999999583,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        3.2,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "malformed",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "preview_wire_segments": [],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "selection_count": 0,
+    "time": 0.773404353,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 25,
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "approach_hint_metrics": {
+    "filled_center": false,
+    "core_green": 0,
+    "outer_green": 0,
+    "core_samples": 25,
+    "majority_threshold": 13
+  },
+  "approach_green_pixels": 0,
+  "elapsed_wall_seconds": 0.30147788499016315,
+  "scope": "Actual native Vulkan production UI pointer and frame clock; tiny dot quiet or malformed fit rejected, no geometry/undo mutation; llvmpipe Xvfb engineering backend.",
+  "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+  "executable_sha256": "988723bc21fd9af1e5874dd35b58a1989ed97f1934b95ed46b570b2bfe70788e"
+}

@@ -1,0 +1,39 @@
+Production3378428 retains world-X rectangle heading; newly frozen source twenty context controls fail. Current production is restored after run.
+
+running 2 tests
+test actual_world_hover_plane_wins_while_context_red_controls_rectangle_heading ... FAILED
+test actual_original_reentry_rectangle_controller_frames_and_arrow_locks ... FAILED
+
+failures:
+
+---- actual_world_hover_plane_wins_while_context_red_controls_rectangle_heading stdout ----
+
+thread 'actual_world_hover_plane_wins_while_context_red_controls_rectangle_heading' (1878153) panicked at crates/ingetrazo-tools/tests/rectangle_context_axes.rs:24:343:
+assertion failed: f.vertices.iter().any(|i| (p[*i].position - (start + u * 2.)).length() < 1e-9)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- actual_original_reentry_rectangle_controller_frames_and_arrow_locks stdout ----
+
+thread 'actual_original_reentry_rectangle_controller_frames_and_arrow_locks' (1878152) panicked at crates/ingetrazo-tools/tests/rectangle_context_axes.rs:15:3:
+"placed-empty" null: [DVec3(3.0, 2.0, 2.0), DVec3(1.0, 2.0, 2.0), DVec3(1.0, -1.0, 2.0), DVec3(3.0, -1.0, 2.0)] vs [Array [Number(1.0), Number(-1.0), Number(2.0)], Array [Number(2.841009616851806), Number(-0.21853774785995483), Number(2.0)], Array [Number(1.668816089630127), Number(2.542977094650269), Number(2.0)], Array [Number(-0.1721935272216797), Number(1.7615149021148682), Number(2.0)]]
+
+
+failures:
+    actual_original_reentry_rectangle_controller_frames_and_arrow_locks
+    actual_world_hover_plane_wins_while_context_red_controls_rectangle_heading
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-tools)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running tests/rectangle_context_axes.rs (target/debug/deps/rectangle_context_axes-f4737fb4624f19cc)
+error: test failed, to rerun pass `-p ingetrazo-tools --test rectangle_context_axes`

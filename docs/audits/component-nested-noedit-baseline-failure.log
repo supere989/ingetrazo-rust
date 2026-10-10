@@ -1,0 +1,42 @@
+Production 3c2deaa fails newly frozen nested no-edit History source controls; expected retained failure.
+
+running 1 test
+test nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands ... FAILED
+
+failures:
+
+---- nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands stdout ----
+
+thread 'nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands' (1860802) panicked at crates/ingetrazo-gui/tests/move_component_arrays.rs:202:3:
+assertion `left == right` failed: {"authored_parent":false,"history_after_inner":0,"history_after_outer":0,"history_before_inner":0,"inner_container":true,"parent_command":"none","parent_faces":0,"selected_matrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0],"selected_shared_with_sibling":false,"selected_vertices":[[-2.854212760925293,0.19859015941619873,4.0],[-4.614779472351074,-0.548725962638855,3.7076282501220703],[-4.026406288146973,2.9601049423217773,4.0]],"sibling_matrix":[-1.760566473007202,-0.7473161220550537,-0.2923716902732849,0.0,-1.17219340801239,2.761514663696289,0.0,0.0,-0.5382591485977173,-0.22847743332386017,0.9563047885894777,0.0,-17.582290649414062,-6.053107738494873,4.0,1.0],"sibling_vertices":[[0.0,0.0,0.0],[1.0,0.0,0.0],[0.0,1.0,0.0]]}
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running tests/move_component_arrays.rs (target/debug/deps/move_component_arrays-95dce6883792475d)
+error: test failed, to rerun pass `-p ingetrazo-gui --test move_component_arrays`

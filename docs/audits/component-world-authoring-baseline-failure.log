@@ -1,0 +1,21 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.45s
+     Running tests/move_component_arrays.rs (target/debug/deps/move_component_arrays-95dce6883792475d)
+
+running 1 test
+test root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces ... FAILED
+
+failures:
+
+---- root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces stdout ----
+
+thread 'root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces' (1791289) panicked at crates/ingetrazo-gui/tests/move_component_arrays.rs:129:160:
+world point DVec3(12.841009616851807, -0.21853774785995483, 0.0) missing from source [Array [Number(14.013202667236328), Number(-2.9800524711608887), Number(0.0)], Array [Number(16.486494064331055), Number(0.6166467666625977), Number(0.0)], Array [Number(8.618154525756836), Number(3.729886054992676), Number(0.0)]]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p ingetrazo-gui --test move_component_arrays`

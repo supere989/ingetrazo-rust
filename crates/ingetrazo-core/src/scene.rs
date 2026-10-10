@@ -33,8 +33,19 @@ pub enum SelectionItem {
 pub struct Scene {
     #[serde(skip)]
     pub dimension_frame:glam::DMat4,
+    /// Original world-space context frame; runtime only, independent of the
+    /// active mesh coordinate map in dimension_frame.
+    #[serde(skip)]
+    pub drawing_frame: Option<glam::DMat4>,
+    /// Runtime command mesh identity. Empty targets the document; each stable
+    /// placement ID identifies an active nested edit view. Never persisted.
+    #[serde(skip)]
+    pub history_context: Vec<uuid::Uuid>,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
+    /// Authoritative shared Mesh prototypes; placement topology is independent.
+    #[serde(default)]
+    pub mesh_shares: HashMap<uuid::Uuid, Mesh>,
     /// Original native payload and modeled snapshot. Unchanged fields retain their
     /// source representation, including future/extension metadata.
     #[serde(default)]
@@ -84,7 +95,10 @@ impl Scene {
 
         Self {
             dimension_frame:glam::DMat4::IDENTITY,
+            drawing_frame:None,
+            history_context:vec![],
             component_definitions: HashMap::new(),
+            mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             mesh: Mesh::new(),
@@ -113,6 +127,10 @@ impl Scene {
             sheets: Vec::new(),
             active_sheet_index: None,
         }
+    }
+
+    pub fn drawing_axes(&self) -> crate::drawing_axes::DrawingAxes {
+        crate::drawing_axes::DrawingAxes::from_frame(self.drawing_frame)
     }
 
     pub fn bump_version(&mut self) {

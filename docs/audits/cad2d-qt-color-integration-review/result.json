@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "workspace_passed": 431,
+  "workspace_ignored": 2,
+  "qt_channel_alpha_pairs": 65536,
+  "hardware_colors": 10,
+  "scope": "constant brush colors only; shape AA and Metal remain open"
+}

@@ -1,6 +1,56 @@
 name: Rust and semantic acceptance
 on: [push, pull_request]
 jobs:
+  metal-native-link:
+    name: Native Metal framework link (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Link native device probe against Apple frameworks
+        run: |
+          mkdir -p docs/audits/metal-native-link-ci
+          cargo build --locked -p ingetrazo-metal --example device_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
+          otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
+      - name: Retain native linking evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-link-${{ matrix.runner }}
+          path: docs/audits/metal-native-link-ci/
+          if-no-files-found: error
+  metal-cross-compilation:
+    name: Native Metal compile (${{ matrix.target }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-apple-darwin, x86_64-apple-darwin]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Check native Metal library and device probe
+        run: |
+          mkdir -p docs/audits/metal-cross-ci
+          cargo check --locked -p ingetrazo-metal --all-targets --target ${{ matrix.target }} > docs/audits/metal-cross-ci/check.log 2>&1
+      - name: Retain compile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-compile-${{ matrix.target }}
+          path: docs/audits/metal-cross-ci/
+          if-no-files-found: error
   compilation-and-tests:
     runs-on: ubuntu-24.04
     steps:
@@ -22,7 +72,7 @@ jobs:
       - name: Persistent shared-buffer HLR and worker deadline controls
         run: cargo run --locked -p ingetrazo-render --example process_hlr_acceptance -- target/debug/ingetrazo-render-worker
       - name: Build direct Vulkan host and allocation probe
-        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe --example native_vulkan_upload_churn
+        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe --example native_vulkan_upload_churn --example native_vulkan_texture_upload_probe
       - name: Direct Vulkan virtual-display lifecycle
         run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan docs/audits/native-vulkan-ci-host
       - name: Actual Vulkan image and staging denial rollback
@@ -37,6 +87,10 @@ jobs:
         run: |
           mkdir -p docs/audits/upload-many-ci
           timeout 30s target/debug/examples/native_vulkan_upload_churn --software-fixture > docs/audits/upload-many-ci/result.json 2> docs/audits/upload-many-ci/runtime.log
+      - name: Native texture image mip staging and pressure controls
+        run: |
+          mkdir -p docs/audits/texture-upload-ci
+          timeout 40s target/debug/examples/native_vulkan_texture_upload_probe --software-fixture > docs/audits/texture-upload-ci/probe.log 2>&1
       - name: Software-rendered virtual-display startup
         run: scripts/render-smoke.sh
       - name: Semantic document acceptance
@@ -48,6 +102,13 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Exact original Qt and production CAD color protocol
+        run: |
+          mkdir -p docs/audits/cad2d-color-ci
+          QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad-span-multiply.py > docs/audits/cad2d-color-ci/byte-span-law.json
+          QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad2d-premultiply.py docs/audits/cad2d-color-ci/original
+          cargo run --locked -p ingetrazo-render --example cad2d_premultiply_protocol -- docs/audits/cad2d-color-ci/native.bin
+          QT_QPA_PLATFORM=offscreen python scripts/check-cad2d-premultiply.py docs/audits/cad2d-color-ci/original docs/audits/cad2d-color-ci/native.bin --output docs/audits/cad2d-color-ci/result.json
       - name: Build production native composer cache fixture
         run: cargo build --locked -p ingetrazo-gui --example composer_native_cache
       - name: Native Vulkan composer cache edit history context and recovery
@@ -187,9 +248,13 @@ jobs:
             docs/audits/sheet-export-ci/*
             docs/audits/sheet-view-dxf/*
             docs/audits/move-inference-source-evidence.json
+            docs/audits/texture-upload-ci/
+            docs/audits/cad2d-color-ci/
             docs/audits/center-tracking-*-ci-evidence.json
             docs/audits/center-tracking-*-ci/*.png
             docs/audits/center-tracking-*-ci/runtime.log
+            docs/audits/center-tracking-*-ci/*state.json
+            docs/audits/center-tracking-*-ci/failure.json
             docs/audits/python-screen-snap-evidence.json
             docs/audits/python-perspective-screen-evidence.json
             docs/audits/python-snap-eye-boundary-evidence.json

@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "candidate": "4c698cf0088acef72691be94e604ac532ac4c19b",
+  "checks": [
+    "original source actual object identity",
+    "published component-false shared Mesh",
+    "equal different prototypes independent",
+    "published vertices and flags",
+    "placement UID preservation",
+    "Make Unique object detachment",
+    "independent unequal parent child lists preserve shared child Mesh",
+    "internal codec comparison identities stripped",
+    "component-marked private ownMesh saves independently without changing shared children"
+  ],
+  "files": {
+    "source.igz": "5bc9dfbbcfa7faf5d4498fc5326bca40a8ef5005505c3f7df72cfb93bd91ecd1",
+    "published.igz": "cb5574b2c706a14c9ab3acdbf73c4007db940dfb269ea20d4b249c5c10760268",
+    "unique.igz": "8dc2ab92eda47d85fe4dfcdca6d2a00e40cde866ad612ef8881d7d6555fe9fb0",
+    "private-container.igz": "1b8db6fe944b366be0a70cd151df44b6247190a14a29635caf63a48e1d60bd5c"
+  },
+  "scope": "Original actual loader and Mesh object identity; no rendered component Finish claim."
+}

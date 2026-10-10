@@ -37,7 +37,8 @@ fn same_model(a:&Scene,b:&Scene)->bool {
     a.sheets==b.sheets &&
     a.native_document==b.native_document &&
     a.native_baseline==b.native_baseline &&
-    a.component_definitions==b.component_definitions
+    a.component_definitions==b.component_definitions &&
+    a.mesh_shares==b.mesh_shares
 }
 impl IngeTrazoApp {
     pub fn mark_document_clean(&mut self) {self.document_session.clean=Some(self.scene.clone());self.document_session.autosaved=None;self.document_session.last_autosave=Instant::now();}
@@ -76,7 +77,7 @@ impl IngeTrazoApp {
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
-                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
+                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
                     self.document_session.recovered_slot=Some(record.slot);self.document_session.clean=None;
                     self.document_session.show_recovery=false;self.status_message="Recovered unsaved copy; save it to a new file".into();},
                 Err(e)=>self.status_message=format!("Recovery failed: {e}"),
@@ -144,6 +145,40 @@ mod tests {
     use super::*;use glam::DVec3;
     fn root()->PathBuf {std::env::temp_dir().join(format!("ingetrazo-lifecycle-{}",uuid::Uuid::new_v4()))}
     fn triangle(app:&mut IngeTrazoApp,p:DVec3) {let ids=[p,p+DVec3::X,p+DVec3::Y].map(|v|app.scene.mesh.add_vertex(v));app.scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();}
+    #[test]
+    fn foreign_mesh_import_cache_retires_only_after_document_replacement() {
+        let mut app=IngeTrazoApp::default();
+        let key=(app.clipboard_document,uuid::Uuid::new_v4(),uuid::Uuid::new_v4(),7);
+        let imported=uuid::Uuid::new_v4();
+        app.clipboard_mesh_share_imports.insert(key,imported);
+        app.open_document_unchecked(&root().join("missing.igz"));
+        assert_eq!(app.clipboard_mesh_share_imports.get(&key),Some(&imported));
+        app.new_document_unchecked();
+        assert!(app.clipboard_mesh_share_imports.is_empty());
+        let directory=root();std::fs::create_dir_all(&directory).unwrap();
+        let file=directory.join("valid.igz");
+        ingetrazo_formats::igz::save_igz(&Scene::new(),&file).unwrap();
+        app.clipboard_mesh_share_imports.insert(key,imported);
+        app.open_document_unchecked(&file);
+        assert!(app.clipboard_mesh_share_imports.is_empty());
+        assert_eq!(app.current_file,Some(file));
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+    #[test]
+    fn mesh_prototype_registry_changes_require_unsaved_close_confirmation() {
+        let mut app=IngeTrazoApp::default();
+        app.mark_document_clean();
+        let token=uuid::Uuid::new_v4();
+        app.scene.register_mesh_share(token,ingetrazo_core::mesh::Mesh::new()).unwrap();
+        assert!(app.document_dirty());
+        app.request_document_action(DocumentAction::Close);
+        assert!(app.document_session.confirm_unsaved);
+        assert!(!app.document_session.close_allowed);
+        app.cancel_document_action();
+        assert!(app.scene.mesh_shares.contains_key(&token));
+        app.scene.mesh_shares.remove(&token);
+        assert!(!app.document_dirty());
+    }
     #[test]
     fn unsaved_actions_cancel_failed_save_and_successful_save_are_atomic() {
         let root=root();std::fs::create_dir_all(&root).unwrap();

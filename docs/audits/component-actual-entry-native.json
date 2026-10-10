@@ -1,0 +1,64 @@
+{
+  "native_base": "98a9c97",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "kind": "native",
+  "entry": {
+    "context_depth": 1,
+    "root_ids": [
+      "af767017-e37a-491b-b2b8-f46ec5e3a2e5",
+      "5ac66694-0c60-485b-a681-0129f9a0db9a"
+    ],
+    "group_ids": [
+      "4a3dabc3-6087-42d0-b366-afcf47a2a154"
+    ],
+    "undo": 0,
+    "redo": 0,
+    "tool": "Select",
+    "entry_pixel": [
+      879.2700554731252,
+      378.504034736503
+    ],
+    "viewport_rect": [
+      50.0,
+      60.0,
+      1222.0,
+      709.6375122070312
+    ]
+  },
+  "finished_undo_world": [
+    [
+      [
+        3.0,
+        2.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        13.0,
+        2.0,
+        1.0
+      ]
+    ]
+  ],
+  "finished_redo_world": [
+    [
+      [
+        3.996167375759037,
+        2.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        13.0,
+        2.0,
+        1.0
+      ]
+    ]
+  ],
+  "executable_sha256": "a256af38b507fdb7b8aa894fd85957da31e503d68c013b6d7c1d33c8da9b6471",
+  "checker_sha256": "7624369fdd78197980af4127d6aaf2fe81677c085cb3179518c2b84fc2282e87",
+  "wire_pixel_checks": 9,
+  "scope": "Actual XTEST double-click entry, Move/array/retype/cancel, Finish/global Undo/Redo; source actual MainWindow Edit-menu Redo and native CtrlY. Software GPU, one translated container; broader nested leaf/hardware remain open."
+}

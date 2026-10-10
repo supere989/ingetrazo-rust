@@ -1,0 +1,19 @@
+{
+  "status": "open",
+  "runs": [
+    {
+      "head": "9421d4c",
+      "run": 38032137378,
+      "conclusion": "failure"
+    },
+    {
+      "head": "359d393",
+      "run": 38032281082,
+      "conclusion": "failure"
+    }
+  ],
+  "step": "Actual original and native center hint and Move UI controls",
+  "latest_failure": "Timed out awaiting undo==1 at check-native-center-tracking.py142",
+  "boundary": "No root cause or retry-success claim. Local renderer acceptance distinct from failing cloud gesture gate.",
+  "investigation": "Independent retained artifact/input/state diagnosis active"
+}

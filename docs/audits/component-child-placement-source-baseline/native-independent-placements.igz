@@ -1,0 +1,414 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 20.0,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 0.5235987755982988,
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": -0.7853981633974483
+    },
+    "compositions": [
+      {
+        "cajetin": {
+          "autor": "IngeTrazo Cad Engine",
+          "campos": [
+            [
+              "PROYECTO",
+              "Active-iQ Architecture"
+            ],
+            [
+              "AUTOR",
+              "IngeTrazo Cad Engine"
+            ],
+            [
+              "FECHA",
+              "2026-10-07"
+            ],
+            [
+              "ESCALA",
+              "1:100"
+            ],
+            [
+              "LÁMINA",
+              "A-01"
+            ],
+            [
+              "TÍTULO",
+              "General Plan"
+            ]
+          ],
+          "drawing_title": "General Plan",
+          "escala": "1:100",
+          "fecha": "2026-10-07",
+          "h_mm": 50.0,
+          "lamina": "A-01",
+          "proyecto": "Active-iQ Architecture",
+          "w_mm": 140.0,
+          "x_mm": 270.0,
+          "y_mm": 237.0
+        },
+        "frames": [
+          {
+            "annotations": true,
+            "border": true,
+            "cam_distance": null,
+            "cam_fov": null,
+            "cam_pitch": null,
+            "cam_target": null,
+            "cam_yaw": null,
+            "cut_fill": "solid",
+            "cut_fill_color": "#595e69",
+            "cut_hatch_mm": 1.5,
+            "h_mm": 207.0,
+            "hidden_lines": false,
+            "paper_bg": false,
+            "pen_cut_mm": 0.5,
+            "pen_edge_mm": 0.18,
+            "pen_profile_mm": 0.35,
+            "perspective": false,
+            "profiles": true,
+            "rot_deg": 0.0,
+            "scale_n": 100.0,
+            "section_marks": true,
+            "show_title": true,
+            "style": "vectorial",
+            "title_text": "Top Plan (1:100)",
+            "uid": "8c57cdc752a0444fb3241fd764854210",
+            "view_key": "std:top",
+            "w_mm": 380.0,
+            "x_mm": 20.0,
+            "y_mm": 20.0
+          }
+        ],
+        "landscape": true,
+        "margin_mm": 10.0,
+        "name": "Sheet 1",
+        "nortes": [],
+        "paper": "A3",
+        "scalebars": [],
+        "texts": []
+      }
+    ],
+    "dimensions": [],
+    "edges": [],
+    "faces": [],
+    "geo_paths": [],
+    "geo_points": [],
+    "georef": {
+      "datum": null
+    },
+    "groups": [
+      {
+        "billboard": false,
+        "children": [
+          {
+            "billboard": false,
+            "children": [],
+            "component": false,
+            "hidden": false,
+            "ifc": null,
+            "layer": null,
+            "name": "child",
+            "proto": 1,
+            "uid": "73b5ddcef85149f2802405e334ef7e98",
+            "xform": [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              3.0,
+              0.0,
+              1.0
+            ]
+          }
+        ],
+        "component": true,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "outer",
+        "proto": 0,
+        "uid": "e6b8ea591453483d88274712d1f77617",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "billboard": false,
+        "children": [
+          {
+            "billboard": false,
+            "children": [],
+            "component": false,
+            "hidden": false,
+            "ifc": null,
+            "layer": null,
+            "name": "child",
+            "proto": 2,
+            "uid": "fdcc03b19e934388b8c63b40ecec2233",
+            "xform": [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              2.0,
+              1.0
+            ]
+          }
+        ],
+        "component": true,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "outer",
+        "proto": 0,
+        "uid": "7b2178a40b314f8b85716210b6de267f",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    ],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "protos": [
+      {
+        "edges": [],
+        "faces": []
+      },
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              7.0
+            ],
+            "b": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              7.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                7.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              7.0
+            ],
+            "b": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              7.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                7.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}

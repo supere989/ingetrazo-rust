@@ -1,0 +1,6 @@
+QOpenGLWidget is not supported on this platform.
+This plugin does not support propagateSizeHints()
+QOpenGLWidget: Failed to create context
+QOpenGLWidget: Failed to create context
+QOpenGLWidget: Failed to create context
+Actual original QAction active-context history thirteen controls PASS; unsafe source face-loss retained

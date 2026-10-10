@@ -1,0 +1,22 @@
+[
+  {
+    "mutation": "geometry",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-world-reopen.py\", line 22, in <module>\n    assert len(group.mesh.vertices)==len(expected),name\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: leaf-scalar\n"
+  },
+  {
+    "mutation": "uv",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-world-reopen.py\", line 25, in <module>\n    close(group.mesh.faces[0].attrs[\"texture\"][\"uvw\"],row[prefix+\"_attrs_after\"][\"texture\"][\"uvw\"],name)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-world-reopen.py\", line 15, in close\n    assert all(abs(x-y)<2e-5 for x,y in zip(a,b)),(name,a,b)\n           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ('leaf-scalar', [2.0, 0.0, 0.0, 3.0, 0.0, 1.0, 0.0, 4.0], [1.0, 2.2351741790771484e-08, -2.1606684219577232e-09, 2.99999996304512, 0.0, 1.0000000298023224, -7.202228147207279e-09, 3.9999999801317845])\n"
+  },
+  {
+    "mutation": "transform",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-world-reopen.py\", line 24, in <module>\n    close(list(group.xform.data()),row[prefix+\"_matrix\"],name)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-world-reopen.py\", line 15, in close\n    assert all(abs(x-y)<2e-5 for x,y in zip(a,b)),(name,a,b)\n           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ('leaf-scalar', [-2.0, 0.0, 0.0, 0.0, 0.6000000238418579, 3.0, 0.0, 0.0, 0.0, 0.4000000059604645, 1.5, 0.0, 4.0, -2.0, 1.0, 1.0], [-2.0, 0.0, 0.0, 0.0, 0.6000000238418579, 3.0, 0.0, 0.0, 0.0, 0.4000000059604645, 1.5, 0.0, 3.0, -2.0, 1.0, 1.0])\n"
+  },
+  {
+    "mutation": "sharing",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-world-reopen.py\", line 19, in <module>\n    assert (groups[0].mesh is groups[1].mesh)==row[\"shared_after\"],name\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: leaf-scalar\n"
+  }
+]

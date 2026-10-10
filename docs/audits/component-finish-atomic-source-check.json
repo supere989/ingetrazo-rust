@@ -1,0 +1,105 @@
+{
+  "provenance": {
+    "rust_commit": "9535b33ae82e842fd325aad55909b522d4222df7",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "source_provenance": {
+    "rust_commit": "6afb3c1a9e2d9b86c955f5a5c7797fbce729c1c0",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "native_sha256": "06b1cfa96289c963115aa617098e4bded6bcc0418bda715cdf63ed114b8bdba1",
+  "scope": "Actual public GUI history/controller calls with explicit face mutation snapshots, six frozen original ordering recipes and two separately classified native integrity corrections. No native key/pixel acceptance; source actual Qt dispatch evidence retained separately.",
+  "source_checks_passed": 18,
+  "native_integrity_boundaries": [
+    {
+      "context_depth": 1,
+      "name": "native-safe-active-makeunique-refusal",
+      "scene_stable": true,
+      "stacks_stable": true,
+      "visible_refusal": true
+    },
+    {
+      "both_placements_redone": true,
+      "both_placements_undone": true,
+      "name": "native-safe-unchanged-finish-redo-rebind",
+      "redo_retained": true
+    }
+  ],
+  "negative_controls": [
+    "ordinary Finish collapse rejected",
+    "missing case rejected"
+  ],
+  "results": [
+    {
+      "active_redo_faces": 3,
+      "active_undo_faces": 2,
+      "exit_depth": 2,
+      "exit_redo_faces": 3,
+      "exit_undo_faces": 2,
+      "ids_preserved": true,
+      "name": "classic-local-two-undo-redo-exit"
+    },
+    {
+      "active_redo_depth": 1,
+      "active_stable": true,
+      "active_undo_depth": 0,
+      "exit_loose_faces": 1,
+      "loose_redo_faces": 1,
+      "loose_undo_faces": 0,
+      "name": "classic-undo-prior-loose-command"
+    },
+    {
+      "active_redo_faces": 3,
+      "active_undo_faces": 2,
+      "exit_depth": 2,
+      "exit_redo_faces": 3,
+      "exit_undo_faces": 2,
+      "ids_preserved": true,
+      "name": "container-local-two-undo-redo-exit"
+    },
+    {
+      "active_redo_depth": 1,
+      "active_stable": true,
+      "active_undo_depth": 0,
+      "exit_loose_faces": 1,
+      "loose_redo_faces": 1,
+      "loose_undo_faces": 0,
+      "name": "container-undo-prior-loose-command"
+    },
+    {
+      "active_redo_faces": 3,
+      "active_undo_faces": 2,
+      "exit_depth": 1,
+      "exit_redo_faces": 3,
+      "exit_undo_faces": 1,
+      "ids_preserved": true,
+      "name": "placed-component-local-two-undo-redo-exit"
+    },
+    {
+      "active_redo_depth": 1,
+      "active_stable": true,
+      "active_undo_depth": 0,
+      "exit_loose_faces": 1,
+      "loose_redo_faces": 1,
+      "loose_undo_faces": 0,
+      "name": "placed-component-undo-prior-loose-command"
+    },
+    {
+      "context_depth": 1,
+      "name": "native-safe-active-makeunique-refusal",
+      "scene_stable": true,
+      "stacks_stable": true,
+      "visible_refusal": true
+    },
+    {
+      "both_placements_redone": true,
+      "both_placements_undone": true,
+      "name": "native-safe-unchanged-finish-redo-rebind",
+      "redo_retained": true
+    }
+  ]
+}

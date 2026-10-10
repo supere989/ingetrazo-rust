@@ -26,8 +26,11 @@ def main():
  requested_delta=[float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0]
  suffix=os.environ.get("INGETRAZO_CENTER_RUN_SUFFIX","")
  directory=Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix);directory.mkdir(exist_ok=True)
+ evidence=directory.parent/(directory.name+"-evidence.json")
+ evidence.unlink(missing_ok=True)
+ (directory/"failure.json").unlink(missing_ok=True)
  for p in directory.iterdir():
-  if p.name=="state.json" or p.suffix==".png":p.unlink()
+  if p.name=="state.json" or p.name.endswith("-state.json") or p.suffix==".png":p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-reference-x11-") as t:
   server=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1200x900x24","-nolisten","tcp"],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
   app=None
@@ -36,6 +39,8 @@ def main():
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["VK_DRIVER_FILES"]="/usr/share/vulkan/icd.d/lvp_icd.json";env["INGETRAZO_VULKAN_DEVICE"]="llvmpipe";env.pop("WAYLAND_DISPLAY",None)
    log=open(directory/"runtime.log","w");command=[sys.executable,"scripts/original_center_ui_fixture.py",str(directory.resolve())] if original else [str(native_binary.resolve()),str(directory.resolve())];app=subprocess.Popen(command,env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
+   def observe(label):
+    (directory/(label+"-state.json")).write_text(json.dumps(state(),indent=2)+"\n")
    initial=wait(lambda:state() if state()["edges"]>0 else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
    x.XDefaultRootWindow.argtypes=[C.c_void_p];x.XDefaultRootWindow.restype=C.c_ulong;root=x.XDefaultRootWindow(d)
@@ -138,7 +143,7 @@ def main():
      assert close(undone["center"],expected) and undone["copy_center"] is None;capture("copy-undo")
      report={"passed":True,"provenance":context(),"mode":mode,"centered":centered,"live_preview":live,"control_states":states,"copy_preview":preview,"copied":copied,"undone":undone,"ghost_patch_changed_pixels":ghost_changed,"quiet_patch_changed_pixels":quiet_changed,"original_registry_retained_unused_vertices":undone["unused_vertices"],"complete_vertex_registry_parity":undone["vertices"]==initial["vertices"],"requested_copy_delta":requested_delta,"actual_copy_delta":delta,"scope":"Rendered native ash Vulkan full application XTEST Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy commit and Undo. Original geometry retained, no preview history, two distinct curve identities. Isolated llvmpipe Xvfb engineering backend, not hardware or general Move proof."}
     else:
-     ctrl_key(0x61);key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"]);click(initial["move_target"])
+     ctrl_key(0x61);observe("move-selected");key(0x6d);observe("move-tool");move(initial["rim"]);click(initial["rim"]);observe("move-grab");move(initial["move_target"]);observe("move-hover");click(initial["move_target"]);observe("move-click")
      moved=wait(lambda:state() if state()["undo"]==1 else None)
      actual_delta=[moved["center"][i]-expected[i] for i in range(3)]
      assert abs(actual_delta[1])<1e-6 and abs(actual_delta[2])<1e-6,moved
@@ -151,10 +156,27 @@ def main():
      move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
      moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
      assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
-     ctrl_key(0x61);key(0xffff)
-     move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
+     ctrl_key(0x61);observe("delete-selected");key(0xffff);observe("delete-key")
+     if original and os.environ.get("INGETRAZO_DELETE_COALESCE_NEGATIVE")=="1":
+      import signal
+      os.kill(app.pid,signal.SIGSTOP)
+      try:move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
+      finally:os.kill(app.pid,signal.SIGCONT)
+     else:
+      away=[moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]
+      move(away)
+      if original:
+       # Qt can compress an away/back pair to no event at all when its
+       # final position equals the old one. Acknowledge the actual first
+       # event before issuing the return, without retrying the gesture.
+       wait(lambda:state() if state().get("mouse_events") and state()["mouse_events"][-1]["edges"]==0 and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,away)))<1 else None)
+      move(moved["center_pixel"])
+      if original:wait(lambda:state() if state().get("mouse_events") and state()["mouse_events"][-1]["edges"]==0 and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,moved["center_pixel"])))<1 else None)
      deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
-     assert deleted["undo"]==2;capture("deleted-center")
+     assert deleted["undo"]==2
+     if original:
+      assert deleted["center_hint_observation"]["valid_reference"] is False and deleted["center_hint_observation"]["allowed"] is False
+     capture("deleted-center")
      report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_hint_metrics":hint_metrics,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":not hint_metrics["filled_center"],"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
    report["approach_hint_metrics"]=hint_metrics
@@ -162,6 +184,15 @@ def main():
    report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
    if original:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select/Undo shortcuts wired to original public actions, software GL Xvfb. "+("Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy and Undo; arrays/othercopytypes separate." if os.environ.get("INGETRAZO_MOVE_COPY")=="1" else "Move/Delete original geometry/history, center acquisition and invalidation; broader Move workflow separate.")
    Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Actual center gesture PASS",mode,"original" if original else "native")
+  except BaseException as error:
+   failure={"passed":False,"error":repr(error),"provenance":context(),"mode":mode,"original":original,"checker_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+   try:failure["last_state"]=state()
+   except (OSError,ValueError,NameError):pass
+   try:capture("failure")
+   except (OSError,AssertionError,subprocess.SubprocessError,NameError):pass
+   (directory/"failure.json").write_text(json.dumps(failure,indent=2)+"\n")
+   evidence.write_text(json.dumps(failure,indent=2)+"\n")
+   raise
   finally:
    if app:
     app.terminate()

@@ -59,3 +59,5 @@ pub mod circle_inference;
 pub mod sheet_shape;
 
 pub mod sheet_color;
+pub mod drawing_axes;
+pub mod gpu_memory;

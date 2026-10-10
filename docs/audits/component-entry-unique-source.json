@@ -1,0 +1,758 @@
+{
+  "provenance": {
+    "rust_commit": "0c6a71b16484ff05493ab84a1877991a59aa2639",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "scope": "Actual original Viewport begin/end edit, including automatic MakeUniqueCommand before edit mark. Six root/nested/plain/component/placed/classic identity controls; no rendered pointer proof.",
+  "cases": [
+    {
+      "kind": "root-plain-shared",
+      "source_unique_on_entry": true,
+      "before_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "entry_world_points": [
+        [
+          3.0,
+          -2.0,
+          1.0
+        ],
+        [
+          1.0,
+          -2.0,
+          1.0
+        ],
+        [
+          3.5999999046325684,
+          1.0,
+          1.0
+        ]
+      ],
+      "entry_drawing_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "after_matrix": null,
+      "after_axes": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "after_points": [
+        [
+          3.0,
+          -2.0,
+          1.0
+        ],
+        [
+          1.0,
+          -2.0,
+          1.0
+        ],
+        [
+          3.5999999046325684,
+          1.0,
+          1.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            -0.5,
+            0.10000000149011612,
+            -0.02666666731238365,
+            4.726666670292616,
+            0.0,
+            0.3333333432674408,
+            -0.08888889104127884,
+            4.75555557757616
+          ]
+        }
+      },
+      "same_original_prototype_after": false,
+      "sibling_same_mesh_after": false,
+      "sibling_in_context_after": true,
+      "history_after_entry": 1,
+      "history_after_no_edit_exit": 1,
+      "camera_unchanged": true
+    },
+    {
+      "kind": "root-component-shared",
+      "source_unique_on_entry": false,
+      "before_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "entry_world_points": [
+        [
+          3.0,
+          -2.0,
+          1.0
+        ],
+        [
+          1.0,
+          -2.0,
+          1.0
+        ],
+        [
+          3.5999999046325684,
+          1.0,
+          1.0
+        ]
+      ],
+      "entry_drawing_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "after_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "after_axes": null,
+      "after_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            1.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            1.0,
+            0.0,
+            4.0
+          ]
+        }
+      },
+      "same_original_prototype_after": true,
+      "sibling_same_mesh_after": true,
+      "sibling_in_context_after": true,
+      "history_after_entry": 0,
+      "history_after_no_edit_exit": 0,
+      "camera_unchanged": true
+    },
+    {
+      "kind": "root-plain-unshared",
+      "source_unique_on_entry": false,
+      "before_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "entry_world_points": [
+        [
+          3.0,
+          -2.0,
+          1.0
+        ],
+        [
+          1.0,
+          -2.0,
+          1.0
+        ],
+        [
+          3.5999999046325684,
+          1.0,
+          1.0
+        ]
+      ],
+      "entry_drawing_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "after_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "after_axes": null,
+      "after_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            1.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            1.0,
+            0.0,
+            4.0
+          ]
+        }
+      },
+      "same_original_prototype_after": true,
+      "sibling_same_mesh_after": null,
+      "sibling_in_context_after": false,
+      "history_after_entry": 0,
+      "history_after_no_edit_exit": 0,
+      "camera_unchanged": true
+    },
+    {
+      "kind": "classic-plain-shared",
+      "source_unique_on_entry": false,
+      "before_matrix": null,
+      "entry_world_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "entry_drawing_frame": null,
+      "after_matrix": null,
+      "after_axes": null,
+      "after_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            1.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            1.0,
+            0.0,
+            4.0
+          ]
+        }
+      },
+      "same_original_prototype_after": true,
+      "sibling_same_mesh_after": true,
+      "sibling_in_context_after": true,
+      "history_after_entry": 0,
+      "history_after_no_edit_exit": 0,
+      "camera_unchanged": true
+    },
+    {
+      "kind": "nested-plain-parent",
+      "source_unique_on_entry": true,
+      "before_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "entry_world_points": [
+        [
+          5.0,
+          -3.0,
+          5.0
+        ],
+        [
+          3.0,
+          -3.0,
+          5.0
+        ],
+        [
+          5.599999904632568,
+          0.0,
+          5.0
+        ]
+      ],
+      "entry_drawing_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "after_matrix": null,
+      "after_axes": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "after_points": [
+        [
+          5.0,
+          -3.0,
+          5.0
+        ],
+        [
+          3.0,
+          -3.0,
+          5.0
+        ],
+        [
+          5.599999904632568,
+          0.0,
+          5.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            -0.5,
+            0.10000000149011612,
+            -0.02666666731238365,
+            5.933333341032267,
+            0.0,
+            0.3333333432674408,
+            -0.08888889104127884,
+            5.444444485008717
+          ]
+        }
+      },
+      "same_original_prototype_after": false,
+      "sibling_same_mesh_after": false,
+      "sibling_in_context_after": true,
+      "history_after_entry": 1,
+      "history_after_no_edit_exit": 1,
+      "camera_unchanged": true
+    },
+    {
+      "kind": "nested-component-parent",
+      "source_unique_on_entry": false,
+      "before_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "entry_world_points": [
+        [
+          5.0,
+          -3.0,
+          5.0
+        ],
+        [
+          3.0,
+          -3.0,
+          5.0
+        ],
+        [
+          5.599999904632568,
+          0.0,
+          5.0
+        ]
+      ],
+      "entry_drawing_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "after_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "after_axes": null,
+      "after_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            1.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            1.0,
+            0.0,
+            4.0
+          ]
+        }
+      },
+      "same_original_prototype_after": true,
+      "sibling_same_mesh_after": true,
+      "sibling_in_context_after": true,
+      "history_after_entry": 0,
+      "history_after_no_edit_exit": 0,
+      "camera_unchanged": true
+    },
+    {
+      "kind": "nested-deleted-sibling",
+      "source_unique_on_entry": false,
+      "before_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "entry_world_points": [
+        [
+          5.0,
+          -3.0,
+          5.0
+        ],
+        [
+          3.0,
+          -3.0,
+          5.0
+        ],
+        [
+          5.599999904632568,
+          0.0,
+          5.0
+        ]
+      ],
+      "entry_drawing_frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "after_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6000000238418579,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4000000059604645,
+        1.5,
+        0.0,
+        5.0,
+        -3.0,
+        5.0,
+        1.0
+      ],
+      "after_axes": null,
+      "after_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "after_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            1.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            1.0,
+            0.0,
+            4.0
+          ]
+        }
+      },
+      "same_original_prototype_after": true,
+      "sibling_same_mesh_after": true,
+      "sibling_in_context_after": false,
+      "history_after_entry": 1,
+      "history_after_no_edit_exit": 1,
+      "camera_unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-vulkan/crates/ingetrazo-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_render-48fb10131abf9ca4)
+
+running 1 test
+test cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs ... FAILED
+
+failures:
+
+---- cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs stdout ----
+
+thread 'cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs' (1806936) panicked at crates/ingetrazo-render/src/cad2d.rs:40:239:
+assertion `left == right` failed: channel=229 alpha=152
+  left: [0.53333336, 0.53333336, 0.53333336]
+ right: [0.5372549, 0.5372549, 0.5372549]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 31 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p ingetrazo-render --lib`

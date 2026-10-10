@@ -1,0 +1,20 @@
+{
+  "Qt_tag": "v6.12.0",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qcompositionfunctions.cpp",
+      "sha256": "321b1a1748724a6dac4bf18393c8bf3466cc1b4d8c5221431a241951ef15f7b1"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qdrawhelper_p.h",
+      "sha256": "299bfba267922062d617a3a1ed87ba3c7bbbbdf74761419fd2ea6893cf8c3583"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qdrawhelper.cpp",
+      "sha256": "d8c736c1ea1f29344d3abf3db1b671a358df0a7be70b2c318fd250d0e21e93aa"
+    }
+  ],
+  "shader_compiler": "shaderc=0.8.3",
+  "binary_sha256": "7181e70d4d3b85b0a3aa4dbb8fd9812bfceaef702d868a8451bb548a766cf1f5",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c"
+}

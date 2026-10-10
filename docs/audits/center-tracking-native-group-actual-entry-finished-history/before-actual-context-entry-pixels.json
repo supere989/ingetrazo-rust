@@ -1,0 +1,18 @@
+{
+  "phase": "before-actual-context-entry",
+  "group_id": "4a3dabc3-6087-42d0-b366-afcf47a2a154",
+  "entry_pixel": [
+    879.2700554731252,
+    378.504034736503
+  ],
+  "passed": true,
+  "hit_segments": 24,
+  "segments": 24,
+  "fraction": 1.0,
+  "quarters": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ]
+}

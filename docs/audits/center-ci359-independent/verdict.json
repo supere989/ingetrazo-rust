@@ -1,0 +1,45 @@
+{
+  "fresh_local_cases": [
+    {
+      "name": "native-curve-ci359-final",
+      "passed": true,
+      "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+      "executable_sha256": "988723bc21fd9af1e5874dd35b58a1989ed97f1934b95ed46b570b2bfe70788e"
+    },
+    {
+      "name": "original-curve-ci359-final",
+      "passed": true,
+      "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+      "executable_sha256": "26e0ab389822e74f85aae87c357f8a3b3c117631eff9c2a665aadf9b72e4ec49"
+    },
+    {
+      "name": "native-tiny-ci359-observed",
+      "passed": true,
+      "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+      "executable_sha256": "4799ec0a8208d3007445405425e92ae6eecc217071d396686750bfa33528bf41"
+    },
+    {
+      "name": "original-tiny-ci359-observed-restored",
+      "passed": true,
+      "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+      "executable_sha256": "26e0ab389822e74f85aae87c357f8a3b3c117631eff9c2a665aadf9b72e4ec49"
+    },
+    {
+      "name": "native-malformed-ci359-observed",
+      "passed": true,
+      "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+      "executable_sha256": "988723bc21fd9af1e5874dd35b58a1989ed97f1934b95ed46b570b2bfe70788e"
+    },
+    {
+      "name": "original-malformed-ci359-observed-restored",
+      "passed": true,
+      "checker_sha256": "e2332b58b17509ee891bf15e206fc417a9c5610d5bb51f9b6f78b7ca902e6806",
+      "executable_sha256": "26e0ab389822e74f85aae87c357f8a3b3c117631eff9c2a665aadf9b72e4ec49"
+    }
+  ],
+  "latent_observer_failure_reproduced_then_corrected": true,
+  "failure_guard_actual_negative_passed": true,
+  "public_ci_942_and359": "FAIL; differentstages, missingstate preventsdefinitiveattribution",
+  "input_timing_or_retries_changed": false,
+  "scope": "Read-only observability and fixture regression correction; no productionMove/Delete fix, no cloud green claim."
+}
