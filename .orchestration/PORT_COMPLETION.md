@@ -314,3 +314,5 @@ Canonical source252704fb passes543 workspace tests/twoignored. Immutable backend
 Canonical3f0d8854 presentation/controller codec integration:548PASS/twoignored, fresh runtime16parser/13reopen and savedview deletion PASS. All37rows/fivegates remainOPEN. Prior main8c40 VulkanCI and isolatedMetal897 native lifecycle failures retained as unresolved; follow-up audit required.
 
 Canonical image-plane9e15aaca reviewedintegration:551PASS/twoignored, actual56states/fourasset-exactoriginalreopens/presentationregressionPASS. Productionmove-negativecaught. Cloudpending. All37rows/fivegatesstayOPEN.
+
+Canonicala5d3c3bcimageownership:555PASS2ignored;19layer3lifetime56image4archivepresentationPASS. CIearlier112alljobsSUCCESS, currentpending. All37/fivegatesOPEN.

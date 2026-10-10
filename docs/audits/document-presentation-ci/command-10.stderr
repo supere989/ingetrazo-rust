@@ -18,5 +18,5 @@ warning: function `scene_from_xml` is never used
 
 warning: `ingetrazo-core` (lib) generated 1 warning
 warning: `ingetrazo-formats` (lib) generated 1 warning
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.51s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.47s
      Running `target/debug/examples/presentation_file_codec docs/audits/document-presentation-ci/files`

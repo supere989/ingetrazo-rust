@@ -1,0 +1,115 @@
+[
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-image-layer-ownership.py",
+      "docs/audits/image-ownership-canonical/original-layers.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "image_layer_ownership"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-image-layer-ownership.py",
+      "docs/audits/image-ownership-canonical/original-layers.json",
+      "docs/audits/image-ownership-canonical/native-layers.json",
+      "docs/audits/image-layer-command-ownership/literal-old-native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-image-object-lifetime.py",
+      "docs/audits/image-ownership-canonical/original-lifetime.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "image_object_lifetime"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-image-object-lifetime.py",
+      "docs/audits/image-ownership-canonical/original-lifetime.json",
+      "docs/audits/image-ownership-canonical/native-lifetime.json",
+      "docs/audits/image-object-branch-lifetime/literal-old-native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/probe-python-image-planes.py",
+      "docs/audits/image-ownership-canonical/original"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "image_plane_acceptance_fixture",
+      "--",
+      "docs/audits/image-ownership-canonical/original",
+      "docs/audits/image-ownership-canonical/native"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-image-plane-ownership.py",
+      "docs/audits/image-ownership-canonical/original/original.json",
+      "docs/audits/image-ownership-canonical/native/native.json",
+      "docs/audits/image-plane-runtime-baseline/native.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/reopen-python-image-planes.py",
+      "docs/audits/image-ownership-canonical/original/original.json",
+      "docs/audits/image-ownership-canonical/native",
+      "docs/audits/image-ownership-canonical/original/scan.png"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-presentation-runtime.py"
+    ],
+    "returncode": 0
+  }
+]

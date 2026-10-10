@@ -8,5 +8,5 @@ warning: function `visit_meshes` is never used
     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
 warning: `ingetrazo-core` (lib) generated 1 warning
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.92s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.30s
      Running `target/debug/examples/presentation_codec docs/audits/document-presentation-ci/codec-original.json`
