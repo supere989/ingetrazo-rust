@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "platform": "native",
+      "fresh_hint_metrics": {
+        "filled_center": true,
+        "core_green": 24,
+        "outer_green": 62,
+        "core_samples": 25,
+        "majority_threshold": 13
+      }
+    },
+    {
+      "platform": "original",
+      "fresh_hint_metrics": {
+        "filled_center": true,
+        "core_green": 17,
+        "outer_green": 56,
+        "core_samples": 25,
+        "majority_threshold": 13
+      }
+    }
+  ],
+  "boundary": "Fresh copy reports omit approach metrics; independently reread actual approach PNG confirms calibrated positive"
+}
