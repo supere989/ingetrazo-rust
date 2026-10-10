@@ -24,7 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 metal.info.name
             ),
         )?;
-        return Err("Exact native RGBA read/write tier2 unsupported".into());
+        return Err("Exact native R32Uint read/write tier1 unsupported".into());
     }
     let geometry = || {
         let mut rows = Vec::new();
@@ -270,7 +270,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let canvas_stats = pool.stats;
     drop((frozen, painter, pool, handle, g));
     assert_eq!(metal.budget.lock().unwrap().total_committed(), 0);
-    std::fs::write(root.join("result.json"),format!("{{\"passed\":true,\"device\":{:?},\"read_write_tier2\":true,\"actual_qt_whole_images\":7,\"missing_ui_negative\":true,\"source_order_negative\":true,\"phase_negative\":true,\"partial_plan_budget_rollback\":true,\"plan_uploads\":{},\"palette_uploads\":{},\"warm_hits\":{},\"uploaded_bytes\":{},\"canvas_allocations\":{},\"canvas_allocated_bytes_cumulative\":{},\"canvas_warm_reuses\":{},\"final_ledger\":0,\"presentation_claim\":false}}",metal.info.name,stats.plan_uploads,stats.palette_uploads,stats.warm_hits,stats.uploaded_bytes,canvas_stats.allocations,canvas_stats.allocation_bytes,canvas_stats.reused))?;
+    assert_eq!(canvas_stats.integer_views,canvas_stats.allocations,"One native view per canvas, never per callback");
+    std::fs::write(root.join("result.json"),format!("{{\"passed\":true,\"device\":{:?},\"integer_read_write_supported\":true,\"zero_copy_integer_view\":true,\"actual_qt_whole_images\":7,\"missing_ui_negative\":true,\"source_order_negative\":true,\"phase_negative\":true,\"partial_plan_budget_rollback\":true,\"plan_uploads\":{},\"palette_uploads\":{},\"warm_hits\":{},\"uploaded_bytes\":{},\"canvas_integer_views\":{},\"canvas_allocations\":{},\"canvas_allocated_bytes_cumulative\":{},\"canvas_warm_reuses\":{},\"final_ledger\":0,\"presentation_claim\":false}}",metal.info.name,stats.plan_uploads,stats.palette_uploads,stats.warm_hits,stats.uploaded_bytes,canvas_stats.integer_views,canvas_stats.allocations,canvas_stats.allocation_bytes,canvas_stats.reused))?;
     Ok(())
 }
 #[cfg(not(target_os = "macos"))]

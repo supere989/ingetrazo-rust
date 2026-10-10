@@ -48,7 +48,7 @@ struct Push {
 }
 impl Painter {
     pub fn supported(metal: &NativeMetal) -> bool {
-        metal.device.readWriteTextureSupport() == MTLReadWriteTextureTier::Tier2
+        matches!(metal.device.readWriteTextureSupport(), MTLReadWriteTextureTier::Tier1 | MTLReadWriteTextureTier::Tier2)
     }
     pub fn prepare(
         &mut self,
@@ -57,7 +57,7 @@ impl Painter {
         density: f32,
     ) -> Result<Arc<Prepared>, String> {
         if !Self::supported(metal) {
-            return Err("Exact Metal RGBA8 read/write composition requires texture tier2".into());
+            return Err("Exact Metal R32Uint read/write composition requires texture tier1".into());
         }
         snapshot.geometry.validate_batches(&snapshot.batches)?;
         snapshot
@@ -176,7 +176,7 @@ impl Prepared {
         canvas: &ProtocolObject<dyn MTLTexture>,
         clip: [u32; 4],
     ) -> Result<(), String> {
-        if canvas.textureType()!=MTLTextureType::Type2D||canvas.sampleCount()!=1||canvas.width()==0||canvas.height()==0||canvas.pixelFormat() != MTLPixelFormat::RGBA8Unorm
+        if canvas.textureType()!=MTLTextureType::Type2D||canvas.sampleCount()!=1||canvas.width()==0||canvas.height()==0||canvas.pixelFormat() != MTLPixelFormat::R32Uint
             || !canvas
                 .usage()
                 .contains(MTLTextureUsage::ShaderRead | MTLTextureUsage::ShaderWrite)

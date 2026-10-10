@@ -11,12 +11,13 @@ use std::{
 };
 struct Image {
     raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
+    integer_view: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
     budget: Arc<Mutex<MemoryBudget>>,
     handle: u64,
 }
 impl Drop for Image {
     fn drop(&mut self) {
-        unsafe { ManuallyDrop::drop(&mut self.raw) };
+        unsafe { ManuallyDrop::drop(&mut self.integer_view); ManuallyDrop::drop(&mut self.raw) };
         if let Ok(mut b) = self.budget.lock() {
             let _ = b.freed(self.handle);
         }
@@ -29,6 +30,7 @@ pub struct Lease {
 #[derive(Default, Clone, Copy, Debug)]
 pub struct Stats {
     pub allocations: u64,
+    pub integer_views: u64,
     pub allocation_bytes: u64,
     pub leases: u64,
     pub reused: u64,
@@ -47,7 +49,7 @@ impl Pool {
     ) -> Result<Option<Arc<Lease>>, String> {
         if metal.poisoned.load(std::sync::atomic::Ordering::Acquire){return Err("Metal canvas admission poisoned".into());}
         if !crate::cad_compute_painter::Painter::supported(metal) {
-            return Err("Exact compute canvas requires native read/write tier2".into());
+            return Err("Exact compute canvas requires native integer read/write tier1".into());
         }
         if extent.0 == 0 || extent.1 == 0 {
             return Ok(None);
@@ -120,12 +122,21 @@ impl Pool {
             desc.setUsage(
                 MTLTextureUsage::RenderTarget
                     | MTLTextureUsage::ShaderRead
-                    | MTLTextureUsage::ShaderWrite,
+                    | MTLTextureUsage::ShaderWrite | MTLTextureUsage::PixelFormatView,
             );
             let Some(raw) = metal.device.newTextureWithDescriptor(&desc) else {
                 metal.budget.lock().unwrap().cancel(ticket)?;
                 return Err("Metal compute canvas allocation failed".into());
             };
+            let Some(integer_view) = raw.newTextureViewWithPixelFormat(MTLPixelFormat::R32Uint) else {
+                metal.budget.lock().unwrap().cancel(ticket)?;
+                return Err("Metal RGBA canvas R32Uint reinterpretation unsupported".into());
+            };
+            let same_parent = integer_view.parentTexture().is_some_and(|parent| std::ptr::eq(&*parent, &*raw));
+            if !same_parent || integer_view.pixelFormat()!=MTLPixelFormat::R32Uint || integer_view.width()!=raw.width() || integer_view.height()!=raw.height() {
+                metal.budget.lock().unwrap().cancel(ticket)?;
+                return Err("Metal integer view must alias the admitted RGBA canvas".into());
+            }
             let handle =
                 (&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>() as usize as u64;
             allocated = MTLResource::allocatedSize(&*raw) as u64;
@@ -140,6 +151,7 @@ impl Pool {
             drop(budget);
             Arc::new(Image {
                 raw: ManuallyDrop::new(raw),
+                integer_view: ManuallyDrop::new(integer_view),
                 budget: metal.budget.clone(),
                 handle,
             })
@@ -147,6 +159,7 @@ impl Pool {
         if allocated != 0 {
             self.images.push(image.clone());
             self.stats.allocations += 1;
+            self.stats.integer_views += 1;
             self.stats.allocation_bytes += allocated;
         } else {
             self.stats.reused += 1;
@@ -163,6 +176,7 @@ impl Lease {
     pub fn texture(&self) -> &ProtocolObject<dyn MTLTexture> {
         &self.image.raw
     }
+    pub fn integer_view(&self) -> &ProtocolObject<dyn MTLTexture> { &self.image.integer_view }
     pub fn allocated_bytes(&self) -> u64 {
         MTLResource::allocatedSize(&**self.image.raw) as u64
     }

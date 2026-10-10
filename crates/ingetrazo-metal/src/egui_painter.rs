@@ -256,7 +256,8 @@ impl PreparedPaint {
             }
         Ok(())
     }
-    pub fn encode_canvas(&self,command:&ProtocolObject<dyn MTLCommandBuffer>,canvas:&ProtocolObject<dyn MTLTexture>,clear:[f64;4])->Result<(),String>{
+    pub fn encode_canvas(&self,command:&ProtocolObject<dyn MTLCommandBuffer>,lease:&crate::compute_canvas::Lease,clear:[f64;4])->Result<(),String>{
+        let canvas=lease.texture();
         if !self.canvas||canvas.pixelFormat()!=MTLPixelFormat::RGBA8Unorm||canvas.width()==0||canvas.height()==0||canvas.width()>16384||canvas.height()>16384||canvas.textureType()!=MTLTextureType::Type2D||canvas.sampleCount()!=1||!canvas.usage().contains(MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead|MTLTextureUsage::ShaderWrite)||clear.iter().any(|v|!v.is_finite()||!(0. ..=1.).contains(v)){return Err("Metal canvas mode/format/domain mismatch".into());}
         let extent=(canvas.width()as u32,canvas.height()as u32);
         let open=|clear_pass:bool|->Result<Retained<ProtocolObject<dyn MTLRenderCommandEncoder>>,String>{
@@ -272,7 +273,7 @@ impl PreparedPaint {
                 PaintOrder::Compute(prepared,clip)=>{
                     if let Some(e)=encoder.take(){e.endEncoding();}
                     let c=clipped_scissor(*clip,self.density,extent)?;
-                    if c[2]>c[0]&&c[3]>c[1]{prepared.encode(command,canvas,c.map(|v|v as u32))?;}
+                    if c[2]>c[0]&&c[3]>c[1]{prepared.encode(command,lease.integer_view(),c.map(|v|v as u32))?;}
                 },
                 PaintOrder::Cad(_,_)=>{if let Some(e)=encoder.take(){e.endEncoding();}return Err("Apple inline CAD cannot bind RGBA compute canvas".into());}
             }
@@ -1384,7 +1385,7 @@ impl EguiPainter {
             }
             let canvas=if paint.requires_canvas(){
                 let canvas=pool.acquire(metal,(width as u32,height as u32))?.ok_or("Diagnostic canvas capacity unavailable")?;
-                paint.encode_canvas(&command,canvas.texture(),[1.;4])?;canvas.present(&command,&target.raw)?;Some(canvas)
+                paint.encode_canvas(&command,&canvas,[1.;4])?;canvas.present(&command,&target.raw)?;Some(canvas)
             }else{
             let descriptor = MTLRenderPassDescriptor::new();
             let color = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };

@@ -246,7 +246,7 @@ impl MetalPresentation {
             .commandBuffer()
             .ok_or("Metal command allocation failed")?;
         if let Some(canvas)=canvas.as_ref(){
-            paint.as_ref().unwrap().encode_canvas(&command,canvas.texture(),rgba)?;
+            paint.as_ref().unwrap().encode_canvas(&command,&canvas,rgba)?;
             canvas.present(&command,&drawable.texture())?;
         }else{
         let desc = MTLRenderPassDescriptor::new();
