@@ -1,0 +1,73 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-shareback-policies/crates/ingetrazo-gui)
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4
+    |
+182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.29s
+     Running tests/component_global_history.rs (/tmp/ingetrazo-shareback-policies-target/debug/deps/component_global_history-4ca02d9b8c83b3bb)
+
+running 15 tests
+test stale_context_target_and_deleted_placement_refuse_without_stack_or_model_change ... ok
+test source_line_first_point_consumes_ctrl_z_before_unsafe_global_target ... ok
+test successful_finish_retires_live_preview_without_authoring_it ... ok
+test no_edit_entry_exit_preserves_global_redo_and_context_tags_are_runtime_only ... ok
+test invalid_candidate_or_historical_mesh_refuses_finish_atomically ... FAILED
+test root_target_can_undo_while_nested_and_no_edit_redo_survives_both_exits ... ok
+test unchanged_shared_finish_validates_and_rebinds_pending_redo_instead_of_detaching ... ok
+test refused_finish_preserves_live_tool_preview_and_revision ... FAILED
+test line_chain_then_pending_point_take_priority_over_make_unique_ancestor ... ok
+test unsafe_make_unique_active_undo_refuses_atomically_and_authored_face_survives ... ok
+test native_cancel_keeps_legitimate_ancestor_undo_and_redo_checkpoint ... ok
+test unsafe_reference_undo_preserves_even_live_preview ... ok
+test nested_ordinary_targets_preserve_three_command_global_order ... ok
+test source_prior_loose_undo_redo_targets_parked_mesh_without_exiting ... ok
+test source_local_commands_keep_global_order_and_finish_fold_only_sharing_leaf ... ok
+
+failures:
+
+---- invalid_candidate_or_historical_mesh_refuses_finish_atomically stdout ----
+
+thread 'invalid_candidate_or_historical_mesh_refuses_finish_atomically' (3078618) panicked at crates/ingetrazo-gui/tests/component_global_history.rs:30:473:
+assertion `left == right` failed
+  left: [Scene { dimension_frame: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }, drawing_frame: None, history_context: [3eba083c-4227-4781-868f-623dbb029d74], history_shareback: None, history_views: Some(ViewMembershipDelta { added: [], removed: [] }), component_definitions: {}, mesh_shares: {}, native_document: Null, native_baseline: Null, mesh: Mesh { vertices: [MeshVertex { uid: 0de1d553-c1bc-48ae-aa4a-bb6acb63fd63, position: DVec3(inf, -10.0, 0.0), edges: [0, 2] }, MeshVertex { uid: 4fcc750d-628e-439a-a2da-5b42b449ffde, position: DVec3(21.0, -10.0, 0.0), edges: [0, 1] }, MeshVertex { uid: 553b76e8-bf18-4337-bb05-e20d9abeb318, position: DVec3(20.0, -9.0, 0.0), edges: [1, 2] }], edges: [MeshEdge { attrs: {}, v0: 0, v1: 1, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 2, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 0, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }], faces: [MeshFace { interior: false, vertices: [0, 1, 2], holes: [], attrs: {}, layer: None }], spatial_index: {PointKey(200000, -100000, 0): 0, PointKey(210000, -100000, 0): 1, PointKey(200000, -90000, 0): 2} }, selection: {}, selection_order: [], version: 0, view_version: 0, groups: [], dimensions: [], guides: [], layers: [Layer { name: "Layer0", visible: true, locked: false, color: None }], materials: {}, saved_views: [], camera: OrbitCamera { target: DVec3(0.0, 0.0, 0.0), distance: 20.0, yaw: -0.7853981633974483, pitch: 0.5235987755982988, up: DVec3(0.0, 0.0, 1.0), fov_deg: 45.0, aspect: 1.0, znear: 0.1, zfar: 10000.0, perspective: true, two_point: false }, unit: Meters, embedded_textures: {}, text_labels: [], section_planes: [], show_section_cuts: true, show_section_planes: true, show_section_fill: true, geo_datum: None, geo_points: [], geo_paths: [], terrain: None, sheets: [], active_sheet_index: None }]
+ right: [Scene { dimension_frame: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }, drawing_frame: None, history_context: [3eba083c-4227-4781-868f-623dbb029d74], history_shareback: None, history_views: None, component_definitions: {}, mesh_shares: {}, native_document: Null, native_baseline: Null, mesh: Mesh { vertices: [MeshVertex { uid: 0de1d553-c1bc-48ae-aa4a-bb6acb63fd63, position: DVec3(inf, -10.0, 0.0), edges: [0, 2] }, MeshVertex { uid: 4fcc750d-628e-439a-a2da-5b42b449ffde, position: DVec3(21.0, -10.0, 0.0), edges: [0, 1] }, MeshVertex { uid: 553b76e8-bf18-4337-bb05-e20d9abeb318, position: DVec3(20.0, -9.0, 0.0), edges: [1, 2] }], edges: [MeshEdge { attrs: {}, v0: 0, v1: 1, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 2, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 0, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }], faces: [MeshFace { interior: false, vertices: [0, 1, 2], holes: [], attrs: {}, layer: None }], spatial_index: {PointKey(200000, -100000, 0): 0, PointKey(210000, -100000, 0): 1, PointKey(200000, -90000, 0): 2} }, selection: {}, selection_order: [], version: 0, view_version: 0, groups: [], dimensions: [], guides: [], layers: [Layer { name: "Layer0", visible: true, locked: false, color: None }], materials: {}, saved_views: [], camera: OrbitCamera { target: DVec3(0.0, 0.0, 0.0), distance: 20.0, yaw: -0.7853981633974483, pitch: 0.5235987755982988, up: DVec3(0.0, 0.0, 1.0), fov_deg: 45.0, aspect: 1.0, znear: 0.1, zfar: 10000.0, perspective: true, two_point: false }, unit: Meters, embedded_textures: {}, text_labels: [], section_planes: [], show_section_cuts: true, show_section_planes: true, show_section_fill: true, geo_datum: None, geo_points: [], geo_paths: [], terrain: None, sheets: [], active_sheet_index: None }]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- refused_finish_preserves_live_tool_preview_and_revision stdout ----
+
+thread 'refused_finish_preserves_live_tool_preview_and_revision' (3078623) panicked at crates/ingetrazo-gui/tests/component_global_history.rs:47:37:
+assertion `left == right` failed
+  left: [Scene { dimension_frame: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }, drawing_frame: None, history_context: [8147ee74-c3ae-4e57-9b77-35bfc5cce279], history_shareback: None, history_views: Some(ViewMembershipDelta { added: [], removed: [] }), component_definitions: {}, mesh_shares: {}, native_document: Null, native_baseline: Null, mesh: Mesh { vertices: [MeshVertex { uid: bccf9a5b-1cd9-42b2-9ab3-0bae2deaf978, position: DVec3(inf, -10.0, 0.0), edges: [0, 2] }, MeshVertex { uid: 27196d65-4a9d-4565-b308-b016bcf0e392, position: DVec3(21.0, -10.0, 0.0), edges: [0, 1] }, MeshVertex { uid: 78e9c6fa-9ba1-4751-a84b-2581a482b73c, position: DVec3(20.0, -9.0, 0.0), edges: [1, 2] }], edges: [MeshEdge { attrs: {}, v0: 0, v1: 1, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 2, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 0, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }], faces: [MeshFace { interior: false, vertices: [0, 1, 2], holes: [], attrs: {}, layer: None }], spatial_index: {PointKey(200000, -100000, 0): 0, PointKey(210000, -100000, 0): 1, PointKey(200000, -90000, 0): 2} }, selection: {}, selection_order: [], version: 0, view_version: 0, groups: [], dimensions: [], guides: [], layers: [Layer { name: "Layer0", visible: true, locked: false, color: None }], materials: {}, saved_views: [], camera: OrbitCamera { target: DVec3(0.0, 0.0, 0.0), distance: 20.0, yaw: -0.7853981633974483, pitch: 0.5235987755982988, up: DVec3(0.0, 0.0, 1.0), fov_deg: 45.0, aspect: 1.0, znear: 0.1, zfar: 10000.0, perspective: true, two_point: false }, unit: Meters, embedded_textures: {}, text_labels: [], section_planes: [], show_section_cuts: true, show_section_planes: true, show_section_fill: true, geo_datum: None, geo_points: [], geo_paths: [], terrain: None, sheets: [], active_sheet_index: None }]
+ right: [Scene { dimension_frame: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }, drawing_frame: None, history_context: [8147ee74-c3ae-4e57-9b77-35bfc5cce279], history_shareback: None, history_views: None, component_definitions: {}, mesh_shares: {}, native_document: Null, native_baseline: Null, mesh: Mesh { vertices: [MeshVertex { uid: bccf9a5b-1cd9-42b2-9ab3-0bae2deaf978, position: DVec3(inf, -10.0, 0.0), edges: [0, 2] }, MeshVertex { uid: 27196d65-4a9d-4565-b308-b016bcf0e392, position: DVec3(21.0, -10.0, 0.0), edges: [0, 1] }, MeshVertex { uid: 78e9c6fa-9ba1-4751-a84b-2581a482b73c, position: DVec3(20.0, -9.0, 0.0), edges: [1, 2] }], edges: [MeshEdge { attrs: {}, v0: 0, v1: 1, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 1, v1: 2, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }, MeshEdge { attrs: {}, v0: 2, v1: 0, faces: [0], soft: false, curve_id: None, layer: None, hidden: false }], faces: [MeshFace { interior: false, vertices: [0, 1, 2], holes: [], attrs: {}, layer: None }], spatial_index: {PointKey(200000, -100000, 0): 0, PointKey(210000, -100000, 0): 1, PointKey(200000, -90000, 0): 2} }, selection: {}, selection_order: [], version: 0, view_version: 0, groups: [], dimensions: [], guides: [], layers: [Layer { name: "Layer0", visible: true, locked: false, color: None }], materials: {}, saved_views: [], camera: OrbitCamera { target: DVec3(0.0, 0.0, 0.0), distance: 20.0, yaw: -0.7853981633974483, pitch: 0.5235987755982988, up: DVec3(0.0, 0.0, 1.0), fov_deg: 45.0, aspect: 1.0, znear: 0.1, zfar: 10000.0, perspective: true, two_point: false }, unit: Meters, embedded_textures: {}, text_labels: [], section_planes: [], show_section_cuts: true, show_section_planes: true, show_section_fill: true, geo_datum: None, geo_points: [], geo_paths: [], terrain: None, sheets: [], active_sheet_index: None }]
+
+
+failures:
+    invalid_candidate_or_historical_mesh_refuses_finish_atomically
+    refused_finish_preserves_live_tool_preview_and_revision
+
+test result: FAILED. 13 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p ingetrazo-gui --test component_global_history`
