@@ -10,6 +10,7 @@ from formats import igz
 from acceptance_context import context
 app=QApplication([])
 directory=Path(sys.argv[1])
+(directory/"original-verdict.json").unlink(missing_ok=True)
 source=json.loads(Path("docs/audits/component-entry-unique-source.json").read_text())
 rows=[]
 for row in source["cases"]:
