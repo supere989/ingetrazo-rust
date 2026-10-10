@@ -1,0 +1,29 @@
+{
+  "workspace_counts": [
+    428,
+    0,
+    2
+  ],
+  "status": "accepted_bounded_native_world_integration",
+  "excluded": "unfinished CAD2D callback contract/pipeline",
+  "included": [
+    "encoded UI composition and source raster origin",
+    "stable user texture identity and actual layout resize",
+    "cached hard edges, source XRay and pre-raster clipping",
+    "strict NVIDIA9image/58center/14section evidence",
+    "source/native softwareGPU actualgroupgesture wirevisibility"
+  ],
+  "limitations": [
+    "generic UI alpha22/24 residual",
+    "sectionIso/hollow/seam original pixel residuals",
+    "Metal implementation/hardware pending",
+    "full styles/textures/performance parity pending"
+  ],
+  "canonical_promotion": true,
+  "hard_edge_hardware_rollback": "actualRTX retained3f9caf4: warm100zeroedgeuploads;600bytecandidateallocatedbeforebudgetdenial;old576byte48endpoint/image/ledgerrestored;finalledger0",
+  "final_workspace_counts": [
+    428,
+    0,
+    2
+  ]
+}

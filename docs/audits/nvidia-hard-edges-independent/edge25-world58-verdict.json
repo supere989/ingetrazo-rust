@@ -1,0 +1,8 @@
+{
+  "retained_old_style_failures": 15,
+  "passed": true,
+  "mandatory_cases": 58,
+  "negative_controls": 5,
+  "rgba_tolerance": 0,
+  "scope": "Same NVIDIA adapter, source OpenGL/headless Vulkan/actual owned-window Vulkan. No general texture/style/Metal acceptance."
+}

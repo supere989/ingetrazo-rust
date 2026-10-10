@@ -1,0 +1,17 @@
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-vulkan/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.54s
+     Running `target/debug/examples/native_sample_diagnostic`
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+sample_extensions ["VK_KHR_line_rasterization", "VK_KHR_pipeline_library", "VK_KHR_ray_tracing_pipeline", "VK_KHR_sampler_mirror_clamp_to_edge", "VK_KHR_sampler_ycbcr_conversion", "VK_KHR_timeline_semaphore", "VK_EXT_graphics_pipeline_library", "VK_EXT_inline_uniform_block", "VK_EXT_line_rasterization", "VK_EXT_multisampled_render_to_single_sampled", "VK_EXT_pipeline_creation_cache_control", "VK_EXT_pipeline_creation_feedback", "VK_EXT_pipeline_library_group_handles", "VK_EXT_pipeline_protected_access", "VK_EXT_pipeline_robustness", "VK_EXT_sampler_filter_minmax"]
+standard 1, programmable PhysicalDeviceSampleLocationsPropertiesEXT { s_type: PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT, p_next: 0x0, sample_location_sample_counts: , max_sample_location_grid_size: Extent2D { width: 0, height: 0 }, sample_location_coordinate_range: [0.0, 0.0], sample_location_sub_pixel_bits: 0, variable_sample_locations: 0, _marker: PhantomData<&()> }

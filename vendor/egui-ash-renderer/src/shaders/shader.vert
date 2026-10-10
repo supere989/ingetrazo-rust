@@ -12,17 +12,17 @@ layout(push_constant) uniform Matrices {
 layout(location = 0) out vec4 oColor;
 layout(location = 1) out vec2 oUV;
 
-const float GAMMA = 2.2;
-
-vec3 SRGBtoLINEAR(vec3 color) {
-    return pow(color, vec3(GAMMA));
+vec3 decodeSRGB(vec3 c){return mix(c/12.92,pow((c+0.055)/1.055,vec3(2.4)),greaterThan(c,vec3(0.04045)));}
+vec3 encodeSRGB(vec3 c){return mix(c*12.92,1.055*pow(c,vec3(1.0/2.4))-0.055,greaterThan(c,vec3(0.0031308)));}
+vec4 encodedPremultiplied(vec4 c){
+    // Color32 stores gamma-encoded *linear* premultiplication. Undo that
+    // representation before interpolating source encoded-premultiplied RGB.
+    // Alpha-zero colors retain egui additive semantics; opaque colors are direct.
+    if(c.a==0.0 || c.a==1.0)return c;
+    return vec4(encodeSRGB(clamp(decodeSRGB(c.rgb)/c.a,0.0,1.0))*c.a,c.a);
 }
-vec4 SRGBtoLINEAR(vec4 color) {
-    return vec4(SRGBtoLINEAR(color.rgb), color.a);
-}
-
 void main() {
-    oColor = SRGBtoLINEAR(vColor);
+    oColor = encodedPremultiplied(vColor);
     oUV = vUV;
 
     gl_Position = matrices.ortho*vec4(vPosition.x, vPosition.y, 0.0, 1.0);

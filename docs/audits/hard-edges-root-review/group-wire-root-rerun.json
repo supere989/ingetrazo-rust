@@ -1,0 +1,30 @@
+{
+  "original-ordinary": {
+    "passed": true,
+    "minimum_coverage": 1.0
+  },
+  "original-linked": {
+    "passed": true,
+    "minimum_coverage": 1.0
+  },
+  "original-nested": {
+    "passed": true,
+    "minimum_coverage": 1.0
+  },
+  "native-ordinary": {
+    "passed": true,
+    "minimum_coverage": 1.0
+  },
+  "native-linked": {
+    "passed": true,
+    "minimum_coverage": 1.0
+  },
+  "native-nested": {
+    "passed": true,
+    "minimum_coverage": 1.0
+  },
+  "old-native-state-only-failure": {
+    "passed": false,
+    "committed_minimum": 0.0
+  }
+}

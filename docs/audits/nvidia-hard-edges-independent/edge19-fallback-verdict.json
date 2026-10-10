@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "differing_rgba_pixels": 0,
+      "passed": true
+    }
+  ],
+  "mandatory_metadata_rows": 19,
+  "whole_image_cases": 9,
+  "rgba_tolerance": 0
+}

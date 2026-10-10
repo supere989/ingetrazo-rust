@@ -50,7 +50,9 @@ pub struct Options {
     pub enable_depth_write: bool,
     /// Is the target framebuffer sRGB.
     ///
-    /// If not, the fragment shader converts colors to sRGB, otherwise it outputs color in linear space.
+    /// Encoded UNORM presentation preserves premultiplied egui color and encoded
+    /// blending. An sRGB target converts output to linear but blends in linear
+    /// light; the native host requires UNORM for document composition fidelity.
     pub srgb_framebuffer: bool,
 }
 
@@ -91,6 +93,7 @@ pub struct Renderer {
     managed_textures: HashMap<TextureId, Texture>,
     textures: HashMap<TextureId, vk::DescriptorSet>,
     encoded_opaque_textures: std::collections::HashSet<TextureId>,
+    bottom_origin_textures: std::collections::HashSet<TextureId>,
     next_user_texture_id: u64,
     options: Options,
     frames: Option<Frames>,
@@ -262,6 +265,7 @@ impl Renderer {
             next_user_texture_id: 0,
             textures,
             encoded_opaque_textures: std::collections::HashSet::new(),
+            bottom_origin_textures: std::collections::HashSet::new(),
             options,
             frames: None,
         })
@@ -357,7 +361,7 @@ impl Renderer {
                     let data = image
                         .pixels
                         .iter()
-                        .flat_map(|c| c.to_array())
+                        .flat_map(|c| encoded_image_pixel(*c))
                         .collect::<Vec<_>>();
 
                     (w, h, data)
@@ -479,10 +483,25 @@ impl Renderer {
         id
     }
 
+    /// Rebind a caller-owned descriptor while retaining the TextureId already
+    /// referenced by tessellated UI meshes. Call only after previous draw fence.
+    /// The caller owns both descriptor lifetimes; encoding/origin tags survive.
+    pub fn update_user_texture(&mut self,id:TextureId,set:vk::DescriptorSet)->RendererResult<()> {
+        if !matches!(id,TextureId::User(_)){return Err(RendererError::BadTexture(id));}
+        let entry=self.textures.get_mut(&id).ok_or(RendererError::BadTexture(id))?;
+        *entry=set;Ok(())
+    }
+
     /// Register an opaque encoded-RGB CAD viewport image. Draw with egui WHITE tint.
     /// This bypasses the normal UI texture gamma transfer without an extra image/pass/copy.
     pub fn add_encoded_opaque_texture(&mut self, set: vk::DescriptorSet) -> TextureId {
         let id=self.add_user_texture(set);self.encoded_opaque_textures.insert(id);id
+    }
+
+    /// Native CAD attachment uses bottom-origin rasterization so physical MSAA
+    /// locations match the source GL pass. Flip sampling, without another pass.
+    pub fn add_bottom_origin_encoded_opaque_texture(&mut self,set:vk::DescriptorSet)->TextureId {
+        let id=self.add_encoded_opaque_texture(set);self.bottom_origin_textures.insert(id);id
     }
 
     /// Remove a user managed texture.
@@ -495,6 +514,7 @@ impl Renderer {
     pub fn remove_user_texture(&mut self, id: TextureId) {
         self.textures.remove(&id);
         self.encoded_opaque_textures.remove(&id);
+        self.bottom_origin_textures.remove(&id);
     }
 
     /// Record commands to render the [`egui::Ui`].
@@ -634,7 +654,7 @@ impl Renderer {
                                 &[],
                             )
                         };
-                        let encoded=u32::from(self.encoded_opaque_textures.contains(&m.texture_id));
+                        let encoded=u32::from(self.encoded_opaque_textures.contains(&m.texture_id))|if self.bottom_origin_textures.contains(&m.texture_id){2}else{0};
                         unsafe{self.device.cmd_push_constants(command_buffer,self.pipeline_layout,vk::ShaderStageFlags::FRAGMENT,64,any_as_u8_slice(&encoded));}
                         current_texture_id = Some(m.texture_id);
                     }
@@ -908,4 +928,21 @@ pub fn orthographic_vk(
     ];
 
     res
+}
+
+// Only changed ColorImage uploads cross the ecolor representation boundary.
+// FontImage has a separate coverage contract (a,a,a,a) and stays untouched.
+fn encoded_image_pixel(c:egui::Color32)->[u8;4]{
+ let bytes=c.to_array();if bytes[3]==0||bytes[3]==255{return bytes;}
+ let rgba=egui::Rgba::from(c).to_array();let alpha=rgba[3];
+ let encoded=|v:f32|{let straight=(v/alpha).clamp(0.,1.);let rgb=if straight<=0.0031308{straight*12.92}else{1.055*straight.powf(1./2.4)-0.055};(rgb*alpha*255.).round().clamp(0.,255.)as u8};
+ [encoded(rgba[0]),encoded(rgba[1]),encoded(rgba[2]),bytes[3]]
+}
+#[cfg(test)]mod encoded_pixel_tests {
+ use super::*;
+ #[test]fn opaque_additive_and_half_white_representation(){
+  assert_eq!(encoded_image_pixel(egui::Color32::from_rgb(226,232,238)),[226,232,238,255]);
+  assert_eq!(encoded_image_pixel(egui::Color32::from_rgba_unmultiplied(255,255,255,128)),[128,128,128,128]);
+  assert_eq!(encoded_image_pixel(egui::Color32::from_rgb_additive(10,20,30)),[10,20,30,0]);
+ }
 }

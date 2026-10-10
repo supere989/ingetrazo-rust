@@ -36,7 +36,8 @@ impl VulkanContext {
    let extensions=unsafe {instance.enumerate_device_extension_properties(physical)?};
    let enabled=if extensions.iter().any(|e|unsafe {CStr::from_ptr(e.extension_name.as_ptr())}==ash::ext::memory_budget::NAME){vec![ash::ext::memory_budget::NAME.as_ptr()]}else{vec![]};
    let priorities=[1.];let queues=[vk::DeviceQueueCreateInfo::default().queue_family_index(graphics).queue_priorities(&priorities)];
-   let device=unsafe {instance.create_device(physical,&vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&enabled),None)?};
+   let available=unsafe{instance.get_physical_device_features(physical)};let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0);
+   let device=unsafe {instance.create_device(physical,&vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&enabled).enabled_features(&features),None)?};
    let pool=match unsafe {device.create_command_pool(&vk::CommandPoolCreateInfo::default().queue_family_index(graphics).flags(vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER),None)} {Ok(pool)=>pool,Err(e)=>{unsafe {device.destroy_device(None)};return Err(Box::<dyn Error>::from(e));}};
    let queue=unsafe {device.get_device_queue(graphics,0)};
    eprintln!("Selected headless adapter {name}; strict request {:?}; no surface/present requirement",request);

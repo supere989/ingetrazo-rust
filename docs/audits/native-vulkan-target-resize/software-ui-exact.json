@@ -1,0 +1,26 @@
+[
+  {
+    "case": "style-wireframe-reflected-line",
+    "original_size": [
+      800,
+      600
+    ],
+    "native_size": [
+      800,
+      600
+    ],
+    "whole_rgba_diff": 0
+  },
+  {
+    "case": "style-xray-occluded-line",
+    "original_size": [
+      800,
+      600
+    ],
+    "native_size": [
+      800,
+      600
+    ],
+    "whole_rgba_diff": 0
+  }
+]

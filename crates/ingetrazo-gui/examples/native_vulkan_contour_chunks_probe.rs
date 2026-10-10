@@ -471,6 +471,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert!(world.contour_batch_count() > 2);
     assert!(world.contour_metrics().additional_position_bytes > 0);
     let baseline_uploads = world.uploads;
+    let baseline_edge_uploads = world.contour_metrics().edge_buffer_uploads;
+    assert_eq!(baseline_edge_uploads,1);
+    assert!(world.edge_endpoint_count()>0);
+    assert_eq!(world.edge_geometry_bytes(),u64::from(world.edge_endpoint_count())*12);
     let cold = world.contour_metrics();
     let started = Instant::now();
     for _ in 0..100 {
@@ -478,6 +482,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let warm_average_ms = started.elapsed().as_secs_f64() * 10.;
     assert_eq!(world.uploads, baseline_uploads);
+    assert_eq!(world.contour_metrics().edge_buffer_uploads,baseline_edge_uploads,"Warm cache uploaded new edge buffers");
     // Camera, edge color and plane uniforms change the rendered result without uploading world geometry.
     style.edge_color = [0., 1., 0., 1.];
     camera.distance = 4.;
@@ -496,7 +501,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(stable, normal);
     // Actual quota denials after partially preparing chunk resources must preserve the old drawable.
     let before = budget.ledger.lock().unwrap().total_committed();
+    let old_edge_cache=(world.edge_endpoint_count(),world.edge_geometry_bytes());
     let mut changed = s.clone();
+    let a=changed.mesh.add_vertex(DVec3::new(-0.2,0.2,1.));
+    let b=changed.mesh.add_vertex(DVec3::new(-0.2,0.8,1.));
+    changed.mesh.add_edge(a,b);
     for face in &mut changed.mesh.faces {
         face.attrs
             .insert("color".into(), serde_json::json!([0., 0., 1., 1.]));
@@ -514,6 +523,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Dynamic quota pressure unexpectedly admitted the next chunk"
     );
     assert!(result.unwrap_err().contains("Contour chunk upload failed"));
+    assert_eq!(world.contour_metrics().edge_buffer_uploads,baseline_edge_uploads+1,"Replacement edge allocation was not reached");
+    assert_eq!(world.contour_metrics().failed_prepared_edge_bytes,old_edge_cache.1+24,"Failed replacement must contain the new loose edge");
+    eprintln!("EDGE_CACHE_PROOF cold_endpoints={} cold_bytes={} warm100_edge_uploads=0 failed_prepared_edge_bytes={} attempted_edge_uploads={} old_count_bytes_restored=true old_ledger_bytes={}",old_edge_cache.0,old_edge_cache.1,world.contour_metrics().failed_prepared_edge_bytes,world.contour_metrics().edge_buffer_uploads,before);
+    assert_eq!((world.edge_endpoint_count(),world.edge_geometry_bytes()),old_edge_cache,"Rejected replacement changed cached drawable edges");
     assert_eq!(world.contour_metrics().failed_prepared_chunks, 2);
     assert_eq!(
         budget.ledger.lock().unwrap().total_committed(),
@@ -554,10 +567,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("PASS actual GPU hollow normal/chunked exact image equality; cold {:?}; warm100average{warm_average_ms:.6}ms; uniform cache, actualpartialquota rollback oldimage, opacity invalidation; final {:?}",cold,world.contour_metrics());
     drop(world);
     assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
+    eprintln!("EDGE_CACHE_PROOF old_full_image_restored=true final_ledger_bytes=0");
     unsafe {
-        context
-            .device
-            .free_command_buffers(context.command_pool, &commands);
+        context.device.free_command_buffers(context.command_pool, &commands);
         context.device.destroy_fence(fence, None);
     }
     Ok(())

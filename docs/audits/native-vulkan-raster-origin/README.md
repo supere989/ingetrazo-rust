@@ -1,0 +1,9 @@
+# Source raster-origin correction
+
+Original Qt GL four-sample FBO queried during its actual active context gives sample positions `(0.375,0.125), (0.875,0.375), (0.125,0.625), (0.625,0.875)` in GL bottom-origin attachment coordinates. Actual software Vulkan reports `standardSampleLocations=1`, with no programmable sample-location extension. Mirroring clip Y before rasterization preserved projected vertices but mirrored the physical sample pattern relative to GL. This was exposed by asymmetric hard-line controls; centered rectangles concealed it.
+
+Keep the native world attachment bottom-origin, preserve front/back selection by reversing Vulkan front-face convention, and flip native world sampling UV at UI presentation. No additional GPU pass, image copy, per-frame geometry transformation, or programmable sample-location dependency is added. Ordinary user and managed textures retain their orientation. Only diagnostic CPU readback row ordering changes.
+
+Actual software Vulkan/source asymmetric line controls changed from 73 mask mismatches to zero whole-image RGBA mismatches, including reflected placement; hidden-line occlusion also became exact. Those hard-edge changes remain a separate incomplete stage (XRay hidden-edge depth/fade is still unsupported). They are diagnosis, not general style acceptance.
+
+The independent frozen fourteen section fixtures were rerun through production World. See results: all ten ordinary cap masks now match exactly, including Iso; hollow Iso retains 15 mask mismatches and shared hollow seam retains 144. Whole-image shaded-face parity is not claimed. The native UI world-texture smoke test retained exact center RGB (204,76,26), two real swapchain resizes, and clean OS close. Hardware NVIDIA, nearest managed texture, and all expanded source/WSI controls must be independently rerun before promotion. Native Metal remains mandatory and unvalidated on actual Mac hardware.

@@ -1,0 +1,195 @@
+{
+  "cases": [
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.034665, compact_preprocess_ms: 0.0, warm_cache_ms: 0.00048100000000000004, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.046718, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000511, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.022593, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000451, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.018856, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000471, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.018084000000000003, compact_preprocess_ms: 0.0, warm_cache_ms: 0.00046, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.015549, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000511, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 0,
+      "hard_edge_endpoint_count": 0,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 0.028554000000000003, compact_preprocess_ms: 0.0, warm_cache_ms: 0.006452, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 24,
+      "hard_edge_endpoint_count": 2,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.066636, compact_preprocess_ms: 0.0, warm_cache_ms: 0.00048100000000000004, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 120,
+      "hard_edge_endpoint_count": 10,
+      "opacity_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [],
+      "surface_bytes": 0
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "consolidated_opaque_count": 6,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.061847000000000006, compact_preprocess_ms: 0.0, warm_cache_ms: 0.000491, cache_hits: 6, failed_prepared_chunks: 0, rollbacks: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 120,
+      "hard_edge_endpoint_count": 10,
+      "opacity_runs": [],
+      "ordinary_runs": [
+        [
+          0,
+          6,
+          false
+        ]
+      ],
+      "paint_runs": [],
+      "surface_bytes": 0
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself",
+  "derived_subset": {
+    "mandatory_cases": [
+      "style-wireframe-asymmetric-line",
+      "style-wireframe-reflected-line",
+      "style-wireframe-hidden-group",
+      "style-wireframe-hidden-edge",
+      "style-wireframe-hidden-layer",
+      "style-wireframe-soft-line",
+      "style-wireframe-clipped-line",
+      "style-hidden_line-occluded-line",
+      "style-xray-occluded-line"
+    ],
+    "parent_manifest_sha256": "f1ddb842b7a3a2ce29a9500cf37b4e163119d54f0ad46a04eaf3082debea08e5",
+    "parent_manifest_file": "../full-native-alpha-results.json",
+    "method": "Explicit nine mandatory hard-edge cases; unchanged source rows and input SHA256. Parent19 metadata retained as reference only, not a complete executable corpus in this directory."
+  }
+}

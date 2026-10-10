@@ -1,0 +1,5 @@
+Actual grouped Move wires are visible
+
+Fresh ordinary/linked/nested originalQt/OpenGL and nativeVulkan software GPU XTEST gestures all show 100% distributed target segment coverage in before/live/copy-preview/copy-commit/Undo captures. Committed subject and newly committed copy each require visible geometry, not state transitions. Offscreen linked siblings remain state-only; no hardware Move/fullRGBA/generic geometry/Finish child-list claim.
+
+Four actual-image negatives reject black-world, missing committed capture, empty PNG and displaced world region. Prior native state-only successful gestures fail this pixel oracle: committed rings have zero ink, while ghost preview itself passes. This literal failure is retained. Initial original observer projected only stored logical group transforms; its live image is visibly shifted by source viewport scratch preview. Observation corrected to follow actual source GPU draw preview matrix/offset for selected IDs, while retaining logical transform field. Original logical-pose failure remains frozen; no productionalgorithm or threshold changed.

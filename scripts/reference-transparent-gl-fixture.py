@@ -40,6 +40,12 @@ if os.environ.get("INGETRAZO_ALPHA_CONTAINER_PAINT")=="1":
 if os.environ.get("INGETRAZO_ALPHA_STYLE_CASES")=="1":
  for mode in ["wireframe","hidden_line","monochrome","xray","shaded"]:
   for kind,spec in [("front",([1.,0.,0.],1.,0.)),("reverse",([1.,0.,0.],1.,0.,{},True)),("translucent",red),("explicit-back",([1.,0.,0.],1.,0.,{"color":[0.,0.,1.],"opacity":1.},True))]:cases[f"style-{mode}-{kind}"]=([spec],[1.,1.,1.])
+edge_cases=set()
+if os.environ.get("INGETRAZO_ALPHA_EDGE_CASES")=="1":
+ for kind in ["asymmetric-line","reflected-line","hidden-group","hidden-edge","hidden-layer","soft-line","clipped-line"]:
+  name=f"style-wireframe-{kind}";edge_cases.add(name);cases[name]=([],[1.,1.,1.])
+ for mode in ["hidden_line","xray"]:
+  name=f"style-{mode}-occluded-line";edge_cases.add(name);cases[name]=([([1.,0.,0.],1.,0.)],[1.,1.,1.])
 for name,(faces,bg) in cases.items():
  vp=Viewport();vp.resize(800,600);mesh=Mesh()
  for spec in faces:
@@ -78,13 +84,28 @@ for name,(faces,bg) in cases.items():
    else:parent.adopt([group])
    group=parent
   groups=[group];mesh=Mesh()
+ if name in edge_cases:
+  z0,z1=(-.2,.2) if name.endswith("clipped-line") else (0.,0.)
+  a,b=QVector3D(-.8,.2,z0),QVector3D(.3,.9,z1)
+  if name.endswith("occluded-line"):a,b=QVector3D(-1.4,.3,-.2),QVector3D(1.4,.3,-.2)
+  edge=mesh.add_edge(a,b)
+  if name.endswith("soft-line"):edge.soft=True
+  if name.endswith("hidden-edge"):edge.hidden=True
+  if name.endswith("hidden-layer"):edge.layer="Hidden"
+  if name.endswith("reflected-line") or name.endswith("hidden-group"):
+   from core.group import Group
+   group=Group(mesh,"Line placement");group.xform=QMatrix4x4();group.xform.scale(-1.,1.,1.);group.hidden=name.endswith("hidden-group");groups=[group];mesh=Mesh()
  vp.scene=Scene(mesh=mesh,groups=groups)
+ if name.endswith("hidden-layer"):
+  from core.layers import Layer
+  vp.scene.layers.append(Layer("Hidden",False))
+ if name.endswith("clipped-line"):vp.scene.section_planes=[SectionPlane(QVector3D(0,0,0),QVector3D(0,0,1),active=True)];vp.scene.show_section_cuts=True;vp.scene.show_section_planes=False
  if name=="section-clipped":vp.scene.section_planes=[SectionPlane(QVector3D(0,0,.1),QVector3D(0,0,1),active=True)];vp.scene.show_section_cuts=True;vp.scene.show_section_planes=False
  mode=name.split("-")[1] if name.startswith("style-") else "shaded"
- vp.style_override=Style(face_mode=mode,sky=False,edges=False,profiles=False,background=tuple(bg),front_color=(.2,.4,.6) if name.startswith("style-") else (1.,1.,1.),back_color=(.8,.3,.1) if name.startswith("style-") else None);vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D(0,0,0);vp.camera.distance=4.
+ vp.style_override=Style(face_mode=mode,sky=False,edges=name in edge_cases,profiles=False,background=tuple(bg),front_color=(.2,.4,.6) if name.startswith("style-") else (1.,1.,1.),back_color=(.8,.3,.1) if name.startswith("style-") else None);vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D(0,0,0);vp.camera.distance=4.
  if name.startswith("style-"):vp.scene.display_style=vp.style_override
  vp.show()
  for _ in range(45):app.processEvents();time.sleep(.02)
  image=vp.grabFramebuffer();assert not image.isNull();image.save(str(root/(name+".png")));save_scene(vp.scene,root/(name+".igz"));pixel=image.pixelColor(400,300)
- rows.append({"case":name,"center_rgba":[pixel.red(),pixel.green(),pixel.blue(),pixel.alpha()],"background":bg,"faces":faces,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest(),"cached_opacity_runs":[list(run) for run in vp._tcol_runs],"ordinary_faces_count":vp._faces_count,"front_culled_opaque_run":list(vp._fvcol_run),"opaque_back_run":list(vp._back_vcol_run),"cached_back_opacity_runs":[list(run) for run in vp._back_tcol_runs],"style_mode":mode,"style_front_color":list(vp.style_override.front_color),"style_back_color":list(vp.style_override.back_color) if vp.style_override.back_color is not None else None,"qt_image_format":str(image.format())});vp.close();vp.deleteLater();app.processEvents()
+ rows.append({"case":name,"center_rgba":[pixel.red(),pixel.green(),pixel.blue(),pixel.alpha()],"background":bg,"faces":faces,"native_input_sha256":hashlib.sha256((root/(name+".igz")).read_bytes()).hexdigest(),"cached_opacity_runs":[list(run) for run in vp._tcol_runs],"ordinary_faces_count":vp._faces_count,"front_culled_opaque_run":list(vp._fvcol_run),"opaque_back_run":list(vp._back_vcol_run),"cached_back_opacity_runs":[list(run) for run in vp._back_tcol_runs],"show_edges":name in edge_cases,"hard_edge_endpoint_count":vp._edges_count,"style_mode":mode,"style_front_color":list(vp.style_override.front_color),"style_back_color":list(vp.style_override.back_color) if vp.style_override.back_color is not None else None,"qt_image_format":str(image.format())});vp.close();vp.deleteLater();app.processEvents()
 report={"provenance":context(),"cases":rows,"scope":"Actual original Qt OpenGL encoded-RGB blend, depth-write-off, cached opacity run order; colored untextured front surfaces only. Not texture/back-side/instancing/Xray coverage."};(root/"original-alpha-results.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))

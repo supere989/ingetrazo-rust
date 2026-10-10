@@ -787,9 +787,12 @@ fn create_vulkan_device_and_graphics_and_present_qs(
         ash::khr::portability_subset::NAME.as_ptr(),
     ];
 
+    let available=unsafe{instance.get_physical_device_features(physical_device)};
+    let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0);
     let device_create_info = vk::DeviceCreateInfo::default()
         .queue_create_infos(&queue_create_infos)
-        .enabled_extension_names(&device_extensions_ptrs);
+        .enabled_extension_names(&device_extensions_ptrs)
+        .enabled_features(&features);
 
     let device = unsafe { instance.create_device(physical_device, &device_create_info, None)? };
     let graphics_queue = unsafe { device.get_device_queue(graphics_q_index, 0) };
@@ -821,13 +824,9 @@ fn create_vulkan_swapchain(
             )?
         };
 
-        *formats
-            .iter()
-            .find(|format| {
-                matches!(format.format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB)
-                    && format.color_space == vk::ColorSpaceKHR::SRGB_NONLINEAR
-            })
-            .unwrap_or(&formats[0])
+        select_encoded_surface_format(&formats)
+            .ok_or("Surface provides no encoded UNORM/SRGB_NONLINEAR presentation format; linear sRGB blending cannot reproduce document composition")?
+
     };
     log::debug!("Swapchain format: {format:?}");
 
@@ -1061,13 +1060,16 @@ impl App for crate::IngeTrazoApp {
         if let Some(path)=initial_file { app.open_document(&path); }
         app
     }
-    fn prepare_gpu(&mut self,system:&mut System,resize:bool) {
+    fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
         if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){return;}
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
         let result=(|| {
             if system.world.is_none(){system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);}
             let world=system.world.as_mut().unwrap();
-            if resize {let scale=system.egui_ctx.pixels_per_point();let extent=vk::Extent2D{width:(rect.width()*scale).ceil().max(1.0) as u32,height:(rect.height()*scale).ceil().max(1.0) as u32};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);}
+            // Layout can change independently of OS resize; the current rect
+            // is authoritative. World.resize returns the cached texture in O(1)
+            // if extent is unchanged, with no allocation/upload/copy.
+            let scale=system.egui_ctx.pixels_per_point();let extent=vk::Extent2D{width:(rect.width()*scale).ceil().max(1.0) as u32,height:(rect.height()*scale).ceil().max(1.0) as u32};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
             world.set_display_scale(system.egui_ctx.pixels_per_point());
             world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.model_revision)
         })();
@@ -1085,4 +1087,22 @@ impl VulkanContext {
         let period=unsafe{self.instance.get_physical_device_properties(self.physical_device)}.limits.timestamp_period;
         (bits!=0&&period>0.).then_some((bits,period))
     }
+}
+
+// Presentation keeps source encoded RGB blending in the attachment itself;
+// an SRGB attachment would silently perform a different linear-light blend.
+fn select_encoded_surface_format(formats:&[vk::SurfaceFormatKHR])->Option<vk::SurfaceFormatKHR>{
+ for preferred in [vk::Format::B8G8R8A8_UNORM,vk::Format::R8G8B8A8_UNORM] {
+  if let Some(format)=formats.iter().find(|f|f.format==preferred&&f.color_space==vk::ColorSpaceKHR::SRGB_NONLINEAR){return Some(*format);}
+ }
+ formats.iter().find(|f|f.format==vk::Format::UNDEFINED&&f.color_space==vk::ColorSpaceKHR::SRGB_NONLINEAR).map(|_|vk::SurfaceFormatKHR{format:vk::Format::B8G8R8A8_UNORM,color_space:vk::ColorSpaceKHR::SRGB_NONLINEAR})
+}
+#[cfg(test)]mod encoded_surface_tests {
+ use super::*;
+ #[test]fn prefers_direct_encoded_attachment_and_refuses_semantic_fallback(){
+  let srgb=vk::SurfaceFormatKHR{format:vk::Format::B8G8R8A8_SRGB,color_space:vk::ColorSpaceKHR::SRGB_NONLINEAR};
+  let unorm=vk::SurfaceFormatKHR{format:vk::Format::R8G8B8A8_UNORM,..srgb};
+  assert_eq!(select_encoded_surface_format(&[srgb,unorm]),Some(unorm));assert_eq!(select_encoded_surface_format(&[srgb]),None);
+  assert_eq!(select_encoded_surface_format(&[vk::SurfaceFormatKHR{format:vk::Format::UNDEFINED,..srgb}]).unwrap().format,vk::Format::B8G8R8A8_UNORM);
+ }
 }

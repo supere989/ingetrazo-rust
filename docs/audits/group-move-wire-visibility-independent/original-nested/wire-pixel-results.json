@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "phase": "group-before",
+      "wire": "a0848cda63894012",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-live-preview",
+      "wire": "a0848cda63894012",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-preview",
+      "wire": "a0848cda63894012",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-preview",
+      "wire": "actual-preview",
+      "passed": true,
+      "hit_segments": 25,
+      "segments": 25,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-commit",
+      "wire": "a0848cda63894012",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-copy-commit",
+      "wire": "b38d89a8649e48b0",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "phase": "group-array-undo",
+      "wire": "a0848cda63894012",
+      "passed": true,
+      "hit_segments": 24,
+      "segments": 24,
+      "fraction": 1.0,
+      "quarters": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "scope": "Distributed visible ink on independently projected committed/preview wire paths; no state-transition-only acceptance"
+}

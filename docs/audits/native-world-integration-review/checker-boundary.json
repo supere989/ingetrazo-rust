@@ -1,0 +1,10 @@
+{
+  "accepted_checks": [
+    "all19 originalIGZ SHA256 matchdeclaredmanifest",
+    "native19fixture geometry_uploads1",
+    "nativeedgebytes12perendpoint",
+    "9strictwholeRGBAimages"
+  ],
+  "observer_boundary": "Original reflected-line diagnostic hard_edge_endpoint_count0 while actual original image and native2endpoint image match exactly; diagnostic inventory equality cannot serve as source oracle.",
+  "actual_image_tolerance": 0
+}
