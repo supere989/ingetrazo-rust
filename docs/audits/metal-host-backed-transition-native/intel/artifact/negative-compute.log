@@ -1,0 +1,9 @@
+Native Metal CAD device=Apple Paravirtual device unified=false Apple1=false ROG=false; virtual/physical classification is external, never inferred from architecture
+Metal CAD execution backend=exact source-ordered span compute
+Metal source wholeRGBA case=alpha-0 different_pixels=2304
+
+thread 'main' (81168) panicked at crates/ingetrazo-metal/examples/cad2d_probe.rs:113:9:
+assertion `left == right` failed: Strict actualQPainter whole-image comparison failed
+  left: 2304
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

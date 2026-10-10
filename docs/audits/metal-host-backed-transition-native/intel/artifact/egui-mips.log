@@ -1,0 +1,2 @@
+Native Metal mipGPU device=Apple Paravirtual device; unified=false
+Metal texture/mip upload completion unknown: complete ownership retained

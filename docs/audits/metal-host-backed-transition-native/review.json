@@ -1,0 +1,12 @@
+{
+  "arm": {
+    "presentation_passed": false,
+    "retained_unresolved": 3,
+    "gpu_mips_and_compression_checks": "pass"
+  },
+  "intel": {
+    "presentation_passed": true,
+    "retained_unresolved": 0,
+    "gpu_mips_and_compression_checks": "pass"
+  }
+}
