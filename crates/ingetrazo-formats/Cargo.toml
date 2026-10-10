@@ -14,3 +14,5 @@ zip.workspace = true
 thiserror.workspace = true
 log.workspace = true
 uuid.workspace = true
+gltf = { version = "1.4.1", default-features = false, features = ["import", "utils", "names", "KHR_texture_transform", "KHR_materials_pbrSpecularGlossiness", "extras"] }
+base64 = "0.22.1"

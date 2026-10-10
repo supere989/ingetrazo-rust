@@ -3,13 +3,15 @@
 
 //! glTF / GLB binary export.
 
-use std::io::Write;
 use ingetrazo_core::scene::Scene;
+use std::io::Write;
 
 pub const GLTF_MAGIC: u32 = 0x46546C67; // "glTF"
 
 #[derive(thiserror::Error, Debug)]
 pub enum GltfError {
+    #[error("Invalid glTF: {0}")]
+    Invalid(String),
     #[error("I/O error: {0}")]
     Io(#[from] std::io::Error),
     #[error("JSON error: {0}")]
@@ -17,6 +19,7 @@ pub enum GltfError {
 }
 
 fn build_document(scene: &Scene) -> (serde_json::Value, Vec<u8>) {
+    // Encode Z-up modelling coordinates as glTF right-handed Y-up: (x,z,-y).
     // Collect triangles: vertex positions as f32
     let mut positions: Vec<f32> = Vec::new();
     let mut indices: Vec<u32> = Vec::new();
@@ -24,17 +27,23 @@ fn build_document(scene: &Scene) -> (serde_json::Value, Vec<u8>) {
     for f_id in 0..scene.mesh.faces.len() {
         for (p0, p1, p2) in scene.mesh.triangulate_face(f_id) {
             let base = (positions.len() / 3) as u32;
-            positions.extend_from_slice(&[p0.x as f32, p0.y as f32, p0.z as f32]);
-            positions.extend_from_slice(&[p1.x as f32, p1.y as f32, p1.z as f32]);
-            positions.extend_from_slice(&[p2.x as f32, p2.y as f32, p2.z as f32]);
+            positions.extend_from_slice(&[p0.x as f32, p0.z as f32, -p0.y as f32]);
+            positions.extend_from_slice(&[p1.x as f32, p1.z as f32, -p1.y as f32]);
+            positions.extend_from_slice(&[p2.x as f32, p2.z as f32, -p2.y as f32]);
             indices.extend_from_slice(&[base, base + 1, base + 2]);
         }
     }
 
     // Bake every nested local transform into the exported world geometry.
-    fn collect_group(group: &ingetrazo_core::groups::Group, parent: glam::DMat4,
-                     positions: &mut Vec<f32>, indices: &mut Vec<u32>) {
-        if group.hidden { return; }
+    fn collect_group(
+        group: &ingetrazo_core::groups::Group,
+        parent: glam::DMat4,
+        positions: &mut Vec<f32>,
+        indices: &mut Vec<u32>,
+    ) {
+        if group.hidden {
+            return;
+        }
         let world = parent * group.transform;
         let reflected = world.determinant() < 0.0;
         for face in 0..group.mesh.faces.len() {
@@ -43,19 +52,24 @@ fn build_document(scene: &Scene) -> (serde_json::Value, Vec<u8>) {
                 let base = (positions.len() / 3) as u32;
                 for point in points {
                     let p = world.transform_point3(point);
-                    positions.extend_from_slice(&[p.x as f32, p.y as f32, p.z as f32]);
+                    positions.extend_from_slice(&[p.x as f32, p.z as f32, -p.y as f32]);
                 }
                 indices.extend_from_slice(&[base, base + 1, base + 2]);
             }
         }
-        for child in &group.children { collect_group(child, world, positions, indices); }
+        for child in &group.children {
+            collect_group(child, world, positions, indices);
+        }
     }
     for group in &scene.groups {
         collect_group(group, glam::DMat4::IDENTITY, &mut positions, &mut indices);
     }
 
     if positions.is_empty() {
-        return (serde_json::json!({"asset": {"version": "2.0", "generator": "IngeTrazo"}, "scene": 0, "scenes": [{"nodes": []}]}), Vec::new());
+        return (
+            serde_json::json!({"asset": {"version": "2.0", "generator": "IngeTrazo"}, "scene": 0, "scenes": [{"nodes": []}]}),
+            Vec::new(),
+        );
     }
 
     // Binary buffer: positions (f32) + indices (u32)
@@ -146,10 +160,19 @@ pub fn export_gltf(scene: &Scene, writer: &mut impl Write) -> Result<(), GltfErr
             | bytes.get(2).copied().unwrap_or(0) as u32;
         encoded.push(ALPHABET[((value >> 18) & 63) as usize] as char);
         encoded.push(ALPHABET[((value >> 12) & 63) as usize] as char);
-        encoded.push(if bytes.len() > 1 { ALPHABET[((value >> 6) & 63) as usize] as char } else { '=' });
-        encoded.push(if bytes.len() > 2 { ALPHABET[(value & 63) as usize] as char } else { '=' });
+        encoded.push(if bytes.len() > 1 {
+            ALPHABET[((value >> 6) & 63) as usize] as char
+        } else {
+            '='
+        });
+        encoded.push(if bytes.len() > 2 {
+            ALPHABET[(value & 63) as usize] as char
+        } else {
+            '='
+        });
     }
-    document["buffers"][0]["uri"] = serde_json::json!(format!("data:application/octet-stream;base64,{encoded}"));
+    document["buffers"][0]["uri"] =
+        serde_json::json!(format!("data:application/octet-stream;base64,{encoded}"));
     serde_json::to_writer_pretty(writer, &document)?;
     Ok(())
 }
@@ -207,8 +230,14 @@ mod tests {
     fn nested_world_geometry_is_exported() {
         let (doc, bytes) = build_document(&nested_scene());
         assert_eq!(doc["accessors"][0]["count"], 3);
-        assert_eq!(doc["accessors"][0]["min"], serde_json::json!([10.0,5.0,0.0]));
-        assert_eq!(doc["accessors"][0]["max"], serde_json::json!([11.0,6.0,0.0]));
+        assert_eq!(
+            doc["accessors"][0]["min"],
+            serde_json::json!([10.0, 0.0, -6.0])
+        );
+        assert_eq!(
+            doc["accessors"][0]["max"],
+            serde_json::json!([11.0, 0.0, -5.0])
+        );
         assert_eq!(bytes.len(), 48);
     }
 
@@ -218,11 +247,17 @@ mod tests {
         let mut text = Vec::new();
         export_gltf(&scene, &mut text).unwrap();
         let doc: serde_json::Value = serde_json::from_slice(&text).unwrap();
-        assert!(doc["buffers"][0]["uri"].as_str().unwrap().starts_with("data:application/octet-stream;base64,"));
+        assert!(doc["buffers"][0]["uri"]
+            .as_str()
+            .unwrap()
+            .starts_with("data:application/octet-stream;base64,"));
         let mut binary = Vec::new();
         export_glb(&scene, &mut binary).unwrap();
         assert_eq!(&binary[..4], b"glTF");
-        assert_eq!(u32::from_le_bytes(binary[8..12].try_into().unwrap()) as usize, binary.len());
+        assert_eq!(
+            u32::from_le_bytes(binary[8..12].try_into().unwrap()) as usize,
+            binary.len()
+        );
     }
 
     #[test]
@@ -239,10 +274,16 @@ mod tests {
     #[test]
     fn reflected_instance_retains_outward_winding() {
         let mut scene = nested_scene();
-        scene.groups[0].transform = DMat4::from_scale(DVec3::new(-1.0,1.0,1.0));
+        scene.groups[0].transform = DMat4::from_scale(DVec3::new(-1.0, 1.0, 1.0));
         let (_, bytes) = build_document(&scene);
-        let floats: Vec<f32> = bytes[..36].chunks_exact(4).map(|c| f32::from_le_bytes(c.try_into().unwrap())).collect();
-        let p: Vec<DVec3> = floats.chunks_exact(3).map(|v| DVec3::new(v[0] as f64,v[1] as f64,v[2] as f64)).collect();
-        assert!((p[1]-p[0]).cross(p[2]-p[0]).z > 0.0);
+        let floats: Vec<f32> = bytes[..36]
+            .chunks_exact(4)
+            .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+            .collect();
+        let p: Vec<DVec3> = floats
+            .chunks_exact(3)
+            .map(|v| DVec3::new(v[0] as f64, v[1] as f64, v[2] as f64))
+            .collect();
+        assert!((p[1] - p[0]).cross(p[2] - p[0]).y > 0.0);
     }
 }
