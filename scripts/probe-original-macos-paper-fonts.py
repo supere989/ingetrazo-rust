@@ -21,7 +21,7 @@ app=QApplication([]);out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 cases=[("helvetica","Helvetica",False,False,"ABC"),("helvetica-bold","Helvetica",True,False,"ABC"),("helvetica-italic","Helvetica",False,True,"ABC"),("times-bold-italic","Times",True,True,"ABC"),("cjk","Helvetica",False,False,"漢字"),("arabic","Helvetica",False,False,"العربية")]
 # Oracle-only disk inventory, never product renderer/font resolution.
 files=[]
-for directory in ["/System/Library/Fonts","/Library/Fonts",str(Path.home()/"Library/Fonts")]:
+for directory in ["/System/Library/Fonts","/Library/Fonts",str(Path.home()/"Library/Fonts"),"/System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved"]:
  for p in Path(directory).rglob("*"):
   if p.suffix.lower() in (".ttf",".otf",".ttc",".otc") and p.is_file():files.append(p)
 identities={}
