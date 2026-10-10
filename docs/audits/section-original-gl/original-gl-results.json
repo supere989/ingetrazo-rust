@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "e5e38a2135bf1f3a61a39abb3466c03d076b2beb",
+    "rust_commit": "5a67d294b6899e15af8fe5a7c9cb052702036e6f",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -46,6 +46,51 @@
       "case": "duplicate",
       "magenta_fill_pixels": 20164,
       "faces": 20,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "coplanar-backface",
+      "magenta_fill_pixels": 0,
+      "faces": 1,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "closed-iso",
+      "magenta_fill_pixels": 9925,
+      "faces": 10,
+      "interior_flags": 0,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "shared-slab-iso",
+      "magenta_fill_pixels": 8519,
+      "faces": 11,
+      "interior_flags": 1,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "magenta_fill_pixels": 9925,
+      "faces": 11,
+      "interior_flags": 1,
+      "context_stencil_bits": 8,
+      "width": 800,
+      "height": 600
+    },
+    {
+      "case": "closed-front",
+      "magenta_fill_pixels": 0,
+      "faces": 10,
       "interior_flags": 0,
       "context_stencil_bits": 8,
       "width": 800,

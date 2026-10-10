@@ -22,6 +22,6 @@ def main():
     expected=r["magenta_fill_pixels"];same=(count==0 if expected==0 else abs(count-expected)/expected<.05)
     rows.append({"case":r["case"],"original_magenta_pixels":expected,"rust_magenta_pixels":count,"coverage_within_five_percent":same})
   finally:p.terminate();p.wait()
- report={"provenance":context(),"passed":all(r["coverage_within_five_percent"] for r in rows),"cases":rows,"scope":"Actual native eframe production painter screenshot, equal800x600 Top orthographic camera and authoredtwo-storeygeometry versus real originalQtGL stencil. Five-percent cap coverage tolerance for raster/contour antialiasing; zero-fill cases exact. No full scene UI gesture or camera-generalization claim."}
+ report={"provenance":context(),"passed":all(r["coverage_within_five_percent"] for r in rows),"cases":rows,"scope":"Actual native eframe production painter screenshot, equal800x600 Top/Iso/Front orthographic cameras and authored two-storey geometry plus coincident cut/backface versus real originalQtGL stencil. Five-percent cap coverage tolerance for raster/contour antialiasing; zero-fill cases exact. No full scene UI gesture or camera-generalization claim."}
  (root/"results.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2));assert report["passed"],rows
 if __name__=="__main__":main()

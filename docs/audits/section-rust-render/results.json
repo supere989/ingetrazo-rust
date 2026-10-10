@@ -1,11 +1,11 @@
 {
   "provenance": {
-    "rust_commit": "a3b2608351dbaaf183c682a72446ebcecbcd19d4",
+    "rust_commit": "5a67d294b6899e15af8fe5a7c9cb052702036e6f",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "passed": true,
+  "passed": false,
   "cases": [
     {
       "case": "closed",
@@ -35,6 +35,36 @@
       "case": "duplicate",
       "original_magenta_pixels": 20164,
       "rust_magenta_pixels": 20164,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "coplanar-backface",
+      "original_magenta_pixels": 0,
+      "rust_magenta_pixels": 20736,
+      "coverage_within_five_percent": false
+    },
+    {
+      "case": "closed-iso",
+      "original_magenta_pixels": 9925,
+      "rust_magenta_pixels": 9800,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "shared-slab-iso",
+      "original_magenta_pixels": 8519,
+      "rust_magenta_pixels": 8356,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "original_magenta_pixels": 9925,
+      "rust_magenta_pixels": 9800,
+      "coverage_within_five_percent": true
+    },
+    {
+      "case": "closed-front",
+      "original_magenta_pixels": 0,
+      "rust_magenta_pixels": 0,
       "coverage_within_five_percent": true
     }
   ],
