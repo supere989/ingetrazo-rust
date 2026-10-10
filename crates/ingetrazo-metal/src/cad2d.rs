@@ -46,20 +46,29 @@ impl Drop for Texture {
 }
 struct Cached {
     id: u64,
-    vertices: Buffer,
-    indices: Buffer,
+    vertices: Arc<Buffer>,
+    indices: Arc<Buffer>,
     bounds: [[f32; 2]; 2],
+}
+struct Frame {
+    command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
+    serial: u64,
+    _vertices: Arc<Buffer>,
+    _indices: Arc<Buffer>,
+    _target: Arc<Texture>,
+    _readback: Option<Arc<Buffer>>,
 }
 struct Inner {
     metal: NativeMetal,
     pipeline: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
-    target: Texture,
-    readback: Option<Buffer>,
+    target: Arc<Texture>,
+    readback: Option<Arc<Buffer>>,
     width: usize,
     height: usize,
     row: usize,
     cached: Option<Cached>,
-    pending: Option<Retained<ProtocolObject<dyn MTLCommandBuffer>>>,
+    frames: std::collections::VecDeque<Frame>,
+    completed_serial: u64,
     stats: MetalCadStats,
     palette: Vec<Batch>,
     colors: Vec<[f32; 4]>,
@@ -72,7 +81,7 @@ pub struct MetalCad2d {
 }
 impl Drop for MetalCad2d {
     fn drop(&mut self) {
-        if !self.unknown {
+        if !self.unknown && self.inner.frames.is_empty() {
             unsafe { ManuallyDrop::drop(&mut self.inner) }
         }
     }
@@ -124,7 +133,7 @@ impl MetalCad2d {
             .newRenderPipelineStateWithDescriptor_error(&descriptor)
             .map_err(|e| format!("Metal CAD pipeline: {e:?}"))?;
         let row = (width.checked_mul(4).ok_or("Target byte overflow")? + 255) & !255;
-        let target = Self::target(&metal, width, height)?;
+        let target = Arc::new(Self::target(&metal, width, height)?);
         let stats = MetalCadStats {
             target_bytes: MTLResource::allocatedSize(&**target.raw) as u64,
             ..Default::default()
@@ -139,7 +148,8 @@ impl MetalCad2d {
                 height,
                 row,
                 cached: None,
-                pending: None,
+                frames: std::collections::VecDeque::new(),
+                completed_serial: 0,
                 stats,
                 palette: Vec::new(),
                 colors: Vec::new(),
@@ -225,8 +235,8 @@ impl MetalCad2d {
         indices.write(bytemuck::cast_slice(geometry.indices()))?;
         self.inner.cached = Some(Cached {
             id: geometry.id(),
-            vertices,
-            indices,
+            vertices: Arc::new(vertices),
+            indices: Arc::new(indices),
             bounds,
         });
         self.inner.stats.geometry_uploads += 1;
@@ -249,6 +259,49 @@ impl MetalCad2d {
         }
         Ok(bounds)
     }
+    /// Nonblocking actual completion collection. Error retains all owners.
+    pub fn poll_completed(&mut self) -> Result<u64, String> {
+        if self.unknown {
+            return Err("Metal CAD completion unknown; refused".into());
+        }
+        while let Some(frame) = self.inner.frames.front() {
+            let status = frame.command.status();
+            if status == MTLCommandBufferStatus::Completed {
+                self.inner.completed_serial = frame.serial;
+                self.inner.frames.pop_front();
+            } else if status == MTLCommandBufferStatus::Error {
+                self.unknown = true;
+                self.inner.metal.poisoned.store(true, Ordering::Release);
+                return Err("Metal CAD command error; all owners retained".into());
+            } else {
+                break;
+            }
+        }
+        Ok(self.inner.completed_serial)
+    }
+    /// Explicit engineering wait only. Production submission never invokes it.
+    pub fn wait_diagnostic(&mut self, serial: u64, timeout: Duration) -> Result<(), String> {
+        if timeout > Duration::from_secs(5) || serial > self.inner.stats.submissions {
+            return Err("Metal CAD diagnostic wait domain invalid".into());
+        }
+        let start = Instant::now();
+        loop {
+            if self.poll_completed()? >= serial {
+                return Ok(());
+            }
+            if start.elapsed() >= timeout {
+                self.unknown = true;
+                self.inner.metal.poisoned.store(true, Ordering::Release);
+                return Err("Metal CAD deadline expired; all owners/ledger retained".into());
+            }
+            std::thread::sleep(
+                Duration::from_millis(1).min(timeout.saturating_sub(start.elapsed())),
+            );
+        }
+    }
+    pub fn in_flight(&self) -> usize {
+        self.inner.frames.len()
+    }
     /// One render encoder with coherent raster-order framebuffer fetch, followed
     /// only by a diagnostic BLIT readback. Uniform changes do not rebuild geometry.
     /// Production offscreen draw: no image copy/readback or CPU output.
@@ -258,10 +311,10 @@ impl MetalCad2d {
         batches: &[Batch],
         pose: Pose,
         clear: [u8; 4],
-    ) -> Result<(), String> {
+    ) -> Result<u64, String> {
         objc2::rc::autoreleasepool(|_| {
-            self.render_inner(geometry, batches, pose, clear, false)
-                .map(|_| ())
+            self.render_inner(geometry, batches, pose, clear, false)?;
+            Ok(self.inner.stats.submissions)
         })
     }
     /// Explicit engineering readback; storage is admitted/mapped only when
@@ -274,6 +327,7 @@ impl MetalCad2d {
         clear: [u8; 4],
     ) -> Result<Vec<u8>, String> {
         objc2::rc::autoreleasepool(|_| {
+            self.wait_diagnostic(self.inner.stats.submissions, Duration::from_secs(5))?;
             self.render_inner(geometry, batches, pose, clear, true)
                 .map(|v| v.unwrap())
         })
@@ -286,6 +340,12 @@ impl MetalCad2d {
         clear: [u8; 4],
         readback: bool,
     ) -> Result<Option<Vec<u8>>, String> {
+        self.poll_completed()?;
+        if self.inner.frames.len() >= 3 {
+            return Err(
+                "Metal CAD in-flight capacity3; explicit backpressure, no wait/allocation".into(),
+            );
+        }
         if batches.len() > 4096 {
             return Err("Metal CAD batch admission exceeds4096".into());
         }
@@ -322,11 +382,11 @@ impl MetalCad2d {
             None
         };
         if readback && self.inner.readback.is_none() {
-            self.inner.readback = Some(
+            self.inner.readback = Some(Arc::new(
                 self.inner
                     .metal
                     .buffer(self.inner.row * self.inner.height, true)?,
-            );
+            ));
         }
         self.prepare(geometry)?;
         if let Some(colors) = colors {
@@ -398,29 +458,27 @@ impl MetalCad2d {
             blit.endEncoding();
             self.inner.stats.readback_submissions += 1;
         }
-        self.inner.pending = Some(command);
-        self.inner.pending.as_ref().unwrap().commit();
-        self.inner.stats.submissions += 1;
-        let start = Instant::now();
-        loop {
-            let status = self.inner.pending.as_ref().unwrap().status();
-            if status == MTLCommandBufferStatus::Completed {
-                break;
-            }
-            if status == MTLCommandBufferStatus::Error || start.elapsed() >= Duration::from_secs(5)
-            {
-                self.unknown = true;
-                self.inner.metal.poisoned.store(true, Ordering::Release);
-                return Err(format!(
-                    "Metal CAD completion unverified; entire owner retained: {status:?}"
-                ));
-            }
-            std::thread::sleep(Duration::from_millis(1));
-        }
-        self.inner.pending.take();
+        let cached = self.inner.cached.as_ref().unwrap();
+        let serial = self.inner.stats.submissions + 1;
+        let frame = Frame {
+            command,
+            serial,
+            _vertices: cached.vertices.clone(),
+            _indices: cached.indices.clone(),
+            _target: self.inner.target.clone(),
+            _readback: if readback {
+                self.inner.readback.clone()
+            } else {
+                None
+            },
+        };
+        self.inner.frames.push_back(frame);
+        self.inner.frames.back().unwrap().command.commit();
+        self.inner.stats.submissions = serial;
         if !readback {
             return Ok(None);
         }
+        self.wait_diagnostic(serial, Duration::from_secs(5))?;
         let raw = unsafe {
             std::slice::from_raw_parts(
                 self.inner

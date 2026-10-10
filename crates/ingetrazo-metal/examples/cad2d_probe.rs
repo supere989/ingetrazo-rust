@@ -121,7 +121,8 @@ fn main() -> Result<(), String> {
     );
     let reads = renderer.stats().readback_submissions;
     for _ in 0..10 {
-        renderer.render(&geometry, &batch, pose, [255; 4])?;
+        let serial = renderer.render(&geometry, &batch, pose, [255; 4])?;
+        renderer.wait_diagnostic(serial, std::time::Duration::from_secs(5))?;
     }
     assert_eq!(renderer.stats().readback_submissions, reads);
     assert_eq!(
