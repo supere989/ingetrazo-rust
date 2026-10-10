@@ -1,11 +1,13 @@
 {
   "tested_commit": "a4a44b2",
-  "passed": 504,
+  "passed": 505,
   "ignored": 2,
   "merge_review": "Keep sheet_shape/sheet_color and drawing_axes/gpu_memory modules. Preserve composer Factory handle with new Qt premultiplied palette construction. Retain both evidence histories.",
   "full_export_parity": "OPEN",
   "fresh_pdf_replay": "27 whole pages exact at72/144/300DPI against retained actual original source export",
   "native_pdf_sha256": "1a48d4c8227c939b10b9568047eb2081eef41c8d878400aefcb3977f2620f2c3",
   "optimized_tested_commit": "9f51ebb",
-  "optimization": "Stack numeric formatter preserves byte output; aggregate page preparation admission before retaining excess draws/path operations. Root combined workspace recheck passes."
+  "optimization": "Stack numeric formatter preserves byte output; aggregate page preparation admission before retaining excess draws/path operations. Root combined workspace recheck passes.",
+  "atlas_tested_commit": "c290c3a",
+  "atlas_guard": "Global writer draw/path limits applied during page collection; per-page temporary remains bounded."
 }
