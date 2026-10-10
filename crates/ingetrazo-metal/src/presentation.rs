@@ -9,6 +9,20 @@ use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 use std::{collections::VecDeque, mem::ManuallyDrop, sync::atomic::Ordering};
 use winit::window::Window;
 
+fn next_terminal<T>(
+    frames: &std::collections::VecDeque<T>,
+    mut proof: impl FnMut(&T) -> Result<Option<bool>, String>,
+) -> Result<Option<(usize, bool)>, String> {
+    // Admission already limits this queue to three immutable owners. No sorting,
+    // allocation or waiting is needed, and unknown owners stay in place.
+    for (index, frame) in frames.iter().enumerate() {
+        if let Some(displayed) = proof(frame)? {
+            return Ok(Some((index, displayed)));
+        }
+    }
+    Ok(None)
+}
+
 fn terminal_proof(
     status: MTLCommandBufferStatus,
     callback_seen: bool,
@@ -127,33 +141,34 @@ impl MetalPresentation {
     /// presentation can still own the drawable after rendering has completed.
     pub fn poll(&mut self) -> Result<usize, String> {
         let mut count = 0;
-        while let Some(frame) = self.owners.frames.front() {
-            if frame.command.status() == MTLCommandBufferStatus::Error {
-                self.owners.metal.poisoned.store(true, Ordering::Release);
-                return Err("Metal presentation command failed; owners quarantined".into());
-            }
-            // GPU completion alone never retires a drawable. Apple's terminal
-            // presentation callback also arrives for skipped frames (actual
-            // ARM/Intel observer evidence). Positive timestamps alone count as
-            // display proof; zero callback times remain explicitly skipped.
-            let displayed = match terminal_proof(
-                frame.command.status(),
-                frame.callback_seen.load(Ordering::Acquire),
-                f64::from_bits(frame.callback_time.load(Ordering::Acquire)),
-            ) {
-                Ok(Some(displayed)) => displayed,
+        loop {
+            let terminal = next_terminal(&self.owners.frames, |frame| {
+                if frame.command.status() == MTLCommandBufferStatus::Error {
+                    return Err("Metal presentation command failed; owners quarantined".into());
+                }
+                terminal_proof(
+                    frame.command.status(),
+                    frame.callback_seen.load(Ordering::Acquire),
+                    f64::from_bits(frame.callback_time.load(Ordering::Acquire)),
+                )
+            });
+            let (index, displayed) = match terminal {
+                Ok(Some(terminal)) => terminal,
                 Ok(None) => break,
                 Err(error) => {
                     self.owners.metal.poisoned.store(true, Ordering::Release);
                     return Err(error);
                 }
             };
+            // Each immutable frame owns its drawable, command and paint.
+            // A missing head callback cannot invalidate a later owner's actual
+            // terminal proof. Never release the unresolved head by inference.
             if displayed {
                 self.displayed += 1;
             } else {
                 self.skipped += 1;
             }
-            self.owners.frames.pop_front();
+            self.owners.frames.remove(index);
             self.retired += 1;
             count += 1;
         }
@@ -328,6 +343,39 @@ impl Drop for MetalPresentation {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn later_terminal_owner_does_not_release_unknown_head() {
+        let mut frames = std::collections::VecDeque::from([
+            (MTLCommandBufferStatus::Completed, false, 0.),
+            (MTLCommandBufferStatus::Completed, true, 0.),
+            (MTLCommandBufferStatus::Completed, true, 7.),
+        ]);
+        let mut displayed = 0;
+        let mut skipped = 0;
+        while let Some((index, visible)) =
+            next_terminal(&frames, |&(s, seen, t)| terminal_proof(s, seen, t)).unwrap()
+        {
+            frames.remove(index);
+            if visible {
+                displayed += 1;
+            } else {
+                skipped += 1;
+            }
+        }
+        assert_eq!((displayed, skipped), (1, 1));
+        assert_eq!(frames.len(), 1);
+        assert!(!frames.front().unwrap().1);
+        // Callback before GPU completion is still no retirement proof.
+        frames.push_back((MTLCommandBufferStatus::Scheduled, true, 9.));
+        assert_eq!(
+            next_terminal(&frames, |&(s, seen, t)| terminal_proof(s, seen, t)).unwrap(),
+            None
+        );
+        frames.push_back((MTLCommandBufferStatus::Completed, true, f64::NAN));
+        assert!(next_terminal(&frames, |&(s, seen, t)| terminal_proof(s, seen, t)).is_err());
+        assert_eq!(frames.len(), 3);
+    }
+
     #[test]
     fn gpu_completion_and_terminal_callback_are_both_required() {
         assert_eq!(
