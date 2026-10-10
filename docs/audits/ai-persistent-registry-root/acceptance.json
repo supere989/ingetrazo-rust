@@ -1,0 +1,21 @@
+{
+  "source": "744c3d05",
+  "persistent_registry_tests": 4,
+  "shared_budget_tests": 3,
+  "fresh_source_weld_cases": 7,
+  "fresh_allocator_base_sizes": [
+    1,
+    1000,
+    50000
+  ],
+  "begin_allocations": 0,
+  "checker_negative_controls": 6,
+  "purged_terminal_target": "/tmp/ingetrazo-root-registry-review",
+  "purged_apparent_bytes": 187228281,
+  "limitations": [
+    "Private append owner proof only; production scripting remains disabled",
+    "Registry truncate assumes journal weld forbids duplicate appended source keys",
+    "Core spatial index publication remains O(base)",
+    "Logical payload budget is not allocator or VM memory enforcement"
+  ]
+}

@@ -1,0 +1,8 @@
+
+running 3 tests
+test owner::tests::shared_budget_staging_and_commit_refusals_release_candidate_only ... ok
+test owner::tests::shared_budget_constructor_and_preparation_refusals_preserve_owner ... ok
+test owner::tests::shared_budget_two_owners_and_existing_redo_survive_refused_commit ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.00s
+

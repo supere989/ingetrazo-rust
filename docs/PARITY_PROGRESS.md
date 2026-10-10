@@ -1,5 +1,7 @@
 # Rust parity progress tracker
 
+Persistent scripting registry reviewed (2026-10-10): integrated `744c3d05` passes four fresh ownership tests, three budget controls, seven fresh source-weld comparisons and zero-allocation transaction begin at 1/1,000/50,000 base vertices. [Independent acceptance](audits/ai-persistent-registry-root/acceptance.json). Per-transaction base copies are removed; full spatial-index rebuilding, production adapters and VM/native allocation bounds remain OPEN. No full parity row or gate is promoted.
+
 Offset CI harness correction under review (2026-10-10): main `d24dae2b` passed workspace tests but its Offset screenshot harness crashed with an unknown image-format filename after cancellation-state assertions passed. Atomic request publication and response-bound screenshot names now pass one focused build and complete rendered Offset replay. [Retained failure and review](audits/offset-capture-ci-failure/review.json). Independent race control and publication remain pending; this does not promote any full parity row or gate.
 
 Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_Angeles). Baseline Rust commit: `68368964fd5625f96ab5c705c43cdc13e402a6bd`. Original Python baseline: submodule `6be29fe437a7cd992d4e079f71720821b25216b9`, source version 0.5.7 (`ingetrazo/core/version.py`). The Rust workspace package version is 0.3.15. This compares the pinned original, not today's upstream HEAD.
