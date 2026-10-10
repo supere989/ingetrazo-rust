@@ -434,6 +434,7 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
         version,
         ..Default::default()
     };
+    let mut retained_texture_bytes = 0u64;
     for i in 0..zip.len() {
         let mut entry = zip
             .by_index(i)
@@ -539,6 +540,14 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
                                 "Texture asset exceeds 16MiB admission".into(),
                             ));
                         }
+                        retained_texture_bytes = retained_texture_bytes
+                            .checked_add(entry.size())
+                            .filter(|&bytes| bytes <= 256 * 1024 * 1024)
+                            .ok_or_else(|| {
+                                SkpError::Invalid(
+                                    "Texture aggregate retained bytes exceed 256MiB".into(),
+                                )
+                            })?;
                         let mut data = Vec::new();
                         entry.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
                         if data.len() > 16 * 1024 * 1024 {

@@ -137,11 +137,20 @@ pub(super) fn bake(
 /// Admit neutral payload assets before constructing any scene resources.
 pub(super) fn admit_assets(payload: &Payload) -> Result<(), SkpError> {
     let mut identities = std::collections::HashMap::<&str, &[u8]>::new();
+    let mut retained_bytes = 0usize;
     for texture in payload
         .materials
         .values()
         .filter_map(|m| m.texture.as_ref())
     {
+        retained_bytes = retained_bytes
+            .checked_add(texture.bytes.len())
+            .ok_or_else(|| SkpError::Invalid("Texture aggregate admission overflow".into()))?;
+        if retained_bytes > 256 * 1024 * 1024 {
+            return Err(SkpError::Invalid(
+                "Texture aggregate retained bytes exceed 256MiB".into(),
+            ));
+        }
         if texture.archive_name.is_empty() || texture.bytes.len() > 16 * 1024 * 1024 {
             return Err(SkpError::Invalid(
                 "Texture identity or byte admission failed".into(),
@@ -153,6 +162,7 @@ pub(super) fn admit_assets(payload: &Payload) -> Result<(), SkpError> {
                     "Conflicting embedded texture identity".into(),
                 ));
             }
+            continue;
         }
         let format = image::guess_format(&texture.bytes)
             .map_err(|_| SkpError::Invalid("Texture image header invalid".into()))?;
@@ -166,6 +176,9 @@ pub(super) fn admit_assets(payload: &Payload) -> Result<(), SkpError> {
         if width == 0 || height == 0 || width as u64 * height as u64 > 64 * 1024 * 1024 {
             return Err(SkpError::Invalid("Texture pixel admission failed".into()));
         }
+        image::ImageReader::with_format(std::io::Cursor::new(&texture.bytes), format)
+            .decode()
+            .map_err(|_| SkpError::Invalid("Texture pixel payload invalid".into()))?;
     }
     Ok(())
 }
@@ -210,6 +223,20 @@ mod admission_tests {
             .push(1);
         assert!(
             matches!(admit_assets(&payload), Err(SkpError::Invalid(s)) if s.contains("Conflicting"))
+        );
+        payload.materials.remove("two");
+        let mut truncated = image();
+        truncated.truncate(41);
+        payload
+            .materials
+            .get_mut("one")
+            .unwrap()
+            .texture
+            .as_mut()
+            .unwrap()
+            .bytes = truncated;
+        assert!(
+            matches!(admit_assets(&payload), Err(SkpError::Invalid(s)) if s.contains("payload"))
         );
         payload.materials.remove("two");
         payload

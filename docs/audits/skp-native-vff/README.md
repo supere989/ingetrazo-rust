@@ -24,3 +24,6 @@ Frozen nested source `ee142abeac35bc31cb246b483f710abf5103017c`, binary SHA256 `
 ## Embedded default-texture stage
 
 The native reader now admits bounded embedded PNG/JPEG assets and preserves original material recipes, image bytes, tile-size fallback, and default local-plane UV mappings for small polygons, including inherited paint, holes and shared/nested placement. Neutral payload admission rejects invalid image headers and conflicting bytes under the same embedded identity before scene construction. The named texture corpus extends the nested corpus to 24 rows. Positioned/projected mapping, tinting, missing-image fallback and large textured polygon fit semantics remain required gaps; legacy eras, annotations, views and billboard/image extraction remain open. Earlier refusal evidence above describes its frozen historical source.
+
+
+Texture integrity admission additionally decodes each distinct embedded identity once and bounds aggregate retained raw asset bytes (including per-material duplicate ownership) to 256 MiB before scene publication; archive parsing applies the same cap before each image read. A header-valid truncated PNG is refused. Frozen original OpenSKP imports that malformed asset and publishes a texture whose QImage is null, so this refusal is an explicit integrity correction rather than malformed-input parity.
