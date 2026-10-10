@@ -47,6 +47,21 @@ pub struct VisualLine {
     pub ascent_26_6: i32,
     pub descent_26_6: i32,
 }
+/// Borrow ordinary spans; admit the single discretionary replacement before allocating.
+fn discretionary_display(text: &str, broken: bool) -> Result<std::borrow::Cow<'_, str>, String> {
+    if broken && text.ends_with('\u{00ad}') {
+        let stem = text.strip_suffix('\u{00ad}').unwrap();
+        let mut display = String::new();
+        display
+            .try_reserve(stem.len() + 1)
+            .map_err(|_| "Paper discretionary hyphen allocation failed")?;
+        display.push_str(stem);
+        display.push('-');
+        Ok(std::borrow::Cow::Owned(display))
+    } else {
+        Ok(std::borrow::Cow::Borrowed(text))
+    }
+}
 /// Resolve only missing character spans; primary-font Latin/space glyphs retain their own face.
 /// Resources are shared Rc owners from the bounded resolver, never full-font copies.
 pub fn shape_line(
@@ -266,8 +281,10 @@ pub fn layout_paragraph(
                 if measured_bytes > 4 * 1024 * 1024 {
                     return Err("Paper paragraph shaping work budget exceeded".into());
                 }
+                // Qt tests a discretionary opportunity with the visible hyphen's advance.
+                let measured = discretionary_display(candidate, at < paragraph.len())?;
                 let advance =
-                    shape_line_with_level(resolver, request, candidate, level)?.advance_26_6;
+                    shape_line_with_level(resolver, request, &measured, level)?.advance_26_6;
                 if end > start && advance > width {
                     if ranges.len() >= 4096 {
                         return Err("Paper paragraph line budget exceeded".into());
@@ -307,15 +324,8 @@ pub fn layout_paragraph(
             let broken_soft_hyphen =
                 range.end < paragraph.len() && paragraph[range.clone()].ends_with('\u{00ad}');
             let authored = paragraph[range].trim_end_matches([' ', '\t']);
-            let display;
-            let text = if broken_soft_hyphen {
-                // The discretionary hyphen is painted only when this opportunity actually ends a line.
-                display = format!("{}-", authored.strip_suffix('\u{00ad}').unwrap());
-                display.as_str()
-            } else {
-                authored
-            };
-            let line = shape_line_with_level(resolver, request, text, level)?;
+            let text = discretionary_display(authored, broken_soft_hyphen)?;
+            let line = shape_line_with_level(resolver, request, &text, level)?;
             for run in &line.runs {
                 admit_font(&mut owners, &run.font)?;
             }
