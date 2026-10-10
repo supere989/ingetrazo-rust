@@ -27,6 +27,12 @@ pub fn parse_sheet_color(value: &str) -> Result<[u8; 4], String> {
                 parse(&hex[6..8])? as u8,
                 parse(&hex[0..2])? as u8,
             ]),
+            9 | 12 => {
+                let digits=hex.len()/3;
+                let max=(1_u32 << (digits*4))-1;
+                let channel=|part:&str|->Result<u8,String>{Ok(((u32::from(parse(part)?)*255+max/2)/max) as u8)};
+                Ok([channel(&hex[..digits])?,channel(&hex[digits..digits*2])?,channel(&hex[digits*2..])?,255])
+            },
             _ => Err(format!("Unsupported sheet colour: {value}")),
         };
     }
@@ -186,6 +192,21 @@ pub fn parse_sheet_color(value: &str) -> Result<[u8; 4], String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn original_long_hex_all_channel_values() {
+        let expected=include_bytes!("../../../docs/audits/sheet-shape-original/original-long-hex-rgba.bin");
+        let mut index=0;
+        for digits in [3,4] {
+            for value in 0..(1_u32 << (digits*4)) {
+                let channel=format!("{value:0digits$x}");
+                let text=format!("#{channel}{channel}{channel}");
+                assert_eq!(parse_sheet_color(&text).unwrap(),expected[index..index+4],"{text}");index+=4;
+            }
+        }
+        assert_eq!(index,expected.len());
+        assert_eq!(parse_sheet_color("#123456789").unwrap(),[18,69,120,255]);
+        assert_eq!(parse_sheet_color("#123456789abc").unwrap(),[18,86,154,255]);
+    }
     #[test]
     fn original_named_palette_and_hex_channel_order() {
         let names: serde_json::Value = serde_json::from_str(include_str!(

@@ -1,0 +1,10 @@
+{
+  "source": "Actual original installed PySide6 QColor",
+  "channel_values": 69632,
+  "formats": [
+    "#RRRGGGBBB",
+    "#RRRRGGGGBBBB"
+  ],
+  "sha256": "e20007db4ad75f9b647ce5e719bc853a6f7ce13ce5bada25920a3205dc37574c",
+  "boundary": "Exhaustive grayscale channel decoding, not image raster parity"
+}

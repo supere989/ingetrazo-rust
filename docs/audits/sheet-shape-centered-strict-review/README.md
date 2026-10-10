@@ -1,0 +1,1 @@
+Strict nine mandatory shape cases remain FAILED after centered stroke correction. Mandatory exact ordered inventory is checked before process startup and after capture; missing, duplicated and reordered negative cases are rejected. No tolerance change.
