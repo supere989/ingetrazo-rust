@@ -1,0 +1,9 @@
+{
+  "production": "f74b6d9",
+  "protocol": "cdb0f3e",
+  "base": "d73f78b",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "fixture_sha256": "700e1a2446269bf75d5acc22984fdb4e76a952ef65d025133d933d9b913e858b",
+  "worker_sha256": "9c3562c811c14c863a5f578e09fcdc404bd778ed5e679d77edbf22f0b2431758",
+  "scope": "Actual original saved-view vector PDF with live hidden groups/layers and cuts opposing saved state. 13scenes x2pages x3DPI all78 exact whole-page RGBA; 13 source camera/WORLD observations; numeral8 controls; unchanged model/warm cache/no startup; same-model-revision changed visibility misses cache/restoration reuses old; ghost flags excluded from paper/cache identity. Source and native generated fresh by mandatory runner. Workspace509PASS2ignored. No saved-style raster/text/title/section-fill/perspective/GUI gesture parity claim. Fills explicitly refused using cached cap material, destination atomic."
+}

@@ -15,12 +15,27 @@ app=QApplication([])
 for path in sorted((out/"corpus").glob("*.reference.json")):
  ref=json.loads(path.read_text());host=QMainWindow();host.viewport=Viewport();vp=host.viewport;igz.load_into(vp.scene,out/"corpus"/(ref["name"]+".igz"))
  for field,value in ref["camera"].items():setattr(vp.camera,field,V(*value)if field in ("target","up")else value)
+ saved_mode=os.environ.get("INGETRAZO_VIEW_PDF_SAVED")=="1"
+ view_key="__current__"
+ if saved_mode:
+  from core.saved_views import SavedView
+  saved=SavedView.capture("Paper saved",vp.scene,vp.camera)
+  saved.hidden_shown={"objects":True,"geometry":True}
+  vp.scene.saved_views=[saved]
+  # Oppose the saved state in the live model. This must not hide the saved
+  # paper geometry or replace its cut state; ghosts remain non-paper ink.
+  for group in vp.scene.groups:group.hidden=True
+  for layer in vp.scene.layers:layer.visible=False
+  vp.scene.show_section_cuts=False
+  view_key="scene:Paper saved"
+  ref["paper_view_key"]=view_key;path.write_text(json.dumps(ref,indent=2))
+  igz.save_scene(vp.scene,out/"corpus"/(ref["name"]+".igz"))
  comps=[]
  from core.hlr import camera_basis
  intermediate=None
  for hidden in (False,True):
   comp=Composicion(name=str(hidden),paper="A4",landscape=False);comp.frames.clear()
-  frame=MarcoVista(x_mm=20,y_mm=30,w_mm=100,h_mm=100,view_key="__current__",style="vectorial",scale_n=100.,hidden_lines=hidden,profiles=True,cut_fill="none",annotations=False,section_marks=False,border=True,border_mm=.43,border_color="#246891",show_title=False,pen_edge_mm=.37 if hidden else .18,pen_profile_mm=.62 if hidden else .35,pen_cut_mm=.83 if hidden else .5)
+  frame=MarcoVista(x_mm=20,y_mm=30,w_mm=100,h_mm=100,view_key=view_key,style="vectorial",scale_n=100.,hidden_lines=hidden,profiles=True,cut_fill="none",annotations=False,section_marks=False,border=True,border_mm=.43,border_color="#246891",show_title=False,pen_edge_mm=.37 if hidden else .18,pen_profile_mm=.62 if hidden else .35,pen_cut_mm=.83 if hidden else .5)
   if intermediate is None:
    window_observer=ComposerWindow(host)
    def observe():

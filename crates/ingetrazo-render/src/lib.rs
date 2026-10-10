@@ -126,6 +126,7 @@ mod tests {
 mod section_clip;
 
 pub mod vector_hlr;
+pub mod paper_scene;
 
 pub mod process_hlr;
 
