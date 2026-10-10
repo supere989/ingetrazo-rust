@@ -1,0 +1,94 @@
+{
+  "passed": false,
+  "error": "AssertionError('Timed out awaiting rendered event/state')",
+  "provenance": {
+    "rust_commit": "be2bf6bc17473f9f338c5ecdfd0ea27729fb1cd2",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.16",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "curve",
+  "original": true,
+  "checker_sha256": "1b90bdb1a6004861812fcaa7464640800ea47fbd46796392fdcd89b4bbd58eae",
+  "last_state": {
+    "selection_count": 0,
+    "rendered_wire_segments": [],
+    "viewport_preview_offset": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "viewport_preview_group_count": 0,
+    "viewport_rect": [
+      0,
+      0,
+      1000,
+      700
+    ],
+    "committed_wire_segments": [],
+    "preview_wire_segments": [],
+    "component_construction": "copy_group_fixture",
+    "active_world_centers": [],
+    "root_child_counts": [],
+    "root_child_world_centers": [],
+    "context_depth": 0,
+    "group_mesh_identity": [],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [],
+    "group_ids": [],
+    "group_count": 0,
+    "mode": "curve",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "LineTool",
+    "curves": [],
+    "time": 345.685547537,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Center",
+    "inference_point": [
+      3.0036284923553467,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        3.0036284923553467,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 0,
+    "faces": 0,
+    "undo": 2,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 0.0,
+      "pointer": [
+        589.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  }
+}

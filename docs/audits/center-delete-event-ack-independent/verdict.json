@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "cloud_signature_reproduced": true,
+  "source_geometry_reference_invalidated": true,
+  "source_and_native_encouraged_points_retained": true,
+  "coalesced_negative_events_after_delete": 0,
+  "acknowledged_positive_events_after_delete": 2,
+  "source_deleted_kind": "None",
+  "native_deleted_kind": "None",
+  "source_unused_vertex_registry": 0,
+  "native_unused_vertex_registry": 24,
+  "full_registry_parity": false,
+  "inference_rejection_assertion_preserved": true,
+  "timing_or_tolerance_increase": false,
+  "whole_gesture_retry": false,
+  "scope": "Actual isolated Qt/softwareVulkan XTEST. Pauses onlyownoriginalprocess for engineeringcoalescingnegative, neverfrozenoriginaltree. Differentcloud359nativeMove failure remains separate/open."
+}
