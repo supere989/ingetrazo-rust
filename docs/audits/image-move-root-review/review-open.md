@@ -1,0 +1,1 @@
+Root source review: restore_current_preview_model reconstructs grab baseline+delta rather than retained incremental frame. Exact failed-history fractional-preview restoration needs proof/correction before adoption. Component Finish/Cancel fractional preview interactions also remain required. Full workspace totals:[563, 0, 2]; tests do not settle this uncovered path.
