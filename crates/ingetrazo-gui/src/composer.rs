@@ -25,6 +25,7 @@ use crate::app::IngeTrazoApp;
 pub struct ComposerState {
     pub pdf_export_error: Option<String>,
     text_canvas:text_canvas::CanvasPainter,
+    outer_border:crate::composer_border::CanvasBorder,
     field_index_cache: Option<((u64,u64,uuid::Uuid,usize),Result<usize,String>)>,
     field_index_computations:u64,
     field_expansions:crate::composer_text_fields::CanvasExpansions,
@@ -44,7 +45,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            pdf_export_error: None,text_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            pdf_export_error: None,text_canvas:Default::default(),outer_border:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -340,6 +341,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             }
         }
     }
+
+    // Original _SheetBorderCanvasItem z=1e6: above every document item.
+    match app.composer_state.outer_border.paint(&painter,app.native_composer.factory.as_ref(),&app.scene.sheets[sheet_idx],zoom,paper_rect.min){Ok(true)=>{},Ok(false)=>app.status_message="Native source sheet border provider unavailable".into(),Err(error)=>app.status_message=error}
 
     if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){let raw_texture_stats=crate::paper_raw_texture::stats(ui.ctx());ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-canvas-paint-stats"),app.composer_state.text_canvas.stats());if let Some(stats)=raw_texture_stats{d.insert_temp(egui::Id::new("pdf-ui-raw-texture-stats"),stats);}d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
 
