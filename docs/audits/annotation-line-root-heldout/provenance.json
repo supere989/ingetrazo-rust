@@ -1,0 +1,9 @@
+{
+  "binary_sha256": "74a71ab1328a3343ddaf996c67fe9b985d7bc4dfac7b1b7ed2816df3b27bb18f",
+  "source_boundary": "Copied worker protocol binary from its target after initial85Qtcontrols, predates frozen85905aa4 GUI routing and derived admission guards. Worker confirms valid-domain line arithmetic unchanged; exact frozen-source reproduction still required.",
+  "cases": 56,
+  "exact": 55,
+  "failed": 1,
+  "failure": "Three pixels on a[-1000,63.75] b[1000,64.25] width3.125 clip[17,19,101,103]",
+  "acceptance": "FAIL; original corpus and full source parity not promoted."
+}
