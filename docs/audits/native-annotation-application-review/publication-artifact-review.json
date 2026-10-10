@@ -1,0 +1,40 @@
+{
+  "source": "f2d366019485706627f9899c85522c95851ac07f",
+  "binary_sha256": "bc96cb586e8da53e3dd951685dc179496135cc53138ae860f68ad8fa83c5e038",
+  "independent_complete_image_comparisons": [
+    {
+      "name": "baseline",
+      "changed_pixels": 0
+    },
+    {
+      "name": "1-refuse",
+      "changed_pixels": 0
+    },
+    {
+      "name": "2-retry",
+      "changed_pixels": 0
+    },
+    {
+      "name": "3-clear",
+      "changed_pixels": 0
+    },
+    {
+      "name": "4-restore",
+      "changed_pixels": 0
+    },
+    {
+      "name": "5-invalid-gate",
+      "changed_pixels": 0
+    },
+    {
+      "name": "6-clear",
+      "changed_pixels": 0
+    },
+    {
+      "name": "7-restore",
+      "changed_pixels": 0
+    }
+  ],
+  "evidence_commit": "12e79ed3",
+  "scope": "Root decoded all retained complete software Vulkan images against retained Qt controls and checked hashes and denial/cleanup log evidence. Fresh merged replay and actual application transition proof pending; original annotation font/depth pixel parity remains OPEN."
+}
