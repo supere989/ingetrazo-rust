@@ -1,0 +1,10 @@
+{
+  "source": "ed80f4a336e14abaa6025bfb523ce76bc598a0f7",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "target_dir": "fresh clone target; CARGO_TARGET_DIR unset",
+  "binary_sha256": {
+    "ingetrazo": "1148bc22bf546de9c58dd27157ac0c2eb5f8785c9a63dfc6ea92e07716345efb",
+    "ingetrazo-render-worker": "1bd63d0d880b16b57c0ca85b9f2f7bd6678638f9b83d082ab80fa51e74eec0d5"
+  },
+  "scope": "Fresh recursive public clone, locked release build, temporary prefix install, installed launcher diagnostics and persistent worker composer acceptance. Initial wrong example name failed and is retained; corrected GUI example passes. GUI visual acceptance, AppImage and other platforms separately required"
+}

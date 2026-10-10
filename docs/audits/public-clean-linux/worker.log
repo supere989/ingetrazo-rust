@@ -1,0 +1,3 @@
+error: no example target named `composer_cache_acceptance` in `ingetrazo-render` package
+help: available example targets:
+    process_hlr_acceptance

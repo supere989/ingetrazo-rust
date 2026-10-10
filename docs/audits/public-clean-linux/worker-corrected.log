@@ -1,0 +1,13 @@
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-public-clean-acceptance/crates/ingetrazo-gui)
+    Finished `release` profile [optimized] target(s) in 0.65s
+     Running `target/release/examples/composer_cache_independent /tmp/ingetrazo-public-clean-install/bin/ingetrazo-render-worker`
+PASS independent production panel: 3 fixed-camera frames, saved hidden snapshot, exact serial endpoints/classes, 5 warm redraws, visibility/noop, model Undo/Redo with sheets retained; persistent PIDs [1108072, 1108074], jobs 18
