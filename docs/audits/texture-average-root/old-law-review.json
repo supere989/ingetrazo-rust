@@ -1,0 +1,67 @@
+{
+  "old_cases": 200,
+  "source_expectations_match_fresh_root_qt": true,
+  "rejected_old_cases": [
+    [
+      2,
+      2,
+      true
+    ],
+    [
+      2,
+      4,
+      true
+    ],
+    [
+      3,
+      2,
+      true
+    ],
+    [
+      4,
+      2,
+      true
+    ],
+    [
+      5,
+      3,
+      true
+    ],
+    [
+      5,
+      4,
+      true
+    ],
+    [
+      7,
+      3,
+      true
+    ],
+    [
+      7,
+      4,
+      true
+    ],
+    [
+      7,
+      5,
+      true
+    ],
+    [
+      8,
+      2,
+      true
+    ],
+    [
+      8,
+      3,
+      true
+    ],
+    [
+      8,
+      5,
+      true
+    ]
+  ],
+  "scope": "Retained old compiled outputs compared with independently regenerated source corpus; no old binary rerun or production activation."
+}
