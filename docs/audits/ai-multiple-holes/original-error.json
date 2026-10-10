@@ -1,0 +1,15 @@
+{
+  "document": {
+    "vertices": 0,
+    "edges": 0,
+    "faces": 0,
+    "undo": 0,
+    "redo": 0
+  },
+  "raw_result": {
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/work/ingetrazo/core/ai.py\", line 366, in mutate\n    exec(compile(code, \"<ai>\", \"exec\"), scope)\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<ai>\", line 2, in <module>\n  File \"/work/ingetrazo/core/mesh.py\", line 852, in add_face\n    raw_holes = _maximal_holes(raw_holes)\n  File \"/work/ingetrazo/core/topology.py\", line 1139, in _maximal_holes\n    nrm = QVector3D.crossProduct(h[1] - h[0], h[2] - h[0])\n                                 ~^^^\nIndexError: list index out of range\n",
+    "error": "SnapshotImport: list index out of range",
+    "changed": false
+  }
+}

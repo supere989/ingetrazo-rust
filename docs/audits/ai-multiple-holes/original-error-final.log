@@ -1,0 +1,20 @@
+[2026-10-10T21:04:49] command SnapshotImport failed and was rolled back:
+Traceback (most recent call last):
+  File "/work/ingetrazo/core/history.py", line 171, in execute
+    cmd.do(self.scene)
+    ~~~~~~^^^^^^^^^^^^
+  File "/work/ingetrazo/core/history.py", line 2666, in do
+    self.mutate(scene)
+    ~~~~~~~~~~~^^^^^^^
+  File "/work/ingetrazo/core/ai.py", line 366, in mutate
+    exec(compile(code, "<ai>", "exec"), scope)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<ai>", line 2, in <module>
+  File "/work/ingetrazo/core/mesh.py", line 852, in add_face
+    raw_holes = _maximal_holes(raw_holes)
+  File "/work/ingetrazo/core/topology.py", line 1139, in _maximal_holes
+    nrm = QVector3D.crossProduct(h[1] - h[0], h[2] - h[0])
+                                 ~^^^
+IndexError: list index out of range
+
+

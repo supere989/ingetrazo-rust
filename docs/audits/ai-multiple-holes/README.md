@@ -1,0 +1,7 @@
+# Multiple-hole source controls
+
+Frozen original 6be29fe437a7cd992d4e079f71720821b25216b9: actual run_transactional / History, nine literal recipes, 27 append/Undo/Redo states. Ordered vertices, boundary edges, radial incidence and face rings match exactly. Controls include XY-zero vertical planes, slanted geometry, concave centroid fallback, duplicate/equal holes and preexisting discarded-hole orphan vertices. Source creates outer vertices before filtering, but creates hole vertices only after filtering (mesh.py:847–853). Preexisting orphan vertices survive Undo.
+
+Three classifier tests and one failed-transaction/Redo preservation test passed. Original malformed-hole exception retains SnapshotImport error and IndexError stderr; native typed refusal differs. Original temporary outer vertices / caught-script exception behavior is not fully reproduced. Triangulation fallback uses native triangulation: exact source earcut tie/pathological containment semantics remain required. Cold quadratic comparisons, allocation admission, VM/compiler/native deadlines, arbitrary face attributes and full Group/_finish identity remain open. This is standalone prerequisite evidence, not enabled production scripting.
+
+Run scripts/check-ai-multiple-holes.py. It invokes the same strict validator for all six negative controls. First original-error.log retains the initial harness mistaken assumption that IndexError type would appear in error instead of stderr.

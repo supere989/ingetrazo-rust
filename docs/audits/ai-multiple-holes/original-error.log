@@ -1,0 +1,25 @@
+[2026-10-10T21:04:26] command SnapshotImport failed and was rolled back:
+Traceback (most recent call last):
+  File "/work/ingetrazo/core/history.py", line 171, in execute
+    cmd.do(self.scene)
+    ~~~~~~^^^^^^^^^^^^
+  File "/work/ingetrazo/core/history.py", line 2666, in do
+    self.mutate(scene)
+    ~~~~~~~~~~~^^^^^^^
+  File "/work/ingetrazo/core/ai.py", line 366, in mutate
+    exec(compile(code, "<ai>", "exec"), scope)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<ai>", line 2, in <module>
+  File "/work/ingetrazo/core/mesh.py", line 852, in add_face
+    raw_holes = _maximal_holes(raw_holes)
+  File "/work/ingetrazo/core/topology.py", line 1139, in _maximal_holes
+    nrm = QVector3D.crossProduct(h[1] - h[0], h[2] - h[0])
+                                 ~^^^
+IndexError: list index out of range
+
+
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-ai-interpreter/scripts/reference-ai-hole-error.py", line 9, in <module>
+    assert 'IndexError' in result['error'],result
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'stdout': '', 'stderr': 'Traceback (most recent call last):\n  File "/work/ingetrazo/core/ai.py", line 366, in mutate\n    exec(compile(code, "<ai>", "exec"), scope)\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<ai>", line 2, in <module>\n  File "/work/ingetrazo/core/mesh.py", line 852, in add_face\n    raw_holes = _maximal_holes(raw_holes)\n  File "/work/ingetrazo/core/topology.py", line 1139, in _maximal_holes\n    nrm = QVector3D.crossProduct(h[1] - h[0], h[2] - h[0])\n                                 ~^^^\nIndexError: list index out of range\n', 'error': 'SnapshotImport: list index out of range', 'changed': False}
