@@ -13,7 +13,7 @@ fn main(){
   let mut camera=OrbitCamera::new();camera.target=v(&case["camera"]["target"]);camera.pitch=case["camera"]["pitch"].as_f64().unwrap();camera.yaw=case["camera"]["yaw"].as_f64().unwrap();camera.distance=10.;camera.perspective=true;camera.aspect=1.;
   let ctx=ScreenSnapContext{viewport:PixelViewport::new(&camera,800.,800.),cursor:DVec2::new(case["pixel"][0].as_f64().unwrap(),case["pixel"][1].as_f64().unwrap()),candidate:v(&case["candidate"]),plane_normal:v(&case["normal"])};
   let mut engine=SnapEngine::default();engine.locked_axis=case["lock"].as_str().and_then(|s|s.chars().next());
-  let r=engine.snap_screen_with_policy(&ray,&scene,tool.snap_anchor(),None,&ctx,&ScreenSnapPolicy{exclusions:tool.snap_exclusions(),magnetic_axis_deg:tool.magnetic_axis_deg(),screen_axis_px:tool.screen_axis_px()});
+  let r=engine.snap_screen_with_policy(&ray,&scene,tool.snap_anchor(),None,&ctx,&ScreenSnapPolicy{exclusions:tool.snap_exclusions(),magnetic_axis_deg:tool.magnetic_axis_deg(),screen_axis_px:tool.screen_axis_px(),face_under_cursor:false});
   output.push(serde_json::json!({"name":case["name"],"kind":format!("{:?}",r.kind),"point":r.point.to_array(),"axis":r.axis,"excluded":tool.snap_exclusions().map(|s|{let mut v=s.loose_edges.iter().copied().collect::<Vec<_>>();v.sort();v})}));
  }
  println!("{}",serde_json::to_string(&output).unwrap());

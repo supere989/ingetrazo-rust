@@ -23,6 +23,9 @@ pub struct ScreenSnapPolicy<'a>{
     pub exclusions:Option<&'a SnapExclusions>,
     pub magnetic_axis_deg:Option<f64>,
     pub screen_axis_px:Option<f64>,
+    /// Source compute_snap defaults this false; only a viewport caller with
+    /// an actual face hit opts into the OnFace fallback.
+    pub face_under_cursor:bool,
 }
 /// Geometry currently moved by a transform is absent from source inference.
 /// Group identities exclude their entire nested placement subtree.
@@ -806,7 +809,7 @@ impl SnapEngine {
                 }
             }
         }
-        if face_under_cursor {return result(ctx.candidate,SnapKind::OnFace,COLOR_ON_FACE,"On Face");}
+        if policy.face_under_cursor {return result(ctx.candidate,SnapKind::OnFace,COLOR_ON_FACE,"On Face");}
         result(ctx.candidate, SnapKind::None, [0.; 3], "")
     }
 }
@@ -899,7 +902,9 @@ mod tests {
         let outer=[DVec3::new(1.,1.,0.),DVec3::new(5.,1.,0.),DVec3::new(5.,5.,0.),DVec3::new(1.,5.,0.)].map(|p|scene.mesh.add_vertex(p));
         scene.mesh.add_face(outer.to_vec(),vec![]);
         let (ray,ctx)=context(&c,DVec3::new(3.,3.,0.),DVec2::ZERO);
-        let mut engine=SnapEngine::default();let r=engine.snap_screen(&ray,&scene,None,None,&ctx);
+        let mut engine=SnapEngine::default();
+        assert_eq!(engine.snap_screen(&ray,&scene,None,None,&ctx).kind,SnapKind::None,"standalone source caller defaults face_under_cursor to false");
+        let r=engine.snap_screen_with_policy(&ray,&scene,None,None,&ctx,&ScreenSnapPolicy{face_under_cursor:true,..Default::default()});
         assert_eq!(r.kind,SnapKind::OnFace);assert_eq!(r.point,ctx.candidate);
         let hole=[DVec3::new(2.,2.,0.),DVec3::new(2.,4.,0.),DVec3::new(4.,4.,0.),DVec3::new(4.,2.,0.)].map(|p|scene.mesh.add_vertex(p));
         scene.mesh.faces.clear();scene.mesh.add_face(outer.to_vec(),vec![hole.to_vec()]);engine.note_model_revision(2);
