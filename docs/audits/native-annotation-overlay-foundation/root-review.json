@@ -10,5 +10,16 @@
     "Cold glyph insertion allocates removal scratch proportional to all cached keys and scans FIFO even when no eviction is needed; skip this work below budget.",
     "Producer never retires unused sized font faces; DPI/point-size churn can permanently exhaust sized face count."
   ],
-  "scope": "Source review only; integrated application GPU acceptance remains pending."
+  "scope": "Source review only; integrated application GPU acceptance remains pending.",
+  "followup": {
+    "cache_fix": "de4e133a",
+    "transaction": "32de820d",
+    "cache_findings_addressed": true,
+    "transaction_review": "All fallible locks, uploads and retirement admission precede query/descriptor/Ready publication. Application integration and actual GPU refusal proof remain pending.",
+    "remaining": [
+      "Warm transaction path still repeatedly validates immutable batch/gate/range contents, including nested range scan; cache immutable admission.",
+      "Explicit last-annotation deletion/empty-plan path required: current preparation refuses empty query inventory and must not leave prior overlay visible."
+    ],
+    "merged_execution": false
+  }
 }
