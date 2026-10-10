@@ -120,6 +120,15 @@ impl App for ApplicationProbe{
  fn new(_: &mut System,_:Option<std::path::PathBuf>)->Self{
   let mut app=crate::IngeTrazoApp::new();app.native_gpu_viewport_enabled=true;app.show_tray=false;
   app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);app.camera.target=glam::DVec3::ZERO;app.camera.distance=5.;app.camera.perspective=false;app.mark_document_clean();
+  if let Some(path)=std::env::var_os("INGETRAZO_ANNOTATION_APP_SCENE"){
+   app.scene=ingetrazo_formats::igz::load_igz(&std::path::PathBuf::from(path)).expect("Actual annotation app scene admission");
+   let camera_path=std::env::var_os("INGETRAZO_ANNOTATION_APP_CAMERA").expect("Actual scene requires explicit camera");
+   use std::io::Read;let mut bytes=Vec::new();std::fs::File::open(camera_path).unwrap().take(16*1024+1).read_to_end(&mut bytes).unwrap();assert!(bytes.len()<=16*1024,"Camera input exceeds admission");
+   app.camera=serde_json::from_slice(&bytes).expect("Actual annotation app camera schema");
+   app.style.visual_style=ingetrazo_render::style::VisualStyle::ShadedWithTextures;
+   app.style.show_textures=false;app.style.background_color=[1.;4];app.style.show_sky=false;app.style.show_profiles=false;
+   app.mark_document_clean();
+  }
   Self{app,nonce:0,held:false,pressure:false,texture:None}
  }
  fn build_ui(&mut self,ctx:&Context){
@@ -144,7 +153,7 @@ impl App for ApplicationProbe{
    App::prepare_gpu(&mut self.app,system,resize);
    if self.pressure{assert!(system.annotation_prepare_error.is_some(),"Actual app pressure unexpectedly published");self.pressure=false;self.held=true;}
   }
-  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len()});
+  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"leaders":self.app.scene.text_labels.len(),"camera":self.app.camera,"camera_snapshot":crate::navigation_ray::camera_snapshot(&self.app.camera).map(|s|serde_json::json!({"matrix":s.matrix.concat(),"inverse":s.inverse().map(|m|m.concat()),"eye":s.eye,"forward":s.forward})),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len()});
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());let temp=dir.join("state.tmp");std::fs::write(&temp,serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(temp,dir.join("state.json")).unwrap();
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Actual annotation app refusal: {error}");}
