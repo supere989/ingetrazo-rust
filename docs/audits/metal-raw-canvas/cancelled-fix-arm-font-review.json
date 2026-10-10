@@ -1,0 +1,48 @@
+{
+  "passed": false,
+  "matched": [
+    "helvetica",
+    "helvetica-bold",
+    "helvetica-italic",
+    "arabic"
+  ],
+  "cases": [
+    {
+      "name": "helvetica",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "helvetica-bold",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "helvetica-italic",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "times-bold-italic",
+      "passed": false,
+      "errors": [
+        "native refusal: CoreText selected \"Times-BoldItalic\" at /System/Library/Fonts/Times.ttc face 3: requested bold=true italic=true, file bold=false italic=true, OS/2 present=true, italic_angle=-15; synthetic or variable traits remain unsupported",
+        "physical face mismatch"
+      ]
+    },
+    {
+      "name": "cjk",
+      "passed": false,
+      "errors": [
+        "native refusal: CoreText font file budget exceeded: selected \"PingFangSC-Regular\" at /System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved/PingFangUI.ttc, file_bytes=56102280, limit=16777216",
+        "physical face mismatch"
+      ]
+    },
+    {
+      "name": "arabic",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "scope": "Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"
+}

@@ -8,12 +8,20 @@ assert original["source_pin"]=="6be29fe437a7cd992d4e079f71720821b25216b9" and or
 assert [r["name"]for r in original["cases"]]==names and len(native)==6
 rows=[]
 for source,got in zip(original["cases"],native):
- for key in ["family","bold","italic","text"]:assert source[key]==got[key],(source["name"],key)
- assert got["coverage"] and got["warm_same_owner"]
- assert got["chosen_bold"]==got["bold"] and got["chosen_italic"]==got["italic"]
- observed=source["observations"];assert observed
- runs=[run for call in observed for run in call["supplementary_qtextlayout_runs"]];assert runs
+ errors=[]
+ for key in ["family","bold","italic","text"]:
+  if source[key]!=got.get(key):errors.append("request mismatch: "+key)
+ if "error" in got:errors.append("native refusal: "+str(got["error"]))
+ else:
+  if got.get("coverage") is not True:errors.append("missing character coverage")
+  if got.get("warm_same_owner") is not True:errors.append("missing stable warm ownership")
+  if got.get("chosen_bold")!=got.get("bold") or got.get("chosen_italic")!=got.get("italic"):errors.append("requested style mismatch")
+ observed=source["observations"]
+ runs=[run for call in observed for run in call["supplementary_qtextlayout_runs"]]
+ if not observed or not runs:errors.append("missing source glyph runs")
  for run in runs:
-  assert any(Path(face["path"])==Path(got["path"]) and face["index"]==got["index"] and face["postscript"]==got["postscript"] for face in run["physical_faces"]),(source["name"],run,got)
- rows.append(source["name"])
-print(json.dumps({"matched":rows,"scope":"Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"}))
+  if not any(face["path"]==got.get("path") and face["index"]==got.get("index") and face["postscript"]==got.get("postscript") for face in run["physical_faces"]):errors.append("physical face mismatch")
+ rows.append({"name":source["name"],"passed":not errors,"errors":errors})
+passed=all(row["passed"] for row in rows)
+print(json.dumps({"passed":passed,"matched":[r["name"] for r in rows if r["passed"]],"cases":rows,"scope":"Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"},indent=2))
+if not passed:raise SystemExit(1)
