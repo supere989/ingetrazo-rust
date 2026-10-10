@@ -1,0 +1,8 @@
+{
+  "source_commit": "265ad392",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": 15,
+  "recorded_inputs": ["QFontMetrics.height", "QFontMetrics.ascent", "QFontMetrics.descent", "each actual horizontalAdvance string and result"],
+  "verification": {"all_previous_operations_unchanged": true, "all_previous_image_hashes_unchanged": true, "unicode_splitline_advance_inputs": ["A", "B", "C"]},
+  "scope": "Actual pinned source methods with controlled projection and occlusion. These metrics permit independent native layout comparisons; they do not establish native font-provider, GPU visibility or complete viewport parity."
+}
