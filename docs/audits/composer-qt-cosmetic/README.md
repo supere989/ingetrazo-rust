@@ -17,3 +17,7 @@ Primary references:
 - https://docs.vulkan.org/samples/latest/samples/extensions/rasterization_order_attachment_access/README.html
 - https://docs.vulkan.org/features/latest/features/proposals/VK_EXT_attachment_feedback_loop_layout.html
 - https://github.com/qt/qtbase/blob/v6.12.0/src/gui/painting/qcosmeticstroker.cpp
+
+## Source-ordered draw grouping diagnostic
+
+`qt_cosmetic::disjoint_ranges` greedily retains maximal prefixes with disjoint integer one-row pixel intervals. It bounds span admission, uses row/x ordered maps, never reorders any span, and flushes only on actual overlap. Three kernel tests pass, including full order preservation and pairwise disjointness. Rounded small fixture: 311 coalesced spans partition into 28 ordered disjoint draw ranges (not311). This is diagnostic metadata only; no renderer/barrier changes are activated. Float-transformed general triangles do not inherit this integer pixel-aligned guarantee. Source width opacity and actual destination operator must still be established.

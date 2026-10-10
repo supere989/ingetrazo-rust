@@ -46,3 +46,24 @@ pub fn rasterize_path(path:&PathContour,closed:bool,width:f64,limit:usize)->Resu
 #[cfg(test)]mod tests{use super::*;
  #[test]fn thin_line_coalesces_and_refuses_work(){let path=PathContour{start:[10.,10.],segments:vec![Segment::Line([100.,10.])]};let spans=rasterize_path(&path,false,0.7,1000).unwrap();assert!(spans.len()<10);assert!(rasterize_path(&path,false,0.7,1).is_err());assert!(rasterize_path(&path,false,1.1,1000).is_err());}
 }
+
+/// Engineering metadata only: source-ordered maximal disjoint prefixes.
+/// Integer one-row spans from the source kernel may overlap across segments.
+/// A barrier between these ranges suffices for pixel-aligned span draws;
+/// arbitrary transformed triangles do not satisfy this contract.
+pub fn disjoint_ranges(spans:&[Span],limit:usize)->Result<Vec<std::ops::Range<usize>>,String>{
+ if spans.len()>limit{return Err("Cosmetic ordering admission exceeded".into());}
+ let mut occupied=BTreeMap::<(i32,i32),i64>::new();let mut ranges=Vec::new();let mut first=0;
+ for(i,s)in spans.iter().enumerate(){
+  let end=i64::from(s.x)+i64::from(s.len);if s.len==0||end>i64::from(i32::MAX){return Err("Invalid cosmetic ordering span".into());}
+  let prior=occupied.range((s.y,i32::MIN)..=(s.y,s.x)).next_back().is_some_and(|(_,e)|*e>i64::from(s.x));
+  let next=occupied.range((s.y,s.x)..=(s.y,i32::MAX)).next().is_some_and(|((_,x),_)|i64::from(*x)<end);
+  if prior||next{ranges.push(first..i);first=i;occupied.clear();}
+  occupied.insert((s.y,s.x),end);
+ }
+ if first<spans.len(){ranges.push(first..spans.len());}Ok(ranges)
+}
+#[cfg(test)]mod ordering_tests{use super::*;
+ #[test]fn only_overlap_flushes_and_order_is_unchanged(){let spans=vec![Span{x:0,y:0,len:4,coverage:100},Span{x:4,y:0,len:8,coverage:200},Span{x:0,y:1,len:12,coverage:150},Span{x:3,y:0,len:2,coverage:70},Span{x:20,y:0,len:4,coverage:170}];assert_eq!(disjoint_ranges(&spans,5).unwrap(),vec![0..3,3..5]);assert!(disjoint_ranges(&spans,4).is_err());}
+ #[test]fn disjoint_prefixes_cover_all_source_spans(){let path=PathContour{start:[0.,0.],segments:vec![Segment::Line([10.,0.]),Segment::Line([0.,0.])]};let spans=rasterize_path(&path,false,0.7,1000).unwrap();let ranges=disjoint_ranges(&spans,1000).unwrap();assert!(ranges.len()>1);assert!(ranges.len()<spans.len());assert_eq!(ranges.iter().flat_map(|r|r.clone()).collect::<Vec<_>>(),(0..spans.len()).collect::<Vec<_>>());for range in ranges{for a in range.clone(){for b in a+1..range.end{let(a,b)=(&spans[a],&spans[b]);assert!(a.y!=b.y||i64::from(a.x)+i64::from(a.len)<=i64::from(b.x)||i64::from(b.x)+i64::from(b.len)<=i64::from(a.x));}}}}
+}
