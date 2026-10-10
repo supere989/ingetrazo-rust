@@ -7,7 +7,7 @@ from pathlib import Path
 if sys.platform!="darwin":raise SystemExit("Requires actual macOS; Linux substitutes are not evidence")
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
 from PySide6.QtCore import qVersion,QRectF,QPointF,Qt
-from PySide6.QtGui import QPainter,QImage,QFontInfo,QTextLayout,QTextOption
+from PySide6.QtGui import QPainter,QImage,QFontInfo,QTextLayout,QTextOption,QFontDatabase
 from PySide6.QtWidgets import QApplication
 from fontTools.ttLib import TTFont,TTCollection
 assert qVersion()=="6.12.0"
@@ -36,7 +36,7 @@ for path in sorted(set(files)):
   for index,font in enumerate(fonts):
    # Read exact stored tables, independent of any fontTools decompilation.
    key=tuple(hashlib.sha256(font.reader[tag]).hexdigest() for tag in ("head","name"))
-   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":file_digest,"file_bytes":path.stat().st_size,"face_table_bytes":sum(table.length for table in font.reader.tables.values()),"largest_tables":sorted([{"tag":str(tag),"bytes":table.length} for tag,table in font.reader.tables.items()],key=lambda row:row["bytes"],reverse=True)[:5]})
+   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":file_digest,"file_bytes":path.stat().st_size,"face_table_bytes":sum(table.length for table in font.reader.tables.values()),"table_tags":sorted(str(tag) for tag in font.reader.tables),"largest_tables":sorted([{"tag":str(tag),"bytes":table.length} for tag,table in font.reader.tables.items()],key=lambda row:row["bytes"],reverse=True)[:5]})
   owner.close()
  except Exception as error:inventory_errors.append({"path":str(path),"error":repr(error)})
 rows=[]
@@ -54,7 +54,10 @@ class Observe(QPainter):
    physical=identities.get(key,[])
    # Retain missing identities and subsequent cases; fail only after writing the report.
    runs.append({"family":raw.familyName(),"style":raw.styleName(),"glyphs":list(run.glyphIndexes()),"positions":[[v.x(),v.y()]for v in run.positions()],"physical_faces":physical,"table_hashes":key,"raw_head_hex":bytes(raw.fontTable("head")).hex()})
-  self.observed.append({"requested_font":{"family":font.family(),"bold":font.bold(),"italic":font.italic(),"weight":int(font.weight())},"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"actual_painter_traits":{"bold":QFontInfo(font).bold(),"italic":QFontInfo(font).italic(),"weight":int(QFontInfo(font).weight()),"exact_match":QFontInfo(font).exactMatch()},"supplementary_qtextlayout_runs":runs})
+  # Record the native Qt database choices behind alias/style matching.
+  resolved=QFontInfo(font).family()
+  database={family:[{"style":style,"weight":QFontDatabase.weight(family,style),"bold":QFontDatabase.bold(family,style),"italic":QFontDatabase.italic(family,style)} for style in QFontDatabase.styles(family)] for family in dict.fromkeys([font.family(),resolved])}
+  self.observed.append({"qt_database_styles":database,"requested_font":{"family":font.family(),"bold":font.bold(),"italic":font.italic(),"weight":int(font.weight())},"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"actual_painter_traits":{"bold":QFontInfo(font).bold(),"italic":QFontInfo(font).italic(),"weight":int(QFontInfo(font).weight()),"exact_match":QFontInfo(font).exactMatch()},"supplementary_qtextlayout_runs":runs})
   return super().drawText(rect,flags,text)
 for name,family,bold,italic,text in cases:
  image=QImage(800,300,QImage.Format_ARGB32_Premultiplied);image.fill(Qt.white)
