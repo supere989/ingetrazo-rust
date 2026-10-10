@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "name": "look-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6799999475479126
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.7278759528245449,
+      "pitch": -0.10471975623504291,
+      "undo": 0
+    },
+    {
+      "name": "look-press-move-release",
+      "eye": [
+        0.0,
+        0.0,
+        1.6799999475479126
+      ],
+      "before_eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "yaw": -1.7278759528245449,
+      "pitch": -0.10471975623504291,
+      "undo": 0
+    }
+  ],
+  "scope": "actual frozen MainWindow/tool contexts/handlers; two native batching arrangements compare same ordered source commands, not XTEST timing"
+}

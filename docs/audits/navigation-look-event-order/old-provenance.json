@@ -1,0 +1,6 @@
+{
+  "source_revision": "0d65630b73b593c3edb6eff7a23fa36b91d4aacf",
+  "binary_sha256": "66d0ba10046c5f816c7ec3f1748a5c62be03221708bb0eed2a44866b81e805a5",
+  "verdict": "FAIL both move/release and press/move/release single-frame bursts drop original9degree yaw/6degree pitch motion",
+  "scope": "actual frozen MainWindow contexts/Look handlers versus compiled native egui ordered events, not rendered XTEST timing"
+}
