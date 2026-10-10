@@ -1,0 +1,2 @@
+   Compiling ingetrazo-cli v0.3.15 (/work/crates/ingetrazo-cli)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
