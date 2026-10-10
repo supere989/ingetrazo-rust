@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """Fresh pinned-original command oracle against freshly built native application."""
-import json,subprocess,sys,tempfile,shutil
+import json,subprocess,sys,tempfile,shutil,os
+from contextlib import nullcontext
 from pathlib import Path
 from acceptance_context import context
-with tempfile.TemporaryDirectory(prefix='ingetrazo-shareback-') as tmp:
+requested=os.environ.get('INGETRAZO_SHAREBACK_EVIDENCE')
+if requested:
+ evidence=Path(requested)
+ if evidence.exists():raise RuntimeError('Refusing existing shareback evidence directory')
+ evidence.mkdir(parents=True)
+with (nullcontext(requested) if requested else tempfile.TemporaryDirectory(prefix='ingetrazo-shareback-')) as tmp:
  root=Path(tmp)
  subprocess.run([sys.executable,'scripts/probe-python-shareback-annotations.py',str(root/'original.json')],check=True)
  subprocess.run(['cargo','run','--locked','-p','ingetrazo-gui','--example','shareback_annotation_fixture','--',str(root/'native')],check=True)
