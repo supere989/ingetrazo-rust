@@ -1,0 +1,8 @@
+{
+  "cases": 4,
+  "equal": true,
+  "negative_rejections": [
+    "authored-alias-hides-default",
+    "exact-default-ignored"
+  ]
+}

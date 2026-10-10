@@ -643,9 +643,12 @@ mod picking_tests {
         s.layers[0].locked=true;assert!(s.image_plane_hit(&ray,ImagePickMode::Selectable).is_none());
         assert_eq!(s.image_plane_hit(&ray,ImagePickMode::Inference).unwrap().0,1);
         s.image_planes[0].layer=None;s.image_planes.truncate(1);
-        s.layers=vec![Layer::new("Layer0")];s.layers[0].visible=false;
+        // An authored first "Layer0" is not the default and must not
+        // hide an unlabelled image; only the exact default controls it.
+        s.layers=vec![Layer::new("Layer0"),Layer::default()];s.layers[0].visible=false;
+        assert_eq!(s.layers[1].name,"Layer 0");
         assert!(s.image_plane_hit(&ray,ImagePickMode::Selectable).is_some());
-        s.layers[0].name="Layer 0".into();assert!(s.image_plane_hit(&ray,ImagePickMode::Inference).is_none());
+        s.layers[1].visible=false;assert!(s.image_plane_hit(&ray,ImagePickMode::Inference).is_none());
     }
     #[test]
     fn source_degenerate_and_sheared_projection_is_not_replaced_by_polygon_pick() {

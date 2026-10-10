@@ -1,0 +1,33 @@
+[
+  {
+    "hidden": [],
+    "default_face": true,
+    "authored_face": true,
+    "loose_wire": true
+  },
+  {
+    "hidden": [
+      "Layer0"
+    ],
+    "default_face": true,
+    "authored_face": false,
+    "loose_wire": true
+  },
+  {
+    "hidden": [
+      "Layer 0"
+    ],
+    "default_face": false,
+    "authored_face": true,
+    "loose_wire": false
+  },
+  {
+    "hidden": [
+      "Layer0",
+      "Layer 0"
+    ],
+    "default_face": false,
+    "authored_face": false,
+    "loose_wire": false
+  }
+]

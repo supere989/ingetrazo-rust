@@ -1,0 +1,5 @@
+use glam::DVec3;
+use ingetrazo_core::{scene::Scene,layers::Layer,saved_views::SavedView};
+use ingetrazo_render::paper_scene::PaperSceneView;
+use serde_json::json;
+fn main(){let mut out=Vec::new();for hidden in [vec![],vec!["Layer0"],vec!["Layer 0"],vec!["Layer0","Layer 0"]]{let mut s=Scene::new();s.layers.insert(0,Layer::new("Layer0"));for shift in [0.,3.]{let ids=[DVec3::new(shift,0.,0.),DVec3::new(shift+1.,0.,0.),DVec3::new(shift,1.,0.)].into_iter().map(|p|s.mesh.add_vertex(p)).collect();s.mesh.add_face(ids,vec![]).unwrap();}s.mesh.faces[1].attrs.insert("layer".into(),"Layer0".into());let a=s.mesh.add_vertex(DVec3::new(10.,0.,0.));let b=s.mesh.add_vertex(DVec3::new(11.,0.,0.));let edge=s.mesh.add_edge(a,b).unwrap();let mut saved=SavedView::new("paper");saved.hidden_layers=hidden.iter().map(|s|s.to_string()).collect();let view=PaperSceneView::new(&s,Some(&saved));out.push(json!({"hidden":hidden,"default_face":view.mesh_face_visible(&s.mesh,0),"authored_face":view.mesh_face_visible(&s.mesh,1),"loose_wire":view.mesh_edge_visible(&s.mesh,edge)}));}println!("{}",serde_json::to_string_pretty(&out).unwrap());}

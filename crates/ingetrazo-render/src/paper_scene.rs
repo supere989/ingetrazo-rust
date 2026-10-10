@@ -24,7 +24,7 @@ impl<'a> PaperSceneView<'a> {
             self.scene
                 .layers
                 .iter()
-                .find(|l| matches!(l.name.as_str(), "Capa 0" | "Layer0" | "Layer 0"))
+                .find(|l| l.name == ingetrazo_core::layers::DEFAULT_LAYER)
         };
         layer.is_none_or(|l| !saved.hidden_layers.contains(&l.name))
     }
@@ -166,4 +166,13 @@ mod tests {
             .active_section()
             .is_none());
     }
+}
+
+#[cfg(test)]mod literal_default_layer_tests {
+ use super::*;
+ use ingetrazo_core::layers::Layer;
+ #[test]fn authored_first_hidden_layer0_does_not_hide_unlabelled_paper_geometry(){
+  let mut scene=Scene::new();scene.layers.insert(0,Layer::new("Layer0"));let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].into_iter().map(|p|scene.mesh.add_vertex(p)).collect();scene.mesh.add_face(ids,vec![]).unwrap();let mut saved=SavedView::new("paper");saved.hidden_layers=vec!["Layer0".into()];let view=PaperSceneView::new(&scene,Some(&saved));assert!(view.mesh_face_visible(&scene.mesh,0));assert!(view.is_layer_visible(None));assert!(!view.is_layer_visible(Some("Layer0")));
+  saved.hidden_layers=vec!["Layer 0".into()];let view=PaperSceneView::new(&scene,Some(&saved));assert!(!view.mesh_face_visible(&scene.mesh,0));assert!(!view.is_layer_visible(None));assert!(view.is_layer_visible(Some("Layer0")));
+ }
 }
