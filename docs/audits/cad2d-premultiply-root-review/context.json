@@ -1,0 +1,9 @@
+{
+  "source_head": "2f333ec00a94ddd88f096d139bc11a110a321b1b",
+  "checks": {
+    "cargo_check": "PASS",
+    "cad2d_tests": 3,
+    "composer_cad_tests": 2
+  },
+  "scope": "Qt solid brush premultiplication only"
+}
