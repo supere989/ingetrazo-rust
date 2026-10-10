@@ -1117,7 +1117,7 @@ pub struct TileCapture{
  pub patches:Vec<[f64;4]>,pub url_template:String,pub name:String,pub attribution:String,
 }
 impl TileCapture{
- pub fn import_reference(previous:Option<&Self>,datum:&SceneDatum,min:DVec3,max:DVec3)->Self{
+ pub fn import_reference(previous:Option<&Self>,datum:&SceneDatum,min:DVec3,max:DVec3,requested_zoom:u8,visible:bool)->Self{
   let mut capture=previous.cloned().unwrap_or_else(||Self{
    source:"esri_imagery".into(),zoom:16,radius_m:1200.,visible:true,opacity:1.,
    patches:vec![],url_template:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}".into(),
@@ -1125,7 +1125,7 @@ impl TileCapture{
   });
   // Source creates a new layer from chosen source/zoom/visibility, resetting
   // radius/opacity while retaining the provider. No imagery is serialized.
-  capture.radius_m=1200.;capture.opacity=1.;
+  capture.radius_m=1200.;capture.opacity=1.;capture.zoom=requested_zoom;capture.visible=visible;
   let width=max.x-min.x;let length=max.y-min.y;
   let margin=0.15*width.max(length).max(200.);
   capture.patches=vec![[(min.x+max.x)/2.,(min.y+max.y)/2.,(width+2.*margin)/2.,(length+2.*margin)/2.]];

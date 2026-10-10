@@ -63,6 +63,8 @@ pub struct IngeTrazoApp {
     pub simplify_angle: f64,
     pub show_open_dialog: bool,
     pub show_geographic_import_dialog: bool,
+    pub base_map_requested_zoom:u8,
+    pub base_map_requested_visible:bool,
     pub show_save_dialog: bool,
     pub dialog_path_input: String,
     pub active_material: String,
@@ -159,6 +161,8 @@ impl IngeTrazoApp {
             simplify_angle: 1.0,
             show_open_dialog: false,
             show_geographic_import_dialog: false,
+            base_map_requested_zoom:16,
+            base_map_requested_visible:true,
             show_save_dialog: false,
             dialog_path_input: String::new(),
             active_material: "Default Cream".to_string(),
@@ -272,6 +276,7 @@ impl IngeTrazoApp {
         match load_file(path) {
             Ok(loaded_scene) => {
                 self.save_undo_state();
+                if let Some(capture)=&loaded_scene.tile_layer{self.base_map_requested_zoom=capture.zoom;self.base_map_requested_visible=capture.visible;}
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
