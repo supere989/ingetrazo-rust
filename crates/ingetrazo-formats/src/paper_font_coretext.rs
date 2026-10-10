@@ -52,6 +52,7 @@ unsafe extern "C" {
     fn CTFontCreateWithFontDescriptor(d: Ref, size: f64, matrix: Ref) -> Ref;
     fn CTFontCopyAttribute(f: Ref, key: Ref) -> Ref;
     fn CTFontCopyPostScriptName(f: Ref) -> Ref;
+    fn CTFontCopyFamilyName(f: Ref) -> Ref;
     static kCTFontURLAttribute: Ref;
     static kCTFontFamilyNameAttribute: Ref;
     static kCTFontTraitsAttribute: Ref;
@@ -88,9 +89,17 @@ fn covers(font: Ref, chars: &[char]) -> Result<bool, String> {
         .all(|c| unsafe { CFCharacterSetIsLongCharacterMember(set.0, *c as u32) != 0 }))
 }
 fn family_name(descriptor: Ref) -> Result<String, String> {
-    let name = Owned::new(unsafe {
-        CTFontDescriptorCopyAttribute(descriptor, kCTFontFamilyNameAttribute)
-    })?;
+    let raw = unsafe { CTFontDescriptorCopyAttribute(descriptor, kCTFontFamilyNameAttribute) };
+    if !raw.is_null() {
+        return text(Owned::new(raw)?.0);
+    }
+    // Sparse cascade descriptors need not carry family attributes; the instantiated
+    // font provides the resolved family, as Qt's getFontDescription does.
+    let font =
+        Owned::new(unsafe { CTFontCreateWithFontDescriptor(descriptor, 100., std::ptr::null()) })
+            .map_err(|e| format!("CoreText cascade font creation: {e}"))?;
+    let name = Owned::new(unsafe { CTFontCopyFamilyName(font.0) })
+        .map_err(|e| format!("CoreText resolved cascade family: {e}"))?;
     text(name.0)
 }
 fn match_family(family: &str, request: &Request) -> Result<Option<Owned>, String> {
@@ -158,7 +167,8 @@ fn match_family(family: &str, request: &Request) -> Result<Option<Owned>, String
                 CFNumberGetValue(number, 13, (&mut slant as *mut f64).cast());
             }
             let italic = slant > 0.;
-            let style = Owned::new(CTFontDescriptorCopyAttribute(d, kCTFontStyleNameAttribute))?;
+            let style = Owned::new(CTFontDescriptorCopyAttribute(d, kCTFontStyleNameAttribute))
+                .map_err(|e| format!("CoreText style name for {family:?}: {e}"))?;
             let style = text(style.0)?;
             if let Some(slot) = slots
                 .iter_mut()
@@ -266,7 +276,8 @@ pub(super) fn match_font(
         }
         let selected =
             selected.ok_or("No source-style native fallback covers the requested characters")?;
-        let url = Owned::new(CTFontCopyAttribute(selected.0, kCTFontURLAttribute))?;
+        let url = Owned::new(CTFontCopyAttribute(selected.0, kCTFontURLAttribute))
+            .map_err(|e| format!("CoreText selected file URL for {family:?}: {e}"))?;
         let mut path = [0u8; 4097];
         if CFURLGetFileSystemRepresentation(url.0, 1, path.as_mut_ptr(), path.len() as isize) == 0 {
             return Err("CoreText font file path unavailable".into());
@@ -282,11 +293,27 @@ pub(super) fn match_font(
         // Native CTFont retains the selected instance. Full TTC bytes are never read.
         let mut file = std::fs::File::open(&path)
             .map_err(|e| format!("CoreText font identity file unavailable: {e}"))?;
-        let index = crate::paper_font_sfnt::collection_index(&mut file, &postscript)?;
         let ptr = selected.0;
         std::mem::forget(selected);
         let font =
             crate::paper_coretext_glyph::NativeFont::from_raw(ptr, CTFontGetSymbolicTraits(ptr))?;
+        let index = match crate::paper_font_sfnt::collection_index(&mut file, &postscript) {
+            Ok(index) => index,
+            Err(name_error) => {
+                let face = ttf_parser::Face::parse(&font.bytes, 0)
+                    .map_err(|e| format!("Native identity metadata parse: {e:?}"))?;
+                let head = face
+                    .raw_face()
+                    .table(ttf_parser::Tag::from_bytes(b"head"))
+                    .ok_or("Missing native identity head")?;
+                let name = face
+                    .raw_face()
+                    .table(ttf_parser::Tag::from_bytes(b"name"))
+                    .ok_or("Missing native identity name")?;
+                crate::paper_font_sfnt::collection_index_by_tables(&mut file, head, name)
+                    .map_err(|e| format!("{name_error}; {e}"))?
+            }
+        };
         Ok((path, index as i32, font))
     }
 }

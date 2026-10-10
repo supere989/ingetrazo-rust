@@ -103,6 +103,69 @@ pub(crate) fn collection_index(file: &mut (impl Read + Seek), name: &str) -> Res
     ))
 }
 
+/// Named variable instances can have a different PostScript name from their physical
+/// collection face. Match exact native metadata tables, never geometry or family names.
+pub(crate) fn collection_index_by_tables(
+    file: &mut (impl Read + Seek),
+    head: &[u8],
+    name: &[u8],
+) -> Result<u32, String> {
+    if head.len() != 54 || name.len() > 256 * 1024 || name.len() < 6 {
+        return Err("Invalid native physical identity tables".into());
+    }
+    let header = read_at(file, 0, 12)?;
+    let offsets = if &header[..4] == b"ttcf" {
+        let count = u32_at(&header, 8)?;
+        if count == 0 || count > 4096 {
+            return Err("Native collection face budget exceeded".into());
+        }
+        let raw = read_at(file, 12, count as usize * 4)?;
+        (0..count as usize)
+            .map(|i| u32_at(&raw, i * 4))
+            .collect::<Result<Vec<_>, _>>()?
+    } else {
+        vec![0]
+    };
+    let mut matched = None;
+    let mut table_bytes = 0usize;
+    for (index, offset) in offsets.into_iter().enumerate() {
+        let header = read_at(file, u64::from(offset), 12)?;
+        let count = u16_at(&header, 4)?;
+        if count > 256 {
+            return Err("Native SFNT directory budget exceeded".into());
+        }
+        let directory = read_at(file, u64::from(offset) + 12, count as usize * 16)?;
+        let mut found = 0;
+        for row in directory.chunks_exact(16) {
+            let expected = match &row[..4] {
+                b"head" => head,
+                b"name" => name,
+                _ => continue,
+            };
+            if u32_at(row, 12)? as usize != expected.len() {
+                continue;
+            }
+            table_bytes = table_bytes
+                .checked_add(expected.len())
+                .ok_or("Native identity byte overflow")?;
+            if table_bytes > 16 * 1024 * 1024 {
+                return Err("Native identity aggregate read budget exceeded".into());
+            }
+            let actual = read_at(file, u64::from(u32_at(row, 8)?), expected.len())?;
+            if actual == expected {
+                found += 1;
+            }
+        }
+        if found == 2 {
+            if matched.is_some() {
+                return Err("Ambiguous native physical collection identity".into());
+            }
+            matched = Some(index as u32);
+        }
+    }
+    matched.ok_or_else(|| "Native metadata identity not found in collection".into())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -145,6 +208,38 @@ mod tests {
         b
     }
     #[test]
+    fn named_instance_uses_exact_metadata_not_requested_postscript() {
+        let mut b = collection();
+        b.resize(200, 0);
+        b[44..48].copy_from_slice(b"head");
+        b[52..56].copy_from_slice(&128u32.to_be_bytes());
+        b[56..60].copy_from_slice(&54u32.to_be_bytes());
+        let head = b[128..182].to_vec();
+        let name = b[60..84].to_vec();
+        assert!(collection_index(&mut Cursor::new(b.clone()), "NamedInstance").is_err());
+        assert_eq!(
+            collection_index_by_tables(&mut Cursor::new(b.clone()), &head, &name).unwrap(),
+            0
+        );
+        let mut duplicate = vec![0u8; 256];
+        duplicate[..12].copy_from_slice(&b[..12]);
+        duplicate[8..12].copy_from_slice(&2u32.to_be_bytes());
+        duplicate[12..16].copy_from_slice(&32u32.to_be_bytes());
+        duplicate[16..20].copy_from_slice(&32u32.to_be_bytes());
+        duplicate[32..76].copy_from_slice(&b[16..60]);
+        duplicate[52..56].copy_from_slice(&100u32.to_be_bytes());
+        duplicate[100..124].copy_from_slice(&name);
+        duplicate[128..182].copy_from_slice(&head);
+        assert!(
+            collection_index_by_tables(&mut Cursor::new(duplicate), &head, &name)
+                .unwrap_err()
+                .contains("Ambiguous")
+        );
+        let mut wrong = head.clone();
+        wrong[20] = 1;
+        assert!(collection_index_by_tables(&mut Cursor::new(b), &wrong, &name).is_err());
+    }
+    #[test]
     fn physical_identity_never_reads_outline_collection_program() {
         let mut source = Counted {
             data: Cursor::new(collection()),
@@ -158,11 +253,9 @@ mod tests {
     fn malformed_identity_table_refuses_before_large_allocation() {
         let mut b = collection();
         b[40..44].copy_from_slice(&300_000u32.to_be_bytes());
-        assert!(
-            collection_index(&mut Cursor::new(b), "FacePS")
-                .unwrap_err()
-                .contains("budget")
-        );
+        assert!(collection_index(&mut Cursor::new(b), "FacePS")
+            .unwrap_err()
+            .contains("budget"));
         let mut b = collection();
         b[76..78].copy_from_slice(&u16::MAX.to_be_bytes());
         assert!(collection_index(&mut Cursor::new(b), "FacePS").is_err());
