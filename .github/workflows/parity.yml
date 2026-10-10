@@ -190,6 +190,8 @@ jobs:
             docs/audits/center-tracking-*-ci-evidence.json
             docs/audits/center-tracking-*-ci/*.png
             docs/audits/center-tracking-*-ci/runtime.log
+            docs/audits/center-tracking-*-ci/*state.json
+            docs/audits/center-tracking-*-ci/failure.json
             docs/audits/python-screen-snap-evidence.json
             docs/audits/python-perspective-screen-evidence.json
             docs/audits/python-snap-eye-boundary-evidence.json
