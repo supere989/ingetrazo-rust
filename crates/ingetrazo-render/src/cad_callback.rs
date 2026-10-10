@@ -182,6 +182,26 @@ mod tests {
         );
         assert_eq!(handle.snapshot().unwrap().revision, 2);
         assert_eq!(factory.metrics().updates, 1);
+        let before = handle.snapshot().unwrap();
+        let bad_bounds: Arc<[Batch]> = vec![Batch { first: 3, count: 3, color: before.batches[0].color }].into();
+        let bad_color: Arc<[Batch]> = vec![Batch { first: 0, count: 3, color: EncodedRgba([f32::NAN, 0., 0., 1.]) }].into();
+        for rejected in [bad_bounds, bad_color] {
+            assert!(handle.update(before.geometry.clone(), rejected, moved).is_err());
+            let after = handle.snapshot().unwrap();
+            assert_eq!(after.revision, before.revision);
+            assert_eq!(after.pose, before.pose);
+            assert!(Arc::ptr_eq(&after.geometry, &before.geometry));
+            assert!(Arc::ptr_eq(&after.batches, &before.batches));
+        }
+        let replacement: Arc<[Batch]> = vec![Batch { first: 0, count: 3, color: EncodedRgba::from_bytes([211, 17, 43, 255], 1.).unwrap() }].into();
+        handle.update(before.geometry.clone(), replacement.clone(), moved).unwrap();
+        let repainted = handle.snapshot().unwrap();
+        assert_eq!(repainted.revision, 3);
+        assert!(Arc::ptr_eq(&repainted.geometry, &before.geometry));
+        assert!(Arc::ptr_eq(&repainted.batches, &replacement));
+        assert_ne!(before.batches[0].color, repainted.batches[0].color);
+        assert_eq!(frozen.batches[0].color, before.batches[0].color);
+        assert_eq!(factory.metrics().updates, 2);
         drop(handle);
         assert_eq!(frozen.geometry.indices().len(), 3);
     }
