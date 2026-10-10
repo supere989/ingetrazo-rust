@@ -1,0 +1,7 @@
+Native source-derived underline plus retained layout failures
+
+3bf65b83 adds typed text decorations emitted under the same direct PDF text transform. Native FT_MulFix metrics derive source underline thickness and offset; QPainter antialiased decoration floors x endpoints, ceils underline offset, adds half line thickness and limits by descent. The actual original underline helper page matches at72/144/300dpi. No glyph outline drawing substitute. NaN decoration admission preserves destination and font work counters; formats75 pass.
+
+Neighbouring public Qt source maps the algorithm: https://raw.githubusercontent.com/qt/qtbase/v6.11.0/src/gui/painting/qpainter.cpp drawTextItemDecoration; https://raw.githubusercontent.com/qt/qtbase/v6.11.0/src/gui/text/freetype/qfontengine_ft.cpp initialize underline metrics. Actual pinned original Qt6.12 runtime pages are authoritative.
+
+Experimental layout fixture attempts all19 frozen input recipes, derives native positions without source output positions, and fails five distinct cases (mixedArabic/Hebrew, CJK, clipped wrap, center highdpi). All19 are mandatory in strict whole-page comparison, with old9still exact. Images show retained failures, not accepted divergence. Source CJK embeds DroidSansFallback rather than primary requested Sans font; source wrap includes actual rectangle clip; neither is permission to outline substitute or erase failure. Paragraph/fallback/bidi/UI remain required.

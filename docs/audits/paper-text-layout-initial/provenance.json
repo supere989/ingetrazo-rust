@@ -1,0 +1,13 @@
+{
+  "commit": "3bf65b83",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sha256": {
+    "/tmp/ingetrazo-sheet-view-pdf/crates/ingetrazo-formats/examples/paper_text_layout_fixture.rs": "2c983d5d0f6c9db0afe77a4ddc1ea5fcce5e23e4f5736cf038e46de050e01ce0",
+    "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-text-layout-pages.py": "ab76e107e69cb1ff9ab628800bca851aaf3ad664fb0f25fb70a3269d1ac66888",
+    "/tmp/ingetrazo-paper-text-subset-clean-target/debug/examples/paper_text_layout_fixture": "57570ea2762782d385d66a5fa430f8b51b771e856aaf1ac043727237ed32b06c"
+  },
+  "result": "underline 3/3 whole pages exact; expanded19 initial15/19 at72,15/19 at144,14/19 at300; five distinct failures retained",
+  "tests": "75 formats pass; decoration NaN refuses before cold work and preserves sentinel",
+  "source": "QFontEngineFT native FT_MulFix underline metric plus QPainter drawTextItemDecoration floor x, ceil offset, thickness/2, descent bound",
+  "scope": "Production decoration API only; experimental paragraph implementation unpromoted; all failures remain required corrections"
+}

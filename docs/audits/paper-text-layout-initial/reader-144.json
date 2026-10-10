@@ -1,0 +1,102 @@
+{
+  "passed": false,
+  "dpi": 144,
+  "cases": [
+    {
+      "case": "accents",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "arabic",
+      "changed_pixels": 283,
+      "passed": false
+    },
+    {
+      "case": "arabic_run",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "bold",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "center",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "cjk",
+      "changed_pixels": 992,
+      "passed": false
+    },
+    {
+      "case": "combining",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hebrew",
+      "changed_pixels": 283,
+      "passed": false
+    },
+    {
+      "case": "hebrew_run",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "italic",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "kerns",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "latin",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mono",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "newlines",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "right",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "serif",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "serif_bold",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "underline",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "wrap",
+      "changed_pixels": 327,
+      "passed": false
+    }
+  ],
+  "scope": "Nineteen native font/layout pages vs actual original paint_text_mm helper, not application/UI/fullP29; failed cases mandatory"
+}

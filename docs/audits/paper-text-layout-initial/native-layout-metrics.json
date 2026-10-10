@@ -1,0 +1,169 @@
+[
+  {
+    "case": "latin",
+    "line_height": 117.0,
+    "lines": [
+      "Office AVATAR fi ffi"
+    ],
+    "underline": []
+  },
+  {
+    "case": "accents",
+    "line_height": 117.0,
+    "lines": [
+      "Planta — sección ñ café"
+    ],
+    "underline": []
+  },
+  {
+    "case": "bold",
+    "line_height": 117.0,
+    "lines": [
+      "Office AVATAR"
+    ],
+    "underline": []
+  },
+  {
+    "case": "italic",
+    "line_height": 117.0,
+    "lines": [
+      "Office AVATAR"
+    ],
+    "underline": []
+  },
+  {
+    "case": "underline",
+    "line_height": 117.0,
+    "lines": [
+      "Ground level"
+    ],
+    "underline": [
+      {
+        "line": [
+          0.0,
+          97.0078125,
+          637.0,
+          97.0078125
+        ],
+        "width": 4.390625
+      }
+    ]
+  },
+  {
+    "case": "wrap",
+    "line_height": 117.0,
+    "lines": [
+      "Long project",
+      "name with",
+      "several words",
+      "that wrap onto a",
+      "second line"
+    ],
+    "underline": []
+  },
+  {
+    "case": "newlines",
+    "line_height": 117.0,
+    "lines": [
+      "Floor 1",
+      "Section A"
+    ],
+    "underline": []
+  },
+  {
+    "case": "center",
+    "line_height": 117.0,
+    "lines": [
+      "Centered title"
+    ],
+    "underline": []
+  },
+  {
+    "case": "right",
+    "line_height": 117.0,
+    "lines": [
+      "Right title"
+    ],
+    "underline": []
+  },
+  {
+    "case": "serif",
+    "line_height": 117.0,
+    "lines": [
+      "Office ffi AVATAR"
+    ],
+    "underline": []
+  },
+  {
+    "case": "mono",
+    "line_height": 117.0,
+    "lines": [
+      "Office ffi AVATAR"
+    ],
+    "underline": []
+  },
+  {
+    "case": "arabic",
+    "line_height": 117.0,
+    "lines": [
+      "العربية 123"
+    ],
+    "underline": []
+  },
+  {
+    "case": "hebrew",
+    "line_height": 117.0,
+    "lines": [
+      "שלום 123"
+    ],
+    "underline": []
+  },
+  {
+    "case": "cjk",
+    "line_height": 117.0,
+    "lines": [
+      "平面図"
+    ],
+    "underline": []
+  },
+  {
+    "case": "combining",
+    "line_height": 117.0,
+    "lines": [
+      "Á é q̈"
+    ],
+    "underline": []
+  },
+  {
+    "case": "kerns",
+    "line_height": 117.0,
+    "lines": [
+      "To WA AV Yi"
+    ],
+    "underline": []
+  },
+  {
+    "case": "serif_bold",
+    "line_height": 118.0,
+    "lines": [
+      "ff ffi fi fl"
+    ],
+    "underline": []
+  },
+  {
+    "case": "arabic_run",
+    "line_height": 117.0,
+    "lines": [
+      "العربية"
+    ],
+    "underline": []
+  },
+  {
+    "case": "hebrew_run",
+    "line_height": 117.0,
+    "lines": [
+      "שלום"
+    ],
+    "underline": []
+  }
+]
