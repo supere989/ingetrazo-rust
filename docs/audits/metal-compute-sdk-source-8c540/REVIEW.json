@@ -1,0 +1,14 @@
+{
+  "run": 38057962068,
+  "source": "8c540f7316e31d1fc9a5c78d3a2e0db86f73a0d9",
+  "independently_replayed_strict_checker_both": true,
+  "arm_job": 114230193394,
+  "intel_job": 114230193677,
+  "arm_artifact": 11672245114,
+  "intel_artifact": 11672300205,
+  "arm_github_declared_archive_digest": "06dfd7369df2f4e07f7913176b02be4a0c3b21afb61a8a1149329bcd6eb8a8c8",
+  "intel_github_declared_archive_digest": "bb027f71b797a0ec7a4b44d5d9e18054ef2476c130c97c0991c2df317d6a4474",
+  "actual_qt_images_per_device": 7,
+  "physical_gpu_claim": false,
+  "native_application_or_presentation_claim": false
+}
