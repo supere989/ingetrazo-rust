@@ -1,0 +1,18 @@
+{
+  "source": "71a0677233c76143492524da352bdb659c58d77f",
+  "binary_sha256": "b00a9180c56efcfb4af2e3128b4f41a95bb51c42e7ad6bc8f45258665b13ed5b",
+  "positive_strict_replay": true,
+  "missing_control": "Declared native timeline with deliberately omitted snapshots cancels actual Walk stroke before any step, explicit status; metadata-absent backend retains old approximation and remains OPEN",
+  "terminal_duplicates_removed": [
+    "/tmp/navigation-ingress-strict-build.log",
+    "/tmp/navigation-ingress-strict.json",
+    "/tmp/navigation-ingress-strict-runtime.log",
+    "/tmp/navigation-ingress-strict-check.json",
+    "/tmp/navigation-ingress-missing-build.log",
+    "/tmp/navigation-ingress-missing-restored.json",
+    "/tmp/navigation-ingress-missing-restored.log",
+    "/tmp/navigation-ingress-missing-restored-check.json",
+    "/tmp/navigation-ingress-missing-refused.json",
+    "/tmp/navigation-ingress-missing-refused.log"
+  ]
+}
