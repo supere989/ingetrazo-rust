@@ -397,8 +397,8 @@ impl IngeTrazoApp {
     }
 
     pub fn copy_selection(&mut self) {
-        let mesh=match ingetrazo_core::containers::copy_selected_mesh(&self.scene){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
-        let groups=self.scene.groups.iter().enumerate().filter(|(i,_)|self.scene.selection.contains(&SelectionItem::Group(*i))).map(|(_,g)|g.clone()).collect::<Vec<_>>();
+        let mesh=match ingetrazo_core::containers::copy_selected_mesh(&self.scene).and_then(|mesh|ingetrazo_core::containers::transform_mesh(&mesh,self.scene.dimension_frame)){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
+        let groups=self.scene.groups.iter().enumerate().filter(|(i,_)|self.scene.selection.contains(&SelectionItem::Group(*i))).map(|(_,g)|{let mut g=g.clone();g.transform=self.scene.dimension_frame*g.transform;g}).collect::<Vec<_>>();
         let mut reference=mesh.vertices.iter().map(|v|v.position).reduce(DVec3::min);
         fn placement_min(group:&ingetrazo_core::groups::Group,parent:glam::DMat4,minimum:&mut Option<DVec3>) {
             let transform=parent*group.transform;
@@ -414,10 +414,12 @@ impl IngeTrazoApp {
     pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
         let Some(cb)=self.clipboard.clone() else{return false;};
         if cb.mesh.faces.is_empty()&&cb.mesh.edges.is_empty()&&cb.groups.is_empty(){return false;}
-        let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&cb.mesh,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};
+        let inverse=self.scene.dimension_frame.inverse();
+        let source=match ingetrazo_core::containers::transform_mesh(&cb.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return false;}};
+        let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&source,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};
         self.save_undo_state();self.scene.mesh=mesh;self.scene.clear_selection();
         for id in faces{self.scene.select(SelectionItem::Face(id));}for id in edges{self.scene.select(SelectionItem::Edge(id));}
-        for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*group.transform;let index=self.scene.groups.len();self.scene.groups.push(group);self.scene.select(SelectionItem::Group(index));}
+        for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*inverse*group.transform;let index=self.scene.groups.len();self.scene.groups.push(group);self.scene.select(SelectionItem::Group(index));}
         self.scene.bump_version();true
     }
     pub fn paste_selection(&mut self) {self.begin_paste_preview();}

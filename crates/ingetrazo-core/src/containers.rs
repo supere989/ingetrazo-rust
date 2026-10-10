@@ -52,6 +52,18 @@ fn append_subset(dst:&mut Mesh,src:&Mesh,faces:&HashSet<usize>,edges:&HashSet<us
     Ok(())
 }
 
+/// A complete affine copy retains opaque entity data and positioned texture
+/// covectors. Used when clipboard geometry crosses document editing frames.
+pub fn transform_mesh(source:&Mesh,transform:DMat4)->Result<Mesh,String>{
+    if !transform.is_finite()||transform.determinant().abs()<1e-12{return Err("invalid clipboard coordinate frame".into());}
+    let mut copy=source.clone();for vertex in &mut copy.vertices{vertex.position=transform.transform_point3(vertex.position);if !vertex.position.is_finite(){return Err("non-finite clipboard geometry".into());}}
+    let inverse_transpose=transform.inverse().transpose();let translation=transform.w_axis.truncate();
+    for face in &mut copy.faces{if let Some(texture)=face.attrs.get_mut("texture"){if let Some(values)=texture.get("uvw").and_then(|v|v.as_array()).filter(|a|a.len()==8).and_then(|a|a.iter().map(|v|v.as_f64()).collect::<Option<Vec<_>>>()){
+        let mut mapped=values.clone();for base in[0,4]{let gradient=inverse_transpose.transform_vector3(glam::DVec3::new(values[base],values[base+1],values[base+2]));mapped[base]=gradient.x;mapped[base+1]=gradient.y;mapped[base+2]=gradient.z;mapped[base+3]=values[base+3]-gradient.dot(translation);}texture["uvw"]=serde_json::json!(mapped);
+    }}}
+    copy.rebuild_spatial_index();Ok(copy)
+}
+
 /// Copy selected loose geometry, including every selected face boundary.
 pub fn copy_selected_mesh(scene:&Scene)->Result<Mesh,String> {
     let faces:HashSet<_>=scene.selection.iter().filter_map(|s|if let SelectionItem::Face(i)=s {Some(*i)}else{None}).collect();

@@ -5,9 +5,12 @@ impl IngeTrazoApp {
         let Some(clipboard)=self.clipboard.clone() else{return;};
         if clipboard.mesh.faces.is_empty()&&clipboard.mesh.edges.is_empty()&&clipboard.groups.is_empty(){return;}
         self.set_tool(ingetrazo_tools::base::ToolType::Select);
-        let mut scene=Scene::new();scene.mesh=clipboard.mesh;scene.groups=clipboard.groups;
+        let inverse=self.scene.dimension_frame.inverse();
+        let mesh=match ingetrazo_core::containers::transform_mesh(&clipboard.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
+        let mut scene=Scene::new();scene.mesh=mesh;scene.groups=clipboard.groups;
+        for group in &mut scene.groups{group.transform=inverse*group.transform;}
         scene.materials=self.scene.materials.clone();scene.layers=self.scene.layers.clone();
-        self.paste_preview=Some(PastePreview{scene,reference:clipboard.reference,offset:DVec3::ZERO});
+        self.paste_preview=Some(PastePreview{scene,reference:inverse.transform_point3(clipboard.reference),offset:DVec3::ZERO});
         self.status_message="Place copied geometry; click to stamp, Esc to cancel".into();
     }
     pub fn update_paste_preview(&mut self,world:DVec3){if world.is_finite(){if let Some(preview)=&mut self.paste_preview{preview.offset=world-preview.reference;}}}
@@ -22,6 +25,14 @@ impl IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
+    #[test]
+    fn copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture(){
+        use ingetrazo_core::{groups::Group,mesh::Mesh};use glam::DMat4;
+        let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();let points=[DVec3::ZERO,DVec3::X,DVec3::Y];let ids=points.map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"uvw":[1.,0.,0.,3.,0.,1.,0.,4.]}));
+        let mut group=Group::with_mesh("source",mesh);let source_frame=DMat4::from_translation(DVec3::new(3.,4.,5.))*DMat4::from_rotation_z(0.4)*DMat4::from_scale(DVec3::new(2.,3.,4.));group.transform=source_frame;app.scene.groups.push(group);app.scene.select(SelectionItem::Group(0));app.begin_component_edit();app.scene.select(SelectionItem::Face(0));app.copy_selection();app.cancel_component_edit();app.paste_in_place();
+        let face=&app.scene.mesh.faces[0];for(i,vertex)in face.vertices.iter().enumerate(){let world=app.scene.mesh.vertices[*vertex].position;assert!((world-source_frame.transform_point3(points[i])).length()<1e-9);let uvw=face.attrs["texture"]["uvw"].as_array().unwrap();let u=DVec3::new(uvw[0].as_f64().unwrap(),uvw[1].as_f64().unwrap(),uvw[2].as_f64().unwrap()).dot(world)+uvw[3].as_f64().unwrap();assert!((u-(points[i].x+3.)).abs()<1e-9);}
+        let mut destination=Group::new("destination");let destination_frame=DMat4::from_translation(DVec3::new(-10.,2.,1.))*DMat4::from_rotation_y(0.7);destination.transform=destination_frame;app.scene.groups.push(destination);app.scene.clear_selection();app.scene.select(SelectionItem::Group(1));app.begin_component_edit();app.paste_in_place();let mesh=&app.scene.mesh;for(i,vertex)in mesh.faces[0].vertices.iter().enumerate(){assert!((destination_frame.transform_point3(mesh.vertices[*vertex].position)-source_frame.transform_point3(points[i])).length()<1e-9);}app.finish_component_edit();assert_eq!(app.scene.groups[1].mesh.faces.len(),1);
+    }
     #[test]
     fn preview_cancel_and_commit_are_one_atomic_stamp() {
         let mut app=IngeTrazoApp::new();let a=app.scene.mesh.add_vertex(DVec3::new(0.,0.,8.));let b=app.scene.mesh.add_vertex(DVec3::new(1.,0.,8.));app.scene.mesh.add_edge(a,b);app.scene.select(SelectionItem::Edge(0));app.copy_selection();
