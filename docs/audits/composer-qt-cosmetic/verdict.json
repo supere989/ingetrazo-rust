@@ -1,0 +1,435 @@
+{
+  "passed": false,
+  "variants": [
+    {
+      "name": "fractional",
+      "exit_code": 0,
+      "passed": true,
+      "report": {
+        "mandatory_cases": 9,
+        "inventory_negative_controls": 3,
+        "passed": true,
+        "cases": [
+          {
+            "name": "rect",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 1,
+            "gpu_cached_bytes": 87120,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "rounded",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 2,
+            "gpu_cached_bytes": 179136,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "ellipse",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 3,
+            "gpu_cached_bytes": 256464,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "polygon-clamped",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 4,
+            "gpu_cached_bytes": 254232,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "line-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 5,
+            "gpu_cached_bytes": 84384,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "arrow",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 6,
+            "gpu_cached_bytes": 94536,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-ticks",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 7,
+            "gpu_cached_bytes": 150048,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-hatch-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 8,
+            "gpu_cached_bytes": 393696,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-band",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 9,
+            "gpu_cached_bytes": 179568,
+            "warm_zero_uploads": true
+          }
+        ],
+        "binary_sha256": "b90ff719f76e44d47f88dc6c723772c9977160b96a41124cc1393dae40f1d7e7",
+        "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+      }
+    },
+    {
+      "name": "zoom-small",
+      "exit_code": 1,
+      "passed": false,
+      "report": {
+        "mandatory_cases": 9,
+        "inventory_negative_controls": 3,
+        "passed": false,
+        "cases": [
+          {
+            "name": "rect",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 1,
+            "gpu_cached_bytes": 15120,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "rounded",
+            "different_pixels": 1,
+            "passed": false,
+            "gpu_uploads": 2,
+            "gpu_cached_bytes": 37584,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "ellipse",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 3,
+            "gpu_cached_bytes": 52560,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "polygon-clamped",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 4,
+            "gpu_cached_bytes": 51408,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "line-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 5,
+            "gpu_cached_bytes": 11808,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "arrow",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 6,
+            "gpu_cached_bytes": 13680,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-ticks",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 7,
+            "gpu_cached_bytes": 27216,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-hatch-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 8,
+            "gpu_cached_bytes": 63576,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-band",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 9,
+            "gpu_cached_bytes": 35496,
+            "warm_zero_uploads": true
+          }
+        ],
+        "binary_sha256": "b90ff719f76e44d47f88dc6c723772c9977160b96a41124cc1393dae40f1d7e7",
+        "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+      }
+    },
+    {
+      "name": "density125",
+      "exit_code": 0,
+      "passed": true,
+      "report": {
+        "mandatory_cases": 9,
+        "inventory_negative_controls": 3,
+        "passed": true,
+        "cases": [
+          {
+            "name": "rect",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 2,
+            "gpu_cached_bytes": 108720,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "rounded",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 3,
+            "gpu_cached_bytes": 223056,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "ellipse",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 4,
+            "gpu_cached_bytes": 319824,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "polygon-clamped",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 5,
+            "gpu_cached_bytes": 319392,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "line-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 6,
+            "gpu_cached_bytes": 109152,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "arrow",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 7,
+            "gpu_cached_bytes": 121320,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-ticks",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 8,
+            "gpu_cached_bytes": 190944,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-hatch-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 9,
+            "gpu_cached_bytes": 534960,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-band",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 10,
+            "gpu_cached_bytes": 227952,
+            "warm_zero_uploads": true
+          }
+        ],
+        "binary_sha256": "b90ff719f76e44d47f88dc6c723772c9977160b96a41124cc1393dae40f1d7e7",
+        "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+      }
+    },
+    {
+      "name": "density200",
+      "exit_code": 0,
+      "passed": true,
+      "report": {
+        "mandatory_cases": 9,
+        "inventory_negative_controls": 3,
+        "passed": true,
+        "cases": [
+          {
+            "name": "rect",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 2,
+            "gpu_cached_bytes": 87120,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "rounded",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 3,
+            "gpu_cached_bytes": 179136,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "ellipse",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 4,
+            "gpu_cached_bytes": 256464,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "polygon-clamped",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 5,
+            "gpu_cached_bytes": 254232,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "line-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 6,
+            "gpu_cached_bytes": 84384,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "arrow",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 7,
+            "gpu_cached_bytes": 94536,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-ticks",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 8,
+            "gpu_cached_bytes": 150048,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-hatch-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 9,
+            "gpu_cached_bytes": 393696,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-band",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 10,
+            "gpu_cached_bytes": 179568,
+            "warm_zero_uploads": true
+          }
+        ],
+        "binary_sha256": "b90ff719f76e44d47f88dc6c723772c9977160b96a41124cc1393dae40f1d7e7",
+        "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+      }
+    },
+    {
+      "name": "negative-origin",
+      "exit_code": 0,
+      "passed": true,
+      "report": {
+        "mandatory_cases": 9,
+        "inventory_negative_controls": 3,
+        "passed": true,
+        "cases": [
+          {
+            "name": "rect",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 1,
+            "gpu_cached_bytes": 87120,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "rounded",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 2,
+            "gpu_cached_bytes": 179136,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "ellipse",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 3,
+            "gpu_cached_bytes": 256464,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "polygon-clamped",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 4,
+            "gpu_cached_bytes": 254088,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "line-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 5,
+            "gpu_cached_bytes": 84384,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "arrow",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 6,
+            "gpu_cached_bytes": 94392,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-ticks",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 7,
+            "gpu_cached_bytes": 149688,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-hatch-inverted",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 8,
+            "gpu_cached_bytes": 393696,
+            "warm_zero_uploads": true
+          },
+          {
+            "name": "terrain-band",
+            "different_pixels": 0,
+            "passed": true,
+            "gpu_uploads": 9,
+            "gpu_cached_bytes": 182232,
+            "warm_zero_uploads": true
+          }
+        ],
+        "binary_sha256": "b90ff719f76e44d47f88dc6c723772c9977160b96a41124cc1393dae40f1d7e7",
+        "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+      }
+    }
+  ]
+}
