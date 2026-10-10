@@ -577,6 +577,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     doc["geo_paths"] = serde_json::json!(scene.geo_paths.iter().map(|p|
         overlay(&p.native_document,&p.native_baseline,path_model(p))).collect::<Vec<_>>());
     doc["terrain"] = serde_json::json!(scene.terrain);
+    doc["tile_layer"] = serde_json::json!(scene.tile_layer);
     doc["compositions"] = serde_json::json!(scene.sheets.iter().map(sheet_to_json).collect::<Vec<_>>());
     doc["active_sheet_index"] = serde_json::json!(scene.active_sheet_index);
     doc
@@ -774,6 +775,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     // Standard IngeTrazo format
     let mut scene = Scene::new();
     scene.embedded_textures = embedded_textures;
+    scene.tile_layer=s_val.get("tile_layer").filter(|v|!v.is_null()).map(|v|serde_json::from_value(v.clone())).transpose().map_err(|e|IgzError::InvalidDocument(format!("Invalid base-map capture: {e}")))?;
     scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
 
@@ -1060,6 +1062,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             "in" => LengthUnit::Inches, "ft" => LengthUnit::Feet, _ => LengthUnit::Meters
         };
     }
+    scene.tile_layer=s_val.get("tile_layer").filter(|v|!v.is_null()).map(|v|serde_json::from_value(v.clone())).transpose().map_err(|e|IgzError::InvalidDocument(format!("Invalid base-map capture: {e}")))?;
     scene.native_document = s_val.clone();
     scene.native_baseline = scene_model(&scene);
     scene.mesh.rebuild_spatial_index();

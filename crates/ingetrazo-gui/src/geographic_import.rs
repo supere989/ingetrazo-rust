@@ -1,5 +1,5 @@
 use crate::IngeTrazoApp;
-use ingetrazo_core::{camera::StandardView,georef::{SceneDatum,GeoPath}};
+use ingetrazo_core::{camera::StandardView,georef::{SceneDatum,GeoPath,TileCapture}};
 use glam::DVec3;
 impl IngeTrazoApp{
  pub fn import_geographic_paths(&mut self,path:&std::path::Path)->Result<usize,String>{
@@ -31,7 +31,9 @@ impl IngeTrazoApp{
   camera.distance=(diagonal*1.3/(2.*(camera.fov_deg.to_radians()*0.5).tan())).max(0.02);
   // Source datum initialization and viewport framing are outside the path command.
   // Validate first, then retain both in the command's before-state.
-  self.scene.geo_datum=Some(datum);self.camera=camera.clone();self.scene.camera=camera;
+  if self.scene.tile_layer.as_ref().is_some_and(|c|c.zoom>21){return Err("Base-map zoom outside supported UI domain".into())}
+  let capture=TileCapture::import_reference(self.scene.tile_layer.as_ref(),&datum,min,max);
+  self.scene.tile_layer=Some(capture);self.scene.geo_datum=Some(datum);self.camera=camera.clone();self.scene.camera=camera;
   self.save_undo_state();
   let count=imported.len();self.scene.geo_paths.extend(imported);self.scene.bump_version();
   self.status_message=format!("Imported {count} feature(s) from {}",path.file_name().unwrap_or_default().to_string_lossy());

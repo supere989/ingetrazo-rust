@@ -1110,3 +1110,42 @@ mod conversion_tests {
         scene.geo_paths.push(GeoPath::new(vec![DVec3::ZERO,DVec3::new(f64::INFINITY,0.,0.)],false,"bad"));let mesh=scene.mesh.clone();let paths=scene.geo_paths.len();assert!(geopath_to_geometry(&mut scene,&[0]).is_err());assert_eq!(scene.mesh,mesh);assert_eq!(scene.geo_paths.len(),paths);assert!(geopath_to_geometry(&mut scene,&[99]).is_err());
     }
 }
+
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
+pub struct TileCapture{
+ pub source:String,pub zoom:u8,pub radius_m:f64,pub visible:bool,pub opacity:f64,
+ pub patches:Vec<[f64;4]>,pub url_template:String,pub name:String,pub attribution:String,
+}
+impl TileCapture{
+ pub fn import_reference(previous:Option<&Self>,datum:&SceneDatum,min:DVec3,max:DVec3)->Self{
+  let mut capture=previous.cloned().unwrap_or_else(||Self{
+   source:"esri_imagery".into(),zoom:16,radius_m:1200.,visible:true,opacity:1.,
+   patches:vec![],url_template:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}".into(),
+   name:"Esri World Imagery (satellite)".into(),attribution:"Esri, Maxar, Earthstar Geographics, and the GIS community".into(),
+  });
+  // Source creates a new layer from chosen source/zoom/visibility, resetting
+  // radius/opacity while retaining the provider. No imagery is serialized.
+  capture.radius_m=1200.;capture.opacity=1.;
+  let width=max.x-min.x;let length=max.y-min.y;
+  let margin=0.15*width.max(length).max(200.);
+  capture.patches=vec![[(min.x+max.x)/2.,(min.y+max.y)/2.,(width+2.*margin)/2.,(length+2.*margin)/2.]];
+  while capture.zoom>8&&capture.import_tile_count(datum)>500{capture.zoom-=1;}
+  capture
+ }
+ fn import_tile_count(&self,datum:&SceneDatum)->u64{
+  debug_assert_eq!(self.patches.len(),1);
+  // Import creates one rectangle. Count its bounded index domain directly;
+  // do not allocate millions of tiles merely to choose a coarser zoom.
+  self.patches.iter().map(|p|{
+   let mut lo_lat=f64::INFINITY;let mut hi_lat=f64::NEG_INFINITY;
+   let mut lo_lon=f64::INFINITY;let mut hi_lon=f64::NEG_INFINITY;
+   for (x,y) in [(p[0]-p[2],p[1]-p[3]),(p[0]+p[2],p[1]-p[3]),(p[0]+p[2],p[1]+p[3]),(p[0]-p[2],p[1]+p[3])]{
+    let(lat,lon,_)=datum.local_to_geodetic(DVec3::new(x,y,0.).as_vec3().as_dvec3());lo_lat=lo_lat.min(lat);hi_lat=hi_lat.max(lat);lo_lon=lo_lon.min(lon);hi_lon=hi_lon.max(lon);
+   }
+   let(x0,y0)=deg2num(hi_lat,lo_lon,self.zoom);let(x1,y1)=deg2num(lo_lat,hi_lon,self.zoom);let n=(1u64<<self.zoom)as f64;
+   let nx=(x0.max(x1).floor().min(n-1.)-x0.min(x1).floor().max(0.)+1.).max(0.)as u64;
+   let ny=(y0.max(y1).floor().min(n-1.)-y0.min(y1).floor().max(0.)+1.).max(0.)as u64;
+   nx*ny
+  }).sum()
+ }
+}
