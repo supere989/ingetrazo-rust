@@ -695,6 +695,22 @@ mod import_weld_tests {
         assert!(scene_from_payload(&base).is_ok());
     }
     #[test]
+    fn adopted_back_color_preserves_geometry_style_and_native_save() {
+        let base:Payload=serde_json::from_str(include_str!("../../../../docs/audits/skp-native-legacy/component-proof/vff35/hole-paint-layer-payload.json")).unwrap();
+        let plain=scene_from_payload(&base).unwrap();let mut painted=base.clone();painted.back_color=Some([0.2,0.3,0.4]);
+        let scene=scene_from_payload(&painted).unwrap();
+        assert_eq!(scene.display_style,plain.display_style);
+        let mut a=crate::igz::scene_to_igz_document(&plain);let mut b=crate::igz::scene_to_igz_document(&scene);
+        fn clear_uids(v:&mut serde_json::Value){match v {serde_json::Value::Object(o)=>{o.remove("uid");for v in o.values_mut(){clear_uids(v);}},serde_json::Value::Array(a)=>for v in a {clear_uids(v);},_=>{}}}
+        clear_uids(&mut a);clear_uids(&mut b);
+        for key in ["groups","protos","dimensions","text_labels","materials","layers","display_style"] {assert_eq!(a.get(key),b.get(key),"{key}");}
+        assert_eq!(b["back_face_color"],serde_json::json!([0.2,0.3,0.4]));
+        let path=std::env::temp_dir().join(format!("skp-back-color-{}.igz",uuid::Uuid::new_v4()));
+        crate::igz::save_igz_format1(&scene,&path).unwrap();let saved:serde_json::Value=serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();std::fs::remove_file(&path).unwrap();
+        assert!(saved.to_string().contains("back_face_color"));
+        let mut old=scene.clone();old.native_baseline=serde_json::Value::Null;assert!(crate::igz::save_igz_format1(&old,&path).is_err());assert!(!path.exists());
+    }
+    #[test]
     fn source_keys_neighbour_distance_and_wide_identity() {
         let mut mesh = Mesh::new();
         let mut w = ImportWeld::default();
