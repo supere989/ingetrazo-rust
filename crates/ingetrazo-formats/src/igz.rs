@@ -533,7 +533,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
         "perspective": scene.camera.perspective,
         "fov_deg": scene.camera.fov_deg,
     });
-    doc["dimensions"] = serde_json::json!(scene.dimensions.iter().map(|d|overlay(&d.native_document,&d.native_baseline,dimension_model(d))).collect::<Vec<_>>());
+    doc["dimensions"] = serde_json::json!(scene.dimensions.iter().map(|d|{let mut live=d.clone();(live.start,live.end)=scene.dimension_points(d);overlay(&d.native_document,&d.native_baseline,dimension_model(&live))}).collect::<Vec<_>>());
     doc["guides"] = serde_json::to_value(&scene.guides).unwrap_or(serde_json::json!([]));
     doc["text_labels"] = serde_json::to_value(&scene.text_labels).unwrap_or(serde_json::json!([]));
     let unit = match scene.unit {
@@ -934,6 +934,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             dim.native_document=raw.clone();dim.native_baseline=dimension_model(&dim);scene.dimensions.push(dim);
         }}
     }
+
+    scene.bind_dimensions();
 
     if let Some(guides_val) = s_val.get("guides") {
         if let Ok(guides) = serde_json::from_value::<Vec<Guide>>(guides_val.clone()) {

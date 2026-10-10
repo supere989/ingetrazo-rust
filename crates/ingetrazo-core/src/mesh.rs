@@ -21,6 +21,8 @@ pub type FaceId = usize;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MeshVertex {
+    #[serde(default="uuid::Uuid::new_v4")]
+    pub uid:uuid::Uuid,
     pub position: DVec3,
     pub edges: Vec<EdgeId>,
 }
@@ -28,6 +30,7 @@ pub struct MeshVertex {
 impl MeshVertex {
     pub fn new(position: DVec3) -> Self {
         Self {
+            uid:uuid::Uuid::new_v4(),
             position,
             edges: Vec::new(),
         }

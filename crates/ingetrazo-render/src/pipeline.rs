@@ -260,10 +260,10 @@ pub fn build_scene_render_data(
     // 4. Dimensions
     for dim in &scene.dimensions {
         if !scene.is_layer_visible(dim.layer.as_deref()){continue;}
-        let p0 = dim.start;
-        let p1 = dim.end;
+        let (p0,p1)=scene.dimension_points(dim);
+        let mut live=dim.clone();live.start=p0;live.end=p1;
         let off = dim.offset;
-        let (d0,d1)=dim.line_points();
+        let (d0,d1)=live.line_points();
 
         // Witness lines
         data.dimension_lines.push_line(p0, d0, [0.15, 0.15, 0.2, 0.7], 1.0, LineStyle::Solid);
@@ -280,7 +280,7 @@ pub fn build_scene_render_data(
         data.dimension_lines.push_line(d1 - tick_v, d1 + tick_v, [0.1, 0.1, 0.15, 1.0], 1.5, LineStyle::Solid);
 
         let mid = (d0 + d1) * 0.5 + up * 0.05;
-        data.dimension_labels.push((mid, dim.display_text(scene.unit, 2)));
+        data.dimension_labels.push((mid, live.display_text(scene.unit, 2)));
     }
 
     // 4b. Text labels (leader annotations)

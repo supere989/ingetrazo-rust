@@ -880,6 +880,7 @@ impl IngeTrazoApp {
 
 impl eframe::App for IngeTrazoApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        self.scene.refresh_dimensions();
         self.document_session_ui(ctx);
         let title = if let Some(path) = &self.current_file {
             let filename = path.file_name().unwrap_or_default().to_string_lossy();

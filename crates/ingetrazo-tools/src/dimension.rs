@@ -74,6 +74,7 @@ impl Tool for DimensionTool {
             let (offset,axis) = Dimension::placement_for_cursor(p0,p1,p_off);
 
             let mut dim = Dimension::new(p0, p1, offset);dim.axis=axis;
+            dim.anchor_a=scene.resolve_dimension_anchor(p0);dim.anchor_b=scene.resolve_dimension_anchor(p1);
             scene.dimensions.push(dim);
             scene.bump_version();
 

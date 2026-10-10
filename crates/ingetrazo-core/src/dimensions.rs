@@ -11,6 +11,8 @@ use crate::units::{format_length, LengthUnit};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Dimension {
+    #[serde(skip)] pub anchor_a:Option<crate::dimension_anchors::VertexAnchor>,
+    #[serde(skip)] pub anchor_b:Option<crate::dimension_anchors::VertexAnchor>,
     #[serde(default)] pub native_document:serde_json::Value,
     #[serde(default)] pub native_baseline:serde_json::Value,
     #[serde(default)] pub layer:Option<String>,
@@ -31,6 +33,7 @@ pub struct Dimension {
 impl Dimension {
     pub fn new(start: DVec3, end: DVec3, offset: DVec3) -> Self {
         Self {
+            anchor_a:None,anchor_b:None,
             native_document:serde_json::Value::Null,native_baseline:serde_json::Value::Null,layer:None,axis:None,
             id: Uuid::new_v4(),
             start,
