@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""Actual source text painter PDFs plus Qt font/layout observations, no native parity claim."""
+import os,sys,json,hashlib,subprocess,struct
+from pathlib import Path
+os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
+sys.path.insert(0,str(Path("ingetrazo").resolve()))
+from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QPainter,QPdfWriter,QFontInfo,QFontMetricsF,QRawFont,QTextLayout,QTextOption,QPageSize
+from PySide6.QtCore import QRectF,QSizeF,Qt,QPointF
+from core.composition import TextoItem,RENDER_DPI,PT_TO_MM
+from views.composer import paint_text_mm
+app=QApplication([]);out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
+class Observe(QPainter):
+ def drawText(self,rect,flags,text):
+  f=self.font();info=QFontInfo(f);m=QFontMetricsF(f);raw=QRawFont.fromFont(f)
+  resolved=subprocess.check_output(["fc-match","-f","%{file}",info.family()+":style="+info.styleName()],text=True)
+  data=Path(resolved).read_bytes();tables={}
+  for i in range(struct.unpack_from(">H",data,4)[0]):
+   tag,_,offset,size=struct.unpack_from(">4sIII",data,12+16*i);tables[tag]=data[offset:offset+size]
+  assert bytes(raw.fontTable("head"))==tables[b"head"],"fc-match font differs from actual QRawFont"
+  matrix=self.transform()
+  row={"text":text,"rect":[rect.x(),rect.y(),rect.width(),rect.height()],"flags":flags,"transform":[matrix.m11(),matrix.m12(),matrix.m21(),matrix.m22(),matrix.dx(),matrix.dy()],"font":{"requested":f.family(),"resolved":info.family(),"style":info.styleName(),"pixel_size":f.pixelSize(),"bold":f.bold(),"italic":f.italic(),"underline":f.underline(),"ascent":m.ascent(),"descent":m.descent(),"leading":m.leading(),"height":m.height(),"advance":m.horizontalAdvance(text),"file":resolved,"sha256":hashlib.sha256(Path(resolved).read_bytes()).hexdigest(),"head_table_sha256":hashlib.sha256(bytes(raw.fontTable("head"))).hexdigest(),"units_per_em":raw.unitsPerEm()},"raw_glyph_indices":raw.glyphIndexesForString(text)}
+  # Supplementary actual Qt QTextLayout model; do not call it source QPainter placement.
+  option=QTextOption();option.setWrapMode(QTextOption.WrapMode.WordWrap);option.setAlignment(Qt.AlignmentFlag(flags & int(Qt.AlignHorizontal_Mask)))
+  layout=QTextLayout(text,f);layout.setTextOption(option);layout.beginLayout();lines=[];y=0.
+  while True:
+   line=layout.createLine()
+   if not line.isValid():break
+   line.setLineWidth(rect.width());line.setPosition(QPointF(0,y));y+=line.height()
+   lines.append({"start":line.textStart(),"length":line.textLength(),"ascent":line.ascent(),"height":line.height(),"width":line.naturalTextWidth()})
+  layout.endLayout();row["supplementary_qtextlayout"]={"lines":lines,"runs":[{"family":run.rawFont().familyName(),"glyphs":run.glyphIndexes(),"positions":[[v.x(),v.y()]for v in run.positions()]}for run in layout.glyphRuns()]};self.observed.append(row)
+  return super().drawText(rect,flags,text)
+cases=[("latin","Office AVATAR fi ffi",{}),("accents","Planta — sección ñ café",{}),("bold","Office AVATAR",{"bold":True}),("italic","Office AVATAR",{"italic":True}),("underline","Ground level",{"underline":True}),("wrap","Long project name with several words that wrap onto a second line",{"w_mm":32}),("newlines","Floor 1\nSection A",{}),("center","Centered title",{"align":"center"}),("right","Right title",{"align":"right"}),("serif","Office ffi AVATAR",{"family":"Serif"}),("mono","Office ffi AVATAR",{"family":"Monospace"}),("arabic","العربية 123",{}),("hebrew","שלום 123",{}),("cjk","平面図",{})]
+rows=[]
+for name,text,props in cases:
+ writer=QPdfWriter(str(out/(name+".original.pdf")));writer.setResolution(RENDER_DPI);writer.setPageSize(QPageSize(QSizeF(210,297),QPageSize.Unit.Millimeter));p=Observe(writer);p.observed=[];p.scale(RENDER_DPI/25.4,RENDER_DPI/25.4);p.translate(20,30)
+ item=TextoItem(text=text,size_pt=14,**props);paint_text_mm(p,item);p.end();rows.append({"name":name,"properties":props,"source_draw_calls":p.observed})
+(out/"font-observations.json").write_text(json.dumps({"source":"views.composer.paint_text_mm / _draw_text_mm","scope":"Actual source PDFs and font records; supplementary Qt layout is not a Rust implementation or parity proof","cases":rows},indent=2,ensure_ascii=False)+"\n")
+print("PASS fourteen actual original text painter PDFs and font observations; native text remains open")
