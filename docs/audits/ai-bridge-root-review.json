@@ -2,7 +2,9 @@
   "reviewed": [
     "4825d9bd",
     "3197ee3e",
-    "5d5b007386d0efd3c6fb5260524a3a99795f104f"
+    "5d5b007386d0efd3c6fb5260524a3a99795f104f",
+    "905bc639",
+    "3d011322"
   ],
   "independent_evidence": {
     "full_cases": 10,
@@ -10,7 +12,7 @@
     "complete_json_equal": true,
     "same_checker_negative_rejections": 5
   },
-  "integration_status": "Held for admission scheduling and redundant command copying fixes",
+  "integration_status": "Integrated into review/next-integration; combined compilation pending",
   "findings": [
     {
       "area": "client pool",
@@ -21,5 +23,9 @@
       "detail": "Candidate mesh clone, undo mesh clone and full Scene history snapshot duplicate model data per command; repeated script edge additions amplify copying. Preserve source endpoint identities with bounded endpoint planning and one existing history snapshot, then command journal followup."
     }
   ],
-  "scope": "Source query/controller equality is established for named corpus; genuine Python execution, screenshots, broader history routing and complete atomic journal remain OPEN."
+  "scope": "Source query/controller equality is established for named corpus; genuine Python execution, screenshots, broader history routing and complete atomic journal remain OPEN.",
+  "corrections": [
+    "Explicit CAS reservation plus capacity-one mailbox removes receiver scheduling admission race; reservation retained while serving.",
+    "Additional candidate and undo mesh clones removed; only existing model history snapshot remains. Independently rechecked optimized ten-case 27-state full JSON equality. Per-script delta journal remains required."
+  ]
 }
