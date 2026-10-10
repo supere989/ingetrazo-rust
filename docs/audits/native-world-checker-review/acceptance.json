@@ -1,0 +1,17 @@
+{
+  "scope": "Retained-image checker equivalence, not fresh GPU rendering",
+  "exact_old_case_records": 4,
+  "changed_pixels": [
+    78,
+    351,
+    5088,
+    3754
+  ],
+  "strict_failure_exit_preserved": true,
+  "negatives": [
+    "black startup rejected",
+    "one altered pixel rejected"
+  ],
+  "elapsed_seconds": 0.232750933006173,
+  "temporary_output_purged": true
+}
