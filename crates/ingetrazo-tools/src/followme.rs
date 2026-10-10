@@ -341,9 +341,29 @@ fn prepare_sweep(
             &scene.mesh,
             &ingetrazo_core::pieces::Piece { faces, edges },
         )?;
-        ingetrazo_core::solids::validate_solid_mesh(&body)
-            .map_err(|e| format!("Attached profile needs a closed solid: {e}"))?;
-        Some(body)
+        let closed_body = consumed.iter().all(|&id| {
+            let face = &scene.mesh.faces[id];
+            std::iter::once(&face.vertices)
+                .chain(&face.holes)
+                .all(|ring| {
+                    (0..ring.len()).all(|i| {
+                        let (a, b) = (ring[i], ring[(i + 1) % ring.len()]);
+                        boundary_faces[&(a.min(b), a.max(b))].len() == 2
+                    })
+                })
+        });
+        if closed_body {
+            ingetrazo_core::solids::validate_solid_mesh(&body)
+                .map_err(|e| format!("Invalid attached solid: {e}"))?;
+            Some(body)
+        } else {
+            // Original sweeps also accept a profile adjoining an open sheet.
+            // Such sheets have no material volume to union: consume only the
+            // profile and keep the other faces as document geometry.
+            consumed.clear();
+            consumed.insert(face_id);
+            None
+        }
     } else {
         None
     };
@@ -544,6 +564,7 @@ fn prepare_sweep(
             result.add_vertex(vertex.position);
         }
     }
+    result = ingetrazo_core::planar::stitch_boundaries(&result)?;
     result.preserve_vertex_uids_from(&scene.mesh);
     scene.mesh = result;
     scene.clear_selection();
@@ -1004,7 +1025,7 @@ mod tests {
     }
 
     #[test]
-    fn attached_cap_sweep_unions_closed_body_and_declines_open_attachment_atomically() {
+    fn attached_cap_sweep_unions_closed_body_and_preserves_open_attachment() {
         let mut scene = Scene::new();
         let ids = [DVec3::ZERO, DVec3::X, DVec3::new(1., 1., 0.), DVec3::Y]
             .into_iter()
@@ -1056,11 +1077,29 @@ mod tests {
         .map(|p| open.mesh.add_vertex(p))
         .collect();
         open.mesh.add_face(ids, vec![]);
-        let before = open.clone();
-        assert!(
-            sweep_profile(&mut open, 0, &[DVec3::ZERO, DVec3::new(0., 2., 0.)], false).is_err()
-        );
-        assert_eq!(open, before);
+        open.mesh.faces[1]
+            .attrs
+            .insert("sheet".into(), serde_json::json!("retained"));
+        sweep_profile(&mut open, 0, &[DVec3::ZERO, DVec3::new(0., 2., 0.)], false).unwrap();
+        assert_eq!(open.mesh.faces.len(), 7);
+        let sheet = open
+            .mesh
+            .faces
+            .iter()
+            .position(|f| f.attrs.get("sheet") == Some(&serde_json::json!("retained")))
+            .unwrap();
+        assert!((open.mesh.face_area(sheet) - 1.).abs() < 1e-9);
+        let ids: Vec<_> = (0..open.mesh.faces.len()).filter(|&i| i != sheet).collect();
+        let solid = ingetrazo_core::pieces::copy_part(
+            &open.mesh,
+            &ingetrazo_core::pieces::Piece {
+                faces: ids,
+                edges: vec![],
+            },
+        )
+        .unwrap();
+        ingetrazo_core::solids::validate_solid_mesh(&solid).unwrap();
+        assert!((solid.volume().unwrap() - 2.).abs() < 1e-8);
     }
 
     #[test]

@@ -622,6 +622,14 @@ mod tests {
 }
 
 /// Insert shared boundary stations in every incident face; no T-junctions.
+/// Insert every existing vertex that lies within another face boundary edge.
+/// Retains faces, holes, paint, vertex identities and edge metadata; useful
+/// when adjoining an open drawing to newly constructed solid geometry.
+pub fn stitch_boundaries(mesh: &Mesh) -> Result<Mesh, String> {
+    validate_mesh(mesh)?;
+    stitch(mesh)
+}
+
 pub(crate) fn stitch(mesh: &Mesh) -> Result<Mesh, String> {
     let mut result = Mesh::new();
     for face in &mesh.faces {
