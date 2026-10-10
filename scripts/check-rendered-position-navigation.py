@@ -8,6 +8,8 @@ original=os.environ.get('INGETRAZO_POSITION_ORIGINAL')=='1';cancel=os.environ.ge
 directory=Path(sys.argv[1]).resolve();directory.mkdir(parents=True,exist_ok=True)
 assert not (directory/'report.json').exists() and not(directory/'state.json').exists(),'fresh evidence directory required'
 binary=(Path(os.environ['CARGO_TARGET_DIR'])/'debug/examples/position_navigation_native_fixture').resolve()
+source_revision=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 def wait(fn,seconds=15):
  end=time.monotonic()+seconds
  while time.monotonic()<end:
@@ -35,7 +37,8 @@ with tempfile.TemporaryDirectory(prefix='position-render-') as runtime:
   assert select.select([server.stdout],[],[],10)[0];display=':'+server.stdout.readline().strip();env=dict(os.environ,DISPLAY=display,XDG_RUNTIME_DIR=runtime,XDG_CONFIG_HOME=runtime,LIBGL_ALWAYS_SOFTWARE='1',VK_DRIVER_FILES='/usr/share/vulkan/icd.d/lvp_icd.json',INGETRAZO_VULKAN_DEVICE='llvmpipe');env.pop('WAYLAND_DISPLAY',None)
   command=[sys.executable,'scripts/original_position_navigation_fixture.py',str(directory)]if original else[str(binary),str(directory)]
   with (directory/'runtime.log').open('w')as log:
-   app=subprocess.Popen(command,env=env,stdout=log,stderr=log);state=lambda:json.loads((directory/'state.json').read_text());initial=wait(lambda:state()if state().get('viewport')else None)
+   app=subprocess.Popen(command,env=env,stdout=log,stderr=log);state=lambda:json.loads((directory/'state.json').read_text());initial=wait(lambda:state()if state().get('viewport')and(not original or state().get('gl_metadata'))else None)
+   if original:assert 'llvmpipe' in initial['gl_metadata']['renderer'].lower(),initial['gl_metadata']
    x=C.CDLL(ctypes.util.find_library('X11'));xt=C.CDLL(ctypes.util.find_library('Xtst'));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(display.encode());assert d
    x.XDefaultRootWindow.argtypes=[C.c_void_p];x.XDefaultRootWindow.restype=C.c_ulong;root=x.XDefaultRootWindow(d);x.XQueryTree.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(C.c_ulong),C.POINTER(C.c_ulong),C.POINTER(C.POINTER(C.c_ulong)),C.POINTER(C.c_uint)];rr=C.c_ulong();pp=C.c_ulong();children=C.POINTER(C.c_ulong)();n=C.c_uint();assert x.XQueryTree(d,root,C.byref(rr),C.byref(pp),C.byref(children),C.byref(n))
    x.XFetchName.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(C.c_char_p)];x.XFree.argtypes=[C.c_void_p];names=[]
@@ -66,7 +69,8 @@ with tempfile.TemporaryDirectory(prefix='position-render-') as runtime:
    assert xt.XTestFakeButtonEvent(d,1,0,0);x.XFlush(d)
    final=wait(lambda:state()if state()['preview']is None and(cancel or 'Look' in state()['mode'])else None);time.sleep(.08);capture('cancelled'if cancel else'committed')
    assert final['undo']==0 and final['version']==initial['version'];assert (final['eye']==initial['eye'])==cancel
-   report=dict(passed=True,implementation='original-Qt-OpenGL-llvmpipe'if original else'native-Vulkan-llvmpipe',cancel=cancel,coverage=coverage,glyph_green=glyph_green,glyph_state=glyph_state,negatives=negative+['missing-endpoint-glyph'],initial=initial,preview=preview,final=final,command=command,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest()if not original else None,scope='actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim')
+   report=dict(passed=True,source_revision=source_revision,script_sha256=script_sha256,implementation='original-Qt-OpenGL-llvmpipe'if original else'native-Vulkan-llvmpipe',cancel=cancel,coverage=coverage,glyph_green=glyph_green,glyph_state=glyph_state,negatives=negative+['missing-endpoint-glyph'],initial=initial,preview=preview,final=final,command=command,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest()if not original else None,scope='actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim')
+   if not original:assert 'Native Vulkan adapter: \"llvmpipe' in (directory/'runtime.log').read_text(),'actual Vulkan adapter not observed'
    (directory/'report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'passed':True,'coverage':coverage,'cancel':cancel}))
  except BaseException as error:
   (directory/'failure.json').write_text(json.dumps({'error':repr(error),'state':state()if app is not None and(directory/'state.json').exists()else None},indent=2)+'\n');raise
