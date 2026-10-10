@@ -19,6 +19,8 @@ pub struct TextureStats {
     pub hash_ms: f64,
     pub decode_ms: f64,
     pub upload_ms: f64,
+    pub orientation_bytes: u64,
+    pub orientation_ms: f64,
 }
 /// Borrow prevents encoded bytes from changing between identity and admission.
 pub struct EncodedAsset<'a> {
@@ -127,9 +129,17 @@ impl TextureCache {
             });
         }
         let start = Instant::now();
-        let decoded = decode_png_jpeg(encoded, max_decoded_bytes)?;
+        let mut decoded = decode_png_jpeg(encoded, max_decoded_bytes)?;
         self.stats.decodes += 1;
         self.stats.decode_ms += start.elapsed().as_secs_f64() * 1000.;
+        // Original QOpenGLTexture uploads QImage.mirrored(), with positive V.
+        // Inverting V instead is not equivalent under fixed-point filtering.
+        // Cold in-place row swaps preserve one shared AssetId/GPU image for faces
+        // and reference planes; warm draws perform no orientation work.
+        let orientation_start = Instant::now();
+        mirror_rgba_rows(&mut decoded.rgba, decoded.extent.width as usize, decoded.extent.height as usize);
+        self.stats.orientation_bytes += decoded.rgba.len() as u64;
+        self.stats.orientation_ms += orientation_start.elapsed().as_secs_f64() * 1000.;
         let start = Instant::now();
         let image = TextureImage::rgba8(
             context,
@@ -282,5 +292,27 @@ mod tests {
         );
         assert!(!decoded.hard_cutout);
         assert!(decode_png_jpeg(b"GIF89a", 64).is_err());
+    }
+}
+
+
+// Cold-only source QImage.mirrored() ABI. No second image allocation.
+fn mirror_rgba_rows(pixels: &mut [u8], width: usize, height: usize) {
+    let stride=width*4;
+    debug_assert_eq!(pixels.len(),stride*height);
+    for y in 0..height/2 {
+        let (top,bottom)=pixels.split_at_mut((height-1-y)*stride);
+        top[y*stride..(y+1)*stride].swap_with_slice(&mut bottom[..stride]);
+    }
+}
+#[cfg(test)]
+mod source_orientation_tests {
+    use super::mirror_rgba_rows;
+    #[test]
+    fn odd_height_preserves_center_and_rgba_channels_without_reallocation() {
+        let mut p=(0..24u8).collect::<Vec<_>>();let pointer=p.as_ptr();
+        mirror_rgba_rows(&mut p,2,3);
+        assert_eq!(p,[16,17,18,19,20,21,22,23,8,9,10,11,12,13,14,15,0,1,2,3,4,5,6,7]);
+        assert_eq!(p.as_ptr(),pointer);
     }
 }
