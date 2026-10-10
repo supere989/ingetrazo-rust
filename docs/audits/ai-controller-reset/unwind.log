@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized] target(s) in 21.10s
+     Running unittests src/bin/controller.rs (/tmp/ingetrazo-ai-owner-target/debug/deps/controller-774609b422d1fb1d)
+
+running 1 test
+test controller::tests::callback_unwind_discards_staged_owner_and_refuses_vm_reuse ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.08s
+

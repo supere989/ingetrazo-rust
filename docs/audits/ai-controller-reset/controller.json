@@ -1,0 +1,120 @@
+{
+  "cases": [
+    {
+      "name": "success",
+      "changed": true,
+      "error": false,
+      "poisoned": false,
+      "events": [
+        "armed",
+        "staged",
+        "committed",
+        "reset"
+      ],
+      "vertices": 2,
+      "edges": 1,
+      "history": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "noop",
+      "changed": false,
+      "error": false,
+      "poisoned": false,
+      "events": [
+        "armed",
+        "staged",
+        "committed",
+        "reset"
+      ],
+      "vertices": 2,
+      "edges": 1,
+      "history": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "failure",
+      "changed": false,
+      "error": true,
+      "poisoned": false,
+      "events": [
+        "armed",
+        "staged",
+        "discarded",
+        "reset"
+      ],
+      "vertices": 2,
+      "edges": 1,
+      "history": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "caught-poison",
+      "changed": false,
+      "error": true,
+      "poisoned": true,
+      "events": [
+        "armed",
+        "staged",
+        "discarded",
+        "reset"
+      ],
+      "vertices": 2,
+      "edges": 1,
+      "history": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "next-session",
+      "changed": true,
+      "error": false,
+      "poisoned": false,
+      "events": [
+        "armed",
+        "staged",
+        "committed",
+        "reset"
+      ],
+      "vertices": 4,
+      "edges": 2,
+      "history": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "prepare-refusal",
+      "error": true,
+      "events": [
+        "armed",
+        "staged",
+        "discarded",
+        "reset"
+      ],
+      "edges": 2
+    },
+    {
+      "name": "retry",
+      "changed": true,
+      "events": [
+        "armed",
+        "staged",
+        "committed",
+        "reset"
+      ],
+      "edges": 3
+    }
+  ],
+  "private_vm_no_reset_api": true,
+  "error_traceback_protocol_proven": false,
+  "wall_time_bound": false,
+  "production": false
+}

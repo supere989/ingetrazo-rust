@@ -1,0 +1,8 @@
+{
+  "parent_revision": "6518e14a",
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "4a5f265f7a338ca0b2d110f3f14d12ca65fa690a9f2b88b3a6ffbb34254de28e",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-ai-owner-target cargo run -j2 --bin controller",
+  "unwind_command": "cargo test -j2 --bin controller callback_unwind",
+  "production": false
+}
