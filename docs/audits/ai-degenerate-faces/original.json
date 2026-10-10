@@ -1,0 +1,1215 @@
+[
+  {
+    "name": "empty",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": [
+      {
+        "outer": [],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "empty-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "empty-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": [
+      {
+        "outer": [],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "one",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "one-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "one-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "two",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0
+      ],
+      [
+        0
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "two-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "two-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0
+      ],
+      [
+        0
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "repeated",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        1
+      ],
+      [
+        0
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      },
+      {
+        "vertices": [
+          0,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          0
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "repeated-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "repeated-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        1
+      ],
+      [
+        0
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      },
+      {
+        "vertices": [
+          0,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          0
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "welded-close",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        1
+      ],
+      [
+        1
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          0,
+          1
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "welded-close-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "welded-close-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        1
+      ],
+      [
+        1
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          0,
+          1
+        ],
+        "holes": []
+      }
+    ]
+  },
+  {
+    "name": "empty-hole",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [
+          []
+        ]
+      }
+    ]
+  },
+  {
+    "name": "empty-hole-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "empty-hole-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [
+          []
+        ]
+      }
+    ]
+  },
+  {
+    "name": "one-hole",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.20000000298023224,
+        0.20000000298023224,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          3,
+          3
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [
+          [
+            3
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "one-hole-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "one-hole-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.20000000298023224,
+        0.20000000298023224,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          3,
+          3
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [
+          [
+            3
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "two-hole",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3
+      ],
+      [
+        3
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.20000000298023224,
+        0.20000000298023224,
+        0.0
+      ],
+      [
+        0.30000001192092896,
+        0.20000000298023224,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          3,
+          4
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "two-hole-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "two-hole-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3
+      ],
+      [
+        3
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.20000000298023224,
+        0.20000000298023224,
+        0.0
+      ],
+      [
+        0.30000001192092896,
+        0.20000000298023224,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          3,
+          4
+        ],
+        "faces": [
+          0,
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [
+          0,
+          1,
+          2
+        ],
+        "holes": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "empty-outer-proper-hole",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [],
+        "holes": [
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "empty-outer-proper-hole-undo",
+    "undo": 0,
+    "redo": 1,
+    "adjacency": [],
+    "vertices": [],
+    "edges": [],
+    "faces": []
+  },
+  {
+    "name": "empty-outer-proper-hole-redo",
+    "undo": 1,
+    "redo": 0,
+    "adjacency": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "edges": [
+      {
+        "vertices": [
+          0,
+          1
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          1,
+          2
+        ],
+        "faces": [
+          0
+        ]
+      },
+      {
+        "vertices": [
+          2,
+          0
+        ],
+        "faces": [
+          0
+        ]
+      }
+    ],
+    "faces": [
+      {
+        "outer": [],
+        "holes": [
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      }
+    ]
+  }
+]
