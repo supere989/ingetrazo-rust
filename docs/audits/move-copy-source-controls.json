@@ -1,0 +1,48 @@
+{
+  "provenance": {
+    "rust_commit": "df4c6278d7918e6bdcebd0c0313e0c03560e6f44",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "name": "holed-painted-face",
+      "faces": 2,
+      "edges": 16,
+      "copied_holes": 1,
+      "copied_attrs": {
+        "vendor": 71,
+        "texture": {
+          "uvw": [
+            1.0,
+            0.0,
+            0.0,
+            -8.0,
+            0.0,
+            1.0,
+            0.0,
+            3.0
+          ],
+          "path": "tile.png"
+        }
+      },
+      "copied_boundary_soft": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "plain-edge-crossing",
+      "edges": 5,
+      "crossing_incidence": 4
+    }
+  ],
+  "scope": "Actual original Move.on_click/on_value + History copy builder; controlled selection/displacement, not pointer or rendered UI. Group/arrays/retyping/cancel remain separate."
+}
