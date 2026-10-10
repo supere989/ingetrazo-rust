@@ -1,0 +1,49 @@
+{
+  "provenance": {
+    "rust_commit": "8e894d18c0e9cfca7bcd7274b131e2d97e3046c9",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "inward",
+      "regions_or_points": 1
+    },
+    {
+      "case": "outward",
+      "regions_or_points": 1
+    },
+    {
+      "case": "collapse",
+      "regions_or_points": 0
+    },
+    {
+      "case": "overshoot",
+      "regions_or_points": 0
+    },
+    {
+      "case": "neck-split",
+      "regions_or_points": 2
+    },
+    {
+      "case": "clockwise",
+      "regions_or_points": 1
+    },
+    {
+      "case": "vertical",
+      "regions_or_points": 1
+    },
+    {
+      "case": "chain0.5",
+      "regions_or_points": 3
+    },
+    {
+      "case": "chain-0.5",
+      "regions_or_points": 3
+    }
+  ],
+  "negative_controls_detected": 2,
+  "scope": "Original ordered ring/holes and open-chain coordinate parity; interactive edge picking, paint and history remain separate."
+}
