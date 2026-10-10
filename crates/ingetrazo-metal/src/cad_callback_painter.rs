@@ -30,7 +30,7 @@ pub struct Stats {
 pub struct Painter {
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>>,
     geometry: HashMap<u64, Arc<Cached>>,
-    palette: HashMap<usize, (Arc<[Batch]>, Arc<[[f32; 4]]>)>,
+    palette: HashMap<(u64,usize), (Arc<[Batch]>, Arc<[[f32; 4]]>)>,
     pub stats: Stats,
 }
 impl Default for Painter {
@@ -81,17 +81,12 @@ impl Painter {
             b
         };
         validate_pose(bounds, &snapshot, density)?;
-        let palette_key = Arc::as_ptr(&snapshot.batches) as *const Batch as usize;
+        let palette_key = (snapshot.geometry.palette_cache_identity(), Arc::as_ptr(&snapshot.batches) as *const Batch as usize);
         let palette_changed = !self.palette.contains_key(&palette_key);
         let colors: Arc<[[f32; 4]]> = if let Some((_, colors)) = self.palette.get(&palette_key) {
             colors.clone()
         } else {
-            snapshot
-                .batches
-                .iter()
-                .map(|b| b.color.qt_premultiplied8())
-                .collect::<Result<Vec<_>, _>>()?
-                .into()
+            snapshot.geometry.resolve_batch_colors(&snapshot.batches)?.into()
         };
         let pipeline = if let Some(p) = &self.pipeline {
             p.clone()

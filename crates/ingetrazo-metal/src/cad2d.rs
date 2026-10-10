@@ -79,6 +79,7 @@ struct Inner {
     completed_serial: u64,
     stats: MetalCadStats,
     palette: Vec<Batch>,
+    palette_geometry: u64,
     colors: Vec<[f32; 4]>,
     // Device/queue outlive all resource owners on verified normal retirement.
     metal: NativeMetal,
@@ -204,6 +205,7 @@ impl MetalCad2d {
                 completed_serial: 0,
                 stats,
                 palette: Vec::new(),
+                palette_geometry: 0,
                 colors: Vec::new(),
             }),
             unknown: false,
@@ -479,13 +481,10 @@ impl MetalCad2d {
                 }
             }
         }
-        let palette_changed = self.inner.palette != batches;
+        let palette_changed = self.inner.palette != batches || self.inner.palette_geometry != geometry.palette_cache_identity();
         let colors = if palette_changed {
             Some(
-                batches
-                    .iter()
-                    .map(|b| b.color.qt_premultiplied8())
-                    .collect::<Result<Vec<_>, _>>()?,
+                geometry.resolve_batch_colors(batches)?,
             )
         } else {
             None
@@ -530,6 +529,7 @@ impl MetalCad2d {
         }
         if let Some(colors) = colors {
             self.inner.palette = batches.to_vec();
+            self.inner.palette_geometry = geometry.palette_cache_identity();
             self.inner.colors = colors;
             self.inner.stats.palette_preparations += 1;
         }

@@ -19,6 +19,15 @@ impl EncodedRgba {
  }
  pub fn validate(self)->Result<(),String>{if self.0.iter().all(|v|v.is_finite()&&(0. ..=1.).contains(v)){Ok(())}else{Err("CAD2D encoded RGBA must be finite0..1".into())}}
 }
+/// Literal encoded premultiplied bytes already produced by a source painter.
+/// No straight-color reconstruction, transfer conversion, or premultiplication.
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+pub struct PremultipliedRgba8([u8;4]);
+impl PremultipliedRgba8 {
+ pub fn new(bytes:[u8;4])->Result<Self,String>{if bytes[..3].iter().any(|&v|v>bytes[3]){return Err("CAD2D premultiplied channel exceeds alpha".into());}Ok(Self(bytes))}
+ pub fn bytes(self)->[u8;4]{self.0}
+ pub fn shader_units(self)->[f32;4]{self.0.map(|v|f32::from(v)/255.)}
+}
 #[repr(C)]#[derive(Clone,Copy,Debug,PartialEq,bytemuck::Pod,bytemuck::Zeroable)]pub struct Vertex {pub position:[f32;2],pub coverage:f32}
 #[derive(Clone,Copy,Debug,PartialEq)]pub struct Batch {pub first:u32,pub count:u32,pub color:EncodedRgba}
 #[derive(Clone,Copy,Debug,PartialEq)]pub struct Pose {pub scale:[f32;2],pub translation:[f32;2]}
@@ -57,7 +66,7 @@ impl SourceSpans {
 }
 /// ID is allocated once for this immutable allocation. Changing palette/pose
 /// retains ID; changing geometry constructs a fresh ID, preventing stale cache.
-#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2],opaque_coverage:bool,source_spans:Option<Arc<SourceSpans>>}
+#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2],opaque_coverage:bool,premultiplied_palette:Option<Arc<[PremultipliedRgba8]>>,source_spans:Option<Arc<SourceSpans>>}
 impl Geometry {
  pub fn new(vertices:Vec<Vertex>,indices:Vec<u32>)->Result<Arc<Self>,String>{
   if vertices.len()>u32::MAX as usize||indices.len()>u32::MAX as usize{return Err("CAD2D geometry exceeds index domain".into());}
@@ -66,7 +75,7 @@ impl Geometry {
   let mut bounds=[[0.;2];2];if let Some(first)=vertices.first(){bounds=[first.position;2];for v in &vertices{for axis in 0..2{bounds[0][axis]=bounds[0][axis].min(v.position[axis]);bounds[1][axis]=bounds[1][axis].max(v.position[axis]);}}}
   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
   let opaque_coverage=vertices.iter().all(|v|v.coverage==1.);
-  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds,opaque_coverage,source_spans:None}))
+  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds,opaque_coverage,premultiplied_palette:None,source_spans:None}))
  }
  /// Pixel-aligned source span producer declares nonoverlapping ordered draw ranges.
  /// Metadata partitions all indices; a caller must not use this for arbitrary
@@ -90,12 +99,26 @@ impl Geometry {
   let source=SourceSpans::validated(&geometry,spans,zoom,ppp,phase)?;
   Arc::get_mut(&mut geometry).unwrap().source_spans=Some(Arc::new(source));Ok(geometry)
  }
+ /// Exact palette is immutable geometry policy, with its own geometry identity.
+ /// Consumers must include geometry ID in palette-cache identity for this path.
+ pub fn new_with_premultiplied_source_spans(vertices:Vec<Vertex>,indices:Vec<u32>,ranges:Vec<std::ops::Range<u32>>,spans:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2],colors:Vec<PremultipliedRgba8>,batches:&[Batch])->Result<Arc<Self>,String>{
+  if colors.len()!=batches.len(){return Err("CAD2D exact palette batch count mismatch".into());}
+  let mut geometry=Self::new_with_source_spans(vertices,indices,ranges,spans,zoom,ppp,phase)?;
+  Arc::get_mut(&mut geometry).unwrap().premultiplied_palette=Some(colors.into());
+  geometry.validate_batches(batches)?;Ok(geometry)
+ }
+ pub fn premultiplied_palette(&self)->Option<&Arc<[PremultipliedRgba8]>>{self.premultiplied_palette.as_ref()}
+ pub fn palette_cache_identity(&self)->u64{if self.premultiplied_palette.is_some(){self.id}else{0}}
+ pub fn resolve_batch_colors(&self,batches:&[Batch])->Result<Vec<[f32;4]>,String>{
+  self.validate_batches(batches)?;
+  if let Some(colors)=&self.premultiplied_palette{Ok(colors.iter().map(|c|c.shader_units()).collect())}else{batches.iter().map(|b|b.color.qt_premultiplied8()).collect()}
+ }
  pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
  /// Derived from every vertex and palette, never a caller flag.
- pub fn is_opaque(&self,batches:&[Batch])->bool{self.opaque_coverage&&batches.iter().all(|b|b.color.0[3]==1.)}
+ pub fn is_opaque(&self,batches:&[Batch])->bool{self.opaque_coverage&&self.premultiplied_palette.as_ref().map_or_else(||batches.iter().all(|b|b.color.0[3]==1.),|colors|colors.len()==batches.len()&&colors.iter().all(|c|c.bytes()[3]==255))}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
  pub fn logical_bytes(&self)->u64{self.vertices.len()as u64*std::mem::size_of::<Vertex>()as u64+self.indices.len()as u64*4}
- pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{for b in batches{b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}}Ok(())}
+ pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}for b in batches{b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}}Ok(())}
 }
 #[cfg(test)]mod tests {
  use super::*;
@@ -174,5 +197,26 @@ fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Resul
   let (_,_,s)=make(1.5,1.25,[20.125,30.375],127);let mut wrong=v.clone();wrong[0].position[0]=f32::from_bits(wrong[0].position[0].to_bits()+1);
   assert!(Geometry::new_with_source_spans(wrong,i.clone(),vec![0..6],s.clone(),1.5,1.25,[20.125,30.375]).is_err());
   assert!(Geometry::new_with_source_spans(v,i,vec![0..6],s,1.5,1.25,[20.125,30.375]).is_ok());
+ }
+}
+
+#[cfg(test)]mod premultiplied_tests {
+ use super::*;
+ fn exact(bytes:[u8;4])->(Arc<Geometry>,Vec<Batch>){
+  let vertices=[[0.,0.],[1.,0.],[1.,1.],[0.,1.]].map(|position|Vertex{position,coverage:1.}).to_vec();
+  let batches=vec![Batch{first:0,count:6,color:EncodedRgba([0.;4])}];
+  let g=Geometry::new_with_premultiplied_source_spans(vertices,vec![0,1,2,0,2,3],vec![0..6],vec![SourceSpan{x:0,y:0,len:1,coverage:255}],1.,1.,[0.;2],vec![PremultipliedRgba8::new(bytes).unwrap()],&batches).unwrap();(g,batches)
+ }
+ #[test]fn literal_bytes_survive_every_valid_channel_alpha_pair(){
+  for a in 0..=255u8{for c in 0..=a{let bytes=[c,c,c,a];let p=PremultipliedRgba8::new(bytes).unwrap();assert_eq!(p.shader_units().map(|v|(v*255.).round()as u8),bytes);}}
+  for bytes in [[1,0,0,0],[128,0,0,127],[0,255,0,128]]{assert!(PremultipliedRgba8::new(bytes).is_err());}
+ }
+ #[test]fn exact_palette_is_geometry_identity_and_never_re_premultiplied(){
+  let(g,b)=exact([17,31,63,100]);let(other,_)=exact([1,2,3,4]);
+  assert_eq!(g.resolve_batch_colors(&b).unwrap(),vec![[17./255.,31./255.,63./255.,100./255.]]);
+  assert_ne!(g.palette_cache_identity(),other.palette_cache_identity());assert!(!g.is_opaque(&b));
+  assert!(g.resolve_batch_colors(&[]).unwrap_err().contains("count mismatch"));
+  let plain=Geometry::new(vec![Vertex{position:[0.;2],coverage:1.};3],vec![0,1,2]).unwrap();let batches=[Batch{first:0,count:3,color:EncodedRgba::from_bytes([17,31,63,100],1.).unwrap()}];
+  assert_eq!(plain.palette_cache_identity(),0);assert_eq!(plain.resolve_batch_colors(&batches).unwrap(),vec![batches[0].color.qt_premultiplied8().unwrap()]);
  }
 }

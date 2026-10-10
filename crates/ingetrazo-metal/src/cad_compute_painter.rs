@@ -28,7 +28,7 @@ pub struct Stats {
 pub struct Painter {
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>>,
     plans: HashMap<u64, Arc<Plan>>,
-    palettes: HashMap<usize, Arc<Palette>>,
+    palettes: HashMap<(u64,usize), Arc<Palette>>,
     pub stats: Stats,
 }
 pub struct Prepared {
@@ -98,21 +98,14 @@ impl Painter {
                 batches: snapshot.batches.clone(),
             })
         };
-        let key = Arc::as_ptr(&snapshot.batches) as *const Batch as usize;
+        let key = (snapshot.geometry.palette_cache_identity(), Arc::as_ptr(&snapshot.batches) as *const Batch as usize);
         let existing = self.palettes.get(&key).cloned();
         let mut palette_bytes = 0;
         let palette = if let Some(p) = existing {
             p
         } else {
-            let colors = snapshot
-                .batches
-                .iter()
-                .map(|b| {
-                    b.color
-                        .qt_premultiplied8()
-                        .map(|c| c.map(|v| (v * 255.).round() as u32))
-                })
-                .collect::<Result<Vec<_>, _>>()?;
+            let colors = snapshot.geometry.resolve_batch_colors(&snapshot.batches)?
+                .into_iter().map(|c|c.map(|v|(v*255.).round()as u32)).collect::<Vec<_>>();
             let bytes = bytemuck::cast_slice(&colors);
             let mut buffer = metal.buffer(bytes.len(), true)?;
             buffer.write(bytes)?;
