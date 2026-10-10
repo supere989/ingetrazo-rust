@@ -51,3 +51,5 @@ Offsetca21984 integrated; fullworkspacePASS;9 original orderedregion/chain cases
 CI38013592441 SUCCESS verified publishedb01dbcf. Local84e7d72 clipboardremap integrated243RusttestsPASS; reviewed multiincomingaliasallocation/opaque metadata problems pendingworkerfix, notpublishuntilreviewed. AttachedFollowMe original17caseoraclePASS combined83bab02. Offsetcontroller195865c readyreview.
 
 Clipboardb9 allocatorreservednames/opaque preservation/overlap andOffset195workflow integrated8d9c279; fullworkspacePASS; currentmandatoryclipboard+9offsetoraclePASS. Sourceplane cap corrected24 in29f4336. Independentvalidator retained opaque-corruption baseline ffd; correctedboundary/OS/paintprecedence neworacle underway.
+
+Open attachedsheet FollowMe891source integrated85b1729; fullworkspacePASS. Previewregistrycache+red4blue2 originalfirst-coverpaint regression integrated29685f4. Independent nativeopenattached sweep/clipboardboundary/OS/collisionprotocol underway; originalinteriorpartition Orientation stillgap geometryworkercontinuing.
