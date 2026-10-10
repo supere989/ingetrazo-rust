@@ -33,10 +33,12 @@ pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,m
  if a.into_iter().chain(b).chain([pen_width]).any(|v|!v.is_finite()||v.abs()>1_000_000.)||clip[0]>clip[2]||clip[1]>clip[3]{return Err("Line raster coordinate admission exceeded".into());}
  let mut out=Output{spans:Vec::new(),limit:max_runs,work:0,max_work};
  if a==b||pen_width<=0.||clip[0]==clip[2]||clip[1]==clip[3]{return Ok(out.spans);}
- let dx=b[0]-a[0];let dy=b[1]-a[1];let length=(dx*dx+dy*dy).sqrt();let mut width=pen_width/length;
+ let dx=b[0]-a[0];let dy=b[1]-a[1];let length=dx.hypot(dy);let mut width=pen_width/length;
  let mut pa=[a[0]-0.5*width*dx,a[1]-0.5*width*dy];let mut pb=[b[0]+0.5*width*dx,b[1]+0.5*width*dy];
  if !width.is_finite()||pa.into_iter().chain(pb).any(|v|!v.is_finite()){return Err("Line derived coordinate overflow".into());}
- let offs=[dy.abs()*width*0.5,dx.abs()*width*0.5];let bounds=[f64::from(clip[0])-offs[0],f64::from(clip[1])-offs[1],f64::from(clip[2])+offs[0],f64::from(clip[3])+offs[1]];
+ let offs=[dy.abs()*width*0.5,dx.abs()*width*0.5];// QRectF(point-pair) stores extent, then right()/bottom() reconstruct origin+extent.
+ // Preserve that sequence before 26.6 snapping; direct endpoint substitution changes coverage.
+ let lower=[f64::from(clip[0])-offs[0],f64::from(clip[1])-offs[1]];let upper=[f64::from(clip[2])+offs[0],f64::from(clip[3])+offs[1]];let bounds=[lower[0],lower[1],lower[0]+(upper[0]-lower[0]),lower[1]+(upper[1]-lower[1])];
  for axis in 0..2{let other=1-axis;let lo=bounds[axis];let hi=bounds[axis+2];
   if pa[axis]<lo{if pb[axis]<=lo{return Ok(out.spans);}pa[other]+=(pb[other]-pa[other])/(pb[axis]-pa[axis])*(lo-pa[axis]);pa[axis]=lo;}
   else if pa[axis]>hi{if pb[axis]>=hi{return Ok(out.spans);}pa[other]+=(pb[other]-pa[other])/(pb[axis]-pa[axis])*(hi-pa[axis]);pa[axis]=hi;}
@@ -56,7 +58,7 @@ pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,m
   let top=(pa[1]as i64)*F;let bottom=(pb[1]as i64)*F;let py=fixed(pa[1]);let by=fixed(pb[1]);
   for y in (top..=bottom).step_by(F as usize){if y/F>=i64::from(clip[3]){break;}let h=(y+F).min(by)-y.max(py);for &(x,len,c)in &groups[..n]{out.add(x,len,y>>16,mul(h,c)>>16)?;}}
  }else{
-  if pa[1]>pb[1]{std::mem::swap(&mut pa,&mut pb);}let delta=[(pb[0]-pa[0])*0.5*width,(pb[1]-pa[1])*0.5*width];let perp=[delta[1],-delta[0]];
+  if pa[1]>pb[1]{std::mem::swap(&mut pa,&mut pb);}let half_width=0.5*width;let delta=[(pb[0]-pa[0])*half_width,(pb[1]-pa[1])*half_width];let perp=[delta[1],-delta[0]];
   let add=|p:[f64;2],sign:f64|[p[0]+perp[0]*sign,p[1]+perp[1]*sign];
   let(top,left,right,bottom)=if pa[0]<pb[0]{(add(pa,1.),add(pa,-1.),add(pb,1.),add(pb,-1.))}else{(add(pa,-1.),add(pb,-1.),add(pa,1.),add(pb,1.))};
   let snap=|p:[f64;2]|p.map(|v|(v*64.).floor()/64.);let(top,left,right,bottom)=(snap(top),snap(left),snap(right),snap(bottom));
@@ -93,5 +95,6 @@ pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,m
 }
 #[cfg(test)]mod tests{use super::*;
  #[test]fn dimension_line_uses_source_255_area_not_gray_256(){let spans=rasterize([160.,100.],[280.,100.],1.5,[0,0,640,400],10000,1000).unwrap();assert_eq!(spans.iter().find(|s|s.y==99&&s.x<=200&&s.x+i32::try_from(s.len).unwrap()>200).unwrap().coverage,191);}
+ #[test]fn clipped_endpoint_preserves_qrect_extent_reconstruction(){let spans=rasterize([-1000.,63.75],[1000.,64.25],3.125,[17,19,101,103],10000,1000).unwrap();for (y,c) in [(63,253),(64,252),(65,145)]{assert_eq!(spans.iter().find(|s|s.y==y&&s.x<=100&&i64::from(s.x)+i64::from(s.len)>100).unwrap().coverage,c);}}
  #[test]fn refusal_is_bounded_before_publication(){assert!(rasterize([f64::NAN,0.],[10.,1.],1.5,[0,0,640,400],100,100).is_err());assert!(rasterize([0.,0.],[100.,100.],2.,[0,0,640,400],1,100).is_err());}
 }
