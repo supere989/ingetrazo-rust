@@ -15,3 +15,14 @@ The private controller currently guards document append publication, not all per
 The retained-history payload cap accounts Delta records and actual record/adjacency capacities, but not history stack capacity slack or VM/cold preparation memory. Append staging entry caps poison the transaction on admission failure, including a caught Python exception. Cold lookup preparation reserves major containers fallibly, yet BigInt keys and VM object/compiler allocations remain outside comprehensive fallible admission. Owner constructor/replace/Undo/Redo still contain infallible pre-mutation collection allocations. The next allocator step is fallible preparation of those containers plus explicit shared budget ownership; it must preserve old tokens, history and document on refusal. It must not silently truncate valid geometry or silently evict command history.
 
 Production run_python remains disabled. No compiler/native fork beyond the reviewed dispatch hook is introduced by this document. Full original imports, scene operations, script values/stdout/tracebacks, screenshot execution, command-specific object lifetime and all-document rollback remain required. No CPython or subprocess compatibility wrapper is proposed.
+
+## Actual VM face-handle integration requirements
+
+The current review-stage `vm_faces` adapter uses genuine RustPython objects rather than serializing attributes into JSON. Before integrating its handle journal, enforce the following alongside the existing geometry transaction contract:
+
+- A host handle reservation or admission failure must poison the whole staged transaction even when Python catches the exception. Earlier staged faces must not publish; old mesh, Redo and unrelated earlier transactions must remain usable.
+- Transfer the accounting lease for moved handle storage from staging to history. Account retained capacities and separate parked/live reservations explicitly; do not double-charge the same moved allocation or present logical pointer accounting as a bound on VM object payloads.
+- Held references to aborted faces remain detached. Later faces must never acquire those references merely by reusing an ordinal. Undo/Redo must retain actual object identity and shared mutable aliases, including mutation while the object is parked.
+- Geometry and handle publication must perform all fallible preparation before either becomes visible. Allocation refusal, branch replacement and teardown must preserve consistent ownership and release the corresponding leases.
+
+These are review requirements, not completed acceptance. The fixed triangle callback is a prerequisite, not the complete original Mesh API. Arbitrary mutations of preexisting aliased objects, Group/_finish identity, native metadata projection, compiler/native allocation bounds and production scene integration remain required.
