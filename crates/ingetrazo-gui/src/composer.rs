@@ -369,6 +369,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
 }
 
+fn frame_scene<'a>(scene:&'a Scene,frame:&ViewFrame)->std::borrow::Cow<'a,Scene>{if let Some(name)=frame.view_key.strip_prefix("scene:"){if let Some(view)=scene.saved_views.iter().find(|view|view.name==name){let mut snapshot=scene.clone();let mut camera=scene.camera.clone();view.apply_scene(&mut snapshot,&mut camera);return std::borrow::Cow::Owned(snapshot);}}std::borrow::Cow::Borrowed(scene)}
+fn section_projected_edges(scene:&Scene)->Vec<(DVec3,DVec3)>{fn mesh(mesh:&ingetrazo_core::mesh::Mesh,transform:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){for edge in &mesh.edges{if edge.hidden||!scene.is_layer_visible(edge.layer.as_deref()){continue;}let a=transform.transform_point3(mesh.vertices[edge.v0].position);let b=transform.transform_point3(mesh.vertices[edge.v1].position);if let Some(segment)=scene.section_segment(a,b){edges.push(segment);}}
+        if let Some(plane)=scene.active_section(){for id in 0..mesh.faces.len(){let face=&mesh.faces[id];if face.attrs.get("hidden").and_then(|v|v.as_bool())==Some(true)||!scene.is_layer_visible(face.layer.as_deref()){continue;}for(a,b,c)in mesh.triangulate_face(id){let points=[a,b,c].map(|p|transform.transform_point3(p));let d=points.map(|p|plane.signed_distance(p));if d.iter().all(|d|d.abs()<1e-7){continue;}let mut hits=vec![];for i in 0..3{let j=(i+1)%3;if d[i].abs()<1e-7{hits.push(points[i]);}if d[i]*d[j]< -1e-14{hits.push(points[i]+(points[j]-points[i])*(d[i]/(d[i]-d[j])));}}let mut unique=vec![];for p in hits{if !unique.iter().any(|other:&DVec3|(*other-p).length()<1e-7){unique.push(p);}}if unique.len()==2{edges.push((unique[0],unique[1]));}}}}
+    }fn groups(groups:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;mesh(&group.mesh,transform,scene,edges);children(&group.children,transform,scene,edges);}}fn children(children:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){groups(children,parent,scene,edges)}let mut edges=vec![];mesh(&scene.mesh,glam::DMat4::IDENTITY,scene,&mut edges);groups(&scene.groups,glam::DMat4::IDENTITY,scene,&mut edges);edges}
+
 /// Projects and renders the 3D model inside the ViewFrame at exact scale 1:N.
 fn render_model_projection(
     scene: &Scene,
@@ -377,19 +382,22 @@ fn render_model_projection(
     frame: &ViewFrame,
 ) {
     let painter = painter.with_clip_rect(frame_rect);
+    let snapshot=frame_scene(scene,frame);let scene=snapshot.as_ref();
 
     let (yaw, pitch) = match frame.view_key.as_str() {
-        "std:top" | "__current__" => (0.0, 89.9_f64.to_radians()),
+        "__current__" => (scene.camera.yaw,scene.camera.pitch),
+        "std:top" => (0.0, 89.9_f64.to_radians()),
         "std:front" => (0.0, 0.0),
         "std:right" => (90.0_f64.to_radians(), 0.0),
         "std:back" => (180.0_f64.to_radians(), 0.0),
         "std:left" => (-90.0_f64.to_radians(), 0.0),
         "std:iso" => (45.0_f64.to_radians(), 35.264_f64.to_radians()),
+        key if key.starts_with("scene:")=>(scene.camera.yaw,scene.camera.pitch),
         _ => (0.0, 89.9_f64.to_radians()),
     };
 
     // Calculate camera target and ortho projection matrix
-    let scene_center = DVec3::ZERO;
+    let scene_center = if frame.view_key=="__current__"||frame.view_key.starts_with("scene:"){scene.camera.target}else{DVec3::ZERO};
     let view_dir = DVec3::new(
         pitch.cos() * yaw.sin(),
         pitch.cos() * yaw.cos(),
@@ -416,46 +424,12 @@ fn render_model_projection(
     // Line stroke for technical plan rendering
     let edge_stroke = Stroke::new(1.2, Color32::from_rgb(25, 25, 30));
 
-    // Draw loose mesh edges
-    for e in &scene.mesh.edges {
-        if e.hidden {
-            continue;
-        }
-        let p0 = scene.mesh.vertices[e.v0].position;
-        let p1 = scene.mesh.vertices[e.v1].position;
-
-        if let (Some((s0, _)), Some((s1, _))) = (
-            project_point(p0, &view_proj, frame_rect),
-            project_point(p1, &view_proj, frame_rect),
-        ) {
-            painter.line_segment([s0, s1], edge_stroke);
-        }
-    }
-
-    // Draw group edges
-    for g in &scene.groups {
-        if g.hidden {
-            continue;
-        }
-        for e in &g.mesh.edges {
-            if e.hidden {
-                continue;
-            }
-            let p0 = g.transform.transform_point3(g.mesh.vertices[e.v0].position);
-            let p1 = g.transform.transform_point3(g.mesh.vertices[e.v1].position);
-
-            if let (Some((s0, _)), Some((s1, _))) = (
-                project_point(p0, &view_proj, frame_rect),
-                project_point(p1, &view_proj, frame_rect),
-            ) {
-                painter.line_segment([s0, s1], edge_stroke);
-            }
-        }
-    }
+    for(p0,p1)in section_projected_edges(scene){if let(Some((s0,_)),Some((s1,_)))=(project_point(p0,&view_proj,frame_rect),project_point(p1,&view_proj,frame_rect)){painter.line_segment([s0,s1],edge_stroke);}}
 
     // Draw traced GeoPaths if present
     for gp in &scene.geo_paths {
         for (p0, p1) in gp.segments() {
+            let Some((p0,p1))=scene.section_segment(p0,p1)else{continue;};
             if let (Some((s0, _)), Some((s1, _))) = (
                 project_point(p0, &view_proj, frame_rect),
                 project_point(p1, &view_proj, frame_rect),
@@ -607,3 +581,5 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
         painter.rect_stroke(h_rect, 0.0, Stroke::new(1.2, highlight_color));
     }
 }
+
+#[cfg(test)]mod section_frame_tests{use super::*;use ingetrazo_core::{groups::Group,mesh::Mesh,saved_views::SavedView,section::SectionPlane};#[test]fn bound_saved_scene_cut_clips_nested_edges_without_changing_live_document(){let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::new(-2.,0.,0.));let b=mesh.add_vertex(DVec3::new(2.,0.,0.));mesh.add_edge(a,b);let mut child=Group::with_mesh("child",mesh);child.transform=glam::DMat4::from_translation(DVec3::X);let mut parent=Group::new("parent");parent.children.push(child);let mut scene=Scene::new();scene.groups.push(parent);scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::X,"Cut","A"));scene.show_section_cuts=true;let view=SavedView::capture_scene("Section",&scene,&scene.camera);scene.saved_views.push(view);scene.section_planes[0].active=false;let original=scene.clone();let mut frame=ViewFrame::default();frame.view_key="scene:Section".into();let snapshot=frame_scene(&scene,&frame);let edges=section_projected_edges(&snapshot);assert_eq!(edges.len(),1);assert_eq!(edges[0],(DVec3::new(-1.,0.,0.),DVec3::ZERO));assert_eq!(scene,original);assert_eq!(section_projected_edges(&scene)[0].1,DVec3::new(3.,0.,0.));}}
