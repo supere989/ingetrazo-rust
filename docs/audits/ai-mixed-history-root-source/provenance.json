@@ -1,0 +1,7 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "script_sha256": "26cc7f9d4caf499ed1b834de8358b57f15b785be7b2384bffddb9a8af1f2f056",
+  "fresh_original_execution": true,
+  "scope": "Raw existing vertex edit, reversed existing face and welded append in one command, followed by repeated and chronological Undo/Redo.",
+  "native_acceptance": "pending"
+}
