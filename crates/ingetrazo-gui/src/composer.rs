@@ -931,7 +931,7 @@ impl IngeTrazoApp {
 }
 
 /// Physical shape commands are shared with export; screen projection happens once here.
-fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_shape::SheetShape,zoom:f32,origin:Pos2)->Result<(),String> {
+pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_shape::SheetShape,zoom:f32,origin:Pos2)->Result<(),String> {
  use ingetrazo_core::sheet_shape::ShapePath;
  fn color(value:&str,alpha:f64)->Result<Color32,String> {
   let raw=value.strip_prefix('#').ok_or_else(||format!("Unsupported sheet colour: {value}"))?;
