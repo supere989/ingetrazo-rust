@@ -440,7 +440,7 @@ impl IngeTrazoApp {
         self.save_undo_state();candidate.bump_version();self.scene=candidate;true
     }
     pub fn paste_selection(&mut self) {self.begin_paste_preview();}
-    pub fn paste_in_place(&mut self) {self.read_system_clipboard();if self.paste_internal(DVec3::ZERO){self.status_message="Pasted in place".into();}}
+    pub fn paste_in_place(&mut self) {self.paste_preview=None;self.read_system_clipboard();if self.paste_internal(DVec3::ZERO){self.status_message="Pasted in place".into();}}
 
     pub fn repeat_last_command(&mut self) {
         self.status_message = ingetrazo_core::i18n::tr("Repeated last command");

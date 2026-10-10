@@ -68,6 +68,7 @@ impl IngeTrazoApp {
     }
 
     pub fn begin_paste_preview(&mut self) {
+        self.paste_preview=None;
         self.read_system_clipboard();
         let Some(mut clipboard)=self.clipboard.clone() else{return;};
         if let Err(e)=validate_payload(&clipboard){self.status_message=e;return;}
@@ -123,7 +124,8 @@ mod tests {
     #[ignore="requires isolated X11 clipboard server"]
     fn system_clipboard_transfers_geometry_between_native_owners(){
         let mut source=IngeTrazoApp::new();source.system_clipboard=Some(arboard::Clipboard::new().unwrap());let a=source.scene.mesh.add_vertex(DVec3::ZERO);let b=source.scene.mesh.add_vertex(DVec3::X);source.scene.mesh.add_edge(a,b);source.scene.select(SelectionItem::Edge(0));source.copy_selection();
-        let mut destination=IngeTrazoApp::new();destination.system_clipboard=Some(arboard::Clipboard::new().unwrap());destination.read_system_clipboard();assert_eq!(destination.clipboard.as_ref().unwrap().mesh.edges.len(),1);destination.paste_in_place();assert_eq!(destination.scene.mesh.edges.len(),1);
+        let mut destination=IngeTrazoApp::new();destination.system_clipboard=Some(arboard::Clipboard::new().unwrap());destination.read_system_clipboard();assert_eq!(destination.clipboard.as_ref().unwrap().mesh.edges.len(),1);destination.paste_selection();assert!(destination.paste_preview.is_some());source.system_clipboard.as_mut().unwrap().set_text(format!("{}{{broken",super::CLIPBOARD_PREFIX)).unwrap();let before=destination.scene.clone();destination.paste_selection();assert!(destination.paste_preview.is_none());assert!(destination.clipboard.is_none());assert!(!destination.commit_paste_preview());assert_eq!(destination.scene,before);
+        source.write_system_clipboard();destination.paste_in_place();assert_eq!(destination.scene.mesh.edges.len(),1);
     }
     #[test]
     fn foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo(){
