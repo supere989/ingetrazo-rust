@@ -40,6 +40,25 @@ pub struct Bridge {
     stop: Arc<AtomicBool>,
     worker: Option<JoinHandle<()>>,
 }
+fn admit_connection(
+    slot: &SyncSender<TcpStream>,
+    admitted: &AtomicBool,
+    connection: TcpStream,
+) -> Result<(), TcpStream> {
+    if admitted
+        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        .is_err()
+    {
+        return Err(connection);
+    }
+    match slot.try_send(connection) {
+        Ok(()) => Ok(()),
+        Err(mpsc::TrySendError::Full(returned) | mpsc::TrySendError::Disconnected(returned)) => {
+            admitted.store(false, Ordering::Release);
+            Err(returned)
+        }
+    }
+}
 fn error(id: Value, message: &str) -> Value {
     json!({"id":id,"ok":false,"error":message})
 }
@@ -71,7 +90,9 @@ impl Bridge {
         let mut slots = Vec::with_capacity(CLIENTS);
         let mut workers = Vec::with_capacity(CLIENTS);
         for index in 0..CLIENTS {
-            let (connections, incoming) = mpsc::sync_channel::<TcpStream>(0);
+            let (connections, incoming) = mpsc::sync_channel::<TcpStream>(1);
+            let admitted = Arc::new(AtomicBool::new(false));
+            let occupied = admitted.clone();
             let sender = sender.clone();
             let stop = stopped.clone();
             let wake = wake.clone();
@@ -80,14 +101,17 @@ impl Bridge {
                 .spawn(move || {
                     while !stop.load(Ordering::Acquire) {
                         match incoming.recv_timeout(POLL) {
-                            Ok(connection) => serve(connection, &sender, &stop, limits, &*wake),
+                            Ok(connection) => {
+                                serve(connection, &sender, &stop, limits, &*wake);
+                                occupied.store(false, Ordering::Release);
+                            }
                             Err(mpsc::RecvTimeoutError::Timeout) => continue,
                             Err(mpsc::RecvTimeoutError::Disconnected) => break,
                         }
                     }
                 }) {
                 Ok(worker) => {
-                    slots.push(connections);
+                    slots.push((connections, admitted));
                     workers.push(worker);
                 }
                 Err(error) => {
@@ -107,10 +131,10 @@ impl Bridge {
                     match listener.accept() {
                         Ok((connection, _)) => {
                             let mut pending = Some(connection);
-                            for slot in &slots {
-                                match slot.try_send(pending.take().expect("unadmitted connection")) {
+                            for (slot, admitted) in &slots {
+                                match admit_connection(slot, admitted, pending.take().expect("unadmitted connection")) {
                                     Ok(()) => break,
-                                    Err(mpsc::TrySendError::Full(returned) | mpsc::TrySendError::Disconnected(returned)) => pending = Some(returned),
+                                    Err(returned) => pending = Some(returned),
                                 }
                             }
                             if let Some(mut connection) = pending {
@@ -302,6 +326,19 @@ mod tests {
             line.push(b[0]);
         }
         serde_json::from_slice(&line).unwrap()
+    }
+    #[test]
+    fn admission_precedes_worker_scheduling_and_holds_serving_slot() {
+        let listener = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+        let client = TcpStream::connect(listener.local_addr().unwrap()).unwrap();
+        let (server, _) = listener.accept().unwrap();
+        let (tx, rx) = mpsc::sync_channel(1);
+        let admitted = AtomicBool::new(false);
+        // No receiving worker exists yet: publication must still succeed.
+        assert!(admit_connection(&tx, &admitted, server).is_ok());
+        let _serving = rx.try_recv().unwrap();
+        // The mailbox is now empty, but the active client still owns the slot.
+        assert!(admit_connection(&tx, &admitted, client).is_err());
     }
     #[test]
     fn persistent_clients_are_bounded_without_idle_monopolization() {
