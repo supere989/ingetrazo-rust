@@ -585,6 +585,55 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
         scene.mesh = ingetrazo_core::heal::orient_faces(&mesh).map_err(invalid)?;
         scene.groups.clear();
         scene.bump_version();
+    } else {
+        let document = roxmltree::Document::parse(&xml).map_err(|e| invalid(e.to_string()))?;
+        let bare = !document.descendants().any(|n| {
+            n.is_element()
+                && n.tag_name().name() == "visual_scene"
+                && n.children()
+                    .any(|c| c.is_element() && c.tag_name().name() == "node")
+        });
+        if bare {
+            let mut combined = ingetrazo_core::mesh::Mesh::new();
+            for group in &scene.groups {
+                for face in &group.mesh.faces {
+                    let rings = std::iter::once(&face.vertices)
+                        .chain(face.holes.iter())
+                        .map(|ring| {
+                            ring.iter()
+                                .map(|&v| combined.add_vertex(group.mesh.vertices[v].position))
+                                .collect::<Vec<_>>()
+                        })
+                        .collect::<Vec<_>>();
+                    let id = combined
+                        .add_face(rings[0].clone(), rings[1..].to_vec())
+                        .ok_or_else(|| invalid("invalid reference face"))?;
+                    combined.faces[id].attrs = face.attrs.clone();
+                }
+            }
+            scene.groups = vec![ingetrazo_core::groups::Group::with_mesh(
+                path.file_stem()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("COLLADA reference"),
+                combined,
+            )];
+        }
+        for group in &mut scene.groups {
+            let source = group.mesh.clone();
+            let (mut fused, _) = ingetrazo_core::simplify::simplify_mesh(
+                &source,
+                0.99999_f64.acos().to_degrees(),
+                false,
+            )
+            .map_err(invalid)?;
+            // Reference fusion keeps boundary stations; editable simplification
+            // removes collinear vertices, so restore them before stitching.
+            for vertex in &source.vertices {
+                fused.add_vertex(vertex.position);
+            }
+            group.mesh = ingetrazo_core::planar::stitch_boundaries(&fused).map_err(invalid)?;
+        }
+        scene.bump_version();
     }
     Ok(scene)
 }
