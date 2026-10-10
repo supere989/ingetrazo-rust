@@ -12,7 +12,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         time::{Duration, Instant},
     };
     struct ReleaseGate(objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn MTLSharedEvent>>);
-    impl Drop for ReleaseGate { fn drop(&mut self) { self.0.setSignaledValue(1); } }
+    impl Drop for ReleaseGate {
+        fn drop(&mut self) {
+            self.0.setSignaledValue(1);
+        }
+    }
     let output = std::env::args()
         .find_map(|arg| arg.strip_prefix("--output=").map(PathBuf::from))
         .unwrap_or_else(|| PathBuf::from("metal-egui-draw-proof"));
@@ -132,6 +136,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut submitted = painter.submit_diagnostic(&metal, paint, 64, 64, false)?;
         submitted.wait_readback(Duration::from_secs(5))
     };
+    assert_eq!(painter.stats().retained_cpu_texture_bytes, 20);
     let paint = painter.prepare(&metal, &scene(0.), 1.)?;
     let initial_pixels = render(&painter, paint.clone())?;
     std::fs::write(output.join("initial.rgba"), &initial_pixels)?;
@@ -197,6 +202,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     painter.update_textures(&metal, &partial)?;
     let revised = painter.prepare(&metal, &scene(0.), 1.)?;
+    assert_eq!(painter.stats().retained_cpu_texture_bytes, 36);
+    assert_eq!(painter.stats().cpu_texture_bytes, 20);
     let partial_pixels = render(&painter, revised.clone())?;
     std::fs::write(output.join("partial.rgba"), &partial_pixels)?;
     std::fs::write(output.join("expected-partial.rgba"), expected(true))?;

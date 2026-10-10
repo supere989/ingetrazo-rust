@@ -25,11 +25,60 @@ impl Drop for Image {
         }
     }
 }
+const CPU_TEXTURE_LIMIT: usize = 256 * 1024 * 1024;
+/// Counts every retained texture snapshot, including frames removed from cache.
+struct CachedPixels {
+    bytes: Vec<u8>,
+    charged: usize,
+    retained: Arc<std::sync::atomic::AtomicUsize>,
+}
+impl CachedPixels {
+    fn new(count: usize, retained: &Arc<std::sync::atomic::AtomicUsize>) -> Result<Self, String> {
+        use std::sync::atomic::Ordering;
+        retained
+            .fetch_update(Ordering::AcqRel, Ordering::Acquire, |used| {
+                used.checked_add(count).filter(|n| *n <= CPU_TEXTURE_LIMIT)
+            })
+            .map_err(|_| "Metal retained CPU texture snapshots exceed256MiB")?;
+        let mut result = Self {
+            bytes: Vec::new(),
+            charged: count,
+            retained: retained.clone(),
+        };
+        result
+            .bytes
+            .try_reserve_exact(count)
+            .map_err(|e| format!("Metal CPU texture allocation: {e}"))?;
+        let extra = result.bytes.capacity() - count;
+        if extra > 0 {
+            retained
+                .fetch_update(Ordering::AcqRel, Ordering::Acquire, |used| {
+                    used.checked_add(extra).filter(|n| *n <= CPU_TEXTURE_LIMIT)
+                })
+                .map_err(|_| "Metal CPU texture capacity exceeds admission")?;
+            result.charged += extra;
+        }
+        result.bytes.resize(count, 0);
+        Ok(result)
+    }
+}
+impl std::ops::Deref for CachedPixels {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        &self.bytes
+    }
+}
+impl Drop for CachedPixels {
+    fn drop(&mut self) {
+        self.retained
+            .fetch_sub(self.charged, std::sync::atomic::Ordering::AcqRel);
+    }
+}
 struct Texture {
     image: Image,
     sampler: Retained<ProtocolObject<dyn MTLSamplerState>>,
     size: [usize; 2],
-    pixels: Vec<u8>,
+    pixels: CachedPixels,
 }
 struct Draw {
     first: usize,
@@ -109,12 +158,17 @@ pub struct PainterStats {
     pub texture_uploads: u64,
     pub gpu_geometry_bytes: u64,
     pub cpu_texture_bytes: usize,
+    pub retained_cpu_texture_bytes: usize,
+    pub encoded_source_pixels: u64,
+    pub copied_snapshot_bytes: u64,
+    pub texture_uploaded_bytes: u64,
 }
 pub struct EguiPainter {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     textures: HashMap<TextureId, Arc<Texture>>,
     mesh: Option<Arc<Mesh>>,
     stats: PainterStats,
+    retained_cpu: Arc<std::sync::atomic::AtomicUsize>,
 }
 impl EguiPainter {
     pub fn new(metal: &NativeMetal) -> Result<Self, String> {
@@ -151,11 +205,17 @@ impl EguiPainter {
                 textures: HashMap::new(),
                 mesh: None,
                 stats: PainterStats::default(),
+                retained_cpu: Arc::new(std::sync::atomic::AtomicUsize::new(0)),
             })
         })
     }
     pub fn stats(&self) -> PainterStats {
-        self.stats
+        PainterStats {
+            retained_cpu_texture_bytes: self
+                .retained_cpu
+                .load(std::sync::atomic::Ordering::Acquire),
+            ..self.stats
+        }
     }
     /// Changed textures are immutable replacements. Earlier submissions retain
     /// their old image/sampler owners; partial updates cannot mutate in-flight GPU reads.
@@ -173,25 +233,23 @@ impl EguiPainter {
     ) -> Result<(), String> {
         let mut staged = HashMap::new();
         let mut cpu_bytes = self.stats.cpu_texture_bytes;
+        let mut copied_bytes = 0u64;
+        let mut uploaded_bytes = 0u64;
         for (id, change) in &delta.set {
             let size = change.image.size();
             if size.contains(&0) || size.iter().any(|x| *x > 4096) {
                 return Err("Metal egui texture extent exceeds4096".into());
             }
             let font = matches!(&change.image, egui::ImageData::Font(_));
-            let colors: Vec<egui::Color32> = match &change.image {
-                egui::ImageData::Color(c) => c.pixels.clone(),
-                egui::ImageData::Font(f) => f.srgba_pixels(None).collect(),
+            let source_count = match &change.image {
+                egui::ImageData::Color(c) => c.pixels.len(),
+                egui::ImageData::Font(f) => f.pixels.len(),
             };
-            if colors.len() != size[0] * size[1] {
+            if source_count != size[0] * size[1] {
                 return Err("Malformed egui texture pixel count".into());
             }
-            let rgba: Vec<u8> = colors
-                .into_iter()
-                .flat_map(|c| encoded_pixel(c, font))
-                .collect();
             let old = staged.get(id).or_else(|| self.textures.get(id));
-            let (target_size, mut pixels) = if let Some(pos) = change.pos {
+            let target_size = if let Some(pos) = change.pos {
                 let old: &Arc<Texture> =
                     old.ok_or("Metal partial update has no existing texture")?;
                 if pos[0].checked_add(size[0]).is_none_or(|n| n > old.size[0])
@@ -199,16 +257,37 @@ impl EguiPainter {
                 {
                     return Err("Metal partial texture update out of bounds".into());
                 }
-                let mut bytes = old.pixels.clone();
-                for y in 0..size[1] {
-                    let offset = ((pos[1] + y) * old.size[0] + pos[0]) * 4;
-                    bytes[offset..offset + size[0] * 4]
-                        .copy_from_slice(&rgba[y * size[0] * 4..(y + 1) * size[0] * 4]);
-                }
-                (old.size, bytes)
+                old.size
             } else {
-                (size, rgba)
+                size
             };
+            // Reject unsupported sampling before reserving/copying CPU or GPU data.
+            let sampler = make_sampler(metal, change.options)?;
+            let mut pixels =
+                CachedPixels::new(target_size[0] * target_size[1] * 4, &self.retained_cpu)?;
+            if change.pos.is_some() {
+                pixels.bytes.copy_from_slice(&old.unwrap().pixels);
+                copied_bytes += pixels.len() as u64;
+            }
+            let pos = change.pos.unwrap_or([0, 0]);
+            let mut write = |index: usize, color: egui::Color32| {
+                let x = index % size[0];
+                let y = index / size[0];
+                let offset = ((pos[1] + y) * target_size[0] + pos[0] + x) * 4;
+                pixels.bytes[offset..offset + 4].copy_from_slice(&encoded_pixel(color, font));
+            };
+            match &change.image {
+                egui::ImageData::Color(c) => {
+                    for (i, color) in c.pixels.iter().copied().enumerate() {
+                        write(i, color)
+                    }
+                }
+                egui::ImageData::Font(f) => {
+                    for (i, color) in f.srgba_pixels(None).enumerate() {
+                        write(i, color)
+                    }
+                }
+            }
             if let Some(old) = old {
                 cpu_bytes = cpu_bytes
                     .checked_sub(old.pixels.len())
@@ -221,18 +300,26 @@ impl EguiPainter {
                 return Err("Metal egui CPU texture cache exceeds256MiB".into());
             }
             let image = allocate_image(metal, target_size, &pixels)?;
-            let sampler = make_sampler(metal, change.options)?;
+            uploaded_bytes += pixels.len() as u64;
+
             staged.insert(
                 *id,
                 Arc::new(Texture {
                     image,
                     sampler,
                     size: target_size,
-                    pixels: std::mem::take(&mut pixels),
+                    pixels,
                 }),
             );
         }
         self.stats.texture_uploads += staged.len() as u64;
+        self.stats.encoded_source_pixels += delta
+            .set
+            .iter()
+            .map(|(_, d)| d.image.size()[0] as u64 * d.image.size()[1] as u64)
+            .sum::<u64>();
+        self.stats.copied_snapshot_bytes += copied_bytes;
+        self.stats.texture_uploaded_bytes += uploaded_bytes;
         self.stats.cpu_texture_bytes = cpu_bytes;
         self.textures.extend(staged);
         // Previous frame owns any texture that is still referenced by its draws.
@@ -513,6 +600,19 @@ fn encoded_pixel(c: egui::Color32, font: bool) -> [u8; 4] {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn retained_cpu_admission_and_last_owner_release() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        let retained = Arc::new(AtomicUsize::new(CPU_TEXTURE_LIMIT - 3));
+        assert!(CachedPixels::new(4, &retained).is_err());
+        assert_eq!(retained.load(Ordering::Acquire), CPU_TEXTURE_LIMIT - 3);
+        let pixels = Arc::new(CachedPixels::new(3, &retained).unwrap());
+        let frame = pixels.clone();
+        drop(pixels);
+        assert_eq!(retained.load(Ordering::Acquire), CPU_TEXTURE_LIMIT);
+        drop(frame);
+        assert_eq!(retained.load(Ordering::Acquire), CPU_TEXTURE_LIMIT - 3);
+    }
     #[test]
     fn admits_real_shader_domain_and_refuses_finite_overflow_inputs() {
         assert!(shader_logical_size([[0., 64.], [0., 64.]], 1., (64, 64)).is_ok());
