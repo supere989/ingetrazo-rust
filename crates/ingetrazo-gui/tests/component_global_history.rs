@@ -62,3 +62,39 @@ fn successful_finish_retires_live_preview_without_authoring_it() {
     assert!(app.component_edit_stack.is_empty());assert_eq!(app.active_tool_type,ToolType::Select);
     assert!(app.active_tool.snap_anchor().is_none());assert_eq!(app.scene.groups[0].mesh,original_mesh);assert!(app.undo_stack.is_empty());
 }
+
+#[test]
+fn line_chain_then_pending_point_take_priority_over_make_unique_ancestor() {
+    use ingetrazo_tools::base::{ToolType,ToolContext};
+    use ingetrazo_core::math::Ray;
+    let mut app=setup("placed-ordinary");app.begin_component_edit();
+    let unique_history=app.undo_stack.clone();let active_baseline=app.scene.clone();
+    assert_eq!(unique_history.len(),1);assert!(unique_history[0].history_context.is_empty());
+    let context_path=app.scene.history_context.clone();let ids=app.scene.groups.iter().map(|g|g.id).collect::<Vec<_>>();
+    app.set_tool(ToolType::Line);
+    let first=ToolContext::new(DVec3::new(4.,5.,0.),Ray::new(DVec3::Z,-DVec3::Z));
+    let second=ToolContext::new(first.world+DVec3::X,first.ray);
+    app.dispatch_tool_click(&first);app.dispatch_tool_click(&second);
+    assert_eq!(app.undo_stack.len(),2);assert_eq!(app.active_tool.snap_anchor(),Some(second.world));
+    app.undo();
+    assert_eq!(app.scene,active_baseline);assert_eq!(app.undo_stack,unique_history);
+    assert_eq!(app.active_tool.snap_anchor(),Some(first.world));assert_eq!(app.redo_stack.len(),1);
+    app.dispatch_tool_move(&ToolContext::new(first.world+DVec3::Y,first.ray));
+    assert!(!app.active_tool.rubber_band_lines().is_empty());
+    let scene=app.scene.clone();let undo=app.undo_stack.clone();let redo=app.redo_stack.clone();let revision=app.model_revision;
+    app.status_message="pending Line point consumes Undo".into();app.undo();
+    assert!(app.active_tool.snap_anchor().is_none());assert!(app.active_tool.rubber_band_lines().is_empty());
+    assert_eq!(app.active_tool_type,ToolType::Line);assert_eq!(app.status_message,"pending Line point consumes Undo");
+    assert_eq!(app.scene,scene);assert_eq!(app.undo_stack,undo);assert_eq!(app.redo_stack,redo);assert_eq!(app.model_revision,revision);
+    assert_eq!(app.component_edit_stack.len(),1);assert_eq!(app.scene.history_context,context_path);
+    assert_eq!(app.scene.groups.iter().map(|g|g.id).collect::<Vec<_>>(),ids);
+    // Now idle Line releases Undo to history; replacing its open mesh is refused.
+    app.undo();assert!(app.status_message.contains("finish or cancel"));
+    assert_eq!(app.scene,scene);assert_eq!(app.undo_stack,undo);assert_eq!(app.redo_stack,redo);assert_eq!(app.model_revision,revision);
+    // A newly armed first point must retain precedence even after this refusal.
+    app.dispatch_tool_click(&first);app.dispatch_tool_move(&second);
+    assert_eq!(app.active_tool.snap_anchor(),Some(first.world));
+    app.status_message="rearmed Line owns Undo".into();app.undo();
+    assert_eq!(app.status_message,"rearmed Line owns Undo");assert!(app.active_tool.snap_anchor().is_none());
+    assert_eq!(app.scene,scene);assert_eq!(app.undo_stack,undo);assert_eq!(app.redo_stack,redo);assert_eq!(app.model_revision,revision);
+}
