@@ -58,6 +58,33 @@ struct Pipeline {
     descriptor_sets:Vec<vk::DescriptorSet>,
     active_set:Option<vk::DescriptorSet>,
 }
+/// Cold engineering observer; a Weak reference never keeps GPU owners alive.
+#[derive(Clone)]
+pub struct DescriptorOwnerWeakForProbe(std::sync::Weak<Mutex<Pipeline>>);
+#[derive(Clone,Debug,PartialEq,Eq)]
+pub struct DescriptorOwnerStateForProbe {
+    integer:bool, pipeline:vk::Pipeline, layout:vk::PipelineLayout,
+    descriptor_layout:vk::DescriptorSetLayout, descriptor_pool:vk::DescriptorPool,
+    descriptor_sets:Vec<vk::DescriptorSet>, active_set:Option<vk::DescriptorSet>,
+}
+impl DescriptorOwnerStateForProbe {
+    pub fn complete_integer(&self)->bool {
+        self.integer && self.pipeline!=vk::Pipeline::null() && self.layout!=vk::PipelineLayout::null()
+        && self.descriptor_layout!=vk::DescriptorSetLayout::null() && self.descriptor_pool!=vk::DescriptorPool::null()
+        && !self.descriptor_sets.is_empty() && self.descriptor_sets.iter().all(|s|*s!=vk::DescriptorSet::null())
+        && self.active_set.is_some_and(|s|self.descriptor_sets.contains(&s))
+    }
+    pub fn descriptor_set_count(&self)->usize{self.descriptor_sets.len()}
+}
+impl DescriptorOwnerWeakForProbe {
+    pub fn state(&self)->Option<DescriptorOwnerStateForProbe>{
+        let owner=self.0.upgrade()?;let p=owner.lock().ok()?;
+        Some(DescriptorOwnerStateForProbe{integer:p.integer,pipeline:p.pipeline,layout:p.layout,
+            descriptor_layout:p.descriptor_layout,descriptor_pool:p.descriptor_pool,
+            descriptor_sets:p.descriptor_sets.clone(),active_set:p.active_set})
+    }
+    pub fn strong_count(&self)->usize{self.0.strong_count()}
+}
 struct NativePaint {
     device: vk::Device,
     state: Mutex<State>,
@@ -277,6 +304,9 @@ impl Renderer {
             upload_bytes: 0,
             cache_hits: 0,
         })
+    }
+    pub fn descriptor_owner_weak_for_probe(&self)->DescriptorOwnerWeakForProbe{
+        DescriptorOwnerWeakForProbe(Arc::downgrade(&self.pipeline))
     }
     pub fn set_render_pass(&mut self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<(),String>{
         let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
