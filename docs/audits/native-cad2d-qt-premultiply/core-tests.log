@@ -1,0 +1,11 @@
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-vulkan/crates/ingetrazo-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_render-48fb10131abf9ca4)
+
+running 3 tests
+test cad2d::tests::original_bytes_survive_without_linear_premultiplication_loss ... ok
+test cad2d::tests::immutable_geometry_identity_and_bounds_are_not_palette_keys ... ok
+test cad2d::tests::qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 29 filtered out; finished in 0.01s
+

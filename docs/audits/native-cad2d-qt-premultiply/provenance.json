@@ -1,0 +1,16 @@
+{
+  "source_commit": "1ddc6d0",
+  "binary_sha256": "8c95ed2695d733ffdf769c873564116ef302bfbb62743e592b0b721326d44f32",
+  "actual_qt_version": "6.12.0",
+  "official_source": "https://github.com/qt/qtbase/blob/6.12/src/gui/painting/qrgba64.h",
+  "actual_reference": "actual QPainter.fillRect for all65536 channel\u00d7alpha pairs overopaque black",
+  "native_gpu_fixture": "Linux Xvfb llvmpipe only; actualRTX independent retestpending",
+  "retained_prior_hardware_failure": "independent321f148/86fa956 dark[1,7,19,128] source128,131,137 vsnativefloat127,130,137",
+  "source_source8pixel": "DarkactualLVP128,131,137 andoriginalRGB146,174,206 exact",
+  "open": [
+    "actualRTX retained10 corpus",
+    "full AA coverage/composition geometry",
+    "generic eguiColor32 lossy path",
+    "nativeMetal implementation/hardware"
+  ]
+}
