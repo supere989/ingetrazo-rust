@@ -1,0 +1,119 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "edges": [],
+    "faces": [
+      {
+        "back": {
+          "color": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "opacity": 0.3
+        },
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "vertices": [
+          [
+            -1.0,
+            -1.0,
+            0.0
+          ],
+          [
+            1.0,
+            -1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1.0,
+            0.0
+          ]
+        ]
+      }
+    ],
+    "groups": [
+      {
+        "component": true,
+        "ext": {
+          "vendor_token": 72
+        },
+        "name": "Numeric zero",
+        "proto": 0,
+        "uid": "audit-numeric",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    ],
+    "protos": [
+      {
+        "component": false,
+        "edges": [],
+        "ext": {
+          "vendor_token": 71
+        },
+        "faces": [
+          {
+            "color": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "opacity": 1.0,
+            "vertices": [
+              [
+                9.0,
+                -1.0,
+                0.0
+              ],
+              [
+                11.0,
+                -1.0,
+                0.0
+              ],
+              [
+                11.0,
+                1.0,
+                0.0
+              ],
+              [
+                9.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ],
+        "name": "Opaque activator",
+        "uid": "audit-opaque"
+      }
+    ]
+  }
+}

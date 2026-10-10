@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "authored_cases": 8,
+  "native_loader_save_reopen_semantics": true,
+  "negative_controls": 3,
+  "literal_render_failures": [],
+  "source_roundtrip_classic_flag_losses": [
+    {
+      "case": "authored-legacy-absent",
+      "path": [
+        0
+      ],
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "authored-legacy-null",
+      "path": [
+        0
+      ],
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "authored-legacy-null-nullxform",
+      "path": [
+        0
+      ],
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "authored-nested-null-adopt",
+      "path": [
+        0,
+        0
+      ],
+      "before": false,
+      "after": true
+    }
+  ],
+  "scope": "SameGPU authored original/native load/render, geometry/component/UID/metadata. No editing/general group claim.",
+  "workspace": {
+    "passed": 421,
+    "ignored": 2
+  },
+  "evidence_boundary": "Root fresh loader/save/reopen and strict artifact validation; actual fresh NVIDIA render evidence independently retained by validation worker at4b7fc66, production renderer paths unchanged in combined root candidate."
+}
