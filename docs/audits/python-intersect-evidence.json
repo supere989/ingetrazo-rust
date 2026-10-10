@@ -1,0 +1,147 @@
+{
+  "provenance": {
+    "rust_commit": "6c5a65b2fdc4ddfd59d0248fe77bc48cf0a0df26",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 1,
+  "cases": [
+    {
+      "case": "cross",
+      "segments": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            2.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "hole",
+      "segments": [
+        [
+          [
+            2.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            1.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            2.0,
+            3.0,
+            0.0
+          ],
+          [
+            2.0,
+            4.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "coplanar",
+      "segments": []
+    },
+    {
+      "case": "groups",
+      "segments": [
+        [
+          [
+            1.0,
+            1.0,
+            2.0
+          ],
+          [
+            1.0,
+            2.0,
+            2.0
+          ]
+        ],
+        [
+          [
+            1.0,
+            1.0,
+            2.0
+          ],
+          [
+            2.0,
+            1.0,
+            2.0
+          ]
+        ],
+        [
+          [
+            1.0,
+            2.0,
+            1.0
+          ],
+          [
+            1.0,
+            2.0,
+            2.0
+          ]
+        ],
+        [
+          [
+            1.0,
+            2.0,
+            1.0
+          ],
+          [
+            2.0,
+            2.0,
+            1.0
+          ]
+        ],
+        [
+          [
+            2.0,
+            1.0,
+            1.0
+          ],
+          [
+            2.0,
+            1.0,
+            2.0
+          ]
+        ],
+        [
+          [
+            2.0,
+            1.0,
+            1.0
+          ],
+          [
+            2.0,
+            2.0,
+            1.0
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "bar-mutation",
+      "original_faces": 10,
+      "rust_faces": 10,
+      "native_symmetric_difference_volume": 0.0,
+      "closed": true
+    }
+  ],
+  "scope": "Exact original world-space intersection segments: crossing squares, hole interruption, coplanar refusal and selected group versus model. Original bar-through-loose-box mutation retains closed native shape and exact cut vertices; healing and context transforms remain separate."
+}
