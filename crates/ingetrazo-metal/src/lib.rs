@@ -18,3 +18,6 @@ pub use cad2d::*;
 mod span_plan;
 #[cfg(target_os = "macos")]
 pub mod presentation;
+
+#[cfg(target_os = "macos")]
+pub mod egui_painter;
