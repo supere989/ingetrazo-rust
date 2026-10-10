@@ -1,0 +1,14 @@
+{
+  "revision": "848aa1681602a2c6053fb6f61151c84a9f92e865",
+  "metal_all_targets_checks": [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin"
+  ],
+  "gui_library_checks": [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin"
+  ],
+  "native_presentation": "pending",
+  "main_adoption": false,
+  "workspace_all_targets": "fails because unguarded Vulkan-only diagnostic examples refer to cfg-excluded native_vulkan"
+}
