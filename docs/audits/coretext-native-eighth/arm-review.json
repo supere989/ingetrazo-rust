@@ -1,0 +1,171 @@
+{
+  "artifact_id": 11684097217,
+  "artifact_sha256": "245a83f40fcce7dc358c8a48a2d20ec8b189814dc5828b9ee216763818d1205e",
+  "source_revision": "1f44d9d7075b17d0c70900631388526c55178c8d",
+  "decode": "Independent owned QImage RGBA8888 + NumPy exact; no transforms/tolerance",
+  "tiles": [
+    {
+      "case": "helvetica",
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "changed_pixels": 1
+    },
+    {
+      "case": "times-bold-italic",
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "changed_pixels": 12
+    }
+  ],
+  "pdf": [
+    {
+      "case": "helvetica",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-bold",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "helvetica-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "times-bold-italic",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "cjk",
+      "dpi": 300,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 72,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 150,
+      "changed_pixels": 0
+    },
+    {
+      "case": "arabic",
+      "dpi": 300,
+      "changed_pixels": 0
+    }
+  ],
+  "canvas_host": {
+    "passed": false,
+    "choice": "canvas",
+    "phase": 0,
+    "close_events": 0,
+    "moves": 0,
+    "presses": 0,
+    "releases": 0,
+    "cancel_verified": false,
+    "modal_submission": null,
+    "displayed": 0,
+    "skipped": 9,
+    "pending": 3,
+    "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+    "physical_input_claim": false,
+    "physical_mac_claim": false,
+    "canvas_cancelled": 1,
+    "canvas_last_raw": [
+      0,
+      0,
+      2,
+      14196,
+      1
+    ],
+    "canvas_submission_observations": 12,
+    "canvas_warm_frames": 11,
+    "canvas_last_stable_uploads": [
+      [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      56
+    ],
+    "application_status": "",
+    "active_sheet_index": 0,
+    "sheet_count": 1
+  },
+  "presentation_diagnostics": "appkit=Some(\"number=24 visible=false active_space=true occlusion=NSWindowOcclusionState(8194) screen=Some(\\\"name=Apple Virtual backing_scale=1 max_fps=60 refresh_min=0.016666666 refresh_max=0.016666666 frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 768.0 } }\\\")\"); extent=(1024, 653); visible=Some(false); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; displaySyncEnabled=true; device_id=4294967706; preferred_device=Some((4294967706, \"Apple Paravirtual device\")); submitted=12; retired=9; displayed=0; skipped=9; frames=[submission=10 id=9 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=392.9763345416667 gpuEnd=392.977500125 callback_seen=false callback_time=0; submission=11 id=10 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=392.9845985 gpuEnd=392.985810875 callback_seen=false callback_time=0; submission=12 id=11 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=392.992604625 gpuEnd=392.99365375 callback_seen=false callback_time=0]",
+  "diagnostic_window": {
+    "window_id": 24,
+    "displayed": 0,
+    "diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194) screen=Some(\\\"name=Apple Virtual backing_scale=1 max_fps=60 refresh_min=0.016666666 refresh_max=0.016666666 frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 768.0 } }\\\")\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; displaySyncEnabled=true; device_id=4294967706; preferred_device=Some((4294967706, \"Apple Paravirtual device\")); submitted=5; retired=4; displayed=0; skipped=4; frames=[submission=5 id=4 command=MTLCommandBufferStatus(2) presentedTime=0 gpuStart=0 gpuEnd=0 callback_seen=false callback_time=0]",
+    "acceptance_proof": false
+  }
+}
