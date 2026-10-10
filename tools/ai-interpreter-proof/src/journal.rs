@@ -1,6 +1,6 @@
 //! Bounded append-only mesh transaction proof, not an all-document journal.
 use glam::DVec3;
-use ingetrazo_core::{math::PointKey,mesh::Mesh};
+use ingetrazo_core::{math::PointKey,mesh::{Mesh,MeshVertex,MeshEdge}};
 use std::collections::{HashMap};
 pub struct MeshJournal {
  pub base_version:u64,
@@ -37,15 +37,67 @@ impl MeshJournal {
  /// This proof supports only appended unpainted edges: richer writes are refused.
  pub fn publish(self,mesh:&mut Mesh,version:u64)->Result<bool,String>{
   if version!=self.base_version||mesh.vertices.len()!=self.base_vertices||mesh.edges.len()!=self.base_edges{return Err("Stale transaction base".into());}
+  // Public vertex arrays can have duplicate keys or a stale private spatial
+  // index. Never ask add_vertex to reinterpret already planned real IDs.
+  validate_base(mesh)?;
+  if mesh.vertices.iter().zip(&self.base_positions).any(|(v,p)|v.position!=*p)
+   || mesh.edges.iter().enumerate().any(|(id,e)|self.edges.get(&ordered(e.v0,e.v1))!=Some(&(id,e.v0,e.v1))){return Err("Changed transaction base".into());}
   if self.added_edges.is_empty(){return Ok(false);}
-  for p in self.added_vertices {mesh.add_vertex(p);}
-  for (a,b) in self.added_edges {mesh.add_edge(a,b).expect("validated append endpoints");}
+  let total=self.base_vertices.checked_add(self.added_vertices.len()).ok_or("Vertex extent overflow")?;
+  let mut vertices:Vec<MeshVertex>=self.added_vertices.into_iter().map(MeshVertex::new).collect();
+  let mut edges=Vec::new();
+  edges.try_reserve(self.added_edges.len()).map_err(|_|"Edge preparation allocation refused")?;
+  let mut adjacency=HashMap::<usize,Vec<usize>>::new();
+  for (offset,(a,b)) in self.added_edges.into_iter().enumerate(){
+   if a>=total||b>=total||a==b{return Err("Invalid planned endpoints".into());}
+   let id=self.base_edges.checked_add(offset).ok_or("Edge extent overflow")?;
+   adjacency.entry(a).or_default().push(id);adjacency.entry(b).or_default().push(id);
+   edges.push(MeshEdge::new(a,b));
+  }
+  mesh.vertices.try_reserve(vertices.len()).map_err(|_|"Vertex publication allocation refused")?;
+  mesh.edges.try_reserve(edges.len()).map_err(|_|"Edge publication allocation refused")?;
+  // Reserve every live adjacency before any semantic publication.
+  for (&id,ids) in &adjacency {
+   let v=if id<self.base_vertices{&mut mesh.vertices[id]}else{&mut vertices[id-self.base_vertices]};
+   v.edges.try_reserve(ids.len()).map_err(|_|"Adjacency allocation refused")?;
+  }
+  mesh.vertices.extend(vertices);mesh.edges.extend(edges);
+  for (id,ids) in adjacency{mesh.vertices[id].edges.extend(ids);}
+  mesh.rebuild_spatial_index();
   Ok(true)
  }
+}
+fn validate_base(mesh:&Mesh)->Result<(),String>{
+ for (id,e) in mesh.edges.iter().enumerate(){
+  if e.v0==e.v1||e.v0>=mesh.vertices.len()||e.v1>=mesh.vertices.len()
+   ||!mesh.vertices[e.v0].edges.contains(&id)||!mesh.vertices[e.v1].edges.contains(&id)
+   ||e.faces.iter().any(|&f|f>=mesh.faces.len()){return Err("Malformed base edge".into());}
+ }
+ for (id,v) in mesh.vertices.iter().enumerate(){
+  if !v.position.is_finite()||v.edges.iter().any(|&e|mesh.edges.get(e).is_none_or(|e|!e.contains_vertex(id))){return Err("Malformed base vertex".into());}
+ }
+ for f in &mesh.faces{if f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|v>=mesh.vertices.len()){return Err("Malformed base face".into());}}
+ Ok(())
 }
 fn ordered(a:usize,b:usize)->(usize,usize){if a<b{(a,b)}else{(b,a)}}
 #[cfg(test)] mod tests{
  use super::*;
+ #[test]fn stale_private_index_cannot_redirect_appended_ids(){
+  let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);
+  mesh.vertices[0].position=DVec3::Y; // private index still maps zero -> 0
+  mesh.vertices.push(MeshVertex::new(DVec3::Y)); // duplicate public key
+  let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();
+  j.publish(&mut mesh,1).unwrap();
+  assert_eq!(mesh.vertices.len(),4);assert_eq!((mesh.edges[0].v0,mesh.edges[0].v1),(2,3));
+  assert_eq!(mesh.vertices[2].position,DVec3::ZERO);assert_eq!(mesh.vertices[0].position,DVec3::Y);
+  assert_eq!(mesh.vertices[2].edges,vec![0]);assert_eq!(mesh.vertices[3].edges,vec![0]);
+ }
+ #[test]fn malformed_base_refused_before_semantic_mutation(){
+  let mut mesh=Mesh::new();mesh.vertices.push(MeshVertex::new(DVec3::ZERO));
+  mesh.edges.push(MeshEdge::new(0,999));
+  let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::Y,DVec3::X).unwrap();
+  let old=mesh.clone();assert!(j.publish(&mut mesh,1).is_err());assert_eq!(mesh,old);
+ }
  #[test]fn discarded_journal_never_mutates_live_mesh(){let mesh=Mesh::new();let before=mesh.clone();let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();drop(j);assert_eq!(mesh,before);}
  #[test]fn stale_publish_is_a_complete_refusal(){let mut mesh=Mesh::new();let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();let before=mesh.clone();assert!(j.publish(&mut mesh,2).is_err());assert_eq!(mesh,before);}
 }

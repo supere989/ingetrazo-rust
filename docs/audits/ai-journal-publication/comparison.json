@@ -1,0 +1,14 @@
+{
+  "bounded_mesh_and_observable_values_equal": true,
+  "cases": 8,
+  "full_traceback_bytes_equal": false,
+  "negative_rejections": [
+    "partial-live-mutation",
+    "lost-edge-identity",
+    "reattach-detached-edge",
+    "no-op-history",
+    "missing-case"
+  ],
+  "all_document_journal": false,
+  "deadline_implemented": false
+}
