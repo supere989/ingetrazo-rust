@@ -82,6 +82,9 @@ impl MetalCad2d {
             && metal.device.areRasterOrderGroupsSupported()
     }
     pub fn new(metal: NativeMetal, width: usize, height: usize) -> Result<Self, String> {
+        objc2::rc::autoreleasepool(|_| Self::new_inner(metal, width, height))
+    }
+    fn new_inner(metal: NativeMetal, width: usize, height: usize) -> Result<Self, String> {
         if !Self::supported(&metal) {
             return Err(format!(
                 "Exact Metal CAD framebuffer fetch unsupported: device={}, Apple1={}, ROG={}; Intel/AMD exact native path remains OPEN",
@@ -249,6 +252,15 @@ impl MetalCad2d {
     /// One render encoder with coherent raster-order framebuffer fetch, followed
     /// only by a diagnostic BLIT readback. Uniform changes do not rebuild geometry.
     pub fn render(
+        &mut self,
+        geometry: &Arc<Geometry>,
+        batches: &[Batch],
+        pose: Pose,
+        clear: [u8; 4],
+    ) -> Result<Vec<u8>, String> {
+        objc2::rc::autoreleasepool(|_| self.render_inner(geometry, batches, pose, clear))
+    }
+    fn render_inner(
         &mut self,
         geometry: &Arc<Geometry>,
         batches: &[Batch],
