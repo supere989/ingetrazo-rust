@@ -28,6 +28,6 @@ def state():
  current=sum(positions,V())/len(positions) if positions else center
  rim=positions[0] if positions else points[0]
  snap=vp.last_snap;anchor=getattr(vp.active_tool,'start_point',None)
- result=dict(mode=mode,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(1,0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ result=dict(mode=mode,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
  directory.joinpath('state.json').write_text(json.dumps(result))
 timer.timeout.connect(state);timer.start(20);app.exec()

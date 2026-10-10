@@ -1,0 +1,304 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "d9837acbd82fc5fa765ef24320f5207133cc7978",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "early": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [],
+    "mode": "curve",
+    "move_target": [
+      773.7116096931534,
+      336.72986048918267
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.113562509,
+    "tool": "Line",
+    "undo": 0
+  },
+  "acquired": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      773.7116096931534,
+      336.72986048918267
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.362332957,
+    "tool": "Line",
+    "undo": 0
+  },
+  "centered": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      773.7116096931534,
+      336.72986048918267
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.78756992,
+    "tool": "Line",
+    "undo": 0
+  },
+  "anchor": {
+    "anchor": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Close",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      773.7116096931534,
+      336.72986048918267
+    ],
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 1.192434215,
+    "tool": "Line",
+    "undo": 0
+  },
+  "moved": {
+    "anchor": null,
+    "center": [
+      2.053415123020104,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      665.816403598043,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      3.2534151230201047,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      778.5280132911963,
+      336.72986048918267
+    ],
+    "revision": 1,
+    "rim": [
+      774.0195489034702,
+      336.72986048918267
+    ],
+    "time": 3.195747092,
+    "tool": "Move",
+    "undo": 1
+  },
+  "moved_hint": {
+    "anchor": null,
+    "center": [
+      2.053415123020104,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      665.816403598043,
+      336.72986048918267
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.053415060043335,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.053415060043335,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      778.5280132911963,
+      336.72986048918267
+    ],
+    "revision": 1,
+    "rim": [
+      774.0195489034702,
+      336.72986048918267
+    ],
+    "time": 3.647746869,
+    "tool": "Line",
+    "undo": 1
+  },
+  "deleted": {
+    "anchor": null,
+    "center": [
+      2.053415123020104,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      665.816403598043,
+      336.72986048918267
+    ],
+    "edges": 0,
+    "faces": 0,
+    "inference_point": [
+      2.0692691360576294,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.053415060043335,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      778.5280132911963,
+      336.72986048918267
+    ],
+    "revision": 2,
+    "rim": [
+      774.0195489034702,
+      336.72986048918267
+    ],
+    "time": 4.694751956,
+    "tool": "Line",
+    "undo": 2
+  },
+  "requested_move_delta": [
+    0.05,
+    0,
+    0
+  ],
+  "actual_move_delta": [
+    0.053415123020104094,
+    0.0,
+    0.0
+  ],
+  "move_coordinate_parity": false,
+  "pointer_quantized_move_matches": true,
+  "approach_green_pixels": 124,
+  "approach_hint_visual_parity_open": false,
+  "elapsed_wall_seconds": 0.3024971050035674,
+  "scope": "Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending.",
+  "executable_sha256": "810180b329a37426c50a1a16d4cd3c053c594dc7b8190baa71155c5f19511290"
+}
