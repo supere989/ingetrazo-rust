@@ -1,11 +1,21 @@
 {
+  "negative_controls": [
+    {
+      "case": "unsplit-crossing",
+      "detected": true
+    },
+    {
+      "case": "lost-bowtie-faces",
+      "detected": true
+    }
+  ],
   "provenance": {
-    "rust_commit": "e0dfef68b3fec6ac9231b95035e172bde0b4bca4",
+    "rust_commit": "e5e38a2135bf1f3a61a39abb3466c03d076b2beb",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "passed": false,
+  "passed": true,
   "cases": [
     {
       "case": "closed-footprint",
@@ -44,272 +54,18 @@
       "original_faces": 0,
       "rust_faces": 0,
       "original_edges": 4,
-      "rust_edges": 2,
-      "exact_geometry_attributes_match": false
+      "rust_edges": 4,
+      "exact_geometry_attributes_match": true
     },
     {
       "case": "bowtie",
       "original_faces": 2,
-      "rust_faces": 0,
+      "rust_faces": 2,
       "original_edges": 6,
-      "rust_edges": 4,
-      "exact_geometry_attributes_match": false
+      "rust_edges": 6,
+      "exact_geometry_attributes_match": true
     }
   ],
-  "failures": [
-    {
-      "case": "crossing-loose-edges",
-      "original_faces": [],
-      "rust_faces": [],
-      "original_edges": [
-        [
-          [
-            -1.0,
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            0.0,
-            0.0
-          ],
-          [
-            1.0,
-            0.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            -1.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            1.0,
-            0.0
-          ]
-        ]
-      ],
-      "rust_edges": [
-        [
-          [
-            -1.0,
-            0.0,
-            0.0
-          ],
-          [
-            1.0,
-            0.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            -1.0,
-            0.0
-          ],
-          [
-            0.0,
-            1.0,
-            0.0
-          ]
-        ]
-      ]
-    },
-    {
-      "case": "bowtie",
-      "original_faces": [
-        {
-          "vertices": [
-            [
-              0.0,
-              2.0,
-              0.0
-            ],
-            [
-              1.0,
-              1.0,
-              0.0
-            ],
-            [
-              2.0,
-              2.0,
-              0.0
-            ]
-          ],
-          "holes": [],
-          "attrs": {}
-        },
-        {
-          "vertices": [
-            [
-              2.0,
-              0.0,
-              0.0
-            ],
-            [
-              1.0,
-              1.0,
-              0.0
-            ],
-            [
-              0.0,
-              0.0,
-              0.0
-            ]
-          ],
-          "holes": [],
-          "attrs": {}
-        }
-      ],
-      "rust_faces": [],
-      "original_edges": [
-        [
-          [
-            2.0,
-            2.0,
-            0.0
-          ],
-          [
-            0.0,
-            2.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            0.0,
-            0.0
-          ],
-          [
-            1.0,
-            1.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            1.0,
-            1.0,
-            0.0
-          ],
-          [
-            2.0,
-            2.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            2.0,
-            0.0
-          ],
-          [
-            1.0,
-            1.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            1.0,
-            1.0,
-            0.0
-          ],
-          [
-            2.0,
-            0.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            2.0,
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0
-          ]
-        ]
-      ],
-      "rust_edges": [
-        [
-          [
-            0.0,
-            0.0,
-            0.0
-          ],
-          [
-            2.0,
-            2.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            2.0,
-            2.0,
-            0.0
-          ],
-          [
-            0.0,
-            2.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            0.0,
-            2.0,
-            0.0
-          ],
-          [
-            2.0,
-            0.0,
-            0.0
-          ]
-        ],
-        [
-          [
-            2.0,
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0
-          ]
-        ]
-      ]
-    }
-  ],
+  "failures": [],
   "scope": "Actual original MainWindow Convert Path command recipe (build_add_edges detect_faces + DeleteGeoPaths CompoundCommand); six source topology cases and native invalid selected-index atomicity. Native GUI undo and geographic projection remain separate."
 }
