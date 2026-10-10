@@ -1,12 +1,9 @@
 //! Selected saved-view operations with identity-preserving updates.
-use crate::IngeTrazoApp;use ingetrazo_core::saved_views::SavedView;use ingetrazo_render::style::VisualStyle;
+use crate::IngeTrazoApp;use ingetrazo_core::saved_views::SavedView;#[cfg(test)]use ingetrazo_render::style::VisualStyle;
 impl IngeTrazoApp {
     fn capture_live_view(&self,name:String)->SavedView {
         let mut view=SavedView::capture_scene(name,&self.scene,&self.camera);
-        let s=&self.style;
-        view.style=Some(serde_json::json!({"face_mode":match s.visual_style{VisualStyle::Wireframe=>"wireframe",VisualStyle::HiddenLine=>"hidden_line",VisualStyle::Monochrome=>"monochrome",VisualStyle::XRay=>"xray",_=>"textures"},
-            "edges":s.show_edges,"profiles":s.show_profiles,"edge_color":&s.edge_color[..3],"front_color":&s.front_color[..3],"back_color":&s.back_color[..3],"background":&s.background_color[..3],"section_fill":self.scene.show_section_fill,"section_fill_color":&s.section_fill_color[..3]}));
-        view.shadows=Some(serde_json::json!({"enabled":self.shadows_enabled}));view
+        let(style,shadows)=self.live_presentation();view.style=Some(serde_json::to_value(style).unwrap());view.shadows=Some(serde_json::to_value(shadows).unwrap());view
     }
     pub fn add_saved_view(&mut self,name:String){let view=self.capture_live_view(name);self.seal_view_history();self.scene.saved_views.push(view);self.selected_saved_view=Some(self.scene.saved_views.len()-1);self.scene.bump_version();}
     pub fn update_selected_saved_view(&mut self){
@@ -22,14 +19,7 @@ impl IngeTrazoApp {
     pub fn rename_selected_saved_view(&mut self,name:String){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){if !name.trim().is_empty()&&name!=self.scene.saved_views[i].name{self.seal_view_history();self.scene.saved_views[i].name=name;let view=self.scene.saved_views[i].clone();self.refresh_history_view(&view);self.scene.bump_version();}}}
     pub fn apply_saved_view(&mut self,i:usize){
         let Some(view)=self.scene.saved_views.get(i).cloned() else{return;};self.selected_saved_view=Some(i);if let Some(visible)=view.georef.as_ref().and_then(|g|g.get("terrain")).and_then(|v|v.as_bool()){self.set_terrain_visibility(visible);}view.apply_scene(&mut self.scene,&mut self.camera);
-        if let Some(s)=&view.style{
-            if let Some(mode)=s.get("face_mode").and_then(|v|v.as_str()){self.style.visual_style=match mode{"wireframe"=>VisualStyle::Wireframe,"hidden_line"=>VisualStyle::HiddenLine,"monochrome"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};}
-            if let Some(v)=s.get("edges").and_then(|v|v.as_bool()){self.style.show_edges=v;}if let Some(v)=s.get("profiles").and_then(|v|v.as_bool()){self.style.show_profiles=v;}
-            fn color(value:Option<&serde_json::Value>,target:&mut [f32;4]){if let Some(a)=value.and_then(|v|v.as_array()).filter(|a|a.len()>=3){for i in 0..3{if let Some(v)=a[i].as_f64(){target[i]=v as f32;}}}}
-            color(s.get("section_fill_color"),&mut self.style.section_fill_color);color(s.get("edge_color"),&mut self.style.edge_color);color(s.get("front_color"),&mut self.style.front_color);color(s.get("back_color"),&mut self.style.back_color);color(s.get("background"),&mut self.style.background_color);
-            if let Some(v)=s.get("section_fill").and_then(|v|v.as_bool()){self.scene.show_section_fill=v;}
-        }
-        if let Some(v)=view.shadows.as_ref().and_then(|s|s.get("enabled")).and_then(|v|v.as_bool()){self.shadows_enabled=v;}
+        self.apply_document_presentation();
         self.status_message=format!("Applied scene: {}",view.name);
     }
 }

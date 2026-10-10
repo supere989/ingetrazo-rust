@@ -41,8 +41,8 @@ fn same_model(a:&Scene,b:&Scene)->bool {
     a.mesh_shares==b.mesh_shares
 }
 impl IngeTrazoApp {
-    pub fn mark_document_clean(&mut self) {self.document_session.clean=Some(self.scene.clone());self.document_session.autosaved=None;self.document_session.last_autosave=Instant::now();}
-    pub fn document_dirty(&self)->bool {!self.document_session.clean.as_ref().map(|s|same_model(&self.scene,s)).unwrap_or(false)}
+    pub fn mark_document_clean(&mut self) {self.sync_document_presentation();self.document_session.clean=Some(self.scene.clone());self.document_session.autosaved=None;self.document_session.last_autosave=Instant::now();}
+    pub fn document_dirty(&self)->bool {let Some(clean)=&self.document_session.clean else{return true;};if !same_model(&self.scene,clean){return true;}if self.presentation_controls_match(){return clean.display_style!=self.scene.display_style||clean.shadows!=self.scene.shadows;}let(d,s)=self.live_presentation();clean.display_style!=d||clean.shadows!=s}
     pub fn attach_session_store(&mut self,mut store:SessionStore) {
         match store.load_preferences() {Ok(p)=>self.document_session.preferences=p,Err(e)=>self.status_message=e}
         let p=&self.document_session.preferences;
@@ -77,7 +77,7 @@ impl IngeTrazoApp {
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
-                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
+                Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
                     self.document_session.recovered_slot=Some(record.slot);self.document_session.clean=None;
                     self.document_session.show_recovery=false;self.status_message="Recovered unsaved copy; save it to a new file".into();},
                 Err(e)=>self.status_message=format!("Recovery failed: {e}"),
