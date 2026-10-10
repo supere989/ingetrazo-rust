@@ -1259,6 +1259,11 @@ impl EguiPainter {
         height: usize,
         blocked_for_probe: bool,
     ) -> Result<DiagnosticPaint, String> {
+        self.submit_clear_diagnostic(metal,paint,width,height,blocked_for_probe,[1.;4])
+    }
+    /// Diagnostic target quantization only; never called by production presentation.
+    pub fn submit_clear_diagnostic(&self,metal:&NativeMetal,paint:Arc<PreparedPaint>,width:usize,height:usize,blocked_for_probe:bool,clear:[f64;4])->Result<DiagnosticPaint,String>{
+        if clear.iter().any(|v|!v.is_finite()||!(0. ..=1.).contains(v)){return Err("Invalid diagnostic clear RGBA".into());}
         objc2::rc::autoreleasepool(|_| {
             if width == 0 || height == 0 || width > 4096 || height > 4096 {
                 return Err("Invalid diagnostic target extent".into());
@@ -1291,12 +1296,7 @@ impl EguiPainter {
             color.setTexture(Some(&target.raw));
             color.setLoadAction(MTLLoadAction::Clear);
             color.setStoreAction(MTLStoreAction::Store);
-            color.setClearColor(MTLClearColor {
-                red: 1.,
-                green: 1.,
-                blue: 1.,
-                alpha: 1.,
-            });
+            color.setClearColor(MTLClearColor {red:clear[0],green:clear[1],blue:clear[2],alpha:clear[3]});
             let encoder = command
                 .renderCommandEncoderWithDescriptor(&descriptor)
                 .ok_or("Diagnostic render encoder unavailable")?;
