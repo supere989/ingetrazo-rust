@@ -1,0 +1,27 @@
+{
+  "cases": [
+    {
+      "image": "cloud-endpoint-approach.png",
+      "center": [
+        500,
+        273
+      ],
+      "green_pixels": {
+        "5": 3,
+        "17": 115
+      }
+    },
+    {
+      "image": "cloud-positive-center-approach.png",
+      "center": [
+        500,
+        273
+      ],
+      "green_pixels": {
+        "5": 17,
+        "17": 56
+      }
+    }
+  ],
+  "scope": "Literal cloud PNG pixels; source centered disk versus endpoint outline diagnosis, not general glyph acceptance"
+}
