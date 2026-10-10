@@ -54,6 +54,8 @@ jobs:
         run: python scripts/check-python-dimension-anchors.py
       - name: Original runtime planar healing
         run: python scripts/check-python-heal.py
+      - name: Original interior partition orientation oracle
+        run: python scripts/check-python-orient.py
       - name: Original offset regions and chains
         run: python scripts/check-python-offset.py
       - name: Original runtime saved view recall

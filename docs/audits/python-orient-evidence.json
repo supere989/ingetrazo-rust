@@ -1,0 +1,48 @@
+{
+  "provenance": {
+    "rust_commit": "4ea875ed39315c3e6748a3b4be1830ad6f118c47",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 2,
+  "cases": [
+    {
+      "case": "cube",
+      "faces": 6,
+      "interior_partitions": 0
+    },
+    {
+      "case": "partition",
+      "faces": 11,
+      "interior_partitions": 1
+    },
+    {
+      "case": "disjoint",
+      "faces": 12,
+      "interior_partitions": 0
+    },
+    {
+      "case": "nested",
+      "faces": 12,
+      "interior_partitions": 0
+    },
+    {
+      "case": "nearby-sheet",
+      "faces": 7,
+      "interior_partitions": 0
+    },
+    {
+      "case": "open-sheets",
+      "faces": 2,
+      "interior_partitions": 0
+    },
+    {
+      "case": "prism",
+      "faces": 5,
+      "interior_partitions": 0
+    }
+  ],
+  "scope": "Original exact oriented face rings and runtime interior flags on inconsistent cube, shared slab, disjoint and nested shells, nearby open sheet, attached open sheets and irregular prism; attribute identity and idempotence. Complex concave/annular probes and randomized ray degeneracies remain open."
+}
