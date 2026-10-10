@@ -4,3 +4,8 @@
 mod device;
 #[cfg(target_os = "macos")]
 pub use device::*;
+
+#[cfg(target_os = "macos")]
+mod submission;
+#[cfg(target_os = "macos")]
+pub use submission::*;
