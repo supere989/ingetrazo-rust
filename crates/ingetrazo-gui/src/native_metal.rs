@@ -203,6 +203,10 @@ impl ApplicationHandler for Host {
                 "Graphics backend: native Metal; device={}; unified={}; opt-in egui host",
                 metal.info.name, metal.info.unified_memory
             );
+            let precise_cad = std::env::var_os("INGETRAZO_METAL_CAD_CALLBACKS").is_some();
+            if precise_cad && !ingetrazo_metal::MetalCad2d::supported(&metal) {
+                return Err("Native Metal exact callback presentation unsupported on this device; Intel/AMD compute presentation is still required".into());
+            }
             let painter = EguiPainter::new(&metal)?;
             let gpu = MetalPresentation::attach(window.clone(), metal)?;
             let input = egui_winit::State::new(
@@ -214,6 +218,9 @@ impl ApplicationHandler for Host {
                 Some(4096),
             );
             let mut app = IngeTrazoApp::new();
+            if precise_cad {
+                app.native_composer.factory=Some(crate::composer_backend::Factory::MetalProducer(ingetrazo_render::cad_callback::Factory::default()));
+            }
             app.system_clipboard = arboard::Clipboard::new().ok();
             app.attach_session_store(if let Some(probe) = self.probe.as_ref() {
                 SessionStore::isolated(&probe.root.join("session"))

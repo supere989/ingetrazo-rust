@@ -163,10 +163,12 @@ struct Mesh {
     key: blake3::Hash,
     bounds: [[f32; 2]; 2],
 }
+enum PaintOrder { Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect) }
 pub struct PreparedPaint {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     mesh: Option<Arc<Mesh>>,
     draws: Vec<Draw>,
+    order: Vec<PaintOrder>,
     density: f32,
 }
 impl PreparedPaint {
@@ -175,16 +177,25 @@ impl PreparedPaint {
         encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
         extent: (u32, u32),
     ) -> Result<(), String> {
-        let Some(mesh) = self.mesh.as_ref() else {
-            return Ok(());
-        };
-        let logical = shader_logical_size(mesh.bounds, self.density, extent)?;
-        encoder.setRenderPipelineState(&self.pipeline);
-        unsafe {
-            encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
-            encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&logical).cast(), 8, 1);
-        }
-        for draw in &self.draws {
+        let logical = self.mesh.as_ref().map(|mesh|shader_logical_size(mesh.bounds,self.density,extent)).transpose()?;
+        for order in &self.order {
+            if let PaintOrder::Cad(prepared,clip)=order {
+                let [x,y,right,bottom]=clipped_scissor(*clip,self.density,extent)?;
+                if right>x&&bottom>y {
+                    encoder.setScissorRect(MTLScissorRect{x,y,width:right-x,height:bottom-y});
+                    prepared.encode(encoder,extent,self.density)?;
+                }
+                continue;
+            }
+            let PaintOrder::Mesh(index)=order else{unreachable!()};
+            let draw=&self.draws[*index];
+            let mesh=self.mesh.as_ref().ok_or("Metal prepared mesh owner missing")?;
+            let logical=logical.as_ref().ok_or("Metal prepared logical domain missing")?;
+            encoder.setRenderPipelineState(&self.pipeline);
+            unsafe {
+                encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw),0,0);
+                encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(logical).cast(),8,1);
+            }
             let [x, y, right, bottom] = clipped_scissor(draw.clip, self.density, extent)?;
             if right == x || bottom == y {
                 continue;
@@ -227,6 +238,7 @@ pub struct PainterStats {
 }
 pub struct EguiPainter {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
+    cad: crate::cad_callback_painter::Painter,
     textures: HashMap<TextureId, Arc<Texture>>,
     mesh: Option<Arc<Mesh>>,
     stats: PainterStats,
@@ -265,6 +277,7 @@ impl EguiPainter {
                 .map_err(|e| format!("Metal egui pipeline: {e:?}"))?;
             Ok(Self {
                 pipeline: Arc::new(pipeline),
+                cad: crate::cad_callback_painter::Painter::default(),
                 textures: HashMap::new(),
                 mesh: None,
                 stats: PainterStats::default(),
@@ -273,6 +286,7 @@ impl EguiPainter {
             })
         })
     }
+    pub fn cad_stats(&self)->crate::cad_callback_painter::Stats{self.cad.stats}
     pub fn stats(&self) -> PainterStats {
         PainterStats {
             retained_cpu_texture_bytes: self
@@ -747,16 +761,21 @@ impl EguiPainter {
         if !density.is_finite() || density <= 0. {
             return Err("Invalid Metal egui pixel density".into());
         }
+        if primitives.len()>8192 {return Err("Metal prepared paint exceeds8192 primitive admission".into());}
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
         let mut draws = Vec::new();
+        let mut order = Vec::new();
         let mut count = 0usize;
         let mut bounds = [[f32::INFINITY, f32::NEG_INFINITY]; 2];
         for primitive in primitives {
             let egui::epaint::Primitive::Mesh(mesh) = &primitive.primitive else {
-                return Err(
-                    "Metal egui paint callback unsupported: no alternate backend fallback".into(),
-                );
+                let egui::epaint::Primitive::Callback(callback)=&primitive.primitive else{unreachable!()};
+                let producer=callback.callback.downcast_ref::<ingetrazo_render::cad_callback::Callback>().ok_or("Metal paint callback type unsupported; no alternate backend fallback")?;
+                if !valid_clip(primitive.clip_rect)||!valid_clip(callback.rect){return Err("Invalid Metal CAD callback clip".into());}
+                let prepared=self.cad.prepare(metal,producer.snapshot()?,density)?;
+                order.push(PaintOrder::Cad(prepared,primitive.clip_rect.intersect(callback.rect)));
+                continue;
             };
             if !mesh.is_valid()
                 || mesh.indices.len() % 3 != 0
@@ -800,6 +819,7 @@ impl EguiPainter {
                         .to_le_bytes(),
                 );
             }
+            order.push(PaintOrder::Mesh(draws.len()));
             draws.push(Draw {
                 first,
                 count: mesh.indices.len(),
@@ -846,6 +866,7 @@ impl EguiPainter {
             pipeline: self.pipeline.clone(),
             mesh,
             draws,
+            order,
             density,
         }))
     }
