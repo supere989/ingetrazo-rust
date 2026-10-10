@@ -427,10 +427,14 @@ impl IngeTrazoApp {
         let inverse=self.scene.dimension_frame.inverse();
         let source=match ingetrazo_core::containers::transform_mesh(&cb.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return false;}};
         let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&source,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};
+        let face_geometry:Vec<_>=faces.iter().map(|&id|{let face=&mesh.faces[id];(face.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>(),face.holes.iter().map(|ring|ring.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>()).collect::<Vec<_>>())}).collect();
+        let edge_geometry:Vec<_>=edges.iter().map(|&id|{let edge=&mesh.edges[id];(mesh.vertices[edge.v0].position,mesh.vertices[edge.v1].position)}).collect();
+        let mesh=match crate::clipboard::merge_pasted_planes(&self.scene.mesh,&mesh,&faces){Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return false;}};
         let mut candidate=self.scene.clone();
         if let Err(e)=crate::clipboard::merge_resources(&mut candidate,&cb.resources){self.status_message=e;return false;}
         candidate.mesh=mesh;candidate.clear_selection();
-        for id in faces{candidate.select(SelectionItem::Face(id));}for id in edges{candidate.select(SelectionItem::Edge(id));}
+        for id in 0..candidate.mesh.faces.len(){let face=&candidate.mesh.faces[id];let outer=face.vertices.iter().map(|&v|candidate.mesh.vertices[v].position).collect::<Vec<_>>();let holes=face.holes.iter().map(|ring|ring.iter().map(|&v|candidate.mesh.vertices[v].position).collect::<Vec<_>>()).collect::<Vec<_>>();if face_geometry.iter().any(|(o,h)|*o==outer&&*h==holes){candidate.select(SelectionItem::Face(id));}}
+        for id in 0..candidate.mesh.edges.len(){let edge=&candidate.mesh.edges[id];let a=candidate.mesh.vertices[edge.v0].position;let b=candidate.mesh.vertices[edge.v1].position;if edge_geometry.iter().any(|&(x,y)|(a==x&&b==y)||(a==y&&b==x)){candidate.select(SelectionItem::Edge(id));}}
         for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*inverse*group.transform;let index=candidate.groups.len();candidate.groups.push(group);candidate.select(SelectionItem::Group(index));}
         let definitions=candidate.component_definitions.clone();for(id,definition)in definitions{if let Err(e)=candidate.replace_component_definition(id,definition){self.status_message=e;return false;}}
         self.save_undo_state();candidate.bump_version();self.scene=candidate;true
