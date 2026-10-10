@@ -161,6 +161,16 @@ jobs:
           QT_QPA_PLATFORM=offscreen python scripts/reference-ai-bridge-query.py docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/original.json
           cargo run --locked -p ingetrazo-gui --example ai_bridge_query_acceptance -- docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/native.json 2> docs/audits/ai-bridge-ci/build.log
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
+      - name: Pinned original and native legacy SKP primitive parity
+        run: |
+          oracle_dir="$RUNNER_TEMP/ingetrazo-openskp-oracle"
+          git init "$oracle_dir"
+          git -C "$oracle_dir" remote add origin https://github.com/iamahsanmehmood/openskp
+          git -C "$oracle_dir" fetch --depth=1 origin 291700bc213655a00461838de71e5f206311e619
+          git -C "$oracle_dir" checkout --detach FETCH_HEAD
+          mkdir -p docs/audits/skp-legacy-ci
+          cargo build --locked -p ingetrazo-formats --example skp_import_acceptance_fixture > docs/audits/skp-legacy-ci/build.log 2>&1
+          QT_QPA_PLATFORM=offscreen python scripts/check-native-skp-legacy.py "$oracle_dir" target/debug/examples/skp_import_acceptance_fixture docs/audits/skp-native-legacy/controls docs/audits/skp-legacy-ci > docs/audits/skp-legacy-ci/check.log 2>&1
       - name: Original native Fontconfig request matching and ownership
         run: |
           mkdir -p docs/audits/font-resolver-ci
@@ -463,6 +473,7 @@ jobs:
           path: |
             docs/audits/image-ownership-ci/
             docs/audits/ai-bridge-ci/
+            docs/audits/skp-legacy-ci/
             docs/audits/font-resolver-ci/
             docs/audits/paragraph-ci/
             docs/audits/composer-text-ci/
