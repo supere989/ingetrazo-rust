@@ -256,6 +256,7 @@ pub fn build_scene_render_data(
             &mut data.visible_edges,
             &mut data.billboards,
             &mut data.textured_meshes,
+            true,
         );
     }
 
@@ -302,6 +303,17 @@ pub fn build_scene_render_data(
     }
 
     crate::section_clip::clip_scene(&mut data,scene,style);
+    data
+}
+
+/// World-space surfaces only: no CPU projection, painter sorting or HLR work.
+/// GPU backends reuse the same visibility, material and recursive transform logic.
+pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {
+    let mut data=SceneRenderData::default();
+    if style.visual_style!=VisualStyle::Wireframe {
+        build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes);
+        for group in &scene.groups {build_group_buffers(group,&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false);}
+    }
     data
 }
 
@@ -392,6 +404,7 @@ fn build_group_buffers(
     vis_edges: &mut LineRenderBuffer,
     billboards: &mut Vec<BillboardRenderItem>,
     textured_meshes: &mut std::collections::HashMap<String, MeshRenderBuffer>,
+    include_edges: bool,
 ) {
     if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
         return;
@@ -513,7 +526,7 @@ fn build_group_buffers(
     }
 
     let eye = camera.eye();
-    for edge in &group.mesh.edges {
+    if include_edges { for edge in &group.mesh.edges {
         if edge.hidden || !scene.is_layer_visible(edge.layer.as_deref()) {
             continue;
         }
@@ -562,6 +575,7 @@ fn build_group_buffers(
         vis_edges.push_line(wp0, wp1, style.edge_color, width, LineStyle::Solid);
     }
 
+    }
     for child in &group.children {
         build_group_buffers(
             child,
@@ -574,6 +588,7 @@ fn build_group_buffers(
             vis_edges,
             billboards,
             textured_meshes,
+            include_edges,
         );
     }
 }
@@ -1317,3 +1332,15 @@ fn render_grid_and_axes(
     }
 }
 
+
+#[cfg(test)]mod native_surface_regression {
+ use super::*;
+ #[test]fn surface_upload_keeps_nested_transform_and_hidden_visibility_without_hlr(){
+  let mut scene=Scene::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);
+  let mut child=ingetrazo_core::groups::Group::with_mesh("leaf",mesh);child.transform=DMat4::from_translation(DVec3::Y*2.);
+  let mut parent=ingetrazo_core::groups::Group::new("parent");parent.transform=DMat4::from_translation(DVec3::X*3.);parent.children.push(child);scene.groups.push(parent);
+  let camera=OrbitCamera::default();let style=StyleConfig::default();let visible=build_world_surfaces(&scene,&camera,&style);
+  assert_eq!(visible.opaque_mesh.indices.len(),3);assert!(visible.opaque_mesh.vertices.iter().all(|v|v.position[0]>=3.&&v.position[1]>=2.));assert!(visible.visible_edges.vertices.is_empty());assert!(visible.hidden_edges.vertices.is_empty());
+  scene.groups[0].hidden=true;assert!(build_world_surfaces(&scene,&camera,&style).opaque_mesh.indices.is_empty());
+ }
+}

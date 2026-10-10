@@ -1,3 +1,5 @@
+pub mod world;
+pub mod resources;
 mod queues;
 pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
@@ -31,6 +33,7 @@ pub trait App {
     fn title() -> &'static str;
     fn new(app: &mut System, initial_file: Option<std::path::PathBuf>) -> Self;
     fn build_ui(&mut self, ctx: &Context);
+    fn prepare_gpu(&mut self,_:&mut System,_resize:bool) {}
     fn gpu_error(&mut self,error:&str) {eprintln!("GPU rendering paused: {error}");}
     fn clean(&mut self, vulkan_ctx: &VulkanContext) {
         let _ = vulkan_ctx;
@@ -117,6 +120,8 @@ pub struct System {
     pub egui_winit: State,
     pub renderer: Renderer,
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
+    pub world: Option<world::World>,
+    draw_serial:u64,
 
     textures_to_free: Option<Vec<TextureId>>,
     close_requested: bool,
@@ -202,7 +207,7 @@ impl System {
             egui_winit,
             renderer,
             memory_budget,
-
+            world:None,draw_serial:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -249,6 +254,8 @@ impl System {
                 .expect("Failed to free textures");
         }
 
+        egui_app.prepare_gpu(self,true);
+
         // Generate UI
         let mut raw_input = self.egui_winit.take_egui_input(&window);
         if self.close_requested { raw_input.viewports.entry(ViewportId::ROOT).or_default().events.push(egui::ViewportEvent::Close); }
@@ -263,6 +270,7 @@ impl System {
             egui_app.build_ui(ctx);
         });
 
+        egui_app.prepare_gpu(self,false);
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
             let canceled=output.commands.iter().any(|c|matches!(c,egui::ViewportCommand::CancelClose));
@@ -332,6 +340,7 @@ impl System {
             pixels_per_point,
             &mut self.renderer,
             &clipped_primitives,
+            self.world.as_mut(),self.draw_serial+1,
         )
         .expect("Failed to record command buffer");
         if let Some(error)=draw_error {egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);}
@@ -349,6 +358,7 @@ impl System {
                 .expect("Failed to submit work to gpu.")
         };
 
+        self.draw_serial+=1;
         let swapchains = [self.swapchain.khr];
         let images_indices = [image_index];
         let present_info = vk::PresentInfoKHR::default()
@@ -408,6 +418,8 @@ impl System {
                 .expect("Failed to wait for graphics device to idle.");
 
             egui_app.clean(&self.vulkan_context);
+            if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
+            drop(self.world.take());
 
             self.vulkan_context.device.destroy_fence(self.fence, None);
             self.vulkan_context
@@ -489,7 +501,7 @@ impl VulkanContext {
         let command_pool = {
             let command_pool_info = vk::CommandPoolCreateInfo::default()
                 .queue_family_index(graphics_q_index)
-                .flags(vk::CommandPoolCreateFlags::empty());
+                .flags(vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER);
             unsafe { device.create_command_pool(&command_pool_info, None)? }
         };
 
@@ -988,12 +1000,14 @@ fn record_command_buffers(
     renderer: &mut Renderer,
 
     clipped_primitives: &[ClippedPrimitive],
+    world:Option<&mut world::World>,serial:u64,
 ) -> Result<Option<String>, Box<dyn Error>> {
     unsafe { device.reset_command_pool(command_pool, vk::CommandPoolResetFlags::empty())? };
 
     let command_buffer_begin_info =
         vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::SIMULTANEOUS_USE);
     unsafe { device.begin_command_buffer(command_buffer, &command_buffer_begin_info)? };
+    if let Some(world)=world {world.record(command_buffer,serial)?;}
 
     let render_pass_begin_info = vk::RenderPassBeginInfo::default()
         .render_pass(render_pass)
@@ -1029,10 +1043,22 @@ impl App for crate::IngeTrazoApp {
     fn title() -> &'static str { "IngeTrazo (native Vulkan)" }
     fn new(_: &mut System, initial_file: Option<std::path::PathBuf>) -> Self {
         let mut app=Self::new();
+        app.native_gpu_viewport_enabled=std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some();
         app.system_clipboard=arboard::Clipboard::new().ok();
         app.attach_session_store(crate::session_state::SessionStore::user_default());
         if let Some(path)=initial_file { app.open_document(&path); }
         app
+    }
+    fn prepare_gpu(&mut self,system:&mut System,resize:bool) {
+        if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){return;}
+        let Some(rect)=self.native_gpu_viewport_rect else {return;};
+        let result=(|| {
+            if system.world.is_none(){system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);}
+            let world=system.world.as_mut().unwrap();
+            if resize {let scale=system.egui_ctx.pixels_per_point();let extent=vk::Extent2D{width:(rect.width()*scale).ceil().max(1.0) as u32,height:(rect.height()*scale).ceil().max(1.0) as u32};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);}
+            world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.model_revision)
+        })();
+        if let Err(error)=result {self.gpu_error(&error);}
     }
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
     fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}

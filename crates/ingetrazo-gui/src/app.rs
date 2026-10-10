@@ -40,6 +40,11 @@ pub struct GeometryClipboard {
 }
 
 pub struct IngeTrazoApp {
+    /// Runtime-only native GPU viewport state; never serialized into the document.
+    pub native_gpu_viewport_enabled: bool,
+    pub model_revision:u64,
+    pub native_gpu_viewport_rect: Option<egui::Rect>,
+    pub native_gpu_viewport_texture: Option<egui::TextureId>,
     pub document_session: crate::document_session::DocumentSession,
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
@@ -134,6 +139,7 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
+            native_gpu_viewport_enabled:false,model_revision:0,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
             component_edit_stack: Vec::new(),
             scene,
             camera,
@@ -227,6 +233,8 @@ impl IngeTrazoApp {
         self.status_message.clear();
         self.vcb_text.clear();
     }
+
+    pub fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);}
 
     pub fn new_document(&mut self) {self.request_document_action(crate::document_session::DocumentAction::New);}
 
@@ -1504,4 +1512,16 @@ mod ordered_solid_selection_tests {
         app.scene.clear_selection();
         assert!(app.scene.selection_order.is_empty());
     }
+}
+
+#[cfg(test)]mod model_revision_regression {
+ use super::*;
+ #[test]fn history_and_context_swaps_never_reuse_gpu_model_revision(){
+  let mut app=IngeTrazoApp::new();let initial=app.model_revision;
+  app.save_undo_state();app.scene.mesh.add_vertex(DVec3::X);let committed=app.model_revision;assert!(committed>initial);
+  app.undo();let undo=app.model_revision;assert!(undo>committed);app.redo();assert!(app.model_revision>undo);
+  let mut mesh=ingetrazo_core::mesh::Mesh::new();let vertices=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(vertices.to_vec(),vec![]);
+  app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("context",mesh));app.scene.selection.insert(SelectionItem::Group(0));let before=app.model_revision;
+  app.begin_component_edit();assert_eq!(app.component_edit_stack.len(),1);assert!(app.model_revision>before);let entered=app.model_revision;app.cancel_component_edit();assert!(app.model_revision>entered);
+ }
 }

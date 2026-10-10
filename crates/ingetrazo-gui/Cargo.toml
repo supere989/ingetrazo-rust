@@ -28,3 +28,5 @@ raw-window-handle = "0.6"
 winit = "0.30"
 egui-winit = "0.30"
 egui-ash-renderer = "=0.7.0"
+
+bytemuck.workspace = true
