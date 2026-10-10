@@ -103,7 +103,8 @@ pub struct System {
     command_buffer: vk::CommandBuffer,
     swapchain: Swapchain,
     image_available_semaphore: vk::Semaphore,
-    render_finished_semaphore: vk::Semaphore,
+    // Presentation may outlive the graphics fence; one semaphore per acquired image.
+    render_finished_semaphores: Vec<vk::Semaphore>,
     fence: vk::Fence,
 
     run: bool,
@@ -150,14 +151,7 @@ impl System {
                     .create_semaphore(&semaphore_info, None)?
             }
         };
-        let render_finished_semaphore = {
-            let semaphore_info = vk::SemaphoreCreateInfo::default();
-            unsafe {
-                vulkan_context
-                    .device
-                    .create_semaphore(&semaphore_info, None)?
-            }
-        };
+        let render_finished_semaphores = create_present_semaphores(&vulkan_context.device,swapchain.images.len())?;
         let fence = {
             let fence_info = vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED);
             unsafe { vulkan_context.device.create_fence(&fence_info, None)? }
@@ -180,7 +174,7 @@ impl System {
             vulkan_context.device.clone(),
             swapchain.render_pass,
             Options {
-                srgb_framebuffer: true,
+                srgb_framebuffer: swapchain.srgb,
                 ..Default::default()
             },
         )?;
@@ -190,7 +184,7 @@ impl System {
             command_buffer,
             swapchain,
             image_available_semaphore,
-            render_finished_semaphore,
+            render_finished_semaphores,
             fence,
 
             run: true,
@@ -214,6 +208,9 @@ impl System {
                 self.swapchain
                     .recreate(&self.vulkan_context)
                     .expect("Failed to recreate swapchain");
+                // recreate waits for device idle, including pending presentation use.
+                unsafe { for semaphore in self.render_finished_semaphores.drain(..) { self.vulkan_context.device.destroy_semaphore(semaphore,None); } }
+                self.render_finished_semaphores=create_present_semaphores(&self.vulkan_context.device,self.swapchain.images.len()).expect("Failed to create presentation semaphores");
                 self.renderer
                     .set_render_pass(self.swapchain.render_pass)
                     .expect("Failed to rebuild renderer pipeline");
@@ -310,7 +307,7 @@ impl System {
 
         let wait_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT];
         let wait_semaphores = [self.image_available_semaphore];
-        let signal_semaphores = [self.render_finished_semaphore];
+        let signal_semaphores = [self.render_finished_semaphores[image_index as usize]];
 
         // Re-record commands to draw geometry
         record_command_buffers(
@@ -402,9 +399,7 @@ impl System {
             self.vulkan_context
                 .device
                 .destroy_semaphore(self.image_available_semaphore, None);
-            self.vulkan_context
-                .device
-                .destroy_semaphore(self.render_finished_semaphore, None);
+            for semaphore in self.render_finished_semaphores.drain(..) { self.vulkan_context.device.destroy_semaphore(semaphore,None); }
 
             self.swapchain.destroy(&self.vulkan_context);
 
@@ -413,6 +408,15 @@ impl System {
                 .free_command_buffers(self.vulkan_context.command_pool, &[self.command_buffer]);
         }
     }
+}
+
+fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semaphore>,vk::Result> {
+    let mut semaphores=Vec::with_capacity(count);
+    for _ in 0..count { match unsafe {device.create_semaphore(&vk::SemaphoreCreateInfo::default(),None)} {
+        Ok(semaphore)=>semaphores.push(semaphore),
+        Err(error)=>{unsafe {for semaphore in semaphores {device.destroy_semaphore(semaphore,None);}}return Err(error);}
+    }}
+    Ok(semaphores)
 }
 
 pub struct VulkanContext {
@@ -512,6 +516,7 @@ struct Swapchain {
     extent: vk::Extent2D,
     khr: vk::SwapchainKHR,
     images: Vec<vk::Image>,
+    srgb: bool,
     image_views: Vec<vk::ImageView>,
     render_pass: vk::RenderPass,
     framebuffers: Vec<vk::Framebuffer>,
@@ -535,6 +540,7 @@ impl Swapchain {
             extent,
             khr,
             images,
+            srgb: matches!(format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB),
             image_views,
             render_pass,
             framebuffers,
@@ -563,6 +569,8 @@ impl Swapchain {
         self.extent = extent;
         self.khr = khr;
         self.images = images;
+        let srgb=matches!(format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB);
+        if srgb!=self.srgb { return Err("Swapchain framebuffer color space changed; renderer recreation required".into()); }
         self.image_views = image_views;
         self.render_pass = render_pass;
         self.framebuffers = framebuffers;
@@ -824,7 +832,7 @@ fn create_vulkan_swapchain(
         *formats
             .iter()
             .find(|format| {
-                format.format == vk::Format::R8G8B8A8_SRGB
+                matches!(format.format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB)
                     && format.color_space == vk::ColorSpaceKHR::SRGB_NONLINEAR
             })
             .unwrap_or(&formats[0])
