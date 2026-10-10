@@ -564,56 +564,59 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
                         let entry = zip
                             .by_name(&asset)
                             .map_err(|e| SkpError::Invalid(e.to_string()))?;
-                        if entry.size() > 16 * 1024 * 1024 {
-                            return Err(SkpError::Invalid(
-                                "Texture asset exceeds 16MiB admission".into(),
-                            ));
-                        }
-                        retained_texture_bytes = retained_texture_bytes
-                            .checked_add(entry.size())
-                            .filter(|&bytes| bytes <= 256 * 1024 * 1024)
-                            .ok_or_else(|| {
-                                SkpError::Invalid(
-                                    "Texture aggregate retained bytes exceed 256MiB".into(),
-                                )
-                            })?;
-                        let mut data = Vec::new();
-                        entry.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
-                        if data.len() > 16 * 1024 * 1024 {
-                            return Err(SkpError::Invalid(
-                                "Texture expansion exceeds admission".into(),
-                            ));
-                        }
-                        match image::guess_format(&data) {
-                            Ok(image::ImageFormat::Png | image::ImageFormat::Jpeg) => {}
-                            _ => {
-                                return Err(SkpError::Unsupported(
-                                    "texture image codec beyond PNG/JPEG".into(),
-                                ))
+                        if entry.size() == 0 {
+                            None
+                        } else {
+                            if entry.size() > 16 * 1024 * 1024 {
+                                return Err(SkpError::Invalid(
+                                    "Texture asset exceeds 16MiB admission".into(),
+                                ));
                             }
+                            retained_texture_bytes = retained_texture_bytes
+                                .checked_add(entry.size())
+                                .filter(|&bytes| bytes <= 256 * 1024 * 1024)
+                                .ok_or_else(|| {
+                                    SkpError::Invalid(
+                                        "Texture aggregate retained bytes exceed 256MiB".into(),
+                                    )
+                                })?;
+                            let mut data = Vec::new();
+                            entry.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
+                            if data.len() > 16 * 1024 * 1024 {
+                                return Err(SkpError::Invalid(
+                                    "Texture expansion exceeds admission".into(),
+                                ));
+                            }
+                            match image::guess_format(&data) {
+                                Ok(image::ImageFormat::Png | image::ImageFormat::Jpeg) => {}
+                                _ => {
+                                    return Err(SkpError::Unsupported(
+                                        "texture image codec beyond PNG/JPEG".into(),
+                                    ))
+                                }
+                            }
+                            let reader = image::ImageReader::new(Cursor::new(&data))
+                                .with_guessed_format()
+                                .map_err(SkpError::Io)?;
+                            let (w, h) = reader
+                                .into_dimensions()
+                                .map_err(|e| SkpError::Invalid(e.to_string()))?;
+                            if w == 0 || h == 0 || w as u64 * h as u64 > 64 * 1024 * 1024 {
+                                return Err(SkpError::Invalid(
+                                    "Texture dimensions exceed admission".into(),
+                                ));
+                            }
+                            let width = t.attribute("xScale").unwrap_or("0").parse().unwrap_or(0.);
+                            let height = t.attribute("yScale").unwrap_or("0").parse().unwrap_or(0.);
+                            Some(TextureRecord {
+                                archive_name: asset,
+                                bytes: data,
+                                width,
+                                height,
+                            })
                         }
-                        let reader = image::ImageReader::new(Cursor::new(&data))
-                            .with_guessed_format()
-                            .map_err(SkpError::Io)?;
-                        let (w, h) = reader
-                            .into_dimensions()
-                            .map_err(|e| SkpError::Invalid(e.to_string()))?;
-                        if w == 0 || h == 0 || w as u64 * h as u64 > 64 * 1024 * 1024 {
-                            return Err(SkpError::Invalid(
-                                "Texture dimensions exceed admission".into(),
-                            ));
-                        }
-                        let width = t.attribute("xScale").unwrap_or("0").parse().unwrap_or(0.);
-                        let height = t.attribute("yScale").unwrap_or("0").parse().unwrap_or(0.);
-                        Some(TextureRecord {
-                            archive_name: asset,
-                            bytes: data,
-                            width,
-                            height,
-                        })
                     } else {
-                        p.unsupported
-                            .insert("material textures (missing image fallback required)".into());
+                        // Pinned source falls through to the declared RGB recipe.
                         None
                     }
                 }
