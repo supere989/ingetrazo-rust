@@ -237,23 +237,10 @@ impl SnapEngine {
                 };
             }
         }
-        for g in &scene.groups {
-            for v in &g.mesh.vertices {
-                let wp = g.transform.transform_point3(v.position);
-                let d = (wp - cursor_work).length();
-                if d < best_dist && scene.section_point_visible(wp) {
-                    best_dist = d;
-                    best_result = SnapResult {
-                        point: wp,
-                        kind: SnapKind::Endpoint,
-                        color: COLOR_ENDPOINT,
-                        label: "Endpoint in Group".to_string(),
-                        axis: None,
-                        guides: Vec::new(),
-                    };
-                }
-            }
-        }
+        fn group_points(groups:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().map(|v|transform.transform_point3(v.position)));children(&group.children,transform,scene,points);}}
+        fn children(children:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){group_points(children,parent,scene,points)}
+        let mut group_vertices=vec![];group_points(&scene.groups,glam::DMat4::IDENTITY,scene,&mut group_vertices);
+        for wp in group_vertices{let d=(wp-cursor_work).length();if d<best_dist&&scene.section_point_visible(wp){best_dist=d;best_result=SnapResult{point:wp,kind:SnapKind::Endpoint,color:COLOR_ENDPOINT,label:"Endpoint in Group".into(),axis:None,guides:vec![]};}}
         for gp in &scene.geo_points {
             let d = (gp.position - cursor_work).length();
             if d < best_dist && scene.section_point_visible(gp.position) {
@@ -748,5 +735,6 @@ mod tests {
         assert!((res.point - DVec3::new(10.0, 20.0, 0.0)).length() < 0.1);
         assert_eq!(res.guides.len(), 2);
     }    #[test]fn section_hides_nearest_endpoint_and_reveals_next_candidate(){let mut scene=Scene::new();scene.mesh.add_vertex(DVec3::new(0.02,0.,0.));scene.mesh.add_vertex(DVec3::new(-0.2,0.,0.));scene.section_planes.push(crate::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;let mut engine=SnapEngine::new(0.5);let ray=Ray::new(DVec3::new(0.02,0.,3.),-DVec3::Z);let snapped=engine.snap(&ray,&scene,None,None);assert_eq!(snapped.kind,SnapKind::Endpoint);assert_eq!(snapped.point,DVec3::new(-0.2,0.,0.));scene.show_section_cuts=false;assert_eq!(engine.snap(&ray,&scene,None,None).point,DVec3::new(0.02,0.,0.));}
+    #[test]fn nested_group_snap_uses_world_placement_and_active_cut(){let mut scene=Scene::new();let mut mesh=crate::mesh::Mesh::new();mesh.add_vertex(DVec3::new(0.02,0.,0.));mesh.add_vertex(DVec3::new(-0.2,0.,0.));let mut child=crate::groups::Group::with_mesh("child",mesh);child.transform=glam::DMat4::from_translation(-DVec3::X);let mut parent=crate::groups::Group::new("parent");parent.transform=glam::DMat4::from_translation(DVec3::X);parent.children.push(child);scene.groups.push(parent);scene.section_planes.push(crate::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;let mut engine=SnapEngine::new(0.5);let ray=Ray::new(DVec3::new(0.02,0.,3.),-DVec3::Z);let result=engine.snap(&ray,&scene,None,None);assert_eq!(result.kind,SnapKind::Endpoint);assert!((result.point-DVec3::new(-0.2,0.,0.)).length()<1e-10);scene.groups[0].hidden=true;assert_ne!(engine.snap(&ray,&scene,None,None).kind,SnapKind::Endpoint);}
 
 }
