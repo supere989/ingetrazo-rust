@@ -12,11 +12,29 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  if let Some(value)=args.windows(2).find(|a|a[0]=="--vendor").map(|a|&a[1]) {request.vendor_id=Some(if let Some(hex)=value.strip_prefix("0x"){u32::from_str_radix(hex,16)?}else{value.parse()?});}
  if let Some(value)=args.windows(2).find(|a|a[0]=="--device-name").map(|a|&a[1]) {request.name=Some(value.clone());}
  let output=args.windows(2).find(|a|a[0]=="--output").map(|a|std::path::PathBuf::from(&a[1])).unwrap_or_else(||"/tmp/ingetrazo-headless-depth.png".into());
- let context=VulkanContext::new_headless(&request)?;
+ let mut context=VulkanContext::new_headless(&request)?;
  let budget=Arc::new(VulkanBudget::new(&context.instance,context.physical_device)?);
  {let mut ledger=budget.ledger.lock().unwrap();ledger.total_limit=Some(128*1024*1024);}
  if args.iter().any(|a|a=="--timeout-control") {let fence=unsafe {context.device.create_fence(&vk::FenceCreateInfo::default(),None)}?;context.wait_transfer(fence)?;return Err("Unsignaled timeout control unexpectedly completed".into());}
  let mut resources=Resources::new(&context,budget.clone());
+ if args.iter().any(|a|a=="--transfer-quarantine-control") {
+  resources.upload(&context,&[1u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true)?;
+  assert_eq!(resources.stats.transfer_command_allocations,1);assert_eq!(resources.stats.transfer_fence_creations,1);
+  let charged=budget.ledger.lock().unwrap().total_committed();assert!(charged>0);
+  // The transfer has completed. An independent unsignaled fence now exercises
+  // actual Vulkan TIMEOUT and conservative unknown-completion ownership.
+  let unknown=unsafe{context.device.create_fence(&vk::FenceCreateInfo::default(),None)}?;
+  context.transfer_timeout_ns=0;context.diagnostic_fail_fast=false;
+  assert_eq!(context.wait_transfer(unknown),Err(vk::Result::TIMEOUT));assert!(resources.check_submission().is_err());
+  assert!(resources.upload(&context,&[2u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true).is_err());
+  assert_eq!(resources.stats.transfer_command_allocations,1);assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged);
+  let owners=context.lifetime.retained_owners();drop(resources);
+  assert_eq!(context.lifetime.retained_owners(),owners+3,"Quarantine must retain budget, buffers and cached transfer owner");
+  assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged,"Quarantine must not free charged resources");
+  context.lifetime.retain((context.device.clone(),unknown));
+  println!("PASS actual unsignaled-fence TIMEOUT; pooled transfer reuse refused; three resource owners retained; charged bytes{charged}; no pending GPU command asserted");return Ok(());
+ }
+
  let no_readback=resources.upload(&context,&[0u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true)?;
  let charged=budget.ledger.lock().unwrap().total_committed();
  assert!(resources.readback_buffer(&context,no_readback).unwrap_err().contains("not created for readback"));
