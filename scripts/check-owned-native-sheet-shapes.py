@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Capture only newly created owned native proof windows on authorized Xwayland."""
+import ctypes as C,ctypes.util,json,os,subprocess,sys,time
+from pathlib import Path
+class Events:
+ def processEvents(self):pass
+app=Events()
+x=C.CDLL(ctypes.util.find_library("X11"))
+x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p
+d=x.XOpenDisplay(os.environ["DISPLAY"].encode());assert d
+x.XDefaultRootWindow.argtypes=[C.c_void_p];x.XDefaultRootWindow.restype=C.c_ulong
+root=x.XDefaultRootWindow(d)
+x.XInternAtom.argtypes=[C.c_void_p,C.c_char_p,C.c_int];x.XInternAtom.restype=C.c_ulong
+atom=lambda name:x.XInternAtom(d,name.encode(),0)
+x.XGetWindowProperty.argtypes=[C.c_void_p,C.c_ulong,C.c_ulong,C.c_long,C.c_long,C.c_int,C.c_ulong,C.POINTER(C.c_ulong),C.POINTER(C.c_int),C.POINTER(C.c_ulong),C.POINTER(C.c_ulong),C.POINTER(C.POINTER(C.c_ubyte))]
+x.XFree.argtypes=[C.c_void_p]
+def prop(w,name):
+ typ=C.c_ulong();fmt=C.c_int();n=C.c_ulong();after=C.c_ulong();p=C.POINTER(C.c_ubyte)()
+ assert x.XGetWindowProperty(d,w,atom(name),0,4096,0,0,C.byref(typ),C.byref(fmt),C.byref(n),C.byref(after),C.byref(p))==0
+ try:return C.string_at(p,n.value) if fmt.value==8 else list(C.cast(p,C.POINTER(C.c_ulong))[:n.value])
+ finally:
+  if p:x.XFree(p)
+def clients():return set(prop(root,"_NET_CLIENT_LIST"))
+x.XMapRaised.argtypes=[C.c_void_p,C.c_ulong]
+x.XResizeWindow.argtypes=[C.c_void_p,C.c_ulong,C.c_uint,C.c_uint];x.XFlush.argtypes=[C.c_void_p]
+class Data(C.Union):_fields_=[("l",C.c_long*5)]
+class Message(C.Structure):_fields_=[("type",C.c_int),("serial",C.c_ulong),("send_event",C.c_int),("display",C.c_void_p),("window",C.c_ulong),("message_type",C.c_ulong),("format",C.c_int),("data",Data)]
+class Event(C.Union):_fields_=[("message",Message),("pad",C.c_long*24)]
+x.XSendEvent.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_long,C.POINTER(Event)]
+def close(w):
+ e=Event();e.message=Message(33,0,1,d,w,atom("WM_PROTOCOLS"),32,Data());e.message.data.l[0]=atom("WM_DELETE_WINDOW");e.message.data.l[1]=0
+ assert x.XSendEvent(d,w,0,0,C.byref(e));x.XFlush(d)
+def wait(fn,timeout=8):
+ end=time.monotonic()+timeout
+ while time.monotonic()<end:
+  value=fn()
+  if value:return value
+  app.processEvents();time.sleep(.05)
+ raise TimeoutError("Owned proof window readiness timed out")
+class XImage(C.Structure):
+ _fields_=[("width",C.c_int),("height",C.c_int),("xoffset",C.c_int),("format",C.c_int),("data",C.c_void_p),("byte_order",C.c_int),("bitmap_unit",C.c_int),("bitmap_bit_order",C.c_int),("bitmap_pad",C.c_int),("depth",C.c_int),("bytes_per_line",C.c_int),("bits_per_pixel",C.c_int),("red_mask",C.c_ulong),("green_mask",C.c_ulong),("blue_mask",C.c_ulong)]
+x.XGetImage.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_ulong,C.c_int];x.XGetImage.restype=C.POINTER(XImage)
+x.XDestroyImage.argtypes=[C.POINTER(XImage)]
+
+import struct,zlib
+EXPECTED=["rect","rounded","ellipse","polygon-clamped","line-inverted","arrow","terrain-ticks","terrain-hatch-inverted","terrain-band"]
+def capture_owned(w,dst,width=600,height=500):
+ p=x.XGetImage(d,w,0,0,width,height,C.c_ulong(-1).value,2)
+ if not p:return False
+ try:
+  im=p.contents
+  assert im.width==width and im.height==height and im.bits_per_pixel==32 and im.byte_order==0
+  assert (im.red_mask,im.green_mask,im.blue_mask)==(0xff0000,0xff00,0xff)
+  raw=C.string_at(im.data,im.bytes_per_line*height);rows=[]
+  for y in range(height):
+   src=raw[y*im.bytes_per_line:y*im.bytes_per_line+width*4];row=bytearray(width*4)
+   row[0::4]=src[2::4];row[1::4]=src[1::4];row[2::4]=src[0::4];row[3::4]=b"\xff"*width
+   rows.append(b"\0"+row)
+  def chunk(kind,data):return struct.pack(">I",len(data))+kind+data+struct.pack(">I",zlib.crc32(kind+data))
+  dst.write_bytes(b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",width,height,8,6,0,0,0))+chunk(b"IDAT",zlib.compress(b"".join(rows)))+chunk(b"IEND",b""))
+  return True
+ finally:x.XDestroyImage(p)
+binary=Path(sys.argv[1]);out=Path(sys.argv[2]);old=clients();cases=[]
+with(out/"startup.log").open("w")as stream:
+ child=subprocess.Popen([str(binary)],stdout=stream,stderr=stream)
+ try:
+  def owned():
+   assert child.poll()is None
+   hits=[w for w in clients()-old if prop(w,"_NET_WM_NAME")==b"IngeTrazo physical sheet shape acceptance"];assert len(hits)<=1
+   return hits[0]if hits else None
+  w=wait(owned);x.XResizeWindow(d,w,600,500);x.XMapRaised(d,w);x.XFlush(d)
+  time.sleep(.6)
+  for phase,name in enumerate(EXPECTED):
+   (out/"phase.next").write_text(str(phase));os.replace(out/"phase.next",out/"phase")
+   def ready():
+    assert child.poll()is None
+    try:s=json.loads((out/"state.json").read_text())
+    except(FileNotFoundError,json.JSONDecodeError):return None
+    return s if s.get("phase")==phase and s.get("uploads")==phase+1 else None
+   state=wait(ready,30);assert state['direct'];time.sleep(.25)
+   assert capture_owned(w,out/(name+".png"));before=json.loads((out/"state.json").read_text());time.sleep(.15);warm=json.loads((out/"state.json").read_text())
+   assert warm['phase']==phase and warm['uploads']==before['uploads']==phase+1 and warm['cache_hits']>before['cache_hits']
+   cases.append(dict(name=name,warm_zero_uploads=True,gpu_uploads=warm['uploads'],gpu_cached_bytes=warm['cached_bytes']))
+  close(w);assert child.wait(timeout=5)==0
+  log=(out/"startup.log").read_text();assert "NVIDIA GeForce RTX 5090"in log and "llvmpipe"not in log
+  (out/"owned-hardware.json").write_text(json.dumps(dict(passed=True,owned_client_only=True,clean_close=True,cases=cases),indent=2)+"\n")
+ finally:
+  if child.poll()is None:
+   child.terminate()
+   try:child.wait(timeout=3)
+   except subprocess.TimeoutExpired:child.kill();child.wait(timeout=3)
