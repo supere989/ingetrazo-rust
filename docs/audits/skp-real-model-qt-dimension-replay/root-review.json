@@ -1,0 +1,23 @@
+{
+  "hashes_verified": 15,
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "different_pixels": 99
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "different_pixels": 0
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "different_pixels": 0
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "different_pixels": 0
+    }
+  ],
+  "status": "dimension_render_correction_verified_remaining_gondola_failure",
+  "scope": "Independent retained image decode. Fresh merged strengthened save assertion pending; native Vulkan stage remains required."
+}
