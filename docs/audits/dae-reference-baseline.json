@@ -1,0 +1,24 @@
+{
+  "original": {
+    "loose_faces": 0,
+    "groups": [
+      {
+        "name": "dae-reference-grid",
+        "faces": 1,
+        "edges": 64,
+        "area": 256.0
+      }
+    ]
+  },
+  "native": {
+    "loose_faces": 0,
+    "groups": [
+      {
+        "name": "IngeTrazo",
+        "faces": 512,
+        "edges": 800,
+        "area": 256.0
+      }
+    ]
+  }
+}
