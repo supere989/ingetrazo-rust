@@ -333,3 +333,26 @@ fn published_mesh_identity_includes_plain_placements_but_not_equal_prototypes() 
     assert_eq!(reopened.groups[2].mesh.vertices[0].position.z,0.);
     std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
 }
+
+#[test]
+fn authored_f64_coordinates_survive_exact_native_document_reopen() {
+    // Values from a reflected/sheared world-edit share-back. Default JSON
+    // parsing previously changed the last coordinate by one floating-point step.
+    let original=json!({"edges":[],"faces":[{"vertices":[
+        [0.19999999999999996,0.6666666666666666,0.0],
+        [1.2,0.6666666666666666,0.0],
+        [0.19999999999999996,1.6666666666666665,0.0]
+    ],"texture":{"uvw":[1.0,0.0,0.0,3.0,0.0,1.0,0.0,4.0]}}]});
+    let src=temp("exact-f64-source.igz");let dst=temp("exact-f64-saved.igz");
+    write_plain(&original,&src);
+    let scene=load_igz(&src).unwrap();
+    for (vertex,expected) in scene.mesh.vertices.iter().zip(original["faces"][0]["vertices"].as_array().unwrap()) {
+        for (actual,expected) in vertex.position.to_array().into_iter().zip(expected.as_array().unwrap()) {
+            assert_eq!(actual.to_bits(),expected.as_f64().unwrap().to_bits());
+        }
+    }
+    assert_eq!(scene_to_igz_document(&scene),original);
+    save_igz(&scene,&dst).unwrap();
+    assert_eq!(scene_to_igz_document(&load_igz(&dst).unwrap()),original);
+    std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}

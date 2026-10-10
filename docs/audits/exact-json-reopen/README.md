@@ -1,0 +1,3 @@
+# Exact native JSON coordinate reopening
+
+Authored reflected/sheared world-edit coordinates exposed default serde_json decimal parsing changing 1.6666666666666665 to 1.6666666666666663. The focused bit-exact native IGZ source/load/save/reload regression fails with the previous parser and passes with float_roundtrip. No numeric tolerance is introduced. All 58 format tests pass. The feature changes parsing accuracy without changing JSON schema or adding processes. Original world-edit workflow interoperability remains in its isolated component review branch; this regression independently protects published native document parsing.

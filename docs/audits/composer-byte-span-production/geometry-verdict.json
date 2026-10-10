@@ -1,0 +1,1 @@
+{"passed": true, "cases": 9, "leaf_checks": 390, "negative_controls": ["missing", "duplicated-recipe", "geometry", "palette", "opacity"], "geometry_absolute_tolerance": 1e-09, "boundary": "Actual original painter draw geometry/palette vs native physical commands; source PNG retained, native preview rasterization/clip-cap pixel equivalence and exports remain open"}

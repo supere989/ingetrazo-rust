@@ -1,6 +1,56 @@
 name: Rust and semantic acceptance
 on: [push, pull_request]
 jobs:
+  metal-native-link:
+    name: Native Metal framework link (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Link native device probe against Apple frameworks
+        run: |
+          mkdir -p docs/audits/metal-native-link-ci
+          cargo build --locked -p ingetrazo-metal --example device_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
+          otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
+      - name: Retain native linking evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-link-${{ matrix.runner }}
+          path: docs/audits/metal-native-link-ci/
+          if-no-files-found: error
+  metal-cross-compilation:
+    name: Native Metal compile (${{ matrix.target }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-apple-darwin, x86_64-apple-darwin]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Check native Metal library and device probe
+        run: |
+          mkdir -p docs/audits/metal-cross-ci
+          cargo check --locked -p ingetrazo-metal --all-targets --target ${{ matrix.target }} > docs/audits/metal-cross-ci/check.log 2>&1
+      - name: Retain compile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-compile-${{ matrix.target }}
+          path: docs/audits/metal-cross-ci/
+          if-no-files-found: error
   compilation-and-tests:
     runs-on: ubuntu-24.04
     steps:
@@ -55,6 +105,7 @@ jobs:
       - name: Exact original Qt and production CAD color protocol
         run: |
           mkdir -p docs/audits/cad2d-color-ci
+          QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad-span-multiply.py > docs/audits/cad2d-color-ci/byte-span-law.json
           QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad2d-premultiply.py docs/audits/cad2d-color-ci/original
           cargo run --locked -p ingetrazo-render --example cad2d_premultiply_protocol -- docs/audits/cad2d-color-ci/native.bin
           QT_QPA_PLATFORM=offscreen python scripts/check-cad2d-premultiply.py docs/audits/cad2d-color-ci/original docs/audits/cad2d-color-ci/native.bin --output docs/audits/cad2d-color-ci/result.json

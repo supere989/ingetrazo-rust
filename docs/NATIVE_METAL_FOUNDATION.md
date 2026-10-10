@@ -9,3 +9,7 @@ Both Apple Silicon and Intel macOS all-target checks pass. Five shared allocatio
 The APIs currently require macOS 11 or newer. Actual allocation size is reconciled after Metal allocation and before publishing the buffer. Advertised ray tracing and BC compression support are diagnostics only. Fence-retired ownership, rendering, compute, texture formats/compression, acceleration structures, application integration and real Mac hardware validation remain open. No parity row is promoted by this foundation.
 
 References: https://docs.rs/objc2-metal/0.3.2/objc2_metal/ and https://developer.apple.com/documentation/metal/mtldevice .
+
+CI independently checks the native Metal library and device probe for both macOS architectures on Linux runners and retains each check log. These jobs perform cross-compilation only; successful results do not prove framework linking, application presentation or actual Mac GPU execution.
+
+Separate native macOS CI jobs build and link the device-probe executable on Apple Silicon (`macos-15`) and Intel (`macos-15-intel`), retaining build, Mach-O architecture and framework linkage diagnostics. Runner labels follow https://docs.github.com/en/actions/reference/runners/github-hosted-runners . These jobs establish native binary linking when successful; they do not execute the probe or establish GPU rendering/hardware parity.
