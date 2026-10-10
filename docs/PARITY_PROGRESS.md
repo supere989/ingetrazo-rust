@@ -386,3 +386,5 @@ Geographic codec combined currentmain:559PASS/twoignored; fresh23source/native s
 
 Reviewed image tools currentmain04db692c:566PASS/twoignored;29picking/nineMove/sixgeometrymodifiers/65contextstates/twoheldtoolmetadata controls exact. [Evidence](audits/image-tools-current-main/README.md). Mixedgeometry/image context remapping, directGPUdraw/physicalpointer/Rotate/Scale/full37rows/fivereleasegatesOPEN.
 Canonical geographic codec2206d4e4:559PASS/twoignored;23exact actualsource/native cases and23actual original reopens, four negatives rejected. [Canonical evidence](audits/geographic-canonical/README.md). Fullgeographicnumeric/provider/fetch/cache/UI/GPU and all37rows/fivereleasegatesOPEN.
+
+Canonical image tool stagecb1bb646:566PASS/twoignored;29picking/nineMove/sixmodifiers/65Finishstates/twoheld-tool metadata controls exact against fresh root source corpus. [Canonical evidence](audits/image-tools-canonical/README.md). Mixedgeometry/image contexts/physicalpointer/directGPUdraw/Rotate/Scale/full37rows/fivereleasegates remainOPEN; cloudpending.
