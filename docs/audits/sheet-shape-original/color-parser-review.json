@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "original_qt_version": "6.12.0",
+  "named_colors": 148,
+  "actual_qcolor_samples": {
+    "#abc": [
+      170,
+      187,
+      204,
+      255
+    ],
+    "#80112233": [
+      17,
+      34,
+      51,
+      128
+    ],
+    "transparent": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "DaRkSlAtEbLuE": [
+      72,
+      61,
+      139,
+      255
+    ]
+  },
+  "native_test": "all frozen148 named RGBA plus hex/transparent/case and invalidUnicode/hex/name controls",
+  "boundary": "Qt SVG palette and #RGB/#RRGGBB/#AARRGGBB; long9/12-digit hex and GPU rastercompositing remain open"
+}

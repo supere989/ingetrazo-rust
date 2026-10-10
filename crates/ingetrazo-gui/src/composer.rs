@@ -934,10 +934,9 @@ impl IngeTrazoApp {
 pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_shape::SheetShape,zoom:f32,origin:Pos2)->Result<(),String> {
  use ingetrazo_core::sheet_shape::ShapePath;
  fn color(value:&str,alpha:f64)->Result<Color32,String> {
-  let raw=value.strip_prefix('#').ok_or_else(||format!("Unsupported sheet colour: {value}"))?;
-  if raw.len()!=6{return Err(format!("Unsupported sheet colour: {value}"));}
-  let rgb=u32::from_str_radix(raw,16).map_err(|_|format!("Invalid sheet colour: {value}"))?;
-  Ok(Color32::from_rgba_unmultiplied((rgb>>16)as u8,(rgb>>8)as u8,rgb as u8,(alpha*255.).round()as u8))
+  let rgba=ingetrazo_core::sheet_color::parse_sheet_color(value)?;
+  let opacity=if alpha==1. {rgba[3]}else {(alpha*255.).round()as u8};
+  Ok(Color32::from_rgba_unmultiplied(rgba[0],rgba[1],rgba[2],opacity))
  }
  let point=|p:glam::DVec2|origin+Vec2::new(((shape.x_mm+p.x)*f64::from(zoom))as f32,((shape.y_mm+p.y)*f64::from(zoom))as f32);
  let commands=shape.paint_commands(100_000)?;
