@@ -321,7 +321,6 @@ mod buffer {
 
 mod texture {
 
-    use super::buffer::*;
     use crate::renderer::allocator::{Allocate, Allocator, Memory};
     use crate::RendererResult;
     use ash::vk;
@@ -349,25 +348,18 @@ mod texture {
             data: &[u8],
             options: egui::TextureOptions,
         ) -> RendererResult<Self> {
-            let (texture, staging_buff, staging_mem) =
-                execute_one_time_commands(device, queue, command_pool, |buffer| {
-                    Self::cmd_from_rgba(device, allocator, buffer, width, height, data, options)
-                })??;
-
-            allocator.destroy_buffer(device, staging_buff, staging_mem)?;
-
+            let mut texture=Self::empty_rgba(device,allocator,width,height,options)?;
+            let region=vk::Rect2D {offset:vk::Offset2D::default(),extent:vk::Extent2D{width,height}};
+            if let Err(error)=texture.update(device,queue,command_pool,allocator,region,data) {
+                texture.destroy(device,allocator)?;return Err(error);
+            }
             Ok(texture)
         }
 
-        fn cmd_from_rgba(
-            device: &Device,
-            allocator: &mut Allocator,
-            command_buffer: vk::CommandBuffer,
-            width: u32,
-            height: u32,
-            data: &[u8],
-            options: egui::TextureOptions,
-        ) -> RendererResult<(Self, vk::Buffer, Memory)> {
+        fn empty_rgba(
+            device:&Device,allocator:&mut Allocator,width:u32,height:u32,
+            options:egui::TextureOptions,
+        )->RendererResult<Self> {
             let (image, image_mem) = allocator.create_image(device, width, height)?;
 
             let image_view = {
@@ -390,7 +382,7 @@ mod texture {
                 Ok(sampler)=>sampler,Err(error)=>{unsafe {device.destroy_image_view(image_view,None)};allocator.destroy_image(device,image,image_mem)?;return Err(error.into());}
             };
 
-            let mut texture = Self {
+            let texture = Self {
                 image,
                 image_mem,
                 image_view,
@@ -400,16 +392,7 @@ mod texture {
                 extent:vk::Extent2D{width,height},
             };
 
-            let region = vk::Rect2D {
-                extent: vk::Extent2D { width, height },
-
-                ..Default::default()
-            };
-            let (staging_buffer, staging_buffer_mem) = match texture.cmd_update(device,command_buffer,allocator,region,data) {
-                Ok(staging)=>staging,Err(error)=>{texture.destroy(device,allocator)?;return Err(error);}
-            };
-
-            Ok((texture, staging_buffer, staging_buffer_mem))
+            Ok(texture)
         }
 
         pub(crate) fn set_options(&mut self,device:&Device,options:egui::TextureOptions)->RendererResult<bool> {
@@ -427,34 +410,54 @@ mod texture {
             region: vk::Rect2D,
             data: &[u8],
         ) -> RendererResult<()> {
-            let (staging_buff, staging_mem) =
-                execute_one_time_commands(device, queue, command_pool, |buffer| {
-                    self.cmd_update(device, buffer, allocator, region, data)
-                })??;
-
-            allocator.destroy_buffer(device, staging_buff, staging_mem)?;
-
-            Ok(())
-        }
-
-        fn cmd_update(
-            &mut self,
-            device: &Device,
-            command_buffer: vk::CommandBuffer,
-            allocator: &mut Allocator,
-            region: vk::Rect2D,
-            data: &[u8],
-        ) -> RendererResult<(vk::Buffer, Memory)> {
+            // Borrow row slices and reuse a bounded staging allocation. Wait on
+            // this transfer's fence, never idle unrelated work on the queue.
             if region.offset.x<0||region.offset.y<0||region.extent.width==0||region.extent.height==0||region.offset.x as u64+region.extent.width as u64>self.extent.width as u64||region.offset.y as u64+region.extent.height as u64>self.extent.height as u64||data.len() as u64!=region.extent.width as u64*region.extent.height as u64*4 {
                 return Err(crate::RendererError::Allocator("Invalid texture update extent or payload".into()));
             }
-            let (buffer, buffer_mem) = create_and_fill_buffer(
-                device,
-                allocator,
-                data,
-                vk::BufferUsageFlags::TRANSFER_SRC,
-            )?;
+            const STAGING_LIMIT:usize=8*1024*1024;
+            let row_bytes=region.extent.width as usize*4;
+            if row_bytes>STAGING_LIMIT {return Err(crate::RendererError::Allocator("Texture row exceeds staging limit".into()));}
+            let rows=(STAGING_LIMIT/row_bytes).min(region.extent.height as usize);
+            let chunk_bytes=rows*row_bytes;
+            let (staging,mut memory)=allocator.create_buffer(device,chunk_bytes,vk::BufferUsageFlags::TRANSFER_SRC)?;
+            let fence=match unsafe {device.create_fence(&vk::FenceCreateInfo::default(),None)} {
+                Ok(f)=>f,Err(e)=>{allocator.destroy_buffer(device,staging,memory)?;return Err(e.into());}
+            };
+            let result=(|| {
+                for (index,chunk) in data.chunks(chunk_bytes).enumerate() {
+                    allocator.update_buffer(device,&mut memory,chunk)?;
+                    let alloc=vk::CommandBufferAllocateInfo::default().command_pool(command_pool).level(vk::CommandBufferLevel::PRIMARY).command_buffer_count(1);
+                    let command=unsafe {device.allocate_command_buffers(&alloc)?[0]};
+                    let commands=[command];
+                    let mut submitted=false;
+                    let transfer=(|| {
+                        unsafe {device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT))?;}
+                        let part=vk::Rect2D{offset:vk::Offset2D{x:region.offset.x,y:region.offset.y+(index*rows) as i32},extent:vk::Extent2D{width:region.extent.width,height:(chunk.len()/row_bytes) as u32}};
+                        self.cmd_copy(device,command,staging,part);
+                        unsafe {
+                            device.end_command_buffer(command)?;
+                            device.reset_fences(&[fence])?;
+                            device.queue_submit(queue,&[vk::SubmitInfo::default().command_buffers(&commands)],fence)?;
+                            submitted=true;
+                            device.wait_for_fences(&[fence],true,u64::MAX)?;
+                        }
+                        self.initialized=true;
+                        Ok::<(),crate::RendererError>(())
+                    })();
+                    // A device-loss wait error must not free pending staging.
+                    if transfer.is_err()&&submitted {unsafe {let _=device.device_wait_idle();}}
+                    unsafe {device.free_command_buffers(command_pool,&commands);}
+                    transfer?;
+                }
+                Ok(())
+            })();
+            unsafe {device.destroy_fence(fence,None);}
+            allocator.destroy_buffer(device,staging,memory)?;
+            result
+        }
 
+        fn cmd_copy(&self,device:&Device,command_buffer:vk::CommandBuffer,buffer:vk::Buffer,region:vk::Rect2D) {
             // Transition the image layout and copy the buffer into the image
             // and transition the layout again to be readable from fragment shader.
             {
@@ -534,8 +537,7 @@ mod texture {
                 };
             }
 
-            self.initialized=true;
-            Ok((buffer, buffer_mem))
+
         }
 
         /// Free texture's resources.
@@ -558,48 +560,4 @@ mod texture {
         #[test]fn nearest_and_repeat_are_not_silently_linear_clamped(){let info=texture_sampler_info(egui::TextureOptions::NEAREST_REPEAT);assert_eq!(info.mag_filter,vk::Filter::NEAREST);assert_eq!(info.min_filter,vk::Filter::NEAREST);assert_eq!(info.address_mode_u,vk::SamplerAddressMode::REPEAT);let linear=texture_sampler_info(egui::TextureOptions::LINEAR);assert_eq!(linear.mag_filter,vk::Filter::LINEAR);assert_eq!(linear.address_mode_u,vk::SamplerAddressMode::CLAMP_TO_EDGE);}
     }
 
-    fn execute_one_time_commands<R, F: FnOnce(vk::CommandBuffer) -> R>(
-        device: &Device,
-        queue: vk::Queue,
-        pool: vk::CommandPool,
-        executor: F,
-    ) -> RendererResult<R> {
-        let command_buffer = {
-            let alloc_info = vk::CommandBufferAllocateInfo::default()
-                .level(vk::CommandBufferLevel::PRIMARY)
-                .command_pool(pool)
-                .command_buffer_count(1);
-
-            unsafe { device.allocate_command_buffers(&alloc_info)?[0] }
-        };
-        let command_buffers = [command_buffer];
-
-        // Begin recording
-        {
-            let begin_info = vk::CommandBufferBeginInfo::default()
-                .flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT);
-            unsafe { device.begin_command_buffer(command_buffer, &begin_info)? };
-        }
-
-        // Execute user function
-        let executor_result = executor(command_buffer);
-
-        // End recording
-        unsafe { device.end_command_buffer(command_buffer)? };
-
-        // Submit and wait
-        {
-            let submit_info = vk::SubmitInfo::default().command_buffers(&command_buffers);
-            let submit_infos = [submit_info];
-            unsafe {
-                device.queue_submit(queue, &submit_infos, vk::Fence::null())?;
-                device.queue_wait_idle(queue)?;
-            };
-        }
-
-        // Free
-        unsafe { device.free_command_buffers(pool, &command_buffers) };
-
-        Ok(executor_result)
-    }
 }
