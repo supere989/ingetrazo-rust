@@ -1,0 +1,550 @@
+{
+  "binary_sha256": "765fd006205483eef7d3355211277f613a5b3daf85fb8942c3bd0c576704bf25",
+  "source_stack_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter",
+  "cases": [
+    {
+      "name": "production-sharp",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 0,
+        "name": "production-sharp",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "cold_builds": [
+          1,
+          1
+        ],
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 12,
+          "cached_bytes": 375912,
+          "draws": 35
+        },
+        "serial": 7,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 48,
+            "cached_bytes": 375912,
+            "draws": 125
+          },
+          "serial": 25,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 54,
+            "cached_bytes": 375912,
+            "draws": 140
+          },
+          "serial": 28,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-sharp",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 62,
+            "cached_bytes": 375912,
+            "draws": 160
+          },
+          "serial": 32,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-rounded-double",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        297,
+        168,
+        988,
+        659
+      ],
+      "state": {
+        "index": 1,
+        "name": "production-rounded-double",
+        "origin": [
+          298.45001220703125,
+          169.5
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.7,
+          "color": "#000000",
+          "radius_mm": 2.5,
+          "style": "double"
+        },
+        "cold_builds": [
+          2,
+          2
+        ],
+        "gpu": {
+          "uploads": 4,
+          "cache_hits": 128,
+          "cached_bytes": 783000,
+          "draws": 342
+        },
+        "serial": 66,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 1,
+          "name": "production-rounded-double",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 156,
+            "cached_bytes": 783000,
+            "draws": 426
+          },
+          "serial": 80,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "production-rounded-double",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 162,
+            "cached_bytes": 783000,
+            "draws": 444
+          },
+          "serial": 83,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "production-rounded-double",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 170,
+            "cached_bytes": 783000,
+            "draws": 468
+          },
+          "serial": 87,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-straight-dash",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 2,
+        "name": "production-straight-dash",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.6,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          3,
+          3
+        ],
+        "gpu": {
+          "uploads": 6,
+          "cache_hits": 234,
+          "cached_bytes": 358272,
+          "draws": 652
+        },
+        "serial": 120,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 2,
+          "name": "production-straight-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 258,
+            "cached_bytes": 358272,
+            "draws": 712
+          },
+          "serial": 132,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "production-straight-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 264,
+            "cached_bytes": 358272,
+            "draws": 727
+          },
+          "serial": 135,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "production-straight-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            3,
+            3
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 270,
+            "cached_bytes": 358272,
+            "draws": 742
+          },
+          "serial": 138,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "status": "Artifact review PASS; frozen source handoff and integration still pending",
+  "status": "Source reviewed and integrated into isolated branch; combined builds and fresh integrated controls pending",
   "rows": [
     {
       "case": "fractional-paper",
@@ -86,5 +86,14 @@
       "native_sha256": "b9db5c8154d9db403837f96c7c21721370d96248b94653bb99afa2608c3d34f5"
     }
   ],
-  "scope": "Empty-item compound paper/shadow/guide/border. Does not prove arbitrary content, Metal, thick curved dashed border or full composer parity."
+  "scope": "Empty-item compound paper/shadow/guide/border. Does not prove arbitrary content, Metal, thick curved dashed border or full composer parity.",
+  "reviewed_source": "3928b7df15b1975cde643a388842ce5142aa54c7",
+  "reviewed_artifacts": "ffa43ed6",
+  "source_review": [
+    "Physical paper shadow/page/margin-guide geometry is generated on numeric key changes only; warm callbacks reuse Arc owners.",
+    "Native callback precedes authored item rendering; existing border callback remains above items.",
+    "Cold geometry limits and atomic callback updates retained; unsupported projections return errors.",
+    "No renderer changes or per-frame image upload introduced.",
+    "Integrated composer.rs differs from agent source only by already-published raw-texture-unavailable text fallback; compound source and all fixture/checker hashes match the frozen handoff."
+  ]
 }

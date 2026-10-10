@@ -1,0 +1,8 @@
+{
+  "source": "ef62e9fa8b85cc8a906f44a73d94b06aff0c37fe",
+  "build": "Both named compound fixtures PASS",
+  "fresh_cold_cases": 5,
+  "fresh_production_cases": 3,
+  "changed_pixels": 0,
+  "scope": "Merged-source exact paper compound controls; broad workspace batch pending."
+}
