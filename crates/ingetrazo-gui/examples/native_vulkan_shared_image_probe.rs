@@ -1,4 +1,6 @@
 //! Actual shared face/reference image ownership, removal and pressure proof.
+#[cfg(any(target_os="linux",target_os="windows"))]
+mod platform {
 use ash::vk;
 use glam::DVec3;
 use ingetrazo_gui::native_vulkan::{budget::VulkanBudget,headless::DeviceRequest,world::World,VulkanContext};
@@ -10,7 +12,7 @@ fn draw(context:&VulkanContext,world:&mut World,command:vk::CommandBuffer,fence:
  context.wait_transfer(fence)?;
  Ok(world.readback(context)?)
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{
+pub fn main()->Result<(),Box<dyn std::error::Error>>{
  let args=std::env::args().collect::<Vec<_>>();
  let context=VulkanContext::new_headless(&DeviceRequest::nvidia_hardware())?;
  let properties=unsafe{context.instance.get_physical_device_properties(context.physical_device)};
@@ -62,3 +64,8 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
  println!("{}",serde_json::to_string_pretty(&serde_json::json!({"renderer_device":{"name":device_name,"vendor_id":properties.vendor_id,"device_id":properties.device_id,"device_type":format!("{:?}",properties.device_type),"software_fixture_requested":false},"cases":records,"ledger_final":budget.ledger.lock().unwrap().total_committed()}))?);
  Ok(())
 }
+}
+#[cfg(any(target_os="linux",target_os="windows"))]
+fn main()->Result<(),Box<dyn std::error::Error>>{platform::main()}
+#[cfg(not(any(target_os="linux",target_os="windows")))]
+fn main(){eprintln!("Native Vulkan diagnostic is Linux/Windows only");std::process::exit(2);}

@@ -1,0 +1,10 @@
+{
+  "source": "2bf3431741190ea3e1d59b51430f2f7521f9956c",
+  "run": 38074479775,
+  "job": 114278460396,
+  "artifact": 11678407341,
+  "sha256": "15eb8c1c9a11cb76d2b21e6664b99b209286752c235d1301947fc7cfc74c199d",
+  "failure": "Vulkan-only shared image example imported native_vulkan on macOS; native GUI library itself compiled.",
+  "correction": "Gate complete diagnostic module to Linux/Windows; preserve its executable body.",
+  "native_recheck": "pending"
+}
