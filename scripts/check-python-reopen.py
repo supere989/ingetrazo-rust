@@ -2,7 +2,7 @@
 """Original runtime differential reopen: Python(source) versus Python(Rust(source)).
 Use isolated Python environment with original runtime requirements installed.
 """
-import json,os,subprocess,sys,tempfile
+import itertools,json,os,subprocess,sys,tempfile
 from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
 sys.path.insert(0,str(Path("ingetrazo").resolve()))
@@ -25,6 +25,12 @@ def main():
             subprocess.run([os.environ.get("INGETRAZO_BINARY","target/debug/ingetrazo"),"convert",str(src),str(converted)],check=True,capture_output=True)
             states=[]
             for i,path in enumerate((src,converted)):
+                # Older fixtures omit names/UIDs: original loader synthesizes them.
+                # Freeze only generated identities; persisted source identities remain authoritative.
+                import core.group as group_module
+                group_module._counter=itertools.count(1)
+                identity_counter=itertools.count(1)
+                group_module.new_uid=lambda: f"parity-generated-{next(identity_counter)}"
                 scene=Scene();igz.load_into(scene,path)
                 saved=Path(temp)/(str(i)+"-"+name);igz.save_scene(scene,saved)
                 states.append(checker.read(saved))

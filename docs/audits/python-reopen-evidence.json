@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "fixtures": [
+    {
+      "name": "arco-yanque.igz",
+      "errors": [],
+      "asset_errors": [],
+      "source_runtime_fields": [
+        "back_face_color",
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "edges",
+        "faces",
+        "groups",
+        "layers",
+        "materials",
+        "protos",
+        "saved_views",
+        "section_planes",
+        "section_view"
+      ]
+    },
+    {
+      "name": "banca-pergola-yanque.igz",
+      "errors": [],
+      "asset_errors": [],
+      "source_runtime_fields": [
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "dimensions",
+        "display_style",
+        "edges",
+        "faces",
+        "groups",
+        "materials",
+        "protos",
+        "saved_views",
+        "section_planes",
+        "section_view"
+      ]
+    },
+    {
+      "name": "luminaria-solar-yanque.igz",
+      "errors": [],
+      "asset_errors": [],
+      "source_runtime_fields": [
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "display_style",
+        "edges",
+        "faces",
+        "groups",
+        "saved_views",
+        "section_planes"
+      ]
+    },
+    {
+      "name": "pileta-fuente-yanque.igz",
+      "errors": [],
+      "asset_errors": [],
+      "source_runtime_fields": [
+        "compositions",
+        "custom_scales",
+        "dimension_style",
+        "dimensions",
+        "edges",
+        "faces",
+        "groups",
+        "materials",
+        "protos",
+        "saved_views",
+        "section_planes",
+        "section_view",
+        "shadows",
+        "text_labels"
+      ]
+    }
+  ],
+  "scope": "Both source and Rust roundtrip reopened and serialized by pinned original Python application. Differential original runtime semantics; no interactive workflow/render proof."
+}
