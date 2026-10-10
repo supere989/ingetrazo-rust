@@ -74,9 +74,10 @@ for row in original["cases"]:
    assert not image.isNull() and image.width()==800 and image.height()==600
    assert image.save(str(out/(name+".png")))
    text=log.read_text();assert "NVIDIA GeForce RTX 5090"in text and "llvmpipe"not in text
+   device=json.loads(next(line.removeprefix("Renderer device: ")for line in text.splitlines()if line.startswith("Renderer device: ")));assert device["vendor_id"]==0x10de and device["device_type"]=="DISCRETE_GPU" and "RTX 5090"in device["name"]
    color=image.pixelColor(400,300);pixel=[color.red(),color.green(),color.blue(),color.alpha()]
    close(w);assert child.wait(timeout=5)==0
-   rows.append({"case":name,"center_rgba":pixel,"owned_window_id":w,"captured":True,"backend_log":log.name})
+   rows.append({"case":name,"center_rgba":pixel,"owned_window_id":w,"captured":True,"backend_log":log.name,"renderer_device":device})
   finally:
    if child.poll()is None:
     child.terminate()

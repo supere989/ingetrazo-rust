@@ -5,6 +5,7 @@ struct Fixture{app:ingetrazo_gui::IngeTrazoApp}
 impl App for Fixture {
  fn title()->&'static str {"IngeTrazo native image outline fixture"}
  fn new(system: &mut System,_:Option<std::path::PathBuf>)->Self {
+ let properties=unsafe{system.vulkan_context.instance.get_physical_device_properties(system.vulkan_context.physical_device)};let name=unsafe{std::ffi::CStr::from_ptr(properties.device_name.as_ptr())}.to_string_lossy();eprintln!("Renderer device: {}",serde_json::json!({"name":name,"vendor_id":properties.vendor_id,"device_id":properties.device_id,"device_type":format!("{:?}",properties.device_type)}));
  let input=std::env::var("INGETRAZO_ALPHA_INPUT").expect("original alpha input directory");let case=std::env::var("INGETRAZO_ALPHA_CASE").unwrap_or("red-half-white".into());
  let s=ingetrazo_formats::igz::load_igz(&std::path::Path::new(&input).join(format!("{case}.igz"))).unwrap();
  let original:serde_json::Value=serde_json::from_slice(&std::fs::read(std::path::Path::new(&input).join("original-alpha-results.json")).unwrap()).unwrap();let row=original["cases"].as_array().unwrap().iter().find(|v|v["case"]==case).unwrap();
