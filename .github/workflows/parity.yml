@@ -13,6 +13,10 @@ jobs:
         with:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
+      - name: Native paper font dependency build and library tests
+        run: |
+          mkdir -p docs/audits/paper-font-native-ci
+          cargo test --locked -p ingetrazo-formats --lib > docs/audits/paper-font-native-ci/tests.log 2>&1
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
@@ -59,7 +63,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: native-metal-link-${{ matrix.runner }}
-          path: docs/audits/metal-native-link-ci/
+          path: |
+            docs/audits/metal-native-link-ci/
+            docs/audits/paper-font-native-ci/
           if-no-files-found: error
   metal-cross-compilation:
     name: Native Metal compile (${{ matrix.target }})
