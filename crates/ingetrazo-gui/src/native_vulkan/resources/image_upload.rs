@@ -95,36 +95,7 @@ impl Resources {
             }
         }
         let capacity = (UPLOAD_CHUNK / row * row).min(bytes);
-        if self
-            .image_staging
-            .and_then(|id| self.logical_bytes(id))
-            .is_none_or(|n| n < capacity)
-        {
-            // Every upload waits its transfer fence, so obsolete staging is idle.
-            // Free before growth: total retained staging never temporarily doubles.
-            if let Some(old) = self.image_staging.take() {
-                self.destroy(old)
-            }
-            let id = self.allocate(
-                capacity,
-                vk::BufferUsageFlags::TRANSFER_SRC,
-                vk::MemoryPropertyFlags::HOST_VISIBLE,
-            )?;
-            let buffer = &self.buffers[&id];
-            let mapped = match unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())} {
-                Ok(ptr)=>ptr,
-                Err(error)=>{self.destroy(id);return Err(error.to_string())}
-            };
-            self.buffers.get_mut(&id).unwrap().persistent_map=Some(mapped as usize);
-            self.stats.image_staging_maps+=1;
-            self.stats.staging_allocations += 1;
-            self.stats.staging_peak = self
-                .stats
-                .staging_peak
-                .max(self.allocation_bytes(id).unwrap());
-            self.image_staging = Some(id);
-        }
-        let staging = self.image_staging.unwrap();
+        let staging = self.staging_buffer(context,capacity)?;
         let (command,fence)=self.transfer_handles(context)?;
         let mut submitted = false;
         let result: Result<(), String> = (|| {
