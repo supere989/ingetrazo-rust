@@ -1,0 +1,10 @@
+{
+  "source": "1df7e46f695ba58e923e493a71fdb0b3655dd5f5",
+  "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked -p ingetrazo-formats --lib --tests -j2",
+  "exit_code": 0,
+  "passed": 85,
+  "failed": 0,
+  "ignored": 0,
+  "log_sha256": "570e89b416b76a84281c726f9bbf36becafcc9da01115b908f0ac226d6026d33",
+  "scope": "Formats integration after native SKP slice; prior647 workspace run predates SKP"
+}
