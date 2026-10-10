@@ -19,11 +19,14 @@ use ingetrazo_render::pipeline::project_point;
 use crate::app::IngeTrazoApp;
 #[path="composer_pdf.rs"] mod pdf;
 #[path="composer_text_canvas.rs"] mod text_canvas;
+#[path="composer_text_authoring.rs"] mod text_authoring;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
 pub struct ComposerState {
     pub pdf_export_error: Option<String>,
+    pub text_tool:bool,
+    pub inline_text:Option<text_authoring::InlineText>,
     text_canvas:text_canvas::CanvasPainter,
     outer_border:crate::composer_border::CanvasBorder,
     paper_canvas:crate::composer_border::CanvasPaper,
@@ -46,7 +49,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            pdf_export_error: None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            pdf_export_error: None,text_tool:false,inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -421,6 +424,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
 
                 // Add Items Menu
+                let text_button=ui.button(tr("+ Text"));if text_button.clicked(){app.composer_state.text_tool=true;app.composer_state.shape_tool=None;}
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-add-text"),text_button.rect));}
                 ui.menu_button(tr("+ Shape"),|ui|{
                     for (kind,label) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")] {
                         if ui.button(tr(label)).clicked(){app.composer_state.shape_tool=Some(kind.into());app.composer_state.shape_start=None;ui.close_menu();}
@@ -573,6 +578,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         app.composer_state.edit_before.get_or_insert_with(||before_sheets.clone());
         app.scene.bump_version();
     }
+
+    if text_authoring::render(app,ui,&painter,sheet_idx,paper_rect,toolbar_rect,&response,zoom){return;}
 
     // Shape placement stays transient until a second click or a completed drag.
     if let Some(kind)=app.composer_state.shape_tool.clone() {

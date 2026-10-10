@@ -995,13 +995,15 @@ impl IngeTrazoApp {
         let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
             if let egui::Event::Key{key,pressed:true,modifiers,..}=event {
                 if modifiers.ctrl || modifiers.command {
-                    flags.0|=*key==egui::Key::Z;flags.1|=*key==egui::Key::Y;
+                    flags.0|=*key==egui::Key::Z&&!modifiers.shift;flags.1|=*key==egui::Key::Y||(*key==egui::Key::Z&&modifiers.shift);
                 }
             }
             flags
         }));
-        if undo_pressed {self.undo();}
-        if redo_pressed {self.redo();}
+        // Original InlineTextEditor owns its focused text Undo/Redo.
+        let inline_text_owns_keys=self.composer_state.inline_text.is_some()&&ctx.wants_keyboard_input();
+        if undo_pressed&&!inline_text_owns_keys {self.undo();}
+        if redo_pressed&&!inline_text_owns_keys {self.redo();}
 
         if self.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){self.navigation.sync_cursor(ctx);}
         // Global Keyboard Shortcuts
