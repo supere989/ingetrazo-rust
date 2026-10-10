@@ -1,0 +1,12 @@
+{
+  "source_revision": "bb6442f0",
+  "fresh_original_recipe_count": 6,
+  "fresh_original_matches_retained": true,
+  "review": "Real RustPython payload and number slots; mutable float32 vector values and copy identity. Existing scoped worker runtime evidence retained. Root independently regenerated actual Qt recipe expectations and reviewed implementation.",
+  "limitations": [
+    "No root merged native replay yet",
+    "Full QVector3D API and platform arithmetic acceptance incomplete",
+    "Editable Mesh/Face projection and transaction rollback remain open",
+    "Production scripting disabled"
+  ]
+}
