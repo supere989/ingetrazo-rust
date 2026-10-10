@@ -3,5 +3,6 @@
   "fresh_original_local": "PASS curve/Move/Delete production Qt isolatedXvfb",
   "cloud_failure": "movedrim memory reacquisition timeout at checker156 afternativecurvePASS",
   "cloud_exact_subcase": "artifact retrieval pending",
-  "scope": "One local original success does not explain or invalidate cloud failure; fresh native reproduction and cloud mouse-event states still required."
+  "scope": "Fresh local original and native each pass once; these positives do not explain or invalidate cloud failure. Cloud event artifact still required.",
+  "fresh_native_local": "PASS curve/Move/Delete production ash isolatedXvfb at96fa541 before diagnostic observer commit30d4a73"
 }
