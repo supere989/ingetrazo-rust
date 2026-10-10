@@ -1,0 +1,22 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/examples/component_ci_world_bake_fixture docs/audits/component-ci-world-bake`
+{"passed": true, "cases": 3, "negative_controls": {"preserve_parent_transform": "rejected", "reverse_child_matrix_order": "rejected", "local_authoring": "rejected"}, "precision": "New source/native comparison1e-6 absolute for pinned original QVector3D/QMatrix4x4 float32; exact flags/counts/IDs asserted in native. No preexisting fixture assertion tolerance widened.", "scope": "Actual original Viewport controller versus native component controller under translated, rotated and tilted/scaled frames; no rendered gesture proof.", "source_sha256": "fa3345016b6bd187de9dfb954e97addfaaca66a2aa67ce2fff86fa0763bc69fe"}

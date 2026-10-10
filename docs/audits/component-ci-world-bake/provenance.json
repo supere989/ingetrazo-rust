@@ -1,0 +1,20 @@
+{
+  "base": "5528b42",
+  "public_run": "38040070919",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "python": "Python 3.13.13",
+  "sha256": {
+    "scripts/probe-python-component-ci-bake.py": "59c712d8fcfb68099b7341e0d26d1d9ab5ebc84764e2b86b8c7d126e3d808939",
+    "scripts/check-component-ci-world-bake.py": "e588cc59173f14f85fce0eb607737909bb51479339942556d5f80c4e3cf6a2d1",
+    "scripts/check-python-components.py": "3a980b54523c85028e671267bb93d6fc57a2667d064caa746b924fb50f12bb54",
+    "crates/ingetrazo-gui/examples/component_ci_world_bake_fixture.rs": "0b0584feabb44ba4568612485ab4c2896db55fcf5110ce46fcc2666afbc2b47b",
+    "crates/ingetrazo-gui/examples/component_editor_acceptance_fixture.rs": "75ea999a212a8c18ff5c51de7320d31611d0a81be3b4b3e7fd3005e5b0b8eb6e",
+    "target/debug/examples/component_ci_world_bake_fixture": "0d91cef0b7a5d4cefbb0091f6cbe4e53ebfe54761675a5d7db27c78ae114bad9",
+    "target/debug/examples/component_editor_acceptance_fixture": "3af7af4c149ddf19fd0e46e1c5ca4bda78435eb20bbae2b8f85f0f7214279105"
+  },
+  "original_source_sha256": {
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+  }
+}
