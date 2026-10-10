@@ -1,0 +1,84 @@
+name: Manual native MetalKit presenter lifecycle control
+on:
+  workflow_dispatch:
+jobs:
+  framework-presenter:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Retain source and native SDK provenance
+        run: |
+          mkdir -p framework-presenter-evidence
+          git rev-parse HEAD > framework-presenter-evidence/revision.txt
+          git submodule status > framework-presenter-evidence/submodules.txt
+          rustc -Vv > framework-presenter-evidence/rustc.txt
+          sw_vers > framework-presenter-evidence/platform.txt
+          uname -m >> framework-presenter-evidence/platform.txt
+          xcodebuild -version > framework-presenter-evidence/sdk.txt
+      - name: Compile and link only the native framework control
+        run: cargo build --locked -j2 -p ingetrazo-metal --example metalkit_presenter_control --example custom_presenter_control > framework-presenter-evidence/build.log 2>&1
+      - name: Run one bounded native framework lifecycle control
+        run: |
+          python3 - <<'PYTHON'
+          import hashlib, json, pathlib, subprocess, time
+          root=pathlib.Path('framework-presenter-evidence')
+          pair={'scope':'Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback','controls':{}}
+          for name in ('custom_presenter_control','metalkit_presenter_control'):
+              binary=pathlib.Path('target/debug/examples')/name
+              report=root/(name+'.json')
+              evidence={'source_revision':(root/'revision.txt').read_text().strip(),
+                        'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),
+                        'process_timeout_seconds':45,'fixture_deadline_seconds':15,'passed':False}
+              started=time.monotonic()
+              try:
+                  with (root/(name+'.log')).open('w') as log:
+                      result=subprocess.run([str(binary),str(report)],stdout=log,stderr=subprocess.STDOUT,timeout=45)
+                  evidence['exit_code']=result.returncode
+              except subprocess.TimeoutExpired:
+                  evidence.update(process_timeout=True,exit_code=None)
+              evidence['elapsed_seconds']=time.monotonic()-started
+              evidence['fixture_report_present']=report.is_file()
+              if report.is_file():
+                  evidence['fixture_report_sha256']=hashlib.sha256(report.read_bytes()).hexdigest()
+                  try:
+                      fixture=json.loads(report.read_text())
+                      evidence['fixture']=fixture
+                      evidence['passed']=(evidence['exit_code']==0 and fixture.get('passed') is True
+                          and fixture.get('error') is None
+                          and type(fixture.get('displayed')) is int and fixture['displayed']>=2
+                          and type(fixture.get('pending')) is int and fixture['pending']==0
+                          and type(fixture.get('queue_device')) is int
+                          and fixture['queue_device']==fixture.get('device_registry_id'))
+                      if name=='metalkit_presenter_control':
+                          evidence['passed']=(evidence['passed']
+                              and fixture.get('framework_timed_updates') is True
+                              and fixture.get('framework_current_drawable') is True
+                              and fixture['queue_device']==fixture.get('layer_device'))
+                  except (ValueError,TypeError,AttributeError,KeyError) as error:
+                      evidence['fixture_report_error']=repr(error)
+              pair['controls'][name]=evidence
+              (root/'execution.json').write_text(json.dumps(pair,indent=2)+'\n')
+          controls=pair['controls']
+          ids=[c.get('fixture',{}).get('queue_device') for c in controls.values()]
+          pair['same_device']=len(ids)==2 and all(type(i) is int for i in ids) and ids[0]==ids[1]
+          pair['passed']=pair['same_device'] and all(c['passed'] for c in controls.values())
+          (root/'execution.json').write_text(json.dumps(pair,indent=2)+'\n')
+          raise SystemExit(0 if pair['passed'] else 1)
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: framework-presenter-${{ matrix.runner }}
+          path: framework-presenter-evidence/
+          if-no-files-found: error

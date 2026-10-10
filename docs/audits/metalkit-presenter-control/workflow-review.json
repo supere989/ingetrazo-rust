@@ -1,0 +1,23 @@
+{
+  "workflow_sha256": "d5fc87260ef1b4cdfaff9c571e3bebbfc872605655390375bbcaea1b2d144156",
+  "scope": "Manual-only paired custom/framework lifecycle diagnostic; no runtime execution yet",
+  "runners": [
+    "macos-15",
+    "macos-15-intel"
+  ],
+  "sequence": [
+    "custom_presenter_control",
+    "metalkit_presenter_control"
+  ],
+  "same_runner_session": true,
+  "same_process_eventloop": false,
+  "fixture_deadline_seconds_each": 15,
+  "outer_timeout_seconds_each": 45,
+  "strict_gate": "error absent; at least2 positive callbacks and0 pending; actual queue/device identity; framework layer identity; both reports retained even first refuses",
+  "provenance": "git revision/submodules,rustc/nativeSDK,each executable SHA256,logs,JSON always artifact upload",
+  "static_python_ast": "PASS",
+  "cloud_dispatch": "NOT RUN",
+  "native_SDK_link_runtime": "PENDING",
+  "apple_metadata_check": "PASS both examples aarch64-apple-darwin, targeted cargo check --locked -j2; native SDK link/runtime pending",
+  "initial_failure": "Custom example omitted MTLDevice/MTLCommandQueue trait imports; retained then corrected"
+}
