@@ -1,0 +1,6 @@
+{
+  "source_sha": "d4c5120379e188bae99454b1aac14976b6d2b1f1",
+  "qt_source": "https://github.com/qt/qtbase/tree/v6.12.0/src/corelib",
+  "result": "85+56 actual QPainter controls exact; prior case53 failure retained27069d24",
+  "scope": "Millimetre dimension nine-pixel failure remains separate and open"
+}
