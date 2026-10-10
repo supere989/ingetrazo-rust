@@ -861,9 +861,13 @@ fn clipped_scissor(clip: egui::Rect, density: f32, extent: (u32, u32)) -> Result
         return Err("Invalid Metal scissor domain".into());
     }
     let edge = |value: f32, limit: u32| -> usize {
-        // f64 preserves the target intersection even for extreme finite f32
-        // density. The only eventual integer conversion is target-bounded.
-        (f64::from(value) * f64::from(density)).round().clamp(0., f64::from(limit)) as usize
+        // Preserve the renderer's existing f32 multiplication/rounding for
+        // admitted finite clips. Unbounded/overflowed endpoints intersect with
+        // the target without ever becoming a nonfinite integer conversion.
+        let scaled = value * density;
+        if scaled == f32::NEG_INFINITY { return 0; }
+        if scaled == f32::INFINITY { return limit as usize; }
+        scaled.round().clamp(0., limit as f32) as usize
     };
     let x = edge(clip.min.x, extent.0);
     let y = edge(clip.min.y, extent.1);
@@ -1090,6 +1094,15 @@ mod tests {
         assert_eq!(clipped_scissor(egui::Rect::from_min_max(egui::pos2(-20., 5.), egui::pos2(500., 500.)), 2., (800,600)).unwrap(), [0,10,800,600]);
         assert!(clipped_scissor(egui::Rect::from_min_max(egui::pos2(f32::NAN, 0.), egui::pos2(5.,5.)), 1., (800,600)).is_err());
         assert_eq!(clipped_scissor(egui::Rect::NOTHING, 1., (800,600)).unwrap(), [800,600,800,600]);
+        // This literal rounds to 1 in f32, while f64 multiplication rounds to
+        // 0: changing precision here changes an existing half-pixel scissor.
+        let edge = f32::from_bits(0x3eaaaa9e);
+        let scale = f32::from_bits(0x3fc0000e);
+        assert_eq!((edge * scale).round(), 1.);
+        assert_eq!((f64::from(edge) * f64::from(scale)).round(), 0.);
+        let clip = egui::Rect::from_min_max(egui::pos2(edge, edge), egui::pos2(10.,10.));
+        assert_eq!(clipped_scissor(clip, scale, (800,600)).unwrap(), [1,1,15,15]);
+
     }
 
     use super::*;
