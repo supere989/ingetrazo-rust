@@ -118,3 +118,5 @@ mod tests {
 }
 
 pub mod component_edit;
+
+pub mod session_state;
