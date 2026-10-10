@@ -1,0 +1,32 @@
+[
+  {
+    "base_vertices": 1,
+    "begins": 1000,
+    "allocation_calls": 0,
+    "allocated_bytes": 0,
+    "cold_vertex_rows": 1,
+    "lookup_calls": 0,
+    "varying_operations": 0,
+    "varying_lookup_calls": 0
+  },
+  {
+    "base_vertices": 1000,
+    "begins": 1000,
+    "allocation_calls": 0,
+    "allocated_bytes": 0,
+    "cold_vertex_rows": 1000,
+    "lookup_calls": 0,
+    "varying_operations": 1000,
+    "varying_lookup_calls": 3000
+  },
+  {
+    "base_vertices": 50000,
+    "begins": 1000,
+    "allocation_calls": 0,
+    "allocated_bytes": 0,
+    "cold_vertex_rows": 50000,
+    "lookup_calls": 0,
+    "varying_operations": 1000,
+    "varying_lookup_calls": 3000
+  }
+]
