@@ -385,8 +385,8 @@ pub fn simplify_mesh(
                 // triangulated annuli silently acquire a second, filled disc.
                 let probe=planar::sample(&outer);
                 if !ids.iter().any(|&id|{
-                    let ring=mesh.faces[id].vertices.iter().map(|&v|f.project(mesh.vertices[v].position)).collect::<Vec<_>>();
-                    planar::inside_ring(probe,&ring)
+                    let rings=planar::rings(mesh,&mesh.faces[id]).iter().map(|ring|ring.iter().map(|&p|f.project(p)).collect::<Vec<_>>()).collect::<Vec<_>>();
+                    planar::inside_rings(probe,&rings)
                 }) {continue;}
                 let mut rings = vec![];
                 for ring in std::iter::once(outer).chain(holes) {
@@ -608,6 +608,9 @@ mod tests {
 
 #[cfg(test)]mod annular_coverage_tests{
  use super::*;use glam::DVec3;
+ #[test]fn already_holed_source_remains_one_face_with_its_void(){
+  let mut m=Mesh::new();let outer=[(0.,0.),(4.,0.),(4.,4.),(0.,4.)].map(|(x,y)|m.add_vertex(DVec3::new(x,y,0.)));let inner=[(1.,1.),(1.,3.),(3.,3.),(3.,1.)].map(|(x,y)|m.add_vertex(DVec3::new(x,y,0.)));m.add_face(outer.to_vec(),vec![inner.to_vec()]);let (out,_)=simplify_mesh(&m,0.,false).unwrap();assert_eq!(out.faces.len(),1);assert_eq!(out.faces[0].holes.len(),1);assert!((out.face_area(0)-12.).abs()<1e-9);
+ }
  #[test]fn eight_annular_triangles_merge_without_filling_the_void(){
   let mut m=Mesh::new();let outer=[(0.,0.),(4.,0.),(4.,4.),(0.,4.)];let inner=[(1.,1.),(3.,1.),(3.,3.),(1.,3.)];let o=outer.map(|(x,y)|m.add_vertex(DVec3::new(x,y,0.)));let h=inner.map(|(x,y)|m.add_vertex(DVec3::new(x,y,0.)));
   for i in 0..4{let j=(i+1)%4;m.add_face(vec![o[i],o[j],h[j]],vec![]);m.add_face(vec![o[i],h[j],h[i]],vec![]);}
