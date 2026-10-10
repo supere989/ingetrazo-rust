@@ -362,6 +362,7 @@ impl Probe {
             }
             Ok(())
         })();
+        std::fs::write(self.root.join("presentation-diagnostics.txt"), gpu.diagnostics()).map_err(|e| e.to_string())?;
         let report = serde_json::json!({"passed":check.is_ok(),"choice":self.choice,"phase":self.phase,"close_events":self.close_events,"moves":self.moves,"presses":self.presses,"releases":self.releases,"cancel_verified":self.cancel_verified,"modal_submission":self.modal_submission,"displayed":gpu.presentation_counters().0,"skipped":gpu.presentation_counters().1,"pending":gpu.counters().2,"error":check.as_ref().err(),"physical_input_claim":false,"physical_mac_claim":false});
         std::fs::write(
             self.root.join("result.json"),
