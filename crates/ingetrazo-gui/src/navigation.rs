@@ -7,12 +7,12 @@ impl Mode { pub fn hint(self)->&'static str {match self {Self::Position=>"Positi
 pub struct Navigation {
  pub mode:Option<Mode>, pub eye_height:f64,
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
- dragged:bool, pub base:Option<DVec3>, accumulator:f64,
+ dragged:bool, pub base:Option<DVec3>, next_tick:Option<f64>,
  held:[bool;6], mouse_captured:bool, cursor_locked_sent:bool,
  bounds_center:DVec3, collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
 }
 impl Default for Navigation {
- fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,accumulator:0.,held:[false;6],mouse_captured:false,cursor_locked_sent:false,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
+ fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],mouse_captured:false,cursor_locked_sent:false,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
 }
 impl Navigation {
  // Remember refused admission until revision changes; direct queries preserve correctness.
@@ -42,7 +42,20 @@ impl Navigation {
   if let Some(index)=movement_key(key){if !pressed||self.claims_key(key,modifiers){self.held[index]=pressed;}}
  }
  fn axes(&self)->[i8;3]{[self.held[0]as i8-self.held[1]as i8,self.held[2]as i8-self.held[3]as i8,self.held[4]as i8-self.held[5]as i8]}
- pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.accumulator=0.;}
+ pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
+ // Original Qt QTimer dispatches one fixed step after an overrun, not all
+ // elapsed intervals. Keep a deadline independent of repaint frequency.
+ fn tick_due(&mut self,time:f64,interval:f64)->bool{
+  if !time.is_finite(){self.next_tick=None;return false;}
+  match self.next_tick {
+   None=>{self.next_tick=Some(time+interval);false},
+   Some(deadline) if time>=deadline=>{self.next_tick=Some(time+interval);true},
+   _=>false,
+  }
+ }
+ fn request_tick(&self,ctx:&egui::Context,time:f64){
+  if let Some(deadline)=self.next_tick{ctx.request_repaint_after(std::time::Duration::from_secs_f64((deadline-time).max(0.)));}
+ }
  pub fn activate(&mut self,mode:Mode){self.cancel();self.mode=Some(mode);}
  pub fn preview_line(&self)->Option<(DVec3,DVec3)>{
   self.press.zip(self.look_at).map(|((_,base),look)|(base+DVec3::Z*self.eye_height,look))
@@ -101,15 +114,15 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   if ui.ctx().wants_keyboard_input(){app.navigation.held=[false;6];}
   else {let events=ui.input(|i|i.events.clone());for event in events{if let egui::Event::Key{key,pressed,modifiers,..}=event{app.navigation.key_event(key,pressed,modifiers);}}}
   let axes=app.navigation.axes();
-  if axes!=[0,0,0]{
-   let dt=ui.input(|i|i.stable_dt)as f64;app.navigation.accumulator=(app.navigation.accumulator+dt.max(0.)).min(0.112);
+  let time=ui.input(|i|i.time);
+  if app.navigation.held.iter().any(|held|*held){
    let modifiers=ui.input(|i|i.modifiers);
-   while app.navigation.accumulator>=0.016 {
-    app.navigation.accumulator-=0.016;let scene=&app.scene;let navigation=&app.navigation;
+   if app.navigation.tick_due(time,0.016){
+    let scene=&app.scene;let navigation=&app.navigation;
     walkthrough::first_person_step(&mut app.camera,axes,0.016,navigation.eye_height,modifiers.shift,modifiers.alt,|o,d|navigation.distance(scene,&Ray::new(o,d)));
    }
-   ui.ctx().request_repaint_after(std::time::Duration::from_millis(16));
-  }else{app.navigation.accumulator=0.;}
+   app.navigation.request_tick(ui.ctx(),time);
+  }else{app.navigation.next_tick=None;}
   let was_captured=app.navigation.mouse_captured;
   if response.hovered()&&(pointer.button_pressed(egui::PointerButton::Primary)||pointer.button_pressed(egui::PointerButton::Secondary)){
    app.navigation.mouse_captured=true;
@@ -142,7 +155,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  });
  if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
   if let Some(p)=position {if mode!=Mode::Position||world.is_some(){
-   app.navigation.press=Some((p,world.unwrap_or(DVec3::ZERO)));app.navigation.last=Some(p);app.navigation.dragged=false;app.navigation.accumulator=0.;
+   app.navigation.press=Some((p,world.unwrap_or(DVec3::ZERO)));app.navigation.last=Some(p);app.navigation.dragged=false;app.navigation.next_tick=None;
   }}
  }
  if pointer.primary_down(){
@@ -154,14 +167,13 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
     }app.navigation.last=Some(p);},
     Mode::FirstPerson=>unreachable!("first-person input handled above"),
     Mode::Walk=>{
-     let dt=ui.input(|i|i.stable_dt)as f64;app.navigation.accumulator=(app.navigation.accumulator+dt.max(0.)).min(0.231);
+     let time=ui.input(|i|i.time);
      let modifiers=ui.input(|i|WalkModifiers{run:i.modifiers.ctrl,shift:i.modifiers.shift,through_walls:i.modifiers.alt});
-     while app.navigation.accumulator>=0.033{
-      app.navigation.accumulator-=0.033;
+     if app.navigation.tick_due(time,0.033){
       let scene=&app.scene;let navigation=&app.navigation;
       walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));
      }
-     ui.ctx().request_repaint_after(std::time::Duration::from_millis(33));
+     app.navigation.request_tick(ui.ctx(),time);
     }
    }
   }
@@ -194,8 +206,8 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   app.set_tool(ingetrazo_tools::base::ToolType::Line);assert_eq!(app.navigation.mode,None);
  }
  #[test]fn cancellation_discards_gesture_and_stops_ticks(){
-  let mut n=Navigation::default();n.activate(Mode::Walk);n.press=Some((DVec2::ZERO,DVec3::ZERO));n.accumulator=0.2;n.cancel();
-  assert!(n.press.is_none());assert_eq!(n.accumulator,0.);assert_eq!(n.mode,Some(Mode::Walk));
+  let mut n=Navigation::default();n.activate(Mode::Walk);n.press=Some((DVec2::ZERO,DVec3::ZERO));n.next_tick=Some(0.2);n.cancel();
+  assert!(n.press.is_none());assert_eq!(n.next_tick,None);assert_eq!(n.mode,Some(Mode::Walk));
  }
 }
 
@@ -263,9 +275,10 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   frame(&mut app,&ctx,0.048,true,vec![key(egui::Key::W,false,egui::Modifiers::NONE)]);
   let released=app.camera.clone();frame(&mut app,&ctx,0.064,true,vec![]);assert_eq!(app.camera,released);
   frame(&mut app,&ctx,0.080,true,vec![key(egui::Key::E,true,egui::Modifiers::NONE)]);
-  assert!(app.camera.eye().z>1.68);
-  frame(&mut app,&ctx,0.096,false,vec![]);let unfocused=app.camera.clone();
-  frame(&mut app,&ctx,0.112,true,vec![]);assert_eq!(app.camera,unfocused);assert_eq!(app.navigation.axes(),[0,0,0]);
+  assert_eq!(app.camera,released,"key press starts a timer without immediate movement");
+  frame(&mut app,&ctx,0.097,true,vec![]);assert!(app.camera.eye().z>1.68);
+  frame(&mut app,&ctx,0.113,false,vec![]);let unfocused=app.camera.clone();
+  frame(&mut app,&ctx,0.129,true,vec![]);assert_eq!(app.camera,unfocused);assert_eq!(app.navigation.axes(),[0,0,0]);
   assert_eq!(app.scene.version,version);assert_eq!(app.undo_stack.len(),history);
  }
  #[test]fn ctrl_shortcuts_are_not_claimed_and_release_clears_pressed_axis(){
@@ -343,4 +356,13 @@ pub(crate) fn first_point_bounds_center(scene:&ingetrazo_core::scene::Scene)->DV
  use super::*;
  fn visible_text(shape:&egui::Shape,expected:&str)->bool{match shape{egui::Shape::Text(text)=>text.galley.job.text==expected,egui::Shape::Vec(shapes)=>shapes.iter().any(|shape|visible_text(shape,expected)),_=>false}}
  #[test]fn actual_statusbar_submits_navigation_readout_without_mutating_input_or_history(){let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;app.show_tray=false;app.show_toolbar=false;app.activate_navigation(Mode::Position);let ctx=egui::Context::default();let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),..Default::default()},|ctx|app.update_ui(ctx));assert!(output.shapes.iter().any(|shape|visible_text(&shape.shape,"1.68 m")));assert!(app.vcb_text.is_empty());assert!(app.undo_stack.is_empty());app.navigation.mode=Some(Mode::Look);app.camera.look_from(DVec3::new(0.,0.,3.25),DVec3::Y);let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),..Default::default()},|ctx|app.update_ui(ctx));assert!(output.shapes.iter().any(|shape|visible_text(&shape.shape,"3.25 m")));assert!(app.vcb_text.is_empty());app.vcb_text="275cm".into();let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),..Default::default()},|ctx|app.update_ui(ctx));assert!(output.shapes.iter().any(|shape|visible_text(&shape.shape,"275cm")));assert_eq!(app.vcb_text,"275cm");assert!(app.undo_stack.is_empty());}
+}
+
+#[cfg(test)]mod timer_dispatch_tests{
+ use super::*;
+ #[test]fn overdue_timer_dispatches_one_then_resumes_interval(){
+  for interval in [0.016,0.033]{let mut n=Navigation::default();assert!(!n.tick_due(1.,interval));assert!(!n.tick_due(1.+interval*0.5,interval));assert!(n.tick_due(1.17,interval));assert!(!n.tick_due(1.17,interval));assert!(!n.tick_due(1.17+interval*0.5,interval));assert!(n.tick_due(1.17+interval,interval));}
+ }
+ #[test]fn cancel_restarts_timer_without_catching_old_deadline(){let mut n=Navigation::default();assert!(!n.tick_due(0.,0.016));n.cancel();assert!(!n.tick_due(2.,0.016));assert!(n.tick_due(2.016,0.016));}
+ #[test]fn nonfinite_clock_does_not_move_or_poison_later_dispatch(){let mut n=Navigation::default();assert!(!n.tick_due(f64::NAN,0.016));assert!(!n.tick_due(1.,0.016));assert!(n.tick_due(1.016,0.016));}
 }
