@@ -43,6 +43,7 @@ pub struct MoveTool {
     original_groups:Vec<(usize,DMat4)>,
     original_planes:Vec<(usize,DVec3)>,
     preview_delta:DVec3,
+    detached_vertices:bool,
     original_version:u64,
     preview_version:u64,
 }
@@ -59,7 +60,7 @@ impl MoveTool {
         self.exclusions=Default::default();
         self.target_vertices.clear();
         self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.original_images.clear();self.preview_images.clear();
-        self.original_positions.clear();self.original_groups.clear();self.original_planes.clear();self.preview_delta=DVec3::ZERO;
+        self.detached_vertices=false;self.original_positions.clear();self.original_groups.clear();self.original_planes.clear();self.preview_delta=DVec3::ZERO;
     }
 
     /// Resolve targets from selection or mouse click.
@@ -150,13 +151,13 @@ impl MoveTool {
 
     fn restore_positions(&self,scene:&mut Scene){
         for (id,image) in &self.original_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=image.origin;}}
-        for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point;}}
+        if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point;}}
     }
     fn apply_preview(&mut self,scene:&mut Scene,delta:DVec3){
         if !delta.is_finite()||delta==self.preview_delta{return;}
-        for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+delta;}}
+        if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+delta;}}
         // Qt applies each preview increment in float32, including accumulated rounding.
@@ -175,6 +176,14 @@ impl MoveTool {
         self.last_error=None;
         if !delta.is_finite(){self.last_error=Some("Move displacement must be finite".into());return;}
         self.revert_preview(scene);
+        if self.detached_vertices {
+            // Source MoveVerticesCommand resolves grabbed positions against the
+            // current loose mesh. The published group is not a replacement for
+            // the detached working vertex objects held by the active tool.
+            let key=|p:DVec3|((p.x*10_000.).round_ties_even() as i64,(p.y*10_000.).round_ties_even() as i64,(p.z*10_000.).round_ties_even() as i64);
+            let positions=self.original_positions.iter().map(|(_,p)|key(*p)).collect::<HashSet<_>>();
+            self.target_vertices=scene.mesh.vertices.iter().enumerate().filter_map(|(id,v)|positions.contains(&key(v.position)).then_some(id)).collect();
+        }
         if self.is_copy_mode&&self.target_vertices.is_empty()&&self.target_groups.is_empty(){return;}
         if delta.length_squared() < 1e-12 && (self.target_images.is_empty() || delta.as_vec3().length() <= 1e-9) {
             return;
@@ -223,7 +232,8 @@ impl MoveTool {
 
 impl Tool for MoveTool {
     fn visit_image_metadata_roots(&self,visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){for(_,image)in &self.original_images{visit(image);}}
-    fn preserves_global_preview_on_context_exit(&self)->bool{self.start_point.is_some()&&!self.is_copy_mode&&!self.target_images.is_empty()&&self.target_vertices.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()}
+    fn preserves_global_preview_on_context_exit(&self)->bool{self.start_point.is_some()&&!self.is_copy_mode&&!self.target_images.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()}
+    fn detach_context_preview(&mut self){self.detached_vertices=true;}
     fn take_image_frame_command(&mut self)->Option<ingetrazo_core::image_plane::ImageFrameCommand>{self.image_command.take()}
     fn placement_preview(&self)->Option<crate::base::PlacementPreview<'_>> {
         if self.start_point.is_none() || self.is_copy_mode || self.original_groups.is_empty()
@@ -254,7 +264,7 @@ impl Tool for MoveTool {
         scene.version=self.preview_version;
         // The exact accumulated float32 pose cannot be reconstructed from its inverse.
         for(id,origin)in &self.preview_images{if let Some(live)=scene.image_planes.get_mut(*id){live.origin=*origin;}}
-        for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}
+        if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(self.preview_delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+self.preview_delta;}}
     }
