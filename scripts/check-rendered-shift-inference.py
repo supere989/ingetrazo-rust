@@ -12,6 +12,30 @@ def wait(fn,seconds=20):
   except (OSError,ValueError):pass
   time.sleep(.05)
  raise AssertionError("Timed out awaiting rendered event/state")
+
+def valid_png(path):
+ try:
+  data=Path(path).read_bytes()
+  if data[:8]!=b"\x89PNG\r\n\x1a\n":return False
+  at=8;packed=b"";dimensions=None;ended=False
+  while at<len(data):
+   if at+12>len(data):return False
+   n=struct.unpack_from(">I",data,at)[0]
+   if at+12+n>len(data):return False
+   tag=data[at+4:at+8];body=data[at+8:at+8+n]
+   if zlib.crc32(tag+body)&0xffffffff!=struct.unpack_from(">I",data,at+8+n)[0]:return False
+   at+=12+n
+   if tag==b"IHDR":
+    if n!=13:return False
+    dimensions=struct.unpack_from(">IIBBBBB",body)
+   if tag==b"IDAT":packed+=body
+   if tag==b"IEND":ended=True;break
+  if not ended or at!=len(data) or not dimensions or not packed:return False
+  w,h,depth,color,_,_,interlace=dimensions
+  if w<=0 or h<=0 or depth!=8 or color!=6 or interlace!=0:return False
+  return len(zlib.decompress(packed))==h*(1+w*4)
+ except (OSError,ValueError,struct.error,zlib.error):return False
+
 def main():
  subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","shift_inference_render_fixture"],check=True)
  directory=Path("docs/audits/shift-inference-render");directory.mkdir(exist_ok=True)
@@ -47,7 +71,7 @@ def main():
    def click(point):
     move(point);event(4,1,point,4);event(5,1,point,8)
    def capture(name):
-    (directory/"capture.txt").write_text(name);wait(lambda:(directory/(name+".png")).is_file())
+    (directory/"capture.txt").write_text(name);wait(lambda:valid_png(directory/(name+".png")))
    x.XKeysymToKeycode.argtypes=[C.c_void_p,C.c_ulong];x.XKeysymToKeycode.restype=C.c_uint
    def key(symbol):
     code=x.XKeysymToKeycode(d,symbol);event(2,code,None,1);event(3,code,None,2)
@@ -67,7 +91,13 @@ def main():
    key(0xff1b);cancelled=wait(lambda:state() if not state()["preview"] else None)
    assert cancelled["edges"]==0 and cancelled["undo"]==0 and cancelled["axis"] is None
    capture("cancelled")
-   report={"provenance":context(),"passed":True,"cue":cue,"locked":locked,"released":released,"arrow_preserved":preserved,"cancelled":cancelled,"scope":"Actual production viewport XTEST Shift press/wander/release without mouse movement, arrow lock preservation and Escape atomic preview cancellation; existing software GL engineering backend, independent original controller evidence not implied."}
+   for name in ("before","locked","released","cancelled"):
+    assert valid_png(directory/(name+".png")),f"Invalid capture {name}"
+   with tempfile.TemporaryDirectory() as bad:
+    invalid=Path(bad)/"bad.png"
+    for value in (b"",b"\x89PNG\r\n\x1a\n",(directory/"cancelled.png").read_bytes()[:-1]):
+     invalid.write_bytes(value);assert not valid_png(invalid),"Invalid PNG negative control accepted"
+   report={"capture_validation":"Complete PNG signature/chunks/CRC/IEND and decompressed RGBA dimensions; empty/header-only/truncated controls rejected","provenance":context(),"passed":True,"cue":cue,"locked":locked,"released":released,"arrow_preserved":preserved,"cancelled":cancelled,"scope":"Actual production viewport XTEST Shift press/wander/release without mouse movement, arrow lock preservation and Escape atomic preview cancellation; existing software GL engineering backend, independent original controller evidence not implied."}
    Path("docs/audits/shift-inference-render-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Native Shift gesture PASS")
   finally:
    if app:app.terminate();app.wait(timeout=5)
