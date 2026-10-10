@@ -38,6 +38,24 @@ with (a.output / "host.log").open("wb") as log:
         report["image_sha256"] = hashlib.sha256(data).hexdigest()
     except Exception as e:
         report["error"] = repr(e)
+        # Capture only our probe window while still live; retain failure status.
+        diagnostic = root / "diagnostic-window.json"
+        if proc.poll() is None and diagnostic.is_file():
+            try:
+                observation = json.loads(diagnostic.read_text())
+                window = observation["window_id"]
+                if type(window) is not int or not 0 < window < 2**32:
+                    raise RuntimeError("Invalid diagnostic window identity")
+                image = a.output / "failed-presentation-diagnostic.png"
+                captured = subprocess.run(["/usr/sbin/screencapture", "-x", "-o", "-l" + str(window), str(image.resolve())], capture_output=True, timeout=2)
+                (a.output / "diagnostic-capture.stderr").write_bytes(captured.stderr)
+                captured.check_returncode()
+                data = image.read_bytes()
+                if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+                    raise RuntimeError("Diagnostic capture is not PNG")
+                report["diagnostic_capture"] = {"sha256":hashlib.sha256(data).hexdigest(),"observation":observation,"acceptance_proof":False}
+            except Exception as diagnostic_error:
+                report["diagnostic_error"] = repr(diagnostic_error)
     finally:
         if root.is_dir():
             (root / "capture-finished").write_text("capture completed or refused\n")

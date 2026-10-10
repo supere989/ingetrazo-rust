@@ -228,6 +228,13 @@ impl Probe {
             ));
         }
         if self.choice == "canvas" {
+            // Diagnostic identity only: never substitutes for presentation proof.
+            if self.started.elapsed() > Duration::from_secs(2) && !self.root.join("diagnostic-window.json").exists() {
+                let snapshot = serde_json::json!({"window_id":gpu.native_window_id()?,"displayed":gpu.presentation_counters().0,"diagnostics":gpu.diagnostics(),"acceptance_proof":false});
+                let pending=self.root.join("diagnostic-window.pending");
+                std::fs::write(&pending,serde_json::to_vec_pretty(&snapshot).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+                std::fs::rename(pending,self.root.join("diagnostic-window.json")).map_err(|e|e.to_string())?;
+            }
             if gpu.presentation_counters().0 > 0 && self.phase == 0 && self.canvas_warm_frames >= 3 {
                 let snapshot = serde_json::json!({
                     "window_id": gpu.native_window_id()?,
