@@ -1,0 +1,127 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "artifact_sha256": "21fe99e1a00e89f20902e151e32ce8ec276b933f26d9a18778b9143e548ffb6b",
+  "rows": [
+    {
+      "name": "helvetica",
+      "context": "image",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "name": "helvetica",
+      "context": "pdf",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "name": "helvetica-bold",
+      "context": "image",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "name": "helvetica-bold",
+      "context": "pdf",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "name": "helvetica-italic",
+      "context": "image",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "name": "helvetica-italic",
+      "context": "pdf",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "name": "times-bold-italic",
+      "context": "image",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "name": "times-bold-italic",
+      "context": "pdf",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "name": "cjk",
+      "context": "image",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "name": "cjk",
+      "context": "pdf",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        300,
+        300
+      ]
+    },
+    {
+      "name": "arabic",
+      "context": "image",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "name": "arabic",
+      "context": "pdf",
+      "pixel_size": 100,
+      "point_size": 75.0,
+      "device_dpi": [
+        300,
+        300
+      ]
+    }
+  ]
+}

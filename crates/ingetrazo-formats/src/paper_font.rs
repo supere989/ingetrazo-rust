@@ -241,6 +241,7 @@ impl CachedFont {
         Ok([thickness, adjusted])
     }
     /// Source QPdf synthetic-bold second pass: shift left by half native line thickness.
+    pub fn shaping_point_size(&self) -> f32 { self.shaper.shaping_point_size() }
     pub fn synthetic_bold_offset_px(&self, requested: bool) -> Result<f64, String> {
         if requested && !self.bold {
             Ok(f64::from(self.decoration_metrics()?[0]) / 128.)

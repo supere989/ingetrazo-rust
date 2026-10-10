@@ -1,0 +1,9 @@
+{
+  "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/qharfbuzzng.cpp",
+  "sha256": "3c8cd1d417d810734d4ee9e8b754cc46d0742b66e4f39148487985337cbb1d10",
+  "lines": [
+    687,
+    696
+  ],
+  "text": "    const qreal x_ppem = (fe->fontDef.pixelSize * fe->fontDef.stretch) / 100.0;\n\n    hb_font_set_funcs(font, qt_ffuncs()->funcs, fe, nullptr);\n    hb_font_set_scale(font, QFixed::fromReal(x_ppem).value(), -QFixed::fromReal(y_ppem).value());\n    hb_font_set_ppem(font, int(x_ppem), int(y_ppem));\n\n    hb_font_set_ptem(font, fe->fontDef.pointSize);\n\n    return font;\n}"
+}
