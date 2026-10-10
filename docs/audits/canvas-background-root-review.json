@@ -1,0 +1,74 @@
+{
+  "source": "985aba7dcb1ece091251609525c9be673a7ccbc7",
+  "evidence": "efd219dc",
+  "independent_decoded_QImage_comparison": [
+    {
+      "sheet": 1,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "compared_pixels": 4551,
+      "mismatches": 0
+    },
+    {
+      "sheet": 1,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "compared_pixels": 4551,
+      "mismatches": 0
+    },
+    {
+      "sheet": 2,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "compared_pixels": 4551,
+      "mismatches": 0
+    },
+    {
+      "sheet": 2,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "compared_pixels": 4551,
+      "mismatches": 0
+    },
+    {
+      "sheet": 3,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "compared_pixels": 4551,
+      "mismatches": 0
+    },
+    {
+      "sheet": 3,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "compared_pixels": 4551,
+      "mismatches": 0
+    }
+  ],
+  "scope": "Six declared retained regions only; no new application replay or full canvas claim",
+  "next_gate": "Merge source with current Vulkan changes and verify combined compilation"
+}
