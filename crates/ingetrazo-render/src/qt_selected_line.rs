@@ -44,7 +44,7 @@ pub fn rasterize(a:[f64;2],b:[f64;2],size:[u32;2],limit:usize)->Result<Vec<Span>
  if a.iter().chain(b.iter()).any(|v|!v.is_finite()){return Ok(Vec::new());}
  let mut a=a;let mut b=b;
  let point=a==b;if point{a[0]-=1.;b[0]+=1.;}
- let delta=[b[0]-a[0],b[1]-a[1]];let length=(delta[0]*delta[0]+delta[1]*delta[1]).sqrt();let mut width=2./length;
+ let delta=[b[0]-a[0],b[1]-a[1]];let length=delta[0].hypot(delta[1]);let mut width=2./length;
  let cap=if point{0.}else{0.5*width};
  let mut pa=[a[0]-cap*delta[0],a[1]-cap*delta[1]];
  let mut pb=[b[0]+cap*delta[0],b[1]+cap*delta[1]];
