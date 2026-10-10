@@ -1,0 +1,56 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "recipes_sha256": "8f6814a4a1b5ad5a520f7f5b79aa4d32b6d64612397e34be5827ae4000b36ccb",
+  "binary_sha256": "7f270a92d41454cfc20cf93190dc6f038f4bdf53581e8ee729670d4836717f31",
+  "scope": "Actual original border painter vs native CPU span geometry; rendered native canvas/cache still separate",
+  "cases": [
+    {
+      "name": "sharp-solid",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "rounded-solid",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "sharp-double",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "rounded-double",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thin-sharp",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thin-rounded",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "clamped-elliptical",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "dashed-retained",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    }
+  ]
+}

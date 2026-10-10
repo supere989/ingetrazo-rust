@@ -1,0 +1,7 @@
+{
+  "binary_sha256": "f783b26e42c8a63f6bb0fb8ca09cfee03cba3c4a29037591e5fd7f2ee9af0efd",
+  "exit": 1,
+  "changed": 6411,
+  "mutation": "Move native source border callback before real red item, violating original z=1e6 order",
+  "scope": "Actual callback draw-order negative; production composer caller/order remains separately source-reviewed"
+}

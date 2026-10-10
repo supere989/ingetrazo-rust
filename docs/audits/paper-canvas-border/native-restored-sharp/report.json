@@ -1,0 +1,172 @@
+{
+  "binary_sha256": "af5f4ccdf68687a0e53eb29fc164f1cecea64ab59baa216d263345d8f5670505",
+  "recipes_sha256": "8f6814a4a1b5ad5a520f7f5b79aa4d32b6d64612397e34be5827ae4000b36ccb",
+  "scope": "Actual native cached border callback over real opaque item primitive, actual XTEST recipe changes; complete production composer paper/guide stage separate",
+  "cases": [
+    {
+      "name": "sharp-solid",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        62,
+        701,
+        541
+      ],
+      "state": {
+        "index": 0,
+        "name": "sharp-solid",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 1,
+        "gpu": {
+          "uploads": 1,
+          "cache_hits": 4,
+          "cached_bytes": 171216,
+          "draws": 5
+        },
+        "serial": 5
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "sharp-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 17,
+            "cached_bytes": 171216,
+            "draws": 18
+          },
+          "serial": 18
+        },
+        {
+          "index": 0,
+          "name": "sharp-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 21,
+            "cached_bytes": 171216,
+            "draws": 22
+          },
+          "serial": 22
+        },
+        {
+          "index": 0,
+          "name": "sharp-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 24,
+            "cached_bytes": 171216,
+            "draws": 25
+          },
+          "serial": 25
+        }
+      ]
+    }
+  ]
+}

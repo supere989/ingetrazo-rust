@@ -1,0 +1,172 @@
+{
+  "binary_sha256": "4d5bdb2b5e8606992188e6dce5dda22ecbbe37b698a9e59a505e8def3c19c4c3",
+  "recipes_sha256": "8f6814a4a1b5ad5a520f7f5b79aa4d32b6d64612397e34be5827ae4000b36ccb",
+  "scope": "Actual native cached border callback over real opaque item primitive, actual XTEST recipe changes; complete production composer paper/guide stage separate",
+  "cases": [
+    {
+      "name": "dashed-retained",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        63,
+        701,
+        541
+      ],
+      "state": {
+        "index": 0,
+        "name": "dashed-retained",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.6,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "dashed"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 1,
+        "gpu": {
+          "uploads": 1,
+          "cache_hits": 4,
+          "cached_bytes": 216216,
+          "draws": 5
+        },
+        "serial": 5
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "dashed-retained",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 15,
+            "cached_bytes": 216216,
+            "draws": 16
+          },
+          "serial": 16
+        },
+        {
+          "index": 0,
+          "name": "dashed-retained",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 19,
+            "cached_bytes": 216216,
+            "draws": 20
+          },
+          "serial": 20
+        },
+        {
+          "index": 0,
+          "name": "dashed-retained",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 22,
+            "cached_bytes": 216216,
+            "draws": 23
+          },
+          "serial": 23
+        }
+      ]
+    }
+  ]
+}

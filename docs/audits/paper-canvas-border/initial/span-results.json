@@ -1,0 +1,117 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "recipes_sha256": "8f6814a4a1b5ad5a520f7f5b79aa4d32b6d64612397e34be5827ae4000b36ccb",
+  "binary_sha256": "6af9036522a33ac0ff5ae5c36685f17dd4b664d91ee9d5e28f5b79bda27b6956",
+  "scope": "Actual original border painter vs native CPU span geometry; rendered native canvas/cache still separate",
+  "cases": [
+    {
+      "name": "sharp-solid",
+      "changed": 10,
+      "first": [
+        [
+          4,
+          4,
+          41,
+          42
+        ],
+        [
+          111,
+          4,
+          80,
+          109
+        ],
+        [
+          4,
+          5,
+          5,
+          11
+        ],
+        [
+          5,
+          5,
+          0,
+          6
+        ],
+        [
+          109,
+          5,
+          16,
+          53
+        ]
+      ],
+      "strict": false
+    },
+    {
+      "name": "rounded-solid",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "sharp-double",
+      "changed": 10,
+      "first": [
+        [
+          4,
+          4,
+          41,
+          42
+        ],
+        [
+          111,
+          4,
+          80,
+          109
+        ],
+        [
+          4,
+          5,
+          5,
+          11
+        ],
+        [
+          5,
+          5,
+          0,
+          6
+        ],
+        [
+          109,
+          5,
+          16,
+          53
+        ]
+      ],
+      "strict": false
+    },
+    {
+      "name": "rounded-double",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thin-sharp",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "thin-rounded",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "clamped-elliptical",
+      "changed": 0,
+      "first": [],
+      "strict": true
+    },
+    {
+      "name": "dashed-retained",
+      "native_error": "Source dashed sheet border canvas remains unsupported",
+      "strict": false
+    }
+  ]
+}

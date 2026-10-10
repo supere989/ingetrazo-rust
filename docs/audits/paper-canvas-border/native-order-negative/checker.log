@@ -1,0 +1,6 @@
+[('sharp-solid', 6411)]
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-canvas-border-native.py", line 55, in <module>
+    (out/'report.json').write_text(json.dumps(dict(binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),recipes_sha256=hashlib.sha256(recipes.read_bytes()).hexdigest(),scope='Actual native cached border callback over real opaque item primitive, actual XTEST recipe changes; complete production composer paper/guide stage separate',cases=results),indent=2)+'\n');print([(r['name'],r['changed'])for r in results]);assert all(r['changed']==0 for r in results),'Actual border pixel discrepancy'
+                                                                                                                                                                                                                                                                                                                                                                                                                                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Actual border pixel discrepancy

@@ -1,0 +1,8 @@
+Suitable Vulkan adapter 0: llvmpipe (LLVM 20.1.2, 256 bits); CPU; queues Queues { graphics: 0, present: 0, compute: Some(0) }
+Native Vulkan adapter: "llvmpipe (LLVM 20.1.2, 256 bits)"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 132593643520 bytes; DEVICE_LOCAL
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT | ATTACHMENT_FEEDBACK_LOOP_EXT
+GPU allocation budget: 749864 committed bytes; peakcommitted 1115464; peakadmitted 1115464; globalcap None; heaps [HeapBudget { capacity: 132593643520, limit: 106074914816, live_budget: Some(119334279168), live_usage: 60512464896, reserved: 0, committed: 749864 }]
+CAD2D metrics: Stats { callbacks: 433, binds: 433, draws: 543, uploads: 8, upload_bytes: 1633104, cache_hits: 425, cached_bytes: 216144, rolled_back_buffers: 0 }
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0

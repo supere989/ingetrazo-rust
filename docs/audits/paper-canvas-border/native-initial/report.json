@@ -1,0 +1,1348 @@
+{
+  "binary_sha256": "bd95994989dc3c9a775257276cbb44f47757d4071addcc32dcd48bdd1124e58d",
+  "recipes_sha256": "8f6814a4a1b5ad5a520f7f5b79aa4d32b6d64612397e34be5827ae4000b36ccb",
+  "scope": "Actual native cached border callback over real opaque item primitive, actual XTEST recipe changes; complete production composer paper/guide stage separate",
+  "cases": [
+    {
+      "name": "sharp-solid",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        62,
+        701,
+        541
+      ],
+      "state": {
+        "index": 0,
+        "name": "sharp-solid",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 1,
+        "gpu": {
+          "uploads": 1,
+          "cache_hits": 4,
+          "cached_bytes": 171216,
+          "draws": 5
+        },
+        "serial": 5
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "sharp-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 18,
+            "cached_bytes": 171216,
+            "draws": 19
+          },
+          "serial": 19
+        },
+        {
+          "index": 0,
+          "name": "sharp-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 21,
+            "cached_bytes": 171216,
+            "draws": 22
+          },
+          "serial": 22
+        },
+        {
+          "index": 0,
+          "name": "sharp-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 1,
+          "gpu": {
+            "uploads": 1,
+            "cache_hits": 25,
+            "cached_bytes": 171216,
+            "draws": 26
+          },
+          "serial": 26
+        }
+      ]
+    },
+    {
+      "name": "rounded-solid",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        62,
+        701,
+        541
+      ],
+      "state": {
+        "index": 1,
+        "name": "rounded-solid",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 3.0,
+          "style": "single"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 2,
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 62,
+          "cached_bytes": 175104,
+          "draws": 64
+        },
+        "serial": 64
+      },
+      "warm": [
+        {
+          "index": 1,
+          "name": "rounded-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 2,
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 76,
+            "cached_bytes": 175104,
+            "draws": 78
+          },
+          "serial": 78
+        },
+        {
+          "index": 1,
+          "name": "rounded-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 2,
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 79,
+            "cached_bytes": 175104,
+            "draws": 81
+          },
+          "serial": 81
+        },
+        {
+          "index": 1,
+          "name": "rounded-solid",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 2,
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 83,
+            "cached_bytes": 175104,
+            "draws": 85
+          },
+          "serial": 85
+        }
+      ]
+    },
+    {
+      "name": "sharp-double",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        62,
+        701,
+        541
+      ],
+      "state": {
+        "index": 2,
+        "name": "sharp-double",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "double"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 3,
+        "gpu": {
+          "uploads": 3,
+          "cache_hits": 117,
+          "cached_bytes": 304848,
+          "draws": 134
+        },
+        "serial": 120
+      },
+      "warm": [
+        {
+          "index": 2,
+          "name": "sharp-double",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "double"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 3,
+          "gpu": {
+            "uploads": 3,
+            "cache_hits": 133,
+            "cached_bytes": 304848,
+            "draws": 166
+          },
+          "serial": 136
+        },
+        {
+          "index": 2,
+          "name": "sharp-double",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "double"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 3,
+          "gpu": {
+            "uploads": 3,
+            "cache_hits": 136,
+            "cached_bytes": 304848,
+            "draws": 172
+          },
+          "serial": 139
+        },
+        {
+          "index": 2,
+          "name": "sharp-double",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "double"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 3,
+          "gpu": {
+            "uploads": 3,
+            "cache_hits": 140,
+            "cached_bytes": 304848,
+            "draws": 180
+          },
+          "serial": 143
+        }
+      ]
+    },
+    {
+      "name": "rounded-double",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        63,
+        701,
+        541
+      ],
+      "state": {
+        "index": 3,
+        "name": "rounded-double",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.7,
+          "color": "#000000",
+          "radius_mm": 2.5,
+          "style": "double"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 4,
+        "gpu": {
+          "uploads": 4,
+          "cache_hits": 174,
+          "cached_bytes": 277416,
+          "draws": 250
+        },
+        "serial": 178
+      },
+      "warm": [
+        {
+          "index": 3,
+          "name": "rounded-double",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 4,
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 185,
+            "cached_bytes": 277416,
+            "draws": 272
+          },
+          "serial": 189
+        },
+        {
+          "index": 3,
+          "name": "rounded-double",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 4,
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 188,
+            "cached_bytes": 277416,
+            "draws": 278
+          },
+          "serial": 192
+        },
+        {
+          "index": 3,
+          "name": "rounded-double",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.7,
+            "color": "#000000",
+            "radius_mm": 2.5,
+            "style": "double"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 4,
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 192,
+            "cached_bytes": 277416,
+            "draws": 286
+          },
+          "serial": 196
+        }
+      ]
+    },
+    {
+      "name": "thin-sharp",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        22,
+        62,
+        465,
+        374
+      ],
+      "state": {
+        "index": 4,
+        "name": "thin-sharp",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.2,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "single"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 5,
+        "gpu": {
+          "uploads": 5,
+          "cache_hits": 226,
+          "cached_bytes": 90144,
+          "draws": 341
+        },
+        "serial": 231
+      },
+      "warm": [
+        {
+          "index": 4,
+          "name": "thin-sharp",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 5,
+          "gpu": {
+            "uploads": 5,
+            "cache_hits": 238,
+            "cached_bytes": 90144,
+            "draws": 353
+          },
+          "serial": 243
+        },
+        {
+          "index": 4,
+          "name": "thin-sharp",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 5,
+          "gpu": {
+            "uploads": 5,
+            "cache_hits": 242,
+            "cached_bytes": 90144,
+            "draws": 357
+          },
+          "serial": 247
+        },
+        {
+          "index": 4,
+          "name": "thin-sharp",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 5,
+          "gpu": {
+            "uploads": 5,
+            "cache_hits": 245,
+            "cached_bytes": 90144,
+            "draws": 360
+          },
+          "serial": 250
+        }
+      ]
+    },
+    {
+      "name": "thin-rounded",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        22,
+        62,
+        465,
+        374
+      ],
+      "state": {
+        "index": 5,
+        "name": "thin-rounded",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.2,
+          "color": "#000000",
+          "radius_mm": 3.0,
+          "style": "single"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 6,
+        "gpu": {
+          "uploads": 6,
+          "cache_hits": 280,
+          "cached_bytes": 92808,
+          "draws": 396
+        },
+        "serial": 286
+      },
+      "warm": [
+        {
+          "index": 5,
+          "name": "thin-rounded",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 6,
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 292,
+            "cached_bytes": 92808,
+            "draws": 408
+          },
+          "serial": 298
+        },
+        {
+          "index": 5,
+          "name": "thin-rounded",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 6,
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 295,
+            "cached_bytes": 92808,
+            "draws": 411
+          },
+          "serial": 301
+        },
+        {
+          "index": 5,
+          "name": "thin-rounded",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 6,
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 299,
+            "cached_bytes": 92808,
+            "draws": 415
+          },
+          "serial": 305
+        }
+      ]
+    },
+    {
+      "name": "clamped-elliptical",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        23,
+        62,
+        701,
+        541
+      ],
+      "state": {
+        "index": 6,
+        "name": "clamped-elliptical",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 100.0,
+          "style": "single"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 7,
+        "gpu": {
+          "uploads": 7,
+          "cache_hits": 332,
+          "cached_bytes": 305424,
+          "draws": 449
+        },
+        "serial": 339
+      },
+      "warm": [
+        {
+          "index": 6,
+          "name": "clamped-elliptical",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 100.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 7,
+          "gpu": {
+            "uploads": 7,
+            "cache_hits": 343,
+            "cached_bytes": 305424,
+            "draws": 460
+          },
+          "serial": 350
+        },
+        {
+          "index": 6,
+          "name": "clamped-elliptical",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 100.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 7,
+          "gpu": {
+            "uploads": 7,
+            "cache_hits": 346,
+            "cached_bytes": 305424,
+            "draws": 463
+          },
+          "serial": 353
+        },
+        {
+          "index": 6,
+          "name": "clamped-elliptical",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 100.0,
+            "style": "single"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 7,
+          "gpu": {
+            "uploads": 7,
+            "cache_hits": 350,
+            "cached_bytes": 305424,
+            "draws": 467
+          },
+          "serial": 357
+        }
+      ]
+    },
+    {
+      "name": "dashed-retained",
+      "changed": 6,
+      "first": [
+        [
+          24,
+          537
+        ],
+        [
+          25,
+          537
+        ],
+        [
+          24,
+          538
+        ],
+        [
+          25,
+          538
+        ],
+        [
+          24,
+          539
+        ]
+      ],
+      "roi": [
+        23,
+        63,
+        701,
+        541
+      ],
+      "state": {
+        "index": 7,
+        "name": "dashed-retained",
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 2.0,
+        "border": {
+          "on": true,
+          "mm": 0.6,
+          "color": "#000000",
+          "radius_mm": 0.0,
+          "style": "dashed"
+        },
+        "origin": [
+          20.3700008392334,
+          60.22999954223633
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "next": [
+          66.0,
+          11.0
+        ],
+        "close": [
+          151.5,
+          11.0
+        ],
+        "cold_builds": 8,
+        "gpu": {
+          "uploads": 8,
+          "cache_hits": 384,
+          "cached_bytes": 216144,
+          "draws": 502
+        },
+        "serial": 392
+      },
+      "warm": [
+        {
+          "index": 7,
+          "name": "dashed-retained",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 8,
+          "gpu": {
+            "uploads": 8,
+            "cache_hits": 395,
+            "cached_bytes": 216144,
+            "draws": 513
+          },
+          "serial": 403
+        },
+        {
+          "index": 7,
+          "name": "dashed-retained",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 8,
+          "gpu": {
+            "uploads": 8,
+            "cache_hits": 399,
+            "cached_bytes": 216144,
+            "draws": 517
+          },
+          "serial": 407
+        },
+        {
+          "index": 7,
+          "name": "dashed-retained",
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 2.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 0.0,
+            "style": "dashed"
+          },
+          "origin": [
+            20.3700008392334,
+            60.22999954223633
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "next": [
+            66.0,
+            11.0
+          ],
+          "close": [
+            151.5,
+            11.0
+          ],
+          "cold_builds": 8,
+          "gpu": {
+            "uploads": 8,
+            "cache_hits": 402,
+            "cached_bytes": 216144,
+            "draws": 520
+          },
+          "serial": 410
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Source canvas border acceptance
+
+Production source: `0e4c93de`. Original: `6be29fe437a7cd992d4e079f71720821b25216b9`, Qt 6.12.0. Frozen inventory: eight literal recipes in recipes.json.
+
+CPU span controls: 8/8 exact. Actual Vulkan/llvmpipe callback controls: seven unchanged solid/double/thin/elliptical cases in native/report.json exact; initial straight dashed case differed by six pixels. Generic Qt QPointF fuzzy-null segment handling corrected that case: native-dashed-followup/report.json is exact. Restored final-source sharp-solid capture is exact in native-restored-sharp/report.json. Historical initial failures remain retained; thresholds unchanged. The seven unchanged captures are reused evidence, not a claimed fresh eight-case final-binary run.
+
+Actual XTEST recipe clicks, submitted frames, callback rendering over a real opaque red item, and native GPU counters are observed. Each cold variant uploads once; three warm observations retain cold-build count/upload count/cached bytes. Maximum active payload 305424 bytes. Cleanup reports zero committed GPU bytes. Wrong callback order compiled into the fixture rejects with 6411 differing pixels; restoration is exact. This proves callback order, while the normal Composer callsite above items is source-reviewed rather than a complete normal Composer UI capture.
+
+Source paths preserve literal Qt RoundJoin, double stroke ordering, source radii and continuous straight dash phase. Thick curved dashed borders, the complete page/shadow/margin-guide compound, extreme pen/degenerated margins, and actual Metal/Glow canvas fidelity remain open. Opaque CAD callbacks retain the separately documented post-fence release deferral; this border capture does not close the callback texture-refusal gate. No repeated PDF or broad suite was run for this stage.

@@ -1,0 +1,13 @@
+{
+  "crates/ingetrazo-gui/src/composer_border.rs": "682e35165ebd94f26a111595b325e9d20d39c9c6d22413326bb8ae69673d5d3f",
+  "crates/ingetrazo-gui/examples/paper_border_native_fixture.rs": "cb21f32271d7724342b21c83e385c6f4ac8977bf6901720a7fd07ff218fa684d",
+  "crates/ingetrazo-gui/examples/paper_border_span_fixture.rs": "8ac568f7d98e23363ab68ea5c29071451be5cdacceb7dcf18a130672c94abc5a",
+  "scripts/check-paper-canvas-border.py": "30c17a3720a1022c78d974f08f753dbbc82249089b5004373abd73147ff85431",
+  "scripts/check-paper-canvas-border-native.py": "a1490405de8c019a49015f07219207c806492100f12c042c98de7104f55aa486",
+  "scripts/check-paper-canvas-border-order-mutation.py": "0807a9f5caebd8487f8b8552c6d78dda6c2f3bb76a07f17f65538b870f47e25f",
+  "/tmp/ingetrazo-geometry-qstroker.cpp": "3017a2f53dc6d94c5cb24436544e2b749f3de32900110c8fa3bf81fd3581ef7e",
+  "/tmp/ingetrazo-geometry-qcosmeticstroker.cpp": "99ca39ef3244af0bdedaa919b665fdf27e337eef342357dddaff7a29ea0466d7",
+  "/tmp/ingetrazo-geometry-qline.h": "a58d0a7cd65eec4faecb623334f1e7a87f5f8b047e5dd0b5b5c761690ce0f4f6",
+  "/tmp/ingetrazo-geometry-qpoint.h": "cff52b14135d6b5a5f10260632fd905bd3c86d789a99221348bbf38c7870fea6",
+  "/tmp/ingetrazo-geometry-qnumeric.h": "a0c5bb942fab69939c9ec020520a10f7c1014da72ddeb74a204cd1e1a0141a4b"
+}
