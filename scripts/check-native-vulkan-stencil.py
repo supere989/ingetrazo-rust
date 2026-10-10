@@ -10,7 +10,10 @@ def count(path):
  return sum(pixels[i]>180 and pixels[i+2]>180 and pixels[i+1]<80 for i in range(0,len(pixels),3))
 def acceptable(reference,native):return native==0 if reference==0 else abs(native-reference)/reference<=.05
 rows=[]
-for row in json.loads(Path(a.original).read_text())['cases']:
+reference_rows=json.loads(Path(a.original).read_text())['cases']
+expected=["closed","shared-slab","shared-slab-reversed","transparent","duplicate","coplanar-backface","closed-iso","shared-slab-iso","shared-slab-reversed-iso","closed-front"]
+assert [row['case'] for row in reference_rows]==expected,"Missing/reordered original stencil controls"
+for row in reference_rows:
  path=Path(a.native_root)/('msaa-'+row['case'])/'resize-800x600.png'
  native=count(path);reference=row['magenta_fill_pixels']
  assert acceptable(reference,native),(row['case'],reference,native)
