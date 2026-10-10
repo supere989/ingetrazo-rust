@@ -23,6 +23,7 @@ use crate::app::IngeTrazoApp;
 #[derive(Debug, Clone)]
 pub struct ComposerState {
     pub pdf_export_error: Option<String>,
+    pub paper_text: std::rc::Rc<std::cell::RefCell<ingetrazo_formats::paper_text_painter::Painter>>,
     pub shape_tool:Option<String>,
     pub shape_start:Option<glam::DVec2>,
     pub pan_offset: Vec2,
@@ -39,6 +40,7 @@ impl Default for ComposerState {
     fn default() -> Self {
         Self {
             pdf_export_error: None,
+            paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
             zoom: 1.5, // 1.5 px per mm by default (~400mm A3 = 600px wide)
@@ -1113,8 +1115,10 @@ impl IngeTrazoApp {
         let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
         let scene=&self.scene;let camera=&self.camera;let compute=&mut self.composer_compute;let document=self.clipboard_document;let revision=self.model_revision;
         let mut painter=|frame:&ViewFrame|pdf::view_draws(scene,camera,compute,document,revision,frame);
-        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_views(sheets,&mut painter)?;
+        let text_resources=&self.composer_state.paper_text;
+        let mut texts=|sheet:&ingetrazo_core::composition::Sheet,item:&ingetrazo_core::composition::TextItem|pdf::text_draws(sheet,item,&mut text_resources.borrow_mut());
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_painters(sheets,&mut painter,&mut texts)?;
         let has_view=sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::ViewFrame(_))));
-        if has_view{ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
+        if has_view || sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::Text(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
     }
 }

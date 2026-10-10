@@ -1,0 +1,13 @@
+{
+  "source_commit": "9bbc59af",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "065fc3492951c6eec3171d5069ad161b71a8a66c0665fe1af07aecb486cab5fc",
+  "scope": "Actual production composer controller, 31 helper cases/93 strict whole pages; not rendered pointer/save dialog or full Text UI",
+  "open": [
+    "background",
+    "dynamic fields",
+    "actual dialog gestures",
+    "native Mac/Windows providers",
+    "full P29"
+  ]
+}

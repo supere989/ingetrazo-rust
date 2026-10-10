@@ -2,6 +2,9 @@
 """Actual native composer PDF button clicks; genuine backend absence is a blocker."""
 import os,json,subprocess,tempfile,time,select,ctypes as C,ctypes.util,shutil,hashlib
 from pathlib import Path
+os.environ.setdefault("QT_QPA_PLATFORM","offscreen")  # Reader stays headless; native Vulkan/XTEST use their owned X server.
+text_source=os.environ.get("INGETRAZO_PDF_UI_TEXT_OBSERVATIONS")
+text_cases=json.loads(Path(text_source).read_text())["cases"] if text_source else None
 unsupported=os.environ.get("INGETRAZO_PDF_UI_UNSUPPORTED")=="1"
 out=Path(os.environ.get("INGETRAZO_PDF_UI_EVIDENCE","docs/audits/composer-pdf-ui"+("-unsupported" if unsupported else "")));out.mkdir(exist_ok=True);(out/"state.json").unlink(missing_ok=True)
 def wait(fn):
@@ -95,7 +98,7 @@ with tempfile.TemporaryDirectory() as runtime:
    assert current["export_result"]==atlas["export_result"]=="PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported",atlas
    counts=[]
   else:
-   assert atlas["sheets"]==initial["sheets"]==9
+   assert atlas["sheets"]==initial["sheets"]==(len(text_cases) if text_cases else 9)
    assert current_path.read_bytes().startswith(b"%PDF-") and all_path.read_bytes().startswith(b"%PDF-")
    from PySide6.QtWidgets import QApplication
    from PySide6.QtPdf import QPdfDocument
@@ -108,8 +111,21 @@ with tempfile.TemporaryDirectory() as runtime:
      raw=doc.render(page,QSize(842,595));assert not raw.isNull();image=QImage(raw.size(),QImage.Format.Format_RGB32);image.fill(0xffffffff);painter=QPainter(image);painter.drawImage(0,0,raw);painter.end();image=image.convertToFormat(QImage.Format.Format_RGBA8888);data=bytes(image.constBits());nonwhite=sum(data[i:i+3]!=b'\xff\xff\xff'for i in range(0,len(data),4));assert nonwhite>100;ink.append(nonwhite)
      if page==0:first_pages.append(data)
    assert first_pages[0]==first_pages[1]
-   assert counts==[1,9]
-  report={"actual_x11_pointer_buttons_passed":True,"current":current,"all":atlas,"dialog_acceptance":"Actual genuine Zenity GTK save dialogs entered with XTEST keyboard","successful_ui_pdf_export":not unsupported,"pdf_page_counts":counts,"page_nonwhite_pixels":[] if unsupported else ink,"error_dialog_dismissed":dismissed if unsupported else None,"error_popup_dark_pixels":popup_dark if unsupported else None,"dismissed_popup_dark_pixels":quiet_dark if unsupported else None,"unsupported_destination_ui":"Actual default sheet current/all errors preserve confirmed overwrite destinations" if unsupported else "Separately exercised in unsupported scenario","binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"scope":"Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."};(out/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report))
+   assert counts==[1,len(text_cases) if text_cases else 9]
+   if text_cases:
+    source_dir=Path(text_source).parent
+    for path in [current_path,all_path]:
+     native=QPdfDocument();assert native.load(str(path))==QPdfDocument.Error.None_
+     for index in range(native.pageCount()):
+      name=text_cases[index]["name"];original=QPdfDocument();assert original.load(str(source_dir/(name+".original.pdf")))==QPdfDocument.Error.None_
+      assert native.pagePointSize(index)==original.pagePointSize(0),(name,"Actual PDF page dimensions differ from source")
+      assert native.getAllText(index).text()==original.getAllText(0).text(),name
+      for dpi in (72,144,300):
+       size=original.pagePointSize(0);pixels=QSize(round(size.width()*dpi/72),round(size.height()*dpi/72))
+       def white(doc,page):
+        raw=doc.render(page,pixels);assert not raw.isNull();im=QImage(raw.size(),QImage.Format.Format_RGB32);im.fill(0xffffffff);p=QPainter(im);p.drawImage(0,0,raw);p.end();return bytes(im.constBits())
+       assert white(native,index)==white(original,0),(name,dpi,"Actual button/dialog PDF differs from frozen source")
+  report={"text_frozen_source_cases":len(text_cases) if text_cases else None,"text_source_exact_pages":(len(text_cases)+1)*3 if text_cases else None,"text_reader_exact_pages":len(text_cases)+1 if text_cases else None,"actual_x11_pointer_buttons_passed":True,"current":current,"all":atlas,"dialog_acceptance":"Actual genuine Zenity GTK save dialogs entered with XTEST keyboard","successful_ui_pdf_export":not unsupported,"pdf_page_counts":counts,"page_nonwhite_pixels":[] if unsupported else ink,"error_dialog_dismissed":dismissed if unsupported else None,"error_popup_dark_pixels":popup_dark if unsupported else None,"dismissed_popup_dark_pixels":quiet_dark if unsupported else None,"unsupported_destination_ui":"Actual default sheet current/all errors preserve confirmed overwrite destinations" if unsupported else "Separately exercised in unsupported scenario","binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"scope":"Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."};(out/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report))
  finally:
   if app:
    import signal
