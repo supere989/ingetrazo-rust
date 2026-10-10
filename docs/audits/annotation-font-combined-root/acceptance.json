@@ -1,0 +1,9 @@
+{
+  "source": "7b7ce751",
+  "command": "cargo test --workspace --locked --lib --tests -j2",
+  "exit_code": 0,
+  "passed": 739,
+  "failed": 0,
+  "ignored": 2,
+  "scope": "Combined Linux library/integration tests after native font plus annotation raster/glyph merge; not full-platform or full-feature parity."
+}

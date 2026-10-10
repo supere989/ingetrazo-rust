@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Combined font/annotation integration (2026-10-10): source `7b7ce751` passes **739 workspace library/integration tests, zero failures, 2 ignored**. [Fresh combined evidence](audits/annotation-font-combined-root/acceptance.json). Fifteen recorded annotation images separately match exactly; real viewport projection/depth, platform and release acceptance remain OPEN.
+
 Merged annotation glyph acceptance (2026-10-10): fresh source `0ed4f0eb` matches all fifteen recorded original operation images exactly, including the former nine-pixel millimetre failure. Native800x600 captures also retain white exterior outside original640x400 canvas. Three metadata/admission tests pass. [Merged evidence](audits/annotation-glyph-merged-root/acceptance.json). This is recorded-operation Vulkan replay; actual source projection/depth, RTX and full models remain OPEN.
 
 Annotation line correction integrated (2026-10-10): source `5501ea67` passes all three focused merged raster tests. Exact Qt rectangle extent reconstruction fixes the retained three-pixel clipping counterexample; root independent corrected-binary replay matches all56 cases. [Merged focused evidence](audits/annotation-line-merged-root/acceptance.json), [independent pixel comparison](audits/annotation-line-qrect-root/result.json). Full merged application replay, the millimetre dimension residual and full rendering parity remain OPEN.
