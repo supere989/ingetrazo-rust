@@ -21,7 +21,7 @@ impl IngeTrazoApp {
     pub fn remove_selected_saved_view(&mut self){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){self.seal_view_history();self.scene.saved_views.remove(i);self.selected_saved_view=if self.scene.saved_views.is_empty(){None}else{Some(i.min(self.scene.saved_views.len()-1))};self.scene.bump_version();}}
     pub fn rename_selected_saved_view(&mut self,name:String){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){if !name.trim().is_empty()&&name!=self.scene.saved_views[i].name{self.seal_view_history();self.scene.saved_views[i].name=name;let view=self.scene.saved_views[i].clone();self.refresh_history_view(&view);self.scene.bump_version();}}}
     pub fn apply_saved_view(&mut self,i:usize){
-        let Some(view)=self.scene.saved_views.get(i).cloned() else{return;};self.selected_saved_view=Some(i);view.apply_scene(&mut self.scene,&mut self.camera);
+        let Some(view)=self.scene.saved_views.get(i).cloned() else{return;};self.selected_saved_view=Some(i);if let Some(visible)=view.georef.as_ref().and_then(|g|g.get("terrain")).and_then(|v|v.as_bool()){self.set_terrain_visibility(visible);}view.apply_scene(&mut self.scene,&mut self.camera);
         if let Some(s)=&view.style{
             if let Some(mode)=s.get("face_mode").and_then(|v|v.as_str()){self.style.visual_style=match mode{"wireframe"=>VisualStyle::Wireframe,"hidden_line"=>VisualStyle::HiddenLine,"monochrome"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};}
             if let Some(v)=s.get("edges").and_then(|v|v.as_bool()){self.style.show_edges=v;}if let Some(v)=s.get("profiles").and_then(|v|v.as_bool()){self.style.show_profiles=v;}
