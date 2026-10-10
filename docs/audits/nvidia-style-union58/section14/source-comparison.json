@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "closed",
+      "source": 20164,
+      "native": 20164,
+      "passed": true
+    },
+    {
+      "case": "shared-slab",
+      "source": 0,
+      "native": 0,
+      "passed": true
+    },
+    {
+      "case": "shared-slab-reversed",
+      "source": 20164,
+      "native": 20164,
+      "passed": true
+    },
+    {
+      "case": "transparent",
+      "source": 0,
+      "native": 0,
+      "passed": true
+    },
+    {
+      "case": "duplicate",
+      "source": 20164,
+      "native": 20164,
+      "passed": true
+    },
+    {
+      "case": "coplanar-backface",
+      "source": 0,
+      "native": 0,
+      "passed": true
+    },
+    {
+      "case": "closed-iso",
+      "source": 9925,
+      "native": 9925,
+      "passed": true
+    },
+    {
+      "case": "shared-slab-iso",
+      "source": 8519,
+      "native": 8519,
+      "passed": true
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "source": 9925,
+      "native": 9925,
+      "passed": true
+    },
+    {
+      "case": "closed-front",
+      "source": 0,
+      "native": 0,
+      "passed": true
+    },
+    {
+      "case": "hollow",
+      "source": 14400,
+      "native": 14400,
+      "passed": true
+    },
+    {
+      "case": "hollow-iso",
+      "source": 6970,
+      "native": 6956,
+      "passed": true
+    },
+    {
+      "case": "transparent-hollow",
+      "source": 0,
+      "native": 0,
+      "passed": true
+    },
+    {
+      "case": "hollow-seam",
+      "source": 15552,
+      "native": 15696,
+      "passed": true
+    }
+  ],
+  "scope": "Existing exact-zero/5percent positive coverage bound, holes remain empty; normal/36B fullimage equality. Not fullpixel equivalence."
+}

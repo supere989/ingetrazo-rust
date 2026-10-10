@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "implementation_source": "77eb89c",
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "probe_sha256": "e77ff38784414d748989646957ee79319cc56ad58f8ee56b8d33916c76882c3b",
+  "window_sha256": "e059dd90c12c4310352066f4c37913d975aa857a548f1d28648f85476e7db03c",
+  "section_probe_sha256": "61ed07860dc064af0dc67315c65adbcb7151745fe7a79f158d32b838a766d481",
+  "original_helper_sha256": "485f9877620ba12eb9b19683037b16f39624cc2866cd38ca4bb77c7a9fe8941c",
+  "immutable_image": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "device": "NVIDIA GeForce RTX 5090",
+  "driver": "615.71.09",
+  "mandatory_cases": 58,
+  "rgba_tolerance": 0,
+  "negative_controls": 5,
+  "retained_old_style_failures": 15,
+  "section_cases": 14,
+  "headless_budget_bytes": 134217728,
+  "window_admission": "Production perheap; no128MiB override",
+  "capture": "Only own newly created named client; never desktop/root",
+  "scope": "Prior38 plus20 untextured colored face style controls. Edges/textures/Metal remain open."
+}

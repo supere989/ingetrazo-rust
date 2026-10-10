@@ -1,0 +1,1050 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "red-half-white",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "red-half-white.log"
+    },
+    {
+      "case": "red-half-black",
+      "center_rgba": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "red-half-black.log"
+    },
+    {
+      "case": "opacity-bucket-order",
+      "center_rgba": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-bucket-order.log"
+    },
+    {
+      "case": "opaque-front",
+      "center_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opaque-front.log"
+    },
+    {
+      "case": "opaque-back",
+      "center_rgba": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opaque-back.log"
+    },
+    {
+      "case": "equal-opacity-forward",
+      "center_rgba": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "passed": true,
+      "backend_log": "equal-opacity-forward.log"
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "center_rgba": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "passed": true,
+      "backend_log": "equal-opacity-reversed.log"
+    },
+    {
+      "case": "opacity-995",
+      "center_rgba": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-995.log"
+    },
+    {
+      "case": "opacity-zero",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-zero.log"
+    },
+    {
+      "case": "section-clipped",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "section-clipped.log"
+    },
+    {
+      "case": "rgb-tie-even",
+      "center_rgba": [
+        32,
+        63,
+        95,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        32,
+        63,
+        95,
+        255
+      ],
+      "passed": true,
+      "backend_log": "rgb-tie-even.log"
+    },
+    {
+      "case": "rgb-tie-odd",
+      "center_rgba": [
+        36,
+        67,
+        99,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        36,
+        67,
+        99,
+        255
+      ],
+      "passed": true,
+      "backend_log": "rgb-tie-odd.log"
+    },
+    {
+      "case": "opacity-round-5005",
+      "center_rgba": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-round-5005.log"
+    },
+    {
+      "case": "opacity-round-1255",
+      "center_rgba": [
+        31,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        31,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-round-1255.log"
+    },
+    {
+      "case": "opacity-threshold-f64",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "opacity-threshold-f64.log"
+    },
+    {
+      "case": "back-0.5-0.3-front",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-0.5-0.3-front.log"
+    },
+    {
+      "case": "back-0.5-0.3-reversed",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-0.5-0.3-reversed.log"
+    },
+    {
+      "case": "back-1.0-0.3-front",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-1.0-0.3-front.log"
+    },
+    {
+      "case": "back-1.0-0.3-reversed",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-1.0-0.3-reversed.log"
+    },
+    {
+      "case": "back-0.5-1.0-front",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-0.5-1.0-front.log"
+    },
+    {
+      "case": "back-0.5-1.0-reversed",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-0.5-1.0-reversed.log"
+    },
+    {
+      "case": "back-1.0-1.0-front",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-1.0-1.0-front.log"
+    },
+    {
+      "case": "back-1.0-1.0-reversed",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-1.0-1.0-reversed.log"
+    },
+    {
+      "case": "back-gate-activated-front",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-gate-activated-front.log"
+    },
+    {
+      "case": "back-gate-activated-reversed",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-gate-activated-reversed.log"
+    },
+    {
+      "case": "back-order-translucent-opaque",
+      "center_rgba": [
+        126,
+        199,
+        178,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        126,
+        199,
+        178,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-order-translucent-opaque.log"
+    },
+    {
+      "case": "back-order-opaque-translucent",
+      "center_rgba": [
+        126,
+        199,
+        178,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        126,
+        199,
+        178,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-order-opaque-translucent.log"
+    },
+    {
+      "case": "back-gate-instanced-only-front",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-gate-instanced-only-front.log"
+    },
+    {
+      "case": "back-gate-instanced-only-reversed",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "passed": true,
+      "backend_log": "back-gate-instanced-only-reversed.log"
+    },
+    {
+      "case": "group-rotated-prototype",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "group-rotated-prototype.log"
+    },
+    {
+      "case": "group-nested-rotated-prototype",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "group-nested-rotated-prototype.log"
+    },
+    {
+      "case": "group-classic-baked-rotation",
+      "center_rgba": [
+        227,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        227,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "group-classic-baked-rotation.log"
+    },
+    {
+      "case": "paint-default-front",
+      "center_rgba": [
+        128,
+        251,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        128,
+        251,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "paint-default-front.log"
+    },
+    {
+      "case": "paint-default-reversed",
+      "center_rgba": [
+        128,
+        251,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        128,
+        251,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "paint-default-reversed.log"
+    },
+    {
+      "case": "paint-face-override",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "paint-face-override.log"
+    },
+    {
+      "case": "paint-explicit-back",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "passed": true,
+      "backend_log": "paint-explicit-back.log"
+    },
+    {
+      "case": "paint-child-own",
+      "center_rgba": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        179,
+        179,
+        253,
+        255
+      ],
+      "passed": true,
+      "backend_log": "paint-child-own.log"
+    },
+    {
+      "case": "paint-top-owner-not-intermediate",
+      "center_rgba": [
+        128,
+        251,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        128,
+        251,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "paint-top-owner-not-intermediate.log"
+    },
+    {
+      "case": "style-wireframe-front",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-front.log"
+    },
+    {
+      "case": "style-wireframe-reverse",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-reverse.log"
+    },
+    {
+      "case": "style-wireframe-translucent",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-translucent.log"
+    },
+    {
+      "case": "style-wireframe-explicit-back",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-wireframe-explicit-back.log"
+    },
+    {
+      "case": "style-hidden_line-front",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-hidden_line-front.log"
+    },
+    {
+      "case": "style-hidden_line-reverse",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-hidden_line-reverse.log"
+    },
+    {
+      "case": "style-hidden_line-translucent",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-hidden_line-translucent.log"
+    },
+    {
+      "case": "style-hidden_line-explicit-back",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-hidden_line-explicit-back.log"
+    },
+    {
+      "case": "style-monochrome-front",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-monochrome-front.log"
+    },
+    {
+      "case": "style-monochrome-reverse",
+      "center_rgba": [
+        204,
+        76,
+        25,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        204,
+        76,
+        25,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-monochrome-reverse.log"
+    },
+    {
+      "case": "style-monochrome-translucent",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-monochrome-translucent.log"
+    },
+    {
+      "case": "style-monochrome-explicit-back",
+      "center_rgba": [
+        204,
+        76,
+        25,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        204,
+        76,
+        25,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-monochrome-explicit-back.log"
+    },
+    {
+      "case": "style-xray-front",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-xray-front.log"
+    },
+    {
+      "case": "style-xray-reverse",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-xray-reverse.log"
+    },
+    {
+      "case": "style-xray-translucent",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-xray-translucent.log"
+    },
+    {
+      "case": "style-xray-explicit-back",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-xray-explicit-back.log"
+    },
+    {
+      "case": "style-shaded-front",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-shaded-front.log"
+    },
+    {
+      "case": "style-shaded-reverse",
+      "center_rgba": [
+        204,
+        76,
+        25,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        204,
+        76,
+        25,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-shaded-reverse.log"
+    },
+    {
+      "case": "style-shaded-translucent",
+      "center_rgba": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-shaded-translucent.log"
+    },
+    {
+      "case": "style-shaded-explicit-back",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "passed": true,
+      "backend_log": "style-shaded-explicit-back.log"
+    }
+  ],
+  "scope": "Actual NVIDIA Vulkan swapchain plus production World and encoded egui adapter; capture strictly newly created own named client window, clean own WM close. No desktop/root image capture."
+}

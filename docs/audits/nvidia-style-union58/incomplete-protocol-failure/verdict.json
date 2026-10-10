@@ -1,0 +1,4 @@
+{
+  "passed": false,
+  "reason": "Source metadata omitted style mode/front/back; probe refused. Raw window38of58 partialpassedTrue is not acceptance. Final helper plus literal checker rejects this."
+}
