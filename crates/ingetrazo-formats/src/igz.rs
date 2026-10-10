@@ -261,13 +261,24 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>) -> serde_json::
         .any(|k| g.native_baseline.get(*k) != model.get(*k));
     if g.native_document.get("proto").is_some() && geometry_changed {
         obj["proto"] = serde_json::json!(protos.len());
-        protos.push(mesh_to_json(&g.mesh));
+        let original_mesh = g.native_document.get("proto").and_then(|v| v.as_u64())
+            .and_then(|i| protos.get(i as usize)).unwrap_or(&g.native_document);
+        let baseline_mesh = serde_json::json!({
+            "edges": g.native_baseline.get("edges"), "faces": g.native_baseline.get("faces")
+        });
+        let preserved_mesh = overlay(original_mesh, &baseline_mesh, mesh_to_json(&g.mesh));
+        protos.push(preserved_mesh);
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
-    } else if g.native_document.is_null() {
+    } else if g.native_document.is_null()
+        || (g.native_document.get("proto").is_none()
+            && g.native_baseline.get("xform") != model.get("xform")) {
         // Python only applies xform to prototype instances.
         obj["proto"] = serde_json::json!(protos.len());
-        protos.push(mesh_to_json(&g.mesh));
+        let baseline_mesh = serde_json::json!({
+            "edges": g.native_baseline.get("edges"), "faces": g.native_baseline.get("faces")
+        });
+        protos.push(overlay(&g.native_document, &baseline_mesh, mesh_to_json(&g.mesh)));
         obj.as_object_mut().unwrap().remove("edges");
         obj.as_object_mut().unwrap().remove("faces");
     }
