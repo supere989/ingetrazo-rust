@@ -259,3 +259,5 @@ Root group Move review29d6aea: fullworkspace420PASS2ignored, fresh original GL g
 Root renderedordinarygroup4bbff2a: freshoriginal+nativeXTESTPASS retained7capturesperapp, exactplacementIDs/history/spacing/retypeUndo controls; sourcefixture mergedgroupstate+canonicalhint_radius observations, realQMainWindowstatusBar. Fullworkspace420PASS2ignored. Linked/nested/perfOPEN.
 
 Root adopted4b review: independent8sameGPURGB+prior58hardware acceptedstrictartifactrerun, rootfreshloader8save/reopen+3negativesPASS, fullworkspace421PASS2ignored. Wholeancestorprototype gate correction noadditionalGPUcopies/sourcePythonchanges. HistoricalnestednullFAIL retained4d. UI53alpha correctionstillisolated/unaccepted, rasterorigin203pending.
+
+Root linked/contextc51133c: actualfreshsource/nativeXTESTlinkedgesturePASS untouchedsibling/shareddefinition stable, narrow82postcancelre-fetch reviewed+regressionPASS, fullworkspace422PASS2ignored. Canonicalpromotion preserveshint_radius observations/sourcepin. Cloudf27438029685561 and16ad38029605740 verifiedLIVE; lastgreen54cae remains. Nestedlocal/perfOPEN.
