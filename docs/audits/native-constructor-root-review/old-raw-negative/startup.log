@@ -1,0 +1,30 @@
+STARTUP_CANCEL StartupInstance audit={"created":{"Instance":1,"DebugMessenger":1},"destroyed":{"Instance":1,"DebugMessenger":1}}
+STARTUP_CANCEL StartupSurface audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1}}
+STARTUP_CANCEL StartupDevice audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1}}
+STARTUP_CANCEL StartupPool audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1}}
+STARTUP_CANCEL StartupCommand audit={"created":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1},"destroyed":{"Instance":1,"DebugMessenger":1,"Surface":1,"Device":1,"CommandPool":1,"CommandBuffer":1}}
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+
+thread 'main' (1) panicked at crates/ingetrazo-gui/examples/native_vulkan_startup_owner_probe.rs:10:107:
+called `Result::unwrap()` on an `Err` value: "Unsubmitted startup owner leak: Audit { created: {Instance: 1, DebugMessenger: 1, Surface: 1, Device: 1, CommandPool: 1, CommandBuffer: 1, Swapchain: 1, ImageView: 3, RenderPass: 1, Framebuffer: 3}, destroyed: {Instance: 1, DebugMessenger: 1, Surface: 1, Device: 1, CommandPool: 1, CommandBuffer: 1} }"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

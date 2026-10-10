@@ -255,6 +255,7 @@ impl Factory{
 }
 pub struct Renderer {
     device: Device,
+    lifetime:Arc<super::lifetime::Lifetime>,
     budget: Arc<VulkanBudget>,
     pressure_after_vertex: bool,
     rolled_back_buffers: u64,
@@ -277,7 +278,7 @@ impl Renderer {
         views:&[vk::ImageView],
         integer:bool,
     ) -> Result<Self, String> {
-        let descriptor_layout=if integer{let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|e.to_string())?}else{vk::DescriptorSetLayout::null()};
+        let descriptor_layout=if integer{let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|{if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}e.to_string()})?}else{vk::DescriptorSetLayout::null()};
         let set_layouts=if integer{vec![descriptor_layout]}else{Vec::new()};
         let ranges = [vk::PushConstantRange {
             stage_flags: vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
@@ -286,17 +287,19 @@ impl Renderer {
         }];
         let layout = match unsafe {
             context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
-        }{Ok(v)=>v,Err(e)=>{if integer{unsafe{context.device.destroy_descriptor_set_layout(descriptor_layout,None)}}return Err(e.to_string())}};
+        }{Ok(v)=>v,Err(e)=>{if integer{unsafe{context.device.destroy_descriptor_set_layout(descriptor_layout,None)}}if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}return Err(e.to_string())}};
         let pipeline = match make_pipeline(&context.device, pass, layout,integer) {
             Ok(p) => p,
             Err(e) => {
                 unsafe { context.device.destroy_pipeline_layout(layout, None);if integer{context.device.destroy_descriptor_set_layout(descriptor_layout,None)} };
-                return Err(e);
+                if e.device_lost(){context.lifetime.quarantine();}
+                return Err(e.to_string());
             }
         };
-        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}return Err(e)}}}else{(vk::DescriptorPool::null(),Vec::new())};
+        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
         Ok(Self {
             device: context.device.clone(),
+            lifetime:context.lifetime.clone(),
             budget: budget.clone(),
             pressure_after_vertex: false,
             rolled_back_buffers: 0,
@@ -316,11 +319,11 @@ impl Renderer {
         DescriptorOwnerWeakForProbe(Arc::downgrade(&self.pipeline))
     }
     pub fn set_render_pass(&mut self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<(),String>{
-        let prepared=self.prepare_render_pass(pass,views)?;self.commit_render_pass(prepared)
+        let prepared=self.prepare_render_pass(pass,views).map_err(|e|{if e.device_lost(){self.lifetime.quarantine();}e.to_string()})?;self.commit_render_pass(prepared)
     }
-    pub(crate) fn prepare_render_pass(&self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<PreparedRenderPass,String>{
+    pub(crate) fn prepare_render_pass(&self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<PreparedRenderPass,super::resize::PrepareError>{
         self.resources.check_submission()?;
-        let p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        let p=self.pipeline.lock().map_err(|_|super::resize::PrepareError::Other("CAD2D pipeline poisoned".into()))?;
         let replacement=make_pipeline(&self.device,pass,p.layout,p.integer)?;
         let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,pool:vk::DescriptorPool::null(),sets:Vec::new()};
         if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
@@ -631,7 +634,7 @@ fn make_pipeline(
     pass: vk::RenderPass,
     layout: vk::PipelineLayout,
     integer:bool,
-) -> Result<vk::Pipeline, String> {
+) -> Result<vk::Pipeline, super::resize::PrepareError> {
     let mut modules = Vec::new();
     let result = (|| {
         for bytes in [
@@ -647,7 +650,7 @@ fn make_pipeline(
                         None,
                     )
                 }
-                .map_err(|e| e.to_string())?,
+                .map_err(super::resize::PrepareError::from)?,
             );
         }
         let stages = [
@@ -727,7 +730,7 @@ fn make_pipeline(
                 for p in partial {
                     unsafe { device.destroy_pipeline(p, None) }
                 }
-                Err(e.to_string())
+                Err(e.into())
             }
         }
     })();
@@ -737,11 +740,11 @@ fn make_pipeline(
     result
 }
 
-fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageView])->Result<(vk::DescriptorPool,Vec<vk::DescriptorSet>),String>{
+fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageView])->Result<(vk::DescriptorPool,Vec<vk::DescriptorSet>),super::resize::PrepareError>{
  if views.is_empty()||views.len()>16{return Err("CAD2D input image descriptor admission outside1..16".into());}
  let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::INPUT_ATTACHMENT,descriptor_count:views.len()as u32}];
- let pool=unsafe{device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(views.len()as u32).pool_sizes(&sizes),None)}.map_err(|e|e.to_string())?;
- let layouts=vec![layout;views.len()];let sets=match unsafe{device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&layouts))}{Ok(v)=>v,Err(e)=>{unsafe{device.destroy_descriptor_pool(pool,None)};return Err(e.to_string())}};
+ let pool=unsafe{device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(views.len()as u32).pool_sizes(&sizes),None)}.map_err(super::resize::PrepareError::from)?;
+ let layouts=vec![layout;views.len()];let sets=match unsafe{device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&layouts))}{Ok(v)=>v,Err(e)=>{unsafe{device.destroy_descriptor_pool(pool,None)};return Err(e.into())}};
  for (set,view) in sets.iter().zip(views){let images=[vk::DescriptorImageInfo::default().image_view(*view).image_layout(vk::ImageLayout::GENERAL)];let write=[vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).image_info(&images)];unsafe{device.update_descriptor_sets(&write,&[])}}
  Ok((pool,sets))
 }

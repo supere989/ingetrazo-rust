@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "binary_sha256": "b7615074e7e6b34c4c0e88110ece7a1afead7d2e01816fe67cb3a77ecbbfc0fe",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "readonly_runtime": true,
+  "network": "none",
+  "device": "nvidia.com/gpu=0",
+  "case": "refusal"
+}

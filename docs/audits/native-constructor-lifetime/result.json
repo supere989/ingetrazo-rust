@@ -1,0 +1,213 @@
+{
+  "status": "PASS",
+  "stages": [
+    [
+      "StartupInstance",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1
+        }
+      }
+    ],
+    [
+      "StartupSurface",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1
+        }
+      }
+    ],
+    [
+      "StartupDevice",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1
+        }
+      }
+    ],
+    [
+      "StartupPool",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1
+        }
+      }
+    ],
+    [
+      "StartupCommand",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1
+        }
+      }
+    ],
+    [
+      "StartupSwapchain",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1,
+          "Swapchain": 1,
+          "ImageView": 3,
+          "RenderPass": 1,
+          "Framebuffer": 3
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1,
+          "Swapchain": 1,
+          "ImageView": 3,
+          "RenderPass": 1,
+          "Framebuffer": 3
+        }
+      }
+    ],
+    [
+      "StartupSync",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1,
+          "AcquireSemaphore": 1,
+          "GraphicsFence": 1,
+          "Swapchain": 1,
+          "ImageView": 3,
+          "RenderPass": 1,
+          "Framebuffer": 3,
+          "Semaphore": 3,
+          "PresentFence": 3
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1,
+          "AcquireSemaphore": 1,
+          "GraphicsFence": 1,
+          "Swapchain": 1,
+          "ImageView": 3,
+          "RenderPass": 1,
+          "Framebuffer": 3,
+          "Semaphore": 3,
+          "PresentFence": 3
+        }
+      }
+    ],
+    [
+      "StartupRenderer",
+      {
+        "created": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1,
+          "AcquireSemaphore": 1,
+          "GraphicsFence": 1,
+          "Swapchain": 1,
+          "ImageView": 3,
+          "RenderPass": 1,
+          "Framebuffer": 3,
+          "EguiPipeline": 1,
+          "Semaphore": 3,
+          "PresentFence": 3
+        },
+        "destroyed": {
+          "Instance": 1,
+          "DebugMessenger": 1,
+          "Surface": 1,
+          "Device": 1,
+          "CommandPool": 1,
+          "CommandBuffer": 1,
+          "AcquireSemaphore": 1,
+          "GraphicsFence": 1,
+          "Swapchain": 1,
+          "ImageView": 3,
+          "RenderPass": 1,
+          "Framebuffer": 3,
+          "EguiPipeline": 1,
+          "Semaphore": 3,
+          "PresentFence": 3
+        }
+      }
+    ]
+  ],
+  "actual_adapter_refusal": {
+    "created": {
+      "Instance": 1,
+      "DebugMessenger": 1,
+      "Surface": 1
+    },
+    "destroyed": {
+      "Instance": 1,
+      "DebugMessenger": 1,
+      "Surface": 1
+    }
+  },
+  "negative_controls": [
+    "missing-stage",
+    "zero-inventory",
+    "missing-destruction"
+  ],
+  "scope": "Actual RTX unsubmitted constructors only; typed device-loss policy unit test is not actual device loss/OOM/recovery proof."
+}
