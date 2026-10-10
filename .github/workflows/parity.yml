@@ -155,6 +155,12 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Original and native bridge query and history parity
+        run: |
+          mkdir -p docs/audits/ai-bridge-ci
+          QT_QPA_PLATFORM=offscreen python scripts/reference-ai-bridge-query.py docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example ai_bridge_query_acceptance -- docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/native.json 2> docs/audits/ai-bridge-ci/build.log
+          python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Original native Fontconfig request matching and ownership
         run: |
           mkdir -p docs/audits/font-resolver-ci
@@ -456,6 +462,7 @@ jobs:
           name: semantic-parity-evidence
           path: |
             docs/audits/image-ownership-ci/
+            docs/audits/ai-bridge-ci/
             docs/audits/font-resolver-ci/
             docs/audits/paragraph-ci/
             docs/audits/composer-text-ci/

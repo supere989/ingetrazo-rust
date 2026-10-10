@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Actual frozen bridge query handler, native IGZ inputs and operative edit entry."""
-import json,os,sys
+import json,os,sys,subprocess
 from pathlib import Path
 from types import SimpleNamespace
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
-sys.path.insert(0,"/work/ingetrazo")
+original=Path(__file__).resolve().parents[1]/"ingetrazo"
+assert subprocess.check_output(["git","-C",str(original),"rev-parse","HEAD"],text=True).strip()=="6be29fe437a7cd992d4e079f71720821b25216b9"
+sys.path.insert(0,str(original))
 from PySide6.QtGui import QVector3D as V,QMatrix4x4 as M
 from core.scene import Scene
 from core.mesh import Mesh
