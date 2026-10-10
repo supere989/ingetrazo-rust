@@ -73,7 +73,7 @@ pub struct SourceBackPaint {pub first:usize,pub count:usize,pub order:usize,pub 
 /// plus UV (20 bytes); shade/opacity/culling are per-draw state, never expanded
 /// into additional per-vertex uploaded color or normal attributes.
 #[derive(Clone, Debug, PartialEq)]
-pub struct SourceTextureRun {pub first:usize,pub count:usize,pub shade:f32,pub opacity:f64,pub front_cull:bool}
+pub struct SourceTextureRun {pub order:usize,pub first:usize,pub count:usize,pub shade:f32,pub opacity:f64,pub front_cull:bool}
 /// Mesh render buffer storing indexed triangle data.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MeshRenderBuffer {
@@ -369,3 +369,14 @@ impl PointRenderBuffer {
         self.points.is_empty()
     }
 }
+
+/// Texture buckets retain first-occurrence draw order across paths/shades.
+/// Original opaque dictionary insertion order matters on coplanar paints;
+/// a randomized HashMap alone cannot reconstruct it.
+#[derive(Default,Clone,Debug)]pub struct TextureBuffers{buffers:std::collections::HashMap<String,MeshRenderBuffer>,next_order:usize}
+impl TextureBuffers{pub fn take_order(&mut self)->usize{let order=self.next_order;self.next_order+=1;order}}
+impl std::ops::Deref for TextureBuffers{type Target=std::collections::HashMap<String,MeshRenderBuffer>;fn deref(&self)->&Self::Target{&self.buffers}}
+impl std::ops::DerefMut for TextureBuffers{fn deref_mut(&mut self)->&mut Self::Target{&mut self.buffers}}
+impl<'a>IntoIterator for &'a TextureBuffers{type Item=(&'a String,&'a MeshRenderBuffer);type IntoIter=std::collections::hash_map::Iter<'a,String,MeshRenderBuffer>;fn into_iter(self)->Self::IntoIter{self.buffers.iter()}}
+impl<'a>IntoIterator for &'a mut TextureBuffers{type Item=(&'a String,&'a mut MeshRenderBuffer);type IntoIter=std::collections::hash_map::IterMut<'a,String,MeshRenderBuffer>;fn into_iter(self)->Self::IntoIter{self.buffers.iter_mut()}}
+impl IntoIterator for TextureBuffers{type Item=(String,MeshRenderBuffer);type IntoIter=std::collections::hash_map::IntoIter<String,MeshRenderBuffer>;fn into_iter(self)->Self::IntoIter{self.buffers.into_iter()}}

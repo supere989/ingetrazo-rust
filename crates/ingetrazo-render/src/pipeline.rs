@@ -34,7 +34,7 @@ pub struct SceneRenderData {
     pub opaque_mesh: MeshRenderBuffer,
     pub section_stencil: Option<crate::section_clip::SectionStencil>,
     pub transparent_mesh: MeshRenderBuffer,
-    pub textured_meshes: std::collections::HashMap<String, MeshRenderBuffer>,
+    pub textured_meshes: crate::buffer::TextureBuffers,
     pub visible_edges: LineRenderBuffer,
     pub hidden_edges: LineRenderBuffer,
     pub guides: LineRenderBuffer,
@@ -52,7 +52,7 @@ impl Default for SceneRenderData {
             opaque_mesh: MeshRenderBuffer::new(),
             section_stencil: None,
             transparent_mesh: MeshRenderBuffer::new(),
-            textured_meshes: std::collections::HashMap::new(),
+            textured_meshes: crate::buffer::TextureBuffers::default(),
             visible_edges: LineRenderBuffer::new(),
             hidden_edges: LineRenderBuffer::new(),
             guides: LineRenderBuffer::new(),
@@ -326,7 +326,7 @@ fn build_mesh_buffers(
     style: &StyleConfig,
     opaque: &mut MeshRenderBuffer,
     transparent: &mut MeshRenderBuffer,
-    textured_meshes: &mut std::collections::HashMap<String, MeshRenderBuffer>,
+    textured_meshes: &mut crate::buffer::TextureBuffers,
 ) {
     for (f_id, face) in mesh.faces.iter().enumerate() {
         let face_layer = face.layer.as_deref().or_else(|| face.attrs.get("layer").and_then(|v| v.as_str()));
@@ -359,6 +359,7 @@ fn build_mesh_buffers(
             let vert_color = [shade, shade, shade, final_opacity];
 
             let tris = mesh.triangulate_face(f_id);
+            let order=textured_meshes.take_order();
             let buffer=textured_meshes.entry(tex_key).or_default();
             let first=buffer.indices.len();
             for (p0, p1, p2) in tris {
@@ -375,7 +376,7 @@ fn build_mesh_buffers(
 
                 buffer.push_triangle(v0, v1, v2);
             }
-            record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity);
+            record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity,order);
         } else {
             let base_color = get_face_base_color(&face.attrs, scene, style);
             let shaded_color = [
@@ -419,7 +420,7 @@ fn build_group_buffers(
     transparent: &mut MeshRenderBuffer,
     vis_edges: &mut LineRenderBuffer,
     billboards: &mut Vec<BillboardRenderItem>,
-    textured_meshes: &mut std::collections::HashMap<String, MeshRenderBuffer>,
+    textured_meshes: &mut crate::buffer::TextureBuffers,
     include_edges: bool,
 ) {
     if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
@@ -509,6 +510,7 @@ fn build_group_buffers(
             let vert_color = [shade, shade, shade, final_opacity];
 
             let tris = group.mesh.triangulate_face(f_id);
+            let order=textured_meshes.take_order();
             let buffer=textured_meshes.entry(tex_key).or_default();
             let first=buffer.indices.len();
             for (p0, p1, p2) in tris {
@@ -533,7 +535,7 @@ fn build_group_buffers(
 
                 buffer.push_triangle(v0, v1, v2);
             }
-            record_source_texture(buffer,first,&attrs,shade,source_final_opacity);
+            record_source_texture(buffer,first,&attrs,shade,source_final_opacity,order);
         } else {
             let base_color = get_face_base_color(&attrs, scene, style);
             let shaded_color = [
@@ -1509,7 +1511,7 @@ fn json_falsey(v:&serde_json::Value)->bool {v.is_null()||v==false||v.as_f64()==S
  }
 }
 
-fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::collections::HashMap<String,serde_json::Value>,shade:f32,opacity:f64){
+fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::collections::HashMap<String,serde_json::Value>,shade:f32,opacity:f64,order:usize){
  let count=buffer.indices.len()-first;if count==0{return;}
  // Original bucket_face retains double-sided opaque textured fronts even
  // when a translucent back override exists; culling applies only glass fronts.
@@ -1517,7 +1519,7 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
  if opacity>=0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first){buffer.source_front_cull.pop();}
  let front_cull=opacity<0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first);
  if let Some(last)=buffer.source_texture_runs.last_mut(){if last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
- buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{first,count,shade,opacity,front_cull});
+ buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{order,first,count,shade,opacity,front_cull});
 }
 
 #[cfg(test)]mod native_texture_regression{
@@ -1537,11 +1539,16 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
   for vertex in &texture.vertices{let p=transform.inverse().transform_point3(DVec3::from_array(vertex.position.map(|v|v as f64)));assert!((vertex.uv[0]as f64-(2.*p.x+0.25)).abs()<1e-5);assert!((vertex.uv[1]as f64-(3.*p.y+0.5)).abs()<1e-5);}
   assert_eq!(texture.source_consolidated_opaque_count,0,"Source texture triangles never enter plain opaque glass gate");
  }
+ #[test]fn texture_dictionary_first_occurrence_survives_interleaved_paths(){
+  let mut scene=Scene::new();for (index,path)in ["A.png","B.png","A.png"].iter().enumerate(){let shift=DVec3::new(index as f64*2.,0.,0.);let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|scene.mesh.add_vertex(p+shift));let face=scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();scene.mesh.faces[face].attrs.insert("texture".into(),serde_json::json!({"path":path}));}
+  let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;let data=build_world_surfaces(&scene,&OrbitCamera::default(),&style);
+  assert_eq!(data.textured_meshes["A.png"].source_texture_runs.len(),1);assert_eq!(data.textured_meshes["A.png"].source_texture_runs[0].count,6);assert_eq!(data.textured_meshes["A.png"].source_texture_runs[0].order,0);assert_eq!(data.textured_meshes["B.png"].source_texture_runs[0].order,1);
+ }
  #[test]fn opaque_front_exception_preserves_previous_glass_cull_span(){
   let mut buffer=MeshRenderBuffer::new();let v=Vertex::new([0.;3],[0.;3],[1.;4],[0.;2]);
   let attrs=std::collections::HashMap::from([("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.5}))]);
-  buffer.push_triangle(v,v,v);record_source_texture(&mut buffer,0,&attrs,1.,0.5);
-  buffer.push_triangle(v,v,v);record_source_texture(&mut buffer,3,&attrs,1.,1.);
+  buffer.push_triangle(v,v,v);record_source_texture(&mut buffer,0,&attrs,1.,0.5,0);
+  buffer.push_triangle(v,v,v);record_source_texture(&mut buffer,3,&attrs,1.,1.,1);
   assert_eq!(buffer.source_front_cull,vec![(0,3)]);
   assert!(buffer.source_texture_runs[0].front_cull);assert!(!buffer.source_texture_runs[1].front_cull);
  }
