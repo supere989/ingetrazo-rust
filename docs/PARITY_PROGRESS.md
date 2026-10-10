@@ -6,6 +6,8 @@ CI correction (2026-10-10): reviewed component acceptance fixture now follows ac
 
 Reviewed layer ownership correction (2026-10-10): fresh root4cases/13states and four corruptions establish panel edits across model History, name-based Assign-created ownership, held Purge/Import object lifetime. Combined542 workspace tests/two ignored and complete component replay pass in isolated review; canonical replay also542PASS/twoignored. Evidence docs/audits/layer-history-root-review. Full parked-context global deletion, annotation command families, shared-definition attribute behavior and rendered tray workflows remain OPEN; no complete row promoted.
 
+Reviewed parked-context layer deletion (2026-10-10): four fresh source/native direct/nested private/shared cases16states and three rejected corruptions now match, with prior13 layer states and complete component replay still passing. Independent combined542 workspacePASS/twoignored; canonical replay also542PASS/twoignored. Evidence docs/audits/layer-context-root-review. Hidden private prototypes and visible sibling ownership remain distinct; full attribute/annotation command families, cancellation, source-reopened deletion documents and rendered tray remain OPEN. No full row promoted.
+
 ## Outcome and evidence
 
 Reviewed terrain runtime visibility and command-owned clear/rebuild history match six fresh source states; stale visibility and literal wrong-Redo negatives reject. **539 workspace tests pass, two ignored**. Full StraightenModel, terrain serialization/rendering and broader presentation history remain OPEN. [Independent terrain review](audits/terrain-history-root-review/README.md).
