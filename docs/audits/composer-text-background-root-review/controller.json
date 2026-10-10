@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "bg_basic",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_wrapped",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_empty",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_cjk",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_rtl",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_serif",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_bold",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_italic",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "bg_transparent",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    }
+  ],
+  "invalid_style_preserves_destination": true,
+  "scope": "Production composer export controller, not OS dialog or rendered pointer proof"
+}

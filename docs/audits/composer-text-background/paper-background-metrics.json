@@ -1,0 +1,209 @@
+[
+  {
+    "name": "bg_basic",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1,
+      "span_mm": [
+        -0.5008342013888887,
+        4.558247178819444
+      ]
+    }
+  },
+  {
+    "name": "bg_wrapped",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 5.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 5,
+      "span_mm": [
+        -0.5008342013888887,
+        21.803458116319444
+      ]
+    }
+  },
+  {
+    "name": "bg_empty",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 0.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 0,
+      "span_mm": [
+        0.0,
+        4.938888888888888
+      ]
+    }
+  },
+  {
+    "name": "bg_cjk",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1,
+      "span_mm": [
+        -0.5008342013888887,
+        4.558247178819444
+      ]
+    }
+  },
+  {
+    "name": "bg_rtl",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 3.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 3,
+      "span_mm": [
+        -0.5008342013888887,
+        13.180852647569445
+      ]
+    }
+  },
+  {
+    "name": "bg_serif",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 2.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 2,
+      "span_mm": [
+        -0.5008342013888887,
+        8.869549913194446
+      ]
+    }
+  },
+  {
+    "name": "bg_bold",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 2.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 2,
+      "span_mm": [
+        -0.5008342013888887,
+        8.869549913194446
+      ]
+    }
+  },
+  {
+    "name": "bg_italic",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1,
+      "span_mm": [
+        -0.5008342013888887,
+        4.558247178819444
+      ]
+    }
+  },
+  {
+    "name": "bg_transparent",
+    "native": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1.0
+    },
+    "source": {
+      "ascent": 92.8125,
+      "descent": 23.578125,
+      "cap_height": 73.0,
+      "leading": 0.0,
+      "line_spacing": 116.390625,
+      "line_count": 1,
+      "span_mm": [
+        -0.5008342013888887,
+        4.558247178819444
+      ]
+    }
+  }
+]
