@@ -1,0 +1,18 @@
+{
+  "source_history_states": 12,
+  "history_depth": 96,
+  "observed_growth_bytes": 64220,
+  "negative_rejections": [
+    "base-per-command",
+    "quadratic-memory-growth",
+    "history-not-reclaimed"
+  ],
+  "allocation_scope": "live Rust allocator request bytes, not RSS",
+  "production": false,
+  "source": "3acf121f",
+  "binary_sha256": {
+    "owner": "2fa653fdf3fde17874f1871229893950f56077d8b3245205eb851f634ccd0ec4",
+    "owner_history": "e15a7debe084d5d6e555bb03e5005067075b048f2f5af596443db5c370775bec"
+  },
+  "scope": "Fresh integrated standalone owner replay against retained pinned original history; not production scene integration or RSS/OOM proof"
+}
