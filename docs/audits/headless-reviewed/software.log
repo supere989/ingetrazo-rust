@@ -1,0 +1,9 @@
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+PASS17MiB actualGPUcopy/readback; upload7.062ms readback3.896ms; statsUploadStats { bytes: 17825792, chunks: 3, staging_peak: 8388608, direct_mapped_bytes: 0, readback_bytes: 17825792, readback_staging_peak: 8388608 }; fence-delayed actualfree
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+PASS native world draw1 actualGPUreadback left[247, 0, 0] right[0, 0, 247]; uploads1
+PASS native world draw2 actualGPUreadback left[0, 0, 247] right[200, 0, 0]; uploads2
+GPU allocation budget: 17280312 committed bytes; peakcommitted 26214400; peakadmitted 26214400; globalcap Some(134217728); heaps [HeapBudget { capacity: 132593643520, limit: 106074914816, live_budget: Some(119334279168), live_usage: 44708671488, reserved: 0, committed: 17280312 }]
+PASS headless strict adapter DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; actual17MiB GPUupload/readback+fence/free; productionworld depth/cache/invalidation; global128MiB limit; eachfence5s; image/tmp/ingetrazo-headless-reviewed-depth.png
