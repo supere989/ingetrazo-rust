@@ -1,0 +1,90 @@
+use glam::{DMat4, DVec3};
+use ingetrazo_formats::igz::{load_igz, save_igz, scene_to_igz_document};
+use serde_json::{json, Value};
+use std::io::{Read, Write};
+
+fn native() -> Value {
+    json!({
+        "edges": [{"a":[0,0,0], "b":[1,0,0], "curve":{"future":"arc"}}],
+        "faces": [],
+        "protos": [{"edges":[], "faces":[{"vertices":[[0,0,0],[1,0,0],[0,1,0]],"material":{"name":"paint"},"future_face":{"v":1}}]}],
+        "groups": [{"name":"parent","proto":0,"component":true,
+            "xform":[1,0,0,0,0,1,0,0,0,0,1,0,4,5,6,1],
+            "ext":{"opaque":[1,{"v":true}]}, "layer":"BIM", "ifc":{"class":"IfcWall"},
+            "children":[{"name":"nested","proto":0,"xform":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,2,1],"uid":"stable"}]}],
+        "materials":[{"name":"paint","color":[0.1,0.2,0.3], "texture":{"embed":"textures/paint.bin","tile":[2,3]}}],
+        "saved_views":[{"name":"saved","future_view":{"x":1}}],
+        "compositions":[{"name":"sheet","unknown_layout":[1,2]}],
+        "section_planes":[{"name":"section","future_plane":[0,1]}],
+        "section_view":{"planes_hidden":true,"cuts_hidden":true},
+        "georef":{"datum":{"future_datum":"opaque"}},
+        "plugin_data":{"future_plugin":{"nested":[1,false,null]}},
+        "units":{"length":"mm","precision":4}
+    })
+}
+
+fn temp(name: &str) -> std::path::PathBuf {
+    std::env::temp_dir().join(format!("igz-{}-{name}", uuid::Uuid::new_v4()))
+}
+fn write_plain(doc: &Value, path: &std::path::Path) {
+    std::fs::write(path, serde_json::to_vec(&json!({"igz_format":1,"app_version":"original","scene":doc})).unwrap()).unwrap();
+}
+
+#[test]
+fn native_noop_preserves_every_nested_value_and_repeated_save() {
+    let src=temp("source.igz"); let dst=temp("saved.igz");
+    let original=native(); write_plain(&original,&src);
+    let scene=load_igz(&src).unwrap();
+    assert_eq!(scene.groups[0].children.len(),1);
+    assert_eq!(scene.groups[0].mesh.faces.len(),1);
+    assert_eq!(scene.groups[0].layer.as_deref(),Some("BIM"));
+    assert!(!scene.show_section_cuts);
+    assert_eq!(scene_to_igz_document(&scene),original);
+    save_igz(&scene,&dst).unwrap();
+    assert_eq!(scene_to_igz_document(&load_igz(&dst).unwrap()),original);
+    std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
+}
+
+#[test]
+fn edited_nested_instance_detaches_geometry_preserving_original_definition_and_metadata() {
+    let src=temp("edit-source.igz"); let dst=temp("edit-save.igz");
+    let original=native(); write_plain(&original,&src);
+    let mut scene=load_igz(&src).unwrap();
+    let child=&mut scene.groups[0].children[0];
+    child.name="edited".into();
+    child.transform=DMat4::from_translation(DVec3::new(7.,8.,9.));
+    child.mesh.vertices[0].position.z=3.;
+    let document=scene_to_igz_document(&scene);
+    assert_eq!(document["protos"][0],original["protos"][0]);
+    assert_eq!(document["groups"][0]["children"][0]["proto"],1);
+    assert_eq!(document["groups"][0]["children"][0]["uid"],"stable");
+    assert_eq!(document["groups"][0]["ext"],original["groups"][0]["ext"]);
+    assert_eq!(document["plugin_data"],original["plugin_data"]);
+    save_igz(&scene,&dst).unwrap();
+    let reopened=load_igz(&dst).unwrap();
+    assert_eq!(reopened.groups[0].children[0].mesh.vertices[0].position.z,3.);
+    assert_eq!(reopened.groups[0].mesh.vertices[0].position.z,0.);
+    assert_eq!(reopened.groups[0].children[0].transform,scene.groups[0].children[0].transform);
+    std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
+}
+
+#[test]
+fn zip_embedded_texture_and_survey_bytes_survive_without_disk_files() {
+    let src=temp("zip-source.igz"); let dst=temp("zip-save.igz");
+    let mut archive=zip::ZipWriter::new(std::fs::File::create(&src).unwrap());
+    let options=zip::write::SimpleFileOptions::default();
+    for (name,bytes) in [("textures/paint.bin",vec![0,255,1,2]),("survey/mesh.bin",vec![7,8,9])] {
+        archive.start_file(name,options).unwrap(); archive.write_all(&bytes).unwrap();
+    }
+    archive.start_file("document.json",options).unwrap();
+    archive.write_all(&serde_json::to_vec(&json!({"igz_format":2,"app_version":"original","scene":native()})).unwrap()).unwrap();
+    archive.finish().unwrap();
+    let scene=load_igz(&src).unwrap(); save_igz(&scene,&dst).unwrap();
+    let mut reopened=zip::ZipArchive::new(std::fs::File::open(&dst).unwrap()).unwrap();
+    for (name,expected) in [("textures/paint.bin",vec![0,255,1,2]),("survey/mesh.bin",vec![7,8,9])] {
+        let mut actual=vec![]; reopened.by_name(name).unwrap().read_to_end(&mut actual).unwrap();
+        assert_eq!(actual,expected);
+    }
+    assert_eq!(scene_to_igz_document(&load_igz(&dst).unwrap()),native());
+    std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
+}

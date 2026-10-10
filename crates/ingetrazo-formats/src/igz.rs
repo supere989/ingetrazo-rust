@@ -196,17 +196,91 @@ fn json_to_mesh(val: &serde_json::Value) -> Mesh {
     mesh
 }
 
-pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
-    let loose = mesh_to_json(&scene.mesh);
-    let mut groups_json = Vec::new();
-    for g in &scene.groups {
-        let mut g_obj = mesh_to_json(&g.mesh);
-        g_obj["name"] = serde_json::Value::String(g.name.clone());
-        let m = g.transform.to_cols_array();
-        g_obj["transform"] = serde_json::json!(m);
-        groups_json.push(g_obj);
-    }
+/// Overlay changed modeled fields only. Unknown and unmodeled native data
+/// remain owned by the document, rather than discarded during deserialization.
+fn overlay(original: &serde_json::Value, baseline: &serde_json::Value,
+           current: serde_json::Value) -> serde_json::Value {
+    if !original.is_object() { return current; }
+    let mut result = original.clone();
+    for (key, value) in current.as_object().unwrap() {
+        if baseline.get(key) != Some(value) {
+            result[key] = merge_changed(result.get(key), baseline.get(key), value);
 
+        }
+    }
+    result
+}
+
+fn merge_changed(original: Option<&serde_json::Value>, baseline: Option<&serde_json::Value>,
+                 current: &serde_json::Value) -> serde_json::Value {
+    if baseline == Some(current) {
+        return original.unwrap_or(current).clone();
+    }
+    if let (Some(o), Some(b)) = (original, baseline) {
+        if current.is_object() && o.is_object() && b.is_object() {
+            return overlay(o, b, current.clone());
+        }
+        if let (Some(oa), Some(ba), Some(ca)) = (o.as_array(), b.as_array(), current.as_array()) {
+            if ca.iter().all(|v| v.get("name").and_then(|v| v.as_str()).is_some())
+                && ba.iter().all(|v| v.get("name").and_then(|v| v.as_str()).is_some())
+                && oa.iter().all(|v| v.get("name").and_then(|v| v.as_str()).is_some()) {
+                return serde_json::json!(ca.iter().map(|c| {
+                    let name = c.get("name");
+                    let o = oa.iter().find(|v| v.get("name") == name);
+                    let b = ba.iter().find(|v| v.get("name") == name);
+                    merge_changed(o,b,c)
+                }).collect::<Vec<_>>());
+            }
+            if oa.len() == ba.len() && ba.len() == ca.len() {
+                return serde_json::json!(ca.iter().enumerate().map(|(i,c)|
+                    merge_changed(Some(&oa[i]),Some(&ba[i]),c)).collect::<Vec<_>>());
+            }
+        }
+    }
+    current.clone()
+}
+
+fn group_model(g: &Group) -> serde_json::Value {
+    let mut obj = mesh_to_json(&g.mesh);
+    obj["name"] = serde_json::json!(g.name);
+    obj["xform"] = serde_json::json!(g.transform.to_cols_array());
+    obj["layer"] = serde_json::json!(g.layer);
+    obj["ifc"] = serde_json::json!(g.ifc_tag);
+    obj["hidden"] = serde_json::json!(g.hidden);
+    obj["billboard"] = serde_json::json!(g.billboard);
+    obj["children"] = serde_json::json!(g.children.iter().map(group_model).collect::<Vec<_>>());
+    obj
+}
+
+fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>) -> serde_json::Value {
+    let model = group_model(g);
+    let mut obj = overlay(&g.native_document, &g.native_baseline, model.clone());
+    // Rust meshes are independent copies. Editing an imported instance makes a
+    // new definition; never mutate a retained prototype used by other instances.
+    let geometry_changed = ["edges", "faces"].iter()
+        .any(|k| g.native_baseline.get(*k) != model.get(*k));
+    if g.native_document.get("proto").is_some() && geometry_changed {
+        obj["proto"] = serde_json::json!(protos.len());
+        protos.push(mesh_to_json(&g.mesh));
+        obj.as_object_mut().unwrap().remove("edges");
+        obj.as_object_mut().unwrap().remove("faces");
+    } else if g.native_document.is_null() {
+        // Python only applies xform to prototype instances.
+        obj["proto"] = serde_json::json!(protos.len());
+        protos.push(mesh_to_json(&g.mesh));
+        obj.as_object_mut().unwrap().remove("edges");
+        obj.as_object_mut().unwrap().remove("faces");
+    }
+    let children = g.children.iter().map(|c| group_to_json(c, protos)).collect::<Vec<_>>();
+    if g.native_baseline.get("children") != model.get("children") {
+        obj["children"] = serde_json::json!(children);
+    }
+    obj
+}
+
+fn scene_model(scene: &Scene) -> serde_json::Value {
+    let loose = mesh_to_json(&scene.mesh);
+    let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
     let mut layers_json = Vec::new();
     for l in &scene.layers {
         layers_json.push(serde_json::json!({
@@ -220,7 +294,20 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let mut doc = loose;
     doc["groups"] = serde_json::json!(groups_json);
     doc["layers"] = serde_json::json!(layers_json);
-    doc["materials"] = serde_json::to_value(&scene.materials).unwrap_or(serde_json::json!({}));
+    let mut names: Vec<_> = scene.materials.keys().collect();
+    names.sort_by_key(|name| {
+        scene.native_document.get("materials").and_then(|v| v.as_array())
+            .and_then(|a| a.iter().position(|v| v.get("name").and_then(|v| v.as_str()) == Some(name.as_str())))
+            .map(|i| (i, (*name).clone())).unwrap_or((usize::MAX, (*name).clone()))
+    });
+    doc["materials"] = serde_json::json!(names.iter().map(|name| {
+        let mat = &scene.materials[*name];
+        serde_json::json!({
+            "name": mat.name, "color": mat.color, "opacity": mat.opacity,
+            "roughness": mat.roughness,
+            "texture": {"path": mat.texture_path, "embed": mat.texture_embed}
+        })
+    }).collect::<Vec<_>>());
     doc["camera"] = serde_json::json!({
         "target": [scene.camera.target.x, scene.camera.target.y, scene.camera.target.z],
         "distance": scene.camera.distance,
@@ -232,8 +319,35 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     doc["dimensions"] = serde_json::to_value(&scene.dimensions).unwrap_or(serde_json::json!([]));
     doc["guides"] = serde_json::to_value(&scene.guides).unwrap_or(serde_json::json!([]));
     doc["text_labels"] = serde_json::to_value(&scene.text_labels).unwrap_or(serde_json::json!([]));
-    doc["unit"] = serde_json::to_value(&scene.unit).unwrap_or(serde_json::json!("Meters"));
+    let unit = match scene.unit {
+        LengthUnit::Meters => "m", LengthUnit::Centimeters => "cm",
+        LengthUnit::Millimeters => "mm", LengthUnit::Inches => "in", LengthUnit::Feet => "ft"
+    };
+    doc["units"] = serde_json::json!({"length":unit,"precision":2});
 
+    doc["saved_views"] = serde_json::json!(scene.saved_views);
+    doc["section_planes"] = serde_json::json!(scene.section_planes);
+    doc["section_view"] = serde_json::json!({
+        "planes_hidden": !scene.show_section_planes, "cuts_hidden": !scene.show_section_cuts,
+        "fill_hidden": !scene.show_section_fill
+    });
+    doc["georef"] = serde_json::json!({"datum": scene.geo_datum});
+    doc["geo_points"] = serde_json::json!(scene.geo_points);
+    doc["geo_paths"] = serde_json::json!(scene.geo_paths);
+    doc["terrain"] = serde_json::json!(scene.terrain);
+    doc["compositions"] = serde_json::json!(scene.sheets);
+    doc["active_sheet_index"] = serde_json::json!(scene.active_sheet_index);
+    doc
+}
+
+pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
+    let current = scene_model(scene);
+    let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
+    if scene.native_baseline.get("groups") != current.get("groups") {
+        let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos)).collect::<Vec<_>>());
+        if !protos.is_empty() { doc["protos"] = serde_json::json!(protos); }
+    }
     doc
 }
 
@@ -256,6 +370,12 @@ pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
         .compression_method(zip::CompressionMethod::Deflated);
 
     let mut modified_scene = scene.clone();
+    let mut written = std::collections::HashSet::new();
+    for (name, bytes) in &scene.embedded_textures {
+        zip.start_file(name, options)?;
+        zip.write_all(bytes)?;
+        written.insert(name.clone());
+    }
     for (_mat_name, mat) in &mut modified_scene.materials {
         if let Some(tex_path) = &mat.texture_path {
             let p = Path::new(tex_path);
@@ -263,8 +383,10 @@ pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
                 if let Ok(data) = std::fs::read(p) {
                     let filename = p.file_name().unwrap_or_default().to_string_lossy();
                     let entry_name = format!("textures/{filename}");
-                    zip.start_file(&entry_name, options)?;
-                    zip.write_all(&data)?;
+                    if written.insert(entry_name.clone()) {
+                        zip.start_file(&entry_name, options)?;
+                        zip.write_all(&data)?;
+                    }
                     mat.texture_path = Some(entry_name);
                 }
             }
@@ -286,7 +408,7 @@ pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
 
 pub fn save_igz(scene: &Scene, path: &Path) -> Result<(), IgzError> {
     let has_texture = scene.materials.values().any(|m| m.texture_path.is_some());
-    if has_texture {
+    if has_texture || !scene.embedded_textures.is_empty() {
         save_igz_format2(scene, path)
     } else {
         save_igz_format1(scene, path)
@@ -304,7 +426,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
             let name = file.name().to_string();
-            if name.starts_with("textures/") {
+            if name != "document.json" && !file.is_dir() {
                 let mut bytes = Vec::new();
                 file.read_to_end(&mut bytes)?;
                 embedded_textures.insert(name, bytes);
@@ -338,6 +460,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     // Standard IngeTrazo format
     let mut scene = Scene::new();
     scene.embedded_textures = embedded_textures;
+    scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
 
     // Load component prototypes if present
@@ -348,45 +471,34 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         }
     }
 
-    if let Some(groups_arr) = s_val.get("groups").and_then(|g| g.as_array()) {
-        for g_val in groups_arr {
-            let name = g_val.get("name").and_then(|n| n.as_str()).unwrap_or("Group").to_string();
-            let mut g = Group::new(name);
-            if let Some(proto_idx) = g_val.get("proto").and_then(|p| p.as_u64()) {
-                if let Some(p_mesh) = proto_meshes.get(proto_idx as usize) {
-                    g.mesh = p_mesh.clone();
-                } else {
-                    g.mesh = json_to_mesh(g_val);
-                }
-            } else {
-                g.mesh = json_to_mesh(g_val);
+    fn read_group(v: &serde_json::Value, protos: &[Mesh]) -> Result<Group, IgzError> {
+        let mut g = Group::new(v.get("name").and_then(|v| v.as_str()).unwrap_or("Group"));
+        g.mesh = if let Some(idx) = v.get("proto").and_then(|v| v.as_u64()) {
+            protos.get(idx as usize).cloned().ok_or_else(||
+                IgzError::InvalidDocument(format!("missing component prototype {idx}")))?
+        } else { json_to_mesh(v) };
+        if let Some(values) = v.get("xform").or_else(|| v.get("transform")).and_then(|v| v.as_array()) {
+            if values.len() != 16 { return Err(IgzError::InvalidDocument("transform must have 16 numbers".into())); }
+            let mut cols = [0.; 16];
+            for (i, val) in values.iter().enumerate() {
+                cols[i] = val.as_f64().ok_or_else(|| IgzError::InvalidDocument("non-numeric transform".into()))?;
             }
-
-            if g_val.get("billboard").and_then(|b| b.as_bool()).unwrap_or(false) {
-                g.billboard = true;
-            }
-            if let Some(faces_arr) = g_val.get("faces").and_then(|f| f.as_array()) {
-                for f in faces_arr {
-                    if let Some(tex) = f.get("texture") {
-                        if let Some(emb) = tex.get("embed").and_then(|e| e.as_str()) {
-                            g.billboard_texture = Some(emb.to_string());
-                        }
-                    }
-                }
-            }
-
-            let t_val = g_val.get("transform").or_else(|| g_val.get("xform"));
-            if let Some(t_arr) = t_val.and_then(|t| t.as_array()) {
-                if t_arr.len() == 16 {
-                    let mut cols = [0.0; 16];
-                    for (i, val) in t_arr.iter().enumerate() {
-                        cols[i] = val.as_f64().unwrap_or(0.0);
-                    }
-                    g.transform = DMat4::from_cols_array(&cols);
-                }
-            }
-            scene.groups.push(g);
+            g.transform = DMat4::from_cols_array(&cols);
         }
+        g.layer = v.get("layer").and_then(|v| v.as_str()).map(str::to_owned);
+        g.ifc_tag = v.get("ifc").filter(|v| !v.is_null()).cloned();
+        g.hidden = v.get("hidden").and_then(|v| v.as_bool()).unwrap_or(false);
+        g.billboard = v.get("billboard").map(|v| v == true || v == "mesh").unwrap_or(false);
+        if let Some(children) = v.get("children").and_then(|v| v.as_array()) {
+            g.children = children.iter().map(|v| read_group(v, protos)).collect::<Result<_,_>>()?;
+        }
+        g.mesh.rebuild_spatial_index();
+        g.native_document = v.clone();
+        g.native_baseline = group_model(&g);
+        Ok(g)
+    }
+    if let Some(groups_arr) = s_val.get("groups").and_then(|g| g.as_array()) {
+        scene.groups = groups_arr.iter().map(|v| read_group(v, &proto_meshes)).collect::<Result<_,_>>()?;
     }
 
     if let Some(layers_arr) = s_val.get("layers").and_then(|l| l.as_array()) {
@@ -399,7 +511,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
                 name,
                 visible,
                 locked,
-                color: None,
+                color: l_val.get("color").and_then(|v| serde_json::from_value(v.clone()).ok()),
             });
         }
     }
@@ -517,6 +629,38 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         }
     }
 
+    if let Some(cam) = s_val.get("camera") {
+        if let Some(fov) = cam.get("fov_deg").and_then(|v| v.as_f64()) { scene.camera.fov_deg = fov; }
+    }
+    if let Some(view) = s_val.get("section_view") {
+        scene.show_section_planes = !view.get("planes_hidden").and_then(|v| v.as_bool()).unwrap_or(false);
+        scene.show_section_cuts = !view.get("cuts_hidden").and_then(|v| v.as_bool()).unwrap_or(false);
+        scene.show_section_fill = !view.get("fill_hidden").and_then(|v| v.as_bool()).unwrap_or(false);
+    }
+    macro_rules! load_field {
+        ($field:ident, $key:literal) => {
+            if let Some(v) = s_val.get($key) {
+                if let Ok(value) = serde_json::from_value(v.clone()) { scene.$field = value; }
+            }
+        }
+    }
+    load_field!(section_planes, "section_planes");
+    load_field!(geo_points, "geo_points");
+    load_field!(geo_paths, "geo_paths");
+    load_field!(terrain, "terrain");
+    load_field!(sheets, "compositions");
+    load_field!(active_sheet_index, "active_sheet_index");
+    if let Some(v) = s_val.get("georef").and_then(|v| v.get("datum")) {
+        scene.geo_datum = serde_json::from_value(v.clone()).ok();
+    }
+    if let Some(u) = s_val.get("units").and_then(|v| v.get("length")).and_then(|v| v.as_str()) {
+        scene.unit = match u {
+            "cm" => LengthUnit::Centimeters, "mm" => LengthUnit::Millimeters,
+            "in" => LengthUnit::Inches, "ft" => LengthUnit::Feet, _ => LengthUnit::Meters
+        };
+    }
+    scene.native_document = s_val.clone();
+    scene.native_baseline = scene_model(&scene);
     scene.mesh.rebuild_spatial_index();
     for g in &mut scene.groups {
         g.mesh.rebuild_spatial_index();

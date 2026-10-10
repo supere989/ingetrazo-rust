@@ -11,6 +11,13 @@ use crate::mesh::Mesh;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Group {
+    /// Original native payload and modeled snapshot. Unchanged fields retain their
+    /// source representation, including future/extension metadata.
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
+
     pub id: Uuid,
     pub name: String,
     pub mesh: Mesh,
@@ -27,6 +34,8 @@ pub struct Group {
 impl Group {
     pub fn new(name: impl Into<String>) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
             name: name.into(),
             mesh: Mesh::new(),
@@ -42,6 +51,8 @@ impl Group {
 
     pub fn with_mesh(name: impl Into<String>, mesh: Mesh) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
             name: name.into(),
             mesh,

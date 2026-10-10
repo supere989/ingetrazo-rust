@@ -30,6 +30,13 @@ pub enum SelectionItem {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Scene {
+    /// Original native payload and modeled snapshot. Unchanged fields retain their
+    /// source representation, including future/extension metadata.
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
+
     pub mesh: Mesh,
     pub selection: HashSet<SelectionItem>,
     pub version: u64,
@@ -68,6 +75,8 @@ impl Scene {
         layers.push(Layer::default());
 
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             mesh: Mesh::new(),
             selection: HashSet::new(),
             version: 0,
