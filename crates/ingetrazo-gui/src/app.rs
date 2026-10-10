@@ -38,6 +38,7 @@ pub struct GeometryClipboard {
 }
 
 pub struct IngeTrazoApp {
+    pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
     pub camera: OrbitCamera,
     pub active_tool_type: ToolType,
@@ -115,6 +116,7 @@ impl IngeTrazoApp {
         ingetrazo_core::i18n::set_language(lang);
 
         let mut app = Self {
+            component_edit_stack: Vec::new(),
             scene,
             camera,
             active_tool_type: ToolType::Select,
@@ -195,6 +197,10 @@ impl IngeTrazoApp {
     }
 
     pub fn new_document(&mut self) {
+        if !self.component_edit_stack.is_empty() {
+            self.status_message = "Finish or cancel the component edit before creating a document".into();
+            return;
+        }
         self.save_undo_state();
         self.scene = Scene::new();
         self.camera = self.scene.camera.clone();
@@ -204,6 +210,10 @@ impl IngeTrazoApp {
     }
 
     pub fn open_document(&mut self, path: &Path) {
+        if !self.component_edit_stack.is_empty() {
+            self.status_message = "Finish or cancel the component edit before opening a document".into();
+            return;
+        }
         match load_file(path) {
             Ok(loaded_scene) => {
                 self.save_undo_state();
@@ -235,9 +245,17 @@ impl IngeTrazoApp {
     }
 
     pub fn save_to_path(&mut self, path: &Path) {
+<<<<<<< HEAD
         let mut document = self.scene.clone();
         document.camera = self.camera.clone();
         match save_file(&document, path) {
+=======
+        if !self.component_edit_stack.is_empty() {
+            self.status_message = "Finish or cancel the component edit before saving the document".into();
+            return;
+        }
+        match save_file(&self.scene, path) {
+>>>>>>> 614a929 (Add nested component edit transactions and linked instance clipboard semantics)
             Ok(()) => {
                 self.scene.camera = self.camera.clone();
                 self.current_file = Some(path.to_path_buf());
@@ -392,7 +410,8 @@ impl IngeTrazoApp {
                 }
             }
 
-            for mut g in cb.groups {
+            for g in cb.groups {
+                let mut g = g.duplicate_instance();
                 g.transform = glam::DMat4::from_translation(offset) * g.transform;
                 let n_gidx = self.scene.groups.len();
                 self.scene.groups.push(g);

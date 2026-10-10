@@ -116,3 +116,5 @@ mod tests {
         assert!(app.camera.pitch > 1.5); // close to 90 degrees
     }
 }
+
+pub mod component_edit;

@@ -26,6 +26,7 @@ impl Scene {
         let group=find(&mut self.groups,group_id).ok_or("component instance not found")?;
         if let Some(id)=group.component_definition {return Ok(id);}
         let id=Uuid::new_v4();
+        for child in &mut group.children {child.definition_member=Some(child.id);}
         self.component_definitions.insert(id,ComponentDefinition {mesh:group.mesh.clone(),children:group.children.clone()});
         group.component_definition=Some(id);self.bump_version();Ok(id)
     }
@@ -50,6 +51,13 @@ impl Scene {
         }
         if references(&definition.children,id,&self.component_definitions,&mut HashSet::new()) {
             return Err("recursive component definition".into());
+        }
+        // Editing a repeated placement uses that instance's UIDs. Definition
+        // child slots retain their stable member IDs, so other instance UIDs
+        // survive a shared update and undo does not become an identity rewrite.
+        for child in &mut definition.children {
+            if let Some(member)=child.definition_member {child.id=member;}
+            child.definition_member=Some(child.id);
         }
         fn check_links(groups:&[Group],defs:&std::collections::HashMap<Uuid,ComponentDefinition>)->Result<(),String> {
             for group in groups {

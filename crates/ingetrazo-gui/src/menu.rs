@@ -256,8 +256,23 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.close_menu();
             }
             if ui.button(format!("{}\tG", tr("Make Component…"))).clicked() {
-                app.make_group();
-                app.status_message = tr("Created component");
+                app.make_component();
+                ui.close_menu();
+            }
+            if ui.button("Edit Group / Component").clicked() {
+                app.begin_component_edit();
+                ui.close_menu();
+            }
+            if ui.button("Finish Group / Component Edit").clicked() {
+                app.finish_component_edit();
+                ui.close_menu();
+            }
+            if ui.button("Cancel Group / Component Edit").clicked() {
+                app.cancel_component_edit();
+                ui.close_menu();
+            }
+            if ui.button("Make Component Unique").clicked() {
+                app.make_component_unique();
                 ui.close_menu();
             }
             if ui.button(format!("{}\tCtrl+Shift+G", tr("Explode Group"))).clicked() {
