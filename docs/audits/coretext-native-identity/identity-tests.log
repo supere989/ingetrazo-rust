@@ -1,8 +1,9 @@
 
-running 3 tests
+running 4 tests
 test tests::malformed_identity_table_refuses_before_large_allocation ... ok
-test tests::physical_identity_never_reads_outline_collection_program ... ok
+test tests::duplicate_head_cannot_replace_missing_name_and_malformed_name_is_not_miss ... ok
 test tests::named_instance_uses_exact_metadata_not_requested_postscript ... ok
+test tests::physical_identity_never_reads_outline_collection_program ... ok
 
-test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 

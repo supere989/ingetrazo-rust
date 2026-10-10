@@ -297,9 +297,9 @@ pub(super) fn match_font(
         std::mem::forget(selected);
         let font =
             crate::paper_coretext_glyph::NativeFont::from_raw(ptr, CTFontGetSymbolicTraits(ptr))?;
-        let index = match crate::paper_font_sfnt::collection_index(&mut file, &postscript) {
-            Ok(index) => index,
-            Err(name_error) => {
+        let index = match crate::paper_font_sfnt::collection_index_match(&mut file, &postscript)? {
+            Some(index) => index,
+            None => {
                 let face = ttf_parser::Face::parse(&font.bytes, 0)
                     .map_err(|e| format!("Native identity metadata parse: {e:?}"))?;
                 let head = face
@@ -310,8 +310,11 @@ pub(super) fn match_font(
                     .raw_face()
                     .table(ttf_parser::Tag::from_bytes(b"name"))
                     .ok_or("Missing native identity name")?;
-                crate::paper_font_sfnt::collection_index_by_tables(&mut file, head, name)
-                    .map_err(|e| format!("{name_error}; {e}"))?
+                crate::paper_font_sfnt::collection_index_by_tables(&mut file, head, name).map_err(
+                    |e| {
+                        format!("Native PostScript identity {postscript:?} has no stored face; {e}")
+                    },
+                )?
             }
         };
         Ok((path, index as i32, font))

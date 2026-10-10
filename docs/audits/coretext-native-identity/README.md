@@ -7,3 +7,7 @@ The candidate resolves a sparse cascade descriptor family through an instantiate
 Named native instances no longer require their PostScript name to equal the stored physical face name. If that lookup fails, exact CTFont copied head+name tables identify the physical collection index. Different metadata rejects; multiple matching faces reject as ambiguous. The fallback reads only bounded directory/metadata bytes, with a16MiB aggregate metadata-read limit; it never reads hvgl or raises the font file cap. Existing native variation/trait/matrix instance identity remains separate from the physical index.
 
 Focused standalone Rust identity tests:3PASS including exact named-instance metadata, changed-head rejection, actual duplicate-offset ambiguity rejection, outline-read exclusion and malformed oversized name admission. No cargo rebuild or cloud launch. Native SDK execution, actual Times synthesis, source CJK descriptor selection, metrics/layout/raster/PDF comparisons are pending; strict face checker unchanged.
+
+## Review correction
+
+The table fallback now tracks distinct required head/name bits and rejects duplicate relevant tags, even if their lengths or bytes do not match. A malformed duplicate-head/no-name collection reproduces the former false-identity risk and now refuses. PostScript lookup exposes an Option match result: only a fully inspected no-match permits metadata fallback. Read failures, malformed records, allocation errors and budget refusals propagate without a second scan. Focused standalone tests now4PASS; no native SDK claim.

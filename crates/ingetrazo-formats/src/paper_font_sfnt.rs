@@ -31,6 +31,15 @@ fn u32_at(b: &[u8], n: usize) -> Result<u32, String> {
     ))
 }
 pub(crate) fn collection_index(file: &mut (impl Read + Seek), name: &str) -> Result<u32, String> {
+    collection_index_match(file, name)?
+        .ok_or_else(|| format!("Native PostScript identity {name:?} not found in collection"))
+}
+/// None is only a valid, fully inspected collection with no matching name.
+/// Read/format/allocation/admission errors remain Err and cannot trigger fallback.
+pub(crate) fn collection_index_match(
+    file: &mut (impl Read + Seek),
+    name: &str,
+) -> Result<Option<u32>, String> {
     let header = read_at(file, 0, 12)?;
     let offsets = if &header[..4] == b"ttcf" {
         let count = u32_at(&header, 8)?;
@@ -93,14 +102,12 @@ pub(crate) fn collection_index(file: &mut (impl Read + Seek), name: &str) -> Res
                         None
                     };
                 if candidate.as_deref() == Some(name) {
-                    return Ok(index as u32);
+                    return Ok(Some(index as u32));
                 }
             }
         }
     }
-    Err(format!(
-        "Native PostScript identity {name:?} not found in collection"
-    ))
+    Ok(None)
 }
 
 /// Named variable instances can have a different PostScript name from their physical
@@ -135,13 +142,18 @@ pub(crate) fn collection_index_by_tables(
             return Err("Native SFNT directory budget exceeded".into());
         }
         let directory = read_at(file, u64::from(offset) + 12, count as usize * 16)?;
-        let mut found = 0;
+        let mut found = 0u8;
+        let mut seen = 0u8;
         for row in directory.chunks_exact(16) {
-            let expected = match &row[..4] {
-                b"head" => head,
-                b"name" => name,
+            let (expected, bit) = match &row[..4] {
+                b"head" => (head, 1),
+                b"name" => (name, 2),
                 _ => continue,
             };
+            if seen & bit != 0 {
+                return Err("Duplicate native physical identity table tag".into());
+            }
+            seen |= bit;
             if u32_at(row, 12)? as usize != expected.len() {
                 continue;
             }
@@ -153,10 +165,10 @@ pub(crate) fn collection_index_by_tables(
             }
             let actual = read_at(file, u64::from(u32_at(row, 8)?), expected.len())?;
             if actual == expected {
-                found += 1;
+                found |= bit;
             }
         }
-        if found == 2 {
+        if found == 3 {
             if matched.is_some() {
                 return Err("Ambiguous native physical collection identity".into());
             }
@@ -206,6 +218,33 @@ mod tests {
         b[74..76].copy_from_slice(&6u16.to_be_bytes());
         b[78..84].copy_from_slice(b"FacePS");
         b
+    }
+    #[test]
+    fn duplicate_head_cannot_replace_missing_name_and_malformed_name_is_not_miss() {
+        let mut b = collection();
+        b.resize(200, 0);
+        b[28..32].copy_from_slice(b"head");
+        b[36..40].copy_from_slice(&128u32.to_be_bytes());
+        b[40..44].copy_from_slice(&54u32.to_be_bytes());
+        b[44..48].copy_from_slice(b"head");
+        b[52..56].copy_from_slice(&128u32.to_be_bytes());
+        b[56..60].copy_from_slice(&54u32.to_be_bytes());
+        let head = b[128..182].to_vec();
+        let name = collection()[60..84].to_vec();
+        assert!(
+            collection_index_by_tables(&mut Cursor::new(b), &head, &name)
+                .unwrap_err()
+                .contains("Duplicate")
+        );
+        let mut b = collection();
+        b[40..44].copy_from_slice(&300_000u32.to_be_bytes());
+        assert!(collection_index_match(&mut Cursor::new(b), "Absent")
+            .unwrap_err()
+            .contains("budget"));
+        assert_eq!(
+            collection_index_match(&mut Cursor::new(collection()), "Absent").unwrap(),
+            None
+        );
     }
     #[test]
     fn named_instance_uses_exact_metadata_not_requested_postscript() {
