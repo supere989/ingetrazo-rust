@@ -27,8 +27,8 @@ pub(super) struct Probe {
 }
 impl Probe {
     pub fn new(root: PathBuf, choice: &str) -> Result<Self, String> {
-        if !matches!(choice, "save" | "discard" | "cancel") {
-            return Err("choice must be save|discard|cancel".into());
+        if !matches!(choice, "save" | "discard" | "cancel" | "canvas") {
+            return Err("choice must be save|discard|cancel|canvas".into());
         }
         std::fs::create_dir_all(&root).map_err(|e| e.to_string())?;
         if std::fs::read_dir(&root)
@@ -68,6 +68,24 @@ impl Probe {
     pub fn setup(&mut self, app: &mut IngeTrazoApp) -> Result<(), String> {
         if app.current_file.as_ref() != Some(&self.document) || app.document_dirty() {
             return Err("Native probe did not reopen clean IGZ".into());
+        }
+        if self.choice == "canvas" {
+            use ingetrazo_core::composition::{Sheet, SheetItem, TextItem};
+            let mut sheet = Sheet::default();
+            sheet.items.clear();
+            sheet.items.push(SheetItem::Text(TextItem {
+                id: uuid::Uuid::new_v4(), pos: (30., 35.),
+                text: "Native Metal Canvas 0123456789".into(),
+                font_size_pt: 24., bold: false,
+            }));
+            app.scene.sheets = vec![sheet];
+            app.scene.active_sheet_index = Some(0);
+            ingetrazo_formats::igz::save_igz(&app.scene, &self.document)
+                .map_err(|e| e.to_string())?;
+            self.initial_bytes = std::fs::read(&self.document).map_err(|e| e.to_string())?;
+            app.open_document(&self.document);
+            app.scene.active_sheet_index = Some(0);
+            return Ok(());
         }
         let ids = [
             glam::DVec3::new(123., 234., 345.),
@@ -169,6 +187,28 @@ impl Probe {
                 gpu.presentation_counters().0
             ));
         }
+        if self.choice == "canvas" {
+            if gpu.presentation_counters().0 > 0 && self.phase == 0 {
+                let snapshot = serde_json::json!({
+                    "window_id": gpu.native_window_id()?,
+                    "submitted": gpu.counters().0,
+                    "displayed": gpu.presentation_counters().0,
+                    "completed_inflight": gpu.completed_inflight_for_probe(),
+                    "physical_mac_claim": false
+                });
+                let pending = self.root.join("own-window.pending");
+                std::fs::write(&pending, serde_json::to_vec_pretty(&snapshot).map_err(|e| e.to_string())?)
+                    .map_err(|e| e.to_string())?;
+                std::fs::rename(pending, self.root.join("own-window.json")).map_err(|e| e.to_string())?;
+                self.phase = 1;
+            }
+            if self.phase == 1 && self.root.join("capture-finished").is_file() {
+                if app.document_dirty() { return Err("Canvas display changed document".into()); }
+                request_close_for_probe(window)?;
+                self.phase = 4;
+            }
+            return Ok(());
+        }
         match self.phase {
             0 if gpu.presentation_counters().0 > 0 => {
                 request_close_for_probe(window)?;
@@ -253,6 +293,15 @@ impl Probe {
         let check = (|| -> Result<(), String> {
             if let Some(error) = error {
                 return Err(error.into());
+            }
+            if self.choice == "canvas" {
+                if self.phase != 4 || self.close_events == 0 || gpu.presentation_counters().0 == 0 {
+                    return Err("Missing completed Canvas presentation and native closure".into());
+                }
+                if app.document_dirty() || std::fs::read(&self.document).map_err(|e| e.to_string())? != self.initial_bytes {
+                    return Err("Canvas display modified document".into());
+                }
+                return Ok(());
             }
             if self.phase != 4
                 || self.close_events == 0

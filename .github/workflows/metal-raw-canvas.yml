@@ -26,12 +26,15 @@ jobs:
           cargo build --locked -p ingetrazo-metal --example egui_raw_probe -j2 > raw-metal-evidence/build.log 2>&1
           cargo check --locked -p ingetrazo-gui -j2 > raw-metal-evidence/host-check.log 2>&1
           cargo build --locked -p ingetrazo-gui --example native_metal -j2 > raw-metal-evidence/host-build.log 2>&1
+          cargo build --locked -p ingetrazo-gui --example native_metal_document_probe -j2 > raw-metal-evidence/canvas-build.log 2>&1
           shasum -a 256 target/debug/examples/egui_raw_probe > raw-metal-evidence/binary.sha256
           python3 - <<'PYTHON'
           import subprocess
           with open('raw-metal-evidence/execution.log','w') as log:
               subprocess.run(['target/debug/examples/egui_raw_probe','--output=raw-metal-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
           PYTHON
+      - name: Capture actual application Canvas window
+        run: python3 scripts/check-metal-canvas-host.py target/debug/examples/native_metal_document_probe raw-metal-evidence/canvas-host
       - uses: actions/upload-artifact@v4
         if: always()
         with:
