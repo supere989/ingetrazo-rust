@@ -1,0 +1,7 @@
+{
+  "source_revision": "849d983",
+  "failed_test": "screen_pick::tests::pixel_threshold_is_zoom_invariant_and_does_not_pick_behind_camera",
+  "failure": "Stale worker camera assumption expected orthographic behind-eye rejection; canonical original camera includes -zfar..+zfar volume.",
+  "correction_revision": "227da56",
+  "scope": "Corrected test only: in-volume orthographic behind-eye point accepted; beyond-near point rejected; perspective behind-eye point rejected. Production clipping unchanged."
+}

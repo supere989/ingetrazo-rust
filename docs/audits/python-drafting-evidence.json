@@ -1,5 +1,5 @@
 {
-  "binary_sha256": "03285d760624c8154e0e33c4d91956aaef553502e0b421242b8359aebe320f75",
+  "binary_sha256": "b1651f899b4d8abb2a2611ebe623d2e747b504ec6767b40be5e5deb4bb3d2836",
   "negative_controls": [
     {
       "case": "lost-region",
@@ -15,7 +15,7 @@
     }
   ],
   "provenance": {
-    "rust_commit": "fedcce41f7835c12088bd26b0ca953410c9d4d49",
+    "rust_commit": "227da5673da3529a5a608d774a7637add335338c",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
