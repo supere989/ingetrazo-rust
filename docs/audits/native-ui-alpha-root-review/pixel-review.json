@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "image_sample_checks": 384,
+  "retained_53_failures": 17,
+  "retained_corrected_failures": 2,
+  "boundary": "Independent retained image/JSON correspondence and adapter diagnostics; no fresh root hardware render claim. Correctedcandidate still fails strictalpha parity."
+}
