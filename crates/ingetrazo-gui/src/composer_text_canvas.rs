@@ -51,7 +51,7 @@ impl CanvasPainter {
    let mut ink=painter.clone();if let Some(clip)=&draw.clip{let mut rect=Rect::NOTHING;for op in clip{if let PathOp::Move(p)|PathOp::Line(p)=op{rect.extend_with(pos+Vec2::new(p[0]as f32*zoom,p[1]as f32*zoom));}}ink=ink.with_clip_rect(painter.clip_rect().intersect(rect));}
    if let Some(text)=&draw.text{let scale=text.scale_mm*f64::from(zoom)*ppp;
     if text.font.synthetic_bold_offset_px(text.bold)?>0.{return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}
-    for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let fixed_x=(x*64.).round()as i64;let fixed_y=(y*64.).round()as i64;let fx=fixed_x.div_euclid(64)as f64;let fy=fixed_y.div_euclid(64)as f64;let phase=[fixed_x.rem_euclid(64)as u8,fixed_y.rem_euclid(64)as u8];let image=self.image(painter.ctx(),&text.font,glyph.glyph,scale,phase,text.italic)?;
+    for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let fixed_x=(x*64.).round()as i64;let fixed_y=(y*64.).round()as i64;let (fx,fy,phase)=device_position(fixed_x,fixed_y);let image=self.image(painter.ctx(),&text.font,glyph.glyph,scale,phase,text.italic)?;
      if let Some(texture)=image.texture{let rect=Rect::from_min_size(Pos2::new(((fx+f64::from(image.left))/ppp)as f32,((fy-f64::from(image.top))/ppp)as f32),Vec2::new((image.width as f64/ppp)as f32,(image.height as f64/ppp)as f32));self.ops.push(Ink::Image(texture,rect,ink.clip_rect(),color));bounds=bounds.union(rect.intersect(ink.clip_rect()));}
     }
     for decoration in &text.decorations{let [x0,y0,x1,y1]=decoration.line_px;self.ops.push(Ink::Line([pos+Vec2::new((x0*text.scale_mm)as f32*zoom,(y0*text.scale_mm)as f32*zoom),pos+Vec2::new((x1*text.scale_mm)as f32*zoom,(y1*text.scale_mm)as f32*zoom)],ink.clip_rect(),egui::Stroke::new((decoration.width_px*text.scale_mm)as f32*zoom,color)));}
@@ -59,5 +59,19 @@ impl CanvasPainter {
   }
   // Publish only after the complete item has valid layout, glyphs and resources.
   for op in self.ops.drain(..){match op{Ink::Image(texture,rect,clip,color)=>{painter.with_clip_rect(clip).image(texture.id(),rect,Rect::from_min_max(Pos2::ZERO,Pos2::new(1.,1.)),color);self.frame_textures.push(texture);},Ink::Fill(rect,clip,color)=>{painter.with_clip_rect(clip).rect_filled(rect,0.,color);},Ink::Line(line,clip,stroke)=>{painter.with_clip_rect(clip).line_segment(line,stroke);}}}self.frame_ops+=count;Ok(bounds)
+ }
+}
+
+// Qt 6.12 raster painter: horizontal four-phase FT cache; without the
+// VerticalSubpixelPositioning hint the baseline is rounded and y phase is zero.
+fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
+ let phase=((x.rem_euclid(64)+1)/16)*16;
+ (x.div_euclid(64)as f64+(phase/64)as f64,(y+32).div_euclid(64)as f64,[(phase%64)as u8,0])
+}
+#[cfg(test)]mod device_position_tests{use super::*;
+ #[test]fn source_quarter_phases_and_rounded_baselines(){
+  assert_eq!(device_position(14,31),(0.,0.,[0,0]));assert_eq!(device_position(15,32),(0.,1.,[16,0]));
+  assert_eq!(device_position(63,63),(1.,1.,[0,0]));assert_eq!(device_position(-1,-33),(0.,-1.,[0,0]));
+  assert_eq!(device_position(-64,-32),(-1.,0.,[0,0]));
  }
 }

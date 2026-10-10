@@ -4,5 +4,17 @@
   "runtime_qt": "6.12.0",
   "function": "QFontEngineFT::loadGlyphFor",
   "policy": "Nonrotation glyph scaling selects HintNone for device rasterization, while the font face keeps its original pixel size.",
-  "boundary": "This policy is separate from unchanged pixel100 shaping and PDF outlines; exact actual TextItem pixel checks remain required."
+  "boundary": "This policy is separate from unchanged pixel100 shaping and PDF outlines; exact actual TextItem pixel checks remain required.",
+  "raster_source": {
+    "url": "https://raw.githubusercontent.com/qt/qtbase/6.12/src/gui/painting/qpaintengine_raster.cpp",
+    "sha256": "f52f54817e5f94955f2064553076f0f65a721fc21650db02ba81ef09a1cc092b",
+    "function": "QRasterPaintEngine::drawCachedGlyphs",
+    "policy": "Without VerticalSubpixelPositioning, zero y subpixel phase and qRound device baseline."
+  },
+  "phase_source": {
+    "url": "https://raw.githubusercontent.com/qt/qtbase/6.12/src/gui/text/qfontengine.cpp",
+    "sha256": "adfc569d5152e82d1b0716fc0d904c238dbd8dc188deec7ec4dc9c0760643397",
+    "function": "QFontEngine::subPixelPositionFor",
+    "policy": "FT engine uses four horizontal phases; (fraction + 1/64) floors to quarter phase."
+  }
 }
