@@ -1,0 +1,20 @@
+{
+  "reviewed_source": "4e3782d8c45a79a9a02fbe05bf9041dbac207a76",
+  "integration_source": "e9c93c23",
+  "retained_observations_equal": true,
+  "cases": 41,
+  "source_functions_reviewed": [
+    "build_request",
+    "parse_reply",
+    "extract_code",
+    "compact_messages",
+    "strip_thoughts"
+  ],
+  "gui_change": "Replaces prompt-ignoring cube placeholder with local session staging",
+  "limitations": [
+    "No HTTP transport, persistent settings, recipe interpreter or live MCP operation acceptance",
+    "Checker mutation loop currently demonstrates inequality rather than invoking validator; follow-up requested",
+    "No full P32 or release gate acceptance"
+  ],
+  "repeated_build": false
+}
