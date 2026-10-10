@@ -1,5 +1,7 @@
 # Rust parity progress tracker
 
+Published `cbc4b494` ordered UI/CAD compute checks now pass on both native Apple runners. [Completed evidence](audits/main-cbc-ordered-compute-completion.json). The broader main workflow remains in progress; independent Canvas presentation, font pixels and physical-device release acceptance are separate requirements.
+
 Multiple-hole prerequisite (review branch, 2026-10-10): 24 fresh original/native append/Undo/Redo states match across eight hole recipes; three filter controls and one rollback/Redo control pass. [Independent review](audits/ai-holes-root/acceptance.json). Malformed-hole document rollback matches, but raw exception behavior remains unequal. Pathological triangulation, attributes, complete object/scene integration and production scripting remain OPEN.
 
 Cloud checkpoint: published `2fc09994` has completed all five configured CI jobs successfully. Current published `cbc4b494` has 696 passing local tests and its separate cloud validation is still running. Native Metal Canvas/font parity remains a separate failing review workflow; no release gate is closed by these CI results.
