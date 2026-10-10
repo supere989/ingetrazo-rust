@@ -43,12 +43,29 @@ vp.makeCurrent();dither_lib=ctypes.CDLL('libGL.so.1');dither_lib.glIsEnabled.arg
 if '--disable-dither' in sys.argv:vp._gl.glDisable(0x0BD0)
 dither_after=bool(dither_lib.glIsEnabled(0x0BD0));vp.doneCurrent()
 image=vp.grabFramebuffer();assert image.save(str(out/'fresh.png'));a=pixels(image);expected=pixels(QImage(str(original/'gondola_v20-iso-source.png')));fresh_exact=bool(np.array_equal(a,expected));fresh_different=int(np.any(a!=expected,axis=2).sum())
+vertex_inputs=[]
+for mesh,paint,groups,mirrored in getattr(vp,'_frame_instanced',{}).values():
+ base=vp._proto_base_chunk(mesh,paint);raw=base['vcol'];vertices=np.frombuffer(raw,dtype=np.float32).reshape(-1,6)
+ selected=[]
+ for primitive in [4,17]:
+  if (primitive+1)*3<=len(vertices):selected.append({'primitive':primitive,'position_rgb':vertices[primitive*3:(primitive+1)*3].tolist()})
+ vertex_inputs.append({'prototype_uid':str(base.get('uid')),'vertex_count':len(vertices),'instances':len(groups),'mirrored':bool(mirrored),'selected_triangles':selected})
+(out/'vertex-inputs.json').write_text(json.dumps(vertex_inputs,indent=2)+'\n')
 vp.makeCurrent();gl=vp._gl;assert vp._scene_fbo.format().samples()==4
 scene_image=vp._scene_fbo.toImage();assert scene_image.save(str(out/'scene-resolved.png'));scene_pixels=pixels(scene_image)
 lib=ctypes.CDLL('libGL.so.1')
 def call(name,types,*args):
  fn=getattr(lib,name);fn.argtypes=types;fn.restype=None;fn(*args)
 U=ctypes.c_uint;I=ctypes.c_int;B=ctypes.c_ubyte;tex=U();fbo=U()
+assert vp._faces_vbo.bind();face_bytes=vp._faces_count*24;assert face_bytes<=64*1024*1024
+face_data=np.empty((vp._faces_count,6),dtype=np.float32)
+call('glGetBufferSubData',[U,ctypes.c_ssize_t,ctypes.c_ssize_t,ctypes.c_void_p],0x8892,0,face_bytes,face_data.ctypes.data)
+assert gl.glGetError()==0;vp._faces_vbo.release()
+selected=[]
+for primitive in [4,17]:
+ if (primitive+1)*3<=len(face_data):selected.append({'primitive':primitive,'position_rgb':face_data[primitive*3:(primitive+1)*3].tolist()})
+(out/'ordinary-vertex-inputs.json').write_text(json.dumps({'vertex_count':len(face_data),'selected_triangles':selected},indent=2)+'\n')
+
 def raw_pixels():
  data=np.empty((600,800,4),dtype=np.uint8)
  call('glReadPixels',[I,I,I,I,U,U,ctypes.c_void_p],0,0,800,600,0x1908,0x1401,data.ctypes.data)
