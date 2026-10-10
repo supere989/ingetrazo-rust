@@ -1,0 +1,326 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "image-alpha",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-below-threshold-behind",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-coplanar-trace",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-cutout",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-faded-behind",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-hidden-layer",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-hidden-line",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-near-clipped",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-oblique",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-offscreen-clip",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-opacity-0999",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-opacity-below",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-opaque-behind",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-overlap",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-perspective",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-quadrants",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-reversed",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-near-clipped",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-oblique",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-offscreen",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-perspective",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-threshold-behind",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-tinted-alpha",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-uv-asymmetric",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-uv-asymmetric-perspective",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-uv-negative-v",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-wireframe",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-xray",
+      "pixels": 480000,
+      "differing_pixels": 0,
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    }
+  ],
+  "total_pixels": 13920000,
+  "scope": "Mandatory29 paired actual NVIDIA OpenGL2/Vulkan full RGBA borders and surfaces; Metal/performance generalization open"
+}

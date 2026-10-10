@@ -1,0 +1,5 @@
+# Isolated GPU arena initial render proof
+
+Frozen source d3993bab, committed Resources API f2c58ed5. Actual owned NVIDIA RTX5090 client capture, readonly CDI/X socket/auth, original frozen OpenGL2 controls. Existing mandatory checker passes 29 whole frames, 13,920,000 RGBA pixels exact; actual device and cleanup ledger controls unchanged. This proves static render equivalence and shared CAD recorder against this literal corpus. No tolerance/ablation. Two named fixtures only, debug0/incremental0/-j2. Focused seven outline tests pass.
+
+Cleanup diagnostics report actual paired pages, range upload bytes and Resources transfer maps/commands/fences. Startup view publication may rebuild twice (four range transfers for one plane); aggregate counts are not a warm-zero proof. Source CPU producer and isolated native arena are active here, not canonical. Dirty warm counters, later changed chunk failure/old full frame retention, retirement fragmentation/large scene throughput and native Metal remain OPEN. Root-owned resources source was merged without edits. Prior 29 originals remain under docs/audits/image-outline-native-gl/original.
