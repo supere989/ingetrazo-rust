@@ -17,7 +17,9 @@ def main():
  original=os.environ.get("INGETRAZO_PREVIEW_ORIGINAL")=="1"
  source=Path(sys.argv[1]).resolve()
  subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","composer_preview_native_fixture"],cwd=source,check=True)
- directory=Path("docs/audits/composer-direct-preview-"+("original" if original else "native"));directory.mkdir(exist_ok=True)
+ directory=Path(os.environ.get("INGETRAZO_PREVIEW_ARTIFACT_DIR", "docs/audits/composer-direct-preview-"+("original" if original else "native")));directory.mkdir(parents=True,exist_ok=True)
+ target_dir=Path(os.environ.get("CARGO_TARGET_DIR",str(source/"target")));target_dir=target_dir if target_dir.is_absolute() else source/target_dir
+ binary=target_dir/"debug/examples/composer_preview_native_fixture"
  for p in directory.iterdir():
   if p.is_file():p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-offset-x11-") as t:
@@ -26,7 +28,7 @@ def main():
   try:
    assert select.select([server.stdout],[],[],10)[0];display=server.stdout.readline().strip();assert display.isdigit()
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["XDG_CONFIG_HOME"]=t+"/config";env["XDG_CACHE_HOME"]=t+"/cache";env["VK_DRIVER_FILES"]="/usr/share/vulkan/icd.d/lvp_icd.json";env["INGETRAZO_VULKAN_DEVICE"]="llvmpipe";env["INGETRAZO_PREVIEW_OUT"]=str(directory.resolve());env.pop("WAYLAND_DISPLAY",None)
-   log=open(directory/"runtime.log","w");app=subprocess.Popen([sys.executable,"scripts/original_composer_preview_fixture.py"] if original else [str(source/"target/debug/examples/composer_preview_native_fixture"),str(directory.resolve())],env=env,stdout=log,stderr=log)
+   log=open(directory/"runtime.log","w");app=subprocess.Popen([sys.executable,"scripts/original_composer_preview_fixture.py"] if original else [str(binary),str(directory.resolve())],env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
    initial=wait(lambda:state() if len(state()["items"])==0 else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
@@ -75,7 +77,7 @@ def main():
    control(ord("z"));undone=wait(lambda:state() if not state()["items"] and state()["undo"]==0 else None);record("undone")
    if not original:
     control(ord("y"));redone=wait(lambda:state() if len(state()["items"])==1 and state()["undo"]==1 else None);record("redone")
-   report={"passed":True,"original":original,"start_pixel":start,"end_pixel":end,"requested_size_mm":[50,35],"source_redo_keyboard_open":original,"source_revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=source,text=True).strip(),"binary_sha256":(None if original else hashlib.sha256((source/"target/debug/examples/composer_preview_native_fixture").read_bytes()).hexdigest()),"reference_fixture_sha256":(hashlib.sha256((source/"scripts/original_composer_preview_fixture.py").read_bytes()).hexdigest() if original else None),"cases":events,"scope":("Original Qt actual toolbar placement/Escape/commit/Undo; Redo keyboard open." if original else "Actual XTEST placement/Escape/commit/UndoRedo through production composer direct CAD factory, software Vulkan; fixture toolbar/keyboard routes.")+" No whole-image or AA parity."}
+   report={"passed":True,"original":original,"start_pixel":start,"end_pixel":end,"requested_size_mm":[50,35],"source_redo_keyboard_open":original,"source_revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=source,text=True).strip(),"binary_sha256":(None if original else hashlib.sha256((binary).read_bytes()).hexdigest()),"reference_fixture_sha256":(hashlib.sha256((source/"scripts/original_composer_preview_fixture.py").read_bytes()).hexdigest() if original else None),"cases":events,"scope":("Original Qt actual toolbar placement/Escape/commit/Undo; Redo keyboard open." if original else "Actual XTEST placement/Escape/commit/UndoRedo through production composer direct CAD factory, software Vulkan; fixture toolbar/keyboard routes.")+" No whole-image or AA parity."}
    (directory/"verdict.json").write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))
   finally:
    if app:
