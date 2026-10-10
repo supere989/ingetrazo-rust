@@ -1,0 +1,68 @@
+{
+  "source_revision": "0fd81a11210fa26f2abcc5636beb41e1eea72dd6",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-metal",
+        "--all-targets",
+        "--target",
+        "aarch64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "ingetrazo-metal-aarch64-apple-darwin.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-gui",
+        "--lib",
+        "--tests",
+        "--example",
+        "native_metal_document_probe",
+        "--target",
+        "aarch64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "ingetrazo-gui-aarch64-apple-darwin.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-metal",
+        "--all-targets",
+        "--target",
+        "x86_64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "ingetrazo-metal-x86_64-apple-darwin.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-gui",
+        "--lib",
+        "--tests",
+        "--example",
+        "native_metal_document_probe",
+        "--target",
+        "x86_64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "ingetrazo-gui-x86_64-apple-darwin.log"
+    }
+  ],
+  "native_execution_claim": false
+}
