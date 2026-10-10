@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-composer-pdf-ui.py", line 85, in <module>
+    key(0xff0d);wait(lambda:state()["border"]["color"]=='#ffffff')
+                ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-composer-pdf-ui.py", line 19, in wait
+    raise AssertionError("Actual UI timeout")
+AssertionError: Actual UI timeout

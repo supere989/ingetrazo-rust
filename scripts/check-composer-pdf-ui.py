@@ -3,7 +3,8 @@
 import os,json,subprocess,tempfile,time,select,ctypes as C,ctypes.util,shutil,hashlib
 from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")  # Reader stays headless; native Vulkan/XTEST use their owned X server.
-text_source=os.environ.get("INGETRAZO_PDF_UI_TEXT_OBSERVATIONS")
+text_source=os.environ.get("INGETRAZO_PDF_UI_FIELD_OBSERVATIONS") or os.environ.get("INGETRAZO_PDF_UI_TEXT_OBSERVATIONS")
+field_mode=bool(os.environ.get("INGETRAZO_PDF_UI_FIELD_OBSERVATIONS"))
 text_cases=json.loads(Path(text_source).read_text())["cases"] if text_source else None
 unsupported=os.environ.get("INGETRAZO_PDF_UI_UNSUPPORTED")=="1"
 out=Path(os.environ.get("INGETRAZO_PDF_UI_EVIDENCE","docs/audits/composer-pdf-ui"+("-unsupported" if unsupported else "")));out.mkdir(exist_ok=True);(out/"state.json").unlink(missing_ok=True)
@@ -74,6 +75,23 @@ with tempfile.TemporaryDirectory() as runtime:
     attrs=Attributes();assert x.XGetWindowAttributes(d,confirm,C.byref(attrs))
     x.XSetInputFocus(d,confirm,1,0)
     click((attrs.width*0.75,attrs.height-24),confirm)
+  border_gestures=None
+  if field_mode:
+   before=state();assert before["border"]["on"] is False and before["border"]["color"]=="#1e242c"
+   click(before["border_menu"]);controls=wait(lambda:state().get("border_controls"));capture("border-menu-before")
+   click(controls[0]);wait(lambda:state()["border"]["on"] is True)
+   click(controls[1]);key(ord('a'),0xffe3)
+   for char in '#ffffff':key(ord(char),0xffe1 if char=='#' else None)
+   key(0xff0d);wait(lambda:state()["border"]["color"]=='#ffffff')
+   capture("border-white-enabled")
+   click(controls[0]);wait(lambda:state()["border"]["on"] is False)
+   key(0xff1b);time.sleep(.15);capture("border-white-disabled")
+   edited=state();assert edited["border"]["color"]=='#ffffff' and edited["authored_text"]==before["authored_text"]
+   key(ord('z'),0xffe3);undone=wait(lambda:state() if state()["border"]["on"] is True else None);capture("border-undo")
+   key(ord('y'),0xffe3);redone=wait(lambda:state() if state()["border"]["on"] is False and state()["border"]["color"]=='#ffffff' else None);capture("border-redo")
+   assert any('key: Z' in event['event'] and 'ctrl: true' in event['event'] and event['final_frame_modifiers']=='Modifiers::NONE'for event in redone['history_key_events'])
+   assert any('key: Y' in event['event'] and 'ctrl: true' in event['event'] and event['final_frame_modifiers']=='Modifiers::NONE'for event in redone['history_key_events'])
+   border_gestures={"before":before,"edited":edited,"undo":undone,"redo":redone,"actual_pointer_properties":True,"actual_global_shortcuts_route_sheet_history":True}
   current_path=out.resolve()/"current.pdf";all_path=out.resolve()/"all.pdf"
   if unsupported:
    current_path.write_bytes(b"existing destination current");all_path.write_bytes(b"existing destination all")
@@ -92,6 +110,13 @@ with tempfile.TemporaryDirectory() as runtime:
    left=round(atlas["error_ok"][0]-20);top=round(atlas["error_ok"][1]-70)
    def dark(image):return sum(max(image.pixelColor(x,y).red(),image.pixelColor(x,y).green(),image.pixelColor(x,y).blue())<100 for x in range(left,left+300)for y in range(top,top+90))
    popup_dark=dark(error_image);quiet_dark=dark(quiet_image);assert popup_dark>10000 and quiet_dark<500,(popup_dark,quiet_dark)
+  warm=None
+  if field_mode:
+   assert current['scene_signature']==atlas['scene_signature']==border_gestures['redo']['scene_signature']
+   warm_path=out.resolve()/'warm-all.pdf';warm_path.unlink(missing_ok=True)
+   click(atlas['all_button']);dialog_save(warm_path,'warm-all');warm=wait(lambda:state()if state()['all_clicks']==2 else None);capture('warm-all-click')
+   assert warm_path.read_bytes()==all_path.read_bytes()
+   assert warm['scene_signature']==atlas['scene_signature'] and warm['paper_resources']==atlas['paper_resources']
   if unsupported:
    assert atlas["sheets"]==initial["sheets"]==1
    assert current_path.read_bytes()==b"existing destination current" and all_path.read_bytes()==b"existing destination all"
@@ -125,7 +150,7 @@ with tempfile.TemporaryDirectory() as runtime:
        def white(doc,page):
         raw=doc.render(page,pixels);assert not raw.isNull();im=QImage(raw.size(),QImage.Format.Format_RGB32);im.fill(0xffffffff);p=QPainter(im);p.drawImage(0,0,raw);p.end();return bytes(im.constBits())
        assert white(native,index)==white(original,0),(name,dpi,"Actual button/dialog PDF differs from frozen source")
-  report={"text_frozen_source_cases":len(text_cases) if text_cases else None,"text_source_exact_pages":(len(text_cases)+1)*3 if text_cases else None,"text_reader_exact_pages":len(text_cases)+1 if text_cases else None,"actual_x11_pointer_buttons_passed":True,"current":current,"all":atlas,"dialog_acceptance":"Actual genuine Zenity GTK save dialogs entered with XTEST keyboard","successful_ui_pdf_export":not unsupported,"pdf_page_counts":counts,"page_nonwhite_pixels":[] if unsupported else ink,"error_dialog_dismissed":dismissed if unsupported else None,"error_popup_dark_pixels":popup_dark if unsupported else None,"dismissed_popup_dark_pixels":quiet_dark if unsupported else None,"unsupported_destination_ui":"Actual default sheet current/all errors preserve confirmed overwrite destinations" if unsupported else "Separately exercised in unsupported scenario","binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"scope":"Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."};(out/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report))
+  report={"warm_dialog_export":warm,"border_gestures":border_gestures,"text_frozen_source_cases":len(text_cases) if text_cases else None,"text_source_exact_pages":(len(text_cases)+1)*3 if text_cases else None,"text_reader_exact_pages":len(text_cases)+1 if text_cases else None,"actual_x11_pointer_buttons_passed":True,"current":current,"all":atlas,"dialog_acceptance":"Actual genuine Zenity GTK save dialogs entered with XTEST keyboard","successful_ui_pdf_export":not unsupported,"pdf_page_counts":counts,"page_nonwhite_pixels":[] if unsupported else ink,"error_dialog_dismissed":dismissed if unsupported else None,"error_popup_dark_pixels":popup_dark if unsupported else None,"dismissed_popup_dark_pixels":quiet_dark if unsupported else None,"unsupported_destination_ui":"Actual default sheet current/all errors preserve confirmed overwrite destinations" if unsupported else "Separately exercised in unsupported scenario","binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"scope":"Native ash production composer button dispatch on isolated Xvfb/llvmpipe; instrumentation observes actual response rects/clicks only."};(out/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report))
  finally:
   if app:
    import signal

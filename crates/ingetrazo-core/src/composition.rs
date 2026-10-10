@@ -314,9 +314,40 @@ impl SheetItem {
     }
 }
 
+/// Original composer border properties remain live while the border is disabled.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SourcePaperBorder {
+    pub on: bool,
+    pub mm: f64,
+    pub color: String,
+    pub radius_mm: f64,
+    pub style: String,
+}
+impl Default for SourcePaperBorder {
+    fn default() -> Self { Self { on:false, mm:0.5, color:"#1e242c".into(), radius_mm:0., style:"single".into() } }
+}
+impl SourcePaperBorder {
+    /// Original from_dict ignores dormant archived properties.
+    pub fn from_native(value: &serde_json::Value) -> Self {
+        let mut out=Self::default();
+        if value.get("on").and_then(serde_json::Value::as_bool).unwrap_or(false) {
+            out.on=true;
+            out.mm=value.get("mm").and_then(serde_json::Value::as_f64).unwrap_or(out.mm);
+            out.radius_mm=value.get("radius_mm").and_then(serde_json::Value::as_f64).unwrap_or(out.radius_mm);
+            if let Some(v)=value.get("color").and_then(serde_json::Value::as_str) {out.color=v.into();}
+            if let Some(v)=value.get("style").and_then(serde_json::Value::as_str) {out.style=v.into();}
+        }
+        out
+    }
+}
+
 /// Master Sheet container (Composición).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Sheet {
+    #[serde(default)]
+    pub source_border: Option<SourcePaperBorder>,
+    #[serde(default)]
+    pub source_border_baseline: Option<SourcePaperBorder>,
     #[serde(default)]
     pub native_document: serde_json::Value,
     #[serde(default)]
@@ -341,6 +372,19 @@ impl Default for Sheet {
 }
 
 impl Sheet {
+    pub fn effective_source_border(&self) -> SourcePaperBorder {
+        self.source_border.clone().unwrap_or_else(|| SourcePaperBorder::from_native(&self.native_document["border"]))
+    }
+    pub fn set_source_border(&mut self, border: SourcePaperBorder) -> Result<(), &'static str> {
+        if !border.mm.is_finite() || !border.radius_mm.is_finite() || border.mm < 0. || border.radius_mm < 0. {return Err("Invalid paper border dimensions");}
+        if !self.native_document.is_object() {self.native_document=serde_json::json!({});}
+        if !self.native_document["border"].is_object() {self.native_document["border"]=serde_json::json!({});}
+        let value=serde_json::to_value(&border).map_err(|_|"Invalid paper border")?;
+        for (key,value) in value.as_object().unwrap() {self.native_document["border"][key]=value.clone();}
+        self.source_border=Some(border);
+        Ok(())
+    }
+
     /// Original composer uses stable z ordering and excludes hidden items.
     /// Retained native metadata is authoritative for these unmodeled properties.
     pub fn visible_item_indices(&self) -> Vec<usize> {
@@ -356,6 +400,8 @@ impl Sheet {
 
     pub fn new(name: impl Into<String>, paper_size: PaperSize, orientation: Orientation) -> Self {
         let mut sheet = Self {
+            source_border: Some(SourcePaperBorder::default()),
+            source_border_baseline: None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             native_items: std::collections::HashMap::new(),
@@ -511,4 +557,21 @@ mod tests {
   sheet.native_items.get_mut(&sheet.items[3].id()).unwrap()["hidden"]=serde_json::json!(true);
   let before=sheet.clone();assert_eq!(sheet.visible_item_indices(),vec![1,0,2]);assert_eq!(sheet,before);
  }
+}
+
+#[cfg(test)]
+mod source_paper_border_tests {
+    use super::*;
+    #[test]
+    fn disabled_runtime_properties_survive_recovery_and_refusal_is_atomic() {
+        let mut sheet=Sheet::default();
+        let mut border=sheet.effective_source_border();
+        border.color="#ffffff".into();border.radius_mm=3.;
+        sheet.set_source_border(border.clone()).unwrap();
+        let recovered:Sheet=serde_json::from_slice(&serde_json::to_vec(&sheet).unwrap()).unwrap();
+        assert_eq!(recovered.effective_source_border(),border);
+        let before=sheet.clone();border.mm=f64::NAN;
+        assert!(sheet.set_source_border(border).is_err());assert_eq!(sheet,before);
+        assert_eq!(SourcePaperBorder::from_native(&serde_json::json!({"on":false,"color":"#ffffff"})),SourcePaperBorder::default());
+    }
 }

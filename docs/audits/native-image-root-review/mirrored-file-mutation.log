@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-image-planes-root/scripts/check-native-image-surfaces.py", line 30, in <module>
+    name=row["case"];a=pixels(source/(name+".png"));b=pixels(native/(name+".png"));assert np.array_equal(a,b),name+" whole RGBA mismatch"
+                                                                                          ~~~~~~~~~~~~~~^^^^^
+AssertionError: image-quadrants whole RGBA mismatch

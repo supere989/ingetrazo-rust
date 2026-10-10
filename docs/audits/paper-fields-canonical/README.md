@@ -1,0 +1,1 @@
+Canonical source416bdce6: locked full workspace581PASS/two ignored. Independent field review includes39 exact source/native PDF pages and actual compiled identity negative/restoration. GUI evidence explicitly retains literal canvas macros and property-history discrepancy as OPEN. This is not full P28/P29 or release acceptance.

@@ -59,6 +59,16 @@ if os.environ.get("INGETRAZO_TEXT_BACKGROUNDS")=="1":
  ("bg_bold","Floor 1\nSection A",{"bold":True,"bg_color":"#ffcc80"}),
  ("bg_italic","Floor 1",{"italic":True,"bg_color":"#ffcc80"}),
  ("bg_transparent","Floor 1",{"bg_color":"#ffcc80","bg_opacity":0})]
+if os.environ.get("INGETRAZO_TEXT_LINEBREAKS")=="1":
+ cases=[("punctuation","alpha/beta/gamma delta|epsilon|zeta 10/10/2026",{"w_mm":24}),
+ ("cjk_wrap","平面図平面図平面図平面図",{"w_mm":18}),
+ ("soft_hyphen","extra\u00adordinary extra\u00adordinary",{"w_mm":18}),
+ ("line_separator","Floor 1\u2028Section A",{}),
+ ("paragraph_separator","Floor 1\u2029Section A",{}),
+ ("punctuation_rtl","שלום/עולם/שלום العربية/123",{"w_mm":24})]
+if os.environ.get("INGETRAZO_TEXT_SHY_BOUNDARIES")=="1":
+ cases=[("shy_"+str(w),"extra\u00adordinary extra\u00adordinary",{"w_mm":w})for w in [12,14,16,20,24,32]]
+ cases += [("shy_prefix_"+str(w),"A extra\u00adordinary",{"w_mm":w})for w in [13,14,15,16]]
 rows=[]
 for name,text,props in cases:
  writer=QPdfWriter(str(out/(name+".original.pdf")));writer.setResolution(RENDER_DPI);writer.setPageSize(QPageSize(QSizeF(210,297),QPageSize.Unit.Millimeter));p=Observe(writer) if os.environ.get("INGETRAZO_TEXT_OBSERVER","1")=="1" else QPainter(writer);p.observed=[];p.scale(RENDER_DPI/25.4,RENDER_DPI/25.4);p.translate(20,30)

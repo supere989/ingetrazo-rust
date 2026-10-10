@@ -11,6 +11,7 @@ pub mod app;
 mod geographic_import;
 pub mod blender;
 pub mod composer;
+mod composer_text_fields;
 pub mod composer_cad;
 pub mod composer_backend;
 pub mod dialogs;

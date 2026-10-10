@@ -1,0 +1,160 @@
+{
+  "cases": [
+    {
+      "case": "main",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "bound",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "missing_bound",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "first_tie",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "empty_title",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "mixed_placeholders",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "hidden_bound",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "unicode_path",
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "equal_text_only",
+      "actual_caller_protocol": {
+        "case": "equal_text_only",
+        "distinct_objects": true,
+        "value_equal": true,
+        "physical_index": 1,
+        "source_fields": {
+          "proyecto": "",
+          "autor": "",
+          "lamina": "Same",
+          "nombre": "Same",
+          "escala": "",
+          "escena": "",
+          "fecha": "10/10/2026",
+          "archivo": "",
+          "hoja": "1",
+          "total": "2"
+        }
+      },
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "different_text_position",
+      "actual_caller_protocol": {
+        "case": "different_text_position",
+        "distinct_objects": true,
+        "value_equal": false,
+        "physical_index": 1,
+        "source_fields": {
+          "proyecto": "",
+          "autor": "",
+          "lamina": "Same",
+          "nombre": "Same",
+          "escala": "",
+          "escena": "",
+          "fecha": "10/10/2026",
+          "archivo": "",
+          "hoja": "2",
+          "total": "2"
+        }
+      },
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "different_frame_uid",
+      "actual_caller_protocol": {
+        "case": "different_frame_uid",
+        "distinct_objects": true,
+        "value_equal": false,
+        "physical_index": 1,
+        "source_fields": {
+          "proyecto": "",
+          "autor": "",
+          "lamina": "Same",
+          "nombre": "Same",
+          "escala": "1:100",
+          "escena": "",
+          "fecha": "10/10/2026",
+          "archivo": "",
+          "hoja": "2",
+          "total": "2"
+        }
+      },
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "same_literal_frame_uid",
+      "actual_caller_protocol": {
+        "case": "same_literal_frame_uid",
+        "distinct_objects": true,
+        "value_equal": true,
+        "physical_index": 1,
+        "source_fields": {
+          "proyecto": "",
+          "autor": "",
+          "lamina": "Same",
+          "nombre": "Same",
+          "escala": "1:100",
+          "escena": "",
+          "fecha": "10/10/2026",
+          "archivo": "",
+          "hoja": "1",
+          "total": "2"
+        }
+      },
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    },
+    {
+      "case": "large_metadata_integer",
+      "actual_caller_protocol": {
+        "case": "large_metadata_integer",
+        "distinct_objects": true,
+        "value_equal": false,
+        "physical_index": 1,
+        "source_fields": {
+          "proyecto": "",
+          "autor": "",
+          "lamina": "Same",
+          "nombre": "Same",
+          "escala": "",
+          "escena": "",
+          "fecha": "10/10/2026",
+          "archivo": "",
+          "hoja": "2",
+          "total": "2"
+        }
+      },
+      "warm_resources_unchanged": true,
+      "authored_scene_unchanged": true
+    }
+  ],
+  "scope": "Actual selected composer export controller; date/path/index/total live; not real save-dialog gesture"
+}
