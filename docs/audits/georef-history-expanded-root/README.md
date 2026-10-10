@@ -1,0 +1,4 @@
+# Compound geographic import and atomic refusal
+Fresh original georeferenced projection and actual command History/native app compare six exact compound-import states for generated and existing rotated/elevated datum. Three imported features (line+two polygons) preserve a pre-existing path/model vertex, and undo/redo as one command. Altitude omitted matches source localZ0. Inputs and full JSON retained.
+Actual native app corrupt KMZ, malformed numeric coordinate schema and empty-feature results preserve Scene, camera, history including undone Redo branch, current_file and existing model destination bytes. No generic model replacement.
+Combined review now includes main7ac38f9 saved-view ownership. Rendered dialog/main-window/base-map references and exact camera acceptance remain pending; broader geographic resources and full P25/P27 remain open. Not integrated main.

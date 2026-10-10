@@ -33,6 +33,22 @@ class Observe(QPainter):
 cases=[("latin","Office AVATAR fi ffi",{}),("accents","Planta — sección ñ café",{}),("bold","Office AVATAR",{"bold":True}),("italic","Office AVATAR",{"italic":True}),("underline","Ground level",{"underline":True}),("wrap","Long project name with several words that wrap onto a second line",{"w_mm":32}),("newlines","Floor 1\nSection A",{}),("center","Centered title",{"align":"center"}),("right","Right title",{"align":"right"}),("serif","Office ffi AVATAR",{"family":"Serif"}),("mono","Office ffi AVATAR",{"family":"Monospace"}),("arabic","العربية 123",{}),("hebrew","שלום 123",{}),("cjk","平面図",{})]
 if os.environ.get("INGETRAZO_TEXT_EXPANDED")=="1":
  cases += [("combining","A\u0301 e\u0301 q\u0308",{}),("kerns","To WA AV Yi",{}),("serif_bold","ff ffi fi fl",{"family":"Serif","bold":True}),("arabic_run","العربية",{}),("hebrew_run","שלום",{})]
+if os.environ.get("INGETRAZO_TEXT_PARAGRAPHS")=="1":
+ # Held-out source recipes: preserve whitespace, mixed fallback and paragraph boundaries.
+ cases += [
+  ("mixed_latin_cjk","Office 平面図 AVATAR",{}),
+  ("mixed_cjk_rtl","平面図 العربية 123",{}),
+  ("mixed_scripts","Latin العربية שלום 123",{}),
+  ("spaces","  Floor   1  Section  A  ",{}),
+  ("tabs","Floor\t1\tSection A",{}),
+  ("nbsp","Floor\u00a01 Section\u00a0A",{"w_mm":22}),
+  ("empty_paragraphs","Floor 1\n\nSection A\n",{}),
+  ("long_word","ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",{"w_mm":20}),
+  ("mixed_wrapped","Office 平面図 several words العربية end",{"w_mm":32}),
+  ("rtl_wrapped","שלום עולם العربية 123 repeated words",{"w_mm":32}),
+  ("fallback_underline","Office 平面図",{"underline":True}),
+  ("fallback_bold","Office 平面図",{"bold":True}),
+ ]
 rows=[]
 for name,text,props in cases:
  writer=QPdfWriter(str(out/(name+".original.pdf")));writer.setResolution(RENDER_DPI);writer.setPageSize(QPageSize(QSizeF(210,297),QPageSize.Unit.Millimeter));p=Observe(writer) if os.environ.get("INGETRAZO_TEXT_OBSERVER","1")=="1" else QPainter(writer);p.observed=[];p.scale(RENDER_DPI/25.4,RENDER_DPI/25.4);p.translate(20,30)

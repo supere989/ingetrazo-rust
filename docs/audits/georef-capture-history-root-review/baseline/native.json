@@ -1,0 +1,92 @@
+{
+  "first": {
+    "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community",
+    "name": "Esri World Imagery (satellite)",
+    "opacity": 1.0,
+    "patches": [
+      [
+        0.0,
+        0.0,
+        30.53570532798767,
+        30.559631645679474
+      ]
+    ],
+    "radius_m": 1200.0,
+    "source": "esri_imagery",
+    "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "visible": true,
+    "zoom": 16
+  },
+  "older_undone": {
+    "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community",
+    "name": "Esri World Imagery (satellite)",
+    "opacity": 1.0,
+    "patches": [
+      [
+        0.0,
+        0.0,
+        30.53570532798767,
+        30.559631645679474
+      ]
+    ],
+    "radius_m": 1200.0,
+    "source": "esri_imagery",
+    "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "visible": true,
+    "zoom": 16
+  },
+  "redone": {
+    "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community",
+    "name": "Esri World Imagery (satellite)",
+    "opacity": 1.0,
+    "patches": [
+      [
+        -1333.1953125,
+        -1129.09765625,
+        14780.64580078125,
+        15278.98759765625
+      ]
+    ],
+    "radius_m": 1200.0,
+    "source": "esri_imagery",
+    "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "visible": true,
+    "zoom": 14
+  },
+  "second": {
+    "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community",
+    "name": "Esri World Imagery (satellite)",
+    "opacity": 1.0,
+    "patches": [
+      [
+        -1333.1953125,
+        -1129.09765625,
+        14780.64580078125,
+        15278.98759765625
+      ]
+    ],
+    "radius_m": 1200.0,
+    "source": "esri_imagery",
+    "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "visible": true,
+    "zoom": 14
+  },
+  "undone": {
+    "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS community",
+    "name": "Esri World Imagery (satellite)",
+    "opacity": 1.0,
+    "patches": [
+      [
+        -1333.1953125,
+        -1129.09765625,
+        14780.64580078125,
+        15278.98759765625
+      ]
+    ],
+    "radius_m": 1200.0,
+    "source": "esri_imagery",
+    "url_template": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "visible": true,
+    "zoom": 14
+  }
+}

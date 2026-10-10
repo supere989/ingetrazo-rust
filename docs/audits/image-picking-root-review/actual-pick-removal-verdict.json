@@ -1,0 +1,6 @@
+{
+  "actual_native_execution_exit": 0,
+  "strict_checker_exit": 1,
+  "strict_checker_stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-image-planes-root/scripts/check-image-plane-picking.py\", line 24, in <module>\n    if __name__=='__main__':main()\n                            ~~~~^^\n  File \"/tmp/ingetrazo-image-planes-root/scripts/check-image-plane-picking.py\", line 13, in main\n    check(a,b)\n    ~~~~~^^^^^\n  File \"/tmp/ingetrazo-image-planes-root/scripts/check-image-plane-picking.py\", line 9, in check\n    if a!=b: raise AssertionError('Picking differs: '+','.join(k for k in sorted(required) if a[k]!=b[k]))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Picking differs: back_side,bare,ctrl_add,default_alias_is_unknown,degenerate_source,edge_inclusive,empty_alias_is_unknown,geometry_wins,missing_texture,nearest_not_last,shift_ctrl_existing_remove,shift_ctrl_remove,shift_toggle,tie_last,transparent_zero,unknown_layer,vertical\n",
+  "scope": "production selectable picker disabled; unchanged original corpus must reject"
+}
