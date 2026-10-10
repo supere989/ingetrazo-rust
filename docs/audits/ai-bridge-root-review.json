@@ -1,0 +1,25 @@
+{
+  "reviewed": [
+    "4825d9bd",
+    "3197ee3e",
+    "5d5b007386d0efd3c6fb5260524a3a99795f104f"
+  ],
+  "independent_evidence": {
+    "full_cases": 10,
+    "full_states": 27,
+    "complete_json_equal": true,
+    "same_checker_negative_rejections": 5
+  },
+  "integration_status": "Held for admission scheduling and redundant command copying fixes",
+  "findings": [
+    {
+      "area": "client pool",
+      "detail": "Zero-capacity try_send admits only when worker is inside recv, so a free slot can spuriously refuse a client at startup or polling boundary. Explicit slot reservation requested."
+    },
+    {
+      "area": "AddEdge command",
+      "detail": "Candidate mesh clone, undo mesh clone and full Scene history snapshot duplicate model data per command; repeated script edge additions amplify copying. Preserve source endpoint identities with bounded endpoint planning and one existing history snapshot, then command journal followup."
+    }
+  ],
+  "scope": "Source query/controller equality is established for named corpus; genuine Python execution, screenshots, broader history routing and complete atomic journal remain OPEN."
+}
