@@ -11,3 +11,11 @@ Focused standalone Rust identity tests:3PASS including exact named-instance meta
 ## Review correction
 
 The table fallback now tracks distinct required head/name bits and rejects duplicate relevant tags, even if their lengths or bytes do not match. A malformed duplicate-head/no-name collection reproduces the former false-identity risk and now refuses. PostScript lookup exposes an Option match result: only a fully inspected no-match permits metadata fallback. Read failures, malformed records, allocation errors and budget refusals propagate without a second scan. Focused standalone tests now4PASS; no native SDK claim.
+
+## Virtual-face physical resource candidate
+
+Second actual ARM run38084954180/source e427d9bd now matches CJK plus the prior four cases. Times remains a selected-font URL refusal. Retained artifact11682550622 SHA256e8ddf52be292c4051bf49d2faf99d7e02d3a3dd9f2d24fac592f428c1d875a7e records source .Times Fallback with stored TimesNewRomanPSMT physical tables, Regular OS/2/head traits, effective bold and Normal style.
+
+When selected CTFont lacks a URL, the candidate resolves stored PostScript names from its already-owned compact native SFNT through CoreText. It accepts the candidate descriptor URL only after exact head+name bytes match the selected virtual CTFont. It keeps the selected virtual CTFont for metrics/outlines/raster; the physical descriptor is only a temporary identity/resource witness. No request alias, family or file name is hardcoded. Up to16 unique identities and256KiB name metadata; no font inventory scan or full collection read. URL-bearing paths retain their current fast path.
+
+The narrow ARM Rust metadata/FFI compile passed with a minimal ttf-parser API adapter, not an actual SDK/runtime check. An initial adapter returned raw_face by value instead of the real borrowed API and failed borrow checking; this adapter failure is retained, then corrected. The source file did not need that change. Full native SDK/runtime, exact selected resource, synthesized rendering and actual pixels remain pending coordinated batch. No cloud launch or broad build from this lane.

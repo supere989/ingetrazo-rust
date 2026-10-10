@@ -1,0 +1,630 @@
+warning: fields `family`, `bold`, `italic`, and `required_chars` are never read
+ --> docs/audits/coretext-native-identity/ffi-virtual-font-check.rs:5:20
+  |
+5 | pub struct Request{family:String,bold:bool,italic:bool,required_chars:Vec<char>}
+  |            ------- ^^^^^^        ^^^^      ^^^^^^      ^^^^^^^^^^^^^^
+  |            |
+  |            fields in this struct
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `sfnt_postscript_name` is never used
+ --> docs/audits/coretext-native-identity/ffi-virtual-font-check.rs:6:32
+  |
+6 | mod paper_font_resolver{pub fn sfnt_postscript_name(_:crate::Name)->Option<String>{None}}
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `MAX_FONT_BYTES` is never used
+ --> docs/audits/coretext-native-identity/ffi-virtual-font-check.rs:7:26
+  |
+7 | mod paper_text{pub const MAX_FONT_BYTES:usize=16*1024*1024;pub struct RasterGlyph{pub left:i32,pub top:i32,pub width:usize,pub height...
+  |                          ^^^^^^^^^^^^^^
+
+warning: struct `RasterGlyph` is never constructed
+ --> docs/audits/coretext-native-identity/ffi-virtual-font-check.rs:7:71
+  |
+7 | mod paper_text{pub const MAX_FONT_BYTES:usize=16*1024*1024;pub struct RasterGlyph{pub left:i32,pub top:i32,pub width:usize,pub height...
+  |                                                                       ^^^^^^^^^^^
+
+warning: type alias `Ref` is never used
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:5:6
+  |
+5 | type Ref = *const c_void;
+  |      ^^^
+
+warning: struct `Owned` is never constructed
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:6:19
+  |
+6 | pub(crate) struct Owned(Ref);
+  |                   ^^^^^
+
+warning: associated function `new` is never used
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:8:19
+  |
+7 | impl Owned {
+  | ---------- associated function in this implementation
+8 |     pub(crate) fn new(p: Ref) -> Result<Self, String> {
+  |                   ^^^
+
+warning: struct `Point` is never constructed
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:23:19
+   |
+23 | pub(crate) struct Point {
+   |                   ^^^^^
+
+warning: struct `Size` is never constructed
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:29:8
+   |
+29 | struct Size {
+   |        ^^^^
+
+warning: struct `Rect` is never constructed
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:35:8
+   |
+35 | struct Rect {
+   |        ^^^^
+
+warning: struct `Matrix` is never constructed
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:41:8
+   |
+41 | struct Matrix {
+   |        ^^^^^^
+
+warning: struct `Element` is never constructed
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:50:8
+   |
+50 | struct Element {
+   |        ^^^^^^^
+
+warning: enum `PathOp` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:109:17
+    |
+109 | pub(crate) enum PathOp {
+    |                 ^^^^^^
+
+warning: struct `Path` is never constructed
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:116:8
+    |
+116 | struct Path {
+    |        ^^^^
+
+warning: function `path_element` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:120:15
+    |
+120 | extern "C" fn path_element(info: *mut c_void, e: *const Element) {
+    |               ^^^^^^^^^^^^
+
+warning: struct `NativeFont` is never constructed
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:162:19
+    |
+162 | pub(crate) struct NativeFont {
+    |                   ^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:170:19
+    |
+169 | impl NativeFont {
+    | --------------- associated items in this implementation
+170 |     pub(crate) fn from_raw(p: Ref, traits: u32) -> Result<Rc<Self>, String> {
+    |                   ^^^^^^^^
+...
+173 |     fn from_owned(owner: Owned, traits: u32) -> Result<Rc<Self>, String> {
+    |        ^^^^^^^^^^
+...
+326 |     pub(crate) fn metrics(&self) -> [i32; 4] {
+    |                   ^^^^^^^
+...
+337 |     pub(crate) fn decoration(&self) -> [i32; 2] {
+    |                   ^^^^^^^^^^
+...
+345 |     pub(crate) fn advance(&self, id: u32) -> Result<f64, String> {
+    |                   ^^^^^^^
+...
+357 |     pub(crate) fn outline(&self, id: u32) -> Result<Vec<PathOp>, String> {
+    |                   ^^^^^^^
+...
+379 |     pub(crate) fn raster(
+    |                   ^^^^^^
+
+warning: function `CFRelease` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:56:8
+   |
+56 |     fn CFRelease(p: Ref);
+   |        ^^^^^^^^^
+
+warning: function `CFDataGetLength` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:57:8
+   |
+57 |     fn CFDataGetLength(p: Ref) -> isize;
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `CFDataGetBytePtr` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:58:8
+   |
+58 |     fn CFDataGetBytePtr(p: Ref) -> *const u8;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `CFDictionaryGetCount` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:59:8
+   |
+59 |     fn CFDictionaryGetCount(p: Ref) -> isize;
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFDictionaryGetKeysAndValues` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:60:8
+   |
+60 |     fn CFDictionaryGetKeysAndValues(p: Ref, keys: *mut Ref, values: *mut Ref);
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFNumberGetValue` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:61:8
+   |
+61 |     fn CFNumberGetValue(p: Ref, kind: i32, out: *mut c_void) -> u8;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyTable` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:65:8
+   |
+65 |     fn CTFontCopyTable(f: Ref, tag: u32, options: u32) -> Ref;
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyVariation` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:66:8
+   |
+66 |     fn CTFontCopyVariation(f: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetMatrix` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:67:8
+   |
+67 |     fn CTFontGetMatrix(f: Ref) -> Matrix;
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetGlyphCount` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:68:8
+   |
+68 |     fn CTFontGetGlyphCount(f: Ref) -> isize;
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetAdvancesForGlyphs` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:69:8
+   |
+69 |     fn CTFontGetAdvancesForGlyphs(f: Ref, o: u32, g: *const u16, a: *mut Size, n: isize) -> f64;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetBoundingRectsForGlyphs` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:70:8
+   |
+70 |     fn CTFontGetBoundingRectsForGlyphs(
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCreatePathForGlyph` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:77:8
+   |
+77 |     fn CTFontCreatePathForGlyph(f: Ref, g: u16, m: *const Matrix) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetAscent` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:78:8
+   |
+78 |     fn CTFontGetAscent(f: Ref) -> f64;
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetDescent` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:79:8
+   |
+79 |     fn CTFontGetDescent(f: Ref) -> f64;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetLeading` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:80:8
+   |
+80 |     fn CTFontGetLeading(f: Ref) -> f64;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetCapHeight` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:81:8
+   |
+81 |     fn CTFontGetCapHeight(f: Ref) -> f64;
+   |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetUnderlineThickness` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:82:8
+   |
+82 |     fn CTFontGetUnderlineThickness(f: Ref) -> f64;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetUnderlinePosition` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:83:8
+   |
+83 |     fn CTFontGetUnderlinePosition(f: Ref) -> f64;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontDrawGlyphs` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:84:8
+   |
+84 |     fn CTFontDrawGlyphs(f: Ref, g: *const u16, p: *const Point, n: usize, c: Ref);
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `CGPathApply` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:88:8
+   |
+88 |     fn CGPathApply(p: Ref, info: *mut c_void, callback: extern "C" fn(*mut c_void, *const Element));
+   |        ^^^^^^^^^^^
+
+warning: function `CGPathRelease` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:89:8
+   |
+89 |     fn CGPathRelease(p: Ref);
+   |        ^^^^^^^^^^^^^
+
+warning: function `CGColorSpaceCreateDeviceRGB` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:90:8
+   |
+90 |     fn CGColorSpaceCreateDeviceRGB() -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGColorSpaceRelease` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:91:8
+   |
+91 |     fn CGColorSpaceRelease(p: Ref);
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGBitmapContextCreate` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:92:8
+   |
+92 |     fn CGBitmapContextCreate(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGContextRelease` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:101:8
+    |
+101 |     fn CGContextRelease(p: Ref);
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `CGContextSetShouldAntialias` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:102:8
+    |
+102 |     fn CGContextSetShouldAntialias(p: Ref, v: bool);
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGContextSetShouldSmoothFonts` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:103:8
+    |
+103 |     fn CGContextSetShouldSmoothFonts(p: Ref, v: bool);
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGContextSetRGBFillColor` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:104:8
+    |
+104 |     fn CGContextSetRGBFillColor(p: Ref, r: f64, g: f64, b: f64, a: f64);
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGContextSetTextMatrix` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:105:8
+    |
+105 |     fn CGContextSetTextMatrix(p: Ref, m: Matrix);
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CGContextSetTextPosition` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_coretext_glyph.rs:106:8
+    |
+106 |     fn CGContextSetTextPosition(p: Ref, x: f64, y: f64);
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `read_at` is never used
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_sfnt.rs:4:4
+  |
+4 | fn read_at(file: &mut (impl Read + Seek), offset: u64, n: usize) -> Result<Vec<u8>, String> {
+  |    ^^^^^^^
+
+warning: function `u16_at` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_sfnt.rs:17:4
+   |
+17 | fn u16_at(b: &[u8], n: usize) -> Result<u16, String> {
+   |    ^^^^^^
+
+warning: function `u32_at` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_sfnt.rs:25:4
+   |
+25 | fn u32_at(b: &[u8], n: usize) -> Result<u32, String> {
+   |    ^^^^^^
+
+warning: function `collection_index` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_sfnt.rs:33:15
+   |
+33 | pub(crate) fn collection_index(file: &mut (impl Read + Seek), name: &str) -> Result<u32, String> {
+   |               ^^^^^^^^^^^^^^^^
+
+warning: function `collection_index_match` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_sfnt.rs:39:15
+   |
+39 | pub(crate) fn collection_index_match(
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `collection_index_by_tables` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_sfnt.rs:115:15
+    |
+115 | pub(crate) fn collection_index_by_tables(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type alias `Ref` is never used
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:5:6
+  |
+5 | type Ref = *const c_void;
+  |      ^^^
+
+warning: struct `Owned` is never constructed
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:6:19
+  |
+6 | pub(crate) struct Owned(pub(crate) Ref);
+  |                   ^^^^^
+
+warning: associated function `new` is never used
+ --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:8:19
+  |
+7 | impl Owned {
+  | ---------- associated function in this implementation
+8 |     pub(crate) fn new(p: Ref) -> Result<Self, String> {
+  |                   ^^^
+
+warning: constant `UTF8` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:70:7
+   |
+70 | const UTF8: u32 = 0x08000100;
+   |       ^^^^
+
+warning: function `text` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:71:15
+   |
+71 | pub(crate) fn text(s: Ref) -> Result<String, String> {
+   |               ^^^^
+
+warning: function `physical_url` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:91:4
+   |
+91 | fn physical_url(font: Ref, bytes: &[u8]) -> Result<Owned, String> {
+   |    ^^^^^^^^^^^^
+
+warning: function `covers` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:163:4
+    |
+163 | fn covers(font: Ref, chars: &[char]) -> Result<bool, String> {
+    |    ^^^^^^
+
+warning: function `family_name` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:169:4
+    |
+169 | fn family_name(descriptor: Ref) -> Result<String, String> {
+    |    ^^^^^^^^^^^
+
+warning: function `match_family` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:183:4
+    |
+183 | fn match_family(family: &str, request: &Request) -> Result<Option<Owned>, String> {
+    |    ^^^^^^^^^^^^
+
+warning: function `match_font` is never used
+   --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:285:15
+    |
+285 | pub(super) fn match_font(
+    |               ^^^^^^^^^^
+
+warning: function `CFRelease` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:23:8
+   |
+23 |     fn CFRelease(p: Ref);
+   |        ^^^^^^^^^
+
+warning: function `CFDataGetLength` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:24:8
+   |
+24 |     fn CFDataGetLength(p: Ref) -> isize;
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `CFDataGetBytePtr` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:25:8
+   |
+25 |     fn CFDataGetBytePtr(p: Ref) -> *const u8;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `CFStringCreateWithBytes` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:26:8
+   |
+26 |     fn CFStringCreateWithBytes(a: Ref, b: *const u8, n: isize, encoding: u32, external: u8) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFStringGetLength` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:27:8
+   |
+27 |     fn CFStringGetLength(s: Ref) -> isize;
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `CFStringGetMaximumSizeForEncoding` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:28:8
+   |
+28 |     fn CFStringGetMaximumSizeForEncoding(n: isize, e: u32) -> isize;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFStringGetCString` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:29:8
+   |
+29 |     fn CFStringGetCString(s: Ref, b: *mut i8, n: isize, e: u32) -> u8;
+   |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `CFURLGetFileSystemRepresentation` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:30:8
+   |
+30 |     fn CFURLGetFileSystemRepresentation(u: Ref, absolute: u8, b: *mut u8, n: isize) -> u8;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFArrayGetCount` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:31:8
+   |
+31 |     fn CFArrayGetCount(a: Ref) -> isize;
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `CFArrayGetValueAtIndex` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:32:8
+   |
+32 |     fn CFArrayGetValueAtIndex(a: Ref, i: isize) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFCharacterSetIsLongCharacterMember` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:33:8
+   |
+33 |     fn CFCharacterSetIsLongCharacterMember(s: Ref, c: u32) -> u8;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFLocaleCopyPreferredLanguages` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:34:8
+   |
+34 |     fn CFLocaleCopyPreferredLanguages() -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFDictionaryCreate` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:35:8
+   |
+35 |     fn CFDictionaryCreate(
+   |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `CFDictionaryGetValue` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:43:8
+   |
+43 |     fn CFDictionaryGetValue(d: Ref, key: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CFNumberGetValue` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:44:8
+   |
+44 |     fn CFNumberGetValue(n: Ref, kind: i32, out: *mut c_void) -> u8;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: static `kCFTypeDictionaryKeyCallBacks` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:45:12
+   |
+45 |     static kCFTypeDictionaryKeyCallBacks: u8;
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: static `kCFTypeDictionaryValueCallBacks` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:46:12
+   |
+46 |     static kCFTypeDictionaryValueCallBacks: u8;
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCreateWithName` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:50:8
+   |
+50 |     fn CTFontCreateWithName(n: Ref, size: f64, matrix: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontGetSymbolicTraits` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:51:8
+   |
+51 |     fn CTFontGetSymbolicTraits(f: Ref) -> u32;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyCharacterSet` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:52:8
+   |
+52 |     fn CTFontCopyCharacterSet(f: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyDefaultCascadeListForLanguages` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:53:8
+   |
+53 |     fn CTFontCopyDefaultCascadeListForLanguages(f: Ref, languages: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCreateWithFontDescriptor` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:54:8
+   |
+54 |     fn CTFontCreateWithFontDescriptor(d: Ref, size: f64, matrix: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyAttribute` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:55:8
+   |
+55 |     fn CTFontCopyAttribute(f: Ref, key: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyPostScriptName` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:56:8
+   |
+56 |     fn CTFontCopyPostScriptName(f: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyFamilyName` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:57:8
+   |
+57 |     fn CTFontCopyFamilyName(f: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontCopyTable` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:58:8
+   |
+58 |     fn CTFontCopyTable(f: Ref, tag: u32, options: u32) -> Ref;
+   |        ^^^^^^^^^^^^^^^
+
+warning: static `kCTFontURLAttribute` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:59:12
+   |
+59 |     static kCTFontURLAttribute: Ref;
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: static `kCTFontFamilyNameAttribute` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:60:12
+   |
+60 |     static kCTFontFamilyNameAttribute: Ref;
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: static `kCTFontTraitsAttribute` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:61:12
+   |
+61 |     static kCTFontTraitsAttribute: Ref;
+   |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: static `kCTFontWeightTrait` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:62:12
+   |
+62 |     static kCTFontWeightTrait: Ref;
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: static `kCTFontStyleNameAttribute` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:63:12
+   |
+63 |     static kCTFontStyleNameAttribute: Ref;
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: static `kCTFontSlantTrait` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:64:12
+   |
+64 |     static kCTFontSlantTrait: Ref;
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontManagerCopyAvailableFontFamilyNames` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:65:8
+   |
+65 |     fn CTFontManagerCopyAvailableFontFamilyNames() -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontDescriptorCreateWithAttributes` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:66:8
+   |
+66 |     fn CTFontDescriptorCreateWithAttributes(a: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontDescriptorCreateMatchingFontDescriptors` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:67:8
+   |
+67 |     fn CTFontDescriptorCreateMatchingFontDescriptors(d: Ref, mandatory: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CTFontDescriptorCopyAttribute` is never used
+  --> /tmp/ingetrazo-coretext-native-identity/crates/ingetrazo-formats/src/paper_font_coretext.rs:68:8
+   |
+68 |     fn CTFontDescriptorCopyAttribute(d: Ref, key: Ref) -> Ref;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: 100 warnings emitted
+

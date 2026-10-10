@@ -21,6 +21,8 @@ impl Drop for Owned {
 #[link(name = "CoreFoundation", kind = "framework")]
 unsafe extern "C" {
     fn CFRelease(p: Ref);
+    fn CFDataGetLength(p: Ref) -> isize;
+    fn CFDataGetBytePtr(p: Ref) -> *const u8;
     fn CFStringCreateWithBytes(a: Ref, b: *const u8, n: isize, encoding: u32, external: u8) -> Ref;
     fn CFStringGetLength(s: Ref) -> isize;
     fn CFStringGetMaximumSizeForEncoding(n: isize, e: u32) -> isize;
@@ -53,6 +55,7 @@ unsafe extern "C" {
     fn CTFontCopyAttribute(f: Ref, key: Ref) -> Ref;
     fn CTFontCopyPostScriptName(f: Ref) -> Ref;
     fn CTFontCopyFamilyName(f: Ref) -> Ref;
+    fn CTFontCopyTable(f: Ref, tag: u32, options: u32) -> Ref;
     static kCTFontURLAttribute: Ref;
     static kCTFontFamilyNameAttribute: Ref;
     static kCTFontTraitsAttribute: Ref;
@@ -81,6 +84,81 @@ pub(crate) fn text(s: Ref) -> Result<String, String> {
             .ok_or("Invalid CoreText name")?;
         String::from_utf8(b[..end].to_vec()).map_err(|_| "Invalid CoreText UTF-8 name".into())
     }
+}
+/// A virtual cascade face may expose native tables without a file URL. Resolve
+/// their stored PostScript identities through CoreText, then verify exact metadata
+/// before borrowing a physical descriptor URL. Keep the original CTFont for glyphs.
+fn physical_url(font: Ref, bytes: &[u8]) -> Result<Owned, String> {
+    let url = unsafe { CTFontCopyAttribute(font, kCTFontURLAttribute) };
+    if !url.is_null() {
+        return Owned::new(url);
+    }
+    let face = ttf_parser::Face::parse(bytes, 0)
+        .map_err(|e| format!("Virtual font metadata parse: {e:?}"))?;
+    let head = face
+        .raw_face()
+        .table(ttf_parser::Tag::from_bytes(b"head"))
+        .ok_or("Virtual font head unavailable")?;
+    let names = face
+        .raw_face()
+        .table(ttf_parser::Tag::from_bytes(b"name"))
+        .ok_or("Virtual font names unavailable")?;
+    if head.len() != 54 || names.len() > 256 * 1024 {
+        return Err("Virtual font physical identity budget exceeded".into());
+    }
+    let mut seen = Vec::new();
+    for name in face
+        .names()
+        .into_iter()
+        .filter_map(crate::paper_font_resolver::sfnt_postscript_name)
+    {
+        if seen.contains(&name) {
+            continue;
+        }
+        if seen.len() >= 16 {
+            return Err("Virtual font identity candidate budget exceeded".into());
+        }
+        seen.push(name.clone());
+        let cf = Owned::new(unsafe {
+            CFStringCreateWithBytes(
+                std::ptr::null(),
+                name.as_ptr(),
+                name.len() as isize,
+                UTF8,
+                0,
+            )
+        })?;
+        let candidate = Owned::new(unsafe { CTFontCreateWithName(cf.0, 100., std::ptr::null()) })?;
+        let mut exact = true;
+        for (tag, expected) in [(b"head", head), (b"name", names)] {
+            let table = unsafe { CTFontCopyTable(candidate.0, u32::from_be_bytes(*tag), 0) };
+            if table.is_null() {
+                exact = false;
+                break;
+            }
+            let table = Owned::new(table)?;
+            let length = unsafe { CFDataGetLength(table.0) };
+            if usize::try_from(length).ok() != Some(expected.len()) {
+                exact = false;
+                break;
+            }
+            let ptr = unsafe { CFDataGetBytePtr(table.0) };
+            if ptr.is_null() {
+                return Err("Invalid virtual font identity table pointer".into());
+            }
+            if unsafe { std::slice::from_raw_parts(ptr, expected.len()) } != expected {
+                exact = false;
+                break;
+            }
+        }
+        if exact {
+            let url = unsafe { CTFontCopyAttribute(candidate.0, kCTFontURLAttribute) };
+            if !url.is_null() {
+                return Owned::new(url);
+            }
+        }
+    }
+    Err("CoreText virtual font has no exact physical metadata URL".into())
 }
 fn covers(font: Ref, chars: &[char]) -> Result<bool, String> {
     let set = Owned::new(unsafe { CTFontCopyCharacterSet(font) })?;
@@ -276,7 +354,11 @@ pub(super) fn match_font(
         }
         let selected =
             selected.ok_or("No source-style native fallback covers the requested characters")?;
-        let url = Owned::new(CTFontCopyAttribute(selected.0, kCTFontURLAttribute))
+        let ptr = selected.0;
+        std::mem::forget(selected);
+        let font =
+            crate::paper_coretext_glyph::NativeFont::from_raw(ptr, CTFontGetSymbolicTraits(ptr))?;
+        let url = physical_url(ptr, &font.bytes)
             .map_err(|e| format!("CoreText selected file URL for {family:?}: {e}"))?;
         let mut path = [0u8; 4097];
         if CFURLGetFileSystemRepresentation(url.0, 1, path.as_mut_ptr(), path.len() as isize) == 0 {
@@ -288,15 +370,11 @@ pub(super) fn match_font(
             .ok_or("CoreText font path budget exceeded")?;
         use std::os::unix::ffi::OsStrExt;
         let path = PathBuf::from(std::ffi::OsStr::from_bytes(&path[..len]));
-        let postscript = Owned::new(CTFontCopyPostScriptName(selected.0))?;
+        let postscript = Owned::new(CTFontCopyPostScriptName(ptr))?;
         let postscript = text(postscript.0)?;
         // Native CTFont retains the selected instance. Full TTC bytes are never read.
         let mut file = std::fs::File::open(&path)
             .map_err(|e| format!("CoreText font identity file unavailable: {e}"))?;
-        let ptr = selected.0;
-        std::mem::forget(selected);
-        let font =
-            crate::paper_coretext_glyph::NativeFont::from_raw(ptr, CTFontGetSymbolicTraits(ptr))?;
         let index = match crate::paper_font_sfnt::collection_index_match(&mut file, &postscript)? {
             Some(index) => index,
             None => {
