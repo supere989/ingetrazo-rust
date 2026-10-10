@@ -1,9 +1,9 @@
 //! Cold resize preparation controls; no fake Vulkan return values.
 use std::{collections::BTreeMap,sync::{Arc,Mutex}};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
-pub enum Stage {BeforeCreate,ImageView(usize),RenderPass,Framebuffer(usize),EguiPipeline,CadPipeline,Sync,BeforeCommit}
+pub enum Stage {StartupCommand,StartupSwapchain,StartupSync,StartupRenderer,BeforeCreate,ImageView(usize),RenderPass,Framebuffer(usize),EguiPipeline,CadPipeline,Sync,BeforeCommit}
 #[derive(Clone,Copy,Debug,PartialEq,Eq,PartialOrd,Ord,serde::Serialize)]
-pub enum Kind {Swapchain,ImageView,RenderPass,Framebuffer,EguiPipeline,CadPipeline,CadPool,Semaphore,PresentFence}
+pub enum Kind {CommandBuffer,AcquireSemaphore,GraphicsFence,Swapchain,ImageView,RenderPass,Framebuffer,EguiPipeline,CadPipeline,CadPool,Semaphore,PresentFence}
 #[derive(Clone,Default,Debug,PartialEq,Eq,serde::Serialize)]
 pub struct Audit {pub created:BTreeMap<Kind,u64>,pub destroyed:BTreeMap<Kind,u64>}
 #[derive(Clone,Default)]
@@ -37,5 +37,21 @@ impl<T> Drop for Tracked<T>{fn drop(&mut self){if let Some(value)=self.value.tak
   let control=Control{cancel:Some(Stage::Framebuffer(1)),audit:None};
   assert!(control.checkpoint(Stage::RenderPass).is_ok());
   assert!(control.checkpoint(Stage::Framebuffer(1)).unwrap_err().starts_with("Engineering resize cancellation"));
+ }
+}
+
+/// Driver result is retained until admission policy is decided, never string-matched.
+#[derive(Debug)] pub(crate) enum PrepareError{Vulkan(ash::vk::Result),Other(String)}
+impl PrepareError{pub fn device_lost(&self)->bool{matches!(self,Self::Vulkan(ash::vk::Result::ERROR_DEVICE_LOST))}}
+impl From<ash::vk::Result> for PrepareError{fn from(value:ash::vk::Result)->Self{Self::Vulkan(value)}}
+impl From<&str> for PrepareError{fn from(value:&str)->Self{Self::Other(value.into())}}
+impl From<String> for PrepareError{fn from(value:String)->Self{Self::Other(value)}}
+impl std::fmt::Display for PrepareError{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{match self{Self::Vulkan(v)=>write!(f,"{v}"),Self::Other(v)=>write!(f,"{v}")}}}
+impl std::error::Error for PrepareError{}
+#[cfg(test)]mod error_tests{
+ use super::*;
+ #[test]fn typed_loss_refuses_but_memory_pressure_and_opaque_text_do_not(){
+  assert!(PrepareError::from(ash::vk::Result::ERROR_DEVICE_LOST).device_lost());
+  for error in [PrepareError::from(ash::vk::Result::ERROR_OUT_OF_DEVICE_MEMORY),PrepareError::from(ash::vk::Result::ERROR_OUT_OF_HOST_MEMORY),PrepareError::Other("ERROR_DEVICE_LOST".into())]{assert!(!error.device_lost());}
  }
 }

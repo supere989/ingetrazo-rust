@@ -56,10 +56,11 @@ pub fn run_app<A: App>(initial_file: Option<std::path::PathBuf>) -> Result<(), B
         app: None,
         egui_app: None,
         initial_file,
+        initialization_error:None,
     };
 
     event_loop.run_app(&mut app)?;
-
+    if let Some(error)=app.initialization_error{return Err(error.into());}
     Ok(())
 }
 
@@ -70,12 +71,13 @@ struct AppWrapper<A: App> {
     app: Option<System>,
     egui_app: Option<A>,
     initial_file: Option<std::path::PathBuf>,
+    initialization_error:Option<String>,
 }
 
 impl<A: App> ApplicationHandler for AppWrapper<A> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = create_window(self.title, event_loop).unwrap();
-        let mut app = System::new(self.title, &window).unwrap();
+        let window = match create_window(self.title,event_loop){Ok(window)=>window,Err(error)=>{self.initialization_error=Some(error.to_string());event_loop.exit();return;}};
+        let mut app = match System::new(self.title,&window){Ok(system)=>system,Err(error)=>{self.initialization_error=Some(error.to_string());event_loop.exit();return;}};
         let proxy=self.proxy.clone();
         app.egui_ctx.set_request_repaint_callback(move |info| { if info.delay.is_zero() { let _=proxy.send_event(()); } });
         let egui_app = A::new(&mut app, self.initial_file.take());
@@ -143,10 +145,25 @@ pub struct System {
 
 impl System {
     pub fn new(title: &str, window: &Window) -> Result<Self, Box<dyn Error>> {
+        Self::new_controlled(title,window,&resize::Control::default())
+    }
+    /// Cold unsubmitted startup control; successful actual owners must unwind.
+    pub fn verify_startup_cancellation_for_probe(title:&str,window:&Window,stage:resize::Stage)->Result<resize::Audit,String>{
+        let audit=std::sync::Arc::new(std::sync::Mutex::new(resize::Audit::default()));
+        match Self::new_controlled(title,window,&resize::Control{cancel:Some(stage),audit:Some(audit.clone())}){
+            Err(error) if error.to_string().starts_with("Engineering resize cancellation")=>{},
+            Err(error)=>return Err(error.to_string()),Ok(_)=>return Err("Expected startup cancellation".into()),
+        }
+        let observed=audit.lock().map_err(|_|"Audit lock poisoned")?.clone();
+        if observed.created!=observed.destroyed{return Err(format!("Unsubmitted startup owner leak: {observed:?}"));}
+        Ok(observed)
+    }
+    fn new_controlled(title:&str,window:&Window,control:&resize::Control)->Result<Self,Box<dyn Error>>{
         log::info!("Create application");
 
         let vulkan_context = VulkanContext::new(&window, title)?;
 
+        let mut startup=UnpublishedStartup{device:vulkan_context.device.clone(),pool:vulkan_context.command_pool,command:None,acquire:None,fence:None,control:control.clone()};
         let command_buffer = {
             let allocate_info = vk::CommandBufferAllocateInfo::default()
                 .command_pool(vulkan_context.command_pool)
@@ -160,7 +177,12 @@ impl System {
             }
         };
 
-        let swapchain = Swapchain::new(&vulkan_context)?;
+        startup.command=Some(command_buffer);control.created(resize::Kind::CommandBuffer,1);control.checkpoint(resize::Stage::StartupCommand)?;
+        let mut retired=false;
+        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+        let mut pending_swapchain=Swapchain::build(&vulkan_context,integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
+        control.checkpoint(resize::Stage::StartupSwapchain)?;
+        let swapchain=pending_swapchain.value.as_ref().unwrap();
 
         // Semaphore use for presentation
         let image_available_semaphore = {
@@ -171,13 +193,17 @@ impl System {
                     .create_semaphore(&semaphore_info, None)?
             }
         };
-        let render_finished_semaphores = create_present_semaphores(&vulkan_context.device,swapchain.images.len())?;
-        let present_fences=create_present_fences(&vulkan_context,swapchain.images.len())?;
+        startup.acquire=Some(image_available_semaphore);control.created(resize::Kind::AcquireSemaphore,1);
+        let mut pending_sync=UnpublishedSync{device:vulkan_context.device.clone(),semaphores:create_present_semaphores(&vulkan_context.device,swapchain.images.len())?,present_fences:Vec::new(),control:control.clone()};
+        control.created(resize::Kind::Semaphore,pending_sync.semaphores.len()as u64);
+        pending_sync.present_fences=create_present_fences(&vulkan_context,swapchain.images.len())?;
+        control.created(resize::Kind::PresentFence,pending_sync.present_fences.len()as u64);
         let fence = {
             let fence_info = vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED);
             unsafe { vulkan_context.device.create_fence(&fence_info, None)? }
         };
 
+        startup.fence=Some(fence);control.created(resize::Kind::GraphicsFence,1);control.checkpoint(resize::Stage::StartupSync)?;
         let egui_ctx = Context::default();
 
         let egui_winit = State::new(
@@ -203,13 +229,17 @@ impl System {
             memory_budget.clone(),
         )?;
 
+        let mut renderer=resize::Tracked::new(renderer,control,vec![(resize::Kind::EguiPipeline,1)]);
+        control.checkpoint(resize::Stage::StartupRenderer)?;
+        // Nothing has been submitted. Move every owner only after all constructors succeed.
+        startup.command=None;startup.acquire=None;startup.fence=None;
         Ok(Self {
             vulkan_context,
             command_buffer,
-            swapchain,
+            swapchain:pending_swapchain.take(),
             image_available_semaphore,
-            render_finished_semaphores,
-            present_fences,presented_without_fence:false,exited:false,
+            render_finished_semaphores:std::mem::take(&mut pending_sync.semaphores),
+            present_fences:std::mem::take(&mut pending_sync.present_fences),presented_without_fence:false,exited:false,
             fence,
 
             run: true,
@@ -217,7 +247,7 @@ impl System {
 
             egui_ctx,
             egui_winit,
-            renderer:std::mem::ManuallyDrop::new(renderer),
+            renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
             world:None,cad2d:None,draw_serial:0,
             textures_to_free: None,
@@ -478,19 +508,23 @@ impl System {
         Ok(observed)
     }
 
+    fn report_prepare_error(&self,error:resize::PrepareError)->String{
+        if error.device_lost(){self.vulkan_context.lifetime.quarantine();}
+        error.to_string()
+    }
     fn resize_transaction(&mut self)->Result<(),String>{self.resize_transaction_controlled(&resize::Control::default())}
     fn resize_transaction_controlled(&mut self,control:&resize::Control)->Result<(),String>{
         if !self.wait_gpu_completion(){return Err("Swapchain completion unknown; owners quarantined".into());}
         control.checkpoint(resize::Stage::BeforeCreate)?;
-        let mut next=self.swapchain.prepare_replacement(&self.vulkan_context,control).map_err(|e|e.to_string())?;
+        let mut next=self.swapchain.prepare_replacement(&self.vulkan_context,control).map_err(|e|{if let Some(result)=e.downcast_ref::<vk::Result>(){self.report_prepare_error((*result).into())}else{e.to_string()}})?;
         let candidate=next.value.as_ref().unwrap();
-        let mut egui_pipeline=resize::Tracked::new(self.renderer.prepare_render_pass(candidate.render_pass).map_err(|e|e.to_string())?,control,vec![(resize::Kind::EguiPipeline,1)]);
+        let mut egui_pipeline=resize::Tracked::new(self.renderer.prepare_render_pass(candidate.render_pass).map_err(|e|match e{egui_ash_renderer::RendererError::Vulkan(v)=>self.report_prepare_error(v.into()),e=>e.to_string()})?,control,vec![(resize::Kind::EguiPipeline,1)]);
         control.checkpoint(resize::Stage::EguiPipeline)?;
-        let mut cad_pipeline=if let Some(cad)=&self.cad2d{Some(resize::Tracked::new(cad.prepare_render_pass(candidate.render_pass,&candidate.image_views)?,control,vec![(resize::Kind::CadPipeline,1),(resize::Kind::CadPool,u64::from(candidate.integer_cad))]))}else{None};
+        let mut cad_pipeline=if let Some(cad)=&self.cad2d{Some(resize::Tracked::new(cad.prepare_render_pass(candidate.render_pass,&candidate.image_views).map_err(|e|self.report_prepare_error(e))?,control,vec![(resize::Kind::CadPipeline,1),(resize::Kind::CadPool,u64::from(candidate.integer_cad))]))}else{None};
         control.checkpoint(resize::Stage::CadPipeline)?;
-        let mut sync=UnpublishedSync{device:self.vulkan_context.device.clone(),semaphores:create_present_semaphores(&self.vulkan_context.device,candidate.images.len()).map_err(|e|e.to_string())?,present_fences:Vec::new(),control:control.clone()};
+        let mut sync=UnpublishedSync{device:self.vulkan_context.device.clone(),semaphores:create_present_semaphores(&self.vulkan_context.device,candidate.images.len()).map_err(|e|self.report_prepare_error(e.into()))?,present_fences:Vec::new(),control:control.clone()};
         control.created(resize::Kind::Semaphore,sync.semaphores.len()as u64);
-        sync.present_fences=create_present_fences(&self.vulkan_context,candidate.images.len()).map_err(|e|e.to_string())?;
+        sync.present_fences=create_present_fences(&self.vulkan_context,candidate.images.len()).map_err(|e|self.report_prepare_error(e.into()))?;
         control.created(resize::Kind::PresentFence,sync.present_fences.len()as u64);
         control.checkpoint(resize::Stage::Sync)?;control.checkpoint(resize::Stage::BeforeCommit)?;
         // CAD lock acquisition is the last fallible publication step. All remaining
@@ -540,6 +574,14 @@ impl System {
 }
 
 impl Drop for System {fn drop(&mut self){self.clean_gpu();if !self.exited{eprintln!("Retaining quarantined egui renderer and WSI resources");self.vulkan_context.lifetime.retain(self.memory_budget.clone());self.vulkan_context.lifetime.retain(unsafe{std::mem::ManuallyDrop::take(&mut self.renderer)});self.vulkan_context.lifetime.retain((self.swapchain.loader.clone(),self.swapchain.khr,self.swapchain.render_pass,std::mem::take(&mut self.swapchain.framebuffers),std::mem::take(&mut self.swapchain.image_views),std::mem::take(&mut self.render_finished_semaphores),std::mem::take(&mut self.present_fences),self.image_available_semaphore,self.fence,self.command_buffer));}}}
+// Startup has no submitted work: reverse local drop order releases these
+// handles before VulkanContext destroys the device. Published System owns them.
+struct UnpublishedStartup{device:Device,pool:vk::CommandPool,command:Option<vk::CommandBuffer>,acquire:Option<vk::Semaphore>,fence:Option<vk::Fence>,control:resize::Control}
+impl Drop for UnpublishedStartup{fn drop(&mut self){unsafe{
+ if let Some(fence)=self.fence.take(){self.device.destroy_fence(fence,None);self.control.destroyed(resize::Kind::GraphicsFence,1);}
+ if let Some(semaphore)=self.acquire.take(){self.device.destroy_semaphore(semaphore,None);self.control.destroyed(resize::Kind::AcquireSemaphore,1);}
+ if let Some(command)=self.command.take(){self.device.free_command_buffers(self.pool,&[command]);self.control.destroyed(resize::Kind::CommandBuffer,1);}
+}}}
 struct UnpublishedSync{device:Device,semaphores:Vec<vk::Semaphore>,present_fences:Vec<PresentFence>,control:resize::Control}
 impl Drop for UnpublishedSync{fn drop(&mut self){let sem=self.semaphores.len();let fences=self.present_fences.len();unsafe{for semaphore in self.semaphores.drain(..){self.device.destroy_semaphore(semaphore,None);}for fence in self.present_fences.drain(..){self.device.destroy_fence(fence.fence,None);}}self.control.destroyed(resize::Kind::Semaphore,sem as u64);self.control.destroyed(resize::Kind::PresentFence,fences as u64);}}
 
@@ -689,11 +731,6 @@ impl Drop for UnpublishedSwapchain{fn drop(&mut self){if let Some(value)=&mut se
 }}}
 
 impl Swapchain {
-    fn new(context:&VulkanContext)->Result<Self,Box<dyn Error>>{
-        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
-        let mut unused=false;
-        Ok(Self::build(context,integer,vk::SwapchainKHR::null(),&mut unused,None,&resize::Control::default())?.take())
-    }
     fn build(context:&VulkanContext,integer:bool,old:vk::SwapchainKHR,retired:&mut bool,format:Option<vk::Format>,control:&resize::Control)->Result<UnpublishedSwapchain,Box<dyn Error>>{
         let mut pending=create_vulkan_swapchain(context,integer,old,retired,format,control)?;
         let value=pending.value.as_mut().unwrap();

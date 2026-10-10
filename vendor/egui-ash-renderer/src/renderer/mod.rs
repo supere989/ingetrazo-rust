@@ -238,11 +238,18 @@ impl Renderer {
             )));
         }
 
-        // Descriptor set layout
+        // Every startup handle is unsubmitted; guard it before the next driver call.
+        struct Startup{device:Device,set_layout:vk::DescriptorSetLayout,layout:vk::PipelineLayout,pipeline:vk::Pipeline,pool:vk::DescriptorPool}
+        impl Drop for Startup{fn drop(&mut self){unsafe{
+            if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None);}
+            if self.pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.pipeline,None);}
+            if self.layout!=vk::PipelineLayout::null(){self.device.destroy_pipeline_layout(self.layout,None);}
+            if self.set_layout!=vk::DescriptorSetLayout::null(){self.device.destroy_descriptor_set_layout(self.set_layout,None);}
+        }}}
         let descriptor_set_layout = create_vulkan_descriptor_set_layout(&device)?;
-
-        // Pipeline and layout
+        let mut pending=Startup{device:device.clone(),set_layout:descriptor_set_layout,layout:vk::PipelineLayout::null(),pipeline:vk::Pipeline::null(),pool:vk::DescriptorPool::null()};
         let pipeline_layout = create_vulkan_pipeline_layout(&device, descriptor_set_layout)?;
+        pending.layout=pipeline_layout;
         let pipeline = create_vulkan_pipeline(
             &device,
             pipeline_layout,
@@ -253,13 +260,15 @@ impl Renderer {
             options,
         )?;
 
-        // Descriptor pool
+        pending.pipeline=pipeline;
         let descriptor_pool = create_vulkan_descriptor_pool(&device, MAX_TEXTURE_COUNT)?;
+        pending.pool=descriptor_pool;
 
         // Textures
         let managed_textures = HashMap::new();
         let textures = HashMap::new();
 
+        pending.set_layout=vk::DescriptorSetLayout::null();pending.layout=vk::PipelineLayout::null();pending.pipeline=vk::Pipeline::null();pending.pool=vk::DescriptorPool::null();
         Ok(Self {
             device,
             allocator,
