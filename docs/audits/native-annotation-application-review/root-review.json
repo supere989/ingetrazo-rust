@@ -1,6 +1,6 @@
 {
   "reviewed_source": "f21b94fb466d49fe1564a558e0a4867c689f163d",
-  "verdict": "HOLD_PENDING_CORRECTION_AND_RUNTIME_EVIDENCE",
+  "verdict": "SOURCE_CORRECTIONS_INTEGRATED_PENDING_MERGED_RUNTIME",
   "findings": [
     {
       "area": "cache invalidation",
@@ -19,7 +19,15 @@
     "palette_intersection": "Worker reports exact software GPU full image with two resizes; root has not independently reviewed artifacts.",
     "source_arrow": "Worker reports 217 differing pixels; strict parity remains failed."
   },
-  "integration": "Not cherry-picked into root integration; independent publication evidence and corrections pending.",
+  "integration": "Reviewed chain through5d819a41 integrated as5376881c; ordinary immutable-admission correction69a27452 retained. No public push or production-default activation.",
   "scope": "Source review only. No feature or release gate promoted.",
-  "followup": "Worker proposes post-preparation resolution of an ordered annotation slot to the currently admitted callback; implementation and actual application acceptance pending."
+  "followup": "Worker proposes post-preparation resolution of an ordered annotation slot to the currently admitted callback; implementation and actual application acceptance pending.",
+  "corrections": [
+    "World preparation errors defer candidate submission.",
+    "Annotation slots resolve after current GPU preparation to fix mid-UI add/delete callback membership.",
+    "Cache includes scene version, factory identity and dimension style.",
+    "UI texture deltas retained before refusal; platform commands processed independently."
+  ],
+  "remaining": "Fresh merged build/replay and actual application transitions including deferred new texture retry pending. Source arrow full image remains217pixels different; font/depth policy/full-model parity open.",
+  "merge_resolution": "5d819a41 removed an unused ordered_draws local in old warm path. Kept69a27452 cold immutable-admission validation and per-frame pose validation; did not reintroduce cold partition scan into warm path."
 }
