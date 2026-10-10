@@ -10,6 +10,7 @@ assert r['windowserver_color_processing'] is False and r['drawable_readback_clai
 assert r['invalid_clear_negative'] is True and r['final_ledger']==0
 names=['actual-fractional-clear','exact-byte-clear','black-control','white-control']
 assert [c['name'] for c in r['cases']]==names
+assert [c['clear'] for c in r['cases']]==[[.08,.2,.35,1.],[20/255,51/255,89/255,1.],[0.,0.,0.,1.],[1.,1.,1.,1.]]
 for c in r['cases']:
     data=(root/(c['name']+'.rgba')).read_bytes()
     pixel=bytes(c['raw_gpu_rgba'])

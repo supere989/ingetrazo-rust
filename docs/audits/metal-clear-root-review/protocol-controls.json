@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "wrong_input_clear_rejected": true,
+  "nonzero_ledger_rejected": true,
+  "changed_exact_byte_rejected": true,
+  "native_execution_claim": false
+}

@@ -16,7 +16,7 @@ jobs:
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe --example egui_draw_probe --example presentation_probe --example egui_contract_probe --example egui_mip_probe --example egui_compressed_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe --example egui_draw_probe --example presentation_probe --example egui_contract_probe --example egui_mip_probe --example egui_compressed_probe --example clear_quantization_probe > docs/audits/metal-native-link-ci/build.log 2>&1
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
@@ -46,6 +46,10 @@ jobs:
         run: |
           target/debug/examples/egui_compressed_probe --output=docs/audits/metal-native-link-ci/egui-compressed > docs/audits/metal-native-link-ci/egui-compressed.log 2>&1
           python3 scripts/check-metal-egui-compressed.py docs/audits/metal-native-link-ci/egui-compressed > docs/audits/metal-native-link-ci/egui-compressed-check.log
+      - name: Actual native BGRA clear quantization diagnostics
+        run: |
+          target/debug/examples/clear_quantization_probe --output=docs/audits/metal-native-link-ci/clear-quantization > docs/audits/metal-native-link-ci/clear-quantization.log 2>&1
+          python3 scripts/check-metal-clear-quantization.py docs/audits/metal-native-link-ci/clear-quantization > docs/audits/metal-native-link-ci/clear-quantization-check.log
       - name: Actual native CAMetalLayer presentation and requested resize
         run: target/debug/examples/presentation_probe --automatic > docs/audits/metal-native-link-ci/presentation.log 2>&1
       - name: Diagnose only the owned Cocoa window
