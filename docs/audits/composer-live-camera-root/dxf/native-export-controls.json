@@ -1,0 +1,730 @@
+[
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "wall_hidden",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385935,
+      1385937
+    ]
+  },
+  {
+    "count": 7,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "wall_hidden",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385935,
+      1385937
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "wall_hidden",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385935,
+      1385937
+    ]
+  },
+  {
+    "count": 7,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "wall_hidden",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385935,
+      1385937
+    ]
+  },
+  {
+    "count": 6,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385939,
+      1385941
+    ]
+  },
+  {
+    "count": 6,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385939,
+      1385941
+    ]
+  },
+  {
+    "count": 6,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385939,
+      1385941
+    ]
+  },
+  {
+    "count": 6,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385939,
+      1385941
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385943,
+      1385945
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385943,
+      1385945
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385943,
+      1385945
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385943,
+      1385945
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385947,
+      1385949
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385947,
+      1385949
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385947,
+      1385949
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385947,
+      1385949
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385951,
+      1385953
+    ]
+  },
+  {
+    "count": 15,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385951,
+      1385953
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385951,
+      1385953
+    ]
+  },
+  {
+    "count": 15,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385951,
+      1385953
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385955,
+      1385957
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385955,
+      1385957
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385955,
+      1385957
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385955,
+      1385957
+    ]
+  },
+  {
+    "count": 6,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385959,
+      1385961
+    ]
+  },
+  {
+    "count": 7,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385959,
+      1385961
+    ]
+  },
+  {
+    "count": 6,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385959,
+      1385961
+    ]
+  },
+  {
+    "count": 7,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385959,
+      1385961
+    ]
+  },
+  {
+    "count": 2,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "open_cut_chain",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385963,
+      1385965
+    ]
+  },
+  {
+    "count": 2,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "open_cut_chain",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385963,
+      1385965
+    ]
+  },
+  {
+    "count": 2,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "open_cut_chain",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385963,
+      1385965
+    ]
+  },
+  {
+    "count": 2,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "open_cut_chain",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385963,
+      1385965
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "nested_reflected_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385967,
+      1385969
+    ]
+  },
+  {
+    "count": 15,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "nested_reflected_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385967,
+      1385969
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "nested_reflected_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385967,
+      1385969
+    ]
+  },
+  {
+    "count": 15,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "nested_reflected_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385967,
+      1385969
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_group",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385971,
+      1385973
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_group",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385971,
+      1385973
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_group",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385971,
+      1385973
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_group",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385971,
+      1385973
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_face",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385975,
+      1385977
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_face",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385975,
+      1385977
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_face",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385975,
+      1385977
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_face",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385975,
+      1385977
+    ]
+  },
+  {
+    "count": 28,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_cylinder_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385979,
+      1385981
+    ]
+  },
+  {
+    "count": 36,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_cylinder_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385979,
+      1385981
+    ]
+  },
+  {
+    "count": 28,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_cylinder_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385979,
+      1385981
+    ]
+  },
+  {
+    "count": 36,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_cylinder_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385979,
+      1385981
+    ]
+  },
+  {
+    "count": 28,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_reflected_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385983,
+      1385985
+    ]
+  },
+  {
+    "count": 36,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_reflected_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385983,
+      1385985
+    ]
+  },
+  {
+    "count": 28,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_reflected_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385983,
+      1385985
+    ]
+  },
+  {
+    "count": 36,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_reflected_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1385983,
+      1385985
+    ]
+  }
+]
