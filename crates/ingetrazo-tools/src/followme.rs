@@ -949,6 +949,55 @@ mod tests {
     }
 
     #[test]
+    fn retained_equator_wires_soften_with_sphere_and_offset_profile_forms_torus() {
+        let n = 24;
+        let path: Vec<_> = (0..n)
+            .map(|i| {
+                let a = std::f64::consts::TAU * i as f64 / n as f64;
+                DVec3::new(a.cos(), a.sin(), 0.)
+            })
+            .collect();
+        for phi in [0_f64, 7.5] {
+            let mut scene = Scene::new();
+            let ids: Vec<_> = path.iter().map(|&p| scene.mesh.add_vertex(p)).collect();
+            for i in 0..n {
+                scene.mesh.add_edge(ids[i], ids[(i + 1) % n]);
+            }
+            let ring = (0..n)
+                .map(|i| {
+                    let a = std::f64::consts::TAU * i as f64 / n as f64;
+                    scene.mesh.add_vertex(DVec3::new(
+                        a.cos() * phi.to_radians().cos(),
+                        a.cos() * phi.to_radians().sin(),
+                        a.sin(),
+                    ))
+                })
+                .collect();
+            scene.mesh.add_face(ring, vec![]);
+            sweep_profile(&mut scene, 0, &path, true).unwrap();
+            assert!(scene.mesh.edges.iter().all(|e| e.soft));
+            assert!(scene.mesh.is_manifold_solid());
+        }
+        let mut scene = Scene::new();
+        let ring = (0..n)
+            .map(|i| {
+                let a = std::f64::consts::TAU * i as f64 / n as f64;
+                scene
+                    .mesh
+                    .add_vertex(DVec3::new(2. + 0.3 * a.cos(), 0., 0.3 * a.sin()))
+            })
+            .collect();
+        scene.mesh.add_face(ring, vec![]);
+        let path: Vec<_> = path.iter().map(|p| *p * 2.).collect();
+        sweep_profile(&mut scene, 0, &path, true).unwrap();
+        assert!(scene.mesh.is_manifold_solid());
+        for v in &scene.mesh.vertices {
+            let p = v.position;
+            assert!((((p.x.hypot(p.y) - 2.).hypot(p.z)) - 0.3).abs() < 1e-7);
+        }
+    }
+
+    #[test]
     fn selected_face_perimeter_and_alt_hover_supply_closed_paths_without_mutation() {
         use ingetrazo_core::math::Ray;
         let mut scene = profile(1., false);

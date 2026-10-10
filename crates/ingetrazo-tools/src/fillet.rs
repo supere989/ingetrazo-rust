@@ -1039,6 +1039,38 @@ mod tests {
         scene
     }
     #[test]
+    fn squash_after_oblique_rotation_rounds_all_corners_in_varied_edge_orders() {
+        let mut original = box_scene();
+        for v in &mut original.mesh.vertices {
+            v.position.y *= 2.;
+            v.position.z *= 2.;
+        }
+        let transform = glam::DMat4::from_translation(DVec3::new(8.5, -3., 0.4))
+            * glam::DMat4::from_scale(DVec3::new(1., 1., 0.5))
+            * glam::DMat4::from_quat(glam::DQuat::from_axis_angle(
+                DVec3::new(0.3, 1., 0.45).normalize(),
+                33_f64.to_radians(),
+            ));
+        for v in &mut original.mesh.vertices {
+            v.position = transform.transform_point3(v.position);
+        }
+        original.mesh.rebuild_spatial_index();
+        let before = original.mesh.volume().unwrap();
+        for shift in 0..5 {
+            let mut scene = original.clone();
+            let mut edges: Vec<_> = (0..scene.mesh.edges.len()).collect();
+            edges.rotate_left(shift);
+            if shift % 2 == 1 {
+                edges.reverse();
+            }
+            fillet_edges(&mut scene, &edges, 0.2, 8).unwrap();
+            assert!(scene.mesh.is_manifold_solid());
+            let after = scene.mesh.volume().unwrap();
+            assert!(after < before && after > before * 0.7);
+        }
+    }
+
+    #[test]
     fn cursor_sizing_preview_and_second_click_commit_match_original_workflow() {
         use ingetrazo_core::math::Ray;
         let mut scene = box_scene();
