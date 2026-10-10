@@ -5,7 +5,7 @@ Occlusion source receives an independent analytic surface predicate.
 import sys,json,subprocess,os,hashlib,copy
 from pathlib import Path
 from acceptance_context import context
-sys.path.insert(0,os.environ.get('INGETRAZO_PYTHON_SOURCE','/work/ingetrazo'))
+sys.path.insert(0,os.environ.get('INGETRAZO_PYTHON_SOURCE',str(Path(__file__).resolve().parents[1]/'ingetrazo')))
 from core.snap import compute_snap
 from PySide6.QtGui import QVector3D as V
 from types import SimpleNamespace as N
