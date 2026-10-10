@@ -316,3 +316,5 @@ Canonical3f0d8854 presentation/controller codec integration:548PASS/twoignored, 
 Canonical image-plane9e15aaca reviewedintegration:551PASS/twoignored, actual56states/fourasset-exactoriginalreopens/presentationregressionPASS. Productionmove-negativecaught. Cloudpending. All37rows/fivegatesstayOPEN.
 
 Canonicala5d3c3bcimageownership:555PASS2ignored;19layer3lifetime56image4archivepresentationPASS. CIearlier112alljobsSUCCESS, currentpending. All37/fivegatesOPEN.
+
+Canonical6a4ef4fontresource/directPDFwriter stage555PASS2ignored; ninecanonicalpages/textcontrols/nativefontresourcePASS; combined27exactpages, nativeARM/Intelresourcesretained. FullTextUI/layout/provider/globalbudget and37rows/fivegatesOPEN.
