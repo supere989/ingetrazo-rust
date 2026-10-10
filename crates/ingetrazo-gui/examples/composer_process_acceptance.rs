@@ -58,6 +58,12 @@ fn main() {
     paint(&mut app, &ctx);
     assert_eq!(app.composer_compute.completed_jobs, first + 2);
     assert_eq!(app.composer_compute.worker_ids(), pids);
+    let revision=app.scene.view_version;
+    assert!(!app.set_layer_visibility(0,true));assert_eq!(app.scene.view_version,revision);
+    assert!(app.set_layer_visibility(0,false));paint(&mut app,&ctx);
+    assert_eq!(app.composer_compute.completed_jobs,first+3);
+    assert!(app.composer_compute.segments(&app.scene,&app.camera,app.clipboard_document,app.model_revision,"visibility-control",true,true).unwrap().is_empty());
+    assert_eq!(app.composer_compute.worker_ids(),pids);
     let mut failed =
         ComposerCompute::with_worker(std::path::Path::new("/missing/ingetrazo-render-worker"));
     assert!(failed

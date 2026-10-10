@@ -332,6 +332,11 @@ impl IngeTrazoApp {
         }
     }
 
+    pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
+        let Some(layer)=self.scene.layers.get_mut(index)else{return false;};
+        if layer.visible==visible{return false;}
+        layer.visible=visible;self.scene.bump_view_version();true
+    }
     pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
