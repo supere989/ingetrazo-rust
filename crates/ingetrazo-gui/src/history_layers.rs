@@ -93,6 +93,11 @@ fn reassign_deleted_layer(
             d.layer = None;
         }
     }
+    for image in &mut scene.image_planes {
+        if image.layer.as_deref() == Some(name) {
+            image.layer = None;
+        }
+    }
     for t in &mut scene.text_labels {
         if t.layer.as_deref() == Some(name) {
             t.layer = None;
@@ -300,6 +305,7 @@ impl IngeTrazoApp {
             return false;
         }
         self.seal_layer_history();
+        self.seal_image_history();
         reassign_deleted_layer(&mut self.scene, &name, &Default::default());
         let excluded: std::collections::HashSet<_> = self
             .component_edit_stack
@@ -342,6 +348,9 @@ impl IngeTrazoApp {
                 update_aliases(&mut definition.children, id, &mesh);
             }
         }
+        // Parked scenes share this object registry. Publish only active global
+        // images, avoiding stale parked transforms overwriting edited frames.
+        self.scene.image_objects.publish(&self.scene.image_planes);
         self.scene.layers.remove(index);
         self.active_layer_idx = self
             .active_layer_idx
