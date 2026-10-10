@@ -62,6 +62,11 @@ fn mesh_to_json(mesh: &Mesh) -> serde_json::Value {
         if let Some(ref l) = e.layer {
             obj["layer"] = serde_json::Value::String(l.clone());
         }
+        for (key, value) in &e.attrs {
+            if !["a", "b", "soft", "hidden", "layer"].contains(&key.as_str()) {
+                obj[key] = value.clone();
+            }
+        }
         edges_json.push(obj);
     }
 
@@ -119,6 +124,13 @@ fn json_to_mesh(val: &serde_json::Value) -> Mesh {
                     let va = mesh.add_vertex(pa);
                     let vb = mesh.add_vertex(pb);
                     if let Some(edge_id) = mesh.add_edge(va, vb) {
+                        if let Some(obj) = e.as_object() {
+                            for (key,value) in obj {
+                                if !["a","b","soft","hidden","layer"].contains(&key.as_str()) {
+                                    mesh.edges[edge_id].attrs.insert(key.clone(),value.clone());
+                                }
+                            }
+                        }
                         if e.get("soft").and_then(|s| s.as_bool()).unwrap_or(false) {
                             mesh.edges[edge_id].soft = true;
                         }
@@ -289,6 +301,14 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>) -> serde_json::
     obj
 }
 
+fn material_model(mat: &Material) -> serde_json::Value {
+    serde_json::json!({
+        "name": mat.name, "color": mat.color, "opacity": mat.opacity,
+        "roughness": mat.roughness,
+        "texture": {"path": mat.texture_path, "embed": mat.texture_embed}
+    })
+}
+
 fn scene_model(scene: &Scene) -> serde_json::Value {
     let loose = mesh_to_json(&scene.mesh);
     let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
@@ -313,11 +333,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     });
     doc["materials"] = serde_json::json!(names.iter().map(|name| {
         let mat = &scene.materials[*name];
-        serde_json::json!({
-            "name": mat.name, "color": mat.color, "opacity": mat.opacity,
-            "roughness": mat.roughness,
-            "texture": {"path": mat.texture_path, "embed": mat.texture_embed}
-        })
+        overlay(&mat.native_document, &mat.native_baseline, material_model(mat))
     }).collect::<Vec<_>>());
     doc["camera"] = serde_json::json!({
         "target": [scene.camera.target.x, scene.camera.target.y, scene.camera.target.z],
@@ -336,13 +352,21 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     };
     doc["units"] = serde_json::json!({"length":unit,"precision":2});
 
-    doc["saved_views"] = serde_json::json!(scene.saved_views);
-    doc["section_planes"] = serde_json::json!(scene.section_planes);
+    doc["saved_views"] = serde_json::json!(scene.saved_views.iter().map(|v| serde_json::json!({
+        "name":v.name, "target":v.target, "distance":v.distance, "yaw":v.yaw,
+        "pitch":v.pitch, "fov":v.fov_deg, "parallel":!v.perspective || v.parallel,
+        "hidden_layers":v.hidden_layers
+    })).collect::<Vec<_>>());
+    doc["section_planes"] = serde_json::json!(scene.section_planes.iter().map(|v| serde_json::json!({
+        "point":v.point, "normal":v.normal, "name":v.name, "symbol":v.symbol,
+        "active":v.active, "uid":v.id.as_u128() as u64
+    })).collect::<Vec<_>>());
     doc["section_view"] = serde_json::json!({
         "planes_hidden": !scene.show_section_planes, "cuts_hidden": !scene.show_section_cuts,
         "fill_hidden": !scene.show_section_fill
     });
-    doc["georef"] = serde_json::json!({"datum": scene.geo_datum});
+    doc["georef"] = serde_json::json!({"datum": scene.geo_datum.as_ref().map(|d|
+        serde_json::json!({"lat":d.lat,"lon":d.lon,"alt":d.alt,"north":d.north}))});
     doc["geo_points"] = serde_json::json!(scene.geo_points);
     doc["geo_paths"] = serde_json::json!(scene.geo_paths);
     doc["terrain"] = serde_json::json!(scene.terrain);
@@ -362,7 +386,27 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     doc
 }
 
+fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
+    let current = scene_model(scene);
+    // These modeled types still have incompatible original schemas. Preserve
+    // original records for no-op saves; refuse edits instead of writing a file
+    // the Python reader silently misinterprets.
+    {
+        for key in ["compositions", "geo_points", "geo_paths", "terrain"] {
+            let value = current.get(key).unwrap();
+            let nonempty = !value.is_null() && value.as_array().map(|a| !a.is_empty()).unwrap_or(true);
+            if (scene.native_document.is_object() && scene.native_baseline.get(key) != Some(value))
+                || (!scene.native_document.is_object() && nonempty) {
+                return Err(IgzError::InvalidDocument(format!(
+                    "editing {key} in an imported document requires a native schema adapter")));
+            }
+        }
+    }
+    Ok(())
+}
+
 pub fn save_igz_format1(scene: &Scene, path: &Path) -> Result<(), IgzError> {
+    validate_native_save(scene)?;
     let envelope = IgzEnvelope {
         igz_format: 1,
         app_version: "0.3.15".to_string(),
@@ -375,6 +419,7 @@ pub fn save_igz_format1(scene: &Scene, path: &Path) -> Result<(), IgzError> {
 }
 
 pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
+    validate_native_save(scene)?;
     let file = File::create(path)?;
     let mut zip = ZipWriter::new(file);
     let options = SimpleFileOptions::default()
@@ -590,6 +635,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
                             mat.texture_path = Some(p.to_string());
                         }
                     }
+                    mat.native_document = m_item.clone();
+                    mat.native_baseline = material_model(&mat);
                     scene.materials.insert(name.to_string(), mat);
                 }
             }
@@ -598,7 +645,9 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
 
     if let Some(sv_val) = s_val.get("saved_views").and_then(|v| v.as_array()) {
         for sv_item in sv_val {
-            if let Ok(sv) = serde_json::from_value::<ingetrazo_core::saved_views::SavedView>(sv_item.clone()) {
+            if let Ok(mut sv) = serde_json::from_value::<ingetrazo_core::saved_views::SavedView>(sv_item.clone()) {
+                sv.fov_deg = sv_item.get("fov").or_else(|| sv_item.get("fov_deg")).and_then(|v| v.as_f64()).unwrap_or(45.);
+                sv.perspective = !sv.parallel;
                 scene.saved_views.push(sv);
             }
         }
@@ -655,14 +704,31 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             }
         }
     }
-    load_field!(section_planes, "section_planes");
+    if let Some(planes) = s_val.get("section_planes").and_then(|v| v.as_array()) {
+        for plane in planes {
+            if let (Some(point), Some(normal)) = (plane.get("point"),plane.get("normal")) {
+                if let (Ok(point),Ok(normal)) = (serde_json::from_value::<DVec3>(point.clone()),serde_json::from_value::<DVec3>(normal.clone())) {
+                    let mut p = ingetrazo_core::section::SectionPlane::new(point,normal,
+                        plane.get("name").and_then(|v| v.as_str()).unwrap_or(""),
+                        plane.get("symbol").and_then(|v| v.as_str()).unwrap_or(""));
+                    p.active = plane.get("active").and_then(|v| v.as_bool()).unwrap_or(false);
+                    if let Some(uid) = plane.get("uid").and_then(|v| v.as_u64()) { p.id = uuid::Uuid::from_u128(uid as u128); }
+                    scene.section_planes.push(p);
+                }
+            }
+        }
+    }
     load_field!(geo_points, "geo_points");
     load_field!(geo_paths, "geo_paths");
     load_field!(terrain, "terrain");
     load_field!(sheets, "compositions");
     load_field!(active_sheet_index, "active_sheet_index");
     if let Some(v) = s_val.get("georef").and_then(|v| v.get("datum")) {
-        scene.geo_datum = serde_json::from_value(v.clone()).ok();
+        if let (Some(lat),Some(lon)) = (v.get("lat").and_then(|v| v.as_f64()),v.get("lon").and_then(|v| v.as_f64())) {
+            scene.geo_datum = Some(ingetrazo_core::georef::SceneDatum::new(lat,lon,
+                v.get("alt").and_then(|v| v.as_f64()).unwrap_or(0.),
+                v.get("north").and_then(|v| v.as_f64()).unwrap_or(0.)));
+        }
     }
     if let Some(u) = s_val.get("units").and_then(|v| v.get("length")).and_then(|v| v.as_str()) {
         scene.unit = match u {

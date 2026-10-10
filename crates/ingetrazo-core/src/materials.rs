@@ -7,6 +7,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Material {
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
     pub name: String,
     pub color: [f32; 4],
     pub texture_path: Option<String>,
@@ -18,6 +22,8 @@ pub struct Material {
 impl Material {
     pub fn new(name: impl Into<String>, color: [f32; 4]) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             name: name.into(),
             color,
             texture_path: None,
@@ -29,6 +35,8 @@ impl Material {
 
     pub fn with_texture(name: impl Into<String>, texture_path: impl Into<String>) -> Self {
         Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             name: name.into(),
             color: [1.0, 1.0, 1.0, 1.0],
             texture_path: Some(texture_path.into()),

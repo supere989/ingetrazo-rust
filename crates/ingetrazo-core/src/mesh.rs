@@ -36,6 +36,9 @@ impl MeshVertex {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MeshEdge {
+    /// Opaque native edge metadata follows edge identity through edits.
+    #[serde(default)]
+    pub attrs: std::collections::HashMap<String, serde_json::Value>,
     pub v0: VertexId,
     pub v1: VertexId,
     pub faces: Vec<FaceId>,
@@ -48,6 +51,7 @@ pub struct MeshEdge {
 impl MeshEdge {
     pub fn new(v0: VertexId, v1: VertexId) -> Self {
         Self {
+            attrs: std::collections::HashMap::new(),
             v0,
             v1,
             faces: Vec::new(),

@@ -88,3 +88,48 @@ fn zip_embedded_texture_and_survey_bytes_survive_without_disk_files() {
     assert_eq!(scene_to_igz_document(&load_igz(&dst).unwrap()),native());
     std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
 }
+
+
+#[test]
+fn native_camera_section_and_datum_edits_use_original_schema() {
+    let src=temp("schema-source.igz"); let dst=temp("schema-save.igz");
+    let doc=json!({
+        "edges":[],"faces":[],
+        "saved_views":[{"name":"view","fov":62.,"parallel":true,"style":{"opaque":17}}],
+        "section_planes":[{"point":[1.,2.,3.],"normal":[0.,0.,1.],"uid":42,"active":true,"future":23}],
+        "georef":{"datum":{"lat":-15.,"lon":-72.,"alt":100.,"north":12.,"future":29}}
+    });
+    write_plain(&doc,&src); let mut scene=load_igz(&src).unwrap();
+    assert_eq!(scene.saved_views[0].fov_deg,62.);
+    assert!(!scene.saved_views[0].perspective);
+    assert_eq!(scene.section_planes[0].id.as_u128(),42);
+    assert!(scene.geo_datum.as_ref().unwrap().east0.abs()>0.);
+    scene.saved_views[0].fov_deg=70.; scene.saved_views[0].perspective=true; scene.saved_views[0].parallel=false;
+    scene.section_planes[0].point.x=9.;
+    scene.geo_datum=Some(ingetrazo_core::georef::SceneDatum::new(-16.,-73.,200.,13.));
+    save_igz(&scene,&dst).unwrap();
+    let out=scene_to_igz_document(&scene);
+    assert_eq!(out["saved_views"][0]["fov"],70.);
+    assert_eq!(out["saved_views"][0]["parallel"],false);
+    assert_eq!(out["saved_views"][0]["style"],doc["saved_views"][0]["style"]);
+    assert_eq!(out["section_planes"][0]["uid"],42);
+    assert_eq!(out["section_planes"][0]["future"],23);
+    assert_eq!(out["georef"]["datum"]["future"],29);
+    let reopened=load_igz(&dst).unwrap();
+    assert_eq!(reopened.saved_views[0].fov_deg,70.);
+    assert_eq!(reopened.section_planes[0].point.x,9.);
+    assert_eq!(reopened.geo_datum.unwrap().lat,-16.);
+    std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
+}
+
+#[test]
+fn unsupported_composer_edits_fail_before_touching_destination() {
+    let src=temp("composer-source.igz"); let dst=temp("composer-save.igz");
+    write_plain(&native(),&src); std::fs::write(&dst,b"retain existing document").unwrap();
+    let mut scene=load_igz(&src).unwrap();
+    scene.sheets.push(ingetrazo_core::composition::Sheet::default());
+    let err=save_igz(&scene,&dst).unwrap_err();
+    assert!(err.to_string().contains("native schema adapter"));
+    assert_eq!(std::fs::read(&dst).unwrap(),b"retain existing document");
+    std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
+}
