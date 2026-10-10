@@ -51,7 +51,8 @@ struct Polygon {
     points: Vec<DVec3>,
     material: Option<String>,
 }
-/// Fit a world-space affine UV map, retaining every authored polygon sample.
+/// Match the original polygon UV fit: choose the largest-area pair from
+/// vertex zero. Additional non-affine samples do not reject the imported face.
 fn affine_uv(points: &[DVec3], uv: &[glam::DVec2]) -> Result<[f64; 8]> {
     if points.len() != uv.len()
         || points.len() < 3
@@ -60,38 +61,43 @@ fn affine_uv(points: &[DVec3], uv: &[glam::DVec2]) -> Result<[f64; 8]> {
     {
         return Err(invalid("invalid polygon UV samples"));
     }
+    let mut best = 1e-24;
     let mut basis = None;
     for i in 1..points.len() {
         for j in i + 1..points.len() {
             let a = points[i] - points[0];
             let b = points[j] - points[0];
-            let n = a.cross(b);
-            if n.length_squared() > 1e-24 {
-                basis = Some((
-                    i,
-                    j,
-                    glam::DMat3::from_cols(a, b, n.normalize()).transpose(),
-                ));
-                break;
+            let cross2 = a.cross(b).length_squared();
+            if cross2 > best {
+                best = cross2;
+                basis = Some((i, j, a, b));
             }
         }
-        if basis.is_some() {
-            break;
-        }
     }
-    let (i, j, m) = basis.ok_or_else(|| invalid("degenerate polygon UV plane"))?;
-    let gu = m.inverse() * DVec3::new(uv[i].x - uv[0].x, uv[j].x - uv[0].x, 0.);
-    let gv = m.inverse() * DVec3::new(uv[i].y - uv[0].y, uv[j].y - uv[0].y, 0.);
+    let (i, j, a, b) = basis.ok_or_else(|| invalid("degenerate polygon UV plane"))?;
+    let g11 = a.length_squared();
+    let g12 = a.dot(b);
+    let g22 = b.length_squared();
+    let det = g11 * g22 - g12 * g12;
+    if det.abs() < 1e-18 {
+        return Err(invalid("degenerate polygon UV fit"));
+    }
+    let gradient = |k: usize| {
+        let d1 = uv[i][k] - uv[0][k];
+        let d2 = uv[j][k] - uv[0][k];
+        a * ((d1 * g22 - d2 * g12) / det) + b * ((d2 * g11 - d1 * g12) / det)
+    };
+    let gu = gradient(0);
+    let gv = gradient(1);
     let u0 = uv[0].x - gu.dot(points[0]);
     let v0 = uv[0].y - gv.dot(points[0]);
-    for (p, t) in points.iter().zip(uv) {
-        let predicted = glam::DVec2::new(gu.dot(*p) + u0, gv.dot(*p) + v0);
-        if predicted.distance(*t) > 1e-6 * (1. + t.length()) {
-            return Err(invalid("non-affine polygon UV mapping"));
-        }
+    let result = [gu.x, gu.y, gu.z, u0, gv.x, gv.y, gv.z, v0];
+    if result.iter().any(|v| !v.is_finite()) {
+        return Err(invalid("non-finite polygon UV fit"));
     }
-    Ok([gu.x, gu.y, gu.z, u0, gv.x, gv.y, gv.z, v0])
+    Ok(result)
 }
+
 fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
     let sources: HashMap<_, _> = mesh
         .children()
@@ -1100,7 +1106,7 @@ mod uv_affine_tests {
     use super::*;
     use glam::DVec2;
     #[test]
-    fn translated_reflected_world_uv_and_non_affine_rejection() {
+    fn translated_reflected_world_uv_and_original_non_affine_fit() {
         let p = [
             DVec3::new(10., 20., 30.),
             DVec3::new(8., 20., 30.),
@@ -1114,7 +1120,7 @@ mod uv_affine_tests {
             assert!((DVec3::new(m[4], m[5], m[6]).dot(*p) + m[7] - t.y).abs() < 1e-10);
         }
         uv[3].x = 0.5;
-        assert!(affine_uv(&p, &uv).is_err());
+        assert_eq!(affine_uv(&p, &uv).unwrap(), m);
         assert!(affine_uv(&[DVec3::ZERO; 3], &[DVec2::ZERO; 3]).is_err());
         assert!(affine_uv(&p, &uv[..3]).is_err());
     }
