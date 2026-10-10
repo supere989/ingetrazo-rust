@@ -1,0 +1,215 @@
+[1m[33mwarning[0m[1m: function `visit_meshes` is never used[0m
+   [1m[94m--> [0mcrates/ingetrazo-core/src/screen_pick.rs:120:15
+    [1m[94m|[0m
+[1m[94m120[0m [1m[94m|[0m pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    [1m[94m|[0m               [1m[33m^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m: `ingetrazo-core` (lib) generated 1 warning
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+   [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:777:35
+    [1m[94m|[0m
+[1m[94m777[0m [1m[94m|[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 185, 190)),
+    [1m[94m|[0m                                   [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+    [1m[94m= [0m[1mnote[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1101:35
+     [1m[94m|[0m
+[1m[94m1101[0m [1m[94m|[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 180, 190)),
+     [1m[94m|[0m                                   [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1123:71
+     [1m[94m|[0m
+[1m[94m1123[0m [1m[94m|[0m             painter.line_segment([p_anchor, p_pos], egui::Stroke::new(1.2, egui::Color32::from_rgb(45, 55, 75)));
+     [1m[94m|[0m                                                                       [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1189:66
+     [1m[94m|[0m
+[1m[94m1189[0m [1m[94m|[0m                 painter.line_segment([s0, s1], egui::Stroke::new(1.5, stroke_color));
+     [1m[94m|[0m                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.5_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1214:78
+     [1m[94m|[0m
+[1m[94m1214[0m [1m[94m|[0m                         painter.line_segment([start, end], egui::Stroke::new(1.5, stroke_color));
+     [1m[94m|[0m                                                                              [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.5_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1240:43
+     [1m[94m|[0m
+[1m[94m1240[0m [1m[94m|[0m                         egui::Stroke::new(1.0, egui::Color32::BLACK),
+     [1m[94m|[0m                                           [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1245:69
+     [1m[94m|[0m
+[1m[94m1245[0m [1m[94m|[0m                     painter.circle_stroke(pos, s, egui::Stroke::new(1.0, egui::Color32::BLACK));
+     [1m[94m|[0m                                                                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1254:97
+     [1m[94m|[0m
+[1m[94m1254[0m [1m[94m|[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+     [1m[94m|[0m                                                                                                 [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1257:114
+     [1m[94m|[0m
+[1m[94m1257[0m [1m[94m|[0m                     painter.line_segment([pos - egui::vec2(s, 0.0), pos + egui::vec2(s, 0.0)], egui::Stroke::new(2.0, glyph_color));
+     [1m[94m|[0m                                                                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `2.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1258:114
+     [1m[94m|[0m
+[1m[94m1258[0m [1m[94m|[0m                     painter.line_segment([pos - egui::vec2(0.0, s), pos + egui::vec2(0.0, s)], egui::Stroke::new(2.0, glyph_color));
+     [1m[94m|[0m                                                                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `2.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1266:97
+     [1m[94m|[0m
+[1m[94m1266[0m [1m[94m|[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+     [1m[94m|[0m                                                                                                 [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.0_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1353:66
+     [1m[94m|[0m
+[1m[94m1353[0m [1m[94m|[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+     [1m[94m|[0m                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `0.7_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1362:66
+     [1m[94m|[0m
+[1m[94m1362[0m [1m[94m|[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+     [1m[94m|[0m                                                                  [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `0.7_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1383:69
+     [1m[94m|[0m
+[1m[94m1383[0m [1m[94m|[0m             painter.line_segment([s_orig, s_pos], egui::Stroke::new(1.8, col));
+     [1m[94m|[0m                                                                     [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.8_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied[0m
+    [1m[94m--> [0mcrates/ingetrazo-render/src/pipeline.rs:1398:68
+     [1m[94m|[0m
+[1m[94m1398[0m [1m[94m|[0m                     painter.line_segment([a, b], egui::Stroke::new(1.2, col));
+     [1m[94m|[0m                                                                    [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.2_f32`[0m
+     [1m[94m|[0m
+     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+
+[1m[33mwarning[0m[1m: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency[0m
+  [1m[94m--> [0mcrates/ingetrazo-render/src/cad2d.rs:36:55
+   [1m[94m|[0m
+[1m[94m36[0m [1m[94m|[0m   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err([1m[94m...[0m
+   [1m[94m|[0m                                                       [1m[33m^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `#[warn(deprecated)]` on by default
+[1m[96mhelp[0m: replace the use of the deprecated method
+   [1m[94m|[0m
+[1m[94m36[0m [91m- [0m  static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.[91mfetch_update[0m(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
+[1m[94m36[0m [92m+ [0m  static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.[92mtry_update[0m(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
+   [1m[94m|[0m
+
+[1m[33mwarning[0m: `ingetrazo-render` (lib) generated 16 warnings (run `cargo fix --lib -p ingetrazo-render` to apply 16 suggestions)
+[1m[92m   Compiling[0m ingetrazo-metal v0.3.15 (/Users/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-metal)
+[1m[33mwarning[0m[1m: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead[0m
+   [1m[94m--> [0mcrates/ingetrazo-metal/src/cad2d.rs:140:17
+    [1m[94m|[0m
+[1m[94m140[0m [1m[94m|[0m         options.setFastMathEnabled(false);
+    [1m[94m|[0m                 [1m[33m^^^^^^^^^^^^^^^^^^[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(deprecated)]` on by default
+
+[1m[33mwarning[0m[1m: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency[0m
+  [1m[94m--> [0mcrates/ingetrazo-metal/src/egui_painter.rs:64:14
+   [1m[94m|[0m
+[1m[94m64[0m [1m[94m|[0m             .fetch_update(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m              [1m[33m^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: replace the use of the deprecated method
+   [1m[94m|[0m
+[1m[94m64[0m [91m- [0m            .[91mfetch_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+[1m[94m64[0m [92m+ [0m            .[92mtry_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency[0m
+  [1m[94m--> [0mcrates/ingetrazo-metal/src/egui_painter.rs:80:18
+   [1m[94m|[0m
+[1m[94m80[0m [1m[94m|[0m                 .fetch_update(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m                  [1m[33m^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: replace the use of the deprecated method
+   [1m[94m|[0m
+[1m[94m80[0m [91m- [0m                .[91mfetch_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+[1m[94m80[0m [92m+ [0m                .[92mtry_update[0m(Ordering::AcqRel, Ordering::Acquire, |used| {
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: variable does not need to be mutable[0m
+   [1m[94m--> [0mcrates/ingetrazo-metal/src/egui_painter.rs:490:13
+    [1m[94m|[0m
+[1m[94m490[0m [1m[94m|[0m         let mut staging = metal.buffer(staging_bytes, true)?;
+    [1m[94m|[0m             [1m[94m----[0m[1m[33m^^^^^^^[0m
+    [1m[94m|[0m             [1m[94m|[0m
+    [1m[94m|[0m             [1m[94mhelp: remove this `mut`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m: `ingetrazo-metal` (lib test) generated 4 warnings (run `cargo fix --lib -p ingetrazo-metal --tests` to apply 3 suggestions)
+[1m[92m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 2.57s
+[1m[92m     Running[0m unittests src/lib.rs (target/debug/deps/ingetrazo_metal-b1b3280a77d7c3d3)
+
+running 5 tests
+test egui_painter::tests::far_finite_source_positions_use_shader_domain_not_arbitrary_cap ... ok
+test egui_painter::tests::admits_real_shader_domain_and_refuses_finite_overflow_inputs ... ok
+test egui_painter::tests::unbounded_clip_is_target_bounded_without_weakening_geometry ... ok
+test egui_painter::tests::retained_cpu_admission_and_last_owner_release ... ok
+test egui_painter::tests::encoded_generic_alpha_does_not_gamma_premultiply_white_twice ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+

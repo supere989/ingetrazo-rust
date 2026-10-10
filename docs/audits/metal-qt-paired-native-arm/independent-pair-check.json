@@ -1,0 +1,23 @@
+{
+  "same_runner": true,
+  "actual_QPainter": true,
+  "own_window_ids": [
+    34,
+    43
+  ],
+  "four_interiors_equal": true,
+  "rgb": [
+    20,
+    51,
+    89
+  ],
+  "qt_raw_rgba": [
+    20,
+    51,
+    89,
+    255
+  ],
+  "metal_actual_visible_clear": true,
+  "metal_presentation_passed": false,
+  "scope": "actual own-window color attribution only; no owner-retirement replacement"
+}
