@@ -129,4 +129,43 @@ mod tests {
         assert!(app.undo_stack.is_empty());
         assert_eq!(app.scene.mesh, before);
     }
+    #[test]
+    fn transform_previews_are_inert_and_vcb_commits_undo_once() {
+        for (tool_type, input) in [
+            (ToolType::Move, "1, 2, 3"),
+            (ToolType::Scale, "2"),
+            (ToolType::Rotate, "90"),
+        ] {
+            let mut app = app();
+            app.active_tool = create_tool(tool_type);
+            app.active_tool_type = tool_type;
+            app.scene.select(SelectionItem::Face(0));
+            let before = app.scene.mesh.clone();
+            app.dispatch_tool_click(&context(0.));
+            app.active_tool.on_move(&mut app.scene, &context(1.));
+            assert_eq!(
+                app.scene.mesh, before,
+                "{tool_type:?} preview mutated model"
+            );
+            app.active_tool.on_cancel(&mut app.scene);
+            assert_eq!(app.scene.mesh, before);
+            assert!(app.undo_stack.is_empty());
+            app.dispatch_tool_click(&context(0.));
+            if tool_type == ToolType::Rotate {
+                let arm = ToolContext::new(DVec3::X, Ray::new(DVec3::X, DVec3::Z));
+                app.dispatch_tool_click(&arm);
+            }
+            app.dispatch_tool_vcb(input).unwrap();
+            assert_ne!(
+                app.scene.mesh, before,
+                "{tool_type:?} did not commit geometry"
+            );
+            assert_eq!(app.undo_stack.len(), 1);
+            let after = app.scene.mesh.clone();
+            app.undo();
+            assert_eq!(app.scene.mesh, before);
+            app.redo();
+            assert_eq!(app.scene.mesh, after);
+        }
+    }
 }
