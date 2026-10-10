@@ -84,7 +84,7 @@ fn crossing(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
     }
     let p = a + u * t;
     let q = c + v * s;
-    if p.distance(q) > 1e-5 {
+    if p.distance(q) > 1e-4 {
         return None;
     }
     Some((p + q) * 0.5)
@@ -148,6 +148,149 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext) -> Vec<Edge> {
     }
     loose.extend(groups);
     loose
+}
+
+fn from_point(
+    scene: &Scene,
+    ctx: &ScreenSnapContext,
+    edges: &[Edge],
+    extra: Option<DVec3>,
+    start: DVec3,
+    dir: DVec3,
+    hovered: bool,
+) -> Option<SnapResult> {
+    let pixels = |p: DVec3| {
+        ctx.viewport
+            .project(p)
+            .map(|q| q.distance(ctx.cursor))
+            .unwrap_or(f64::INFINITY)
+    };
+    let mut refs = vec![];
+    if let Some(p) = extra {
+        refs.push((p, SnapKind::FromPoint, COLOR_ENDPOINT));
+    }
+    for e in edges {
+        refs.push((e.a, SnapKind::FromPoint, COLOR_ENDPOINT));
+        refs.push((e.b, SnapKind::FromPoint, COLOR_ENDPOINT));
+        refs.push(((e.a + e.b) * 0.5, SnapKind::Midpoint, COLOR_MIDPOINT));
+    }
+    refs.push((DVec3::ZERO, SnapKind::Origin, COLOR_ORIGIN));
+    let mut best = None;
+    let mut distance = 9.;
+    for (reference, kind, color) in refs {
+        let reach = (reference - start).dot(dir);
+        if !hovered && reach <= 1e-6 {
+            continue;
+        }
+        let foot = start + dir * reach;
+        if foot.distance(reference) < 1e-4 {
+            continue;
+        }
+        let d = if hovered {
+            pixels(foot).min(pixels(reference))
+        } else {
+            pixels(foot)
+        };
+        if d <= distance && visible(scene, ctx, foot) {
+            if best.is_none() || d < distance {
+                distance = d;
+                let mut r = result(foot, kind, color, "From point");
+                r.guides.push((reference, foot, color));
+                best = Some(r);
+            }
+        }
+    }
+    best
+}
+fn axis_direction(draw: DVec3, degrees: f64) -> Option<DVec3> {
+    if draw.length() < 1e-6 {
+        return None;
+    }
+    let draw = draw.normalize();
+    [DVec3::X, DVec3::Y, DVec3::Z]
+        .into_iter()
+        .find(|d| draw.dot(*d).abs() >= degrees.to_radians().cos())
+        .map(|d| d * draw.dot(d).signum())
+}
+fn memory_snap(
+    engine: &SnapEngine,
+    scene: &Scene,
+    ctx: &ScreenSnapContext,
+    on_face: bool,
+) -> Option<SnapResult> {
+    let pixels = |p: DVec3| {
+        ctx.viewport
+            .project(p)
+            .map(|q| q.distance(ctx.cursor))
+            .unwrap_or(f64::INFINITY)
+    };
+    if engine.encouraged_points.len() >= 2 {
+        let a = engine.encouraged_points[engine.encouraged_points.len() - 1];
+        let b = engine.encouraged_points[engine.encouraged_points.len() - 2];
+        let mut best = None;
+        let mut distance = 9.;
+        for x in [DVec3::X, DVec3::Y, DVec3::Z] {
+            for y in [DVec3::X, DVec3::Y, DVec3::Z] {
+                if x == y {
+                    continue;
+                }
+                if let Some(p) = crossing(
+                    a - x * 10000.,
+                    a + x * 10000.,
+                    b - y * 10000.,
+                    b + y * 10000.,
+                ) {
+                    let d = pixels(p);
+                    if d <= distance && visible(scene, ctx, p) {
+                        distance = d;
+                        let mut r = result(
+                            p,
+                            SnapKind::TwoPointFromPoint,
+                            COLOR_ENDPOINT,
+                            "From points",
+                        );
+                        r.guides
+                            .extend([(a, p, COLOR_ENDPOINT), (b, p, COLOR_ENDPOINT)]);
+                        best = Some(r);
+                    }
+                }
+            }
+        }
+        if best.is_some() {
+            return best;
+        }
+    }
+    let reference = engine.encouraged_points.last().copied()?;
+    let mut best = None;
+    let mut distance = 9.;
+    let n = if on_face {
+        ctx.plane_normal.normalize_or_zero()
+    } else {
+        DVec3::ZERO
+    };
+    for axis in [DVec3::X, DVec3::Y, DVec3::Z] {
+        let an = axis.dot(n);
+        let reach = if an.abs() < 1e-6 {
+            if (reference - ctx.candidate).dot(n).abs() > 1e-4 {
+                continue;
+            }
+            (ctx.candidate - reference).dot(axis)
+        } else {
+            (ctx.candidate - reference).dot(n) / an
+        };
+        if reach.abs() < 1e-3 {
+            continue;
+        }
+        let foot = reference + axis * reach;
+        let d = pixels(foot);
+        if d <= distance && visible(scene, ctx, foot) {
+            distance = d;
+            let mut r = result(foot, SnapKind::FromPoint, COLOR_ENDPOINT, "From point");
+            r.guides.push((reference, foot, COLOR_ENDPOINT));
+            best = Some(r);
+        }
+    }
+    best
 }
 
 impl SnapEngine {
@@ -243,6 +386,17 @@ impl SnapEngine {
                     return result(p, SnapKind::Intersection, COLOR_ENDPOINT, "Intersection");
                 }
             }
+            if let Some(r) = from_point(
+                scene,
+                ctx,
+                &edges,
+                self.encouraged_points.last().copied(),
+                origin,
+                dir,
+                true,
+            ) {
+                return r;
+            }
             let p = project_line(ray, origin, dir);
             let color = match axis {
                 Some('x') => COLOR_AXIS_X,
@@ -255,6 +409,21 @@ impl SnapEngine {
             r.guides
                 .push((origin - dir * 100., origin + dir * 100., color));
             return r;
+        }
+        if let Some(start) = start {
+            if let Some(dir) = axis_direction(ctx.candidate - start, 10.) {
+                if let Some(r) = from_point(
+                    scene,
+                    ctx,
+                    &edges,
+                    self.encouraged_points.last().copied(),
+                    start,
+                    dir,
+                    false,
+                ) {
+                    return r;
+                }
+            }
         }
         let near: Vec<_> = edges.iter().filter(|e| e.distance <= 14.).collect();
         let mut hits = vec![];
@@ -315,6 +484,27 @@ impl SnapEngine {
                     if e.guide { "On Guide Line" } else { "On Edge" },
                 );
             }
+        }
+        if let (Some(start), Some((a, b))) = (start, self.reference_edge) {
+            let draw = (ctx.candidate - start).normalize_or_zero();
+            let parallel = (b - a).normalize_or_zero();
+            let perpendicular = ctx.plane_normal.cross(parallel).normalize_or_zero();
+            for (direction, label) in [
+                (parallel, "Parallel to edge"),
+                (perpendicular, "Perpendicular to edge"),
+            ] {
+                if direction.length() > 1e-9
+                    && draw.dot(direction).abs() >= 3_f64.to_radians().cos()
+                {
+                    let point = project_line(ray, start, direction);
+                    let mut r = result(point, SnapKind::Reference, COLOR_REFERENCE, label);
+                    r.guides.push((start, point, COLOR_REFERENCE));
+                    return r;
+                }
+            }
+        }
+        if let Some(r) = memory_snap(self, scene, ctx, hover_face(scene, ray).is_some()) {
+            return r;
         }
         // Weak angular cues preserve the raw candidate, as source rule9 does.
         if let Some(start) = start {
@@ -478,6 +668,40 @@ mod tests {
         assert_eq!(r.kind, SnapKind::AxisInference);
         assert_eq!(r.point, candidate);
     }
+    #[test]
+    fn memory_lines_yield_to_midpoint_and_preserve_wall_plane() {
+        let c = camera(10.);
+        let mut scene = Scene::new();
+        let a = scene.mesh.add_vertex(DVec3::new(2., 2., 0.));
+        let b = scene.mesh.add_vertex(DVec3::new(6., 2., 0.));
+        scene.mesh.add_edge(a, b);
+        let mut engine = SnapEngine::default();
+        engine.encourage_point(DVec3::new(4., 4., 0.));
+        let (ray, ctx) = context(&c, DVec3::new(4., 2., 0.), DVec2::ZERO);
+        assert_eq!(
+            engine.snap_screen(&ray, &scene, None, None, &ctx).kind,
+            SnapKind::Midpoint
+        );
+        let (ray, ctx) = context(&c, DVec3::new(4., 6., 0.), DVec2::X * 2.);
+        let r = engine.snap_screen(&ray, &Scene::new(), None, None, &ctx);
+        assert_eq!(r.kind, SnapKind::FromPoint);
+        assert_eq!(r.point, DVec3::new(4., 6., 0.));
+    }
+    #[test]
+    fn lock_fetches_off_line_reference_height_without_breaking_axis() {
+        let c = camera(10.);
+        let mut scene = Scene::new();
+        let a = scene.mesh.add_vertex(DVec3::new(3., 2., 0.));
+        let b = scene.mesh.add_vertex(DVec3::new(4., 2., 0.));
+        scene.mesh.add_edge(a, b);
+        let mut engine = SnapEngine::default();
+        engine.locked_axis = Some('x');
+        let (ray, ctx) = context(&c, DVec3::new(3., 2., 0.), DVec2::ZERO);
+        let r = engine.snap_screen(&ray, &scene, Some(DVec3::ZERO), None, &ctx);
+        assert_eq!(r.kind, SnapKind::FromPoint);
+        assert_eq!(r.point, DVec3::new(3., 0., 0.));
+    }
+
     #[test]
     fn locked_axis_still_snaps_endpoints_and_closure_in_both_directions() {
         let c = camera(10.);
