@@ -1,0 +1,5 @@
+# Root finite-position attribution and reviewed admission
+
+Fresh root execution of actual shared IngeTrazoApp.update_ui and egui tessellation reproduces24 frames at three actual target sizes from the retained native input IGZ and lifecycle marker triangle. Every rejected vertex has finite position/UV and valid indices; large positions arise in the actual shared app. No injected RawInput sequence here proves native input delivery or GPU acceptance.
+
+Generic Metal admission now uses the existing exact f32 vertex-shader doubled/projected domain validation, while finite positions/UV, index validity, vertex/index counts, allocation budget and framebuffer bounds remain required. The arbitrary million-position cap is removed without altering the CAD integer span physical domain. Both Apple Metal all-target checks pass. A new real GPU far-position whole-target control and four refusal controls are wired, with independent checker requiring the actual third image. Native GPU and lifecycle execution remain pending on this source; previous painting and callback failures remain retained.

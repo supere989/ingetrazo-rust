@@ -31,6 +31,7 @@ jobs:
           target/debug/examples/cad2d_probe --allow-unsupported --output=docs/audits/metal-native-link-ci/fetch > docs/audits/metal-native-link-ci/fetch-render.log 2>&1
       - name: Actual native Metal egui textured font and scissor draws
         run: |
+          cargo test --locked -p ingetrazo-metal --lib egui_painter::tests -- --nocapture > docs/audits/metal-native-link-ci/egui-domain-unit.log 2>&1
           target/debug/examples/egui_draw_probe --output=docs/audits/metal-native-link-ci/egui-draw > docs/audits/metal-native-link-ci/egui-draw.log 2>&1
           python3 scripts/check-metal-egui-draw.py docs/audits/metal-native-link-ci/egui-draw > docs/audits/metal-native-link-ci/egui-draw-check.json
       - name: Actual fractional font alpha and texture sampler contract

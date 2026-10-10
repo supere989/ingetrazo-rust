@@ -1,0 +1,54 @@
+{
+  "source_revision": "dbeeb8630069be5de2b7decae5ac40db738dfd13",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-metal",
+        "--all-targets",
+        "--target",
+        "aarch64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-0.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-metal",
+        "--all-targets",
+        "--target",
+        "x86_64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "egui_mesh_admission_probe",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-2.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-metal-host-root-target/debug/examples/egui_mesh_admission_probe",
+        "/tmp/ingetrazo-metal-host-root/docs/audits/metal-clip-native-arm/files/document-lifecycle/save/document.igz"
+      ],
+      "returncode": 0,
+      "log": "command-3.log"
+    }
+  ]
+}

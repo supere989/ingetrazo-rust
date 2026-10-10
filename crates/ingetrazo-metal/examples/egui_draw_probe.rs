@@ -296,7 +296,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     std::fs::write(
         output.join("result.json"),
-        "{\"passed\":true,\"whole_images\":2,\"warm_identical_gpu_images\":10,\"completed_drop\":true,\"actual_shared_event_timeout\":true,\"pending_drop_retained\":true,\"physical_mac_claim\":false}",
+        "{\"passed\":true,\"whole_images\":3,\"warm_identical_gpu_images\":10,\"completed_drop\":true,\"actual_shared_event_timeout\":true,\"pending_drop_retained\":true,\"physical_mac_claim\":false}",
     )?;
     eprintln!(
         "PASS actual native textured/font/clip images, sparse partial, warm uploads0, real admission rollback, completed vs pending Drop and actual GPU-gated timeout. Physical Mac/WSI still open."

@@ -26,16 +26,22 @@ def negative_controls():
         try: exact(broken,expected(True) if name=="stale partial" else image)
         except AssertionError: pass
         else: raise AssertionError(f"Negative accepted: {name}")
-    return 5
+    far=bytes([255,0,0,255])*(64*64)
+    broken=bytearray(far);broken[1]=1
+    try: exact(bytes(broken),far)
+    except AssertionError: pass
+    else: raise AssertionError("Altered far-finite pixel accepted")
+    return 6
 
 def validate(root):
     data=json.loads((root/"result.json").read_text())
-    assert data=={"passed":True,"whole_images":2,"warm_identical_gpu_images":10,"completed_drop":True,"actual_shared_event_timeout":True,"pending_drop_retained":True,"physical_mac_claim":False},"Missing/mismatched native control protocol"
+    assert data=={"passed":True,"whole_images":3,"warm_identical_gpu_images":10,"completed_drop":True,"actual_shared_event_timeout":True,"pending_drop_retained":True,"physical_mac_claim":False},"Missing/mismatched native control protocol"
     for name,partial in [("initial",False),("partial",True)]:
         want=expected(partial)
         exact((root/f"expected-{name}.rgba").read_bytes(),want)
         exact((root/f"{name}.rgba").read_bytes(),want)
-    return {"whole_images_exact":2,"negative_controls":negative_controls(),"physical_mac_claim":False}
+    exact((root/"far-finite.rgba").read_bytes(),bytes([255,0,0,255])*(64*64))
+    return {"whole_images_exact":3,"negative_controls":negative_controls(),"physical_mac_claim":False}
 
 if __name__=="__main__":
     p=argparse.ArgumentParser();p.add_argument("root",type=Path,nargs="?");p.add_argument("--self-test",action="store_true");args=p.parse_args()
