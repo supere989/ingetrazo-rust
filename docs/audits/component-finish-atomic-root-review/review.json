@@ -1,0 +1,9 @@
+{
+  "tested_commit": "c26079a",
+  "workspace_passed": 470,
+  "workspace_ignored": 2,
+  "scope": "Atomic refused Finish preserves live scene, history, active tool and preview; successful Finish cancels unfinished preview. Combined current-main unit/integration and original source checker evidence.",
+  "rendered_actual_entry_commit": "0adce5f",
+  "rendered_scope": "Owner evidence on isolated software Xvfb; actual double-click entry, Finish/global Undo/Redo. Not latest combined executable GPU proof.",
+  "full_component_parity": "OPEN"
+}

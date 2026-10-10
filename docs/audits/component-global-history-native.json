@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "24d9f7ae87517110d6fbad29de04cd42de1fc649",
+    "rust_commit": "c26079a85645796695ddab1de024d13dcf45855d",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -11,7 +11,7 @@
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "native_sha256": "700ac59ff81b731ec80c8503694b9cfe40620ffb350a8fb07dece6699cf466c2",
+  "native_sha256": "9d926e2af31546aebfa2ba4ca491e470d79e303e0d85f09409146b0dc90ce1c5",
   "scope": "Actual public GUI history/controller calls with explicit face mutation snapshots, six frozen original ordering recipes and two separately classified native integrity corrections. No native key/pixel acceptance; source actual Qt dispatch evidence retained separately.",
   "source_checks_passed": 18,
   "native_integrity_boundaries": [
