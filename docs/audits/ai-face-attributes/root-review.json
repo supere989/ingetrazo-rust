@@ -2,7 +2,7 @@
   "source_commit": "99b13912",
   "fresh_original_states": 12,
   "retained_native_states_match": true,
-  "fresh_native_execution": false,
+  "fresh_native_execution": true,
   "checker": "12 states and six rejecting mutations pass",
   "review": "History moves owned faces into reserved command slots after fallible preparation; attributes are not recursively cloned. Logical charge moves staging to history.",
   "remaining": [
@@ -11,5 +11,21 @@
     "production scene integration",
     "global memory bounds"
   ],
-  "fresh_original_sha256": "b08533e57cccc152ab9c32169c8bac391afb060eb531140e03b0c3375d121a15"
+  "fresh_original_sha256": "b08533e57cccc152ab9c32169c8bac391afb060eb531140e03b0c3375d121a15",
+  "integrated_source": "314116be",
+  "fresh_native_states": 12,
+  "binary_sha256": {
+    "face_attributes": "b90d17aeefbbab0755c1b21d7f113318ad8632e954d814ea41993c15fc9cab1a",
+    "face_attribute_failure": "e2b6db1dd5d46f3d4154bf4322e3b7134a8fef5f69de062461a05e08d7fe68f9"
+  },
+  "allocation": {
+    "payload_bytes": 57344,
+    "history_max_allocation": 736,
+    "history_total_allocation_bytes": 3296,
+    "history_allocation_calls": 17,
+    "pointer_stable": true,
+    "actual_refusal_preserved_redo": true,
+    "ledger_released": true
+  },
+  "temporary_target_purged_bytes": 187049035
 }

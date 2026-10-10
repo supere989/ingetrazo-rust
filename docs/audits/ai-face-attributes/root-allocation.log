@@ -1,0 +1,2 @@
+{"payload_bytes":57344,"history_max_allocation":736,"history_total_allocation_bytes":3296,"history_allocation_calls":17,"pointer_stable":true,"actual_refusal_preserved_redo":true,"ledger_released":true}
+actual new-radial allocator refusal preserves mesh, Redo, earlier transaction; retry+Undo/Redo and ledger release PASS
