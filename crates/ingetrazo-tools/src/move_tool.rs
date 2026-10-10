@@ -7,6 +7,13 @@ use ingetrazo_core::scene::{Scene, SelectionItem};
 
 use crate::base::{Tool, ToolContext, ToolType};
 
+#[derive(Debug,Default,Clone)]
+struct CopyAssets{
+    mesh:ingetrazo_core::mesh::Mesh,
+    plain:Vec<(DVec3,DVec3)>,
+    isolated:Vec<DVec3>,
+    groups:Vec<ingetrazo_core::groups::Group>,
+}
 /// Move and Copy tool supporting vector translations, Ctrl-copy, and linear array repeats.
 #[derive(Debug, Default, Clone)]
 pub struct MoveTool {
@@ -20,6 +27,9 @@ pub struct MoveTool {
     pub last_delta: Option<DVec3>,
     pub last_moved_verts: Vec<usize>,
     exclusions: ingetrazo_core::snap_screen::SnapExclusions,
+    copy_assets:CopyAssets,
+    last_error:Option<String>,
+    control_down:bool,
 }
 
 impl MoveTool {
@@ -38,17 +48,20 @@ impl MoveTool {
 
     /// Resolve targets from selection or mouse click.
     pub fn gather_targets(&mut self, scene: &Scene, ctx: &ToolContext) {
+        self.last_error=None;
         let mut vert_set = HashSet::new();
+        let mut copy_edges=HashSet::new();let mut copy_faces=HashSet::new();let mut isolated=vec![];
         let mut group_set = HashSet::new();let mut plane_set=HashSet::new();
 
         if !scene.selection.is_empty() {
             for item in &scene.selection {
                 match item {
                     SelectionItem::Vertex(vid) => {
-                        vert_set.insert(*vid);
+                        if let Some(vertex)=scene.mesh.vertices.get(*vid){vert_set.insert(*vid);isolated.push(vertex.position);}
                     }
                     SelectionItem::Edge(eid) => {
                         if *eid < scene.mesh.edges.len() {
+                            copy_edges.insert(*eid);
                             let e = &scene.mesh.edges[*eid];
                             vert_set.insert(e.v0);
                             vert_set.insert(e.v1);
@@ -56,6 +69,7 @@ impl MoveTool {
                     }
                     SelectionItem::Face(fid) => {
                         if *fid < scene.mesh.faces.len() {
+                            copy_faces.insert(*fid);
                             for &v in &scene.mesh.faces[*fid].vertices {
                                 vert_set.insert(v);
                             }
@@ -69,20 +83,39 @@ impl MoveTool {
                 }
             }
         } else {
-            // Pick under cursor
-            if let Some(id)=crate::base::pick_section_plane(scene,&ctx.ray,0.2){plane_set.insert(id);}else if let Some(vid) = crate::base::pick_scene_vertex(scene, &ctx.ray, 0.2) {
-                vert_set.insert(vid);
-            } else if let Some(eid) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2) {
-                let e = &scene.mesh.edges[eid];
-                vert_set.insert(e.v0);
-                vert_set.insert(e.v1);
-            } else if let Some((fid, _, _)) = crate::base::pick_scene_face(scene, &ctx.ray) {
-                for &v in &scene.mesh.faces[fid].vertices {
-                    vert_set.insert(v);
-                }
+            // Original gather_targets picks a group, then an edge, then a face.
+            if let Some(id)=crate::base::pick_section_plane(scene,&ctx.ray,0.2){plane_set.insert(id);}
+            else if let Some((id,_))=crate::base::pick_scene_group(scene,&ctx.ray,0.2){group_set.insert(id);}
+            else if let Some(eid)=crate::base::pick_scene_edge(scene,&ctx.ray,0.2){
+                copy_edges.insert(eid);let e=&scene.mesh.edges[eid];vert_set.insert(e.v0);vert_set.insert(e.v1);
+            }else if let Some((fid,_,_))=crate::base::pick_scene_face(scene,&ctx.ray){
+                copy_faces.insert(fid);vert_set.extend(scene.mesh.faces[fid].vertices.iter().copied());
+            }else if let Some(vid)=crate::base::pick_scene_vertex(scene,&ctx.ray,0.2){
+                vert_set.insert(vid);isolated.push(scene.mesh.vertices[vid].position);
             }
         }
 
+        let mut face_sides=HashSet::new();
+        for &id in &copy_faces{let face=&scene.mesh.faces[id];for ring in std::iter::once(&face.vertices).chain(&face.holes){for i in 0..ring.len(){let (a,b)=(ring[i],ring[(i+1)%ring.len()]);face_sides.insert(if a<b{(a,b)}else{(b,a)});}}}
+        let mut plain=vec![];
+        copy_edges.retain(|&id|{let edge=&scene.mesh.edges[id];let pair=if edge.v0<edge.v1{(edge.v0,edge.v1)}else{(edge.v1,edge.v0)};
+            if !edge.soft&&edge.curve_id.is_none()&&!face_sides.contains(&pair){plain.push((scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position));false}else{true}});
+        match ingetrazo_core::containers::copy_mesh_subset(&scene.mesh,&copy_faces,&copy_edges){
+            Ok(mut mesh)=>{
+                // Source AddFace/AddEdge copy commands author fresh boundaries;
+                // face attributes travel in full, explicit edges carry soft/curve.
+                fn key(a:DVec3,b:DVec3)->([u64;3],[u64;3]){
+                    let point=|v:DVec3|v.to_array().map(|x|if x==0.{0}else{x.to_bits()});let (a,b)=(point(a),point(b));if a<b{(a,b)}else{(b,a)}
+                }
+                let flags=copy_edges.iter().map(|&id|{let edge=&scene.mesh.edges[id];(key(scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position),(edge.soft,edge.curve_id))}).collect::<std::collections::HashMap<_,_>>();
+                for edge in &mut mesh.edges{
+                    let (soft,curve)=flags.get(&key(mesh.vertices[edge.v0].position,mesh.vertices[edge.v1].position)).copied().unwrap_or((false,None));
+                    edge.attrs.clear();edge.layer=None;edge.hidden=false;edge.soft=soft;edge.curve_id=curve;
+                }
+                self.copy_assets=CopyAssets{mesh,plain,isolated,groups:group_set.iter().filter_map(|&id|scene.groups.get(id).cloned()).collect()};
+            }
+            Err(error)=>{self.last_error=Some(error);vert_set.clear();group_set.clear();plane_set.clear();self.copy_assets=Default::default();}
+        }
         self.exclusions.loose_edges=scene.mesh.edges.iter().enumerate()
             .filter(|(_,edge)|vert_set.contains(&edge.v0)||vert_set.contains(&edge.v1))
             .map(|(id,_)|id).collect();
@@ -98,15 +131,17 @@ impl MoveTool {
             return;
         }
 
+        if !delta.is_finite(){self.last_error=Some("Move displacement must be finite".into());return;}
         if self.is_copy_mode {
-            // Copy mode: clone target vertices
-            let mut new_verts = Vec::with_capacity(self.target_vertices.len());
-            for &vid in &self.target_vertices {
-                let old_pos = scene.mesh.vertices[vid].position;
-                let new_vid = scene.mesh.add_vertex(old_pos + delta);
-                new_verts.push(new_vid);
-            }
-            self.last_moved_verts = new_verts;
+            let result=(||->Result<_,String>{
+                let (mut mesh,_,_)=ingetrazo_core::containers::paste_mesh(&scene.mesh,&self.copy_assets.mesh,delta)?;
+                let segments=self.copy_assets.plain.iter().map(|&(a,b)|(a+delta,b+delta)).collect::<Vec<_>>();
+                if !segments.is_empty(){mesh=ingetrazo_core::drafting::add_segments(&mesh,&segments,None,None)?;}
+                let vertices=self.copy_assets.isolated.iter().map(|p|mesh.add_vertex(*p+delta)).collect::<Vec<_>>();
+                let groups=self.copy_assets.groups.iter().map(|g|{let mut copy=g.duplicate_instance();copy.transform=DMat4::from_translation(delta)*copy.transform;copy}).collect::<Vec<_>>();
+                Ok((mesh,vertices,groups))
+            })();
+            match result{Ok((mesh,vertices,groups))=>{scene.mesh=mesh;scene.groups.extend(groups);self.last_moved_verts=vertices;},Err(error)=>{self.last_error=Some(error);return;}}
         } else {
             // Translate original vertices
             for &vid in &self.target_vertices {
@@ -132,6 +167,13 @@ impl MoveTool {
 impl Tool for MoveTool {
     fn tool_type(&self) -> ToolType {
         ToolType::Move
+    }
+
+    fn error_message(&self)->Option<&str>{self.last_error.as_deref()}
+
+    fn note_control_state(&mut self,held:bool){
+        if held&&!self.control_down{self.is_copy_mode=!self.is_copy_mode;}
+        self.control_down=held;
     }
 
     fn name(&self) -> &'static str {
@@ -176,15 +218,11 @@ impl Tool for MoveTool {
 
     fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
         self.hover_point = Some(ctx.world);
-        if ctx.ctrl_held {
-            self.is_copy_mode = true;
-        }
+        self.note_control_state(ctx.ctrl_held);
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if ctx.ctrl_held {
-            self.is_copy_mode = true;
-        }
+        self.note_control_state(ctx.ctrl_held);
 
         if self.start_point.is_none() {
             self.gather_targets(scene, ctx);
@@ -270,7 +308,7 @@ impl Tool for MoveTool {
 
         self.execute_move(delta, scene);
         self.reset();
-        Ok(())
+        if let Some(error)=self.last_error.take(){Err(error)}else{Ok(())}
     }
 }
 
@@ -279,6 +317,17 @@ mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
 
+    #[test]
+    fn control_press_toggles_once_release_keeps_mode_and_commit_consumes_it(){
+        let mut tool=MoveTool::new();tool.note_control_state(true);assert!(tool.is_copy_mode);
+        tool.note_control_state(true);assert!(tool.is_copy_mode);
+        tool.note_control_state(false);assert!(tool.is_copy_mode);
+        tool.note_control_state(true);assert!(!tool.is_copy_mode);
+        tool.note_control_state(false);tool.note_control_state(true);assert!(tool.is_copy_mode);
+        tool.reset();assert!(!tool.is_copy_mode);
+        tool.note_control_state(true);assert!(!tool.is_copy_mode,"held modifier does not rearm consumed operation");
+        tool.note_control_state(false);tool.note_control_state(true);assert!(tool.is_copy_mode);
+    }
     #[test]
     fn inference_excludes_incident_edges_and_nested_groups_but_copy_keeps_them(){
         let mut scene=Scene::new();
@@ -295,6 +344,39 @@ mod tests {
         assert_eq!(excluded.groups,HashSet::from([scene.groups[0].id]));
         tool.is_copy_mode=true;assert!(tool.snap_exclusions().is_none());
         tool.on_cancel(&mut scene);assert!(tool.snap_exclusions().is_none());
+    }
+
+    fn copy_at(scene:&mut Scene,delta:DVec3)->MoveTool{
+        let mut tool=MoveTool::new();let mut first=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::new(0.,0.,10.),-DVec3::Z));first.ctrl_held=true;tool.on_click(scene,&first);
+        tool.on_click(scene,&ToolContext::new(delta,first.ray));tool
+    }
+    #[test]fn copy_holed_face_preserves_face_paint_uv_and_authors_fresh_boundaries(){
+        let mut scene=Scene::new();let outer=[DVec3::ZERO,DVec3::X*4.,DVec3::new(4.,4.,0.),DVec3::Y*4.].map(|p|scene.mesh.add_vertex(p));
+        let hole=[DVec3::new(1.,1.,0.),DVec3::new(1.,3.,0.),DVec3::new(3.,3.,0.),DVec3::new(3.,1.,0.)].map(|p|scene.mesh.add_vertex(p));
+        let face=scene.mesh.add_face(outer.to_vec(),vec![hole.to_vec()]).unwrap();
+        scene.mesh.faces[face].attrs.insert("vendor".into(),serde_json::json!(71));scene.mesh.faces[face].attrs.insert("texture".into(),serde_json::json!({"uvw":[1.,0.,0.,2.,0.,1.,0.,3.],"path":"tile.png"}));
+        for edge in &mut scene.mesh.edges{edge.soft=true;edge.attrs.insert("edge-vendor".into(),serde_json::json!(4));}
+        scene.select(SelectionItem::Face(face));let before=scene.mesh.clone();let tool=copy_at(&mut scene,DVec3::X*10.);assert!(tool.error_message().is_none());
+        assert_eq!(scene.mesh.faces.len(),2);assert_eq!(scene.mesh.edges.len(),16);assert_eq!(scene.mesh.vertices.len(),16);
+        let copied=&scene.mesh.faces[1];assert_eq!(copied.holes.len(),1);assert_eq!(copied.attrs["vendor"],serde_json::json!(71));assert_eq!(copied.attrs["texture"]["uvw"][3],serde_json::json!(-8.));
+        assert!(scene.mesh.edges[..8].iter().all(|e|e.soft));assert!(scene.mesh.edges[8..].iter().all(|e|!e.soft&&!e.attrs.contains_key("edge-vendor")));
+        assert_eq!(scene.mesh.vertices[0].uid,before.vertices[0].uid);assert_ne!(scene.mesh.vertices[8].uid,before.vertices[0].uid);
+    }
+    #[test]fn copied_plain_edge_splits_existing_crossing_without_repainting_source(){
+        let mut scene=Scene::new();let a=scene.mesh.add_vertex(-DVec3::X);let b=scene.mesh.add_vertex(DVec3::X);let edge=scene.mesh.add_edge(a,b).unwrap();
+        let c=scene.mesh.add_vertex(DVec3::Y);let d=scene.mesh.add_vertex(DVec3::Y*3.);scene.mesh.add_edge(c,d);
+        scene.mesh.edges[edge].attrs.insert("vendor".into(),serde_json::json!(71));scene.select(SelectionItem::Edge(edge));let tool=copy_at(&mut scene,DVec3::Y*2.);assert!(tool.error_message().is_none());
+        assert_eq!(scene.mesh.edges.len(),5);let crossing=scene.mesh.vertices.iter().position(|v|v.position.distance(DVec3::Y*2.)<1e-9).unwrap();
+        assert_eq!(scene.mesh.edges.iter().filter(|e|e.contains_vertex(crossing)).count(),4);assert_eq!(scene.mesh.edges.iter().filter(|e|e.attrs.get("vendor")==Some(&serde_json::json!(71))).count(),1);
+    }
+    #[test]fn group_copy_retains_private_semantics_nested_metadata_and_fresh_placements(){
+        let mut scene=Scene::new();let mut group=ingetrazo_core::groups::Group::new("private");group.transform=DMat4::from_rotation_z(0.3);group.native_document=serde_json::json!({"material":{"color":[1,0,0]},"vendor":71});group.children.push(ingetrazo_core::groups::Group::new("child"));scene.groups.push(group);scene.select(SelectionItem::Group(0));
+        let original=scene.groups[0].clone();let tool=copy_at(&mut scene,DVec3::X*5.);assert!(tool.error_message().is_none());assert_eq!(scene.groups.len(),2);let copy=&scene.groups[1];
+        assert_eq!(scene.groups[0],original);assert_ne!(copy.id,original.id);assert_ne!(copy.children[0].id,original.children[0].id);assert!(copy.component_definition.is_none());assert_eq!(copy.native_document,original.native_document);
+        assert!((copy.transform.transform_point3(DVec3::ONE)-original.transform.transform_point3(DVec3::ONE)-DVec3::X*5.).length()<1e-10);
+    }
+    #[test]fn nonfinite_copy_is_atomic_and_actionable(){
+        let mut scene=Scene::new();let v=scene.mesh.add_vertex(DVec3::ZERO);scene.select(SelectionItem::Vertex(v));let before=scene.clone();let tool=copy_at(&mut scene,DVec3::splat(f64::NAN));assert_eq!(scene,before);assert_eq!(tool.error_message(),Some("Move displacement must be finite"));
     }
 
     #[test]

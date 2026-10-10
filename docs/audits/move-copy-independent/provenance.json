@@ -1,0 +1,14 @@
+{
+  "source_revision": "635aca36a6f396b98f44468119b5053ac48016b9",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "88a8f598ce7ace2ae49fe146fd351942a0e298207dd1f515f116cf6648b4f4c8",
+  "python": "3.13.13 PySide6 6.12",
+  "renderer": "original controller preview softwareGL/Xvfb; native controlled Tool API no screenshot",
+  "cases": 4,
+  "negative_controls": [
+    "curve-collision",
+    "child-placement",
+    "component-unlinked",
+    "held-key-rearm"
+  ]
+}

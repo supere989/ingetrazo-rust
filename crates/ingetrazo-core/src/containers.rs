@@ -64,14 +64,19 @@ pub fn transform_mesh(source:&Mesh,transform:DMat4)->Result<Mesh,String>{
     copy.rebuild_spatial_index();Ok(copy)
 }
 
+/// Extract explicit loose faces/edges, including all copied face boundaries.
+/// Transform tools use this without cloning unrelated Scene data at grab time.
+pub fn copy_mesh_subset(source:&Mesh,faces:&HashSet<usize>,selected_edges:&HashSet<usize>)->Result<Mesh,String>{
+    if faces.iter().any(|i|*i>=source.faces.len())||selected_edges.iter().any(|i|*i>=source.edges.len()){return Err("invalid geometry selection".into());}
+    let mut edges=selected_edges.clone();let pairs=boundaries(source,faces);
+    for (i,e) in source.edges.iter().enumerate(){if pairs.contains(&pair(e.v0,e.v1)){edges.insert(i);}}
+    let mut mesh=Mesh::new();append_subset(&mut mesh,source,faces,&edges,DMat4::IDENTITY,None,None,false)?;Ok(mesh)
+}
 /// Copy selected loose geometry, including every selected face boundary.
 pub fn copy_selected_mesh(scene:&Scene)->Result<Mesh,String> {
     let faces:HashSet<_>=scene.selection.iter().filter_map(|s|if let SelectionItem::Face(i)=s {Some(*i)}else{None}).collect();
-    let mut edges:HashSet<_>=scene.selection.iter().filter_map(|s|if let SelectionItem::Edge(i)=s {Some(*i)}else{None}).collect();
-    if faces.iter().any(|i|*i>=scene.mesh.faces.len())||edges.iter().any(|i|*i>=scene.mesh.edges.len()){return Err("invalid clipboard selection".into());}
-    let pairs=boundaries(&scene.mesh,&faces);
-    for (i,e) in scene.mesh.edges.iter().enumerate(){if pairs.contains(&pair(e.v0,e.v1)){edges.insert(i);}}
-    let mut mesh=Mesh::new();append_subset(&mut mesh,&scene.mesh,&faces,&edges,DMat4::IDENTITY,None,None,false)?;Ok(mesh)
+    let edges:HashSet<_>=scene.selection.iter().filter_map(|s|if let SelectionItem::Edge(i)=s {Some(*i)}else{None}).collect();
+    copy_mesh_subset(&scene.mesh,&faces,&edges)
 }
 /// Append a translated snapshot atomically; remap curve identities independently
 /// and keep attributes on pre-existing destination edges untouched.
