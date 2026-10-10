@@ -359,6 +359,14 @@ impl IngeTrazoApp {
         if self.component_history_step(false).is_some(){return;}
         if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
+            if prev.history_shareback.is_some() {
+                let mut inverse=self.scene.clone();inverse.history_shareback=prev.history_shareback;
+                match crate::component_edit::shareback_restore(&self.scene,&prev) {
+                    Ok(restored)=>{self.redo_stack.push(inverse);self.scene=restored;self.bump_model_revision();self.status_message="Undo".into();},
+                    Err(error)=>{self.undo_stack.push(prev);self.status_message=error;},
+                }
+                return;
+            }
             self.redo_stack.push(self.scene.clone());
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
@@ -377,6 +385,14 @@ impl IngeTrazoApp {
         if self.component_history_step(true).is_some(){return;}
         if let Some(mut next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
+            if next.history_shareback.is_some() {
+                let mut inverse=self.scene.clone();inverse.history_shareback=next.history_shareback;
+                match crate::component_edit::shareback_restore(&self.scene,&next) {
+                    Ok(restored)=>{self.undo_stack.push(inverse);self.scene=restored;self.bump_model_revision();self.status_message="Redo".into();},
+                    Err(error)=>{self.redo_stack.push(next);self.status_message=error;},
+                }
+                return;
+            }
             self.undo_stack.push(self.scene.clone());
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             self.scene = next;self.bump_model_revision();
