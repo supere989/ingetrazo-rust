@@ -1,0 +1,1166 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "4c5da0d699bacebaeb1e96f4a870e0157eaf0c19",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "curve",
+  "centered": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "kind": "Center",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 0,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 0.821410051,
+    "tool": "Line",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24
+  },
+  "live_preview": {
+    "anchor": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      949.2035415853861,
+      336.72986048918267
+    ],
+    "preview_lines": 1,
+    "revision": 2,
+    "rim": [
+      859.0342538308635,
+      336.7298604891827
+    ],
+    "time": 2.917703963,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24
+  },
+  "control_states": [
+    {
+      "enabled": true,
+      "held": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          661.0,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": [
+          741.9732297100232,
+          295.66304904503284
+        ],
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          859.3724330599499,
+          336.7298604891827
+        ],
+        "preview_lines": 25,
+        "revision": 3,
+        "rim": [
+          769.2031453054271,
+          336.72986048918267
+        ],
+        "time": 3.131553122,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      },
+      "held_after_frames": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          661.0,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": [
+          741.9732297100232,
+          295.66304904503284
+        ],
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          859.3724330599499,
+          336.7298604891827
+        ],
+        "preview_lines": 25,
+        "revision": 3,
+        "rim": [
+          769.2031453054271,
+          336.72986048918267
+        ],
+        "time": 3.43044163,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      },
+      "released": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          661.0,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": [
+          741.9732297100232,
+          295.66304904503284
+        ],
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          859.3724330599499,
+          336.7298604891827
+        ],
+        "preview_lines": 25,
+        "revision": 3,
+        "rim": [
+          769.2031453054271,
+          336.72986048918267
+        ],
+        "time": 3.58285173,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      }
+    },
+    {
+      "enabled": false,
+      "held": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.9962495075927937,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          750.8311085254362,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": null,
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          949.2035415853861,
+          336.72986048918267
+        ],
+        "preview_lines": 1,
+        "revision": 4,
+        "rim": [
+          859.0342538308635,
+          336.7298604891827
+        ],
+        "time": 3.732491394,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      },
+      "held_after_frames": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.9962495075927937,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          750.8311085254362,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": null,
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ],
+          [
+            2.9962494373321533,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          949.2035415853861,
+          336.72986048918267
+        ],
+        "preview_lines": 1,
+        "revision": 4,
+        "rim": [
+          859.0342538308635,
+          336.7298604891827
+        ],
+        "time": 4.035820617,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      },
+      "released": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.9962495075927937,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          750.8311085254362,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": null,
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ],
+          [
+            2.9962494373321533,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          949.2035415853861,
+          336.72986048918267
+        ],
+        "preview_lines": 1,
+        "revision": 4,
+        "rim": [
+          859.0342538308635,
+          336.7298604891827
+        ],
+        "time": 4.184387061,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      }
+    },
+    {
+      "enabled": true,
+      "held": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          661.0,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": [
+          741.9732297100232,
+          295.66304904503284
+        ],
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ],
+          [
+            2.9962494373321533,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          859.3724330599499,
+          336.7298604891827
+        ],
+        "preview_lines": 25,
+        "revision": 5,
+        "rim": [
+          769.2031453054271,
+          336.72986048918267
+        ],
+        "time": 4.3369948560000005,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      },
+      "held_after_frames": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          661.0,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": [
+          741.9732297100232,
+          295.66304904503284
+        ],
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ],
+          [
+            2.9962494373321533,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          859.3724330599499,
+          336.7298604891827
+        ],
+        "preview_lines": 25,
+        "revision": 5,
+        "rim": [
+          769.2031453054271,
+          336.72986048918267
+        ],
+        "time": 4.633260756,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      },
+      "released": {
+        "anchor": [
+          3.2,
+          3.0,
+          1.0
+        ],
+        "center": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "center_pixel": [
+          661.0,
+          336.72986048918267
+        ],
+        "copy_center": null,
+        "copy_probe_pixel": [
+          741.9732297100232,
+          295.66304904503284
+        ],
+        "curves": [
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71,
+          71
+        ],
+        "edges": 24,
+        "faces": 0,
+        "inference_point": [
+          4.196249507592794,
+          3.0,
+          1.0
+        ],
+        "kind": "FromPoint",
+        "memory": [
+          [
+            2.0,
+            3.0,
+            1.0
+          ],
+          [
+            2.9962494373321533,
+            3.0,
+            1.0
+          ]
+        ],
+        "mode": "curve",
+        "move_target": [
+          859.3724330599499,
+          336.7298604891827
+        ],
+        "preview_lines": 25,
+        "revision": 5,
+        "rim": [
+          769.2031453054271,
+          336.72986048918267
+        ],
+        "time": 4.783076072,
+        "tool": "Move",
+        "undo": 0,
+        "unused_vertices": 0,
+        "vertices": 24
+      }
+    }
+  ],
+  "copy_preview": {
+    "anchor": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": [
+      741.9732297100232,
+      295.66304904503284
+    ],
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 25,
+    "revision": 5,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 4.783076072,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24
+  },
+  "copied": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": [
+      2.9962495075927937,
+      3.0,
+      1.0
+    ],
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72
+    ],
+    "edges": 48,
+    "faces": 0,
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 6,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 5.254994789,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 48
+  },
+  "undone": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "edges": 24,
+    "faces": 0,
+    "inference_point": [
+      4.743057787883817,
+      5.1561751526616995,
+      0.0
+    ],
+    "kind": "None",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "curve",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 7,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 5.9138098150000005,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 24
+  },
+  "ghost_patch_changed_pixels": 24,
+  "quiet_patch_changed_pixels": 0,
+  "original_registry_retained_unused_vertices": 0,
+  "complete_vertex_registry_parity": true,
+  "requested_copy_delta": [
+    1.0,
+    0,
+    0
+  ],
+  "actual_copy_delta": [
+    0.9962495075927937,
+    0.0,
+    0.0
+  ],
+  "scope": "Rendered native ash Vulkan full application XTEST Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy commit and Undo. Original geometry retained, no preview history, two distinct curve identities. Isolated llvmpipe Xvfb engineering backend, not hardware or general Move proof.",
+  "proof_boundary": "Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls.",
+  "checker_sha256": "63082b4e5861097c9269a6ea196a59a37e4a437e7b66dc11f4356cb18b84fd0f",
+  "executable_sha256": "58a082170526de3135c5de9e0f17eabbeb6d966ec2d34dbe82d66b2bf196a052"
+}

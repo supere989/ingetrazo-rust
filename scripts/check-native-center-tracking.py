@@ -17,6 +17,7 @@ from png_capture import valid_png
 
 def main():
  original=os.environ.get("INGETRAZO_CENTER_ORIGINAL")=="1"
+ native_binary=(Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/center_tracking_native_fixture").resolve()
  if not original:subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","center_tracking_native_fixture"],check=True)
  native_binary=Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/center_tracking_native_fixture"
  mode=os.environ.get("INGETRAZO_CENTER_MODE","curve")
@@ -95,26 +96,61 @@ def main():
     click(initial["center_pixel"]);anchor=wait(lambda:state() if state()["anchor"] else None)
     assert close(anchor["anchor"],expected) and anchor["undo"]==0
     key(0xff1b);wait(lambda:state() if state()["anchor"] is None else None)
-    ctrl_key(0x61);key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"]);click(initial["move_target"])
-    moved=wait(lambda:state() if state()["undo"]==1 else None)
-    actual_delta=[moved["center"][i]-expected[i] for i in range(3)]
-    assert abs(actual_delta[1])<1e-6 and abs(actual_delta[2])<1e-6,moved
-    move_parity=close(actual_delta,requested_delta)
-    pointer_quantized_move_matches=sum((a-b)**2 for a,b in zip(actual_delta,requested_delta))**.5<.01
-    assert pointer_quantized_move_matches,actual_delta
-    key(0x6c)
-    # Move ends at its new rim. Original hover is event-driven: create actual
-    # pointer motion after switching tool rather than warping to the same pixel.
-    move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
-    moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
-    assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
-    ctrl_key(0x61);key(0xffff)
-    move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
-    deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
-    assert deleted["undo"]==2;capture("deleted-center")
-    report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":approach_green<=5,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
+    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":
+     capture("before-copy")
+     ctrl_key(0x61);key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"])
+     live=wait(lambda:state() if state()["undo"]==0 and not close(state()["center"],expected) else None)
+     live_delta=[live["center"][i]-expected[i] for i in range(3)]
+     assert sum((a-b)**2 for a,b in zip(live_delta,requested_delta))**.5<.01,live
+     capture("move-live-preview")
+     control=x.XKeysymToKeycode(d,0xffe3);states=[]
+     for enabled in (True,False,True):
+      event(2,control,None,1)
+      held=wait(lambda:state() if (state()["preview_lines"]>1)==enabled and (close(state()["center"],expected)==enabled) else None)
+      time.sleep(.3);still=state();assert (still["preview_lines"]>1)==enabled and still["undo"]==0
+      event(3,control,None,2);released=state();assert (released["preview_lines"]>1)==enabled and released["undo"]==0
+      states.append({"enabled":enabled,"held":held,"held_after_frames":still,"released":released})
+     preview=state();assert preview["edges"]==24 and close(preview["center"],expected);capture("copy-wireframe-preview")
+     def changed_patch(point):
+      px,py=map(round,point)
+      patches=[subprocess.check_output(["convert",str(directory/name),"-crop",f"9x9+{px-4}+{py-4}","-depth","8","rgb:-"])for name in("before-copy.png","copy-wireframe-preview.png")]
+      assert all(len(p)==9*9*3 for p in patches),"Missing pixel patch must fail"
+      return sum(max(abs(a-b)for a,b in zip(patches[0][i:i+3],patches[1][i:i+3]))>20 for i in range(0,len(patches[0]),3))
+     probe=preview["copy_probe_pixel"];assert probe is not None
+     ghost_changed=changed_patch(probe);quiet_changed=changed_patch([probe[0],probe[1]-30])
+     assert ghost_changed>=5 and quiet_changed<=3,(ghost_changed,quiet_changed,probe)
+     click(initial["move_target"]);copied=wait(lambda:state() if state()["undo"]==1 and state()["edges"]==48 else None)
+     assert close(copied["center"],expected),copied
+     delta=[copied["copy_center"][i]-expected[i] for i in range(3)]
+     assert sum((a-b)**2 for a,b in zip(delta,requested_delta))**.5<.01,delta
+     assert len(set(copied["curves"]))==2 and all(copied["curves"].count(c)==24 for c in set(copied["curves"])),copied
+     capture("copied-curve-commit");ctrl_key(0x7a)
+     undone=wait(lambda:state() if state()["undo"]==0 and state()["edges"]==24 else None)
+     assert close(undone["center"],expected) and undone["copy_center"] is None;capture("copy-undo")
+     report={"passed":True,"provenance":context(),"mode":mode,"centered":centered,"live_preview":live,"control_states":states,"copy_preview":preview,"copied":copied,"undone":undone,"ghost_patch_changed_pixels":ghost_changed,"quiet_patch_changed_pixels":quiet_changed,"original_registry_retained_unused_vertices":undone["unused_vertices"],"complete_vertex_registry_parity":undone["vertices"]==initial["vertices"],"requested_copy_delta":requested_delta,"actual_copy_delta":delta,"scope":"Rendered native ash Vulkan full application XTEST Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy commit and Undo. Original geometry retained, no preview history, two distinct curve identities. Isolated llvmpipe Xvfb engineering backend, not hardware or general Move proof."}
+    else:
+     ctrl_key(0x61);key(0x6d);move(initial["rim"]);click(initial["rim"]);move(initial["move_target"]);click(initial["move_target"])
+     moved=wait(lambda:state() if state()["undo"]==1 else None)
+     actual_delta=[moved["center"][i]-expected[i] for i in range(3)]
+     assert abs(actual_delta[1])<1e-6 and abs(actual_delta[2])<1e-6,moved
+     move_parity=close(actual_delta,requested_delta)
+     pointer_quantized_move_matches=sum((a-b)**2 for a,b in zip(actual_delta,requested_delta))**.5<.01
+     assert pointer_quantized_move_matches,actual_delta
+     key(0x6c)
+     # Move ends at its new rim. Original hover is event-driven: create actual
+     # pointer motion after switching tool rather than warping to the same pixel.
+     move([moved["rim"][0]+20,moved["rim"][1]+20]);move(moved["rim"]);wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
+     moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
+     assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
+     ctrl_key(0x61);key(0xffff)
+     move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
+     deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
+     assert deleted["undo"]==2;capture("deleted-center")
+     report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":approach_green<=5,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
+   if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
+   report["checker_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
    report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
-   if original:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select shortcuts wired to original public actions, Move/Delete original geometry/history, software GL Xvfb."
+   if original:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select/Undo shortcuts wired to original public actions, software GL Xvfb. "+("Move live preview, three Ctrl press/held/release toggles, copy wireframe, 24-edge curve copy and Undo; arrays/othercopytypes separate." if os.environ.get("INGETRAZO_MOVE_COPY")=="1" else "Move/Delete original geometry/history, center acquisition and invalidation; broader Move workflow separate.")
    Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Actual center gesture PASS",mode,"original" if original else "native")
   finally:
    if app:

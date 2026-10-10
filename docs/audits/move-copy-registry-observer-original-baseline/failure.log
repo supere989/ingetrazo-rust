@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-center-ui/scripts/check-native-center-tracking.py", line 144, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-center-ui/scripts/check-native-center-tracking.py", line 117, in main
+    assert close(undone["center"],expected) and undone["copy_center"] is None;capture("copy-undo")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

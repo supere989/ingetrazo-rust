@@ -1,0 +1,10 @@
+{
+  "rust_production_commit": "4c5da0d",
+  "observed_changed_pixels": {
+    "ghost": 81,
+    "quiet": 81
+  },
+  "retained_failure": "Initial before.png was taken as first fixture state became available, before native world ink had settled. Entire positive and negative patches therefore changed.",
+  "correction": "Capture before-copy.png after completed actual center acquisition and cancellation, when world ink is demonstrably present; compare ghost and quiet patches against that settled immutable baseline. Thresholds remain ghost>=5 and quiet<=3.",
+  "scope": "Image baseline readiness correction, no production renderer or geometry changes."
+}

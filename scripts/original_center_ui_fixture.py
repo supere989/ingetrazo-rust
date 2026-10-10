@@ -20,7 +20,7 @@ vp.set_active_tool(LineTool());vp.show();vp.setFocus();directory=Path(sys.argv[1
 # Standalone Viewport does not install the main-window tool/select shortcuts.
 # Wire these to the original public actions; geometry/Move/dwell remain original.
 shortcuts=[]
-for sequence,action in [('Ctrl+A',lambda:vp.scene.select(vp.scene.mesh.edges)),('M',lambda:vp.set_active_tool(MoveTool())),('L',lambda:vp.set_active_tool(LineTool()))]:
+for sequence,action in [('Ctrl+A',lambda:vp.scene.select(vp.scene.mesh.edges)),('M',lambda:vp.set_active_tool(MoveTool())),('L',lambda:vp.set_active_tool(LineTool())),('Ctrl+Z',lambda:(vp.history.undo(),vp.notify_scene_changed()))]:
  shortcut=QShortcut(QKeySequence(sequence),vp);shortcut.activated.connect(action);shortcuts.append(shortcut)
 def a(p):return[p.x(),p.y(),p.z()]
 def state():
@@ -28,6 +28,12 @@ def state():
  current=sum(positions,V())/len(positions) if positions else center
  rim=positions[0] if positions else points[0]
  snap=vp.last_snap;anchor=getattr(vp.active_tool,'start_point',None)
- result=dict(mode=mode,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
- directory.joinpath('state.json').write_text(json.dumps(result))
+ copy_vertices={id(v):v.position for e in vp.scene.mesh.edges if e.curve is not None and e.curve!=71 for v in(e.v0,e.v1)}
+ copy_center=sum(copy_vertices.values(),V())/len(copy_vertices) if copy_vertices else None
+ lines=getattr(vp.active_tool,'rubber_band_lines',None)
+ copy_probe=vp._world_to_pixel(current+vp.active_tool.hover_point-vp.active_tool.grab+V(0,radius,0)) if getattr(vp.active_tool,'_copy',False) and anchor is not None and vp.active_tool.hover_point is not None else None
+ result=dict(mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ temporary=directory/'state.tmp'
+ temporary.write_text(json.dumps(result))
+ temporary.replace(directory/'state.json')
 timer.timeout.connect(state);timer.start(20);app.exec()
