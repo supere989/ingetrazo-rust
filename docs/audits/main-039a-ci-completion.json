@@ -1,0 +1,55 @@
+{
+  "observed_utc": "2026-10-10T18:57:57.364651+00:00",
+  "runs": [
+    {
+      "run": 38076274359,
+      "source": "039a5b63d1160011faaa196bfb3cd69af4e5645c",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114283755159,
+          "name": "compilation-and-tests",
+          "conclusion": "success"
+        },
+        {
+          "id": 114283755320,
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "conclusion": "success"
+        },
+        {
+          "id": 114283755332,
+          "name": "Native Metal framework link (macos-15-intel)",
+          "conclusion": "success"
+        },
+        {
+          "id": 114283755339,
+          "name": "Native Metal framework link (macos-15)",
+          "conclusion": "success"
+        },
+        {
+          "id": 114283755383,
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run": 38076274350,
+      "source": "039a5b63d1160011faaa196bfb3cd69af4e5645c",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114283755074,
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "conclusion": "success"
+        },
+        {
+          "id": 114283755160,
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "scope": "Public main builds/semantic pipeline and ordered Metal compute pass; this predates the active integration batch and does not establish actual Canvas presentation."
+}
