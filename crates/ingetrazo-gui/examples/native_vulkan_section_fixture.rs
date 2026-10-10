@@ -22,7 +22,11 @@ let mut style=StyleConfig::default();style.show_edges=false;style.show_profiles=
   egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|{let rect=ui.max_rect();self.app.camera.aspect=rect.width()as f64/rect.height()as f64;self.app.native_gpu_viewport_rect=Some(rect);if let Some(texture)=self.app.native_gpu_viewport_texture{ui.painter().image(texture,rect,egui::Rect::from_min_max(egui::Pos2::ZERO,egui::pos2(1.,1.)),egui::Color32::WHITE);}});
   if ctx.input(|i|i.viewport().close_requested()){ctx.send_viewport_cmd(egui::ViewportCommand::Close);}
  }
- fn prepare_gpu(&mut self,system:&mut System,resize:bool){App::prepare_gpu(&mut self.app,system,resize);}
+ fn prepare_gpu(&mut self,system:&mut System,resize:bool){
+  if system.world.is_none(){if let Ok(limit)=std::env::var("INGETRAZO_SECTION_STORAGE_LIMIT"){let mut world=ingetrazo_gui::native_vulkan::world::World::new(&system.vulkan_context,system.memory_budget.clone()).unwrap();world.set_contour_storage_limit_for_probe(limit.parse().unwrap()).unwrap();system.world=Some(world);}}
+  let before=system.world.as_ref().map(|w|w.uploads).unwrap_or(0);App::prepare_gpu(&mut self.app,system,resize);
+  if let Some(world)=&system.world {if world.uploads!=before{eprintln!("Contour metrics: {:?}",world.contour_metrics());}}
+ }
  fn gpu_error(&mut self,error:&str){panic!("GPU section fixture failed: {error}");}
 }
 fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}

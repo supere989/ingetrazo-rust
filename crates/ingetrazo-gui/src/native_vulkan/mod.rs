@@ -1076,3 +1076,13 @@ impl App for crate::IngeTrazoApp {
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
     fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}
 }
+
+impl VulkanContext {
+    /// Timestamp precision for the actual selected graphics family; no inferred GPU timing.
+    pub fn graphics_timestamp_info(&self)->Option<(u32,f32)> {
+        let queues=unsafe{self.instance.get_physical_device_queue_family_properties(self.physical_device)};
+        let bits=queues[self.graphics_q_index as usize].timestamp_valid_bits;
+        let period=unsafe{self.instance.get_physical_device_properties(self.physical_device)}.limits.timestamp_period;
+        (bits!=0&&period>0.).then_some((bits,period))
+    }
+}
