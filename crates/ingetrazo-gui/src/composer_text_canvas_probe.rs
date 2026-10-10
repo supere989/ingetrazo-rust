@@ -21,6 +21,9 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
         ("times-bold-italic", "Times", true, true, "ABC"),
         ("cjk", "Helvetica", false, false, "漢字"),
         ("arabic", "Helvetica", false, false, "العربية"),
+        ("italic-overlap", "Helvetica", false, true, "AVAVA"),
+        ("arabic-marks", "Helvetica", false, false, "العَربيَّة"),
+        ("times-overlap", "Times", true, true, "AVWA"),
     ] {
         let result = (|| -> Result<serde_json::Value, String> {
             let ctx = egui::Context::default();
@@ -85,7 +88,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 return Err("Empty Canvas ink".into());
             }
             image::save_buffer(
-                root.join(format!("{name}.native.png")),
+                root.join(format!("{name}.aggregate.png")),
                 &frame,
                 800,
                 300,
@@ -100,7 +103,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 if sample.image.width>0&&sample.image.height>0{
                     image::save_buffer(root.join(&filename),&sample.image.pixels,sample.image.width as u32,sample.image.height as u32,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
                 }
-                masks.push(serde_json::json!({"index":index,"position":[sample.x,sample.y],"size":[sample.image.width,sample.image.height],"clip":sample.clip,"mask":filename}));
+                masks.push(serde_json::json!({"index":index,"position":[sample.x,sample.y],"size":[sample.image.width,sample.image.height],"clip":sample.clip,"mask":filename,"pixel_encoding":"premultiplied RGBA8; compare raw stored bytes without unpremultiply"}));
                 for row in 0..sample.image.height{for col in 0..sample.image.width{
                     let x=sample.x+col as i64;let y=sample.y+row as i64;
                     if x>=0&&x<800&&y>=0&&y<300&&x>=sample.clip[0]&&x<sample.clip[2]&&y>=sample.clip[1]&&y<sample.clip[3]{
@@ -110,6 +113,16 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
             }
             image::save_buffer(root.join(format!("{name}.ordered.png")),&ordered,800,300,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
             std::fs::write(root.join(format!("{name}.masks.json")),serde_json::to_vec_pretty(&masks).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+            let producer=ingetrazo_render::cad_callback::Factory::default();
+            let factory=crate::composer_backend::Factory::MetalProducer(producer.clone());
+            ctx.begin_pass(input());let painter=ctx.layer_painter(egui::LayerId::background());
+            let ordered_bounds=cache.paint_with_factory(&painter,&sheet,&item,text,1,1,3.,Pos2::ZERO,&mut resources,Some(&factory))?;
+            let output=ctx.end_pass();assert!(!output.shapes.is_empty());assert_eq!(bounds,ordered_bounds);
+            let ordered_cache=cache.tiles.get(&item.id).unwrap().ordered.as_ref().unwrap();
+            let ordered_records=ordered_cache.observe([800,300],ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[item.pos.0 as f32*3.,item.pos.1 as f32*3.]},1.)?;
+            if ordered_records!=ordered{return Err("Ordered GPU records differ from actual source mask order".into());}
+            image::save_buffer(root.join(format!("{name}.native.png")),&ordered_records,800,300,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
+            let before_producer=producer.metrics();let ordered_before=cache.ordered_stats();
             let before = (
                 cache.stats(),
                 cache.tile_builds,
@@ -120,7 +133,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 cache.begin_frame();
                 ctx.begin_pass(input());
                 let painter = ctx.layer_painter(egui::LayerId::background());
-                let warm = cache.paint(
+                let warm = cache.paint_with_factory(
                     &painter,
                     &sheet,
                     &item,
@@ -130,6 +143,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                     3.,
                     Pos2::ZERO,
                     &mut resources,
+                    Some(&factory),
                 )?;
                 assert_eq!(warm, bounds);
                 let output = ctx.end_pass();
@@ -144,6 +158,8 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                     )
                 );
             }
+            assert_eq!(cache.ordered_stats(),ordered_before);
+            assert_eq!(producer.metrics().handles,before_producer.handles);assert_eq!(producer.metrics().updates,before_producer.updates);
             let layout = cache.layouts.get(&item.id).unwrap().draws.clone();
             let text_run = layout.iter().find_map(|d| d.text.as_ref()).unwrap();
             let phase_counts = text_run
@@ -218,7 +234,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 );
             }
             Ok(
-                serde_json::json!({"name":name,"passed":true,"size":[800,300],"tile_size":tile_image.size,"tile_origin":[x,y],"warm_before":before,"warm_frames":3,"warm_unchanged":true,"style_control":style_control,"phase_counts":phase_counts}),
+                serde_json::json!({"name":name,"passed":true,"size":[800,300],"tile_size":tile_image.size,"tile_origin":[x,y],"warm_before":before,"warm_frames":3,"warm_unchanged":true,"style_control":style_control,"phase_counts":phase_counts,"ordered_before":ordered_before,"ordered_warm_unchanged":true,"ordered_handle_count":producer.metrics().handles,"ordered_updates":producer.metrics().updates}),
             )
         })();
         match result {
@@ -229,7 +245,9 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
             }
         }
     }
-    let report = serde_json::json!({"passed":!failed,"scope":"Actual production native font resolver/layout/raster/Canvas cached tile + encoded white composition; no GPU upload, WSI, desktop or physical input claim","cases":rows});
+    let held_names=["italic-overlap","arabic-marks","times-overlap"];
+    let(mut cases,mut held_out)=(Vec::new(),Vec::new());for row in rows{if held_names.contains(&row["name"].as_str().unwrap()){held_out.push(row)}else{cases.push(row)}}
+    let report = serde_json::json!({"passed":!failed,"scope":"Actual production native font resolver/layout/raster/ordered cached span records + encoded white byte observation; aggregate negative retained; no GPU upload, WSI, desktop or physical input claim","cases":cases,"held_out_cases":held_out});
     std::fs::write(
         root.join("native-canvas.json"),
         serde_json::to_vec_pretty(&report).unwrap(),

@@ -19,6 +19,7 @@ from core.composition import TextoItem
 from views.composer import paint_text_mm
 app=QApplication([]);out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 cases=[("helvetica","Helvetica",False,False,"ABC"),("helvetica-bold","Helvetica",True,False,"ABC"),("helvetica-italic","Helvetica",False,True,"ABC"),("times-bold-italic","Times",True,True,"ABC"),("cjk","Helvetica",False,False,"漢字"),("arabic","Helvetica",False,False,"العربية")]
+held_out_cases=[("italic-overlap","Helvetica",False,True,"AVAVA"),("arabic-marks","Helvetica",False,False,"العَربيَّة"),("times-overlap","Times",True,True,"AVWA")]
 # Oracle-only disk inventory, never product renderer/font resolution.
 files=[]
 for directory in ["/System/Library/Fonts","/Library/Fonts",str(Path.home()/"Library/Fonts"),"/System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved"]:
@@ -66,7 +67,7 @@ class Observe(QPainter):
   operative_bounds=metrics.boundingRect(rect,flags,text)
   self.observed.append({"operative_call":{"rect":[rect.x(),rect.y(),rect.width(),rect.height()],"flags":int(flags),"text":text,"world_transform":[self.worldTransform().m11(),self.worldTransform().m12(),self.worldTransform().m21(),self.worldTransform().m22(),self.worldTransform().dx(),self.worldTransform().dy()],"font_pixel_size":font.pixelSize(),"font_point_size":font.pointSizeF(),"effective_point_size":QFontInfo(font).pointSizeF(),"effective_pixel_size":QFontInfo(font).pixelSize(),"device_logical_dpi":[self.device().logicalDpiX(),self.device().logicalDpiY()],"device_pixel_ratio":self.device().devicePixelRatioF(),"metrics":{"ascent":metrics.ascent(),"descent":metrics.descent(),"leading":metrics.leading(),"height":metrics.height(),"cap_height":metrics.capHeight(),"underline_pos":metrics.underlinePos(),"line_width":metrics.lineWidth()},"measured_bounds":[operative_bounds.x(),operative_bounds.y(),operative_bounds.width(),operative_bounds.height()]},"qt_database_styles":database,"requested_font":{"family":font.family(),"bold":font.bold(),"italic":font.italic(),"weight":int(font.weight())},"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"actual_painter_traits":{"bold":QFontInfo(font).bold(),"italic":QFontInfo(font).italic(),"weight":int(QFontInfo(font).weight()),"exact_match":QFontInfo(font).exactMatch()},"supplementary_qtextlayout_runs":runs})
   return super().drawText(rect,flags,text)
-for name,family,bold,italic,text in cases:
+for name,family,bold,italic,text in cases+held_out_cases:
  image=QImage(800,300,QImage.Format_ARGB32_Premultiplied);image.fill(Qt.white)
  painter=Observe(image);painter.observed=[];painter.scale(3.,3.);painter.translate(10.37,10.23)
  paint_text_mm(painter,TextoItem(text=text,size_pt=14,family=family,bold=bold,italic=italic));painter.end()
@@ -76,8 +77,9 @@ for name,family,bold,italic,text in cases:
  paint_text_mm(pdf_painter,TextoItem(text=text,size_pt=14,family=family,bold=bold,italic=italic));pdf_painter.end()
 
  rows.append({"name":name,"family":family,"bold":bold,"italic":italic,"text":text,"observations":painter.observed,"pdf_observations":pdf_painter.observed,"png_sha256":hashlib.sha256((out/(name+".png")).read_bytes()).hexdigest()})
-assert len(rows)==6 and all(r["observations"] for r in rows)
-report={"source_pin":pin,"qt":qVersion(),"platform":platform.platform(),"machine":platform.machine(),"script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),"cases":rows,"inventory_errors":inventory_errors,"scope":"Actual original paint_text_mm QImage pixels; supplementary Qt glyph-run matching is not the operative painter placement or native Canvas parity"}
+assert len(rows)==9 and all(r["observations"] for r in rows)
+held_names={r[0] for r in held_out_cases};held_rows=[r for r in rows if r["name"] in held_names];rows=[r for r in rows if r["name"] not in held_names]
+report={"source_pin":pin,"qt":qVersion(),"platform":platform.platform(),"machine":platform.machine(),"script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),"cases":rows,"held_out_cases":held_rows,"inventory_errors":inventory_errors,"scope":"Actual original paint_text_mm QImage pixels; supplementary Qt glyph-run matching is not the operative painter placement or native Canvas parity"}
 (out/"original-macos-fonts.json").write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n")
 missing=[r["name"] for r in rows if any(not run["physical_faces"] for call in r["observations"] for run in call["supplementary_qtextlayout_runs"])]
 print(json.dumps({"captured":len(rows),"unmapped_cases":missing}))
