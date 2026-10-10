@@ -1,0 +1,12 @@
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial1: 17.733886ms
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial2: 2.311383ms
+Actual full World GPUdraw timestamp serial3: 0.963909ms
+Actual full World GPUdraw timestamp serial4: 0.863050ms
+Actual full World GPUdraw timestamp serial5: 0.950464ms
+Actual full World GPUdraw timestamp serial6: 0.769643ms
+PASS actual GPU hollow normal/chunked exact image equality; cold ContourMetrics { additional_position_bytes: 1152, batches: 16, cold_build_ms: 0.280279, compact_preprocess_ms: 0.0063019999999999994, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }; warm100average0.000590ms; uniform cache, actualpartialquota rollback oldimage, opacity invalidation; final ContourMetrics { additional_position_bytes: 1152, batches: 16, cold_build_ms: 0.358697, compact_preprocess_ms: 0.0025549999999999995, warm_cache_ms: 0.051077, cache_hits: 102, failed_prepared_chunks: 2, rollbacks: 1 }
