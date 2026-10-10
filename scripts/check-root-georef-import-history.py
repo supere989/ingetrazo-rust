@@ -9,7 +9,7 @@ from core.history import History,AddGeoPathCommand,CompoundCommand
 from PySide6.QtGui import QVector3D
 file=Path(sys.argv[1]);feats=load_features(file);expected=[]
 for seeded in [False,True]:
- scene=Scene();scene.mesh.vertex(QVector3D(9,8,7))
+ scene=Scene();scene.mesh.vertex(QVector3D(9,8,7));scene.geo_paths.append(GeoPath([QVector3D(4,5,6),QVector3D(7,8,9)],closed=False,name="Existing"))
  pts=[p for f in feats for p in f.points]
  d=SceneDatum(-13.5,-71.9,1234.,23.) if seeded else SceneDatum(sum(p[0] for p in pts)/len(pts),sum(p[1] for p in pts)/len(pts))
  scene.georef=d;history=History(scene)
