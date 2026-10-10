@@ -92,7 +92,7 @@ impl MoveTool {
                         group_set.insert(*gid);
                     }
                     SelectionItem::SectionPlane(id)=>{plane_set.insert(*id);},
-                    SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) => {}
+                    SelectionItem::ImagePlane(_) | SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) => {}
                 }
             }
         } else {
