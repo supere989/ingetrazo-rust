@@ -1,0 +1,52 @@
+{
+  "source_revision": "a7afd8d95070f864261d91582c2133a0e0331493",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "scripts/check-metal-owned-window.py",
+        "--self-test"
+      ],
+      "returncode": 0,
+      "log": "self-test.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check-metal-owned-window.py",
+        "--capture-failure-self-test"
+      ],
+      "returncode": 0,
+      "log": "capture-failure-self-test.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-metal",
+        "--all-targets",
+        "--target",
+        "aarch64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "aarch64-apple-darwin.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-metal",
+        "--all-targets",
+        "--target",
+        "x86_64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "x86_64-apple-darwin.log"
+    }
+  ],
+  "native_execution_claim": false
+}

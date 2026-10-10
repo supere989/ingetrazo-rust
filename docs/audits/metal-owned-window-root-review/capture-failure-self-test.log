@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "capture_failure_controls": 3,
+  "actual_child_completion": true,
+  "native_execution_claim": false
+}

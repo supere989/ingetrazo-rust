@@ -47,6 +47,12 @@ jobs:
           python3 scripts/check-metal-egui-compressed.py docs/audits/metal-native-link-ci/egui-compressed > docs/audits/metal-native-link-ci/egui-compressed-check.log
       - name: Actual native CAMetalLayer presentation and requested resize
         run: target/debug/examples/presentation_probe --automatic > docs/audits/metal-native-link-ci/presentation.log 2>&1
+      - name: Diagnose only the owned Cocoa window
+        if: always()
+        run: |
+          python3 scripts/check-metal-owned-window.py --self-test
+          python3 scripts/check-metal-owned-window.py --capture-failure-self-test
+          python3 scripts/check-metal-owned-window.py target/debug/examples/presentation_probe docs/audits/metal-native-link-ci/owned-window --source-revision=${{ github.sha }} > docs/audits/metal-native-link-ci/owned-window-command.log 2>&1
       - name: Actual shared application Cocoa document lifecycle
         if: always()
         run: |
