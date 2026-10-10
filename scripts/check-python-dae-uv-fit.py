@@ -8,7 +8,13 @@ from PySide6.QtGui import QVector3D as V,QImage,QColor
 from core.scene import Scene
 from formats import dae,igz
 NS="{http://www.collada.org/2005/11/COLLADASchema}"
-app=QApplication([]);exe=os.environ["INGETRAZO_DAE_FIXTURE"];revision=os.environ["INGETRAZO_DAE_SOURCE_REVISION"];rows=[];root=Path("docs/audits/dae-uv-fit-corpus");root.mkdir(exist_ok=True)
+app=QApplication([]);exe=os.environ.get("INGETRAZO_DAE_FIXTURE")
+if exe is None:
+ subprocess.run(["cargo","build","--locked","-p","ingetrazo-formats","--example","dae_import_acceptance_fixture"],check=True)
+ exe=str(Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/dae_import_acceptance_fixture")
+ revision=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
+else:revision=os.environ["INGETRAZO_DAE_SOURCE_REVISION"]
+rows=[];root=Path("docs/audits/dae-uv-fit-corpus");root.mkdir(exist_ok=True)
 with tempfile.TemporaryDirectory()as d:
  d=Path(d);binary=d/"decoder";shutil.copy2(exe,binary);digest=hashlib.sha256(binary.read_bytes()).hexdigest()
  for name,points,uv in [
