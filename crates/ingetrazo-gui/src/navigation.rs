@@ -42,6 +42,7 @@ impl Navigation {
   if let Some(index)=movement_key(key){if !pressed||self.claims_key(key,modifiers){self.held[index]=pressed;}}
  }
  fn axes(&self)->[i8;3]{[self.held[0]as i8-self.held[1]as i8,self.held[2]as i8-self.held[3]as i8,self.held[4]as i8-self.held[5]as i8]}
+ pub fn walk_anchor(&self)->Option<DVec2>{if self.mode==Some(Mode::Walk){self.press.map(|(anchor,_)|anchor)}else{None}}
  pub fn cancel(&mut self){self.held=[false;6];self.walk_modifiers=egui::Modifiers::NONE;self.mouse_captured=false;self.look_button=None;self.look_cursor=None;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
  // Original Qt QTimer dispatches one fixed step after an overrun, not all
  // elapsed intervals. Keep a deadline independent of repaint frequency.
@@ -224,13 +225,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,_resp
   if app.navigation.tick_due(time,0.033){let scene=&app.scene;let navigation=&app.navigation;walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));}
   app.navigation.request_tick(ui.ctx(),time);
  }
- if mode==Mode::Walk {if let Some((anchor,_))=app.navigation.press{
-  let center=egui::pos2(rect.min.x+anchor.x as f32,rect.min.y+anchor.y as f32);
-  let painter=ui.painter_at(rect);let stroke=egui::Stroke::new(1.5,egui::Color32::from_rgba_unmultiplied(30,30,30,230));
-  painter.line_segment([center-egui::vec2(10.,0.),center+egui::vec2(10.,0.)],stroke);
-  painter.line_segment([center-egui::vec2(0.,10.),center+egui::vec2(0.,10.)],stroke);
-  painter.circle_stroke(center,4.,egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,255,255,200)));
- }}
+
  None
 }
 
@@ -416,4 +411,15 @@ pub(crate) fn first_point_bounds_center(scene:&ingetrazo_core::scene::Scene)->DV
   frame(&mut app,&ctx,0.02,vec![button(egui::pos2(400.,300.),true),egui::Event::PointerMoved(egui::pos2(440.,260.)),button(egui::pos2(440.,260.),false)]);assert_ne!(app.camera,original);let turned=app.camera.clone();
   frame(&mut app,&ctx,0.03,vec![egui::Event::PointerMoved(egui::pos2(500.,200.))]);assert_eq!(app.camera,turned);assert!(app.undo_stack.is_empty());assert!(app.navigation.press.is_none());
  }
+}
+
+/// Paint after the world image, so opaque GPU viewport content cannot hide the marker.
+pub fn paint_overlay(navigation:&Navigation,painter:&egui::Painter,rect:egui::Rect){
+ if navigation.mode==Some(Mode::Walk) {if let Some((anchor,_))=navigation.press{
+  let center=egui::pos2(rect.min.x+anchor.x as f32,rect.min.y+anchor.y as f32);
+  let stroke=egui::Stroke::new(1.5,egui::Color32::from_rgba_unmultiplied(30,30,30,230));
+  painter.line_segment([center-egui::vec2(10.,0.),center+egui::vec2(10.,0.)],stroke);
+  painter.line_segment([center-egui::vec2(0.,10.),center+egui::vec2(0.,10.)],stroke);
+  painter.circle_stroke(center,4.,egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,255,255,200)));
+ }}
 }

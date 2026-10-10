@@ -30,7 +30,7 @@ mod native {
             app.camera.target = glam::DVec3::ZERO;
             app.camera.perspective = false;
             app.camera.set_standard_view(StandardView::Top);
-            app.activate_navigation(Mode::Position);
+            if std::env::var_os("INGETRAZO_NAV_WALK").is_some(){app.camera.look_from(glam::DVec3::new(0.,0.,1.68),glam::DVec3::Y);app.activate_navigation(Mode::Walk);}else{app.activate_navigation(Mode::Position);}
             Self {
                 app,
                 dir: std::env::args().nth(1).unwrap().into(),
@@ -69,7 +69,7 @@ mod native {
                 )
                 .map(|p| [p.0.x, p.0.y])
             });
-            let state = serde_json::json!({"measurement":self.app.navigation_measurement(),"measurement_rect":ctx.read_response(egui::Id::new("measurements_vcb")).map(|r|[r.rect.min.x,r.rect.min.y,r.rect.max.x,r.rect.max.y]),"status":self.app.status_message,"endpoint_pixel":endpoint,"snap_kind":self.app.snap_engine.current_inference().map(|r|format!("{:?}",r.kind)),"frames":self.frames,"eye":self.app.camera.eye().to_array(),"forward":self.app.camera.forward().to_array(),"yaw":self.app.camera.yaw,"pitch":self.app.camera.pitch,"mode":format!("{:?}",self.app.navigation.mode),"preview":preview,"preview_pixels":projected,"viewport":rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"undo":self.app.undo_stack.len(),"version":self.app.scene.version,"faces":self.app.scene.mesh.faces.len(),"focused":ctx.input(|i|i.focused),"pointer":ctx.input(|i|i.pointer.hover_pos()).map(|p|[p.x,p.y])});
+            let state = serde_json::json!({"walk_anchor":rect.and_then(|r|self.app.navigation.walk_anchor().map(|p|[r.min.x as f64+p.x,r.min.y as f64+p.y])),"measurement":self.app.navigation_measurement(),"measurement_rect":ctx.read_response(egui::Id::new("measurements_vcb")).map(|r|[r.rect.min.x,r.rect.min.y,r.rect.max.x,r.rect.max.y]),"status":self.app.status_message,"endpoint_pixel":endpoint,"snap_kind":self.app.snap_engine.current_inference().map(|r|format!("{:?}",r.kind)),"frames":self.frames,"eye":self.app.camera.eye().to_array(),"forward":self.app.camera.forward().to_array(),"yaw":self.app.camera.yaw,"pitch":self.app.camera.pitch,"mode":format!("{:?}",self.app.navigation.mode),"preview":preview,"preview_pixels":projected,"viewport":rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"undo":self.app.undo_stack.len(),"version":self.app.scene.version,"faces":self.app.scene.mesh.faces.len(),"focused":ctx.input(|i|i.focused),"pointer":ctx.input(|i|i.pointer.hover_pos()).map(|p|[p.x,p.y])});
             std::fs::write(self.dir.join("state.tmp"), state.to_string()).unwrap();
             std::fs::rename(self.dir.join("state.tmp"), self.dir.join("state.json")).unwrap();
             ctx.request_repaint_after(std::time::Duration::from_millis(16));
