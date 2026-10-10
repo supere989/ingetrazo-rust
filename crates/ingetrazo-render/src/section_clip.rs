@@ -339,7 +339,10 @@ mod tests {
                 .count()
         };
         let closed = count(&scene);
-        assert_eq!(closed, 20880); // Polygon-offset side fragments extend one edge row; contours occlude that border.
+        // Literal original Top is exactly perpendicular. Actual original GL
+        // no-contour ablation: docs/audits/stencil-independent/provenance.json
+        // records 20736 (=144^2); the old 89.9-degree preset added a row.
+        assert_eq!(closed, 20736);
         let mut coplanar = scene.clone();
         coplanar.mesh = ingetrazo_core::mesh::Mesh::new();
         let ids = [
@@ -381,7 +384,7 @@ mod tests {
         }
         assert_eq!(
             count(&cavity),
-            20880 - 5184,
+            20736 - 5184,
             "front-facing cavity surface must suppress fill in the void"
         );
         for visual in [
