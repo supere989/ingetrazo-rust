@@ -1,0 +1,51 @@
+{
+  "provenance": {
+    "rust_commit": "60bc05d21eac2edeb47560b2d80fab9b83d2a939",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 1,
+  "original_export_reference": {
+    "obj": {
+      "area": 12.0,
+      "triangles": 8,
+      "negative_z_winding": 8,
+      "errors": []
+    },
+    "stl": {
+      "area": 12.0,
+      "triangles": 8,
+      "negative_z_winding": 8,
+      "errors": []
+    }
+  },
+  "results": [
+    {
+      "area": 12.0,
+      "triangles": 8,
+      "negative_z_winding": 0,
+      "errors": [],
+      "format": "obj",
+      "exit_code": 0
+    },
+    {
+      "area": 12.0,
+      "triangles": 8,
+      "negative_z_winding": 0,
+      "errors": [],
+      "format": "stl",
+      "exit_code": 0
+    },
+    {
+      "area": 12.0,
+      "triangles": 8,
+      "negative_z_winding": 0,
+      "errors": [],
+      "format": "dxf",
+      "exit_code": 0
+    }
+  ],
+  "scope": "World-space holed reflected nested surface, hidden top-level object; OBJ/STL original export comparison and external DXF parsing. Rust +Z reflected winding is a correction to original -Z open-face winding; materials/textures, loose wires, broad importer entities and sheet DXF remain open."
+}

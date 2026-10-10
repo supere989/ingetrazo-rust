@@ -1,0 +1,366 @@
+{
+  "provenance": {
+    "rust_commit": "60bc05d21eac2edeb47560b2d80fab9b83d2a939",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": false,
+  "results": [
+    {
+      "format": ".obj",
+      "exit_code": 0,
+      "errors": [
+        "Named OBJ parts and independently selectable children lost",
+        "OBJ MTL face colors lost"
+      ],
+      "original_bounds_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          2.0
+        ]
+      ],
+      "rust_bounds_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          2.0
+        ]
+      ],
+      "original_part_names": [
+        "parts",
+        "seat",
+        "leg"
+      ],
+      "rust_part_names": [],
+      "original_colors": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "rust_colors": []
+    },
+    {
+      "format": ".stl",
+      "exit_code": 0,
+      "errors": [],
+      "original_bounds_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          2.0
+        ]
+      ],
+      "rust_bounds_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          2.0
+        ]
+      ],
+      "original_solid_report": [
+        false,
+        null
+      ],
+      "rust_solid_report": [
+        false,
+        null
+      ]
+    },
+    {
+      "format": ".dxf",
+      "exit_code": 0,
+      "errors": [
+        "Actual original-runtime geometry coordinates differ",
+        "DXF LINE/LWPOLYLINE spatial segments lost or changed",
+        "DXF named layer lost"
+      ],
+      "original_bounds_points": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          3.0,
+          0.0
+        ]
+      ],
+      "rust_bounds_points": [],
+      "original_segments": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            3.0,
+            0.0
+          ],
+          [
+            2.0,
+            3.0,
+            0.0
+          ]
+        ]
+      ],
+      "rust_segments": []
+    }
+  ],
+  "scope": "Named touching OBJ parts+MTL colors, STL triangles, DXF metre LINE/LWPOLYLINE/layer. Not full entity/unit/recentering/texture/import atomicity coverage."
+}
