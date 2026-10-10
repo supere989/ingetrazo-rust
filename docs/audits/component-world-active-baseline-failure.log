@@ -1,0 +1,43 @@
+Baseline production 2e73cb8 with newly frozen six source world-Move controls. Expected retained failure; current code is restored after the run.
+
+running 1 test
+test original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact ... FAILED
+
+failures:
+
+---- original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact stdout ----
+
+thread 'original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact' (1846416) panicked at crates/ingetrazo-gui/tests/move_component_arrays.rs:173:3:
+assertion `left == right` failed
+  left: DMat4 { x_axis: DVec4(-2.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.6, 3.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.4, 1.5, 0.0), w_axis: DVec4(3.0, -2.0, 1.0, 1.0) }
+ right: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(0.0, 0.0, 0.0, 1.0) }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.43s
+     Running tests/move_component_arrays.rs (target/debug/deps/move_component_arrays-95dce6883792475d)
+error: test failed, to rerun pass `-p ingetrazo-gui --test move_component_arrays`

@@ -1,4 +1,4 @@
-//! Local-coordinate group editing with one atomic document history entry.
+//! Source-compatible world-coordinate group editing with atomic document history.
 use ingetrazo_core::{camera::OrbitCamera,components::ComponentDefinition,scene::{Scene,SelectionItem}};
 use ingetrazo_tools::base::ToolType;
 use crate::app::IngeTrazoApp;
@@ -12,6 +12,9 @@ pub struct ComponentEditSession {
     private_container_mesh: Option<uuid::Uuid>,
     container_bake: Option<glam::DMat4>,
     container_axes: Option<glam::DMat4>,
+    leaf_share_back: Option<glam::DMat4>,
+    mesh_baseline: ingetrazo_core::mesh::Mesh,
+    groups_baseline: Vec<ingetrazo_core::groups::Group>,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
@@ -66,6 +69,14 @@ impl IngeTrazoApp {
         // Migration may add identities but does not replace placement geometry.
         let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
         self.scene.refresh_dimensions();
+        let world_frame=self.scene.dimension_frame*group.transform;
+        let world_mesh=if world_frame==glam::DMat4::IDENTITY {group.mesh.clone()} else {
+            match ingetrazo_core::containers::transform_mesh(&group.mesh,world_frame) {
+                Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}
+            }
+        };
+        let mut world_children=group.children.clone();
+        for child in &mut world_children {child.transform=world_frame*child.transform;}
         let mut session=ComponentEditSession{
             original_scene:self.scene.clone(),original_camera:self.camera.clone(),
             original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
@@ -73,28 +84,30 @@ impl IngeTrazoApp {
             private_container_mesh:if !group.children.is_empty() && !group.mesh.vertices.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(uuid::Uuid::new_v4())} else {None},
             container_axes:if !group.children.is_empty() && (group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array())) {Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))} else {None},
             container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
+            leaf_share_back:if group.children.is_empty() {Some(world_frame.inverse())} else {None},
+            mesh_baseline:world_mesh.clone(),groups_baseline:world_children.clone(),
             dimension_baseline:vec![],section_baseline:vec![],
         };
         let drawing_frame=if group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array()) {
             Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))
         } else {None};
         let mut edit=Scene::new();
-        edit.mesh=group.mesh;edit.groups=group.children;
+        edit.mesh=world_mesh;edit.groups=world_children;
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
         edit.mesh_shares=self.scene.mesh_shares.clone();
-        edit.dimension_frame=self.scene.dimension_frame*group.transform;
+        // Original Scene.begin_group_edit exposes WORLD geometry and leaves
+        // the viewport camera unchanged. Drawing axes remain the raw frame read
+        // before the placement bake, independent of the active coordinate map.
+        edit.dimension_frame=glam::DMat4::IDENTITY;
         edit.drawing_frame=drawing_frame;
         edit.dimensions=self.scene.dimensions.clone();
-        let inverse=group.transform.inverse();
-        for dimension in &mut edit.dimensions{dimension.start=inverse.transform_point3(dimension.start);dimension.end=inverse.transform_point3(dimension.end);dimension.offset=inverse.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;}
-        edit.section_planes=self.scene.section_planes.clone();edit.show_section_cuts=self.scene.show_section_cuts;edit.show_section_planes=self.scene.show_section_planes;edit.show_section_fill=self.scene.show_section_fill;for plane in &mut edit.section_planes{plane.point=inverse.transform_point3(plane.point);plane.normal=group.transform.transpose().transform_vector3(plane.normal).normalize();}session.section_baseline=edit.section_planes.clone();
+        edit.section_planes=self.scene.section_planes.clone();edit.show_section_cuts=self.scene.show_section_cuts;edit.show_section_planes=self.scene.show_section_planes;edit.show_section_fill=self.scene.show_section_fill;session.section_baseline=edit.section_planes.clone();
         edit.bind_dimensions();session.dimension_baseline=edit.dimensions.clone();
-        self.camera.target=group.transform.inverse().transform_point3(self.camera.target);
         edit.camera=self.camera.clone();
         self.scene=edit;self.bump_model_revision();self.component_edit_stack.push(session);
-        self.status_message="Editing group in local coordinates; Finish commits, Cancel restores".into();
+        self.status_message="Editing group; Finish commits, Cancel restores".into();
     }
 
     pub fn finish_component_edit(&mut self) {
@@ -113,9 +126,7 @@ impl IngeTrazoApp {
         let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
             self.status_message="Edited instance no longer exists".into();return;
         };
-        let old=&candidate.groups[group_index];
-        let edit_transform=old.transform;
-        let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
+        let changed=session.mesh_baseline!=self.scene.mesh || session.groups_baseline!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
             || candidate.component_definitions!=self.scene.component_definitions
             || candidate.mesh_shares!=self.scene.mesh_shares
@@ -123,14 +134,16 @@ impl IngeTrazoApp {
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed || session.container_axes.is_some() || session.container_bake.is_some() || session.private_container_mesh.is_some() {
             let mut replacement=ComponentDefinition{mesh_share:None,mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
-            if let Some(world_frame)=session.container_bake {
-                replacement.mesh=match ingetrazo_core::containers::transform_mesh(&replacement.mesh,world_frame) {Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}};
-                for child in &mut replacement.children {child.transform=world_frame*child.transform;}
-                // Source containers enter world coordinates. The native edit
-                // tools remain local during preview, then express that same
-                // world-owned prototype in the enclosing native edit frame.
+            if let Some(inverse)=session.leaf_share_back {
+                // Original placed leaves edit a world copy, then inverse-map
+                // only that mesh into their shared local prototype on exit.
+                replacement.mesh=match ingetrazo_core::containers::transform_mesh(&replacement.mesh,inverse) {Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}};
+            }
+            if session.container_bake.is_some() {
+                // Original container bake happens outside History on entry.
+                // Its world mesh/child placements already form the edit view;
+                // Finish persists that representation without a second bake.
                 candidate.groups[group_index].transform=candidate.dimension_frame.inverse();
-
             }
             if let Some(axes)=session.container_axes {
                 if !candidate.groups[group_index].native_document.is_object() {candidate.groups[group_index].native_document=serde_json::json!({});}
@@ -178,14 +191,14 @@ impl IngeTrazoApp {
             candidate.bump_version();
             candidate.materials=self.scene.materials.clone();candidate.layers=self.scene.layers.clone();
             if self.scene.dimensions!=session.dimension_baseline {
-                let transform=edit_transform;
+                let transform=candidate.dimension_frame.inverse();
                 candidate.dimensions=self.scene.dimensions.clone();
                 for dimension in &mut candidate.dimensions{
                     dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
                 }
                 candidate.bind_dimensions();
             }
-            if self.scene.section_planes!=session.section_baseline{let transform=edit_transform;candidate.section_planes=self.scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
+            if self.scene.section_planes!=session.section_baseline{let transform=candidate.dimension_frame.inverse();candidate.section_planes=self.scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
             candidate.show_section_cuts=self.scene.show_section_cuts;candidate.show_section_planes=self.scene.show_section_planes;candidate.show_section_fill=self.scene.show_section_fill;
             candidate.refresh_dimensions();
         }
@@ -227,16 +240,16 @@ mod tests {
         let mut dimension=ingetrazo_core::dimensions::Dimension::new(start,end,DVec3::new(4.,3.,2.));dimension.axis=Some("x".into());app.scene.dimensions.push(dimension);app.scene.bind_dimensions();
         let expected=app.scene.dimensions[0].clone();let expected_lines=expected.line_points();app.begin_component_edit();
         assert!((app.scene.dimensions[0].length()-expected.length()).abs()<1e-10);
-        let(local_a,local_b)=app.scene.dimensions[0].line_points();assert!((transform.transform_point3(local_a)-expected_lines.0).length()<1e-9);assert!((transform.transform_point3(local_b)-expected_lines.1).length()<1e-9);
+        let(world_a,world_b)=app.scene.dimensions[0].line_points();assert!((world_a-expected_lines.0).length()<1e-9);assert!((world_b-expected_lines.1).length()<1e-9);
         app.scene.dimensions[0].text_override=Some("world <>".into());
         let mut fresh=ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y);fresh.axis=Some("z".into());fresh.measurement_frame=app.scene.dimension_frame;app.scene.dimensions.push(fresh);app.scene.bind_dimensions();
         let expected_new=app.scene.dimensions[1].length();app.finish_component_edit();assert!(app.component_edit_stack.is_empty());assert_eq!(app.scene.dimensions.len(),2);assert!((app.scene.dimensions[0].length()-expected.length()).abs()<1e-10);assert!((app.scene.dimensions[1].length()-expected_new).abs()<1e-10);assert_eq!(app.scene.dimensions[1].axis.as_deref(),Some("z"));
     }
     #[test]
-    fn local_dimensions_commit_to_parent_coordinates_and_cancel_restore() {
+    fn world_dimensions_commit_without_second_placement_transform_and_cancel_restore() {
         let mut app=app();app.scene.clear_selection();app.scene.select(SelectionItem::Group(1));
         let original=app.scene.clone();app.begin_component_edit();
-        app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y));app.scene.bind_dimensions();
+        app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::new(3.,4.,5.),DVec3::new(4.,4.,5.),DVec3::Y));app.scene.bind_dimensions();
         app.finish_component_edit();assert_eq!(app.component_edit_stack.len(),0);assert_eq!(app.scene.dimensions.len(),1);
         assert_eq!(app.scene.dimensions[0].start,DVec3::new(3.,4.,5.));assert_eq!(app.scene.dimensions[0].end,DVec3::new(4.,4.,5.));assert_eq!(app.scene.dimensions[0].offset,DVec3::Y);
         assert_eq!(app.scene.dimensions[0].anchor_a.as_ref().unwrap().path,vec![app.scene.groups[1].id]);

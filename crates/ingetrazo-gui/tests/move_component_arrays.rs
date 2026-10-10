@@ -54,7 +54,7 @@ fn entering_edit_context_retires_live_group_preview_before_camera_frame_capture(
  let mut app=IngeTrazoApp::new();let mut g=Group::with_mesh("target",mesh());g.transform=DMat4::from_translation(DVec3::X*2.);app.scene.groups.push(g);app.scene.select(SelectionItem::Group(0));
  let frame=app.scene.groups[0].transform;let target=app.camera.target;
  app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));assert_eq!(app.scene.groups[0].transform,DMat4::from_translation(DVec3::Y*3.)*frame);
- app.begin_component_edit();assert_eq!(app.camera.target,frame.inverse().transform_point3(target),"context capture must follow live preview cancellation");assert_eq!(app.scene.dimension_frame,frame);
+ app.begin_component_edit();assert_eq!(app.camera.target,target,"original entry leaves the world camera unchanged after live preview cancellation");assert_eq!(app.scene.dimension_frame,DMat4::IDENTITY);assert_eq!(app.scene.drawing_frame,Some(frame));
  app.cancel_component_edit();assert_eq!(app.scene.groups[0].transform,frame);assert_eq!(app.camera.target,target);
 }
 #[test]
@@ -69,7 +69,7 @@ fn refused_singular_context_keeps_live_preview_and_revision_until_user_cancel(){
 fn rotated_scaled_context_uses_restored_grab_placement_and_cancel_camera(){
  let mut app=IngeTrazoApp::new();let mut group=Group::with_mesh("placed",mesh());group.transform=DMat4::from_translation(DVec3::X*2.)*DMat4::from_rotation_z(0.37)*DMat4::from_scale(DVec3::new(2.,3.,4.));app.scene.groups.push(group);app.scene.select(SelectionItem::Group(0));
  let original=app.scene.groups[0].transform;let camera=app.camera.clone();app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));
- app.begin_component_edit();assert_eq!(app.scene.dimension_frame,original);assert_eq!(app.camera.target,original.inverse().transform_point3(camera.target));
+ app.begin_component_edit();assert_eq!(app.scene.dimension_frame,DMat4::IDENTITY);assert_eq!(app.scene.drawing_frame,Some(original));assert_eq!(app.camera,camera);
  app.cancel_component_edit();assert_eq!(app.scene.groups[0].transform,original);assert_eq!(app.camera,camera);assert!(app.undo_stack.is_empty());
 }
 #[test]
@@ -114,6 +114,7 @@ fn transformed_nonempty_container_own_mesh_detaches_source_prototype() {
   app.finish_component_edit();let private=transformed&&nonempty;
   assert_eq!(app.scene.groups[0].mesh_share!=app.scene.groups[1].mesh_share,private);
   let expected=source["cases"].as_array().unwrap().iter().find(|c|c["transformed"]==transformed&&c["nonempty"]==nonempty).unwrap();
+  for (actual,expected) in app.scene.groups[0].mesh.vertices.iter().zip(expected["selected_vertices"].as_array().unwrap()) {let e=DVec3::new(expected[0].as_f64().unwrap(),expected[1].as_f64().unwrap(),expected[2].as_f64().unwrap());assert!(actual.position.distance(e)<1e-6);}
   for (actual,expected) in app.scene.groups[1].mesh.vertices.iter().zip(expected["sibling_vertices"].as_array().unwrap()) {let e=DVec3::new(expected[0].as_f64().unwrap(),expected[1].as_f64().unwrap(),expected[2].as_f64().unwrap());assert!(actual.position.distance(e)<1e-6);}
   assert_eq!(app.scene.groups[1].mesh.vertices.len(),expected["sibling_vertices"].as_array().unwrap().len());
   if private {assert_eq!(app.scene.groups[1],before.groups[1]);assert_eq!(app.scene.component_definitions[&definition],before.component_definitions[&definition]);}
@@ -153,5 +154,33 @@ fn no_edit_container_bake_preserves_source_zero_history_and_clears_selection() {
   parent.children.push(Group::new("child"));app.scene.groups.push(parent);app.scene.make_component(app.scene.groups[0].id).unwrap();app.scene.groups.push(app.scene.groups[0].duplicate_instance());app.scene.select(SelectionItem::Group(0));
   let sibling=app.scene.groups[1].clone();app.begin_component_edit();app.finish_component_edit();assert!(app.scene.selection.is_empty());assert_eq!(app.undo_stack.len(),row["history_after_no_edit"].as_u64().unwrap()as usize);assert_eq!(app.scene.groups[1],sibling);
   if let Some(stored)=row["stored_axes_after_exit"].as_array() {let actual=app.scene.groups[0].native_document["axes"].as_array().unwrap();for (a,b) in actual.iter().zip(stored){assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<4e-6);}} else {assert!(app.scene.groups[0].native_document.get("axes").is_none());}
+ }
+}
+
+#[test]
+fn original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact() {
+ let source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-world-move-source.json")).unwrap();
+ fn vector(value:&serde_json::Value)->DVec3 {DVec3::new(value[0].as_f64().unwrap(),value[1].as_f64().unwrap(),value[2].as_f64().unwrap())}
+ fn compare(mesh:&Mesh,expected:&serde_json::Value) {let expected=expected.as_array().unwrap();assert_eq!(mesh.vertices.len(),expected.len());for (v,p) in mesh.vertices.iter().zip(expected){assert!(v.position.distance(vector(p))<2e-5,"{:?} vs {p}",v.position);}}
+ for row in source["cases"].as_array().unwrap() {
+  let kind=row["kind"].as_str().unwrap();let mut app=IngeTrazoApp::new();app.scene=ingetrazo_core::scene::Scene::new();
+  let mut group=Group::with_mesh(kind,{let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]).unwrap();mesh.faces[0].attrs.insert("vendor".into(),serde_json::json!(71));mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"uvw":[1.,0.,0.,3.,0.,1.,0.,4.]}));mesh});
+  group.transform=DMat4::from_cols_array(&[-2.,0.,0.,0.,0.6,3.,0.,0.,0.,0.4,1.5,0.,3.,-2.,1.,1.]);
+  if kind=="container" {group.children.push(Group::new("child"));}
+  app.scene.groups.push(group);app.scene.make_component(app.scene.groups[0].id).unwrap();let mut sibling=app.scene.groups[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*10.)*sibling.transform;app.scene.groups.push(sibling);
+  if kind=="nested-leaf" {let mut outer=Group::new("outer");outer.transform=DMat4::from_translation(DVec3::new(2.,-1.,4.))*DMat4::from_rotation_z(23f64.to_radians());outer.children=std::mem::take(&mut app.scene.groups);app.scene.groups.push(outer);app.scene.make_component(app.scene.groups[0].id).unwrap();}
+  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();let camera=app.camera.clone();app.begin_component_edit();if kind=="nested-leaf" {app.scene.select(SelectionItem::Group(0));app.begin_component_edit();}
+  assert_eq!(app.scene.dimension_frame,DMat4::IDENTITY);assert_eq!(app.camera,camera);compare(&app.scene.mesh,&row["entry_world_points"]);
+  app.scene.select(SelectionItem::Face(0));app.set_tool(ingetrazo_tools::base::ToolType::Move);app.dispatch_tool_click(&context(vector(&row["world_grab"])));app.dispatch_tool_move(&context(vector(&row["world_hover"])));
+  app.dispatch_tool_vcb(if row["mode"]=="scalar" {"2"} else {"1;-2;0.5"}).unwrap();compare(&app.scene.mesh,&row["active_world_after"]);assert_eq!(app.camera,camera);
+  app.finish_component_edit();
+  let groups=&app.scene.groups;
+  compare(&groups[0].mesh,&row["selected_prototype_after"]);compare(&groups[1].mesh,&row["sibling_prototype_after"]);assert_eq!(groups[0].mesh_share==groups[1].mesh_share,row["shared_after"].as_bool().unwrap());
+  for (g,attrs) in [(&groups[0],&row["selected_attrs_after"]),(&groups[1],&row["sibling_attrs_after"])] {
+   assert_eq!(g.mesh.faces[0].attrs["vendor"],attrs["vendor"]);
+   for (a,b) in g.mesh.faces[0].attrs["texture"]["uvw"].as_array().unwrap().iter().zip(attrs["texture"]["uvw"].as_array().unwrap()) {assert!((a.as_f64().unwrap()-b.as_f64().unwrap()).abs()<2e-5);}
+  }
+  if kind=="nested-leaf" {app.finish_component_edit();}
+  assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);
  }
 }
