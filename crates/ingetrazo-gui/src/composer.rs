@@ -178,6 +178,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     };
 
     app.native_composer.retain_items(&items);
+    if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
     for idx in app.scene.sheets[sheet_idx].visible_item_indices() {
         let item=&items[idx];
@@ -448,13 +449,14 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             let page=|p:Pos2|glam::DVec2::new(f64::from((p.x-paper_rect.min.x)/zoom),f64::from((p.y-paper_rect.min.y)/zoom));
             if first_pass && response.drag_started() {if let Some(start)=pointer.press_origin(){app.composer_state.shape_start=Some(page(start));}}
             if let Some(start)=app.composer_state.shape_start {
-                if let Ok(preview)=ingetrazo_core::sheet_shape::SheetShape::from_drag(&kind,start,page(hover)){let _=paint_sheet_shape(&painter,&preview,zoom,paper_rect.min);}
+                if let Ok(preview)=ingetrazo_core::sheet_shape::SheetShape::from_drag(&kind,start,page(hover)){match app.native_composer.paint_preview(&painter,&preview,zoom,paper_rect.min){Ok(true)=>{},Ok(false)=>{if let Err(error)=paint_sheet_shape(&painter,&preview,zoom,paper_rect.min){app.status_message=error;}},Err(error)=>app.status_message=error}}
                 if first_pass && (response.drag_stopped()||response.clicked()){
                     match app.place_composer_shape(&kind,start,page(hover)){Ok(_)=>{},Err(error)=>app.status_message=error}
                     app.composer_state.shape_start=None;
                 }
             } else if first_pass && response.clicked(){app.composer_state.shape_start=Some(page(hover));}
         }
+        if app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
         return;
     }
     // Handle Item Selection & Dragging on Canvas

@@ -82,8 +82,17 @@ impl Cache{
  pub factory:Option<crate::native_vulkan::cad2d::Factory>,
  entries:std::collections::HashMap<uuid::Uuid,(Cache,Option<crate::native_vulkan::cad2d::Handle>)>,
  active:std::collections::HashSet<uuid::Uuid>,
+ preview:(Cache,Option<crate::native_vulkan::cad2d::Handle>),
 }
 impl NativeComposer{
+ pub fn clear_preview(&mut self){self.preview=Default::default();}
+ pub fn paint_preview(&mut self,painter:&egui::Painter,shape:&SheetShape,zoom:f32,origin:Pos2)->Result<bool,String>{
+  let Some(factory)=&self.factory else{return Ok(false);};
+  let(g,b)=self.preview.0.prepare(painter.ctx(),shape,zoom,painter.ctx().pixels_per_point())?;
+  let pose=ingetrazo_render::cad2d::Pose{scale:[zoom;2],translation:[origin.x+shape.x_mm as f32*zoom,origin.y+shape.y_mm as f32*zoom]};
+  if let Some(handle)=&self.preview.1{handle.update(g,b,pose)?;}else{self.preview.1=Some(factory.handle(g,b,pose)?);}
+  painter.add(self.preview.1.as_ref().unwrap().shape(painter.clip_rect()));Ok(true)
+ }
  pub fn retain_items(&mut self,items:&[ingetrazo_core::composition::SheetItem]){
   self.active.clear();self.active.extend(items.iter().filter_map(|i|if let ingetrazo_core::composition::SheetItem::Shape(s)=i{Some(s.id)}else{None}));
   self.entries.retain(|id,_|self.active.contains(id));
