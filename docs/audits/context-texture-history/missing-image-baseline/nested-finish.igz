@@ -1,0 +1,303 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 20.0,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 0.5235987755982988,
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": -0.7853981633974483
+    },
+    "compositions": [],
+    "dimensions": [],
+    "edges": [],
+    "faces": [],
+    "geo_paths": [],
+    "geo_points": [],
+    "georef": {
+      "datum": null
+    },
+    "groups": [
+      {
+        "axes": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          100.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "billboard": false,
+        "children": [
+          {
+            "billboard": false,
+            "children": [],
+            "component": false,
+            "hidden": false,
+            "ifc": null,
+            "layer": null,
+            "name": "Target",
+            "proto": 1,
+            "uid": "3f17e57e8ce348b198efb3809c41bf9f",
+            "xform": [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ],
+        "component": false,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "Parent",
+        "proto": 0,
+        "uid": "835e7f3faa834e948d97cbae754a7aa6",
+        "xform": [
+          1.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          1.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          1.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          1.0
+        ]
+      }
+    ],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "protos": [
+      {
+        "axes": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          100.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "edges": [],
+        "faces": []
+      },
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              -90.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              -89.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              -89.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              -89.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              -89.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              -90.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              -90.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              -90.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ]
+          },
+          {
+            "mat": "Imported",
+            "texture": {
+              "embed": "textures/92ba2143dc2e0ac0-checker.png",
+              "sh": 1.0,
+              "sw": 1.0,
+              "uvw": [
+                1.0,
+                0.0,
+                0.0,
+                110.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "vertices": [
+              [
+                -90.0,
+                0.0,
+                0.0
+              ],
+              [
+                -89.0,
+                0.0,
+                0.0
+              ],
+              [
+                -89.0,
+                1.0,
+                0.0
+              ],
+              [
+                -90.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}
