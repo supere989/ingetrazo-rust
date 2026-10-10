@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "backend": "native",
+      "mode": "ordinary",
+      "passed": true,
+      "minimum_segment_coverage": 1.0
+    },
+    {
+      "backend": "native",
+      "mode": "linked",
+      "passed": true,
+      "minimum_segment_coverage": 1.0
+    },
+    {
+      "backend": "native",
+      "mode": "nested",
+      "passed": true,
+      "minimum_segment_coverage": 1.0
+    },
+    {
+      "backend": "original",
+      "mode": "ordinary",
+      "passed": true,
+      "minimum_segment_coverage": 1.0
+    },
+    {
+      "backend": "original",
+      "mode": "linked",
+      "passed": true,
+      "minimum_segment_coverage": 1.0
+    },
+    {
+      "backend": "original",
+      "mode": "nested",
+      "passed": true,
+      "minimum_segment_coverage": 1.0
+    }
+  ],
+  "scope": "ActualXTEST softwareVulkan/originalQtGL, distributedwire visibility; not actualRTX Move gesture or exactRGBA parity"
+}
