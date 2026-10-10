@@ -49,7 +49,7 @@ impl Resources {
     /// Fresh RGBA8_UNORM image must have TRANSFER_DST|SAMPLED usage, and
     /// TRANSFER_SRC when mip_levels>1. Failure leaves only this new image
     /// partially prepared; callers must drop it and retain prior cached images.
-    pub fn upload_rgba8_image(
+    fn upload_rgba8_image(
         &mut self,
         context: &VulkanContext,
         image: vk::Image,
@@ -409,9 +409,13 @@ impl TextureImage {
                 )
         }
         .map_err(|e| format!("RGBA texture format/usage unavailable: {e}"))?;
+        let logical_bytes: u64 = layout.mips[..levels as usize].iter().map(|m|m.bytes).sum();
         if extent.width > props.max_extent.width
             || extent.height > props.max_extent.height
             || levels > props.max_mip_levels
+            || props.max_array_layers < 1
+            || !props.sample_counts.contains(vk::SampleCountFlags::TYPE_1)
+            || logical_bytes > props.max_resource_size
         {
             return Err("Texture exceeds actual device format limits".into());
         }
@@ -449,6 +453,10 @@ impl TextureImage {
         }
         .map_err(|e| e.to_string())?;
         let req = unsafe { device.get_image_memory_requirements(image) };
+        if req.size > props.max_resource_size {
+            unsafe {device.destroy_image(image,None)};
+            return Err("Actual texture allocation exceeds queried format max resource size".into());
+        }
         let mut memory = None;
         let mut view = vk::ImageView::null();
         let mut sampler = vk::Sampler::null();
