@@ -38,55 +38,83 @@ fn source_scale(n: f64) -> String {
         format!("1:{number}")
     }
 }
-/// Source date.today uses the native local calendar; never a UTC or stale authored-date substitute.
-pub(crate) fn today() -> Result<String, String> {
-    #[cfg(unix)]
-    let (year, month, day) = unsafe {
-        let now = libc::time(std::ptr::null_mut());
-        if now == -1 {
-            return Err("Native calendar clock failed".into());
+/// Sample the native local calendar once for a canvas frame, without formatting.
+#[derive(Debug,Clone,Copy,PartialEq,Eq)]
+pub(crate) struct CalendarDate {year:i32,month:i32,day:i32}
+impl CalendarDate {
+    pub(crate) fn new(year:i32,month:i32,day:i32)->Result<Self,String>{
+        let leap=year%4==0&&(year%100!=0||year%400==0);
+        let days=match month{2=>if leap{29}else{28},4|6|9|11=>30,_=>31};
+        if !(1..=9999).contains(&year)||!(1..=12).contains(&month)||!(1..=days).contains(&day){return Err("Invalid native local calendar".into());}
+        Ok(Self{year,month,day})
+    }
+    pub(crate) fn display(self)->String {format!("{:02}/{:02}/{:04}",self.day,self.month,self.year)}
+}
+#[cfg(unix)]
+fn calendar_at(now:libc::time_t)->Result<CalendarDate,String>{
+    let mut local:libc::tm=unsafe{std::mem::zeroed()};
+    if unsafe{libc::localtime_r(&now,&mut local)}.is_null(){return Err("Native local calendar conversion failed".into());}
+    CalendarDate::new(local.tm_year+1900,local.tm_mon+1,local.tm_mday)
+}
+thread_local!{static CALENDAR_SAMPLES:std::cell::Cell<u64>=const{std::cell::Cell::new(0)};}
+pub(crate) fn calendar_samples()->u64{CALENDAR_SAMPLES.with(std::cell::Cell::get)}
+pub(crate) fn sample_calendar()->Result<CalendarDate,String>{
+    CALENDAR_SAMPLES.with(|n|n.set(n.get().wrapping_add(1)));
+    #[cfg(unix)] {
+        let now=unsafe{libc::time(std::ptr::null_mut())};
+        if now==-1{return Err("Native calendar clock failed".into());}
+        calendar_at(now)
+    }
+    #[cfg(windows)] {
+        #[repr(C)]struct SystemTime{year:u16,month:u16,weekday:u16,day:u16,hour:u16,minute:u16,second:u16,millis:u16}
+        #[link(name="kernel32")]extern "system"{fn GetLocalTime(time:*mut SystemTime);}
+        let mut local:SystemTime=unsafe{std::mem::zeroed()};unsafe{GetLocalTime(&mut local);}
+        CalendarDate::new(i32::from(local.year),i32::from(local.month),i32::from(local.day))
+    }
+    #[cfg(not(any(unix,windows)))]{Err("Native local calendar provider unavailable".into())}
+}
+/// The PDF source painter continues to sample each Text's actual local calendar.
+pub(crate) fn today()->Result<String,String>{sample_calendar().map(CalendarDate::display)}
+
+#[derive(Debug,Clone,PartialEq,Eq)]
+struct ExpansionContextKey {
+    model:u64,scene:u64,sheet:uuid::Uuid,total:usize,index:usize,
+    path:Option<std::path::PathBuf>,date:CalendarDate,date_string:String,
+}
+#[derive(Debug,Clone)]
+struct ExpansionEntry {authored:String,bound:String,display:std::sync::Arc<str>}
+/// Only the active sheet's current expansion generation is retained.
+#[derive(Debug,Clone,Default)]
+pub(crate) struct CanvasExpansions {
+    key:Option<ExpansionContextKey>,entries:std::collections::HashMap<uuid::Uuid,ExpansionEntry>,bytes:usize,
+    pub(crate) computations:u64,
+}
+impl CanvasExpansions {
+    pub(crate) fn get(&mut self,model:u64,scene:u64,sheet:&Sheet,item:&TextItem,index:usize,total:usize,path:Option<&Path>,date:CalendarDate)->Result<std::sync::Arc<str>,String>{
+        const BYTES:usize=32*1024*1024;
+        const ENTRIES:usize=10000;
+        let same=self.key.as_ref().is_some_and(|k|k.model==model&&k.scene==scene&&k.sheet==sheet.id&&k.total==total&&k.index==index&&k.path.as_deref()==path&&k.date==date);
+        if !same {
+            if path.is_some_and(|p|p.as_os_str().len()>ingetrazo_formats::paper_text_layout::MAX_LINE_BYTES){return Err("Canvas Text path exceeds byte budget".into());}
+            self.entries.clear();self.bytes=0;
+            self.key=Some(ExpansionContextKey{model,scene,sheet:sheet.id,total,index,path:path.map(Path::to_path_buf),date,date_string:date.display()});
         }
-        let mut local: libc::tm = std::mem::zeroed();
-        if libc::localtime_r(&now, &mut local).is_null() {
-            return Err("Native local calendar conversion failed".into());
-        }
-        (local.tm_year + 1900, local.tm_mon + 1, local.tm_mday)
-    };
-    #[cfg(windows)]
-    let (year, month, day) = unsafe {
-        #[repr(C)]
-        struct SystemTime {
-            year: u16,
-            month: u16,
-            weekday: u16,
-            day: u16,
-            hour: u16,
-            minute: u16,
-            second: u16,
-            millis: u16,
-        }
-        #[link(name = "kernel32")]
-        extern "system" {
-            fn GetLocalTime(time: *mut SystemTime);
-        }
-        let mut local: SystemTime = std::mem::zeroed();
-        GetLocalTime(&mut local);
-        (
-            i32::from(local.year),
-            i32::from(local.month),
-            i32::from(local.day),
-        )
-    };
-    #[cfg(not(any(unix, windows)))]
-    return Err("Native local calendar provider unavailable".into());
-    #[cfg(any(unix, windows))]
-    {
-        if !(1..=9999).contains(&year) || !(1..=12).contains(&month) || !(1..=31).contains(&day) {
-            return Err("Invalid native local calendar".into());
-        }
-        Ok(format!("{day:02}/{month:02}/{year:04}"))
+        let bound=sheet.native_items.get(&item.id).and_then(|v|v.get("frame_uid")).and_then(serde_json::Value::as_str).unwrap_or("");
+        if let Some(entry)=self.entries.get(&item.id){if entry.authored==item.text&&entry.bound==bound{return Ok(entry.display.clone());}}
+        let display=expand(sheet,item,&Context{index:Some(index),total,path,date:&self.key.as_ref().unwrap().date_string})?;
+        let bytes=item.text.len().checked_add(bound.len()).and_then(|v|v.checked_add(display.len())).ok_or("Canvas Text cache size overflow")?;
+        let old=self.entries.get(&item.id).map(|v|v.authored.len()+v.bound.len()+v.display.len()).unwrap_or(0);
+        let aggregate=self.bytes.checked_sub(old).and_then(|v|v.checked_add(bytes)).ok_or("Canvas Text cache size overflow")?;
+        if aggregate>BYTES||(!self.entries.contains_key(&item.id)&&self.entries.len()>=ENTRIES){return Err("Canvas Text cache budget exceeded".into());}
+        let mut authored=String::new();authored.try_reserve_exact(item.text.len()).map_err(|_|"Canvas Text cache allocation failed")?;authored.push_str(&item.text);
+        let mut binding=String::new();binding.try_reserve_exact(bound.len()).map_err(|_|"Canvas Text cache allocation failed")?;binding.push_str(bound);
+        self.entries.try_reserve(1).map_err(|_|"Canvas Text cache allocation failed")?;
+        let display:std::sync::Arc<str>=display.into();
+        self.entries.insert(item.id,ExpansionEntry{authored,bound:binding,display:display.clone()});self.bytes=aggregate;self.computations=self.computations.wrapping_add(1);
+        Ok(display)
     }
 }
+
 /// Compare source dataclass records, excluding opaque archive keys and Rust UI identities.
 /// Only duplicate sheet headers need this cold bounded key; each candidate is admitted once/export.
 fn equality_key(sheet: &Sheet) -> Result<Vec<u8>, String> {
@@ -732,5 +760,35 @@ mod tests {
         b.source_border=None;
         let loaded=vec![a,b];
         assert_eq!(source_indices(&loaded,&loaded[1..]).unwrap()[&(&loaded[1] as *const Sheet)],0);
+    }
+}
+
+#[cfg(test)]mod canvas_expansion_cache_tests {
+    use super::*;
+    fn sample()->(Sheet,TextItem){
+        let mut sheet=Sheet::default();sheet.items.clear();let text=TextItem{id:uuid::Uuid::new_v4(),pos:(20.,30.),text:"{fecha} {archivo} {hoja}/{total}".into(),font_size_pt:14.,bold:false};sheet.items.push(SheetItem::Text(text.clone()));(sheet,text)
+    }
+    #[test]fn warm_strings_share_identity_and_file_date_content_binding_invalidate(){
+        let (mut sheet,mut item)=sample();let mut cache=CanvasExpansions::default();let date=CalendarDate::new(2026,3,7).unwrap();let calendar_before=calendar_samples();
+        let first=cache.get(1,2,&sheet,&item,0,2,Some(Path::new("/tmp/a.igz")),date).unwrap();
+        assert_eq!(&*first,"07/03/2026 a 1/2");
+        let warm=cache.get(1,2,&sheet,&item,0,2,Some(Path::new("/tmp/a.igz")),date).unwrap();assert!(std::sync::Arc::ptr_eq(&first,&warm));assert_eq!(cache.computations,1);assert_eq!(calendar_samples(),calendar_before);
+        let renamed=cache.get(1,2,&sheet,&item,0,2,Some(Path::new("/tmp/b.igz")),date).unwrap();assert_eq!(&*renamed,"07/03/2026 b 1/2");assert_eq!(cache.computations,2);
+        let midnight=cache.get(1,2,&sheet,&item,0,2,Some(Path::new("/tmp/b.igz")),CalendarDate::new(2026,3,8).unwrap()).unwrap();assert_eq!(&*midnight,"08/03/2026 b 1/2");assert_eq!(cache.computations,3);
+        item.text="{hoja} {escala}".into();assert_eq!(&*cache.get(1,2,&sheet,&item,1,2,None,date).unwrap(),"2 ");
+        let mut frame=ingetrazo_core::composition::ViewFrame::default();frame.scale_n=25.;let id=frame.id;sheet.items.push(SheetItem::ViewFrame(frame));sheet.native_items.insert(id,serde_json::json!({"uid":"bound"}));sheet.native_items.insert(item.id,serde_json::json!({"frame_uid":"bound"}));
+        assert_eq!(&*cache.get(1,3,&sheet,&item,1,2,None,date).unwrap(),"2 1:25");
+        let before=cache.computations;item.text="unchanged macro: {nombre}".into();assert!(cache.get(1,3,&sheet,&item,1,2,None,date).unwrap().starts_with("unchanged macro: "));assert_eq!(cache.computations,before+1);
+    }
+    #[test]fn refusal_keeps_previous_entries_and_calendar_is_validated(){
+        let (sheet,item)=sample();let mut cache=CanvasExpansions::default();let date=CalendarDate::new(2024,2,29).unwrap();let first=cache.get(1,2,&sheet,&item,0,1,None,date).unwrap();let before=(cache.bytes,cache.computations,cache.entries.len());
+        let mut invalid=item.clone();invalid.text="x".repeat(ingetrazo_formats::paper_text_layout::MAX_LINE_BYTES+1);assert!(cache.get(1,2,&sheet,&invalid,0,1,None,date).is_err());assert_eq!((cache.bytes,cache.computations,cache.entries.len()),before);
+        assert!(std::sync::Arc::ptr_eq(&first,&cache.get(1,2,&sheet,&item,0,1,None,date).unwrap()));assert!(CalendarDate::new(2026,2,29).is_err());assert!(CalendarDate::new(2026,4,31).is_err());
+    }
+    #[cfg(unix)]#[test]fn native_calendar_source_timestamp_protocol(){
+        if let Ok(path)=std::env::var("INGETRAZO_CALENDAR_SOURCE"){
+            let value:serde_json::Value=serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap();let zone=std::env::var("TZ").unwrap();let rows=value["zones"][&zone].as_array().expect("source timezone controls");assert!(rows.len()>=8);
+            for row in rows{assert_eq!(calendar_at(row["timestamp"].as_i64().unwrap() as libc::time_t).unwrap().display(),row["source_date"].as_str().unwrap());}
+        }else{assert_eq!(sample_calendar().unwrap().display().len(),10);}
     }
 }
