@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Merged membership permutation (2026-10-10): fresh integrated RustPython replay matches six freshly regenerated original states; fourteen negative controls reject. Genuine object identity and source weld-key lookup survive reordering and Undo/Redo; error/quota history controls and final logical charge pass. [Independent execution](audits/ai-membership-permutation-root/acceptance.json). General deletion/replacement, simultaneous reorder+append, Edge APIs, efficient history/resource bounds and production integration remain OPEN.
+
 Ninth Intel Metal review (2026-10-10): root independently decoded all nine complete GPU Canvas images exactly; retained presenter reports19displayed,2skipped,0pending and20warm observations. [Root review](audits/coretext-native-ninth/intel-root-review.json). Reviewer also retains eighteen exact PDFs. ARM presentation and physical Mac acceptance remain OPEN.
 
 Merged annotation application acceptance (2026-10-10): fresh integrated build passes two focused tests, actual application mid-UI add/delete/refusal/retry, deferred managed-texture retry, and eight exact controlled Qt publication images on llvmpipe Vulkan. Last deletion restores the exact empty viewport after correcting pre-UI resource serial ownership. Both owned processes close within the bound. [Independent merged acceptance](audits/native-annotation-merged-root/acceptance.json). Original arrow still differs by217pixels; native font/depth policy, RTX and broad rendering parity remain OPEN.
