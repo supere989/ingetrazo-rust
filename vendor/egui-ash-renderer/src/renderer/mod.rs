@@ -75,6 +75,12 @@ pub struct DynamicRendering {
     pub depth_attachment_format: Option<vk::Format>,
 }
 
+/// Unsubmitted replacement pipeline. Dropping it leaves the live renderer intact.
+#[cfg(not(feature = "dynamic-rendering"))]
+pub struct PreparedRenderPass {device:Device,pipeline:vk::Pipeline}
+#[cfg(not(feature = "dynamic-rendering"))]
+impl Drop for PreparedRenderPass {fn drop(&mut self){if self.pipeline!=vk::Pipeline::null(){unsafe{self.device.destroy_pipeline(self.pipeline,None)}}}}
+
 /// Vulkan renderer for egui.
 ///
 /// It records rendering command to the provided command buffer at each call to [`cmd_draw`].
@@ -285,14 +291,25 @@ impl Renderer {
     /// * [`RendererError`] - If any Vulkan error is encountered during pipeline creation.
     #[cfg(not(feature = "dynamic-rendering"))]
     pub fn set_render_pass(&mut self, render_pass: vk::RenderPass) -> RendererResult<()> {
-        unsafe { self.device.destroy_pipeline(self.pipeline, None) };
-        self.pipeline = create_vulkan_pipeline(
-            &self.device,
-            self.pipeline_layout,
-            render_pass,
-            self.options,
-        )?;
+        let replacement=self.prepare_render_pass(render_pass)?;
+        self.commit_render_pass(replacement);
         Ok(())
+    }
+
+    /// Cold engineering identity, not a handle for external GPU commands.
+    pub fn pipeline_identity_for_probe(&self)->u64{vk::Handle::as_raw(self.pipeline)}
+    /// Prepare without changing or destroying the live pipeline.
+    #[cfg(not(feature = "dynamic-rendering"))]
+    pub fn prepare_render_pass(&self,render_pass:vk::RenderPass)->RendererResult<PreparedRenderPass>{
+        let pipeline=create_vulkan_pipeline(&self.device,self.pipeline_layout,render_pass,self.options)?;
+        Ok(PreparedRenderPass{device:self.device.clone(),pipeline})
+    }
+    /// Caller must first complete all submitted uses of the previous pipeline.
+    #[cfg(not(feature = "dynamic-rendering"))]
+    pub fn commit_render_pass(&mut self,mut replacement:PreparedRenderPass){
+        let next=std::mem::replace(&mut replacement.pipeline,vk::Pipeline::null());
+        let old=std::mem::replace(&mut self.pipeline,next);
+        unsafe{self.device.destroy_pipeline(old,None)};
     }
 
     /// Change the dynamic rendering parameters.
