@@ -1490,6 +1490,7 @@ name = "ingetrazo-metal"
 version = "0.3.15"
 dependencies = [
  "blake3",
+ "block2 0.6.2",
  "bytemuck",
  "egui",
  "ingetrazo-core",
