@@ -4,7 +4,8 @@ Run under podman unshare so readonly overlay paths are visible. Own Qt windows o
 """
 import os,sys,json,time,subprocess,hashlib
 from pathlib import Path
-publish='ingetrazo-publish';work='/tmp/ingetrazo-skp-native-import';out=Path(sys.argv[1])
+publish='ingetrazo-publish';work=os.environ.get('INGETRAZO_SKP_WORKTREE','/tmp/ingetrazo-skp-native-import');out=Path(sys.argv[1])
+assert Path(work).is_absolute(), 'absolute container worktree required'
 assert not out.exists(),'fresh output required';out.mkdir(mode=0o700)
 def query(*a):return subprocess.check_output(a,text=True).strip()
 merged=query('podman','inspect',publish,'--format','{{.GraphDriver.Data.MergedDir}}');image=query('podman','inspect',publish,'--format','{{.Image}}')
@@ -14,7 +15,12 @@ display=os.environ['DISPLAY'];auth=Path(os.environ['XAUTHORITY']);assert auth.is
 importer='/tmp/ingetrazo-skp-runtime-metadata-importer';probe=os.environ.get('INGETRAZO_SKP_NATIVE_PROBE','/tmp/ingetrazo-skp-world-aligned-probe')
 for f in [importer,probe]:assert Path(merged+f).is_file()
 source_sha=query('podman','exec',publish,'git','-C',work,'rev-parse','HEAD')
+checkout_status=query('podman','exec',publish,'git','-C',work,'status','--porcelain','--untracked-files=no','--ignore-submodules=all')
+probe_source=os.environ.get('INGETRAZO_SKP_PROBE_SOURCE')
+if probe_source:
+ assert len(probe_source)==40 and all(c in '0123456789abcdef' for c in probe_source), 'full frozen probe source SHA required'
 meta={'image_id':image,'source':source_sha,'importer_sha256':hashlib.sha256(Path(merged+importer).read_bytes()).hexdigest(),'probe_sha256':hashlib.sha256(Path(merged+probe).read_bytes()).hexdigest(),'device':'nvidia.com/gpu=0','cases':[]}
+meta['source_provenance']={'checkout_path':work,'checkout_head':source_sha,'tracked_changes':checkout_status.splitlines(),'probe_build_source':probe_source,'scope':'Checkout HEAD is an observation, not proof of the probe build source. Probe SHA256 identifies executed bytes; supplied build source must be backed by retained build evidence.'}
 name='ingetrazo-skp-hardware-'+str(os.getpid())
 common=['podman','run','--rm','--name',name,'--read-only','--network','none','--device','nvidia.com/gpu=0','--userns','keep-id:uid=1000,gid=1000','--user','1000:1000','--security-opt','label=disable','--tmpfs','/tmp:rw','-v','/usr/lib/libEGL.so.1:/usr/lib/libEGL.so.1:ro','-v','/usr/lib/libGLdispatch.so.0:/usr/lib/libGLdispatch.so.0:ro']
 def run(label,args,timeout):
