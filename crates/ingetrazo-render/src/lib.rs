@@ -143,3 +143,5 @@ pub mod qt_cosmetic;
 pub mod texture_layout;
 
 pub mod native_textures;
+
+pub mod cad_callback;

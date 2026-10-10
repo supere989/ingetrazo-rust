@@ -1,0 +1,7 @@
+# Backend-neutral CAD callback boundary
+
+The shared composer uses a static backend enum. Linux/Windows still dispatch to the existing Vulkan factory, handle, update and paint callback without changing geometry or shader behavior. The Metal producer emits an immutable-data callback for later native painter admission. No Metal factory is installed in the application at this checkpoint: the native painter does not yet consume this payload.
+
+A stable callback owns a mutex-protected snapshot of Arc geometry, Arc palette, pose and monotonic revision. A prepared painter must freeze and retain that snapshot through actual GPU completion. Changing the producer cannot modify an earlier snapshot. Unchanged updates compare Arc identity and pose, do not scan geometry or allocate a replacement snapshot, and leave the revision unchanged. New palette/geometry and invalid pose are checked before publication; failure preserves the previous snapshot. This layer allocates no GPU memory and cannot substitute for native budget, completion or rendering acceptance.
+
+Validation: both Apple targets compile the GUI library using the diagnostic blake3/pure feature; one producer ownership/atomicity test and six existing composer cache/geometry tests pass. Actual native callback consumption, GPU byte accounting, warm upload proof, source pixel comparisons and physical Mac execution remain required. The enum adds one dispatch per handle operation, not one virtual call per primitive.
