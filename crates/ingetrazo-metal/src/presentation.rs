@@ -80,6 +80,15 @@ impl MetalPresentation {
         let layer = CAMetalLayer::new();
         layer.setDevice(Some(&metal.device));
         layer.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
+        // The native UI/CAD shaders produce encoded sRGB bytes. Explicitly
+        // identify that source space to Core Animation; nil is unmanaged.
+        // This performs no authored-color adjustment or shader compensation.
+        let colorspace = objc2_core_graphics::CGColorSpace::with_name(Some(unsafe {
+            objc2_core_graphics::kCGColorSpaceSRGB
+        }))
+        .ok_or("Native sRGB color space creation failed")?;
+        layer.setColorspace(Some(&colorspace));
+        eprintln!("Metal presentation source color space: sRGB");
         layer.setFramebufferOnly(true);
         layer.setMaximumDrawableCount(3);
         // Apple bounds nextDrawable acquisition to approximately one second.

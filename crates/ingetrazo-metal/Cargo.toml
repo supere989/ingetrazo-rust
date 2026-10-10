@@ -17,6 +17,7 @@ objc2-foundation = { version = "=0.3.2", default-features = false, features = ["
 objc2-quartz-core = { version = "=0.3.2", features = ["CAMetalLayer", "CALayer", "objc2-metal"] }
 objc2-app-kit = { version = "=0.3.2", features = ["NSView"] }
 objc2-core-foundation = "=0.3.2"
+objc2-core-graphics = "=0.3.2"
 raw-window-handle = "0.6"
 winit = "0.30"
 
