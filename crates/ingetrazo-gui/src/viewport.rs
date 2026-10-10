@@ -129,9 +129,15 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .as_ref()
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
-            let snap_res = app
-                .snap_engine
-                .snap(&cursor_ray, &app.scene, start_pt, app.active_tool.snap_close());
+            let screen_drawing=matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle);
+            let snap_res=if screen_drawing{
+                let context=ingetrazo_core::snap_screen::ScreenSnapContext{
+                    viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),
+                    cursor:glam::DVec2::new(rel_x,rel_y),candidate:cursor_world_pos,plane_normal,
+                };
+                let result=app.snap_engine.snap_screen(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context);
+                app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));result
+            }else{app.snap_engine.snap(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close())};
             if app.active_tool_type!=ToolType::Freehand && snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
                 active_snap_glyph = SnapGlyph::from_snap_result(&snap_res, start_pt);
@@ -379,7 +385,7 @@ fn cursor_work_plane(app:&IngeTrazoApp,ray:&ingetrazo_core::math::Ray)->(DVec3,D
     let forward=app.camera.forward();let near_horizon=forward.z.abs()<15_f64.to_radians().sin();let vertical=if forward.x.abs()>=forward.y.abs(){DVec3::X}else{DVec3::Y};
     if let Some((point,normal))=app.active_tool.drawing_plane(){if app.active_tool_type==ToolType::Line&&normal.z.abs()>0.94&&near_horizon{return(point,vertical);}return(point,normal);}
     if let Some(point)=app.active_tool.snap_anchor(){return(point,if near_horizon{vertical}else{DVec3::Z});}
-    if let Some((face,_,point))=ingetrazo_tools::base::pick_scene_face(&app.scene,ray){return(point,app.scene.mesh.face_normal(face));}
+    if let Some((point,normal,_))=ingetrazo_core::screen_pick::hover_face(&app.scene,ray){return(point,normal);}
     if forward.abs().max_element()>=0.97{
         let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
         fn group_bounds(group:&ingetrazo_core::groups::Group,parent:glam::DMat4,lo:&mut DVec3,hi:&mut DVec3){let transform=parent*group.transform;for v in &group.mesh.vertices{let p=transform.transform_point3(v.position);*lo=lo.min(p);*hi=hi.max(p);}for child in &group.children{group_bounds(child,transform,lo,hi);}}

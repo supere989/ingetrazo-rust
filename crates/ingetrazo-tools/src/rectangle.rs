@@ -195,7 +195,7 @@ impl Tool for RectangleTool {
         self.note_control_state(ctx.ctrl_held);
         if self.start_point.is_some(){self.on_move(scene,ctx);}
         if self.start_point.is_none() {
-            if self.plane_lock.is_none(){if let Some((face,_,_))=crate::base::pick_scene_face(scene,&ctx.ray){self.plane_normal=scene.mesh.face_normal(face);}}
+            if self.plane_lock.is_none(){if let Some((_,normal,_))=ingetrazo_core::screen_pick::hover_face(scene,&ctx.ray){self.plane_normal=normal;}}
             self.start_point = Some(ctx.world);
         } else {
             let start = self.start_point.unwrap();
