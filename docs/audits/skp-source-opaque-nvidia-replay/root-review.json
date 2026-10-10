@@ -1,0 +1,29 @@
+{
+  "review": "Independent digest and decoded whole-image verification",
+  "manifest_files_verified": 21,
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "different_pixels": 78,
+      "maximum_channel_delta": 14
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "different_pixels": 351,
+      "maximum_channel_delta": 84
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "different_pixels": 5088,
+      "maximum_channel_delta": 210
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "different_pixels": 3754,
+      "maximum_channel_delta": 210
+    }
+  ],
+  "full_parity": false,
+  "scope": "Ordinary opaque painted color key correction. HiddenLine/Monochrome and transparent paths preserved by scoped admission. Texture averages, overlays and remaining geometry/edge differences open.",
+  "transport_integration": "Resolved missing transport script by retaining complete reviewed59ab8eed script; reference-skp-real-render.py exists."
+}
