@@ -1,0 +1,34 @@
+[
+  {
+    "name": "append-and-weld",
+    "code": "mesh.add_edge(QVector3D(0,0,0),QVector3D(1,0,0))\nmesh.add_edge(QVector3D(1,0,0),QVector3D(2,0,0))"
+  },
+  {
+    "name": "merged-noop",
+    "code": "mesh.add_edge(QVector3D(1,0,0),QVector3D(0,0,0))"
+  },
+  {
+    "name": "retain-existing-edge",
+    "code": "keep=mesh.add_edge(QVector3D(0,0,0),QVector3D(1,0,0))"
+  },
+  {
+    "name": "partial-error",
+    "code": "bad=mesh.add_edge(QVector3D(8,0,0),QVector3D(9,0,0))\nraise ValueError('discard-staged-edge')"
+  },
+  {
+    "name": "expression-noop",
+    "code": "sum(i*i for i in range(4))"
+  },
+  {
+    "name": "same-edge-object",
+    "code": "a=mesh.add_edge(QVector3D(0,0,0),QVector3D(1,0,0))\nb=mesh.add_edge(QVector3D(1,0,0),QVector3D(0,0,0))\nprint(a is b)"
+  },
+  {
+    "name": "existing-reference-after-error",
+    "code": "print(keep is mesh.add_edge(QVector3D(1,0,0),QVector3D(0,0,0)))"
+  },
+  {
+    "name": "detached-pending-reference",
+    "code": "good=mesh.add_edge(QVector3D(8,0,0),QVector3D(9,0,0))\nprint(bad is good)"
+  }
+]

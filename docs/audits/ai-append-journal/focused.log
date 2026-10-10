@@ -1,0 +1,18 @@
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-ai-interpreter/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof)
+    Finished `test` profile [unoptimized] target(s) in 0.32s
+     Running unittests src/bin/transaction.rs (/tmp/ingetrazo-ai-interpreter-target/debug/deps/transaction-c514ec5975c920a0)
+
+running 2 tests
+test journal::tests::discarded_journal_never_mutates_live_mesh ... ok
+test journal::tests::stale_publish_is_a_complete_refusal ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

@@ -7,6 +7,8 @@ publish = false
 [dependencies]
 rustpython-vm = { version = "=0.6.0", default-features = false, features = ["compiler", "gc", "importlib", "stdio"] }
 serde_json = "1"
+ingetrazo-core = { path = "../../crates/ingetrazo-core" }
+glam = "0.29"
 [profile.dev]
 debug = 0
 incremental = false
