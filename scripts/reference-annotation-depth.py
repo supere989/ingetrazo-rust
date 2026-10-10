@@ -21,7 +21,7 @@ def case(name, world, depth=.5, patches=(), eye=(0,0,0), fwd=(0,0,1), matrix=Non
     def ray(w):calls.append(list(w.toTuple()));return bool(fallback)
     view=SimpleNamespace(_depth_snap=None if fallback is not None else (buf,m,inv,5,5,QVector3D(*eye),QVector3D(*fwd)),_is_occluded=ray)
     result=bool(_occluded_on_screen(view,QVector3D(*world)))
-    rows.append(dict(name=name,world=world,depth=buf.tolist(),mvp_column_major=list(m.data()),eye=eye,forward=fwd,fallback=fallback,fallback_calls=calls,occluded=result))
+    rows.append(dict(name=name,world=world,depth=buf.tolist(),mvp_column_major=list(m.data()),inverse_mvp_column_major=list(inv.data()),eye=eye,forward=fwd,fallback=fallback,fallback_calls=calls,occluded=result))
 case("surface",(0,0,0))
 case("within-absolute-tolerance",(0,0,.019))
 case("beyond-absolute-tolerance",(0,0,.021))
