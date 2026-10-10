@@ -1,0 +1,6 @@
+{
+  "source": "bdc794fd",
+  "binary_sha256": "864efc75aebf0f3fe1cfeac4ab15e3a16142ab1d22ec4503c6d770410c62e8db",
+  "command": "cargo run --manifest-path tools/ai-interpreter-proof/Cargo.toml --no-default-features --bin prepared_owners -j2",
+  "scope": "exclusive private append/face owner prerequisite; not live app scripting"
+}
