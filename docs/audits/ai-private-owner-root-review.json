@@ -1,0 +1,17 @@
+{
+  "reviewed_source": "6518e14ae545bd274d8b85d206dc39be4cbafc82",
+  "retained_history_states_exact": 12,
+  "retained_allocator_growth_bytes": 64220,
+  "source_review": "Private mesh and state tokens; commands retain appended records only; prepared spatial index validates ordered coordinates before allocation-free swap.",
+  "limitations": [
+    "Retained evidence review, not fresh root execution",
+    "Allocator measurement includes instrumentation allocations, not RSS",
+    "Infallible prepublication collect and clone paths are not recoverable allocator admission",
+    "Production writers, history limits, staging limits and reset-discard coupling remain open"
+  ],
+  "artifact_sha256": {
+    "original.json": "48479d4ab9079967b03df9ee6cb0f866e263d7f80709996acdff3f33e02c4981",
+    "native.json": "48479d4ab9079967b03df9ee6cb0f866e263d7f80709996acdff3f33e02c4981",
+    "memory.json": "3f4e9d6e6fe43af6ca8417d3cac772b294f0b6bd2de640c75832c257f4d25f38"
+  }
+}
