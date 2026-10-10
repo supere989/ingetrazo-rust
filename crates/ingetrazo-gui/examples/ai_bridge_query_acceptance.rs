@@ -21,17 +21,7 @@ fn main() {
                 }
                 "leave" => app.finish_component_edit(),
                 "add-edge" => {
-                    app.save_undo_state();
-                    let a = app
-                        .scene
-                        .mesh
-                        .add_vertex(glam::DVec3::new(101., 102., 103.));
-                    let b = app
-                        .scene
-                        .mesh
-                        .add_vertex(glam::DVec3::new(104., 105., 106.));
-                    app.scene.mesh.add_edge(a, b).unwrap();
-                    app.scene.bump_version();
+                    app.add_edge_command(glam::DVec3::new(101.,102.,103.),glam::DVec3::new(104.,105.,106.),None,None).unwrap();
                 }
                 "undo" | "redo" => {
                     let reply = app.ai_bridge_request(&json!({"id":1,"tool":step}));

@@ -175,3 +175,4 @@ pub mod navigation;
 pub mod navigation_ray;
 
 pub mod composer_border;
+mod history_edges;

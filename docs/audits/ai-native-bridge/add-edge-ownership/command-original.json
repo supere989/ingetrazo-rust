@@ -1,0 +1,8 @@
+{
+  "undo_vertex_count": 2,
+  "undo_retains_vertex_objects": true,
+  "redo_retains_edge_object": true,
+  "merged_undo_edge_count": 1,
+  "merged_undo_soft": false,
+  "merged_undo_curve": 9
+}
