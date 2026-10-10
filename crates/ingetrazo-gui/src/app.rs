@@ -245,17 +245,13 @@ impl IngeTrazoApp {
     }
 
     pub fn save_to_path(&mut self, path: &Path) {
-<<<<<<< HEAD
-        let mut document = self.scene.clone();
-        document.camera = self.camera.clone();
-        match save_file(&document, path) {
-=======
         if !self.component_edit_stack.is_empty() {
             self.status_message = "Finish or cancel the component edit before saving the document".into();
             return;
         }
-        match save_file(&self.scene, path) {
->>>>>>> 614a929 (Add nested component edit transactions and linked instance clipboard semantics)
+        let mut document = self.scene.clone();
+        document.camera = self.camera.clone();
+        match save_file(&document, path) {
             Ok(()) => {
                 self.scene.camera = self.camera.clone();
                 self.current_file = Some(path.to_path_buf());
