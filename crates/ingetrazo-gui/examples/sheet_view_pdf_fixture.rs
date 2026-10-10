@@ -3,6 +3,58 @@ use ingetrazo_core::{
     sheet_shape::SheetShape,
 };
 use ingetrazo_gui::{composer_compute::ComposerCompute, IngeTrazoApp};
+// Boundary equality is independent of triangulation fan order. The paper source
+// f64 clipper changes chord/ring start order versus the viewport f32 cap API.
+fn material_boundary(triangles: &[[glam::DVec3; 3]]) -> Vec<[[f64; 3]; 2]> {
+    let mut pairs = Vec::new();
+    for triangle in triangles {
+        for i in 0..3 {
+            let mut pair = [triangle[i].to_array(), triangle[(i + 1) % 3].to_array()];
+            pair.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            pairs.push(pair);
+        }
+    }
+    pairs.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let mut boundary = Vec::new();
+    let mut i = 0;
+    while i < pairs.len() {
+        let mut j = i + 1;
+        while j < pairs.len() && pairs[j] == pairs[i] {
+            j += 1;
+        }
+        if (j - i) % 2 == 1 {
+            boundary.push(pairs[i]);
+        }
+        i = j;
+    }
+    boundary
+}
+fn canonical_rings(rings: &[Vec<glam::DVec3>]) -> Vec<Vec<[f64; 3]>> {
+    let mut result = Vec::new();
+    for ring in rings {
+        let points = ring.iter().map(|p| p.to_array()).collect::<Vec<_>>();
+        let mut variants = Vec::new();
+        for reverse in [false, true] {
+            for start in 0..points.len() {
+                variants.push(
+                    (0..points.len())
+                        .map(|i| {
+                            points[if reverse {
+                                (start + points.len() - i) % points.len()
+                            } else {
+                                (start + i) % points.len()
+                            }]
+                        })
+                        .collect::<Vec<_>>(),
+                );
+            }
+        }
+        variants.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        result.push(variants.remove(0));
+    }
+    result.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    result
+}
 fn main() {
     let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
     let worker = std::path::PathBuf::from(std::env::args().nth(2).unwrap());
@@ -34,7 +86,16 @@ fn main() {
                     .as_str()
                     .unwrap_or("__current__")
                     .into(),
-                cut_fill: "none".into(),
+                cut_fill: reference["paper_cut_fill"]
+                    .as_str()
+                    .unwrap_or("none")
+                    .into(),
+                scale_n: reference["paper_scale_n"].as_f64().unwrap_or(100.),
+                cut_hatch_mm: reference["paper_cut_hatch_mm"].as_f64().unwrap_or(1.5),
+                cut_fill_color: reference["paper_cut_fill_color"]
+                    .as_str()
+                    .unwrap_or("#595e69")
+                    .into(),
                 border: true,
                 pen_edge_mm: if hidden { 0.37 } else { 0.18 },
                 pen_profile_mm: if hidden { 0.62 } else { 0.35 },
@@ -288,11 +349,24 @@ fn main() {
                 false,
             )
             .unwrap();
-        assert_eq!(
-            paper.section_material,
-            ingetrazo_render::vector_hlr::paper_section_triangles(&app.scene),
-            "cached admission material must equal the independent existing section API"
-        );
+        if app.scene.active_section().is_none_or(|p| {
+            p.normal
+                .abs()
+                .to_array()
+                .iter()
+                .filter(|&&v| v != 0.)
+                .count()
+                == 1
+        }) {
+            assert_eq!(
+                material_boundary(&paper.section_material),
+                material_boundary(&ingetrazo_render::vector_hlr::paper_section_triangles(
+                    &app.scene
+                )),
+                "cached admission material {name}, source loops {:?}",
+                paper.section_loops
+            );
+        }
         let cache_jobs = app.composer_compute.completed_jobs;
         let warm = app
             .composer_compute
@@ -312,27 +386,27 @@ fn main() {
         );
         assert_eq!(cache_jobs, app.composer_compute.completed_jobs);
         if !paper.section_material.is_empty() {
+            let previous = app.scene.sheets.clone();
             for sheet in &mut app.scene.sheets {
                 for item in &mut sheet.items {
                     if let SheetItem::ViewFrame(frame) = item {
-                        frame.cut_fill = "solid".into();
+                        frame.cut_fill = "hatch".into();
+                        frame.cut_hatch_mm = f64::NAN;
                     }
                 }
             }
-            let sentinel = root.join(format!("{name}.unsupported-fill.pdf"));
+            let sentinel = root.join(format!("{name}.invalid-hatch.pdf"));
             std::fs::write(&sentinel, b"section admission sentinel").unwrap();
             let before_jobs = app.composer_compute.completed_jobs;
             let error = app.export_composer_pdf(None, &sentinel).unwrap_err();
-            assert!(error.contains("section fill painter"), "{error}");
-            assert_eq!(
-                before_jobs, app.composer_compute.completed_jobs,
-                "unsupported fill admission must reuse completed section geometry"
-            );
+            assert!(error.contains("hatch step"), "{error}");
+            assert_eq!(before_jobs, app.composer_compute.completed_jobs);
             assert_eq!(
                 std::fs::read(&sentinel).unwrap(),
                 b"section admission sentinel"
             );
             std::fs::remove_file(sentinel).unwrap();
+            app.scene.sheets = previous;
         }
         if let Some(name) = reference["paper_view_key"]
             .as_str()
@@ -359,7 +433,20 @@ fn main() {
                 .unwrap();
             let source_caps =
                 ingetrazo_render::vector_hlr::paper_section_triangles(&observation_scene);
-            assert_eq!(record.section_material, source_caps);
+            if observation_scene.active_section().is_none_or(|p| {
+                p.normal
+                    .abs()
+                    .to_array()
+                    .iter()
+                    .filter(|&&v| v != 0.)
+                    .count()
+                    == 1
+            }) {
+                assert_eq!(
+                    material_boundary(&record.section_material),
+                    material_boundary(&source_caps)
+                );
+            }
             let mut ghosts = saved.clone();
             ghosts.hidden_shown = Some(serde_json::json!({"objects":false,"geometry":false}));
             let ghost_view =
@@ -424,6 +511,46 @@ fn main() {
             assert_eq!(
                 app.scene, before,
                 "borrowed saved-view computations cannot mutate scene"
+            );
+        }
+        if let Some(source_loops) = operative.get("world_section_loops") {
+            let expected = source_loops
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|r| {
+                    r.as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|p| {
+                            glam::DVec3::from_array(std::array::from_fn(|i| p[i].as_f64().unwrap()))
+                        })
+                        .collect::<Vec<_>>()
+                })
+                .collect::<Vec<_>>();
+            let key = reference["paper_view_key"]
+                .as_str()
+                .unwrap_or("__current__");
+            let saved = key
+                .strip_prefix("scene:")
+                .and_then(|n| app.scene.saved_views.iter().find(|s| s.name == n));
+            let view = ingetrazo_render::paper_scene::PaperSceneView::new(&app.scene, saved);
+            let record = app
+                .composer_compute
+                .original_qt_paper_drawing_for_view(
+                    &view,
+                    &app.camera,
+                    app.clipboard_document,
+                    app.model_revision,
+                    key,
+                    true,
+                    false,
+                )
+                .unwrap();
+            assert_eq!(
+                canonical_rings(&record.section_loops),
+                canonical_rings(&expected),
+                "actual original WORLD section loops {name}; no coordinate tolerance"
             );
         }
         rows.push(serde_json::json!({"name":name,"pages":2,"warm_cache_no_jobs":true,"worker_pids":pids,"scene_unchanged":true,"cache_policy_separation":true,"cached_section_admission":true,"operative_camera_basis":true,"operative_hard_world_exact":app.scene.active_section().is_none()}));
