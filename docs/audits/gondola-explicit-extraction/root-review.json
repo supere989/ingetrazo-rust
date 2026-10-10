@@ -1,0 +1,8 @@
+{
+  "result": "Fresh source acceptance fails at 16 pixels, x588 y328..343, red51 becomes52.",
+  "capture_boundary": "Fresh full image is captured before diagnostic extraction state changes. Thus extraction-state edits cannot account for the fresh reference mismatch.",
+  "source_unchanged": true,
+  "diagnostic_changes": "Disable extraction dither/sRGB/scissor and bind program/VAO/MS sampler for every sample.",
+  "conclusion": "Retained original output has observed run-to-run variation along the disputed boundary; cause unresolved. No tolerance or resolve rounding patch accepted.",
+  "next": "Inspect repeatability inputs, draw order and overlapping source surface coverage before altering production Vulkan."
+}

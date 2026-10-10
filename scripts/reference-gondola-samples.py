@@ -82,17 +82,21 @@ call('glBindFramebuffer',[U,U],0x8CA8,vp._scene_fbo.handle());call('glBlitFrameb
 program=QOpenGLShaderProgram();assert program.addShaderFromSourceCode(QOpenGLShader.Vertex,'#version 330 core\nvoid main(){vec2 p[3]=vec2[3](vec2(-1,-1),vec2(3,-1),vec2(-1,3));gl_Position=vec4(p[gl_VertexID],0,1);}')
 assert program.addShaderFromSourceCode(QOpenGLShader.Fragment,'#version 330 core\nuniform sampler2DMS image;uniform int sample_index;out vec4 color;void main(){color=texelFetch(image,ivec2(gl_FragCoord.xy),sample_index);}')
 assert program.link(),program.log();assert program.bind();vao=QOpenGLVertexArrayObject();assert vao.create();vao.bind();target=QOpenGLFramebufferObject(800,600);assert target.isValid()
-for capability in [0x0B71,0x0BE2,0x0B90,0x0B44,0x3000,0x8E51]:gl.glDisable(capability)
+for capability in [0x0B71,0x0BE2,0x0B90,0x0B44,0x3000,0x8E51,0x0BD0,0x8DB9,0x0C11]:gl.glDisable(capability)
+call('glColorMask',[B,B,B,B],1,1,1,1)
 gl.glViewport(0,0,800,600);gl.glActiveTexture(0x84C0);call('glBindTexture',[U,U],0x9100,tex.value);gl.glUniform1i(program.uniformLocation('image'),0)
 samples=[];raw_samples=[]
 for i in range(4):
- assert target.bind();gl.glUniform1i(program.uniformLocation('sample_index'),i);gl.glDrawArrays(0x0004,0,3);assert gl.glGetError()==0
+ assert target.bind();assert program.bind();vao.bind()
+ gl.glActiveTexture(0x84C0);call('glBindTexture',[U,U],0x9100,tex.value)
+ gl.glUniform1i(program.uniformLocation('image'),0);gl.glUniform1i(program.uniformLocation('sample_index'),i)
+ gl.glDrawArrays(0x0004,0,3);assert gl.glGetError()==0
  raw=raw_pixels();raw_samples.append(raw);np.save(out/f'sample-{i}-raw.npy',raw)
  im=target.toImage();assert im.save(str(out/f'sample-{i}.png'));samples.append(pixels(im))
 reconstructed=((sum(x.astype(np.uint16) for x in samples)+1)//4).astype(np.uint8);different=int(np.any(reconstructed!=scene_pixels,axis=2).sum());overlay_different=int(np.any(scene_pixels!=a,axis=2).sum())
 raw_sum=sum(x.astype(np.uint16) for x in raw_samples);raw_reconstructed=((raw_sum+1)//4).astype(np.uint8)
 raw_different=int(np.any(raw_reconstructed!=raw_resolved,axis=2).sum())
-report={'diagnostic_primitive_id':'--primitive-id' in sys.argv,'diagnostic_surface_path':'--surface-path' in sys.argv,'diagnostic_edges_disabled':'--no-edges' in sys.argv,'diagnostic_flat_face_color':'--flat-face-color' in sys.argv,'integer_half_down_is_acceptance_rule':False,'dither_before':dither_before,'dither_after':dither_after,'raw_reconstruction_different_pixels':raw_different,'raw_vs_qimage_scene_different_pixels':int(np.any(raw_resolved!=scene_pixels,axis=2).sum()),'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
+report={'extraction_state':'explicit shader, VAO, sampler binding each sample; dither/sRGB/scissor disabled; full color mask','diagnostic_primitive_id':'--primitive-id' in sys.argv,'diagnostic_surface_path':'--surface-path' in sys.argv,'diagnostic_edges_disabled':'--no-edges' in sys.argv,'diagnostic_flat_face_color':'--flat-face-color' in sys.argv,'integer_half_down_is_acceptance_rule':False,'dither_before':dither_before,'dither_after':dither_after,'raw_reconstruction_different_pixels':raw_different,'raw_vs_qimage_scene_different_pixels':int(np.any(raw_resolved!=scene_pixels,axis=2).sum()),'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','fresh_full_image_exact':fresh_exact,'fresh_different_pixels':fresh_different,'reconstructed_resolve_different_pixels':different,'scene_vs_widget_different_pixels':overlay_different,'edge_pixels':[{'xy':[x,340],'resolved':a[340,x].tolist(),'samples':[s[340,x].tolist() for s in samples]} for x in range(586,591)],'scope':'Diagnostic original renderer sample-color inspection. A reference mismatch remains a terminal failure even though sample evidence is retained. No Rust per-sample comparison yet.'}
 (out/'review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 vao.release();program.release();del target;del resolved_target;del vao;del program;call('glDeleteFramebuffers',[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call('glDeleteTextures',[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()
 
