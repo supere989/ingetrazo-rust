@@ -1,0 +1,11 @@
+{
+  "source_revision": "036475e2e8a410c2b178c941fe7968a4b08f4df1",
+  "binaries": {
+    "native_vulkan": "724858d1b9a9c1e95852edc151de4a462924c48e96dae26819a448df81536091",
+    "native_vulkan_budget_probe": "dddb051bbb8e84102c680408c3a449bdf1a15109e4135da9c95db005e8a8825f"
+  },
+  "host_startup_resize_clean_close_passed": true,
+  "actual_image_then_staging_denial_rollback_passed": true,
+  "visually_inspected": "host-resize-1100x700.png",
+  "scope": "Linux Xvfb Mesa llvmpipe Vulkan1.4.318. Actual production UI via ash; CPU projected scene painter. No hardware GPU throughput, direct world depth/stencil, native Metal or ray tracing acceptance."
+}
