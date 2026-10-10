@@ -203,12 +203,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             style.show_textures = true;
             let published_uploads = world.uploads;
             let published_means = world.texture_stats().0.average_entries;
+            let published_sampled = world.texture_stats().0.sampled_entries;
             world.set_texture_publication_entry_limit(Some(0));
             let publication_error = world
                 .set_scene(&context, &scene, &camera, &style, fence, 3, 2)
                 .expect_err("real sampled candidate must refuse publication entry admission");
             assert_eq!(world.uploads, published_uploads);
             assert_eq!(world.texture_stats().0.average_entries, published_means);
+            assert_eq!(
+                world.texture_stats().0.sampled_entries,
+                published_sampled,
+                "refused candidate must not publish sampled cache entries"
+            );
             let after_publication_refusal = capture(&context, &mut world, commands[0], fence, 4)?;
             assert_eq!(
                 after_publication_refusal, pixels,
@@ -260,7 +266,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "returning to average mode must reproduce initial full frame"
             );
             replacement_control = Some(
-                serde_json::json!({"error":error,"old_frame_exact":true,"old_entries_preserved":true,"retry_exact":true,"publication_error":publication_error,"publication_refusal_old_frame_exact":true,"publication_retry_succeeded":true,"sampled_mode_exercised":true,"monochrome_no_surface_texture_work":true,"style_roundtrip_exact":true}),
+                serde_json::json!({"error":error,"old_frame_exact":true,"old_entries_preserved":true,"retry_exact":true,"publication_error":publication_error,"publication_refusal_old_frame_exact":true,"publication_refusal_sampled_entries_unchanged":true,"publication_retry_succeeded":true,"sampled_mode_exercised":true,"monochrome_no_surface_texture_work":true,"style_roundtrip_exact":true}),
             );
         }
         rows.push(serde_json::json!({"name":name,"geometry_uploads":world.uploads,"warm_uploads":0,"warm_frames":3,"replacement_control":replacement_control,"cold_texture_stats":{"geometry_uploads":cold.0,"hashes":cold.1,"sampled_decodes":cold.2,"sampled_uploads":cold.3,"average_decodes":cold.4,"average_hits":cold.5,"average_entries":cold.6},"hard_edge_bytes":world.edge_geometry_bytes(),"dimensions":scene.dimensions.len(),"text_labels":scene.text_labels.len(),"scope":"production native World; annotation overlays not rendered"}));
