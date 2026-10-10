@@ -61,7 +61,8 @@ shade=["group-rotated-prototype","group-nested-rotated-prototype","group-classic
 paint=["paint-default-front","paint-default-reversed","paint-face-override","paint-explicit-back","paint-child-own","paint-top-owner-not-intermediate"]
 styles=[f"style-{mode}-{kind}"for mode in ["wireframe","hidden_line","monochrome","xray","shaded"]for kind in ["front","reverse","translucent","explicit-back"]]
 authored=["authored-legacy-absent","authored-legacy-null","authored-legacy-null-nullxform","authored-legacy-null-component-true","authored-proto-zero-true","authored-proto-zero-false","authored-nested-numeric-adopt","authored-nested-null-adopt"]
-assert names in [authored,base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint+styles],names
+edge=["style-wireframe-asymmetric-line","style-wireframe-reflected-line","style-wireframe-hidden-group","style-wireframe-hidden-edge","style-wireframe-hidden-layer","style-wireframe-soft-line","style-wireframe-clipped-line","style-hidden_line-occluded-line","style-xray-occluded-line"]
+assert names in [base+edge,authored,base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint,base+rounding+["opacity-threshold-f64"]+back+instanced+shade+paint+styles],names
 (out/"native-ui-results.json").write_text(json.dumps({"passed":False,"cases":[],"status":"starting"}))
 
 for row in original["cases"]:
