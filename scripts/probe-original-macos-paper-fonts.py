@@ -7,7 +7,7 @@ from pathlib import Path
 if sys.platform!="darwin":raise SystemExit("Requires actual macOS; Linux substitutes are not evidence")
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
 from PySide6.QtCore import qVersion,QRectF,QPointF,Qt
-from PySide6.QtGui import QPainter,QImage,QFontInfo,QTextLayout,QTextOption,QFontDatabase
+from PySide6.QtGui import QPainter,QImage,QFontInfo,QTextLayout,QTextOption,QFontDatabase,QFontMetricsF
 from PySide6.QtWidgets import QApplication
 from fontTools.ttLib import TTFont,TTCollection
 assert qVersion()=="6.12.0"
@@ -36,7 +36,7 @@ for path in sorted(set(files)):
   for index,font in enumerate(fonts):
    # Read exact stored tables, independent of any fontTools decompilation.
    key=tuple(hashlib.sha256(font.reader[tag]).hexdigest() for tag in ("head","name"))
-   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":file_digest,"file_bytes":path.stat().st_size,"face_table_bytes":sum(table.length for table in font.reader.tables.values()),"table_tags":sorted(str(tag) for tag in font.reader.tables),"largest_tables":sorted([{"tag":str(tag),"bytes":table.length} for tag,table in font.reader.tables.items()],key=lambda row:row["bytes"],reverse=True)[:5]})
+   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"physical_traits":{"os2_bold":bool(font["OS/2"].fsSelection & 32) if "OS/2" in font else None,"os2_italic":bool(font["OS/2"].fsSelection & 1) if "OS/2" in font else None,"head_bold":bool(font["head"].macStyle & 1),"head_italic":bool(font["head"].macStyle & 2)},"sha256":file_digest,"file_bytes":path.stat().st_size,"face_table_bytes":sum(table.length for table in font.reader.tables.values()),"table_tags":sorted(str(tag) for tag in font.reader.tables),"largest_tables":sorted([{"tag":str(tag),"bytes":table.length} for tag,table in font.reader.tables.items()],key=lambda row:row["bytes"],reverse=True)[:5]})
   owner.close()
  except Exception as error:inventory_errors.append({"path":str(path),"error":repr(error)})
 rows=[]
@@ -53,11 +53,18 @@ class Observe(QPainter):
    raw=run.rawFont();key=tuple(hashlib.sha256(bytes(raw.fontTable(tag))).hexdigest()for tag in ["head","name"])
    physical=identities.get(key,[])
    # Retain missing identities and subsequent cases; fail only after writing the report.
-   runs.append({"family":raw.familyName(),"style":raw.styleName(),"glyphs":list(run.glyphIndexes()),"positions":[[v.x(),v.y()]for v in run.positions()],"physical_faces":physical,"table_hashes":key,"raw_head_hex":bytes(raw.fontTable("head")).hex()})
+   advances=raw.advancesForGlyphIndexes(run.glyphIndexes())
+   glyph_metrics=[]
+   for glyph,advance in zip(run.glyphIndexes(),advances):
+    bounds=raw.boundingRect(glyph);path_bounds=raw.pathForGlyph(glyph).boundingRect()
+    glyph_metrics.append({"id":int(glyph),"advance":[advance.x(),advance.y()],"bounds":[bounds.x(),bounds.y(),bounds.width(),bounds.height()],"path_bounds":[path_bounds.x(),path_bounds.y(),path_bounds.width(),path_bounds.height()]})
+   runs.append({"raw_metrics":{"pixel_size":raw.pixelSize(),"ascent":raw.ascent(),"descent":raw.descent(),"leading":raw.leading(),"cap_height":raw.capHeight(),"units_per_em":raw.unitsPerEm(),"weight":int(raw.weight()),"style":raw.style().value},"glyph_metrics":glyph_metrics,"family":raw.familyName(),"style":raw.styleName(),"glyphs":list(run.glyphIndexes()),"positions":[[v.x(),v.y()]for v in run.positions()],"physical_faces":physical,"table_hashes":key,"raw_head_hex":bytes(raw.fontTable("head")).hex()})
   # Record the native Qt database choices behind alias/style matching.
   resolved=QFontInfo(font).family()
   database={family:[{"style":style,"weight":QFontDatabase.weight(family,style),"bold":QFontDatabase.bold(family,style),"italic":QFontDatabase.italic(family,style)} for style in QFontDatabase.styles(family)] for family in dict.fromkeys([font.family(),resolved])}
-  self.observed.append({"qt_database_styles":database,"requested_font":{"family":font.family(),"bold":font.bold(),"italic":font.italic(),"weight":int(font.weight())},"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"actual_painter_traits":{"bold":QFontInfo(font).bold(),"italic":QFontInfo(font).italic(),"weight":int(QFontInfo(font).weight()),"exact_match":QFontInfo(font).exactMatch()},"supplementary_qtextlayout_runs":runs})
+  metrics=QFontMetricsF(font)
+  operative_bounds=metrics.boundingRect(rect,flags,text)
+  self.observed.append({"operative_call":{"rect":[rect.x(),rect.y(),rect.width(),rect.height()],"flags":int(flags),"text":text,"world_transform":[self.worldTransform().m11(),self.worldTransform().m12(),self.worldTransform().m21(),self.worldTransform().m22(),self.worldTransform().dx(),self.worldTransform().dy()],"font_pixel_size":font.pixelSize(),"font_point_size":font.pointSizeF(),"metrics":{"ascent":metrics.ascent(),"descent":metrics.descent(),"leading":metrics.leading(),"height":metrics.height(),"cap_height":metrics.capHeight(),"underline_pos":metrics.underlinePos(),"line_width":metrics.lineWidth()},"measured_bounds":[operative_bounds.x(),operative_bounds.y(),operative_bounds.width(),operative_bounds.height()]},"qt_database_styles":database,"requested_font":{"family":font.family(),"bold":font.bold(),"italic":font.italic(),"weight":int(font.weight())},"actual_painter_font":QFontInfo(font).family(),"actual_painter_style":QFontInfo(font).styleName(),"actual_painter_traits":{"bold":QFontInfo(font).bold(),"italic":QFontInfo(font).italic(),"weight":int(QFontInfo(font).weight()),"exact_match":QFontInfo(font).exactMatch()},"supplementary_qtextlayout_runs":runs})
   return super().drawText(rect,flags,text)
 for name,family,bold,italic,text in cases:
  image=QImage(800,300,QImage.Format_ARGB32_Premultiplied);image.fill(Qt.white)
