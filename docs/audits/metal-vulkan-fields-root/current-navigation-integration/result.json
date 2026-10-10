@@ -1,0 +1,7 @@
+{
+  "source": "d5422757e382b9ca86b16e5ed60855a3b0305b98",
+  "passed": 620,
+  "failed": 0,
+  "ignored": 2,
+  "scope": "combined Metal source/current main d600 Linux locked lib and tests; new native SDK/compute acceptance pending"
+}
