@@ -6,8 +6,8 @@ import os,sys,json,hashlib,subprocess,platform
 from pathlib import Path
 if sys.platform!="darwin":raise SystemExit("Requires actual macOS; Linux substitutes are not evidence")
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
-from PySide6.QtCore import qVersion,QRectF,QPointF,Qt
-from PySide6.QtGui import QPainter,QImage,QFontInfo,QTextLayout,QTextOption,QFontDatabase,QFontMetricsF
+from PySide6.QtCore import qVersion,QRectF,QPointF,QSizeF,Qt
+from PySide6.QtGui import QPainter,QImage,QFontInfo,QTextLayout,QTextOption,QFontDatabase,QFontMetricsF,QPdfWriter,QPageSize
 from PySide6.QtWidgets import QApplication
 from fontTools.ttLib import TTFont,TTCollection
 assert qVersion()=="6.12.0"
@@ -71,6 +71,10 @@ for name,family,bold,italic,text in cases:
  painter=Observe(image);painter.observed=[];painter.scale(3.,3.);painter.translate(10.37,10.23)
  paint_text_mm(painter,TextoItem(text=text,size_pt=14,family=family,bold=bold,italic=italic));painter.end()
  image.save(str(out/(name+".png")))
+ writer=QPdfWriter(str(out/(name+".original.pdf")));writer.setResolution(300);writer.setPageSize(QPageSize(QSizeF(210,297),QPageSize.Unit.Millimeter))
+ pdf_painter=QPainter(writer);pdf_painter.scale(300./25.4,300./25.4);pdf_painter.translate(10.37,10.23)
+ paint_text_mm(pdf_painter,TextoItem(text=text,size_pt=14,family=family,bold=bold,italic=italic));pdf_painter.end()
+
  rows.append({"name":name,"family":family,"bold":bold,"italic":italic,"text":text,"observations":painter.observed,"png_sha256":hashlib.sha256((out/(name+".png")).read_bytes()).hexdigest()})
 assert len(rows)==6 and all(r["observations"] for r in rows)
 report={"source_pin":pin,"qt":qVersion(),"platform":platform.platform(),"machine":platform.machine(),"script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),"cases":rows,"inventory_errors":inventory_errors,"scope":"Actual original paint_text_mm QImage pixels; supplementary Qt glyph-run matching is not the operative painter placement or native Canvas parity"}
