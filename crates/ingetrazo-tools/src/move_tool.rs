@@ -28,7 +28,9 @@ pub struct MoveTool {
     pub target_images:Vec<usize>,
     original_images:Vec<(usize,ingetrazo_core::image_plane::ImagePlane)>,
     preview_images:Vec<(usize,DVec3)>,
-    image_membership:Vec<u128>,
+    image_membership_epoch:u64,
+    pub image_membership_rebuilds:u64,
+    pub image_membership_scanned:u64,
     image_indices:HashMap<u128,usize>,
     image_command:Option<ingetrazo_core::image_plane::ImageFrameCommand>,
     pub last_targets: Vec<usize>,
@@ -161,15 +163,15 @@ impl MoveTool {
     }
 
     fn refresh_image_membership(&mut self,scene:&Scene){
-        if self.image_membership.len()==scene.image_planes.len()&&self.image_membership.iter().zip(&scene.image_planes).all(|(id,p)|*id==p.id.as_u128()){return;}
-        self.image_membership.clear();self.image_indices.clear();
-        for(index,p)in scene.image_planes.iter().enumerate(){let id=p.id.as_u128();self.image_membership.push(id);self.image_indices.insert(id,index);}
+        if self.image_membership_epoch==scene.image_planes.membership_epoch(){return;}
+        self.image_membership_epoch=scene.image_planes.membership_epoch();self.image_indices.clear();self.image_membership_rebuilds+=1;self.image_membership_scanned+=scene.image_planes.len()as u64;
+        for(index,p)in scene.image_planes.iter().enumerate(){self.image_indices.insert(p.id.as_u128(),index);}
     }
     fn image_index(scene:&Scene, preferred:usize, image:&ingetrazo_core::image_plane::ImagePlane)->Option<usize>{
         if scene.image_planes.get(preferred).is_some_and(|p|p.id==image.id){Some(preferred)}else{scene.image_planes.iter().position(|p|p.id==image.id)}
     }
     fn restore_positions(&self,scene:&mut Scene){
-        for (id,image) in &self.original_images{if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes[index].origin=image.origin;}}
+        for (id,image) in &self.original_images{if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().origin=image.origin;}}
         if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point;}}
@@ -185,21 +187,21 @@ impl MoveTool {
             let index=self.image_indices.get(&image.id.as_u128()).copied();
             let current=index.map(|i|scene.image_planes[i].origin).unwrap_or(*origin);
             *origin=(current.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();
-            if let Some(index)=index{*preferred=index;scene.image_planes[index].origin=*origin;}else{scene.image_objects.set_held_origin(image,*origin);}
+            if let Some(index)=index{*preferred=index;scene.image_planes.pose_mut(index).unwrap().origin=*origin;}else{scene.image_objects.set_held_origin(image,*origin);}
         }
         self.preview_delta=delta;scene.bump_version();self.preview_version=scene.version;
     }
     fn revert_preview(&mut self,scene:&mut Scene){
         if self.preview_delta!=DVec3::ZERO{
             self.refresh_image_membership(scene);
-            let image_origins=self.original_images.iter().zip(&self.preview_images).map(|((preferred,image),(_,origin))|{
+            let image_origins=self.original_images.iter().zip(&self.preview_images).map(|((_preferred,image),(_,origin))|{
                 let current=self.image_indices.get(&image.id.as_u128()).map(|i|scene.image_planes[*i].origin).unwrap_or(*origin);
                 (current.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()
             }).collect::<Vec<_>>();
             self.restore_positions(scene);
             for (((preferred,image),(_,origin)),current) in self.original_images.iter_mut().zip(&mut self.preview_images).zip(image_origins){
                 *origin=current;
-                if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes[index].origin=current;}else{scene.image_objects.set_held_origin(image,current);}
+                if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes.pose_mut(index).unwrap().origin=current;}else{scene.image_objects.set_held_origin(image,current);}
             }
             self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
     }
@@ -251,7 +253,7 @@ impl MoveTool {
             let command=ingetrazo_core::image_plane::ImageFrameCommand{images:self.original_images.iter().map(|(_,image)|image.clone()).collect(),operation:ingetrazo_core::image_plane::ImageFrameOperation::Move(delta)};
             // Publish grab baseline rather than live preview into held identity.
             scene.image_objects.publish(&scene.image_planes);
-            command.apply(&mut scene.image_planes,&scene.image_objects,true);self.image_command=Some(command);
+            command.apply(scene.image_planes.poses_mut(),&scene.image_objects,true);self.image_command=Some(command);
         }
         // Original copy builders stamp geometry only; section planes stay put.
         if !self.is_copy_mode{for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point+=delta;}}}
@@ -288,14 +290,14 @@ impl Tool for MoveTool {
 
     fn restore_transient_model(&self,scene:&mut Scene){if self.start_point.is_some(){
         let origins=self.original_images.iter().filter_map(|(id,image)|Self::image_index(scene,*id,image).map(|index|(index,(scene.image_planes[index].origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
-        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes[id].origin=origin;}scene.version=self.original_version;
+        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes.pose_mut(id).unwrap().origin=origin;}scene.version=self.original_version;
     }}
     fn end_transient_before_history(&mut self,scene:&mut Scene){if self.start_point.is_some(){self.on_cancel(scene);}}
     fn restore_current_preview_model(&self,scene:&mut Scene){
         if self.start_point.is_none(){return;}
         scene.version=self.preview_version;
         // The exact accumulated float32 pose cannot be reconstructed from its inverse.
-        for((id,image),(_,origin))in self.original_images.iter().zip(&self.preview_images){if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes[index].origin=*origin;}}
+        for((id,image),(_,origin))in self.original_images.iter().zip(&self.preview_images){if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().origin=*origin;}}
         if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(self.preview_delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+self.preview_delta;}}
@@ -665,7 +667,7 @@ mod tests {
   let ctx=|p|ToolContext::new(p,Ray::new(DVec3::new(0.5,0.5,1.),-DVec3::Z));tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_move(&mut scene,&ctx(DVec3::X*2.));assert_eq!(scene.image_planes[0].origin,DVec3::X*2.);assert!(tool.placement_preview().is_none());
   tool.on_cancel(&mut scene);assert_eq!(scene.image_planes[0].origin,DVec3::ZERO);assert!(tool.take_image_frame_command().is_none());
   tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_move(&mut scene,&ctx(DVec3::X));tool.on_control_state(&mut scene,true);assert_eq!(scene.image_planes[0].origin,DVec3::ZERO);let mut end=ctx(DVec3::X*3.);end.ctrl_held=true;tool.on_click(&mut scene,&end);assert_eq!(scene.image_planes.len(),1);assert!(tool.take_image_frame_command().is_none());
-  tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_click(&mut scene,&ctx(DVec3::Y*2.));let command=tool.take_image_frame_command().unwrap();scene.image_planes[0].origin+=DVec3::X*10.;scene.image_objects.publish(&scene.image_planes);command.apply(&mut scene.image_planes,&scene.image_objects,false);assert_eq!(scene.image_planes[0].origin,DVec3::X*10.);
+  tool.on_click(&mut scene,&ctx(DVec3::ZERO));tool.on_click(&mut scene,&ctx(DVec3::Y*2.));let command=tool.take_image_frame_command().unwrap();scene.image_planes[0].origin+=DVec3::X*10.;scene.image_objects.publish(&scene.image_planes);command.apply(scene.image_planes.poses_mut(),&scene.image_objects,false);assert_eq!(scene.image_planes[0].origin,DVec3::X*10.);
  }
 }
 

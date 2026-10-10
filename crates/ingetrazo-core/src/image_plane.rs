@@ -158,6 +158,55 @@ impl ImagePlane {
         Ok(p)
     }
 }
+/// Ordered reference-image membership. Pose edits preserve the epoch;
+/// structural edits and cloned/restored list owners get a fresh epoch.
+#[derive(Debug,Serialize,Deserialize)]
+#[serde(transparent)]
+pub struct ImagePlaneList {
+    planes:Vec<ImagePlane>,
+    #[serde(skip,default="new_image_membership_epoch")]
+    epoch:std::sync::atomic::AtomicU64,
+}
+fn next_image_membership_epoch()->u64{
+    static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
+    NEXT.fetch_add(1,std::sync::atomic::Ordering::Relaxed)
+}
+fn new_image_membership_epoch()->std::sync::atomic::AtomicU64{std::sync::atomic::AtomicU64::new(next_image_membership_epoch())}
+impl From<Vec<ImagePlane>> for ImagePlaneList{fn from(planes:Vec<ImagePlane>)->Self{Self{planes,epoch:new_image_membership_epoch()}}}
+impl Default for ImagePlaneList{fn default()->Self{Vec::new().into()}}
+impl Clone for ImagePlaneList{fn clone(&self)->Self{self.planes.clone().into()}}
+impl PartialEq for ImagePlaneList{fn eq(&self,other:&Self)->bool{self.planes==other.planes}}
+impl std::ops::Deref for ImagePlaneList{type Target=[ImagePlane];fn deref(&self)->&Self::Target{&self.planes}}
+impl std::ops::Index<usize> for ImagePlaneList{type Output=ImagePlane;fn index(&self,i:usize)->&ImagePlane{&self.planes[i]}}
+impl std::ops::IndexMut<usize> for ImagePlaneList{fn index_mut(&mut self,i:usize)->&mut ImagePlane{self.changed();&mut self.planes[i]}}
+impl ImagePlaneList{
+    pub fn membership_epoch(&self)->u64{self.epoch.load(std::sync::atomic::Ordering::Relaxed)}
+    fn changed(&self){self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}
+    pub fn push(&mut self,p:ImagePlane){self.planes.push(p);self.changed();}
+    pub fn remove(&mut self,index:usize)->ImagePlane{let p=self.planes.remove(index);self.changed();p}
+    pub fn insert(&mut self,index:usize,p:ImagePlane){self.planes.insert(index,p);self.changed();}
+    pub fn reverse(&mut self){if self.planes.len()>1{self.planes.reverse();self.changed();}}
+    pub fn retain(&mut self,mut keep:impl FnMut(&ImagePlane)->bool){let n=self.planes.len();self.planes.retain(|p|keep(p));if n!=self.planes.len(){self.changed();}}
+    pub fn clear(&mut self){if !self.planes.is_empty(){self.planes.clear();self.changed();}}
+    pub fn truncate(&mut self,n:usize){if n<self.planes.len(){self.planes.truncate(n);self.changed();}}
+    /// Unrestricted slice edits conservatively invalidate membership.
+    pub fn poses_mut(&mut self)->&mut [ImagePlane]{self.changed();&mut self.planes}
+    /// Guarded single-object edits preserve warm pose performance and detect
+    /// identity changes or whole-object replacement on release.
+    pub fn pose_mut(&mut self,index:usize)->Option<ImagePoseGuard<'_>>{
+        let plane=self.planes.get_mut(index)?;let original_id=plane.id;
+        Some(ImagePoseGuard{plane,original_id,epoch:&self.epoch})
+    }
+    pub fn iter_mut(&mut self)->std::slice::IterMut<'_,ImagePlane>{self.changed();self.planes.iter_mut()}
+}
+impl<'a> IntoIterator for &'a ImagePlaneList{type Item=&'a ImagePlane;type IntoIter=std::slice::Iter<'a,ImagePlane>;fn into_iter(self)->Self::IntoIter{self.planes.iter()}}
+impl<'a> IntoIterator for &'a mut ImagePlaneList{type Item=&'a mut ImagePlane;type IntoIter=std::slice::IterMut<'a,ImagePlane>;fn into_iter(self)->Self::IntoIter{self.changed();self.planes.iter_mut()}}
+
+pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane,original_id:uuid::Uuid,epoch:&'a std::sync::atomic::AtomicU64}
+impl std::ops::Deref for ImagePoseGuard<'_>{type Target=ImagePlane;fn deref(&self)->&ImagePlane{self.plane}}
+impl std::ops::DerefMut for ImagePoseGuard<'_>{fn deref_mut(&mut self)->&mut ImagePlane{self.plane}}
+impl Drop for ImagePoseGuard<'_>{fn drop(&mut self){if self.plane.id!=self.original_id{self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}}}
+
 /// Mirrors original command-held object lifetime without coordinate matching.
 #[derive(Debug, Clone, Default)]
 pub struct ImageObjects(pub Arc<Mutex<HashMap<uuid::Uuid, ImagePlane>>>);
@@ -526,7 +575,7 @@ mod picking_tests {
     fn image_modes_preserve_last_tie_locks_and_literal_default_layer() {
         let mut s=Scene::new();s.layers=vec![Layer::new("Images")];
         let a=ImagePlane::new("first",DVec3::ZERO,DVec3::X*2.,DVec3::Y*2.);let mut b=a.clone();b.id=uuid::Uuid::new_v4();b.locked=true;
-        s.image_planes=vec![a,b];let ray=Ray::new(DVec3::new(1.,1.,10.),-DVec3::Z);
+        s.image_planes=vec![a,b].into();let ray=Ray::new(DVec3::new(1.,1.,10.),-DVec3::Z);
         assert_eq!(s.image_plane_hit(&ray,ImagePickMode::Inference).unwrap().0,1);
         assert_eq!(s.image_plane_hit(&ray,ImagePickMode::Selectable).unwrap().0,0);
         assert_eq!(s.image_plane_hit(&ray,ImagePickMode::LockedContext).unwrap().0,1);

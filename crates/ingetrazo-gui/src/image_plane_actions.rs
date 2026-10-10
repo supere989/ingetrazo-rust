@@ -10,9 +10,9 @@ pub(crate) fn restore(current: &Scene, target: &mut Scene) -> Option<ImageDelta>
     current.image_objects.publish(&current.image_planes);
     target.image_objects = current.image_objects.clone();
     target.image_planes = delta.as_ref().map_or_else(
-        || current.image_planes.clone(),
+        || current.image_planes.to_vec(),
         |d| d.restore(&current.image_planes, &current.image_objects),
-    );
+    ).into();
     if let Some(d) = &delta {
         if let Some(created) = &d.add_layer_created {
             let mut made = created.lock().unwrap();
@@ -236,7 +236,7 @@ impl IngeTrazoApp {
         self.save_undo_state();
         let command = ImageFrameCommand { images, operation };
         command.apply(
-            &mut self.scene.image_planes,
+            self.scene.image_planes.poses_mut(),
             &self.scene.image_objects,
             true,
         );
