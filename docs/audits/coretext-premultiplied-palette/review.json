@@ -1,0 +1,7 @@
+{
+  "contract": "Geometry optionally owns immutable typed premultiplied RGBA8 palette aligned with Batch sequence. Literal bytes normalized only to GPU units. Existing straight EncodedRgba defaults unchanged. Geometry.palette_cache_identity returns geometryID only for exact palette, otherwise0.",
+  "tests": "2 focused render library tests PASS; all valid channel<=alpha pairs survive normalization/recovery; invalid premultiplied bytes/count mismatch rejected; exact versus ordinary color semantics and identity separated",
+  "log_sha256": "0f10ce0a533cd658ac545133b4e5553d3d0a74c07fdea1f13ff7bbd157f9bfc0",
+  "Metal": "Standalone/framebuffer-fetch/compute consumers use Geometry.resolve_batch_colors and geometry-aware palette identity; native SDK compilation pending coordinated batch.",
+  "Vulkan": "Owned by validation worker; narrow consumer integration pending this frozen API."
+}
