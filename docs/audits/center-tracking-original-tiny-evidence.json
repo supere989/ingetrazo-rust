@@ -1,0 +1,109 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "5bac2c238e1df6e3678e3f7e35ba26872b73e857",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "tiny",
+  "early": {
+    "mode": "tiny",
+    "time": 125228.10412081,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      500.8894517909148,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      2.009999990463257,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "acquired": {
+    "mode": "tiny",
+    "time": 125228.305393396,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      500.8894517909148,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      2.009999990463257,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "centered": {
+    "mode": "tiny",
+    "time": 125228.483932029,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      500.8894517909148,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      500.0,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      2.0025882720947266,
+      3.0096592903137207,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null
+  },
+  "elapsed_wall_seconds": 0.2507773279940011,
+  "scope": "Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; tiny hint quiet or malformed center rejected; no native Vulkan or movement claim.",
+  "executable_sha256": "1934d63d2c5523868b323c5f8aeaabb1e25947a32c27b864fc7a9675b9fcdb01"
+}
