@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 0
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 0
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 0
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 0
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 0
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 0
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 0
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 0
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 0
+    }
+  ],
+  "scope": "Root independently rebuilt frozen8bf2d40; actual owned RTX5090 whole image captures against retained original Qt; admission metadata under review"
+}
