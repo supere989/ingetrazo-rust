@@ -1,0 +1,18 @@
+[
+  {
+    "platform": "arm",
+    "device": "Apple Paravirtual device",
+    "warm_hits": 33,
+    "views": 4,
+    "cumulative_canvas_bytes": 81920,
+    "final_ledger": 0
+  },
+  {
+    "platform": "intel",
+    "device": "Apple Paravirtual device",
+    "warm_hits": 33,
+    "views": 4,
+    "cumulative_canvas_bytes": 77824,
+    "final_ledger": 0
+  }
+]
