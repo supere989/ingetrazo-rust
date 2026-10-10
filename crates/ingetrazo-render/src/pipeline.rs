@@ -299,7 +299,7 @@ pub fn build_scene_render_data(
         data.snap_glyphs.push(glyph.clone());
     }
 
-    crate::section_clip::clip_scene(&mut data,scene);
+    crate::section_clip::clip_scene(&mut data,scene,style);
     data
 }
 
