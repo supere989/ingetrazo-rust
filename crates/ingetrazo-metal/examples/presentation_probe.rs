@@ -17,6 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         started: std::time::Instant,
         resized: bool,
         resize_requested: bool,
+        diagnostics_at: std::time::Instant,
     }
     impl ApplicationHandler for Probe {
         fn resumed(&mut self, ev: &ActiveEventLoop) {
@@ -46,18 +47,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         fn window_event(&mut self, ev: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
             let Some(gpu) = self.gpu.as_mut() else { return };
             let result = match event {
+                WindowEvent::Occluded(value) => {
+                    eprintln!("WSI actual Occluded({value})");
+                    Ok(())
+                }
+                WindowEvent::Focused(value) => {
+                    eprintln!("WSI actual Focused({value})");
+                    Ok(())
+                }
                 WindowEvent::CloseRequested => {
                     eprintln!("presentation counters {:?}", gpu.counters());
                     ev.exit();
                     Ok(())
                 }
                 WindowEvent::Resized(size) => {
-                    if self.resize_requested { self.resized = true; }
+                    if self.resize_requested {
+                        self.resized = true;
+                    }
                     gpu.resize(
-                    size.width,
-                    size.height,
-                    self.window.as_ref().unwrap().scale_factor(),
-                ) },
+                        size.width,
+                        size.height,
+                        self.window.as_ref().unwrap().scale_factor(),
+                    )
+                }
                 WindowEvent::ScaleFactorChanged { scale_factor, .. } => {
                     let s = self.window.as_ref().unwrap().inner_size();
                     gpu.resize(s.width, s.height, scale_factor)
@@ -85,6 +97,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             if self.automatic {
+                if self.diagnostics_at.elapsed() >= std::time::Duration::from_secs(1) {
+                    if let Some(gpu) = self.gpu.as_ref() {
+                        eprintln!("WSI observation: {}", gpu.diagnostics());
+                    }
+                    self.diagnostics_at = std::time::Instant::now();
+                }
                 if self.started.elapsed() > std::time::Duration::from_secs(15) {
                     self.error = Some("bounded WSI probe missed presented completion".into());
                     ev.exit();
@@ -94,10 +112,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     let (_, retired, pending) = gpu.counters();
                     if retired >= 2 && !self.resize_requested {
                         self.resize_requested = true;
-                        let _ = self.window.as_ref().unwrap().request_inner_size(winit::dpi::LogicalSize::new(640., 480.));
+                        let _ = self
+                            .window
+                            .as_ref()
+                            .unwrap()
+                            .request_inner_size(winit::dpi::LogicalSize::new(640., 480.));
                     }
                     if self.resized && retired >= 6 && pending == 0 {
-                        eprintln!("PASS actual CAMetalLayer presented retirement and resize {:?}", gpu.counters());
+                        eprintln!(
+                            "PASS actual CAMetalLayer presented retirement and resize {:?}",
+                            gpu.counters()
+                        );
                         ev.exit();
                         return;
                     }
@@ -108,7 +133,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 std::time::Instant::now() + std::time::Duration::from_millis(16),
             ));
             if let Some(w) = self.window.as_ref() {
-                if !self.automatic || self.frames < if self.resized { 6 } else { 2 } { w.request_redraw(); }
+                if !self.automatic || self.frames < if self.resized { 6 } else { 2 } {
+                    w.request_redraw();
+                }
             }
         }
         fn exiting(&mut self, _: &ActiveEventLoop) {
@@ -126,6 +153,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         started: std::time::Instant::now(),
         resized: false,
         resize_requested: false,
+        diagnostics_at: std::time::Instant::now(),
     };
     event.run_app(&mut probe)?;
     if let Some(e) = probe.error {
