@@ -60,6 +60,7 @@ impl Entry {
                 .edges
                 .read()
                 .clone()
+                .expect("Live Vertex incidence")
                 .downcast::<rustpython_vm::builtins::PySet>()
                 .map_err(|_| "Staged incidence edit requires Edge graph journal")?;
             if !incidence.elements().is_empty() {
@@ -107,6 +108,16 @@ impl Entry {
         Ok(())
     }
 }
+// Cold engineering observations of actual VM payload destruction, not OwnerBudget bytes.
+static LIVE_VERTICES: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+static LIVE_EDGES: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+pub fn graph_payload_lifetimes() -> (usize, usize) {
+    use std::sync::atomic::Ordering;
+    (
+        LIVE_VERTICES.load(Ordering::Relaxed),
+        LIVE_EDGES.load(Ordering::Relaxed),
+    )
+}
 struct Stage {
     entries: HashMap<usize, Entry>,
     budget: OwnerBudget,
@@ -145,11 +156,37 @@ pub mod editable_mesh {
         AsObject, Py, PyObjectRef, PyPayload, PyResult, Traverse, VirtualMachine,
     };
     #[pyattr]
-    #[pyclass(name = "Vertex", traverse)]
+    #[pyclass(name = "Vertex", traverse = "manual")]
     #[derive(Debug, PyPayload)]
     pub struct Vertex {
         pub(super) position: PyRwLock<PyRef<QVector3D>>,
-        pub(super) edges: PyRwLock<PyObjectRef>,
+        pub(super) edges: PyRwLock<Option<PyObjectRef>>,
+    }
+    unsafe impl rustpython_vm::object::Traverse for Vertex {
+        fn traverse(&self, visit: &mut rustpython_vm::object::TraverseFn<'_>) {
+            self.position.traverse(visit);
+            self.edges.traverse(visit);
+        }
+        fn clear(&mut self, out: &mut Vec<PyObjectRef>) {
+            // Collector only calls clear for unreachable payloads. Move the owning
+            // incidence ref to its deferred drop list; no VM allocation or callback
+            // occurs while this field lock is held.
+            let edges = { self.edges.write().take() };
+            if let Some(edges) = edges {
+                out.push(edges);
+            }
+        }
+    }
+    impl Vertex {
+        fn track(self) -> Self {
+            LIVE_VERTICES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            self
+        }
+    }
+    impl Drop for Vertex {
+        fn drop(&mut self) {
+            LIVE_VERTICES.fetch_sub(1, std::sync::atomic::Ordering::Relaxed);
+        }
     }
     impl Constructor for Vertex {
         type Args = PyRef<QVector3D>;
@@ -159,8 +196,9 @@ pub mod editable_mesh {
                 position: PyRwLock::new(
                     QVector3D::from_coordinates(position.coordinates()).into_ref(&vm.ctx),
                 ),
-                edges: PyRwLock::new(PySet::default().into_ref(&vm.ctx).into()),
-            })
+                edges: PyRwLock::new(Some(PySet::default().into_ref(&vm.ctx).into())),
+            }
+            .track())
         }
     }
     #[pyclass(with(Constructor))]
@@ -176,17 +214,17 @@ pub mod editable_mesh {
         }
         #[pygetset]
         fn edges(zelf: &Py<Self>) -> PyObjectRef {
-            zelf.edges.read().clone()
+            zelf.edges.read().clone().expect("Live Vertex incidence")
         }
         #[pygetset(setter)]
         fn set_edges(zelf: &Py<Self>, edges: PyObjectRef) {
-            let old = std::mem::replace(&mut *zelf.edges.write(), edges);
+            let old = std::mem::replace(&mut *zelf.edges.write(), Some(edges));
             drop(old);
         }
         #[pymethod]
         fn faces(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<PyObjectRef> {
             vm.host_budget_tick()?;
-            let edges = zelf.edges.read().clone();
+            let edges = zelf.edges.read().clone().expect("Live Vertex incidence");
             let out = PySet::default().into_ref(&vm.ctx);
             for edge in vm.extract_elements_with(&edges, Ok)? {
                 let radial = edge.get_attr("faces", vm)?;
@@ -199,122 +237,209 @@ pub mod editable_mesh {
         }
     }
     #[pyattr]
-    #[pyclass(name = "Edge", traverse)]
+    #[pyclass(name = "Edge", traverse = "manual")]
     #[derive(Debug, PyPayload)]
     pub struct Edge {
-        v0: PyRwLock<PyRef<Vertex>>,
-        v1: PyRwLock<PyRef<Vertex>>,
-        faces: PyRwLock<PyObjectRef>,
-        soft: PyRwLock<PyObjectRef>,
-        hidden: PyRwLock<PyObjectRef>,
-        layer: PyRwLock<PyObjectRef>,
-        curve: PyRwLock<PyObjectRef>,
+        v0: PyRwLock<Option<PyRef<Vertex>>>,
+        v1: PyRwLock<Option<PyRef<Vertex>>>,
+        faces: PyRwLock<Option<PyObjectRef>>,
+        soft: PyRwLock<Option<PyObjectRef>>,
+        hidden: PyRwLock<Option<PyObjectRef>>,
+        layer: PyRwLock<Option<PyObjectRef>>,
+        curve: PyRwLock<Option<PyObjectRef>>,
+    }
+    unsafe impl rustpython_vm::object::Traverse for Edge {
+        fn traverse(&self, visit: &mut rustpython_vm::object::TraverseFn<'_>) {
+            self.v0.traverse(visit);
+            self.v1.traverse(visit);
+            self.faces.traverse(visit);
+            self.soft.traverse(visit);
+            self.hidden.traverse(visit);
+            self.layer.traverse(visit);
+            self.curve.traverse(visit);
+        }
+        fn clear(&mut self, out: &mut Vec<PyObjectRef>) {
+            let v0 = { self.v0.write().take() };
+            if let Some(v0) = v0 {
+                out.push(v0.into());
+            }
+            let v1 = { self.v1.write().take() };
+            if let Some(v1) = v1 {
+                out.push(v1.into());
+            }
+            for field in [
+                &self.faces,
+                &self.soft,
+                &self.hidden,
+                &self.layer,
+                &self.curve,
+            ] {
+                let child = { field.write().take() };
+                if let Some(child) = child {
+                    out.push(child);
+                }
+            }
+        }
+    }
+    impl Edge {
+        fn track(self) -> Self {
+            LIVE_EDGES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            self
+        }
+    }
+    impl Drop for Edge {
+        fn drop(&mut self) {
+            LIVE_EDGES.fetch_sub(1, std::sync::atomic::Ordering::Relaxed);
+        }
     }
     impl Constructor for Edge {
         type Args = (PyRef<Vertex>, PyRef<Vertex>);
         fn py_new(_cls: &Py<PyType>, (v0, v1): Self::Args, vm: &VirtualMachine) -> PyResult<Self> {
             vm.host_budget_tick()?;
             Ok(Self {
-                v0: PyRwLock::new(v0),
-                v1: PyRwLock::new(v1),
-                faces: PyRwLock::new(vm.ctx.new_list(vec![]).into()),
-                soft: PyRwLock::new(vm.ctx.new_bool(false).into()),
-                hidden: PyRwLock::new(vm.ctx.new_bool(false).into()),
-                layer: PyRwLock::new(vm.ctx.none()),
-                curve: PyRwLock::new(vm.ctx.none()),
-            })
+                v0: PyRwLock::new(Some(v0)),
+                v1: PyRwLock::new(Some(v1)),
+                faces: PyRwLock::new(Some(vm.ctx.new_list(vec![]).into())),
+                soft: PyRwLock::new(Some(vm.ctx.new_bool(false).into())),
+                hidden: PyRwLock::new(Some(vm.ctx.new_bool(false).into())),
+                layer: PyRwLock::new(Some(vm.ctx.none())),
+                curve: PyRwLock::new(Some(vm.ctx.none())),
+            }
+            .track())
         }
     }
     #[pyclass(with(Constructor))]
     impl Edge {
         #[pygetset]
         fn v0(zelf: &Py<Self>) -> PyRef<Vertex> {
-            zelf.v0.read().clone()
+            zelf.v0.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_v0(zelf: &Py<Self>, v: PyRef<Vertex>) {
-            let old = std::mem::replace(&mut *zelf.v0.write(), v);
+            let old = std::mem::replace(&mut *zelf.v0.write(), Some(v));
             drop(old);
         }
         #[pygetset]
         fn v1(zelf: &Py<Self>) -> PyRef<Vertex> {
-            zelf.v1.read().clone()
+            zelf.v1.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_v1(zelf: &Py<Self>, v: PyRef<Vertex>) {
-            let old = std::mem::replace(&mut *zelf.v1.write(), v);
+            let old = std::mem::replace(&mut *zelf.v1.write(), Some(v));
             drop(old);
         }
         #[pygetset]
         fn a(zelf: &Py<Self>) -> PyRef<QVector3D> {
-            zelf.v0.read().position.read().clone()
+            zelf.v0
+                .read()
+                .as_ref()
+                .expect("Live Edge endpoint")
+                .position
+                .read()
+                .clone()
         }
         #[pygetset]
         fn b(zelf: &Py<Self>) -> PyRef<QVector3D> {
-            zelf.v1.read().position.read().clone()
+            zelf.v1
+                .read()
+                .as_ref()
+                .expect("Live Edge endpoint")
+                .position
+                .read()
+                .clone()
         }
         #[pygetset]
         fn faces(zelf: &Py<Self>) -> PyObjectRef {
-            zelf.faces.read().clone()
+            zelf.faces.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_faces(zelf: &Py<Self>, v: PyObjectRef) {
-            let old = std::mem::replace(&mut *zelf.faces.write(), v);
+            let old = std::mem::replace(&mut *zelf.faces.write(), Some(v));
             drop(old);
         }
         #[pygetset]
         fn soft(zelf: &Py<Self>) -> PyObjectRef {
-            zelf.soft.read().clone()
+            zelf.soft.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_soft(zelf: &Py<Self>, v: PyObjectRef) {
-            let old = std::mem::replace(&mut *zelf.soft.write(), v);
+            let old = std::mem::replace(&mut *zelf.soft.write(), Some(v));
             drop(old);
         }
         #[pygetset]
         fn hidden(zelf: &Py<Self>) -> PyObjectRef {
-            zelf.hidden.read().clone()
+            zelf.hidden.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_hidden(zelf: &Py<Self>, v: PyObjectRef) {
-            let old = std::mem::replace(&mut *zelf.hidden.write(), v);
+            let old = std::mem::replace(&mut *zelf.hidden.write(), Some(v));
             drop(old);
         }
         #[pygetset]
         fn layer(zelf: &Py<Self>) -> PyObjectRef {
-            zelf.layer.read().clone()
+            zelf.layer.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_layer(zelf: &Py<Self>, v: PyObjectRef) {
-            let old = std::mem::replace(&mut *zelf.layer.write(), v);
+            let old = std::mem::replace(&mut *zelf.layer.write(), Some(v));
             drop(old);
         }
         #[pygetset]
         fn curve(zelf: &Py<Self>) -> PyObjectRef {
-            zelf.curve.read().clone()
+            zelf.curve.read().clone().expect("Live Edge field")
         }
         #[pygetset(setter)]
         fn set_curve(zelf: &Py<Self>, v: PyObjectRef) {
-            let old = std::mem::replace(&mut *zelf.curve.write(), v);
+            let old = std::mem::replace(&mut *zelf.curve.write(), Some(v));
             drop(old);
         }
         #[pymethod]
         fn other(zelf: &Py<Self>, vertex: PyObjectRef) -> PyRef<Vertex> {
-            if zelf.v0.read().is(&vertex) {
-                zelf.v1.read().clone()
+            if zelf
+                .v0
+                .read()
+                .as_ref()
+                .expect("Live Edge endpoint")
+                .is(&vertex)
+            {
+                zelf.v1.read().clone().expect("Live Edge field")
             } else {
-                zelf.v0.read().clone()
+                zelf.v0.read().clone().expect("Live Edge field")
             }
         }
         #[pymethod]
         fn has(zelf: &Py<Self>, vertex: PyObjectRef) -> bool {
-            zelf.v0.read().is(&vertex) || zelf.v1.read().is(&vertex)
+            zelf.v0
+                .read()
+                .as_ref()
+                .expect("Live Edge endpoint")
+                .is(&vertex)
+                || zelf
+                    .v1
+                    .read()
+                    .as_ref()
+                    .expect("Live Edge endpoint")
+                    .is(&vertex)
         }
         #[pymethod]
         fn length(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<f64> {
             vm.host_budget_tick()?;
-            let a = zelf.v0.read().position.read().coordinates();
-            let b = zelf.v1.read().position.read().coordinates();
+            let a = zelf
+                .v0
+                .read()
+                .as_ref()
+                .expect("Live Edge endpoint")
+                .position
+                .read()
+                .coordinates();
+            let b = zelf
+                .v1
+                .read()
+                .as_ref()
+                .expect("Live Edge endpoint")
+                .position
+                .read()
+                .coordinates();
             Ok(QVector3D::magnitude(std::array::from_fn(|i| b[i] - a[i])) as f64)
         }
     }
@@ -584,8 +709,9 @@ pub mod editable_mesh {
                             QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
                         let vertex = Vertex {
                             position: PyRwLock::new(position),
-                            edges: PyRwLock::new(PySet::default().into_ref(&vm.ctx).into()),
+                            edges: PyRwLock::new(Some(PySet::default().into_ref(&vm.ctx).into())),
                         }
+                        .track()
                         .into_ref(&vm.ctx);
                         entry.vertices_created.push(vertex.clone());
                         vertices.push(vertex.into());
@@ -911,7 +1037,7 @@ impl<'a> RootRestore<'a> {
             let p = vertex.position.read().coordinates();
             let position =
                 crate::vm_groups::native_groups::QVector3D::from_coordinates(p).into_ref(&vm.ctx);
-            let incidence = vertex.edges.read().clone();
+            let incidence = vertex.edges.read().clone().expect("Live Vertex incidence");
             let incidence = incidence
                 .downcast::<rustpython_vm::builtins::PySet>()
                 .map_err(|_| "Managed incidence requires set until Edge graph publication")?;
@@ -1047,7 +1173,12 @@ impl<'a> RootRestore<'a> {
         }
         let mut changed = reordered;
         for record in &self.positions {
-            let incidence = record.vertex.edges.read().clone();
+            let incidence = record
+                .vertex
+                .edges
+                .read()
+                .clone()
+                .expect("Live Vertex incidence");
             let incidence = incidence
                 .downcast::<rustpython_vm::builtins::PySet>()
                 .map_err(|_| "Managed incidence edit requires Edge graph journal")?;
@@ -1094,7 +1225,7 @@ impl<'a> RootRestore<'a> {
         for record in self.positions.drain(..) {
             let old = std::mem::replace(&mut *record.vertex.position.write(), record.position);
             drop(old);
-            let old = std::mem::replace(&mut *record.vertex.edges.write(), record.edges);
+            let old = std::mem::replace(&mut *record.vertex.edges.write(), Some(record.edges));
             drop(old);
         }
         for record in self.face_fields.drain(..) {
@@ -1415,6 +1546,27 @@ impl Controller {
         controller.execute("mesh=Mesh()").unwrap();
         controller.adopt("mesh");
         controller
+    }
+    pub fn proof_gc_graph_inventory(&self) -> serde_json::Value {
+        self.interpreter.enter(|vm| {
+            let objects=vm.state.gc.get_objects(None);
+            serde_json::Value::Array(objects.iter().filter(|o| matches!(o.class().name().as_ref(), "Vertex"|"Edge"))
+                .map(|o| serde_json::json!({"class":o.class().name().to_string(),"strong_refs_including_inventory":o.strong_count()})).collect())
+        })
+    }
+    pub fn collect_proof_gc(&self) {
+        self.interpreter.enter(|vm| {
+            vm.state.gc.collect_force(2);
+        });
+    }
+    pub fn proof_automatic_gc(&self, enabled: bool) {
+        self.interpreter.enter(|vm| {
+            if enabled {
+                vm.state.gc.enable();
+            } else {
+                vm.state.gc.disable();
+            }
+        });
     }
     pub fn budget(&self) -> OwnerBudget {
         self.budget.clone()

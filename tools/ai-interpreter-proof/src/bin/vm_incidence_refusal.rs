@@ -20,6 +20,10 @@ fn main() {
     let mut c = vm_mesh::Controller::new();
     c.enable_history();
     c.assert_script("m=mesh\nheld=m.add_face([QVector3D(0,0,0),QVector3D(1,0,0),QVector3D(0,1,0)])\nv=held.loop[0]\noldedges=v.edges");
+    let initial_history = c.history_counts();
+    assert!(!c.execute("replacement=set()\nv.edges=replacement").unwrap());
+    assert_eq!(c.history_counts(), initial_history);
+    c.assert_script("assert v.edges is replacement\noldedges=v.edges");
     let counts = c.native_counts("m");
     let history = c.history_counts();
     assert!(c
@@ -48,6 +52,6 @@ fn main() {
     assert_eq!(budget.snapshot().total(), 0);
     println!(
         "{}",
-        serde_json::json!({"managed_root_refusal_restores":true,"staged_incidence_refused":true,"history_preserved":true,"undo_redo_preserves_empty_incidence":true,"empty_history_counts":empty,"final_owner_charge":0,"production_enabled":false,"source_incidence_parity":false})
+        serde_json::json!({"empty_replacement_source_control":{"source_accepts_empty_replacement_without_history":true,"actual_replacement_identity_retained":true,"history_before":initial_history,"history_after":initial_history},"managed_root_refusal_restores":true,"staged_incidence_refused":true,"history_preserved":true,"undo_redo_preserves_empty_incidence":true,"empty_history_counts":empty,"final_owner_charge":0,"production_enabled":false,"source_incidence_parity":false})
     );
 }
