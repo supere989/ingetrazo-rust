@@ -1,0 +1,7 @@
+{
+  "source": "23db085977a069999fe169a6e444867f169653ce",
+  "artifact_digests_verified": 106,
+  "complete_document_comparisons": 35,
+  "review": "Missing or zero-byte image retains declared material color/opacity; nonempty corrupt-image integrity guard retained. Historical missing-image refusal preserved in earlier evidence.",
+  "remaining": "Legacy, tint, large textured polygons, annotations and full rendered acceptance remain OPEN."
+}
