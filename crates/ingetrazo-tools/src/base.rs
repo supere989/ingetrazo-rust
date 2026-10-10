@@ -112,6 +112,8 @@ pub trait Tool: Send + Sync {
     fn lock_drawing_plane(&mut self,_normal:DVec3)->bool{false}
     /// Consume an inferred-shape lock key without changing model geometry.
     fn toggle_inference_lock(&mut self)->bool{false}
+    /// Notify modifier transitions, including frames without pointer movement.
+    fn note_control_state(&mut self,_held:bool){}
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }
     fn preview_mesh(&self) -> Option<&Mesh> {
         None

@@ -31,6 +31,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let shift_down = ui.input(|i| i.modifiers.shift);
     let alt_down = ui.input(|i| i.modifiers.alt);
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
+    app.active_tool.note_control_state(ui.input(|i| i.modifiers.ctrl));
 
     // Zoom on wheel
     if scroll_delta != 0.0 && response.hovered() {

@@ -21,6 +21,7 @@ pub struct RectangleTool {
     error: Option<String>,
     square_lock: bool,
     arrow_square_lock: bool,
+    control_down: bool,
     plane_lock: Option<DVec3>,
 }
 
@@ -34,6 +35,7 @@ impl Default for RectangleTool {
             error: None,
             square_lock: false,
             arrow_square_lock: false,
+            control_down: false,
             plane_lock: None,
         }
     }
@@ -54,7 +56,6 @@ impl RectangleTool {
     pub fn reset(&mut self) {
         self.start_point = None;
         self.hover_point = None;
-        self.from_center = false;
         self.plane_normal=DVec3::Z;self.square_lock=false;self.arrow_square_lock=false;self.error=None;self.plane_lock=None;
     }
 
@@ -111,6 +112,11 @@ impl RectangleTool {
 
 impl Tool for RectangleTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
+    fn note_control_state(&mut self,held:bool){
+        if held&&!self.control_down{self.from_center=!self.from_center;}
+        self.control_down=held;
+    }
+
     fn toggle_inference_lock(&mut self)->bool {
         if self.start_point.is_none(){return false;}
         if self.arrow_square_lock{self.arrow_square_lock=false;return true;}
@@ -154,6 +160,7 @@ impl Tool for RectangleTool {
 
     fn on_activate(&mut self, _scene: &mut Scene) {
         self.reset();
+        self.from_center=false;
     }
 
     fn on_deactivate(&mut self, _scene: &mut Scene) {
@@ -167,13 +174,13 @@ impl Tool for RectangleTool {
     fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
         self.hover_point = Some(ctx.world);
         if self.plane_lock.is_none(){if let Some(start)=self.start_point{let d=ctx.world-start;if d.dot(self.plane_normal).abs()>=1e-3{let flat=[DVec3::X,DVec3::Y,DVec3::Z].into_iter().filter(|n|d.dot(*n).abs()<1e-3).collect::<Vec<_>>();if flat.len()==1{self.plane_normal=flat[0];}}}}
-        self.from_center=ctx.ctrl_held;
+        self.note_control_state(ctx.ctrl_held);
         if !ctx.shift_held{self.square_lock=false;}else if let Some(start)=self.start_point{let (u,v)=drawing_axes(self.plane_normal);let d=ctx.world-start;let a=d.dot(u).abs();let b=d.dot(v).abs();if a>1e-6&&b>1e-6&&(a-b).abs()<=0.04*a.max(b){self.square_lock=true;}}
 
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        self.from_center = ctx.ctrl_held;
+        self.note_control_state(ctx.ctrl_held);
         if self.start_point.is_some(){self.on_move(scene,ctx);}
         if self.start_point.is_none() {
             if self.plane_lock.is_none(){if let Some((face,_,_))=crate::base::pick_scene_face(scene,&ctx.ray){self.plane_normal=scene.mesh.face_normal(face);}}
@@ -238,6 +245,22 @@ impl Tool for RectangleTool {
 mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
+
+    #[test]
+    fn control_toggles_center_persistently_without_pointer_motion() {
+        let mut tool=RectangleTool::new();let mut scene=Scene::new();let before=scene.clone();
+        tool.note_control_state(true);assert!(tool.from_center);
+        tool.note_control_state(true);assert!(tool.from_center);
+        tool.note_control_state(false);assert!(tool.from_center);
+        assert_eq!(serde_json::to_value(&scene).unwrap(),serde_json::to_value(&before).unwrap());
+        tool.start_point=Some(DVec3::ZERO);tool.hover_point=Some(DVec3::X+DVec3::Y);
+        tool.on_vcb_input(&mut scene,"4,2").unwrap();assert!(tool.from_center);
+        assert!((scene.mesh.face_area(0)-8.).abs()<1e-9);
+        tool.on_cancel(&mut scene);assert!(tool.from_center);
+        tool.note_control_state(true);assert!(!tool.from_center);
+        tool.note_control_state(false);tool.note_control_state(true);assert!(tool.from_center);
+        tool.on_activate(&mut scene);assert!(!tool.from_center);
+    }
 
     #[test]
     fn down_latches_only_inferred_square_without_model_mutation() {
