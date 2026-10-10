@@ -1,18 +1,18 @@
 {
   "provenance": {
-    "rust_commit": "8ab734f6dbb206516764dc60d17f90e8850bec64",
+    "rust_commit": "3ff39bb5ba3f40a50671e30f43553f48c7d57207",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "source_provenance": {
-    "rust_commit": "8ab734f6dbb206516764dc60d17f90e8850bec64",
+    "rust_commit": "3ff39bb5ba3f40a50671e30f43553f48c7d57207",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "scope": "Original core.axes.sync/compute_snap, Viewport._project_to_lock_line/_capture_shift_lock and keyReleaseEvent with controlled orthographic pixel/ray callbacks. Source world origin remains0. Five context frames \u00d7seven locked/angular/magnetic/origin/Shift controls. Not full camera/pointer/occlusion/memory proof.",
-  "native_sha256": "595ef83ae5232b8950ac2b131ccb7c98c5a7943284f62bac94d526c8af47d914",
+  "native_sha256": "f4610faa4de25928c0777388ffca4a404c7c7ac3a7cdf4c3a8f2acc16656613f",
   "passed": 35,
   "negative_controls": [
     "kind mutation rejected",
