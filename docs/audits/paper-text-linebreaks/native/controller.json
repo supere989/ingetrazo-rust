@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "punctuation",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "cjk_wrap",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "soft_hyphen",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "line_separator",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "paragraph_separator",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    },
+    {
+      "case": "punctuation_rtl",
+      "scene_unchanged": true,
+      "warm_bytes_exact": true,
+      "warm_resources_unchanged": true
+    }
+  ],
+  "invalid_style_preserves_destination": true,
+  "scope": "Production composer export controller, not OS dialog or rendered pointer proof"
+}

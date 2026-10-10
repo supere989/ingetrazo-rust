@@ -194,6 +194,16 @@ jobs:
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
           QT_QPA_PLATFORM=offscreen INGETRAZO_PDF_UI_TEXT_OBSERVATIONS=docs/audits/paragraph-ci/original/font-observations.json INGETRAZO_PDF_UI_EVIDENCE=docs/audits/composer-text-ci/ui CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
+      - name: Original punctuation and discretionary Text boundaries
+        run: |
+          for family in LINEBREAKS SHY_BOUNDARIES; do
+            export INGETRAZO_TEXT_${family}=1
+            out=docs/audits/text-boundaries-ci/$family
+            QT_QPA_PLATFORM=offscreen python scripts/probe-python-paper-text.py "$out/original"
+            cargo run --locked -p ingetrazo-formats --example paper_paragraph_fixture -- "$out/original/font-observations.json" "$out/native"
+            for dpi in 72 144 300; do QT_QPA_PLATFORM=offscreen python scripts/check-paper-text-layout-pages.py "$out/original" "$out/native" "$dpi"; done
+            unset INGETRAZO_TEXT_${family}
+          done
       - name: Actual Text background export and save dialogs
         run: |
           mkdir -p docs/audits/composer-background-ci/original

@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "dpi": 72,
+  "cases": [
+    {
+      "case": "cjk_wrap",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "line_separator",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "paragraph_separator",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "punctuation",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "punctuation_rtl",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "soft_hyphen",
+      "changed_pixels": 0,
+      "passed": true
+    }
+  ],
+  "scope": "6 native font/layout pages vs actual original paint_text_mm helper, not application/UI/fullP29; failed cases mandatory"
+}
