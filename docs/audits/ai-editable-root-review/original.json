@@ -1,0 +1,278 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "mesh": {
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "faces": [
+          {
+            "vertices": [
+              0,
+              1,
+              2
+            ],
+            "holes": []
+          }
+        ]
+      },
+      "persistent_faces": true,
+      "persistent_vertices": true,
+      "held_face_live": true,
+      "face_loop_preserved": true,
+      "attrs_dict_preserved": true,
+      "vertex_position_preserved": true
+    },
+    {
+      "name": "shared",
+      "mesh": {
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "faces": [
+          {
+            "vertices": [
+              0,
+              1,
+              2
+            ],
+            "holes": []
+          },
+          {
+            "vertices": [
+              0,
+              2,
+              3
+            ],
+            "holes": []
+          }
+        ]
+      },
+      "persistent_faces": true,
+      "persistent_vertices": true,
+      "held_face_live": true,
+      "face_loop_preserved": true,
+      "attrs_dict_preserved": true,
+      "vertex_position_preserved": true
+    },
+    {
+      "name": "abort",
+      "mesh": {
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "faces": [
+          {
+            "vertices": [
+              0,
+              1,
+              2
+            ],
+            "holes": []
+          },
+          {
+            "vertices": [
+              0,
+              2,
+              3
+            ],
+            "holes": []
+          }
+        ]
+      },
+      "persistent_faces": true,
+      "persistent_vertices": true,
+      "held_face_live": true,
+      "face_loop_preserved": false,
+      "attrs_dict_preserved": false,
+      "vertex_position_preserved": false
+    },
+    {
+      "name": "field-abort",
+      "mesh": {
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "faces": [
+          {
+            "vertices": [
+              0,
+              1,
+              2
+            ],
+            "holes": []
+          },
+          {
+            "vertices": [
+              0,
+              2,
+              3
+            ],
+            "holes": []
+          }
+        ]
+      },
+      "persistent_faces": true,
+      "persistent_vertices": true,
+      "held_face_live": true,
+      "face_loop_preserved": false,
+      "attrs_dict_preserved": false,
+      "vertex_position_preserved": false
+    }
+  ],
+  "face_live_geometry_reads": true,
+  "private_scope_edit_survives_error": true,
+  "shallow_existing_field_rollback": true
+}

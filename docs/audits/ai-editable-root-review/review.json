@@ -1,0 +1,13 @@
+{
+  "original_reproduced": true,
+  "states": 4,
+  "candidate": "ecc6b927209b17a300a5045c28673453407c6ca0",
+  "root_native_replay": false,
+  "integration_status": "held pending admission and finalizer fixes",
+  "findings": [
+    "RootRestore outer and hole ring allocations precede corresponding logical admission.",
+    "Hole-list slot capacity is omitted from logical reference charge.",
+    "Restoration assigns arbitrary attrs under write lock, potentially releasing arbitrary payloads before poison; require poison and release outside lock."
+  ],
+  "scope": "Fresh pinned original semantics and source review only; no full scripting acceptance."
+}
