@@ -1,0 +1,65 @@
+{
+  "source": "Actual PySide6 QPainter source-over raster; no custom color blend calculation",
+  "parent_sha256": "e74288dc83ade289b76f926e4b6e03f2a0d89fdf723433331a997860501dbb49",
+  "parent_case": {
+    "case": "solid-rgb128-white",
+    "points": [
+      [
+        597,
+        57
+      ],
+      [
+        672,
+        57
+      ],
+      [
+        597,
+        132
+      ],
+      [
+        672,
+        132
+      ]
+    ],
+    "rgba": [
+      [
+        146,
+        174,
+        206,
+        255
+      ],
+      [
+        146,
+        174,
+        206,
+        255
+      ],
+      [
+        146,
+        174,
+        206,
+        255
+      ],
+      [
+        146,
+        174,
+        206,
+        255
+      ]
+    ]
+  },
+  "rgba_input": [
+    37,
+    93,
+    157,
+    128
+  ],
+  "background": [
+    255,
+    255,
+    255,
+    255
+  ],
+  "original_helper_commit": "40e1cc3",
+  "protocol": "Compare interior source fillRect to translated 80x80 authored native geometry; geometry/AA boundary not claimed"
+}

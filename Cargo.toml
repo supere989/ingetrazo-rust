@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "crates/ingetrazo-core",
+    "crates/ingetrazo-metal",
     "crates/ingetrazo-tools",
     "crates/ingetrazo-formats",
     "crates/ingetrazo-render",
@@ -19,7 +20,7 @@ repository = "https://github.com/supere989/ingetrazo-rust"
 [workspace.dependencies]
 glam = { version = "0.29", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde_json = { version = "1.0", features = ["float_roundtrip"] }
 flate2 = "1.0"
 zip = { version = "2.2", default-features = false, features = ["deflate"] }
 thiserror = "2.0"
@@ -28,6 +29,7 @@ env_logger = "0.11"
 approx = "0.5"
 uuid = { version = "1.10", features = ["v4", "serde"] }
 bytemuck = { version = "1.19", features = ["derive"] }
+blake3 = "1.8"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
 egui = "0.30"
 eframe = { version = "0.30", default-features = false, features = ["default_fonts", "glow", "wayland", "x11"] }

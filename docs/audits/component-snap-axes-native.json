@@ -1,0 +1,375 @@
+{
+  "provenance": {
+    "rust_commit": "3ff39bb5ba3f40a50671e30f43553f48c7d57207",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "source_provenance": {
+    "rust_commit": "3ff39bb5ba3f40a50671e30f43553f48c7d57207",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "scope": "Original core.axes.sync/compute_snap, Viewport._project_to_lock_line/_capture_shift_lock and keyReleaseEvent with controlled orthographic pixel/ray callbacks. Source world origin remains0. Five context frames \u00d7seven locked/angular/magnetic/origin/Shift controls. Not full camera/pointer/occlusion/memory proof.",
+  "native_sha256": "f4610faa4de25928c0777388ffca4a404c7c7ac3a7cdf4c3a8f2acc16656613f",
+  "passed": 35,
+  "negative_controls": [
+    "kind mutation rejected",
+    "point mutation rejected",
+    "missing context frame rejected",
+    "missing case rejected"
+  ],
+  "results": [
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "identity-empty/red-lock",
+      "point": [
+        6.0,
+        5.0,
+        0.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis_inference",
+      "name": "identity-empty/weak-red",
+      "point": [
+        6.0,
+        5.010000228881836,
+        0.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "identity-empty/magnetic-red",
+      "point": [
+        6.0,
+        5.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "origin",
+      "name": "identity-empty/world-origin",
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "origin",
+      "name": "identity-empty/context-origin",
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "reference",
+      "name": "identity-empty/shift-held",
+      "point": [
+        6.0,
+        5.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "identity-empty/shift-released",
+      "point": [
+        6.0,
+        5.5,
+        0.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "placed-empty/red-lock",
+      "point": [
+        6.841009590925179,
+        4.781462190533505,
+        2.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis_inference",
+      "name": "placed-empty/weak-red",
+      "point": [
+        6.83710241317749,
+        4.7906670570373535,
+        2.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "placed-empty/magnetic-red",
+      "point": [
+        6.841009638531264,
+        4.781462210741089,
+        2.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "origin",
+      "name": "placed-empty/world-origin",
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "placed-empty/context-origin",
+      "point": [
+        1.0,
+        -1.0,
+        2.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "reference",
+      "name": "placed-empty/shift-held",
+      "point": [
+        6.841009673654298,
+        4.781462225649932,
+        2.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "placed-empty/shift-released",
+      "point": [
+        6.645644187927246,
+        5.2417144775390625,
+        2.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "reflected-nonempty/red-lock",
+      "point": [
+        3.158990277946016,
+        3.218537753805621,
+        2.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis_inference",
+      "name": "reflected-nonempty/weak-red",
+      "point": [
+        3.155083179473877,
+        3.227742910385132,
+        2.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "reflected-nonempty/magnetic-red",
+      "point": [
+        3.158990497056071,
+        3.2185378468123194,
+        2.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "origin",
+      "name": "reflected-nonempty/world-origin",
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "reflected-nonempty/context-origin",
+      "point": [
+        1.0,
+        -1.0,
+        2.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "reference",
+      "name": "reflected-nonempty/shift-held",
+      "point": [
+        3.1589903301600835,
+        3.218537775969177,
+        2.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "reflected-nonempty/shift-released",
+      "point": [
+        2.9636247158050537,
+        3.678790330886841,
+        2.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "custom-axes/red-lock",
+      "point": [
+        16.528294869163037,
+        2.3753083796246246,
+        2.6977800694787484
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis_inference",
+      "name": "custom-axes/weak-red",
+      "point": [
+        16.52438735961914,
+        2.3845133781433105,
+        2.697780132293701
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "custom-axes/magnetic-red",
+      "point": [
+        16.528294683147767,
+        2.3753083006658264,
+        2.697780100369715
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "origin",
+      "name": "custom-axes/world-origin",
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "custom-axes/context-origin",
+      "point": [
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "reference",
+      "name": "custom-axes/shift-held",
+      "point": [
+        16.52829512414598,
+        2.375308487858461,
+        2.69778002713454
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "custom-axes/shift-released",
+      "point": [
+        16.332929611206055,
+        2.8355607986450195,
+        2.697780132293701
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "skewed-mirror/red-lock",
+      "point": [
+        5.0,
+        3.0,
+        1.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis_inference",
+      "name": "skewed-mirror/weak-red",
+      "point": [
+        5.0,
+        3.009999990463257,
+        1.0
+      ]
+    },
+    {
+      "axis": "x",
+      "kind": "axis",
+      "name": "skewed-mirror/magnetic-red",
+      "point": [
+        5.0,
+        3.0,
+        1.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "origin",
+      "name": "skewed-mirror/world-origin",
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "skewed-mirror/context-origin",
+      "point": [
+        3.0,
+        -2.0,
+        1.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "reference",
+      "name": "skewed-mirror/shift-held",
+      "point": [
+        5.0,
+        3.0,
+        1.0
+      ]
+    },
+    {
+      "axis": null,
+      "kind": "none",
+      "name": "skewed-mirror/shift-released",
+      "point": [
+        5.0,
+        3.5,
+        1.0
+      ]
+    }
+  ]
+}

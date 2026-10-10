@@ -1,0 +1,315 @@
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+PASS original translated/rotated/tilted scaled nested world-bake, shared plain prototype and outside-history Undo
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling cfg-if v1.0.5
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.2
+   Compiling once_cell v1.21.4
+   Compiling smallvec v1.16.2
+   Compiling libc v0.2.190
+   Compiling memchr v2.8.3
+   Compiling pkg-config v0.3.34
+   Compiling rustix v1.1.5
+   Compiling linux-raw-sys v0.12.1
+   Compiling find-msvc-tools v0.1.14
+   Compiling shlex v2.0.1
+   Compiling autocfg v1.5.1
+   Compiling scoped-tls v1.0.1
+   Compiling downcast-rs v1.2.1
+   Compiling wayland-client v0.31.15
+   Compiling stable_deref_trait v1.2.1
+   Compiling getrandom v0.3.4
+   Compiling ttf-parser v0.25.1
+   Compiling zerocopy v0.8.60
+   Compiling version_check v0.9.5
+   Compiling serde_core v1.0.229
+   Compiling thiserror v2.0.21
+   Compiling khronos_api v3.1.0
+   Compiling parking_lot_core v0.9.12
+   Compiling ab_glyph_rasterizer v0.1.10
+   Compiling simd-adler32 v0.3.10
+   Compiling cfg_aliases v0.2.2
+   Compiling thiserror v1.0.69
+   Compiling libloading v0.8.9
+   Compiling litemap v0.8.3
+   Compiling scopeguard v1.2.0
+   Compiling crc32fast v1.5.2
+   Compiling xml-rs v0.8.29
+   Compiling cc v1.6.0
+   Compiling dlib v0.5.3
+   Compiling rustix v0.38.44
+   Compiling writeable v0.6.4
+   Compiling lock_api v0.4.14
+   Compiling icu_normalizer_data v2.3.0
+   Compiling utf8_iter v1.0.4
+   Compiling rustversion v1.0.23
+   Compiling serde v1.0.229
+   Compiling linux-raw-sys v0.4.15
+   Compiling cursor-icon v1.2.0
+   Compiling xcursor v0.3.11
+   Compiling icu_properties_data v2.3.0
+   Compiling zmij v1.0.23
+   Compiling pin-project-lite v0.2.17
+   Compiling adler2 v2.0.1
+   Compiling tracing-core v0.1.36
+   Compiling xkeysym v0.2.1
+   Compiling static_assertions v1.1.0
+   Compiling itoa v1.0.18
+   Compiling percent-encoding v2.3.2
+   Compiling slab v0.4.12
+   Compiling ahash v0.8.12
+   Compiling dashu-int v0.5.1
+   Compiling serde_json v1.0.151
+   Compiling miniz_oxide v0.9.1
+   Compiling num-traits v0.2.19
+   Compiling dashu-base v0.5.1
+   Compiling num-modular v0.6.6
+   Compiling quick-xml v0.41.0
+   Compiling nohash-hasher v0.2.0
+   Compiling smithay-client-toolkit v0.19.2
+   Compiling gl_generator v0.14.0
+   Compiling arrayref v0.3.9
+   Compiling epaint_default_fonts v0.30.0
+   Compiling profiling v1.0.18
+   Compiling getrandom v0.4.3
+   Compiling wayland-sys v0.31.11
+   Compiling x11-dl v2.21.0
+   Compiling arrayvec v0.7.8
+   Compiling strict-num v0.1.1
+   Compiling either v1.18.0
+   Compiling as-raw-xcb-connection v1.0.1
+   Compiling raw-window-handle v0.6.2
+   Compiling x11rb-protocol v0.13.2
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+   Compiling winit v0.30.13
+   Compiling rustc-hash v2.1.3
+   Compiling tracing v0.1.44
+   Compiling pxfm v0.1.30
+   Compiling smithay-client-toolkit v0.20.0
+   Compiling zune-core v0.5.3
+   Compiling itertools v0.14.0
+   Compiling form_urlencoded v1.2.2
+   Compiling memoffset v0.9.1
+   Compiling glutin v0.32.3
+   Compiling dpi v0.1.2
+   Compiling ash v0.38.0+1.3.281
+   Compiling flate2 v1.1.10
+   Compiling inflections v1.1.1
+   Compiling smol_str v0.2.2
+   Compiling byteorder-lite v0.1.0
+   Compiling zune-jpeg v0.5.15
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling glutin-winit v0.5.0
+   Compiling xkbcommon-dl v0.4.2
+   Compiling equivalent v1.0.2
+   Compiling bumpalo v3.20.3
+   Compiling glutin_egl_sys v0.7.1
+   Compiling glutin_glx_sys v0.6.1
+   Compiling zip v2.4.2
+   Compiling hashbrown v0.17.1
+   Compiling urlencoding v2.1.3
+   Compiling web-time v1.1.0
+   Compiling lazy_static v1.5.1
+   Compiling byteorder v1.5.0
+   Compiling ryu v1.0.23
+   Compiling base64 v0.13.1
+   Compiling litrs v1.0.0
+   Compiling png v0.18.1
+   Compiling zopfli v0.8.3
+   Compiling glow v0.16.0
+   Compiling base64 v0.22.1
+   Compiling pdf-writer v0.15.0
+   Compiling roxmltree v0.20.0
+   Compiling constant_time_eq v0.4.2
+   Compiling cpufeatures v0.3.1
+   Compiling wayland-backend v0.3.17
+   Compiling blake3 v1.8.7
+   Compiling wayland-scanner v0.31.11
+   Compiling clipper2-rust v1.2.0
+   Compiling memmap2 v0.9.11
+   Compiling document-features v0.2.12
+   Compiling indexmap v2.14.2
+   Compiling parking_lot v0.12.5
+   Compiling earcutr v0.5.0
+   Compiling owned_ttf_parser v0.25.1
+   Compiling ab_glyph v0.2.32
+   Compiling uuid v1.27.0
+   Compiling thiserror-impl v1.0.69
+   Compiling gltf-derive v1.4.1
+   Compiling synstructure v0.14.0
+   Compiling moxcms v0.8.1
+   Compiling bytemuck_derive v1.12.1
+   Compiling displaydoc v0.2.7
+   Compiling zerovec-derive v0.11.6
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling dashu-ratio v0.5.1
+   Compiling zerofrom v0.1.8
+   Compiling yoke v0.8.3
+   Compiling zerotrie v0.2.5
+   Compiling bytemuck v1.25.2
+   Compiling zerovec v0.11.8
+   Compiling emath v0.30.0
+   Compiling tiny-skia-path v0.11.4
+   Compiling manifold-rust v0.16.0
+   Compiling ecolor v0.30.0
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling epaint v0.30.0
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+   Compiling tiny-skia v0.11.4
+   Compiling polling v3.11.0
+   Compiling gethostname v1.1.0
+   Compiling calloop v0.13.0
+   Compiling calloop v0.14.5
+   Compiling icu_provider v2.3.1
+   Compiling egui v0.30.0
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling wayland-csd-frame v0.3.0
+   Compiling glam v0.29.3
+   Compiling gltf-json v1.4.1
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling image v0.25.10
+   Compiling url v2.5.8
+   Compiling wayland-protocols v0.32.13
+   Compiling wayland-cursor v0.31.14
+   Compiling calloop-wayland-source v0.3.0
+   Compiling calloop-wayland-source v0.4.1
+   Compiling webbrowser v1.2.4
+   Compiling gltf v1.4.1
+   Compiling egui_glow v0.30.0
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-core)
+   Compiling x11rb v0.13.2
+   Compiling wayland-protocols-wlr v0.3.12
+   Compiling wayland-protocols-misc v0.3.12
+   Compiling wayland-protocols-plasma v0.3.12
+   Compiling wayland-protocols-experimental v20250721.0.1
+   Compiling arboard v3.6.1
+   Compiling egui-ash-renderer v0.7.0 (/tmp/ingetrazo-component-ci-root/vendor/egui-ash-renderer)
+   Compiling ash-window v0.13.0
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling sctk-adwaita v0.10.1
+   Compiling smithay-clipboard v0.7.3
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-render)
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-formats)
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-tools)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling egui-winit v0.30.0
+   Compiling eframe v0.30.0
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 11.56s
+     Running `/tmp/ingetrazo-component-ci-root-target/debug/examples/component_ci_world_bake_fixture docs/audits/component-ci-world-bake`
+{"passed": true, "cases": 3, "negative_controls": {"preserve_parent_transform": "rejected", "reverse_child_matrix_order": "rejected", "local_authoring": "rejected"}, "precision": "New source/native comparison1e-6 absolute for pinned original QVector3D/QMatrix4x4 float32; exact flags/counts/IDs asserted in native. No preexisting fixture assertion tolerance widened.", "scope": "Actual original Viewport controller versus native component controller under translated, rotated and tilted/scaled frames; no rendered gesture proof.", "source_sha256": "7c82b8697ae2cad748424c8ad139184d86de39285ca8ebabda1a428e1da99432"}
+   Compiling libc v0.2.190
+   Compiling bitflags v2.13.2
+   Compiling log v0.4.34
+   Compiling bytemuck v1.25.2
+   Compiling syn v3.0.6
+   Compiling zopfli v0.8.3
+   Compiling png v0.18.1
+   Compiling pdf-writer v0.15.0
+   Compiling image v0.25.10
+   Compiling getrandom v0.4.3
+   Compiling uuid v1.27.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling displaydoc v0.2.7
+   Compiling thiserror v2.0.21
+   Compiling zip v2.4.2
+   Compiling serde v1.0.229
+   Compiling glam v0.29.3
+   Compiling gltf-json v1.4.1
+   Compiling gltf v1.4.1
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-formats)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.63s
+     Running `/tmp/ingetrazo-component-ci-root-target/debug/examples/component_acceptance_fixture /tmp/tmpavyvegqh`
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-component-ci-root/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running `/tmp/ingetrazo-component-ci-root-target/debug/examples/component_editor_acceptance_fixture /tmp/tmpavyvegqh`
+{
+  "provenance": {
+    "rust_commit": "8962ce3b99b3f97f28772541504afbc95c52a9f3",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "checks": [
+    "linked definitions reopen as same Python mesh identity",
+    "explicit legacy definition replacement keeps plain placement independent in that fixture",
+    "shared edit updates both linked instances",
+    "Make Unique detaches even identical geometry before later shared edit",
+    "instance UID and opaque attributes retained",
+    "nested editor commit propagates and Python preserves shared child identity",
+    "exact controller undo/redo and cancel preserve document; fragment save blocked",
+    "unique classic clipboard copy independent, linked component copy shared, distinct placement IDs",
+    "nested world edit preserves distinct UIDs, bakes selected container placement into children, preserves sibling placements",
+    "unique parent subtree resists later original shared-child edits while preserving placements and child identity",
+    "unique leaf and parent reopen as ordinary Python groups"
+  ],
+  "scope": "Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; fresh actual original translated/rotated/tilted-scaled WORLD controls and three rejected mutations; no rendered UI gesture proof."
+}

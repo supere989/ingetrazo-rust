@@ -1,0 +1,12 @@
+[
+  {
+    "control": "shifted",
+    "checker_exit": 1,
+    "expected": "reject"
+  },
+  {
+    "control": "missing",
+    "checker_exit": 1,
+    "expected": "reject"
+  }
+]

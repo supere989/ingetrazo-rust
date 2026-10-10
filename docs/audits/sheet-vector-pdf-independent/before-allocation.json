@@ -1,0 +1,1 @@
+{"allocation_calls_including_realloc":900072,"bytes":4738767,"commands":50001,"encode_nanoseconds":[22886287,21918699,22453068,22426758,22381463,22412873,22450283,22297935,22357447],"numeric_coordinates":300002,"scope":"Release in-process vector encode only, no prepare/IO timing; instrumented allocator counts separately from repeated timing, no renderer/full application claim."}

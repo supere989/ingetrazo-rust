@@ -1,0 +1,17 @@
+[
+  {
+    "mutation": "geometry",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-entry-reopen.py\", line 20, in <module>\n    assert len(points)==len(row[\"after_points\"]),kind\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: root-plain-shared\n"
+  },
+  {
+    "mutation": "axes",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-entry-reopen.py\", line 27, in <module>\n    assert all(abs(a-b)<2e-5 for a,b in zip(list(group.axes.data()),row[\"after_axes\"])),kind\n           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: root-plain-shared\n"
+  },
+  {
+    "mutation": "sharing",
+    "rejected": true,
+    "stderr": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-entry-reopen.py\", line 29, in <module>\n    assert (group.mesh is groups[1].mesh)==row[\"sibling_same_mesh_after\"],kind\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: root-component-shared\n"
+  }
+]

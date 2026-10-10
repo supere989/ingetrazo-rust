@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-texture-draw-review/scripts/check-native-texture-draw.py", line 14, in <module>
+    check(native)
+    ~~~~~^^^^^^^^
+  File "/tmp/ingetrazo-texture-draw-review/scripts/check-native-texture-draw.py", line 12, in check
+    assert a==b,f"{name}: {a} != {b}"
+           ^^^^
+AssertionError: texture-cutout: [[199, 102, 102, 255], [255, 255, 255, 255], [255, 255, 255, 255], [200, 219, 219, 255], [190, 190, 190, 255]] != [[199, 104, 104, 255], [255, 255, 255, 255], [255, 255, 255, 255], [200, 219, 219, 255], [189, 189, 189, 255]]

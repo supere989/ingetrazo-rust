@@ -1,0 +1,3 @@
+# Independent context snapping review
+
+Fresh pinned-original 35 case payloads exactly match the retained source corpus. Native comparison passes 35/35 and four negative controls. Combined review branch passes 455 tests with two ignored after integration with native Metal foundation main cb223cc. This proves the bounded projection/ray and operative Shift-handler protocol, not a new rendered gesture or full inference order claim. Seven ordinary entry publications also reopen through original Python with three rejecting semantic mutations. Active history, authored world-edit publication corpus and rendered component entry/exit remain open.

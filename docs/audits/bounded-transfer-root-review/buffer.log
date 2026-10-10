@@ -1,0 +1,5 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Retaining quarantined GPU buffers and memory ledger
+PASS actual queued timeout: kind=buffer elapsed_ms=50 retained_bytes=12288 before_bytes=4096 prior_buffer_destructions=1 old_buffer_preserved=true new_admission_refused=true drop_frees_pending=false subsequent_real_completion=true automatic_recovery=false
+Retaining quarantined Vulkan device, instance and loader; GPU completion unknown

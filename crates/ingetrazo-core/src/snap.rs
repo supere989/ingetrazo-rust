@@ -107,6 +107,8 @@ pub struct SnapEngine {
     pub(crate) shift_lock: Option<(DVec3,DVec3)>,
     shift_held: bool,
     last_inference: Option<SnapResult>,
+    drawing_frame: Option<glam::DMat4>,
+    pub(crate) drawing_axes: crate::drawing_axes::DrawingAxes,
 }
 
 impl Default for SnapEngine {
@@ -127,11 +129,22 @@ impl Default for SnapEngine {
             shift_lock: None,
             shift_held: false,
             last_inference: None,
+            drawing_frame: None,
+            drawing_axes: Default::default(),
         }
     }
 }
 
 impl SnapEngine {
+    /// Source core.axes.sync: context directions update together, cached for
+    /// unchanged frames. World point memories remain world-valued.
+    pub fn sync_drawing_frame(&mut self, frame: Option<glam::DMat4>) {
+        if self.drawing_frame!=frame {
+            self.drawing_frame=frame;
+            self.drawing_axes=crate::drawing_axes::DrawingAxes::from_frame(frame);
+        }
+    }
+
     /// Retire operation references while retaining user snapping configuration.
     pub fn reset_operation_state(&mut self) {
         self.encouraged_points.clear();
@@ -157,7 +170,7 @@ impl SnapEngine {
             if let (Some(start),Some(snap)) = (start,self.last_inference.as_ref()) {
                 if matches!(snap.kind,SnapKind::AxisInference|SnapKind::AxisLock|SnapKind::Reference) {
                     let mut delta = if let Some(axis) = snap.axis {
-                        match axis { 'x'|'X'=>DVec3::X, 'y'|'Y'=>DVec3::Y, _=>DVec3::Z }
+                        self.drawing_axes.axis(axis.to_ascii_lowercase()).unwrap_or(self.drawing_axes.z)
                     } else { snap.point-start };
                     if snap.axis.is_some() && (snap.point-start).dot(delta)<0. { delta=-delta; }
                     if delta.is_finite() && delta.length()>1e-6 {

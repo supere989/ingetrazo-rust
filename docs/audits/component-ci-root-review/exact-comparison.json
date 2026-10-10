@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "cases": 3,
+  "negative_controls": {
+    "preserve_parent_transform": "rejected",
+    "reverse_child_matrix_order": "rejected",
+    "local_authoring": "rejected",
+    "sub_micro_coordinate_change": "rejected"
+  },
+  "precision": "Exact source/native numeric equality for these binary-representable affine controls; flags/counts/IDs remain exact. Arbitrary float32/f64 rotated precision remains separate open scope.",
+  "scope": "Actual original Viewport controller versus native component controller under translated, rotated and tilted/scaled frames; no rendered gesture proof.",
+  "source_sha256": "7c82b8697ae2cad748424c8ad139184d86de39285ca8ebabda1a428e1da99432"
+}

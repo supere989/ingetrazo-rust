@@ -1,0 +1,15 @@
+{
+  "source_revision": "1ddc6d0",
+  "binary_sha256": "00bb8569680f1065b7f75bb16058d22470c2195d5878f5468b2252e523a92deb",
+  "checker_sha256": "42bea0d713df7781561efb653e2a4c4605c6e6ca309af9b904719aeb7e5e6667",
+  "same_checker_as_retained_failure": true,
+  "expanded_colors": 10,
+  "captures_per_color": 2,
+  "full_interior_pixels_per_capture": 2500,
+  "lifecycle_cases": 5,
+  "actual_backend": "NVIDIA RTX5090 owned-window Vulkan GLX WSI",
+  "old_dark_negative_exit": 1,
+  "tolerance_changes": false,
+  "palette_compensation": false,
+  "scope": "Exact constant color contract and five lifecycle controls; interpolated AA geometry, complete document painting, Metal remainopen."
+}

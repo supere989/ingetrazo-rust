@@ -11,8 +11,11 @@ use crate::mesh::Mesh;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Group {
-    /// Explicit linked-component identity; ordinary serialized prototypes remain
-    /// independent groups even when their initial mesh data is deduplicated.
+    /// Mesh prototype identity, independent of component flags and child placement lists.
+    /// Equal meshes never acquire the same token by geometry deduplication.
+    #[serde(default)]
+    pub mesh_share: Option<Uuid>,
+    /// Explicit linked-component identity.
     #[serde(default)]
     pub component_definition: Option<Uuid>,
     /// Identity of this child slot inside its parent component definition.
@@ -41,6 +44,7 @@ pub struct Group {
 impl Group {
     pub fn new(name: impl Into<String>) -> Self {
         Self {
+            mesh_share: None,
             component_definition: None,
             definition_member: None,
             native_document: serde_json::Value::Null,
@@ -60,6 +64,7 @@ impl Group {
 
     pub fn with_mesh(name: impl Into<String>, mesh: Mesh) -> Self {
         Self {
+            mesh_share: None,
             component_definition: None,
             definition_member: None,
             native_document: serde_json::Value::Null,
@@ -75,6 +80,14 @@ impl Group {
             billboard_texture: None,
             hidden: false,
         }
+    }
+    /// Original stored axes live in the Mesh coordinate space; retain their
+    /// affine matrix (including scale/reflection), not a normalized basis.
+    pub fn axes_matrix(&self)->Option<DMat4> {
+        let values=self.native_document.get("axes")?.as_array()?;
+        if values.len()!=16 {return None;}
+        let mut array=[0.;16];for (index,value) in values.iter().enumerate(){array[index]=value.as_f64()?;}
+        Some(DMat4::from_cols_array(&array))
     }
     /// The persisted placement identity, including legacy non-UUID names.
     pub fn native_uid(&self)->String {

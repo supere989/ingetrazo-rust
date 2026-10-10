@@ -1,0 +1,90 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_base": "0963c7f",
+  "scope": "Actual XTEST pointer/key/menu input; original actual MainWindow and native ash Vulkan production UI; isolated Xvfb software GPUs, no hardware or broad component parity claim. Component entry fixture setup is programmatic; Finish and Undo/Redo are real UI actions.",
+  "cases": [
+    {
+      "name": "center-tracking-original-group-actual-mainwindow-finished-history",
+      "report": "docs/audits/center-tracking-original-group-actual-mainwindow-finished-history-evidence.json",
+      "executable_sha256": "904b328256ebc7245b764df0981cbf055cadd3856bfd1852923e7675d80b3f34",
+      "checker_sha256": "cbacdc781e16b7b70c504a5737e8c487fafeacedeaca38f18d8e980ab32ab2fe",
+      "wire_pixels_passed": true,
+      "distributed_wire_checks": 7,
+      "finished_undo_world": [
+        [
+          [
+            3.0,
+            2.0,
+            1.0
+          ]
+        ],
+        [
+          [
+            13.0,
+            2.0,
+            1.0
+          ]
+        ]
+      ],
+      "finished_redo_world": [
+        [
+          [
+            3.995821952819824,
+            2.0,
+            1.0
+          ]
+        ],
+        [
+          [
+            13.0,
+            2.0,
+            1.0
+          ]
+        ]
+      ],
+      "root_ids_preserved": true
+    },
+    {
+      "name": "center-tracking-native-group-finished-global-history",
+      "report": "docs/audits/center-tracking-native-group-finished-global-history-evidence.json",
+      "executable_sha256": "b25faa861663440255b514f24de70e3f56d46272c7baffc78f208a78ba1420e4",
+      "checker_sha256": "cbacdc781e16b7b70c504a5737e8c487fafeacedeaca38f18d8e980ab32ab2fe",
+      "wire_pixels_passed": true,
+      "distributed_wire_checks": 7,
+      "finished_undo_world": [
+        [
+          [
+            3.0,
+            2.0,
+            1.0
+          ]
+        ],
+        [
+          [
+            13.0,
+            2.0,
+            1.0
+          ]
+        ]
+      ],
+      "finished_redo_world": [
+        [
+          [
+            4.006249922685727,
+            2.0,
+            1.0
+          ]
+        ],
+        [
+          [
+            13.0,
+            2.0,
+            1.0
+          ]
+        ]
+      ],
+      "root_ids_preserved": true
+    }
+  ],
+  "source_redo_keyboard_failure": "Actual original Linux MainWindow Ctrl+Shift+Z has duplicate QAction shortcuts and fails with Ambiguous shortcut overload; retained separately. Positive source Redo uses XTEST Edit menu QAction; native uses Ctrl+Y."
+}

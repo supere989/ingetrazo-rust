@@ -138,3 +138,6 @@ pub mod cad2d;
 pub mod qt_gray;
 
 pub mod qt_cosmetic;
+pub mod texture_layout;
+
+pub mod native_textures;

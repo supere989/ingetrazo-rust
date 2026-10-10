@@ -1,0 +1,57 @@
+{
+  "status": "held_pending_remaining_component_workflows",
+  "formats_tests": "pass",
+  "native_preservation": {
+    "passed": 16,
+    "failed": 0
+  },
+  "controls": [
+    "published proto identity includes component=false",
+    "equal distinct protos remain distinct",
+    "vendor prototype and placement metadata retained",
+    "direct unpub placement edits detach without discarding geometry",
+    "legacy component publication uses separate identity namespace"
+  ],
+  "retained_failures": [
+    "initial-tests.log",
+    "second-tests.log"
+  ],
+  "remaining": [
+    "source no-edit history equivalence",
+    "reentry drawing axes",
+    "fresh original reopen exact root/nested authored world surfaces",
+    "rendered Finish workflow acceptance",
+    "full workspace after latestworldauthoring changes"
+  ],
+  "canonical_promotion": false,
+  "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, Make Unique detachment; unequal parent child counts2/1 with shared child Mesh; internal comparison keys absent",
+  "workspace_counts": [
+    428,
+    0,
+    2
+  ],
+  "combined_source": "schema/Finish7029293 reviewed with own mesh token aware native save guard and explicit definition root identity",
+  "combined_workspace_counts": [
+    432,
+    0,
+    2
+  ],
+  "document_lifecycle": "mesh registry included in dirty/autosave comparison; focused lifecycle suite passes",
+  "clipboard_combined_gui_counts": [
+    100,
+    0,
+    1
+  ],
+  "clipboard_lifecycle": "successful New/Open/Recover retire runtime imported identities; failed Open preserves current mappings",
+  "latest_world_combined_counts": [
+    439,
+    0,
+    2
+  ],
+  "private_container_codec": "originalPython actualobjectidentity PASS privatecomponent-marked ownMesh; children retainsharedMesh",
+  "world_authoring_controls": {
+    "passed": 10,
+    "failed": 0,
+    "scope": "root/nested source world-frame authoring and shared prototype surfaces; no rendered proof"
+  }
+}

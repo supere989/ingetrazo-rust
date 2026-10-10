@@ -1,0 +1,43 @@
+Production0c6a71b omits operative Viewport auto-MakeUnique; new seven source entry/exit identity controls fail after Finish. Current production restored after run.
+
+running 1 test
+test actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition ... FAILED
+
+failures:
+
+---- actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition stdout ----
+
+thread 'actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition' (1909988) panicked at crates/ingetrazo-gui/tests/move_component_arrays.rs:226:31:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-center-ui/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.52s
+     Running tests/move_component_arrays.rs (target/debug/deps/move_component_arrays-95dce6883792475d)
+error: test failed, to rerun pass `-p ingetrazo-gui --test move_component_arrays`

@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "7afd90edcc7ae0c973a954a720a61c2abd015419",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "kind": "root-plain-shared",
+      "passed": true,
+      "sha256": "01e210d0d8b7bbf34aad164f9a543bbdbc80d70cf061c80c7470563de0214de5"
+    },
+    {
+      "kind": "root-component-shared",
+      "passed": true,
+      "sha256": "a95cb3e33ec6fad099fceb9d916a386ad3347c37639bbd4399f4c500ec6beb5d"
+    },
+    {
+      "kind": "root-plain-unshared",
+      "passed": true,
+      "sha256": "f6281143e85605c9a07881344fd19a6230750bc899cd2b318bbaadf385ba908d"
+    },
+    {
+      "kind": "classic-plain-shared",
+      "passed": true,
+      "sha256": "5d36eea920a5cac6f423ac53c1b6c338cfc65ab7601fb61ace720c280961e52a"
+    },
+    {
+      "kind": "nested-plain-parent",
+      "passed": true,
+      "sha256": "05137942e334ff86c55959a2628d42d3800e99491122bf95b666ce3aaf5d3c7a"
+    },
+    {
+      "kind": "nested-component-parent",
+      "passed": true,
+      "sha256": "beb11850849f629fea3f1cffd1bff8cf1a14e08216cdd7c75d89a40c5ee16071"
+    },
+    {
+      "kind": "nested-deleted-sibling",
+      "passed": true,
+      "sha256": "cca5f0ec206eed38e02f672310f33f7ee2067dc6de34d8a559923192d07d9ab1"
+    }
+  ],
+  "scope": "Actual original loader of native seven UI edit-entry publications; geometry, UV/vendor attributes, classic placement/raw axes and actual Mesh identity. No rendered or active Undo claim."
+}

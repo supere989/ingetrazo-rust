@@ -11,6 +11,8 @@ from formats import igz
 
 def main():
     app=QApplication.instance() or QApplication([])
+    subprocess.run([sys.executable,"scripts/probe-python-component-ci-bake.py"],check=True)
+    subprocess.run([sys.executable,"scripts/check-component-ci-world-bake.py"],check=True)
     with tempfile.TemporaryDirectory() as temp:
         directory=Path(temp);identity=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
         source={"igz_format":1,"app_version":"independent-original","scene":{"faces":[],"edges":[],"protos":[{"edges":[],"faces":[{"vertices":[[0,0,0],[1,0,0],[0,1,0]],"opaque_face":61}]}],"groups":[{"name":name,"uid":"persisted-"+name,"component":component,"proto":0,"xform":identity,"opaque_instance":value} for name,component,value in [("first",True,67),("second",True,71),("plain",False,73)]]}}
@@ -29,14 +31,16 @@ def main():
             scene=Scene();igz.load_into(scene,directory/(name+".igz"));return scene
         before=reopen("editor-before")
         committed=reopen("editor-committed")
-        assert [g.mesh.vertices[0].position.z() for g in committed.groups[:3]]==[5,5,0]
+        assert [g.mesh.vertices[0].position.z() for g in committed.groups[:3]]==[5,5,5]
         assert before.groups[3].children[0].uid!=before.groups[4].children[0].uid
         for index in (3,4):
             assert committed.groups[index].children[0].uid==before.groups[index].children[0].uid
-            assert committed.groups[index].xform==before.groups[index].xform
-            assert committed.groups[index].children[0].xform==before.groups[index].children[0].xform
-        assert committed.groups[3].xform[0,3]==4 and committed.groups[4].xform[0,3]==14
-        assert committed.groups[3].children[0].xform[0,3]==-2
+            expected_parent=before.groups[index].xform if index==4 else type(before.groups[index].xform)()
+            expected_child=before.groups[index].children[0].xform if index==4 else before.groups[index].xform*before.groups[index].children[0].xform
+            assert committed.groups[index].xform==expected_parent
+            assert committed.groups[index].children[0].xform==expected_child
+        assert committed.groups[3].xform[0,3]==0 and committed.groups[4].xform[0,3]==14
+        assert committed.groups[3].children[0].xform[0,3]==2
         assert committed.groups[3].children[0].mesh is committed.groups[0].mesh
         assert committed.groups[4].children[0].mesh is committed.groups[0].mesh
         assert [g.mesh.vertices[0].position.z() for g in reopen("editor-undone").groups[:3]]==[0,0,0]
@@ -49,7 +53,7 @@ def main():
         assert parent_unique.groups[4].xform==committed.groups[4].xform
         assert parent_unique.groups[4].children[0].xform==committed.groups[4].children[0].xform
         unique_editor=reopen("editor-unique")
-        assert [g.mesh.vertices[0].position.z() for g in unique_editor.groups[:3]]==[7,5,0]
+        assert [g.mesh.vertices[0].position.z() for g in unique_editor.groups[:3]]==[7,5,5]
         assert unique_editor.groups[3].children[0].mesh.vertices[0].position.z()==5
         pasted=reopen("editor-pasted")
         assert pasted.groups[0].mesh is not pasted.groups[5].mesh,"Classic unique group copy must be independent"
@@ -61,6 +65,6 @@ def main():
             path=directory/(suffix+".igz");raw=json.loads(path.read_text())["scene"]
             assert [g["uid"] for g in raw["groups"]]==["persisted-first","persisted-second","persisted-plain"]
             assert [g["opaque_instance"] for g in raw["groups"]]==[67,71,73]
-    report={"provenance":context(),"passed":True,"checks":["linked definitions reopen as same Python mesh identity","plain component=false stays independent","shared edit updates both linked instances","Make Unique detaches even identical geometry before later shared edit","instance UID and opaque attributes retained","nested editor commit propagates and Python preserves shared child identity","exact controller undo/redo and cancel preserve document; fragment save blocked","unique classic clipboard copy independent, linked component copy shared, distinct placement IDs","nested definition edit preserves distinct child UIDs and parent/child placement matrices","unique parent subtree resists later original shared-child edits while preserving placements and child identity","unique leaf and parent reopen as ordinary Python groups"],"scope":"Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; no rendered UI gesture proof."}
+    report={"provenance":context(),"passed":True,"checks":["linked definitions reopen as same Python mesh identity","explicit legacy definition replacement keeps plain placement independent in that fixture","shared edit updates both linked instances","Make Unique detaches even identical geometry before later shared edit","instance UID and opaque attributes retained","nested editor commit propagates and Python preserves shared child identity","exact controller undo/redo and cancel preserve document; fragment save blocked","unique classic clipboard copy independent, linked component copy shared, distinct placement IDs","nested world edit preserves distinct UIDs, bakes selected container placement into children, preserves sibling placements","unique parent subtree resists later original shared-child edits while preserving placements and child identity","unique leaf and parent reopen as ordinary Python groups"],"scope":"Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; fresh actual original translated/rotated/tilted-scaled WORLD controls and three rejected mutations; no rendered UI gesture proof."}
     Path("docs/audits/python-component-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()

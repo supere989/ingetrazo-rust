@@ -1,0 +1,280 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling cfg-if v1.0.5
+   Compiling autocfg v1.5.1
+   Compiling serde_core v1.0.229
+   Compiling simd-adler32 v0.3.10
+   Compiling crc32fast v1.5.2
+   Compiling adler2 v2.0.1
+   Compiling serde v1.0.229
+   Compiling zmij v1.0.23
+   Compiling rustversion v1.0.23
+   Compiling memchr v2.8.3
+   Compiling dashu-int v0.5.1
+   Compiling serde_json v1.0.151
+   Compiling libc v0.2.190
+   Compiling itoa v1.0.18
+   Compiling dashu-base v0.5.1
+   Compiling getrandom v0.4.3
+   Compiling thiserror v2.0.21
+   Compiling num-modular v0.6.6
+   Compiling static_assertions v1.1.0
+   Compiling zune-core v0.5.3
+   Compiling inflections v1.1.1
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.2
+   Compiling either v1.18.0
+   Compiling pxfm v0.1.30
+   Compiling equivalent v1.0.2
+   Compiling bumpalo v3.20.3
+   Compiling bytemuck v1.25.2
+   Compiling rustc-hash v2.1.3
+   Compiling byteorder-lite v0.1.0
+   Compiling miniz_oxide v0.9.1
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+   Compiling hashbrown v0.17.1
+   Compiling zip v2.4.2
+   Compiling byteorder v1.5.0
+   Compiling lazy_static v1.5.1
+   Compiling base64 v0.13.1
+   Compiling urlencoding v2.1.3
+   Compiling itertools v0.14.0
+   Compiling roxmltree v0.20.0
+   Compiling base64 v0.22.1
+   Compiling zune-jpeg v0.5.15
+   Compiling num-traits v0.2.19
+   Compiling zopfli v0.8.3
+   Compiling flate2 v1.1.10
+   Compiling indexmap v2.14.2
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling png v0.18.1
+   Compiling clipper2-rust v1.2.0
+   Compiling earcutr v0.5.0
+   Compiling moxcms v0.8.1
+   Compiling uuid v1.27.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling displaydoc v0.2.7
+   Compiling gltf-derive v1.4.1
+   Compiling dashu-ratio v0.5.1
+   Compiling manifold-rust v0.16.0
+   Compiling gltf-json v1.4.1
+   Compiling glam v0.29.3
+   Compiling image v0.25.10
+   Compiling gltf v1.4.1
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-formats)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-formats` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.23s
+     Running `target/debug/examples/component_acceptance_fixture /tmp/tmpsz9m0hop`
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.2
+   Compiling once_cell v1.21.4
+   Compiling smallvec v1.16.2
+   Compiling libc v0.2.190
+   Compiling rustix v1.1.5
+   Compiling pkg-config v0.3.34
+   Compiling linux-raw-sys v0.12.1
+   Compiling find-msvc-tools v0.1.14
+   Compiling shlex v2.0.1
+   Compiling downcast-rs v1.2.1
+   Compiling scoped-tls v1.0.1
+   Compiling wayland-client v0.31.15
+   Compiling stable_deref_trait v1.2.1
+   Compiling ttf-parser v0.25.1
+   Compiling version_check v0.9.5
+   Compiling zerocopy v0.8.60
+   Compiling khronos_api v3.1.0
+   Compiling getrandom v0.3.4
+   Compiling parking_lot_core v0.9.12
+   Compiling cfg_aliases v0.2.2
+   Compiling ab_glyph_rasterizer v0.1.10
+   Compiling litemap v0.8.3
+   Compiling libloading v0.8.9
+   Compiling quick-xml v0.41.0
+   Compiling rustix v0.38.44
+   Compiling xml-rs v0.8.29
+   Compiling writeable v0.6.4
+   Compiling syn v3.0.6
+   Compiling thiserror v1.0.69
+   Compiling scopeguard v1.2.0
+   Compiling thiserror-impl v1.0.69
+   Compiling utf8_iter v1.0.4
+   Compiling cursor-icon v1.2.0
+   Compiling pin-project-lite v0.2.17
+   Compiling lock_api v0.4.14
+   Compiling cc v1.6.0
+   Compiling tracing-core v0.1.36
+   Compiling dlib v0.5.3
+   Compiling xcursor v0.3.11
+   Compiling icu_properties_data v2.3.0
+   Compiling xkeysym v0.2.1
+   Compiling linux-raw-sys v0.4.15
+   Compiling icu_normalizer_data v2.3.0
+   Compiling percent-encoding v2.3.2
+   Compiling slab v0.4.12
+   Compiling arrayref v0.3.9
+   Compiling epaint_default_fonts v0.30.0
+   Compiling smithay-client-toolkit v0.19.2
+   Compiling profiling v1.0.18
+   Compiling strict-num v0.1.1
+   Compiling nohash-hasher v0.2.0
+   Compiling arrayvec v0.7.8
+   Compiling ahash v0.8.12
+   Compiling x11rb-protocol v0.13.2
+   Compiling raw-window-handle v0.6.2
+   Compiling as-raw-xcb-connection v1.0.1
+   Compiling winit v0.30.13
+   Compiling smithay-client-toolkit v0.20.0
+   Compiling png v0.18.1
+   Compiling form_urlencoded v1.2.2
+   Compiling glutin v0.32.3
+   Compiling memoffset v0.9.1
+   Compiling dpi v0.1.2
+   Compiling smol_str v0.2.2
+   Compiling ash v0.38.0+1.3.281
+   Compiling glutin-winit v0.5.0
+   Compiling zopfli v0.8.3
+   Compiling glow v0.16.0
+   Compiling litrs v1.0.0
+   Compiling web-time v1.1.0
+   Compiling constant_time_eq v0.4.2
+   Compiling cpufeatures v0.3.1
+   Compiling tracing v0.1.44
+   Compiling wayland-sys v0.31.11
+   Compiling x11-dl v2.21.0
+   Compiling gl_generator v0.14.0
+   Compiling document-features v0.2.12
+   Compiling xkbcommon-dl v0.4.2
+   Compiling wayland-scanner v0.31.11
+   Compiling glutin_egl_sys v0.7.1
+   Compiling glutin_glx_sys v0.6.1
+   Compiling wayland-backend v0.3.17
+   Compiling blake3 v1.8.7
+   Compiling memmap2 v0.9.11
+   Compiling getrandom v0.4.3
+   Compiling uuid v1.27.0
+   Compiling parking_lot v0.12.5
+   Compiling owned_ttf_parser v0.25.1
+   Compiling ab_glyph v0.2.32
+   Compiling synstructure v0.14.0
+   Compiling bytemuck_derive v1.12.1
+   Compiling displaydoc v0.2.7
+   Compiling zerovec-derive v0.11.6
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerofrom v0.1.8
+   Compiling yoke v0.8.3
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling bytemuck v1.25.2
+   Compiling thiserror v2.0.21
+   Compiling zip v2.4.2
+   Compiling emath v0.30.0
+   Compiling tiny-skia-path v0.11.4
+   Compiling image v0.25.10
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling ecolor v0.30.0
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+   Compiling tiny-skia v0.11.4
+   Compiling epaint v0.30.0
+   Compiling serde v1.0.229
+   Compiling icu_provider v2.3.1
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling glam v0.29.3
+   Compiling gltf-json v1.4.1
+   Compiling egui v0.30.0
+   Compiling polling v3.11.0
+   Compiling gethostname v1.1.0
+   Compiling calloop v0.13.0
+   Compiling calloop v0.14.5
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling wayland-csd-frame v0.3.0
+   Compiling url v2.5.8
+   Compiling webbrowser v1.2.4
+   Compiling wayland-protocols v0.32.13
+   Compiling wayland-cursor v0.31.14
+   Compiling calloop-wayland-source v0.3.0
+   Compiling calloop-wayland-source v0.4.1
+   Compiling gltf v1.4.1
+   Compiling egui_glow v0.30.0
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-core)
+   Compiling x11rb v0.13.2
+   Compiling ash-window v0.13.0
+   Compiling egui-ash-renderer v0.7.0 (/tmp/ingetrazo-component-ci/vendor/egui-ash-renderer)
+   Compiling arboard v3.6.1
+   Compiling wayland-protocols-wlr v0.3.12
+   Compiling wayland-protocols-misc v0.3.12
+   Compiling wayland-protocols-experimental v20250721.0.1
+   Compiling wayland-protocols-plasma v0.3.12
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-tools)
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-formats)
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-render)
+   Compiling sctk-adwaita v0.10.1
+   Compiling smithay-clipboard v0.7.3
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling egui-winit v0.30.0
+   Compiling eframe v0.30.0
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-component-ci/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.84s
+     Running `target/debug/examples/component_editor_acceptance_fixture /tmp/tmpsz9m0hop`
+
+thread 'main' (2266122) panicked at crates/ingetrazo-gui/examples/component_editor_acceptance_fixture.rs:8:143:
+assertion `left == right` failed
+  left: DMat4 { x_axis: DVec4(1.0, -0.0, 0.0, -0.0), y_axis: DVec4(-0.0, 1.0, -0.0, 0.0), z_axis: DVec4(0.0, -0.0, 1.0, -0.0), w_axis: DVec4(-0.0, 0.0, -0.0, 1.0) }
+ right: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(4.0, 5.0, 6.0, 1.0) }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-component-ci/scripts/check-python-components.py", line 66, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-component-ci/scripts/check-python-components.py", line 27, in main
+    subprocess.run(["cargo","run","--locked","-p","ingetrazo-gui","--example","component_editor_acceptance_fixture","--",temp],check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['cargo', 'run', '--locked', '-p', 'ingetrazo-gui', '--example', 'component_editor_acceptance_fixture', '--', '/tmp/tmpsz9m0hop']' returned non-zero exit status 101.

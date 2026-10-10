@@ -226,12 +226,12 @@ fn from_point(
     }
     best
 }
-fn axis_direction(draw: DVec3, degrees: f64) -> Option<DVec3> {
+fn axis_direction(draw: DVec3, degrees: f64, axes: crate::drawing_axes::DrawingAxes) -> Option<DVec3> {
     if draw.length() < 1e-6 {
         return None;
     }
     let draw = draw.normalize();
-    [DVec3::X, DVec3::Y, DVec3::Z]
+    [axes.x, axes.y, axes.z]
         .into_iter()
         .find(|d| draw.dot(*d).abs() >= degrees.to_radians().cos())
         .map(|d| d * draw.dot(d).signum())
@@ -253,8 +253,8 @@ fn memory_snap(
         let b = engine.encouraged_points[engine.encouraged_points.len() - 2];
         let mut best = None;
         let mut distance = 9.;
-        for x in [DVec3::X, DVec3::Y, DVec3::Z] {
-            for y in [DVec3::X, DVec3::Y, DVec3::Z] {
+        for x in [engine.drawing_axes.x,engine.drawing_axes.y,engine.drawing_axes.z] {
+            for y in [engine.drawing_axes.x,engine.drawing_axes.y,engine.drawing_axes.z] {
                 if x == y {
                     continue;
                 }
@@ -292,7 +292,7 @@ fn memory_snap(
     } else {
         DVec3::ZERO
     };
-    for axis in [DVec3::X, DVec3::Y, DVec3::Z] {
+    for axis in [engine.drawing_axes.x,engine.drawing_axes.y,engine.drawing_axes.z] {
         let an = axis.dot(n);
         let reach = if an.abs() < 1e-6 {
             if (reference - ctx.candidate).dot(n).abs() > 1e-4 {
@@ -551,6 +551,7 @@ impl SnapEngine {
     pub fn snap_screen_with_policy(
         &mut self,ray:&Ray,scene:&Scene,start:Option<DVec3>,close:Option<DVec3>,ctx:&ScreenSnapContext,policy:&ScreenSnapPolicy,
     )->SnapResult{
+        self.sync_drawing_frame(scene.drawing_frame);
         self.update_center(scene, ray, ctx);
         let edges = edges(scene, ctx, policy.exclusions);
         let pixels = |p: DVec3| {
@@ -565,9 +566,9 @@ impl SnapEngine {
             .or_else(|| {
                 self.locked_axis.zip(start).map(|(axis, p)| {
                     let d = match axis {
-                        'x' | 'X' => DVec3::X,
-                        'y' | 'Y' => DVec3::Y,
-                        _ => DVec3::Z,
+                        'x' | 'X' => self.drawing_axes.x,
+                        'y' | 'Y' => self.drawing_axes.y,
+                        _ => self.drawing_axes.z,
                     };
                     (p, d, Some(axis.to_ascii_lowercase()))
                 })
@@ -669,7 +670,7 @@ impl SnapEngine {
             return r;
         }
         if let Some(start) = start {
-            if let Some(dir) = axis_direction(ctx.candidate - start, 10.) {
+            if let Some(dir) = axis_direction(ctx.candidate - start, 10.,self.drawing_axes) {
                 if let Some(r) = from_point(
                     scene,
                     ctx,
@@ -770,7 +771,7 @@ impl SnapEngine {
             let d = ctx.candidate - start;
             if d.length() > 1e-6 {
                 let n = d.normalize();
-                let axes=[('x',DVec3::X,COLOR_AXIS_X),('y',DVec3::Y,COLOR_AXIS_Y),('z',DVec3::Z,COLOR_AXIS_Z)];
+                let axes=[('x',self.drawing_axes.x,COLOR_AXIS_X),('y',self.drawing_axes.y,COLOR_AXIS_Y),('z',self.drawing_axes.z,COLOR_AXIS_Z)];
                 if let Some(angle)=policy.magnetic_axis_deg {
                     if let Some(&(axis,dir,color))=axes.iter().find(|(_,dir,_)|n.dot(*dir).abs()>=angle.to_radians().cos()){
                         let point=project_line(ray,start,dir);
@@ -791,9 +792,9 @@ impl SnapEngine {
                     }
                 }
                 for (axis, dir, color) in [
-                    ('x', DVec3::X, COLOR_AXIS_X),
-                    ('y', DVec3::Y, COLOR_AXIS_Y),
-                    ('z', DVec3::Z, COLOR_AXIS_Z),
+                    ('x', self.drawing_axes.x, COLOR_AXIS_X),
+                    ('y', self.drawing_axes.y, COLOR_AXIS_Y),
+                    ('z', self.drawing_axes.z, COLOR_AXIS_Z),
                 ] {
                     if n.dot(dir).abs() >= 3_f64.to_radians().cos() {
                         let mut r = result(
@@ -1192,5 +1193,29 @@ mod curve_dwell_priority_tests {
         engine.note_screen_result(&endpoint,false,1.);
         engine.note_screen_result(&endpoint,false,1.3);
         assert_eq!(engine.encouraged_points,vec![corner]);
+    }
+}
+
+#[cfg(test)]
+mod context_axes_source_acceptance {
+    use super::*;
+    use glam::DMat4;
+    fn point(v:&serde_json::Value)->DVec3 {DVec3::new(v[0].as_f64().unwrap(),v[1].as_f64().unwrap(),v[2].as_f64().unwrap())}
+    #[test]
+    fn frozen_original_context_axes_and_shift_directions() {
+        let evidence:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-snap-axes-source.json")).unwrap();
+        for row in evidence["cases"].as_array().unwrap() {
+            let raw:Vec<_>=row["frame"].as_array().unwrap().iter().map(|v|v.as_f64().unwrap()).collect();let mut scene=Scene::new();scene.drawing_frame=Some(DMat4::from_cols_array(&raw.try_into().unwrap()));
+            let mut engine=SnapEngine::default();engine.sync_drawing_frame(scene.drawing_frame);let start=row["start"].as_array().map(|_|point(&row["start"]));engine.locked_axis=row["axis"].as_str().and_then(|s|s.chars().next());
+            if !row["shift_capture"].is_null() {
+                let capture=&row["shift_capture"];engine.note_inference_result(&SnapResult{point:point(&capture["point"]),kind:SnapKind::AxisInference,axis:Some('x'),..Default::default()});engine.update_shift_state(true,start);
+                let (a,b)=engine.shift_lock.unwrap();assert!((b-a).normalize().distance(point(&capture["source_direction"]))<4e-6);
+                if row["mode"]=="shift-released" {engine.update_shift_state(false,start);assert!(engine.shift_lock.is_none());}
+            }
+            let candidate=point(&row["candidate"]);let viewport=PixelViewport{matrix:DMat4::from_translation(DVec3::new(0.,0.,0.5))*DMat4::from_scale(DVec3::new(0.1,0.1,-0.001)),width:2000.,height:2000.};let ctx=ScreenSnapContext{viewport,cursor:viewport.project_for_snapping(candidate).unwrap(),candidate,plane_normal:DVec3::Z};let policy=ScreenSnapPolicy{magnetic_axis_deg:row["magnetic"].as_f64(),..Default::default()};
+            let snap=engine.snap_screen_with_policy(&Ray::new(DVec3::new(candidate.x,candidate.y,100.),-DVec3::Z),&scene,start,None,&ctx,&policy);
+            let kind=match snap.kind {SnapKind::AxisLock=>"axis",SnapKind::AxisInference=>"axis_inference",SnapKind::Reference=>"reference",SnapKind::Origin=>"origin",SnapKind::None=>"none",_=>"other"};assert_eq!(kind,row["original"]["kind"].as_str().unwrap(),"{}",row["name"]);assert_eq!(snap.axis.map(|c|c.to_string()),row["original"]["axis"].as_str().map(|s|s.to_string()));assert!(snap.point.distance(point(&row["original"]["point"]))<4e-6,"{}",row["name"]);
+            engine.reset_operation_state();engine.sync_drawing_frame(None);assert_eq!(engine.drawing_axes,crate::drawing_axes::DrawingAxes::default());assert!(engine.shift_lock.is_none());assert!(engine.locked_axis.is_none());
+        }
     }
 }

@@ -1,0 +1,16 @@
+{
+  "reviewed_main": "ff4ec8d",
+  "production_transfer_timeout_ns": "u64::MAX",
+  "source": "crates/ingetrazo-gui/src/native_vulkan/mod.rs:559",
+  "unbounded_cleanup_sites": [
+    "resources.rs:121",
+    "resources.rs:154",
+    "resources.rs:213",
+    "resources.rs:234"
+  ],
+  "release_gate": "OPEN",
+  "required_behavior": "Finite production transfer wait; unknown completion stops new submissions and preserves submitted resource ownership until actual completion or safe device teardown. Coordinated Resources, TextureImage, transfer, World, CAD and VulkanContext lifecycle required.",
+  "forbidden_shortcut": "Do not simply remove waits and free possibly pending GPU resources.",
+  "present_lifecycle": "Separate present queue/swapchain completion contract still under review",
+  "implementation_worktree": "/tmp/ingetrazo-bounded-transfer"
+}

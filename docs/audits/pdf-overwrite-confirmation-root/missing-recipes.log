@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-pdf-overwrite-root/scripts/check-composer-pdf-ui.py", line 24, in <module>
+    state=lambda:json.loads((out/"state.json").read_text());initial=wait(state)
+                                                                    ~~~~^^^^^^^
+  File "/tmp/ingetrazo-pdf-overwrite-root/scripts/check-composer-pdf-ui.py", line 15, in wait
+    raise AssertionError("Actual UI timeout")
+AssertionError: Actual UI timeout

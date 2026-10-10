@@ -1,0 +1,7 @@
+# Pending Line points versus target-changing ancestor history
+
+Independent review of combined 0adce5f confirms the intended Undo order: composer-local history owns its scope; otherwise Tool.prepare_undo runs before the component history refusal guard. Original views/main_window.py::_on_undo invokes the active tool handler first. Original tools/line.py::on_undo consumes a pending first point by resetting its chain, without popping History. Native preserves this precedence.
+
+The stronger regression starts a placed ordinary shared group edit, which creates a real root-target MakeUnique snapshot. It commits one Line segment, undoes that segment, then hovers a pending first point. The next Undo cancels this point while preserving the entire Scene, undo/redo stacks, stable group IDs, context identity and model revision. Idle Line then releases the following Undo to the reference-changing guard, which refuses atomically. A newly armed first point still owns Undo after that refusal.
+
+Moving the guard before prepare_undo deliberately fails this regression; line-undo-guard-first-negative.log retains the observed failure. Restoring production order passes all 15 component history tests and GUI library 96 tests with 1 ignored. No production modification is required. This is controller/source semantics evidence, not another rendered gesture or broad P08 acceptance claim. Source reference-changing Undo data-loss safeguards remain explicitly classified in COMPONENT_GLOBAL_HISTORY.md.

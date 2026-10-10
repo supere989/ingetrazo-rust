@@ -1,0 +1,61 @@
+0-10T09:11:52.6360076Z     [1m[94m|[0m                                                [1m[33m^^^[0m [1m[33mhelp: explicitly specify the type as `f32`: `1.8_f32`[0m
+2026-10-10T09:11:52.6360545Z     [1m[94m|[0m
+2026-10-10T09:11:52.6361173Z     [1m[94m= [0m[1mwarning[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+2026-10-10T09:11:52.6362122Z     [1m[94m= [0m[1mnote[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+2026-10-10T09:11:52.6362534Z 
+2026-10-10T09:11:52.6362988Z [1m[33mwarning[0m: `ingetrazo-gui` (lib) generated 23 warnings (run `cargo fix --lib -p ingetrazo-gui` to apply 20 suggestions)
+2026-10-10T09:11:52.6363860Z [1m[92m   Compiling[0m ingetrazo-gui v0.3.15 (/home/runner/work/ingetrazo-rust/ingetrazo-rust/crates/ingetrazo-gui)
+2026-10-10T09:11:53.4236834Z [1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.94s
+2026-10-10T09:11:53.4385439Z [1m[92m     Running[0m `target/debug/examples/component_editor_acceptance_fixture /tmp/tmp12vn3tw1`
+2026-10-10T09:11:53.4514864Z 
+2026-10-10T09:11:53.4515634Z thread 'main' (12095) panicked at crates/ingetrazo-gui/examples/component_editor_acceptance_fixture.rs:8:143:
+2026-10-10T09:11:53.4516654Z assertion `left == right` failed
+2026-10-10T09:11:53.4517456Z   left: DMat4 { x_axis: DVec4(1.0, -0.0, 0.0, -0.0), y_axis: DVec4(-0.0, 1.0, -0.0, 0.0), z_axis: DVec4(0.0, -0.0, 1.0, -0.0), w_axis: DVec4(-0.0, 0.0, -0.0, 1.0) }
+2026-10-10T09:11:53.4518985Z  right: DMat4 { x_axis: DVec4(1.0, 0.0, 0.0, 0.0), y_axis: DVec4(0.0, 1.0, 0.0, 0.0), z_axis: DVec4(0.0, 0.0, 1.0, 0.0), w_axis: DVec4(4.0, 5.0, 6.0, 1.0) }
+2026-10-10T09:11:53.4519876Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+2026-10-10T09:11:53.4539781Z Traceback (most recent call last):
+2026-10-10T09:11:53.4555910Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-python-components.py", line 66, in <module>
+2026-10-10T09:11:53.4556957Z     if __name__=="__main__":main()
+2026-10-10T09:11:53.4557407Z                             ~~~~^^
+2026-10-10T09:11:53.4558629Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-python-components.py", line 27, in main
+2026-10-10T09:11:53.4560158Z     subprocess.run(["cargo","run","--locked","-p","ingetrazo-gui","--example","component_editor_acceptance_fixture","--",temp],check=True)
+2026-10-10T09:11:53.4561382Z     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-10T09:11:53.4562414Z   File "/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/subprocess.py", line 578, in run
+2026-10-10T09:11:53.4563320Z     raise CalledProcessError(retcode, process.args,
+2026-10-10T09:11:53.4563954Z                              output=stdout, stderr=stderr)
+2026-10-10T09:11:53.4565415Z subprocess.CalledProcessError: Command '['cargo', 'run', '--locked', '-p', 'ingetrazo-gui', '--example', 'component_editor_acceptance_fixture', '--', '/tmp/tmp12vn3tw1']' returned non-zero exit status 101.
+2026-10-10T09:11:53.4911858Z ##[error]Process completed with exit code 1.
+2026-10-10T09:11:53.5079440Z ##[group]Run actions/upload-artifact@v4
+2026-10-10T09:11:53.5079912Z with:
+2026-10-10T09:11:53.5080130Z   name: semantic-parity-evidence
+2026-10-10T09:11:53.5086368Z   path: docs/audits/*semantic-evidence.*
+docs/audits/python-*-evidence.json
+docs/audits/render-pergola.png
+docs/audits/render-startup.log
+docs/audits/exchange-*-evidence.json
+docs/audits/dxf-curve-evidence.json
+docs/audits/section-original-gl/*
+docs/audits/section-rust-render/*
+docs/audits/offset-render/*.png
+docs/audits/offset-render/runtime.log
+docs/audits/native-vulkan-ci-host/*
+docs/audits/native-vulkan-ci-budget/*
+docs/audits/headless-vulkan-ci/*
+docs/audits/contour-chunks-ci/*
+docs/audits/upload-many-ci/*
+docs/audits/native-composer-ci/*.png
+docs/audits/native-composer-ci/native.log
+docs/audits/native-composer-ci/result.json
+docs/audits/sheet-export-ci/*
+docs/audits/sheet-view-dxf/*
+docs/audits/move-inference-source-evidence.json
+docs/audits/texture-upload-ci/
+docs/audits/cad2d-color-ci/
+docs/audits/center-tracking-*-ci-evidence.json
+docs/audits/center-tracking-*-ci/*.png
+docs/audits/center-tracking-*-ci/runtime.log
+docs/audits/center-tracking-*-ci/*state.json
+docs/audits/center-tracking-*-ci/failure.json
+docs/audits/python-screen-snap-evidence.json
+docs/audits/python-perspective-screen-evidence.json
+docs/audi

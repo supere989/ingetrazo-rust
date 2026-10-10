@@ -1,0 +1,23 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "frozen_commit": "8f14f1b41ee1d0adc20de15a7f3789d5bb7e6291",
+  "corrected_commit": "a60d92e9d4ebffed4c5f6037f705044eaa8da7c6",
+  "image": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "source_process_exit_codes": [
+    0,
+    0
+  ],
+  "native_process_exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "checker_exit_codes": {
+    "five_frozen": 0,
+    "five_corrected": 0,
+    "heldout_frozen": 1,
+    "heldout_corrected": 1
+  },
+  "coverage": "exact sampled source pixels, not whole-image parity"
+}

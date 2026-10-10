@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "pairs": 65536,
+  "channels_checked": 262144,
+  "sha256": "3cd43e2070e1e3b60163c3ec2d271895eccead8194aa5e88c7239d1115dafbef",
+  "law": "t=channel*coverage; (t+(t>>8)+128)>>8",
+  "scope": "Actual QPainter premultiplied DestinationIn, same source BYTE_MUL used by solid SourceOver span multiplication. Not brush global opacity or gradient interpolation."
+}

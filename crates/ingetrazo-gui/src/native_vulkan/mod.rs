@@ -2,6 +2,7 @@ pub mod cad2d;
 pub mod headless;
 pub mod world;
 pub mod resources;
+pub mod texture_cache;
 mod queues;
 pub mod budget;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
@@ -1160,3 +1161,4 @@ fn cad_attachment_usage(supported:vk::ImageUsageFlags,integer:bool)->Result<vk::
 #[cfg(test)]mod cad_input_usage_tests{use super::*;
  #[test]fn unsupported_input_is_explicit_refusal(){let color=vk::ImageUsageFlags::COLOR_ATTACHMENT;assert_eq!(cad_attachment_usage(color,false).unwrap(),color);assert!(cad_attachment_usage(color,true).unwrap_err().contains("INPUT_ATTACHMENT"));assert_eq!(cad_attachment_usage(color|vk::ImageUsageFlags::INPUT_ATTACHMENT,true).unwrap(),color|vk::ImageUsageFlags::INPUT_ATTACHMENT);assert!(cad_attachment_usage(vk::ImageUsageFlags::INPUT_ATTACHMENT,true).is_err());}
 }
+pub mod textures;

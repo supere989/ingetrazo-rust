@@ -1,0 +1,18 @@
+   Compiling objc2 v0.6.5
+    Checking ingetrazo-core v0.3.15 (/tmp/ingetrazo-native-metal-foundation/crates/ingetrazo-core)
+    Checking block2 v0.6.2
+    Checking objc2-foundation v0.3.2
+    Checking dispatch2 v0.3.1
+    Checking objc2-core-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Checking ingetrazo-metal v0.3.15 (/tmp/ingetrazo-native-metal-foundation/crates/ingetrazo-metal)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.77s

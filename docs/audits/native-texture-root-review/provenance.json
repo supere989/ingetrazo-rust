@@ -1,0 +1,8 @@
+{
+  "candidate": "8f14f1b",
+  "binary_sha256": "394cbd6d53a962dfdc3f0d364af3055e6992a2ebeb35301445f32356204238a5",
+  "frozen_original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "hardware": "NVIDIA GeForce RTX5090",
+  "software_reference": "Fresh actual original Qt/Mesa",
+  "scope": "Independent headless sampled texture hardware and resource lifecycle proof; strict cross-backend sample failures retained, not full parity"
+}

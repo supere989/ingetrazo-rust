@@ -1,0 +1,57 @@
+{
+  "reader": "QtPdf/PDFium",
+  "pages": 9,
+  "point_size": [
+    595,
+    842
+  ],
+  "passed": false,
+  "cases": [
+    {
+      "page": 0,
+      "different_pixels": 733,
+      "passed": false
+    },
+    {
+      "page": 1,
+      "different_pixels": 687,
+      "passed": false
+    },
+    {
+      "page": 2,
+      "different_pixels": 664,
+      "passed": false
+    },
+    {
+      "page": 3,
+      "different_pixels": 669,
+      "passed": false
+    },
+    {
+      "page": 4,
+      "different_pixels": 330,
+      "passed": false
+    },
+    {
+      "page": 5,
+      "different_pixels": 352,
+      "passed": false
+    },
+    {
+      "page": 6,
+      "different_pixels": 550,
+      "passed": false
+    },
+    {
+      "page": 7,
+      "different_pixels": 1418,
+      "passed": false
+    },
+    {
+      "page": 8,
+      "different_pixels": 465,
+      "passed": false
+    }
+  ],
+  "scope": "Actual original atlas vs direct native vector PDF at whole72DPI pages, strictRGBA. UI/other painters remain open."
+}

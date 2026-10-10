@@ -1,0 +1,386 @@
+compilation-and-tests	Actual original and native center hint and Move UI controls	﻿2026-10-10T06:51:59.1584128Z ##[group]Run for mode in curve tiny malformed; do
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1584439Z ^[[36;1mfor mode in curve tiny malformed; do^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1584944Z ^[[36;1m  INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_EXPECT_HINT=1 INGETRAZO_CENTER_RUN_SUFFIX=-ci python scripts/check-native-center-tracking.py^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1585692Z ^[[36;1m  INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_RUN_SUFFIX=-ci INGETRAZO_CENTER_ORIGINAL=1 python scripts/check-native-center-tracking.py^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1586149Z ^[[36;1mdone^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1647265Z shell: /usr/bin/bash -e {0}
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1647466Z env:
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1647626Z   CARGO_HOME: /home/runner/.cargo
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1647831Z   CARGO_INCREMENTAL: 0
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1648007Z   CARGO_TERM_COLOR: always
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1648235Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1648562Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1648883Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1649196Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1649485Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1649772Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.1650185Z ##[endgroup]
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3898377Z ^[[1m^[[33mwarning^[[0m^[[1m: function `visit_meshes` is never used^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3898843Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-core/src/screen_pick.rs:120:15
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3899138Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3899534Z ^[[1m^[[94m120^[[0m ^[[1m^[[94m|^[[0m pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3899953Z     ^[[1m^[[94m|^[[0m               ^[[1m^[[33m^^^^^^^^^^^^^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3900206Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3900527Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3900800Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3900968Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-core` (lib) generated 1 warning
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3901921Z ^[[1m^[[33mwarning^[[0m^[[1m: function `scene_from_xml` is never used^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3902509Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-formats/src/dae_import.rs:757:15
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3903008Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3903953Z ^[[1m^[[94m757^[[0m ^[[1m^[[94m|^[[0m pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3904595Z     ^[[1m^[[94m|^[[0m               ^[[1m^[[33m^^^^^^^^^^^^^^^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3904949Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3905398Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3905774Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3906332Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3907014Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:753:35
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3907446Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3908022Z ^[[1m^[[94m753^[[0m ^[[1m^[[94m|^[[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 185, 190)),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3909531Z     ^[[1m^[[94m|^[[0m                                   ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3910091Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3910879Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3911996Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3912964Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3913457Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3913992Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3915149Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1077:35
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3915576Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3916167Z ^[[1m^[[94m1077^[[0m ^[[1m^[[94m|^[[0m                 egui::Stroke::new(1.0, egui::Color32::from_rgb(180, 180, 190)),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3916987Z      ^[[1m^[[94m|^[[0m                                   ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3917457Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3918128Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3919125Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3920260Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3920697Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3921369Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1099:71
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3921763Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3922478Z ^[[1m^[[94m1099^[[0m ^[[1m^[[94m|^[[0m             painter.line_segment([p_anchor, p_pos], egui::Stroke::new(1.2, egui::Color32::from_rgb(45, 55, 75)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3924620Z      ^[[1m^[[94m|^[[0m                                                                       ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3925273Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3926084Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3927225Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3927727Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3928170Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3928874Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1165:66
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3929265Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3929690Z ^[[1m^[[94m1165^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], egui::Stroke::new(1.5, stroke_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3930273Z      ^[[1m^[[94m|^[[0m                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3930643Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3931121Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3931799Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3932090Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3932345Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3932769Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1190:78
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3933033Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3933449Z ^[[1m^[[94m1190^[[0m ^[[1m^[[94m|^[[0m                         painter.line_segment([start, end], egui::Stroke::new(1.5, stroke_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3934406Z      ^[[1m^[[94m|^[[0m                                                                              ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3934998Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3935477Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3936189Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3936491Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3936942Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3937354Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1216:43
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3937615Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3937944Z ^[[1m^[[94m1216^[[0m ^[[1m^[[94m|^[[0m                         egui::Stroke::new(1.0, egui::Color32::BLACK),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3938444Z      ^[[1m^[[94m|^[[0m                                           ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3938789Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3939249Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3939897Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3940186Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3940432Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3940839Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1221:69
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3941106Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3941526Z ^[[1m^[[94m1221^[[0m ^[[1m^[[94m|^[[0m                     painter.circle_stroke(pos, s, egui::Stroke::new(1.0, egui::Color32::BLACK));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3942228Z      ^[[1m^[[94m|^[[0m                                                                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3942597Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3943049Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3943704Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3944260Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3944508Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3944929Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1230:97
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3945204Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3945703Z ^[[1m^[[94m1230^[[0m ^[[1m^[[94m|^[[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3946415Z      ^[[1m^[[94m|^[[0m                                                                                                 ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3946807Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3947277Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3947941Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3948231Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3948480Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3948890Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1233:114
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3949153Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3949648Z ^[[1m^[[94m1233^[[0m ^[[1m^[[94m|^[[0m                     painter.line_segment([pos - egui::vec2(s, 0.0), pos + egui::vec2(s, 0.0)], egui::Stroke::new(2.0, glyph_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3950357Z      ^[[1m^[[94m|^[[0m                                                                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `2.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3950775Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3951242Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3952048Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3952335Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3952585Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3953005Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1234:114
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3953270Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3953758Z ^[[1m^[[94m1234^[[0m ^[[1m^[[94m|^[[0m                     painter.line_segment([pos - egui::vec2(0.0, s), pos + egui::vec2(0.0, s)], egui::Stroke::new(2.0, glyph_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3954655Z      ^[[1m^[[94m|^[[0m                                                                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `2.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3955072Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3955545Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3956210Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3956612Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3956854Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3957263Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1242:97
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3957527Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3958009Z ^[[1m^[[94m1242^[[0m ^[[1m^[[94m|^[[0m                     painter.add(egui::Shape::convex_polygon(pts, glyph_color, egui::Stroke::new(1.0, egui::Color32::BLACK)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3958693Z      ^[[1m^[[94m|^[[0m                                                                                                 ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3959088Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3959545Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3960197Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3960490Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3960727Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3961138Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1329:66
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3961395Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3961774Z ^[[1m^[[94m1329^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3962330Z      ^[[1m^[[94m|^[[0m                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `0.7_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3962696Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3963151Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3963928Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3964306Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3964587Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3964991Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1338:66
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3965250Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3965618Z ^[[1m^[[94m1338^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], egui::Stroke::new(0.7, grid_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3966170Z      ^[[1m^[[94m|^[[0m                                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `0.7_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3966668Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3967123Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3967795Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3968110Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3968362Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3968786Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1359:69
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3969050Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3969428Z ^[[1m^[[94m1359^[[0m ^[[1m^[[94m|^[[0m             painter.line_segment([s_orig, s_pos], egui::Stroke::new(1.8, col));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3969994Z      ^[[1m^[[94m|^[[0m                                                                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.8_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3970370Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3970847Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3971508Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3971934Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3972182Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3972595Z     ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-render/src/pipeline.rs:1374:68
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3972854Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3973219Z ^[[1m^[[94m1374^[[0m ^[[1m^[[94m|^[[0m                     painter.line_segment([a, b], egui::Stroke::new(1.2, col));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3973951Z      ^[[1m^[[94m|^[[0m                                                                    ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3974369Z      ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3974847Z      ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3975528Z      ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3975814Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3975991Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-formats` (lib) generated 1 warning
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3976549Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-render` (lib) generated 15 warnings (run `cargo fix --lib -p ingetrazo-render` to apply 15 suggestions)
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3977253Z ^[[1m^[[33mwarning^[[0m^[[1m: use of deprecated constant `std::u32::MAX`: replaced by the `MAX` associated constant on this type^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3977744Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/native_vulkan/mod.rs:862:59
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3978027Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3978372Z ^[[1m^[[94m862^[[0m ^[[1m^[[94m|^[[0m         if capabilities.current_extent.width != std::u32::MAX {
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3978776Z     ^[[1m^[[94m|^[[0m                                                           ^[[1m^[[33m^^^^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3979050Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3979299Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(deprecated)]` on by default
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3979474Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3979813Z ^[[1m^[[33mwarning^[[0m^[[1m: use of deprecated constant `std::u64::MAX`: replaced by the `MAX` associated constant on this type^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3980293Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/native_vulkan/mod.rs:247:65
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3980557Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3980875Z ^[[1m^[[94m247^[[0m ^[[1m^[[94m|^[[0m                 .wait_for_fences(&[self.fence], true, std::u64::MAX)
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3981272Z     ^[[1m^[[94m|^[[0m                                                                 ^[[1m^[[33m^^^^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3981589Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3981932Z ^[[1m^[[33mwarning^[[0m^[[1m: use of deprecated constant `std::u64::MAX`: replaced by the `MAX` associated constant on this type^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3982413Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/native_vulkan/mod.rs:308:27
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3982684Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3982948Z ^[[1m^[[94m308^[[0m ^[[1m^[[94m|^[[0m                 std::u64::MAX,
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3983241Z     ^[[1m^[[94m|^[[0m                           ^[[1m^[[33m^^^^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3983399Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3983640Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3984151Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:140:54
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3984406Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3984828Z ^[[1m^[[94m140^[[0m ^[[1m^[[94m|^[[0m     painter.rect_stroke(paper_rect, 0.0, Stroke::new(1.0, Color32::from_rgb(180, 180, 185)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3985417Z     ^[[1m^[[94m|^[[0m                                                      ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3985779Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3986244Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3987036Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3987642Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: `#[warn(float_literal_f32_fallback)]` (part of `#[warn(future_incompatible)]`) on by default
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3987931Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3988182Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3988583Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:148:21
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3988834Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3989197Z ^[[1m^[[94m148^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::from_rgba_unmultiplied(160, 175, 200, 150)),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3989691Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3990015Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3990491Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3991151Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3991436Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3991679Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3992070Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:188:62
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3992318Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3992719Z ^[[1m^[[94m188^[[0m ^[[1m^[[94m|^[[0m                     painter.rect_stroke(fr, 0.0, Stroke::new(1.2, Color32::from_rgb(40, 40, 45)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3993297Z     ^[[1m^[[94m|^[[0m                                                              ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3993661Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3994250Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3994913Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3995203Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3995442Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3995841Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:681:60
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3996096Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3996507Z ^[[1m^[[94m681^[[0m ^[[1m^[[94m|^[[0m                 painter.line_segment([s0, s1], Stroke::new(1.8, Color32::from_rgb(20, 100, 200)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3997292Z     ^[[1m^[[94m|^[[0m                                                            ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.8_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3997664Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3998372Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3999413Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.3999871Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4000248Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4000860Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:690:48
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4001251Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4001777Z ^[[1m^[[94m690^[[0m ^[[1m^[[94m|^[[0m     painter.rect_stroke(rect, 0.0, Stroke::new(1.4, Color32::BLACK));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4002604Z     ^[[1m^[[94m|^[[0m                                                ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.4_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4003144Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4004116Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4005121Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4005565Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4005918Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4006511Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:699:21
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4006869Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4007257Z ^[[1m^[[94m699^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4007889Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4008359Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4009035Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4022555Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4023095Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4023528Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4024359Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:705:21
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4024791Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4025265Z ^[[1m^[[94m705^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4026001Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4026569Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4027361Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4028502Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4029005Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4029421Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4030002Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:758:50
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4030352Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4030867Z ^[[1m^[[94m758^[[0m ^[[1m^[[94m|^[[0m     painter.circle_stroke(center, r, Stroke::new(1.2, Color32::BLACK));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4031642Z     ^[[1m^[[94m|^[[0m                                                  ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4032330Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4032995Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4034101Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4034533Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4034885Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4035456Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:769:21
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4035813Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4036202Z ^[[1m^[[94m769^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4036812Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4037280Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4037942Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4038892Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4039474Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4039815Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4040381Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:775:21
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4040738Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4041106Z ^[[1m^[[94m775^[[0m ^[[1m^[[94m|^[[0m         Stroke::new(1.0, Color32::BLACK),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4041706Z     ^[[1m^[[94m|^[[0m                     ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4042165Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4042830Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4043899Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4044384Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4044762Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4045425Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:795:56
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4045833Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4046460Z ^[[1m^[[94m795^[[0m ^[[1m^[[94m|^[[0m         painter.rect_stroke(div_rect, 0.0, Stroke::new(1.0, Color32::BLACK));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4047394Z     ^[[1m^[[94m|^[[0m                                                        ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4047990Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4048772Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4049904Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4050416Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4050824Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4051480Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:812:48
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4051885Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4052468Z ^[[1m^[[94m812^[[0m ^[[1m^[[94m|^[[0m     painter.rect_stroke(rect, 0.0, Stroke::new(1.5, highlight_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4053358Z     ^[[1m^[[94m|^[[0m                                                ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4054060Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4054853Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4056011Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4056309Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4056570Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4056997Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/composer.rs:825:54
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4057264Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4057656Z ^[[1m^[[94m825^[[0m ^[[1m^[[94m|^[[0m         painter.rect_stroke(h_rect, 0.0, Stroke::new(1.2, highlight_color));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4058205Z     ^[[1m^[[94m|^[[0m                                                      ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.2_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4058569Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4059041Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4059711Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4059996Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4060248Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4060762Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/tray.rs:270:47
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4061011Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4061412Z ^[[1m^[[94m270^[[0m ^[[1m^[[94m|^[[0m ^[[1m^[[94m...^[[0m                   egui::Stroke::new(1.0, egui::Color32::from_rgb(100, 105, 115)),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4061954Z     ^[[1m^[[94m|^[[0m                                         ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4062294Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4062757Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4063458Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4063763Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4064309Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4064737Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/tray.rs:345:87
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4064995Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4065509Z ^[[1m^[[94m345^[[0m ^[[1m^[[94m|^[[0m ^[[1m^[[94m...^[[0m                   ui.painter().rect_stroke(rect, 2.0, egui::Stroke::new(1.0, egui::Color32::from_rgb(90, 95, 105)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4066176Z     ^[[1m^[[94m|^[[0m                                                                             ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4066553Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4067039Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4067710Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4068009Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4068257Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4068671Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:313:39
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4068927Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4069328Z ^[[1m^[[94m313^[[0m ^[[1m^[[94m|^[[0m                     egui::Stroke::new(1., egui::Color32::from_rgba_unmultiplied(255, 180, 60, 150)),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4069862Z     ^[[1m^[[94m|^[[0m                                       ^[[1m^[[33m^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4070215Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4070796Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4071444Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4071736Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4071980Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4072370Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:326:56
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4072617Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4073039Z ^[[1m^[[94m326^[[0m ^[[1m^[[94m|^[[0m         painter.circle_stroke(pos,4.,egui::Stroke::new(3.,egui::Color32::from_white_alpha(230)));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4073617Z     ^[[1m^[[94m|^[[0m                                                        ^[[1m^[[33m^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `3_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4074105Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4074566Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4075221Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4075625Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4075880Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4076276Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:327:56
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4076524Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4076873Z ^[[1m^[[94m327^[[0m ^[[1m^[[94m|^[[0m         painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4077401Z     ^[[1m^[[94m|^[[0m                                                        ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.5_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4077760Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4078234Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4078891Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4079182Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4079427Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4079822Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:339:35
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4080071Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4080412Z ^[[1m^[[94m339^[[0m ^[[1m^[[94m|^[[0m                 egui::Stroke::new(2.0, egui::Color32::from_rgb(255, 60, 60)),
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4080906Z     ^[[1m^[[94m|^[[0m                                   ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `2.0_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4081250Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4081700Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4082340Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4082626Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4082868Z ^[[1m^[[33mwarning^[[0m^[[1m: falling back to `f32` as the trait bound `f32: From<f64>` is not satisfied^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4083258Z    ^[[1m^[[94m--> ^[[0mcrates/ingetrazo-gui/src/viewport.rs:371:48
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4083505Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4084018Z ^[[1m^[[94m371^[[0m ^[[1m^[[94m|^[[0m                 let stroke = egui::Stroke::new(1.8, egui::Color32::from_rgb(243, 115, 41));
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4084561Z     ^[[1m^[[94m|^[[0m                                                ^[[1m^[[33m^^^^[[0m ^[[1m^[[33mhelp: explicitly specify the type as `f32`: `1.8_f32`^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4084910Z     ^[[1m^[[94m|^[[0m
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4085362Z     ^[[1m^[[94m= ^[[0m^[[1mwarning^[[0m: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4086139Z     ^[[1m^[[94m= ^[[0m^[[1mnote^[[0m: for more information, see issue #154024 <https://github.com/rust-lang/rust/issues/154024>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4086430Z 
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4086776Z ^[[1m^[[33mwarning^[[0m: `ingetrazo-gui` (lib) generated 23 warnings (run `cargo fix --lib -p ingetrazo-gui` to apply 20 suggestions)
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:51:59.4087308Z ^[[1m^[[92m    Finished^[[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.11s
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:05.0723226Z Actual center gesture PASS curve native
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8595357Z Traceback (most recent call last):
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8608331Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-center-tracking.py", line 173, in <module>
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8608843Z     if __name__=="__main__":main()
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8609055Z                             ~~~~^^
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8609496Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-center-tracking.py", line 156, in main
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8610076Z     deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8610609Z   File "/home/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-native-center-tracking.py", line 16, in wait
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8611465Z     raise AssertionError("Timed out awaiting rendered event/state")
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8611777Z AssertionError: Timed out awaiting rendered event/state
+compilation-and-tests	Actual original and native center hint and Move UI controls	2026-10-10T06:52:30.8741629Z ##[error]Process completed with exit code 1.

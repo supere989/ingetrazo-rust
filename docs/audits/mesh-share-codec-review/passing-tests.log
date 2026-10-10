@@ -1,0 +1,101 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-formats)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running unittests src/lib.rs (/tmp/ingetrazo-mesh-share-codec-target/debug/deps/ingetrazo_formats-1a14ed83fc58e0d7)
+
+running 30 tests
+test dae_import::image_binding_tests::direct_image_and_scoped_sampler_chains_reject_broken_binding ... ok
+test dae::tests::test_dae_export_basic_cube ... ok
+test dae_import::image_file_tests::escaped_local_image_bytes_are_exact_and_remote_and_malformed_uris_refused ... ok
+test dae_import::uv_affine_tests::translated_reflected_world_uv_and_original_non_affine_fit ... ok
+test dae_import::tests::strided_accessors_instances_units_upaxis_and_reflection_are_composed ... ok
+test dae_import::tests::geographic_asset_preserves_site_anchor ... ok
+test dae_import::tests::diffuse_effect_is_bound_by_primitive_symbol_not_global_material_order ... ok
+test gltf::tests::hidden_parent_suppresses_descendants_and_empty_has_no_accessors ... ok
+test dae_import::representative_image_tests::original_qt_opaque_fixed_point_and_alpha_weighted_controls ... ok
+test exchange::tests::nested_holes_reflections_and_hidden_containers_preserve_world_surface ... ok
+test gltf::tests::nested_world_geometry_is_exported ... ok
+test dae_import::tests::interleaved_texture_coordinates_keep_authored_indices_and_reject_truncation ... ok
+test dae_import::tests::truncated_indices_accessors_and_node_cycles_fail_without_partial_scene ... ok
+test dxf::tests::linework_layers_bulges_and_invalid_entities_are_transactional ... ok
+test ifc::tests::test_ifc_guid_length_and_validity ... ok
+test gltf::tests::reflected_instance_retains_outward_winding ... ok
+test ifc::tests::test_ifc_export_basic_structure ... ok
+test gltf::tests::textual_and_binary_containers_are_distinct ... ok
+test obj::import_tests::named_objects_negative_indices_and_linework_are_retained ... ok
+test obj::import_tests::bad_indices_or_nonfinite_vertices_never_partially_modify_scene ... ok
+test obj::asset_tests::missing_texture_fails_before_destination_or_sidecar_mutation ... ok
+test dae_import::tests::textured_scene_assembly_keeps_bytes_and_world_uv_through_reflection ... ok
+test tests::test_stl_export_and_import ... ok
+test obj::asset_tests::material_texture_bytes_and_local_affine_uv_survive_nested_export ... ok
+test tests::test_convert_file ... ok
+test tests::test_obj_export_and_import ... ok
+test gltf_import::tests::external_buffer_nested_transform_material_texture_uv_and_title ... ok
+test tests::test_igz_save_and_load ... ok
+test dae_import::reference_threshold_tests::original_editable_threshold_and_reference_boundary_stations ... ok
+test dae_import::reference_threshold_tests::reference_instances_preserve_names_shared_definition_and_placements ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/native_preservation.rs (/tmp/ingetrazo-mesh-share-codec-target/debug/deps/native_preservation-4afb5c1cec204107)
+
+running 16 tests
+test replacement_face_does_not_inherit_deleted_face_metadata ... ok
+test dimensions_use_original_schema_and_keep_identity_on_reorder_edits ... ok
+test renamed_and_reordered_views_and_sections_keep_identity_metadata ... ok
+test survey_points_and_paths_preserve_metadata_through_rename_reorder_and_edit ... ok
+test native_camera_section_and_datum_edits_use_original_schema ... ok
+test edited_vector_ink_controls_reopen_with_original_field_names ... ok
+test fresh_saved_view_references_exact_persisted_group_and_section_uids ... ok
+test texture_files_with_same_basename_get_distinct_archive_entries ... ok
+test frame_camera_native_edit_preserves_opaque_metadata_and_reopens_lens ... ok
+test fresh_rust_sheet_saves_in_python_composition_schema ... ok
+test original_composer_edits_preserve_unsupported_items_and_title_rows ... ok
+test native_noop_preserves_every_nested_value_and_repeated_save ... ok
+test published_mesh_identity_includes_plain_placements_but_not_equal_prototypes ... ok
+test edited_nested_instance_detaches_geometry_preserving_original_definition_and_metadata ... ok
+test zip_embedded_texture_and_survey_bytes_survive_without_disk_files ... ok
+test explicit_components_share_updates_while_plain_proto_groups_remain_independent ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/preservation_acceptance.rs (/tmp/ingetrazo-mesh-share-codec-target/debug/deps/preservation_acceptance-8729a1d3cfad440b)
+
+running 3 tests
+test renamed_material_retains_unknown_source_attributes ... ok
+test deleting_edge_does_not_strip_surviving_curve_metadata ... ok
+test edited_geometry_material_layer_and_group_replace_raw_baseline ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/roundtrips.rs (/tmp/ingetrazo-mesh-share-codec-target/debug/deps/roundtrips-84b6608f6e3edc8c)
+
+running 9 tests
+test test_glb_export ... ok
+test test_stl_binary_roundtrip ... ok
+test test_stl_ascii_roundtrip ... ok
+test test_stl_auto_detect ... ok
+test test_obj_export_and_import_roundtrip ... ok
+test test_dxf_export_and_import ... ok
+test test_igz_format1_roundtrip ... ok
+test test_load_example_banca_pergola ... ok
+test test_igz_format2_zip_roundtrip ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s

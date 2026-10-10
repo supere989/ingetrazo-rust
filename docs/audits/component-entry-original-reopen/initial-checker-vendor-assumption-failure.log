@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-mesh-share-codec/scripts/check-python-component-entry-reopen.py", line 23, in <module>
+    assert attrs["vendor"]==row["after_attrs"]["vendor"],kind
+           ~~~~~^^^^^^^^^^
+KeyError: 'vendor'

@@ -1,0 +1,40 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-tools)
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-mesh-share-codec/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.99s
+     Running tests/move_component_arrays.rs (/tmp/ingetrazo-mesh-share-codec-target/debug/deps/move_component_arrays-95dce6883792475d)
+
+running 14 tests
+test refused_singular_context_keeps_live_preview_and_revision_until_user_cancel ... ok
+test rotated_scaled_context_uses_restored_grab_placement_and_cancel_camera ... ok
+test linked_nested_group_spaced_arrays_keep_definitions_and_atomic_history ... ok
+test entering_edit_context_retires_live_group_preview_before_camera_frame_capture ... ok
+test no_edit_container_bake_preserves_source_zero_history_and_clears_selection ... ok
+test local_component_group_move_retains_sibling_placement_and_undo_restores ... ok
+test transformed_nonempty_container_own_mesh_detaches_source_prototype ... ok
+test container_finish_copy_array_delete_match_source_independent_lists ... ok
+test crossing_and_exact_overlap_arrays_match_retained_original_segments ... ok
+test root_and_nested_empty_container_world_authoring_matches_original_prototype_surfaces ... ok
+test actual_viewport_plain_copied_leaf_entry_is_unique_only_outside_definition ... ok
+test nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands ... ok
+test original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact ... ok
+test shared_child_mesh_refresh_and_native_reopen_retain_independent_placements ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s

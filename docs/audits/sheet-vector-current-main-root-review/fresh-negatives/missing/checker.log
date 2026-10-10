@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-vector-export/scripts/check-sheet-shapes-pdf.py", line 12, in <module>
+    doc=QPdfDocument();assert doc.load(str(out/(name+".pdf")))==QPdfDocument.Error.None_;assert doc.pageCount()==9;docs.append(doc)
+                                                                                                ^^^^^^^^^^^^^^^^^^
+AssertionError

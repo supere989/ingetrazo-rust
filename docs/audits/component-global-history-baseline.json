@@ -1,0 +1,74 @@
+{
+  "revision": "6afb3c1",
+  "native_sha256": "9e7b3115d61990bd8e593268b11b39a7fce2b8bab220fe548d7d3337d0ade66b",
+  "scope": "Same thin public GUI protocol built against pre-change production files. Strict source checker fails ordinary Finish/global parked history; raw results retained. Fixture/checker are current independent input/reader, not historical artifacts.",
+  "results": [
+    {
+      "active_redo_faces": 3,
+      "active_undo_faces": 2,
+      "exit_depth": 1,
+      "exit_redo_faces": 3,
+      "exit_undo_faces": 1,
+      "ids_preserved": true,
+      "name": "classic-local-two-undo-redo-exit"
+    },
+    {
+      "active_redo_depth": 0,
+      "active_stable": true,
+      "active_undo_depth": 0,
+      "exit_loose_faces": 1,
+      "loose_redo_faces": 1,
+      "loose_undo_faces": 0,
+      "name": "classic-undo-prior-loose-command"
+    },
+    {
+      "active_redo_faces": 3,
+      "active_undo_faces": 2,
+      "exit_depth": 1,
+      "exit_redo_faces": 3,
+      "exit_undo_faces": 1,
+      "ids_preserved": true,
+      "name": "container-local-two-undo-redo-exit"
+    },
+    {
+      "active_redo_depth": 0,
+      "active_stable": true,
+      "active_undo_depth": 0,
+      "exit_loose_faces": 1,
+      "loose_redo_faces": 1,
+      "loose_undo_faces": 0,
+      "name": "container-undo-prior-loose-command"
+    },
+    {
+      "active_redo_faces": 3,
+      "active_undo_faces": 2,
+      "exit_depth": 1,
+      "exit_redo_faces": 3,
+      "exit_undo_faces": 1,
+      "ids_preserved": true,
+      "name": "placed-component-local-two-undo-redo-exit"
+    },
+    {
+      "active_redo_depth": 0,
+      "active_stable": true,
+      "active_undo_depth": 0,
+      "exit_loose_faces": 1,
+      "loose_redo_faces": 1,
+      "loose_undo_faces": 0,
+      "name": "placed-component-undo-prior-loose-command"
+    },
+    {
+      "context_depth": 1,
+      "name": "native-safe-active-makeunique-refusal",
+      "scene_stable": true,
+      "stacks_stable": true,
+      "visible_refusal": false
+    },
+    {
+      "both_placements_redone": false,
+      "both_placements_undone": true,
+      "name": "native-safe-unchanged-finish-redo-rebind",
+      "redo_retained": false
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 //! Direct Vulkan buffers, bounded uploads and fence-retired destruction.
+mod image_upload;
+pub use image_upload::TextureImage;
 use ash::{vk,Device};
 use ash::vk::Handle;
 use egui_ash_renderer::MemoryObserver;
@@ -6,11 +8,11 @@ use std::{collections::HashMap,sync::Arc};
 use super::budget::VulkanBudget;
 const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
-struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>}
-#[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64}
-pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats}
+struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>,persistent_map:Option<usize>}
+#[derive(Default,Debug,serde::Serialize)]pub struct UploadStats {pub buffer_allocations:u64,pub allocation_bytes_total:u64,pub buffer_destructions:u64,pub upload_calls:u64,pub staging_allocations:u64,pub transfer_command_allocations:u64,pub transfer_fence_creations:u64,pub transfer_submissions:u64,pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64,pub image_upload_calls:u64,pub image_bytes:u64,pub image_mips_generated:u64,pub image_staging_maps:u64,pub image_staging_unmaps:u64}
+pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
 impl Resources {
- pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default()}}
+ pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
  pub fn buffer(&self,id:BufferId)->Option<vk::Buffer> {self.buffers.get(&id).map(|b|b.handle)}
  pub fn logical_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.logical_bytes)}
  pub fn allocation_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.allocation_bytes)}
@@ -30,16 +32,16 @@ impl Resources {
    Ok((memory,self.properties.memory_types[ty as usize].property_flags))
   })();
   let (memory,properties)=match result {Ok(memory)=>memory,Err(error)=>{unsafe {self.device.destroy_buffer(buffer,None)};return Err(error);}};
-  self.stats.buffer_allocations+=1;self.stats.allocation_bytes_total+=requirements.size;let id=BufferId(self.next);self.next+=1;self.buffers.insert(id,Buffer {handle:buffer,usage,memory,logical_bytes:bytes,allocation_bytes:requirements.size,properties,last_use:0,retire_after:None});Ok(id)
+  self.stats.buffer_allocations+=1;self.stats.allocation_bytes_total+=requirements.size;let id=BufferId(self.next);self.next+=1;self.buffers.insert(id,Buffer {handle:buffer,usage,memory,logical_bytes:bytes,allocation_bytes:requirements.size,properties,last_use:0,retire_after:None,persistent_map:None});Ok(id)
  }
- fn destroy(&mut self,id:BufferId) {if let Some(buffer)=self.buffers.remove(&id) {self.stats.buffer_destructions+=1;unsafe {self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
+ fn destroy(&mut self,id:BufferId) {if let Some(buffer)=self.buffers.remove(&id) {self.stats.buffer_destructions+=1;unsafe {if buffer.persistent_map.is_some(){self.device.unmap_memory(buffer.memory);self.stats.image_staging_unmaps+=1;}self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
  fn write(&self,id:BufferId,data:&[u8])->Result<(),String> {
   let buffer=self.buffers.get(&id).ok_or("Unknown GPU upload buffer")?;
   if data.len() as u64>buffer.logical_bytes {return Err("Upload exceeds GPU buffer extent".into());}
-  let ptr=unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
+  let ptr=if let Some(mapped)=buffer.persistent_map {mapped as *mut std::ffi::c_void}else{unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?};
   unsafe {std::ptr::copy_nonoverlapping(data.as_ptr(),ptr.cast::<u8>(),data.len());}
   let result=if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT) {unsafe {self.device.flush_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(buffer.memory).offset(0).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())}else{Ok(())};
-  unsafe {self.device.unmap_memory(buffer.memory)};result
+  if buffer.persistent_map.is_none(){unsafe {self.device.unmap_memory(buffer.memory)}};result
  }
  /// Returns only after transfer completion; no scene serialization or IPC on upload path.
  pub fn upload(&mut self,context:&super::VulkanContext,data:&[u8],usage:vk::BufferUsageFlags,force_staging:bool)->Result<BufferId,String> {
@@ -217,9 +219,9 @@ impl Resources {
   let buffer=self.buffers.get(&id).ok_or("Unknown GPU buffer")?;
   if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_VISIBLE){return Err("Diagnostic requires host-visible device-local memory".into());}
   if expected.len() as u64!=buffer.logical_bytes{return Err("Diagnostic byte extent mismatch".into());}
-  let ptr=unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
+  let ptr=if let Some(mapped)=buffer.persistent_map {mapped as *mut std::ffi::c_void}else{unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?};
   let result=(|| {if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT) {unsafe {self.device.invalidate_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(buffer.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())?;}if unsafe {std::slice::from_raw_parts(ptr.cast::<u8>(),expected.len())}!=expected{return Err("GPU uploaded bytes differ".into());}Ok(())})();
-  unsafe {self.device.unmap_memory(buffer.memory)};result
+  if buffer.persistent_map.is_none(){unsafe {self.device.unmap_memory(buffer.memory)}};result
  }
  pub fn mark_used(&mut self,id:BufferId,serial:u64)->Result<(),String> {let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;if b.retire_after.is_some(){return Err("Cannot submit a retired GPU buffer".into());}b.last_use=b.last_use.max(serial);Ok(())}
  pub fn retire(&mut self,id:BufferId)->Result<(),String> {let b=self.buffers.get_mut(&id).ok_or("Unknown GPU buffer")?;b.retire_after=Some(b.last_use);self.budget.ledger.lock().unwrap().retire(b.memory.as_raw(),b.last_use)}

@@ -1,0 +1,7 @@
+# Independent CI center reacquisition review
+
+Fresh separate worktree at 252d290, source-only original pin recorded in review.json. Positive first execution passed unchanged center acquisition, Move, moved-center reacquisition, deletion and Undo checks. Independently verified actual MouseMove timestamps strictly increase after tool switch, away and return, with exact expected coordinates. Observer is passive and returns False; source snap/dwell/geometry methods remain unchanged.
+
+SIGSTOP coalesced-away/return first execution fails at the unchanged 20-second memory acquisition deadline. Owned child is always resumed in finally and then terminated/awaited by existing cleanup. Independently asserted event lists identical at Line entry, coalesced return and failure; actual tool LineTool, undo1 and empty memory reproduce the public cloud failure signature. Thus requested pointer warps without delivered original UI events are rejected rather than treated as application acceptance.
+
+Fix adds delivery acknowledgments only for original post-Move away/return. The two moves, coordinates, default pauses, center-kind/point/memory assertions, dwell threshold and wait timeout remain unchanged; there is no retry or tolerance widening. Single state snapshot plus strict timestamp watermark prevents old same-coordinate events passing. Native path is unchanged. This validates the original fixture event protocol, not general snapping parity or production CI success.

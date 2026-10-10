@@ -1,19 +1,218 @@
-//! Local-coordinate group editing with one atomic document history entry.
+//! Source-compatible world-coordinate group editing with atomic document history.
 use ingetrazo_core::{camera::OrbitCamera,components::ComponentDefinition,scene::{Scene,SelectionItem}};
 use ingetrazo_tools::base::ToolType;
 use crate::app::IngeTrazoApp;
 
 pub struct ComponentEditSession {
     original_scene: Scene,
+    cancel_scene: Scene,
     original_camera: OrbitCamera,
     original_undo: Vec<Scene>,
     original_redo: Vec<Scene>,
     group_id: uuid::Uuid,
+    fold_history: bool,
+    private_container_mesh: Option<uuid::Uuid>,
+    container_bake: Option<glam::DMat4>,
+    container_axes: Option<glam::DMat4>,
+    leaf_share_back: Option<glam::DMat4>,
+    mesh_baseline: ingetrazo_core::mesh::Mesh,
+    groups_baseline: Vec<ingetrazo_core::groups::Group>,
+    mesh_share_baseline: std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>,
+    definitions_baseline: std::collections::HashMap<uuid::Uuid,ComponentDefinition>,
+    editing_definition: bool,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
 
+
+#[derive(Clone)]
+struct SourceEntryBake {id:uuid::Uuid,matrix:Option<glam::DMat4>,axes:Option<glam::DMat4>,private:Option<uuid::Uuid>}
+impl SourceEntryBake {
+    fn from_session(session:&ComponentEditSession)->Self {Self{id:session.group_id,matrix:session.container_bake,axes:session.container_axes,private:session.private_container_mesh}}
+    fn apply(&self,scene:&mut Scene)->Result<(),String> {
+        let Some(axes)=self.axes else{return Ok(());};
+        fn find(groups:&mut [ingetrazo_core::groups::Group],id:uuid::Uuid)->Option<&mut ingetrazo_core::groups::Group>{
+            for group in groups {if group.id==id{return Some(group);}if let Some(group)=find(&mut group.children,id){return Some(group);}}None
+        }
+        let Some(group)=find(&mut scene.groups,self.id) else{return Ok(());};
+        // Exact raw axes mark this representation; world coordinates must
+        // never be baked twice when lifting through multiple context levels.
+        if group.axes_matrix()==Some(axes){return Ok(());}
+        if let Some(matrix)=self.matrix {
+            group.mesh=ingetrazo_core::containers::transform_mesh(&group.mesh,matrix)?;
+            for child in &mut group.children{child.transform=matrix*child.transform;}
+            // Prior placement commands remain inverse deltas against the
+            // newly baked representation, as source MoveGroup.undo composes.
+            group.transform=if group.transform.x_axis==matrix.x_axis && group.transform.y_axis==matrix.y_axis && group.transform.z_axis==matrix.z_axis {
+                glam::DMat4::from_translation(group.transform.w_axis.truncate()-matrix.w_axis.truncate())
+            } else {group.transform*matrix.inverse()};
+            if let Some(token)=self.private {group.mesh_share=Some(token);scene.mesh_shares.insert(token,group.mesh.clone());}
+        }
+        if !group.native_document.is_object(){group.native_document=serde_json::json!({});}
+        group.native_document["axes"]=serde_json::json!(axes.to_cols_array());Ok(())
+    }
+}
+
+fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scene,bool),String> {
+        let mut candidate=session.original_scene.clone();
+        let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
+            return Err("Edited instance no longer exists".into());
+        };
+        let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
+            || candidate.materials!=scene.materials || candidate.layers!=scene.layers
+            || session.definitions_baseline!=scene.component_definitions
+            || session.mesh_share_baseline!=scene.mesh_shares
+            || scene.dimensions!=session.dimension_baseline || scene.section_planes!=session.section_baseline
+            || scene.show_section_cuts!=candidate.show_section_cuts||scene.show_section_planes!=candidate.show_section_planes||scene.show_section_fill!=candidate.show_section_fill;
+        if changed || session.container_axes.is_some() || session.container_bake.is_some() || session.private_container_mesh.is_some() {
+            let mut replacement=ComponentDefinition{mesh_share:None,mesh:scene.mesh.clone(),children:scene.groups.clone()};
+            if let Some(inverse)=session.leaf_share_back {
+                // Original placed leaves edit a world copy, then inverse-map
+                // only that mesh into their shared local prototype on exit.
+                replacement.mesh=match ingetrazo_core::containers::transform_mesh(&replacement.mesh,inverse) {Ok(mesh)=>mesh,Err(error)=>return Err(error)};
+            }
+            if session.container_bake.is_some() {
+                // Original container bake happens outside History on entry.
+                // Its world mesh/child placements already form the edit view;
+                // Finish persists that representation without a second bake.
+                candidate.groups[group_index].transform=candidate.dimension_frame.inverse();
+            }
+            if let Some(axes)=session.container_axes {
+                if !candidate.groups[group_index].native_document.is_object() {candidate.groups[group_index].native_document=serde_json::json!({});}
+                candidate.groups[group_index].native_document["axes"]=serde_json::json!(axes.to_cols_array());
+            }
+            // Mesh publication and placement authoring are separate operations:
+            // the original container owns its child list, while placed leaves
+            // retain explicit prototype sharing (even component=false).
+            let mut meshes=std::collections::HashMap::new();
+            fn collect(groups:&[ingetrazo_core::groups::Group],baseline:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>,changed:&mut std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>)->Result<(),String> {
+                for group in groups {
+                    if let Some(token)=group.mesh_share {
+                        if baseline.get(&token)!=Some(&group.mesh) {
+                            if changed.get(&token).map(|m|m!=&group.mesh).unwrap_or(false) {return Err("Conflicting edits to shared mesh".into());}
+                            changed.insert(token,group.mesh.clone());
+                        }
+                    }
+                    collect(&group.children,baseline,changed)?;
+                }
+                Ok(())
+            }
+            if let Err(error)=collect(&scene.groups,&candidate.mesh_shares,&mut meshes) {return Err(error);}
+            for (token,mesh) in &scene.mesh_shares {
+                if candidate.mesh_shares.get(token)!=Some(mesh) {meshes.insert(*token,mesh.clone());}
+            }
+            let root_token=session.private_container_mesh.or(candidate.groups[group_index].mesh_share);
+            if session.private_container_mesh.is_some() {candidate.groups[group_index].mesh_share=root_token;}
+            if let Some(token)=root_token {
+                if session.private_container_mesh.is_some() || candidate.groups[group_index].mesh!=replacement.mesh {meshes.insert(token,replacement.mesh.clone());}
+            }
+            // Import newly authored identities, never infer them from equal meshes.
+            for (token,mesh) in &meshes {
+                if !candidate.mesh_shares.contains_key(token) {
+                    if let Err(error)=candidate.register_mesh_share(*token,mesh.clone()) {return Err(error);}
+                }
+            }
+            for (id,def) in &scene.component_definitions {
+                candidate.component_definitions.entry(*id).or_insert_with(||def.clone());
+            }
+            candidate.groups[group_index].mesh=replacement.mesh;
+            candidate.groups[group_index].children=replacement.children;
+            for (token,mesh) in meshes {
+                if let Err(error)=candidate.publish_mesh_share(token,mesh) {return Err(error);}
+            }
+            candidate.bump_version();
+            candidate.materials=scene.materials.clone();candidate.layers=scene.layers.clone();
+            if scene.dimensions!=session.dimension_baseline {
+                let transform=candidate.dimension_frame.inverse();
+                candidate.dimensions=scene.dimensions.clone();
+                for dimension in &mut candidate.dimensions{
+                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
+                }
+                candidate.bind_dimensions();
+            }
+            if scene.section_planes!=session.section_baseline{let transform=candidate.dimension_frame.inverse();candidate.section_planes=scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
+            candidate.show_section_cuts=scene.show_section_cuts;candidate.show_section_planes=scene.show_section_planes;candidate.show_section_fill=scene.show_section_fill;
+            candidate.refresh_dimensions();
+        }
+        candidate.clear_selection();
+        Ok((candidate,changed))
+}
+
 impl IngeTrazoApp {
+    /// Route global commands to their immutable edit mesh identity. Return
+    /// Some when handled/refused, None for the normal active-scene path.
+    fn component_history_target(&self,redo:bool)->Result<Option<usize>,String> {
+        let Some(next)=(if redo {self.redo_stack.last()} else {self.undo_stack.last()}) else {return Ok(None);};
+        if next.history_context==self.scene.history_context {return Ok(None);}
+        let target=&next.history_context;
+        if self.component_edit_stack.is_empty() || !self.scene.history_context.starts_with(target) {
+            return Err("History target is no longer active; Undo/Redo refused".into());
+        }
+        let index=target.len();
+        let Some(session)=self.component_edit_stack.get(index) else {
+            return Err("History context identity is stale; Undo/Redo refused".into());
+        };
+        if session.original_scene.history_context!=*target {
+            return Err("History context identity is stale; Undo/Redo refused".into());
+        }
+        let before=session.original_scene.groups.iter().find(|g|g.id==session.group_id);
+        let after=next.groups.iter().find(|g|g.id==session.group_id);
+        fn same_placement(a:&ingetrazo_core::groups::Group,b:&ingetrazo_core::groups::Group)->bool {
+            // Legacy runtime identity adoption is not a reference-changing
+            // model command. Every authored field and child remains compared.
+            let mut a=a.clone();let mut b=b.clone();
+            fn normalize(a:&mut ingetrazo_core::groups::Group,b:&mut ingetrazo_core::groups::Group) {
+                if a.mesh_share.is_none() || b.mesh_share.is_none(){a.mesh_share=None;b.mesh_share=None;}
+                for (a,b) in a.children.iter_mut().zip(&mut b.children){normalize(a,b);}
+            }
+            normalize(&mut a,&mut b);a==b
+        }
+        if !before.zip(after).is_some_and(|(a,b)|same_placement(a,b)) {
+            return Err("Undo/Redo would replace the open group; finish or cancel editing first".into());
+        }
+        Ok(Some(index))
+    }
+
+    pub(crate) fn refuse_component_history_step(&mut self,redo:bool)->bool {
+        if let Err(error)=self.component_history_target(redo){self.status_message=error;true}else{false}
+    }
+
+    pub(crate) fn component_history_step(&mut self,redo:bool)->Option<bool> {
+        let index=match self.component_history_target(redo){Ok(Some(index))=>index,Ok(None)=>return None,Err(error)=>{self.status_message=error;return Some(false);}};
+        let next=if redo {self.redo_stack.last()}else{self.undo_stack.last()}.unwrap();
+        let session=&self.component_edit_stack[index];
+        let mut replacement=next.clone();
+        // Adopt only existing placement identities, never deduplicate meshes
+        // by equality. A pre-migration snapshot can target the parked loose
+        // mesh without removing identities needed by the open edit session.
+        for group in &mut replacement.groups {
+            if group.mesh_share.is_none() {
+                if let Some(old)=session.original_scene.groups.iter().find(|old|old.id==group.id) {
+                    group.mesh_share=old.mesh_share;
+                    if let Some(token)=old.mesh_share {replacement.mesh_shares.entry(token).or_insert_with(||group.mesh.clone());}
+                }
+            }
+        }
+        let previous=session.original_scene.clone();
+        if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
+        let mut cancel_replacement=replacement.clone();
+        if let Some(original)=session.cancel_scene.groups.iter().find(|g|g.id==session.group_id){
+            if let Some(group)=cancel_replacement.groups.iter_mut().find(|g|g.id==session.group_id){*group=original.clone();}
+        }
+        self.component_edit_stack[index].cancel_scene=cancel_replacement;
+        self.component_edit_stack[index].original_scene=replacement;
+        // Cancel is a native session rollback, not source Undo. Retain genuine
+        // ancestor-history changes rather than pairing their new parked mesh
+        // with the obsolete pre-entry stacks. Exclude only this session's own
+        // descendant commands from its cancellation checkpoint.
+        for session in self.component_edit_stack.iter_mut().skip(index) {
+            let mut path=session.original_scene.history_context.clone();path.push(session.group_id);
+            session.original_undo=self.undo_stack.iter().filter(|entry|!entry.history_context.starts_with(&path)).cloned().collect();
+            session.original_redo=self.redo_stack.iter().filter(|entry|!entry.history_context.starts_with(&path)).cloned().collect();
+        }
+        self.bump_model_revision();self.status_message=if redo {"Redo"} else {"Undo"}.into();Some(true)
+    }
+
     pub fn make_component(&mut self) {
         let selected:Vec<_>=self.scene.selection.iter().filter_map(|s|if let SelectionItem::Group(i)=s {Some(*i)} else {None}).collect();
         let index=if selected.len()==1 && self.scene.selection.len()==1 {
@@ -59,27 +258,83 @@ impl IngeTrazoApp {
         // Retiring Move may restore its transient placement. Capture the edit
         // from the restored entity, not the validated live-preview clone.
         let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
+        if let Err(error)=self.scene.migrate_legacy_mesh_shares() {self.status_message=error;return;}
+        // Migration may add identities but does not replace placement geometry.
+        let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
+        // Operative Viewport.begin_group_edit: an ordinary placed leaf
+        // copied outside a component definition becomes unique before entry.
+        // Mesh tokens establish sharing; equal geometry never does.
+        let inside_definition=self.component_edit_stack.last().is_some_and(|s|s.editing_definition);
+        let component=group.component_definition.is_some() || group.native_document.get("component").and_then(|v|v.as_bool())==Some(true);
+        let placed=group.transform!=glam::DMat4::IDENTITY || group.component_definition.is_some() || group.native_document.get("xform").is_some_and(|v|v.is_array());
+        fn shared_placement(groups:&[ingetrazo_core::groups::Group],token:uuid::Uuid,id:uuid::Uuid,skip_context:Option<uuid::Uuid>)->bool {
+            groups.iter().any(|g|Some(g.id)!=skip_context && ((g.id!=id && g.mesh_share==Some(token)) || shared_placement(&g.children,token,id,skip_context)))
+        }
+        let shared=group.mesh_share.is_some_and(|token|shared_placement(&self.scene.groups,token,group.id,None)
+            || self.component_edit_stack.iter().any(|s|shared_placement(&s.original_scene.groups,token,group.id,Some(s.group_id))));
+        if placed && !component && group.children.is_empty() && !inside_definition && shared {
+            let world=self.scene.dimension_frame*group.transform;
+            let mesh=match ingetrazo_core::containers::transform_mesh(&group.mesh,world) {Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}};
+            let axes=world*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY);
+            self.save_undo_state();
+            let selected=self.scene.groups.iter_mut().find(|g|g.id==group.id).unwrap();
+            selected.mesh=mesh;selected.mesh_share=None;selected.transform=glam::DMat4::IDENTITY;
+            if !selected.native_document.is_object() {selected.native_document=serde_json::json!({});}
+            selected.native_document["xform"]=serde_json::Value::Null;
+            selected.native_document["axes"]=serde_json::json!(axes.to_cols_array());
+            // An explicitly baked classic placement encodes xform=null. Its
+            // model comparison baseline is now identity, keeping that source
+            // representation while leaving original prototype identity intact
+            // for codec detachment and the Undo snapshot.
+            if !selected.native_baseline.is_object() {selected.native_baseline=serde_json::json!({});}
+            selected.native_baseline["xform"]=serde_json::json!(glam::DMat4::IDENTITY.to_cols_array());
+            self.scene.bump_version();self.bump_model_revision();
+        }
+        let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
         self.scene.refresh_dimensions();
-        let mut session=ComponentEditSession{
-            original_scene:self.scene.clone(),original_camera:self.camera.clone(),
-            original_undo:std::mem::take(&mut self.undo_stack),original_redo:std::mem::take(&mut self.redo_stack),
-            group_id:group.id,dimension_baseline:vec![],section_baseline:vec![],
+        let world_frame=self.scene.dimension_frame*group.transform;
+        let world_mesh=if world_frame==glam::DMat4::IDENTITY {group.mesh.clone()} else {
+            match ingetrazo_core::containers::transform_mesh(&group.mesh,world_frame) {
+                Ok(mesh)=>mesh,Err(error)=>{self.status_message=error;return;}
+            }
         };
+        let mut world_children=group.children.clone();
+        for child in &mut world_children {child.transform=world_frame*child.transform;}
+        let mut session=ComponentEditSession{
+            original_scene:self.scene.clone(),cancel_scene:self.scene.clone(),original_camera:self.camera.clone(),
+            original_undo:self.undo_stack.clone(),original_redo:self.redo_stack.clone(),
+            group_id:group.id,
+            fold_history:group.children.is_empty() && (group.transform!=glam::DMat4::IDENTITY || group.component_definition.is_some() || group.native_document.get("xform").is_some_and(|v|v.is_array())),
+            private_container_mesh:if !group.children.is_empty() && !group.mesh.vertices.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(uuid::Uuid::new_v4())} else {None},
+            container_axes:if !group.children.is_empty() && (group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array())) {Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))} else {None},
+            container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
+            leaf_share_back:if group.children.is_empty() {Some(world_frame.inverse())} else {None},
+            mesh_baseline:world_mesh.clone(),groups_baseline:world_children.clone(),
+            mesh_share_baseline:self.scene.mesh_shares.clone(),definitions_baseline:self.scene.component_definitions.clone(),
+            editing_definition:component,
+            dimension_baseline:vec![],section_baseline:vec![],
+        };
+        let drawing_frame=if group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array()) {
+            Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))
+        } else {None};
         let mut edit=Scene::new();
-        edit.mesh=group.mesh;edit.groups=group.children;
+        edit.mesh=world_mesh;edit.groups=world_children;
+        edit.history_context=self.scene.history_context.clone();edit.history_context.push(group.id);
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
-        edit.dimension_frame=self.scene.dimension_frame*group.transform;
+        edit.mesh_shares=self.scene.mesh_shares.clone();
+        // Original Scene.begin_group_edit exposes WORLD geometry and leaves
+        // the viewport camera unchanged. Drawing axes remain the raw frame read
+        // before the placement bake, independent of the active coordinate map.
+        edit.dimension_frame=glam::DMat4::IDENTITY;
+        edit.drawing_frame=drawing_frame;
         edit.dimensions=self.scene.dimensions.clone();
-        let inverse=group.transform.inverse();
-        for dimension in &mut edit.dimensions{dimension.start=inverse.transform_point3(dimension.start);dimension.end=inverse.transform_point3(dimension.end);dimension.offset=inverse.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;}
-        edit.section_planes=self.scene.section_planes.clone();edit.show_section_cuts=self.scene.show_section_cuts;edit.show_section_planes=self.scene.show_section_planes;edit.show_section_fill=self.scene.show_section_fill;for plane in &mut edit.section_planes{plane.point=inverse.transform_point3(plane.point);plane.normal=group.transform.transpose().transform_vector3(plane.normal).normalize();}session.section_baseline=edit.section_planes.clone();
+        edit.section_planes=self.scene.section_planes.clone();edit.show_section_cuts=self.scene.show_section_cuts;edit.show_section_planes=self.scene.show_section_planes;edit.show_section_fill=self.scene.show_section_fill;session.section_baseline=edit.section_planes.clone();
         edit.bind_dimensions();session.dimension_baseline=edit.dimensions.clone();
-        self.camera.target=group.transform.inverse().transform_point3(self.camera.target);
         edit.camera=self.camera.clone();
         self.scene=edit;self.bump_model_revision();self.component_edit_stack.push(session);
-        self.status_message="Editing group in local coordinates; Finish commits, Cancel restores".into();
+        self.status_message="Editing group; Finish commits, Cancel restores".into();
     }
 
     pub fn finish_component_edit(&mut self) {
@@ -92,57 +347,84 @@ impl IngeTrazoApp {
             || !self.scene.saved_views.is_empty() {
             self.status_message="Group annotations are not supported; remove them or cancel the edit".into();return;
         }
-        self.set_tool(ToolType::Select);
+        // Validate the model after retiring transient preview without changing
+        // the live tool, Scene, inference state, or history on refusal.
+        let mut finishing_scene=self.scene.clone();
+        self.active_tool.restore_transient_model(&mut finishing_scene);
         let session=self.component_edit_stack.last().unwrap();
-        let mut candidate=session.original_scene.clone();
-        let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
-            self.status_message="Edited instance no longer exists".into();return;
-        };
-        let old=&candidate.groups[group_index];
-        let changed=old.mesh!=self.scene.mesh || old.children!=self.scene.groups
-            || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
-            || candidate.component_definitions!=self.scene.component_definitions
-            || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
-            || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
-        if changed {
-            let replacement=ComponentDefinition{mesh:self.scene.mesh.clone(),children:self.scene.groups.clone()};
-            let updates:Vec<_>=self.scene.component_definitions.iter().filter(|(id,def)|
-                candidate.component_definitions.get(id)!=Some(*def)).map(|(id,def)|(*id,def.clone())).collect();
-            for (id,def) in &updates {candidate.component_definitions.entry(*id).or_insert_with(||def.clone());}
-            for (id,def) in updates {
-                if let Err(e)=candidate.replace_component_definition(id,def) {self.status_message=e;return;}
-            }
-            if let Some(id)=candidate.groups[group_index].component_definition {
-                if let Err(e)=candidate.replace_component_definition(id,replacement) {self.status_message=e;return;}
-            } else {
-                candidate.groups[group_index].mesh=replacement.mesh;
-                candidate.groups[group_index].children=replacement.children;
-                candidate.bump_version();
-            }
-            candidate.materials=self.scene.materials.clone();candidate.layers=self.scene.layers.clone();
-            if self.scene.dimensions!=session.dimension_baseline {
-                let transform=candidate.groups[group_index].transform;
-                candidate.dimensions=self.scene.dimensions.clone();
-                for dimension in &mut candidate.dimensions{
-                    dimension.start=transform.transform_point3(dimension.start);dimension.end=transform.transform_point3(dimension.end);dimension.offset=transform.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;dimension.measurement_frame=candidate.dimension_frame;
+        let (candidate,changed)=match component_candidate(session,&finishing_scene) {Ok(result)=>result,Err(error)=>{self.status_message=error;return;}};
+        // Lift target-tagged ordinary commands before changing either stack.
+        // Each snapshot receives the same source world/container publication
+        // as Finish, while retaining its individual global chronological slot.
+        let target=self.scene.history_context.clone();
+        let mut lifted_undo=self.undo_stack.clone();let mut lifted_redo=self.redo_stack.clone();
+        if !session.fold_history || !changed {
+            for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
+                if entry.history_context==target {
+                    *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
+                        scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene
+                    },Err(error)=>{self.status_message=error;return;}};
                 }
-                candidate.bind_dimensions();
             }
-            if self.scene.section_planes!=session.section_baseline{let transform=candidate.groups[group_index].transform;candidate.section_planes=self.scene.section_planes.clone();for plane in &mut candidate.section_planes{plane.point=transform.transform_point3(plane.point);plane.normal=transform.inverse().transpose().transform_vector3(plane.normal).normalize();}}
-            candidate.show_section_cuts=self.scene.show_section_cuts;candidate.show_section_planes=self.scene.show_section_planes;candidate.show_section_fill=self.scene.show_section_fill;
-            candidate.refresh_dimensions();
         }
+
+        // Apply this source entry bake to every older target view, including
+        // parked ancestors. Prior Move snapshots keep inverse deltas against
+        // the new mesh frame; their metadata and nested placement list survive.
+        // Older root snapshots need ancestor entry bakes first, exactly as
+        // the live source enters outer→inner. This preserves identity matrices
+        // and prevents an unentered local frame from being treated as world.
+        let bakes:Vec<_>=self.component_edit_stack.iter().map(SourceEntryBake::from_session).collect();
+        for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
+            for bake in &bakes {if let Err(error)=bake.apply(entry){self.status_message=error;return;}}
+        }
+        let mut parked_candidates:Vec<_>=self.component_edit_stack[..self.component_edit_stack.len()-1].iter().map(|parent|parent.original_scene.clone()).collect();
+        for parent in &mut parked_candidates {for bake in &bakes {if let Err(error)=bake.apply(parent){self.status_message=error;return;}}}
+        self.set_tool(ToolType::Select);
         let session=self.component_edit_stack.pop().unwrap();
+        if !changed {
+            if let Some(parent)=self.component_edit_stack.last_mut() {
+                // A child entry bake is outside the original command History.
+                // Retire only its representation delta from the parent's edit
+                // baseline. Never hide a parent command already changing that
+                // child, or an independently authored prototype/definition.
+                if let (Some(before),Some(after),Some(baseline))=(
+                    session.original_scene.groups.iter().find(|g|g.id==session.group_id),
+                    candidate.groups.iter().find(|g|g.id==session.group_id),
+                    parent.groups_baseline.iter_mut().find(|g|g.id==session.group_id)) {
+                    if baseline==before {*baseline=after.clone();}
+                }
+                for (token,mesh) in &candidate.mesh_shares {
+                    if parent.mesh_share_baseline.get(token)==session.original_scene.mesh_shares.get(token) {
+                        parent.mesh_share_baseline.insert(*token,mesh.clone());
+                    }
+                }
+                for (id,definition) in &candidate.component_definitions {
+                    if parent.definitions_baseline.get(id)==session.original_scene.component_definitions.get(id) {
+                        parent.definitions_baseline.insert(*id,definition.clone());
+                    }
+                }
+            }
+        }
+        for (parent,candidate) in self.component_edit_stack.iter_mut().zip(parked_candidates){parent.original_scene=candidate;}
         self.scene=candidate;self.bump_model_revision();self.camera=session.original_camera;
-        self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
-        if changed {self.undo_stack.push(session.original_scene);self.redo_stack.clear();}
-        self.status_message=if changed {"Committed group edit"} else {"Group edit unchanged"}.into();
+        self.undo_stack=lifted_undo;self.redo_stack=lifted_redo;
+        if session.fold_history && changed {
+            // Sharing leaves fold only commands targeting this edit mesh.
+            // Prior document commands retain their global positions.
+            self.undo_stack.retain(|entry|!entry.history_context.starts_with(&target));
+            self.redo_stack.retain(|entry|!entry.history_context.starts_with(&target));
+            if changed {self.undo_stack.push(session.original_scene);self.redo_stack.clear();}
+        }
+
+        self.status_message=if changed {"Committed group edit"} else {"Group edit unchanged; pending history targets validated"}.into();
     }
 
     pub fn cancel_component_edit(&mut self) {
         if let Some(session)=self.component_edit_stack.pop() {
             self.set_tool(ToolType::Select);
-            self.scene=session.original_scene;self.bump_model_revision();self.camera=session.original_camera;
+            self.scene=session.cancel_scene;self.bump_model_revision();self.camera=session.original_camera;
             self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
             self.status_message="Cancelled group edit".into();
         } else {self.status_message="No group edit is active".into();}
@@ -169,16 +451,16 @@ mod tests {
         let mut dimension=ingetrazo_core::dimensions::Dimension::new(start,end,DVec3::new(4.,3.,2.));dimension.axis=Some("x".into());app.scene.dimensions.push(dimension);app.scene.bind_dimensions();
         let expected=app.scene.dimensions[0].clone();let expected_lines=expected.line_points();app.begin_component_edit();
         assert!((app.scene.dimensions[0].length()-expected.length()).abs()<1e-10);
-        let(local_a,local_b)=app.scene.dimensions[0].line_points();assert!((transform.transform_point3(local_a)-expected_lines.0).length()<1e-9);assert!((transform.transform_point3(local_b)-expected_lines.1).length()<1e-9);
+        let(world_a,world_b)=app.scene.dimensions[0].line_points();assert!((world_a-expected_lines.0).length()<1e-9);assert!((world_b-expected_lines.1).length()<1e-9);
         app.scene.dimensions[0].text_override=Some("world <>".into());
         let mut fresh=ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y);fresh.axis=Some("z".into());fresh.measurement_frame=app.scene.dimension_frame;app.scene.dimensions.push(fresh);app.scene.bind_dimensions();
         let expected_new=app.scene.dimensions[1].length();app.finish_component_edit();assert!(app.component_edit_stack.is_empty());assert_eq!(app.scene.dimensions.len(),2);assert!((app.scene.dimensions[0].length()-expected.length()).abs()<1e-10);assert!((app.scene.dimensions[1].length()-expected_new).abs()<1e-10);assert_eq!(app.scene.dimensions[1].axis.as_deref(),Some("z"));
     }
     #[test]
-    fn local_dimensions_commit_to_parent_coordinates_and_cancel_restore() {
+    fn world_dimensions_commit_without_second_placement_transform_and_cancel_restore() {
         let mut app=app();app.scene.clear_selection();app.scene.select(SelectionItem::Group(1));
         let original=app.scene.clone();app.begin_component_edit();
-        app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y));app.scene.bind_dimensions();
+        app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::new(3.,4.,5.),DVec3::new(4.,4.,5.),DVec3::Y));app.scene.bind_dimensions();
         app.finish_component_edit();assert_eq!(app.component_edit_stack.len(),0);assert_eq!(app.scene.dimensions.len(),1);
         assert_eq!(app.scene.dimensions[0].start,DVec3::new(3.,4.,5.));assert_eq!(app.scene.dimensions[0].end,DVec3::new(4.,4.,5.));assert_eq!(app.scene.dimensions[0].offset,DVec3::Y);
         assert_eq!(app.scene.dimensions[0].anchor_a.as_ref().unwrap().path,vec![app.scene.groups[1].id]);
@@ -226,7 +508,11 @@ mod tests {
         assert_eq!(app.scene.groups[2].children[0].mesh.vertices[0].position.z,11.);
         assert_eq!(app.scene.groups[3].children[0].mesh.vertices[0].position.z,11.);
         assert_eq!(app.scene.groups[2].children[0].id,child_ids[0]);assert_eq!(app.scene.groups[3].children[0].id,child_ids[1]);
-        app.undo();assert_eq!(app.scene,before);
+        let mut expected=before.clone();
+        // Actual original nested-parent-bake-survives-undo-False control:
+        // entry axes survive Undo of the shared leaf edit.
+        expected.groups[2].native_document=serde_json::json!({"axes":DMat4::IDENTITY.to_cols_array()});
+        app.undo();assert_eq!(app.scene,expected);
     }
 
     #[test]

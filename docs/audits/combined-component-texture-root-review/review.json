@@ -1,0 +1,21 @@
+{
+  "tested_commit": "38e0163",
+  "passed": 480,
+  "ignored": 2,
+  "hardware_execution": "Fresh actual NVIDIA RTX5090 native combined binary; retained same-hardware original reference",
+  "full_parity": "OPEN",
+  "binary_sha256": "afbb78186b7c503864fc74400b9ac50a56adf2fd6a09d187ccc46f8284d3e452",
+  "hardware_results": [
+    {
+      "corpus": "five",
+      "exit": 0
+    },
+    {
+      "corpus": "heldout",
+      "exit": 1
+    }
+  ],
+  "heldout_remaining_failure": "tex-shaded-average",
+  "final_tested_commit": "839598f",
+  "undo_precedence": "Root rerun15 history tests PASS; guard-first mutation negative retained by owner"
+}

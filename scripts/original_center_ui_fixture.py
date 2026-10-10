@@ -3,7 +3,7 @@
 import sys,os,json,math
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer,QObject,QEvent
 from PySide6.QtGui import QVector3D as V,QShortcut,QKeySequence
 source=Path(os.environ.get('INGETRAZO_PYTHON_SOURCE',str(Path(__file__).resolve().parents[1]/'ingetrazo')));sys.path.insert(0,str(source))
 from views.viewport import Viewport
@@ -46,6 +46,13 @@ if os.environ.get('INGETRAZO_GROUP_NESTED')=='1':
 vp.setFocus();directory=Path(sys.argv[1]);timer=QTimer()
 # Standalone Viewport does not install the main-window tool/select shortcuts.
 # Wire these to the original public actions; geometry/Move/dwell remain original.
+mouse_events=[]
+class MouseObserver(QObject):
+ def eventFilter(self,obj,event):
+  if event.type()==QEvent.Type.MouseMove:
+   mouse_events.append(dict(point=[event.position().x(),event.position().y()],edges=len(vp.scene.mesh.edges),at=__import__('time').monotonic()))
+  return False
+mouse_observer=MouseObserver(vp);vp.installEventFilter(mouse_observer)
 shortcuts=[]
 for sequence,action in [('Ctrl+A',lambda:vp.scene.select(vp.scene.mesh.edges)),('M',lambda:vp.set_active_tool(MoveTool())),('L',lambda:vp.set_active_tool(LineTool())),('Ctrl+Z',lambda:(vp.history.undo(),vp.notify_scene_changed()))]:
  shortcut=QShortcut(QKeySequence(sequence),vp);shortcut.activated.connect(action);shortcuts.append(shortcut)
@@ -94,7 +101,12 @@ def state():
  from PySide6.QtGui import QMatrix4x4
  for group in active_groups:projected_wires(group,QMatrix4x4())
  preview_wire_segments=[[vp._world_to_pixel(first),vp._world_to_pixel(second)]for first,second in lines()] if callable(lines) else []
- result=dict(rendered_wire_segments=rendered_wire_segments,viewport_preview_offset=a(getattr(vp,"_preview_offset",V())),viewport_preview_group_count=len(getattr(vp,"_preview_groups",None)or()),viewport_rect=[0,0,vp.width(),vp.height()],committed_wire_segments=committed_wire_segments,preview_wire_segments=preview_wire_segments,component_construction=os.environ.get("INGETRAZO_SOURCE_COMPONENT_CONSTRUCTION","copy_group_fixture"),active_world_centers=group_centers,root_child_counts=[len(g.children) for g in vp.scene.groups],root_child_world_centers=root_centers,context_depth=len(vp.scene._edit_stack),group_mesh_identity=[id(g.mesh) for g in active_groups],buffers=buffers,value_buffer=vp._value_buffer,array_window=getattr(vp.active_tool,"_last",None) is not None,group_centers=group_centers,group_ids=[g.uid for g in active_groups],group_count=len(active_groups),mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges)+sum(len(g.mesh.edges) for g in active_groups),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ result=dict(mouse_events=mouse_events[-32:],scene_version=vp.scene.version,selection_count=len(vp.scene.selection),rendered_wire_segments=rendered_wire_segments,viewport_preview_offset=a(getattr(vp,"_preview_offset",V())),viewport_preview_group_count=len(getattr(vp,"_preview_groups",None)or()),viewport_rect=[0,0,vp.width(),vp.height()],committed_wire_segments=committed_wire_segments,preview_wire_segments=preview_wire_segments,component_construction=os.environ.get("INGETRAZO_SOURCE_COMPONENT_CONSTRUCTION","copy_group_fixture"),active_world_centers=group_centers,root_child_counts=[len(g.children) for g in vp.scene.groups],root_child_world_centers=root_centers,context_depth=len(vp.scene._edit_stack),group_mesh_identity=[id(g.mesh) for g in active_groups],buffers=buffers,value_buffer=vp._value_buffer,array_window=getattr(vp.active_tool,"_last",None) is not None,group_centers=group_centers,group_ids=[g.uid for g in active_groups],group_count=len(active_groups),mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges)+sum(len(g.mesh.edges) for g in active_groups),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ ref=vp._valid_center_ref()
+ pc=vp._world_to_pixel(ref[0]) if ref is not None else None
+ pointer=vp._last_mouse_pos
+ hint_radius=vp._center_hint_px(ref,pc) if pc is not None else 0.
+ result['center_hint_observation']=dict(valid_reference=ref is not None,radius_px=hint_radius,pointer=[pointer.x(),pointer.y()] if pointer is not None else None,allowed=bool(ref is not None and vp.active_tool is not None and vp.active_tool.uses_snap and not (snap is not None and snap.kind=='center') and pointer is not None and pc is not None and hint_radius>0 and math.hypot(pc[0]-pointer.x(),pc[1]-pointer.y())<=hint_radius))
  temporary=directory/'state.tmp'
  temporary.write_text(json.dumps(result))
  temporary.replace(directory/'state.json')

@@ -1,0 +1,189 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "active_sheet_index": null,
+    "camera": {
+      "distance": 20.0,
+      "fov_deg": 45.0,
+      "perspective": true,
+      "pitch": 0.5235987755982988,
+      "target": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": -0.7853981633974483
+    },
+    "compositions": [],
+    "dimensions": [],
+    "edges": [],
+    "faces": [],
+    "geo_paths": [],
+    "geo_points": [],
+    "georef": {
+      "datum": null
+    },
+    "groups": [
+      {
+        "billboard": false,
+        "children": [],
+        "component": false,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "classic-plain-shared",
+        "proto": 0,
+        "uid": "9aa10464ab9143879bce2867eb6321c1",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "billboard": false,
+        "children": [],
+        "component": false,
+        "hidden": false,
+        "ifc": null,
+        "layer": null,
+        "name": "classic-plain-shared",
+        "proto": 0,
+        "uid": "154d96be7bc643208c470ae18bad54d5",
+        "xform": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    ],
+    "guides": [],
+    "layers": [
+      {
+        "color": null,
+        "locked": false,
+        "name": "Layer0",
+        "visible": true
+      }
+    ],
+    "materials": [],
+    "protos": [
+      {
+        "component": false,
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "texture": {
+              "uvw": [
+                1.0,
+                0.0,
+                0.0,
+                3.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0
+              ]
+            },
+            "vendor": 71,
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ],
+        "xform": null
+      }
+    ],
+    "saved_views": [],
+    "section_planes": [],
+    "section_view": {
+      "cuts_hidden": false,
+      "fill_hidden": false,
+      "planes_hidden": false
+    },
+    "terrain": null,
+    "text_labels": [],
+    "units": {
+      "length": "m",
+      "precision": 2
+    }
+  }
+}
