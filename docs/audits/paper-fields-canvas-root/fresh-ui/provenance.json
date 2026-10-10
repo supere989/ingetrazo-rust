@@ -1,0 +1,9 @@
+{
+  "source": "3a40ba6d9b4efae274244654fbc60ff6a085f156",
+  "binary_sha256": "c6f13cfeafc933274f00c6dbc5aa0b8fbf8385124995ed00a05d6b9cc12c09eb",
+  "fresh_native_and_literal_ui": true,
+  "glyph_regions": 6,
+  "full_gui_tests_passed": 147,
+  "ignored": 1,
+  "property_history_difference": "OPEN; separate correction pending review"
+}

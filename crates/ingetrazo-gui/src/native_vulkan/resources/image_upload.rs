@@ -12,7 +12,8 @@ pub(super) struct Transfer {
     fence: vk::Fence,
 }
 impl Transfer {
-    fn new(context: &VulkanContext) -> Result<Self, String> {
+    pub(super) fn handles(&self) -> (vk::CommandBuffer,vk::Fence) {(self.command,self.fence)}
+    pub(super) fn new(context: &VulkanContext) -> Result<Self, String> {
         let device = context.device.clone();
         let command = unsafe {
             device.allocate_command_buffers(
@@ -123,15 +124,8 @@ impl Resources {
                 .max(self.allocation_bytes(id).unwrap());
             self.image_staging = Some(id);
         }
-        if self.image_transfer.is_none() {
-            self.image_transfer = Some(Transfer::new(context)?);
-            self.stats.transfer_command_allocations += 1;
-            self.stats.transfer_fence_creations += 1;
-        }
         let staging = self.image_staging.unwrap();
-        let transfer = self.image_transfer.as_ref().unwrap();
-        let command = transfer.command;
-        let fence = transfer.fence;
+        let (command,fence)=self.transfer_handles(context)?;
         let mut submitted = false;
         let result: Result<(), String> = (|| {
             let mut offset = 0u64;

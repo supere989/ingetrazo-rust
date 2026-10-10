@@ -1,0 +1,5 @@
+# Actual opaque CAD order and admission controls
+
+Fresh cef01c5f engineering fixture on physical NVIDIA RTX5090, native Vulkan WSI, exact integer CAD enabled. Two arbitrary unordered opaque overlapping triangle batches are drawn red/blue and blue/red. Whole800×600 RGBA matches actual Qt6.12 RGB32 fillRect source in both cases (960,000 pixels total). Different colours preserve batch order; no raster span metadata used.
+
+Fractional vertex coverage and fractional palette alpha use the same unordered geometry and are refused by actual production CAD prepare before drawing, with original disjoint-metadata error. The engineering fixture deliberately panics on gpu_error so logs can observe refusal, exit101 and bounded cleanup committed_bytes=0; production reports error through its existing recovery path. No fabricated Vulkan return/error or driver OOM/device-loss claim. Actual physical properties are verified for every control. Separate native-gl artifact has29 exact full original widget frames and six checker mutation negatives. Native Metal consumer/generalization remain open.

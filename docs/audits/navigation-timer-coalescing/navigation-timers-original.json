@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "name": "walk-stalled",
+      "blocked_seconds": 0.17006883397698402,
+      "timeouts": 1,
+      "before": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "after": [
+        6.111109780379282e-16,
+        0.019800186157226562,
+        1.6799999475479126
+      ],
+      "delta": [
+        -1.2124217848761241e-18,
+        0.019800186157226562,
+        0.0
+      ],
+      "timer_active": false
+    },
+    {
+      "name": "first-person-stalled",
+      "blocked_seconds": 0.17006678000325337,
+      "timeouts": 1,
+      "before": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "after": [
+        6.108537976593181e-16,
+        0.024000167846679688,
+        1.6799999475479126
+      ],
+      "delta": [
+        -1.469602163486211e-18,
+        0.024000167846679688,
+        0.0
+      ],
+      "timer_active": false
+    }
+  ],
+  "scope": "actual QTimer dispatch after one blocked event-loop interval; controlled handler setup, not rendered input"
+}

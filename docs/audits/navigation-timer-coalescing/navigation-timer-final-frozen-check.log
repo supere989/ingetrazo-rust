@@ -1,0 +1,1 @@
+{"passed": true, "mandatory_cases": 2, "compiled_old_defect_negatives": 2, "missing_case_negative": true, "scope": "controlled actual Qt timer dispatch/native egui input; not rendered timing or all-mode acceptance"}

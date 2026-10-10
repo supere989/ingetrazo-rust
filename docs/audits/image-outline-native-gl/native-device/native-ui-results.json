@@ -1,0 +1,528 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "image-quadrants",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-quadrants.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-alpha",
+      "center_rgba": [
+        200,
+        214,
+        230,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-alpha.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-cutout",
+      "center_rgba": [
+        191,
+        192,
+        192,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-cutout.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-opacity-0999",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-opacity-0999.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-opacity-below",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-opacity-below.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-reversed",
+      "center_rgba": [
+        127,
+        127,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-reversed.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-wireframe",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-wireframe.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-hidden-line",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-hidden-line.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-xray",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-xray.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-hidden-layer",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-hidden-layer.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-overlap",
+      "center_rgba": [
+        152,
+        167,
+        183,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-overlap.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-opaque-behind",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-opaque-behind.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-faded-behind",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-faded-behind.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-threshold-behind",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-threshold-behind.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-below-threshold-behind",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-below-threshold-behind.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-coplanar-trace",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-coplanar-trace.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-oblique",
+      "center_rgba": [
+        127,
+        128,
+        127,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-oblique.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-perspective",
+      "center_rgba": [
+        127,
+        128,
+        127,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-perspective.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-uv-asymmetric",
+      "center_rgba": [
+        127,
+        126,
+        187,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-uv-asymmetric.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-uv-asymmetric-perspective",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-uv-asymmetric-perspective.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-uv-negative-v",
+      "center_rgba": [
+        127,
+        128,
+        127,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-uv-negative-v.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-offscreen-clip",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-offscreen-clip.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-near-clipped",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-near-clipped.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-tinted-alpha",
+      "center_rgba": [
+        165,
+        178,
+        162,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-tinted-alpha.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected",
+      "center_rgba": [
+        127,
+        128,
+        128,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-selected.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-oblique",
+      "center_rgba": [
+        127,
+        128,
+        127,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-selected-oblique.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-perspective",
+      "center_rgba": [
+        127,
+        128,
+        127,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-selected-perspective.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-offscreen",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-selected-offscreen.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    },
+    {
+      "case": "image-selected-near-clipped",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 102760450,
+      "captured": true,
+      "backend_log": "image-selected-near-clipped.log",
+      "renderer_device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "vendor_id": 4318,
+        "device_id": 11141,
+        "device_type": "DISCRETE_GPU"
+      }
+    }
+  ],
+  "scope": "Actual NVIDIA Vulkan swapchain plus production World and cached image CAD outlines; capture strictly newly created own named client window, clean own WM close. No desktop/root image capture."
+}

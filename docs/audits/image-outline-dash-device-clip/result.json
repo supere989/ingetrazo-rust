@@ -1,0 +1,1 @@
+{"cases": 17, "coverage_exact": true, "negative_controls": 3, "scope": "Independent device-clipped width-one antialiased DashLine. Front clipping, selected width-two outlines, native overlay and Metal remain open."}

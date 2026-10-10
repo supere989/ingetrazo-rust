@@ -1,0 +1,134 @@
+{
+  "passed": true,
+  "implementation": "original-Qt-OpenGL-llvmpipe",
+  "cancel": false,
+  "coverage": {
+    "samples": 48,
+    "visible": 48,
+    "coverage": 1.0
+  },
+  "negatives": [
+    "black-world",
+    "missing-preview"
+  ],
+  "initial": {
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 2,
+    "eye": [
+      3.7493993930529855e-32,
+      -6.123233998228043e-16,
+      10.0
+    ],
+    "forward": [
+      -3.7493993930529855e-33,
+      6.123234262925839e-17,
+      -1.0
+    ],
+    "mode": "PositionCameraTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": false,
+    "pointer": null
+  },
+  "preview": {
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 15,
+    "eye": [
+      3.7493993930529855e-32,
+      -6.123233998228043e-16,
+      10.0
+    ],
+    "forward": [
+      -3.7493993930529855e-33,
+      6.123234262925839e-17,
+      -1.0
+    ],
+    "mode": "PositionCameraTool",
+    "preview": [
+      [
+        1.2202690839767456,
+        -0.6033552289009094,
+        1.6799999475479126
+      ],
+      [
+        2.101574659347534,
+        -0.06101345270872116,
+        0.0
+      ]
+    ],
+    "preview_pixels": [
+      [
+        450.0,
+        407.9999988973141
+      ],
+      [
+        515.0000095367432,
+        367.9999999012798
+      ]
+    ],
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      515,
+      368
+    ]
+  },
+  "final": {
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 28,
+    "eye": [
+      1.2202706336975098,
+      -0.6033544540405273,
+      1.679999828338623
+    ],
+    "forward": [
+      0.44665393233299255,
+      0.2748638987541199,
+      -0.8514400720596313
+    ],
+    "mode": "LookAroundTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      515,
+      368
+    ]
+  },
+  "command": [
+    "/tmp/ingetrazo-parity-python/bin/python",
+    "scripts/original_position_navigation_fixture.py",
+    "/tmp/ingetrazo-navigation-validation/docs/audits/navigation-independent/render-original-commit-owned-id"
+  ],
+  "binary_sha256": null,
+  "scope": "actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim"
+}

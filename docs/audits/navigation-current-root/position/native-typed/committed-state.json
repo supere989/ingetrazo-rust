@@ -1,0 +1,43 @@
+{
+  "measurement": "2.50 m",
+  "measurement_rect": [
+    1098.0,
+    779.637451171875,
+    1176.0,
+    797.9999389648438
+  ],
+  "status": "Look Around \u2014 drag to turn",
+  "endpoint_pixel": [
+    190.54554748535156,
+    40.42939758300781
+  ],
+  "snap_kind": "None",
+  "frames": 333,
+  "eye": [
+    1.0080403089523302,
+    -0.5060501694679265,
+    2.5
+  ],
+  "forward": [
+    0.2755483564791236,
+    0.1695682170941281,
+    -0.9462133601853087
+  ],
+  "mode": "Some(Look)",
+  "preview": null,
+  "preview_pixels": null,
+  "viewport": [
+    50.0,
+    30.0,
+    1272.0,
+    769.6375122070312
+  ],
+  "undo": 0,
+  "version": 0,
+  "faces": 0,
+  "focused": true,
+  "pointer": [
+    816.0,
+    405.0
+  ]
+}

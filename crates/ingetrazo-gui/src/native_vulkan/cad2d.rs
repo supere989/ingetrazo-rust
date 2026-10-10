@@ -41,6 +41,7 @@ struct Ready {
     premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
     ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,
+    opaque:bool,
 }
 struct State {
     geometry: Arc<Geometry>,
@@ -225,7 +226,7 @@ impl VulkanPaint for NativePaint {
                     32,
                     bytemuck::cast_slice(rgba),
                 );
-                if p.integer{
+                if p.integer&&!r.opaque{
                     let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
                     for range in ranges.iter().filter(|range|range.start>=batch.first&&range.end<=batch.first+batch.count){
                         let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
@@ -375,7 +376,7 @@ impl Renderer {
                 if let Some(r) = &s.ready {
                     self.active.insert(r.id);
                 }
-                if self.pipeline.lock().unwrap().integer{
+                if self.pipeline.lock().unwrap().integer&&!s.geometry.is_opaque(&s.batches){
                     s.geometry.validate_ordered_pose(s.pose,pixels_per_point)?;
                     let ranges=s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
                     let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;if !ranges.iter().any(|r|r.end==end){return Err("Exact integer CAD2D palette boundary splits a disjoint draw".into());}}
@@ -473,6 +474,7 @@ impl Renderer {
                     premultiplied:s.premultiplied.clone(),
                     pose: s.pose,
                     ordered_draws:s.geometry.ordered_draws(),
+                    opaque:s.geometry.is_opaque(&s.batches),
                 });
             } else {
                 s.ready = None;

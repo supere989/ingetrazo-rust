@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-gpu-fields-root/scripts/check-native-image-surfaces.py", line 33, in <module>
+    assert not np.array_equal(normative,pixels(old/"image-quadrants.png")),"literal old inverse-V path incorrectly admitted"
+                                        ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-gpu-fields-root/scripts/check-native-image-surfaces.py", line 24, in pixels
+    im=QImage(str(path)).convertToFormat(QImage.Format_RGBA8888);assert not im.isNull(),str(path)
+                                                                        ^^^^^^^^^^^^^^^
+AssertionError: docs/audits/native-image-root-review/software/image-quadrants.png

@@ -1,0 +1,9 @@
+{
+  "source_revision": "8a6e0c5fcd596ae16d76afcf4eb84cdd678b8237",
+  "binary_sha256": {
+    "navigation_event_acceptance": "93284329ceb37644b1a74c9430f5304476e77f3eb9630ba2a9f7886036183544",
+    "position_navigation_native_fixture": "944f1031329ef3f8478a43dbcbdff87301cb249d33df45b8e5f992d7f9308aa4"
+  },
+  "tests": "152GUIlibPASS1ignored;2literal compiled burstcontrols +2old negativecontrols;two actualXTEST Position\u2192Look gestures pass bounded camera mapping/eye/history",
+  "scope": "original MainWindow handlers versus native egui event order, controlled burst cases; actualsourceQtGL/nativeVulkan llvmpipe render separately. Existing2e-5Qtfloat/double numeric bound. Not wholeimageAA/pointerlatency/hardware/fullnavigation parity. Position/FirstPerson burst paths remain required."
+}

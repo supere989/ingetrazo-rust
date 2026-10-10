@@ -1,0 +1,96 @@
+{
+  "source": "views.composer.ComposerWindow._set_field_context actual production method",
+  "scope": "Original dataclass equality index semantics; native pointer-only draft remains a retained discrepancy",
+  "cases": [
+    {
+      "case": "equal_text_only",
+      "distinct_objects": true,
+      "value_equal": true,
+      "physical_index": 1,
+      "source_fields": {
+        "proyecto": "",
+        "autor": "",
+        "lamina": "Same",
+        "nombre": "Same",
+        "escala": "",
+        "escena": "",
+        "fecha": "10/10/2026",
+        "archivo": "",
+        "hoja": "1",
+        "total": "2"
+      }
+    },
+    {
+      "case": "different_text_position",
+      "distinct_objects": true,
+      "value_equal": false,
+      "physical_index": 1,
+      "source_fields": {
+        "proyecto": "",
+        "autor": "",
+        "lamina": "Same",
+        "nombre": "Same",
+        "escala": "",
+        "escena": "",
+        "fecha": "10/10/2026",
+        "archivo": "",
+        "hoja": "2",
+        "total": "2"
+      }
+    },
+    {
+      "case": "different_frame_uid",
+      "distinct_objects": true,
+      "value_equal": false,
+      "physical_index": 1,
+      "source_fields": {
+        "proyecto": "",
+        "autor": "",
+        "lamina": "Same",
+        "nombre": "Same",
+        "escala": "1:100",
+        "escena": "",
+        "fecha": "10/10/2026",
+        "archivo": "",
+        "hoja": "2",
+        "total": "2"
+      }
+    },
+    {
+      "case": "same_literal_frame_uid",
+      "distinct_objects": true,
+      "value_equal": true,
+      "physical_index": 1,
+      "source_fields": {
+        "proyecto": "",
+        "autor": "",
+        "lamina": "Same",
+        "nombre": "Same",
+        "escala": "1:100",
+        "escena": "",
+        "fecha": "10/10/2026",
+        "archivo": "",
+        "hoja": "1",
+        "total": "2"
+      }
+    },
+    {
+      "case": "large_metadata_integer",
+      "distinct_objects": true,
+      "value_equal": false,
+      "physical_index": 1,
+      "source_fields": {
+        "proyecto": "",
+        "autor": "",
+        "lamina": "Same",
+        "nombre": "Same",
+        "escala": "",
+        "escena": "",
+        "fecha": "10/10/2026",
+        "archivo": "",
+        "hoja": "2",
+        "total": "2"
+      }
+    }
+  ]
+}

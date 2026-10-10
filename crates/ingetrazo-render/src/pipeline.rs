@@ -1172,8 +1172,14 @@ pub fn render_scene_to_egui(
         }
     }
 
+    render_snap_glyphs(&data.snap_glyphs,camera,painter,rect);
+}
+
+/// Shared UI-only inference overlay; no scene collection, textures or background pass.
+pub fn render_snap_glyphs(glyphs:&[SnapGlyph],camera:&OrbitCamera,painter:&egui::Painter,rect:egui::Rect){
+    let view_proj=camera.projection_matrix()*camera.view_matrix();
     // 9. Render Snap Glyphs and Axis Rays
-    for glyph in &data.snap_glyphs {
+    for glyph in glyphs {
         // Draw axis line if present
         if let Some((p0, p1, col)) = glyph.axis_line {
             if let (Some((s0, _)), Some((s1, _))) = (

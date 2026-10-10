@@ -42,6 +42,7 @@ pub struct GeometryClipboard {
 pub struct IngeTrazoApp {
     /// Runtime-only native GPU viewport state; never serialized into the document.
     pub native_composer:crate::composer_cad::NativeComposer,
+    pub image_outlines:crate::image_outlines::ImageOutlineCache,
     pub native_gpu_viewport_enabled: bool,
     pub native_gpu_viewport_rect: Option<egui::Rect>,
     pub native_gpu_viewport_texture: Option<egui::TextureId>,
@@ -49,6 +50,7 @@ pub struct IngeTrazoApp {
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
     pub camera: OrbitCamera,
+    pub navigation: crate::navigation::Navigation,
     pub active_tool_type: ToolType,
     pub active_tool: Box<dyn Tool>,
     pub style: StyleConfig,
@@ -109,6 +111,7 @@ pub struct IngeTrazoApp {
     pub composer_state: crate::composer::ComposerState,
     pub composer_compute:crate::composer_compute::ComposerCompute,
     pub model_revision:u64,
+    pub native_geometry_revision:u64,
     pub blender_state: crate::blender::BlenderRenderState,
     pub show_render_dialog: bool,
 }
@@ -143,10 +146,11 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
-            native_composer:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
+            native_composer:Default::default(),image_outlines:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,
             component_edit_stack: Vec::new(),
             scene,
             camera,
+            navigation: Default::default(),
             active_tool_type: ToolType::Select,
             active_tool: create_tool(ToolType::Select),
             style: StyleConfig::default_shaded(),
@@ -204,7 +208,7 @@ impl IngeTrazoApp {
             texture_opacity: 1.0,
             terrain_contour_interval: 1.0,
             composer_state: crate::composer::ComposerState::default(),
-            composer_compute:Default::default(),model_revision:0,
+            composer_compute:Default::default(),model_revision:0,native_geometry_revision:0,
             blender_state: crate::blender::BlenderRenderState::default(),
             show_render_dialog: false,
         };
@@ -234,9 +238,10 @@ impl IngeTrazoApp {
     }
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        self.navigation.cancel(); self.navigation.mode=None;
         self.paste_preview=None;
-        let version=self.scene.version;self.active_tool.on_deactivate(&mut self.scene);
-        if self.scene.version!=version{self.bump_model_revision();}
+        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
         self.active_tool = create_tool(tool_type);
@@ -360,7 +365,8 @@ impl IngeTrazoApp {
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
         self.change_layer_visibility(index,visible)
     }
-    pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
+    pub(crate) fn bump_model_revision(&mut self){self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
+    pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
@@ -756,7 +762,8 @@ impl IngeTrazoApp {
             self.console_logs.clear();
             return;
         }
-        if code.starts_with("add_cube") || code.starts_with("cube") {
+        if matches!(code, "add_cube" | "add_cube()" | "cube" | "cube()") {
+            self.save_undo_state();
             let s = 1.0;
             let v0 = self.scene.mesh.add_vertex(DVec3::new(0.0, 0.0, 0.0));
             let v1 = self.scene.mesh.add_vertex(DVec3::new(s, 0.0, 0.0));
@@ -788,7 +795,9 @@ impl IngeTrazoApp {
                 self.scene.layers.len()
             ));
         } else {
-            self.console_logs.push(format!("Command executed: {code} (OK)"));
+            let error = format!("Unsupported console command: {code}");
+            self.status_message = error.clone();
+            self.console_logs.push(error);
         }
     }
 
@@ -956,6 +965,7 @@ impl IngeTrazoApp {
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
+        if self.navigation_suspended(){self.navigation.cancel();self.navigation.sync_cursor(ctx);}
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});
             crate::section_actions::render_section_name_prompt(self,ctx);return;
@@ -982,6 +992,7 @@ impl IngeTrazoApp {
         if undo_pressed {self.undo();}
         if redo_pressed {self.redo();}
 
+        if self.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){self.navigation.sync_cursor(ctx);}
         // Global Keyboard Shortcuts
         if ctx.input(|i| i.modifiers.command || i.modifiers.ctrl) {
             if ctx.input(|i| i.key_pressed(egui::Key::N)) {
@@ -1019,13 +1030,13 @@ impl IngeTrazoApp {
                 self.set_tool(ToolType::PushPull);
             } else if ctx.input(|i| i.key_pressed(egui::Key::M)) {
                 self.set_tool(ToolType::Move);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)&&!self.navigation_claims_key(egui::Key::Q,i.modifiers)) {
                 self.set_tool(ToolType::Rotate);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::S)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::S)&&!self.navigation_claims_key(egui::Key::S,i.modifiers)) {
                 self.set_tool(ToolType::Scale);
             } else if ctx.input(|i| i.key_pressed(egui::Key::T)) {
                 self.set_tool(ToolType::Tape);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::E)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::E)&&!self.navigation_claims_key(egui::Key::E,i.modifiers)) {
                 self.set_tool(ToolType::Eraser);
             } else if ctx.input(|i| i.key_pressed(egui::Key::B)) {
                 self.set_tool(ToolType::Paint);
@@ -1575,6 +1586,50 @@ mod ordered_solid_selection_tests {
   app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("context",mesh));app.scene.selection.insert(SelectionItem::Group(0));let before=app.model_revision;
   app.begin_component_edit();assert_eq!(app.component_edit_stack.len(),1);assert!(app.model_revision>before);let entered=app.model_revision;app.cancel_component_edit();assert!(app.model_revision>entered);
  }
+}
+
+#[cfg(test)]
+mod console_transaction_tests {
+    use super::IngeTrazoApp;
+
+    #[test]
+    fn console_cube_is_one_reversible_transaction() {
+        let mut app = IngeTrazoApp::new();
+        let before = app.scene.mesh.clone();
+        app.run_script("add_cube");
+        assert_eq!(app.undo_stack.len(), 1);
+        let after = app.scene.mesh.clone();
+        assert_ne!(after, before);
+        assert_eq!(after.faces.len(), 6);
+        app.undo();
+        assert_eq!(app.scene.mesh, before);
+        assert_eq!(app.redo_stack.len(), 1);
+        app.redo();
+        assert_eq!(app.scene.mesh, after);
+    }
+
+    #[test]
+    fn console_refusals_and_inspection_preserve_model_and_redo() {
+        let mut app = IngeTrazoApp::new();
+        app.run_script("cube");
+        app.undo();
+        let before = app.scene.clone();
+        let undo = app.undo_stack.len();
+        let redo = app.redo_stack.len();
+        for command in ["cube_invalid", "add_cube(2)", "print(1)", "cube(); delete_all"] {
+            app.run_script(command);
+            assert_eq!(app.scene, before);
+            assert_eq!(app.undo_stack.len(), undo);
+            assert_eq!(app.redo_stack.len(), redo);
+            assert!(app.console_logs.last().unwrap().starts_with("Unsupported console command:"));
+        }
+        for command in ["stats", "clear", "", "  "] {
+            app.run_script(command);
+            assert_eq!(app.scene, before);
+            assert_eq!(app.undo_stack.len(), undo);
+            assert_eq!(app.redo_stack.len(), redo);
+        }
+    }
 }
 
 #[cfg(test)]

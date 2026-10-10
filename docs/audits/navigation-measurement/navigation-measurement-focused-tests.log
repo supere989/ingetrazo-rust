@@ -1,0 +1,221 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-navigation-validation/crates/ingetrazo-gui)
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "-m64" "/tmp/ingetrazo-center-ui-independent-target/debug/deps/rustcXQrnrH/symbols.o" "<17 object files omitted>" "-Wl,--as-needed" "-Wl,-Bstatic" "/tmp/ingetrazo-center-ui-independent-target/debug/deps/{libash_window-c5361393238cc00e,libblake3-718b42d6f5e5ee7f,libconstant_time_eq-c1641d0ea023be0a,libcpufeatures-3a77ee0211af6e6b}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libtest-*,libgetopts-*,librustc_std_workspace_std-*}.rlib" "/tmp/ingetrazo-center-ui-independent-target/debug/deps/{libegui_ash_renderer-4097467370aef4e3,libash-4d75fdfb3ec683ba,libeframe-ebab5fed3216de75,libglutin_winit-1ab680c0320a0036,libglutin-505cde8909b9b57d,libglutin_glx_sys-0762f0e86732b570,libglutin_egl_sys-c2fa3a7263a6e763,libegui_winit-f6a583e61572f6db,libwebbrowser-000998658ee030d0,liburl-ad89012bbc6c9f56,libidna-9fa41a153a3bf6df,libidna_adapter-e0612aa2cbc3fbf8,libicu_properties-3538c84a854e0fda,libicu_properties_data-62924364f77411fd,libicu_normalizer-911ecdac0a825810,libicu_normalizer_data-c6c0203201c973cf,libicu_collections-41bd4bc8b6303c05,libutf8_iter-b1845d2c29dc838d,libpotential_utf-c62d8d906b85c2fa,libicu_provider-55be2cb209b592bf,libicu_locale_core-2e01c346bb08cff2,libtinystr-058e8c1559af3f42,liblitemap-8a7aa09187553a36,libwriteable-0601f02a732d8faf,libzerovec-eea981d21688fd1a,libzerotrie-74fa2d94fb025797,libyoke-d13fc540fa7fbfd9,libstable_deref_trait-e84c1638f6c89d20,libzerofrom-5d1f25152ce1ed0c,libform_urlencoded-b840c0046a495045,libsmithay_clipboard-453cbd7e0a100da5,libsmithay_client_toolkit-e12e921a047b54e1,libwayland_protocols_misc-cdd4313b28d4eb4a,libwayland_protocols_experimental-40f929d6bcb7c0fa,libcalloop_wayland_source-2ee5ad03595cea85,libcalloop-cff7b787cfcaff32,libarboard-4b5671d0a7ee971d,libweb_time-ed266b99c6e421f7,libwinit-c6675aa32af29d97,libsctk_adwaita-64b97be69c612fb8,libtiny_skia-062dc401651e1071,libarrayvec-3efbc9f13c06714f,libtiny_skia_path-6ebc5b33403ef762,libstrict_num-44fcb7a12d69568d,libarrayref-9075b730ad58c1ad,libpercent_encoding-fc65e9f0882ad832,libx11rb-63c990f27b3133b5,libgethostname-5c442520aeb43b15,libas_raw_xcb_connection-8ea56081daed5287,libx11rb_protocol-1a2d039eaf4222c9,libwayland_protocols_plasma-872d1756fa973ed3,libsmithay_client_toolkit-cfae39fe8f2dd258,libwayland_cursor-d7fcaa3b23f54b3e,libxcursor-47b04a51d1fe5f70,libwayland_protocols_wlr-43594e45f3d63226,libwayland_protocols-4f1e9dde21dc0e97,libwayland_csd_frame-fee4b66da91673b5,libcalloop_wayland_source-4f5c630c7be6373a,libwayland_client-d752bae79a7e3445,libwayland_backend-da48f12bc9947e15,libdowncast_rs-71c1a580947ad0cf,libscoped_tls-debb7c6aa64c3993,libwayland_sys-a93178ed728e1cf4,libcalloop-b2ed2a34601da4be,libthiserror-a55356320affc2e8,librustix-6c4d9be8bfac5723,liblinux_raw_sys-5aa0046591c0924a,libpolling-b48d24f5cece2d80,librustix-a97ed2d201301290,liblinux_raw_sys-03595c89a58b4bb1,libx11_dl-8dfa5bf0a6406ffb,libxkbcommon_dl-ed79b48608819fdd,libxkeysym-ab4e854a81e0c7e6,libdlib-02f341cffc4defb5,libtracing-2625d8f27d4c4f06,libpin_project_lite-84104c71dcf82ece,libtracing_core-482aabe419814abd,libsmol_str-96ac2e2ae3153160,libcursor_icon-fe4987a4e0ac9259,libdpi-cee251a802f18b79,libraw_window_handle-2f0de733a0d7c451,libegui_glow-10b913ce38346a56,libmemoffset-d02a87ba15e2f5b2,libglow-0cb5a62933a59e1e,libingetrazo_tools-fbee36e8b69c6895,libingetrazo_render-38fab4dc5003e618,libegui-85dd173db1591c2a,libepaint-d219ba0ea398d1da,libnohash_hasher-3dea44db06f57849,libprofiling-61d7135310eedc44,libahash-04069987720f7507,libgetrandom-994e17821f5d423e,libonce_cell-56e2c5688d6fa4f6,libzerocopy-fd5c1f3bc14bc680,libepaint_default_fonts-9e8419a47fe23e08,libab_glyph-03da7c72ba693a76,libowned_ttf_parser-b27a1d6042282462,libab_glyph_rasterizer-8ce847dc04f7bf61,libparking_lot-799e7b18627e3ea2,libparking_lot_core-4c967f4c9bf7efe4,libsmallvec-563878475245ebc2,liblock_api-00d283d858804a89,libscopeguard-d7f327f1116c8f3f,libecolor-e230c37a64f34fa5,libemath-4e95ddaa45509947,libmemmap2-cf77983ab434d597,libingetrazo_formats-b1216f8f7e6cc0a3,libunicode_linebreak-1159b0aab2c4f49d,libunicode_bidi-84e4e45231a36f63,liblibloading-6425d4424c74443f,libttf_parser-bc3afd1d5581ba97,libgltf-954dfa5106c0606e,libbase64-7df46378b2223ba1,liburlencoding-fa6b0164ecddd156,libbyteorder-84532e27cf0dd08f,libgltf_json-2b66e51d6b81f049,liblazy_static-123e86bcf22fb137,libimage-f6944997c931f4bd,libbytemuck-81463f860a205f2a,libbyteorder_lite-d26e26b9b7354199,libmoxcms-8ae81194ba685141,libpxfm-4019ed2cfac9a3e8,libpng-71b613795848a91a,libfdeflate-f797f8e19dd129af,libzune_jpeg-f62200c34d724af5,libzune_core-5f95d4f1ad950c27,libharfbuzz_sys-f06d85064aec5b39,libfreetype_sys-5c73480164d8a742,libpdf_writer-b3bbb25a9f094964,libryu-b726d2da29e285ab,libbitflags-ec488ff30f70a0d2,libzip-ea1b36647ce965cf,libzopfli-0bfd00693f723644,libbumpalo-70b706b7283a172c,liblog-08a2790420b3f930,libflate2-8853dc34bb576b72,libminiz_oxide-cce96677aa1cd28f,libsimd_adler32-91606a7c255d4dd3,libthiserror-87f01fa4fe87f169,libcrc32fast-377ac1ac1b024ad2,libbase64-76f54f820f429c43,libroxmltree-4c435eac2690251c,libingetrazo_core-976b6395933017d9,libearcutr-faedcd8edec133ea,libitertools-199a96caadd1c7a1,libeither-6d85f83f28dff121,libmanifold_rust-f979723338775d0c,libdashu_ratio-791dad9730346951,libdashu_int-f341b171b49bf05b,libnum_modular-844d6ed29b2bda37,libstatic_assertions-d05dfa74f04cf9c7,libdashu_base-5285bdd80688ae7f,librustc_hash-1ecbff53d6dd9162,libclipper2_rust-16bd9bc3623b4edd,libnum_traits-f7b8d2bab384e908,libserde_json-b3ad55d2c41eea92,libmemchr-82b368222789aaa4,libzmij-903071458ada82f7,libitoa-17e8fd3d4fa56fd6,libindexmap-cdf2b8ed43bf57d1,libequivalent-e21dbb601b189988,libhashbrown-e034d444d9f5b1ba,libuuid-61da2242513acfa8,libgetrandom-cff2bccf3785ea4b,liblibc-efb2781555332332,libcfg_if-896e4ddc4c880786,libsha1_smol-cb67a1aa41c2e580,libglam-caaa133496c3d76f,libserde-3d9f4a542b5fef78,libserde_core-cbc63947bd87ed87}.rlib" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-Wl,-Bdynamic" "-ldl" "-ldl" "-lstdc++" "-lz" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-L" "/tmp/ingetrazo-center-ui-independent-target/debug/deps/rustcXQrnrH/raw-dylibs" "-B<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld" "-fuse-ld=lld" "-Wl,--eh-frame-hdr" "-Wl,-z,noexecstack" "-L" "/tmp/ingetrazo-center-ui-independent-target/debug/build/blake3-ba1f9fdddd042eec/out" "-L" "/tmp/ingetrazo-center-ui-independent-target/debug/build/freetype-sys-1c28a58f46de8856/out" "-L" "/tmp/ingetrazo-center-ui-independent-target/debug/build/libz-sys-1c191faf22ab0a90/out/lib" "-L" "/tmp/ingetrazo-center-ui-independent-target/debug/build/harfbuzz-sys-9b48c75356fb0c30/out" "-L" "<sysroot>/lib/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/ingetrazo-center-ui-independent-target/debug/deps/ingetrazo_gui-689aa027e92f230b" "-Wl,--gc-sections" "-pie" "-Wl,-z,relro,-z,now" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: collect2: fatal error: ld terminated with signal 7 [Bus error], core dumped
+          compilation terminated.
+          
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+error: could not compile `ingetrazo-gui` (lib test) due to 1 previous error; 1 warning emitted

@@ -1,0 +1,233 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-navigation-validation/crates/ingetrazo-gui)
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.56s
+     Running unittests src/lib.rs (/tmp/ingetrazo-center-ui-independent-target/debug/deps/ingetrazo_gui-689aa027e92f230b)
+
+running 14 tests
+test navigation::first_person_input_tests::ctrl_shortcuts_are_not_claimed_and_release_clears_pressed_axis ... ok
+test navigation::tests::cancellation_discards_gesture_and_stops_ticks ... ok
+test navigation::tests::camera_placement_preserves_model_and_hands_off_state_independently ... ok
+test navigation::first_person_input_tests::model_context_change_stops_held_movement_and_mouse_capture ... ok
+test navigation::bounds_cache_tests::model_visibility_rebuilds_position_center_but_unchanged_hover_reuses_it ... ok
+test navigation_ray::tests::frozen_qt_iso_ground_and_ordinary_ray_are_distinct_without_camera_mutation ... ok
+test navigation::height_tests::measurement_routes_camera_height_without_model_transaction ... ok
+test navigation_ray::tests::rejected_ray_inputs_and_grazing_or_behind_plane_leave_camera_unchanged ... ok
+test navigation::collision_cache_tests::warm_camera_queries_reuse_index_and_history_revision_rebuilds ... ok
+test navigation::first_person_input_tests::sheet_and_dialog_ownership_stop_navigation_before_dispatch ... ok
+test navigation::first_person_input_tests::cursor_ownership_commands_only_on_capture_and_release_transitions ... ok
+test navigation::first_person_input_tests::movement_releases_on_key_up_and_focus_loss_without_geometry_history ... ok
+test navigation::first_person_input_tests::position_click_snaps_endpoint_and_hands_off_to_look ... ok
+test navigation::height_tests::typed_offset_survives_settings_restart ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.01s
+

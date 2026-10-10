@@ -194,6 +194,16 @@ jobs:
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
           QT_QPA_PLATFORM=offscreen INGETRAZO_PDF_UI_TEXT_OBSERVATIONS=docs/audits/paragraph-ci/original/font-observations.json INGETRAZO_PDF_UI_EVIDENCE=docs/audits/composer-text-ci/ui CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
+      - name: Original punctuation and discretionary Text boundaries
+        run: |
+          for family in LINEBREAKS SHY_BOUNDARIES; do
+            export INGETRAZO_TEXT_${family}=1
+            out=docs/audits/text-boundaries-ci/$family
+            QT_QPA_PLATFORM=offscreen python scripts/probe-python-paper-text.py "$out/original"
+            cargo run --locked -p ingetrazo-formats --example paper_paragraph_fixture -- "$out/original/font-observations.json" "$out/native"
+            for dpi in 72 144 300; do QT_QPA_PLATFORM=offscreen python scripts/check-paper-text-layout-pages.py "$out/original" "$out/native" "$dpi"; done
+            unset INGETRAZO_TEXT_${family}
+          done
       - name: Actual Text background export and save dialogs
         run: |
           mkdir -p docs/audits/composer-background-ci/original
@@ -348,6 +358,16 @@ jobs:
           cargo run --locked -p ingetrazo-tools --example move_position_keys > docs/audits/image-tools-ci/keys-native.json
           python scripts/check-move-position-keys.py docs/audits/image-tools-ci/keys-original.json docs/audits/image-tools-ci/keys-native.json
           cargo run --locked -p ingetrazo-tools --example image_move_epoch > docs/audits/image-tools-ci/epoch-native.json
+      - name: Original image Rotate gestures and Finish ownership
+        run: |
+          python scripts/probe-python-image-rotate.py docs/audits/image-tools-ci/rotate-original.json
+          cargo run --locked -p ingetrazo-gui --example image_rotate_tool > docs/audits/image-tools-ci/rotate-native.json
+          cargo run --locked -p ingetrazo-gui --example image_rotate_tool -- --zero-axis-control > docs/audits/image-tools-ci/rotate-zero.json
+          python scripts/check-image-rotate-tools.py docs/audits/image-tools-ci/rotate-original.json docs/audits/image-tools-ci/rotate-native.json docs/audits/image-rotate-tools/old9.json docs/audits/image-tools-ci/rotate-zero.json
+          python scripts/probe-python-image-rotate-context.py docs/audits/image-tools-ci/rotate-context-original.json
+          cargo run --locked -p ingetrazo-gui --example image_rotate_context > docs/audits/image-tools-ci/rotate-context-native.json
+          python scripts/check-image-rotate-context.py docs/audits/image-tools-ci/rotate-context-original.json docs/audits/image-tools-ci/rotate-context-native.json docs/audits/image-rotate-context/old.json
+          cargo run --locked -p ingetrazo-tools --example image_rotate_epoch > docs/audits/image-tools-ci/rotate-epoch.json
       - name: Original map metadata codec and actual source reopens
         run: |
           mkdir -p docs/audits/map-codec-ci

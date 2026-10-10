@@ -1,0 +1,36 @@
+#[cfg(any(target_os="linux",target_os="windows"))]
+mod platform {
+//! Full-viewport native Vulkan section oracle; uses production world pipelines.
+use glam::DVec3;use ingetrazo_core::{camera::{OrbitCamera,StandardView}};use ingetrazo_render::style::StyleConfig;
+use ingetrazo_gui::native_vulkan::{App,System};
+struct Fixture{app:ingetrazo_gui::IngeTrazoApp}
+impl App for Fixture {
+ fn title()->&'static str {"IngeTrazo native image outline fixture"}
+ fn new(system: &mut System,_:Option<std::path::PathBuf>)->Self {
+ let properties=unsafe{system.vulkan_context.instance.get_physical_device_properties(system.vulkan_context.physical_device)};let name=unsafe{std::ffi::CStr::from_ptr(properties.device_name.as_ptr())}.to_string_lossy();eprintln!("Renderer device: {}",serde_json::json!({"name":name,"vendor_id":properties.vendor_id,"device_id":properties.device_id,"device_type":format!("{:?}",properties.device_type)}));
+ let input=std::env::var("INGETRAZO_ALPHA_INPUT").expect("original alpha input directory");let case=std::env::var("INGETRAZO_ALPHA_CASE").unwrap_or("red-half-white".into());
+ let s=ingetrazo_formats::igz::load_igz(&std::path::Path::new(&input).join(format!("{case}.igz"))).unwrap();
+ let original:serde_json::Value=serde_json::from_slice(&std::fs::read(std::path::Path::new(&input).join("original-alpha-results.json")).unwrap()).unwrap();let row=original["cases"].as_array().unwrap().iter().find(|v|v["case"]==case).unwrap();
+ let mut camera=OrbitCamera::default();camera.set_standard_view(if row["camera_view"]=="iso"{StandardView::Iso}else{StandardView::Top});camera.perspective=row["camera_perspective"].as_bool().unwrap_or(false);camera.target=DVec3::ZERO;camera.distance=4.;
+ let mut style=StyleConfig::default();style.show_edges=row["show_edges"].as_bool().unwrap_or(false);style.show_profiles=false;style.show_sky=false;style.show_grid=false;style.background_color=[row["background"][0].as_f64().unwrap()as f32,row["background"][1].as_f64().unwrap()as f32,row["background"][2].as_f64().unwrap()as f32,1.];
+ if row.get("style_mode").is_some() {style.visual_style=match row["style_mode"].as_str().unwrap(){"wireframe"=>ingetrazo_render::style::VisualStyle::Wireframe,"hidden_line"=>ingetrazo_render::style::VisualStyle::HiddenLine,"monochrome"=>ingetrazo_render::style::VisualStyle::Monochrome,"xray"=>ingetrazo_render::style::VisualStyle::XRay,_=>ingetrazo_render::style::VisualStyle::ShadedWithTextures};}
+ let mut app=ingetrazo_gui::IngeTrazoApp::new();app.system_clipboard=None;app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory().into());app.scene=s;if row["image_selected"].as_bool().unwrap_or(false){app.scene.select(ingetrazo_core::scene::SelectionItem::ImagePlane(0));}app.camera=camera;app.style=style;app.style.show_textures=row["show_textures"].as_bool().unwrap_or(true);app.native_gpu_viewport_enabled=true;app.mark_document_clean();Self{app}
+ }
+ fn build_ui(&mut self,ctx:&egui::Context){
+  egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|{let rect=ui.max_rect();self.app.camera.aspect=rect.width()as f64/rect.height()as f64;self.app.native_gpu_viewport_rect=Some(rect);if let Some(texture)=self.app.native_gpu_viewport_texture{ui.painter().image(texture,rect,egui::Rect::from_min_max(egui::Pos2::ZERO,egui::pos2(1.,1.)),egui::Color32::WHITE);}self.app.image_outlines.paint(&self.app.scene,&self.app.camera,ui.painter(),rect,self.app.native_composer.factory.as_ref()).unwrap();});
+  if ctx.input(|i|i.viewport().close_requested()){eprintln!("Image outline metrics: cold_builds={} generated_spans={}",self.app.image_outlines.cold_builds,self.app.image_outlines.generated_spans);ctx.send_viewport_cmd(egui::ViewportCommand::Close);}
+ }
+ fn prepare_gpu(&mut self,system:&mut System,resize:bool){
+  if system.world.is_none(){if let Ok(limit)=std::env::var("INGETRAZO_SECTION_STORAGE_LIMIT"){let mut world=ingetrazo_gui::native_vulkan::world::World::new(&system.vulkan_context,system.memory_budget.clone()).unwrap();world.set_contour_storage_limit_for_probe(limit.parse().unwrap()).unwrap();system.world=Some(world);}}
+  let before=system.world.as_ref().map(|w|w.uploads).unwrap_or(0);App::prepare_gpu(&mut self.app,system,resize);
+  if let Some(world)=&system.world {if world.uploads!=before{eprintln!("Contour metrics: {:?}",world.contour_metrics());}}
+ }
+ fn gpu_error(&mut self,error:&str){panic!("GPU section fixture failed: {error}");}
+}
+pub fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+#[cfg(any(target_os="linux",target_os="windows"))]
+fn main()->Result<(),Box<dyn std::error::Error>>{platform::main()}
+#[cfg(not(any(target_os="linux",target_os="windows")))]
+fn main(){eprintln!("This diagnostic requires the native Vulkan Linux/Windows backend");std::process::exit(2);}

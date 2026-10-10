@@ -1,0 +1,97 @@
+{
+  "passed": false,
+  "numeric_boundary": 2e-05,
+  "cases": [
+    {
+      "name": "front-empty",
+      "errors": {
+        "point": 3.540141080282666e-08,
+        "after_eye": 3.540141080282666e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    },
+    {
+      "name": "right-empty",
+      "errors": {
+        "point": 3.540141091384896e-08,
+        "after_eye": 3.540141091384896e-08,
+        "after_forward": 0.0,
+        "before_eye": 0.0
+      },
+      "passed": true
+    },
+    {
+      "name": "top-empty",
+      "errors": {
+        "point": 3.540141080282666e-08,
+        "after_eye": 3.8183110362410844e-07,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    },
+    {
+      "name": "iso-ground",
+      "errors": {
+        "point": 0.00022659355909127044,
+        "after_eye": 0.00022659355909127044,
+        "after_forward": 1.2101617152815436e-08,
+        "before_eye": 1.0364386149319671e-07
+      },
+      "passed": false
+    },
+    {
+      "name": "front-locked-image",
+      "errors": {
+        "point": 3.540141091384896e-08,
+        "after_eye": 3.540141091384896e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    },
+    {
+      "name": "face-before-image",
+      "errors": {
+        "point": 3.540141085833781e-08,
+        "after_eye": 3.540141085833781e-08,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    },
+    {
+      "name": "position-drag",
+      "errors": {
+        "point": 3.540141080282666e-08,
+        "after_eye": 2.956029000245053e-06,
+        "after_forward": 3.156230611311983e-07,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    },
+    {
+      "name": "position-cancel",
+      "errors": {
+        "point": 3.540141080282666e-08,
+        "after_eye": 2.491276972875189e-25,
+        "after_forward": 2.6718907323636308e-24,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    },
+    {
+      "name": "position-six-pixels",
+      "errors": {
+        "point": 3.540141080282666e-08,
+        "after_eye": 3.8183110362410844e-07,
+        "after_forward": 6.106226635438361e-17,
+        "before_eye": 2.491276972875189e-25
+      },
+      "passed": true
+    }
+  ],
+  "scope": "controlled actual original handlers versus egui controller; no rendered proof; iso discrepancy remains open"
+}

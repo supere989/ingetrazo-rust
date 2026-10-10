@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "case": "forward",
+      "maximum_difference": 4.882812483231191e-07,
+      "passed": true
+    },
+    {
+      "case": "backward",
+      "maximum_difference": 4.882812483231191e-07,
+      "passed": true
+    },
+    {
+      "case": "turn_right",
+      "maximum_difference": 8.768894979027664e-07,
+      "passed": true
+    },
+    {
+      "case": "turn_left",
+      "maximum_difference": 8.768894979027664e-07,
+      "passed": true
+    },
+    {
+      "case": "turn_walk",
+      "maximum_difference": 7.286101819659052e-07,
+      "passed": true
+    },
+    {
+      "case": "run",
+      "maximum_difference": 4.425048842904289e-07,
+      "passed": true
+    },
+    {
+      "case": "dead_zone",
+      "maximum_difference": 5.245208734017126e-08,
+      "passed": true
+    },
+    {
+      "case": "edge_dead_zone",
+      "maximum_difference": 7.486655313471147e-07,
+      "passed": true
+    },
+    {
+      "case": "clamped",
+      "maximum_difference": 4.5554568828265474e-07,
+      "passed": true
+    },
+    {
+      "case": "wall",
+      "maximum_difference": 5.245208734017126e-08,
+      "passed": true
+    },
+    {
+      "case": "wall_alt",
+      "maximum_difference": 3.8146972514141453e-07,
+      "passed": true
+    },
+    {
+      "case": "strafe",
+      "maximum_difference": 5.245208734017126e-08,
+      "passed": true
+    },
+    {
+      "case": "rise",
+      "maximum_difference": 7.629394538355427e-08,
+      "passed": true
+    },
+    {
+      "case": "rise_run",
+      "maximum_difference": 1.239776610262311e-07,
+      "passed": true
+    },
+    {
+      "case": "stair",
+      "maximum_difference": 3.8146972514141453e-07,
+      "passed": true
+    },
+    {
+      "case": "drop",
+      "maximum_difference": 3.8146972514141453e-07,
+      "passed": true
+    },
+    {
+      "case": "open_ground",
+      "maximum_difference": 3.8146972514141453e-07,
+      "passed": true
+    }
+  ],
+  "scope": "Controlled analytic rays and explicit2e-5Qt/native numeric bound; no livegeometry orUI parity"
+}

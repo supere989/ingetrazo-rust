@@ -1,0 +1,86 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "rows": [
+    {
+      "label": "empty_property_history",
+      "undo": 0,
+      "redo": 0,
+      "positions": [],
+      "paper": "A4",
+      "landscape": true,
+      "border": {
+        "on": false,
+        "color": "#ffffff",
+        "radius_mm": 0.0
+      }
+    },
+    {
+      "label": "undo_item_preserves_properties",
+      "undo": 1,
+      "redo": 1,
+      "positions": [
+        [
+          20,
+          30
+        ]
+      ],
+      "paper": "A1",
+      "landscape": false,
+      "border": {
+        "on": true,
+        "color": "#ffffff",
+        "radius_mm": 5.0
+      }
+    },
+    {
+      "label": "direct_property_preserves_redo",
+      "undo": 2,
+      "redo": 0,
+      "positions": [
+        [
+          33.0,
+          44.0
+        ]
+      ],
+      "paper": "A1",
+      "landscape": false,
+      "border": {
+        "on": false,
+        "color": "#ff0000",
+        "radius_mm": 5.0
+      }
+    },
+    {
+      "label": "undo_all_items",
+      "undo": 0,
+      "redo": 2,
+      "positions": [],
+      "paper": "A1",
+      "landscape": false,
+      "border": {
+        "on": false,
+        "color": "#ff0000",
+        "radius_mm": 5.0
+      }
+    },
+    {
+      "label": "redo_all_items",
+      "undo": 2,
+      "redo": 0,
+      "positions": [
+        [
+          33.0,
+          44.0
+        ]
+      ],
+      "paper": "A1",
+      "landscape": false,
+      "border": {
+        "on": false,
+        "color": "#ff0000",
+        "radius_mm": 5.0
+      }
+    }
+  ],
+  "scope": "Operative source handlers on genuine source widget values and actual ComposerHistory commands; pointer entry proven separately"
+}

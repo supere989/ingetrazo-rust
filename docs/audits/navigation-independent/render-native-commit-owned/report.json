@@ -1,0 +1,130 @@
+{
+  "passed": true,
+  "implementation": "native-Vulkan-llvmpipe",
+  "cancel": false,
+  "coverage": {
+    "samples": 48,
+    "visible": 48,
+    "coverage": 1.0
+  },
+  "negatives": [
+    "black-world",
+    "missing-preview"
+  ],
+  "initial": {
+    "frames": 1,
+    "eye": [
+      3.7493994566546446e-32,
+      -6.123233995736766e-16,
+      10.0
+    ],
+    "forward": [
+      -3.749399456654645e-33,
+      6.123233995736766e-17,
+      -1.0
+    ],
+    "mode": "Some(Position)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      770.0
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": false,
+    "pointer": [
+      650.0,
+      500.0
+    ]
+  },
+  "preview": {
+    "frames": 56,
+    "eye": [
+      3.7493994566546446e-32,
+      -6.123233995736766e-16,
+      10.0
+    ],
+    "forward": [
+      -3.749399456654645e-33,
+      6.123233995736766e-17,
+      -1.0
+    ],
+    "mode": "Some(Position)",
+    "preview": [
+      [
+        1.0080403089523315,
+        -0.506050169467926,
+        1.68
+      ],
+      [
+        1.7360694408416748,
+        -0.05803224816918373,
+        0.0
+      ]
+    ],
+    "preview_pixels": [
+      [
+        751.0,
+        445.0
+      ],
+      [
+        816.0,
+        405.0
+      ]
+    ],
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      816.0,
+      405.0
+    ]
+  },
+  "final": {
+    "frames": 114,
+    "eye": [
+      1.0080403089523329,
+      -0.5060501694679256,
+      1.6799999999999997
+    ],
+    "forward": [
+      0.3862266189106422,
+      0.2376779161371362,
+      -0.8912565326692209
+    ],
+    "mode": "Some(Look)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      816.0,
+      405.0
+    ]
+  },
+  "command": [
+    "/tmp/ingetrazo-center-ui-independent-target/debug/examples/position_navigation_native_fixture",
+    "/tmp/ingetrazo-navigation-validation/docs/audits/navigation-independent/render-native-commit-owned"
+  ],
+  "binary_sha256": "546e6f495905a5ea2e907b6b7100a8e45d96a77d810a8dcf84d250b552ab767a",
+  "scope": "actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim"
+}

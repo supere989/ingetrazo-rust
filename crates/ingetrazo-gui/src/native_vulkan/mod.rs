@@ -27,7 +27,7 @@ use std::{
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
-    event::WindowEvent,
+    event::{WindowEvent,DeviceEvent,DeviceId},
     event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
     window::{Window, WindowId},
 };
@@ -101,6 +101,14 @@ impl<A: App> ApplicationHandler for AppWrapper<A> {
         if let (Some(app),Some(window),Some(egui_app))=(&mut self.app,&self.window,&mut self.egui_app) {
             if matches!(event,WindowEvent::RedrawRequested) { app.draw(egui_app,window); }
             else { app.on_window_event(&event,window,event_loop); }
+        }
+    }
+
+    fn device_event(&mut self,_:&ActiveEventLoop,_:DeviceId,event:DeviceEvent){
+        if let DeviceEvent::MouseMotion{delta}=event {
+            if let (Some(app),Some(window))=(&mut self.app,&self.window){
+                if window.has_focus(){app.egui_winit.on_mouse_motion(delta);window.request_redraw();}
+            }
         }
     }
 
@@ -1247,7 +1255,7 @@ impl App for crate::IngeTrazoApp {
             // if extent is unchanged, with no allocation/upload/copy.
             let scale=system.egui_ctx.pixels_per_point();let extent=vk::Extent2D{width:(rect.width()*scale).ceil().max(1.0) as u32,height:(rect.height()*scale).ceil().max(1.0) as u32};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
             world.set_display_scale(system.egui_ctx.pixels_per_point());
-            world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.model_revision)
+            world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)
         })();
         if let Err(error)=result {self.gpu_error(&error);}
     }
@@ -1291,3 +1299,5 @@ fn cad_attachment_usage(supported:vk::ImageUsageFlags,integer:bool)->Result<vk::
  #[test]fn unsupported_input_is_explicit_refusal(){let color=vk::ImageUsageFlags::COLOR_ATTACHMENT;assert_eq!(cad_attachment_usage(color,false).unwrap(),color);assert!(cad_attachment_usage(color,true).unwrap_err().contains("INPUT_ATTACHMENT"));assert_eq!(cad_attachment_usage(color|vk::ImageUsageFlags::INPUT_ATTACHMENT,true).unwrap(),color|vk::ImageUsageFlags::INPUT_ATTACHMENT);assert!(cad_attachment_usage(vk::ImageUsageFlags::INPUT_ATTACHMENT,true).is_err());}
 }
 pub mod textures;
+
+pub mod reference_images;

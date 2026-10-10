@@ -1,0 +1,46 @@
+{
+  "eye_height": 2.5,
+  "value_buffer": "",
+  "measurement": "2.50 m",
+  "measurement_label": "Height offset",
+  "gl_metadata": {
+    "vendor": "Mesa",
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+  },
+  "endpoint_pixel": [
+    507.50844955444336,
+    215.9915509968996
+  ],
+  "snap_kind": "endpoint",
+  "window_id": 2097159,
+  "window_title": "IngeTrazo \u2014 Untitled",
+  "frames": 44,
+  "eye": [
+    3.7493993930529855e-32,
+    -6.123233998228043e-16,
+    10.0
+  ],
+  "forward": [
+    -3.7493993930529855e-33,
+    6.123234262925839e-17,
+    -1.0
+  ],
+  "mode": "PositionCameraTool",
+  "preview": null,
+  "preview_pixels": null,
+  "viewport": [
+    40,
+    58,
+    680,
+    669
+  ],
+  "undo": 0,
+  "version": 1,
+  "faces": 0,
+  "focused": true,
+  "pointer": [
+    508,
+    216
+  ]
+}

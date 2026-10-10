@@ -1,0 +1,17 @@
+{
+  "blocked": {
+    "pid": 828847,
+    "terminate_timeout": true,
+    "kill_timeout": false,
+    "returncode": -9,
+    "elapsed_seconds": 0.05120289701153524
+  },
+  "sentinel_untouched_before_cleanup": true,
+  "sentinel_cleanup": {
+    "pid": 828846,
+    "terminate_timeout": false,
+    "kill_timeout": false,
+    "returncode": -15,
+    "elapsed_seconds": 0.0010822630138136446
+  }
+}

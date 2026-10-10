@@ -253,6 +253,8 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     ui.checkbox(&mut app.document_session.preferences.autosave,"Enable recovery copies");ui.end_row();
                     ui.strong("Autosave interval");
                     ui.add(egui::Slider::new(&mut app.document_session.preferences.autosave_minutes,1..=60).text("minutes"));ui.end_row();
+                    ui.strong("First-person look sensitivity");
+                    ui.add(egui::Slider::new(&mut app.document_session.preferences.look_sensitivity,1..=100));ui.end_row();
                     ui.strong("Undo steps");
                     ui.add(egui::Slider::new(&mut app.document_session.preferences.undo_steps,1..=1000));ui.end_row();
 
@@ -390,7 +392,7 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
             .resizable(true)
             .default_size(egui::vec2(500.0, 360.0))
             .show(ctx, |ui| {
-                ui.label(egui::RichText::new("Python / IngeTrazo Script Shell").small().color(egui::Color32::from_rgb(160, 160, 170)));
+                ui.label(egui::RichText::new("Native commands: add_cube, select_all, stats, clear").small().color(egui::Color32::from_rgb(160, 160, 170)));
                 ui.separator();
 
                 egui::ScrollArea::vertical().max_height(200.0).show(ui, |ui| {

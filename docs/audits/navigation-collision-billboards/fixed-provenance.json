@@ -1,0 +1,6 @@
+{
+  "source_revision": "bdd060d6868f6676f790c6f4416dc5c56b6aa486",
+  "binary_sha256": "0d50f0fc61d888130c435b6f15032831605bc115cb2fb4ef36e89d3803f74df3",
+  "tests": "159core+151GUI PASS/1ignored;5indexfocusPASS",
+  "scope": "8literal actual frozen MainWindow.ray_distance queries, originalIGZ reopen, cached+directfallback distances exact, tinycache admission; no rendered wall/floor traversal proof. Direct fallback still uses existing per-face triangulation allocations, not allocation-free claim."
+}

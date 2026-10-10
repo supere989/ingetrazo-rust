@@ -166,13 +166,15 @@ pub struct ImagePlaneList {
     planes:Vec<ImagePlane>,
     #[serde(skip,default="new_image_membership_epoch")]
     epoch:std::sync::atomic::AtomicU64,
+    #[serde(skip,default="new_image_membership_epoch")]
+    publication:std::sync::atomic::AtomicU64,
 }
 fn next_image_membership_epoch()->u64{
     static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
     NEXT.fetch_add(1,std::sync::atomic::Ordering::Relaxed)
 }
 fn new_image_membership_epoch()->std::sync::atomic::AtomicU64{std::sync::atomic::AtomicU64::new(next_image_membership_epoch())}
-impl From<Vec<ImagePlane>> for ImagePlaneList{fn from(planes:Vec<ImagePlane>)->Self{Self{planes,epoch:new_image_membership_epoch()}}}
+impl From<Vec<ImagePlane>> for ImagePlaneList{fn from(planes:Vec<ImagePlane>)->Self{Self{planes,epoch:new_image_membership_epoch(),publication:new_image_membership_epoch()}}}
 impl Default for ImagePlaneList{fn default()->Self{Vec::new().into()}}
 impl Clone for ImagePlaneList{fn clone(&self)->Self{self.planes.clone().into()}}
 impl PartialEq for ImagePlaneList{fn eq(&self,other:&Self)->bool{self.planes==other.planes}}
@@ -181,7 +183,9 @@ impl std::ops::Index<usize> for ImagePlaneList{type Output=ImagePlane;fn index(&
 impl std::ops::IndexMut<usize> for ImagePlaneList{fn index_mut(&mut self,i:usize)->&mut ImagePlane{self.changed();&mut self.planes[i]}}
 impl ImagePlaneList{
     pub fn membership_epoch(&self)->u64{self.epoch.load(std::sync::atomic::Ordering::Relaxed)}
-    fn changed(&self){self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}
+    /// Runtime drawable state token; never persisted or compared as model state.
+    pub fn publication_revision(&self)->u64{self.publication.load(std::sync::atomic::Ordering::Relaxed)}
+    fn changed(&self){self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);self.publication.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}
     pub fn push(&mut self,p:ImagePlane){self.planes.push(p);self.changed();}
     pub fn remove(&mut self,index:usize)->ImagePlane{let p=self.planes.remove(index);self.changed();p}
     pub fn insert(&mut self,index:usize,p:ImagePlane){self.planes.insert(index,p);self.changed();}
@@ -194,7 +198,7 @@ impl ImagePlaneList{
     /// Restricted frame mutation cannot change UUID or replace an object,
     /// even when the returned handle is forgotten instead of dropped.
     pub fn pose_mut(&mut self,index:usize)->Option<ImagePoseGuard<'_>>{
-        Some(ImagePoseGuard{plane:self.planes.get_mut(index)?})
+        Some(ImagePoseGuard{plane:self.planes.get_mut(index)?,publication:&self.publication})
     }
     pub fn iter_mut(&mut self)->std::slice::IterMut<'_,ImagePlane>{self.changed();self.planes.iter_mut()}
 }
@@ -217,11 +221,11 @@ impl<'a> IntoIterator for &'a mut ImagePlaneList{type Item=&'a mut ImagePlane;ty
 /// let mut pose=planes.pose_mut(0).unwrap();
 /// *pose=replacement;
 /// ```
-pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane}
+pub struct ImagePoseGuard<'a>{plane:&'a mut ImagePlane,publication:&'a std::sync::atomic::AtomicU64}
 impl std::ops::Deref for ImagePoseGuard<'_>{type Target=ImagePlane;fn deref(&self)->&ImagePlane{self.plane}}
 impl ImagePoseGuard<'_>{
-    pub fn set_origin(&mut self,origin:DVec3){self.plane.origin=origin;}
-    pub fn set_frame(&mut self,[origin,u,v]:[DVec3;3]){self.plane.origin=origin;self.plane.u=u;self.plane.v=v;}
+    pub fn set_origin(&mut self,origin:DVec3){if self.plane.origin!=origin{self.plane.origin=origin;self.publication.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}}
+    pub fn set_frame(&mut self,[origin,u,v]:[DVec3;3]){if [self.plane.origin,self.plane.u,self.plane.v]!=[origin,u,v]{self.plane.origin=origin;self.plane.u=u;self.plane.v=v;self.publication.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);}}
 }
 
 /// Mirrors original command-held object lifetime without coordinate matching.
@@ -240,6 +244,18 @@ impl ImageObjects {
         }
     }
     /// Update a tool-held detached object's frame without copying live lists.
+    pub fn held_frame(&self, image: &ImagePlane) -> [DVec3; 3] {
+        let objects = self.0.lock().unwrap();
+        let p = objects.get(&image.id).unwrap_or(image);
+        [p.origin, p.u, p.v]
+    }
+    pub fn set_held_frame(&self, image: &ImagePlane, [origin, u, v]: [DVec3; 3]) {
+        let mut objects = self.0.lock().unwrap();
+        let p = objects.entry(image.id).or_insert_with(|| image.clone());
+        p.origin = origin;
+        p.u = u;
+        p.v = v;
+    }
     pub fn set_held_origin(&self, image:&ImagePlane, origin:DVec3) {
         let mut objects=self.0.lock().unwrap();
         objects.entry(image.id).or_insert_with(||image.clone()).origin=origin;
@@ -610,4 +626,40 @@ mod picking_tests {
         p.u=DVec3::X*2.;p.v=DVec3::new(1.,2.,0.);
         assert!(p.ray_hit(&Ray::new(DVec3::new(2.25,0.5,10.),-DVec3::Z)).is_none());
     }
+}
+
+impl ImagePlane {
+    /// Source QMatrix4x4 frame pose without allocating a document or history.
+    pub fn rotated_frame(&self, centre: DVec3, axis: DVec3, degrees: f64) -> [DVec3; 3] {
+        ImageRotation::new(centre, axis, degrees).frame(self)
+    }
+}
+/// One source Qt-f32 matrix shared by all images in a Rotate preview.
+pub struct ImageRotation(ImageFrameMatrix);
+impl ImageRotation {
+    pub fn new(centre: DVec3, axis: DVec3, degrees: f64) -> Self {
+        Self(ImageFrameMatrix::rotate(centre, axis, degrees))
+    }
+    pub fn frame(&self, image: &ImagePlane) -> [DVec3; 3] {
+        [
+            self.0.map(image.origin, true),
+            self.0.map(image.u, false),
+            self.0.map(image.v, false),
+        ]
+    }
+}
+
+#[cfg(test)]mod publication_revision_tests {
+ use super::*;
+ #[test]fn pose_publication_is_immediate_noop_stable_and_membership_independent(){
+  let mut p=ImagePlaneList::from(vec![ImagePlane::new("x",DVec3::ZERO,DVec3::X,DVec3::Y)]);
+  let membership=p.membership_epoch();let initial=p.publication_revision();
+  p.pose_mut(0).unwrap().set_origin(DVec3::ZERO);assert_eq!(p.publication_revision(),initial);
+  {let mut handle=p.pose_mut(0).unwrap();handle.set_origin(DVec3::Z);std::mem::forget(handle);}
+  assert_ne!(p.publication_revision(),initial);assert_eq!(p.membership_epoch(),membership);
+  let changed=p.publication_revision();p.pose_mut(0).unwrap().set_frame([DVec3::Z,DVec3::X,DVec3::Y]);assert_eq!(p.publication_revision(),changed);
+  let clone=p.clone();assert_eq!(clone,p);assert_ne!(clone.publication_revision(),changed);
+  let encoded=serde_json::to_value(&p).unwrap();assert!(encoded.is_array());let decoded:ImagePlaneList=serde_json::from_value(encoded).unwrap();assert_eq!(decoded,p);assert_ne!(decoded.publication_revision(),changed);
+  p[0].opacity=0.5;assert_ne!(p.publication_revision(),changed);
+ }
 }

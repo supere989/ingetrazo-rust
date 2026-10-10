@@ -1,0 +1,18 @@
+Suitable Vulkan adapter 0: NVIDIA GeForce RTX 5090; DISCRETE_GPU; queues Queues { graphics: 0, present: 0, compute: Some(2) }
+Native Vulkan adapter: "NVIDIA GeForce RTX 5090"; API 1.4.351; max texture 32768; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 34190917632 bytes; DEVICE_LOCAL
+Vulkan heap 1: 99445232640 bytes; 
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+Renderer device: {"name":"NVIDIA GeForce RTX 5090","vendor_id":4318,"device_id":11141,"device_type":"DISCRETE_GPU"}
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Contour metrics: ContourMetrics { additional_position_bytes: 0, batches: 0, cold_build_ms: 1.1801069999999998, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 0, failed_prepared_edge_bytes: 0 }
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT | INPUT_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT
+Image outline metrics: cold_builds=2 generated_spans=568
+GPU allocation budget: 21045912 committed bytes; peakcommitted 63985432; peakadmitted 63985432; globalcap None; heaps [HeapBudget { capacity: 34190917632, limit: 27352734104, live_budget: Some(27445926294), live_usage: 27983872, reserved: 0, committed: 21045792 }, HeapBudget { capacity: 99445232640, limit: 79556186112, live_budget: Some(89500709376), live_usage: 4255744, reserved: 0, committed: 120 }]
+Native world GPU surface uploads: 1
+CAD2D metrics: Stats { callbacks: 5, binds: 5, draws: 20, uploads: 2, upload_bytes: 95424, cache_hits: 3, cached_bytes: 40992, rolled_back_buffers: 0 }
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0

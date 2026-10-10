@@ -1,0 +1,9 @@
+{
+  "source": "129e0e308f2c85edd64f8d47ca9961ca088355a1",
+  "command": "CARGO_INCREMENTAL=0 cargo test --workspace --locked -j2 --lib --tests",
+  "passed": 582,
+  "failed": 0,
+  "ignored": 2,
+  "previous_all_examples_run": "failed during linking; bus error and storage pressure; retained",
+  "doc_tests": "not included in this run"
+}

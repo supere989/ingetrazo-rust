@@ -1,0 +1,260 @@
+{
+  "passed": true,
+  "source_revision": "83077693d8d9918c18b2ee13bbccab8dac2ef34a",
+  "script_sha256": "263a4c41ff6904960195883b07659ed9154624f58fcd409bcb98c85532f3dda6",
+  "implementation": "native-Vulkan-llvmpipe",
+  "cancel": false,
+  "typed_height": true,
+  "typed_state": {
+    "measurement": "2.50 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "",
+    "endpoint_pixel": [
+      839.5642700195312,
+      221.2544708251953
+    ],
+    "snap_kind": "None",
+    "frames": 74,
+    "eye": [
+      3.7493994566546446e-32,
+      -6.123233995736766e-16,
+      10.0
+    ],
+    "forward": [
+      -3.749399456654645e-33,
+      6.123233995736766e-17,
+      -1.0
+    ],
+    "mode": "Some(Position)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      1137.0,
+      789.0
+    ]
+  },
+  "coverage": {
+    "samples": 48,
+    "visible": 48,
+    "coverage": 1.0
+  },
+  "glyph_green": 61,
+  "glyph_state": {
+    "measurement": "2.50 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "",
+    "endpoint_pixel": [
+      839.5642700195312,
+      221.2544708251953
+    ],
+    "snap_kind": "Endpoint",
+    "frames": 109,
+    "eye": [
+      3.7493994566546446e-32,
+      -6.123233995736766e-16,
+      10.0
+    ],
+    "forward": [
+      -3.749399456654645e-33,
+      6.123233995736766e-17,
+      -1.0
+    ],
+    "mode": "Some(Position)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      840.0,
+      221.0
+    ]
+  },
+  "negatives": [
+    "black-world",
+    "missing-preview",
+    "missing-endpoint-glyph"
+  ],
+  "initial": {
+    "measurement": "1.68 m",
+    "measurement_rect": [
+      1098.0,
+      780.0,
+      1176.0,
+      798.3624877929688
+    ],
+    "status": "Position Camera \u2014 click or drag from where to stand",
+    "endpoint_pixel": [
+      839.6517944335938,
+      221.34820556640625
+    ],
+    "snap_kind": null,
+    "frames": 1,
+    "eye": [
+      3.7493994566546446e-32,
+      -6.123233995736766e-16,
+      10.0
+    ],
+    "forward": [
+      -3.749399456654645e-33,
+      6.123233995736766e-17,
+      -1.0
+    ],
+    "mode": "Some(Position)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      770.0
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": false,
+    "pointer": [
+      650.0,
+      500.0
+    ]
+  },
+  "preview": {
+    "measurement": "2.50 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "",
+    "endpoint_pixel": [
+      839.5642700195312,
+      221.2544708251953
+    ],
+    "snap_kind": "None",
+    "frames": 149,
+    "eye": [
+      3.7493994566546446e-32,
+      -6.123233995736766e-16,
+      10.0
+    ],
+    "forward": [
+      -3.749399456654645e-33,
+      6.123233995736766e-17,
+      -1.0
+    ],
+    "mode": "Some(Position)",
+    "preview": [
+      [
+        1.0080403089523315,
+        -0.506050169467926,
+        2.5
+      ],
+      [
+        1.7360694408416748,
+        -0.05803224816918373,
+        0.0
+      ]
+    ],
+    "preview_pixels": [
+      [
+        751.0,
+        445.0
+      ],
+      [
+        816.0,
+        405.0
+      ]
+    ],
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      816.0,
+      405.0
+    ]
+  },
+  "final": {
+    "measurement": "2.50 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "Look Around \u2014 drag to turn",
+    "endpoint_pixel": [
+      190.54554748535156,
+      40.42939758300781
+    ],
+    "snap_kind": "None",
+    "frames": 186,
+    "eye": [
+      1.0080403089523302,
+      -0.5060501694679265,
+      2.5
+    ],
+    "forward": [
+      0.2755483564791236,
+      0.1695682170941281,
+      -0.9462133601853087
+    ],
+    "mode": "Some(Look)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      816.0,
+      405.0
+    ]
+  },
+  "command": [
+    "/tmp/ingetrazo-center-ui-independent-target/debug/examples/position_navigation_native_fixture",
+    "/tmp/navigation-height-native-proof"
+  ],
+  "binary_sha256": "8f98b007aa9a979dd75e899cbfbc02b251ede67cfa876add074054c914a7f909",
+  "scope": "actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim"
+}
