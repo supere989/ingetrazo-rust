@@ -1,0 +1,9 @@
+{
+  "candidate": "635aca36a6f396b98f44468119b5053ac48016b9",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-move-copy-review-target cargo test --locked --workspace",
+  "passed": 402,
+  "failed": 0,
+  "ignored": 2,
+  "retained_log_sha256": "e31593dc19e5085c5b9d901cced0b1f3463c006c799772ebe2d0a9c927a25e81",
+  "remaining": "Independent original/native copy corpus, actual rendered copy/Ctrl gestures, arrays/retyping and live previews remain open."
+}
