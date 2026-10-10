@@ -1,0 +1,1928 @@
+{
+  "qt": "6.12.0",
+  "encoder": "Version: ImageMagick 6.9.12-98 Q16 x86_64 18038 https://legacy.imagemagick.org\nCopyright: (C) 1999 ImageMagick Studio LLC\nLicense: https://imagemagick.org/script/license.php\nFeatures: Cipher DPC Modules OpenMP(4.5) \nDelegates (built-in): bzlib djvu fftw fontconfig freetype heic jbig jng jp2 jpeg lcms lqr ltdl lzma openexr pangocairo png raw tiff webp wmf x xml zlib\n",
+  "binary_sha256": "12be001ed0d6887038167b3d1e21218eca5e4593f0376c6cce467e93e6ebdbc4",
+  "cases": [
+    {
+      "name": "1x1-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "a7f6d212797be66eec42a7694d3472b90cfb2342c87dcfc375ee1425d01c948e",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.0007331450178753585,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "dd927be688e63b6216bcf92a958b39f8d0da9d9e21fa06a16ed1b6b8c2bf87dc",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.0005585640028584749,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "453aebb2f4abc92e07b63f20c008a7a95c03027511134d1598fac54dc24d7e18",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.00048245201469399035,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "4ded8b4eaa817a778b5cee2a53abd82ddb608081e9f89332820a00d8fb96301a",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.0004831520200241357,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "61fbd9c47ddfdae1912f643b04ab69917faa5dff8fe80a438d2c112edccd1a79",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.0004369450034573674,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "8f52fdaac7fa9d77c33ce2fd313d4442cdc0749482623996463dac02af8c1c08",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.00045813500764779747,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "a474d253ca911c7db367946e28a80aaaa9c8d2ca6a9386f77f572984598ccce3",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.00040537500171922147,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "1x1-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/1x1-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "5c4369de529c4f9a2afb27ca04748bc0c1ecbc7322097d7a375525d7531760fa",
+      "qt_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "native_sha256": "1febfddcb3dccc9bdf06ce675380d21fc1e901c62f48396f37eb47162d232d2d",
+      "elapsed_seconds": 0.0005347699916455895,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4,
+      "native_bytes": 4,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "32ea8f64b5ad55c8ebe24b240f6c910cb08255b98982e9fd552ce848a0a8969b",
+      "qt_sha256": "7f80cb02c9efe1ab94cd73a0c74d9071f071b1932869eda0c688813b9b4ca371",
+      "native_sha256": "7f80cb02c9efe1ab94cd73a0c74d9071f071b1932869eda0c688813b9b4ca371",
+      "elapsed_seconds": 0.0008012530161067843,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "724eb35a2b271f99f7b5b2b7008eca43fc45b8de0e18234be44c3ec5182f1d6d",
+      "qt_sha256": "7f80cb02c9efe1ab94cd73a0c74d9071f071b1932869eda0c688813b9b4ca371",
+      "native_sha256": "7f80cb02c9efe1ab94cd73a0c74d9071f071b1932869eda0c688813b9b4ca371",
+      "elapsed_seconds": 0.0005852750036865473,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "68f6c30150ece97955d3f632403b72b43fa36f1e5148b9db6b140d9be0ccf73c",
+      "qt_sha256": "418e73fb5933bae475ba5508b9838d84b44e185f86afee8ea6d1139570e4c974",
+      "native_sha256": "418e73fb5933bae475ba5508b9838d84b44e185f86afee8ea6d1139570e4c974",
+      "elapsed_seconds": 0.0004860379849560559,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "78c76a3f039b38c459a7eb1c81aec7294d9c8342efff46d83b2ee1767a3b411a",
+      "qt_sha256": "418e73fb5933bae475ba5508b9838d84b44e185f86afee8ea6d1139570e4c974",
+      "native_sha256": "418e73fb5933bae475ba5508b9838d84b44e185f86afee8ea6d1139570e4c974",
+      "elapsed_seconds": 0.0005884910060558468,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "7f3d4b2923bd6395162e4e4d24d21b64605edd502a5900e85c47b7bf2a054d0b",
+      "qt_sha256": "52c084cb24ea149eb928aee03e4bd156b840c7943508e6359dd36c33adeba79f",
+      "native_sha256": "52c084cb24ea149eb928aee03e4bd156b840c7943508e6359dd36c33adeba79f",
+      "elapsed_seconds": 0.0005330870044417679,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "3491d2cd6abf63cb14cef68c87984542b521933f27a23b80bd7628c7d588841d",
+      "qt_sha256": "52c084cb24ea149eb928aee03e4bd156b840c7943508e6359dd36c33adeba79f",
+      "native_sha256": "52c084cb24ea149eb928aee03e4bd156b840c7943508e6359dd36c33adeba79f",
+      "elapsed_seconds": 0.0005002640245947987,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "899119b29ea6c53504a753a1f9468112b2b739ea2ae256b597b583ea90124df8",
+      "qt_sha256": "70b51991c92e397c6559e1e9462b96a471d1f9320685a913f1ba2cea0e633b2e",
+      "native_sha256": "70b51991c92e397c6559e1e9462b96a471d1f9320685a913f1ba2cea0e633b2e",
+      "elapsed_seconds": 0.0004182900011073798,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "2x3-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/2x3-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "5a92799599fd98c115f7501005558e4ab559cbb752bd13e7c0abad66365d7ad8",
+      "qt_sha256": "70b51991c92e397c6559e1e9462b96a471d1f9320685a913f1ba2cea0e633b2e",
+      "native_sha256": "70b51991c92e397c6559e1e9462b96a471d1f9320685a913f1ba2cea0e633b2e",
+      "elapsed_seconds": 0.0005540570127777755,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "4c45cf2346fac39d5fb45adbd7a07b8d36358999f41bdcdae7098fc58a468a85",
+      "qt_sha256": "28afb21643c35b667302ae4bc2f7cb90b0fb5b3731f5ccb34fd48bf20a30c410",
+      "native_sha256": "28afb21643c35b667302ae4bc2f7cb90b0fb5b3731f5ccb34fd48bf20a30c410",
+      "elapsed_seconds": 0.0004071489966008812,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "b78749ba958a984b7f91c1403443fa69d3b7de59287223fa8776cde53500e000",
+      "qt_sha256": "28afb21643c35b667302ae4bc2f7cb90b0fb5b3731f5ccb34fd48bf20a30c410",
+      "native_sha256": "28afb21643c35b667302ae4bc2f7cb90b0fb5b3731f5ccb34fd48bf20a30c410",
+      "elapsed_seconds": 0.0005147629999555647,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "bd226816394fcdd757f108ce03ef75dd4838a0551a0b5f2116a3be59b372fdf7",
+      "qt_sha256": "71d43cf003be80d27ad78abc80113c0549f0cf5ef5fc2a86079c62b1780e037f",
+      "native_sha256": "71d43cf003be80d27ad78abc80113c0549f0cf5ef5fc2a86079c62b1780e037f",
+      "elapsed_seconds": 0.000459927978226915,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "1e11b214c2e14776612ea97c7af8c3dd7cc01d91010493bd5f9574117f75f3d7",
+      "qt_sha256": "71d43cf003be80d27ad78abc80113c0549f0cf5ef5fc2a86079c62b1780e037f",
+      "native_sha256": "71d43cf003be80d27ad78abc80113c0549f0cf5ef5fc2a86079c62b1780e037f",
+      "elapsed_seconds": 0.0005119470006320626,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "0b3d18bf8f7dee2cdbd0f8a76004c76e2e3f0eb826cdee86ec6f4d508f422a05",
+      "qt_sha256": "2efe91ce85eb2e6ffe4ec15e41544f88045bcb123d8972bc980fbb09458bcf5d",
+      "native_sha256": "2efe91ce85eb2e6ffe4ec15e41544f88045bcb123d8972bc980fbb09458bcf5d",
+      "elapsed_seconds": 0.0004710000066552311,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "6127f88946934e97ce62c3c8f506ae2790827fc2023efc8485af938a3ddb2511",
+      "qt_sha256": "2efe91ce85eb2e6ffe4ec15e41544f88045bcb123d8972bc980fbb09458bcf5d",
+      "native_sha256": "2efe91ce85eb2e6ffe4ec15e41544f88045bcb123d8972bc980fbb09458bcf5d",
+      "elapsed_seconds": 0.0005754570011049509,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "1944942fca4deac6be4b51f9a5824abc5ea4b37695e4a1165dff2f08e2a88dbe",
+      "qt_sha256": "9408ce9fa6b069d8d4b5c5448e8887d9d3f1fd011b09cb1aeccff32aa19e9eaf",
+      "native_sha256": "9408ce9fa6b069d8d4b5c5448e8887d9d3f1fd011b09cb1aeccff32aa19e9eaf",
+      "elapsed_seconds": 0.0007510479772463441,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "3x2-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/3x2-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "be88733d9fbf71a2a8b59e67ff707b4d82a7649c214301cce9937b35f32ec9b4",
+      "qt_sha256": "9408ce9fa6b069d8d4b5c5448e8887d9d3f1fd011b09cb1aeccff32aa19e9eaf",
+      "native_sha256": "9408ce9fa6b069d8d4b5c5448e8887d9d3f1fd011b09cb1aeccff32aa19e9eaf",
+      "elapsed_seconds": 0.0005961160059086978,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 24,
+      "native_bytes": 24,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "e0e531fa6ac9dc6bf7b96a265a68637def85477dedeccbf37fc6efa12347a199",
+      "qt_sha256": "d640db288192d8280fee1abd5bcfe5303c197bc4bde0253461563d5d4a6b6db5",
+      "native_sha256": "d640db288192d8280fee1abd5bcfe5303c197bc4bde0253461563d5d4a6b6db5",
+      "elapsed_seconds": 0.00042551400838419795,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "5f4b3a65a3c2e3997abe38d5629ecc5a4f2fd20acfbbff8ff5888cdb565c49cd",
+      "qt_sha256": "d640db288192d8280fee1abd5bcfe5303c197bc4bde0253461563d5d4a6b6db5",
+      "native_sha256": "d640db288192d8280fee1abd5bcfe5303c197bc4bde0253461563d5d4a6b6db5",
+      "elapsed_seconds": 0.0005528639885596931,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "2028e420720affee0a248b353b38a71585bbde286541359229063c184e6fef19",
+      "qt_sha256": "f18fe96a3718706b9c10a4ec65b9d132e740ed5952be498173f4ab3401ecd871",
+      "native_sha256": "f18fe96a3718706b9c10a4ec65b9d132e740ed5952be498173f4ab3401ecd871",
+      "elapsed_seconds": 0.0004946339759044349,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "d50eae9a24dd02dd74a9ef869187aba5da9572bc39753d38dbb718bd88a5150c",
+      "qt_sha256": "f18fe96a3718706b9c10a4ec65b9d132e740ed5952be498173f4ab3401ecd871",
+      "native_sha256": "f18fe96a3718706b9c10a4ec65b9d132e740ed5952be498173f4ab3401ecd871",
+      "elapsed_seconds": 0.0005713389837183058,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "659fe494d5a8c68633487fa61e7282d24dee77fc2eb56abc3c6c68bb1fa3c36f",
+      "qt_sha256": "249ea785c602632b54ec250e9fde188724dfed4ecae8189da7b7ef19c3037ad3",
+      "native_sha256": "249ea785c602632b54ec250e9fde188724dfed4ecae8189da7b7ef19c3037ad3",
+      "elapsed_seconds": 0.00043958998867310584,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "12aea05eaa944f3405fd7f9b11c1697c0f8d2e429ab5c4663082493c505373dc",
+      "qt_sha256": "249ea785c602632b54ec250e9fde188724dfed4ecae8189da7b7ef19c3037ad3",
+      "native_sha256": "249ea785c602632b54ec250e9fde188724dfed4ecae8189da7b7ef19c3037ad3",
+      "elapsed_seconds": 0.0007144389965105802,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "110f8b3fe12c78be110954914aac07446f7a3c4e54da340a9108e99625199867",
+      "qt_sha256": "ab35277d9887f77903e96a7d1f84b13435b1bdb0d8608c8e8300635e77bce8ba",
+      "native_sha256": "ab35277d9887f77903e96a7d1f84b13435b1bdb0d8608c8e8300635e77bce8ba",
+      "elapsed_seconds": 0.0006015060062054545,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "4x4-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/4x4-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "b8990e16640b794d537126d532e8bbb95c2791075eded4f0fcb9cff4f182d917",
+      "qt_sha256": "ab35277d9887f77903e96a7d1f84b13435b1bdb0d8608c8e8300635e77bce8ba",
+      "native_sha256": "ab35277d9887f77903e96a7d1f84b13435b1bdb0d8608c8e8300635e77bce8ba",
+      "elapsed_seconds": 0.0006235880136955529,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 64,
+      "native_bytes": 64,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "228f49f67747c365afdffa26155e080a316719eb12bd6301c1a2a8de5dd4da83",
+      "qt_sha256": "d3e7eb6b3a3838bb830db690feb12565b5a7389f59c48162eb3d4b1e7dde09f3",
+      "native_sha256": "d3e7eb6b3a3838bb830db690feb12565b5a7389f59c48162eb3d4b1e7dde09f3",
+      "elapsed_seconds": 0.0005064360157120973,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "f90b0b62cc3626dd806c40b1fc953ebffbcbdf86b54e13eed932689b1ec8e7e6",
+      "qt_sha256": "d3e7eb6b3a3838bb830db690feb12565b5a7389f59c48162eb3d4b1e7dde09f3",
+      "native_sha256": "d3e7eb6b3a3838bb830db690feb12565b5a7389f59c48162eb3d4b1e7dde09f3",
+      "elapsed_seconds": 0.000654155999654904,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "356a233169d667df02febd7c003788e5f8009c8e14a20a8d94be820a6075651e",
+      "qt_sha256": "9c03ea16dcefbc1a728000e023d3d5db4f328bbdaff935fac6c91dbf7415445b",
+      "native_sha256": "9c03ea16dcefbc1a728000e023d3d5db4f328bbdaff935fac6c91dbf7415445b",
+      "elapsed_seconds": 0.0005564599996432662,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "ca60ad27e86901eef9c2762641ec83e40af9e35eefbc6f00fe037632153dea2a",
+      "qt_sha256": "9c03ea16dcefbc1a728000e023d3d5db4f328bbdaff935fac6c91dbf7415445b",
+      "native_sha256": "9c03ea16dcefbc1a728000e023d3d5db4f328bbdaff935fac6c91dbf7415445b",
+      "elapsed_seconds": 0.000639918987872079,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "74ded3ffd2404bdf0ddc165600ddca8486e7af25bed4e0226b552347473e43d0",
+      "qt_sha256": "b0db0d95c2405ce8bbd40c6967840cab7f6fd50dd61e188a6ad54cafb6e2755f",
+      "native_sha256": "b0db0d95c2405ce8bbd40c6967840cab7f6fd50dd61e188a6ad54cafb6e2755f",
+      "elapsed_seconds": 0.0006165739905554801,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "68471bf9a70b1227b2e5b2872d85c81bc93a30b892f23ac19f5e72440c4a5f25",
+      "qt_sha256": "b0db0d95c2405ce8bbd40c6967840cab7f6fd50dd61e188a6ad54cafb6e2755f",
+      "native_sha256": "b0db0d95c2405ce8bbd40c6967840cab7f6fd50dd61e188a6ad54cafb6e2755f",
+      "elapsed_seconds": 0.0006300900131464005,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "1c20ba14ad4670a70f3d7d053224623db1105f023cf6ce2fb6e86b33531884ae",
+      "qt_sha256": "e50fd19c65deb6e1763dbf66fa9a7c28fe789e69979b306434dcae2df2a572a7",
+      "native_sha256": "e50fd19c65deb6e1763dbf66fa9a7c28fe789e69979b306434dcae2df2a572a7",
+      "elapsed_seconds": 0.0006036499980837107,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "7x9-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/7x9-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "0ab1da7954376e8908a8585913bee950fc738ccd8398988584b18a5809db3594",
+      "qt_sha256": "e50fd19c65deb6e1763dbf66fa9a7c28fe789e69979b306434dcae2df2a572a7",
+      "native_sha256": "e50fd19c65deb6e1763dbf66fa9a7c28fe789e69979b306434dcae2df2a572a7",
+      "elapsed_seconds": 0.0007423220085911453,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 252,
+      "native_bytes": 252,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "f0c7cd8b485fc99af41d751b245810b27828617fd1f27cc05092e82678201506",
+      "qt_sha256": "ec7a9be567db4b8ca4cadc6771ef64f289aac525991910d0fe926746d5c2218b",
+      "native_sha256": "ec7a9be567db4b8ca4cadc6771ef64f289aac525991910d0fe926746d5c2218b",
+      "elapsed_seconds": 0.0006042209861334413,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "96b9ad1c820100f3f68360ecce3ad85d61cbebb6543383d80cef8e3f83083123",
+      "qt_sha256": "ec7a9be567db4b8ca4cadc6771ef64f289aac525991910d0fe926746d5c2218b",
+      "native_sha256": "ec7a9be567db4b8ca4cadc6771ef64f289aac525991910d0fe926746d5c2218b",
+      "elapsed_seconds": 0.0007098199857864529,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "e54824c8ebbb8cdb557d5e1c1169ae14ed82ea763b8dd7a8538cd411aa946b83",
+      "qt_sha256": "d205fdc578026ba3e9bc495c4a052e5b1ee6a850ac0864fd531d1a2dee6b0e61",
+      "native_sha256": "d205fdc578026ba3e9bc495c4a052e5b1ee6a850ac0864fd531d1a2dee6b0e61",
+      "elapsed_seconds": 0.0006543859781231731,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "2eb9389e0b71ef72633a6de14964950f4fa429c8a4a3f42720c1626fcb37c22c",
+      "qt_sha256": "d205fdc578026ba3e9bc495c4a052e5b1ee6a850ac0864fd531d1a2dee6b0e61",
+      "native_sha256": "d205fdc578026ba3e9bc495c4a052e5b1ee6a850ac0864fd531d1a2dee6b0e61",
+      "elapsed_seconds": 0.0007081179937813431,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "7135741ba48dd30c7b4bc0c5ee27bdb5ecda6759760b0d39e17517d98da495ce",
+      "qt_sha256": "e8f5b1d23d795b1a2843ef5190a37345f10fbb41dc0d68a14da0273ca9a933b4",
+      "native_sha256": "e8f5b1d23d795b1a2843ef5190a37345f10fbb41dc0d68a14da0273ca9a933b4",
+      "elapsed_seconds": 0.0005319949996192008,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "5caea0928290917def91ad71f3049406543194217c59fd0de21a4b3395006129",
+      "qt_sha256": "e8f5b1d23d795b1a2843ef5190a37345f10fbb41dc0d68a14da0273ca9a933b4",
+      "native_sha256": "e8f5b1d23d795b1a2843ef5190a37345f10fbb41dc0d68a14da0273ca9a933b4",
+      "elapsed_seconds": 0.00074263199348934,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "6ad8046981b26fe026d282ae6516e1c5a6eff7d3290ccf8f3fcec76514531485",
+      "qt_sha256": "3b9ea9d424997ec68eaa32c68a0e839eca244e69f348f0439be1260bd971f2ad",
+      "native_sha256": "3b9ea9d424997ec68eaa32c68a0e839eca244e69f348f0439be1260bd971f2ad",
+      "elapsed_seconds": 0.0005616010166704655,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "17x13-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/17x13-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "da6a58f73024fb5e328f2b7938087cbf9a5233c9029fae7f1000dbd805f62ca8",
+      "qt_sha256": "3b9ea9d424997ec68eaa32c68a0e839eca244e69f348f0439be1260bd971f2ad",
+      "native_sha256": "3b9ea9d424997ec68eaa32c68a0e839eca244e69f348f0439be1260bd971f2ad",
+      "elapsed_seconds": 0.00063140201382339,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 884,
+      "native_bytes": 884,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "3abcd16c61bdff1b5644ffa3b154e9ab0e810222301b564a54b4e88d7d3bccd7",
+      "qt_sha256": "c58e377cbcd6dbcb168d38662c7d963969f7922b67000b68a00cf214211fe9ed",
+      "native_sha256": "c58e377cbcd6dbcb168d38662c7d963969f7922b67000b68a00cf214211fe9ed",
+      "elapsed_seconds": 0.0006884099857416004,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "6292b9347a4c002f0ad2c09ab16c63f3ce6747d7c1baf4586e23c5be7e5132fb",
+      "qt_sha256": "c58e377cbcd6dbcb168d38662c7d963969f7922b67000b68a00cf214211fe9ed",
+      "native_sha256": "c58e377cbcd6dbcb168d38662c7d963969f7922b67000b68a00cf214211fe9ed",
+      "elapsed_seconds": 0.0009740899840835482,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "fd85af5bb6193e7686901998aec6db8688ec295b5fafdfb301c8ea4cbddd7be4",
+      "qt_sha256": "3b0622469f3b5043a7707faf6ae07e22fc0ec40fa2ce442d7ed073f9c5b94031",
+      "native_sha256": "3b0622469f3b5043a7707faf6ae07e22fc0ec40fa2ce442d7ed073f9c5b94031",
+      "elapsed_seconds": 0.0006530130049213767,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "664bc0838bab898ef2d1ec8892b301ac879575fac602f7417423ce878a1a0768",
+      "qt_sha256": "3b0622469f3b5043a7707faf6ae07e22fc0ec40fa2ce442d7ed073f9c5b94031",
+      "native_sha256": "3b0622469f3b5043a7707faf6ae07e22fc0ec40fa2ce442d7ed073f9c5b94031",
+      "elapsed_seconds": 0.0008185159822460264,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "362cb85bac1fa5e4ee742a2c91184bf18dc4bc27a29ad058467d70ab02871e5c",
+      "qt_sha256": "91a69df5052bcbd5dd62457b69b3eb9036b283ddf8f5ec197358a3577a9685a5",
+      "native_sha256": "91a69df5052bcbd5dd62457b69b3eb9036b283ddf8f5ec197358a3577a9685a5",
+      "elapsed_seconds": 0.0006559590110555291,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "0c1256e2b54d5e87ae9ac122b113b60472e32803fa9ba68670bd68aa3a14b04e",
+      "qt_sha256": "91a69df5052bcbd5dd62457b69b3eb9036b283ddf8f5ec197358a3577a9685a5",
+      "native_sha256": "91a69df5052bcbd5dd62457b69b3eb9036b283ddf8f5ec197358a3577a9685a5",
+      "elapsed_seconds": 0.0008282549970317632,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "43a0563810ba38d06282bac76d6ba75f1e03116687fc7f1972dab777408f574f",
+      "qt_sha256": "86a73c273ae720ebea3527db98097afea977f9420e791a9691acf82a198b070e",
+      "native_sha256": "86a73c273ae720ebea3527db98097afea977f9420e791a9691acf82a198b070e",
+      "elapsed_seconds": 0.0006416920223273337,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "32x33-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/32x33-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "483f654a025272d3ca5374b7267a8a3a39cb50969c0c9115cc5490328a94e181",
+      "qt_sha256": "86a73c273ae720ebea3527db98097afea977f9420e791a9691acf82a198b070e",
+      "native_sha256": "86a73c273ae720ebea3527db98097afea977f9420e791a9691acf82a198b070e",
+      "elapsed_seconds": 0.0008296069863718003,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 4224,
+      "native_bytes": 4224,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-1x1-progressive0",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-1x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "f0ecb2143daf67e93cad8882c9f2e257d758e2cc68ff5148cb602c1ae14177f5",
+      "qt_sha256": "ebd6adcfe7df64f32ec50359bb0a629761ca261544d76720d8f52c4e20a0c439",
+      "native_sha256": "ebd6adcfe7df64f32ec50359bb0a629761ca261544d76720d8f52c4e20a0c439",
+      "elapsed_seconds": 0.000857610022649169,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-1x1-progressive1",
+      "sampling": [
+        17,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "1x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-1x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "dba0c7a0c1cc2f29da650cd596b38498fdbb227dd407d27b56974a7dfe95f422",
+      "qt_sha256": "ebd6adcfe7df64f32ec50359bb0a629761ca261544d76720d8f52c4e20a0c439",
+      "native_sha256": "ebd6adcfe7df64f32ec50359bb0a629761ca261544d76720d8f52c4e20a0c439",
+      "elapsed_seconds": 0.0011392620217520744,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-2x1-progressive0",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-2x1-progressive0.jpg"
+      ],
+      "encoded_sha256": "9ae32cd17ab7b9eda15ea2c98db346ebd4a1a716ca98a7a515543f796255ccdb",
+      "qt_sha256": "e74a5efe5e702b50ff57838d095addd3e2d8567631bf8c1c7e25ba4ee2850d1e",
+      "native_sha256": "e74a5efe5e702b50ff57838d095addd3e2d8567631bf8c1c7e25ba4ee2850d1e",
+      "elapsed_seconds": 0.0007570500019937754,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-2x1-progressive1",
+      "sampling": [
+        33,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "2x1,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-2x1-progressive1.jpg"
+      ],
+      "encoded_sha256": "9ecb44282525e94cbfba3346681a84b17b1e5763015e0d30d16983c99c167ec3",
+      "qt_sha256": "e74a5efe5e702b50ff57838d095addd3e2d8567631bf8c1c7e25ba4ee2850d1e",
+      "native_sha256": "e74a5efe5e702b50ff57838d095addd3e2d8567631bf8c1c7e25ba4ee2850d1e",
+      "elapsed_seconds": 0.001087212993297726,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-1x2-progressive0",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-1x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "43d2d3d7341183f4a9f8c50200965d2021edc40e175608339358570ff3e18f4a",
+      "qt_sha256": "2a5742fdae896fb10025ef89510900093e2d501c65b4412154dc52f69b985a35",
+      "native_sha256": "2a5742fdae896fb10025ef89510900093e2d501c65b4412154dc52f69b985a35",
+      "elapsed_seconds": 0.0008977160032372922,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-1x2-progressive1",
+      "sampling": [
+        18,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "1x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-1x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "aa87f0d5adaaef355e49551c29ee3bafc6523d25b81c250e84b3d5d6bbaa1bea",
+      "qt_sha256": "2a5742fdae896fb10025ef89510900093e2d501c65b4412154dc52f69b985a35",
+      "native_sha256": "2a5742fdae896fb10025ef89510900093e2d501c65b4412154dc52f69b985a35",
+      "elapsed_seconds": 0.0011719540052581578,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-2x2-progressive0",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 192,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "None",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-2x2-progressive0.jpg"
+      ],
+      "encoded_sha256": "ab839ef5fc079717407ae62d30cc94828481dab08000f6cd3dcd00b8bc2c09b0",
+      "qt_sha256": "6c669763653a37f8a32e4e182e6443d3da62181a76ff5ca5571743f14d33b55c",
+      "native_sha256": "6c669763653a37f8a32e4e182e6443d3da62181a76ff5ca5571743f14d33b55c",
+      "elapsed_seconds": 0.0009303560073021799,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    },
+    {
+      "name": "65x31-2x2-progressive1",
+      "sampling": [
+        34,
+        17,
+        17
+      ],
+      "sof": 194,
+      "encoder_command": [
+        "convert",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31.ppm",
+        "-sampling-factor",
+        "2x2,1x1,1x1",
+        "-quality",
+        "85",
+        "-interlace",
+        "Plane",
+        "/tmp/ingetrazo-skp-source-jpeg-border-controls/65x31-2x2-progressive1.jpg"
+      ],
+      "encoded_sha256": "b2b1ef52236d487c57cd4d8a52e5ed8d0355e40a7e989e1bdb06e1d59d1e96ba",
+      "qt_sha256": "6c669763653a37f8a32e4e182e6443d3da62181a76ff5ca5571743f14d33b55c",
+      "native_sha256": "6c669763653a37f8a32e4e182e6443d3da62181a76ff5ca5571743f14d33b55c",
+      "elapsed_seconds": 0.0009984960197471082,
+      "returncode": 0,
+      "stderr": "",
+      "qt_bytes": 8060,
+      "native_bytes": 8060,
+      "changed": 0,
+      "exact": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "asset": "legacy-dib-22.jpg",
+    "raw_sha256": "cdbad04cc5cfb5923edb3b407de2055ef08c1168eb7bf0dc0d287bdd623b7e7d",
+    "prior_raw_sha256": "cdbad04cc5cfb5923edb3b407de2055ef08c1168eb7bf0dc0d287bdd623b7e7d",
+    "unchanged": true
+  },
+  {
+    "asset": "legacy-dib-24.jpg",
+    "raw_sha256": "aa7784e4fbe8401d12e860d5f6d4dbd7fa010420d2d81dfc7d078d9efbeb7674",
+    "prior_raw_sha256": "aa7784e4fbe8401d12e860d5f6d4dbd7fa010420d2d81dfc7d078d9efbeb7674",
+    "unchanged": true
+  },
+  {
+    "asset": "legacy-dib-28.jpg",
+    "raw_sha256": "5da8645dc20f174c78f345743a31cf3ca6745dd168b1b4ba090876fb134ccd8a",
+    "prior_raw_sha256": "5da8645dc20f174c78f345743a31cf3ca6745dd168b1b4ba090876fb134ccd8a",
+    "unchanged": true
+  },
+  {
+    "asset": "legacy-dib-31.jpg",
+    "raw_sha256": "ab0ef83ff63cad50a07954051ed14e1a4a485acdb4ad576dad7afb3f1d73c320",
+    "prior_raw_sha256": "ab0ef83ff63cad50a07954051ed14e1a4a485acdb4ad576dad7afb3f1d73c320",
+    "unchanged": true
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "binary_sha256": "12be001ed0d6887038167b3d1e21218eca5e4593f0376c6cce467e93e6ebdbc4",
+  "cases": [
+    {
+      "name": "truncated",
+      "returncode": 1,
+      "stderr": "Error: \"I/O errors Not enough bytes, expected 64 but found 39\\n\"\n",
+      "previous_output_preserved": true,
+      "refused": true
+    },
+    {
+      "name": "wrong_magic",
+      "returncode": 1,
+      "stderr": "Error: \"The image format could not be determined\"\n",
+      "previous_output_preserved": true,
+      "refused": true
+    },
+    {
+      "name": "invalid_metadata",
+      "returncode": 1,
+      "stderr": "Error: \"\\\"invalid JPEG metadata length\\\"\"\n",
+      "previous_output_preserved": true,
+      "refused": true
+    },
+    {
+      "name": "oversized_sof",
+      "returncode": 1,
+      "stderr": "Error: \"source JPEG decoded work admission\"\n",
+      "previous_output_preserved": true,
+      "refused": true
+    },
+    {
+      "name": "actual_low_work_budget",
+      "returncode": 1,
+      "stderr": "Error: \"source JPEG header work admission\"\n",
+      "previous_output_preserved": true,
+      "refused": true
+    },
+    {
+      "name": "PNG_alpha0",
+      "returncode": 0,
+      "exact": true,
+      "expected_sha256": "f4ebb9369da575c6052b932a1c42171351359c5982bdd47e2f7fbeca2593348e"
+    },
+    {
+      "name": "PNG_alpha1",
+      "returncode": 0,
+      "exact": true,
+      "expected_sha256": "afbbd8f335b9a0798f49c2242f13fdff01b7ba3189d316d7da634dab347c62d3"
+    },
+    {
+      "name": "PNG_alpha127",
+      "returncode": 0,
+      "exact": true,
+      "expected_sha256": "25a99aed73153fa381b7df609c8d69ff414398e359838ee6f46567e96c2f0e37"
+    },
+    {
+      "name": "PNG_alpha128",
+      "returncode": 0,
+      "exact": true,
+      "expected_sha256": "e1af2997d0a872a049e886d6c62c12001bc06906ebc43d286c5b0f0608c5a49b"
+    },
+    {
+      "name": "PNG_alpha254",
+      "returncode": 0,
+      "exact": true,
+      "expected_sha256": "c5063b550a1a2db234bd150d2e4e97e9e9e7bbb3c5088be53e37483d94138f5f"
+    },
+    {
+      "name": "PNG_alpha255",
+      "returncode": 0,
+      "exact": true,
+      "expected_sha256": "e8c0f21a21485281459c3fe305bcf03108fab10c126b7a7ef9efd1a70b958158"
+    }
+  ],
+  "passed": true
+}
