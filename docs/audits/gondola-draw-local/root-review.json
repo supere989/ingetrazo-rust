@@ -1,0 +1,6 @@
+{
+  "finding": "Original ordinary surface pass is one full 48489-vertex draw with no front-copy draw; local primitive4/17 maps to global4/17 in this pass.",
+  "boundary": "Does not exclude later instanced or other passes using the same primitive IDs.",
+  "fresh_source": "Exact reference match on this run; previous16-pixel source variation retained independently.",
+  "next": "Attribute diagnostic primitive IDs to their draw pass before concluding which triangle supplies final coverage."
+}

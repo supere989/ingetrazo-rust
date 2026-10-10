@@ -65,6 +65,18 @@ selected=[]
 for primitive in [4,17]:
  if (primitive+1)*3<=len(face_data):selected.append({'primitive':primitive,'position_rgb':face_data[primitive*3:(primitive+1)*3].tolist()})
 (out/'ordinary-vertex-inputs.json').write_text(json.dumps({'vertex_count':len(face_data),'selected_triangles':selected},indent=2)+'\n')
+# gl_PrimitiveID restarts at each draw; record draw-local candidates rather
+# than assuming shader ID is the global ordinary-buffer triangle index.
+spans=getattr(vp,'_face_spans',None)
+visible,culled=vp._visible_spans(spans,vp._frame_planes,None) if spans else ([(0,vp._faces_count)],0)
+draw_candidates=[]
+for first,count in visible:
+ for primitive in [4,17]:
+  start=first+primitive*3
+  if start+3<=first+count:
+   draw_candidates.append({'draw_first':first,'draw_count':count,'local_primitive':primitive,'global_primitive':start//3,'position_rgb':face_data[start:start+3].tolist()})
+(out/'draw-local-inputs.json').write_text(json.dumps({'ordinary_visible_spans':visible,'culled_vertices':culled,'opaque_front_copy_run':vp._fvcol_run,'candidates':draw_candidates,'scope':'Ordinary draw-local candidates; instanced and later passes not attributed.'},indent=2)+'\n')
+
 
 def raw_pixels():
  data=np.empty((600,800,4),dtype=np.uint8)
