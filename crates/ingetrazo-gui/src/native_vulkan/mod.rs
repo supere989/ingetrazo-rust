@@ -1142,3 +1142,5 @@ fn select_encoded_surface_format(formats:&[vk::SurfaceFormatKHR])->Option<vk::Su
   assert_eq!(select_encoded_surface_format(&[vk::SurfaceFormatKHR{format:vk::Format::UNDEFINED,..srgb}]).unwrap().format,vk::Format::B8G8R8A8_UNORM);
  }
 }
+
+pub mod textures;

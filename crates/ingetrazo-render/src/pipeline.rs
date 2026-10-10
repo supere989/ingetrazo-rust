@@ -349,6 +349,7 @@ fn build_mesh_buffers(
         let source_final_opacity = if is_xray {style.xray_opacity as f64} else {source_opacity};
         let final_opacity=source_final_opacity as f32;
 
+        let face_order=textured_meshes.take_order();
         let has_texture = style.show_textures && (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
 
         if has_texture {
@@ -362,7 +363,7 @@ fn build_mesh_buffers(
             let vert_color = [shade, shade, shade, final_opacity];
 
             let tris = mesh.triangulate_face(f_id);
-            let order=textured_meshes.take_order();
+            let order=face_order;
             let buffer=textured_meshes.entry(tex_key).or_default();
             let first=buffer.indices.len();
             for &(p0, p1, p2) in &tris {
@@ -380,7 +381,7 @@ fn build_mesh_buffers(
                 buffer.push_triangle(v0, v1, v2);
             }
             record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity,order);
-            if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,&tris,DMat4::IDENTITY,false,false);}
+            if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         } else {
             let base_color = get_face_base_color(&face.attrs, scene, style);
             let shaded_color = [
@@ -404,12 +405,12 @@ fn build_mesh_buffers(
                     opaque.push_triangle(v0, v1, v2);
                 }
             }
-            let order=opaque.indices.len()+transparent.indices.len();
+            let order=face_order;
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
             record_source_back_paint(target,first,order,&face.attrs,shade);
             record_default_back(target,first,&face.attrs,source_final_opacity);
             if !(is_xray||source_final_opacity<0.999)&&!target.source_front_cull.last().is_some_and(|r|r.0==first){target.source_consolidated_opaque_count+=target.indices.len()-first;}
-            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,&tris,DMat4::IDENTITY,false,false);}
+            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         }
     }
 }
@@ -501,6 +502,7 @@ fn build_group_buffers(
         let source_final_opacity = if is_xray {style.xray_opacity as f64} else {source_opacity};
         let final_opacity=source_final_opacity as f32;
 
+        let face_order=textured_meshes.take_order();
         let has_texture = style.show_textures && (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
 
         if has_texture {
@@ -516,7 +518,7 @@ fn build_group_buffers(
             let vert_color = [shade, shade, shade, final_opacity];
 
             let tris = group.mesh.triangulate_face(f_id);
-            let order=textured_meshes.take_order();
+            let order=face_order;
             let buffer=textured_meshes.entry(tex_key).or_default();
             let first=buffer.indices.len();
             for &(p0, p1, p2) in &tris {
@@ -542,7 +544,7 @@ fn build_group_buffers(
                 buffer.push_triangle(v0, v1, v2);
             }
             record_source_texture(buffer,first,&attrs,shade,source_final_opacity,order);
-            if native_texture_sides {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,&tris,world_t,source_placement,reflected);}
+            if native_texture_sides {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,face_order,&tris,world_t,source_placement,reflected);}
         } else {
             let base_color = get_face_base_color(&attrs, scene, style);
             let shaded_color = [
@@ -571,11 +573,11 @@ fn build_group_buffers(
                     opaque.push_triangle(v0, v1, v2);
                 }
             }
-            let order=opaque.indices.len()+transparent.indices.len();
+            let order=face_order;
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
             record_source_back_paint(target,first,order,&attrs,shade);
             record_default_back(target,first,&attrs,source_final_opacity);
-            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,&tris,world_t,source_placement,reflected);}
+            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,face_order,&tris,world_t,source_placement,reflected);}
         }
     }
 
@@ -1524,7 +1526,7 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
  let count=buffer.indices.len()-first;if count==0{return;}
  // Original bucket_face retains double-sided opaque textured fronts even
  // when a translucent back override exists; culling applies only glass fronts.
- record_source_back_paint(buffer,first,first,attrs,shade);
+ record_source_back_paint(buffer,first,order,attrs,shade);
  if opacity>=0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first){buffer.source_front_cull.pop();}
  let front_cull=opacity<0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first);
  if let Some(last)=buffer.source_texture_runs.last_mut(){if !last.back_side&&last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
@@ -1577,9 +1579,9 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
  }
 }
 
-fn append_source_back_texture(buffers:&mut crate::buffer::TextureBuffers,attrs:&std::collections::HashMap<String,serde_json::Value>,normal:DVec3,shade:f32,tris:&[(DVec3,DVec3,DVec3)],transform:DMat4,local_uv:bool,reflected:bool){
+fn append_source_back_texture(buffers:&mut crate::buffer::TextureBuffers,attrs:&std::collections::HashMap<String,serde_json::Value>,normal:DVec3,shade:f32,order:usize,tris:&[(DVec3,DVec3,DVec3)],transform:DMat4,local_uv:bool,reflected:bool){
  let Some(back)=attrs.get("back").and_then(|v|v.as_object())else{return;};let Some(tex)=back.get("texture")else{return;};let Some(path)=tex.get("embed").and_then(|v|v.as_str()).or_else(||tex.get("path").and_then(|v|v.as_str()))else{return;};if tris.is_empty(){return;}
- let opacity=back.get("opacity").and_then(|v|v.as_f64()).unwrap_or(1.);let(gu,cu,gv,cv)=face_uv_axes(tex,normal);let order=buffers.take_order();let buffer=buffers.entry(path.into()).or_default();let first=buffer.indices.len();
+ let opacity=back.get("opacity").and_then(|v|v.as_f64()).unwrap_or(1.);let(gu,cu,gv,cv)=face_uv_axes(tex,normal);let buffer=buffers.entry(path.into()).or_default();let first=buffer.indices.len();
  for &(p0,p1,p2)in tris{let(p1,p2)=if reflected{(p2,p1)}else{(p1,p2)};let vertices=[p0,p1,p2].map(|p|{let world=transform.transform_point3(p);let uvp=if local_uv{p}else{world};Vertex::from_dvec3(world,normal,[shade,shade,shade,opacity as f32],[(gu.dot(uvp)+cu)as f32,(gv.dot(uvp)+cv)as f32])});buffer.push_triangle(vertices[0],vertices[1],vertices[2]);}
  let count=buffer.indices.len()-first;if let Some(last)=buffer.source_texture_runs.last_mut(){if last.back_side&&last.first+last.count==first&&last.shade==shade&&last.opacity==opacity{last.count+=count;return;}}
  buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{back_side:true,order,first,count,shade,opacity,front_cull:false});
