@@ -1,0 +1,38 @@
+{
+  "cancel_verified": false,
+  "choice": "save",
+  "close_events": 1,
+  "confirm_unsaved": true,
+  "current_output_has_modal": true,
+  "current_submission_floor": 5,
+  "deadline_presentation_diagnostics": "extent=(1280, 800); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; hidden=false; drawable_size=CGSize { width: 1280.0, height: 800.0 }; presentsWithTransaction=false; submitted=6; retired=3; displayed=1; skipped=2; frames=[submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=504.62305562700004 gpuEnd=504.62977583900005 callback_seen=false callback_time=0; submission=5 id=4 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=507.60689830300004 gpuEnd=507.60840916200004 callback_seen=false callback_time=0; submission=6 id=5 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=508.669252495 gpuEnd=508.67076490200003 callback_seen=false callback_time=0]",
+  "deadline_window_visible": true,
+  "displayed": 1,
+  "error": "Bounded Cocoa lifecycle deadline phase=1 close=1 move=0 press=0 release=0 displayed=1",
+  "last_modal_center": [
+    566.5,
+    424.6820068359375
+  ],
+  "modal_candidates": [
+    [
+      6,
+      [
+        566.5,
+        424.6820068359375
+      ]
+    ]
+  ],
+  "modal_label": "save",
+  "modal_submission": null,
+  "moves": 0,
+  "passed": false,
+  "pending": 3,
+  "phase": 1,
+  "physical_input_claim": false,
+  "physical_mac_claim": false,
+  "presentation_diagnostics": "extent=(1280, 800); visible=Some(false); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1280.0, height: 800.0 } }; hidden=false; drawable_size=CGSize { width: 1280.0, height: 800.0 }; presentsWithTransaction=false; submitted=6; retired=3; displayed=1; skipped=2; frames=[submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=504.62305562700004 gpuEnd=504.62977583900005 callback_seen=false callback_time=0; submission=5 id=4 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=507.60689830300004 gpuEnd=507.60840916200004 callback_seen=false callback_time=0; submission=6 id=5 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=508.669252495 gpuEnd=508.67076490200003 callback_seen=false callback_time=0]",
+  "presses": 0,
+  "releases": 0,
+  "skipped": 2,
+  "ui_turns": 6
+}

@@ -1,0 +1,17 @@
+{
+  "same_runner": true,
+  "actual_QPainter": true,
+  "four_interiors_equal": false,
+  "qt_rgb": [
+    20,
+    51,
+    89
+  ],
+  "metal_rgb": [
+    21,
+    51,
+    89
+  ],
+  "metal_presentation_passed": true,
+  "strict_pixel_failure_retained": true
+}
