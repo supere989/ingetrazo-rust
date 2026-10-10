@@ -155,12 +155,19 @@ def main():
      # pointer motion after switching tool rather than warping to the same pixel.
      observe("moved-line-tool")
      away=[moved["rim"][0]+20,moved["rim"][1]+20]
-     move(away)
-     if original:wait(lambda:state() if state().get("mouse_events") and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,away)))<1 else None)
-     observe("moved-rim-away")
-     move(moved["rim"])
-     if original:wait(lambda:state() if state().get("mouse_events") and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,moved["rim"])))<1 else None)
-     observe("moved-rim-return")
+     if original and os.environ.get("INGETRAZO_MOVE_COALESCE_NEGATIVE")=="1":
+      import signal
+      os.kill(app.pid,signal.SIGSTOP)
+      try:move(away);move(moved["rim"])
+      finally:os.kill(app.pid,signal.SIGCONT)
+      observe("moved-coalesced-return")
+     else:
+      move(away)
+      if original:wait(lambda:state() if state().get("mouse_events") and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,away)))<1 else None)
+      observe("moved-rim-away")
+      move(moved["rim"])
+      if original:wait(lambda:state() if state().get("mouse_events") and sum((a-b)**2 for a,b in zip(state()["mouse_events"][-1]["point"],map(round,moved["rim"])))<1 else None)
+      observe("moved-rim-return")
      wait(lambda:state() if state()["memory"] else None);move(moved["center_pixel"])
      moved_hint=wait(lambda:state() if state()["kind"]=="Center" else None)
      assert close(moved_hint["inference_point"],moved["center"]);capture("moved-center")
