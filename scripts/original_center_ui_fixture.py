@@ -29,6 +29,11 @@ def state():
  rim=positions[0] if positions else points[0]
  snap=vp.last_snap;anchor=getattr(vp.active_tool,'start_point',None)
  result=dict(mode=mode,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ ref=vp._valid_center_ref()
+ pc=vp._world_to_pixel(ref[0]) if ref is not None else None
+ pointer=vp._last_mouse_pos
+ radius=vp._center_hint_px(ref,pc) if pc is not None else 0.
+ result['center_hint_observation']=dict(radius_px=radius,pointer=[pointer.x(),pointer.y()] if pointer is not None else None,allowed=bool(ref is not None and vp.active_tool is not None and vp.active_tool.uses_snap and not (snap is not None and snap.kind=='center') and pointer is not None and pc is not None and radius>0 and math.hypot(pc[0]-pointer.x(),pc[1]-pointer.y())<=radius))
  temporary=directory/'state.tmp'
  temporary.write_text(json.dumps(result))
  temporary.replace(directory/'state.json')
