@@ -3,6 +3,8 @@
 import ctypes as C,ctypes.util,json,os,sys,subprocess,tempfile,time,select,struct,zlib,re,hashlib
 from pathlib import Path
 from acceptance_context import context
+from center_hint_glyph import center_hint_metrics
+from PySide6.QtGui import QImage
 def wait(fn,seconds=20):
  end=time.monotonic()+seconds
  while time.monotonic()<end:
@@ -78,17 +80,24 @@ def main():
    if mode in ("curve","tiny","malformed"):
     approach=[initial["center_pixel"][0]+20,initial["center_pixel"][1]];move(approach);time.sleep(.1);capture("approach-hint")
     cx,cy=map(round,initial["center_pixel"])
-    text=subprocess.check_output(["convert",str(directory/"approach-hint.png"),"-crop",f"17x17+{cx-8}+{cy-8}","-depth","8","txt:-"],text=True)
-    colors=[tuple(map(int,values)) for values in re.findall(r"\((\d+),(\d+),(\d+)(?:,\d+)?\)",text)]
-    approach_green=sum(r<100 and g>100 and b<150 for r,g,b in colors)
-    if mode=="curve" and (original or os.environ.get("INGETRAZO_CENTER_EXPECT_HINT")=="1"):assert approach_green>5,"Center approach hint must materially render"
-    if mode!="curve":assert approach_green==0,"Tiny/malformed approach center must stay quiet"
+    image=QImage(str(directory/"approach-hint.png"));assert not image.isNull()
+    assert cx>=8 and cy>=8 and cx+8<image.width() and cy+8<image.height()
+    def pixel(px,py):
+     color=image.pixelColor(px,py);return color.red(),color.green(),color.blue()
+    hint_metrics=center_hint_metrics(pixel,cx,cy)
+    approach_green=hint_metrics["outer_green"]
+    if mode=="curve" and (original or os.environ.get("INGETRAZO_CENTER_EXPECT_HINT")=="1"):assert hint_metrics["filled_center"],"Filled center approach hint must render"
+    if mode!="curve":
+     assert not hint_metrics["filled_center"],"Tiny/malformed approach must not render a filled center hint"
+     if original:
+      observation=state()["center_hint_observation"]
+      assert observation["allowed"] is False,observation
    move(initial["center_pixel"]);time.sleep(.1)
    centered=state()
    if mode!="curve":
     assert centered["kind"]!="Center",centered
     capture("quiet-center")
-    report={"passed":True,"provenance":context(),"mode":mode,"early":early,"acquired":acquired,"centered":centered,"approach_green_pixels":approach_green,"elapsed_wall_seconds":elapsed,"scope":"Actual native Vulkan production UI pointer and frame clock; tiny dot quiet or malformed fit rejected, no geometry/undo mutation; llvmpipe Xvfb engineering backend."}
+    report={"passed":True,"provenance":context(),"mode":mode,"early":early,"acquired":acquired,"centered":centered,"approach_hint_metrics":hint_metrics,"approach_green_pixels":approach_green,"elapsed_wall_seconds":elapsed,"scope":"Actual native Vulkan production UI pointer and frame clock; tiny dot quiet or malformed fit rejected, no geometry/undo mutation; llvmpipe Xvfb engineering backend."}
    else:
     centered=wait(lambda:state() if state()["kind"]=="Center" else None)
     assert close(centered["inference_point"],expected);capture("center-hint")
@@ -112,7 +121,7 @@ def main():
     move([moved["center_pixel"][0]+20,moved["center_pixel"][1]+20]);move(moved["center_pixel"])
     deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
     assert deleted["undo"]==2;capture("deleted-center")
-    report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":approach_green<=5,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
+    report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":requested_delta,"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"pointer_quantized_move_matches":pointer_quantized_move_matches,"approach_hint_metrics":hint_metrics,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":not hint_metrics["filled_center"],"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
    report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
    if original:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select shortcuts wired to original public actions, Move/Delete original geometry/history, software GL Xvfb."
    Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+suffix+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Actual center gesture PASS",mode,"original" if original else "native")
