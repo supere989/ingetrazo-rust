@@ -197,6 +197,7 @@ impl IngeTrazoApp {
     pub fn new_document(&mut self) {
         self.save_undo_state();
         self.scene = Scene::new();
+        self.camera = self.scene.camera.clone();
         self.current_file = None;
         self.textures.clear();
         self.status_message.clear();
@@ -206,6 +207,7 @@ impl IngeTrazoApp {
         match load_file(path) {
             Ok(loaded_scene) => {
                 self.save_undo_state();
+                self.camera = loaded_scene.camera.clone();
                 self.scene = loaded_scene;
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();
@@ -215,9 +217,6 @@ impl IngeTrazoApp {
                     self.recent_files.truncate(10);
                 }
                 self.textures.clear();
-                self.camera.set_standard_view(ingetrazo_core::camera::StandardView::Iso);
-                self.camera.target = DVec3::ZERO;
-                self.camera.distance = 20.0;
                 self.status_message.clear();
             }
             Err(err) => {
@@ -236,8 +235,11 @@ impl IngeTrazoApp {
     }
 
     pub fn save_to_path(&mut self, path: &Path) {
-        match save_file(&self.scene, path) {
+        let mut document = self.scene.clone();
+        document.camera = self.camera.clone();
+        match save_file(&document, path) {
             Ok(()) => {
+                self.scene.camera = self.camera.clone();
                 self.current_file = Some(path.to_path_buf());
                 self.status_message = format!("Saved: {}", path.display());
             }
@@ -248,6 +250,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_undo_state(&mut self) {
+        self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
         self.redo_stack.clear();
         if self.undo_stack.len() > 50 {
@@ -259,6 +262,7 @@ impl IngeTrazoApp {
         if let Some(prev) = self.undo_stack.pop() {
             self.redo_stack.push(self.scene.clone());
             self.scene = prev;
+            self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
         }
     }
@@ -267,6 +271,7 @@ impl IngeTrazoApp {
         if let Some(next) = self.redo_stack.pop() {
             self.undo_stack.push(self.scene.clone());
             self.scene = next;
+            self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
         }
     }
@@ -1467,3 +1472,30 @@ mod tests {
 }
 
 
+
+#[cfg(test)]
+mod document_camera_tests {
+    use super::*;
+    #[test]
+    fn visible_camera_is_saved_restored_and_reset_for_new_document() {
+        let path = std::env::temp_dir().join(format!("camera-{}.igz", uuid::Uuid::new_v4()));
+        let mut app = IngeTrazoApp::new();
+        app.camera.target = DVec3::new(3.0,4.0,5.0);
+        app.camera.distance = 42.0;
+        app.camera.yaw = 0.6;
+        app.camera.perspective = false;
+        app.save_to_path(&path);
+        let reopened = IngeTrazoApp::with_file(&path);
+        assert_eq!(reopened.camera.target, app.camera.target);
+        assert_eq!(reopened.camera.distance, 42.0);
+        assert_eq!(reopened.camera.yaw, 0.6);
+        assert!(!reopened.camera.perspective);
+        app.new_document();
+        assert_eq!(app.camera, OrbitCamera::new());
+        app.undo();
+        assert_eq!(app.camera.target, DVec3::new(3.0,4.0,5.0));
+        app.redo();
+        assert_eq!(app.camera, OrbitCamera::new());
+        std::fs::remove_file(path).unwrap();
+    }
+}
