@@ -329,6 +329,12 @@ jobs:
           python scripts/probe-python-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json
           cargo run --locked -p ingetrazo-gui --example image_frame_commands > docs/audits/image-ownership-ci/native-frames.json
           python scripts/check-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json docs/audits/image-ownership-ci/native-frames.json docs/audits/image-frame-command-ownership/literal-old-native.json
+      - name: Original image picking and reference work planes
+        run: |
+          mkdir -p docs/audits/image-ownership-ci
+          python scripts/probe-python-image-picking.py scripts/image-plane-pick-input.json docs/audits/image-ownership-ci/original-picking.json
+          cargo run --locked -p ingetrazo-gui --example image_plane_picking -- scripts/image-plane-pick-input.json > docs/audits/image-ownership-ci/native-picking.json
+          python scripts/check-image-plane-picking.py docs/audits/image-ownership-ci/original-picking.json docs/audits/image-ownership-ci/native-picking.json
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
