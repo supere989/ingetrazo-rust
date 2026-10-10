@@ -4,6 +4,17 @@
     1,
     2
   ],
+  "process_metrics": {
+    "elapsed_ns": 189335,
+    "input_bytes": 488,
+    "output_bytes": 40,
+    "tasks": 1,
+    "workers": 2
+  },
+  "worker_pids": [
+    861035,
+    861037
+  ],
   "world": [
     [
       [

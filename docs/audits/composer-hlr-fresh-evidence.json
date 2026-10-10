@@ -1,5 +1,5 @@
 {
-  "native_revision": "f3f2e1162652aae2b5d0687c50e86704617eb140",
+  "native_revision": "d3909d17485ab578dfc48a49b1a0ade508ff8ea7",
   "passed": true,
   "endpoint_tolerance": 2e-05,
   "caps_required": true,
@@ -124,6 +124,17 @@
           1,
           1
         ],
+        "process_metrics": {
+          "elapsed_ns": 260840,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -274,6 +285,17 @@
           1,
           1
         ],
+        "process_metrics": {
+          "elapsed_ns": 233238,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -423,6 +445,17 @@
           1,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 218800,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -574,6 +607,17 @@
           1,
           1
         ],
+        "process_metrics": {
+          "elapsed_ns": 215444,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -724,6 +768,17 @@
           1,
           1
         ],
+        "process_metrics": {
+          "elapsed_ns": 231795,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -873,6 +928,17 @@
           1,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 212338,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -1366,6 +1432,17 @@
           2,
           2
         ],
+        "process_metrics": {
+          "elapsed_ns": 774192,
+          "input_bytes": 3584,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -1953,6 +2030,17 @@
           2,
           2,
           2
+        ],
+        "process_metrics": {
+          "elapsed_ns": 655479,
+          "input_bytes": 3584,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -2359,6 +2447,17 @@
           1,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 377128,
+          "input_bytes": 1472,
+          "output_bytes": 208,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -2826,6 +2925,17 @@
           3,
           3
         ],
+        "process_metrics": {
+          "elapsed_ns": 1244024,
+          "input_bytes": 1472,
+          "output_bytes": 208,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -3267,6 +3377,17 @@
           0,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 304452,
+          "input_bytes": 1472,
+          "output_bytes": 224,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -3734,6 +3855,17 @@
           3,
           3
         ],
+        "process_metrics": {
+          "elapsed_ns": 233027,
+          "input_bytes": 1472,
+          "output_bytes": 224,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -3976,6 +4108,17 @@
           1,
           2
         ],
+        "process_metrics": {
+          "elapsed_ns": 190026,
+          "input_bytes": 488,
+          "output_bytes": 40,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -4061,6 +4204,17 @@
         "kinds": [
           1,
           2
+        ],
+        "process_metrics": {
+          "elapsed_ns": 189335,
+          "input_bytes": 488,
+          "output_bytes": 40,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -4227,6 +4381,17 @@
           1,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 175419,
+          "input_bytes": 416,
+          "output_bytes": 72,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -4462,6 +4627,17 @@
           1,
           3
         ],
+        "process_metrics": {
+          "elapsed_ns": 176191,
+          "input_bytes": 416,
+          "output_bytes": 72,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -4808,6 +4984,17 @@
           2,
           2
         ],
+        "process_metrics": {
+          "elapsed_ns": 529033,
+          "input_bytes": 3248,
+          "output_bytes": 384,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -5141,6 +5328,17 @@
           2,
           2,
           2
+        ],
+        "process_metrics": {
+          "elapsed_ns": 1247501,
+          "input_bytes": 3248,
+          "output_bytes": 384,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -5795,6 +5993,17 @@
           0,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 1192798,
+          "input_bytes": 5984,
+          "output_bytes": 512,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -6874,6 +7083,17 @@
           3,
           3
         ],
+        "process_metrics": {
+          "elapsed_ns": 1282296,
+          "input_bytes": 5984,
+          "output_bytes": 512,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -7887,6 +8107,17 @@
           1,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 1480167,
+          "input_bytes": 5984,
+          "output_bytes": 624,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -8966,6 +9197,17 @@
           3,
           3
         ],
+        "process_metrics": {
+          "elapsed_ns": 1399416,
+          "input_bytes": 5984,
+          "output_bytes": 624,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -9500,6 +9742,17 @@
           1,
           1
         ],
+        "process_metrics": {
+          "elapsed_ns": 312606,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -9649,6 +9902,17 @@
           1,
           1,
           1
+        ],
+        "process_metrics": {
+          "elapsed_ns": 268003,
+          "input_bytes": 1472,
+          "output_bytes": 256,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -9800,6 +10064,17 @@
           1,
           1
         ],
+        "process_metrics": {
+          "elapsed_ns": 1123808,
+          "input_bytes": 2912,
+          "output_bytes": 896,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
+        ],
         "world": [
           [
             [
@@ -10009,6 +10284,17 @@
           3,
           3,
           3
+        ],
+        "process_metrics": {
+          "elapsed_ns": 537669,
+          "input_bytes": 2912,
+          "output_bytes": 896,
+          "tasks": 1,
+          "workers": 2
+        },
+        "worker_pids": [
+          861035,
+          861037
         ],
         "world": [
           [
@@ -10101,19 +10387,19 @@
     }
   ],
   "scope": "Fresh locked production fixture build, fresh pinned original HLR, separate process actual original IGZ inputs; endpoints/classes in thirteen orthographic cases both hidden modes, hidden face/group layers, nested reflected nonuniform placements and soft cylinder silhouettes. Production cap triangles compared with original even-odd loop filled area and 83x79 deterministic point coverage including hollow cuts; shifted same-area cap negative control. Rendered widths/dashes remain pending separate acceptance.",
-  "native_fixture_sha256": "f70e459bf00bac4390a939cffd8db0913d62e65786dbd3adac5b232b7907dd88",
+  "native_fixture_sha256": "f2d02dbbe199ae67983061125264fc102bd05a7657642b754cd5b5f469cdc48c",
   "input_sha256": {
     "front_box.igz": "34f6867118befa7ecbade513482f4941f5d641857fe18f68c6ee3deefcdb7bb7",
     "hidden_layer_face.igz": "7dbb7d3c7874e5da51930171f3b88b759e621f467846ca200299feb137a988c5",
-    "hidden_layer_group.igz": "07e98a30968113e40d91bb3ac9ca5855ba1b70874ce708dfb9ceb2cf306b2c07",
+    "hidden_layer_group.igz": "fc807e80ae14872355fea963125bb1f07ed937ad90b8140e6986a837dd4733de",
     "hollow_cap.igz": "0c6df587db78002d11c11fa0246a7ba6a35c73fabdbde97e33efc08e31dc9f57",
     "iso_box.igz": "34f6867118befa7ecbade513482f4941f5d641857fe18f68c6ee3deefcdb7bb7",
-    "nested_reflected_box.igz": "28252296b88ad4fa0bd3507aedd81a8b77f7b965763317190a50021566401471",
+    "nested_reflected_box.igz": "d392fe4242db982a92488b20e23de9fb87428d4ba703c34e598ec45c6ecc93d8",
     "open_cut_chain.igz": "1f1ea5c19ae1831a29f8af17a0c324bfece8d1009d0f084a698982c38dc4ef5a",
     "partial_rear_line.igz": "8f08c56cde3f5b8da7dfcb9df46ed76feaef84cc7c18519961b65d45a86e44e7",
     "section_board.igz": "a5e57a092372a14d118d7a7fae843a70a869138b32ce04495badc0dccfe18f82",
     "soft_cylinder_silhouette.igz": "70c7dd606f31585ade1c74eb3470d02ee300c94a29a1e480ead782eece820923",
-    "soft_reflected_silhouette.igz": "a823c26e0a8e8b8fab7d1482fc614a245162c994706a48cedef492db285b09c5",
+    "soft_reflected_silhouette.igz": "9e687ee52efa532c4b4238f7d200b1a9e7ffbef099cbc82f37aed01f83d1424e",
     "top_box.igz": "34f6867118befa7ecbade513482f4941f5d641857fe18f68c6ee3deefcdb7bb7",
     "wall_hidden.igz": "678e21f425afce05388175275be22ae29803994b433d1f40ae686243963e2ac5"
   }
