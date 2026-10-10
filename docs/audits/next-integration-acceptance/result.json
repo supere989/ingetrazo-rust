@@ -1,0 +1,12 @@
+{
+  "source": "a5d8c38c3363127ac558fc1d59b0368ad31a951c",
+  "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --workspace --locked --lib --tests -j2",
+  "exit_code": 0,
+  "passed": 647,
+  "failed": 0,
+  "ignored": 2,
+  "suite_summaries": 28,
+  "log_sha256": "71f1e2e97c7d0c585b1d56909cd34d8035247f546f5f8cad0bfd151e77e2b240",
+  "scope": "Combined AI provider, Canvas raw glyph/background/decorations, existing Vulkan changes and Linux workspace. Native Metal input runtime and physical Mac acceptance remain open.",
+  "temporary_target_and_log_purged": true
+}
