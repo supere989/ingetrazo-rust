@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "30a62731c6b3ea3bf2dfe36b0323b999b4964e3c",
+    "rust_commit": "75b79f3f0ce173ad16f55ba025bb43c073fb1d17",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -31,6 +31,25 @@
       "matrix_unchanged": true,
       "undo": 0,
       "cancel_restores": true
+    },
+    {
+      "name": "linked nested group spaced array retype",
+      "first_offsets": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "retyped_offsets": [
+        0,
+        4,
+        8
+      ],
+      "shared_parent_and_child_mesh": true,
+      "fresh_parent_and_child_uids": true,
+      "undo_entries": 1,
+      "undo_groups": 1,
+      "redo_groups": 3
     }
   ],
   "scope": "Operative original Move.on_click/on_hover/on_cancel and Viewport frozen-preview state. Controlled world/screen recipes with a real isolated software GL context, no rendered pointer/GPU upload or timing acceptance."

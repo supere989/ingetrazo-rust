@@ -38,5 +38,25 @@ for placed in (False,True):
  assert (None if group.xform is None else list(group.xform.data()))==matrix
  vp.close()
  rows.append({'placed':placed,'pointer_recipe_offsets':[1,2,3],'frozen_scene_version':version,'geometry_unchanged':True,'matrix_unchanged':True,'undo':0,'cancel_restores':True})
+# Operative placed component copy/retype: definitions shared, placements fresh.
+vp=Viewport();vp.resize(800,600);vp.show();app.processEvents();vp.makeCurrent();vp.flash_status=lambda text:None
+mesh=Mesh();mesh.add_face([V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0)])
+group=Group(mesh,name='linked');group.xform=QMatrix4x4();group.xform.translate(0,2,0);group.xform.rotate(17,V(0,0,1));group.component=True
+group.children.append(Group(name='nested private'));vp.scene.groups.append(group);vp.scene.select([group]);tool=MoveTool();vp.set_active_tool(tool)
+tool.on_click(N(viewport=vp,world=V(0,0,0),screen=QPointF(0,0)));tool._copy=True;tool.hover_point=V(3,0,0)
+assert tool.on_array_value(vp,3,'x',step=2.)
+assert len(vp.history.undo_stack)==1 and len(vp.scene.groups)==4
+assert all(g.mesh is mesh for g in vp.scene.groups)
+assert len({g.uid for g in vp.scene.groups})==4
+assert len({g.children[0].uid for g in vp.scene.groups})==4
+assert all(g.children[0].mesh is group.children[0].mesh for g in vp.scene.groups)
+assert [g.xform.map(V(0,0,0)).x() for g in vp.scene.groups]==[0.,2.,4.,6.]
+assert tool.on_array_value(vp,2,'x',step=4.)
+assert [g.xform.map(V(0,0,0)).x() for g in vp.scene.groups]==[0.,4.,8.]
+assert len(vp.history.undo_stack)==1
+vp.history.undo();assert len(vp.scene.groups)==1 and vp.scene.groups[0] is group
+vp.history.redo();assert len(vp.scene.groups)==3
+rows.append({'name':'linked nested group spaced array retype','first_offsets':[0,2,4,6],'retyped_offsets':[0,4,8],'shared_parent_and_child_mesh':True,'fresh_parent_and_child_uids':True,'undo_entries':1,'undo_groups':1,'redo_groups':3})
+vp.close()
 Path('docs/audits/move-group-frozen-source-controls.json').write_text(json.dumps({'provenance':context(),'cases':rows,'scope':'Operative original Move.on_click/on_hover/on_cancel and Viewport frozen-preview state. Controlled world/screen recipes with a real isolated software GL context, no rendered pointer/GPU upload or timing acceptance.'},indent=2)+'\n')
 print('Original ordinary/placed group frozen preview controls PASS')
