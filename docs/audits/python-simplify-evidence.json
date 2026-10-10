@@ -1,6 +1,20 @@
 {
+  "negative_controls": [
+    {
+      "case": "unchanged-grid",
+      "detected": true
+    },
+    {
+      "case": "lost-protected-hole",
+      "detected": true
+    },
+    {
+      "case": "paint-seam-corruption",
+      "detected": true
+    }
+  ],
   "provenance": {
-    "rust_commit": "9305cd9b867ed3c4178c54ae7260a4419258ff0a",
+    "rust_commit": "89c7ea0dd7b72bde74a94202bb5ce6758767ef48",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -113,5 +127,5 @@
     }
   ],
   "failures": [],
-  "scope": "Original exact oriented rings, holes, attrs and transient interior flags across four grids, principal-plane restriction, curved root-normal drift, paint/UV seams, protected holed partition and T junction. Near-threshold equivalent simplifications are retained as literal parity failures."
+  "scope": "Original exact oriented rings, holes, attrs and transient interior flags across four grids, principal-plane restriction, curved root-normal drift, paint/UV seams, protected holed partition and T junction. Near-threshold differences remain literal failures. Boundary-order implementation is pinned to 64-bit CPython 3.13; this corpus is not broad platform equivalence."
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exact original simplification geometry/attributes; retain curve drift failures."""
-import json,os,sys,tempfile,subprocess,math,importlib.util
+import json,os,sys,tempfile,subprocess,math,importlib.util,copy
 from pathlib import Path
 from acceptance_context import context
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen");sys.path.insert(0,str(Path("ingetrazo").resolve()))
@@ -47,6 +47,14 @@ def main():
   for c,m,r in zip(cases,meshes,results):
    removed=simplify_mesh(m,c["angle"],c["principal"]);expected=serialized(m);same=faces(expected)==faces(r["faces"]);row={"case":c["name"],"original_removed":removed,"rust_removed":r["removed"],"original_faces":len(expected),"rust_faces":len(r["faces"]),"exact_geometry_attributes_match":same};rows.append(row)
    if not same or removed!=r["removed"]:errors.append({"case":c["name"],"original":expected,"rust":r["faces"]})
- report={"provenance":context(),"passed":not errors,"cases":rows,"failures":errors,"scope":"Original exact oriented rings, holes, attrs and transient interior flags across four grids, principal-plane restriction, curved root-normal drift, paint/UV seams, protected holed partition and T junction. Near-threshold equivalent simplifications are retained as literal parity failures."}
+ controls=[]
+ for name,index,mutate in [
+  ("unchanged-grid",0,lambda rows: rows.__setitem__(slice(None),copy.deepcopy(cases[0]["faces"]))),
+  ("lost-protected-hole",11,lambda rows: rows[0].__setitem__("holes",[])),
+  ("paint-seam-corruption",8,lambda rows: rows[0].__setitem__("attrs",{}))]:
+  changed=copy.deepcopy(results[index]["faces"]);mutate(changed)
+  detected=faces(changed)!=faces(results[index]["faces"]);assert detected,name
+  controls.append({"case":name,"detected":detected})
+ report={"negative_controls":controls,"provenance":context(),"passed":not errors,"cases":rows,"failures":errors,"scope":"Original exact oriented rings, holes, attrs and transient interior flags across four grids, principal-plane restriction, curved root-normal drift, paint/UV seams, protected holed partition and T junction. Near-threshold differences remain literal failures. Boundary-order implementation is pinned to 64-bit CPython 3.13; this corpus is not broad platform equivalence."}
  Path("docs/audits/python-simplify-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps({k:v for k,v in report.items() if k!="failures"},indent=2));assert not errors,[e["case"] for e in errors]
 if __name__=="__main__":main()

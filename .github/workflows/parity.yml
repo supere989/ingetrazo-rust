@@ -56,6 +56,8 @@ jobs:
         run: python scripts/check-python-dimension-anchors.py
       - name: Original runtime planar healing
         run: python scripts/check-python-heal.py
+      - name: Original simplification geometry and protected attributes
+        run: python scripts/check-python-simplify.py
       - name: Original interior partition orientation oracle
         run: python scripts/check-python-orient.py
       - name: Original offset regions and chains
