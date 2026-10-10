@@ -360,7 +360,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    response.context_menu(|ui|{if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});
+    if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
 
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {

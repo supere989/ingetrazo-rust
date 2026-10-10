@@ -506,6 +506,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 app.activate_navigation(crate::navigation::Mode::Walk);
                 ui.close_menu();
             }
+            if ui.button(tr("First Person")).clicked() {app.activate_navigation(crate::navigation::Mode::FirstPerson);ui.close_menu();}
             if ui.button(tr("Look Around")).clicked() {
                 app.activate_navigation(crate::navigation::Mode::Look);
                 ui.close_menu();

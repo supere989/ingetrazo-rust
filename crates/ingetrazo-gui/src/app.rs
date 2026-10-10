@@ -363,7 +363,7 @@ impl IngeTrazoApp {
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
         self.change_layer_visibility(index,visible)
     }
-    pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
+    pub(crate) fn bump_model_revision(&mut self){self.navigation.cancel();self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
@@ -975,6 +975,7 @@ impl IngeTrazoApp {
         ctx.send_viewport_cmd(egui::ViewportCommand::Title(title));
         self.blender_state.poll_events(ctx);
 
+        if self.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){self.navigation.sync_cursor(ctx);}
         // Global Keyboard Shortcuts
         if ctx.input(|i| i.modifiers.command || i.modifiers.ctrl) {
             if ctx.input(|i| i.key_pressed(egui::Key::N)) {
@@ -1018,13 +1019,13 @@ impl IngeTrazoApp {
                 self.set_tool(ToolType::PushPull);
             } else if ctx.input(|i| i.key_pressed(egui::Key::M)) {
                 self.set_tool(ToolType::Move);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)&&!self.navigation.claims_key(egui::Key::Q,i.modifiers)) {
                 self.set_tool(ToolType::Rotate);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::S)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::S)&&!self.navigation.claims_key(egui::Key::S,i.modifiers)) {
                 self.set_tool(ToolType::Scale);
             } else if ctx.input(|i| i.key_pressed(egui::Key::T)) {
                 self.set_tool(ToolType::Tape);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::E)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::E)&&!self.navigation.claims_key(egui::Key::E,i.modifiers)) {
                 self.set_tool(ToolType::Eraser);
             } else if ctx.input(|i| i.key_pressed(egui::Key::B)) {
                 self.set_tool(ToolType::Paint);
