@@ -1,0 +1,18 @@
+{
+  "candidate_worktree": "/tmp/ingetrazo-sheet-view-pdf",
+  "status": "Source review of pending probe; runtime acceptance not yet available",
+  "reviewed_path": [
+    "Same upload_pending_textures helper used by production host and probe",
+    "Budget constrained after measuring real image requirements",
+    "Failed raw bytes retained until retry or release",
+    "Released failed ID cancelled together with pending delta",
+    "Held raw ID retried then ACKed and retired",
+    "Ordinary managed partial update/free retained",
+    "Final committed and reserved ledger and managed identities compared with baseline"
+  ],
+  "required_corrections_sent": [
+    "Platform gate new native Vulkan example to Linux/Windows so native macOS all-targets remains buildable",
+    "Require staging budget-admission error, not arbitrary upload error"
+  ],
+  "scope": "No assertion of final pixel preservation or physical GPU acceptance from source review"
+}
