@@ -124,3 +124,5 @@ mod tests {
 }
 
 mod section_clip;
+
+pub mod vector_hlr;

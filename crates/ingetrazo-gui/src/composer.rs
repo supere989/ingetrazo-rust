@@ -421,7 +421,8 @@ fn render_model_projection(
     // Line stroke for technical plan rendering
     let edge_stroke = Stroke::new(1.2, Color32::from_rgb(25, 25, 30));
 
-    for(p0,p1)in section_projected_edges(scene){if let(Some((s0,_)),Some((s1,_)))=(project_point(p0,&view_proj,frame_rect),project_point(p1,&view_proj,frame_rect)){painter.line_segment([s0,s1],edge_stroke);}}
+    let segments=if matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective{ingetrazo_render::vector_hlr::parallel_visible_segments(scene,&camera).into_iter().map(|s|(s.a,s.b)).collect()}else{section_projected_edges(scene)};
+    for(p0,p1)in segments{if let(Some((s0,_)),Some((s1,_)))=(project_point(p0,&view_proj,frame_rect),project_point(p1,&view_proj,frame_rect)){painter.line_segment([s0,s1],edge_stroke);}}
 
     // Draw traced GeoPaths if present
     for gp in &scene.geo_paths {

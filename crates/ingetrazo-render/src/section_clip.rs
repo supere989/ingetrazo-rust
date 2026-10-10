@@ -27,7 +27,7 @@ fn interpolate(a: Vertex, b: Vertex, t: f64) -> Vertex {
     }
     result
 }
-fn mesh(buffer: &mut MeshRenderBuffer, plane: &SectionPlane) {
+pub(crate) fn mesh(buffer: &mut MeshRenderBuffer, plane: &SectionPlane) {
     let old = std::mem::take(buffer);
     for triangle in old.indices.chunks_exact(3) {
         let vertices = triangle
@@ -86,7 +86,7 @@ fn lines(buffer: &mut LineRenderBuffer, plane: &SectionPlane) {
         buffer.push_segment(segment);
     }
 }
-fn cap_segments(
+pub(crate) fn cap_segments(
     buffers: impl Iterator<Item = MeshRenderBuffer>,
     plane: &SectionPlane,
 ) -> Vec<(DVec3, DVec3)> {
@@ -133,7 +133,7 @@ fn cap_segments(
     segments
 }
 // Contours use source surfaces even when the current style renders no faces.
-fn contour_geometry(scene: &Scene) -> MeshRenderBuffer {
+pub(crate) fn contour_geometry(scene: &Scene) -> MeshRenderBuffer {
     fn add(
         out: &mut MeshRenderBuffer,
         scene: &Scene,
