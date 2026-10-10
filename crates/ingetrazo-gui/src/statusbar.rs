@@ -81,7 +81,7 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         ui.separator();
 
         // Prompt hint
-        let default_hint = if app.active_tool_type==ingetrazo_tools::base::ToolType::Select {tr("Select — Shift = add/remove, Ctrl = add. Double-click a group to edit it. F3 = search commands.")}else{format!("{} — {}",app.active_tool.name(),app.active_tool.description())};
+        let default_hint = if let Some(mode)=app.navigation.mode {tr(mode.hint())}else if app.active_tool_type==ingetrazo_tools::base::ToolType::Select {tr("Select — Shift = add/remove, Ctrl = add. Double-click a group to edit it. F3 = search commands.")}else{format!("{} — {}",app.active_tool.name(),app.active_tool.description())};
         let hint = if !app.status_message.is_empty() {
             &app.status_message
         } else {
@@ -94,7 +94,7 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.label(tr("Units: Meters"));
             ui.separator();
 
-            let vcb_label = app.active_tool.vcb_label();
+            let vcb_label = match app.navigation.mode {Some(crate::navigation::Mode::Position)=>"Height offset",Some(_)=>"Eye height",None=>app.active_tool.vcb_label()};
             let prompt = if !vcb_label.is_empty() { tr(vcb_label) } else { tr("Measurements") };
 
             let edit_resp = ui.add(

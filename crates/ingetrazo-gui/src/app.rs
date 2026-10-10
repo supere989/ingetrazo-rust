@@ -50,6 +50,7 @@ pub struct IngeTrazoApp {
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
     pub camera: OrbitCamera,
+    pub navigation: crate::navigation::Navigation,
     pub active_tool_type: ToolType,
     pub active_tool: Box<dyn Tool>,
     pub style: StyleConfig,
@@ -149,6 +150,7 @@ impl IngeTrazoApp {
             component_edit_stack: Vec::new(),
             scene,
             camera,
+            navigation: Default::default(),
             active_tool_type: ToolType::Select,
             active_tool: create_tool(ToolType::Select),
             style: StyleConfig::default_shaded(),
@@ -236,6 +238,7 @@ impl IngeTrazoApp {
     }
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        self.navigation.cancel(); self.navigation.mode=None;
         self.paste_preview=None;
         let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
@@ -362,7 +365,7 @@ impl IngeTrazoApp {
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
         self.change_layer_visibility(index,visible)
     }
-    pub(crate) fn bump_model_revision(&mut self){self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
+    pub(crate) fn bump_model_revision(&mut self){self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
     pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
         self.sync_document_presentation();
@@ -962,6 +965,7 @@ impl IngeTrazoApp {
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
+        if self.navigation_suspended(){self.navigation.cancel();self.navigation.sync_cursor(ctx);}
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});
             crate::section_actions::render_section_name_prompt(self,ctx);return;
@@ -988,6 +992,7 @@ impl IngeTrazoApp {
         if undo_pressed {self.undo();}
         if redo_pressed {self.redo();}
 
+        if self.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){self.navigation.sync_cursor(ctx);}
         // Global Keyboard Shortcuts
         if ctx.input(|i| i.modifiers.command || i.modifiers.ctrl) {
             if ctx.input(|i| i.key_pressed(egui::Key::N)) {
@@ -1025,13 +1030,13 @@ impl IngeTrazoApp {
                 self.set_tool(ToolType::PushPull);
             } else if ctx.input(|i| i.key_pressed(egui::Key::M)) {
                 self.set_tool(ToolType::Move);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)&&!self.navigation_claims_key(egui::Key::Q,i.modifiers)) {
                 self.set_tool(ToolType::Rotate);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::S)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::S)&&!self.navigation_claims_key(egui::Key::S,i.modifiers)) {
                 self.set_tool(ToolType::Scale);
             } else if ctx.input(|i| i.key_pressed(egui::Key::T)) {
                 self.set_tool(ToolType::Tape);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::E)) {
+            } else if ctx.input(|i| i.key_pressed(egui::Key::E)&&!self.navigation_claims_key(egui::Key::E,i.modifiers)) {
                 self.set_tool(ToolType::Eraser);
             } else if ctx.input(|i| i.key_pressed(egui::Key::B)) {
                 self.set_tool(ToolType::Paint);

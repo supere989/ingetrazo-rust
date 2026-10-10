@@ -1,0 +1,1 @@
+{"passed": true, "observations": 10, "scope": "Actual XTEST keys/buttons/raw relative mouse and focused window on owned Xvfb/llvmpipe native Vulkan; not hardware or original rendered parity"}

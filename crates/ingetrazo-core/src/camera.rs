@@ -89,6 +89,35 @@ impl OrbitCamera {
         }
     }
 
+    /// Place the eye and look direction using the existing orbit representation.
+    /// Returns false without mutation for nonfinite input.
+    pub fn look_from(&mut self, eye: DVec3, direction: DVec3) -> bool {
+        if !eye.is_finite() || !direction.is_finite() || !self.distance.is_finite() { return false; }
+        let d = if direction.length_squared() < 1e-18 { self.forward() } else { direction.normalize() };
+        if !d.is_finite() { return false; }
+        let pitch = (-d.z).clamp(-1.,1.).asin().clamp(-89_f64.to_radians(),89_f64.to_radians());
+        let yaw = if pitch.cos().abs() > 1e-9 { (-d.y).atan2(-d.x) } else { self.yaw };
+        let target = eye + d * self.distance;
+        if !target.is_finite() { return false; }
+        self.yaw = yaw; self.pitch = pitch; self.target = target; true
+    }
+
+    /// Turn the head clockwise and upward while retaining the eye.
+    pub fn turn(&mut self, yaw_degrees: f64, pitch_degrees: f64) -> bool {
+        if !yaw_degrees.is_finite() || !pitch_degrees.is_finite() { return false; }
+        let eye = self.eye(); let d = self.forward();
+        let yaw = d.y.atan2(d.x) - yaw_degrees.to_radians();
+        let pitch = (d.z.clamp(-1.,1.).asin() + pitch_degrees.to_radians()).clamp(-89_f64.to_radians(),89_f64.to_radians());
+        self.look_from(eye,DVec3::new(pitch.cos()*yaw.cos(),pitch.cos()*yaw.sin(),pitch.sin()))
+    }
+
+    /// Translate eye and target together, preserving the view direction.
+    pub fn move_eye(&mut self, delta: DVec3) -> bool {
+        let target = self.target + delta;
+        if !delta.is_finite() || !target.is_finite() { return false; }
+        self.target = target; true
+    }
+
     /// Right vector perpendicular to view and up.
     pub fn right(&self) -> DVec3 {
         self.forward().cross(self.up_vector()).normalize_or_zero()
@@ -396,4 +425,21 @@ mod original_perspective_tests {
  #[test]fn top_bottom_collapse_vertical_edge_and_keep_finite_basis(){
   for view in [StandardView::Top,StandardView::Bottom]{let mut camera=OrbitCamera::default();camera.set_standard_view(view);camera.perspective=false;let m=camera.projection_matrix()*camera.view_matrix();let a=m*DVec3::new(0.3,0.9,-0.2).extend(1.);let b=m*DVec3::new(0.3,0.9,0.2).extend(1.);assert!((a.x-b.x).abs()<1e-12&&(a.y-b.y).abs()<1e-12,"Architectural plan projects a vertical edge as a line");assert!(m.is_finite());assert!((camera.pitch.abs()-std::f64::consts::FRAC_PI_2).abs()<1e-12);}
  }
+}
+
+#[cfg(test)]
+mod walkthrough_camera_tests {
+    use super::*;
+    #[test] fn turn_and_translation_keep_the_orbit_representation() {
+        let mut c=OrbitCamera::new(); let eye=c.eye(); let distance=c.distance;
+        assert!(c.turn(35.,12.)); assert!(c.eye().distance(eye)<1e-12); assert_eq!(c.distance,distance);
+        let direction=c.forward(); let eye=c.eye(); assert!(c.move_eye(DVec3::new(2.,3.,4.)));
+        assert!(c.eye().distance(eye+DVec3::new(2.,3.,4.))<1e-12); assert!(c.forward().distance(direction)<1e-12);
+    }
+    #[test] fn refused_nonfinite_navigation_is_atomic() {
+        let mut c=OrbitCamera::new(); let old=c.clone();
+        assert!(!c.look_from(DVec3::splat(f64::NAN),DVec3::Y)); assert_eq!(c,old);
+        assert!(!c.turn(f64::INFINITY,0.)); assert_eq!(c,old);
+        assert!(!c.move_eye(DVec3::splat(f64::INFINITY))); assert_eq!(c,old);
+    }
 }

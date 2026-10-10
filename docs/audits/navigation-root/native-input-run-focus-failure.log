@@ -1,0 +1,4 @@
+X Error of failed request:  BadMatch (invalid parameter attributes)
+  Major opcode of failed request:  42 (X_SetInputFocus)
+  Serial number of failed request:  8
+  Current serial number in output stream:  10

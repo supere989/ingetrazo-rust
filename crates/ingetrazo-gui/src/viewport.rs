@@ -47,7 +47,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         let drag_delta = response.drag_delta();
         let is_middle = pointer.middle_down();
         let is_alt_left =
-            alt_down && pointer.primary_down() && app.active_tool_type != ToolType::FollowMe;
+            alt_down && pointer.primary_down() && app.active_tool_type != ToolType::FollowMe && app.navigation.mode.is_none();
 
         if is_middle || is_alt_left {
             if shift_down {
@@ -66,6 +66,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let mut active_snap_glyph = None;
     let mut active_center_hint = None;
 
+    if app.navigation.mode.is_some() {
+        crate::navigation::input(app,ui,rect,&response);
+    } else {
     if let Some(mouse_pos) = pointer.hover_pos() {
         if rect.contains(mouse_pos) {
             let rel_x = (mouse_pos.x - rect.min.x) as f64;
@@ -221,6 +224,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         });
     }
 
+    } // ordinary geometry tool input
+
     // 3. Render 3D Scene
     // Decode and upload embedded textures into egui texture manager
     for (name, bytes) in app.scene.embedded_textures.iter().chain(app.paste_preview.iter().flat_map(|preview|preview.scene.embedded_textures.iter())) {
@@ -360,7 +365,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    response.context_menu(|ui|{if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});
+    if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
 
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {
