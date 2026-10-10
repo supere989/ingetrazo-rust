@@ -81,6 +81,12 @@ jobs:
         run: |
           mkdir -p docs/audits/metal-native-link-ci
           cargo run --locked -p ingetrazo-metal --example presentation_probe -- --automatic --diagnostic-event-loop-poll > docs/audits/metal-native-link-ci/presentation-event-loop-poll.log 2>&1
+      - name: Independent direct AppKit Metal presentation reference
+        if: always()
+        run: |
+          mkdir -p docs/audits/metal-native-link-ci/appkit-reference
+          swiftc -swift-version 5 scripts/metal-appkit-reference.swift -framework AppKit -framework Metal -framework QuartzCore -o /tmp/metal-appkit-reference > docs/audits/metal-native-link-ci/appkit-reference/build.log 2>&1
+          python3 scripts/check-metal-appkit-reference.py /tmp/metal-appkit-reference docs/audits/metal-native-link-ci/appkit-reference ${{ github.sha }} > docs/audits/metal-native-link-ci/appkit-reference/check.log 2>&1
       - name: Actual shared application Cocoa document lifecycle
         if: always()
         run: |
