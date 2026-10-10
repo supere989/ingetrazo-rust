@@ -1,0 +1,3 @@
+Actual discrete RTX5090 proof on59469ac:17MiB optimalimage everyGPUreadbackbyteexact; constant7x5 three-mipchain exact; persistent8MiB staging maps1/unmaps0 acrosswarmnextimage, onecommand/fence; finalmaps2/unmaps2 afterexplicitrelease/denial/retry andledger0. Realbudgetimage andstagingadmissionfailure preservepreviousGPUimage andreserved0. Upload4.884ms isonesample diagnostic, notthroughputclaim.
+
+Productionexceptioncleanup afterfailedtransferwait callsdevice_wait_idle withouttimebound. External40sharness controlsproof only; driverhang/device-loss cleanup remainsopen. NoUV/sampledraw/fulltexture/renderplatform acceptance.
