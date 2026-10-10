@@ -78,7 +78,7 @@ impl MeshJournal {
   }
   for (&id,ids) in &adjacency{if id>=self.base_vertices{vertices[id-self.base_vertices].edges.extend(ids);}}
   let command=AppendUndo{base_vertices:self.base_vertices,base_edges:self.base_edges,
-   base_uids:mesh.vertices.iter().map(|v|v.uid).collect(),base_positions:self.base_positions,vertices:vertices.clone(),edges:edges.clone(),applied:true};
+   base_uids:mesh.vertices.iter().map(|v|v.uid).collect(),base_positions:self.base_positions,base_endpoints:mesh.edges.iter().map(|e|(e.v0,e.v1)).collect(),vertices:vertices.clone(),edges:edges.clone(),applied:true};
   mesh.vertices.extend(vertices);mesh.edges.extend(edges);
   for (id,ids) in adjacency{if id<self.base_vertices{mesh.vertices[id].edges.extend(ids);}}
   mesh.rebuild_spatial_index();
@@ -87,11 +87,11 @@ impl MeshJournal {
 }
 /// Only appended records are copied; no Scene or base Mesh snapshot.
 pub struct AppendUndo{
- base_vertices:usize,base_edges:usize,base_uids:Vec<uuid::Uuid>,base_positions:Vec<DVec3>,
+ base_vertices:usize,base_edges:usize,base_uids:Vec<uuid::Uuid>,base_positions:Vec<DVec3>,base_endpoints:Vec<(usize,usize)>,
  vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,applied:bool,
 }
 impl AppendUndo{
- fn base_matches(&self,m:&Mesh)->bool{m.vertices.len()>=self.base_vertices&&m.vertices[..self.base_vertices].iter().zip(&self.base_uids).all(|(v,id)|v.uid==*id)&&m.vertices[..self.base_vertices].iter().zip(&self.base_positions).all(|(v,p)|v.position==*p)}
+ fn base_matches(&self,m:&Mesh)->bool{m.vertices.len()>=self.base_vertices&&m.vertices[..self.base_vertices].iter().zip(&self.base_uids).all(|(v,id)|v.uid==*id)&&m.vertices[..self.base_vertices].iter().zip(&self.base_positions).all(|(v,p)|v.position==*p)&&m.edges.len()>=self.base_edges&&m.edges[..self.base_edges].iter().zip(&self.base_endpoints).all(|(e,p)|(e.v0,e.v1)==*p)}
  pub fn undo(&mut self,m:&mut Mesh)->Result<(),String>{
   if !self.applied||!self.base_matches(m)||m.vertices.len()!=self.base_vertices+self.vertices.len()||m.edges.len()!=self.base_edges+self.edges.len()
    ||m.vertices[self.base_vertices..]!=self.vertices||m.edges[self.base_edges..]!=self.edges{return Err("Changed append command ownership".into());}
@@ -141,6 +141,11 @@ fn ordered(a:usize,b:usize)->(usize,usize){if a<b{(a,b)}else{(b,a)}}
   let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();let mut c=j.publish_owned(&mut mesh,1).unwrap().unwrap();
   let expected=mesh.clone();for _ in 0..3{c.undo(&mut mesh).unwrap();assert_eq!(mesh.vertices.len(),1);assert_eq!(mesh.vertices[0].uid,base_uid);c.redo(&mut mesh).unwrap();assert_eq!(mesh,expected);}
   mesh.faces.push(ingetrazo_core::mesh::MeshFace::new(vec![0,1,0]));let old=mesh.clone();assert!(c.undo(&mut mesh).is_err());assert_eq!(mesh,old);
+ }
+ #[test]fn redo_replaced_base_edge_refuses_without_mutation(){
+  let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X);let c=mesh.add_vertex(DVec3::Y);mesh.add_edge(a,b).unwrap();
+  let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::Y,DVec3::Z).unwrap();let mut command=j.publish_owned(&mut mesh,1).unwrap().unwrap();command.undo(&mut mesh).unwrap();
+  mesh.edges[0].v1=c;mesh.vertices[b].edges.clear();mesh.vertices[c].edges.push(0);let old=mesh.clone();assert!(command.redo(&mut mesh).is_err());assert_eq!(mesh,old);
  }
  #[test]fn redo_changed_base_refuses_without_mutation(){
   let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);let mut j=MeshJournal::begin(&mesh,1);j.add_edge(DVec3::ZERO,DVec3::X).unwrap();let mut c=j.publish_owned(&mut mesh,1).unwrap().unwrap();c.undo(&mut mesh).unwrap();mesh.vertices[0].position=DVec3::Y;let old=mesh.clone();assert!(c.redo(&mut mesh).is_err());assert_eq!(mesh,old);
