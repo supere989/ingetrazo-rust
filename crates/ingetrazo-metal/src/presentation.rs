@@ -81,6 +81,21 @@ impl MetalPresentation {
         if !density.is_finite() || density <= 0.0 || width > 16384 || height > 16384 {
             return Err("Invalid native drawable extent/density".into());
         }
+        // A supplied CAMetalLayer is layer-hosted: AppKit does not maintain its
+        // presentation geometry. drawableSize only allocates pixel textures.
+        // Keep its logical frame equal to the actual live content view bounds.
+        MainThreadMarker::new().ok_or("Metal layer resize requires main thread")?;
+        let RawWindowHandle::AppKit(handle) = self
+            .owners
+            ._window
+            .window_handle()
+            .map_err(|e| e.to_string())?
+            .as_raw()
+        else {
+            return Err("Native Metal requires AppKit view".into());
+        };
+        let view = unsafe { handle.ns_view.cast::<NSView>().as_ref() };
+        self.owners.layer.setFrame(view.bounds());
         self.extent = (width, height);
         self.owners.layer.setContentsScale(density);
         self.owners
