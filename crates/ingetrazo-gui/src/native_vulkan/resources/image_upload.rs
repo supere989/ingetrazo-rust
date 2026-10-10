@@ -105,6 +105,13 @@ impl Resources {
                 vk::BufferUsageFlags::TRANSFER_SRC,
                 vk::MemoryPropertyFlags::HOST_VISIBLE,
             )?;
+            let buffer = &self.buffers[&id];
+            let mapped = match unsafe {self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())} {
+                Ok(ptr)=>ptr,
+                Err(error)=>{self.destroy(id);return Err(error.to_string())}
+            };
+            self.buffers.get_mut(&id).unwrap().persistent_map=Some(mapped as usize);
+            self.stats.image_staging_maps+=1;
             self.stats.staging_allocations += 1;
             self.stats.staging_peak = self
                 .stats

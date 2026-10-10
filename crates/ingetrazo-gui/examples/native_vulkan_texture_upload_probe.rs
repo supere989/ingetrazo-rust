@@ -35,6 +35,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(resources.stats.image_bytes, 17 * 1024 * 1024);
     assert!(resources.image_staging_bytes() <= 8 * 1024 * 1024);
     drop(image);
+    assert_eq!(resources.stats.image_staging_maps,1,"Large upload mapped staging per chunk");
+    assert_eq!(resources.stats.image_staging_unmaps,0,"Staging prematurely unmapped");
     let allocations = resources.stats.staging_allocations;
     let commands = resources.stats.transfer_command_allocations;
     let fences = resources.stats.transfer_fence_creations;
@@ -56,6 +58,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         resources.stats.staging_allocations, allocations,
         "Repeated images allocated new staging"
     );
+    assert_eq!(resources.stats.image_staging_maps,1,"Repeated image remapped retained staging");
     assert_eq!(resources.stats.transfer_command_allocations, commands);
     assert_eq!(resources.stats.transfer_fence_creations, fences);
     assert!(resources
@@ -108,6 +111,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     drop(mip);
     resources.release_image_staging();
     assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
+    assert_eq!(resources.stats.image_staging_maps,resources.stats.image_staging_unmaps,"Retained staging mapping leaked");
     eprintln!("PASS17MiB optimal GPU texture/readback upload{upload_ms:.3}ms; constant7x5 mip chain; persistentstaging/command/fence; actualbudgetdenial oldimage preserved; ledgerzero; {:?}",resources.stats);
     Ok(())
 }
