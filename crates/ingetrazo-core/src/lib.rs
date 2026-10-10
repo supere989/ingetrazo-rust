@@ -54,3 +54,4 @@ mod drafting_earcut;
 
 pub mod screen_pick;
 pub mod snap_screen;
+pub mod circle_inference;
