@@ -461,6 +461,7 @@ pub(super) fn text_draws(
     sheet: &ingetrazo_core::composition::Sheet,
     item: &ingetrazo_core::composition::TextItem,
     painter: &mut ingetrazo_formats::paper_text_painter::Painter,
+    context: Option<&crate::composer_text_fields::Context<'_>>,
 ) -> Result<Vec<ingetrazo_formats::sheet_pdf::Draw>, String> {
     use ingetrazo_formats::{paper_text_layout::Alignment, paper_text_painter::TextStyle};
     let native = sheet.native_items.get(&item.id);
@@ -478,19 +479,10 @@ pub(super) fn text_draws(
             .unwrap_or(false)
     };
     let background = string("bg_color", "");
-    // Known dynamic source fields must never be silently exported as stale literals.
-    for field in [
-        "proyecto", "autor", "lamina", "nombre", "escala", "escena", "fecha", "archivo", "hoja",
-        "total",
-    ] {
-        if item
-            .text
-            .to_ascii_lowercase()
-            .contains(&format!("{{{field}}}"))
-        {
-            return Err("PDF dynamic text field context remains unavailable".into());
-        }
-    }
+    let expanded = context
+        .map(|context| crate::composer_text_fields::expand(sheet, item, context))
+        .transpose()?;
+    let text = expanded.as_deref().unwrap_or(&item.text);
     let family = string("family", "Sans Serif");
     let color = string("color", "#1e242c");
     let align = string("align", "left");
@@ -501,7 +493,7 @@ pub(super) fn text_draws(
         .and_then(|v| v.as_f64())
         .unwrap_or(80.);
     let style = TextStyle {
-        text: &item.text,
+        text,
         origin_mm: [item.pos.0, item.pos.1],
         width_mm: width,
         size_pt: item.font_size_pt,

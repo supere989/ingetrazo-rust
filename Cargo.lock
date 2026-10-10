@@ -1500,6 +1500,7 @@ dependencies = [
  "ingetrazo-formats",
  "ingetrazo-render",
  "ingetrazo-tools",
+ "libc",
  "log",
  "raw-window-handle",
  "serde",
