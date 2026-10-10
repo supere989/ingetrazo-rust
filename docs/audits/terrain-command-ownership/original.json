@@ -1,0 +1,350 @@
+{
+  "provenance": {
+    "rust_commit": "4d666db5ad7d39d2de70235a971f1f10a05a333e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "ordinary": {
+      "entry": {
+        "views": [],
+        "sheets": [
+          "Sheet"
+        ],
+        "terrain": true,
+        "path": [
+          {
+            "points": [
+              [
+                2.0,
+                3.0,
+                4.0
+              ],
+              [
+                5.0,
+                6.0,
+                7.0
+              ]
+            ],
+            "name": "Route"
+          }
+        ]
+      },
+      "states": [
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "closed": true,
+              "name": "Route",
+              "surface": "flat"
+            }
+          ]
+        },
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "name": "Route"
+            }
+          ]
+        },
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  5.0,
+                  6.0,
+                  7.0
+                ]
+              ],
+              "name": "Route"
+            }
+          ]
+        },
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "name": "Route"
+            }
+          ]
+        },
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "closed": true,
+              "name": "Route",
+              "surface": "flat"
+            }
+          ]
+        }
+      ],
+      "history_before_finish": 2
+    },
+    "folded": {
+      "entry": {
+        "views": [],
+        "sheets": [
+          "Sheet"
+        ],
+        "terrain": true,
+        "path": [
+          {
+            "points": [
+              [
+                2.0,
+                3.0,
+                4.0
+              ],
+              [
+                5.0,
+                6.0,
+                7.0
+              ]
+            ],
+            "name": "Route"
+          }
+        ]
+      },
+      "states": [
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "closed": true,
+              "name": "Route",
+              "surface": "flat"
+            }
+          ]
+        },
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "closed": true,
+              "name": "Route",
+              "surface": "flat"
+            }
+          ]
+        },
+        {
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "path": [
+            {
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "closed": true,
+              "name": "Route",
+              "surface": "flat"
+            }
+          ]
+        }
+      ],
+      "history_before_finish": 3
+    },
+    "import_object_lifetime": {
+      "states": [
+        [],
+        [],
+        [
+          [
+            "Renamed",
+            20.0
+          ]
+        ],
+        [
+          [
+            "Scene 1",
+            20.0
+          ],
+          [
+            "Renamed",
+            20.0
+          ]
+        ]
+      ],
+      "redo_retained_after_ui_add": 1
+    },
+    "terrain_owner_runtime_rebuild": [
+      null,
+      [
+        9.0,
+        false
+      ],
+      [
+        1.0,
+        true
+      ],
+      null,
+      [
+        1.0,
+        true
+      ],
+      null
+    ]
+  }
+}
