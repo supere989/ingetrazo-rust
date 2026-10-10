@@ -208,6 +208,9 @@ impl Probe {
         window: &Window,
     ) -> Result<(), String> {
         if self.started.elapsed() > Duration::from_secs(15) {
+            // Capture live AppKit visibility before event-loop teardown changes it.
+            std::fs::write(self.root.join("presentation-before-exit.txt"), gpu.diagnostics())
+                .map_err(|e| e.to_string())?;
             return Err(format!(
                 "Bounded Cocoa lifecycle deadline phase={} close={} move={} press={} release={} displayed={}",
                 self.phase,
