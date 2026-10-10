@@ -18,7 +18,7 @@ impl ImageOutlineCache{
   if self.key.as_ref()==Some(&key)&&count==self.selected.len()&&self.selected.iter().all(|i|scene.selection.contains(&SelectionItem::ImagePlane(*i))){
    return Ok(self.geometry.clone().zip(self.batches.clone()));
   }
-  let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut ordered=Vec::new();let mut selected=Vec::with_capacity(count);let mut generated=0u64;
+  let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut selected=Vec::with_capacity(count);let mut generated=0u64;
   for(index,image)in scene.image_planes.iter().enumerate(){
    let is_selected=scene.selection.contains(&SelectionItem::ImagePlane(index));if is_selected{selected.push(index);}
    let layer=image.layer.as_deref().unwrap_or("Layer 0");if scene.layers.iter().any(|l|l.name==layer&&!l.visible){continue;}
@@ -26,22 +26,19 @@ impl ImageOutlineCache{
    for edge in 0..4{
     let a=corners[edge].to_array();let b=corners[(edge+1)%4].to_array();
     let Some([a,b])=ingetrazo_render::image_outline::projected_segment(&matrix,a,b,size)else{continue;};
-    let spans=if is_selected{ingetrazo_render::qt_selected_line::rasterize(a,b,size,100_000)?}else{ingetrazo_render::qt_cosmetic::rasterize_dashed_line_clipped(a,b,size,100_000)?};
-    let first=indices.len()as u32;
-    let ranges=ingetrazo_render::qt_cosmetic::disjoint_ranges(&spans,100_000)?;
-    for range in ranges{ordered.push(first+(range.start as u32)*6..first+(range.end as u32)*6);}
-    generated+=spans.len()as u64;
-    for span in spans{
-     if vertices.len().checked_add(4).and_then(|v|v.checked_mul(12)).and_then(|v|indices.len().checked_add(6).and_then(|i|i.checked_mul(4)).and_then(|i|v.checked_add(i))).is_none_or(|bytes|bytes>8*1024*1024){return Err("Image outline geometry exceeds8MiB admission".into());}
-     let base=vertices.len()as u32;let x=span.x as f32;let y=span.y as f32;let end=x+span.len as f32;
-     for position in [[x,y],[end,y],[end,y+1.],[x,y+1.]]{vertices.push(Vertex{position:position.map(|v|v/density),coverage:f32::from(span.coverage)/255.});}
-     indices.extend_from_slice(&[base,base+1,base+2,base,base+2,base+3]);
+    let strips=ingetrazo_render::qt_gl_image_line::strips(a,b,is_selected,size,100_000)?;
+    let first=indices.len()as u32;generated+=strips.len()as u64;
+    for strip in strips{
+     if vertices.len().checked_add(8).and_then(|v|v.checked_mul(12)).and_then(|v|indices.len().checked_add(18).and_then(|i|i.checked_mul(4)).and_then(|i|v.checked_add(i))).is_none_or(|bytes|bytes>8*1024*1024){return Err("Image outline geometry exceeds8MiB admission".into());}
+     let base=vertices.len()as u32;
+     for position in strip{vertices.push(Vertex{position:position.map(|v|v/density),coverage:1.});}
+     for i in 0..6{indices.extend_from_slice(&[base+i,base+i+1,base+i+2]);}
     }
     let count=indices.len()as u32-first;
     if count>0{batches.push(Batch{first,count,color:EncodedRgba::from_bytes(if is_selected{[243,115,41,255]}else{[120,140,165,255]},1.)?});}
    }
   }
-  let geometry=if indices.is_empty(){None}else{Some(Geometry::new_with_ordered_draws(vertices,indices,ordered)?)};
+  let geometry=if indices.is_empty(){None}else{Some(Geometry::new(vertices,indices)?)};
   let batches:Option<Arc<[Batch]>>=geometry.as_ref().map(|_|batches.into());
   self.key=Some(key);self.selected=selected;self.geometry=geometry;self.batches=batches;self.cold_builds+=1;self.generated_spans+=generated;
   Ok(self.geometry.clone().zip(self.batches.clone()))
