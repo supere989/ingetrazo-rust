@@ -57,7 +57,11 @@ with tempfile.TemporaryDirectory() as runtime:
    subprocess.run(['import','-display',display,'-window',str(dialog_window),str(out/(label+'-typed-dialog.png'))],check=True)
    key(0xff0d)
    if unsupported:
-    time.sleep(.3);subprocess.run(['import','-display',display,'-window','root',str(out/(label+'-overwrite-dialog.png'))],check=True);key(0xff0d)
+    def overwrite_confirmation():
+     cs=C.POINTER(C.c_ulong)();nn=C.c_uint();x.XQueryTree(d,root,C.byref(r),C.byref(p),C.byref(cs),C.byref(nn));return next((cs[i] for i in range(nn.value) if cs[i] not in initial_windows and cs[i]!=dialog_window and area(cs[i])>10000),None)
+    confirm=wait(overwrite_confirmation)
+    subprocess.run(['import','-display',display,'-window',str(confirm),str(out/(label+'-overwrite-dialog.png'))],check=True)
+    x.XSetInputFocus(d,confirm,1,0);key(ord('r'),0xffe9)
   current_path=out.resolve()/"current.pdf";all_path=out.resolve()/"all.pdf"
   if unsupported:
    current_path.write_bytes(b"existing destination current");all_path.write_bytes(b"existing destination all")
