@@ -417,6 +417,7 @@ impl IngeTrazoApp {
     }
     pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
         let Some(cb)=self.clipboard.clone() else{return false;};
+        if let Err(e)=crate::clipboard::validate_payload(&cb){self.status_message=e;return false;}
         if cb.mesh.faces.is_empty()&&cb.mesh.edges.is_empty()&&cb.groups.is_empty(){return false;}
         let inverse=self.scene.dimension_frame.inverse();
         let source=match ingetrazo_core::containers::transform_mesh(&cb.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return false;}};
@@ -430,7 +431,7 @@ impl IngeTrazoApp {
         self.save_undo_state();candidate.bump_version();self.scene=candidate;true
     }
     pub fn paste_selection(&mut self) {self.begin_paste_preview();}
-    pub fn paste_in_place(&mut self) {self.read_system_clipboard();self.paste_internal(DVec3::ZERO);self.status_message="Pasted in place".into();}
+    pub fn paste_in_place(&mut self) {self.read_system_clipboard();if self.paste_internal(DVec3::ZERO){self.status_message="Pasted in place".into();}}
 
     pub fn repeat_last_command(&mut self) {
         self.status_message = ingetrazo_core::i18n::tr("Repeated last command");

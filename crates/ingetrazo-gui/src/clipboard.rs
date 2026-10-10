@@ -10,18 +10,31 @@ pub(crate) fn merge_resources(destination:&mut Scene,source:&Scene)->Result<(),S
     for layer in &source.layers{if !destination.layers.iter().any(|existing|existing.name==layer.name){destination.layers.push(layer.clone());}}
     Ok(())
 }
+pub(crate) fn validate_payload(payload:&crate::app::GeometryClipboard)->Result<(),String>{
+    fn mesh(mesh:&ingetrazo_core::mesh::Mesh)->Result<(),String>{
+        let n=mesh.vertices.len();if mesh.vertices.iter().any(|v|!v.position.is_finite())||mesh.edges.iter().any(|e|e.v0>=n||e.v1>=n)||mesh.faces.iter().any(|f|std::iter::once(&f.vertices).chain(&f.holes).any(|ring|ring.len()<3||ring.iter().any(|v|*v>=n))){return Err("Malformed clipboard geometry".into());}Ok(())
+    }
+    fn groups(groups:&[ingetrazo_core::groups::Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>,stack:&mut Vec<uuid::Uuid>,depth:usize)->Result<(),String>{
+        if depth>128{return Err("Clipboard nesting exceeds limit".into());}
+        for g in groups{if !g.transform.is_finite()||g.transform.determinant().abs()<1e-12{return Err("Invalid clipboard transform".into());}mesh(&g.mesh)?;groups_children(&g.children,defs,stack,depth)?;if let Some(id)=g.component_definition{if stack.contains(&id){return Err("Recursive clipboard component".into());}let def=defs.get(&id).ok_or("Missing clipboard component")?;stack.push(id);mesh(&def.mesh)?;groups_children(&def.children,defs,stack,depth)?;stack.pop();}}Ok(())
+    }
+    fn groups_children(children:&[ingetrazo_core::groups::Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>,stack:&mut Vec<uuid::Uuid>,depth:usize)->Result<(),String>{groups(children,defs,stack,depth+1)}
+    if !payload.reference.is_finite(){return Err("Invalid clipboard reference".into());}mesh(&payload.mesh)?;groups(&payload.groups,&payload.resources.component_definitions,&mut vec![],0)?;
+    for(id,def)in &payload.resources.component_definitions{mesh(&def.mesh)?;groups(&def.children,&payload.resources.component_definitions,&mut vec![*id],0)?;}Ok(())
+}
 const CLIPBOARD_PREFIX:&str="IngeTrazo-Rust-geometry-v1\n";
 impl IngeTrazoApp {
     pub(crate) fn write_system_clipboard(&mut self){
         if let (Some(system),Some(payload))=(&mut self.system_clipboard,&self.clipboard){if let Ok(encoded)=serde_json::to_string(payload){let _=system.set_text(format!("{CLIPBOARD_PREFIX}{encoded}"));}}
     }
     pub(crate) fn read_system_clipboard(&mut self){
-        if let Some(system)=&mut self.system_clipboard{if let Ok(text)=system.get_text(){if let Some(encoded)=text.strip_prefix(CLIPBOARD_PREFIX){if let Ok(payload)=serde_json::from_str(encoded){self.clipboard=Some(payload);}}}}
+        if let Some(system)=&mut self.system_clipboard{if let Ok(text)=system.get_text(){if let Some(encoded)=text.strip_prefix(CLIPBOARD_PREFIX){self.clipboard=None;match serde_json::from_str(encoded){Ok(payload)=>match validate_payload(&payload){Ok(())=>self.clipboard=Some(payload),Err(error)=>self.status_message=error},Err(_)=>self.status_message="Malformed IngeTrazo clipboard payload".into()}}else{self.clipboard=None;}}}
     }
 
     pub fn begin_paste_preview(&mut self) {
         self.read_system_clipboard();
         let Some(clipboard)=self.clipboard.clone() else{return;};
+        if let Err(e)=validate_payload(&clipboard){self.status_message=e;return;}
         if clipboard.mesh.faces.is_empty()&&clipboard.mesh.edges.is_empty()&&clipboard.groups.is_empty(){return;}
         self.set_tool(ingetrazo_tools::base::ToolType::Select);
         let inverse=self.scene.dimension_frame.inverse();
@@ -45,6 +58,11 @@ impl IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
+    #[test]
+    fn malformed_mesh_and_recursive_definitions_leave_document_and_history_unchanged(){
+        let mut app=IngeTrazoApp::new();let mut payload=crate::app::GeometryClipboard::default();payload.mesh.add_vertex(DVec3::ZERO);payload.mesh.add_vertex(DVec3::X);payload.mesh.add_edge(0,1);payload.mesh.edges[0].v1=999;app.clipboard=Some(payload.clone());let before=app.scene.clone();assert!(!app.paste_internal(DVec3::ZERO));assert_eq!(app.scene,before);assert!(app.undo_stack.is_empty());app.begin_paste_preview();assert!(app.paste_preview.is_none());
+        payload.mesh.edges[0].v1=1;let id=uuid::Uuid::new_v4();let mut group=ingetrazo_core::groups::Group::new("recursive");group.component_definition=Some(id);payload.resources.component_definitions.insert(id,ingetrazo_core::components::ComponentDefinition{mesh:Default::default(),children:vec![group.clone()]});payload.groups.push(group);assert!(super::validate_payload(&payload).is_err());
+    }
     #[test]
     #[ignore="requires isolated X11 clipboard server"]
     fn system_clipboard_transfers_geometry_between_native_owners(){
