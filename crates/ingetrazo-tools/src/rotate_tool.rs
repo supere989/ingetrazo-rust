@@ -114,6 +114,7 @@ impl RotateTool {
     }
 
     pub fn execute_rotation(&mut self, angle_rad: f64, scene: &mut Scene) {
+        if self.is_copy_mode&&self.target_vertices.is_empty()&&self.target_groups.is_empty(){return;}
         let Some(center) = self.center else { return };
         let quat = DQuat::from_axis_angle(self.plane_normal, angle_rad);
 
@@ -140,7 +141,8 @@ impl RotateTool {
             }
         }
 
-        for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point=center+quat*(plane.point-center);plane.normal=(quat*plane.normal).normalize();}}
+        // Original copy builders exclude section planes.
+        if !self.is_copy_mode{for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point=center+quat*(plane.point-center);plane.normal=(quat*plane.normal).normalize();}}}
         self.last_angle_rad = Some(angle_rad);
         scene.bump_version();
     }

@@ -87,6 +87,7 @@ impl MoveTool {
 
     /// Execute translation or copy.
     pub fn execute_move(&mut self, delta: DVec3, scene: &mut Scene) {
+        if self.is_copy_mode&&self.target_vertices.is_empty()&&self.target_groups.is_empty(){return;}
         if delta.length_squared() < 1e-12 {
             return;
         }
@@ -114,7 +115,8 @@ impl MoveTool {
             self.last_moved_verts = self.target_vertices.clone();
         }
 
-        for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point+=delta;}}
+        // Original copy builders stamp geometry only; section planes stay put.
+        if !self.is_copy_mode{for &id in &self.target_planes{if let Some(plane)=scene.section_planes.get_mut(id){plane.point+=delta;}}}
         self.last_targets = self.target_vertices.clone();
         self.last_delta = Some(delta);
         scene.bump_version();
