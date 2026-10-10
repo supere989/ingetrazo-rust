@@ -1,0 +1,335 @@
+{
+  "method": "Independent full RGBA decode; compare retained source SKP, Python native-IGZ, and actual Rust Vulkan images. No tolerance or image transformation.",
+  "scope": "Diagnostic localization, not acceptance or a proven raster cause.",
+  "cases": [
+    {
+      "case": "gondola_v20-iso",
+      "source_vs_python_native_import": 0,
+      "source_vs_rust": 78,
+      "python_native_import_vs_rust": 78,
+      "import_and_render_difference_overlap": 0,
+      "difference_bounds": [
+        245,
+        255,
+        588,
+        420
+      ],
+      "all_different_pixels_grayscale": false,
+      "max_channel_delta": 14,
+      "most_common_pairs": [
+        {
+          "original": [
+            51,
+            59,
+            71,
+            255
+          ],
+          "native": [
+            52,
+            59,
+            71,
+            255
+          ],
+          "count": 64
+        },
+        {
+          "original": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "native": [
+            185,
+            185,
+            185,
+            255
+          ],
+          "count": 6
+        },
+        {
+          "original": [
+            169,
+            169,
+            169,
+            255
+          ],
+          "native": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "count": 3
+        },
+        {
+          "original": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "native": [
+            169,
+            169,
+            169,
+            255
+          ],
+          "count": 2
+        },
+        {
+          "original": [
+            135,
+            75,
+            15,
+            255
+          ],
+          "native": [
+            149,
+            82,
+            15,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "original": [
+            185,
+            185,
+            185,
+            255
+          ],
+          "native": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "original": [
+            219,
+            219,
+            219,
+            255
+          ],
+          "native": [
+            233,
+            233,
+            233,
+            255
+          ],
+          "count": 1
+        }
+      ],
+      "files_sha256": {
+        "docs/audits/skp-real-model-nvidia-failure/original/gondola_v20-iso-source.png": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7",
+        "docs/audits/skp-real-model-nvidia-failure/original/gondola_v20-iso-native-igz.png": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7",
+        "docs/audits/texture-publication-gpu-root/native/gondola_v20-iso-native-vulkan.png": "2905243230f4a6623045d1fa8ab476657fa1eb42a86dafb27b3500874e3b4971"
+      }
+    },
+    {
+      "case": "gondola_v20-asymmetric",
+      "source_vs_python_native_import": 16,
+      "source_vs_rust": 351,
+      "python_native_import_vs_rust": 335,
+      "import_and_render_difference_overlap": 16,
+      "difference_bounds": [
+        217,
+        238,
+        606,
+        455
+      ],
+      "all_different_pixels_grayscale": false,
+      "max_channel_delta": 84,
+      "most_common_pairs": [
+        {
+          "original": [
+            51,
+            59,
+            71,
+            255
+          ],
+          "native": [
+            52,
+            59,
+            71,
+            255
+          ],
+          "count": 16
+        },
+        {
+          "original": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "native": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "count": 13
+        },
+        {
+          "original": [
+            159,
+            80,
+            0,
+            255
+          ],
+          "native": [
+            159,
+            100,
+            40,
+            255
+          ],
+          "count": 12
+        },
+        {
+          "original": [
+            199,
+            199,
+            199,
+            255
+          ],
+          "native": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "count": 11
+        },
+        {
+          "original": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "native": [
+            247,
+            247,
+            247,
+            255
+          ],
+          "count": 11
+        },
+        {
+          "original": [
+            160,
+            160,
+            160,
+            255
+          ],
+          "native": [
+            176,
+            176,
+            176,
+            255
+          ],
+          "count": 9
+        },
+        {
+          "original": [
+            193,
+            193,
+            193,
+            255
+          ],
+          "native": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "count": 9
+        },
+        {
+          "original": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "native": [
+            199,
+            199,
+            199,
+            255
+          ],
+          "count": 9
+        },
+        {
+          "original": [
+            209,
+            209,
+            209,
+            255
+          ],
+          "native": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "count": 8
+        },
+        {
+          "original": [
+            247,
+            247,
+            247,
+            255
+          ],
+          "native": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "count": 8
+        },
+        {
+          "original": [
+            181,
+            141,
+            101,
+            255
+          ],
+          "native": [
+            177,
+            140,
+            101,
+            255
+          ],
+          "count": 7
+        },
+        {
+          "original": [
+            176,
+            176,
+            176,
+            255
+          ],
+          "native": [
+            160,
+            160,
+            160,
+            255
+          ],
+          "count": 6
+        }
+      ],
+      "files_sha256": {
+        "docs/audits/skp-real-model-nvidia-failure/original/gondola_v20-asymmetric-source.png": "1c1c0c8a65d869e3a23828660fccd1a3e2627266cd3b5875dfd7c9a534cb18e9",
+        "docs/audits/skp-real-model-nvidia-failure/original/gondola_v20-asymmetric-native-igz.png": "bf1ccc79b99084f6d6124981cec6c5d9e3342b08e65bbfa84c4252caedead5bd",
+        "docs/audits/texture-publication-gpu-root/native/gondola_v20-asymmetric-native-vulkan.png": "5cf2d897474e0fd2e10335a64690d6b830ae28a6c4e2f9044b53408b2c35e939"
+      }
+    }
+  ]
+}
