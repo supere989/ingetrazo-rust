@@ -6,6 +6,26 @@ use glam::DVec2;
 use ingetrazo_core::sheet_shape::{SheetShape,ShapePath};
 use ingetrazo_render::cad2d::{Geometry,Vertex,Batch};
 
+fn minimum_edge(points:&[DVec2])->f64{points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|(*b-*a).length()).fold(f64::INFINITY,f64::min)}
+fn convex_outline(points:&[DVec2])->bool{
+ if points.len()<3||minimum_edge(points)<=1e-12{return false;}
+ let area=points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|a.perp_dot(*b)).sum::<f64>();
+ if !area.is_finite()||area.abs()<=1e-12{return false;}
+ (0..points.len()).all(|i|(points[(i+1)%points.len()]-points[i]).perp_dot(points[(i+2)%points.len()]-points[(i+1)%points.len()])*area>=0.)
+}
+pub fn convex_bevel_outline(points:&[DVec2],radius:f64)->Result<Vec<Vec<DVec2>>,String>{
+ let area=points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|a.perp_dot(*b)).sum::<f64>();
+ if !convex_outline(points)||!radius.is_finite()||radius<=0.{return Err("Invalid convex bevel stroke".into());}
+ let reversed;let points=if area<0.{reversed=points.iter().rev().copied().collect::<Vec<_>>();&reversed[..]}else{points};
+ let normals=points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|{let d=(*b-*a).normalize();DVec2::new(d.y,-d.x)*radius}).collect::<Vec<_>>();
+ let mut outer=Vec::with_capacity(points.len()*2);let mut inner=Vec::with_capacity(points.len()*3);
+ for i in 0..points.len(){outer.push(points[i]+normals[i]);outer.push(points[(i+1)%points.len()]+normals[i]);}
+ // Literal Qt inside-turn outline retains the original join vertex. Its
+ // self-overlapping winding area must not be replaced by a healed polygon.
+ for i in (0..points.len()).rev(){inner.push(points[(i+1)%points.len()]-normals[i]);inner.push(points[i]-normals[i]);inner.push(points[i]);}
+ Ok(vec![outer,inner])
+}
+
 fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32,phase:DVec2)->Result<(Arc<Geometry>,Arc<[Batch]>,Vec<(usize,bool)>),String>{
  if !zoom.is_finite()||zoom<=0.||!pixels_per_point.is_finite()||pixels_per_point<=0.{return Err("Invalid composer CAD scale".into());}
  let density=zoom*pixels_per_point;if !density.is_finite(){return Err("Composer CAD scale overflow".into());}
@@ -13,7 +33,11 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
  let palette=crate::composer::precise_shape_palette(&commands)?;
  let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();
  for (command_index,(command,(stroke_color,fill_color))) in commands.into_iter().zip(palette).enumerate(){
-  let straight_rect=match &command.path {ShapePath::RoundedRect{size,radius} if *radius==0.=>Some(*size),_=>None};
+  let straight_outline=match &command.path {
+   ShapePath::RoundedRect{size,radius} if *radius==0.=>Some(vec![DVec2::ZERO,DVec2::new(size.x,0.),*size,DVec2::new(0.,size.y)]),
+   ShapePath::Polygon(points) if convex_outline(points)=>Some(points.clone()),
+   _=>None,
+  };
   let (points,closed)=match command.path {
    ShapePath::RoundedRect{size,radius}=>{
     let points=if radius<=0.{vec![DVec2::ZERO,DVec2::new(size.x,0.),size,DVec2::new(0.,size.y)]}else{
@@ -39,14 +63,12 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
   for (color,fill) in [(fill_color,true),(stroke_color,false)]{
    let Some(color)=color else{continue;};
    let width=command.stroke.as_ref().map(|(_,w)|*w as f32).unwrap_or(0.);
-   // Exact straight rectangle lane. Qt BevelJoin outlines and 26.6 gray
-   // scan conversion; curved paths remain explicitly on the old tessellator.
-   if let Some(size)=straight_rect.filter(|size|fill||(width>0.&&f64::from(width)<size.min_element())) {
-    let w=size.x*f64::from(density);let h=size.y*f64::from(density);
-    let radius=command.stroke.as_ref().map(|(_,w)|*w).unwrap_or(0.)*f64::from(density)/2.;
-    let mut contours=if fill{vec![vec![[0.,0.],[w,0.],[w,h],[0.,h]]]}else if radius>0. && radius*2.<w.min(h){
-     vec![vec![[0.,-radius],[w,-radius],[w+radius,0.],[w+radius,h],[w,h+radius],[0.,h+radius],[-radius,h],[-radius,0.]],vec![[radius,0.],[radius,h],[0.,h],[0.,h-radius],[w,h-radius],[w,h],[w-radius,h],[w-radius,0.],[w,0.],[w,radius],[0.,radius],[0.,0.]]]
-    }else {return Err("Exact rectangle stroke collapsed or cosmetic width unsupported".into());};
+   // Exact convex line-outline lane. Curves/nonconvex and cosmetic strokes
+   // remain explicitly on the prior tessellator, never silently healed.
+   if let Some(points)=straight_outline.as_ref().filter(|points|fill||(width>0.&&f64::from(width)<minimum_edge(points))) {
+    let radius=command.stroke.as_ref().map(|(_,w)|*w).unwrap_or(0.)/2.;
+    let outlines=if fill{vec![points.clone()]}else{convex_bevel_outline(points,radius)?};
+    let mut contours=outlines.into_iter().map(|outline|outline.into_iter().map(|p|[p.x*f64::from(density),p.y*f64::from(density)]).collect::<Vec<_>>()).collect::<Vec<_>>();
     for contour in &mut contours{for point in contour{point[0]+=phase.x;point[1]+=phase.y;}}
     let spans=ingetrazo_render::qt_gray::rasterize(&contours,250_000,100_000)?;
     let byte_count=vertices.len().checked_mul(12).and_then(|v|indices.len().checked_mul(4).and_then(|i|v.checked_add(i))).and_then(|old|spans.len().checked_mul(72).and_then(|new|old.checked_add(new))).ok_or("Composer span byte overflow")?;
@@ -105,7 +127,7 @@ impl Cache{
   let physical=DVec2::new(f64::from(translation.x)*f64::from(pixels_per_point),f64::from(translation.y)*f64::from(pixels_per_point));
   // Only reuse integer translations where Qt qRound cannot cross its negative
   // half-tie asymmetry. Negative screen coordinates retain complete origin.
-  let exact_rect=shape.kind=="rect"&&shape.radius_mm==0.;
+  let exact_rect=(shape.kind=="rect"&&shape.radius_mm==0.)||shape.kind=="poligono"||shape.kind=="flecha"||(shape.kind=="terreno"&&shape.ground=="band");
   let extent=shape.stroke_mm*f64::from(zoom)*f64::from(pixels_per_point)/2.;
   let phase=if !exact_rect{DVec2::ZERO}else if physical.min_element()>extent+2. {DVec2::new(physical.x.fract(),physical.y.fract())}else{physical};
   let phase_key=[phase.x.to_bits(),phase.y.to_bits()];
@@ -154,6 +176,14 @@ impl NativeComposer{
 }
 #[cfg(test)]mod tests{
  use super::*;
+ #[test]fn bevel_orientation_and_invalid_contours(){
+  let points=vec![DVec2::new(0.,0.),DVec2::new(10.,0.),DVec2::new(10.,8.),DVec2::new(0.,8.)];
+  let mut reversed=points.clone();reversed.reverse();
+  let a=convex_bevel_outline(&points,1.).unwrap();let b=convex_bevel_outline(&reversed,1.).unwrap();
+  assert_eq!(a.iter().map(Vec::len).collect::<Vec<_>>(),b.iter().map(Vec::len).collect::<Vec<_>>());
+  let concave=vec![DVec2::ZERO,DVec2::new(10.,0.),DVec2::new(3.,3.),DVec2::new(10.,8.),DVec2::new(0.,8.)];
+  assert!(convex_bevel_outline(&concave,1.).is_err());assert!(convex_bevel_outline(&points,f64::NAN).is_err());
+ }
  #[test]fn pose_palette_and_invalid_updates_preserve_cached_geometry(){
   let ctx=egui::Context::default();let _=ctx.run(Default::default(),|_|{});let mut cache=Cache::default();let mut shape=SheetShape::default();shape.fill=true;
   let(g,b)=cache.prepare(&ctx,&shape,4.,1.).unwrap();shape.x_mm+=17.;shape.z+=1.;
