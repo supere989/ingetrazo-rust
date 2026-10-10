@@ -323,6 +323,12 @@ jobs:
           python scripts/probe-python-image-object-lifetime.py docs/audits/image-ownership-ci/original-lifetime.json
           cargo run --locked -p ingetrazo-gui --example image_object_lifetime > docs/audits/image-ownership-ci/native-lifetime.json
           python scripts/check-image-object-lifetime.py docs/audits/image-ownership-ci/original-lifetime.json docs/audits/image-ownership-ci/native-lifetime.json docs/audits/image-object-branch-lifetime/literal-old-native.json
+      - name: Original command-held image frame semantics
+        run: |
+          mkdir -p docs/audits/image-ownership-ci
+          python scripts/probe-python-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json
+          cargo run --locked -p ingetrazo-gui --example image_frame_commands > docs/audits/image-ownership-ci/native-frames.json
+          python scripts/check-image-frame-commands.py docs/audits/image-ownership-ci/original-frames.json docs/audits/image-ownership-ci/native-frames.json docs/audits/image-frame-command-ownership/literal-old-native.json
       - name: Original runtime saved view recall
         run: python scripts/check-python-saved-views.py
       - name: Original runtime polygon intersection segments and mutation
