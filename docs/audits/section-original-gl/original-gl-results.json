@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "c2976ebcd8d06ca42ef0f3b4294befb73aa82c6c",
+    "rust_commit": "e5e38a2135bf1f3a61a39abb3466c03d076b2beb",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -26,7 +26,7 @@
     },
     {
       "case": "shared-slab-reversed",
-      "magenta_fill_pixels": 0,
+      "magenta_fill_pixels": 20164,
       "faces": 11,
       "interior_flags": 1,
       "context_stencil_bits": 8,
