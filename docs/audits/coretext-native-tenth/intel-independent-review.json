@@ -1,0 +1,1164 @@
+{
+  "run": 38094814956,
+  "artifact_id": 11685293936,
+  "artifact_sha256": "3b1904191ecb26cce6ee213b726b0ee4c127219e4d41cb285eb1ebd8d9d0844d",
+  "revision": "729480f6f31d2f01c8364b3d8d6a883bf5dfa4a4",
+  "actual_gpu_canvas": {
+    "helvetica": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "9120558f72aa23c464b9c4c259aacdc12052b7a9d8ac385cc4516d8d84bdd825",
+      "native_sha256": "d3bf26b8f25601dcd898f8529b5715e15c7b865dde762cf3f0f0e0e6935944d5"
+    },
+    "helvetica-bold": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "08340cd1a5138850e35360d77468e888bd1b7039f30d87dfa62596dc9cd17d74",
+      "native_sha256": "c63dc7e1352d34a98ad2253395a6dd7b8761a44e2774de8f895fc73cd3630103"
+    },
+    "helvetica-italic": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "2133e39fc03217153b25415afdd73dea374ca61b9de2a3082fc3b740628d7a9e",
+      "native_sha256": "a686e81fc33fc43976c5beb422923064d933ef157b9da0a877aaad90ca431446"
+    },
+    "times-bold-italic": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "0e3ad00b34fae4f3d1300f3f7e818c959f07efa0c66e29670a6f725f49871174",
+      "native_sha256": "b5ac378645c6980479cba74769c30236eb471ca80296016cd676ea4cda708543"
+    },
+    "cjk": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "ea0772c7125d98fa14da1f008c7dbc45099256b08a5e70317f0d688497052b56",
+      "native_sha256": "65b9c764e2cfaebc8ad95e79f4d052ff655c96fe798da758a1a33eb51782c3bf"
+    },
+    "arabic": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "d89a666478cc56883dea2452e8481bd65a47b1270222768fc75e2ac822df82aa",
+      "native_sha256": "d25e95239af02aced2a0c8e1a06ad49a99a769e52fd440fb5e8a3e398df90bde"
+    },
+    "italic-overlap": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "1ee5cccc2dbb4787e6e73ddb835f41ebdef4ac7f9ee58a15181c2b11fc434794",
+      "native_sha256": "3e9b98bde6bed2d46701cb88445f92f752a6c5e9b79207b64f6ead7f4c3f887c"
+    },
+    "arabic-marks": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "d591f2ef670ee3257d7b957afd1ab8c67c6b7a7c47bf4dfc250f0489785229d4",
+      "native_sha256": "119b97430a584018f45a57ecda9ac6dce07f363a787c97df2f293bea7f23e954"
+    },
+    "times-overlap": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        800,
+        300
+      ],
+      "reference_sha256": "707b90da81c57a07a814dd57924f8e4bb195af06b570b071fab1eb84c6f71501",
+      "native_sha256": "c8621ebaae56c75ed81f409ea1cf45f7c4326bb0addbeaf5d3bcc3fb1ca5d650"
+    }
+  },
+  "actual_pdf_pages": {
+    "helvetica-72": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        595,
+        842
+      ],
+      "reference_sha256": "59d31d5bb73a8bbb2121e3964e7e76ea20e9c6acd60496727ad386e18e4eb1a5",
+      "native_sha256": "59d31d5bb73a8bbb2121e3964e7e76ea20e9c6acd60496727ad386e18e4eb1a5"
+    },
+    "helvetica-150": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        1240,
+        1754
+      ],
+      "reference_sha256": "2eede648985fc945e83f60c95773d1f18097d11d127f8ba83abd529784d7657a",
+      "native_sha256": "2eede648985fc945e83f60c95773d1f18097d11d127f8ba83abd529784d7657a"
+    },
+    "helvetica-300": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        2479,
+        3508
+      ],
+      "reference_sha256": "14bd8dbcd4b1280f48315019295230f73c79415ff85db939a4d88b2daa71f855",
+      "native_sha256": "14bd8dbcd4b1280f48315019295230f73c79415ff85db939a4d88b2daa71f855"
+    },
+    "helvetica-bold-72": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        595,
+        842
+      ],
+      "reference_sha256": "fcb3ab4e8d5712251cbe8b16eae238671a7c2c1b875c61b844d6dc829b6b6478",
+      "native_sha256": "fcb3ab4e8d5712251cbe8b16eae238671a7c2c1b875c61b844d6dc829b6b6478"
+    },
+    "helvetica-bold-150": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        1240,
+        1754
+      ],
+      "reference_sha256": "fef0a9a5fc601ae04a4a9e85da0b5d96f2effbc9c47e8666f17c15111744a509",
+      "native_sha256": "fef0a9a5fc601ae04a4a9e85da0b5d96f2effbc9c47e8666f17c15111744a509"
+    },
+    "helvetica-bold-300": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        2479,
+        3508
+      ],
+      "reference_sha256": "68d95abb5473bc094b0afa1fcbde00fde83da736570aee3ca2da344759ba3974",
+      "native_sha256": "68d95abb5473bc094b0afa1fcbde00fde83da736570aee3ca2da344759ba3974"
+    },
+    "helvetica-italic-72": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        595,
+        842
+      ],
+      "reference_sha256": "ceec2328fafab945dea7443e22c9e14ed7445cbc49119e84c1f6f404bc5d6565",
+      "native_sha256": "ceec2328fafab945dea7443e22c9e14ed7445cbc49119e84c1f6f404bc5d6565"
+    },
+    "helvetica-italic-150": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        1240,
+        1754
+      ],
+      "reference_sha256": "55a233112e9e127ecb1eb96c28768bcbd5bb02d733d09b086a22a1758a501ee7",
+      "native_sha256": "55a233112e9e127ecb1eb96c28768bcbd5bb02d733d09b086a22a1758a501ee7"
+    },
+    "helvetica-italic-300": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        2479,
+        3508
+      ],
+      "reference_sha256": "9bffe23d8661b44bf17780d3108b4bdda47b13d8f3f0ea104050044d728690cf",
+      "native_sha256": "9bffe23d8661b44bf17780d3108b4bdda47b13d8f3f0ea104050044d728690cf"
+    },
+    "times-bold-italic-72": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        595,
+        842
+      ],
+      "reference_sha256": "8612b204cf01149ea1e73d3790f12ef240dba3618195e72f305444403ad3b66d",
+      "native_sha256": "8612b204cf01149ea1e73d3790f12ef240dba3618195e72f305444403ad3b66d"
+    },
+    "times-bold-italic-150": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        1240,
+        1754
+      ],
+      "reference_sha256": "e96a7bf15b00d8ebf4f623425a4e35161836bf5ceea5a5787ada8b4a141d7bac",
+      "native_sha256": "e96a7bf15b00d8ebf4f623425a4e35161836bf5ceea5a5787ada8b4a141d7bac"
+    },
+    "times-bold-italic-300": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        2479,
+        3508
+      ],
+      "reference_sha256": "aae40fcf8ab2061b49b55a7a971cb0b7bc88eef561e5b1bce0f8c8568d4cffed",
+      "native_sha256": "aae40fcf8ab2061b49b55a7a971cb0b7bc88eef561e5b1bce0f8c8568d4cffed"
+    },
+    "cjk-72": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        595,
+        842
+      ],
+      "reference_sha256": "7adceb9ca402d1e5b7909cf19ac6953fe94b439f6d4e007d4fc33cb518aa4faf",
+      "native_sha256": "7adceb9ca402d1e5b7909cf19ac6953fe94b439f6d4e007d4fc33cb518aa4faf"
+    },
+    "cjk-150": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        1240,
+        1754
+      ],
+      "reference_sha256": "55f6483a79563cb96f208a6fb3174a92c8f73e7171fe3adb37cda32d842326ba",
+      "native_sha256": "55f6483a79563cb96f208a6fb3174a92c8f73e7171fe3adb37cda32d842326ba"
+    },
+    "cjk-300": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        2479,
+        3508
+      ],
+      "reference_sha256": "a6fdd65eb21578f5de966d49577125efa27a963b6385de75e4a313b67f4d6053",
+      "native_sha256": "a6fdd65eb21578f5de966d49577125efa27a963b6385de75e4a313b67f4d6053"
+    },
+    "arabic-72": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        595,
+        842
+      ],
+      "reference_sha256": "dbc8d2364dadad39f64540423400784ae01ce2abb734d59fac527df9b55e17a0",
+      "native_sha256": "dbc8d2364dadad39f64540423400784ae01ce2abb734d59fac527df9b55e17a0"
+    },
+    "arabic-150": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        1240,
+        1754
+      ],
+      "reference_sha256": "244b68d8af1b633b9cea36ea8249a63015eb7feb686f3de0519943d6217b3024",
+      "native_sha256": "244b68d8af1b633b9cea36ea8249a63015eb7feb686f3de0519943d6217b3024"
+    },
+    "arabic-300": {
+      "pixels": 0,
+      "max_channel": 0,
+      "size": [
+        2479,
+        3508
+      ],
+      "reference_sha256": "f9df2278991b55c951cb7c8180e03a9e80b63f402c863ba7d1a2b7f68bcbc9c8",
+      "native_sha256": "f9df2278991b55c951cb7c8180e03a9e80b63f402c863ba7d1a2b7f68bcbc9c8"
+    }
+  },
+  "native_report": {
+    "passed": true,
+    "scope": "Actual production native font resolver/layout/raster/ordered cached span records + encoded white byte observation; aggregate negative retained; no GPU upload, WSI, desktop or physical input claim",
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          25,
+          11
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1324,
+            1,
+            3
+          ],
+          2,
+          [
+            [
+              1,
+              1,
+              3,
+              52944,
+              1
+            ],
+            [
+              1,
+              1,
+              [
+                1,
+                52944,
+                1
+              ]
+            ]
+          ],
+          [
+            1,
+            1100,
+            1,
+            1100,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 1,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 1,
+          "palette_uploads": 1,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          11
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1324,
+            1,
+            3
+          ],
+          2,
+          [
+            [
+              2,
+              2,
+              6,
+              106092,
+              2
+            ],
+            [
+              2,
+              2,
+              [
+                2,
+                106092,
+                2
+              ]
+            ]
+          ],
+          [
+            1,
+            1188,
+            1,
+            1188,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 2,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 2,
+          "palette_uploads": 2,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          25,
+          11
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1364,
+            1,
+            3
+          ],
+          2,
+          [
+            [
+              3,
+              3,
+              9,
+              157664,
+              3
+            ],
+            [
+              3,
+              3,
+              [
+                3,
+                157664,
+                3
+              ]
+            ]
+          ],
+          [
+            1,
+            1100,
+            1,
+            1100,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 3,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 3,
+          "palette_uploads": 3,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          10
+        ],
+        "tile_origin": [
+          30,
+          32
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1480,
+            1,
+            3
+          ],
+          2,
+          [
+            [
+              4,
+              4,
+              12,
+              270656,
+              4
+            ],
+            [
+              4,
+              4,
+              [
+                4,
+                270656,
+                4
+              ]
+            ]
+          ],
+          [
+            1,
+            1080,
+            1,
+            1080,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": {
+          "bold_cache_identity_distinct": true,
+          "missing_bold_changes_pixels": true,
+          "invalid_glyph_and_scale_refused": true,
+          "scale_bounds": [
+            {
+              "scale": 0.25,
+              "size": [
+                25,
+                19
+              ],
+              "right_edge_ink_rows": 0,
+              "source_identical_padded_bounds": true
+            },
+            {
+              "scale": 1.0,
+              "size": [
+                91,
+                70
+              ],
+              "right_edge_ink_rows": 0,
+              "source_identical_padded_bounds": true
+            },
+            {
+              "scale": 4.0,
+              "size": [
+                352,
+                273
+              ],
+              "right_edge_ink_rows": 0,
+              "source_identical_padded_bounds": true
+            },
+            {
+              "scale": 32.0,
+              "bounded_refusal": "Native raster byte budget exceeded"
+            }
+          ]
+        },
+        "phase_counts": [
+          4,
+          4,
+          4
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 4,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 4,
+          "palette_uploads": 4,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "cjk",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          24,
+          13
+        ],
+        "tile_origin": [
+          30,
+          31
+        ],
+        "warm_before": [
+          [
+            1,
+            2,
+            1404,
+            1,
+            2
+          ],
+          2,
+          [
+            [
+              5,
+              5,
+              14,
+              912056,
+              5
+            ],
+            [
+              6,
+              6,
+              [
+                5,
+                912056,
+                5
+              ]
+            ]
+          ],
+          [
+            1,
+            1248,
+            1,
+            1248,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 5,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 5,
+          "palette_uploads": 5,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          13
+        ],
+        "tile_origin": [
+          30,
+          32
+        ],
+        "warm_before": [
+          [
+            1,
+            7,
+            1696,
+            1,
+            7
+          ],
+          2,
+          [
+            [
+              6,
+              6,
+              21,
+              997128,
+              6
+            ],
+            [
+              13,
+              13,
+              [
+                6,
+                997128,
+                6
+              ]
+            ]
+          ],
+          [
+            1,
+            1404,
+            1,
+            1404,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 6,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 6,
+          "palette_uploads": 6,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      }
+    ],
+    "held_out_cases": [
+      {
+        "name": "italic-overlap",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          37,
+          10
+        ],
+        "tile_origin": [
+          30,
+          30
+        ],
+        "warm_before": [
+          [
+            1,
+            3,
+            1280,
+            1,
+            3
+          ],
+          2,
+          [
+            [
+              7,
+              7,
+              26,
+              1048700,
+              7
+            ],
+            [
+              13,
+              13,
+              [
+                6,
+                997128,
+                6
+              ]
+            ]
+          ],
+          [
+            1,
+            1480,
+            1,
+            1480,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 7,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 7,
+          "palette_uploads": 7,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "arabic-marks",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          27,
+          16
+        ],
+        "tile_origin": [
+          30,
+          29
+        ],
+        "warm_before": [
+          [
+            1,
+            9,
+            1920,
+            1,
+            9
+          ],
+          2,
+          [
+            [
+              8,
+              8,
+              35,
+              1133772,
+              8
+            ],
+            [
+              15,
+              15,
+              [
+                6,
+                997128,
+                6
+              ]
+            ]
+          ],
+          [
+            1,
+            1728,
+            1,
+            1728,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 8,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 8,
+          "palette_uploads": 8,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      },
+      {
+        "name": "times-overlap",
+        "passed": true,
+        "size": [
+          800,
+          300
+        ],
+        "tile_size": [
+          36,
+          10
+        ],
+        "tile_origin": [
+          30,
+          32
+        ],
+        "warm_before": [
+          [
+            1,
+            4,
+            2200,
+            1,
+            4
+          ],
+          2,
+          [
+            [
+              8,
+              8,
+              36,
+              1193820,
+              9
+            ],
+            [
+              15,
+              15,
+              [
+                6,
+                997128,
+                6
+              ]
+            ]
+          ],
+          [
+            1,
+            1440,
+            1,
+            1440,
+            0
+          ]
+        ],
+        "warm_frames": 3,
+        "warm_unchanged": true,
+        "style_control": null,
+        "phase_counts": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "ordered_before": [
+          1,
+          1,
+          1,
+          575704
+        ],
+        "ordered_warm_unchanged": true,
+        "ordered_handle_count": 1,
+        "ordered_updates": 0,
+        "gpu": {
+          "backend": "production native Metal compute callback consumer",
+          "warm_frames": 3,
+          "deep_admissions": 9,
+          "warm_deep_admissions": 0,
+          "plan_uploads": 9,
+          "palette_uploads": 9,
+          "canvas_allocations": 1,
+          "warm_unchanged": true,
+          "presentation_claim": false,
+          "physical_mac_claim": false
+        }
+      }
+    ]
+  },
+  "host": {
+    "passed": true,
+    "choice": "canvas",
+    "phase": 4,
+    "close_events": 1,
+    "moves": 0,
+    "presses": 0,
+    "releases": 0,
+    "cancel_verified": false,
+    "modal_submission": null,
+    "displayed": 15,
+    "skipped": 1,
+    "pending": 0,
+    "error": null,
+    "physical_input_claim": false,
+    "physical_mac_claim": false,
+    "canvas_cancelled": 2,
+    "canvas_last_raw": [
+      0,
+      0,
+      4,
+      14216,
+      2
+    ],
+    "canvas_submission_observations": 16,
+    "canvas_warm_frames": 15,
+    "canvas_last_stable_uploads": [
+      [
+        0,
+        0,
+        4,
+        14216,
+        2
+      ],
+      57
+    ],
+    "application_status": "",
+    "active_sheet_index": 0,
+    "sheet_count": 1
+  },
+  "host_checker": {
+    "passed": true,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "fa2218651b15a98e2917886c400f5897cfd98f4641f3e03a46de874f26ace946",
+    "snapshot": {
+      "window_id": 27,
+      "submitted": 4,
+      "displayed": 1,
+      "completed_inflight": 1,
+      "physical_mac_claim": false,
+      "raw_uploads": [
+        0,
+        0,
+        4,
+        14216,
+        2
+      ],
+      "texture_uploads": 57,
+      "warm_frames": 3,
+      "cancelled_uploads": 2,
+      "raw_owner_fixture": "live-2x2-swatch-and-cancelled-1x1"
+    },
+    "image_sha256": "9ca6c4b3e65c90ba881b492734539f1d10382ff0c3f6afa7f0791619dcc7d4ff",
+    "exit_code": 0,
+    "host": {
+      "passed": true,
+      "choice": "canvas",
+      "phase": 4,
+      "close_events": 1,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 15,
+      "skipped": 1,
+      "pending": 0,
+      "error": null,
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 2,
+      "canvas_last_raw": [
+        0,
+        0,
+        4,
+        14216,
+        2
+      ],
+      "canvas_submission_observations": 16,
+      "canvas_warm_frames": 15,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          4,
+          14216,
+          2
+        ],
+        57
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "Independent actual retained PNG byte decoding; no new capture or build. Intel strict lifecycle succeeds. Not physical-Mac or complete P29 acceptance."
+}
