@@ -5,7 +5,7 @@ from pathlib import Path
 original=json.loads(Path(sys.argv[1]).read_text())['cases']
 native=json.loads(Path(sys.argv[2]).read_text())['cases']
 baseline=json.loads(Path(sys.argv[3]).read_text())['cases']
-assert len(original)==len(native)==len(baseline)==10
+assert len(original)==len(native)>=10 and len(baseline)>=10
 for o,n in zip(original,native):
  assert o['case']==n['case']
  assert o['center_rgba']==n['center_rgba'],(o['case'],o['center_rgba'],n['center_rgba'])
@@ -24,4 +24,4 @@ assert sum(o['center_rgba']!=b['center_rgba'] for o,b in zip(original,baseline))
 rows={n['case']:n for n in native}
 assert rows['equal-opacity-forward']['center_rgba']!=rows['equal-opacity-reversed']['center_rgba']
 assert rows['red-half-black']['center_rgba'][0]==124 and rows['red-half-black']['center_rgba'][0]!=183
-print('PASS ten exact actual Qt alpha pixels, cached bucket order, 24B shared vertices, no duplicate positions, stale opaque/linear/order negative controls')
+print(f'PASS {len(original)} exact actual Qt alpha pixels, cached bucket order, 24B shared vertices, no duplicate positions, stale opaque/linear/order negative controls')

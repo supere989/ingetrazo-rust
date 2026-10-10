@@ -141,11 +141,8 @@ pub fn shade_factor(normal: DVec3) -> f32 {
     ((0.62 + 0.38 * d) * 32.0).round() as f32 / 32.0
 }
 
-fn get_face_tex_and_opacity(
-    attrs: &std::collections::HashMap<String, serde_json::Value>,
-    scene: &Scene,
-) -> (Option<serde_json::Value>, f32) {
-    let opacity = attrs
+fn get_face_source_opacity(attrs: &std::collections::HashMap<String,serde_json::Value>,scene:&Scene)->f64 {
+    attrs
         .get("opacity")
         .and_then(|v| v.as_f64())
         .or_else(|| {
@@ -161,7 +158,14 @@ fn get_face_tex_and_opacity(
                 .and_then(|m| m.as_str())
                 .and_then(|mat_name| scene.materials.get(mat_name).map(|m| m.opacity as f64))
         })
-        .unwrap_or(1.0) as f32;
+        .unwrap_or(1.0)
+}
+
+fn get_face_tex_and_opacity(
+    attrs: &std::collections::HashMap<String, serde_json::Value>,
+    scene: &Scene,
+) -> (Option<serde_json::Value>, f32) {
+    let opacity = get_face_source_opacity(attrs,scene) as f32;
 
     let tex_val = attrs.get("texture").cloned().or_else(|| {
         attrs.get("mat").and_then(|m| m.as_str()).and_then(|mat_name| {
@@ -384,6 +388,7 @@ fn build_mesh_buffers(
                 let v2 = Vertex::from_dvec3(p2, norm, shaded_color, [0.0, 0.0]);
 
                 if is_xray || final_opacity < 0.999 {
+                    transparent.mark_source_opacity(if is_xray {style.xray_opacity as f64} else {get_face_source_opacity(&face.attrs,scene)});
                     transparent.push_triangle(v0, v1, v2);
                 } else {
                     opaque.push_triangle(v0, v1, v2);
@@ -517,6 +522,7 @@ fn build_group_buffers(
                 let v2 = Vertex::from_dvec3(wp2, world_norm, shaded_color, [0.0, 0.0]);
 
                 if is_xray || final_opacity < 0.999 {
+                    transparent.mark_source_opacity(if is_xray {style.xray_opacity as f64} else {get_face_source_opacity(&face.attrs,scene)});
                     transparent.push_triangle(v0, v1, v2);
                 } else {
                     opaque.push_triangle(v0, v1, v2);
