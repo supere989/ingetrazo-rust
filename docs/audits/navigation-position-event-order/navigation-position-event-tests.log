@@ -1,0 +1,374 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-navigation-validation/crates/ingetrazo-gui)
+warning: function `pack_transparent` is never used
+   --> crates/ingetrazo-gui/src/native_vulkan/world.rs:416:16
+    |
+416 | #[cfg(test)]fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer,opaque:&ingetrazo_render::buffer::MeshRenderBuffer...
+    |                ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-gui` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 2.99s
+     Running unittests src/lib.rs (/tmp/ingetrazo-center-ui-independent-target/debug/deps/ingetrazo_gui-cc1f3a5637eb6dcd)
+
+running 153 tests
+test blender::tests::test_resolution_presets ... ok
+test blender::tests::test_blender_state_initialization ... ok
+test clipboard::tests::system_clipboard_transfers_geometry_between_native_owners ... ignored, requires isolated X11 clipboard server
+test app::console_transaction_tests::console_refusals_and_inspection_preserve_model_and_redo ... ok
+test app::console_transaction_tests::console_cube_is_one_reversible_transaction ... ok
+test clipboard::tests::malformed_mesh_and_recursive_definitions_leave_document_and_history_unchanged ... ok
+test app::model_revision_regression::history_and_context_swaps_never_reuse_gpu_model_revision ... ok
+test clipboard::tests::resource_allocator_reserves_incoming_names_and_leaves_opaque_fields ... ok
+test app::tests::test_cad_clipboard_and_group_operations ... ok
+test clipboard::tests::preview_cancel_and_commit_are_one_atomic_stamp ... ok
+test clipboard::tests::copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture ... ok
+test component_edit::tests::axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context ... ok
+test clipboard::tests::overlap_paint_matches_original_first_covering_face_priority ... ok
+test component_edit::tests::cancel_and_fragment_save_preserve_document_and_history ... ok
+test clipboard::tests::loose_copy_paste_preserves_holes_opaque_data_uvs_curves_and_one_history_step ... ok
+test clipboard::tests::same_document_paste_refreshes_mesh_without_replacing_independent_child_lists ... ok
+test component_edit::tests::component_edit_commits_all_instances_once_and_undo_redo_restores_registry ... ok
+test clipboard::tests::overlap_stamp_rebuilds_regions_on_two_planes_with_one_undo ... ok
+test composer::frame_camera_tests::frame_bounds_matches_original_edge_and_group_vertex_semantics ... ok
+test clipboard::tests::foreign_component_material_and_asset_collisions_remap_with_shared_repeat_identity ... ok
+test composer::frame_camera_tests::frame_overrides_roll_scale_and_perspective_have_original_camera_semantics ... ok
+test clipboard::tests::foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo ... ok
+test component_edit::tests::paste_retains_link_but_creates_unique_instance_uids ... ok
+test composer::frame_camera_tests::hidden_face_boundaries_and_contours_are_absent_from_sheet ... ok
+test composer::frame_camera_tests::frame_pixel_aspect_saved_lens_clamp_and_two_point_follow_original ... ok
+test composer::frame_camera_tests::raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation ... ok
+test component_edit::tests::mixed_selection_component_creation_and_explosion_are_reversible ... ok
+test composer::frame_camera_tests::saved_section_view_uses_original_camera_direction_without_mutating_live_state ... ok
+test composer::frame_camera_tests::model_history_preserves_later_sheet_edits_and_switch_retires_drag ... ok
+test component_edit::tests::world_dimensions_commit_without_second_placement_transform_and_cancel_restore ... ok
+test composer::live_composer_camera_tests::current_and_missing_saved_use_live_camera_while_bound_view_uses_snapshot ... ok
+test composer::frame_camera_tests::sheet_gestures_have_scoped_undo_and_cancel_or_selection_has_no_history ... ok
+test composer::section_frame_tests::bound_saved_scene_cut_clips_nested_edges_without_changing_live_document ... ok
+test document_session::tests::mesh_prototype_registry_changes_require_unsaved_close_confirmation ... ok
+test composer_cad::tests::bevel_orientation_and_invalid_contours ... ok
+test composer::shape_authoring_tests::precise_palette_preserves_bytes_and_source_alpha_replacement ... ok
+test document_presentation::tests::presentation_only_leaf_finish_retains_exact_private_geometry_and_no_history ... ok
+test composer::shape_authoring_tests::shape_placement_is_atomic_undoable_and_invalid_input_preserves_history ... ok
+test dimension_actions::tests::property_edit_delete_invalid_axis_and_undo_preserve_dimension_identity ... ok
+test component_edit::tests::shareback_retains_annotations_and_ordinary_annotation_history_stays_reversible ... ok
+test app::ordered_solid_selection_tests::first_selected_group_is_cutter_even_when_scene_order_is_reversed ... ok
+test document_presentation::tests::ui_changes_dirty_document_without_quantizing_untouched_storage ... ok
+test component_edit::tests::nested_component_edit_propagates_and_folds_into_one_outer_history_entry ... ok
+test app::tests::solid_boolean_prepares_before_undo_and_restores_inputs ... ok
+test document_presentation::tests::complete_saved_view_recalls_precision_recipe_sky_and_time ... ok
+test history_layers::tests::registry_membership_is_not_ordinary_geometry_history ... ok
+test geometry_actions::tests::menu_intersect_rebuild_and_failed_plane_have_single_atomic_history ... ok
+test geometry_actions::tests::heal_menu_holes_overlap_and_undo_restores_both_faces ... ok
+test geometry_actions::tests::simplify_and_path_conversion_commit_once_and_undo_exactly ... ok
+test composer::pdf::grid_tests::literal_original_grid_cutoff_and_perspective_controls ... ok
+test geometry_actions::tests::orient_partition_marking_flip_and_second_pass_noop_have_one_undo ... ok
+test history_views::tests::imported_view_owner_survives_update_delete_and_redo_object_lifetime ... ok
+test history_layers::tests::nested_ordinary_layer_panel_state_survives_lifted_model_undo ... ok
+test history_terrain::tests::visibility_is_nonhistory_and_noop_has_no_revision_or_copy ... ok
+test image_plane_actions::tests::add_image_layer_redo_uses_current_name_and_rechecks_creation ... ok
+test history_layers::tests::delete_selected_layer_reassigns_nested_mesh_and_keeps_other_layer ... ok
+test history_views::tests::nonhistory_view_actions_do_not_hide_geometry_branch ... ok
+test image_plane_actions::tests::detached_metadata_is_rooted_by_redo_then_reclaimed_when_branch_dies ... ok
+test image_plane_actions::tests::delete_image_layer_is_global_and_survives_owned_frame_undo ... ok
+test image_plane_actions::tests::context_cancel_history_roots_detached_metadata_until_session_release ... ok
+test history_terrain::tests::same_geometry_rebuild_is_different_runtime_owner_and_survives_unrelated_undo ... ok
+test native_vulkan::cad_input_usage_tests::unsupported_input_is_explicit_refusal ... ok
+test native_vulkan::encoded_surface_tests::prefers_direct_encoded_attachment_and_refuses_semantic_fallback ... ok
+test native_vulkan::headless::tests::strict_hardware_request_never_substitutes_software_or_other_vendor ... ok
+test image_plane_actions::tests::unrelated_geometry_history_does_not_own_plane_and_bad_input_is_atomic ... ok
+test image_plane_actions::tests::relative_frame_undo_and_absolute_transform_capture_are_distinct ... ok
+test image_plane_actions::tests::reference_only_finish_keeps_precise_prototype_and_layer_owned_history ... ok
+test native_vulkan::queues::tests::combined_and_dedicated_compute_preferred ... ok
+test native_vulkan::queues::tests::sparse_split_graphics_present_preserve_real_indices ... ok
+test native_vulkan::resize::error_tests::typed_loss_refuses_but_memory_pressure_and_opaque_text_do_not ... ok
+test native_vulkan::queues::tests::no_present_or_graphics_is_rejected ... ok
+test native_vulkan::resize::tests::cancellation_is_explicit_and_stage_specific ... ok
+test native_vulkan::resize::tests::unused_owner_is_destroyed_and_published_owner_is_transferred ... ok
+test native_vulkan::world::contour_chunk_regression::storage_chunks_fit_actual_range_and_preserve_complete_triangles ... ok
+test native_vulkan::world::lifecycle_regression::failed_pipeline_batch_releases_every_partial_non_null_handle ... ok
+test native_vulkan::world::sample_count_regression::format_support_limits_global_msaa_without_allocating_invalid_images ... ok
+test native_vulkan::texture_cache::tests::source_alpha_strict_threshold_and_sparse_coverage ... ok
+test navigation::first_person_input_tests::ctrl_shortcuts_are_not_claimed_and_release_clears_pressed_axis ... ok
+test navigation::bounds_cache_tests::model_visibility_rebuilds_position_center_but_unchanged_hover_reuses_it ... ok
+test native_vulkan::texture_cache::tests::decode_budget_and_format_fail_before_pixel_admission ... ok
+test navigation::first_person_input_tests::model_context_change_stops_held_movement_and_mouse_capture ... ok
+test navigation::collision_cache_tests::warm_camera_queries_reuse_index_and_history_revision_rebuilds ... ok
+test navigation::tests::cancellation_discards_gesture_and_stops_ticks ... ok
+test navigation::timer_dispatch_tests::nonfinite_clock_does_not_move_or_poison_later_dispatch ... ok
+test navigation::timer_dispatch_tests::overdue_timer_dispatches_one_then_resumes_interval ... ok
+test geometry_actions::tests::placed_component_pieces_update_shared_definition_and_undo_once ... ok
+test navigation::timer_dispatch_tests::cancel_restarts_timer_without_catching_old_deadline ... ok
+test navigation_ray::tests::frozen_qt_iso_ground_and_ordinary_ray_are_distinct_without_camera_mutation ... ok
+test navigation_ray::tests::rejected_ray_inputs_and_grazing_or_behind_plane_leave_camera_unchanged ... ok
+test navigation::tests::camera_placement_preserves_model_and_hands_off_state_independently ... ok
+test navigation::height_tests::measurement_routes_camera_height_without_model_transaction ... ok
+test outliner::tests::cut_list_controls_apply_precision_surface_filter_and_document_units ... ok
+test outliner::tests::all_visibility_is_one_undo_and_cut_list_and_cache_follow_changes ... ok
+test clipboard::tests::foreign_mesh_identity_remaps_collisions_keeps_repeat_and_separates_equal_prototypes ... ok
+test saved_view_actions::tests::selected_update_preserves_metadata_and_recalls_hidden_tree_section_style ... ok
+test outliner::tests::nested_selection_opens_correct_context_and_properties_roundtrip_with_undo ... ok
+test session_state::tests::crash_writer_helper ... ok
+test section_actions::prompt_tests::placement_prompt_cancel_rename_optout_and_undo_follow_original_history ... ok
+test section_actions::selection_identity_tests::deleting_earlier_plane_keeps_selection_on_same_persisted_identity ... ok
+test tests::test_app_camera_presets ... ok
+test tests::test_app_delete_and_select_all ... ok
+test section_actions::tests::sections_in_rotated_scaled_edit_context_keep_world_plane_and_outer_undo ... ok
+test tests::test_app_initialization ... ok
+test tests::test_app_tool_switching ... ok
+test tests::test_app_undo_redo ... ok
+test tool_history::section_group_workflow::clipped_front_group_does_not_block_rear_group_select_and_double_click ... ok
+test tool_history::tests::cancel_invalid_vcb_and_selection_do_not_create_undo_commits ... ok
+test tool_history::tests::failed_path_sweep_reports_error_without_document_or_history_mutation ... ok
+test tool_history::tests::click_and_vcb_pushpull_each_create_one_undo_commit ... ok
+test tool_history::tests::duplicate_line_undo_does_not_pop_unrelated_history_and_numeric_closure_stays_active ... ok
+test tool_history::tests::freehand_preview_cancel_release_has_one_reversible_commit ... ok
+test tool_history::tests::history_replacement_retires_move_targets_and_redo_preserves_original_geometry ... ok
+
+running 1 test
+test document_session::tests::native_close_requests_offer_cancel_then_close_after_discard ... ok
+test tool_history::tests::followme_preview_cancel_and_drag_release_history_are_atomic ... ok
+test tool_history::tests::line_midchain_undo_rewinds_vcb_origin_without_consuming_prior_document_undo ... ok
+test tool_history::tests::move_live_preview_click_vcb_failure_cancel_and_tool_change_are_transactional ... ok
+test composer_cad::tests::pose_palette_and_invalid_updates_preserve_cached_geometry ... ok
+test composer::frame_camera_tests::subpixel_paper_hatch_keeps_original_two_row_coverage ... ok
+test viewport::drafting_plane_tests::locked_reference_still_offers_tilted_drawing_plane ... ok
+test tool_history::tests::offset_preview_failure_cancel_and_success_have_transactional_history ... ok
+test tool_history::tests::move_array_retyping_replaces_one_undo_and_document_replacement_closes_window ... ok
+test viewport::drafting_plane_tests::standard_view_uses_model_center_oblique_uses_ground_and_line_can_rise ... ok
+test tool_history::tests::source_move_live_preview_and_other_transform_previews_commit_undo_once ... ok
+test viewport::move_plane_tests::move_grab_uses_camera_heading_plane_and_top_view_fallback ... ok
+test viewport::move_plane_tests::move_second_point_yields_to_unselected_face_but_axis_and_selection_keep_grab_plane ... ok
+test tool_history::tests::ctrl_pushpull_vcb_preserves_slab_and_commits_one_undo ... ok
+test composer_cad::tests::direct_geometry_separates_coverage_from_authored_alpha ... ok
+test navigation::first_person_input_tests::position_click_snaps_endpoint_and_hands_off_to_look ... ok
+test navigation::look_order_tests::outside_press_is_not_owned_and_release_retires_last_motion ... ok
+test composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item ... ok
+test navigation::first_person_input_tests::movement_releases_on_key_up_and_focus_loss_without_geometry_history ... ok
+test tool_history::tests::nested_mirrored_component_drafting_commits_shared_definition_once ... ok
+test navigation::first_person_input_tests::cursor_ownership_commands_only_on_capture_and_release_transitions ... ok
+test navigation::first_person_input_tests::sheet_and_dialog_ownership_stop_navigation_before_dispatch ... ok
+test tool_history::tests::fillet_sizing_preview_and_invalid_radius_do_not_create_history ... ok
+test section_actions::native_close_tests::native_close_cancels_naming_then_enters_unsaved_guard ... ok
+test navigation::height_tests::typed_offset_survives_settings_restart ... ok
+test composer_cad::tests::closed_curve_offsets_refuse_degenerate_and_keep_warm_cache ... ok
+test app::document_camera_tests::visible_camera_is_saved_restored_and_reset_for_new_document ... ok
+test composer_cad::tests::round_caps_cache_actual_origin_and_refuse_degenerate ... ok
+test composer_cad::tests::exact_rectangle_phase_cache_and_admission_are_atomic ... ok
+test document_session::tests::foreign_mesh_import_cache_retires_only_after_document_replacement ... ok
+test session_state::tests::preferences_keep_unknown_settings_and_corrupt_source_is_never_overwritten ... ok
+test section_actions::color_tests::section_color_saved_view_and_isolated_restart_keep_rgb ... ok
+test document_session::tests::camera_selection_do_not_dirty_and_preferences_restart_keeps_recent_files ... ok
+test document_session::tests::timer_skips_gestures_cleans_and_duplicates_then_discard_keeps_recovery ... ok
+test app::tests::test_group_3_colors ... ok
+test app::tests::test_load_example_pergola ... ok
+test session_state::tests::slots_do_not_collide_across_paths_or_live_windows_and_retirement_keeps_recoverable_copy ... ok
+test document_session::tests::naming_modal_keeps_document_autosave_timer_and_pending_prompt ... ok
+test session_state::tests::separate_process_crash_restart_recovers_latest_geometry_without_touching_original ... ok
+test document_session::tests::unsaved_actions_cancel_failed_save_and_successful_save_are_atomic ... ok
+test navigation::measurement_display_tests::actual_statusbar_submits_navigation_readout_without_mutating_input_or_history ... ok
+
+test result: ok. 152 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.27s
+

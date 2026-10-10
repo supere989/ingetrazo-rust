@@ -1,0 +1,45 @@
+{
+  "measurement": "1.68 m",
+  "measurement_rect": [
+    1098.0,
+    779.637451171875,
+    1176.0,
+    797.9999389648438
+  ],
+  "status": "Position Camera \u2014 click or drag from where to stand",
+  "endpoint_pixel": [
+    839.5642700195312,
+    221.2544708251953
+  ],
+  "snap_kind": "Endpoint",
+  "frames": 69,
+  "eye": [
+    3.7493994566546446e-32,
+    -6.123233995736766e-16,
+    10.0
+  ],
+  "forward": [
+    -3.749399456654645e-33,
+    6.123233995736766e-17,
+    -1.0
+  ],
+  "yaw": -1.5707963267948966,
+  "pitch": 1.5707963267948966,
+  "mode": "Some(Position)",
+  "preview": null,
+  "preview_pixels": null,
+  "viewport": [
+    50.0,
+    30.0,
+    1272.0,
+    769.6375122070312
+  ],
+  "undo": 0,
+  "version": 0,
+  "faces": 0,
+  "focused": true,
+  "pointer": [
+    840.0,
+    221.0
+  ]
+}
