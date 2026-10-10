@@ -21,6 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         resize_requested: bool,
         diagnostics_at: std::time::Instant,
         owned_window_path: Option<std::path::PathBuf>,
+        owned_capture_ack:Option<std::path::PathBuf>,
     }
     impl ApplicationHandler for Probe {
         fn resumed(&mut self, ev: &ActiveEventLoop) {
@@ -113,9 +114,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             if self.automatic {
-                if self.diagnostics_at.elapsed() >= std::time::Duration::from_secs(1) {
+                if self.owned_window_path.is_some() || self.diagnostics_at.elapsed() >= std::time::Duration::from_secs(1) {
                     if let Some(gpu) = self.gpu.as_ref() {
-                        eprintln!("WSI observation: {}", gpu.diagnostics());
+                        if self.diagnostics_at.elapsed()>=std::time::Duration::from_secs(1){eprintln!("WSI observation: {}",gpu.diagnostics());}
                         if let Some(path) = self.owned_window_path.as_ref() {
                             let snapshot = (|| -> Result<(), String> {
                                 let id = gpu.native_window_id()?;
@@ -137,7 +138,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             }
                         }
                     }
-                    self.diagnostics_at = std::time::Instant::now();
+                    if self.diagnostics_at.elapsed()>=std::time::Duration::from_secs(1){self.diagnostics_at=std::time::Instant::now();}
                 }
                 if self.started.elapsed() > std::time::Duration::from_secs(15) {
                     self.error = Some("bounded WSI probe missed presented completion".into());
@@ -165,6 +166,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         && displayed >= 6
                         && pending == 0
                     {
+                        // Keep only this own diagnostic window alive for capture after
+                        // the unchanged positive-display/resize criteria are reached.
+                        // The original15s deadline still precedes this branch. Capture
+                        // failure also acknowledges; it never substitutes for display.
+                        if self.owned_capture_ack.as_ref().is_some_and(|path|!path.is_file()){
+                            ev.set_control_flow(ControlFlow::WaitUntil(std::time::Instant::now()+std::time::Duration::from_millis(16)));
+                            return;
+                        }
                         eprintln!(
                             "PASS actual CAMetalLayer displayed={displayed} skipped={skipped} and exact requested resize {:?}",
                             gpu.counters()
@@ -217,6 +226,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             a.strip_prefix("--owned-window-id=")
                 .map(std::path::PathBuf::from)
         }),
+        owned_capture_ack:std::env::args().find_map(|a|a.strip_prefix("--owned-window-ack=").map(std::path::PathBuf::from)),
     };
     event.run_app(&mut probe)?;
     if let Some(e) = probe.error {
