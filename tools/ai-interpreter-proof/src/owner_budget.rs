@@ -13,6 +13,8 @@ impl OwnerBudget{
  pub fn reserve(&self,kind:Kind,bytes:usize)->Result<Lease,String>{let mut lease=Lease{budget:self.clone(),kind,bytes:0};lease.resize(bytes)?;Ok(lease)}
 }
 impl Lease{
+ /// Transfers accounting category without changing total admitted bytes.
+ pub fn reclassify(&mut self,kind:Kind)->Result<(),String>{if self.kind==kind{return Ok(());}let mut s=self.budget.0.borrow_mut();let next=s.bytes[kind as usize].checked_add(self.bytes).ok_or("Lease category overflow")?;s.bytes[self.kind as usize]-=self.bytes;s.bytes[kind as usize]=next;self.kind=kind;Ok(())}
  pub fn bytes(&self)->usize{self.bytes}
  pub fn merge(&mut self,mut other:Lease)->Result<(),String>{if self.kind!=other.kind||!Rc::ptr_eq(&self.budget.0,&other.budget.0){return Err("Foreign budget lease".into());}self.bytes=self.bytes.checked_add(other.bytes).ok_or("Lease extent overflow")?;other.bytes=0;Ok(())}
  pub fn resize(&mut self,bytes:usize)->Result<(),String>{let mut s=self.budget.0.borrow_mut();let total=s.bytes.iter().try_fold(0usize,|n,&x|n.checked_add(x)).ok_or("Owner budget extent overflow")?;if bytes>self.bytes{let extra=bytes-self.bytes;let next=total.checked_add(extra).ok_or("Owner budget extent overflow")?;if s.limit.is_some_and(|limit|next>limit){return Err("Shared owner payload admission denied".into());}s.bytes[self.kind as usize]+=extra;s.peak=s.peak.max(next);}else{s.bytes[self.kind as usize]-=self.bytes-bytes;}self.bytes=bytes;Ok(())}

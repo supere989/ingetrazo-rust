@@ -1,0 +1,6 @@
+[
+ {"name":"nested-attributes","attrs":{"color":[0.1,0.2,0.3,0.4],"layer":"Authored","opacity":0.75,"vendor":{"path":"unchanged.png","nested":[null,true,17,"payload"],"empty":{}}}},
+ {"name":"texture-attributes","attrs":{"material":"Named Paint","back_color":[0.9,0.8,0.7],"texture":{"path":"tile.png","uvw":[[1,0,0,2],[0,1,0,3]],"vendor":{"material":"opaque"}},"flags":[false,{},[],123.5]}},
+ {"name":"empty-attributes","attrs":{}},
+ {"name":"unicode-attributes","attrs":{"café":"測定","nested":[{"tag":"Δ"}],"layer":""}}
+]
