@@ -28,7 +28,9 @@ for label,extra in variants.items():
  except subprocess.TimeoutExpired as e:
   data=e.stdout or b'';(out/'transport.log').write_text(data.decode(errors='replace') if isinstance(data,bytes) else data);result.update(exit_code=124,timed_out=True)
  finally:
-  subprocess.run(['podman','rm','-f',name],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=10)
+  try:
+   clean=subprocess.run(['podman','rm','-f',name],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=10);result['cleanup_exit_code']=clean.returncode
+  except subprocess.TimeoutExpired:result['cleanup_timed_out']=True
   result['elapsed_s']=time.monotonic()-start;(out/'transport.json').write_text(json.dumps(result,indent=2)+'\n');results.append(result);(args.output/'transport-results.json').write_text(json.dumps(results,indent=2)+'\n')
  assert result['exit_code']==0,(label,result['exit_code'],'retained transport failure')
 print(json.dumps({'passed':True,'cases':list(variants),'image_id':image}))
