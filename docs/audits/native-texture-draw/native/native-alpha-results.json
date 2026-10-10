@@ -1,0 +1,260 @@
+{
+  "cases": [
+    {
+      "case": "texture-quadrants",
+      "center_rgba": [
+        124,
+        124,
+        124,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.6629929999999999, compact_preprocess_ms: 0.0, warm_cache_ms: 0.010740999999999999, cache_hits: 2, failed_prepared_chunks: 0, rollbacks: 1, edge_buffer_uploads: 3, failed_prepared_edge_bytes: 96 }",
+      "geometry_uploads": 2,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "samples": [
+        [
+          176,
+          43,
+          43,
+          255
+        ],
+        [
+          69,
+          206,
+          43,
+          255
+        ],
+        [
+          69,
+          43,
+          206,
+          255
+        ],
+        [
+          179,
+          206,
+          206,
+          255
+        ],
+        [
+          124,
+          124,
+          124,
+          255
+        ]
+      ],
+      "surface_bytes": 0,
+      "texture_stats": "(Stats { builds: 2, uploads: 2, vertex_bytes: 240, draws: 2, cache_hits: 0, rollbacks: 1 }, TextureStats { hashes: 3, encoded_bytes_hashed: 311, decodes: 3, uploads: 2, hits: 0, retired: 1, hash_ms: 0.017513, decode_ms: 0.40970399999999996, upload_ms: 12.245626999999999 })"
+    },
+    {
+      "case": "texture-repeat",
+      "center_rgba": [
+        124,
+        123,
+        123,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.42004400000000003, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0103, cache_hits: 2, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "samples": [
+        [
+          182,
+          208,
+          208,
+          255
+        ],
+        [
+          67,
+          42,
+          208,
+          255
+        ],
+        [
+          67,
+          208,
+          42,
+          255
+        ],
+        [
+          178,
+          42,
+          42,
+          255
+        ],
+        [
+          124,
+          123,
+          123,
+          255
+        ]
+      ],
+      "surface_bytes": 0,
+      "texture_stats": "(Stats { builds: 1, uploads: 1, vertex_bytes: 120, draws: 1, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 103, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.0036669999999999997, decode_ms: 0.11634, upload_ms: 0.140295 })"
+    },
+    {
+      "case": "texture-alpha",
+      "center_rgba": [
+        200,
+        214,
+        229,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.316558, compact_preprocess_ms: 0.0, warm_cache_ms: 0.003416, cache_hits: 2, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "samples": [
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ],
+        [
+          200,
+          214,
+          229,
+          255
+        ]
+      ],
+      "surface_bytes": 0,
+      "texture_stats": "(Stats { builds: 1, uploads: 1, vertex_bytes: 120, draws: 1, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 98, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004248, decode_ms: 0.114136, upload_ms: 0.070924 })"
+    },
+    {
+      "case": "texture-cutout",
+      "center_rgba": [
+        189,
+        189,
+        189,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.270732, compact_preprocess_ms: 0.0, warm_cache_ms: 0.003106, cache_hits: 2, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "samples": [
+        [
+          199,
+          104,
+          104,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          200,
+          219,
+          219,
+          255
+        ],
+        [
+          189,
+          189,
+          189,
+          255
+        ]
+      ],
+      "surface_bytes": 0,
+      "texture_stats": "(Stats { builds: 1, uploads: 1, vertex_bytes: 120, draws: 1, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 1, encoded_bytes_hashed: 101, decodes: 1, uploads: 1, hits: 0, retired: 0, hash_ms: 0.004007, decode_ms: 0.109698, upload_ms: 0.053311 })"
+    },
+    {
+      "case": "texture-back",
+      "center_rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "consolidated_opaque_count": 0,
+      "contour_metrics": "ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.68839, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0034869999999999996, cache_hits: 2, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }",
+      "geometry_uploads": 1,
+      "hard_edge_bytes": 96,
+      "hard_edge_endpoint_count": 8,
+      "opacity_runs": [],
+      "ordinary_runs": [],
+      "paint_runs": [],
+      "samples": [
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ],
+        [
+          0,
+          0,
+          247,
+          255
+        ]
+      ],
+      "surface_bytes": 0,
+      "texture_stats": "(Stats { builds: 1, uploads: 2, vertex_bytes: 240, draws: 2, cache_hits: 0, rollbacks: 0 }, TextureStats { hashes: 2, encoded_bytes_hashed: 201, decodes: 2, uploads: 2, hits: 0, retired: 0, hash_ms: 0.005379, decode_ms: 0.192945, upload_ms: 0.298083 })"
+    }
+  ],
+  "scope": "Production World native GPU input/reference corpus render; no parity assertion in renderer fixture itself"
+}
