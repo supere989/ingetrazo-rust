@@ -25,8 +25,14 @@
     "normal_vs72byte_image_equal": true,
     "diagnostic": "all failures before prepared chunks through9200 bytes; success at9216 bytes; partial rollback NOT exercised",
     "failed_prepared_chunks": 0,
-    "rollbacks": 0
+    "rollbacks": 0,
+    "source_explanation": "Discrete GPU upload transient staging peak for first vertex buffer (2x4608 bytes) exceeds persistent geometry plus tiny contour chunks. Static total cap cannot permit that peak and later deny a partial chunk. Pressure-after-N actual ledger admission remains to be tested."
   },
   "overall_passed": false,
-  "scope": "No general original pixel parity, rollback acceptance, RT/Metal/performance claim"
+  "scope": "No general original pixel parity, rollback acceptance, RT/Metal/performance claim",
+  "missing_corpus_negative": {
+    "exit_code": 1,
+    "expected_error": "Missing mandatory original corpus case original/closed-front.igz",
+    "helper_source": "ef6f843"
+  }
 }
