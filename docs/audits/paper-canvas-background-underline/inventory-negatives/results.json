@@ -1,0 +1,17 @@
+[
+  {
+    "case": "empty",
+    "exit": 1,
+    "refused": true
+  },
+  {
+    "case": "renamed",
+    "exit": 1,
+    "refused": true
+  },
+  {
+    "case": "missing-secondary",
+    "exit": 1,
+    "refused": true
+  }
+]

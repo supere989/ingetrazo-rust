@@ -1,0 +1,87 @@
+{
+  "passed": false,
+  "rows": [
+    {
+      "sheet": 0,
+      "position_y_mm": 30,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "changed_pixels": 1,
+      "original_ink_pixels": 419,
+      "render_hints": 5
+    },
+    {
+      "sheet": 0,
+      "position_y_mm": 50,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "changed_pixels": 1,
+      "original_ink_pixels": 216,
+      "render_hints": 5
+    },
+    {
+      "sheet": 1,
+      "position_y_mm": 30,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "changed_pixels": 1,
+      "original_ink_pixels": 422,
+      "render_hints": 5
+    },
+    {
+      "sheet": 1,
+      "position_y_mm": 50,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "changed_pixels": 1,
+      "original_ink_pixels": 216,
+      "render_hints": 5
+    },
+    {
+      "sheet": 2,
+      "position_y_mm": 30,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "changed_pixels": 1,
+      "original_ink_pixels": 422,
+      "render_hints": 5
+    },
+    {
+      "sheet": 2,
+      "position_y_mm": 50,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "changed_pixels": 1,
+      "original_ink_pixels": 216,
+      "render_hints": 5
+    }
+  ],
+  "native_binary_sha256": "72a2c40a5282709f3aa615d46c55b9fdd13b6129af6f09dc7314dfb9a1686a23",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "checker_sha256": "20c6e21d06b3da345a215132a27d45ccfd5d101cc19ae37494a1a8873b8e9952",
+  "scope": "Actual original QGraphics TextItem/cache painter versus native canvas pixels.\nOwned QImage proof at observed native paper transform; full original widget gesture\nand cross-platform canvas behavior are separate gates.\n"
+}

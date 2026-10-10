@@ -12,6 +12,7 @@ mod geographic_import;
 pub mod blender;
 pub mod composer;
 mod composer_text_fields;
+mod paper_raw_texture;
 pub mod composer_cad;
 pub mod composer_backend;
 pub mod dialogs;

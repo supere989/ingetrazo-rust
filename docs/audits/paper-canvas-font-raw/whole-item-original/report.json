@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "mismatches": [],
+      "sheet": 0,
+      "position_y_mm": 30,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "changed_pixels": 0,
+      "original_ink_pixels": 419,
+      "render_hints": 5
+    },
+    {
+      "mismatches": [],
+      "sheet": 0,
+      "position_y_mm": 50,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "changed_pixels": 0,
+      "original_ink_pixels": 216,
+      "render_hints": 5
+    },
+    {
+      "mismatches": [],
+      "sheet": 1,
+      "position_y_mm": 30,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "changed_pixels": 0,
+      "original_ink_pixels": 422,
+      "render_hints": 5
+    },
+    {
+      "mismatches": [],
+      "sheet": 1,
+      "position_y_mm": 50,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "changed_pixels": 0,
+      "original_ink_pixels": 216,
+      "render_hints": 5
+    },
+    {
+      "mismatches": [],
+      "sheet": 2,
+      "position_y_mm": 30,
+      "roi": [
+        387,
+        234,
+        510,
+        271
+      ],
+      "changed_pixels": 0,
+      "original_ink_pixels": 422,
+      "render_hints": 5
+    },
+    {
+      "mismatches": [],
+      "sheet": 2,
+      "position_y_mm": 50,
+      "roi": [
+        387,
+        264,
+        510,
+        301
+      ],
+      "changed_pixels": 0,
+      "original_ink_pixels": 216,
+      "render_hints": 5
+    }
+  ],
+  "native_binary_sha256": "f2f16abec543320c278b5d9035221c2d1579e1412cbad78cefbd472e323e5f16",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "checker_sha256": "9bd9ad191b5343bd80633cdec3bd4bfa2954be6b3657f2ebf91e096d9ad52f53",
+  "scope": "Actual original QGraphics TextItem/cache painter versus native canvas pixels.\nOwned QImage proof at observed native paper transform; full original widget gesture\nand cross-platform canvas behavior are separate gates.\n"
+}

@@ -1,0 +1,5 @@
+{
+  "base": "749c9759",
+  "candidate_patch_sha256": "ed8cc21d31caebc0547071a26721170cc917a9940853ec64514ddd6ae15d8f12",
+  "result": "FAIL193/103,193/103,201/103 pixels. Naive precolored Color32 transport rejected; production restored baseline."
+}

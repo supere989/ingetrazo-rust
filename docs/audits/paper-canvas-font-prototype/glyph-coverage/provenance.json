@@ -1,0 +1,6 @@
+{
+  "source_revision": "a1e15e06 plus observation-only paper_canvas_coverage_fixture",
+  "executable_sha256": "694fa9e7dfeb7f8f73aaf18aaef743b2b3b83258235406861053c477f698c4c9",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Four real original QRawFont phase-zero maps and native FT coverage exactly match before GPU compositing. One-bit coverage negatives rejected. This does not resolve the single pixel full TextItem canvas failure."
+}

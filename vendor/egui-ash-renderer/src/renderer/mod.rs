@@ -368,9 +368,23 @@ impl Renderer {
         command_pool: vk::CommandPool,
         textures_delta: &[(TextureId, ImageDelta)],
     ) -> RendererResult<()> {
+        self.set_textures_with_encoded_images(queue, command_pool, textures_delta, &[])
+    }
+
+    /// Cold managed uploads of already encoded premultiplied RGBA8. No Color32
+    /// conversion or extra image copy; descriptor and texture retirement are
+    /// identical to ordinary managed images. Call only at the usual idle fence.
+    pub fn set_textures_with_encoded_images(
+        &mut self, queue: vk::Queue, command_pool: vk::CommandPool,
+        textures_delta: &[(TextureId, ImageDelta)],
+        encoded: &[(TextureId, EncodedRgbaImage<'_>)],
+    ) -> RendererResult<()> {
+        validate_encoded_images(textures_delta, encoded)?;
         log::trace!("Setting {} textures", textures_delta.len());
         for (id, delta) in textures_delta {
-            let (width, height, data) = match &delta.image {
+            let (width, height, data) = if let Some((_,raw))=encoded.iter().find(|(key,_)|key==id) {
+                (raw.size[0] as u32,raw.size[1] as u32,std::borrow::Cow::Borrowed(raw.pixels))
+            } else {match &delta.image {
                 ImageData::Font(font) => {
                     let w = font.width() as u32;
                     let h = font.height() as u32;
@@ -379,7 +393,7 @@ impl Renderer {
                         .flat_map(|c| c.to_array())
                         .collect::<Vec<_>>();
 
-                    (w, h, data)
+                    (w, h, std::borrow::Cow::Owned(data))
                 }
                 ImageData::Color(image) => {
                     let w = image.width() as u32;
@@ -390,9 +404,9 @@ impl Renderer {
                         .flat_map(|c| encoded_image_pixel(*c))
                         .collect::<Vec<_>>();
 
-                    (w, h, data)
+                    (w, h, std::borrow::Cow::Owned(data))
                 }
-            };
+            }};
 
             if let Some([offset_x, offset_y]) = delta.pos {
                 log::trace!("Updating texture {id:?}");
@@ -414,7 +428,7 @@ impl Renderer {
                         },
                         extent: vk::Extent2D { width, height },
                     },
-                    data.as_slice(),
+                    data.as_ref(),
                 )?;
                 if texture.set_options(&self.device,delta.options)? {
                     let infos=[vk::DescriptorImageInfo::default().sampler(texture.sampler).image_view(texture.image_view).image_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)];
@@ -432,7 +446,7 @@ impl Renderer {
                     &mut self.allocator,
                     width,
                     height,
-                    data.as_slice(),
+                    data.as_ref(),
                     delta.options,
                 )?;
 
@@ -1006,3 +1020,31 @@ pub trait VulkanPaint:Send+Sync {
  fn paint(&self,info:&egui::PaintCallbackInfo,device:&ash::Device,command:ash::vk::CommandBuffer)->RendererResult<()>;
 }
 pub struct VulkanPaintCallback(pub std::sync::Arc<dyn VulkanPaint>);
+
+/// Source encoded-premultiplied bytes borrowed for one cold managed upload.
+/// This API includes alpha; it is distinct from opaque native viewport textures.
+pub struct EncodedRgbaImage<'a>{pub size:[usize;2],pub pixels:&'a [u8]}
+fn validate_encoded_images(deltas:&[(TextureId,ImageDelta)],images:&[(TextureId,EncodedRgbaImage<'_>)])->RendererResult<()> {
+ if images.len()>4096{return Err(RendererError::Init("Raw encoded image count exceeded".into()));}
+ let mut bytes=0usize;
+ for (index,(id,image))in images.iter().enumerate(){
+  if !matches!(id,TextureId::Managed(_))||images[..index].iter().any(|(key,_)|key==id)||!deltas.iter().any(|(key,delta)|key==id&&delta.pos.is_none()) {return Err(RendererError::Init("Raw encoded image identity/update invalid".into()));}
+  let [w,h]=image.size;let size=w.checked_mul(h).and_then(|n|n.checked_mul(4)).filter(|&n|n<=16*1024*1024).ok_or_else(||RendererError::Init("Raw encoded image budget exceeded".into()))?;
+  if w==0||h==0||w>4096||h>4096||size!=image.pixels.len(){return Err(RendererError::Init("Raw encoded image dimensions invalid".into()));}
+  bytes=bytes.checked_add(size).filter(|&n|n<=32*1024*1024).ok_or_else(||RendererError::Init("Raw encoded upload budget exceeded".into()))?;
+  if image.pixels.chunks_exact(4).any(|p|p[..3].iter().any(|&c|c>p[3])) {return Err(RendererError::Init("Raw image is not encoded premultiplied RGBA8".into()));}
+ }
+ Ok(())
+}
+
+#[cfg(test)]mod raw_encoded_admission_tests{
+ use super::*;
+ fn delta()->ImageDelta{ImageDelta::full(egui::ColorImage::new([1,1],egui::Color32::TRANSPARENT),egui::TextureOptions::NEAREST)}
+ #[test]fn bounded_alpha_payload_and_identity_controls(){
+  let id=TextureId::Managed(7);let deltas=[(id,delta())];let pixels=[8,9,12,68];let valid=[(id,EncodedRgbaImage{size:[1,1],pixels:&pixels})];assert!(validate_encoded_images(&deltas,&valid).is_ok());
+  for(size,data)in [([1,1],&pixels[..3]),([0,1],&pixels[..]),([usize::MAX,2],&pixels[..]),([4097,1],&pixels[..]),([1,1],&[69,9,12,68][..])]{assert!(validate_encoded_images(&deltas,&[(id,EncodedRgbaImage{size,pixels:data})]).is_err());}
+  assert!(validate_encoded_images(&[],&valid).is_err());assert!(validate_encoded_images(&[(TextureId::User(7),delta())],&[(TextureId::User(7),EncodedRgbaImage{size:[1,1],pixels:&pixels})]).is_err());
+  let duplicated=[(id,EncodedRgbaImage{size:[1,1],pixels:&pixels}),(id,EncodedRgbaImage{size:[1,1],pixels:&pixels})];assert!(validate_encoded_images(&deltas,&duplicated).is_err());
+  let mut partial=delta();partial.pos=Some([0,0]);assert!(validate_encoded_images(&[(id,partial)],&valid).is_err());
+ }
+}

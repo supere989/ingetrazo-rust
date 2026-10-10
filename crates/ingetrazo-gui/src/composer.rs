@@ -18,11 +18,13 @@ use ingetrazo_render::pipeline::project_point;
 
 use crate::app::IngeTrazoApp;
 #[path="composer_pdf.rs"] mod pdf;
+#[path="composer_text_canvas.rs"] mod text_canvas;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
 pub struct ComposerState {
     pub pdf_export_error: Option<String>,
+    text_canvas:text_canvas::CanvasPainter,
     field_index_cache: Option<((u64,u64,uuid::Uuid,usize),Result<usize,String>)>,
     field_index_computations:u64,
     field_expansions:crate::composer_text_fields::CanvasExpansions,
@@ -42,7 +44,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            pdf_export_error: None,field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            pdf_export_error: None,text_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -165,6 +167,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let margin_mm = app.scene.sheets[sheet_idx].margin_mm;
     let selected_item = app.scene.sheets[sheet_idx].selected_item;
     let items = app.scene.sheets[sheet_idx].items.clone();
+    app.composer_state.text_canvas.begin_frame();
     let field_index=if items.iter().any(|item|matches!(item,SheetItem::Text(t)if t.text.contains('{'))) {Some(canvas_field_index(app,sheet_idx))}else{None};
     let calendar_before=crate::composer_text_fields::calendar_samples();
     let calendar=field_index.as_ref().map(|_|crate::composer_text_fields::sample_calendar());
@@ -187,6 +190,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         Vec2::new(paper_w_px, paper_h_px),
     );
 
+    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-paper-transform"),[paper_rect.min.x,paper_rect.min.y,zoom]));}
     // Draw Paper Shadow & Sheet
     let shadow_rect = paper_rect.translate(Vec2::new(6.0, 8.0));
     painter.rect_filled(shadow_rect, 2.0, Color32::from_black_alpha(100));
@@ -299,13 +303,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{
                     let mut strings=d.get_temp::<Vec<String>>(egui::Id::new("pdf-ui-canvas-fields")).unwrap_or_default();strings.push(display.to_string());d.insert_temp(egui::Id::new("pdf-ui-canvas-fields"),strings);
                 });}
-                let painted_rect=painter.text(
-                    p,
-                    egui::Align2::LEFT_TOP,
-                    display,
-                    FontId::proportional((txt.font_size_pt as f32 * zoom * 0.4).max(10.0)),
-                    Color32::from_rgb(15, 15, 20),
-                );
+                let painted_rect=match app.composer_state.text_canvas.paint(&painter,&app.scene.sheets[sheet_idx],txt,display,app.model_revision,app.scene.version,zoom,paper_rect.min,&mut app.composer_state.paper_text.borrow_mut()) {
+                    Ok(rect)=>rect,Err(error)=>{app.status_message=error.clone();painter.text(p,egui::Align2::LEFT_TOP,format!("Text painter: {error}"),FontId::proportional(10.),Color32::DARK_RED)},
+                };
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{let mut rects=d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-canvas-text-rects")).unwrap_or_default();rects.push(painted_rect);d.insert_temp(egui::Id::new("pdf-ui-canvas-text-rects"),rects);});}
                 if is_selected {
                     let text_rect = Rect::from_min_size(p, Vec2::new(60.0 * zoom, 12.0 * zoom));
@@ -335,7 +335,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         }
     }
 
-    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
+    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){let raw_texture_stats=crate::paper_raw_texture::stats(ui.ctx());ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-canvas-paint-stats"),app.composer_state.text_canvas.stats());if let Some(stats)=raw_texture_stats{d.insert_temp(egui::Id::new("pdf-ui-raw-texture-stats"),stats);}d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
 
     // Top Floating Toolbar for Composer Controls
     let toolbar_rect = Rect::from_min_size(

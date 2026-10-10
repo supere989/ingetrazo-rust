@@ -1,0 +1,13 @@
+# Cached source text background and underline
+
+Production source stages: `1b304b5c` then `985aba7d`, original pin `6be29fe437a7cd992d4e079f71720821b25216b9`, Qt6.12.0.
+
+Final named ash composer binary SHA256: `3cf822f4ac4faa61008bae6419d545268d2f2eb88c073d2e901003b28ee53db2`. Actual XTEST canvas-only replay covers background, underline and combined background+underline, two TextItems per sheet. All six unchanged declared regions match actual original cached QGraphics TextItem strictly. Actual warm upload/layout/raster counters are unchanged in each idle observation. PDF comparisons were not repeated.
+
+Source mapping: `QRasterizer::rasterizeLine` axis-aligned antialiased branch defines16.16 rectangle coverage. `QCosmeticStroker::drawLineAA` horizontal flat-cap branch defines thin lines; ordinary spans multiply coverage by width-opacity before brush blending, while explicit rectangular clip's fast draw fades the16-bit brush first. QColor's16-bit opacity is retained until ARGB32 brush conversion. `qdrawhelper_p.h BYTE_MUL` computes product+original-product-carry+128; rounding before carry was the retained final one-pixel bug. One cached item consumes fills/glyphs/decorations in source draw order and publishes one texture; warm path does not rescan or rerasterize source draws.
+
+Retained failures: initial six region counts242/121,205/146,1520/951; raw-brush correction made background-only exact; thin-line span correction left one combined pixel; exact source BYTE_MUL carry order removed it. Focused15 actual Qt rectangle/color controls and10 actual Qt thin-line/clip controls pass. Single-pixel valid PNG mutation rejects. Empty, renamed and missing-secondary source inventories reject; recipe manifest pins hashes/literal identities and all six positions.
+
+Ownership: managed texture submission/fence owner is unchanged. Pending raw bytes and old failed queued sets are cancelled together only at acknowledged next-frame retirement. Current-frame set/paint/free remains eligible for upload and paint. Four focused queue tests cover bytes shared until ACK, unavailable queue refusal, failed set/drop retirement and actual egui same-frame set+image+free. The first tests incorrectly assumed no unrelated font-atlas set remained; corrected to require only the dead ID absent, preserving other managed updates.
+
+No broad canvas/Text/P29 closure: arbitrary clip/layout/platform font cases, synthetic bold, source cache bounding behavior for expanded long fields, and outer border remain required. No actual hardware texture refusal injection claim; queue lifecycle controls are focused CPU-egui proof, actual canvas uses software Vulkan.

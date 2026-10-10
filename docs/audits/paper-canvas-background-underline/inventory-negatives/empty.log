@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-view-pdf/scripts/check-paper-canvas-original-text.py", line 21, in <module>
+    assert len(cases)==3 and all(isinstance(c.get('secondary'),dict) for c in cases), 'Three sheets with two text entries each are mandatory'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Three sheets with two text entries each are mandatory

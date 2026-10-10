@@ -1,0 +1,43 @@
+diff --git a/crates/ingetrazo-gui/src/composer_text_canvas.rs b/crates/ingetrazo-gui/src/composer_text_canvas.rs
+index 43eae850..081cadd4 100644
+--- a/crates/ingetrazo-gui/src/composer_text_canvas.rs
++++ b/crates/ingetrazo-gui/src/composer_text_canvas.rs
+@@ -5,7 +5,7 @@ use egui::{Color32,Pos2,Rect,Vec2,TextureHandle};
+ use ingetrazo_core::composition::{Sheet,TextItem};
+ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Painter,sheet_pdf::{Draw,PathOp}};
+ #[derive(Clone)]struct Layout {text:String,draws:Arc<Vec<Draw>>,bytes:usize,fonts:Vec<(FontKey,usize)>}
+-#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:i64,phase:[u8;2],italic:bool}
++#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:i64,phase:[u8;2],italic:bool,color:[u8;4]}
+ #[derive(Clone)]struct GlyphImage {texture:Option<TextureHandle>,left:i32,top:i32,width:usize,height:usize,bytes:usize}
+ #[derive(Clone)]enum Ink{Image(TextureHandle,Rect,Rect,Color32),Fill(Rect,Rect,Color32),Line([Pos2;2],Rect,egui::Stroke)}
+ #[derive(Clone,Default)]pub(super) struct CanvasPainter {
+@@ -33,13 +33,15 @@ impl CanvasPainter {
+  }
+  fn retire_layout(&mut self,id:uuid::Uuid){if let Some(layout)=self.layouts.remove(&id){self.layout_bytes-=layout.bytes;for (key,_)in layout.fonts{if let Some(entry)=self.font_refs.get_mut(&key){entry.0-=1;if entry.0==0{let (_,bytes)=self.font_refs.remove(&key).unwrap();self.font_bytes-=bytes;}}}}}
+ 
+- fn image(&mut self,ctx:&egui::Context,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<GlyphImage,String>{
+-  let key=GlyphKey{font:font.key(),glyph,scale:(scale*65536.)as i64,phase,italic};
++ fn image(&mut self,ctx:&egui::Context,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],italic:bool,color:Color32)->Result<GlyphImage,String>{
++  let key=GlyphKey{font:font.key(),glyph,scale:(scale*65536.)as i64,phase,italic,color:color.to_array()};
+   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
+   let bitmap=font.rasterize_glyph(glyph,scale,phase,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
+   if bytes>16*1024*1024{return Err("Canvas glyph texture budget exceeded".into());}
+   self.glyphs.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;self.order.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;
+-  let texture=if bytes==0{None}else{let mut pixels=Vec::new();pixels.try_reserve_exact(bitmap.coverage.len()).map_err(|_|"Canvas glyph texture allocation failed")?;pixels.extend(bitmap.coverage.iter().map(|&alpha|Color32::from_white_alpha(alpha)));Some(ctx.load_texture("source-paper-glyph",egui::ColorImage{size:[bitmap.width,bitmap.height],pixels},egui::TextureOptions::NEAREST))};
++  let texture=if bytes==0{None}else{let mut pixels=Vec::new();pixels.try_reserve_exact(bitmap.coverage.len()).map_err(|_|"Canvas glyph texture allocation failed")?;// Original DeviceCoordinateCache stores a colored premultiplied 8-bit image.
++  // Precolor once; GPU float tint multiplication otherwise rounds differently.
++  let [r,g,b,a]=color.to_srgba_unmultiplied();pixels.extend(bitmap.coverage.iter().map(|&alpha|Color32::from_rgba_unmultiplied(r,g,b,((u16::from(alpha)*u16::from(a)+127)/255)as u8)));Some(ctx.load_texture("source-paper-glyph",egui::ColorImage{size:[bitmap.width,bitmap.height],pixels},egui::TextureOptions::NEAREST))};
+   while self.glyphs.len()>=4096||self.glyph_bytes+bytes>32*1024*1024{let old=self.order.pop_front().ok_or("Canvas glyph cache invariant failed")?;let retired=self.glyphs.remove(&old).ok_or("Canvas glyph cache identity failed")?;self.glyph_bytes-=retired.bytes;}
+   let image=GlyphImage{texture,left:bitmap.left,top:bitmap.top,width:bitmap.width,height:bitmap.height,bytes};self.glyphs.insert(key,image.clone());self.order.push_back(key);self.glyph_bytes+=bytes;self.raster_builds+=1;Ok(image)
+  }
+@@ -51,8 +53,8 @@ impl CanvasPainter {
+    let mut ink=painter.clone();if let Some(clip)=&draw.clip{let mut rect=Rect::NOTHING;for op in clip{if let PathOp::Move(p)|PathOp::Line(p)=op{rect.extend_with(pos+Vec2::new(p[0]as f32*zoom,p[1]as f32*zoom));}}ink=ink.with_clip_rect(painter.clip_rect().intersect(rect));}
+    if let Some(text)=&draw.text{let scale=text.scale_mm*f64::from(zoom)*ppp;
+     if text.font.synthetic_bold_offset_px(text.bold)?>0.{return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}
+-    for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let fixed_x=(x*64.)as i64;let fixed_y=(y*64.)as i64;let (fx,fy,phase)=device_position(fixed_x,fixed_y);let image=self.image(painter.ctx(),&text.font,glyph.glyph,scale,phase,text.italic)?;
+-     if let Some(texture)=image.texture{let rect=Rect::from_min_size(Pos2::new(((fx+f64::from(image.left))/ppp)as f32,((fy-f64::from(image.top))/ppp)as f32),Vec2::new((image.width as f64/ppp)as f32,(image.height as f64/ppp)as f32));self.ops.push(Ink::Image(texture,rect,ink.clip_rect(),color));bounds=bounds.union(rect.intersect(ink.clip_rect()));}
++    for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let fixed_x=(x*64.)as i64;let fixed_y=(y*64.)as i64;let (fx,fy,phase)=device_position(fixed_x,fixed_y);let image=self.image(painter.ctx(),&text.font,glyph.glyph,scale,phase,text.italic,color)?;
++     if let Some(texture)=image.texture{let rect=Rect::from_min_size(Pos2::new(((fx+f64::from(image.left))/ppp)as f32,((fy-f64::from(image.top))/ppp)as f32),Vec2::new((image.width as f64/ppp)as f32,(image.height as f64/ppp)as f32));self.ops.push(Ink::Image(texture,rect,ink.clip_rect(),Color32::WHITE));bounds=bounds.union(rect.intersect(ink.clip_rect()));}
+     }
+     for decoration in &text.decorations{let [x0,y0,x1,y1]=decoration.line_px;self.ops.push(Ink::Line([pos+Vec2::new((x0*text.scale_mm)as f32*zoom,(y0*text.scale_mm)as f32*zoom),pos+Vec2::new((x1*text.scale_mm)as f32*zoom,(y1*text.scale_mm)as f32*zoom)],ink.clip_rect(),egui::Stroke::new((decoration.width_px*text.scale_mm)as f32*zoom,color)));}
+    }else if !draw.path.is_empty(){let mut rect=Rect::NOTHING;for op in &draw.path{if let PathOp::Move(p)|PathOp::Line(p)=op{rect.extend_with(pos+Vec2::new(p[0]as f32*zoom,p[1]as f32*zoom));}}self.ops.push(Ink::Fill(rect,ink.clip_rect(),color));bounds=bounds.union(rect);}

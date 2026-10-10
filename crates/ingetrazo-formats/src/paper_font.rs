@@ -245,6 +245,9 @@ impl CachedFont {
             0.
         }
     }
+    pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
+        self.shaper.rasterize_glyph(glyph,scale,phase,self.synthetic_italic_shear(italic))
+    }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
         self.shaper.shared_bytes()
     }
@@ -373,5 +376,19 @@ impl FontCache {
     }
     pub fn stats(&self) -> (usize, usize, u64) {
         (self.fonts.len(), self.bytes, self.loads)
+    }
+}
+
+#[cfg(all(test,target_os="linux"))]
+mod raster_admission_tests {
+    use super::*;
+    #[test]fn device_glyph_refusal_restores_shared_font_geometry(){
+        let mut resolver=crate::paper_font_resolver::Resolver::new().unwrap();
+        let font=resolver.resolve(crate::paper_font_resolver::Request{family:"Sans Serif".into(),bold:false,italic:false,required_chars:vec![]}).unwrap().font;
+        let before=font.shape_run("A",None).unwrap();let glyph=before[0].id;let cap=font.cap_height_26_6();let metrics=font.underline_metrics_px().unwrap();
+        let first=font.rasterize_glyph(glyph,0.1,[0,0],false).unwrap();assert!(first.coverage.iter().any(|&v|v>0));assert_eq!(first.coverage.len(),first.width*first.height);
+        assert!(font.rasterize_glyph(glyph,40.,[0,0],false).is_err());assert!(font.rasterize_glyph(glyph,0.1,[64,0],false).is_err());assert!(font.rasterize_glyph(u32::MAX,0.1,[0,0],false).is_err());assert!(font.rasterize_glyph(glyph,f64::NAN,[0,0],false).is_err());
+        assert_eq!(font.shape_run("A",None).unwrap(),before);assert_eq!(font.cap_height_26_6(),cap);assert_eq!(font.underline_metrics_px().unwrap(),metrics);
+        let again=font.rasterize_glyph(glyph,0.1,[0,0],false).unwrap();assert_eq!(again.coverage,first.coverage);assert_eq!((again.left,again.top),(first.left,first.top));
     }
 }
