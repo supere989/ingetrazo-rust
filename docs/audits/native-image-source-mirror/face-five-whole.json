@@ -1,0 +1,42 @@
+[
+  {
+    "case": "texture-quadrants",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "texture-repeat",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "texture-alpha",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "texture-cutout",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "texture-back",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  }
+]

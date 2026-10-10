@@ -1,0 +1,132 @@
+[
+  {
+    "case": "tex-back-color-front",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-back-color-reversed",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-trans-back-color-front",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-trans-back-color-reversed",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-back-opaque-color-reversed",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "color-back-tex-reversed",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "color-back-tex-front",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-hole",
+    "differing_pixels": 62,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 1,
+    "central_max_channel_difference": 0,
+    "bbox": [
+      294,
+      285,
+      324,
+      314
+    ]
+  },
+  {
+    "case": "tex-group-reflected",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-group-slanted",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-mixed-order-tex-first",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-mixed-order-color-first",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-mixed-backcolor-phase",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  },
+  {
+    "case": "tex-shaded-average",
+    "differing_pixels": 131044,
+    "central_150x150_differing": 22500,
+    "max_channel_difference": 110,
+    "central_max_channel_difference": 110,
+    "bbox": [
+      219,
+      119,
+      580,
+      480
+    ]
+  },
+  {
+    "case": "tex-xray",
+    "differing_pixels": 0,
+    "central_150x150_differing": 0,
+    "max_channel_difference": 0,
+    "central_max_channel_difference": 0,
+    "bbox": null
+  }
+]

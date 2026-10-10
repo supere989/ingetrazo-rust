@@ -1,0 +1,1 @@
+{"cases": 16, "whole_rgba_pixels": 7680000, "exact": true, "literal_old_rejected": true, "device_mutations_rejected": 3, "pixel_mutations_rejected": 1, "scope": "Original GPU image surfaces only; QPainter outlines deliberately excluded, remaining full display/oblique/mixed transforms/Metal open"}
