@@ -13,6 +13,8 @@ jobs:
       - name: Check mandatory original fixtures
         run: python3 -c "from pathlib import Path; names = [\"arco-yanque\", \"banca-pergola-yanque\", \"luminaria-solar-yanque\", \"pileta-fuente-yanque\"]; assert all((Path(\"ingetrazo/examples\") / (n + \".igz\")).is_file() for n in names), \"Missing original fixtures\""
       - run: cargo test --workspace --locked
+      - name: Native isolated X11 clipboard acceptance
+        run: python3 scripts/check-native-clipboard.py
       - run: cargo build --locked -p ingetrazo-cli
       - name: Software-rendered virtual-display startup
         run: scripts/render-smoke.sh
