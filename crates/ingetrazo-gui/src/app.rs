@@ -74,6 +74,7 @@ pub struct IngeTrazoApp {
     pub clipboard: Option<GeometryClipboard>,
     pub system_clipboard: Option<arboard::Clipboard>,
     pub clipboard_document: uuid::Uuid,
+    pub(crate) clipboard_mesh_share_imports: crate::clipboard::MeshShareImports,
     pub selected_dimension: Option<usize>,
     pub dimension_text_input: Option<(usize,String)>,
     pub parts_options:crate::outliner::PartsOptions,
@@ -168,6 +169,7 @@ impl IngeTrazoApp {
             clipboard: None,
             system_clipboard: None,
             clipboard_document: uuid::Uuid::new_v4(),
+            clipboard_mesh_share_imports: Default::default(),
             paste_preview: None,section_name_prompt:None,
             selected_saved_view: None,
             parts_options:crate::outliner::PartsOptions::default(),
@@ -444,6 +446,7 @@ impl IngeTrazoApp {
     }
 
     pub fn copy_selection(&mut self) {
+        self.clipboard_mesh_share_imports.clear();
         let mesh=match ingetrazo_core::containers::copy_selected_mesh(&self.scene).and_then(|mesh|ingetrazo_core::containers::transform_mesh(&mesh,self.scene.dimension_frame)){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
         let groups=self.scene.groups.iter().enumerate().filter(|(i,_)|self.scene.selection.contains(&SelectionItem::Group(*i))).map(|(_,g)|{let mut g=g.clone();g.transform=self.scene.dimension_frame*g.transform;g}).collect::<Vec<_>>();
         let mut reference=mesh.vertices.iter().map(|v|v.position).reduce(DVec3::min);
@@ -456,14 +459,14 @@ impl IngeTrazoApp {
         let reference=reference.unwrap_or(DVec3::ZERO);
         let count=mesh.faces.len()+mesh.edges.len()+groups.len();
         if count==0{self.status_message="Nothing selected to copy".into();return;}
-        let mut resources=Scene::new();resources.materials=self.scene.materials.clone();resources.layers=self.scene.layers.clone();resources.embedded_textures=self.scene.embedded_textures.clone();resources.component_definitions=self.scene.component_definitions.clone();
+        let mut resources=Scene::new();resources.materials=self.scene.materials.clone();resources.layers=self.scene.layers.clone();resources.embedded_textures=self.scene.embedded_textures.clone();resources.component_definitions=self.scene.component_definitions.clone();resources.mesh_shares=self.scene.mesh_shares.clone();
         self.clipboard=Some(GeometryClipboard{mesh,reference,groups,resources,source_document:self.clipboard_document});self.write_system_clipboard();self.status_message=format!("Copied selection ({count} items)");
     }
     pub(crate) fn paste_internal(&mut self,offset:DVec3)->bool {
         let Some(mut cb)=self.clipboard.clone() else{return false;};
         if let Err(e)=crate::clipboard::validate_payload(&cb){self.status_message=e;return false;}
         if cb.mesh.faces.is_empty()&&cb.mesh.edges.is_empty()&&cb.groups.is_empty(){return false;}
-        crate::clipboard::remap_resources(&mut cb,&self.scene,self.clipboard_document);
+        crate::clipboard::remap_resources(&mut cb,&self.scene,self.clipboard_document,&mut self.clipboard_mesh_share_imports);
         let inverse=self.scene.dimension_frame.inverse();
         let source=match ingetrazo_core::containers::transform_mesh(&cb.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return false;}};
         let (mesh,faces,edges)=match ingetrazo_core::containers::paste_mesh(&self.scene.mesh,&source,offset){Ok(result)=>result,Err(e)=>{self.status_message=e;return false;}};
@@ -476,7 +479,7 @@ impl IngeTrazoApp {
         for id in 0..candidate.mesh.faces.len(){let face=&candidate.mesh.faces[id];let outer=face.vertices.iter().map(|&v|candidate.mesh.vertices[v].position).collect::<Vec<_>>();let holes=face.holes.iter().map(|ring|ring.iter().map(|&v|candidate.mesh.vertices[v].position).collect::<Vec<_>>()).collect::<Vec<_>>();if face_geometry.iter().any(|(o,h)|*o==outer&&*h==holes){candidate.select(SelectionItem::Face(id));}}
         for id in 0..candidate.mesh.edges.len(){let edge=&candidate.mesh.edges[id];let a=candidate.mesh.vertices[edge.v0].position;let b=candidate.mesh.vertices[edge.v1].position;if edge_geometry.iter().any(|&(x,y)|(a==x&&b==y)||(a==y&&b==x)){candidate.select(SelectionItem::Edge(id));}}
         for group in cb.groups{let mut group=group.duplicate_instance();group.transform=glam::DMat4::from_translation(offset)*inverse*group.transform;let index=candidate.groups.len();candidate.groups.push(group);candidate.select(SelectionItem::Group(index));}
-        let definitions=candidate.component_definitions.clone();for(id,definition)in definitions{if let Err(e)=candidate.replace_component_definition(id,definition){self.status_message=e;return false;}}
+
         self.save_undo_state();candidate.bump_version();self.scene=candidate;true
     }
     pub fn paste_selection(&mut self) {self.begin_paste_preview();}

@@ -1,9 +1,12 @@
 use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::Scene;
+pub(crate) type MeshShareImports=std::collections::HashMap<(uuid::Uuid,uuid::Uuid,uuid::Uuid,u64),uuid::Uuid>;
 pub struct PastePreview {pub scene:Scene,pub reference:DVec3,pub offset:DVec3}
 /// Fail before mutation when a foreign document uses a resource name for different data.
 pub(crate) fn merge_resources(destination:&mut Scene,source:&Scene)->Result<(),String>{
     for(name,bytes)in &source.embedded_textures {if destination.embedded_textures.get(name).is_some_and(|existing|existing!=bytes){return Err(format!("Clipboard asset name conflict: {name}"));}}
     for(name,material)in &source.materials {if destination.materials.get(name).is_some_and(|existing|existing!=material){return Err(format!("Clipboard material name conflict: {name}"));}}
+    for(token,mesh)in &source.mesh_shares {if destination.mesh_shares.get(token).is_some_and(|existing|existing!=mesh){return Err("Clipboard mesh share identity conflict".into());}}
+    for(token,mesh)in &source.mesh_shares {destination.mesh_shares.entry(*token).or_insert_with(||mesh.clone());}
     for(name,bytes)in &source.embedded_textures{destination.embedded_textures.entry(name.clone()).or_insert_with(||bytes.clone());}
     for(name,material)in &source.materials{destination.materials.entry(name.clone()).or_insert_with(||material.clone());}
     for(id,definition)in &source.component_definitions{destination.component_definitions.entry(*id).or_insert_with(||definition.clone());}
@@ -19,11 +22,13 @@ pub(crate) fn merge_pasted_planes(original:&ingetrazo_core::mesh::Mesh,pasted:&i
     let mut planes=std::collections::HashSet::new();overlaps.retain(|&id|{let mut normal=pasted.face_normal(id);if normal.z<0.||(normal.z==0.&&(normal.y<0.||(normal.y==0.&&normal.x<0.))){normal=-normal;}let distance=normal.dot(pasted.vertices[pasted.faces[id].vertices[0]].position);planes.insert([(normal.x*1e4).round()as i64,(normal.y*1e4).round()as i64,(normal.z*1e4).round()as i64,(distance*1e4).round()as i64])});if planes.len()>24{return Ok(pasted.clone());}
     let mut result=pasted.clone();for id in overlaps{let face=&pasted.faces[id];let origin=pasted.vertices[face.vertices[0]].position;let normal=pasted.face_normal(id);if let Some(current)=result.faces.iter().position(|face|face.vertices.iter().all(|&v|normal.dot(result.vertices[v].position-origin).abs()<1e-4)){result=ingetrazo_core::planar::rebuild_faces(&result,&[current])?;}}Ok(result)
 }
-pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destination:&Scene,document:uuid::Uuid){
+pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destination:&Scene,document:uuid::Uuid,imports:&mut MeshShareImports){
     use std::collections::HashMap;
+    imports.retain(|(destination,source,_,_),_|*destination==document&&*source==payload.source_document);
     if payload.source_document==document{
         for(name,material)in &mut payload.resources.materials{if let Some(current)=destination.materials.get(name){*material=current.clone();}}
         for(name,bytes)in &mut payload.resources.embedded_textures{if let Some(current)=destination.embedded_textures.get(name){*bytes=current.clone();}}
+        for(token,mesh)in &mut payload.resources.mesh_shares{if let Some(current)=destination.mesh_shares.get(token){*mesh=current.clone();}}
         for(id,definition)in &mut payload.resources.component_definitions{if let Some(current)=destination.component_definitions.get(id){*definition=current.clone();}}
     }
     let mut assets=HashMap::new();let mut materials=HashMap::new();
@@ -38,13 +43,41 @@ pub(crate) fn remap_resources(payload:&mut crate::app::GeometryClipboard,destina
     let mut definitions=HashMap::new();if payload.source_document!=document{for(id,definition)in &payload.resources.component_definitions{
         use std::hash::{Hash,Hasher};let mut hash=std::collections::hash_map::DefaultHasher::new();serde_json::to_value(definition).unwrap_or_default().to_string().hash(&mut hash);let target=uuid::Uuid::from_u128(id.as_u128()^document.as_u128()^u128::from(hash.finish()));definitions.insert(*id,target);
     }}
+    let mut shares=HashMap::new();
+    if payload.source_document!=document {
+        let incoming:std::collections::HashSet<_>=payload.resources.mesh_shares.keys().copied().collect();
+        let mut allocated=std::collections::HashSet::new();
+        let mut ordered:Vec<_>=payload.resources.mesh_shares.iter().collect();ordered.sort_by_key(|(token,_)|**token);
+        for(token,prototype) in ordered {
+            use std::hash::{Hash,Hasher};
+            let mut remapped=prototype.clone();mesh(&mut remapped,&assets,&materials);
+            let mut hash=std::collections::hash_map::DefaultHasher::new();
+            serde_json::to_value(&remapped).unwrap_or_default().to_string().hash(&mut hash);
+            let key=(document,payload.source_document,*token,hash.finish());
+            let prior=imports.get(&key).copied().filter(|target|!allocated.contains(target)&&destination.mesh_shares.get(target).is_none_or(|mesh|mesh==&remapped));
+            let target=prior.unwrap_or_else(|| {
+                loop {let target=uuid::Uuid::new_v4();if !allocated.contains(&target)&&!incoming.contains(&target)&&!destination.mesh_shares.contains_key(&target){break target;}}
+            });
+            imports.insert(key,target);
+            allocated.insert(target);shares.insert(*token,target);
+        }
+    }
     fn mesh(mesh:&mut ingetrazo_core::mesh::Mesh,assets:&HashMap<String,String>,materials:&HashMap<String,String>){for face in &mut mesh.faces{for(key,value)in &mut face.attrs{if key=="mat"||key=="material"{if let Some(target)=value.as_str().and_then(|name|materials.get(name)){*value=serde_json::json!(target);}}if key=="texture"{texture_refs(value,assets);}}}}
-    fn groups(groups:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>){for group in groups{if let Some(id)=group.component_definition{group.component_definition=Some(*defs.get(&id).unwrap_or(&id));}mesh(&mut group.mesh,assets,materials);values(&mut group.native_document,assets,materials);if let Some(paint)=group.native_document.get_mut("material"){values(paint,assets,materials);}if let Some(texture)=&mut group.billboard_texture{if let Some(target)=assets.get(texture){*texture=target.clone();}}groups_children(&mut group.children,assets,materials,defs);}}
-    fn groups_children(children:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>){groups(children,assets,materials,defs)}
-    mesh(&mut payload.mesh,&assets,&materials);groups(&mut payload.groups,&assets,&materials,&definitions);
+    fn groups(groups:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>,shares:&HashMap<uuid::Uuid,uuid::Uuid>){for group in groups{if let Some(token)=group.mesh_share{group.mesh_share=Some(*shares.get(&token).unwrap_or(&token));}if let Some(id)=group.component_definition{group.component_definition=Some(*defs.get(&id).unwrap_or(&id));}mesh(&mut group.mesh,assets,materials);values(&mut group.native_document,assets,materials);if let Some(paint)=group.native_document.get_mut("material"){values(paint,assets,materials);}if let Some(texture)=&mut group.billboard_texture{if let Some(target)=assets.get(texture){*texture=target.clone();}}groups_children(&mut group.children,assets,materials,defs,shares);}}
+    fn groups_children(children:&mut[ingetrazo_core::groups::Group],assets:&HashMap<String,String>,materials:&HashMap<String,String>,defs:&HashMap<uuid::Uuid,uuid::Uuid>,shares:&HashMap<uuid::Uuid,uuid::Uuid>){groups(children,assets,materials,defs,shares)}
+    mesh(&mut payload.mesh,&assets,&materials);groups(&mut payload.groups,&assets,&materials,&definitions,&shares);
     payload.resources.embedded_textures=std::mem::take(&mut payload.resources.embedded_textures).into_iter().map(|(name,bytes)|(assets[&name].clone(),bytes)).collect();
     payload.resources.materials=std::mem::take(&mut payload.resources.materials).into_iter().map(|(name,mut material)|{let target=materials[&name].clone();material.name=target.clone();(target,material)}).collect();
-    payload.resources.component_definitions=std::mem::take(&mut payload.resources.component_definitions).into_iter().map(|(id,mut definition)|{mesh(&mut definition.mesh,&assets,&materials);groups(&mut definition.children,&assets,&materials,&definitions);(*definitions.get(&id).unwrap_or(&id),definition)}).collect();
+    payload.resources.component_definitions=std::mem::take(&mut payload.resources.component_definitions).into_iter().map(|(id,mut definition)|{if let Some(token)=definition.mesh_share{definition.mesh_share=Some(*shares.get(&token).unwrap_or(&token));}mesh(&mut definition.mesh,&assets,&materials);groups(&mut definition.children,&assets,&materials,&definitions,&shares);(*definitions.get(&id).unwrap_or(&id),definition)}).collect();
+    payload.resources.mesh_shares=std::mem::take(&mut payload.resources.mesh_shares).into_iter().map(|(token,mut prototype)|{mesh(&mut prototype,&assets,&materials);(*shares.get(&token).unwrap_or(&token),prototype)}).collect();
+    // Same-document copies use current prototype geometry while retaining their
+    // independently authored placement lists/matrices and per-placement payload.
+    if payload.source_document==document {
+        fn current(groups:&mut [ingetrazo_core::groups::Group],shares:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>) {
+            for group in groups {if let Some(mesh)=group.mesh_share.and_then(|token|shares.get(&token)){group.mesh=mesh.clone();}current(&mut group.children,shares);}
+        }
+        current(&mut payload.groups,&payload.resources.mesh_shares);
+    }
 }
 pub(crate) fn validate_payload(payload:&crate::app::GeometryClipboard)->Result<(),String>{
     fn mesh(mesh:&ingetrazo_core::mesh::Mesh)->Result<(),String>{
@@ -56,7 +89,10 @@ pub(crate) fn validate_payload(payload:&crate::app::GeometryClipboard)->Result<(
     }
     fn groups_children(children:&[ingetrazo_core::groups::Group],defs:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>,stack:&mut Vec<uuid::Uuid>,depth:usize)->Result<(),String>{groups(children,defs,stack,depth+1)}
     if !payload.reference.is_finite(){return Err("Invalid clipboard reference".into());}mesh(&payload.mesh)?;groups(&payload.groups,&payload.resources.component_definitions,&mut vec![],0)?;
-    for(id,def)in &payload.resources.component_definitions{mesh(&def.mesh)?;groups(&def.children,&payload.resources.component_definitions,&mut vec![*id],0)?;}Ok(())
+    for prototype in payload.resources.mesh_shares.values(){mesh(prototype)?;}
+    fn share_refs(groups:&[ingetrazo_core::groups::Group],shares:&std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>)->Result<(),String>{for group in groups{if let Some(token)=group.mesh_share{if !shares.contains_key(&token){return Err("Missing clipboard mesh share".into());}}share_refs(&group.children,shares)?;}Ok(())}
+    share_refs(&payload.groups,&payload.resources.mesh_shares)?;
+    for(id,def)in &payload.resources.component_definitions{if let Some(token)=def.mesh_share{if !payload.resources.mesh_shares.contains_key(&token){return Err("Missing clipboard definition mesh share".into());}}share_refs(&def.children,&payload.resources.mesh_shares)?;mesh(&def.mesh)?;groups(&def.children,&payload.resources.component_definitions,&mut vec![*id],0)?;}Ok(())
 }
 const CLIPBOARD_PREFIX:&str="IngeTrazo-Rust-geometry-v1\n";
 impl IngeTrazoApp {
@@ -73,7 +109,7 @@ impl IngeTrazoApp {
         let Some(mut clipboard)=self.clipboard.clone() else{return;};
         if let Err(e)=validate_payload(&clipboard){self.status_message=e;return;}
         if clipboard.mesh.faces.is_empty()&&clipboard.mesh.edges.is_empty()&&clipboard.groups.is_empty(){return;}
-        remap_resources(&mut clipboard,&self.scene,self.clipboard_document);
+        remap_resources(&mut clipboard,&self.scene,self.clipboard_document,&mut self.clipboard_mesh_share_imports);
         self.set_tool(ingetrazo_tools::base::ToolType::Select);
         let inverse=self.scene.dimension_frame.inverse();
         let mesh=match ingetrazo_core::containers::transform_mesh(&clipboard.mesh,inverse){Ok(mesh)=>mesh,Err(e)=>{self.status_message=e;return;}};
@@ -81,7 +117,7 @@ impl IngeTrazoApp {
         for group in &mut scene.groups{group.transform=inverse*group.transform;}
         scene.materials=self.scene.materials.clone();scene.layers=self.scene.layers.clone();
         if let Err(e)=merge_resources(&mut scene,&clipboard.resources){self.status_message=e;return;}
-        let definitions=scene.component_definitions.clone();for(id,definition)in definitions{if let Err(error)=scene.replace_component_definition(id,definition){self.status_message=error;return;}}
+
         self.paste_preview=Some(PastePreview{scene,reference:inverse.transform_point3(clipboard.reference),offset:DVec3::ZERO});
         self.status_message="Place copied geometry; click to stamp, Esc to cancel".into();
     }
@@ -98,8 +134,34 @@ impl IngeTrazoApp {
 mod tests {
     use crate::IngeTrazoApp;use glam::DVec3;use ingetrazo_core::scene::SelectionItem;
     #[test]
+    fn same_document_paste_refreshes_mesh_without_replacing_independent_child_lists() {
+        use ingetrazo_core::{groups::Group,mesh::Mesh};
+        let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(v.to_vec(),vec![]).unwrap();
+        let mut parent=Group::new("parent");parent.children.push(Group::with_mesh("child",mesh));app.scene.groups.push(parent);app.scene.make_component(app.scene.groups[0].id).unwrap();app.scene.groups.push(app.scene.groups[0].duplicate_instance());
+        let copy=app.scene.groups[0].children[0].duplicate_instance();app.scene.groups[0].children.push(copy);
+        let sibling=app.scene.groups[1].clone();let token=app.scene.groups[0].children[0].mesh_share.unwrap();app.scene.select(SelectionItem::Group(0));app.copy_selection();
+        let mut edited=app.scene.mesh_shares[&token].clone();edited.vertices[0].position.z=2.;app.scene.publish_mesh_share(token,edited).unwrap();
+        let before=app.scene.clone();assert!(app.paste_internal(DVec3::X*3.));assert_eq!(app.scene.groups[0].children.len(),2);assert_eq!(app.scene.groups[1].children.len(),1);assert_eq!(app.scene.groups[1].id,sibling.id);assert_eq!(app.scene.groups[2].children.len(),2);
+        assert!(app.scene.groups[2].children.iter().all(|g|g.mesh_share==Some(token)&&g.mesh.vertices[0].position.z==2.));let after=app.scene.clone();app.undo();assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);app.redo();assert_eq!(app.scene.groups,after.groups);
+    }
+    #[test]
+    fn foreign_mesh_identity_remaps_collisions_keeps_repeat_and_separates_equal_prototypes() {
+        use ingetrazo_core::{groups::Group,mesh::Mesh};
+        let mut source=IngeTrazoApp::new();let mut mesh=Mesh::new();let v=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(v.to_vec(),vec![]).unwrap();mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"embed":"same.png","uvw":[1,0,0,0,0,1,0,0],"opaque":71}));
+        source.scene.embedded_textures.insert("same.png".into(),vec![1]);for name in ["a","equal independent b"]{source.scene.groups.push(Group::with_mesh(name,mesh.clone()));let id=source.scene.groups.last().unwrap().id;source.scene.make_component(id).unwrap();}
+        source.scene.select(SelectionItem::Group(0));source.scene.select(SelectionItem::Group(1));source.copy_selection();let old=source.scene.groups[0].mesh_share.unwrap();
+        let mut destination=IngeTrazoApp::new();destination.scene.mesh_shares.insert(old,mesh.clone());destination.scene.embedded_textures.insert("same.png".into(),vec![9]);destination.clipboard=source.clipboard.clone();let before=destination.scene.clone();assert!(destination.paste_internal(DVec3::ZERO));
+        let tokens=destination.scene.groups.iter().map(|g|g.mesh_share.unwrap()).collect::<Vec<_>>();assert_ne!(tokens[0],old);assert_ne!(tokens[0],tokens[1]);
+        for token in &tokens {assert_eq!(destination.scene.mesh_shares[token].faces[0].attrs["texture"]["embed"],"same.png (clipboard 1)");assert_eq!(destination.scene.mesh_shares[token].faces[0].attrs["texture"]["opaque"],71);}
+        assert!(destination.paste_internal(DVec3::X*3.));assert_eq!(destination.scene.groups[2].mesh_share,Some(tokens[0]));assert_eq!(destination.scene.groups[3].mesh_share,Some(tokens[1]));
+        let copied=destination.scene.clone();destination.undo();destination.undo();assert_eq!(destination.scene.groups,before.groups);assert_eq!(destination.scene.mesh_shares,before.mesh_shares);destination.redo();destination.redo();assert_eq!(destination.scene.groups,copied.groups);
+        // A changed source prototype is a new imported snapshot; it cannot
+        // overwrite the older pasted geometry or alias its identity.
+        let mut updated=source.scene.mesh_shares[&old].clone();updated.vertices[0].position.z=7.;source.scene.publish_mesh_share(old,updated).unwrap();source.copy_selection();destination.clipboard=source.clipboard.clone();assert!(destination.paste_internal(DVec3::Y*3.));let newer=destination.scene.groups[4].mesh_share.unwrap();assert_ne!(newer,tokens[0]);assert_eq!(destination.scene.mesh_shares[&tokens[0]].vertices[0].position.z,0.);assert_eq!(destination.scene.mesh_shares[&newer].vertices[0].position.z,7.);
+    }
+    #[test]
     fn resource_allocator_reserves_incoming_names_and_leaves_opaque_fields(){
-        let mut payload=crate::app::GeometryClipboard::default();payload.resources.embedded_textures.insert("foo".into(),vec![1]);payload.resources.embedded_textures.insert("foo (clipboard 1)".into(),vec![2]);payload.resources.materials.insert("Paint".into(),ingetrazo_core::materials::Material::new("Paint",[1.,0.,0.,1.]));payload.resources.materials.insert("Paint (clipboard 1)".into(),ingetrazo_core::materials::Material::new("Paint (clipboard 1)",[0.,1.,0.,1.]));let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|payload.mesh.add_vertex(p));payload.mesh.add_face(ids.to_vec(),vec![]);payload.mesh.faces[0].attrs.insert("extension".into(),serde_json::json!({"path":"foo","material":"Paint","nested":{"embed":"foo"}}));payload.mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"embed":"foo"}));let opaque=payload.mesh.faces[0].attrs["extension"].clone();let mut destination=ingetrazo_core::scene::Scene::new();destination.embedded_textures.insert("foo".into(),vec![9]);destination.materials.insert("Paint".into(),ingetrazo_core::materials::Material::new("Paint",[0.,0.,1.,1.]));super::remap_resources(&mut payload,&destination,uuid::Uuid::new_v4());assert_eq!(payload.resources.embedded_textures.len(),2);assert_eq!(payload.resources.embedded_textures["foo (clipboard 1)"],vec![2]);assert_eq!(payload.resources.embedded_textures["foo (clipboard 2)"],vec![1]);assert_eq!(payload.resources.materials.len(),2);assert!(payload.resources.materials.contains_key("Paint (clipboard 2)"));assert_eq!(payload.mesh.faces[0].attrs["extension"],opaque);assert_eq!(payload.mesh.faces[0].attrs["texture"]["embed"],"foo (clipboard 2)");
+        let mut payload=crate::app::GeometryClipboard::default();payload.resources.embedded_textures.insert("foo".into(),vec![1]);payload.resources.embedded_textures.insert("foo (clipboard 1)".into(),vec![2]);payload.resources.materials.insert("Paint".into(),ingetrazo_core::materials::Material::new("Paint",[1.,0.,0.,1.]));payload.resources.materials.insert("Paint (clipboard 1)".into(),ingetrazo_core::materials::Material::new("Paint (clipboard 1)",[0.,1.,0.,1.]));let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|payload.mesh.add_vertex(p));payload.mesh.add_face(ids.to_vec(),vec![]);payload.mesh.faces[0].attrs.insert("extension".into(),serde_json::json!({"path":"foo","material":"Paint","nested":{"embed":"foo"}}));payload.mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"embed":"foo"}));let opaque=payload.mesh.faces[0].attrs["extension"].clone();let mut destination=ingetrazo_core::scene::Scene::new();destination.embedded_textures.insert("foo".into(),vec![9]);destination.materials.insert("Paint".into(),ingetrazo_core::materials::Material::new("Paint",[0.,0.,1.,1.]));super::remap_resources(&mut payload,&destination,uuid::Uuid::new_v4(),&mut Default::default());assert_eq!(payload.resources.embedded_textures.len(),2);assert_eq!(payload.resources.embedded_textures["foo (clipboard 1)"],vec![2]);assert_eq!(payload.resources.embedded_textures["foo (clipboard 2)"],vec![1]);assert_eq!(payload.resources.materials.len(),2);assert!(payload.resources.materials.contains_key("Paint (clipboard 2)"));assert_eq!(payload.mesh.faces[0].attrs["extension"],opaque);assert_eq!(payload.mesh.faces[0].attrs["texture"]["embed"],"foo (clipboard 2)");
     }
     #[test]
     fn overlap_paint_matches_original_first_covering_face_priority(){
