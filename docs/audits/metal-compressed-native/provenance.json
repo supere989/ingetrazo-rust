@@ -1,0 +1,12 @@
+{
+  "run": 38048312271,
+  "revision": "58f2a0e0e14d02300eee63d53f2dd5b75fb356aa",
+  "artifacts": {
+    "arm": 11668353204,
+    "intel": 11668776517
+  },
+  "actual_gpu": "Apple Paravirtual",
+  "root_checks": "both compressed+batched mip pass",
+  "arm_host_presentation": "failure",
+  "main_adoption": false
+}

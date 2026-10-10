@@ -1,0 +1,3 @@
+Native Metal egui sampled draw: device=Apple Paravirtual device; unified=false
+Metal diagnostic paint owner quarantined: unknown completion
+PASS actual native textured/font/clip images, sparse partial, warm uploads0, real admission rollback, completed vs pending Drop and actual GPU-gated timeout. Physical Mac/WSI still open.

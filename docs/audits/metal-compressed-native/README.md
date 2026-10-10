@@ -1,0 +1,4 @@
+# Independent native compression and batched mip review
+Revision58f2a0e, run38048312271: ARMartifact11668353204 and Intelartifact11668776517. ZIPdigests match GitHub. Root independently checks exact uploaded GPU blocks and every decoded4x4 pixel. Actual ARMBC1+ASTC pass; IntelBC1 passes and ASTCexplicitly unsupported. Native logs retain real private-image+staging quarantine under actual unsignaled shared-event stall, poison admission and observe later completion without guessing owner freedom. Warm uploads0, admission rollback and normal finalledger0 checked.
+Root also independently verifies seven complete two-image mip levels and actual sampler output. Native protocol requires one generation submission for two images.
+ARM presentation step still fails; Intel completes configured native job. Neither physicalMac performance nor whole host/default/world/production compressed-container support is established.
