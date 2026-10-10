@@ -68,6 +68,10 @@ jobs:
         if: always()
         run: |
           python3 scripts/check-metal-owned-window.py target/debug/examples/presentation_probe docs/audits/metal-native-link-ci/owned-drawable-readback --drawable-readback --source-revision=${{ github.sha }} > docs/audits/metal-native-link-ci/owned-drawable-command.log 2>&1
+      - name: Pinned Qt native window color policy causal diagnostic
+        if: always()
+        run: |
+          python3 scripts/check-metal-owned-window.py target/debug/examples/presentation_probe docs/audits/metal-native-link-ci/owned-window-color-policy --drawable-readback --window-color-space --source-revision=${{ github.sha }} > docs/audits/metal-native-link-ci/owned-window-color-policy-command.log 2>&1
       - name: Independent native immediate-presentation diagnostic
         if: always()
         run: |

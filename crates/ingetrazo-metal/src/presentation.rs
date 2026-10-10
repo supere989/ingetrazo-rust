@@ -80,6 +80,19 @@ impl MetalPresentation {
         metal: NativeMetal,
         display_sync: bool,
     ) -> Result<Self, String> {
+        Self::attach_with_color_policy(window, metal, display_sync, false)
+    }
+    /// Isolated cold engineering comparison with pinned Qt's default native
+    /// backing-store color policy. Does not alter default attachment.
+    pub fn attach_with_window_color_space(
+        window: std::sync::Arc<Window>, metal: NativeMetal, display_sync: bool,
+    ) -> Result<Self, String> {
+        Self::attach_with_color_policy(window, metal, display_sync, true)
+    }
+    fn attach_with_color_policy(
+        window: std::sync::Arc<Window>, metal: NativeMetal,
+        display_sync: bool, use_window_space: bool,
+    ) -> Result<Self, String> {
         let mtm = MainThreadMarker::new().ok_or("Metal window attachment requires main thread")?;
         let RawWindowHandle::AppKit(handle) =
             window.window_handle().map_err(|e| e.to_string())?.as_raw()
@@ -93,15 +106,21 @@ impl MetalPresentation {
         let layer = CAMetalLayer::new();
         layer.setDevice(Some(&metal.device));
         layer.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
-        // The native UI/CAD shaders produce encoded sRGB bytes. Explicitly
-        // identify that source space to Core Animation; nil is unmanaged.
-        // This performs no authored-color adjustment or shader compensation.
-        let colorspace = objc2_core_graphics::CGColorSpace::with_name(Some(unsafe {
-            objc2_core_graphics::kCGColorSpaceSRGB
-        }))
-        .ok_or("Native sRGB color space creation failed")?;
-        layer.setColorspace(Some(&colorspace));
-        eprintln!("Metal presentation source color space: sRGB");
+        if use_window_space {
+            // Qt6.12 QNSView.colorSpace defaults to NSWindow.colorSpace and
+            // propagates that exact CGColorSpace to its native Metal layer.
+            let native = view.window().ok_or("Own window color space requires attached view")?;
+            let space = native.colorSpace().ok_or("Own NSWindow color space unavailable")?;
+            let cg = space.CGColorSpace().ok_or("Own NSWindow CGColorSpace unavailable")?;
+            layer.setColorspace(Some(&cg));
+            eprintln!("Metal presentation source color space: actual own NSWindow {:?}", space);
+        } else {
+            let colorspace = objc2_core_graphics::CGColorSpace::with_name(Some(unsafe {
+                objc2_core_graphics::kCGColorSpaceSRGB
+            })).ok_or("Native sRGB color space creation failed")?;
+            layer.setColorspace(Some(&colorspace));
+            eprintln!("Metal presentation source color space: sRGB");
+        }
         layer.setFramebufferOnly(true);
         layer.setMaximumDrawableCount(3);
         layer.setDisplaySyncEnabled(display_sync);

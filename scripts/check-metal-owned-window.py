@@ -110,7 +110,7 @@ def main():
         print(json.dumps(self_test(),indent=2));return 0
     if sys.argv[1:]==["--capture-failure-self-test"]:
         print(json.dumps(capture_failure_self_test(),indent=2));return 0
-    parser=argparse.ArgumentParser();parser.add_argument("binary",type=pathlib.Path);parser.add_argument("output",type=pathlib.Path);parser.add_argument("--source-revision",required=True);parser.add_argument("--drawable-readback",action="store_true");args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument("binary",type=pathlib.Path);parser.add_argument("output",type=pathlib.Path);parser.add_argument("--source-revision",required=True);parser.add_argument("--drawable-readback",action="store_true");parser.add_argument("--window-color-space",action="store_true");args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
     if any(args.output.iterdir()):raise ValueError("fresh diagnostic directory required")
     report={"passed":False,"presentation_passed":False,"physical_mac_claim":False,"source_revision":args.source_revision,"binary_sha256":hashlib.sha256(args.binary.read_bytes()).hexdigest()}
@@ -123,6 +123,7 @@ def main():
         acknowledgment=args.output/"capture-finished"
         command=[str(args.binary.resolve()),"--automatic","--owned-window-id="+str(identity.resolve()),"--owned-window-ack="+str(acknowledgment.resolve())];report["presentation_command"]=command
         if args.drawable_readback:command.append("--diagnostic-drawable-readback")
+        if args.window_color_space:command.append("--diagnostic-window-colorspace")
         native_started=time.monotonic();proc=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
         capture=pathlib.Path("/usr/sbin/screencapture")
         help_result=subprocess.run([str(capture),"-h"],capture_output=True,text=True,timeout=2)

@@ -15,6 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         frames: u64,
         automatic: bool,
         display_sync: bool,
+    window_color_space: bool,
         drawable_readback: bool,
         started: std::time::Instant,
         resized: bool,
@@ -41,7 +42,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "Native Metal WSI: device={}; unified={}; FOUNDATION ONLY",
                     metal.info.name, metal.info.unified_memory
                 );
-                let mut gpu = MetalPresentation::attach_with_display_sync(window.clone(), metal, self.display_sync)?;
+                let mut gpu = if self.window_color_space {
+                    MetalPresentation::attach_with_window_color_space(window.clone(), metal, self.display_sync)?
+                } else {
+                    MetalPresentation::attach_with_display_sync(window.clone(), metal, self.display_sync)?
+                };
                 if self.drawable_readback { gpu.enable_center_readback_for_probe()?; }
                 self.gpu = Some(gpu);
                 self.window = Some(window);
@@ -215,6 +220,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         frames: 0,
         automatic: std::env::args().any(|s| s == "--automatic"),
         display_sync: !std::env::args().any(|s| s == "--diagnostic-no-vsync"),
+        window_color_space: std::env::args().any(|s| s == "--diagnostic-window-colorspace"),
         drawable_readback: std::env::args().any(|s| s == "--diagnostic-drawable-readback"),
         started: std::time::Instant::now(),
         resized: false,
