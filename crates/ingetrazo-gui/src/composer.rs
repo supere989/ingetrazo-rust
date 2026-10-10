@@ -26,6 +26,8 @@ pub struct ComposerState {
     pub dragging_item_idx: Option<usize>,
     pub drag_start_pos: Option<Pos2>,
     pub drag_item_orig_pos: Option<(f64, f64)>,
+    pub edit_before:Option<Vec<ingetrazo_core::composition::Sheet>>,
+    pub sheet_history:std::collections::HashMap<uuid::Uuid,(Vec<ingetrazo_core::composition::Sheet>,Vec<ingetrazo_core::composition::Sheet>)>,
 }
 
 impl Default for ComposerState {
@@ -36,15 +38,49 @@ impl Default for ComposerState {
             dragging_item_idx: None,
             drag_start_pos: None,
             drag_item_orig_pos: None,
+            edit_before:None,sheet_history:Default::default(),
         }
     }
 }
 
+fn sheet_model_equal(a:&[ingetrazo_core::composition::Sheet],b:&[ingetrazo_core::composition::Sheet])->bool {
+ let mut a=a.to_vec();let mut b=b.to_vec();for s in a.iter_mut().chain(b.iter_mut()){s.selected_item=None;}a==b
+}
+impl IngeTrazoApp {
+ pub fn begin_composer_edit(&mut self){if self.composer_state.edit_before.is_none(){self.composer_state.edit_before=Some(self.scene.sheets.clone());}}
+ pub fn finish_composer_edit(&mut self){
+  let Some(sheets)=self.composer_state.edit_before.take()else{return;};
+  if sheet_model_equal(&sheets,&self.scene.sheets){return;}
+  for before in sheets {if let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id){
+   if sheet_model_equal(std::slice::from_ref(&before),std::slice::from_ref(current)){continue;}
+   let history=self.composer_state.sheet_history.entry(before.id).or_default();history.0.push(before);history.1.clear();
+   if history.0.len()>self.document_session.preferences.undo_steps{history.0.remove(0);}
+  }}self.scene.bump_version();
+ }
+ pub fn undo_composer_edit(&mut self){self.finish_composer_edit();
+  let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
+  let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
+  if let Some(before)=history.0.pop(){history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}
+ }
+ pub fn redo_composer_edit(&mut self){self.finish_composer_edit();
+  let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
+  let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
+  if let Some(after)=history.1.pop(){history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}
+ }
+ pub fn cancel_composer_edit(&mut self){if let Some(sheets)=self.composer_state.edit_before.take(){let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
+  self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
+ }
+}
+
 pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_idx: usize) {
     if sheet_idx >= app.scene.sheets.len() {
+        app.finish_composer_edit();
         app.scene.active_sheet_index = None;
         return;
     }
+
+    let before_sheets=app.scene.sheets.clone();
+    if ui.input(|i|i.key_pressed(egui::Key::Escape)){app.cancel_composer_edit();}
 
     let (response_rect, response) = ui.allocate_exact_size(ui.available_size(), egui::Sense::click_and_drag());
     let painter = ui.painter_at(response_rect);
@@ -343,6 +379,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
 
     if bump_needed {
+        app.composer_state.edit_before.get_or_insert_with(||before_sheets.clone());
         app.scene.bump_version();
     }
 
@@ -367,6 +404,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             if let Some(sel_idx) = sheet.selected_item {
                 let ir = rect_mm_to_screen(sheet.items[sel_idx].rect());
                 if ir.contains(hover_pos) {
+                    app.composer_state.edit_before.get_or_insert_with(||before_sheets.clone());
                     app.composer_state.dragging_item_idx = Some(sel_idx);
                     app.composer_state.drag_start_pos = Some(hover_pos);
                     let orig_rect = sheet.items[sel_idx].rect();
@@ -395,10 +433,10 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 app.composer_state.dragging_item_idx = None;
                 app.composer_state.drag_start_pos = None;
                 app.composer_state.drag_item_orig_pos = None;
-                app.scene.bump_version();
             }
         }
     }
+    if app.composer_state.dragging_item_idx.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
 }
 
 fn frame_scene<'a>(scene:&'a Scene,frame:&ViewFrame)->std::borrow::Cow<'a,Scene>{if let Some(name)=frame.view_key.strip_prefix("scene:"){if let Some(view)=scene.saved_views.iter().find(|view|view.name==name){let mut snapshot=scene.clone();let mut camera=scene.camera.clone();view.apply_scene(&mut snapshot,&mut camera);return std::borrow::Cow::Owned(snapshot);}}std::borrow::Cow::Borrowed(scene)}
@@ -715,6 +753,20 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 
 #[cfg(test)]mod frame_camera_tests{
  use super::*;
+ #[test]fn sheet_gestures_have_scoped_undo_and_cancel_or_selection_has_no_history(){
+  use ingetrazo_core::composition::{Sheet,PaperSize,Orientation};
+  let mut app=IngeTrazoApp::new();app.scene.sheets.clear();app.document_session.preferences.undo_steps=64;
+  let mut sheet=Sheet::new("Atomic",PaperSize::A4,Orientation::Portrait);sheet.items.push(SheetItem::ViewFrame(ViewFrame::default()));let id=sheet.id;app.scene.sheets.push(sheet);app.scene.active_sheet_index=Some(0);
+  let initial=app.scene.sheets.clone();app.begin_composer_edit();
+  for x in [30.,40.,50.] {app.scene.sheets[0].items[0].set_pos(x,60.);}
+  app.finish_composer_edit();assert_eq!(app.composer_state.sheet_history[&id].0.len(),1);assert!(app.undo_stack.is_empty());app.undo();assert_eq!(app.scene.sheets,initial);app.redo();assert_eq!(app.scene.sheets[0].items[0].rect().x,50.);
+  let history=app.composer_state.sheet_history[&id].0.len();app.begin_composer_edit();app.scene.sheets[0].selected_item=Some(0);app.finish_composer_edit();assert_eq!(app.composer_state.sheet_history[&id].0.len(),history);
+  let before=app.scene.sheets.clone();app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(90.,100.);app.cancel_composer_edit();assert_eq!(app.scene.sheets,before);assert_eq!(app.composer_state.sheet_history[&id].0.len(),history);
+  app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(70.,80.);app.undo();assert_eq!(app.scene.sheets,before);assert!(app.composer_state.edit_before.is_none());
+  app.save_undo_state();app.scene.mesh.add_vertex(DVec3::new(4.,5.,6.));let model=app.scene.mesh.clone();let geometry_history=app.undo_stack.len();
+  app.scene.sheets.push(Sheet::new("Neighbor",PaperSize::A4,Orientation::Portrait));app.scene.active_sheet_index=Some(1);let neighbor=app.scene.sheets[1].clone();app.undo();assert_eq!(app.scene.sheets[1],neighbor);assert_eq!(app.scene.mesh,model);assert_eq!(app.undo_stack.len(),geometry_history);
+  app.scene.active_sheet_index=Some(0);app.undo();assert_eq!(app.scene.mesh,model);assert_eq!(app.scene.sheets[1],neighbor);assert_eq!(app.undo_stack.len(),geometry_history);
+ }
  #[test]fn raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation(){
   use ingetrazo_render::style::{StyleConfig,VisualStyle};
   let mut scene=Scene::new();let mut view=ingetrazo_core::saved_views::SavedView::capture_scene("Ink",&scene,&scene.camera);view.style=Some(serde_json::json!({"face_mode":"shaded","sky":true,"background":[0.2,0.3,0.4]}));scene.saved_views.push(view);let original=scene.clone();

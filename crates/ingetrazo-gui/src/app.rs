@@ -235,6 +235,7 @@ impl IngeTrazoApp {
         self.save_undo_state();
         self.retire_current_recovery();
         self.scene = Scene::new();
+        self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();
         self.camera = self.scene.camera.clone();
         self.scene.unit=self.document_session.preferences.new_document_unit;
@@ -257,6 +258,7 @@ impl IngeTrazoApp {
                 self.save_undo_state();
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
+                self.composer_state=Default::default();
                 self.scene = loaded_scene;self.clipboard_document=uuid::Uuid::new_v4();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
@@ -317,6 +319,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_undo_state(&mut self) {
+        self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
         self.redo_stack.clear();
@@ -326,6 +329,8 @@ impl IngeTrazoApp {
     }
 
     pub fn undo(&mut self) {
+        if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
+        self.finish_composer_edit();
         if let Some(prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.redo_stack.push(self.scene.clone());
@@ -336,6 +341,8 @@ impl IngeTrazoApp {
     }
 
     pub fn redo(&mut self) {
+        if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return;}
+        self.finish_composer_edit();
         if let Some(next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());
@@ -995,6 +1002,7 @@ impl eframe::App for IngeTrazoApp {
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {
+                self.finish_composer_edit();
                 render_viewport(self, ui);
             }
         });
