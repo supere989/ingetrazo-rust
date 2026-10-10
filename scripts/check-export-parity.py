@@ -27,7 +27,10 @@ def decode(path):
         count=a["count"]*({"VEC3":3,"SCALAR":1}[a["type"]]);code={5126:"f",5125:"I",5123:"H"}[a["componentType"]]
         offset=view.get("byteOffset",0)+a.get("byteOffset",0)
         return struct.unpack_from("<"+code*count,data,offset)
-    coords=accessor(primitive["attributes"]["POSITION"]);points=list(zip(coords[::3],coords[1::3],coords[2::3]));indices=accessor(primitive["indices"])
+    coords=accessor(primitive["attributes"]["POSITION"]);encoded=list(zip(coords[::3],coords[1::3],coords[2::3]));points=[(x,-z,y) for x,y,z in encoded];indices=accessor(primitive["indices"])
+    assert set(encoded)=={(12.,34.,-23.),(11.,34.,-23.),(12.,34.,-24.)},"glTF must encode original Y-up right-handed metres"
+    if "NORMAL" in primitive["attributes"]:
+        normals=accessor(primitive["attributes"]["NORMAL"]);assert all(abs(x)<1e-6 and abs(y-1)<1e-6 and abs(z)<1e-6 for x,y,z in zip(normals[::3],normals[1::3],normals[2::3])),"Encoded normals must face +Y"
     expected={(12.,23.,34.),(11.,23.,34.),(12.,24.,34.)}
     assert set(points)==expected,(points,expected)
     assert len(indices)==3 and all(i<len(points) for i in indices)
@@ -35,7 +38,7 @@ def decode(path):
     # Parent/child composition plus reflected winding must preserve outward +Z.
     normal=(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
     assert normal>0,"Reflected geometry winding incorrect"
-    return {"format":path.suffix,"decoded_points":points,"winding_z":normal}
+    return {"format":path.suffix,"encoded_y_up_points":encoded,"decoded_world_z_up_points":points,"winding_z":normal}
 
 def main():
     with tempfile.TemporaryDirectory() as temp:

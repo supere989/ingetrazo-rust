@@ -1,0 +1,15 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-core)
+   Compiling ingetrazo-formats v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-formats)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.07s
+     Running `target/debug/examples/export_acceptance_fixture /tmp/tmpouzs85bm`
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-validation/scripts/check-export-parity.py", line 49, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-validation/scripts/check-export-parity.py", line 46, in main
+    results=[decode(Path(temp)/("fixture"+suffix)) for suffix in (".gltf",".glb")]
+             ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-validation/scripts/check-export-parity.py", line 31, in decode
+    assert set(encoded)=={(12.,34.,-23.),(11.,34.,-23.),(12.,34.,-24.)},"glTF must encode original Y-up right-handed metres"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: glTF must encode original Y-up right-handed metres
