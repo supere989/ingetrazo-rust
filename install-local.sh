@@ -12,9 +12,10 @@ if [[ ! -f "$BIN" || ! -f "$WORKER_BIN" ]]; then
     (cd "$ROOT" && cargo build --locked --release -p ingetrazo-cli -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker)
 fi
 
-BIN_DIR="${HOME}/.local/bin"
-APP_DIR="${HOME}/.local/share/applications"
-ICON_DIR="${HOME}/.local/share/icons/hicolor/256x256/apps"
+INSTALL_PREFIX="${INGETRAZO_INSTALL_PREFIX:-${HOME}/.local}"
+BIN_DIR="$INSTALL_PREFIX/bin"
+APP_DIR="$INSTALL_PREFIX/share/applications"
+ICON_DIR="$INSTALL_PREFIX/share/icons/hicolor/256x256/apps"
 
 mkdir -p "$BIN_DIR" "$APP_DIR" "$ICON_DIR"
 
