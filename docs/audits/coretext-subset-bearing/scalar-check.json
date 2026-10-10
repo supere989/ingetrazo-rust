@@ -1,0 +1,6 @@
+{
+  "scope": "Extracted production scalar only; no SDK claim",
+  "source_sha256": "c3e02771d918ecf7598d7674082bcfbb1cbf2246216bc89b79601e0a1555edca",
+  "binary_sha256": "184e8fc6bb91f26bb5a377370f34b32057abf1007cd6e3c61591a46dbe6b7c5a",
+  "output": "\nrunning 1 test\ntest metrics ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+}

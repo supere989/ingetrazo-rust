@@ -1,0 +1,55 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/qfontsubset.cpp",
+    "sha256": "38fd0fc6a8be4917970a6704dc99b0cdbb5e2723a4d0db828e450b2056707657",
+    "sections": [
+      {
+        "lines": [
+          907,
+          920
+        ],
+        "text": "static QTtfGlyph generateGlyph(int index, const QPainterPath &path, qreal advance, qreal lsb, qreal ppem)\n{\n    QList<TTF_POINT> points;\n    QList<int> endPoints;\n    QTtfGlyph glyph;\n    glyph.index = index;\n    glyph.advanceWidth = qRound(advance * 2048. / ppem);\n    glyph.lsb = qRound(lsb * 2048. / ppem);\n\n    if (path.isEmpty()) {\n        //qDebug(\"glyph %d is empty\", index);\n        lsb = 0;\n        glyph.xMin = glyph.xMax = glyph.yMin = glyph.yMax = 0;\n        glyph.numContours = 0;"
+      },
+      {
+        "lines": [
+          1156,
+          1167
+        ],
+        "text": "    for (qsizetype i = 0; i < numGlyphs; ++i) {\n        glyph_t g = glyph_indices.at(i);\n        QPainterPath path;\n        glyph_metrics_t metric;\n        fontEngine->getUnscaledGlyph(g, &path, &metric);\n        if (noEmbed) {\n            path = QPainterPath();\n            if (g == 0)\n                path.addRect(QRectF(0, 0, 1000, 1000));\n        }\n        QTtfGlyph glyph = generateGlyph(i, path, metric.xoff.toReal(), metric.x.toReal(), properties.emSquare.toReal());\n"
+      }
+    ]
+  },
+  {
+    "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/text/coretext/qfontengine_coretext.mm",
+    "sha256": "a11cdd716adbb09ad01e1e58bc02219aeaa37370073f613b8fd69a6798aa1a2e",
+    "sections": [
+      {
+        "lines": [
+          384,
+          400
+        ],
+        "text": "glyph_metrics_t QCoreTextFontEngine::boundingBox(glyph_t glyph)\n{\n    glyph_metrics_t ret;\n    CGGlyph g = glyph;\n    CGRect rect = CTFontGetBoundingRectsForGlyphs(ctfont, kCTFontOrientationHorizontal, &g, 0, 1);\n    if (synthesisFlags & QFontEngine::SynthesizedItalic) {\n        rect.size.width += rect.size.height * SYNTHETIC_ITALIC_SKEW;\n    }\n    ret.width = QFixed::fromReal(rect.size.width);\n    ret.height = QFixed::fromReal(rect.size.height);\n    ret.x = QFixed::fromReal(rect.origin.x);\n    ret.y = -QFixed::fromReal(rect.origin.y) - ret.height;\n    CGSize advances[1];\n    CTFontGetAdvancesForGlyphs(ctfont, kCTFontOrientationHorizontal, &g, advances, 1);\n    ret.xoff = QFixed::fromReal(advances[0].width);\n    ret.yoff = QFixed::fromReal(advances[0].height);\n"
+      },
+      {
+        "lines": [
+          980,
+          999
+        ],
+        "text": "void QCoreTextFontEngine::getUnscaledGlyph(glyph_t glyph, QPainterPath *path, glyph_metrics_t *metric)\n{\n    CGAffineTransform cgMatrix = CGAffineTransformIdentity;\n\n    qreal emSquare = CTFontGetUnitsPerEm(ctfont);\n    qreal scale = emSquare / CTFontGetSize(ctfont);\n    cgMatrix = CGAffineTransformScale(cgMatrix, scale, -scale);\n\n    QCFType<CGPathRef> cgpath = CTFontCreatePathForGlyph(ctfont, (CGGlyph) glyph, &cgMatrix);\n    ConvertPathInfo info(path, QPointF(0,0));\n    CGPathApply(cgpath, &info, convertCGPathToQPainterPath);\n\n    *metric = boundingBox(glyph);\n    // scale the metrics too\n    metric->width  = QFixed::fromReal(metric->width.toReal() * scale);\n    metric->height = QFixed::fromReal(metric->height.toReal() * scale);\n    metric->x      = QFixed::fromReal(metric->x.toReal() * scale);\n    metric->y      = QFixed::fromReal(metric->y.toReal() * scale);\n    metric->xoff   = QFixed::fromReal(metric->xoff.toReal() * scale);\n    metric->yoff   = QFixed::fromReal(metric->yoff.toReal() * scale);"
+      }
+    ]
+  },
+  {
+    "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/corelib/global/qnumeric.h",
+    "sha256": "a0c5bb942fab69939c9ec020520a10f7c1014da72ddeb74a204cd1e1a0141a4b",
+    "sections": [
+      {
+        "lines": [
+          530,
+          555
+        ],
+        "text": "namespace QRoundImpl {\n// gcc < 10 doesn't have __has_builtin\n#if defined(Q_PROCESSOR_ARM_64) && (__has_builtin(__builtin_round) || defined(Q_CC_GNU)) && !defined(Q_CC_CLANG)\n// ARM64 has a single instruction that can do C++ rounding with conversion to integer.\n// Note current clang versions have non-constexpr __builtin_round, ### allow clang this path when they fix it.\nconstexpr inline double qRound(double d)\n{ return __builtin_round(d); }\nconstexpr inline float qRound(float f)\n{ return __builtin_roundf(f); }\n#elif defined(__SSE2__) && (__has_builtin(__builtin_copysign) || defined(Q_CC_GNU))\n// SSE has binary operations directly on floating point making copysign fast\nconstexpr inline double qRound(double d)\n{ return d + __builtin_copysign(0.5, d); }\nconstexpr inline float qRound(float f)\n{ return f + __builtin_copysignf(0.5f, f); }\n#else\nconstexpr inline double qRound(double d)\n{ return d >= 0.0 ? d + 0.5 : d - 0.5; }\nconstexpr inline float qRound(float d)\n{ return d >= 0.0f ? d + 0.5f : d - 0.5f; }\n#endif\n} // namespace QRoundImpl\n\n// Like qRound, but have well-defined saturating behavior.\n// NaN is not handled.\ntemplate <typename FP,"
+      }
+    ]
+  }
+]
