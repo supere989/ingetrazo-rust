@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "2da7c625db7648aafe2fe98de4ae7abb083c4bc7",
+    "rust_commit": "270af8b7c1d16a01e2f196832ad8e21db90e56a1",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -29,9 +29,63 @@
     {
       "case": "closed-torus",
       "original_volume": 27.000004677311495,
-      "rust_volume": 27.000004677311495,
+      "rust_volume": 27.000004677311498,
       "symmetric_difference_volume": 0.0
+    },
+    {
+      "case": "sphere-0-1-1",
+      "original_volume": 4.070552068435163,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 2.9074788440979637e-07
+    },
+    {
+      "case": "sphere-0-0_5-1",
+      "original_volume": 0.5088190085543953,
+      "rust_volume": 0.5088190448978809,
+      "symmetric_difference_volume": 3.6343485555778196e-08
+    },
+    {
+      "case": "sphere-0-1-0_5",
+      "original_volume": 4.070552068435163,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 2.9074788445142974e-07
+    },
+    {
+      "case": "sphere-7_5-1-1",
+      "original_volume": 4.070552344555686,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 2.2702752283656245e-07
+    },
+    {
+      "case": "sphere-7_5-0_5-1",
+      "original_volume": 0.5088190430694608,
+      "rust_volume": 0.5088190448978809,
+      "symmetric_difference_volume": 2.8378440350036242e-08
+    },
+    {
+      "case": "sphere-7_5-1-0_5",
+      "original_volume": 4.070552344555686,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 2.2702752285798773e-07
+    },
+    {
+      "case": "sphere-33-1-1",
+      "original_volume": 4.070552245498565,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 1.4067098916711964e-07
+    },
+    {
+      "case": "sphere-33-0_5-1",
+      "original_volume": 0.5088190306873206,
+      "rust_volume": 0.5088190448978809,
+      "symmetric_difference_volume": 1.758387364554493e-08
+    },
+    {
+      "case": "sphere-33-1-0_5",
+      "original_volume": 4.070552245498565,
+      "rust_volume": 4.070552359183047,
+      "symmetric_difference_volume": 1.4067098915950378e-07
     }
   ],
-  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Axis-crossing revolution/clipped poles, arbitrary path and interactive workflow remain open."
+  "scope": "Straight, right-angle mitre, holed straight tube, circular rectangular torus; independent original native manifold shape oracle. Nine touching/crossing-axis sphere revolutions across three plane orientations and radius pairs. Arbitrary path and interactive workflow remain open."
 }

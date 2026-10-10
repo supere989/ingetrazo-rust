@@ -9,4 +9,11 @@ fn main(){let dir=std::path::PathBuf::from(std::env::args().nth(1).unwrap());for
  let path=if name=="closed-torus"{(0..12).map(|i|{let angle=std::f64::consts::TAU*i as f64/12.;DVec3::new(4.5*angle.cos(),4.5*angle.sin(),0.5)}).collect::<Vec<_>>()}else if name=="bend"{vec![DVec3::ZERO,DVec3::new(0.,4.,0.),DVec3::new(4.,4.,0.)]}else{vec![DVec3::ZERO,DVec3::new(0.,if name=="tube"{5.}else{3.},0.)]};
  save(&scene.mesh,&dir.join(format!("{name}-source.igz")));std::fs::write(dir.join(format!("{name}-path.json")),serde_json::to_vec(&path.iter().map(|p|p.to_array()).collect::<Vec<_>>()).unwrap()).unwrap();
  sweep_profile(&mut scene,0,&path,name=="closed-torus").unwrap();save(&scene.mesh,&dir.join(format!("{name}-result.igz")));
-}}
+ }
+ for (label,phi) in [("0",0_f64),("7_5",7.5),("33",33.)] {for (rlabel,r,plabel,pr) in [("1",1.,"1",1.),("0_5",0.5,"1",1.),("1",1.,"0_5",0.5)] {
+ let name=format!("sphere-{label}-{rlabel}-{plabel}");let mut scene=Scene::new();let phi=phi.to_radians();let u=DVec3::new(phi.cos(),phi.sin(),0.);
+ let ring=(0..24).map(|i|{let a=std::f64::consts::TAU*i as f64/24.;scene.mesh.add_vertex(u*(r*a.cos())+DVec3::Z*(r*a.sin()))}).collect();scene.mesh.add_face(ring,vec![]).unwrap();
+ let path=(0..24).map(|i|{let a=std::f64::consts::TAU*i as f64/24.;DVec3::new(pr*a.cos(),pr*a.sin(),0.)}).collect::<Vec<_>>();
+ save(&scene.mesh,&dir.join(format!("{name}-source.igz")));std::fs::write(dir.join(format!("{name}-path.json")),serde_json::to_vec(&path.iter().map(|p|p.to_array()).collect::<Vec<_>>()).unwrap()).unwrap();sweep_profile(&mut scene,0,&path,true).unwrap();save(&scene.mesh,&dir.join(format!("{name}-result.igz")));
+ }}
+}
