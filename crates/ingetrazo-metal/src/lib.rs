@@ -23,7 +23,11 @@ mod span_plan;
 #[cfg(target_os = "macos")]
 pub mod native_input;
 
+#[cfg(target_os = "macos")]
 pub mod cad_callback_painter;
 
 #[cfg(target_os = "macos")]
 pub mod cad_compute_painter;
+
+#[cfg(target_os = "macos")]
+pub mod compute_canvas;

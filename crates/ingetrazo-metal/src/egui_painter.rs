@@ -163,13 +163,14 @@ struct Mesh {
     key: blake3::Hash,
     bounds: [[f32; 2]; 2],
 }
-enum PaintOrder { Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect) }
+enum PaintOrder { Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect), Compute(Arc<crate::cad_compute_painter::Prepared>,egui::Rect) }
 pub struct PreparedPaint {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     mesh: Option<Arc<Mesh>>,
     draws: Vec<Draw>,
     order: Vec<PaintOrder>,
     density: f32,
+    canvas: bool,
 }
 impl PreparedPaint {
     pub(crate) fn encode(
@@ -177,6 +178,7 @@ impl PreparedPaint {
         encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
         extent: (u32, u32),
     ) -> Result<(), String> {
+        if self.canvas{return Err("Metal compute canvas requires ordered command encoding".into());}
         let logical = self.mesh.as_ref().map(|mesh|shader_logical_size(mesh.bounds,self.density,extent)).transpose()?;
         for order in &self.order {
             if let PaintOrder::Cad(prepared,clip)=order {
@@ -220,7 +222,65 @@ impl PreparedPaint {
         }
         Ok(())
     }
+    pub fn requires_canvas(&self)->bool{self.canvas}
+    fn encode_mesh(&self,index:usize,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,extent:(u32,u32))->Result<(),String>{
+        let logical=self.mesh.as_ref().map(|mesh|shader_logical_size(mesh.bounds,self.density,extent)).transpose()?;
+            let draw=&self.draws[index];
+            let mesh=self.mesh.as_ref().ok_or("Metal prepared mesh owner missing")?;
+            let logical=logical.as_ref().ok_or("Metal prepared logical domain missing")?;
+            encoder.setRenderPipelineState(&self.pipeline);
+            unsafe {
+                encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw),0,0);
+                encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(logical).cast(),8,1);
+            }
+            let [x, y, right, bottom] = clipped_scissor(draw.clip, self.density, extent)?;
+            if right == x || bottom == y {
+                return Ok(());
+            }
+            encoder.setScissorRect(MTLScissorRect {
+                x,
+                y,
+                width: right - x,
+                height: bottom - y,
+            });
+            unsafe {
+                encoder.setFragmentTexture_atIndex(Some(&draw.texture.image.raw), 0);
+                encoder.setFragmentSamplerState_atIndex(Some(&draw.texture.sampler), 0);
+                encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
+                    MTLPrimitiveType::Triangle,
+                    draw.count,
+                    MTLIndexType::UInt32,
+                    &mesh.indices.raw,
+                    draw.first * 4,
+                );
+            }
+        Ok(())
+    }
+    pub fn encode_canvas(&self,command:&ProtocolObject<dyn MTLCommandBuffer>,canvas:&ProtocolObject<dyn MTLTexture>,clear:[f64;4])->Result<(),String>{
+        if !self.canvas||canvas.pixelFormat()!=MTLPixelFormat::RGBA8Unorm||canvas.width()==0||canvas.height()==0||canvas.width()>16384||canvas.height()>16384||canvas.textureType()!=MTLTextureType::Type2D||canvas.sampleCount()!=1||!canvas.usage().contains(MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead|MTLTextureUsage::ShaderWrite)||clear.iter().any(|v|!v.is_finite()||!(0. ..=1.).contains(v)){return Err("Metal canvas mode/format/domain mismatch".into());}
+        let extent=(canvas.width()as u32,canvas.height()as u32);
+        let open=|clear_pass:bool|->Result<Retained<ProtocolObject<dyn MTLRenderCommandEncoder>>,String>{
+            let pass=MTLRenderPassDescriptor::new();let color=unsafe{pass.colorAttachments().objectAtIndexedSubscript(0)};
+            color.setTexture(Some(canvas));color.setLoadAction(if clear_pass{MTLLoadAction::Clear}else{MTLLoadAction::Load});color.setStoreAction(MTLStoreAction::Store);
+            color.setClearColor(MTLClearColor{red:clear[0],green:clear[1],blue:clear[2],alpha:clear[3]});
+            command.renderCommandEncoderWithDescriptor(&pass).ok_or_else(||"Metal canvas render encoder unavailable".into())
+        };
+        let mut encoder=Some(open(true)?);
+        for order in &self.order{
+            match order {
+                PaintOrder::Mesh(index)=>{if encoder.is_none(){encoder=Some(open(false)?);}if let Err(error)=self.encode_mesh(*index,encoder.as_ref().unwrap(),extent){encoder.take().unwrap().endEncoding();return Err(error);}},
+                PaintOrder::Compute(prepared,clip)=>{
+                    if let Some(e)=encoder.take(){e.endEncoding();}
+                    let c=clipped_scissor(*clip,self.density,extent)?;
+                    if c[2]>c[0]&&c[3]>c[1]{prepared.encode(command,canvas,c.map(|v|v as u32))?;}
+                },
+                PaintOrder::Cad(_,_)=>{if let Some(e)=encoder.take(){e.endEncoding();}return Err("Apple inline CAD cannot bind RGBA compute canvas".into());}
+            }
+        }
+        if let Some(e)=encoder{e.endEncoding();}Ok(())
+    }
 }
+
 #[derive(Default, Debug, Clone, Copy)]
 pub struct PainterStats {
     pub geometry_uploads: u64,
@@ -239,6 +299,7 @@ pub struct PainterStats {
 pub struct EguiPainter {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     cad: crate::cad_callback_painter::Painter,
+    compute: Option<crate::cad_compute_painter::Painter>,
     textures: HashMap<TextureId, Arc<Texture>>,
     mesh: Option<Arc<Mesh>>,
     stats: PainterStats,
@@ -246,7 +307,12 @@ pub struct EguiPainter {
     mip_jobs: std::collections::VecDeque<MipJob>,
 }
 impl EguiPainter {
-    pub fn new(metal: &NativeMetal) -> Result<Self, String> {
+    pub fn new(metal: &NativeMetal) -> Result<Self,String>{Self::new_mode(metal,false)}
+    pub fn new_compute(metal:&NativeMetal)->Result<Self,String>{
+        if !crate::cad_compute_painter::Painter::supported(metal){return Err("Exact Metal canvas read/write unsupported".into());}
+        Self::new_mode(metal,true)
+    }
+    fn new_mode(metal:&NativeMetal,compute:bool)->Result<Self,String>{
         objc2::rc::autoreleasepool(|_| {
             let library = metal
                 .device
@@ -265,7 +331,7 @@ impl EguiPainter {
             descriptor.setVertexFunction(Some(&vertex));
             descriptor.setFragmentFunction(Some(&fragment));
             let color = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };
-            color.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
+            color.setPixelFormat(if compute{MTLPixelFormat::RGBA8Unorm}else{MTLPixelFormat::BGRA8Unorm});
             color.setBlendingEnabled(true);
             color.setSourceRGBBlendFactor(MTLBlendFactor::One);
             color.setDestinationRGBBlendFactor(MTLBlendFactor::OneMinusSourceAlpha);
@@ -278,6 +344,7 @@ impl EguiPainter {
             Ok(Self {
                 pipeline: Arc::new(pipeline),
                 cad: crate::cad_callback_painter::Painter::default(),
+                compute:compute.then(crate::cad_compute_painter::Painter::default),
                 textures: HashMap::new(),
                 mesh: None,
                 stats: PainterStats::default(),
@@ -287,6 +354,7 @@ impl EguiPainter {
         })
     }
     pub fn cad_stats(&self)->crate::cad_callback_painter::Stats{self.cad.stats}
+    pub fn compute_stats(&self)->Option<crate::cad_compute_painter::Stats>{self.compute.as_ref().map(|p|p.stats)}
     pub fn stats(&self) -> PainterStats {
         PainterStats {
             retained_cpu_texture_bytes: self
@@ -773,8 +841,9 @@ impl EguiPainter {
                 let egui::epaint::Primitive::Callback(callback)=&primitive.primitive else{unreachable!()};
                 let producer=callback.callback.downcast_ref::<ingetrazo_render::cad_callback::Callback>().ok_or("Metal paint callback type unsupported; no alternate backend fallback")?;
                 if !valid_clip(primitive.clip_rect)||!valid_clip(callback.rect){return Err("Invalid Metal CAD callback clip".into());}
-                let prepared=self.cad.prepare(metal,producer.snapshot()?,density)?;
-                order.push(PaintOrder::Cad(prepared,primitive.clip_rect.intersect(callback.rect)));
+                let clip=primitive.clip_rect.intersect(callback.rect);
+                if let Some(compute)=self.compute.as_mut(){order.push(PaintOrder::Compute(compute.prepare(metal,producer.snapshot()?,density)?,clip));}
+                else{order.push(PaintOrder::Cad(self.cad.prepare(metal,producer.snapshot()?,density)?,clip));}
                 continue;
             };
             if !mesh.is_valid()
@@ -866,6 +935,7 @@ impl EguiPainter {
             draws,
             order,
             density,
+            canvas:self.compute.is_some(),
         }))
     }
 }
@@ -1189,6 +1259,7 @@ struct DiagnosticOwners {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     _paint: Arc<PreparedPaint>,
     _target: Image,
+    _canvas:Option<Arc<crate::compute_canvas::Lease>>,
     readback: Buffer,
     gate: Option<Retained<ProtocolObject<dyn MTLSharedEvent>>>,
     width: usize,
@@ -1280,6 +1351,10 @@ impl EguiPainter {
         height: usize,
         blocked_for_probe: bool,
     ) -> Result<DiagnosticPaint, String> {
+        let mut pool=crate::compute_canvas::Pool::default();
+        self.submit_diagnostic_with_pool(metal,paint,width,height,blocked_for_probe,&mut pool)
+    }
+    pub fn submit_diagnostic_with_pool(&self,metal:&NativeMetal,paint:Arc<PreparedPaint>,width:usize,height:usize,blocked_for_probe:bool,pool:&mut crate::compute_canvas::Pool)->Result<DiagnosticPaint,String>{
         objc2::rc::autoreleasepool(|_| {
             if width == 0 || height == 0 || width > 4096 || height > 4096 {
                 return Err("Invalid diagnostic target extent".into());
@@ -1307,6 +1382,10 @@ impl EguiPainter {
             if let Some(gate) = gate.as_ref() {
                 command.encodeWaitForEvent_value(ProtocolObject::from_ref(&**gate), 1);
             }
+            let canvas=if paint.requires_canvas(){
+                let canvas=pool.acquire(metal,(width as u32,height as u32))?.ok_or("Diagnostic canvas capacity unavailable")?;
+                paint.encode_canvas(&command,canvas.texture(),[1.;4])?;canvas.present(&command,&target.raw)?;Some(canvas)
+            }else{
             let descriptor = MTLRenderPassDescriptor::new();
             let color = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };
             color.setTexture(Some(&target.raw));
@@ -1326,6 +1405,8 @@ impl EguiPainter {
                 return Err(error);
             }
             encoder.endEncoding();
+                None
+            };
             let blit = command
                 .blitCommandEncoder()
                 .ok_or("Diagnostic BLIT encoder unavailable")?;
@@ -1338,6 +1419,7 @@ impl EguiPainter {
                     command,
                     _paint: paint,
                     _target: target,
+                    _canvas:canvas,
                     readback,
                     gate,
                     width,

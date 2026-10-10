@@ -1,0 +1,14 @@
+{
+  "qt": "6.12.0",
+  "format": "RGBA8888",
+  "width": 64,
+  "height": 64,
+  "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c",
+  "actual_QPainter": true,
+  "ordered_fills": [
+    "opaque_blue_UI",
+    "authored_outer_alpha128",
+    "authored_inner_alpha128",
+    "opaque_green_UI"
+  ]
+}

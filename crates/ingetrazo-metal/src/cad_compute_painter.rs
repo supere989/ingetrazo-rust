@@ -144,6 +144,7 @@ impl Painter {
                     .map_err(|e| format!("Exact Metal canvas pipeline:{e:?}"))?,
             )
         };
+        if pipeline.maxTotalThreadsPerThreadgroup()<64{return Err("Metal compute pipeline cannot admit8x8 source tile workgroup".into());}
         // Publish only after all allocations/compiler admission succeed. Earlier frames
         // retain their immutable plan/palette even if cache eviction occurs.
         if self.plans.len() >= 64 && !self.plans.contains_key(&id) {
@@ -175,7 +176,7 @@ impl Prepared {
         canvas: &ProtocolObject<dyn MTLTexture>,
         clip: [u32; 4],
     ) -> Result<(), String> {
-        if canvas.pixelFormat() != MTLPixelFormat::RGBA8Unorm
+        if canvas.textureType()!=MTLTextureType::Type2D||canvas.sampleCount()!=1||canvas.width()==0||canvas.height()==0||canvas.pixelFormat() != MTLPixelFormat::RGBA8Unorm
             || !canvas
                 .usage()
                 .contains(MTLTextureUsage::ShaderRead | MTLTextureUsage::ShaderWrite)

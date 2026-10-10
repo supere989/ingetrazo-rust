@@ -41,12 +41,14 @@ struct Frame {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     drawable: Retained<ProtocolObject<dyn CAMetalDrawable>>,
     _paint: Option<std::sync::Arc<dyn std::any::Any>>,
+    _canvas:Option<std::sync::Arc<crate::compute_canvas::Lease>>,
     callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
     callback_time: std::sync::Arc<std::sync::atomic::AtomicU64>,
     _callback: block2::RcBlock<dyn Fn(std::ptr::NonNull<ProtocolObject<dyn MTLDrawable>>)>,
 }
 struct Owners {
     frames: VecDeque<Frame>,
+    canvases:crate::compute_canvas::Pool,
     layer: Retained<CAMetalLayer>,
     // Keep winit/AppKit window/view/delegate lifetime through quarantined work.
     _window: std::sync::Arc<Window>,
@@ -125,6 +127,7 @@ impl MetalPresentation {
         let mut result = Self {
             owners: ManuallyDrop::new(Owners {
                 frames: VecDeque::new(),
+                canvases:crate::compute_canvas::Pool::default(),
                 layer,
                 _window: window.clone(),
                 metal,
@@ -230,6 +233,9 @@ impl MetalPresentation {
         if self.extent.0 == 0 || self.extent.1 == 0 || self.owners.frames.len() >= 3 {
             return Ok(false);
         }
+        let canvas=if paint.as_ref().is_some_and(|p|p.requires_canvas()){
+            let owners=&mut *self.owners;let Some(canvas)=owners.canvases.acquire(&owners.metal,self.extent)?else{return Ok(false)};Some(canvas)
+        }else{None};
         let Some(drawable) = self.owners.layer.nextDrawable() else {
             return Ok(false);
         };
@@ -239,6 +245,10 @@ impl MetalPresentation {
             .queue
             .commandBuffer()
             .ok_or("Metal command allocation failed")?;
+        if let Some(canvas)=canvas.as_ref(){
+            paint.as_ref().unwrap().encode_canvas(&command,canvas.texture(),rgba)?;
+            canvas.present(&command,&drawable.texture())?;
+        }else{
         let desc = MTLRenderPassDescriptor::new();
         // Metal render pass guarantees eight color slots; index zero is in range.
         let attachment = unsafe { desc.colorAttachments().objectAtIndexedSubscript(0) };
@@ -261,6 +271,7 @@ impl MetalPresentation {
             }
         }
         encoder.endEncoding();
+        }
         let callback_seen = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
         let callback_time = std::sync::Arc::new(std::sync::atomic::AtomicU64::new(0));
         let seen = callback_seen.clone();
@@ -286,6 +297,7 @@ impl MetalPresentation {
             callback_time,
             _callback: callback,
             _paint: paint.map(|p| p as std::sync::Arc<dyn std::any::Any>),
+            _canvas:canvas,
         });
         self.submitted += 1;
         Ok(true)
