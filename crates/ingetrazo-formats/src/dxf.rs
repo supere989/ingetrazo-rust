@@ -20,13 +20,12 @@ pub fn export_dxf(scene: &Scene, writer: &mut impl Write) -> Result<(), DxfError
     writeln!(writer, "0\nSECTION\n2\nTABLES\n0\nENDSEC")?;
     writeln!(writer, "0\nSECTION\n2\nENTITIES")?;
 
-    for (f_id, _f) in scene.mesh.faces.iter().enumerate() {
-        for (p0, p1, p2) in scene.mesh.triangulate_face(f_id) {
-            writeln!(writer, "0\n3DFACE\n8\n0")?;
-            writeln!(writer, "10\n{:.6}\n20\n{:.6}\n30\n{:.6}", p0.x, p0.y, p0.z)?;
-            writeln!(writer, "11\n{:.6}\n21\n{:.6}\n31\n{:.6}", p1.x, p1.y, p1.z)?;
-            writeln!(writer, "12\n{:.6}\n22\n{:.6}\n32\n{:.6}", p2.x, p2.y, p2.z)?;
-            writeln!(writer, "13\n{:.6}\n23\n{:.6}\n33\n{:.6}", p2.x, p2.y, p2.z)?; // Triangle: 4th pt repeats 3rd
+    for triangle in crate::exchange::triangles(scene) {
+        let [p0,p1,p2]=triangle.points;
+        let layer=triangle.layer.replace(['\n','\r'],"_");
+        writeln!(writer,"0\n3DFACE\n8\n{layer}")?;
+        for (i,p) in [p0,p1,p2,p2].into_iter().enumerate() {
+            writeln!(writer,"{}\n{:.9}\n{}\n{:.9}\n{}\n{:.9}",10+i,p.x,20+i,p.y,30+i,p.z)?;
         }
     }
 

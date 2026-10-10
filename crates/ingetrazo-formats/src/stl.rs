@@ -19,14 +19,10 @@ pub enum StlError {
 }
 
 fn collect_scene_triangles(scene: &Scene) -> Vec<(DVec3, DVec3, DVec3, DVec3)> {
-    let mut tris = Vec::new();
-    for f_id in 0..scene.mesh.faces.len() {
-        let norm = scene.mesh.face_normal(f_id);
-        for (p0, p1, p2) in scene.mesh.triangulate_face(f_id) {
-            tris.push((norm, p0, p1, p2));
-        }
-    }
-    tris
+    crate::exchange::triangles(scene).into_iter().map(|t| {
+        let [a,b,c]=t.points;
+        ((b-a).cross(c-a).normalize_or_zero(),a,b,c)
+    }).collect()
 }
 
 /// Export scene to binary STL format.

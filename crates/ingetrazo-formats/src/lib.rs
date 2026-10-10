@@ -6,6 +6,7 @@
 //! - OBJ (.obj): Wavefront OBJ exchange
 //! - STL (.stl): Stereolithography 3D print format
 
+mod exchange;
 pub mod dae;
 pub mod dxf;
 pub mod gltf;

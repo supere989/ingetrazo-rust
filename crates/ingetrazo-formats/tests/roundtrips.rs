@@ -191,8 +191,11 @@ fn test_obj_export_and_import_roundtrip() {
     // In OBJ export, original scene had 6 faces on cube + 5 faces on group pyramid = 11 faces
     assert!(new_scene.mesh.faces.len() >= 6);
 
-    let quad_faces: Vec<_> = new_scene.mesh.faces.iter().filter(|f| f.vertices.len() == 4).collect();
-    assert_eq!(quad_faces.len(), 7, "Expected 7 quad faces (6 from cube + 1 from pyramid base)");
+    // Match the original writer's triangulated interchange while retaining
+    // actual closed geometry, including the transformed pyramid.
+    assert_eq!(new_scene.mesh.faces.len(),18);
+    assert!(new_scene.mesh.faces.iter().all(|f|f.vertices.len()==3));
+    assert!((new_scene.mesh.volume().unwrap()-4.0/3.0).abs()<1e-6);
 
     // Verify cube volume
     let cube_vol = original.mesh.volume().unwrap();

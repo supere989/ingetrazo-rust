@@ -22,59 +22,18 @@ pub enum ObjError {
 pub fn export_obj(scene: &Scene, writer: &mut impl Write) -> Result<(), ObjError> {
     writeln!(writer, "# IngeTrazo OBJ Export")?;
 
-    let mut all_verts: Vec<DVec3> = Vec::new();
-    let mut all_normals: Vec<DVec3> = Vec::new();
-    let mut all_faces: Vec<(Vec<usize>, usize)> = Vec::new(); // (vert_indices, normal_idx)
-
-    // 1. Loose mesh
-    let base_idx = all_verts.len();
-    for v in &scene.mesh.vertices {
-        all_verts.push(v.position);
+    let triangles=crate::exchange::triangles(scene);
+    for triangle in &triangles {
+        for p in triangle.points {writeln!(writer,"v {:.6} {:.6} {:.6}",p.x,p.y,p.z)?;}
     }
-    for (f_id, f) in scene.mesh.faces.iter().enumerate() {
-        let norm = scene.mesh.face_normal(f_id);
-        all_normals.push(norm);
-        let n_idx = all_normals.len();
-        let loop_idx: Vec<usize> = f.vertices.iter().map(|&v| base_idx + v + 1).collect();
-        all_faces.push((loop_idx, n_idx));
+    for triangle in &triangles {
+        let [a,b,c]=triangle.points;
+        let n=(b-a).cross(c-a).normalize_or_zero();
+        writeln!(writer,"vn {:.6} {:.6} {:.6}",n.x,n.y,n.z)?;
     }
-
-    // 2. Groups
-    for group in &scene.groups {
-        let base_g = all_verts.len();
-        for v in &group.mesh.vertices {
-            let world_p = group.transform.transform_point3(v.position);
-            all_verts.push(world_p);
-        }
-        for (f_id, f) in group.mesh.faces.iter().enumerate() {
-            let local_norm = group.mesh.face_normal(f_id);
-            let world_norm = group.transform.transform_vector3(local_norm).normalize_or_zero();
-            all_normals.push(world_norm);
-            let n_idx = all_normals.len();
-            let loop_idx: Vec<usize> = f.vertices.iter().map(|&v| base_g + v + 1).collect();
-            all_faces.push((loop_idx, n_idx));
-        }
-    }
-
-
-
-    // Write vertex positions
-    for v in &all_verts {
-        writeln!(writer, "v {:.6} {:.6} {:.6}", v.x, v.y, v.z)?;
-    }
-
-    // Write normals
-    for n in &all_normals {
-        writeln!(writer, "vn {:.6} {:.6} {:.6}", n.x, n.y, n.z)?;
-    }
-
-    // Write polygon faces
-    for (v_indices, n_idx) in all_faces {
-        write!(writer, "f")?;
-        for v_idx in v_indices {
-            write!(writer, " {}//{}", v_idx, n_idx)?;
-        }
-        writeln!(writer)?;
+    for (i,_) in triangles.iter().enumerate() {
+        let v=3*i+1;let n=i+1;
+        writeln!(writer,"f {v}//{n} {}//{n} {}//{n}",v+1,v+2)?;
     }
 
     Ok(())
