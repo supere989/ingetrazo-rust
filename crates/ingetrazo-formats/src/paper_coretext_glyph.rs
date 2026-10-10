@@ -525,7 +525,7 @@ impl NativeFont {
             );
             CGContextSetTextPosition(
                 ctx,
-                -x.trunc() + f64::from(phase[0]) / 64.,
+                -x.floor() + f64::from(phase[0]) / 64.,
                 height as f64 + y - f64::from(phase[1]) / 64.,
             );
             CTFontDrawGlyphs(self.owner.0, &g, &Point::default(), 1, ctx);
@@ -533,7 +533,7 @@ impl NativeFont {
             // the RIGHT. The separate PDF writer policy shifts LEFT.
             if bold_offset > 0. {
                 CGContextSetTextPosition(ctx,
-                    -x.trunc() + f64::from(phase[0]) / 64. + bold_offset * scale,
+                    -x.floor() + f64::from(phase[0]) / 64. + bold_offset * scale,
                     height as f64 + y - f64::from(phase[1]) / 64.);
                 CTFontDrawGlyphs(self.owner.0, &g, &Point::default(), 1, ctx);
             }
@@ -545,8 +545,8 @@ impl NativeFont {
             .map_err(|_| "Native coverage allocation failed")?;
         coverage.extend(rgba.chunks_exact(4).map(native_argb_coverage));
         Ok(crate::paper_text::RasterGlyph {
-            left: x.trunc() as i32,
-            top: -y.trunc() as i32,
+            left: x.floor() as i32,
+            top: -y.floor() as i32,
             width,
             height,
             coverage,
