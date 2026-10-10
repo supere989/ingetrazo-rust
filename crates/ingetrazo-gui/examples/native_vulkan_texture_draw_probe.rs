@@ -52,6 +52,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         if let Some(mode)=case["style_mode"].as_str() {style.visual_style=match mode {"wireframe"=>ingetrazo_render::style::VisualStyle::Wireframe,"hidden_line"=>ingetrazo_render::style::VisualStyle::HiddenLine,"monochrome"=>ingetrazo_render::style::VisualStyle::Monochrome,"xray"=>ingetrazo_render::style::VisualStyle::XRay,_=>ingetrazo_render::style::VisualStyle::ShadedWithTextures};}
         if name.starts_with("style-") {for i in 0..3 {style.front_color[i]=case["style_front_color"][i].as_f64().unwrap()as f32;style.back_color[i]=case["style_back_color"][i].as_f64().unwrap()as f32;}}
+        style.show_textures=case["show_textures"].as_bool().unwrap_or(true);
         style.show_sky = false;
         style.show_edges = case["show_edges"].as_bool().unwrap_or(false);
         style.show_profiles = false;
