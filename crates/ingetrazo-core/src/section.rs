@@ -70,6 +70,12 @@ impl SectionPlane {
         }
     }
 
+    pub fn native_uid(&self)->serde_json::Value {
+        let current=serde_json::json!(self.id.as_u128() as u64);
+        if self.native_baseline.get("uid").map(|v|v==&current).unwrap_or(true){if let Some(uid)=self.native_document.get("uid"){return uid.clone();}}
+        current
+    }
+
     /// Reverse normal: cut shows the opposite side.
     pub fn flip(&mut self) {
         self.normal = -self.normal;

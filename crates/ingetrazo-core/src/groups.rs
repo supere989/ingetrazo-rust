@@ -76,6 +76,14 @@ impl Group {
             hidden: false,
         }
     }
+    /// The persisted placement identity, including legacy non-UUID names.
+    pub fn native_uid(&self)->String {
+        let current=self.id.simple().to_string();
+        if self.native_baseline.get("uid").map(|v|v==&serde_json::json!(current)).unwrap_or(true){
+            if let Some(uid)=self.native_document.get("uid").and_then(|v|v.as_str()){return uid.to_owned();}
+        }
+        current
+    }
     /// Copies placement identity while retaining component definition links.
     pub fn duplicate_instance(&self) -> Self {
         let mut copy=self.clone();

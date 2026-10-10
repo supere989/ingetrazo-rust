@@ -272,3 +272,13 @@ fn dimensions_use_original_schema_and_keep_identity_on_reorder_edits() {
     let reopened=load_igz(&target).unwrap();let doc=scene_to_igz_document(&reopened);assert_eq!(doc["dimensions"][0]["opaque"]["id"],2);assert_eq!(doc["dimensions"][1]["opaque"]["id"],1);assert_eq!(doc["dimensions"][1]["b"][0],7.);assert_eq!(doc["dimensions"][1]["text"],"edited <>");assert!(doc["dimensions"][1].get("start").is_none());
     std::fs::remove_file(source).unwrap();std::fs::remove_file(target).unwrap();
 }
+
+#[test]
+fn fresh_saved_view_references_exact_persisted_group_and_section_uids() {
+    use ingetrazo_core::{scene::Scene,groups::Group,section::SectionPlane,saved_views::SavedView};
+    let mut scene=Scene::new();let mut parent=Group::new("parent");let mut child=Group::new("hidden child");child.hidden=true;parent.children.push(child);scene.groups.push(parent);
+    scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"cut","A"));scene.saved_views.push(SavedView::capture_scene("view",&scene,&scene.camera));
+    let document=scene_to_igz_document(&scene);assert_eq!(document["saved_views"][0]["hidden_objects"][0],document["groups"][0]["children"][0]["uid"]);assert_eq!(document["saved_views"][0]["section"]["active"],document["section_planes"][0]["uid"]);
+    let path=temp("view-identities.igz");save_igz(&scene,&path).unwrap();let mut restored=load_igz(&path).unwrap();restored.groups[0].children[0].hidden=false;restored.section_planes[0].active=false;let view=restored.saved_views[0].clone();let mut camera=restored.camera.clone();view.apply_scene(&mut restored,&mut camera);assert!(restored.groups[0].children[0].hidden);assert!(restored.section_planes[0].active);
+    let original_uid=restored.groups[0].native_uid();let duplicate=restored.groups[0].duplicate_instance();assert_ne!(duplicate.native_uid(),original_uid);std::fs::remove_file(path).unwrap();
+}

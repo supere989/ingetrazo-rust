@@ -90,21 +90,21 @@ impl SavedView {
     /// Preserve raw identity/extension metadata when refreshing a view.
     pub fn capture_scene(name:impl Into<String>,scene:&crate::scene::Scene,camera:&OrbitCamera)->Self {
         let mut view=Self::capture(name,camera,&scene.layers);view.two_point=camera.two_point;
-        fn hidden(groups:&[crate::groups::Group],ids:&mut Vec<String>){for group in groups{if group.hidden{ids.push(group.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||group.id.to_string()));}hidden(&group.children,ids);}}
+        fn hidden(groups:&[crate::groups::Group],ids:&mut Vec<String>){for group in groups{if group.hidden{ids.push(group.native_uid());}hidden(&group.children,ids);}}
         let mut ids=vec![];hidden(&scene.groups,&mut ids);view.hidden_objects=Some(ids);
-        let active=scene.section_planes.iter().find(|s|s.active).map(|s|s.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||s.id.to_string()));
+        let active=scene.section_planes.iter().find(|s|s.active).map(|s|s.native_uid());
         view.section=Some(serde_json::json!({"active":active,"planes_shown":scene.show_section_planes,"cuts_shown":scene.show_section_cuts}));
         view.georef=Some(serde_json::json!({"terrain":scene.terrain.as_ref().map(|t|t.visible).unwrap_or(false)}));view
     }
     pub fn apply_scene(&self,scene:&mut crate::scene::Scene,camera:&mut OrbitCamera) {
         self.apply(camera,&mut scene.layers);
         if let Some(ids)=&self.hidden_objects {
-            fn apply(groups:&mut [crate::groups::Group],ids:&[String]){for group in groups{let id=group.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||group.id.to_string());group.hidden=ids.contains(&id);apply(&mut group.children,ids);}}
+            fn apply(groups:&mut [crate::groups::Group],ids:&[String]){for group in groups{let id=group.native_uid();group.hidden=ids.contains(&id);apply(&mut group.children,ids);}}
             apply(&mut scene.groups,ids);
         }
         if let Some(section)=&self.section {
-            let active=section.get("active").and_then(|v|v.as_str());
-            for plane in &mut scene.section_planes{let id=plane.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||plane.id.to_string());plane.active=active==Some(id.as_str());}
+            let active=section.get("active");
+            for plane in &mut scene.section_planes{let id=plane.native_uid();plane.active=active==Some(&id);}
             scene.show_section_planes=section.get("planes_shown").and_then(|v|v.as_bool()).unwrap_or(true);
             scene.show_section_cuts=section.get("cuts_shown").and_then(|v|v.as_bool()).unwrap_or(true);
         }
