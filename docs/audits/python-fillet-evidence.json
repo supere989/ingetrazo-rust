@@ -1,12 +1,12 @@
 {
   "provenance": {
-    "rust_commit": "2da7c625db7648aafe2fe98de4ae7abb083c4bc7",
+    "rust_commit": "24744f7d9dfe30a70b840ba501415f9a3deccb9a",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
   "passed": true,
-  "negative_controls_detected": 3,
+  "negative_controls_detected": 5,
   "cases": [
     {
       "case": "r02-s8",
@@ -31,7 +31,23 @@
       "original_volume": 1.9611446783981306,
       "rust_volume": 1.9611446827219292,
       "symmetric_difference_volume": 4.6174733915227235e-09
+    },
+    {
+      "case": "rim",
+      "radius": 0.2,
+      "segments": 8,
+      "original_volume": 1.9504719673263493,
+      "rust_volume": 1.9504719543228597,
+      "symmetric_difference_volume": 1.7236843369958607e-08
+    },
+    {
+      "case": "all",
+      "radius": 0.2,
+      "segments": 8,
+      "original_volume": 1.870363606499802,
+      "rust_volume": 1.8703636094535245,
+      "symmetric_difference_volume": 3.859942154546277e-08
     }
   ],
-  "scope": "One convex box edge with three radii/segment counts. Independent original/native manifold shape oracle. Multi-edge rims, concave edges, spherical joins and interactive acceptance remain open."
+  "scope": "Single convex box edge at three radii/segment counts, four-edge top rim and all twelve box edges with spherical joins. Independent original/native manifold shape oracle. General concave/mixed selections and interactive acceptance remain open."
 }
