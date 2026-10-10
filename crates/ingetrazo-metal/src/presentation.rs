@@ -398,6 +398,24 @@ impl MetalPresentation {
             .filter(|f| f.command.status() == MTLCommandBufferStatus::Completed)
             .count()
     }
+    /// Own-window color attribution only. No window/layer color property is changed.
+    pub fn native_color_metadata(&self) -> String {
+        if MainThreadMarker::new().is_none() { return "main-thread metadata unavailable".into(); }
+        let Ok(handle) = self.owners._window.window_handle() else { return "window handle unavailable".into(); };
+        let RawWindowHandle::AppKit(handle) = handle.as_raw() else { return "non-AppKit window".into(); };
+        let view = unsafe { handle.ns_view.cast::<NSView>().as_ref() };
+        let window_space = view.window().map(|window| unsafe {
+            let space: Option<Retained<objc2::runtime::AnyObject>> = objc2::msg_send![&*window, colorSpace];
+            space.map(|space| {
+                let description: Retained<objc2_foundation::NSString> = objc2::msg_send![&*space, description];
+                description.to_string().chars().take(2048).collect::<String>()
+            }).unwrap_or_else(|| "nil".into())
+        }).unwrap_or_else(|| "window unattached".into());
+        let layer_space = self.owners.layer.colorspace().and_then(|space| {
+            objc2_core_graphics::CGColorSpace::name(Some(&space)).map(|name| name.to_string())
+        }).unwrap_or_else(|| "unnamed-or-nil".into());
+        format!("window_color_space={window_space:?}; layer_color_space={layer_space:?}; layer_contents_format={:?}", self.owners.layer.contentsFormat())
+    }
     /// Read-only native diagnostics. Completed is never substituted for displayed.
     pub fn diagnostics(&self) -> String {
         let frames: Vec<_> = self
@@ -419,7 +437,8 @@ impl MetalPresentation {
             })
             .collect();
         format!(
-            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; displaySyncEnabled={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            "color_metadata={}; extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; displaySyncEnabled={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            self.native_color_metadata(),
             self.extent,
             self.owners._window.is_visible(),
             self.owners.layer.frame(),

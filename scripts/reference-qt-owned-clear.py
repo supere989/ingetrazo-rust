@@ -45,6 +45,16 @@ def main():
                 if not native:raise RuntimeError('Qt-owned native view has no window')
                 number=send(native,'windowNumber',ctypes.c_long)
                 if number<=0:raise RuntimeError('invalid own NSWindow number')
+                def object_description(ptr):
+                    if not ptr:return 'nil'
+                    description=send(ptr,'description',ctypes.c_void_p)
+                    if not description:return 'description unavailable'
+                    text=send(description,'UTF8String',ctypes.c_char_p)
+                    return text.decode(errors='replace')[:2048] if text else 'UTF8 unavailable'
+                layer=send(view,'layer',ctypes.c_void_p)
+                report['native_window_color_space']=object_description(send(native,'colorSpace',ctypes.c_void_p))
+                report['native_view_layer_class']=objc.object_getClassName(layer).decode() if layer else 'nil'
+                report['native_view_layer_contents_format']=object_description(send(layer,'contentsFormat',ctypes.c_void_p)) if layer else 'nil'
                 report.update(qt=qVersion(),owned_nswindow_id=number,owned_nsview_class=name,actual_QPainter=True,paint_events=widget.paints,raw_source_rgba=[20,51,89,255],raw_source_sha256=hashlib.sha256(raw).hexdigest())
                 (root/'own-window.json').write_text(json.dumps(report,indent=2)+'\n')
                 cmd=['/usr/sbin/screencapture','-x','-l',str(number),str(root/'own-window.png')]
