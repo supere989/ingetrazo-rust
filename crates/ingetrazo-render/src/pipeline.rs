@@ -424,6 +424,7 @@ fn build_group_buffers(
     // Original viewport._instance_entry.tp32 preserves painted front winding
     // under reflected placements. Reorder local corners before UV evaluation.
     let reflected = world_t.determinant() < 0.0;
+    let source_placement = source_group_has_placement(group);
 
     // Billboard / Face-Me cutout figures
     if group.billboard {
@@ -474,7 +475,9 @@ fn build_group_buffers(
 
         let local_norm = group.mesh.face_normal(f_id);
         let world_norm = world_t.transform_vector3(local_norm).normalize_or_zero();
-        let shade = shade_factor(world_norm);
+        // Original _instance_entry transforms position columns only: prototype
+        // RGB is shaded in local coordinates and retained through placement.
+        let shade = shade_factor(if source_placement {local_norm} else {world_norm});
         let tex_val = get_face_texture(&face.attrs, scene);
         let source_opacity = get_face_source_opacity(&face.attrs, scene);
 
@@ -551,7 +554,6 @@ fn build_group_buffers(
     // Original _instanced_eligible uses a prototype-local cache: transparent/back
     // content stays consolidated. Counts/ranges already built above answer that
     // question without another face traversal or a per-frame placement copy.
-    let source_placement=source_group_has_placement(group);
     let local_transparent=transparent.indices.len()!=local_start.1;
     let local_back=opaque.source_back_override_count+transparent.source_back_override_count!=local_start.3;
     let instanced=source_placement&&!group.billboard&&!local_transparent&&!local_back&&!source_instancing_disabled();
@@ -1375,6 +1377,14 @@ fn render_grid_and_axes(
   assert_eq!(visible.opaque_mesh.indices.len(),3);assert!(visible.opaque_mesh.vertices.iter().all(|v|v.position[0]>=3.&&v.position[1]>=2.));assert!(visible.visible_edges.vertices.is_empty());assert!(visible.hidden_edges.vertices.is_empty());
   scene.groups[0].hidden=true;assert!(build_world_surfaces(&scene,&camera,&style).opaque_mesh.indices.is_empty());
  }
+ #[test]fn prototype_shade_is_retained_but_classic_baked_geometry_shades_its_own_plane(){
+  let mut scene=Scene::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));let f=mesh.add_face(ids.to_vec(),vec![]).unwrap();mesh.faces[f].attrs.insert("color".into(),serde_json::json!([1.,0.,0.]));mesh.faces[f].attrs.insert("opacity".into(),serde_json::json!(0.5));
+  let mut group=ingetrazo_core::groups::Group::with_mesh("prototype",mesh);group.transform=DMat4::from_rotation_y(-std::f64::consts::FRAC_PI_4);group.native_document=serde_json::json!({"proto":0,"xform":group.transform.to_cols_array()});scene.groups.push(group);
+  let camera=OrbitCamera::default();let style=StyleConfig::default();let v=build_world_surfaces(&scene,&camera,&style);assert_eq!(v.transparent_mesh.vertices[0].color[0],shade_factor(DVec3::Z));
+  let group=&mut scene.groups[0];for vertex in &mut group.mesh.vertices{vertex.position=group.transform.transform_point3(vertex.position);}group.transform=DMat4::IDENTITY;group.native_document=serde_json::json!({"faces":[]});
+  let v=build_world_surfaces(&scene,&camera,&style);assert_eq!(v.transparent_mesh.vertices[0].color[0],shade_factor(DVec3::new(-1.,0.,1.)));assert!(v.transparent_mesh.vertices[0].color[0]<shade_factor(DVec3::Z));
+ }
+
  #[test]fn reflected_nested_placements_preserve_painted_front_and_uv_correspondence(){
   for textured in [false,true] {for double_reflection in [false,true] {
    let mut scene=Scene::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));let face=mesh.add_face(ids.to_vec(),vec![]).unwrap();

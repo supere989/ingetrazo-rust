@@ -33,6 +33,8 @@ if os.environ.get("INGETRAZO_ALPHA_INSTANCED_GATE")=="1":
  glass=([1.,0.,0.],1.,0.,{"color":[0.,0.,1.],"opacity":.3},False)
  cases["back-gate-instanced-only-front"]=([glass,([0.,1.,0.],1.,0.,{},False,10.)],[1.,1.,1.])
  cases["back-gate-instanced-only-reversed"]=([(*glass[:4],True),([0.,1.,0.],1.,0.,{},False,10.)],[1.,1.,1.])
+if os.environ.get("INGETRAZO_ALPHA_GROUP_SHADE")=="1":
+ for name in ["group-rotated-prototype","group-nested-rotated-prototype","group-classic-baked-rotation"]:cases[name]=([red],[1.,1.,1.])
 for name,(faces,bg) in cases.items():
  vp=Viewport();vp.resize(800,600);mesh=Mesh()
  for spec in faces:
@@ -46,6 +48,16 @@ for name,(faces,bg) in cases.items():
   from core.group import Group
   f=mesh.faces[-1];group_mesh=Mesh();gface=group_mesh.add_face(f.vertices);gface.attrs.update(f.attrs);mesh.remove_face(f)
   group=Group(group_mesh,"Opaque activator instance");group.component=True;group.xform=QMatrix4x4();groups=[group]
+ if name.startswith("group-"):
+  from core.group import Group
+  group=Group(mesh,"Shading prototype");xf=QMatrix4x4();xf.rotate(-45.,0.,1.,0.)
+  if name=="group-classic-baked-rotation":
+   from core.group import transformed_mesh
+   group.mesh=transformed_mesh(mesh,xf)
+  elif name=="group-nested-rotated-prototype":
+   group.xform=xf;parent=Group(name="Parent");parent.adopt([group]);parent.xform.rotate(20.,0.,0.,1.);group=parent
+  else:group.xform=xf
+  groups=[group];mesh=Mesh()
  vp.scene=Scene(mesh=mesh,groups=groups)
  if name=="section-clipped":vp.scene.section_planes=[SectionPlane(QVector3D(0,0,.1),QVector3D(0,0,1),active=True)];vp.scene.show_section_cuts=True;vp.scene.show_section_planes=False
  vp.style_override=Style(face_mode="shaded",sky=False,edges=False,profiles=False,background=tuple(bg));vp.camera.set_view("top");vp.camera.perspective=False;vp.camera.target=QVector3D(0,0,0);vp.camera.distance=4.;vp.show()
