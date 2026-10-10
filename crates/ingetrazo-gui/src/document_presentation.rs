@@ -202,6 +202,7 @@ mod tests {
             minute: 25,
             darkness: 0.63,
             utc_offset: Some(-5),
+            ..Default::default()
         };
         a.set_shadow_settings(s.clone());
         a.add_saved_view("View".into());
