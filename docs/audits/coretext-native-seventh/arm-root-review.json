@@ -1,0 +1,200 @@
+{
+  "source_revision": "8395919af1acb345154e66216003059236e276c1",
+  "artifact_id": 11684110636,
+  "zip_sha256": "f8290636e74792605c406afc7321cfc414d73a71ccac9372c459ef82d24495a9",
+  "method": "Fresh root QImage RGBA decode; exact full-image numpy comparison, no transforms or tolerances.",
+  "cases": [
+    {
+      "case": "helvetica",
+      "tile": {
+        "changed_pixels": 0,
+        "channel_deltas": []
+      },
+      "pdf": [
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        }
+      ]
+    },
+    {
+      "case": "helvetica-bold",
+      "tile": {
+        "changed_pixels": 0,
+        "channel_deltas": []
+      },
+      "pdf": [
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        }
+      ]
+    },
+    {
+      "case": "helvetica-italic",
+      "tile": {
+        "changed_pixels": 1,
+        "channel_deltas": [
+          -1
+        ]
+      },
+      "pdf": [
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        }
+      ]
+    },
+    {
+      "case": "times-bold-italic",
+      "tile": {
+        "changed_pixels": 43,
+        "channel_deltas": [
+          1
+        ]
+      },
+      "pdf": [
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        }
+      ]
+    },
+    {
+      "case": "cjk",
+      "tile": {
+        "changed_pixels": 0,
+        "channel_deltas": []
+      },
+      "pdf": [
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        }
+      ]
+    },
+    {
+      "case": "arabic",
+      "tile": {
+        "changed_pixels": 12,
+        "channel_deltas": [
+          -1,
+          1
+        ]
+      },
+      "pdf": [
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        },
+        {
+          "changed_pixels": 0,
+          "channel_deltas": []
+        }
+      ]
+    }
+  ],
+  "canvas_host": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "064ea277449047eb66876952162e64901489291d2f1baaa6df6a2e48baa74b5b",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "diagnostic_capture": {
+      "sha256": "9e59795f2aaf6fd41a964444bdc6d3ee9b17303adb3e67aa7b22ba78040dc4ff",
+      "observation": {
+        "window_id": 23,
+        "displayed": 0,
+        "diagnostics": "appkit=Some(\"number=23 visible=true active_space=true occlusion=NSWindowOcclusionState(8194)\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=5; retired=2; displayed=0; skipped=2; frames=[submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=412.64257629166667 gpuEnd=412.70384862500003 callback_seen=false callback_time=0; submission=3 id=2 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=412.703869875 gpuEnd=412.7066759166667 callback_seen=false callback_time=0; submission=5 id=4 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=412.7444585416667 gpuEnd=412.74560075000005 callback_seen=false callback_time=0]",
+        "acceptance_proof": false
+      },
+      "acceptance_proof": false
+    },
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 8,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 11,
+      "canvas_warm_frames": 10,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "scope": "18 exact PDF comparisons on native ARM cloud runner; three of six Canvas tiles exact; actual presentation fails. Full Metal/platform parity remains open."
+}

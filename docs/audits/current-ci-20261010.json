@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-10T22:09:29.022244+00:00",
+  "observed_utc": "2026-10-10T22:16:16.589027+00:00",
   "runs": [
     {
       "id": 38089335853,
@@ -10,36 +10,27 @@
         {
           "name": "Native Metal compile (aarch64-apple-darwin)",
           "status": "completed",
-          "conclusion": "success",
-          "active_steps": []
+          "conclusion": "success"
         },
         {
           "name": "Native Metal framework link (macos-15)",
           "status": "completed",
-          "conclusion": "success",
-          "active_steps": []
+          "conclusion": "success"
         },
         {
           "name": "compilation-and-tests",
           "status": "in_progress",
-          "conclusion": null,
-          "active_steps": [
-            "Original and native saved tilted cropped colored hatch PDF pages"
-          ]
+          "conclusion": null
         },
         {
           "name": "Native Metal framework link (macos-15-intel)",
-          "status": "in_progress",
-          "conclusion": null,
-          "active_steps": [
-            "Actual completed and pending Metal CAD Drop ownership"
-          ]
+          "status": "completed",
+          "conclusion": "success"
         },
         {
           "name": "Native Metal compile (x86_64-apple-darwin)",
           "status": "completed",
-          "conclusion": "success",
-          "active_steps": []
+          "conclusion": "success"
         }
       ]
     },
@@ -52,18 +43,12 @@
         {
           "name": "raw-texture (macos-15-intel)",
           "status": "in_progress",
-          "conclusion": null,
-          "active_steps": [
-            "Build and execute bounded native raw texture fixture"
-          ]
+          "conclusion": null
         },
         {
           "name": "raw-texture (macos-15)",
-          "status": "in_progress",
-          "conclusion": null,
-          "active_steps": [
-            "Build and execute bounded native raw texture fixture"
-          ]
+          "status": "completed",
+          "conclusion": "failure"
         }
       ]
     }
