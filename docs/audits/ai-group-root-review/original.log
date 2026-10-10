@@ -1,0 +1,17 @@
+[2026-10-10T21:57:50] command SnapshotImport failed and was rolled back:
+Traceback (most recent call last):
+  File "/work/ingetrazo/core/history.py", line 171, in execute
+    cmd.do(self.scene)
+    ~~~~~~^^^^^^^^^^^^
+  File "/work/ingetrazo/core/history.py", line 2666, in do
+    self.mutate(scene)
+    ~~~~~~~~~~~^^^^^^^
+  File "/work/ingetrazo/core/ai.py", line 368, in mutate
+    result = eval(compiled, scope)
+  File "<ai>", line 1, in <module>
+  File "/work/ingetrazo/core/ai.py", line 132, in extrude
+    mesh.add_face([lo[i], lo[j], hi[j], hi[i]])
+                                 ~~^^^
+IndexError: list index out of range
+
+

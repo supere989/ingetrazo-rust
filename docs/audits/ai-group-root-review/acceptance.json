@@ -1,0 +1,25 @@
+{
+  "source": "237b356c",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "fresh_original_and_merged_native": true,
+  "identity_states": 3,
+  "full_ordered_geometry_recipes": 5,
+  "negative_controls_rejected": 12,
+  "binary_sha256": "787117dfae3600e049e027ef4160a5737fa691ba270125c8c94e08b16dfcaeca",
+  "ownership_review": [
+    "persistent GC-owned face list",
+    "Group command handles moved through undo redo",
+    "external Group retains interpreter and charged native Mesh",
+    "teardown and final external handle release collect cycles",
+    "other controller scope survives teardown"
+  ],
+  "remaining": [
+    "native projection of editable face lists and attrs",
+    "existing object rollback",
+    "complete Mesh Vertex Edge Face Group APIs",
+    "all helpers and general topology",
+    "full memory time bounds",
+    "production scene integration"
+  ],
+  "production_enabled": false
+}

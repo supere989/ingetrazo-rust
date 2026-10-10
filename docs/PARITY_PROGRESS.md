@@ -1,5 +1,7 @@
 # Rust parity progress tracker
 
+Merged Group/Mesh ownership prerequisite (2026-10-10): fresh original and freshly compiled integrated RustPython executions match three identity/history states and five full ordered geometry recipes; twelve same-validator negative controls reject. Real persistent face-list identity, externally held cyclic-object lifetime and independent-controller teardown controls pass. [Independent acceptance](audits/ai-group-root-review/acceptance.json). Mutable native projection, preexisting-object rollback, full APIs/helpers, memory/time bounds and production scripting remain OPEN.
+
 Combined integration acceptance (2026-10-10): **703 workspace tests pass, zero failures, 2 ignored** on `b6a07d0b`, covering source decoding, production texture averages and admitted Vulkan publication. [Retained acceptance](audits/texture-publication-combined/acceptance.json). Standalone scripting proofs remain separately scoped; strict full-image and platform parity and all release gates remain OPEN.
 
 Publication rollback and style routing (2026-10-10, integration branch): actual RTX 5090 execution passes real sampled-cache admission refusal with unchanged prior full frame and published entry count, successful retry, sampled-to-monochrome-to-average roundtrip, and final zero GPU ledger on both chapel views. [Independent acceptance boundary](audits/texture-publication-gpu-root/root-review.json). Strict full-model pixel differences remain 78/351/4832/3723; native annotations, broader failure coverage and all release gates remain OPEN.
