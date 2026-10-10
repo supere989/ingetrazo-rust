@@ -139,13 +139,14 @@ impl Handle {
         batches: Arc<[Batch]>,
         pose: Pose,
     ) -> Result<(), String> {
-        geometry.validate_batches(&batches)?;
         pose.validate()?;
         let mut s = self
             .inner
             .state
             .lock()
             .map_err(|_| "CAD2D state poisoned")?;
+        if Arc::ptr_eq(&s.geometry,&geometry)&&Arc::ptr_eq(&s.batches,&batches){s.pose=pose;return Ok(());}
+        geometry.validate_batches(&batches)?;
         if !Arc::ptr_eq(&s.batches,&batches) || s.geometry.palette_cache_identity()!=geometry.palette_cache_identity(){s.premultiplied=prepare_palette(&geometry,&batches)?;}
         s.geometry = geometry;
         s.batches = batches;
