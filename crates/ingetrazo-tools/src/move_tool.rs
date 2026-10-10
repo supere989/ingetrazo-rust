@@ -48,6 +48,15 @@ pub struct MoveTool {
     preview_version:u64,
 }
 
+/// Equality representation of original mesh._key: Qt float32 input, Python
+/// ties-even integer rounding, and no narrowing integer cast. None is the
+/// original nonfinite key refusal, not a coordinate eligible for welding.
+#[doc(hidden)]
+pub fn source_move_position_key(p:DVec3)->Option<[f64;3]>{
+    let p=p.as_vec3().as_dvec3();
+    p.is_finite().then(||p.to_array().map(|x|{let n=(x*10_000.).round_ties_even();if n==0.{0.}else{n}}))
+}
+
 impl MoveTool {
     pub fn new() -> Self {
         Self::default()
@@ -180,9 +189,9 @@ impl MoveTool {
             // Source MoveVerticesCommand resolves grabbed positions against the
             // current loose mesh. The published group is not a replacement for
             // the detached working vertex objects held by the active tool.
-            let key=|p:DVec3|((p.x*10_000.).round_ties_even() as i64,(p.y*10_000.).round_ties_even() as i64,(p.z*10_000.).round_ties_even() as i64);
-            let positions=self.original_positions.iter().map(|(_,p)|key(*p)).collect::<HashSet<_>>();
-            self.target_vertices=scene.mesh.vertices.iter().enumerate().filter_map(|(id,v)|positions.contains(&key(v.position)).then_some(id)).collect();
+            let Some(positions)=self.original_positions.iter().map(|(_,p)|source_move_position_key(*p).map(|k|k.map(f64::to_bits))).collect::<Option<HashSet<_>>>() else {self.last_error=Some("Move source coordinates are not finite".into());return;};
+            if scene.mesh.vertices.iter().any(|v|!v.position.as_vec3().is_finite()){self.last_error=Some("Move mesh coordinates are not finite".into());return;}
+            self.target_vertices=scene.mesh.vertices.iter().enumerate().filter_map(|(id,v)|positions.contains(&source_move_position_key(v.position).unwrap().map(f64::to_bits)).then_some(id)).collect();
         }
         if self.is_copy_mode&&self.target_vertices.is_empty()&&self.target_groups.is_empty(){return;}
         if delta.length_squared() < 1e-12 && (self.target_images.is_empty() || delta.as_vec3().length() <= 1e-9) {
