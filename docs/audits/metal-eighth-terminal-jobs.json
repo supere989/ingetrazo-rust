@@ -1,0 +1,25 @@
+{
+  "observed_at": "2026-10-10T22:38:28.525735+00:00",
+  "run_id": 38091398188,
+  "jobs": [
+    {
+      "name": "raw-texture (macos-15-intel)",
+      "head_sha": "1f44d9d7075b17d0c70900631388526c55178c8d",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Compare strict source and native Canvas font tiles"
+      ]
+    },
+    {
+      "name": "raw-texture (macos-15)",
+      "head_sha": "1f44d9d7075b17d0c70900631388526c55178c8d",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Compare strict source and native Canvas font tiles",
+        "Capture actual application Canvas window"
+      ]
+    }
+  ]
+}
