@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Paired native presentation review (2026-10-10): root independently verifies Intel artifact and report hashes; custom presenter displays four frames and MTKView displays three, both draining to zero pending on the same device. The paired ARM controls both fail positive presentation despite completed GPU commands. This narrows investigation to their common boundary; it does not establish a virtual-machine limitation. [Intel root review](audits/metalkit-presenter-control/native-run38096096481/intel-root-review.json), [ARM root review](audits/metalkit-presenter-control/native-run38096096481/arm-root-review.json). Physical Mac and platform acceptance remain OPEN.
+
 Merged interpreter graph lifetime (2026-10-10): fresh merged build matches freshly executed original cycle inventory, seven checker negatives reject, and actual Vertex/Edge payload counts return to zero after collection/teardown. Empty incidence-wrapper replacement matches original identity and no-history behavior. [Root execution](audits/ai-graph-cycle-root/acceptance.json). Full generated topology, callback resurrection, total heap bounds and production scripting remain OPEN.
 
 Combined font/annotation integration (2026-10-10): source `7b7ce751` passes **739 workspace library/integration tests, zero failures, 2 ignored**. [Fresh combined evidence](audits/annotation-font-combined-root/acceptance.json). Fifteen recorded annotation images separately match exactly; real viewport projection/depth, platform and release acceptance remain OPEN.

@@ -1,0 +1,22 @@
+{
+  "run_id": 38096096481,
+  "zip_hash_verified": true,
+  "report_hashes_verified": true,
+  "controls": {
+    "custom_presenter_control": {
+      "submitted": 6,
+      "displayed": 4,
+      "skipped": 2,
+      "pending": 0,
+      "queue_device": 4294968034
+    },
+    "metalkit_presenter_control": {
+      "submitted": 4,
+      "displayed": 3,
+      "skipped": 1,
+      "pending": 0,
+      "queue_device": 4294968034
+    }
+  },
+  "conclusion": "Both Intel controls pass positive presentation and drain on the same device. ARM cause remains unresolved; physical Mac acceptance remains open."
+}
