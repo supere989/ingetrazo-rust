@@ -158,6 +158,18 @@ extern "C" fn path_element(info: *mut c_void, e: *const Element) {
         _ => PathOp::Close,
     });
 }
+/// Qt CoreText defines this in float precision, separately from FreeType's0.3.
+pub(crate) fn synthetic_italic_shear() -> f64 {
+    (14f32 * 0f32.acos() / 90f32).tan() as f64
+}
+fn fixed_metric(value: f64) -> f64 {
+    ((value * 64.) as i32) as f64 / 64.
+}
+fn raster_width(raw_width: f64, raw_height: f64, shear: f64, scale: f64) -> f64 {
+    // Qt boundingBox first incorporates synthesis into the native CGRect,
+    // then qcoretextfontengine_scaleMetrics quantizes the device scaling.
+    fixed_metric(fixed_metric(raw_width + raw_height * shear) * scale) + 3.
+}
 /// Retained native font references are thread confined by Rc, just like CachedFont.
 pub(crate) struct NativeFont {
     owner: Owned,
@@ -426,7 +438,7 @@ impl NativeFont {
         let fixed = |x: f64| ((x * 64.) as i32) as f64 / 64.;
         let x = fixed(fixed(rect.origin.x) * scale) - 1.;
         let y = fixed((-fixed(rect.origin.y) - fixed(rect.size.height)) * scale) - 1.;
-        let w = fixed((fixed(rect.size.width) + fixed(rect.size.height) * shear) * scale) + 3.;
+        let w = raster_width(rect.size.width, rect.size.height, shear, scale);
         let h = fixed(fixed(rect.size.height) * scale) + 2.;
         if [x, y, w, h].iter().any(|v| !v.is_finite() || v.abs() > 1e6) || w < 0. || h < 0. {
             return Err("Native raster bounds refused".into());
@@ -499,5 +511,29 @@ impl NativeFont {
             height,
             coverage,
         })
+    }
+}
+
+#[cfg(test)]
+mod synthesis_metric_tests {
+    use super::*;
+    #[test]
+    fn source_float_angle_and_quantization_order() {
+        assert_eq!(
+            synthetic_italic_shear(),
+            f64::from((14f32 * 0f32.acos() / 90f32).tan())
+        );
+        assert_ne!(synthetic_italic_shear(), 0.3);
+        let (width, height, scale) = (69.12345, 67.23456, 1.);
+        let shear = synthetic_italic_shear();
+        let actual = raster_width(width, height, shear, scale);
+        assert_eq!(
+            actual,
+            fixed_metric(fixed_metric(width + height * shear) * scale) + 3.
+        );
+        // Fixture covers fractional native metrics rather than integer-only cases.
+        let previous =
+            fixed_metric((fixed_metric(width) + fixed_metric(height) * shear) * scale) + 3.;
+        assert_ne!(actual, previous);
     }
 }

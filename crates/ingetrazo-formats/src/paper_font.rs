@@ -250,6 +250,8 @@ impl CachedFont {
     }
     pub fn synthetic_italic_shear(&self, requested: bool) -> f64 {
         if requested && !self.italic {
+            #[cfg(target_os="macos")]
+            if self.native.is_some() { return crate::paper_coretext_glyph::synthetic_italic_shear(); }
             0.3
         } else {
             0.
