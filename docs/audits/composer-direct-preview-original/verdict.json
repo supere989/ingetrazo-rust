@@ -1,0 +1,208 @@
+{
+  "passed": true,
+  "original": true,
+  "start_pixel": [
+    214,
+    277
+  ],
+  "end_pixel": [
+    333.86531986531986,
+    360.9057239057239
+  ],
+  "requested_size_mm": [
+    50,
+    35
+  ],
+  "source_redo_keyboard_open": true,
+  "source_revision": "4e4889d913993b5d1129da1049141c3ab076b32f",
+  "binary_sha256": "c9d9ec2d93e996628a934b395c5b6805416bbc36dc9ba93a1ac4d643d2649cc4",
+  "cases": [
+    {
+      "case": "before",
+      "state": {
+        "paper_mm": [
+          297.0,
+          210.0
+        ],
+        "tool": "select",
+        "start": null,
+        "items": [],
+        "undo": 0,
+        "redo": 0,
+        "metrics": null,
+        "preview_alive": false,
+        "button": [
+          322,
+          19
+        ],
+        "paper": [
+          114,
+          157,
+          826,
+          661
+        ]
+      }
+    },
+    {
+      "case": "placement-preview",
+      "state": {
+        "paper_mm": [
+          297.0,
+          210.0
+        ],
+        "tool": "rect",
+        "start": [
+          41.70792079207921,
+          50.04950495049505
+        ],
+        "items": [],
+        "undo": 0,
+        "redo": 0,
+        "metrics": null,
+        "preview_alive": true,
+        "button": [
+          322,
+          19
+        ],
+        "paper": [
+          114,
+          157,
+          826,
+          661
+        ]
+      }
+    },
+    {
+      "case": "warm-preview",
+      "state": {
+        "paper_mm": [
+          297.0,
+          210.0
+        ],
+        "tool": "rect",
+        "start": [
+          41.70792079207921,
+          50.04950495049505
+        ],
+        "items": [],
+        "undo": 0,
+        "redo": 0,
+        "metrics": null,
+        "preview_alive": true,
+        "button": [
+          322,
+          19
+        ],
+        "paper": [
+          114,
+          157,
+          826,
+          661
+        ]
+      }
+    },
+    {
+      "case": "cancelled",
+      "state": {
+        "paper_mm": [
+          297.0,
+          210.0
+        ],
+        "tool": "rect",
+        "start": null,
+        "items": [],
+        "undo": 0,
+        "redo": 0,
+        "metrics": null,
+        "preview_alive": false,
+        "button": [
+          322,
+          19
+        ],
+        "paper": [
+          114,
+          157,
+          826,
+          661
+        ]
+      }
+    },
+    {
+      "case": "committed",
+      "state": {
+        "paper_mm": [
+          297.0,
+          210.0
+        ],
+        "tool": "select",
+        "start": null,
+        "items": [
+          {
+            "kind": "rect",
+            "x_mm": 41.70792079207921,
+            "y_mm": 50.04950495049505,
+            "w_mm": 50.04950495049505,
+            "h_mm": 35.03465346534654,
+            "stroke_mm": 0.35,
+            "fill": false,
+            "invert": false,
+            "z": 0.0,
+            "locked": false,
+            "group_id": "",
+            "list_name": "",
+            "hidden": false,
+            "radius_mm": 0.0,
+            "sides": 6,
+            "color": "#1e242c",
+            "fill_color": "#e2e8ee",
+            "ground": "ticks",
+            "tick_mm": 2.5,
+            "tick_step_mm": 3.0,
+            "band_mm": 6.0
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "metrics": null,
+        "preview_alive": false,
+        "button": [
+          322,
+          19
+        ],
+        "paper": [
+          114,
+          157,
+          826,
+          661
+        ]
+      }
+    },
+    {
+      "case": "undone",
+      "state": {
+        "paper_mm": [
+          297.0,
+          210.0
+        ],
+        "tool": "select",
+        "start": null,
+        "items": [],
+        "undo": 0,
+        "redo": 1,
+        "metrics": null,
+        "preview_alive": false,
+        "button": [
+          322,
+          19
+        ],
+        "paper": [
+          114,
+          157,
+          826,
+          661
+        ]
+      }
+    }
+  ],
+  "scope": "Actual XTEST placement drag/hold/Escape/commit/UndoRedo through productioncomposer directCAD factory. SoftwareVulkan; instrumented toolbar/keyboard routes. No originalwholepixel or AA parity."
+}

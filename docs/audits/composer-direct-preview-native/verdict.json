@@ -1,0 +1,296 @@
+{
+  "passed": true,
+  "original": false,
+  "start_pixel": [
+    320.0,
+    234.0
+  ],
+  "end_pixel": [
+    420.0,
+    304.0
+  ],
+  "requested_size_mm": [
+    50,
+    35
+  ],
+  "source_redo_keyboard_open": false,
+  "source_revision": "4e4889d913993b5d1129da1049141c3ab076b32f",
+  "binary_sha256": "c9d9ec2d93e996628a934b395c5b6805416bbc36dc9ba93a1ac4d643d2649cc4",
+  "cases": [
+    {
+      "case": "before",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [],
+        "metrics": {
+          "cache_hits": 0,
+          "cached_bytes": 0,
+          "draws": 0,
+          "uploads": 0
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 0,
+        "start": null,
+        "tool": null,
+        "undo": 0
+      }
+    },
+    {
+      "case": "placement-preview",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [],
+        "metrics": {
+          "cache_hits": 13,
+          "cached_bytes": 336,
+          "draws": 14,
+          "uploads": 1
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 0,
+        "start": [
+          50.0,
+          60.0
+        ],
+        "tool": "rect",
+        "undo": 0
+      }
+    },
+    {
+      "case": "warm-preview",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [],
+        "metrics": {
+          "cache_hits": 50,
+          "cached_bytes": 336,
+          "draws": 51,
+          "uploads": 1
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 0,
+        "start": [
+          50.0,
+          60.0
+        ],
+        "tool": "rect",
+        "undo": 0
+      }
+    },
+    {
+      "case": "cancelled",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [],
+        "metrics": {
+          "cache_hits": 64,
+          "cached_bytes": 0,
+          "draws": 65,
+          "uploads": 1
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 0,
+        "start": null,
+        "tool": null,
+        "undo": 0
+      }
+    },
+    {
+      "case": "committed",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [
+          {
+            "Shape": {
+              "id": "53b3cc31-561a-4c6a-9a88-b6003044f02e",
+              "shape": {
+                "band_mm": 6.0,
+                "color": "#1e242c",
+                "fill": false,
+                "fill_color": "#e2e8ee",
+                "ground": "ticks",
+                "group_id": "",
+                "h_mm": 35.0,
+                "hidden": false,
+                "invert": false,
+                "kind": "rect",
+                "list_name": "",
+                "locked": false,
+                "radius_mm": 0.0,
+                "sides": 6,
+                "stroke_mm": 0.35,
+                "tick_mm": 2.5,
+                "tick_step_mm": 3.0,
+                "w_mm": 50.0,
+                "x_mm": 50.0,
+                "y_mm": 60.0,
+                "z": 0.0
+              }
+            }
+          }
+        ],
+        "metrics": {
+          "cache_hits": 89,
+          "cached_bytes": 336,
+          "draws": 92,
+          "uploads": 3
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 0,
+        "start": null,
+        "tool": "rect",
+        "undo": 1
+      }
+    },
+    {
+      "case": "undone",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [],
+        "metrics": {
+          "cache_hits": 115,
+          "cached_bytes": 0,
+          "draws": 118,
+          "uploads": 3
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 1,
+        "start": null,
+        "tool": "rect",
+        "undo": 0
+      }
+    },
+    {
+      "case": "redone",
+      "state": {
+        "button": [
+          56.0,
+          11.0
+        ],
+        "items": [
+          {
+            "Shape": {
+              "id": "53b3cc31-561a-4c6a-9a88-b6003044f02e",
+              "shape": {
+                "band_mm": 6.0,
+                "color": "#1e242c",
+                "fill": false,
+                "fill_color": "#e2e8ee",
+                "ground": "ticks",
+                "group_id": "",
+                "h_mm": 35.0,
+                "hidden": false,
+                "invert": false,
+                "kind": "rect",
+                "list_name": "",
+                "locked": false,
+                "radius_mm": 0.0,
+                "sides": 6,
+                "stroke_mm": 0.35,
+                "tick_mm": 2.5,
+                "tick_step_mm": 3.0,
+                "w_mm": 50.0,
+                "x_mm": 50.0,
+                "y_mm": 60.0,
+                "z": 0.0
+              }
+            }
+          }
+        ],
+        "metrics": {
+          "cache_hits": 148,
+          "cached_bytes": 336,
+          "draws": 152,
+          "uploads": 4
+        },
+        "paper": [
+          220.0,
+          114.0,
+          1060.0,
+          708.0
+        ],
+        "paper_mm": [
+          420.0,
+          297.0
+        ],
+        "redo": 0,
+        "start": null,
+        "tool": "rect",
+        "undo": 1
+      }
+    }
+  ],
+  "scope": "Actual XTEST placement/Escape/commit/UndoRedo through production composer direct CAD factory, software Vulkan; fixture toolbar/keyboard routes. No whole-image or AA parity."
+}
