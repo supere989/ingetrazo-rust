@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "ellipse-flat",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "ellipse-tall",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "ellipse-circle",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "ellipse-small",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "rounded-flat",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "rounded-tall",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "rounded-wide",
+      "passed": true,
+      "different_pixels": 0
+    },
+    {
+      "name": "rounded-capsule",
+      "passed": true,
+      "different_pixels": 0
+    }
+  ]
+}
