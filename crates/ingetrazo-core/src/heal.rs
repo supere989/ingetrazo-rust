@@ -218,7 +218,31 @@ pub fn orient_faces(mesh: &Mesh) -> Result<Mesh, String> {
     Ok(out)
 }
 
+/// Recompute derived partition flags after geometry edits without changing
+/// user-authored boundary winding.
+pub fn refresh_interior(mesh: &mut Mesh) -> Result<(), String> {
+    planar::validate_mesh(mesh)?;
+    if mesh.faces.is_empty() {
+        return Ok(());
+    }
+    let frame = Frame::new(&planar::rings(mesh, &mesh.faces[0])[0])?;
+    if mesh.faces.iter().all(|f| {
+        planar::rings(mesh, f)
+            .iter()
+            .flatten()
+            .all(|&p| frame.on_plane(p))
+    }) {
+        for face in &mut mesh.faces {
+            face.interior = false;
+        }
+        return Ok(());
+    }
+    classify_components(mesh, false)
+}
 fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
+    classify_components(mesh, true)
+}
+fn classify_components(mesh: &mut Mesh, flip_boundary: bool) -> Result<(), String> {
     use glam::DVec3;
     use std::collections::{BTreeMap, VecDeque};
     let triangles: Vec<_> = (0..mesh.faces.len())
@@ -378,7 +402,7 @@ fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
     for i in 0..mesh.faces.len() {
         mesh.faces[i].interior = !boundary[i];
     }
-    if closed {
+    if closed && flip_boundary {
         for i in 0..mesh.faces.len() {
             if boundary[i] && state(i, &boundary) == 1 {
                 mesh.faces[i].vertices.reverse();
@@ -431,6 +455,55 @@ mod tests {
             mesh.add_face(f.into_iter().map(|i| v[i]).collect(), vec![]);
         }
     }
+    #[test]
+    fn changing_a_partition_into_an_external_sheet_clears_derived_state_without_flipping() {
+        let mut m = Mesh::new();
+        box_at(&mut m, 0., 1.);
+        box_at(&mut m, 1., 1.);
+        let mut faces = m.faces.clone();
+        faces.remove(11);
+        let mut network = Mesh::new();
+        for face in &faces {
+            planar::add_face(&mut network, &planar::rings(&m, face), face).unwrap();
+        }
+        let mut out = orient_faces(&network).unwrap();
+        let id = out.faces.iter().position(|f| f.interior).unwrap();
+        // Detach the formerly internal face while leaving both shells' walls.
+        let ring = out.faces[id].vertices.clone();
+        let new: Vec<_> = ring
+            .iter()
+            .map(|&v| out.add_vertex(out.vertices[v].position + DVec3::Y * 10.))
+            .collect();
+        out.faces[id].vertices = new;
+        let winding = out.faces[id].vertices.clone();
+        refresh_interior(&mut out).unwrap();
+        assert!(!out.faces[id].interior);
+        assert_eq!(out.faces[id].vertices, winding);
+    }
+
+    #[test]
+    fn disconnected_free_partition_and_interior_only_edges_are_not_solid() {
+        let mut m = Mesh::new();
+        box_at(&mut m, 0., 4.);
+        let ids = [
+            DVec3::new(1., 1., 2.),
+            DVec3::new(2., 1., 2.),
+            DVec3::new(2., 2., 2.),
+            DVec3::new(1., 2., 2.),
+        ]
+        .into_iter()
+        .map(|p| m.add_vertex(p))
+        .collect();
+        m.add_face(ids, vec![]);
+        let out = orient_faces(&m).unwrap();
+        assert!(!out.faces.last().unwrap().interior);
+        assert!(!out.is_manifold_solid());
+        let mut marked = out;
+        marked.faces.last_mut().unwrap().interior = true;
+        assert!(!marked.is_manifold_solid());
+        assert!(!crate::solids::solid_report(&marked).0);
+    }
+
     #[test]
     fn orient_marks_shared_partition_and_keeps_nested_shells_independent() {
         let mut m = Mesh::new();

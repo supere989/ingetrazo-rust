@@ -683,7 +683,8 @@ fn prepare_fillet(
         }
     }
     if !validate {
-        scene.mesh = result;
+        ingetrazo_core::heal::refresh_interior(&mut result)?;
+    scene.mesh = result;
         return Ok(());
     }
     ingetrazo_core::solids::validate_solid_mesh(&result)?;
@@ -750,6 +751,7 @@ fn prepare_fillet(
         curve = curve.checked_add(1).ok_or("Curve identifiers exhausted")?;
     }
     result.preserve_vertex_uids_from(mesh);
+    ingetrazo_core::heal::refresh_interior(&mut result)?;
     scene.mesh = result;
     scene.clear_selection();
     scene.bump_version();

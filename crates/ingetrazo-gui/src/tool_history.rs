@@ -7,6 +7,7 @@ use ingetrazo_tools::base::ToolContext;
 fn changed_model(before: &Scene, after: &Scene) -> bool {
     before.mesh != after.mesh
         || before.groups != after.groups
+        || before.component_definitions != after.component_definitions
         || before.dimensions != after.dimensions
         || before.guides != after.guides
         || before.section_planes != after.section_planes
@@ -26,7 +27,14 @@ impl IngeTrazoApp {
         before
     }
 
-    fn record_tool_commit(&mut self, before: Scene) {
+    fn record_tool_commit(&mut self, before: Scene) -> Result<(),String> {
+        if before.mesh != self.scene.mesh {
+            if let Err(error)=ingetrazo_core::heal::refresh_interior(&mut self.scene.mesh) {
+                self.scene=before;
+                self.status_message=format!("Tool error: {error}");
+                return Err(error);
+            }
+        }
         if changed_model(&before, &self.scene) {
             self.undo_stack.push(before);
             self.redo_stack.clear();
@@ -34,6 +42,7 @@ impl IngeTrazoApp {
                 self.undo_stack.remove(0);
             }
         }
+        Ok(())
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
@@ -44,14 +53,14 @@ impl IngeTrazoApp {
             .error_message()
             .map(|error| format!("Tool error: {error}"))
             .unwrap_or_default();
-        self.record_tool_commit(before);
+        let _ = self.record_tool_commit(before);
     }
 
     pub fn dispatch_tool_release(&mut self, context: &ToolContext, drag_distance: f64) {
         let before = self.tool_snapshot();
         self.active_tool.on_release(&mut self.scene, context, drag_distance);
         self.status_message = self.active_tool.error_message().map(|e| format!("Tool error: {e}")).unwrap_or_default();
-        self.record_tool_commit(before);
+        let _ = self.record_tool_commit(before);
     }
 
     pub fn dispatch_tool_double_click(&mut self, context: &ToolContext) {
@@ -62,15 +71,14 @@ impl IngeTrazoApp {
             .error_message()
             .map(|error| format!("Tool error: {error}"))
             .unwrap_or_default();
-        self.record_tool_commit(before);
+        let _ = self.record_tool_commit(before);
     }
 
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
         let before = self.tool_snapshot();
         match self.active_tool.on_vcb_input(&mut self.scene, text) {
             Ok(()) => {
-                self.record_tool_commit(before);
-                Ok(())
+                self.record_tool_commit(before)
             }
             Err(error) => {
                 self.scene = before;

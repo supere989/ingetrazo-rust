@@ -339,6 +339,7 @@ impl PushPullTool {
         }
         candidate.preserve_vertex_uids_from(mesh);
         // No partial mutation or version bump escapes a failed preparation.
+        ingetrazo_core::heal::refresh_interior(&mut candidate)?;
         scene.mesh = candidate;
         scene.clear_selection();
         scene.bump_version();

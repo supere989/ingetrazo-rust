@@ -566,6 +566,7 @@ fn prepare_sweep(
     }
     result = ingetrazo_core::planar::stitch_boundaries(&result)?;
     result.preserve_vertex_uids_from(&scene.mesh);
+    ingetrazo_core::heal::refresh_interior(&mut result)?;
     scene.mesh = result;
     scene.clear_selection();
     scene.bump_version();

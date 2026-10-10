@@ -280,7 +280,7 @@ pub fn offset_face(mesh: &Mesh, face_id: usize, d: f64) -> Result<Mesh, String> 
         }
     }
     out.preserve_vertex_uids_from(mesh);
-    planar::validate_mesh(&out)?;
+    crate::heal::refresh_interior(&mut out)?;
     Ok(out)
 }
 
