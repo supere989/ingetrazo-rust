@@ -467,6 +467,7 @@ fn build_group_buffers(
         }
     }
 
+    let consolidated_start=opaque.source_consolidated_opaque_count;
     let local_start=(opaque.indices.len(),transparent.indices.len(),opaque.source_front_cull.len(),opaque.source_back_override_count+transparent.source_back_override_count);
     for (f_id, face) in group.mesh.faces.iter().enumerate() {
         let face_layer = face.layer.as_deref().or_else(|| face.attrs.get("layer").and_then(|v| v.as_str()));
@@ -557,14 +558,6 @@ fn build_group_buffers(
         }
     }
 
-    // Original _instanced_eligible uses a prototype-local cache: transparent/back
-    // content stays consolidated. Counts/ranges already built above answer that
-    // question without another face traversal or a per-frame placement copy.
-    let local_transparent=transparent.indices.len()!=local_start.1;
-    let local_back=opaque.source_back_override_count+transparent.source_back_override_count!=local_start.3;
-    let instanced=source_placement&&!group.billboard&&!local_transparent&&!local_back&&!source_instancing_disabled();
-    if !instanced {let front_only:usize=opaque.source_front_cull[local_start.2..].iter().map(|r|r.1).sum();opaque.source_consolidated_opaque_count+=opaque.indices.len()-local_start.0-front_only;}
-
     let eye = camera.eye();
     if include_edges { for edge in &group.mesh.edges {
         if edge.hidden || !scene.is_layer_visible(edge.layer.as_deref()) {
@@ -632,6 +625,18 @@ fn build_group_buffers(
             include_edges,
         );
     }
+    // Original _group_chunk flattens the entire adopted subtree into the
+    // ancestor prototype cache. Classify only after child geometry is collected:
+    // a classic inline child cannot escape an eligible ancestor placement.
+    // Original _instanced_eligible uses a prototype-local cache: transparent/back
+    // content stays consolidated. Counts/ranges already built above answer that
+    // question without another face traversal or a per-frame placement copy.
+    let local_transparent=transparent.indices.len()!=local_start.1;
+    let local_back=opaque.source_back_override_count+transparent.source_back_override_count!=local_start.3;
+    let instanced=source_placement&&!group.billboard&&!local_transparent&&!local_back&&!source_instancing_disabled();
+    opaque.source_consolidated_opaque_count=consolidated_start;
+    if !instanced {let front_only:usize=opaque.source_front_cull[local_start.2..].iter().map(|r|r.1).sum();opaque.source_consolidated_opaque_count+=opaque.indices.len()-local_start.0-front_only;}
+
 }
 
 
@@ -1436,6 +1441,16 @@ fn source_group_has_placement(group:&ingetrazo_core::groups::Group)->bool {
 #[cfg(test)]mod source_placement_regression {
  use super::*;
  use ingetrazo_core::groups::Group;
+ #[test]fn adopted_parent_classifies_whole_inline_subtree_and_transparent_child_disables_gate(){
+  let mut scene=Scene::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);
+  let mut child=Group::with_mesh("inline",mesh);child.native_document=serde_json::json!({"proto":null,"component":false});
+  let mut parent=Group::new("adopted");parent.native_document=serde_json::json!({"component":false});parent.children.push(child);scene.groups.push(parent);
+  let draw=|scene:&Scene|build_world_surfaces(scene,&OrbitCamera::default(),&StyleConfig::default());
+  assert_eq!(draw(&scene).opaque_mesh.indices.len(),3);assert_eq!(draw(&scene).opaque_mesh.source_consolidated_opaque_count,0);
+  let child=scene.groups[0].children.pop().unwrap();scene.groups=vec![child];assert_eq!(draw(&scene).opaque_mesh.source_consolidated_opaque_count,3);
+  let child=scene.groups.pop().unwrap();let mut parent=Group::new("adopted");parent.children.push(child.clone());let mut glass=child;glass.mesh.faces[0].attrs.insert("opacity".into(),serde_json::json!(0.5));parent.children.push(glass);scene.groups.push(parent);
+  let result=draw(&scene);assert_eq!(result.opaque_mesh.source_consolidated_opaque_count,3);assert_eq!(result.transparent_mesh.indices.len(),3);
+ }
  #[test]fn classic_legacy_and_component_flags_do_not_imply_instancing(){
   let mut g=Group::new("legacy");
   g.native_document=serde_json::json!({"component":true,"proto":null,"xform":DMat4::IDENTITY.to_cols_array()});assert!(!source_group_has_placement(&g));
