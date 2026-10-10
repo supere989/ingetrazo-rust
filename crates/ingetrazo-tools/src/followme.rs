@@ -3,7 +3,7 @@
 //! Follow Me: joint-plane miter sweeps and circular closed-path revolutions.
 //! Ported from the original IngeTrazo core/sweep.py construction.
 use crate::base::{pick_edge, pick_face, Tool, ToolContext, ToolType};
-use glam::{DQuat, DVec3};
+use glam::DVec3;
 use ingetrazo_core::{
     math::newell_vector,
     mesh::{Mesh, MeshFace},
@@ -89,8 +89,40 @@ fn project(
         .collect())
 }
 
-/// Circular path matching the original lathe construction. Profiles crossing
-/// the revolution axis are refused until clipped-pole topology is implemented.
+/// Clip a revolution profile to its own side of the axis. Axis crossings
+/// become exact pole points, shared identically by every longitude station.
+fn clip_half(loop_points: &[DVec3], tolerance: f64) -> Result<Vec<DVec3>, String> {
+    // Local coordinates are (height, radial, transverse).
+    let mut result = Vec::new();
+    for i in 0..loop_points.len() {
+        let current = loop_points[i];
+        let next = loop_points[(i + 1) % loop_points.len()];
+        let current_in = current.y >= -tolerance;
+        let next_in = next.y >= -tolerance;
+        if current_in {
+            result.push(if current.y > tolerance {
+                DVec3::new(current.x, current.y.max(0.), current.z)
+            } else {
+                DVec3::new(current.x, 0., 0.)
+            });
+        }
+        if current_in != next_in {
+            let t = current.y / (current.y - next.y);
+            result.push(DVec3::new(current.x + (next.x - current.x) * t, 0., 0.));
+        }
+    }
+    result.dedup_by(|a, b| (*a - *b).length() < 1e-12);
+    if result.len() > 1 && (result[0] - *result.last().unwrap()).length() < 1e-12 {
+        result.pop();
+    }
+    if result.len() < 3 {
+        return Err("Revolution profile collapses on the axis".into());
+    }
+    Ok(result)
+}
+
+/// Match the original circular lathe construction, including full profiles
+/// crossing the axis: their half profile sweeps once, not twice over itself.
 fn revolution_rings(
     loops: &[Vec<DVec3>],
     normal: DVec3,
@@ -120,30 +152,65 @@ fn revolution_rings(
     }
     let mut radial = axis.cross(normal).normalize();
     let profile_center = loops[0].iter().sum::<DVec3>() / loops[0].len() as f64;
-    if (profile_center - center).dot(radial) < 0.0 {
+    if (profile_center - center).dot(radial) < 0. {
         radial = -radial;
     }
-    if loops
-        .iter()
-        .flatten()
-        .any(|p| (*p - center).dot(radial) <= 1e-6)
-    {
-        return Some(Err(
-            "Profile touching or crossing the revolution axis is unsupported".into(),
-        ));
-    }
     let side = axis.cross(radial);
+    let local = |p: DVec3| {
+        let relative = p - center;
+        DVec3::new(relative.dot(axis), relative.dot(radial), relative.dot(side))
+    };
+    let size = loops[0]
+        .iter()
+        .map(|&p| local(p).abs().max_element())
+        .fold(0., f64::max)
+        .max(1e-12);
+    let keep_tolerance = (size * 1e-6).max(1e-7);
+    let mut outer: Vec<_> = loops[0].iter().copied().map(local).collect();
+    if outer.iter().any(|p| p.y < -keep_tolerance) {
+        outer = match clip_half(&outer, keep_tolerance) {
+            Ok(points) => points,
+            Err(error) => return Some(Err(error)),
+        };
+    } else {
+        // A planar profile through the axis has zero transverse coordinate;
+        // clamp pole positions to exact bit-identical points at all stations.
+        for point in &mut outer {
+            *point = if point.y.abs() > keep_tolerance {
+                DVec3::new(point.x, point.y, 0.)
+            } else {
+                DVec3::new(point.x, 0., 0.)
+            };
+        }
+    }
+    let mut local_loops = vec![outer];
+    for hole in &loops[1..] {
+        let points: Vec<_> = hole.iter().copied().map(local).collect();
+        if points.iter().any(|p| p.y < -keep_tolerance) {
+            if points.iter().any(|p| p.y > keep_tolerance) {
+                return Some(Err("A profile hole crosses the revolution axis".into()));
+            }
+            // A hole entirely on the discarded half does not affect this side.
+        } else {
+            local_loops.push(points);
+        }
+    }
     Some(Ok(path
         .iter()
         .map(|p| {
             let relative = *p - center;
             let angle = relative.dot(side).atan2(relative.dot(radial));
-            let rotation = DQuat::from_axis_angle(axis, angle);
-            loops
+            let (sin, cos) = angle.sin_cos();
+            local_loops
                 .iter()
                 .map(|ring| {
                     ring.iter()
-                        .map(|p| center + rotation * (*p - center))
+                        .map(|p| {
+                            center
+                                + axis * p.x
+                                + (radial * cos + side * sin) * p.y
+                                + (side * cos - radial * sin) * p.z
+                        })
                         .collect()
                 })
                 .collect()
@@ -305,7 +372,14 @@ pub fn sweep_profile(
         for (a, b) in rings[i].iter().zip(&rings[next]) {
             for j in 0..a.len() {
                 let k = (j + 1) % a.len();
-                add_face(&mut sweep, &[a[j], a[k], b[k], b[j]], &[], &source)?;
+                let mut wall = vec![a[j], a[k], b[k], b[j]];
+                wall.dedup_by(|p, q| (*p - *q).length() < 1e-9);
+                if wall.len() > 1 && (wall[0] - *wall.last().unwrap()).length() < 1e-9 {
+                    wall.pop();
+                }
+                if wall.len() >= 3 {
+                    add_face(&mut sweep, &wall, &[], &source)?;
+                }
             }
         }
     }
@@ -669,5 +743,43 @@ mod tests {
             sweep_profile(&mut scene, 0, &[DVec3::ZERO, DVec3::splat(f64::NAN)], false).is_err()
         );
         assert_eq!(scene, before);
+    }
+    #[test]
+    fn full_circles_revolve_once_into_closed_spheres_with_shared_poles() {
+        let n = 24;
+        for degrees in [0.0_f64, 7.5, 33.] {
+            for (radius, path_radius) in [(1., 1.), (0.5, 1.), (1., 0.5)] {
+                let angle = degrees.to_radians();
+                let radial = DVec3::new(angle.cos(), angle.sin(), 0.);
+                let mut scene = Scene::new();
+                let ids = (0..n)
+                    .map(|i| {
+                        let angle = 2. * std::f64::consts::PI * i as f64 / n as f64;
+                        scene.mesh.add_vertex(
+                            radial * (radius * angle.cos()) + DVec3::Z * (radius * angle.sin()),
+                        )
+                    })
+                    .collect();
+                scene.mesh.add_face(ids, vec![]);
+                let path: Vec<_> = (0..n)
+                    .map(|i| {
+                        let angle = 2. * std::f64::consts::PI * i as f64 / n as f64;
+                        DVec3::new(path_radius * angle.cos(), path_radius * angle.sin(), 0.)
+                    })
+                    .collect();
+                sweep_profile(&mut scene, 0, &path, true).unwrap();
+                assert_eq!(scene.mesh.faces.len(), n * (n / 2));
+                assert!(scene.mesh.is_manifold_solid());
+                assert!(scene.mesh.edges.iter().all(|e| e.soft));
+                for vertex in &scene.mesh.vertices {
+                    assert!((vertex.position.length() - radius).abs() < 1e-8);
+                }
+                let area: f64 = (0..scene.mesh.faces.len())
+                    .map(|id| scene.mesh.face_area(id))
+                    .sum();
+                let sphere_area = 4. * std::f64::consts::PI * radius * radius;
+                assert!((0.98 * sphere_area..sphere_area).contains(&area));
+            }
+        }
     }
 }
