@@ -1,0 +1,7 @@
+{
+  "parent_revision": "7655cba9",
+  "binary_sha256": "e17373455c75b3842d315fbc9db45b8c10890fc78f0dd9b859acd1e7380fa6fe",
+  "command": "cargo run -j2 --bin owner",
+  "focused_test": "cargo test -j2 --bin owner history_admission",
+  "production": false
+}

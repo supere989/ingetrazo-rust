@@ -1,0 +1,46 @@
+{
+  "base_vertices": 10000,
+  "history_depth": 96,
+  "memory_points": [
+    {
+      "depth": 32,
+      "live_bytes": 1607343,
+      "retained_baseline_entries": 0,
+      "history_payload_bytes": [
+        12288,
+        0
+      ]
+    },
+    {
+      "depth": 64,
+      "live_bytes": 1625804,
+      "retained_baseline_entries": 0,
+      "history_payload_bytes": [
+        24576,
+        0
+      ]
+    },
+    {
+      "depth": 96,
+      "live_bytes": 1651657,
+      "retained_baseline_entries": 0,
+      "history_payload_bytes": [
+        36864,
+        0
+      ]
+    }
+  ],
+  "baseline_live_bytes": 1589812,
+  "history_growth_bytes": 62487,
+  "retained_history_payload_bytes": [
+    36864,
+    0
+  ],
+  "peak_live_bytes": 4652354,
+  "replace_released_bytes": 1635088,
+  "retained_baseline_entries": 0,
+  "undo_redo_cycles": 96,
+  "elapsed_ms": 1288,
+  "production_writers_routed": false,
+  "system_allocator_oom_proof": false
+}

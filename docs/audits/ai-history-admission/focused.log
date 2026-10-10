@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized] target(s) in 20.96s
+     Running unittests src/bin/owner.rs (/tmp/ingetrazo-ai-owner-target/debug/deps/owner-125545d3bfa392f8)
+
+running 1 test
+test owner::tests::history_admission_preserves_redo_and_retry_without_payload_growth ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+
