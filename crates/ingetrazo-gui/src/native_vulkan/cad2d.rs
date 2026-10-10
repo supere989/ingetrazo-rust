@@ -121,6 +121,18 @@ impl Handle {
         }
         .into()
     }
+    /// Cold producer admission: Rust-visible callback/state records (including
+    /// inline Ready storage) and distinct resolved palette payloads. Geometry,
+    /// batch/range owners, shared pipeline/counters, Arc allocator headers and
+    /// GPU residency are accounted separately; this is not total process RSS.
+    pub fn retained_cpu_bytes(&self)->Result<usize,String>{
+        let state=self.inner.state.lock().map_err(|_|"CAD2D state poisoned")?;
+        let mut bytes=std::mem::size_of::<NativePaint>()+std::mem::size_of::<VulkanPaintCallback>();
+        if self.callback.0.as_any().is::<AnnotationPaint>(){bytes+=std::mem::size_of::<AnnotationPaint>();}
+        bytes=bytes.checked_add(state.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD palette byte overflow")?).ok_or("CAD retained byte overflow")?;
+        if let Some(ready)=&state.ready{if !Arc::ptr_eq(&ready.premultiplied,&state.premultiplied){bytes=bytes.checked_add(ready.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD old palette byte overflow")?).ok_or("CAD retained byte overflow")?;}}
+        Ok(bytes)
+    }
     pub fn update(
         &self,
         geometry: Arc<Geometry>,
