@@ -47,7 +47,6 @@ impl MeshJournal {
  }
  pub(crate) fn stage_vertex(&mut self,p:DVec3)->Result<usize,String>{if let Some(r)=&self.registry{r.check()?;}if self.admission_failed{return Err("Transaction staging previously refused".into());}let p=p.as_vec3().as_dvec3();if !p.is_finite(){return Err("Nonfinite face vertex".into());}self.vertex(SourceKey::new(p),p)}
  pub(crate) fn link_vertices(&mut self,v0:usize,v1:usize)->Result<(usize,usize,usize),String>{
-  if v0==v1{return Err("Degenerate face boundary remains unsupported".into());}
   let key=ordered(v0,v1);
   let endpoints=if let Some(existing)=self.lookup_edge(&key){existing}else{let preparation=(||{if self.edge_limit.is_some_and(|n|self.added_edges.len()>=n){return Err("Append edge staging admission denied".into());}self.edges.try_reserve(1).map_err(|_|"Append edge lookup admission refused")?;self.added_edges.try_reserve(1).map_err(|_|"Append edge staging allocation refused")?;self.base_edges.checked_add(self.added_edges.len()).ok_or_else(||"Append edge extent overflow".into())})();let id=self.admission(preparation)?;self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
   Ok(endpoints)
@@ -150,8 +149,8 @@ pub(crate) fn validate_base(mesh:&Mesh)->Result<(),String>{
   }
  }
  for (id,e) in mesh.edges.iter().enumerate(){
-  if e.v0==e.v1||e.v0>=mesh.vertices.len()||e.v1>=mesh.vertices.len()
-   ||incidence[id]!=3||e.faces.iter().any(|&f|f>=mesh.faces.len()){return Err("Malformed base edge".into());}
+  if e.v0>=mesh.vertices.len()||e.v1>=mesh.vertices.len()
+   ||incidence[id]!=(if e.v0==e.v1{1}else{3})||e.faces.iter().any(|&f|f>=mesh.faces.len()){return Err("Malformed base edge".into());}
  }
  for f in &mesh.faces{if f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|v>=mesh.vertices.len()){return Err("Malformed base face".into());}}
  Ok(())
