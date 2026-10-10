@@ -1,0 +1,9 @@
+{
+  "candidate": "5bb87ec",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-backpaint-review-target cargo test --locked --workspace",
+  "passed": 397,
+  "failed": 0,
+  "ignored": 2,
+  "retained_log_sha256": "23866648e5a0c977350b7439ec7c24416d472258c5452ed08fa1b6cf55888987",
+  "acceptance": "Original/native 22 software retained pixels and runs rechecked; mandatory corpus guard and independent same-GPU/backpaint/full topology acceptance pending."
+}
