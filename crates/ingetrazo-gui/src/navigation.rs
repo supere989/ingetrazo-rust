@@ -8,11 +8,11 @@ pub struct Navigation {
  pub mode:Option<Mode>, pub eye_height:f64,
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
  dragged:bool, pub base:Option<DVec3>, next_tick:Option<f64>,
- held:[bool;6], mouse_captured:bool, cursor_locked_sent:bool,look_button:Option<egui::PointerButton>,look_cursor:Option<DVec2>,
+ held:[bool;6], walk_modifiers:egui::Modifiers, mouse_captured:bool, cursor_locked_sent:bool,look_button:Option<egui::PointerButton>,look_cursor:Option<DVec2>,
  bounds_center:DVec3, collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
 }
 impl Default for Navigation {
- fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],mouse_captured:false,cursor_locked_sent:false,look_button:None,look_cursor:None,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
+ fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],walk_modifiers:egui::Modifiers::NONE,mouse_captured:false,cursor_locked_sent:false,look_button:None,look_cursor:None,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
 }
 impl Navigation {
  // Remember refused admission until revision changes; direct queries preserve correctness.
@@ -42,7 +42,7 @@ impl Navigation {
   if let Some(index)=movement_key(key){if !pressed||self.claims_key(key,modifiers){self.held[index]=pressed;}}
  }
  fn axes(&self)->[i8;3]{[self.held[0]as i8-self.held[1]as i8,self.held[2]as i8-self.held[3]as i8,self.held[4]as i8-self.held[5]as i8]}
- pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.look_button=None;self.look_cursor=None;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
+ pub fn cancel(&mut self){self.held=[false;6];self.walk_modifiers=egui::Modifiers::NONE;self.mouse_captured=false;self.look_button=None;self.look_cursor=None;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
  // Original Qt QTimer dispatches one fixed step after an overrun, not all
  // elapsed intervals. Keep a deadline independent of repaint frequency.
  fn tick_due(&mut self,time:f64,interval:f64)->bool{
@@ -118,7 +118,7 @@ fn position_snap(app:&mut crate::IngeTrazoApp,rect:egui::Rect,p:DVec2,time:f64)-
   app.snap_engine.note_inference_result(&result);
   Some(result)
 }
-pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response)->Option<ingetrazo_core::snap::SnapResult>{
+pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,_response:&egui::Response)->Option<ingetrazo_core::snap::SnapResult>{
  if app.navigation_suspended(){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
  let Some(mode)=app.navigation.mode else{return None};
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
@@ -207,30 +207,22 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
   if !moved&&app.navigation.mode==Some(Mode::Position){if let Some(pos)=ui.input(|i|i.pointer.hover_pos()){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();snap=position_snap(app,rect,p,time);}}
   return snap;
  }
- let pointer=ui.input(|i|i.pointer.clone());
- let position=pointer.hover_pos().map(|p|DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64));
- if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
-  if let Some(p)=position {{
-   app.navigation.press=Some((p,DVec3::ZERO));app.navigation.last=Some(p);app.navigation.dragged=false;app.navigation.next_tick=None;
-  }}
- }
- if pointer.primary_down(){
-  if let (Some((anchor,_)),Some(p))=(app.navigation.press,position){
-   match mode{
-    Mode::Walk=>{
-     let time=ui.input(|i|i.time);
-     let modifiers=ui.input(|i|WalkModifiers{run:i.modifiers.ctrl,shift:i.modifiers.shift,through_walls:i.modifiers.alt});
-     if app.navigation.tick_due(time,0.033){
-      let scene=&app.scene;let navigation=&app.navigation;
-      walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));
-     }
-     app.navigation.request_tick(ui.ctx(),time);
-    },_=>unreachable!("other navigation modes handled above"),
-   }
+ // Walk preserves the source click anchor and most recent hover state. A
+ // release in this frame retires the stroke before any scheduled step.
+ ui.input(|i|for event in &i.events{
+  match event{
+   egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed,modifiers}=>{
+    if *pressed{if rect.contains(*pos){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64);app.navigation.press=Some((p,DVec3::ZERO));app.navigation.last=Some(p);app.navigation.walk_modifiers=*modifiers;app.navigation.next_tick=None;}}
+    else{app.navigation.cancel();}
+   },
+   egui::Event::PointerMoved(pos) if app.navigation.press.is_some()=>{app.navigation.last=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64));app.navigation.walk_modifiers=i.modifiers;},_=>{},
   }
- }
- if pointer.button_released(egui::PointerButton::Primary){
-  app.navigation.cancel();
+ });
+ if let(Some((anchor,_)),Some(p))=(app.navigation.press,app.navigation.last){
+  let time=ui.input(|i|i.time);let current=ui.input(|i|i.modifiers);let remembered=app.navigation.walk_modifiers;
+  let modifiers=WalkModifiers{run:current.ctrl||remembered.ctrl,shift:current.shift||remembered.shift,through_walls:current.alt||remembered.alt};
+  if app.navigation.tick_due(time,0.033){let scene=&app.scene;let navigation=&app.navigation;walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));}
+  app.navigation.request_tick(ui.ctx(),time);
  }
  if mode==Mode::Walk {if let Some((anchor,_))=app.navigation.press{
   let center=egui::pos2(rect.min.x+anchor.x as f32,rect.min.y+anchor.y as f32);
