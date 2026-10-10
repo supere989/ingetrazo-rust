@@ -15,6 +15,7 @@ pub struct VectorSegment {
     pub kind: LineKind,
 }
 fn project(p: DVec3, camera: &OrbitCamera) -> DVec3 {
+    let p = p - camera.eye();
     DVec3::new(
         p.dot(camera.right()),
         p.dot(camera.right().cross(camera.forward())),
@@ -121,7 +122,7 @@ fn occluded_interval(a: DVec3, b: DVec3, triangle: [DVec3; 3], epsilon: f64) -> 
     let mut lo: f64 = 0.;
     let mut hi: f64 = 1.;
     for i in 0..3 {
-        if !clip_linear(&mut lo, &mut hi, wa[i], wb[i]) {
+        if !clip_linear(&mut lo, &mut hi, wa[i] + 1e-12, wb[i] + 1e-12) {
             return None;
         }
     }
@@ -190,7 +191,156 @@ fn cap_triangles(
     }
     result
 }
+fn bary(q: DVec2, t: [DVec3; 3]) -> Option<[f64; 3]> {
+    let p = t.map(|p| p.truncate());
+    let cross = |a: DVec2, b: DVec2| a.x * b.y - a.y * b.x;
+    let area = cross(p[1] - p[0], p[2] - p[0]);
+    if area.abs() < 1e-18 {
+        return None;
+    }
+    Some([
+        cross(p[1] - q, p[2] - q) / area,
+        cross(p[2] - q, p[0] - q) / area,
+        cross(p[0] - q, p[1] - q) / area,
+    ])
+}
+fn surface_at(p: DVec2, depth: f64, triangles: &[[DVec3; 3]], tolerance: f64) -> bool {
+    triangles.iter().any(|&t| {
+        bary(p, t).is_some_and(|w| {
+            w.iter().all(|&v| v >= -1e-9)
+                && w[0] * t[0].z + w[1] * t[1].z + w[2] * t[2].z <= depth + tolerance
+        })
+    })
+}
+fn cap_boundary(caps: &[[DVec3; 3]], camera: &OrbitCamera) -> Vec<(DVec3, DVec3)> {
+    let mut mesh = Mesh::new();
+    for tri in caps {
+        let ids = tri.map(|p| mesh.add_vertex(p));
+        mesh.add_face(ids.to_vec(), vec![]);
+    }
+    mesh.edges
+        .iter()
+        .filter(|e| e.faces.len() == 1)
+        .map(|e| {
+            (
+                project(mesh.vertices[e.v0].position, camera),
+                project(mesh.vertices[e.v1].position, camera),
+            )
+        })
+        .collect()
+}
+fn cap_intervals(
+    a: DVec3,
+    b: DVec3,
+    boundary: &[(DVec3, DVec3)],
+    plane: Option<[DVec3; 3]>,
+    eps: f64,
+) -> Vec<(f64, f64)> {
+    let Some(triangle) = plane else {
+        return vec![];
+    };
+    let Some(wa) = bary(a.truncate(), triangle) else {
+        return vec![];
+    };
+    let Some(wb) = bary(b.truncate(), triangle) else {
+        return vec![];
+    };
+    let za = wa[0] * triangle[0].z + wa[1] * triangle[1].z + wa[2] * triangle[2].z;
+    let zb = wb[0] * triangle[0].z + wb[1] * triangle[1].z + wb[2] * triangle[2].z;
+    let mut lo = 0.;
+    let mut hi = 1.;
+    if !clip_linear(&mut lo, &mut hi, a.z - za - eps, b.z - zb - eps) {
+        return vec![];
+    }
+    let mut cuts = vec![lo, hi];
+    let d = (b - a).truncate();
+    let cross = |a: DVec2, b: DVec2| a.x * b.y - a.y * b.x;
+    for &(p, q) in boundary {
+        let e = (q - p).truncate();
+        let w = (p - a).truncate();
+        let den = cross(d, e);
+        if den.abs() < 1e-15 {
+            continue;
+        }
+        let t = cross(w, e) / den;
+        let u = cross(w, d) / den;
+        if (0. ..=1.).contains(&u) && t > lo && t < hi {
+            cuts.push(t);
+        }
+    }
+    cuts.sort_by(f64::total_cmp);
+    let mut result = vec![];
+    for pair in cuts.windows(2) {
+        let (t0, t1) = (pair[0], pair[1]);
+        if t1 - t0 < 1e-10 {
+            continue;
+        }
+        let p = a.lerp(b, (t0 + t1) / 2.);
+        let crossings = boundary
+            .iter()
+            .filter(|&&(a, b)| {
+                if (a.y > p.y) == (b.y > p.y) {
+                    return false;
+                }
+                let x = a.x + (b.x - a.x) * (p.y - a.y) / (b.y - a.y);
+                x > p.x
+            })
+            .count();
+        if crossings % 2 == 1 {
+            result.push((t0, t1));
+        }
+    }
+    result
+}
+fn complement(mut intervals: Vec<(f64, f64)>) -> Vec<(f64, f64)> {
+    intervals.sort_by(|a, b| a.0.total_cmp(&b.0));
+    let mut result = vec![];
+    let mut start: f64 = 0.;
+    for (lo, hi) in intervals {
+        if lo > start + 1e-10 {
+            result.push((start, lo));
+        }
+        start = start.max(hi);
+    }
+    if start < 1. - 1e-10 {
+        result.push((start, 1.));
+    }
+    result
+}
 /// Return only visible portions; split edges remain referenced to world coordinates.
+// Original hlr._merge_collinear joins only world-collinear, end-to-end ink
+// of the same class. Projected coincident lines at different depths stay distinct.
+fn merge_collinear(lines: Vec<VectorSegment>, tolerance: f64) -> Vec<VectorSegment> {
+    let mut used = vec![false; lines.len()];
+    let mut result = Vec::new();
+    for (i, line) in lines.iter().enumerate() {
+        if used[i] { continue; }
+        used[i] = true;
+        let direction = (line.b-line.a).normalize_or_zero();
+        let mut ends = [line.a, line.b];
+        for end in 0..2 {
+            let forward = if end == 0 { -direction } else { direction };
+            loop {
+                let mut next = None;
+                for (j, candidate) in lines.iter().enumerate() {
+                    if used[j] || candidate.kind != line.kind { continue; }
+                    for (start, other) in [(candidate.a,candidate.b),(candidate.b,candidate.a)] {
+                        let delta = other-start;
+                        if (start-ends[end]).abs().max_element() <= tolerance
+                            && forward.cross(delta.normalize_or_zero()).length_squared() <= 1e-14
+                            && forward.dot(delta) > 0. {
+                            next = Some((j,other)); break;
+                        }
+                    }
+                    if next.is_some() { break; }
+                }
+                match next { Some((j,p)) => { used[j]=true; ends[end]=p; }, None => break }
+            }
+        }
+        result.push(VectorSegment {a:ends[0],b:ends[1],kind:line.kind});
+    }
+    result
+}
 pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<VectorSegment> {
     let mut surfaces = crate::section_clip::contour_geometry(scene);
     let mut edges = gather_edges(scene, camera);
@@ -207,7 +357,7 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
         }
         crate::section_clip::mesh(&mut surfaces, plane);
     }
-    let mut triangles = surfaces
+    let triangles = surfaces
         .indices
         .chunks_exact(3)
         .map(|ids| {
@@ -222,7 +372,11 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
         })
         .map(|v| [v[0], v[1], v[2]])
         .collect::<Vec<_>>();
-    triangles.extend(caps.into_iter().map(|tri| tri.map(|p| project(p, camera))));
+    let boundary = cap_boundary(&caps, camera);
+    let cap_plane = caps
+        .iter()
+        .map(|tri| tri.map(|p| project(p, camera)))
+        .find(|&t| bary(DVec2::ZERO, t).is_some());
     let min = triangles
         .iter()
         .flatten()
@@ -238,6 +392,20 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
     } else {
         1e-9
     };
+    let extent = triangles.iter().flatten().fold(
+        (DVec2::splat(f64::INFINITY), DVec2::splat(f64::NEG_INFINITY)),
+        |(lo, hi), p| (lo.min(p.truncate()), hi.max(p.truncate())),
+    );
+    let delta = ((extent.1 - extent.0).max_element() * 1e-4).max(1e-9);
+    let ptol = epsilon + delta * 10.;
+    let depths = edges
+        .iter()
+        .flat_map(|e| [project(e.a, camera).z, project(e.b, camera).z])
+        .collect::<Vec<_>>();
+    let cap_eps = (depths.iter().copied().fold(f64::NEG_INFINITY, f64::max)
+        - depths.iter().copied().fold(f64::INFINITY, f64::min))
+        * 1e-4;
+    let cap_eps = cap_eps.max(epsilon);
     let mut result = vec![];
     for edge in edges {
         let a = project(edge.a, camera);
@@ -249,31 +417,47 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
             .iter()
             .filter_map(|&tri| occluded_interval(a, b, tri, epsilon))
             .collect::<Vec<_>>();
-        intervals.sort_by(|a, b| a.0.total_cmp(&b.0));
-        let mut start: f64 = 0.;
-        for (lo, hi) in intervals {
-            if lo > start + 1e-10 {
-                result.push(VectorSegment {
-                    a: edge.a.lerp(edge.b, start),
-                    b: edge.a.lerp(edge.b, lo),
-                    kind: edge.kind,
-                });
+        intervals.extend(cap_intervals(a, b, &boundary, cap_plane, cap_eps));
+        for (lo, hi) in complement(intervals) {
+            let mut kind = edge.kind;
+            if kind == LineKind::Edge {
+                let mid = a.lerp(b, (lo + hi) / 2.);
+                let direction = (b - a).truncate().normalize();
+                let normal = DVec2::new(-direction.y, direction.x) * delta;
+                if !surface_at(mid.truncate() + normal, mid.z, &triangles, ptol)
+                    || !surface_at(mid.truncate() - normal, mid.z, &triangles, ptol)
+                {
+                    kind = LineKind::Profile;
+                }
             }
-            start = start.max(hi);
-        }
-        if start < 1. - 1e-10 {
             result.push(VectorSegment {
-                a: edge.a.lerp(edge.b, start),
-                b: edge.b,
-                kind: edge.kind,
+                a: edge.a.lerp(edge.b, lo),
+                b: edge.a.lerp(edge.b, hi),
+                kind,
             });
         }
     }
-    result
+    merge_collinear(result, delta * 1e-2)
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn triangle_cut_runs_merge_but_depth_and_line_class_remain_distinct() {
+        let segment = |a, b, kind| VectorSegment { a, b, kind };
+        let lines = vec![
+            segment(DVec3::ZERO,DVec3::X,LineKind::Cut),
+            segment(DVec3::X*2.,DVec3::X,LineKind::Cut),
+            segment(DVec3::Z,DVec3::Z+DVec3::X,LineKind::Cut),
+            segment(DVec3::X*2.,DVec3::X*3.,LineKind::Edge),
+        ];
+        let result = merge_collinear(lines,1e-9);
+        assert_eq!(result.len(),3);
+        assert_eq!(result[0].a,DVec3::ZERO);
+        assert_eq!(result[0].b,DVec3::X*2.);
+        assert_eq!(result[1].a,DVec3::Z);
+        assert_eq!(result[2].kind,LineKind::Edge);
+    }
     #[test]
     fn actual_triangle_occlusion_splits_rear_line_and_preserves_coplanar_front() {
         let mut scene = Scene::new();
