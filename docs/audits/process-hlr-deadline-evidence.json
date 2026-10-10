@@ -1,0 +1,47 @@
+{
+  "source": "76266cec65d7c13bd896a111e79223c7ce628fd0",
+  "binary_sha256": "afc0c5504048022b8b3ed3f0e7aeafc0641956a6626c616e22bf2a051f630ddd",
+  "cases": [
+    {
+      "case": "startup-stall",
+      "hung_until_external_kill": false,
+      "elapsed_s": 0.052320064991363324,
+      "returncode": 101,
+      "stdout": "",
+      "stderr": "\nthread 'main' (864076) panicked at crates/ingetrazo-render/examples/process_hlr_independent.rs:9:170:\ncalled `Result::unwrap()` on an `Err` value: Custom { kind: TimedOut, error: \"HLR worker response deadline exceeded\" }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    },
+    {
+      "case": "task-stall",
+      "hung_until_external_kill": false,
+      "elapsed_s": 0.061714964991551824,
+      "returncode": 0,
+      "stdout": "Err(Custom { kind: TimedOut, error: \"HLR worker response deadline exceeded\" })\n",
+      "stderr": ""
+    },
+    {
+      "case": "crash",
+      "hung_until_external_kill": false,
+      "elapsed_s": 0.009311133995652199,
+      "returncode": 0,
+      "stdout": "Err(Custom { kind: InvalidData, error: \"HLR worker exited\" })\n",
+      "stderr": ""
+    },
+    {
+      "case": "oversize-handshake",
+      "hung_until_external_kill": false,
+      "elapsed_s": 0.006753976005711593,
+      "returncode": 101,
+      "stdout": "",
+      "stderr": "\nthread 'main' (864110) panicked at crates/ingetrazo-render/examples/process_hlr_independent.rs:9:170:\ncalled `Result::unwrap()` on an `Err` value: Custom { kind: InvalidData, error: \"oversized or incomplete worker descriptor\" }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    },
+    {
+      "case": "corrupt-result",
+      "hung_until_external_kill": false,
+      "elapsed_s": 0.005841721998876892,
+      "returncode": 0,
+      "stdout": "Err(Custom { kind: InvalidData, error: \"result exceeds shared output\" })\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true
+}
