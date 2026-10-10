@@ -11,7 +11,8 @@ enum Object {
     EdgeUse(u64, bool),
     Loop(Vec<(u64, bool)>),
     Face(Face),
-    Material(String, [f64; 4]),
+    Material(String, [f64; 4], Option<TextureRecord>, bool),
+    Dib(Arc<[u8]>),
     Layer(String, bool),
     Attributes,
     Premodel,
@@ -238,6 +239,66 @@ impl<'a> Archive<'a> {
             layer: (layer != 0).then_some(layer as u64),
         })
     }
+    fn texture_block(&mut self) -> Result<([f64; 4], TextureRecord, bool), SkpError> {
+        self.r.raw(if self.ver >= 17 { 2 } else { 1 })?;
+        let (dib_id, object) = self
+            .object(Some("CDib"))?
+            .ok_or_else(|| SkpError::Invalid("Null legacy texture DIB".into()))?;
+        let Object::Dib(data) = object.as_ref() else {
+            return Err(SkpError::Invalid(
+                "Legacy texture DIB class mismatch".into(),
+            ));
+        };
+        let marker = self
+            .r
+            .peek(28)
+            .windows(3)
+            .position(|b| b == [255, 254, 255]);
+        match marker {
+            Some(20) => {
+                self.r.u32()?;
+            }
+            Some(16) => {}
+            _ => return Err(SkpError::Invalid("Legacy texture size alignment".into())),
+        }
+        let width = self.r.f64()?;
+        let height = self.r.f64()?;
+        let filename = self.r.utf16()?;
+        self.charge(filename.capacity())?;
+        let avg: [u8; 9] = self.r.raw(9)?.try_into().unwrap();
+        self.r.utf16()?;
+        let flags: [u8; 8] = self.r.raw(8)?.try_into().unwrap();
+        let transparency = self.r.f64()?;
+        let opacity = if self.r.u8()? != 0 {
+            (1. - transparency).clamp(0., 1.)
+        } else {
+            1.
+        };
+        self.charge(data.len())?; // Neutral material ownership is distinct from archive DIB ownership.
+        let texture = TextureRecord {
+            archive_name: format!(
+                "legacy-dib-{dib_id}.{}",
+                if data.starts_with(b"\x89PNG") {
+                    "png"
+                } else {
+                    "jpg"
+                }
+            ),
+            bytes: data.to_vec(),
+            width,
+            height,
+        };
+        Ok((
+            [
+                avg[0] as f64 / 255.,
+                avg[1] as f64 / 255.,
+                avg[2] as f64 / 255.,
+                opacity,
+            ],
+            texture,
+            flags[4] != 0 || avg[3] == 255,
+        ))
+    }
     fn vertex_ref(&mut self) -> Result<u64, SkpError> {
         let (id, value) = self
             .object(Some("CVertex"))?
@@ -250,6 +311,15 @@ impl<'a> Archive<'a> {
     fn new_object(&mut self, name: &str) -> Result<Option<(u32, Arc<Object>)>, SkpError> {
         let slot = self.allocate(Slot::Object(Arc::new(Object::Premodel)))?;
         let value = match name {
+            "CDib" => {
+                self.r.u32()?; // Source subtype retained only for record framing; codec is from payload bytes.
+                let n = self.r.u32()? as usize;
+                if n > 16 * 1024 * 1024 {
+                    return Err(SkpError::Invalid("Legacy DIB byte admission".into()));
+                }
+                self.charge(n)?;
+                Object::Dib(Arc::from(self.r.raw(n)?))
+            }
             "CVertex" => {
                 self.preamble()?;
                 Object::Vertex([self.r.f64()?, self.r.f64()?, self.r.f64()?])
@@ -356,9 +426,10 @@ impl<'a> Archive<'a> {
                 let name = self.r.utf16()?;
                 self.charge(name.capacity())?;
                 if self.r.u16()? != 0 {
-                    return Err(SkpError::Unsupported(
-                        "legacy textured material/DIB reader".into(),
-                    ));
+                    let (rgba, texture, colorized) = self.texture_block()?;
+                    let value = Arc::new(Object::Material(name, rgba, Some(texture), colorized));
+                    self.slots.insert(slot, Slot::Object(Arc::clone(&value)));
+                    return Ok(Some((slot, value)));
                 }
                 let b = self.r.raw(4)?.to_vec();
                 self.r.utf16()?;
@@ -377,6 +448,8 @@ impl<'a> Archive<'a> {
                             1.
                         },
                     ],
+                    None,
+                    false,
                 )
             }
             "CLayer" => {
@@ -389,13 +462,13 @@ impl<'a> Archive<'a> {
                 }
                 self.r.utf16()?;
                 if self.r.u16()? & 255 != 0 {
-                    return Err(SkpError::Unsupported(
-                        "legacy textured layer/DIB reader".into(),
-                    ));
+                    self.texture_block()?;
+                    self.r.raw(4)?;
+                } else {
+                    self.r.raw(4)?;
+                    self.r.utf16()?;
+                    self.r.raw(21)?;
                 }
-                self.r.raw(4)?;
-                self.r.utf16()?;
-                self.r.raw(21)?;
                 Object::Layer(name, flags.first().is_some_and(|b| *b != 0))
             }
             "CAttributeContainer" => {
@@ -619,14 +692,19 @@ fn model(
         ..Payload::default()
     };
     for (id, material) in materials {
-        if let Object::Material(name, color) = material.as_ref() {
+        if let Object::Material(name, color, texture, colorized) = material.as_ref() {
+            if *colorized {
+                return Err(SkpError::Unsupported(
+                    "legacy source colorized texture requires tint/greedy-flag guard".into(),
+                ));
+            }
             if p.material_names.insert(id as u64, name.clone()).is_some()
                 || p.materials
                     .insert(
                         name.clone(),
                         MaterialRecord {
                             color: *color,
-                            texture: None,
+                            texture: texture.clone(),
                         },
                     )
                     .is_some()
@@ -718,6 +796,29 @@ mod tests {
         assert_eq!(ar.decoded_bytes, before);
         ar.decoded_bytes = 256 * 1024 * 1024 - 1;
         assert!(matches!(ar.charge(2), Err(SkpError::Invalid(s)) if s.contains("aggregate")));
+    }
+    #[test]
+    fn dib_records_keep_shared_payload_and_admit_before_copy() {
+        let mut bytes = vec![255, 255, 0, 0, 4, 0];
+        bytes.extend_from_slice(b"CDib");
+        bytes.extend_from_slice(&0_u32.to_le_bytes());
+        bytes.extend_from_slice(&4_u32.to_le_bytes());
+        bytes.extend_from_slice(b"data");
+        bytes.extend_from_slice(&2_u16.to_le_bytes());
+        let mut ar = Archive::new(&bytes, 17, 0, 1);
+        let a = ar.object(None).unwrap().unwrap().1;
+        let b = ar.object(None).unwrap().unwrap().1;
+        assert!(Arc::ptr_eq(&a, &b));
+        let Object::Dib(payload) = a.as_ref() else {
+            panic!("DIB expected")
+        };
+        assert_eq!(payload.as_ref(), b"data");
+        let mut excessive = bytes.clone();
+        excessive[14..18].copy_from_slice(&(16_u32 * 1024 * 1024 + 1).to_le_bytes());
+        let mut ar = Archive::new(&excessive, 17, 0, 1);
+        assert!(
+            matches!(ar.object(None), Err(SkpError::Invalid(s)) if s.contains("DIB byte admission"))
+        );
     }
     #[test]
     fn unresolved_premodel_root_refuses_without_panicking() {
