@@ -3,6 +3,7 @@
 import ctypes as C,ctypes.util,json,os,subprocess,tempfile,time,select,struct,zlib
 from pathlib import Path
 from acceptance_context import context
+from png_capture import valid_png
 def wait(fn,seconds=20):
  end=time.monotonic()+seconds
  while time.monotonic()<end:
@@ -47,7 +48,7 @@ def main():
    def click(point):
     move(point);event(4,1,point,4);event(5,1,point,8)
    def capture(name):
-    (directory/"capture.txt").write_text(name);wait(lambda:(directory/(name+".png")).is_file())
+    (directory/"capture.txt").write_text(name);wait(lambda:valid_png(directory/(name+".png")))
    x.XKeysymToKeycode.argtypes=[C.c_void_p,C.c_ulong];x.XKeysymToKeycode.restype=C.c_uint
    def key(symbol):
     code=x.XKeysymToKeycode(d,symbol);event(2,code,None,1);event(3,code,None,2)

@@ -11,3 +11,9 @@ docs/audits/offset-render/state.json
 docs/audits/offset-render/capture.txt
 docs/audits/offset-render/runtime.log
 docs/audits/offset-render/committed.igz
+
+# Gesture IPC is transient; PNG, IGZ and report evidence remain tracked.
+docs/audits/drawing-reference-render/capture.txt
+docs/audits/drawing-reference-render/state.json
+docs/audits/shift-inference-render/capture.txt
+docs/audits/shift-inference-render/state.json

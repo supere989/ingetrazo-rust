@@ -1,6 +1,7 @@
 {
+  "capture_validation": "Complete PNG signature/chunks/CRC/IEND and decompressed RGBA dimensions; empty/header-only/truncated controls rejected",
   "provenance": {
-    "rust_commit": "1f55a6fcd5f15b324b478377f49082375f769ff4",
+    "rust_commit": "7997f5b68d3b0a9f07f97c6ac3bced9d2a0c3e08",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
