@@ -9,8 +9,11 @@ use serde::{Deserialize, Serialize};
 use crate::camera::OrbitCamera;
 use crate::layers::Layer;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SavedView {
+    /// Original commands retain view objects by identity; never written to IGZ.
+    #[serde(skip, default = "uuid::Uuid::new_v4")]
+    pub history_id: uuid::Uuid,
     #[serde(default)]
     pub native_document: serde_json::Value,
     #[serde(default)]
@@ -50,6 +53,7 @@ fn default_true() -> bool { true }
 impl SavedView {
     pub fn new(name: impl Into<String>) -> Self {
         Self {
+            history_id:uuid::Uuid::new_v4(),
             two_point:false,hidden_objects:None,style:None,section:None,georef:None,shadows:None,hidden_shown:None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
@@ -72,6 +76,7 @@ impl SavedView {
             .collect();
 
         Self {
+            history_id:uuid::Uuid::new_v4(),
             two_point:camera.two_point,hidden_objects:None,style:None,section:None,georef:None,shadows:None,hidden_shown:None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
@@ -126,3 +131,21 @@ impl SavedView {
         }
     }
 }
+
+impl PartialEq for SavedView {fn eq(&self,other:&Self)->bool {self.native_document==other.native_document && self.native_baseline==other.native_baseline && self.two_point==other.two_point && self.hidden_objects==other.hidden_objects && self.style==other.style && self.section==other.section && self.georef==other.georef && self.shadows==other.shadows && self.hidden_shown==other.hidden_shown && self.name==other.name && self.target==other.target && self.distance==other.distance && self.yaw==other.yaw && self.pitch==other.pitch && self.fov_deg==other.fov_deg && self.perspective==other.perspective && self.parallel==other.parallel && self.hidden_layers==other.hidden_layers}}
+
+/// A single model command's view ownership, distinct from ScenesPanel actions.
+#[derive(Debug,Clone,PartialEq)]
+pub struct ViewMembershipDelta {pub added:Vec<(usize,SavedView)>,pub removed:Vec<(usize,SavedView)>}
+impl ViewMembershipDelta {
+ pub fn between(before:&[SavedView],after:&[SavedView])->Self{let before_ids=before.iter().map(|v|v.history_id).collect::<std::collections::HashSet<_>>();let after_ids=after.iter().map(|v|v.history_id).collect::<std::collections::HashSet<_>>();Self{added:after.iter().enumerate().filter(|(_,v)|!before_ids.contains(&v.history_id)).map(|(i,v)|(i,v.clone())).collect(),removed:before.iter().enumerate().filter(|(_,v)|!after_ids.contains(&v.history_id)).map(|(i,v)|(i,v.clone())).collect()}}
+ pub fn inverse(&self)->Self{Self{added:self.removed.clone(),removed:self.added.clone()}}
+ pub fn restore(&self,current:&[SavedView])->Vec<SavedView>{let added=self.added.iter().map(|(_,v)|v.history_id).collect::<std::collections::HashSet<_>>();let mut result=current.iter().filter(|v|!added.contains(&v.history_id)).cloned().collect::<Vec<_>>();let mut live=result.iter().map(|v|v.history_id).collect::<std::collections::HashSet<_>>();for (_,v) in &self.removed {if live.insert(v.history_id){result.push(v.clone());}}result}
+ pub fn refresh(&mut self,view:&SavedView){for (_,owned) in self.added.iter_mut().chain(&mut self.removed){if owned.history_id==view.history_id{*owned=view.clone();}}}
+}
+
+/// Sealed-empty and unsealed history are semantically equal Scene snapshots;
+/// the seal bit only prevents later non-command edits being attributed to a command.
+#[derive(Debug,Clone,Default)]
+pub struct ViewHistory(pub Option<ViewMembershipDelta>);
+impl PartialEq for ViewHistory {fn eq(&self,other:&Self)->bool{match(&self.0,&other.0){(None,Some(d))|(Some(d),None)=>d.added.is_empty()&&d.removed.is_empty(),(a,b)=>a==b}}}

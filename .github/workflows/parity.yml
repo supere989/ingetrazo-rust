@@ -233,6 +233,12 @@ jobs:
         run: python scripts/check-python-pieces.py
       - name: Original runtime nested world dimension measurement
         run: python scripts/check-python-dimension-world.py
+      - name: Original saved-view command membership and object lifetime
+        run: |
+          mkdir -p docs/audits/savedview-membership-ci
+          python scripts/probe-python-presentation-history.py docs/audits/savedview-membership-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example presentation_history_fixture -- docs/audits/savedview-membership-ci/native
+          python scripts/check-saved-view-membership.py docs/audits/savedview-membership-ci/original.json docs/audits/savedview-membership-ci/native/native.json docs/audits/presentation-history/native-baseline.json
       - name: Original global entities survive nested edit history
         run: |
           mkdir -p docs/audits/context-globals-ci
@@ -331,6 +337,7 @@ jobs:
             docs/audits/grid-source-ci/
             docs/audits/grid-default-ci/
             docs/audits/grid-heldout-ci/
+            docs/audits/savedview-membership-ci/
             docs/audits/context-globals-ci/
             docs/audits/context-textures-ci/
             docs/audits/shareback-annotations-ci/

@@ -40,6 +40,7 @@ impl IngeTrazoApp {
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene);
         if committed {
+            self.seal_view_history_before(&before);
             self.bump_model_revision();
             if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
             self.active_tool.note_history_revision(self.model_revision,true);

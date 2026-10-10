@@ -1,0 +1,305 @@
+{
+  "cases": {
+    "folded": {
+      "entry": {
+        "path": [
+          {
+            "name": "Route",
+            "points": [
+              [
+                2.0,
+                3.0,
+                4.0
+              ],
+              [
+                5.0,
+                6.0,
+                7.0
+              ]
+            ]
+          }
+        ],
+        "sheets": [
+          "Sheet"
+        ],
+        "terrain": true,
+        "views": []
+      },
+      "history_before_finish": 5,
+      "states": [
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ]
+        },
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ]
+        },
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ]
+        }
+      ]
+    },
+    "ordinary": {
+      "entry": {
+        "path": [
+          {
+            "name": "Route",
+            "points": [
+              [
+                2.0,
+                3.0,
+                4.0
+              ],
+              [
+                5.0,
+                6.0,
+                7.0
+              ]
+            ]
+          }
+        ],
+        "sheets": [
+          "Sheet"
+        ],
+        "terrain": true,
+        "views": []
+      },
+      "history_before_finish": 4,
+      "states": [
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ]
+        },
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": true,
+          "views": [
+            [
+              "Scene 1",
+              20.0
+            ]
+          ]
+        },
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": true,
+          "views": []
+        },
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": true,
+          "views": [
+            [
+              "Scene 1",
+              20.0
+            ]
+          ]
+        },
+        {
+          "path": [
+            {
+              "closed": true,
+              "name": "Route",
+              "points": [
+                [
+                  2.0,
+                  3.0,
+                  4.0
+                ],
+                [
+                  8.0,
+                  9.0,
+                  10.0
+                ]
+              ],
+              "surface": "flat"
+            }
+          ],
+          "sheets": [
+            "Edited sheet"
+          ],
+          "terrain": false,
+          "views": [
+            [
+              "Scene 1",
+              33.0
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

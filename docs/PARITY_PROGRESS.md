@@ -4,6 +4,8 @@ Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_An
 
 ## Outcome and evidence
 
+Reviewed saved-view command ownership matches fresh source panel/history state and four import-object lifetime states, preserving Redo after non-command panel edits. **537 workspace tests pass, two ignored**. Ordinary terrain visibility and full presentation history remain OPEN. [Independent saved-view review](audits/savedview-history-root-review/README.md).
+
 Reviewed global entity publication preserves guides, text and geodata through20 exact original/native history states and four context entries. Workspace remains **535 passed, two ignored**; broader global command families remain OPEN. [Independent global review](audits/context-global-root-review/README.md).
 
 Reviewed context texture publication preserves referenced PNG bytes, UVW and opaque face attributes through six exact original/native direct/nested Finish/Undo/Redo states; the historical missing-image negative is rejected. Workspace remains **535 passed, two ignored**. [Independent texture review](audits/context-texture-root-review/README.md). Full material/library, desktop clipboard and unreferenced archive packaging remain OPEN.
