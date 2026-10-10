@@ -37,7 +37,11 @@ impl IngeTrazoApp {
                 };
                 plane.flip();
             }
-            SectionAction::Delete(id) => candidate.section_planes.retain(|plane| plane.id != id),
+            SectionAction::Delete(id) => {
+                let Some(removed)=candidate.section_planes.iter().position(|plane|plane.id==id)else{return;};candidate.section_planes.remove(removed);
+                fn remap(item:ingetrazo_core::scene::SelectionItem,index:usize)->Option<ingetrazo_core::scene::SelectionItem>{use ingetrazo_core::scene::SelectionItem;match item{SelectionItem::SectionPlane(id)if id==index=>None,SelectionItem::SectionPlane(id)if id>index=>Some(SelectionItem::SectionPlane(id-1)),item=>Some(item)}}
+                candidate.selection=std::mem::take(&mut candidate.selection).into_iter().filter_map(|item|remap(item,removed)).collect();candidate.selection_order=std::mem::take(&mut candidate.selection_order).into_iter().filter_map(|item|remap(item,removed)).collect();
+            },
             SectionAction::Rename(id, name, symbol) => {
                 let Some(plane) = candidate.section_planes.iter_mut().find(|p| p.id == id) else {
                     return;
@@ -255,3 +259,5 @@ mod prompt_tests {
 
 impl IngeTrazoApp{pub(crate) fn handle_section_prompt_close(&mut self,ctx:&egui::Context){if self.section_name_prompt.is_some()&&ctx.input(|input|input.viewport().close_requested()){self.finish_section_name_prompt(false);}}}
 #[cfg(test)]mod native_close_tests{use super::*;use glam::DVec3;use ingetrazo_tools::base::{ToolType,ToolContext};use ingetrazo_core::math::Ray;#[test]fn native_close_cancels_naming_then_enters_unsaved_guard(){let mut app=IngeTrazoApp::new();app.set_tool(ToolType::SectionPlane);app.dispatch_tool_click(&ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z)));assert!(app.section_name_prompt.is_some());let ctx=egui::Context::default();let mut input=egui::RawInput::default();input.viewports.get_mut(&egui::ViewportId::ROOT).unwrap().events.push(egui::ViewportEvent::Close);let output=ctx.run(input,|ctx|{app.handle_section_prompt_close(ctx);app.document_session_ui(ctx);});assert!(app.section_name_prompt.is_none());assert!(app.document_session.confirm_unsaved);assert!(!app.document_session.close_allowed);assert!(output.viewport_output[&egui::ViewportId::ROOT].commands.iter().any(|cmd|matches!(cmd,egui::ViewportCommand::CancelClose)));assert_eq!(app.scene.section_planes.len(),1);}}
+
+#[cfg(test)]mod selection_identity_tests{use super::*;use ingetrazo_core::{scene::SelectionItem,section::SectionPlane};use glam::DVec3;#[test]fn deleting_earlier_plane_keeps_selection_on_same_persisted_identity(){let mut app=IngeTrazoApp::new();for symbol in["A","B","C"]{app.scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,symbol,symbol));}let remove=app.scene.section_planes[0].id;let selected=app.scene.section_planes[2].id;app.scene.select(SelectionItem::SectionPlane(2));let before=app.scene.clone();app.apply_section_action(SectionAction::Delete(remove));assert!(app.scene.selection.contains(&SelectionItem::SectionPlane(1)));assert_eq!(app.scene.section_planes[1].id,selected);assert_eq!(app.scene.selection_order,vec![SelectionItem::SectionPlane(1)]);app.undo();assert_eq!(app.scene,before);}}
