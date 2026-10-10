@@ -42,8 +42,8 @@ with tempfile.TemporaryDirectory() as runtime:
   initial_windows={children[i] for i in range(n.value)};window=max(initial_windows,key=area)
   x.XWarpPointer.argtypes=[C.c_void_p,C.c_ulong,C.c_ulong,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_int,C.c_int];x.XFlush.argtypes=[C.c_void_p];x.XSetInputFocus.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_ulong];x.XSetInputFocus(d,window,1,0)
   xt=C.CDLL(ctypes.util.find_library("Xtst"));xt.XTestFakeButtonEvent.argtypes=[C.c_void_p,C.c_uint,C.c_int,C.c_ulong]
-  def click(point):
-   x.XWarpPointer(d,0,window,0,0,0,0,round(point[0]),round(point[1]));x.XFlush(d);time.sleep(.1)
+  def click(point,target_window=None):
+   x.XWarpPointer(d,0,target_window or window,0,0,0,0,round(point[0]),round(point[1]));x.XFlush(d);time.sleep(.1)
    for down in (1,0):assert xt.XTestFakeButtonEvent(d,1,down,0);x.XFlush(d);time.sleep(.15)
   def capture(name):subprocess.run(["import","-display",display,"-window",str(window),str(out/(name+".png"))],check=True)
   x.XKeysymToKeycode.argtypes=[C.c_void_p,C.c_ulong];x.XKeysymToKeycode.restype=C.c_uint
@@ -68,7 +68,9 @@ with tempfile.TemporaryDirectory() as runtime:
      cs=C.POINTER(C.c_ulong)();nn=C.c_uint();x.XQueryTree(d,root,C.byref(r),C.byref(p),C.byref(cs),C.byref(nn));return next((cs[i] for i in range(nn.value) if cs[i] not in initial_windows and cs[i]!=dialog_window and area(cs[i])>10000 and mapped_confirmation(cs[i],dialog_window)),None)
     confirm=wait(overwrite_confirmation)
     subprocess.run(['import','-display',display,'-window',str(confirm),str(out/(label+'-overwrite-dialog.png'))],check=True)
-    x.XSetInputFocus(d,confirm,1,0);key(ord('r'),0xffe9)
+    attrs=Attributes();assert x.XGetWindowAttributes(d,confirm,C.byref(attrs))
+    x.XSetInputFocus(d,confirm,1,0)
+    click((attrs.width*0.75,attrs.height-24),confirm)
   current_path=out.resolve()/"current.pdf";all_path=out.resolve()/"all.pdf"
   if unsupported:
    current_path.write_bytes(b"existing destination current");all_path.write_bytes(b"existing destination all")

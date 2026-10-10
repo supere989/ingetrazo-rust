@@ -6,7 +6,10 @@ use objc2_metal::{
 };
 use std::{
     mem::ManuallyDrop,
-    sync::{Arc, Mutex},
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 // Apple's command-line Metal device discovery requires CoreGraphics linkage.
 #[link(name = "CoreGraphics", kind = "framework")]
@@ -27,6 +30,7 @@ pub struct NativeMetal {
     pub queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
     pub info: DeviceInfo,
     pub budget: Arc<Mutex<MemoryBudget>>,
+    pub(crate) poisoned: Arc<AtomicBool>,
 }
 impl NativeMetal {
     pub fn new() -> Result<Self, String> {
@@ -52,12 +56,16 @@ impl NativeMetal {
             queue,
             info,
             budget: Arc::new(Mutex::new(MemoryBudget::new([(recommended, limit)]))),
+            poisoned: Arc::new(AtomicBool::new(false)),
         })
     }
     /// Shared storage is directly CPU accessible and requires no staging copy
     /// on unified hardware. Private GPU storage is explicitly requested by the
     /// caller for discrete devices or resources with no CPU access requirement.
     pub fn buffer(&self, bytes: usize, shared: bool) -> Result<Buffer, String> {
+        if self.poisoned.load(Ordering::Acquire) {
+            return Err("Metal submission completion unknown; device admission poisoned".into());
+        }
         if bytes == 0 || bytes > self.info.max_buffer_length {
             return Err("Metal buffer extent exceeds device limits".into());
         }
@@ -100,11 +108,10 @@ impl NativeMetal {
         })
     }
 }
-/// A buffer must remain owned until its last actual GPU completion. Command
-/// submission and fence-retired ownership are a subsequent required stage;
-/// this foundation deliberately exposes no submit-with-untracked-owners API.
+/// Exclusive resource owner. Submission consumes buffers into a retained owner;
+/// callers cannot write or free them while GPU completion is unknown.
 pub struct Buffer {
-    raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLBuffer>>>,
+    pub(crate) raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLBuffer>>>,
     budget: Arc<Mutex<MemoryBudget>>,
     handle: u64,
     shared: bool,
@@ -123,7 +130,7 @@ impl Buffer {
         if data.len() > self.length() {
             return Err("Metal write exceeds buffer extent".into());
         }
-        // Exclusive owner access; this foundation cannot submit the buffer.
+        // Exclusive owner access; submission retains buffers inaccessible to callers.
         unsafe {
             std::ptr::copy_nonoverlapping(
                 data.as_ptr(),
@@ -136,7 +143,7 @@ impl Buffer {
 }
 impl Drop for Buffer {
     fn drop(&mut self) {
-        // No submission API can reference this owner yet; release its actual
+        // Submitted buffers are only dropped after verified completion; release actual
         // Metal allocation before removing the corresponding budget charge.
         unsafe {
             ManuallyDrop::drop(&mut self.raw);
