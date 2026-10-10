@@ -17,6 +17,14 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  {let mut ledger=budget.ledger.lock().unwrap();ledger.total_limit=Some(128*1024*1024);}
  if args.iter().any(|a|a=="--timeout-control") {let fence=unsafe {context.device.create_fence(&vk::FenceCreateInfo::default(),None)}?;context.wait_transfer(fence)?;return Err("Unsignaled timeout control unexpectedly completed".into());}
  let mut resources=Resources::new(&context,budget.clone());
+ let no_readback=resources.upload(&context,&[0u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true)?;
+ let charged=budget.ledger.lock().unwrap().total_committed();
+ assert!(resources.readback_buffer(&context,no_readback).unwrap_err().contains("not created for readback"));
+ assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged,"Rejected readback allocated staging");
+ resources.retire(no_readback)?;
+ let completed=unsafe {context.device.create_fence(&vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED),None)}?;
+ assert_eq!(resources.collect(completed,0)?,1);unsafe {context.device.destroy_fence(completed,None)};
+ eprintln!("PASS ordinary GPU buffer rejects undeclared readback before staging allocation");
  let expected=(0..17*1024*1024).map(|i|(i%251)as u8).collect::<Vec<_>>();let started=Instant::now();
  let buffer=resources.upload(&context,&expected,vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC,true)?;
  let upload_ms=started.elapsed().as_secs_f64()*1000.;let started=Instant::now();let copied=resources.readback_buffer(&context,buffer)?;
