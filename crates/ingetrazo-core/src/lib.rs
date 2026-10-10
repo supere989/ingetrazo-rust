@@ -73,3 +73,5 @@ pub mod visible_ray_index;
 
 pub mod ai;
 pub mod ai_protocol;
+
+pub mod ai_bridge;
