@@ -18,6 +18,7 @@ from png_capture import valid_png
 def main():
  original=os.environ.get("INGETRAZO_CENTER_ORIGINAL")=="1"
  if not original:subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","center_tracking_native_fixture"],check=True)
+ native_binary=Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/center_tracking_native_fixture"
  mode=os.environ.get("INGETRAZO_CENTER_MODE","curve")
  directory=Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode);directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
@@ -28,7 +29,7 @@ def main():
   try:
    assert select.select([server.stdout],[],[],10)[0];display=server.stdout.readline().strip();assert display.isdigit()
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["VK_DRIVER_FILES"]="/usr/share/vulkan/icd.d/lvp_icd.json";env["INGETRAZO_VULKAN_DEVICE"]="llvmpipe";env.pop("WAYLAND_DISPLAY",None)
-   log=open(directory/"runtime.log","w");command=[sys.executable,"scripts/original_center_ui_fixture.py",str(directory.resolve())] if original else ["target/debug/examples/center_tracking_native_fixture",str(directory.resolve())];app=subprocess.Popen(command,env=env,stdout=log,stderr=log)
+   log=open(directory/"runtime.log","w");command=[sys.executable,"scripts/original_center_ui_fixture.py",str(directory.resolve())] if original else [str(native_binary.resolve()),str(directory.resolve())];app=subprocess.Popen(command,env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
    initial=wait(lambda:state() if state()["edges"]>0 else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
@@ -64,6 +65,7 @@ def main():
    assert not early["memory"],early
    acquired=wait(lambda:state() if state()["memory"] else None)
    elapsed=time.monotonic()-began
+   assert elapsed>=.2,"Center encouraged before the original 250ms dwell window"
    expected=initial["center"]
    if mode in ("curve","tiny"):
     assert close(acquired["memory"][-1],expected),acquired
@@ -106,10 +108,15 @@ def main():
     deleted=wait(lambda:state() if state()["edges"]==0 and state()["kind"]!="Center" else None)
     assert deleted["undo"]==2;capture("deleted-center")
     report={"passed":True,"provenance":context(),"early":early,"acquired":acquired,"centered":centered,"anchor":anchor,"moved":moved,"moved_hint":moved_hint,"deleted":deleted,"requested_move_delta":[1,0,0],"actual_move_delta":actual_delta,"move_coordinate_parity":move_parity,"approach_green_pixels":approach_green,"approach_hint_visual_parity_open":True,"elapsed_wall_seconds":elapsed,"scope":"Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending."}
-   report["executable_sha256"]=hashlib.sha256(Path("scripts/original_center_ui_fixture.py" if original else "target/debug/examples/center_tracking_native_fixture").read_bytes()).hexdigest()
+   report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()
    if original:report["scope"]="Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; tiny hint quiet or malformed center rejected; no native Vulkan or movement claim."
    Path("docs/audits/center-tracking-"+("original-" if original else "native-")+mode+"-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print("Actual center gesture PASS",mode,"original" if original else "native")
   finally:
-   if app:app.terminate();app.wait(timeout=5)
-   server.terminate();server.communicate(timeout=5)
+   if app:
+    app.terminate()
+    try:app.wait(timeout=5)
+    except subprocess.TimeoutExpired:app.kill();app.wait(timeout=5)
+   server.terminate()
+   try:server.communicate(timeout=5)
+   except subprocess.TimeoutExpired:server.kill();server.communicate(timeout=5)
 if __name__=="__main__":main()
