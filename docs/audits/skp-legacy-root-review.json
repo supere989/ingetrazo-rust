@@ -1,0 +1,17 @@
+{
+  "source": "b432700ba14dafbe2f9ee2358224b82484051f3d",
+  "evidence": "1c3f840e99fe95855ab7f0f72b0c8ceb148e9763",
+  "independent_comparison": {
+    "six_retained_signature_pairs_equal": true,
+    "scope": "Authored primitive controls; signature omits some document fields and does not establish full legacy model parity."
+  },
+  "integration": "HELD",
+  "required_corrections": [
+    "Object reference lookup clones entire Face/Loop values, and roots retain those clones. Replace with stable IDs or shared immutable owners and bound aggregate decoded allocations to prevent reference amplification.",
+    "Extended drawbase layer object references are consumed then discarded to zero; compare actual source behavior and preserve identity or refuse explicitly."
+  ],
+  "remaining": [
+    "Actual nonempty legacy models across supported eras",
+    "DIB textures, definitions, annotations and full document/rendered comparisons"
+  ]
+}
