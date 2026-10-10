@@ -483,7 +483,8 @@ fn view_model(v: &ingetrazo_core::saved_views::SavedView) -> serde_json::Value {
     serde_json::json!({
         "name":v.name, "target":v.target, "distance":v.distance, "yaw":v.yaw,
         "pitch":v.pitch, "fov":v.fov_deg, "parallel":!v.perspective || v.parallel,
-        "hidden_layers":v.hidden_layers
+        "hidden_layers":v.hidden_layers,"two_point":v.two_point,"hidden_objects":v.hidden_objects,
+        "style":v.style,"section":v.section,"georef":v.georef,"shadows":v.shadows,"hidden_shown":v.hidden_shown
     })
 }
 

@@ -15,6 +15,13 @@ pub struct SavedView {
     pub native_document: serde_json::Value,
     #[serde(default)]
     pub native_baseline: serde_json::Value,
+    #[serde(default)] pub two_point: bool,
+    #[serde(default)] pub hidden_objects: Option<Vec<String>>,
+    #[serde(default)] pub style: Option<serde_json::Value>,
+    #[serde(default)] pub section: Option<serde_json::Value>,
+    #[serde(default)] pub georef: Option<serde_json::Value>,
+    #[serde(default)] pub shadows: Option<serde_json::Value>,
+    #[serde(default)] pub hidden_shown: Option<serde_json::Value>,
     pub name: String,
     #[serde(default)]
     pub target: DVec3,
@@ -43,6 +50,7 @@ fn default_true() -> bool { true }
 impl SavedView {
     pub fn new(name: impl Into<String>) -> Self {
         Self {
+            two_point:false,hidden_objects:None,style:None,section:None,georef:None,shadows:None,hidden_shown:None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             name: name.into(),
@@ -64,6 +72,7 @@ impl SavedView {
             .collect();
 
         Self {
+            two_point:camera.two_point,hidden_objects:None,style:None,section:None,georef:None,shadows:None,hidden_shown:None,
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             name: name.into(),
@@ -78,7 +87,33 @@ impl SavedView {
         }
     }
 
+    /// Preserve raw identity/extension metadata when refreshing a view.
+    pub fn capture_scene(name:impl Into<String>,scene:&crate::scene::Scene,camera:&OrbitCamera)->Self {
+        let mut view=Self::capture(name,camera,&scene.layers);view.two_point=camera.two_point;
+        fn hidden(groups:&[crate::groups::Group],ids:&mut Vec<String>){for group in groups{if group.hidden{ids.push(group.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||group.id.to_string()));}hidden(&group.children,ids);}}
+        let mut ids=vec![];hidden(&scene.groups,&mut ids);view.hidden_objects=Some(ids);
+        let active=scene.section_planes.iter().find(|s|s.active).map(|s|s.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||s.id.to_string()));
+        view.section=Some(serde_json::json!({"active":active,"planes_shown":scene.show_section_planes,"cuts_shown":scene.show_section_cuts}));
+        view.georef=Some(serde_json::json!({"terrain":scene.terrain.as_ref().map(|t|t.visible).unwrap_or(false)}));view
+    }
+    pub fn apply_scene(&self,scene:&mut crate::scene::Scene,camera:&mut OrbitCamera) {
+        self.apply(camera,&mut scene.layers);
+        if let Some(ids)=&self.hidden_objects {
+            fn apply(groups:&mut [crate::groups::Group],ids:&[String]){for group in groups{let id=group.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||group.id.to_string());group.hidden=ids.contains(&id);apply(&mut group.children,ids);}}
+            apply(&mut scene.groups,ids);
+        }
+        if let Some(section)=&self.section {
+            let active=section.get("active").and_then(|v|v.as_str());
+            for plane in &mut scene.section_planes{let id=plane.native_document.get("uid").and_then(|v|v.as_str()).map(str::to_owned).unwrap_or_else(||plane.id.to_string());plane.active=active==Some(id.as_str());}
+            scene.show_section_planes=section.get("planes_shown").and_then(|v|v.as_bool()).unwrap_or(true);
+            scene.show_section_cuts=section.get("cuts_shown").and_then(|v|v.as_bool()).unwrap_or(true);
+        }
+        if let (Some(georef),Some(terrain))=(&self.georef,&mut scene.terrain){if let Some(visible)=georef.get("terrain").and_then(|v|v.as_bool()){terrain.visible=visible;}}
+        scene.camera=camera.clone();scene.bump_view_version();
+    }
+
     pub fn apply(&self, camera: &mut OrbitCamera, layers: &mut [Layer]) {
+        camera.two_point=self.two_point;
         camera.target = self.target;
         camera.distance = self.distance;
         camera.yaw = self.yaw;

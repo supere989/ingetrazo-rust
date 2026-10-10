@@ -177,48 +177,23 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 } else {
                     tr(&sv.name)
                 };
-                let resp = ui.selectable_label(false, &display_name);
+                let resp = ui.selectable_label(app.selected_saved_view==Some(i), &display_name);
                 if resp.clicked() || resp.double_clicked() {
                     scene_to_apply = Some(i);
                 }
             }
 
-            if let Some(idx) = scene_to_apply {
-                if let Some(sv) = app.scene.saved_views.get(idx).cloned() {
-                    sv.apply(&mut app.camera, &mut app.scene.layers);
-                    app.status_message = format!("{}: {}", tr("Applied scene"), sv.name);
-                }
-            }
-
+            if let Some(idx)=scene_to_apply{app.apply_saved_view(idx);}
             ui.add_space(4.0);
-            ui.horizontal(|ui| {
-                if ui.button(tr("+ Scene")).clicked() {
-                    let num = app.scene.saved_views.len() + 1;
-                    let scene_name = format!("{} {num}", tr("Scene"));
-                    let sv = ingetrazo_core::saved_views::SavedView::capture(
-                        scene_name.clone(),
-                        &app.camera,
-                        &app.scene.layers,
-                    );
-                    app.scene.saved_views.push(sv);
-                    app.status_message = format!("{}: {scene_name}", tr("Captured scene"));
-                }
-                if ui.button(tr("Update")).clicked() {
-                    if let Some(sv) = app.scene.saved_views.first_mut() {
-                        *sv = ingetrazo_core::saved_views::SavedView::capture(
-                            sv.name.clone(),
-                            &app.camera,
-                            &app.scene.layers,
-                        );
-                        app.status_message = format!("{}: {}", tr("Updated scene"), sv.name);
-                    }
-                }
-                if ui.button("–").clicked() {
-                    if !app.scene.saved_views.is_empty() {
-                        app.scene.saved_views.pop();
-                    }
-                }
+            ui.horizontal(|ui|{
+                if ui.button(tr("+ Scene")).clicked(){let name=format!("{} {}",tr("Scene"),app.scene.saved_views.len()+1);app.add_saved_view(name);}
+                if ui.button(tr("Update")).clicked(){app.update_selected_saved_view();}
+                if ui.button("–").clicked(){app.remove_selected_saved_view();}
             });
+            if let Some(i)=app.selected_saved_view.filter(|i|*i<app.scene.saved_views.len()){
+                let mut name=app.scene.saved_views[i].name.clone();
+                if ui.text_edit_singleline(&mut name).changed(){app.rename_selected_saved_view(name);}
+            }
         });
     ui.separator();
 
