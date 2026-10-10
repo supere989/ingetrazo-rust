@@ -41,7 +41,7 @@ impl Image {
  }
 }
 impl Drop for Image {fn drop(&mut self){unsafe {if let Some(view)=self.sampled_depth_view{self.device.destroy_image_view(view,None);}self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.handle,None);self.device.free_memory(self.memory,None)};self.budget.freed(self.memory);}}
-struct Target {device:Device,pool:vk::DescriptorPool,_color:Image,_msaa:Option<Image>,_depth:Image,framebuffer:vk::Framebuffer,sampler:vk::Sampler,set:vk::DescriptorSet,extent:vk::Extent2D,texture:Option<egui::TextureId>}
+struct Target {identity:Arc<()>,device:Device,pool:vk::DescriptorPool,_color:Image,_msaa:Option<Image>,_depth:Image,framebuffer:vk::Framebuffer,sampler:vk::Sampler,set:vk::DescriptorSet,extent:vk::Extent2D,texture:Option<egui::TextureId>}
 impl Drop for Target {fn drop(&mut self){unsafe {self.device.destroy_framebuffer(self.framebuffer,None);self.device.destroy_sampler(self.sampler,None);let _=self.device.free_descriptor_sets(self.pool,&[self.set]);}}}
 #[derive(Default,Clone,Copy,Debug)]pub struct ContourMetrics {pub additional_position_bytes:u64,pub batches:usize,pub cold_build_ms:f64,pub compact_preprocess_ms:f64,pub warm_cache_ms:f64,pub cache_hits:u64,pub failed_prepared_chunks:usize,pub rollbacks:u64,pub edge_buffer_uploads:u64,pub failed_prepared_edge_bytes:u64}
 #[derive(Clone,Copy)]struct ContourBatch {vertices:BufferId,indices:BufferId,triangles:u32,compact:bool,stride:u32,owned:bool}
@@ -90,7 +90,7 @@ impl Drop for Contours {fn drop(&mut self){unsafe{if self.pipeline!=vk::Pipeline
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 #[repr(C)]struct ColoredVertex {position:[f32;3],color:[f32;3]}
 #[derive(Clone,Copy)]struct OpacityRun {first:u32,count:u32,opacity:f32,kind:u32}
-pub struct World {annotation_visibility:Option<super::annotation_visibility_gpu::Evaluator>,annotation_depth_binding:Option<vk::ImageView>,annotation_parameters:Option<super::annotation_visibility_gpu::Parameters>,textures:Option<super::textures::Textures>,texture_enabled:bool,texture_average:bool,has_texture_sources:bool,show_edges:bool,edge_vertices:Option<BufferId>,edge_count:u32,style_mode:ingetrazo_render::style::VisualStyle,style_front:[f32;4],style_back:[f32;4],default_back_runs:Vec<(u32,u32)>,consolidated_opaque_count:usize,paint_pipelines:[vk::Pipeline;10],ordinary_runs:Vec<(u32,u32,bool)>,transparent_vertices:Option<BufferId>,opacity_runs:Vec<OpacityRun>,transparent_pipeline:vk::Pipeline,probe_pressure_after:Option<usize>,contour_metrics:ContourMetrics,contours:Option<Contours>,contour_batches:Vec<ContourBatch>,background:[f32;4],eye:[f32;3],width_factor:f32,display_scale:f32,edge_color:[f32;4],device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,mask_pipeline:vk::Pipeline,cap_pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,samples:vk::SampleCountFlags,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,cap_vertices:Option<BufferId>,cap_signature:Option<([[f32;3];4],[f32;4])>,cap_key:Option<((u64,u64,u64),[f32;4],bool,[f32;4])>,revision:Option<(u64,u64,u64)>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
+pub struct World {annotation_visibility:Option<super::annotation_visibility_gpu::Evaluator>,annotation_depth_binding:Option<Arc<()>>,annotation_parameters:Option<super::annotation_visibility_gpu::Parameters>,textures:Option<super::textures::Textures>,texture_enabled:bool,texture_average:bool,has_texture_sources:bool,show_edges:bool,edge_vertices:Option<BufferId>,edge_count:u32,style_mode:ingetrazo_render::style::VisualStyle,style_front:[f32;4],style_back:[f32;4],default_back_runs:Vec<(u32,u32)>,consolidated_opaque_count:usize,paint_pipelines:[vk::Pipeline;10],ordinary_runs:Vec<(u32,u32,bool)>,transparent_vertices:Option<BufferId>,opacity_runs:Vec<OpacityRun>,transparent_pipeline:vk::Pipeline,probe_pressure_after:Option<usize>,contour_metrics:ContourMetrics,contours:Option<Contours>,contour_batches:Vec<ContourBatch>,background:[f32;4],eye:[f32;3],width_factor:f32,display_scale:f32,edge_color:[f32;4],device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,mask_pipeline:vk::Pipeline,cap_pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,samples:vk::SampleCountFlags,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,cap_vertices:Option<BufferId>,cap_signature:Option<([[f32;3];4],[f32;4])>,cap_key:Option<((u64,u64,u64),[f32;4],bool,[f32;4])>,revision:Option<(u64,u64,u64)>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
 impl World {
  pub fn new(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<Self,String> {
   let device=context.device.clone();
@@ -156,7 +156,7 @@ impl World {
   let sampler=unsafe {self.device.create_sampler(&vk::SamplerCreateInfo::default().mag_filter(vk::Filter::LINEAR).min_filter(vk::Filter::LINEAR).address_mode_u(vk::SamplerAddressMode::CLAMP_TO_EDGE).address_mode_v(vk::SamplerAddressMode::CLAMP_TO_EDGE),None)}.map_err(|e|e.to_string())?;
   let attachments=if let Some(msaa)=&msaa{vec![msaa.view,color.view,depth.view]}else{vec![color.view,depth.view]};let framebuffer=match unsafe {self.device.create_framebuffer(&vk::FramebufferCreateInfo::default().render_pass(self.render_pass).attachments(&attachments).width(extent.width).height(extent.height).layers(1),None)} {Ok(f)=>f,Err(e)=>{unsafe {self.device.destroy_sampler(sampler,None)};return Err(e.to_string());}};
   let set=match egui_ash_renderer::vulkan::create_vulkan_descriptor_set(&self.device,self.descriptor_layout,self.pool,color.view,sampler) {Ok(set)=>set,Err(e)=>{unsafe {self.device.destroy_framebuffer(framebuffer,None);self.device.destroy_sampler(sampler,None);}return Err(e.to_string());}};
-  Ok(Target{device:self.device.clone(),pool:self.pool,_color:color,_msaa:msaa,_depth:depth,framebuffer,sampler,set,extent,texture:None})
+  Ok(Target{identity:Arc::new(()),device:self.device.clone(),pool:self.pool,_color:color,_msaa:msaa,_depth:depth,framebuffer,sampler,set,extent,texture:None})
  }
 
  /// Bounded engineering override exercises chunking on real GPU resources; never raises hardware limits.
@@ -180,16 +180,16 @@ impl World {
   let mut queries=Vec::new();queries.try_reserve_exact(points.len()).map_err(|_|"Annotation query CPU admission failed")?;
   for &point in points {queries.push(super::annotation_visibility::prepare_query(&mvp,point,eye,forward,extent)?);}
   if self.annotation_visibility.is_none(){self.annotation_visibility=Some(super::annotation_visibility_gpu::Evaluator::new(context,self.budget.clone(),samples>1)?);}
-  self.annotation_visibility.as_mut().unwrap().prepare(context,&queries,view,fence,completed)?;
-  self.annotation_depth_binding=Some(view);
+  self.annotation_visibility.as_mut().unwrap().prepare(context,&queries,view,&target.identity,fence,completed)?;
+  self.annotation_depth_binding=Some(target.identity.clone());
   self.annotation_parameters=Some(super::annotation_visibility_gpu::Parameters{inverse,eye:[eye[0],eye[1],eye[2],0.],forward:[forward[0],forward[1],forward[2],0.],extent_count_sample:[extent[0],extent[1],points.len() as u32,sample]});
   Ok(())
  }
  /// Invoke after World::record ends its render pass, before native annotation
  /// draws. Resized/replaced depth targets must be prepared again.
  pub fn record_annotation_queries_for_probe(&mut self,command:vk::CommandBuffer,serial:u64)->Result<(),String>{
-  let view=self.target.as_ref().and_then(|t|t._depth.sampled_depth_view).ok_or("Annotation depth target absent")?;
-  if self.annotation_depth_binding!=Some(view){return Err("Annotation query binding stale after target replacement".into());}
+  let target=self.target.as_ref().ok_or("Annotation depth target absent")?;
+  admit_annotation_target(&self.annotation_depth_binding,&target.identity)?;
   let parameters=self.annotation_parameters.ok_or("Annotation queries not prepared")?;
   self.annotation_visibility.as_mut().ok_or("Annotation evaluator absent")?.record(command,serial,parameters,self.samples.as_raw())
  }
@@ -436,6 +436,22 @@ pub fn verify_image_view_failure_rollback(context:&VulkanContext,budget:Arc<Vulk
  }
 }
 
+fn admit_annotation_target(binding:&Option<Arc<()>>,target:&Arc<()>)->Result<(),String>{
+ if binding.as_ref().is_some_and(|owner|Arc::ptr_eq(owner,target)){Ok(())}else{Err("Annotation query binding stale after target replacement".into())}
+}
+#[cfg(test)]mod annotation_target_identity_tests{
+ use super::*;
+ #[test]fn reused_raw_view_does_not_admit_a_recreated_target(){
+  use ash::vk::Handle;
+  let old=(Arc::new(()),vk::ImageView::from_raw(71));
+  let new=(Arc::new(()),vk::ImageView::from_raw(71));
+  let binding=Some(old.0.clone());
+  assert_eq!(old.1,new.1,"Control explicitly reuses a raw handle");
+  assert!(admit_annotation_target(&binding,&old.0).is_ok());
+  assert!(admit_annotation_target(&binding,&new.0).is_err());
+  assert!(admit_annotation_target(&Some(new.0.clone()),&new.0).is_ok());
+ }
+}
 fn select_sample_count(global:vk::SampleCountFlags,color:vk::SampleCountFlags,depth:vk::SampleCountFlags)->Result<vk::SampleCountFlags,String> {
  let common=global&color&depth;
  [vk::SampleCountFlags::TYPE_4,vk::SampleCountFlags::TYPE_2,vk::SampleCountFlags::TYPE_1].into_iter().find(|samples|common.contains(*samples)).ok_or("No compatible world color/depth/stencil sample count".into())

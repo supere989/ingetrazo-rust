@@ -10,14 +10,14 @@ pub(crate) struct Parameters {
 pub(crate) struct Evaluator {
  device:Device,resources:Resources,layout:vk::PipelineLayout,pipeline:vk::Pipeline,
  set_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,set:vk::DescriptorSet,
- query:Option<BufferId>,output:Option<BufferId>,count:u32,multisampled:bool,cached_queries:Vec<Query>,uploads:u64,
+ query:Option<BufferId>,output:Option<BufferId>,count:u32,multisampled:bool,cached_queries:Vec<Query>,uploads:u64,depth_identity:Option<Arc<()>>,
 }
 impl Evaluator {
  pub(crate) fn new(context:&VulkanContext,budget:Arc<VulkanBudget>,multisampled:bool)->Result<Self,String> {
   let families=unsafe{context.instance.get_physical_device_queue_family_properties(context.physical_device)};
   if !families[context.graphics_q_index as usize].queue_flags.contains(vk::QueueFlags::COMPUTE){return Err("Annotation visibility requires compute-capable graphics queue".into());}
   let device=context.device.clone();
-  let mut owner=Self{device,resources:Resources::new(context,budget),layout:vk::PipelineLayout::null(),pipeline:vk::Pipeline::null(),set_layout:vk::DescriptorSetLayout::null(),pool:vk::DescriptorPool::null(),set:vk::DescriptorSet::null(),query:None,output:None,count:0,multisampled,cached_queries:Vec::new(),uploads:0};
+  let mut owner=Self{device,resources:Resources::new(context,budget),layout:vk::PipelineLayout::null(),pipeline:vk::Pipeline::null(),set_layout:vk::DescriptorSetLayout::null(),pool:vk::DescriptorPool::null(),set:vk::DescriptorSet::null(),query:None,output:None,count:0,multisampled,cached_queries:Vec::new(),uploads:0,depth_identity:None};
   let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).descriptor_count(1).stage_flags(vk::ShaderStageFlags::COMPUTE),
    vk::DescriptorSetLayoutBinding::default().binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::COMPUTE),
    vk::DescriptorSetLayoutBinding::default().binding(2).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::COMPUTE)];
@@ -38,7 +38,7 @@ impl Evaluator {
  }
  /// Previous use must have completed. Depth owner must outlive this set and GPU
  /// submission. Only World supplies the live view; no foreign raw-view API.
- pub(crate) fn prepare(&mut self,context:&VulkanContext,queries:&[Query],depth:vk::ImageView,fence:vk::Fence,completed:u64)->Result<(),String>{
+ pub(crate) fn prepare(&mut self,context:&VulkanContext,queries:&[Query],depth:vk::ImageView,depth_identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<(),String>{
   let bytes=bytemuck::cast_slice(queries);
   let limits=unsafe{context.instance.get_physical_device_properties(context.physical_device)}.limits;
   let max=limits.max_storage_buffer_range as usize;
@@ -46,15 +46,18 @@ impl Evaluator {
   // Validate completion and resource owner before descriptor reuse/allocation.
   self.resources.publication_preflight(context,fence,completed,&[],&[])?;
   if self.cached_queries==queries {
+   if self.depth_identity.as_ref().is_some_and(|old|Arc::ptr_eq(old,depth_identity)){return Ok(());}
    let image=[vk::DescriptorImageInfo::default().image_view(depth).image_layout(vk::ImageLayout::DEPTH_STENCIL_READ_ONLY_OPTIMAL)];
    unsafe{self.device.update_descriptor_sets(&[vk::WriteDescriptorSet::default().dst_set(self.set).dst_binding(0).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).image_info(&image)],&[]);}
-   return Ok(());
+   self.depth_identity=Some(depth_identity.clone());return Ok(());
   }
+  if self.query.is_some()!=self.output.is_some(){return Err("Inconsistent annotation buffer owner".into());}
+  let old_ids=self.query.zip(self.output).map(|(q,o)|[q,o]);
+  let old=old_ids.as_ref().map_or(&[][..],|ids|ids.as_slice());
   let mut cached=Vec::new();cached.try_reserve_exact(queries.len()).map_err(|_|"Annotation query cache admission failed")?;cached.extend_from_slice(queries);
   let query=self.resources.upload(context,bytes,vk::BufferUsageFlags::STORAGE_BUFFER,false)?;
   let output=match self.resources.allocate_buffer(queries.len() as u64*4,vk::BufferUsageFlags::STORAGE_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC){Ok(id)=>id,Err(e)=>{self.resources.retire(query)?;self.resources.collect(fence,completed)?;return Err(e);}};
-  let old=[self.query,self.output].into_iter().flatten().collect::<Vec<_>>();
-  let proof=match self.resources.publication_preflight(context,fence,completed,&old,&[query,output]){Ok(p)=>p,Err(e)=>{self.resources.retire(query)?;self.resources.retire(output)?;self.resources.collect(fence,completed)?;return Err(e);}};
+  let proof=match self.resources.publication_preflight(context,fence,completed,old,&[query,output]){Ok(p)=>p,Err(e)=>{self.resources.retire(query)?;self.resources.retire(output)?;self.resources.collect(fence,completed)?;return Err(e);}};
   let image=[vk::DescriptorImageInfo::default().image_view(depth).image_layout(vk::ImageLayout::DEPTH_STENCIL_READ_ONLY_OPTIMAL)];
   let input=[vk::DescriptorBufferInfo::default().buffer(self.resources.buffer(query).unwrap()).range(bytes.len() as u64)];
   let result=[vk::DescriptorBufferInfo::default().buffer(self.resources.buffer(output).unwrap()).range(queries.len() as u64*4)];
@@ -63,7 +66,7 @@ impl Evaluator {
    vk::WriteDescriptorSet::default().dst_set(self.set).dst_binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(&input),
    vk::WriteDescriptorSet::default().dst_set(self.set).dst_binding(2).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(&result)],&[]);}
   self.resources.retire_completed(proof);
-  self.query=Some(query);self.output=Some(output);self.count=queries.len() as u32;self.cached_queries=cached;self.uploads+=1;Ok(())
+  self.query=Some(query);self.output=Some(output);self.count=queries.len() as u32;self.cached_queries=cached;self.uploads+=1;self.depth_identity=Some(depth_identity.clone());Ok(())
  }
  pub(crate) fn record(&mut self,command:vk::CommandBuffer,serial:u64,mut p:Parameters,samples:u32)->Result<(),String>{
   if p.extent_count_sample[0]==0||p.extent_count_sample[1]==0||samples==0||p.extent_count_sample[3]>=samples||self.multisampled!=(samples>1){return Err("Annotation depth sample policy/extent mismatch".into());}

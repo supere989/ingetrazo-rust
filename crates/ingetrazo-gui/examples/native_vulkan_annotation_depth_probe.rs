@@ -27,7 +27,7 @@ pub fn main()->Result<(),Box<dyn std::error::Error>>{
  let inverse=glam::Mat4::from_cols_array(&m).inverse().to_cols_array();
  let eye=camera.eye().as_vec3().to_array();let forward=camera.forward().as_vec3().to_array();
  let points=[[0.,0.,1.],[0.,0.,-1.],[0.,0.,0.],[3.,3.,-1.]];
- let(_,samples,extent)=world.annotation_depth_info().ok_or("No retained sampled depth")?;
+ let(format,samples,extent)=world.annotation_depth_info().ok_or("No retained sampled depth")?;
  let mut outputs=Vec::new();
  for sample in 0..samples.as_raw(){
   let serial=sample as u64+1;
@@ -49,7 +49,7 @@ pub fn main()->Result<(),Box<dyn std::error::Error>>{
  assert!(world.record_annotation_queries_for_probe(command,99).is_err());
  drop(world);assert_eq!(budget.ledger.lock().unwrap().total_committed(),0,"Annotation/depth GPU owner leak");
  unsafe{context.device.free_command_buffers(context.command_pool,&commands);context.device.destroy_fence(fence,None);}
- println!("{}",serde_json::json!({"scope":"actual retained depth sampling; not original MSAA resolve policy or annotation overlay proof","samples":samples.as_raw(),"extent":[extent.width,extent.height],"flags":outputs,"warm_query_uploads":1,"invalid_sample_refused":true,"stale_target_refused":true,"final_ledger":0}));
+ println!("{}",serde_json::json!({"scope":"actual retained depth sampling; not original MSAA resolve policy or annotation overlay proof","depth_format":format!("{format:?}"),"samples":samples.as_raw(),"extent":[extent.width,extent.height],"flags":outputs,"warm_query_uploads":1,"invalid_sample_refused":true,"stale_target_refused":true,"final_ledger":0}));
  Ok(())
 }
 }
