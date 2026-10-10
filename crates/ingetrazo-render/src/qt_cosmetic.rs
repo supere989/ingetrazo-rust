@@ -60,6 +60,31 @@ pub fn rasterize_dashed_line(a:[f64;2],b:[f64;2],limit:usize)->Result<Vec<Span>,
  let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity:256,dash:true};
  writer.line(a,b,true,true)?;Ok(writer.spans)
 }
+/// Qt rough floating device clip before fixed-point dash initialization,
+/// followed by the exact pixel clip. Expanded bounds match deviceRect +/-1/2.
+pub fn rasterize_dashed_line_clipped(mut a:[f64;2],mut b:[f64;2],size:[u32;2],limit:usize)->Result<Vec<Span>,String>{
+ if size.contains(&0)||size.iter().any(|v|*v>1_000_000)||limit==0{return Err("Invalid dash device admission".into());}
+ if a.iter().chain(b.iter()).any(|v|!v.is_finite()){return Ok(Vec::new());}
+ for axis in 0..2{
+  let other=1-axis;let low=-1.;let high=f64::from(size[axis])+1.;
+  if a[axis]<low{
+   if b[axis]<=low{return Ok(Vec::new());}
+   a[other]+=(b[other]-a[other])/(b[axis]-a[axis])*(low-a[axis]);a[axis]=low;
+  }else if a[axis]>high{
+   if b[axis]>=high{return Ok(Vec::new());}
+   a[other]+=(b[other]-a[other])/(b[axis]-a[axis])*(high-a[axis]);a[axis]=high;
+  }
+  if b[axis]<low{b[other]+=(b[other]-a[other])/(b[axis]-a[axis])*(low-b[axis]);b[axis]=low;}
+  else if b[axis]>high{b[other]+=(b[other]-a[other])/(b[axis]-a[axis])*(high-b[axis]);b[axis]=high;}
+ }
+ let mut spans=rasterize_dashed_line(a,b,limit)?;
+ spans.retain_mut(|span|{
+  if span.y<0||i64::from(span.y)>=i64::from(size[1]){return false;}
+  let left=i64::from(span.x).max(0);let right=(i64::from(span.x)+i64::from(span.len)).min(i64::from(size[0]));
+  if right<=left{return false;}span.x=left as i32;span.len=(right-left)as u32;true
+ });
+ Ok(spans)
+}
 #[cfg(test)]mod tests{use super::*;
  #[test]fn thin_line_coalesces_and_refuses_work(){let path=PathContour{start:[10.,10.],segments:vec![Segment::Line([100.,10.])]};let spans=rasterize_path(&path,false,0.7,1000).unwrap();assert!(spans.len()<10);assert!(rasterize_path(&path,false,0.7,1).is_err());assert!(rasterize_path(&path,false,1.1,1000).is_err());}
 }

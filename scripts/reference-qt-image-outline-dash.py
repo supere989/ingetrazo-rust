@@ -7,6 +7,7 @@ from PySide6.QtCore import Qt,QPointF
 import numpy as np
 rows=[]
 cases=[("horizontal",[20.,40.],[140.,40.]),("horizontal-reversed",[140.,40.],[20.,40.]),("vertical",[40.,20.],[40.,140.]),("vertical-reversed",[40.,140.],[40.,20.]),("diagonal",[20.25,30.5],[170.75,140.125]),("diagonal-reversed",[170.75,140.125],[20.25,30.5]),("negative-slope",[30.125,180.5],[170.75,25.25]),("negative-slope-reversed",[170.75,25.25],[30.125,180.5]),("short",[33.25,33.75],[34.125,34.5]),("fractional",[31.125,49.75],[173.5,49.875])]
+cases += [("clip-left",[-80.125,40.5],[130.75,70.125]),("clip-left-reversed",[130.75,70.125],[-80.125,40.5]),("clip-right",[200.5,80.75],[390.125,180.5]),("clip-bottom",[50.125,100.5],[180.25,380.75]),("clip-corner",[-300.5,-150.125],[400.75,340.5]),("clip-outside",[-5.,20.],[-5.,150.]),("clip-short",[-4.,-.25],[4.,.25])]
 for name,a,b in cases:
  im=QImage(256,256,QImage.Format_ARGB32);im.fill(Qt.transparent)
  p=QPainter(im);p.setRenderHint(QPainter.Antialiasing,True);p.setPen(QPen(QColor(120,140,165),1,Qt.DashLine));p.drawLine(QPointF(*a),QPointF(*b));p.end()
