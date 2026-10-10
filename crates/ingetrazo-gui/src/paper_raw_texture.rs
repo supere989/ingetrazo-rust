@@ -33,6 +33,15 @@ pub(crate)fn cancel(ctx:&Context,ids:&[TextureId],sets:&mut std::collections::Ve
  sets.retain(|(id,_)|!ids.contains(id));Ok(())
 }
 
+/// Metal's accumulated delta is contiguous; remove payload and retry identity
+/// together without converting the queue or copying image bytes.
+pub(crate)fn cancel_vec(ctx:&Context,ids:&std::collections::HashSet<TextureId>,sets:&mut Vec<(TextureId,egui::epaint::ImageDelta)>)->Result<(),String>{
+ if ids.is_empty(){return Ok(());}
+ let provider=provider(ctx)?;let mut pending=provider.0.lock().map_err(|_|"Source texture queue unavailable")?;
+ for id in ids{if let Some(image)=pending.images.remove(id){pending.bytes-=image.pixels.len();}}
+ sets.retain(|(id,_)|!ids.contains(id));Ok(())
+}
+
 #[cfg(test)]mod tests{use super::*;
  #[test]fn same_frame_set_paint_free_remains_available_until_retirement(){
   let ctx=Context::default();install(&ctx);ctx.begin_pass(egui::RawInput::default());let handle=create(&ctx,[1,1],vec![0,0,0,255]).unwrap();let id=handle.id();ctx.layer_painter(egui::LayerId::background()).image(id,egui::Rect::from_min_size(egui::Pos2::new(1.,1.),egui::Vec2::splat(10.)),egui::Rect::from_min_max(egui::Pos2::ZERO,egui::Pos2::new(1.,1.)),egui::Color32::WHITE);drop(handle);let frame=ctx.end_pass();assert!(frame.textures_delta.set.iter().any(|(key,_)|*key==id));assert!(frame.textures_delta.free.contains(&id));assert!(!frame.shapes.is_empty());assert!(peek(&ctx,id).unwrap().is_some());let mut sets=std::collections::VecDeque::from(frame.textures_delta.set);cancel(&ctx,&frame.textures_delta.free,&mut sets).unwrap();assert!(!sets.iter().any(|(key,_)|*key==id));assert!(peek(&ctx,id).unwrap().is_none());
