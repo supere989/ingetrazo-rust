@@ -1,0 +1,81 @@
+{
+  "negative_controls": [
+    {
+      "case": "lost-region",
+      "detected": true
+    },
+    {
+      "case": "lost-curve-membership",
+      "detected": true
+    },
+    {
+      "case": "lost-wire",
+      "detected": true
+    }
+  ],
+  "provenance": {
+    "rust_commit": "8a7caa6782754b05efa76b40684bed90147adedb",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "cases": [
+    {
+      "case": "painted-line-chord",
+      "match": true,
+      "original_faces": 2,
+      "rust_faces": 2
+    },
+    {
+      "case": "crossing-wires",
+      "match": true,
+      "original_faces": 0,
+      "rust_faces": 0
+    },
+    {
+      "case": "line-bowtie",
+      "match": true,
+      "original_faces": 2,
+      "rust_faces": 2
+    },
+    {
+      "case": "rectangle-band",
+      "match": true,
+      "original_faces": 3,
+      "rust_faces": 3
+    },
+    {
+      "case": "rectangle-overlap",
+      "match": true,
+      "original_faces": 3,
+      "rust_faces": 3
+    },
+    {
+      "case": "freehand-closed",
+      "match": true,
+      "original_faces": 1,
+      "rust_faces": 1
+    },
+    {
+      "case": "freehand-open-chord",
+      "match": true,
+      "original_faces": 2,
+      "rust_faces": 2
+    },
+    {
+      "case": "old-curve-global-rebuild",
+      "match": true,
+      "original_faces": 1,
+      "rust_faces": 1
+    },
+    {
+      "case": "rectangle-3d-step-band",
+      "match": true,
+      "original_faces": 10,
+      "rust_faces": 10
+    }
+  ],
+  "failures": [],
+  "scope": "Original actual Line single-edge, Rectangle explicit AddFace and Freehand commit_arc pipelines; exact oriented faces/holes/paint, wire topology and curve membership. Includes original global rebuild resurrection when any disconnected curve exists. Native input nonfinite refusal. Includes actual original stepped-solid band fixture; UI sampling, projection/undo controller acceptance separate."
+}

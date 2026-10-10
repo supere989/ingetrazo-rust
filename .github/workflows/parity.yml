@@ -60,6 +60,8 @@ jobs:
         run: python scripts/check-python-dimension-anchors.py
       - name: Original runtime planar healing
         run: python scripts/check-python-heal.py
+      - name: Original Line Rectangle Freehand drafting semantics
+        run: python scripts/check-python-drafting.py
       - name: Original geographic path conversion topology
         run: python scripts/check-python-geopath-conversion.py
       - name: Ctrl PushPull literal success and intentional safety boundaries
