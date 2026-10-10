@@ -1,7 +1,7 @@
 {
-  "native_sha256": "d158b499c60362175e8b2e522fdb21d5c3054bcdcc308cbea4a5add9c0b675e3",
+  "native_sha256": "45bfd82a6b5fb5feec989aeb92f45e757e86fd3524070e84532ce6cbb5575dfb",
   "context": {
-    "rust_commit": "d264b0e04c21dfbd728da852f393cee01aef98ab",
+    "rust_commit": "40ef985655261ea76905a5ab7a8064540538d393",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -168,16 +168,16 @@
       "native": [
         {
           "encouraged": [],
-          "kind": "none",
+          "kind": "endpoint",
           "point": [
             2.0,
-            3.0000061988830566,
-            0.0
+            -5.651594161987305,
+            4.994999885559082
           ]
         }
       ],
       "matches": [
-        false
+        true
       ],
       "clip_probe": true
     },
@@ -197,16 +197,16 @@
       "native": [
         {
           "encouraged": [],
-          "kind": "none",
+          "kind": "endpoint",
           "point": [
             2.0,
-            2.999919891357422,
-            0.0
+            -5.616953372955322,
+            4.974999904632568
           ]
         }
       ],
       "matches": [
-        false
+        true
       ],
       "clip_probe": true
     },
@@ -532,11 +532,8 @@
       "clip_probe": false
     }
   ],
-  "failed": [
-    "eye-depth-0.01",
-    "eye-depth-0.05"
-  ],
-  "passed": false,
+  "failed": [],
+  "passed": true,
   "negative_controls": {
     "screen_linear_distance": 0.07054252177476883,
     "malformed_circle_rejected": true,

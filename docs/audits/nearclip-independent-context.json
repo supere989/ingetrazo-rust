@@ -1,0 +1,22 @@
+{
+  "production_source": "40ef985 (9d5a55b+72e2c39+aafeb54)",
+  "validator": "40ef985655261ea76905a5ab7a8064540538d393",
+  "private_target": "/tmp/ingetrazo-nearclip-independent-target",
+  "binary_sha256": {
+    "perspective_screen_fixture": "45bfd82a6b5fb5feec989aeb92f45e757e86fd3524070e84532ce6cbb5575dfb",
+    "screen_snap_fixture": "26d20cbf3c2c9ae84539847b0b7aa8d15a7599f1ffb91833e88f83f02fb77e5f"
+  },
+  "passing": {
+    "perspective": 11,
+    "eye_boundary": 2,
+    "held_out_depth": 6,
+    "orthographic": 10
+  },
+  "audit": "Positive-w-only projection called in SnapEngine/curve hover; ordinaryPixelViewport.project retains depthclip andw<=1e-12 guard. Independent focused2productiontestsPASS.",
+  "limits": [
+    "UI centeracquisition andwallclockdwell pending",
+    "groupprefilter/distance-capped large-sceneeye-straddling notgeneralized",
+    "single perspectivecamera andboundedrecipes only",
+    "historical2nearclipfailures remainretained inpreviousbaseline"
+  ]
+}

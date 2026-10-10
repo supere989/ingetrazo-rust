@@ -46,6 +46,8 @@ jobs:
         run: python scripts/check-native-composer-cache.py target/debug/examples/composer_native_cache target/debug/ingetrazo-render-worker docs/audits/native-composer-ci
       - name: Original orthographic screen snapping controls
         run: python scripts/check-python-screen-snap.py
+      - name: Original perspective snapping and eye boundary controls
+        run: QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-eye-boundary.py
       - name: Rendered software OpenGL drawing reference gestures
         run: python scripts/check-rendered-drawing-reference.py
       - name: Rendered software OpenGL temporary Shift inference gestures
@@ -154,6 +156,8 @@ jobs:
             docs/audits/native-composer-ci/native.log
             docs/audits/native-composer-ci/result.json
             docs/audits/python-screen-snap-evidence.json
+            docs/audits/python-perspective-screen-evidence.json
+            docs/audits/python-snap-eye-boundary-evidence.json
             docs/audits/drawing-reference-render-evidence.json
             docs/audits/drawing-reference-render/*.png
             docs/audits/drawing-reference-render/runtime.log

@@ -17,7 +17,8 @@ p=lambda a:V(*a)
 w2p=lambda p:(1000+100*p.x(),1000-100*p.y())
 subprocess.run(['cargo','build','--locked','-p','ingetrazo-core','--example','screen_snap_fixture'],check=True)
 rows=[]
-native=json.loads(subprocess.check_output(['target/debug/examples/screen_snap_fixture'],input=json.dumps(cases).encode()))
+native_binary=Path(os.environ.get('CARGO_TARGET_DIR','target'))/'debug/examples/screen_snap_fixture'
+native=json.loads(subprocess.check_output([str(native_binary.resolve())],input=json.dumps(cases).encode()))
 assert len(native)==len(cases), 'Missing native results must fail'
 assert [r['name'] for r in native]==[c['name'] for c in cases], 'Native result order/identity mismatch'
 def matches(original,rust):
@@ -37,5 +38,5 @@ for field in ['kind','point']:
  controls.append(field+' mutation rejected')
 assert len(native[:-1])!=len(cases)
 controls.append('missing native fixture rejected')
-Path("docs/audits/python-screen-snap-evidence.json").write_text(json.dumps(dict(context=context(),cases=rows,passed=len(rows),negative_controls=controls,native_sha256=hashlib.sha256(Path('target/debug/examples/screen_snap_fixture').read_bytes()).hexdigest(),scope="10 orthographic source/native controls; nested uses source flattened world edge view, source occlusion analytic predicate; fresh independent rerun on merged production source; three retained negative controls; controller gesture pixels are separate"),indent=2)+"\n")
+Path("docs/audits/python-screen-snap-evidence.json").write_text(json.dumps(dict(context=context(),cases=rows,passed=len(rows),negative_controls=controls,native_sha256=hashlib.sha256(native_binary.read_bytes()).hexdigest(),scope="10 orthographic source/native controls; nested uses source flattened world edge view, source occlusion analytic predicate; fresh independent rerun on merged production source; three retained negative controls; controller gesture pixels are separate"),indent=2)+"\n")
 print(f"Source/native screen controls: {len(rows)}/{len(rows)} PASS")

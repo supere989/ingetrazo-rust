@@ -1,0 +1,22 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-nearclip-independent-validation/crates/ingetrazo-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.84s
+     Running unittests src/lib.rs (/tmp/ingetrazo-nearclip-independent-target/debug/deps/ingetrazo_core-424173c7a16df2e1)
+
+running 2 tests
+test screen_pick::snap_projection_boundary_tests::ordinary_projection_retains_tiny_positive_w_rejection ... ok
+test screen_pick::snap_projection_boundary_tests::snapping_accepts_before_near_and_rejects_behind_without_changing_render_clip ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 124 filtered out; finished in 0.00s
+
+     Running tests/boolean_acceptance.rs (/tmp/ingetrazo-nearclip-independent-target/debug/deps/boolean_acceptance-d5061d4184a1f183)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/test_i18n.rs (/tmp/ingetrazo-nearclip-independent-target/debug/deps/test_i18n-9e982b203a734489)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
