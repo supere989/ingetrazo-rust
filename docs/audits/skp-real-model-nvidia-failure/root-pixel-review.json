@@ -1,0 +1,414 @@
+{
+  "pairs": [
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "comparison": "qt_import",
+      "pixels": 0,
+      "max_channel": 0,
+      "bbox": null,
+      "most_common_color_changes": []
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "comparison": "vulkan",
+      "pixels": 8919,
+      "max_channel": 210,
+      "bbox": [
+        250,
+        165,
+        551,
+        391
+      ],
+      "most_common_color_changes": [
+        {
+          "source": [
+            45,
+            55,
+            75,
+            255
+          ],
+          "native": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "count": 1941
+        },
+        {
+          "source": [
+            183,
+            124,
+            72,
+            255
+          ],
+          "native": [
+            183,
+            123,
+            72,
+            255
+          ],
+          "count": 1136
+        },
+        {
+          "source": [
+            116,
+            155,
+            36,
+            255
+          ],
+          "native": [
+            115,
+            154,
+            37,
+            255
+          ],
+          "count": 993
+        },
+        {
+          "source": [
+            143,
+            191,
+            48,
+            255
+          ],
+          "native": [
+            144,
+            192,
+            47,
+            255
+          ],
+          "count": 838
+        },
+        {
+          "source": [
+            112,
+            147,
+            36,
+            255
+          ],
+          "native": [
+            111,
+            147,
+            36,
+            255
+          ],
+          "count": 699
+        }
+      ]
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "comparison": "qt_import",
+      "pixels": 0,
+      "max_channel": 0,
+      "bbox": null,
+      "most_common_color_changes": []
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "comparison": "vulkan",
+      "pixels": 8631,
+      "max_channel": 210,
+      "bbox": [
+        197,
+        194,
+        444,
+        325
+      ],
+      "most_common_color_changes": [
+        {
+          "source": [
+            45,
+            55,
+            75,
+            255
+          ],
+          "native": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "count": 2185
+        },
+        {
+          "source": [
+            116,
+            155,
+            36,
+            255
+          ],
+          "native": [
+            115,
+            154,
+            37,
+            255
+          ],
+          "count": 864
+        },
+        {
+          "source": [
+            183,
+            124,
+            72,
+            255
+          ],
+          "native": [
+            183,
+            123,
+            72,
+            255
+          ],
+          "count": 850
+        },
+        {
+          "source": [
+            143,
+            191,
+            48,
+            255
+          ],
+          "native": [
+            144,
+            192,
+            47,
+            255
+          ],
+          "count": 789
+        },
+        {
+          "source": [
+            234,
+            235,
+            237,
+            255
+          ],
+          "native": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "count": 746
+        }
+      ]
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "comparison": "qt_import",
+      "pixels": 16,
+      "max_channel": 1,
+      "bbox": [
+        479,
+        440,
+        479,
+        455
+      ],
+      "most_common_color_changes": [
+        {
+          "source": [
+            51,
+            59,
+            71,
+            255
+          ],
+          "native": [
+            52,
+            59,
+            71,
+            255
+          ],
+          "count": 16
+        }
+      ]
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "comparison": "vulkan",
+      "pixels": 24452,
+      "max_channel": 84,
+      "bbox": [
+        214,
+        194,
+        607,
+        478
+      ],
+      "most_common_color_changes": [
+        {
+          "source": [
+            108,
+            108,
+            108,
+            255
+          ],
+          "native": [
+            106,
+            106,
+            106,
+            255
+          ],
+          "count": 5431
+        },
+        {
+          "source": [
+            135,
+            32,
+            0,
+            255
+          ],
+          "native": [
+            134,
+            33,
+            0,
+            255
+          ],
+          "count": 5275
+        },
+        {
+          "source": [
+            139,
+            139,
+            139,
+            255
+          ],
+          "native": [
+            138,
+            138,
+            138,
+            255
+          ],
+          "count": 4058
+        },
+        {
+          "source": [
+            159,
+            80,
+            0,
+            255
+          ],
+          "native": [
+            159,
+            79,
+            0,
+            255
+          ],
+          "count": 1441
+        },
+        {
+          "source": [
+            100,
+            76,
+            48,
+            255
+          ],
+          "native": [
+            101,
+            74,
+            49,
+            255
+          ],
+          "count": 1117
+        }
+      ]
+    },
+    {
+      "name": "gondola_v20-iso",
+      "comparison": "qt_import",
+      "pixels": 0,
+      "max_channel": 0,
+      "bbox": null,
+      "most_common_color_changes": []
+    },
+    {
+      "name": "gondola_v20-iso",
+      "comparison": "vulkan",
+      "pixels": 25241,
+      "max_channel": 14,
+      "bbox": [
+        189,
+        127,
+        611,
+        498
+      ],
+      "most_common_color_changes": [
+        {
+          "source": [
+            116,
+            28,
+            0,
+            255
+          ],
+          "native": [
+            115,
+            28,
+            0,
+            255
+          ],
+          "count": 7302
+        },
+        {
+          "source": [
+            139,
+            139,
+            139,
+            255
+          ],
+          "native": [
+            138,
+            138,
+            138,
+            255
+          ],
+          "count": 6870
+        },
+        {
+          "source": [
+            108,
+            108,
+            108,
+            255
+          ],
+          "native": [
+            106,
+            106,
+            106,
+            255
+          ],
+          "count": 2510
+        },
+        {
+          "source": [
+            104,
+            104,
+            104,
+            255
+          ],
+          "native": [
+            102,
+            102,
+            102,
+            255
+          ],
+          "count": 2116
+        },
+        {
+          "source": [
+            159,
+            80,
+            0,
+            255
+          ],
+          "native": [
+            159,
+            79,
+            0,
+            255
+          ],
+          "count": 1691
+        }
+      ]
+    }
+  ],
+  "scope": "Independent retained GPU image decode and color-difference characterization; no tolerance change"
+}
