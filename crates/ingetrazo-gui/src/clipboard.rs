@@ -80,6 +80,7 @@ impl IngeTrazoApp {
         for group in &mut scene.groups{group.transform=inverse*group.transform;}
         scene.materials=self.scene.materials.clone();scene.layers=self.scene.layers.clone();
         if let Err(e)=merge_resources(&mut scene,&clipboard.resources){self.status_message=e;return;}
+        let definitions=scene.component_definitions.clone();for(id,definition)in definitions{if let Err(error)=scene.replace_component_definition(id,definition){self.status_message=error;return;}}
         self.paste_preview=Some(PastePreview{scene,reference:inverse.transform_point3(clipboard.reference),offset:DVec3::ZERO});
         self.status_message="Place copied geometry; click to stamp, Esc to cancel".into();
     }
@@ -98,6 +99,10 @@ mod tests {
     #[test]
     fn resource_allocator_reserves_incoming_names_and_leaves_opaque_fields(){
         let mut payload=crate::app::GeometryClipboard::default();payload.resources.embedded_textures.insert("foo".into(),vec![1]);payload.resources.embedded_textures.insert("foo (clipboard 1)".into(),vec![2]);payload.resources.materials.insert("Paint".into(),ingetrazo_core::materials::Material::new("Paint",[1.,0.,0.,1.]));payload.resources.materials.insert("Paint (clipboard 1)".into(),ingetrazo_core::materials::Material::new("Paint (clipboard 1)",[0.,1.,0.,1.]));let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|payload.mesh.add_vertex(p));payload.mesh.add_face(ids.to_vec(),vec![]);payload.mesh.faces[0].attrs.insert("extension".into(),serde_json::json!({"path":"foo","material":"Paint","nested":{"embed":"foo"}}));payload.mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"embed":"foo"}));let opaque=payload.mesh.faces[0].attrs["extension"].clone();let mut destination=ingetrazo_core::scene::Scene::new();destination.embedded_textures.insert("foo".into(),vec![9]);destination.materials.insert("Paint".into(),ingetrazo_core::materials::Material::new("Paint",[0.,0.,1.,1.]));super::remap_resources(&mut payload,&destination,uuid::Uuid::new_v4());assert_eq!(payload.resources.embedded_textures.len(),2);assert_eq!(payload.resources.embedded_textures["foo (clipboard 1)"],vec![2]);assert_eq!(payload.resources.embedded_textures["foo (clipboard 2)"],vec![1]);assert_eq!(payload.resources.materials.len(),2);assert!(payload.resources.materials.contains_key("Paint (clipboard 2)"));assert_eq!(payload.mesh.faces[0].attrs["extension"],opaque);assert_eq!(payload.mesh.faces[0].attrs["texture"]["embed"],"foo (clipboard 2)");
+    }
+    #[test]
+    fn overlap_paint_matches_original_first_covering_face_priority(){
+        let mut app=IngeTrazoApp::new();let ids=[(0.,0.),(2.,0.),(2.,2.),(0.,2.)].map(|(x,y)|app.scene.mesh.add_vertex(DVec3::new(x,y,0.)));app.scene.mesh.add_face(ids.to_vec(),vec![]);app.scene.mesh.faces[0].attrs.insert("mat".into(),serde_json::json!("blue"));app.scene.select(SelectionItem::Face(0));app.copy_selection();app.scene.mesh.faces[0].attrs.insert("mat".into(),serde_json::json!("red"));assert!(app.paste_internal(DVec3::X));let mut areas=std::collections::HashMap::<String,f64>::new();for id in 0..app.scene.mesh.faces.len(){let paint=app.scene.mesh.faces[id].attrs["mat"].as_str().unwrap().to_owned();*areas.entry(paint).or_default()+=app.scene.mesh.face_area(id);}assert!((areas["red"]-4.).abs()<1e-9);assert!((areas["blue"]-2.).abs()<1e-9);
     }
     #[test]
     fn overlap_stamp_rebuilds_regions_on_two_planes_with_one_undo(){
