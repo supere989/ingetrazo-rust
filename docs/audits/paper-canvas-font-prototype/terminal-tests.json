@@ -1,0 +1,38 @@
+{
+  "admission": {
+    "sha256": "a83d09f1be443d016aeffd5beaab04cda34f66924be937f56eea127cbad0c320",
+    "terminal": [
+      "test paper_font::raster_admission_tests::device_glyph_refusal_restores_shared_font_geometry ... ok",
+      "",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 35 filtered out; finished in 0.34s",
+      ""
+    ]
+  },
+  "unhinted-admission": {
+    "sha256": "2a9e5bc4b15237ee38810b9fc6f08edec5b6f04ddd1d0e7f13a456abaf3b77d9",
+    "terminal": [
+      "test paper_font::raster_admission_tests::device_glyph_refusal_restores_shared_font_geometry ... ok",
+      "",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 35 filtered out; finished in 0.33s",
+      ""
+    ]
+  },
+  "phase-test": {
+    "sha256": "2ec5da01e4bb03e7f6b006febb6fe7c89eba815bf6c34e811ac69b2af60f6ae0",
+    "terminal": [
+      "test composer::text_canvas::device_position_tests::source_quarter_phases_and_rounded_baselines ... ok",
+      "",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s",
+      ""
+    ]
+  },
+  "layout-test": {
+    "sha256": "3b53c8ffe865f45a147ca764f4ec3fb79f5e32c0825347ca28b112af3d672978",
+    "terminal": [
+      "test composer::text_canvas::layout_admission_tests::warm_layout_and_refusal_keep_retained_font_identity ... ok",
+      "",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 145 filtered out; finished in 0.36s",
+      ""
+    ]
+  }
+}
