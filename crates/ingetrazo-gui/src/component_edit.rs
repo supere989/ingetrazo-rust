@@ -75,6 +75,9 @@ impl IngeTrazoApp {
             container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
             dimension_baseline:vec![],section_baseline:vec![],
         };
+        let drawing_frame=if group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array()) {
+            Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))
+        } else {None};
         let mut edit=Scene::new();
         edit.mesh=group.mesh;edit.groups=group.children;
         edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
@@ -82,6 +85,7 @@ impl IngeTrazoApp {
         edit.component_definitions=self.scene.component_definitions.clone();
         edit.mesh_shares=self.scene.mesh_shares.clone();
         edit.dimension_frame=self.scene.dimension_frame*group.transform;
+        edit.drawing_frame=drawing_frame;
         edit.dimensions=self.scene.dimensions.clone();
         let inverse=group.transform.inverse();
         for dimension in &mut edit.dimensions{dimension.start=inverse.transform_point3(dimension.start);dimension.end=inverse.transform_point3(dimension.end);dimension.offset=inverse.transform_vector3(dimension.offset);dimension.anchor_a=None;dimension.anchor_b=None;}

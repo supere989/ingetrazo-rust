@@ -33,6 +33,10 @@ pub enum SelectionItem {
 pub struct Scene {
     #[serde(skip)]
     pub dimension_frame:glam::DMat4,
+    /// Original world-space context frame; runtime only, independent of the
+    /// active mesh coordinate map in dimension_frame.
+    #[serde(skip)]
+    pub drawing_frame: Option<glam::DMat4>,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
     /// Authoritative shared Mesh prototypes; placement topology is independent.
@@ -87,6 +91,7 @@ impl Scene {
 
         Self {
             dimension_frame:glam::DMat4::IDENTITY,
+            drawing_frame:None,
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
@@ -117,6 +122,10 @@ impl Scene {
             sheets: Vec::new(),
             active_sheet_index: None,
         }
+    }
+
+    pub fn drawing_axes(&self) -> crate::drawing_axes::DrawingAxes {
+        crate::drawing_axes::DrawingAxes::from_frame(self.drawing_frame)
     }
 
     pub fn bump_version(&mut self) {
