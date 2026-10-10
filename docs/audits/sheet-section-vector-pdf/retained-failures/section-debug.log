@@ -1,0 +1,6 @@
+
+thread 'main' (2659155) panicked at crates/ingetrazo-gui/examples/sheet_view_pdf_fixture.rs:291:9:
+assertion `left == right` failed: cached admission material section_board, source loops [[DVec3(4.0, 2.0, 0.0), DVec3(1.3333333333333335, 2.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(0.0, 2.0, 1.3333333333333335), DVec3(0.0, 2.0, 4.0), DVec3(1.3333333333333335, 2.0, 4.0), DVec3(4.0, 2.0, 4.0), DVec3(4.0, 2.0, 1.3333333333333335)]]
+  left: []
+ right: [[DVec3(4.0, 2.0, 0.0), DVec3(1.3333333333333335, 2.0, 0.0), DVec3(0.0, 2.0, 0.0)], [DVec3(4.0, 2.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(0.0, 2.0, 1.3333333333333335)], [DVec3(4.0, 2.0, 0.0), DVec3(0.0, 2.0, 1.3333333333333335), DVec3(0.0, 2.0, 4.0)], [DVec3(4.0, 2.0, 0.0), DVec3(0.0, 2.0, 4.0), DVec3(1.3333333333333335, 2.0, 4.0)], [DVec3(4.0, 2.0, 0.0), DVec3(1.3333333333333335, 2.0, 4.0), DVec3(4.0, 2.0, 4.0)], [DVec3(4.0, 2.0, 0.0), DVec3(4.0, 2.0, 4.0), DVec3(4.0, 2.0, 1.3333333333333335)]]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

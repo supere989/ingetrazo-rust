@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "strict_pages": 78,
+  "native_fixture_sha256": "9732d207429413afed37752ec29b25b7b0edd7742e66d85d5ce74e1be50d3db2",
+  "worker_sha256": "268167bc2a8f67728dd0e0e5554bcb5b94ec8f9e16285424e7016cd1e7975e17",
+  "scope": "Orthographic current View line painter plus controls; no UI/default raster/text/title/full P29 claim."
+}
