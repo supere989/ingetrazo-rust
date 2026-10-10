@@ -82,11 +82,11 @@ pub(super) fn match_font(request:&Request)->Result<(PathBuf,i32,FtPolicy,Option<
  if count>4096{return Err("CoreText font collection budget exceeded".into())}
  for index in 0..count{
   let face=ttf_parser::Face::parse(&bytes,index).map_err(|_|"Invalid CoreText font face")?;
-  if face.names().into_iter().any(|n|n.name_id==ttf_parser::name_id::POST_SCRIPT_NAME&&n.to_string().as_deref()==Some(postscript.as_str())){
+  if face.names().into_iter().any(|n|super::sfnt_postscript_name(n).as_deref()==Some(postscript.as_str())){
    if face.is_bold()!=request.bold||face.is_italic()!=request.italic{return Err("CoreText style requires unsupported synthetic or variable face traits".into())}
    if !request.required_chars.iter().all(|ch|face.glyph_index(*ch).is_some()){return Err("CoreText file face does not cover its matched character set".into())}
    return Ok((path,index as i32,FtPolicy{hinting:Hinting::None,force_auto_hint:false},Some(std::sync::Arc::from(bytes))))
   }
  }
- Err("CoreText face identity cannot be mapped to its font collection".into())
+ Err(format!("CoreText face {postscript:?} cannot be mapped to font collection {} ({count} faces)",path.display()))
 }}

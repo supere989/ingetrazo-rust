@@ -398,3 +398,33 @@ mod publication_tests {
 #[cfg(target_os = "macos")]
 #[path = "paper_font_coretext.rs"]
 mod coretext;
+
+/// Decode a physical SFNT PostScript identity, including Macintosh Roman records.
+/// PostScript names are ASCII; other legacy encodings must not be guessed.
+pub fn sfnt_postscript_name(name: ttf_parser::name::Name<'_>) -> Option<String> {
+    if name.name_id != ttf_parser::name_id::POST_SCRIPT_NAME { return None; }
+    name.to_string().or_else(|| {
+        (name.platform_id == ttf_parser::PlatformId::Macintosh
+            && name.encoding_id == 0 && !name.name.is_empty()
+            && name.name.iter().all(|b| (33..=126).contains(b)))
+            .then(|| String::from_utf8(name.name.to_vec()).expect("ASCII name"))
+    })
+}
+
+#[cfg(test)]
+mod postscript_identity_tests {
+    use super::sfnt_postscript_name;
+    #[test]
+    fn mac_roman_identity_is_exact_and_other_encodings_are_not_guessed() {
+        let name = ttf_parser::name::Name { platform_id: ttf_parser::PlatformId::Macintosh,
+            encoding_id: 0, language_id: 0, name_id: ttf_parser::name_id::POST_SCRIPT_NAME,
+            name: b"Helvetica-Bold" };
+        assert_eq!(sfnt_postscript_name(name).as_deref(), Some("Helvetica-Bold"));
+        assert_eq!(sfnt_postscript_name(ttf_parser::name::Name { encoding_id: 1, ..name }), None);
+        assert_eq!(sfnt_postscript_name(ttf_parser::name::Name { name: b"bad\xff", ..name }), None);
+        assert_eq!(sfnt_postscript_name(ttf_parser::name::Name { name_id: 1, ..name }), None);
+        let unicode = ttf_parser::name::Name { platform_id: ttf_parser::PlatformId::Unicode,
+            name: b"\0A\0B", ..name };
+        assert_eq!(sfnt_postscript_name(unicode).as_deref(), Some("AB"));
+    }
+}
