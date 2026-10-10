@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "reviewed_commit": "727767c005976ac77da8dec1e38dc0c873ab4228",
+  "workspace_passed": 416,
+  "workspace_ignored": 2,
+  "raw_workspace_sha256": "a10173a42eafdaf4999cbbd1b9f3d69d4d628579ab43cc17ffd21fcdd7d9df7f",
+  "retained_workspace_sha256": "09d0961b2effaa071851232ec83a4ac39de4c6c88982d755d157fb87fe7822a0",
+  "strict_hardware_artifact_reread": {
+    "retained_old_style_failures": 15,
+    "passed": true,
+    "mandatory_cases": 58,
+    "negative_controls": 5,
+    "rgba_tolerance": 0,
+    "scope": "Same NVIDIA adapter, source OpenGL/headless Vulkan/actual owned-window Vulkan. No general texture/style/Metal acceptance."
+  },
+  "renderer_source_matches_hardware_candidate": "77eb89c",
+  "provenance_sha256": "04fbf345f84ce64739774da64a7e76b7356710d38c1ea026ab99864fa7c22d51",
+  "boundary": "Untextured face-style corpus; actual retained section/rollback protocol evidence, contour residuals and edge/texture/Metal/performance gates remain open"
+}
