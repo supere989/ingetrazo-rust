@@ -1,0 +1,9 @@
+{
+  "reviewed_source_sha256": "b421d96352a0f0015838bf28f8e39274b7b00d6306920ca6db77e0d81a25e65e",
+  "stage": "Uncommitted full-model importer; not accepted",
+  "findings": [
+    "i64 source key conversion saturates for large finite Qt coordinates; neighbor arithmetic can overflow and distinct keys can alias. Original Python keys are arbitrary integers.",
+    "collect is shared by VFF and legacy imports; prior VFF nested and textured comparisons are relevant regression coverage."
+  ],
+  "action": "Agent notified; preserve exact full-model comparison and address key domain before integration."
+}
