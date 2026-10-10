@@ -9,6 +9,8 @@ rustpython-vm = { version = "=0.6.0", default-features = false, features = ["com
 serde_json = "1"
 ingetrazo-core = { path = "../../crates/ingetrazo-core" }
 glam = "0.29"
+num-bigint = "0.4"
+num-traits = "0.2"
 [profile.dev]
 debug = 0
 incremental = false

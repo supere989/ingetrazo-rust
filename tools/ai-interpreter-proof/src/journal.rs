@@ -1,12 +1,16 @@
 //! Bounded append-only mesh transaction proof, not an all-document journal.
 use glam::DVec3;
-use ingetrazo_core::{math::PointKey,mesh::{Mesh,MeshVertex,MeshEdge}};
+use ingetrazo_core::{mesh::{Mesh,MeshVertex,MeshEdge}};
 use std::collections::{HashMap};
+use num_bigint::BigInt;
+use num_traits::FromPrimitive;
+#[derive(Clone,Eq,PartialEq,Hash)] struct SourceKey([BigInt;3]);
+impl SourceKey{fn new(p:DVec3)->Self{Self(p.to_array().map(|x|BigInt::from_f64((x*10000.).round_ties_even()).expect("finite Qt coordinate")))}}
 pub struct MeshJournal {
  pub base_version:u64,
  pub base_vertices:usize,
  pub base_edges:usize,
- vertices:HashMap<PointKey,usize>,
+ vertices:HashMap<SourceKey,usize>,
  edges:HashMap<(usize,usize),(usize,usize,usize)>,
  base_positions:Vec<DVec3>,
  pub added_vertices:Vec<DVec3>,
@@ -15,22 +19,32 @@ pub struct MeshJournal {
 impl MeshJournal {
  pub fn begin(mesh:&Mesh,version:u64)->Self {
   Self {base_version:version,base_vertices:mesh.vertices.len(),base_edges:mesh.edges.len(),
-   vertices:mesh.vertices.iter().enumerate().map(|(id,v)|(PointKey::from_vec3(v.position),id)).collect(),
+   vertices:mesh.vertices.iter().enumerate().map(|(id,v)|(SourceKey::new(v.position),id)).collect(),
    edges:mesh.edges.iter().enumerate().map(|(id,e)|(ordered(e.v0,e.v1),(id,e.v0,e.v1))).collect(),base_positions:mesh.vertices.iter().map(|v|v.position).collect(),added_vertices:vec![],added_edges:vec![]}
  }
  pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(usize,DVec3,DVec3),String>{
   let a=a.as_vec3().as_dvec3();let b=b.as_vec3().as_dvec3();
   if !a.is_finite()||!b.is_finite(){return Err("Nonfinite endpoint".into());}
-  let ka=PointKey::from_vec3(a);let kb=PointKey::from_vec3(b);
-  if ka==kb{return Err("Coincident endpoints".into());}
+  let ka=SourceKey::new(a);let kb=SourceKey::new(b);
   let v0=self.vertex(ka,a);let v1=self.vertex(kb,b);
+  if v0==v1{return Err("degenerate edge: endpoints weld to one vertex".into());}
   let key=ordered(v0,v1);
   let endpoints=if let Some(&existing)=self.edges.get(&key){existing}else{let id=self.base_edges+self.added_edges.len();self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
   Ok((endpoints.0,self.position(endpoints.1),self.position(endpoints.2)))
  }
  fn position(&self,id:usize)->DVec3{if id<self.base_vertices{self.base_positions[id]}else{self.added_vertices[id-self.base_vertices]}}
- fn vertex(&mut self,key:PointKey,p:DVec3)->usize {
+ fn vertex(&mut self,key:SourceKey,p:DVec3)->usize {
   if let Some(&id)=self.vertices.get(&key){return id;}
+  // Original registry probes neighbouring cells in dx/dy/dz order,
+  // with Qt float32 subtraction and squared-length, strictly below step².
+  for dx in -1..=1{for dy in -1..=1{for dz in -1..=1{
+   if dx==0&&dy==0&&dz==0{continue;}
+   let neighbour=SourceKey([&key.0[0]+dx,&key.0[1]+dy,&key.0[2]+dz]);
+   if let Some(&id)=self.vertices.get(&neighbour){
+    let d=self.position(id).as_vec3()-p.as_vec3();
+    if (d.length_squared() as f64)<1e-8{return id;}
+   }
+  }}}
   let id=self.base_vertices+self.added_vertices.len();self.vertices.insert(key,id);self.added_vertices.push(p);id
  }
  /// UI owner admission precedes every mutation. Version must cover all writers.
@@ -68,13 +82,19 @@ impl MeshJournal {
  }
 }
 fn validate_base(mesh:&Mesh)->Result<(),String>{
+ let mut incidence=vec![0u8;mesh.edges.len()];
+ for (id,v) in mesh.vertices.iter().enumerate(){
+  if !v.position.is_finite(){return Err("Malformed base vertex".into());}
+  for &edge in &v.edges{
+   let e=mesh.edges.get(edge).ok_or("Malformed base incidence")?;
+   let bit=if e.v0==id{1}else if e.v1==id{2}else{return Err("Malformed base incidence".into());};
+   if incidence[edge]&bit!=0{return Err("Duplicate base incidence".into());}
+   incidence[edge]|=bit;
+  }
+ }
  for (id,e) in mesh.edges.iter().enumerate(){
   if e.v0==e.v1||e.v0>=mesh.vertices.len()||e.v1>=mesh.vertices.len()
-   ||!mesh.vertices[e.v0].edges.contains(&id)||!mesh.vertices[e.v1].edges.contains(&id)
-   ||e.faces.iter().any(|&f|f>=mesh.faces.len()){return Err("Malformed base edge".into());}
- }
- for (id,v) in mesh.vertices.iter().enumerate(){
-  if !v.position.is_finite()||v.edges.iter().any(|&e|mesh.edges.get(e).is_none_or(|e|!e.contains_vertex(id))){return Err("Malformed base vertex".into());}
+   ||incidence[id]!=3||e.faces.iter().any(|&f|f>=mesh.faces.len()){return Err("Malformed base edge".into());}
  }
  for f in &mesh.faces{if f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|v>=mesh.vertices.len()){return Err("Malformed base face".into());}}
  Ok(())

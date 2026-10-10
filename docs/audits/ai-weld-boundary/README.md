@@ -1,0 +1,5 @@
+# Transaction-local original weld boundary
+
+Actual frozen Qt Mesh.add_edge and standalone native journal agree exactly on seven literal cases: positive/negative half-grid, neighbouring cell, strict step boundary below/above, diagonal neighbour and large finite float32 coordinates. The old native key output is retained and rejected by the same validator; inventory mutations also reject.
+
+Only the standalone transaction lookup changes: Qt float32 quantization, ties-even arbitrary integer keys and ordered 26-neighbour strict float32 distance probing. Core PointKey behavior is untouched. Publication uses real appended IDs and a linear incidence validation pass, avoiding high-degree repeated adjacency searches. It currently rebuilds the native spatial index once per successful transaction because direct append must leave the shared Mesh usable by existing core operations; persistent index ownership/efficient incremental publication remain open. This is not a deadline, complete history journal, import, allocation failure or whole-document atomicity proof.
