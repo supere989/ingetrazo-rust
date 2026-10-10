@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "source": "be6c1663797638c1dc865e0fe066b23c31f3cfd2",
+  "binary_sha256": "8339f968b82bec7e49fdd36bc6145c1c33d6ba4fc73a446f7c2ed568f355be3a",
+  "real_models": 3,
+  "chapel_dimensions": 26,
+  "back_painted_corner_order": "exact; compiled-old mismatch rejected",
+  "scope": "Fresh integrated imported structures and explicit annotation inventory, not complete SKP era or rendered parity",
+  "remaining": [
+    "broader record coverage and positive leader text",
+    "rendered import acceptance",
+    "combined workspace acceptance"
+  ],
+  "purged_completed_transports": [
+    {
+      "path": "models/gondola_v20-payload.json",
+      "sha256": "726281dc45aea9fe133259b7b2f2bee99480108f9271198f5965baf71e84560d",
+      "bytes": 5015479
+    },
+    {
+      "path": "models/gondola_v20.igz",
+      "sha256": "5bdc9779452215f0572445a90af41d08be496681cd617e2b5d48c123d777edb6",
+      "bytes": 2641104
+    },
+    {
+      "path": "models/capilla_quiroz_v17-payload.json",
+      "sha256": "e9869b4602a2b24b31b63954ba8f17d664f246557ae4d520d53753cc63f6764e",
+      "bytes": 1604396
+    },
+    {
+      "path": "models/capilla_quiroz_v17.igz",
+      "sha256": "3f5697ab402c184508c81d720947545ee685f5c9e468e68b45042dc816dbec0d",
+      "bytes": 104193
+    },
+    {
+      "path": "models/legacy_v7_synthetic-payload.json",
+      "sha256": "2b34ebceb2352c4261a24e68ea371a534101e27bc0dfb1b1138c48b3adfaf78b",
+      "bytes": 22985070
+    },
+    {
+      "path": "models/legacy_v7_synthetic.igz",
+      "sha256": "81d2414b33c7a8496ce789a6175e2dd14b1e06a8904dd903731265a87f5a79e7",
+      "bytes": 1474742
+    },
+    {
+      "path": "back-control/payload.json",
+      "sha256": "dc71cbfe4d5e8dff4d1e9708b11f5ae1115c58646c023a325f59129b792cb4f3",
+      "bytes": 3256
+    },
+    {
+      "path": "back-control/fixed.igz",
+      "sha256": "601d360ed9539183043625d21467aec36f79194aabe1b2de4ae77ec17c710159",
+      "bytes": 4579
+    }
+  ]
+}
