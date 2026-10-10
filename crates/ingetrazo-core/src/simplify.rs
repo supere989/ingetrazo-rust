@@ -51,6 +51,31 @@ fn compatible(a: &MeshFace, b: &MeshFace) -> bool {
                 _ => false,
             })
 }
+// The source kernel stores QVector3D normals in float32. Near the zero-angle
+// threshold its normalization/dot rounding decides whether triangles fuse.
+fn source_normal(mesh: &Mesh, id: usize) -> DVec3 {
+    let ring = &mesh.faces[id].vertices;
+    let mut n = glam::Vec3::ZERO;
+    for i in 0..ring.len() {
+        let a = mesh.vertices[ring[i]].position;
+        let b = mesh.vertices[ring[(i + 1) % ring.len()]].position;
+        n += glam::Vec3::new(
+            ((a.y - b.y) * (a.z + b.z)) as f32,
+            ((a.z - b.z) * (a.x + b.x)) as f32,
+            ((a.x - b.x) * (a.y + b.y)) as f32,
+        );
+    }
+    let length = n.length();
+    if length < 1e-10 {
+        DVec3::ZERO
+    } else {
+        (n / length).as_dvec3()
+    }
+}
+fn source_dot(a: DVec3, b: DVec3) -> f64 {
+    a.as_vec3().dot(b.as_vec3()) as f64
+}
+
 fn root(parent: &mut [usize], mut i: usize) -> usize {
     while parent[i] != i {
         parent[i] = parent[parent[i]];
@@ -122,18 +147,24 @@ pub fn simplify_mesh(
         }
         eligible.push(i);
     }
-    let normals: Vec<_> = eligible.iter().map(|&i| mesh.face_normal(i)).collect();
+    let normals: Vec<_> = eligible.iter().map(|&i| source_normal(mesh, i)).collect();
     let mut parent: Vec<_> = (0..eligible.len()).collect();
     let mut edges = BTreeMap::<(usize, usize), Vec<usize>>::new();
+    let mut edge_order = vec![];
     for (j, &i) in eligible.iter().enumerate() {
         let ring = &mesh.faces[i].vertices;
         for k in 0..ring.len() {
             let (a, b) = (ring[k], ring[(k + 1) % ring.len()]);
-            edges.entry((a.min(b), a.max(b))).or_default().push(j);
+            let key = (a.min(b), a.max(b));
+            if !edges.contains_key(&key) {
+                edge_order.push(key);
+            }
+            edges.entry(key).or_default().push(j);
         }
     }
     let cos = max_angle_degrees.to_radians().max(0.00045).cos();
-    for adjacent in edges.values() {
+    for key in edge_order {
+        let adjacent = &edges[&key];
         if adjacent.len() != 2 {
             continue;
         }
@@ -142,14 +173,14 @@ pub fn simplify_mesh(
         if principal_planes && (!principal(normals[a]) || !principal(normals[b])) {
             continue;
         }
-        if normals[a].dot(normals[b]).abs() < cos
+        if source_dot(normals[a], normals[b]).abs() < cos
             || !compatible(&mesh.faces[eligible[a]], &mesh.faces[eligible[b]])
         {
             continue;
         }
         let (ra, rb) = (root(&mut parent, a), root(&mut parent, b));
         if ra != rb
-            && normals[ra].dot(normals[rb]).abs() >= cos
+            && source_dot(normals[ra], normals[rb]).abs() >= cos
             && compatible(&mesh.faces[eligible[ra]], &mesh.faces[eligible[rb]])
         {
             parent[rb] = ra;
