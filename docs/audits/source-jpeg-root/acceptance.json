@@ -1,0 +1,117 @@
+{
+  "source": "e9003673",
+  "binary_sha256": "63e702898dc64cb166ea967022e13532c791556ddae5c9cc33cf5aeb3ff5057e",
+  "scope": "Fresh merged native decoder against actual Qt on independent dimensions, patterns and JPEG qualities",
+  "cases": [
+    {
+      "width": 11,
+      "height": 19,
+      "quality": 35,
+      "progressive": false,
+      "encoded_sha256": "b0ddab4a85359e41fbba222c72a147fe4dc0df108526fa0990f9af551b13bbb5",
+      "rgba_sha256": "0a59eff685ccecdcd989bcdd5fef0df1694d08b6b22c10908727cc69ebc4b7ae",
+      "exact": true
+    },
+    {
+      "width": 11,
+      "height": 19,
+      "quality": 35,
+      "progressive": true,
+      "encoded_sha256": "f7754a201c63ccc18d11d4d114634c80ad07dc8efd2e85f9185cc645f16bf4e0",
+      "rgba_sha256": "0a59eff685ccecdcd989bcdd5fef0df1694d08b6b22c10908727cc69ebc4b7ae",
+      "exact": true
+    },
+    {
+      "width": 11,
+      "height": 19,
+      "quality": 95,
+      "progressive": false,
+      "encoded_sha256": "cb72b7bf166f7616ff443635990e9b62e780f3e635f4d7696e1809513ea805bf",
+      "rgba_sha256": "9daba1d02456938a8c720c005db95a71a3838ea7a5eb24412bb2fa238977051e",
+      "exact": true
+    },
+    {
+      "width": 11,
+      "height": 19,
+      "quality": 95,
+      "progressive": true,
+      "encoded_sha256": "741b34f23622463f5dd6bbe93560ffaed339544dc993f1ea55aa115a098cbf87",
+      "rgba_sha256": "9daba1d02456938a8c720c005db95a71a3838ea7a5eb24412bb2fa238977051e",
+      "exact": true
+    },
+    {
+      "width": 33,
+      "height": 17,
+      "quality": 35,
+      "progressive": false,
+      "encoded_sha256": "ce346f73d570ddd0e1128e64a0698827649b1470457402aa6e3b830af2275aca",
+      "rgba_sha256": "d4974b3082ee5402091ee47bbe6e2fdba1a18902b47b3e2da46c7316e3c27094",
+      "exact": true
+    },
+    {
+      "width": 33,
+      "height": 17,
+      "quality": 35,
+      "progressive": true,
+      "encoded_sha256": "a85984d7b515bea8e624252417fde557b5ac0dfde59671174b0f65814b4abf51",
+      "rgba_sha256": "d4974b3082ee5402091ee47bbe6e2fdba1a18902b47b3e2da46c7316e3c27094",
+      "exact": true
+    },
+    {
+      "width": 33,
+      "height": 17,
+      "quality": 95,
+      "progressive": false,
+      "encoded_sha256": "25789ee04454ea23ea4d4dcbdea8a7dfe72daef73182c3b7e623c489b432eabd",
+      "rgba_sha256": "7a43751df74609ed0a8fa4ff178a39acd1c1e907798a1c8e1c1984d0e6e17e60",
+      "exact": true
+    },
+    {
+      "width": 33,
+      "height": 17,
+      "quality": 95,
+      "progressive": true,
+      "encoded_sha256": "38595b234c13dc4192e3b8f0d1007be425a8c08c025d3bf374581736a463339f",
+      "rgba_sha256": "7a43751df74609ed0a8fa4ff178a39acd1c1e907798a1c8e1c1984d0e6e17e60",
+      "exact": true
+    },
+    {
+      "width": 129,
+      "height": 67,
+      "quality": 35,
+      "progressive": false,
+      "encoded_sha256": "412601ab385b8f0e5ba17f222d3f5ac01bd6474fe3aa74af7fa571967ea858ae",
+      "rgba_sha256": "f983cbc83c0175c721acbcfe085892f621e63632931e40ddb530d488fa66c118",
+      "exact": true
+    },
+    {
+      "width": 129,
+      "height": 67,
+      "quality": 35,
+      "progressive": true,
+      "encoded_sha256": "bca1d324d49a289b94d90cb9e86716d67f27059fe67ffc5ef06a180672020be1",
+      "rgba_sha256": "f983cbc83c0175c721acbcfe085892f621e63632931e40ddb530d488fa66c118",
+      "exact": true
+    },
+    {
+      "width": 129,
+      "height": 67,
+      "quality": 95,
+      "progressive": false,
+      "encoded_sha256": "142b8600c89116797124d1cd438f02ac01532ad72744fc50f1299f1bc2cfdaa9",
+      "rgba_sha256": "21aa426d8b8ca20bcb884bc8c6aa6f70dda2d6e1793cc3e33abd1b521713813c",
+      "exact": true
+    },
+    {
+      "width": 129,
+      "height": 67,
+      "quality": 95,
+      "progressive": true,
+      "encoded_sha256": "633af261f262de14c9eee291e15f8577f437faacce231b4e347187375d040d9f",
+      "rgba_sha256": "21aa426d8b8ca20bcb884bc8c6aa6f70dda2d6e1793cc3e33abd1b521713813c",
+      "exact": true
+    }
+  ],
+  "passed": true,
+  "temporary_inputs_purged": true
+}
