@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "workspace": [
+    428,
+    0,
+    2
+  ],
+  "fixed_function_cases": 9,
+  "manual_fallback_cases": 9,
+  "whole_rgba_tolerance": 0,
+  "missing_manifest_failure_retained": true,
+  "boundary": "Root fresh coherent latest CAD candidate software Vulkan images. Hardware/WSI/groupvisibility and exactauthored2D acceptance remain separate, genericUI2/24 residual retained."
+}

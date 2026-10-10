@@ -1,0 +1,111 @@
+{
+  "igz_format": 1,
+  "app_version": "0.5.7",
+  "scene": {
+    "edges": [],
+    "faces": [],
+    "groups": [
+      {
+        "proto": 0,
+        "xform": [
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "component": true,
+        "name": "Line placement",
+        "uid": "a173929e821042b8",
+        "hidden": true
+      }
+    ],
+    "protos": [
+      {
+        "edges": [
+          {
+            "a": [
+              -0.800000011920929,
+              0.20000000298023224,
+              0.0
+            ],
+            "b": [
+              0.30000001192092896,
+              0.8999999761581421,
+              0.0
+            ]
+          }
+        ],
+        "faces": []
+      }
+    ],
+    "dimension_style": {
+      "decimals": 2,
+      "units": "m",
+      "font_size": 9,
+      "color": [
+        45,
+        55,
+        75
+      ],
+      "norma": "iso",
+      "base_step_mm": 8.0,
+      "ends": "arrow"
+    },
+    "display_style": {
+      "name": "Default",
+      "face_mode": "wireframe",
+      "edges": true,
+      "profiles": false,
+      "back_edges": false,
+      "edge_color": [
+        0.13,
+        0.17,
+        0.23
+      ],
+      "front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sky": false,
+      "sky_color": [
+        0.925,
+        0.935,
+        0.945
+      ],
+      "ground_color": [
+        0.815,
+        0.82,
+        0.815
+      ],
+      "section_fill": true,
+      "section_fill_color": [
+        0.35,
+        0.37,
+        0.41
+      ]
+    }
+  }
+}

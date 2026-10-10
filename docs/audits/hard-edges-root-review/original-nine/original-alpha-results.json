@@ -1,0 +1,405 @@
+{
+  "provenance": {
+    "rust_commit": "aa49778f3119078b6834c47fd9a1ef6874994840",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "8e61efa070963cfe25595fda632f726bb5c64310c4f1ddd339378d8339d5dbc1",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 2,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "f4255f8c839066b794408d1db7b7281bd2147d1195001b6edd2f3b74378d2c9b",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 0,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "1a807c701922a831e18d4804f3ae9abc23f108a0ab13d70796bea3d1ad74f67d",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 0,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "d1a009f6ba3639b81204883f3fa62a66d311cafe79c8ae1ad22ba98c58beaf2c",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 0,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "b47c228eae92f99229d13cf2a68a744c2a8ee3c6576864e018195ddf1caf42a3",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 0,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "2e46d744cb00b85e82bd6f77748bea9dc6e007640a9f5201be3599072781b2bb",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 0,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [],
+      "native_input_sha256": "d8c3f94743192a35432530bd878f5294e9051026eb0efe0045de73e55e4da3d2",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 0,
+      "front_culled_opaque_run": [
+        0,
+        0
+      ],
+      "opaque_back_run": [
+        0,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 2,
+      "style_mode": "wireframe",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "center_rgba": [
+        51,
+        102,
+        153,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          1.0,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "a33fbece5c34ce5c6ddb2b3a66c40061e4e5f13bab9d4f3f51be7ab4fb2cc3a2",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 6,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 10,
+      "style_mode": "hidden_line",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "center_rgba": [
+        250,
+        102,
+        102,
+        255
+      ],
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "faces": [
+        [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          1.0,
+          0.0
+        ]
+      ],
+      "native_input_sha256": "1bb0d62ff36282cb0fb5871d50b6363093a5f53f2c51a70bb587e5858b414e40",
+      "cached_opacity_runs": [],
+      "ordinary_faces_count": 6,
+      "front_culled_opaque_run": [
+        6,
+        0
+      ],
+      "opaque_back_run": [
+        6,
+        0
+      ],
+      "cached_back_opacity_runs": [],
+      "show_edges": true,
+      "hard_edge_endpoint_count": 10,
+      "style_mode": "xray",
+      "style_front_color": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "style_back_color": [
+        0.8,
+        0.3,
+        0.1
+      ],
+      "qt_image_format": "Format.Format_RGB32"
+    }
+  ],
+  "scope": "Actual original Qt OpenGL encoded-RGB blend, depth-write-off, cached opacity run order; colored untextured front surfaces only. Not texture/back-side/instancing/Xray coverage.",
+  "root_manifest_boundary": {
+    "mandatory_subset": 9,
+    "parent_sha256": "7d436030b5bd5d924811ff4d4e32532483d35f07383b7ed6e541f8a30af18972",
+    "reason": "Committed original manifest references additional IGZ files absent from bounded hard-edge artifact; this declared nine-only manifest reproduces the advertised acceptance, not the broader corpus."
+  }
+}

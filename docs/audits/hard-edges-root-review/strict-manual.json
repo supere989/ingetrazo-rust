@@ -1,0 +1,51 @@
+{
+  "scope": "Exact software/hardware image corpus only; profiles/textures/back-edge dashes/platform/performance acceptance remains separate",
+  "cases": [
+    {
+      "case": "style-wireframe-asymmetric-line",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-wireframe-reflected-line",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-wireframe-hidden-group",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-wireframe-hidden-edge",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-wireframe-hidden-layer",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-wireframe-soft-line",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-wireframe-clipped-line",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-hidden_line-occluded-line",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    },
+    {
+      "case": "style-xray-occluded-line",
+      "whole_rgba_differing_pixels": 0,
+      "pass_exact": true
+    }
+  ],
+  "pass_all": true
+}
