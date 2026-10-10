@@ -19,3 +19,7 @@ python scripts/check-macos-paper-font-pages.py original-fonts native-font-pages 
 python scripts/check-macos-paper-font-pages.py original-fonts native-font-pages 150
 python scripts/check-macos-paper-font-pages.py original-fonts native-font-pages 300
 ```
+
+## Partial diagnostics and mandatory negatives
+
+The checker retains one result for each of the six required names even when native resolution/export refuses. Available pages are still read and compared. Missing/refused cases always keep the overall result false. Each actual source page also passes blank and exactly one decoded-pixel alteration through the identical comparison function; both must refuse. Small actual QImage unit controls passed and are retained; actual macOS PDF/control execution remains pending coordinated native output.
