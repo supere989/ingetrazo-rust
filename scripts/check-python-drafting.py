@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual original Line/Rectangle/Freehand command recipes versus native drafting."""
-import os,sys,json,tempfile,subprocess,types,copy
+import os,sys,json,tempfile,subprocess,types,copy,hashlib
 from pathlib import Path
 from acceptance_context import context
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen");sys.path.insert(0,"ingetrazo")
@@ -46,8 +46,9 @@ def main():
    if o["explicit"]is not None:o["explicit"]=[transform(p)for p in o["explicit"]]
   return c
  cases.extend([angled(cases[i])for i in [0,3,9,10,11]])
+ cases.extend([case("holed-outside-void-chord",holed,ops=[op([[0,.5,0],[4,.5,0]])]),case("two-hole-chord-locality",[{"vertices":[[0,0,0],[8,0,0],[8,8,0],[0,8,0]],"holes":[hole,[[5,5,0],[5,7,0],[7,7,0],[7,5,0]]],"attrs":paint}],ops=[op([[0,2,0],[8,2,0]])])])
  Path("docs/audits/drafting-expanded-corpus.json").write_text(json.dumps(cases,indent=2)+"\n")
- rows=[];failures=[]
+ rows=[];failures=[];frozen=[]
  with tempfile.TemporaryDirectory()as d:
   a,b=Path(d)/"cases.json",Path(d)/"results.json";a.write_text(json.dumps(cases));subprocess.run(["cargo","run","--locked","-p","ingetrazo-core","--example","drafting_acceptance_fixture","--",str(a),str(b)],check=True);results=json.loads(b.read_text())
   for c,r in zip(cases,results):
@@ -63,12 +64,14 @@ def main():
      for a,b in seg:h.execute(build_add_edge(s,a,b))
     assert h.last_error is None,h.last_error
    fs=[{"vertices":[xyz(p)for p in f.vertices],"holes":[[xyz(p)for p in hole]for hole in f.holes],"attrs":f.attrs}for f in s.faces];es=[{"points":[xyz(e.a),xyz(e.b)],"curve":e.curve}for e in s.mesh.edges]
+   frozen.append({"input":c,"original":{"faces":fs,"edges":es},"rust":r})
    same=faces(fs)==faces(r["faces"])and edges(es)==edges(r["edges"])and curves(es)==curves(r["edges"]);rows.append({"case":c["name"],"match":same,"original_faces":len(fs),"rust_faces":len(r["faces"])})
    if not same:failures.append({"case":c["name"],"original_faces":fs,"original_edges":es,"rust":r})
  controls=[]
  for name,index,field,value in [("lost-region",0,"faces",[]),("lost-curve-membership",5,"edges",[dict(e,curve=None)for e in results[5]["edges"]]),("lost-wire",1,"edges",[])]:
   changed=copy.deepcopy(results[index]);changed[field]=value;detected=faces(changed["faces"])!=faces(results[index]["faces"]) or edges(changed["edges"])!=edges(results[index]["edges"]) or curves(changed["edges"])!=curves(results[index]["edges"]);assert detected
   controls.append({"case":name,"detected":True})
- report={"negative_controls":controls,"provenance":context(),"passed":not failures,"cases":rows,"failures":failures,"scope":"Original actual Line single-edge, Rectangle explicit AddFace and Freehand commit_arc pipelines; exact oriented faces/holes/paint, wire topology and curve membership. Includes original global rebuild resurrection when any disconnected curve exists. Expanded holed and nonprincipal-plane source boundaries retained; Native input nonfinite refusal. Includes actual original stepped-solid band fixture; UI sampling, projection/undo controller acceptance separate."}
+ Path("docs/audits/drafting-accepted-corpus.json").write_text(json.dumps(frozen,indent=2)+"\n")
+ report={"binary_sha256":hashlib.sha256(Path("target/debug/examples/drafting_acceptance_fixture").read_bytes()).hexdigest(),"negative_controls":controls,"provenance":context(),"passed":not failures,"cases":rows,"failures":failures,"scope":"Original actual Line single-edge, Rectangle explicit AddFace and Freehand commit_arc pipelines; exact oriented faces/holes/paint, wire topology and curve membership. Includes original global rebuild resurrection when any disconnected curve exists. Expanded holed and nonprincipal-plane source boundaries retained; Native input nonfinite refusal. Includes actual original stepped-solid band fixture; UI sampling, projection/undo controller acceptance separate."}
  Path("docs/audits/python-drafting-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(rows));assert not failures,[f["case"]for f in failures]
 if __name__=="__main__":main()
