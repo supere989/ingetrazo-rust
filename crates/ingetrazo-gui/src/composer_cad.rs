@@ -64,9 +64,18 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    // Exact convex outlines and source round caps. Other curves, clipped
    // strokes/nonconvex and cosmetic strokes remain on the prior tessellator.
    let eligible_outline=straight_outline.as_ref().filter(|points|fill||(width>0.&&f64::from(width)<minimum_edge(points)));
-   if eligible_outline.is_some()||(closed_curve.is_some()&&(fill||width>0.))||(!fill&&width>0.&&exact_line.is_some()) {
+   let thin=!fill&&command.stroke.as_ref().is_some_and(|(_,w)|*w*f64::from(density)<=1.);
+   if thin||eligible_outline.is_some()||(closed_curve.is_some()&&(fill||width>0.))||(!fill&&width>0.&&exact_line.is_some()) {
     let radius=command.stroke.as_ref().map(|(_,w)|*w).unwrap_or(0.)/2.;
-    let spans=if let Some(points)=eligible_outline{
+    let spans=if thin{
+     use ingetrazo_render::qt_gray::{PathContour,Segment};let mut path=if let Some(path)=&closed_curve{path.clone()}else if let Some((a,b))=exact_line{PathContour{start:[a.x,a.y],segments:vec![Segment::Line([b.x,b.y])]}}else if let Some(points)=&straight_outline{let mut segments=points.iter().skip(1).map(|p|Segment::Line([p.x,p.y])).collect::<Vec<_>>();segments.push(Segment::Line([points[0].x,points[0].y]));PathContour{start:[points[0].x,points[0].y],segments}}else{return Err("Cosmetic unsupported authored path".into());};
+     let transform=|p:[f64;2]|[p[0]*f64::from(density)+phase.x,p[1]*f64::from(density)+phase.y];path.start=transform(path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>*to=transform(*to),Segment::Cubic{control1,control2,to}=>{*control1=transform(*control1);*control2=transform(*control2);*to=transform(*to);}}}
+     let spans=ingetrazo_render::qt_cosmetic::rasterize_path(&path,closed,command.stroke.as_ref().unwrap().1*f64::from(density),100_000)?;
+     if let Some(clip)=&command.clip{let contour=clip.iter().map(|p|transform([p.x,p.y])).collect::<Vec<_>>();let clip=ingetrazo_render::qt_gray::rasterize(&[contour],250_000,100_000)?;
+      // Cosmetic segments may overlap and are deliberately not globally sorted.
+      let mut clipped=Vec::new();for span in &spans{clipped.extend(ingetrazo_render::qt_gray::intersect_spans(&[*span],&clip,100_000)?);if clipped.len()>100_000{return Err("Cosmetic clipped span admission exceeded".into());}}clipped
+     }else{spans}
+    }else if let Some(points)=eligible_outline{
     let outlines=if fill{vec![points.clone()]}else{convex_bevel_outline(points,radius)?};
     let mut contours=outlines.into_iter().map(|outline|outline.into_iter().map(|p|[p.x*f64::from(density),p.y*f64::from(density)]).collect::<Vec<_>>()).collect::<Vec<_>>();
     for contour in &mut contours{for point in contour{point[0]+=phase.x;point[1]+=phase.y;}}

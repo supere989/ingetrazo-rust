@@ -136,3 +136,5 @@ pub mod native_edges;
 pub mod cad2d;
 
 pub mod qt_gray;
+
+pub mod qt_cosmetic;
