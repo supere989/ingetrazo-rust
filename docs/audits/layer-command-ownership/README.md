@@ -1,24 +1,45 @@
-# Layer command ownership: operative original baseline
+# Layer command ownership
 
-`original.json` comes from `scripts/probe-python-layer-history.py`, pinned Python
-6be29fe437a7cd992d4e079f71720821b25216b9, real LayersPanel callbacks and History
-commands under Qt offscreen. This proves controller state, not rendered UI.
+Source baseline `cc170ea7` executes actual pinned Python LayersPanel callbacks
+and AssignLayer/PurgeUnused/SnapshotImport commands under Qt offscreen.
+Native source `891ac5ce` uses production app methods and model-history hooks.
+Four cases/13 states compare exactly after explicitly translating the legacy
+native default name `Layer0` into source `Layer 0`. All other names, ordering,
+flags, entity labels and history depths are exact. Four corruptions are rejected.
 
-Four cases establish distinct ownership:
-- Panel add/visibility/lock survive unrelated model Undo/Redo without adding history.
-- AssignLayer-created registry removal uses the original target **name**, not stable
-  object identity. Renaming it leaves the renamed layer on Undo; Redo creates the
-  original target name again. Entity labels follow the command.
-- Purge retains removed Layer objects. A visibility change after Undo survives
-  another Redo/Undo, with original index restoration.
-- SnapshotImport retains appended Layer objects. Deleting the imported layer in
-  the panel leaves it absent on Undo, but Redo resurrects the renamed object.
+Ownership is distinct:
+- Panel add/visibility/lock remain outside History and retain Redo.
+- Assign-created layers are removed by the original target **name** on Undo.
+  Renaming leaves the renamed layer alive; Redo creates the original name and
+  reapplies the command-owned entity labels.
+- Purge restores held Layer objects at their original indices, preserving later
+  visibility edits through repeated cycles.
+- SnapshotImport owns appended objects. UI-deleting an imported renamed layer
+  does not invalidate its held object; Redo appends that object again.
 
-Native source currently snapshots the whole registry for model Undo and its panel
-minus button pops the last layer without reassigning tagged entities. Correction
-and independent native comparison are **pending**. A blanket exclusion of layers
-would lose Assign/Purge/Import ownership and is not an acceptable correction.
+Runtime identity/ownership metadata is not serialized and does not alter layer
+semantic equality. Panel mutations seal the preceding model operation before
+changing registry membership; Undo applies only the recorded command ownership.
+Ordinary nested history carries this metadata through Finish. Mesh-shareback
+continues to preserve the current global registry, matching source absorption.
 
-Default labels differ: original `Layer 0`, current native `Layer0`; any normalized
-checker must name this representation boundary rather than silently hiding it.
-No style/shadow/image-plane or full layer workflow completion is claimed.
+The tray now routes registry/flag edits through these app methods, offers naming,
+and deletes its selected layer rather than the last one. Current-context deletion
+reassigns nested meshes/placements, modeled annotations and registry caches.
+Purge descends nested geometry, respects saved-view hidden layers and checks
+parked outer contexts. Locks/hidden layers prune Face/Edge/Group selection.
+
+`baseline-native.json` is a literal pre-correction app replay of the first two
+cases: panel addition disappears on Undo; the Purge cycle was already a
+positive control. The old output is rejected on its recorded panel case, not
+merely because the other two cases were absent. Three focused regression tests cover ordinary registry state,
+nested entity reassignment and lifted ordinary context history. Workspace:
+540 passed/2 ignored; original shareback and global-entity replays pass.
+
+Boundaries remain open: no rendered tray gesture acceptance, actual file-import
+UI proof (native import case uses the snapshot import boundary), complete global
+layer deletion across parked contexts, all annotation selection/assignment
+families, command-family-specific geometry/attribute ownership, shared-definition
+rename/delete corners or full immutable-history performance. Image planes are
+not modeled yet. No full layer/P15/style/shadow/image-plane claim. Tile fields
+were untouched.
