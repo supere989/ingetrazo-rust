@@ -1,0 +1,21 @@
+{
+  "reviewed_commit": "740ec97f2e2e1abd5ec51664330372d198c997c0",
+  "reviewed_blobs": {
+    "crates/ingetrazo-gui/src/image_outline_arena.rs": "0cbac317994b1e0245e9393e77ee4ad1a940e19a",
+    "crates/ingetrazo-gui/src/image_outline_chunks.rs": "19aa0986427e082b38d8c56ad3446ceee3915afe",
+    "crates/ingetrazo-gui/src/native_vulkan/cad2d/arena.rs": "9d58d26dcccb6345735abecb427059cc25282cf6"
+  },
+  "review_type": "Independent source inspection; runtime handoff pending",
+  "findings": [
+    "Pending allocations cannot be marked used or rolled back after publication.",
+    "Retired ranges remain unavailable until the acknowledged graphics serial reaches their last use.",
+    "Failed multi-chunk publication preserves prior ready geometry and ready pose; candidate rollback is conditional on known submission completion.",
+    "CPU chunk candidates are all constructed before publication; unchanged chunks preserve Arc identity."
+  ],
+  "limits": [
+    "Arena capacity is fixed at 32 MiB for each vertex/index planner, not a global VRAM limit. Large-scene capacity policy remains open.",
+    "Draw and prepare still inspect published slots; no whole-frame O(k) or measured end-to-end performance claim.",
+    "Actual failed-publication hardware output and restored-source results still require final handoff review."
+  ],
+  "tests_rerun": false
+}
