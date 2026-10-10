@@ -18,6 +18,7 @@ from views.viewport import Viewport
 # Inventory comparison remains mandatory beside pixel captures.
 s=(root/'scripts/check-native-skp-vff.py').read_text();exec(s[s.index('def ring('):s.index('rows=[]')])
 s=(root/'scripts/check-native-skp-legacy-model.py').read_text();exec(s[s.index('def inventory'):s.index('rows=[]\nfor name')])
+binary_sha256=hashlib.sha256(native.read_bytes()).hexdigest()
 rows=[];protocol=[]
 for name in ['gondola_v20','capilla_quiroz_v17']:
  path=oracle/'packages/python/tests/fixtures'/(name+'.skp');igz=out/(name+'.igz');igz.unlink(missing_ok=True)
@@ -41,5 +42,6 @@ for name in ['gondola_v20','capilla_quiroz_v17']:
    vp.close();vp.deleteLater();app.processEvents()
   left,right=captures;different=sum(left.pixel(x,y)!=right.pixel(x,y)for y in range(600)for x in range(800));ink=sum(left.pixelColor(x,y).red()<245 or left.pixelColor(x,y).green()<245 or left.pixelColor(x,y).blue()<245 for y in range(600)for x in range(800));assert ink>1000
   rows.append({**record,'different_pixels':different,'source_ink_pixels':ink,'exact':different==0,'source_image_sha256':hashlib.sha256((out/(record['name']+'-source.png')).read_bytes()).hexdigest(),'native_igz_image_sha256':hashlib.sha256((out/(record['name']+'-native-igz.png')).read_bytes()).hexdigest()})
-(out/'protocol.json').write_text(json.dumps({'cases':protocol,'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','parser_pin':'291700bc213655a00461838de71e5f206311e619','binary_sha256':hashlib.sha256(native.read_bytes()).hexdigest()},indent=2)+'\n')
+(out/'protocol.json').write_text(json.dumps({'cases':protocol,'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','parser_pin':'291700bc213655a00461838de71e5f206311e619','binary_sha256':binary_sha256},indent=2)+'\n')
+assert hashlib.sha256(native.read_bytes()).hexdigest()==binary_sha256,'importer executable changed during capture'
 (out/'qt-isolation-results.json').write_text(json.dumps({'passed':all(r['exact']for r in rows),'cases':rows,'scope':'Qt renderer import isolation only; native Vulkan stage required'},indent=2)+'\n');assert all(r['exact']for r in rows),'strict pixel failure retained'

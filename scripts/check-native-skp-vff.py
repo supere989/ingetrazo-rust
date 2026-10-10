@@ -39,7 +39,7 @@ def scene(s):
   mesh=g.mesh;world=parent*(g.xform if g.xform is not None else QMatrix4x4());local=sorted(face(f)for f in mesh.faces);geometry=[]
   for f in mesh.faces:
    pts=[tuple(world.map(v.position).toTuple())for v in f.loop];geometry.append(min(tuple(pts[i:]+pts[:i])for i in range(len(pts))))
-  item={'name':g.name,'layer':g.layer,'path':path,'local':local,'world':sorted(geometry),'edges':sorted(edge(e)for e in mesh.edges),'counts':[len(mesh.vertices),len(mesh.edges),len(mesh.faces)],'children':len(g.children),'axes':list(g.axes.data())if g.axes is not None else None}
+  item={'name':g.name,'layer':g.layer,'path':path,'local':local,'world':sorted(geometry),'edges':sorted(edge(e)for e in mesh.edges),'counts':[len(mesh.vertices),len(mesh.edges),len(mesh.faces)],'children':len(g.children),'axes':list(g.axes.data())if g.axes is not None else None,'xform':list(g.xform.data())if g.xform is not None else None,'component':g.component,'billboard':g.billboard,'hidden':g.hidden,'material':normalized(g.material)}
   groups.append(item);shares.setdefault(id(mesh),[]).append(path)
   for i,child in enumerate(g.children):visit(child,world,path+'/'+child.name+':'+str(i))
  for i,g in enumerate(s.groups):visit(g,QMatrix4x4(),g.name+':'+str(i))
