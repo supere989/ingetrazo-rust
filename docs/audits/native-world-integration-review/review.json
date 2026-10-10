@@ -4,7 +4,7 @@
     0,
     2
   ],
-  "status": "pending_final_integration_regression",
+  "status": "accepted_bounded_native_world_integration",
   "excluded": "unfinished CAD2D callback contract/pipeline",
   "included": [
     "encoded UI composition and source raster origin",
@@ -19,6 +19,11 @@
     "Metal implementation/hardware pending",
     "full styles/textures/performance parity pending"
   ],
-  "canonical_promotion": false,
-  "hard_edge_hardware_rollback": "actualRTX retained3f9caf4: warm100zeroedgeuploads;600bytecandidateallocatedbeforebudgetdenial;old576byte48endpoint/image/ledgerrestored;finalledger0"
+  "canonical_promotion": true,
+  "hard_edge_hardware_rollback": "actualRTX retained3f9caf4: warm100zeroedgeuploads;600bytecandidateallocatedbeforebudgetdenial;old576byte48endpoint/image/ledgerrestored;finalledger0",
+  "final_workspace_counts": [
+    428,
+    0,
+    2
+  ]
 }
