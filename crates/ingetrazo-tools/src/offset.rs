@@ -77,28 +77,8 @@ impl OffsetTool {
 
     /// Apply offset loop to the selected face in `scene`.
     pub fn apply_offset(scene: &mut Scene, face_id: usize, dist: f64) -> Result<(), String> {
-        if face_id >= scene.mesh.faces.len() {
-            return Err("Invalid face ID".into());
-        }
-
-        let normal = scene.mesh.face_normal(face_id);
-        let positions: Vec<DVec3> = scene.mesh.faces[face_id]
-            .vertices
-            .iter()
-            .map(|&v| scene.mesh.vertices[v].position)
-            .collect();
-
-        let Some(offset_positions) = Self::offset_polygon(&positions, normal, dist) else {
-            return Err("Failed to compute offset polygon".into());
-        };
-
-        let offset_verts: Vec<usize> = offset_positions
-            .into_iter()
-            .map(|p| scene.mesh.add_vertex(p))
-            .collect();
-
-        // Add inner face
-        scene.mesh.add_face(offset_verts, vec![]);
+        let result = ingetrazo_core::offset::offset_face(&scene.mesh, face_id, dist)?;
+        scene.mesh = result;
         scene.bump_version();
         Ok(())
     }
