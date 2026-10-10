@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "actual_gpu_images": [
+    {
+      "name": "alpha-0",
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "name": "alpha-1",
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "name": "alpha-127",
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "name": "alpha-128",
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "name": "alpha-254",
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "name": "alpha-255",
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "name": "mixed-ui-cad",
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    }
+  ],
+  "actual_gpu_negatives": 2,
+  "presentation_claim": false
+}

@@ -1,0 +1,672 @@
+{
+  "plain:finish_live": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.4249999523162842,
+        -1.4500000476837158,
+        3.1000001430511475
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    }
+  ],
+  "plain:cancel_then_finish": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    }
+  ],
+  "component:finish_live": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.4249999523162842,
+        -1.4500000476837158,
+        3.1000001430511475
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    }
+  ],
+  "component:cancel_then_finish": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    }
+  ],
+  "folded:finish_live": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.4249999523162842,
+        -1.4500000476837158,
+        3.1000001430511475
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 2
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 2
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 2
+    }
+  ],
+  "folded:cancel_then_finish": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    }
+  ],
+  "nested:finish_live": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.4249999523162842,
+        -1.4500000476837158,
+        3.1000001430511475
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    }
+  ],
+  "nested:cancel_then_finish": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 0
+    }
+  ],
+  "nested_folded:finish_live": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.4249999523162842,
+        -1.4500000476837158,
+        3.1000001430511475
+      ],
+      "active": true,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 2
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 2
+    },
+    {
+      "origin": [
+        1.8250000476837158,
+        -0.75,
+        2.4000000953674316
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 2
+    }
+  ],
+  "nested_folded:cancel_then_finish": [
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.5
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        1.024999976158142,
+        -0.8500000238418579,
+        3.3000001907348633
+      ],
+      "active": true,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": true,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    },
+    {
+      "origin": [
+        0.125,
+        -1.25,
+        2.500000238418579
+      ],
+      "active": false,
+      "editing": false,
+      "undo": 1
+    }
+  ]
+}

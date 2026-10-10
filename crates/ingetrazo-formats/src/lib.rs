@@ -225,3 +225,5 @@ pub mod paper_font;
 pub mod paper_font_resolver;
 
 pub mod paper_text_layout;
+
+pub mod paper_text_painter;

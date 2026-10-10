@@ -1,0 +1,162 @@
+{
+  "passed": true,
+  "dpi": 72,
+  "cases": [
+    {
+      "case": "accents",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "arabic",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "arabic_run",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "bold",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "center",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "cjk",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "combining",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "empty_paragraphs",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "fallback_bold",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "fallback_underline",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hebrew",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "hebrew_run",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "italic",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "kerns",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "latin",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "long_word",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_cjk_rtl",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_latin_cjk",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_scripts",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_wrapped",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mono",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "nbsp",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "newlines",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "right",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "rtl_wrapped",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "serif",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "serif_bold",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "spaces",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "tabs",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "underline",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "wrap",
+      "changed_pixels": 0,
+      "passed": true
+    }
+  ],
+  "scope": "31 native font/layout pages vs actual original paint_text_mm helper, not application/UI/fullP29; failed cases mandatory"
+}

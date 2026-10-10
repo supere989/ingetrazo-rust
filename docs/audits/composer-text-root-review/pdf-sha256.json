@@ -1,0 +1,250 @@
+{
+  "original/accents.original.pdf": {
+    "bytes": 10208,
+    "sha256": "e2d1284ab8c4590e03b89a6863bea533728c16a78430252a91c039320d778feb"
+  },
+  "original/arabic.original.pdf": {
+    "bytes": 9800,
+    "sha256": "8c364ebb1fc07efa570616847873180e2a479bd7e02dc2100459023a07e6cc1a"
+  },
+  "original/arabic_run.original.pdf": {
+    "bytes": 9427,
+    "sha256": "50dc84ffc3fb3ccfcc761da2d2611d5fd6c9df21a4b77282cfad4cb2eb04bb1d"
+  },
+  "original/bold.original.pdf": {
+    "bytes": 9649,
+    "sha256": "6633158e42496ea2f3c39c95603571abda91a1949ba60a1e25037897d73fd803"
+  },
+  "original/center.original.pdf": {
+    "bytes": 9545,
+    "sha256": "efe1f23242e2747022807bc7a3482e0571191e9817def3a264ebdccfe03daa84"
+  },
+  "original/cjk.original.pdf": {
+    "bytes": 5736,
+    "sha256": "f1cafb287ac256583669d095fab4048d95d0563180c2064f56a78bb480a36998"
+  },
+  "original/combining.original.pdf": {
+    "bytes": 9221,
+    "sha256": "cf27b2797a4f6b344fb24d6d6539691272ead40cd9302fcb922e31a458ac3615"
+  },
+  "original/empty_paragraphs.original.pdf": {
+    "bytes": 9906,
+    "sha256": "0984032c2f4f4005d607c807d048d6cb7548ae8b8c3ba9a8e2858d3862b78e77"
+  },
+  "original/fallback_bold.original.pdf": {
+    "bytes": 11934,
+    "sha256": "8122441044d06b94498ce435a1b29abf81854398041ce0cf0fb3f8fe47464ce0"
+  },
+  "original/fallback_underline.original.pdf": {
+    "bytes": 11924,
+    "sha256": "f00eeace527421f576ff6e77b479805132cdc9d6de2249c56ace1bc5c8abfc18"
+  },
+  "original/hebrew.original.pdf": {
+    "bytes": 9533,
+    "sha256": "b016227fa8db36e18e93195bebe8d18099c2b3c3596af3640806bc82c5208053"
+  },
+  "original/hebrew_run.original.pdf": {
+    "bytes": 9135,
+    "sha256": "43546d2dcb2bda179dbb2d524e92d7adfbd80318c11ad61dfad14cc2e0dbc9b9"
+  },
+  "original/italic.original.pdf": {
+    "bytes": 9669,
+    "sha256": "469ea7885859c666660cbdeb67a1307346083eb75701d21e4a9368b21fee7f88"
+  },
+  "original/kerns.original.pdf": {
+    "bytes": 9285,
+    "sha256": "fae70fe2433a629efd024c18be25fc79de584c299edd9f6e00771e5e201d5541"
+  },
+  "original/latin.original.pdf": {
+    "bytes": 9740,
+    "sha256": "b46068c3c8337f2b06b766dbc550fdadb36cd1d4c3b9acfcffb49fbb29997c7d"
+  },
+  "original/long_word.original.pdf": {
+    "bytes": 12816,
+    "sha256": "a003f292d8436eb510bc6d5073fc5d7b94bfaf89d247e161971a829bd0954308"
+  },
+  "original/mixed_cjk_rtl.original.pdf": {
+    "bytes": 12373,
+    "sha256": "45cb47b6ce91cc12fca6bf30cb68cccc5d9a826f4935cfa62de164930f0e7b09"
+  },
+  "original/mixed_latin_cjk.original.pdf": {
+    "bytes": 12242,
+    "sha256": "44f3eb37363bbfc0339c86563abef73d08b9c9dbf86c6e798fcc8f3450283eab"
+  },
+  "original/mixed_scripts.original.pdf": {
+    "bytes": 10636,
+    "sha256": "4b53a8b74edbeb6367767ecd42788c8e5aa032744ee62d1f9b23c4df68e2ff19"
+  },
+  "original/mixed_wrapped.original.pdf": {
+    "bytes": 13499,
+    "sha256": "14512d41dd1044eaea93c8d2a83ac65a6ea99c8cd0b9ad3bf4d14d4ee2bd431d"
+  },
+  "original/mono.original.pdf": {
+    "bytes": 8808,
+    "sha256": "41f93186f3ad0090b82fd217526f630bb387a572ba5a848bb46adcbbb938da58"
+  },
+  "original/nbsp.original.pdf": {
+    "bytes": 9906,
+    "sha256": "f579246b063e1964f8ad22ce61aaceff75111a1e0fba1e30470117e07a17f54c"
+  },
+  "original/newlines.original.pdf": {
+    "bytes": 9906,
+    "sha256": "306b2d02460dc2a178cf711632783ef9ee14faf5c01a2d5d4ca108113c6eae1a"
+  },
+  "original/right.original.pdf": {
+    "bytes": 9521,
+    "sha256": "b29a3707cf63232de80efc07242fcc8eb0f79bfdfc302103e7ba361325b401ed"
+  },
+  "original/rtl_wrapped.original.pdf": {
+    "bytes": 11388,
+    "sha256": "e88a6d0a1a944ec81ddca28d9066d909b7f5fefb32d5ad36d5ab9e7dc51b990f"
+  },
+  "original/serif.original.pdf": {
+    "bytes": 9107,
+    "sha256": "a68df15c70021bbbf0c7410b80a2245a3b60e03ad3561ddf32d4f9def184bba3"
+  },
+  "original/serif_bold.original.pdf": {
+    "bytes": 8456,
+    "sha256": "77d494a26b51c87c7e82110b4785676850cad62f7571cfa4bd2b01295b0cedd7"
+  },
+  "original/spaces.original.pdf": {
+    "bytes": 9911,
+    "sha256": "5055403da0c523de7490bb621c33508903cee6fb6612aabb8cc1b6d50edfd9bb"
+  },
+  "original/tabs.original.pdf": {
+    "bytes": 9897,
+    "sha256": "4fa0d0d2305acef9beaefd43aaaa7f8a1b8cb340858e5e921270e566135286f2"
+  },
+  "original/underline.original.pdf": {
+    "bytes": 9734,
+    "sha256": "1815df09238b3a3a8c866d5c92b90ef7ebdfdcdcaf532d60960a3c6722a370eb"
+  },
+  "original/wrap.original.pdf": {
+    "bytes": 10782,
+    "sha256": "33f01f63aa7c6d7b853b466368dbd65deba231027bbdf481a1c6e43d9275df6c"
+  },
+  "native/accents.native.pdf": {
+    "bytes": 21349,
+    "sha256": "5332cf2aa0cd643540654623a907d424b81f53d20104e5c17ebf6dfdb9241321"
+  },
+  "native/arabic.native.pdf": {
+    "bytes": 20480,
+    "sha256": "639c4334ac690d5f7609735c53c4a70387185aa2370aa70064ead59a8eeeb133"
+  },
+  "native/arabic_run.native.pdf": {
+    "bytes": 19486,
+    "sha256": "b909b5c0b9f40ecc2bcf21f9ec64dc887ebc7c5cb2a90e6a25f239400b324433"
+  },
+  "native/bold.native.pdf": {
+    "bytes": 19831,
+    "sha256": "8c9c5e8ecdc2e435b48160431f5a1481698b7584f609f199c9f6f0f42995409c"
+  },
+  "native/center.native.pdf": {
+    "bytes": 19742,
+    "sha256": "155787ea0f8df6685d5af48cc8304f9ac8da89d4539946f756ef45a5f1aa0b43"
+  },
+  "native/cjk.native.pdf": {
+    "bytes": 4480,
+    "sha256": "81281a04eda3af5b38902b03d4d8b3183e62fd15eeff99b233d09218febcf4f2"
+  },
+  "native/combining.native.pdf": {
+    "bytes": 18944,
+    "sha256": "251ef913b4cd371095ad15d43ba9bf704ee93cc316ddd16260be85f10409868b"
+  },
+  "native/empty_paragraphs.native.pdf": {
+    "bytes": 20573,
+    "sha256": "550988460820d9c0581df568fdf3ab17b93398d866532e30414e57c919b6a6bb"
+  },
+  "native/fallback_bold.native.pdf": {
+    "bytes": 23249,
+    "sha256": "b4be23077f8dfd45b7a013064453c3ba128b0d34b746845de63e8f4c746bb9b2"
+  },
+  "native/fallback_underline.native.pdf": {
+    "bytes": 23276,
+    "sha256": "b8402f61253e667166eaf1e158d21d7609074c40a22ab8138a3bb98c6416c23d"
+  },
+  "native/hebrew.native.pdf": {
+    "bytes": 19819,
+    "sha256": "23865a287190229dc7b2c0db89eb4921c7dd965186feabea4c69936729776538"
+  },
+  "native/hebrew_run.native.pdf": {
+    "bytes": 18826,
+    "sha256": "e432d6f7167c85ab6cfbf876158523eab1746f934d3954c47b8bbc0f01332259"
+  },
+  "native/italic.native.pdf": {
+    "bytes": 19798,
+    "sha256": "d151d188a9029a5084dffef7b6f979de9ce5306d79c5ae16091e6490d7a38c5f"
+  },
+  "native/kerns.native.pdf": {
+    "bytes": 19120,
+    "sha256": "3c6bdf482a3b5bdf3ea16561df71fb8cfa851bb987dc00880f226e39cbd9c60b"
+  },
+  "native/latin.native.pdf": {
+    "bytes": 20065,
+    "sha256": "59f9a9a539f3a0e4955a8a8fd7dce8009beb55e854c6ee4ccba4fc827ec8a8fe"
+  },
+  "native/long_word.native.pdf": {
+    "bytes": 27628,
+    "sha256": "6cdcd8eec92a043fd379862d91d373586b91baae7c46023ceac37c4c7dca7aa1"
+  },
+  "native/mixed_cjk_rtl.native.pdf": {
+    "bytes": 24666,
+    "sha256": "52d2a21421a47e33c09dbdccb97ce801132e5a16e896240fe07cf65f766bd854"
+  },
+  "native/mixed_latin_cjk.native.pdf": {
+    "bytes": 23972,
+    "sha256": "bff7f8da7dacb7255a7e5a886b16e4678ab07ff0c4396e3d46396691190bb36c"
+  },
+  "native/mixed_scripts.native.pdf": {
+    "bytes": 22643,
+    "sha256": "81d7ae89f4090dfc27a9120f4931ab1bf0c5773c109aeca22da53f5ca90b50d4"
+  },
+  "native/mixed_wrapped.native.pdf": {
+    "bytes": 27203,
+    "sha256": "b3c195aebf6ccfb4e73366017ea16ca7424979da90ec4393b4b3b80a05e7ef52"
+  },
+  "native/mono.native.pdf": {
+    "bytes": 12786,
+    "sha256": "d42587017a4c5de8ab67d426b1fee9a2708b45c2ab7e44de5644a50bfd7f9a07"
+  },
+  "native/nbsp.native.pdf": {
+    "bytes": 20573,
+    "sha256": "2e67ef0d009adf01dc784cd53ab11d434e2444c520cb294856535b25dbd505e8"
+  },
+  "native/newlines.native.pdf": {
+    "bytes": 20573,
+    "sha256": "df235a6f69cc8fd8fe91d9c1d2f91bf2a4d5b4c94c97516c8274d9efd7048b13"
+  },
+  "native/right.native.pdf": {
+    "bytes": 19601,
+    "sha256": "40e92d09994425c66c8092fa4f8dd1ee5c6c6ea45544a93ab7021a2679763a04"
+  },
+  "native/rtl_wrapped.native.pdf": {
+    "bytes": 24721,
+    "sha256": "ca83312deb702572870cc1274417cf96c860e738ed69de579d6fdc8faab58e70"
+  },
+  "native/serif.native.pdf": {
+    "bytes": 13251,
+    "sha256": "fbb765e9e57b243d111fa441b9486ec004d490a921da96ae4e1bcb9cbe2bffe2"
+  },
+  "native/serif_bold.native.pdf": {
+    "bytes": 12228,
+    "sha256": "7fbcfebe7189af99149931b37d48505f6b583580ab92889bde06427ea384d2cc"
+  },
+  "native/spaces.native.pdf": {
+    "bytes": 20523,
+    "sha256": "846beb178b6dff7ad825ec44530ca96015ca307e3821e3e8e5fb242f0fcfca4c"
+  },
+  "native/tabs.native.pdf": {
+    "bytes": 20367,
+    "sha256": "89162bacbb351a0a1674a840bb6b00d8fed404481a94b4091dda5bf973d462b8"
+  },
+  "native/underline.native.pdf": {
+    "bytes": 20012,
+    "sha256": "13bf631f87260a87c32e07acd68098fa8db198c11afe6857e677e4a41a06111a"
+  },
+  "native/wrap.native.pdf": {
+    "bytes": 24529,
+    "sha256": "4f97cee29aac7ce0ea4913794106967974f2c5fde6df7755db9d5c823e828978"
+  }
+}

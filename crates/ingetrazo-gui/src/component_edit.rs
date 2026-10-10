@@ -456,7 +456,7 @@ impl IngeTrazoApp {
         }
         let mut parked_candidates:Vec<_>=self.component_edit_stack[..self.component_edit_stack.len()-1].iter().map(|parent|parent.original_scene.clone()).collect();
         for parent in &mut parked_candidates {for bake in &bakes {if let Err(error)=bake.apply(parent){self.status_message=error;return;}}}
-        if !preserve_global_preview{self.set_tool(ToolType::Select);}
+        if !preserve_global_preview{self.set_tool(ToolType::Select);}else{self.active_tool.detach_context_preview();}
         let session=self.component_edit_stack.pop().unwrap();
         if !changed {
             if let Some(parent)=self.component_edit_stack.last_mut() {

@@ -1,0 +1,33 @@
+{
+  "source": "7af8513b0e076919192efa106c8c714060596adf",
+  "archives": [
+    {
+      "kind": "compute",
+      "architecture": "arm",
+      "archive_sha256": "7ee435ba4faed7d1c4cbd0b59a2f8dfdf525a395d9871b200e119f9fa360aca4",
+      "bytes": 13065,
+      "matches_github_declared_digest": true
+    },
+    {
+      "kind": "compute",
+      "architecture": "intel",
+      "archive_sha256": "9b736cf42edfcacf68fabcb798e101048619a2fbc6e16555000db53951814caf",
+      "bytes": 13061,
+      "matches_github_declared_digest": true
+    },
+    {
+      "kind": "sdk",
+      "architecture": "arm",
+      "archive_sha256": "e2bda31c91154082aaec91920d25bc5a2325aa229f60422adf7cd9a00dffb14f",
+      "bytes": 31197,
+      "matches_github_declared_digest": true
+    },
+    {
+      "kind": "sdk",
+      "architecture": "intel",
+      "archive_sha256": "12a7bb055893978fe4fc54794c8812ec6659c1d1899f1fed463d1b4db859f4b6",
+      "bytes": 29377,
+      "matches_github_declared_digest": true
+    }
+  ]
+}
