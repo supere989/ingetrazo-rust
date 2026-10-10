@@ -13,6 +13,13 @@ impl Cache {
  pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
  pub fn stats(&self)->(u64,(usize,usize,u64)){(self.builds,self.fonts.stats())}
+ pub(crate) fn leader_metrics(&mut self,text:&str,point_size:i32,dpi:f64)->Result<(f64,f64),String>{
+  let size=(f64::from(point_size)*dpi/72.+0.5).floor();
+  if !size.is_finite()||!(1. ..=4096.).contains(&size){return Err("Annotation metric size outside admission".into());}
+  let request=Request{family:"Sans Serif".into(),bold:true,italic:false,required_chars:vec![]};
+  let line=self.fonts.shape(&request,text,size as u32)?;
+  Ok((((line.ascent_26_6+63)/64+(line.descent_26_6+63)/64)as f64,(line.advance_26_6 as f64/64.+0.5).floor()))
+ }
  pub fn prepare(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64)->Result<Arc<Mesh>,String>{
   let density=f64::from(density);
   if !density.is_finite()||density<=0.||density>40.||!font_dpi.is_finite()||font_dpi<=0.{return Err("Annotation physical/font density outside admission".into());}

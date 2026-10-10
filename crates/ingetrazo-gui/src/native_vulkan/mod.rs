@@ -3,6 +3,8 @@ pub mod resize;
 pub mod headless;
 pub mod world;
 mod annotation_visibility;
+mod annotation_viewport;
+pub mod annotation_overlay_probe;
 mod annotation_visibility_gpu;
 pub mod resources;
 pub mod texture_cache;
@@ -145,6 +147,10 @@ pub struct System {
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
     pub world: Option<world::World>,
     pub cad2d: Option<cad2d::Renderer>,
+    annotation_cad:Option<cad2d::Renderer>,
+    annotation_viewport:Option<annotation_viewport::ViewportAnnotations>,
+    annotation_prepare_error:Option<String>,
+    annotation_sample:Option<u32>,
     draw_serial:u64,
 
     textures_to_free: Option<Vec<TextureId>>,
@@ -181,6 +187,11 @@ impl System {
         Ok(observed)
     }
     fn new_controlled(title:&str,window:&Window,control:&resize::Control)->Result<Self,Box<dyn Error>>{
+        let annotation_sample=match std::env::var("INGETRAZO_ANNOTATION_DEPTH_SAMPLE"){
+            Ok(value)=>Some(value.parse::<u32>().map_err(|_|std::io::Error::new(std::io::ErrorKind::InvalidInput,"Invalid annotation depth sample policy"))?),
+            Err(std::env::VarError::NotPresent)=>None,Err(error)=>return Err(error.into()),
+        };
+
         log::info!("Create application");
 
         let vulkan_context = VulkanContext::new_controlled(&window, title,control)?;
@@ -274,7 +285,7 @@ impl System {
             pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
-            world:None,cad2d:None,draw_serial:0,
+            world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_sample,draw_serial:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -383,6 +394,24 @@ impl System {
         Ok(self.cad2d.as_ref().unwrap())
     }
 
+    /// Annotation callbacks use the existing source-ordered feedback pass.
+    /// Capability refusal precedes any renderer allocation.
+    pub(crate) fn annotation_factory(&mut self)->Result<cad2d::Factory,String>{
+        if !self.swapchain.integer_cad{return Err("Native annotations require admitted integer CAD input-attachment pass".into());}
+        if self.annotation_cad.is_none(){self.annotation_cad=Some(cad2d::Renderer::new_annotations(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass,&self.swapchain.image_views)?);}
+        Ok(self.annotation_cad.as_ref().unwrap().factory())
+    }
+    pub(crate) fn prepare_annotation_overlay(&mut self,handle:&cad2d::Handle,
+        queries:std::sync::Arc<[annotation_visibility::Query]>,inverse:[f32;16],eye:[f32;3],forward:[f32;3],sample:u32)->Result<(),String>{
+        let renderer=self.annotation_cad.as_mut().ok_or("Annotation renderer absent")?;
+        self.world.as_mut().ok_or("Annotation World absent")?.prepare_annotation_overlay(renderer,handle,&self.vulkan_context,queries,inverse,eye,forward,sample,self.fence,self.draw_serial,self.draw_serial+1,self.egui_ctx.pixels_per_point())
+    }
+    pub(crate) fn clear_annotation_overlay(&mut self)->Result<(),String>{
+        if let Some(renderer)=&mut self.annotation_cad{
+            self.world.as_mut().ok_or("Annotation World absent")?.clear_annotation_overlay(renderer,&self.vulkan_context,self.fence,self.draw_serial)?;
+        }
+        Ok(())
+    }
     pub fn verify_outline_budget_for_probe(&mut self)->Result<serde_json::Value,String>{if !self.wait_gpu_completion(){return Err("Outline budget probe requires acknowledged GPU completion".into());}self.cad2d.as_mut().ok_or("CAD renderer absent")?.verify_outline_budget_for_probe(&self.vulkan_context,self.fence,self.draw_serial)}
     pub fn verify_outline_candidate_rollback_for_probe(&mut self,handle:&cad2d::arena::Handle)->Result<(),String>{if !self.wait_gpu_completion(){return Err("Outline rollback probe requires acknowledged GPU completion".into());}self.cad2d.as_mut().ok_or("CAD renderer absent")?.verify_outline_candidate_rollback_for_probe(&self.vulkan_context,self.fence,self.draw_serial,handle)}
     pub fn verify_cad2d_rollback_for_probe(&mut self)->Result<(),String>{
@@ -445,6 +474,7 @@ impl System {
         });
 
         egui_app.prepare_gpu(self,false);
+        if self.annotation_prepare_error.is_some(){self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
         if self.vulkan_context.lifetime.uncertain(){return;}
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
@@ -507,6 +537,7 @@ impl System {
                 egui_app.gpu_error(&format!("CAD input selection failed after image acquisition: {error}; resources quarantined"));return;
             }
         }
+        if let Some(cad)=&mut self.annotation_cad{if let Err(error)=cad.set_input_image(image_index as usize){self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error);return;}}
         if let Some(present)=self.present_fences.get_mut(image_index as usize){
             if present.used{if let Err(error)=self.vulkan_context.lifetime.wait(present.fence,lifetime::WAIT_NS){egui_app.gpu_error(&format!("Previous presentation completion unknown: {error}"));return;}present.used=false;}
             if let Err(error)=unsafe{self.vulkan_context.device.reset_fences(&[present.fence])}{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
@@ -637,6 +668,7 @@ impl System {
         let mut egui_pipeline=resize::Tracked::new(self.renderer.prepare_render_pass(candidate.render_pass).map_err(|e|match e{egui_ash_renderer::RendererError::Vulkan(v)=>self.report_prepare_error(v.into()),e=>e.to_string()})?,control,vec![(resize::Kind::EguiPipeline,1)]);
         control.checkpoint(resize::Stage::EguiPipeline)?;
         let mut cad_pipeline=if let Some(cad)=&self.cad2d{Some(resize::Tracked::new(cad.prepare_render_pass(candidate.render_pass,&candidate.image_views).map_err(|e|self.report_prepare_error(e))?,control,vec![(resize::Kind::CadPipeline,1),(resize::Kind::CadPool,u64::from(candidate.integer_cad))]))}else{None};
+        let mut annotation_pipeline=if let Some(cad)=&self.annotation_cad{Some(cad.prepare_render_pass(candidate.render_pass,&candidate.image_views).map_err(|e|self.report_prepare_error(e))?)}else{None};
         control.checkpoint(resize::Stage::CadPipeline)?;
         let mut sync=UnpublishedSync{device:self.vulkan_context.device.clone(),semaphores:create_present_semaphores(&self.vulkan_context.device,candidate.images.len()).map_err(|e|self.report_prepare_error(e.into()))?,present_fences:Vec::new(),control:control.clone()};
         control.created(resize::Kind::Semaphore,sync.semaphores.len()as u64);
@@ -645,7 +677,12 @@ impl System {
         control.checkpoint(resize::Stage::Sync)?;control.checkpoint(resize::Stage::BeforeCommit)?;
         // CAD lock acquisition is the last fallible publication step. All remaining
         // swaps are infallible; old submitted uses completed before preparation.
-        if let (Some(cad),Some(prepared))=(&mut self.cad2d,&mut cad_pipeline){cad.commit_render_pass(prepared.take())?;}
+        match (&mut self.cad2d,cad_pipeline.as_mut().map(|p|p.take()),&mut self.annotation_cad,annotation_pipeline.take()){
+            (Some(cad),Some(prepared),Some(annotation),Some(other))=>cad.commit_render_pass_pair(prepared,annotation,other)?,
+            (Some(cad),Some(prepared),_,_)=>cad.commit_render_pass(prepared)?,
+            (_,_,Some(annotation),Some(other))=>annotation.commit_render_pass(other)?,
+            _=>{},
+        }
         self.renderer.commit_render_pass(egui_pipeline.take());
         let mut previous=std::mem::replace(&mut self.swapchain,next.take());
         let old_semaphores=std::mem::replace(&mut self.render_finished_semaphores,std::mem::take(&mut sync.semaphores));
@@ -667,7 +704,8 @@ impl System {
         if !self.wait_gpu_completion(){return;}
         if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
         if let Some(cad)=&self.cad2d {eprintln!("CAD2D metrics: {:?}",cad.stats());eprintln!("Outline arena metrics: {}",cad.outline_arena_stats());}
-        drop(self.world.take());drop(self.cad2d.take());
+        if let Some(cad)=&self.annotation_cad{let stats=cad.stats();eprintln!("Native annotation metrics: {}",serde_json::json!({"geometry_uploads":stats.uploads,"geometry_upload_bytes":stats.upload_bytes,"geometry_cached_bytes":stats.cached_bytes,"cache_hits":stats.cache_hits,"draws":stats.draws,"rolled_back_buffers":stats.rolled_back_buffers,"query_uploads":self.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe())}));}
+        drop(self.world.take());drop(self.annotation_cad.take());drop(self.cad2d.take());
         if self.vulkan_context.lifetime.uncertain(){return;}
         unsafe{
             std::mem::ManuallyDrop::drop(&mut self.renderer);
@@ -1288,7 +1326,7 @@ fn record_command_buffers(
     let command_buffer_begin_info =
         vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::SIMULTANEOUS_USE);
     unsafe { device.begin_command_buffer(command_buffer, &command_buffer_begin_info)? };
-    if let Some(world)=world {world.record(command_buffer,serial)?;}
+    if let Some(world)=world {world.record(command_buffer,serial)?;world.record_annotations_if_prepared(command_buffer,serial)?;}
 
     let render_pass_begin_info = vk::RenderPassBeginInfo::default()
         .render_pass(render_pass)
@@ -1342,7 +1380,10 @@ impl App for crate::IngeTrazoApp {
         app
     }
     fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
-        if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){return;}
+        if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){
+            if system.annotation_cad.is_some(){let result=system.clear_annotation_overlay();system.annotation_prepare_error=result.as_ref().err().cloned();match result{Ok(())=>self.native_gpu_annotation_shape=None,Err(error)=>self.gpu_error(&error)}}
+            return;
+        }
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
         let result=(|| {
             if system.world.is_none(){system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);}
@@ -1354,7 +1395,22 @@ impl App for crate::IngeTrazoApp {
             world.set_display_scale(system.egui_ctx.pixels_per_point());
             world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)
         })();
-        if let Err(error)=result {self.gpu_error(&error);}
+        if let Err(error)=result {self.gpu_error(&error);return;}
+        if let Some(sample)=system.annotation_sample{
+            let result=(||{
+                let factory=system.annotation_factory()?;
+                let mut state=match system.annotation_viewport.take(){Some(state)=>state,None=>annotation_viewport::ViewportAnnotations::new()?};
+                let candidate=state.prepare(self,&factory,rect,system.egui_ctx.pixels_per_point()).map(|value|value.map(|value|(value.handle.clone(),value.queries.clone(),value.inverse,value.eye,value.forward)));
+                system.annotation_viewport=Some(state);
+                match candidate?{
+                    Some((handle,queries,inverse,eye,forward))=>{system.prepare_annotation_overlay(&handle,queries,inverse,eye,forward,sample)?;self.native_gpu_annotation_shape=Some(handle.shape(rect));},
+                    None=>{system.clear_annotation_overlay()?;self.native_gpu_annotation_shape=None;},
+                }
+                Ok::<(),String>(())
+            })();
+            system.annotation_prepare_error=result.as_ref().err().cloned();
+            if let Err(error)=result{self.gpu_error(&error);}
+        }
     }
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
     fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}

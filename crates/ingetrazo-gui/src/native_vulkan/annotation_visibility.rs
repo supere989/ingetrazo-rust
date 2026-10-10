@@ -50,7 +50,7 @@ pub(crate) fn prepare_query(mvp: &[f32;16], world: [f32;3], eye: [f32;3],
     result.active=1;
     Ok(result)
 }
-fn map(m: &[f32;16], v:[f32;4])->[f32;4] {
+pub(crate) fn map(m: &[f32;16], v:[f32;4])->[f32;4] {
     std::array::from_fn(|r|m[r]*v[0]+m[4+r]*v[1]+m[8+r]*v[2]+m[12+r]*v[3])
 }
 /// Diagnostic-only CPU reconstruction for comparison with frozen Qt operation

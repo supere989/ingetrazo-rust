@@ -135,6 +135,13 @@ impl Handle {
         if let Some(ready)=&state.ready{if !Arc::ptr_eq(&ready.premultiplied,&state.premultiplied){bytes=bytes.checked_add(ready.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD old palette byte overflow")?).ok_or("CAD retained byte overflow")?;}}
         Ok(bytes)
     }
+    pub(crate) fn update_annotation(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<(),String>{
+        geometry.validate_batches(&batches)?;pose.validate()?;
+        if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
+        let palette=prepare_palette(&geometry,&batches)?;
+        let mut state=self.inner.state.lock().map_err(|_|"Annotation state poisoned")?;
+        state.geometry=geometry;state.batches=batches;state.premultiplied=palette;state.pose=pose;state.gates=Some(gates);Ok(())
+    }
     pub fn update(
         &self,
         geometry: Arc<Geometry>,
@@ -577,13 +584,24 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views,p.annotations)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
         Ok(prepared)
     }
-    pub(crate) fn commit_render_pass(&mut self,mut prepared:PreparedRenderPass)->Result<(),String>{
-        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+    fn publish_render_pass(device:&Device,p:&mut Pipeline,mut prepared:PreparedRenderPass){
         let previous=std::mem::replace(&mut p.pipeline,std::mem::replace(&mut prepared.pipeline,vk::Pipeline::null()));
         let previous_pool=std::mem::replace(&mut p.descriptor_pool,std::mem::replace(&mut prepared.pool,vk::DescriptorPool::null()));
         p.descriptor_sets=std::mem::take(&mut prepared.sets);p.active_set=None;p.visibility=None;
-        unsafe{self.device.destroy_pipeline(previous,None);if previous_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(previous_pool,None)}};
-        Ok(())
+        unsafe{device.destroy_pipeline(previous,None);if previous_pool!=vk::DescriptorPool::null(){device.destroy_descriptor_pool(previous_pool,None)}};
+    }
+    pub(crate) fn commit_render_pass(&mut self,prepared:PreparedRenderPass)->Result<(),String>{
+        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        Self::publish_render_pass(&self.device,&mut p,prepared);Ok(())
+    }
+    /// Both immutable owners are locked before either pipeline changes.
+    pub(crate) fn commit_render_pass_pair(&mut self,prepared:PreparedRenderPass,
+        other:&mut Self,other_prepared:PreparedRenderPass)->Result<(),String>{
+        if Arc::ptr_eq(&self.pipeline,&other.pipeline){return Err("CAD pipeline pair aliases one owner".into());}
+        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        let mut q=other.pipeline.lock().map_err(|_|"Annotation pipeline poisoned")?;
+        Self::publish_render_pass(&self.device,&mut p,prepared);
+        Self::publish_render_pass(&other.device,&mut q,other_prepared);Ok(())
     }
     /// Called after the previous submitted frame fence, before recording this image.
     pub fn set_input_image(&mut self,index:usize)->Result<(),String>{let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;if p.integer{p.active_set=Some(*p.descriptor_sets.get(index).ok_or("CAD2D input image index invalid")?);}Ok(())}

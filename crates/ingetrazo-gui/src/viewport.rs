@@ -368,6 +368,12 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
+    if app.native_gpu_viewport_enabled {
+        if let Some(egui::Shape::Callback(callback))=&app.native_gpu_annotation_shape{
+            let mut callback=callback.clone();callback.rect=rect;painter.add(egui::Shape::Callback(callback));
+        }
+    }
+
     if let Some((label, point)) = app.active_tool.value_label() {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
         if let Some((position, _)) = project_point(point, &view_proj, rect) {
