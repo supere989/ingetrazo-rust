@@ -1,0 +1,11 @@
+{
+  "source": "3f3a16bf",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-native-font-merge-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --workspace --locked --lib --tests -j2",
+  "exit_code": 0,
+  "totals": {
+    "passed": 735,
+    "failed": 0,
+    "ignored": 2
+  },
+  "scope": "Combined Linux workspace libraries/integration tests after native font/ordered Canvas merge. Does not prove merged Apple SDK runtime, full Python rendered parity, docs tests or release gates."
+}
