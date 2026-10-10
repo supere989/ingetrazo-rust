@@ -362,7 +362,10 @@ impl PaperFont {
             let mut matrix=ft::FT_Matrix{xx:(scale*65536.).round()as _,xy:(scale*italic_shear*65536.).round()as _,yx:0,yy:(scale*65536.).round()as _};
             let mut delta=ft::FT_Vector{x:phase[0]as _,y:-(phase[1]as ft::FT_Pos)};
             ft::FT_Set_Transform(face,&mut matrix,&mut delta);let _restore=RestoreFaceTransform(face);
-            if ft::FT_Load_Glyph(face,glyph,geometry.flags|ft::FT_LOAD_NO_BITMAP)!=0||(*face).glyph.is_null(){return Err("Canvas glyph load failed".into());}
+            // Qt 6.12 loadGlyphFor disables hinting for scaled nonrotation glyphs.
+            // Keep the pixel100 layout/face size; only this device raster load is unhinted.
+            let flags=geometry.flags|ft::FT_LOAD_NO_BITMAP|if scale!=1. {ft::FT_LOAD_NO_HINTING}else{0};
+            if ft::FT_Load_Glyph(face,glyph,flags)!=0||(*face).glyph.is_null(){return Err("Canvas glyph load failed".into());}
             let slot=(*face).glyph;
             if (*slot).format!=ft::FT_GLYPH_FORMAT_OUTLINE{return Err("Canvas glyph outline format unavailable".into());}
             let mut bbox:ft::FT_BBox=std::mem::zeroed();ft::FT_Outline_Get_CBox(&(*slot).outline,&mut bbox);

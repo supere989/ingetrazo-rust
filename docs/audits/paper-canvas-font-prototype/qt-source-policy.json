@@ -1,0 +1,8 @@
+{
+  "url": "https://raw.githubusercontent.com/qt/qtbase/6.12/src/gui/text/freetype/qfontengine_ft.cpp",
+  "sha256": "a4da9104a396f753fe0d0fbb7762305b265ecaf1b0431eb747e18b55c3d29add",
+  "runtime_qt": "6.12.0",
+  "function": "QFontEngineFT::loadGlyphFor",
+  "policy": "Nonrotation glyph scaling selects HintNone for device rasterization, while the font face keeps its original pixel size.",
+  "boundary": "This policy is separate from unchanged pixel100 shaping and PDF outlines; exact actual TextItem pixel checks remain required."
+}
