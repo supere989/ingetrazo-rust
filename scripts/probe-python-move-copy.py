@@ -38,6 +38,13 @@ for count,mode in [(3,"x"),(3,"/"),(2,"x")]:
  states.append({"count":count,"mode":mode,"faces":len(vp.scene.mesh.faces),"edges":len(vp.scene.mesh.edges),"face_start_x":starts,"undo":len(vp.history.undo_stack)})
 vp.history.undo();assert len(vp.scene.mesh.faces)==1
 rows.append({"name":"array-complete-face-retyping","states":states,"undo_restores_original":True})
+vp=Viewport();vp.flash_status=lambda text:None;face=vp.scene.mesh.add_face([V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0)]);vp.scene.select([face]);t=MoveTool();vp.set_active_tool(t);t.on_click(N(viewport=vp,world=V(0,0,0),screen=QPointF(0,0)));t._copy=True;t.hover_point=V(3,0,0)
+parsed=vp._parse_value_buffer("3x200cm");assert parsed==("array",3,"x",2.)
+assert t.on_array_value(vp,parsed[1],parsed[2],step=parsed[3]);assert len(vp.history.undo_stack)==1
+starts=sorted(min(p.x() for p in f.vertices) for f in vp.scene.mesh.faces);assert starts==[0.,2.,4.,6.]
+parsed=vp._parse_value_buffer("2*400cm");assert t.on_array_value(vp,parsed[1],parsed[2],step=parsed[3]);assert len(vp.history.undo_stack)==1
+starts=sorted(min(p.x() for p in f.vertices) for f in vp.scene.mesh.faces);assert starts==[0.,4.,8.]
+rows.append({"name":"spaced-array-current-drag-retype","face_start_x":starts,"undo":1,"source_units":"200cm then400cm"})
 vp=Viewport();vp.flash_status=lambda text:None;t=MoveTool();vp.set_active_tool(t)
 assert t.on_key(vp,Qt.Key_Control,Qt.NoModifier) and t._copy
 assert t.on_key(vp,Qt.Key_Control,Qt.ControlModifier) and not t._copy

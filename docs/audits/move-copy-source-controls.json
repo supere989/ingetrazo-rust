@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "1e0c33e5316c1ccb4b2b91c6a527ca7ba0152547",
+    "rust_commit": "f8787f6bcbb8e3100caad51bc6cd23ad27a4a749",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -86,6 +86,16 @@
         }
       ],
       "undo_restores_original": true
+    },
+    {
+      "name": "spaced-array-current-drag-retype",
+      "face_start_x": [
+        0.0,
+        4.0,
+        8.0
+      ],
+      "undo": 1,
+      "source_units": "200cm then400cm"
     },
     {
       "name": "control-key-toggle",
