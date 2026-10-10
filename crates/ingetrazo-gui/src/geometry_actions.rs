@@ -7,6 +7,24 @@ use ingetrazo_core::{
     scene::SelectionItem,
 };
 impl IngeTrazoApp {
+    pub fn heal_overlaps(&mut self) {
+        match ingetrazo_core::heal::heal_faces(&self.scene.mesh, 0.5, None) {
+            Ok((mesh, removed)) => {
+                if !planar::equivalent(&self.scene.mesh, &mesh) {
+                    self.save_undo_state();
+                    self.scene.mesh = mesh;
+                    self.scene.clear_selection();
+                    self.scene.bump_version();
+                }
+                self.status_message = format!(
+                    "Healed overlapping geometry: removed {} redundant face(s)",
+                    removed.len()
+                );
+            }
+            Err(error) => self.status_message = format!("Heal: {error}"),
+        }
+    }
+
     pub fn intersect_faces(&mut self, mode: IntersectMode) {
         let mut prepared = self.scene.clone();
         prepared.camera = self.camera.clone();
@@ -59,6 +77,42 @@ mod tests {
             .collect();
         app.scene.mesh.add_face(ring, vec![]).unwrap()
     }
+    #[test]
+    fn heal_menu_holes_overlap_and_undo_restores_both_faces() {
+        let mut app = IngeTrazoApp::new();
+        app.scene.mesh.clear();
+        face(
+            &mut app,
+            &[
+                DVec3::ZERO,
+                DVec3::new(10., 0., 0.),
+                DVec3::new(10., 10., 0.),
+                DVec3::new(0., 10., 0.),
+            ],
+        );
+        face(
+            &mut app,
+            &[
+                DVec3::new(2., 2., 0.),
+                DVec3::new(4., 2., 0.),
+                DVec3::new(4., 4., 0.),
+                DVec3::new(2., 4., 0.),
+            ],
+        );
+        let before = app.scene.mesh.clone();
+        app.heal_overlaps();
+        assert_eq!(app.undo_stack.len(), 1);
+        assert_eq!(app.scene.mesh.faces.len(), 2);
+        assert!(app.scene.mesh.faces.iter().any(|f| f.holes.len() == 1));
+        let after = app.scene.mesh.clone();
+        app.undo();
+        assert_eq!(app.scene.mesh, before);
+        app.redo();
+        assert_eq!(app.scene.mesh, after);
+        app.heal_overlaps();
+        assert_eq!(app.undo_stack.len(), 1);
+    }
+
     #[test]
     fn menu_intersect_rebuild_and_failed_plane_have_single_atomic_history() {
         let mut app = IngeTrazoApp::new();

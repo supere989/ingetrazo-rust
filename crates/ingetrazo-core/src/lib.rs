@@ -39,3 +39,4 @@ pub mod containers;
 
 pub mod planar;
 pub mod intersect;
+pub mod heal;

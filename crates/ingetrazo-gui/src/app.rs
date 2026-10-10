@@ -587,27 +587,6 @@ impl IngeTrazoApp {
         self.status_message = format!("Flipped selection along axis {}", axis.to_uppercase());
     }
 
-    pub fn heal_overlaps(&mut self) {
-        self.save_undo_state();
-        let mut faces_to_keep = Vec::new();
-        let mut seen = std::collections::HashSet::new();
-        for f in &self.scene.mesh.faces {
-            if f.vertices.len() < 3 {
-                continue;
-            }
-            let mut sorted = f.vertices.clone();
-            sorted.sort();
-            if seen.insert(sorted) {
-                faces_to_keep.push(f.clone());
-            }
-        }
-        let removed = self.scene.mesh.faces.len() - faces_to_keep.len();
-        self.scene.mesh.faces = faces_to_keep;
-        self.scene.mesh.rebuild_spatial_index();
-        self.scene.bump_version();
-        self.status_message = format!("Healed overlapping geometry: removed {removed} redundant face(s)");
-    }
-
     pub fn split_into_pieces(&mut self) {
         self.save_undo_state();
         let mut visited = vec![false; self.scene.mesh.faces.len()];

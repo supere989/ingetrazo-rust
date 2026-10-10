@@ -547,3 +547,8 @@ pub fn equivalent(a: &Mesh, b: &Mesh) -> bool {
     }
     true
 }
+
+pub(crate) fn inside_or_boundary(p: DVec2, ring: &[DVec2]) -> bool {
+    inside_ring(p, ring)
+        || (0..ring.len()).any(|i| on_segment(p, ring[i], ring[(i + 1) % ring.len()]))
+}
