@@ -1,7 +1,7 @@
 {
   "passed": true,
   "provenance": {
-    "rust_commit": "5bac2c238e1df6e3678e3f7e35ba26872b73e857",
+    "rust_commit": "3f89f99eee157ea97990a3781fe95ea6419084eb",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -37,7 +37,7 @@
       661.9016928775451,
       336.72986048918267
     ],
-    "time": 0.111141469,
+    "time": 0.116777252,
     "tool": "Line",
     "undo": 0
   },
@@ -77,7 +77,7 @@
       661.9016928775451,
       336.72986048918267
     ],
-    "time": 0.366686398,
+    "time": 0.366861773,
     "tool": "Line",
     "undo": 0
   },
@@ -117,11 +117,11 @@
       661.9016928775451,
       336.72986048918267
     ],
-    "time": 0.564923707,
+    "time": 0.566156415,
     "tool": "Line",
     "undo": 0
   },
-  "elapsed_wall_seconds": 0.30165123200276867,
+  "elapsed_wall_seconds": 0.30172403299366124,
   "scope": "Actual native Vulkan production UI pointer and frame clock; tiny dot quiet or malformed fit rejected, no geometry/undo mutation; llvmpipe Xvfb engineering backend.",
-  "executable_sha256": "99a6bc9ac4120c4a06430722ee80b4f59129841eb006e59d7edc08ff4c1b7403"
+  "executable_sha256": "73f4e25fb0314423cb921ff58c9bf0f72392a4d441f750b4892e48eebd08fcd5"
 }

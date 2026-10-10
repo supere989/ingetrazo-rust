@@ -1,7 +1,7 @@
 {
   "passed": true,
   "provenance": {
-    "rust_commit": "5bac2c238e1df6e3678e3f7e35ba26872b73e857",
+    "rust_commit": "3f89f99eee157ea97990a3781fe95ea6419084eb",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -36,7 +36,7 @@
       769.2031453054271,
       336.72986048918267
     ],
-    "time": 0.11888493,
+    "time": 0.115650985,
     "tool": "Line",
     "undo": 0
   },
@@ -76,7 +76,7 @@
       769.2031453054271,
       336.72986048918267
     ],
-    "time": 0.372538901,
+    "time": 0.366262135,
     "tool": "Line",
     "undo": 0
   },
@@ -116,7 +116,7 @@
       769.2031453054271,
       336.72986048918267
     ],
-    "time": 0.7896559,
+    "time": 0.789008772,
     "tool": "Line",
     "undo": 0
   },
@@ -160,7 +160,7 @@
       769.2031453054271,
       336.72986048918267
     ],
-    "time": 1.192227462,
+    "time": 1.192255869,
     "tool": "Line",
     "undo": 0
   },
@@ -194,7 +194,7 @@
       881.6302212158755,
       336.72986048918267
     ],
-    "time": 3.195701744,
+    "time": 3.197730087,
     "tool": "Move",
     "undo": 1
   },
@@ -234,7 +234,7 @@
       881.6302212158755,
       336.72986048918267
     ],
-    "time": 3.8993170360000002,
+    "time": 3.850711035,
     "tool": "Line",
     "undo": 1
   },
@@ -274,7 +274,7 @@
       881.6302212158755,
       336.72986048918267
     ],
-    "time": 4.8520879919999995,
+    "time": 4.7971283289999995,
     "tool": "Line",
     "undo": 2
   },
@@ -291,7 +291,7 @@
   "move_coordinate_parity": false,
   "approach_green_pixels": 0,
   "approach_hint_visual_parity_open": true,
-  "elapsed_wall_seconds": 0.3016055109910667,
+  "elapsed_wall_seconds": 0.30214268699637614,
   "scope": "Native ash Vulkan full application UI, XTEST real pointer/dwell/click/Move/CtrlA/Delete, named center and Line anchor, movement/deletion cache, no extra preview undo. llvmpipe isolated Xvfb engineering backend, hardware/independent original UI pending.",
-  "executable_sha256": "99a6bc9ac4120c4a06430722ee80b4f59129841eb006e59d7edc08ff4c1b7403"
+  "executable_sha256": "73f4e25fb0314423cb921ff58c9bf0f72392a4d441f750b4892e48eebd08fcd5"
 }
