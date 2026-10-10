@@ -2,10 +2,14 @@
 // Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
 
 use glam::DVec3;
-use ingetrazo_core::math::plane_basis;
+
 use ingetrazo_core::scene::Scene;
 
 use crate::base::{Tool, ToolContext, ToolType};
+
+/// Drawing axes match original rectangle._plane_axes: project local +X,
+/// using +Y when the plane is nearly perpendicular to +X.
+fn drawing_axes(normal:DVec3)->(DVec3,DVec3){let n=normal.normalize_or_zero();let mut u=DVec3::X-n*n.x;if u.length()<0.1{u=DVec3::Y-n*n.y;}u=u.normalize_or_zero();(u,n.cross(u).normalize_or_zero())}
 
 /// Interactive Rectangle tool for drawing 4-edge planar rectangles and faces.
 #[derive(Debug, Clone)]
@@ -15,6 +19,7 @@ pub struct RectangleTool {
     pub plane_normal: DVec3,
     pub from_center: bool,
     error: Option<String>,
+    square_lock: bool,
 }
 
 impl Default for RectangleTool {
@@ -25,6 +30,7 @@ impl Default for RectangleTool {
             plane_normal: DVec3::Z, // Default XY ground plane
             from_center: false,
             error: None,
+            square_lock: false,
         }
     }
 }
@@ -45,12 +51,12 @@ impl RectangleTool {
         self.start_point = None;
         self.hover_point = None;
         self.from_center = false;
-        self.plane_normal=DVec3::Z;
+        self.plane_normal=DVec3::Z;self.square_lock=false;self.error=None;
     }
 
     /// Calculate the 4 corners from start point and an opposite point.
     pub fn compute_corners(&self, start: DVec3, far: DVec3) -> Option<[DVec3; 4]> {
-        let (u, v) = plane_basis(self.plane_normal);
+        let (u, v) = drawing_axes(self.plane_normal);
         let delta = far - start;
         let du = delta.dot(u);
         let dv = delta.dot(v);
@@ -78,10 +84,15 @@ impl RectangleTool {
         }
     }
 
+    fn inferred_corners(&self,start:DVec3,far:DVec3)->Option<[DVec3;4]>{
+        let (u,v)=drawing_axes(self.plane_normal);let du=(far-start).dot(u);let dv=(far-start).dot(v);let near_square=(du.abs()-dv.abs()).abs()<=0.04*du.abs().max(dv.abs());
+        let far=if du.abs()>1e-6&&dv.abs()>1e-6&&(self.square_lock||near_square){let side=du.abs().max(dv.abs());start+u*side.copysign(du)+v*side.copysign(dv)}else{far};self.compute_corners(start,far)
+    }
+
     /// Preview the 4 corners during hover.
     pub fn preview_corners(&self) -> Option<[DVec3; 4]> {
         match (self.start_point, self.hover_point) {
-            (Some(s), Some(h)) => self.compute_corners(s, h),
+            (Some(s), Some(h)) => self.inferred_corners(s, h),
             _ => None,
         }
     }
@@ -131,9 +142,9 @@ impl Tool for RectangleTool {
 
     fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
         self.hover_point = Some(ctx.world);
-        if ctx.ctrl_held {
-            self.from_center = true;
-        }
+        self.from_center=ctx.ctrl_held;
+        if !ctx.shift_held{self.square_lock=false;}else if let Some(start)=self.start_point{let (u,v)=drawing_axes(self.plane_normal);let d=ctx.world-start;let a=d.dot(u).abs();let b=d.dot(v).abs();if a>1e-6&&b>1e-6&&(a-b).abs()<=0.04*a.max(b){self.square_lock=true;}}
+
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
@@ -143,7 +154,7 @@ impl Tool for RectangleTool {
             self.start_point = Some(ctx.world);
         } else {
             let start = self.start_point.unwrap();
-            if let Some(corners) = self.compute_corners(start, ctx.world) {
+            if let Some(corners) = self.inferred_corners(start, ctx.world) {
                 if let Err(error)=self.commit_corners(corners,scene){self.error=Some(error);}
             }
         }
@@ -155,7 +166,7 @@ impl Tool for RectangleTool {
         };
 
         let trimmed = text.trim();
-        let parts: Vec<&str> = if trimmed.contains(';') {
+        let mut parts: Vec<&str> = if trimmed.contains(';') {
             trimmed.split(';').collect()
         } else if trimmed.contains(',') {
             trimmed.split(',').collect()
@@ -163,6 +174,7 @@ impl Tool for RectangleTool {
             trimmed.split_whitespace().collect()
         };
 
+        if parts.len()==1&&self.square_lock{parts.push(parts[0]);}
         if parts.len() != 2 {
             return Err("Rectangle dimensions format: 'width, height'".into());
         }
@@ -174,7 +186,7 @@ impl Tool for RectangleTool {
             return Err("Dimensions must be finite and positive".into());
         }
 
-        let (u, v) = plane_basis(self.plane_normal);
+        let (u, v) = drawing_axes(self.plane_normal);
         let (sign_u, sign_v) = if let Some(hover) = self.hover_point {
             let d = hover - start;
             (
@@ -201,6 +213,11 @@ mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
 
+    #[test]fn nonprincipal_axes_project_world_x_and_square_inference_keeps_typed_sizes(){
+        let normal=DVec3::new(0.3,0.4,0.866025403784).normalize();let tool=RectangleTool::with_normal(normal);let (u,v)=drawing_axes(normal);let expected=(DVec3::X-normal*normal.x).normalize();assert!(u.distance(expected)<1e-12);let corners=tool.compute_corners(DVec3::ZERO,u*2.+v*3.).unwrap();assert!(corners[1].distance(u*2.)<1e-12);assert!(corners[3].distance(v*3.)<1e-12);
+        let mut tool=RectangleTool::new();tool.start_point=Some(DVec3::ZERO);let mut ctx=ToolContext::new(DVec3::new(2.,1.95,0.),Ray::new(DVec3::Z,-DVec3::Z));ctx.shift_held=true;let mut scene=Scene::new();tool.on_move(&mut scene,&ctx);let square=tool.preview_corners().unwrap();assert_eq!(square[2],DVec3::new(2.,2.,0.));ctx.world=DVec3::new(4.,1.,0.);tool.on_move(&mut scene,&ctx);assert_eq!(tool.preview_corners().unwrap()[2],DVec3::new(4.,4.,0.));tool.on_vcb_input(&mut scene,"3").unwrap();assert!((scene.mesh.face_area(0)-9.).abs()<1e-9);
+        let mut tool=RectangleTool::new();tool.start_point=Some(DVec3::ZERO);tool.hover_point=Some(DVec3::X+DVec3::Y);tool.on_vcb_input(&mut scene,"2,1.95").unwrap();assert!(scene.mesh.faces.iter().enumerate().any(|(i,_)|(scene.mesh.face_area(i)-3.9).abs()<1e-9));
+    }
     #[test]fn center_typed_dimensions_are_whole_width_and_height(){
         let mut scene=Scene::new();let mut tool=RectangleTool::new();tool.start_point=Some(DVec3::ZERO);tool.hover_point=Some(DVec3::X+DVec3::Y);tool.from_center=true;tool.on_vcb_input(&mut scene,"4,2").unwrap();assert!((scene.mesh.face_area(0)-8.).abs()<1e-9);assert!((scene.mesh.vertices.iter().map(|v|v.position.x).fold(f64::NEG_INFINITY,f64::max)-2.).abs()<1e-9);
         let mut tool=RectangleTool::new();tool.start_point=Some(DVec3::ZERO);let before=scene.clone();assert!(tool.on_vcb_input(&mut scene,"-4,2").is_err());assert_eq!(scene,before);

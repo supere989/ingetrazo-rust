@@ -331,6 +331,7 @@ impl IngeTrazoApp {
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
+        if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
         if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.redo_stack.push(self.scene.clone());

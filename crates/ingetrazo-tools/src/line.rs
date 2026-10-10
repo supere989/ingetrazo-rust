@@ -15,6 +15,7 @@ pub struct LineTool {
     pub chain_first_point: Option<DVec3>,
     pub chain_vertices: Vec<DVec3>,
     error: Option<String>,
+    work_plane: Option<(DVec3,DVec3)>,
 }
 
 impl LineTool {
@@ -26,7 +27,7 @@ impl LineTool {
         self.start_point = None;
         self.hover_point = None;
         self.chain_first_point = None;
-        self.chain_vertices.clear();
+        self.chain_vertices.clear();self.work_plane=None;self.error=None;
     }
 
     fn commit_segment(&mut self, next_point: DVec3, scene: &mut Scene) -> Result<(),String> {
@@ -56,6 +57,11 @@ impl LineTool {
 
 impl Tool for LineTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
+    fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.work_plane}
+    fn prepare_undo(&mut self,available:bool)->bool{
+        if self.start_point.is_none(){return false;}if self.chain_vertices.len()>1&&available{self.chain_vertices.pop();self.start_point=self.chain_vertices.last().copied();if self.chain_vertices.len()==1{self.chain_first_point=self.start_point;}false}else{self.reset();true}
+    }
+
     fn tool_type(&self) -> ToolType {
         ToolType::Line
     }
@@ -94,6 +100,7 @@ impl Tool for LineTool {
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         if self.start_point.is_none() {
+            self.work_plane=crate::base::pick_scene_face(scene,&ctx.ray).map(|(i,_,_)|(ctx.world,scene.mesh.face_normal(i)));
             self.start_point = Some(ctx.world);
             self.chain_first_point = Some(ctx.world);
             self.chain_vertices = vec![ctx.world];

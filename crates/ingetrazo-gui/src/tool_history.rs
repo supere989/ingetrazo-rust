@@ -119,6 +119,9 @@ mod tests {
         )
     }
 
+    #[test]fn line_midchain_undo_rewinds_vcb_origin_without_consuming_prior_document_undo(){
+        let mut app=app();app.scene=Scene::new();app.active_tool=create_tool(ToolType::Line);app.active_tool_type=ToolType::Line;let ctx=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));app.dispatch_tool_click(&ctx);app.dispatch_tool_vcb("2;0;0").unwrap();app.dispatch_tool_vcb("0;3;0").unwrap();assert_eq!(app.scene.mesh.edges.len(),2);app.undo();assert_eq!(app.scene.mesh.edges.len(),1);app.dispatch_tool_vcb("0;-1;0").unwrap();assert!(app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(2.,-1.,0.)));assert!(!app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(2.,3.,0.)));app.undo();app.undo();assert!(app.scene.mesh.edges.is_empty());app.undo();assert!(app.dispatch_tool_vcb("1;0;0").is_err());assert!(app.undo_stack.is_empty());
+    }
     #[test]fn freehand_preview_cancel_release_has_one_reversible_commit(){
         let mut app=app();app.scene=Scene::new();app.active_tool=create_tool(ToolType::Freehand);app.active_tool_type=ToolType::Freehand;
         let ctx=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));app.dispatch_tool_click(&ctx);app.active_tool.on_move(&mut app.scene,&ToolContext::new(DVec3::X,ctx.ray));app.active_tool.on_cancel(&mut app.scene);assert!(app.scene.mesh.edges.is_empty());assert!(app.undo_stack.is_empty());
