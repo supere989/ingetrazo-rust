@@ -584,6 +584,7 @@ mod admission_tests {
         let mut d = Definition::default();
         geometry(&edge, &mut d).unwrap();
         assert!(geometry(&edge, &mut d).is_err());
+        let co = [0xa1, 0x0f, 1, 0, 0, 0, 1, 0xa2, 0x0f, 1, 0, 0, 0, 0];
         let face = Node {
             tag: [0xac, 0x0d],
             body: &[],
@@ -595,11 +596,11 @@ mod admission_tests {
                     children: vec![Node {
                         tag: [0x94, 0x11],
                         body: &[],
-                        children: vec![Node {
-                            tag: [0xa0, 0x0f],
-                            body: &[],
-                            children: vec![leaf([0xa1, 0x0f], &id), leaf([0xa2, 0x0f], &a)],
-                        }],
+                        children: vec![
+                            leaf([0xa0, 0x0f], &co),
+                            leaf([0xa0, 0x0f], &co),
+                            leaf([0xa0, 0x0f], &co),
+                        ],
                     }],
                 },
             ],
