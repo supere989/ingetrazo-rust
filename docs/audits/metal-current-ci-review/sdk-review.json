@@ -1,0 +1,13 @@
+{
+  "source": "f03caba2295ae2900e43e04bf477f69da3f7008d",
+  "artifacts": {
+    "11677676880": "9cf5135967a9889aa4863feb59072244dd551a86c427feeb97a1d4adcc373413",
+    "11677286896": "405d6e7d82cccda750c3712df5b6e1f6a9b4e235258ac7bfe8cfe42e56ec7e16"
+  },
+  "sha256_and_zip_crc_verified": true,
+  "both_architectures": "Native GUI check/build completed; font suite 33 passed each; devices report Apple Paravirtual",
+  "arm_fetch": "Six exact whole-image cases; actual admission rollback and final ledger zero reported",
+  "intel_fetch": "Explicit unsupported framebuffer-fetch refusal; direct fetch rendering remains open",
+  "ordered_compute": "Both architectures separately verified in independent-artifact-review.json",
+  "physical_mac_acceptance": false
+}
