@@ -1,0 +1,8 @@
+{
+  "source_revision": "62bccc3a0f3101a2917a41dc7fc16969ad1fc85c",
+  "binary_sha256": "b181edc374fec0575e98459b0ea9acf08674351421abcbfd169f30019fbf806a",
+  "original_source_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "qt_overrun_contract": "https://doc.qt.io/qt-6/qtimer.html#accuracy-and-timer-resolution",
+  "verdict": "FAIL: stalled native Walk5steps/FP7steps versus actual source one timeout each; controlled source handlers and native egui frames, not rendered timing proof"
+}

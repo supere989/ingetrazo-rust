@@ -18,9 +18,11 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         let mut duplicate_sheet_idx = None;
         let mut delete_sheet_idx = None;
 
+        if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-sheet-tabs"),Vec::<egui::Rect>::new()));}
         for (idx, sheet) in app.scene.sheets.iter().enumerate() {
             let is_active = app.scene.active_sheet_index == Some(idx);
             let tab_resp = ui.selectable_label(is_active, &sheet.name);
+            if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{let mut tabs=d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-sheet-tabs")).unwrap_or_default();tabs.push(tab_resp.rect);d.insert_temp(egui::Id::new("pdf-ui-sheet-tabs"),tabs);});}
             if tab_resp.clicked() {
                 switch_to_sheet = Some(idx);
             }
@@ -79,7 +81,7 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         ui.separator();
 
         // Prompt hint
-        let default_hint = if app.active_tool_type==ingetrazo_tools::base::ToolType::Select {tr("Select — Shift = add/remove, Ctrl = add. Double-click a group to edit it. F3 = search commands.")}else{format!("{} — {}",app.active_tool.name(),app.active_tool.description())};
+        let default_hint = if let Some(mode)=app.navigation.mode {tr(mode.hint())}else if app.active_tool_type==ingetrazo_tools::base::ToolType::Select {tr("Select — Shift = add/remove, Ctrl = add. Double-click a group to edit it. F3 = search commands.")}else{format!("{} — {}",app.active_tool.name(),app.active_tool.description())};
         let hint = if !app.status_message.is_empty() {
             &app.status_message
         } else {
@@ -92,12 +94,14 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.label(tr("Units: Meters"));
             ui.separator();
 
-            let vcb_label = app.active_tool.vcb_label();
+            let vcb_label = match app.navigation.mode {Some(crate::navigation::Mode::Position)=>"Height offset",Some(_)=>"Eye height",None=>app.active_tool.vcb_label()};
             let prompt = if !vcb_label.is_empty() { tr(vcb_label) } else { tr("Measurements") };
 
+            let measurement=app.navigation_measurement().unwrap_or_else(||"0.00".into());
             let edit_resp = ui.add(
                 egui::TextEdit::singleline(&mut app.vcb_text)
-                    .hint_text("0.00")
+                    .id(egui::Id::new("measurements_vcb"))
+                    .hint_text(measurement)
                     .desired_width(70.0),
             );
 

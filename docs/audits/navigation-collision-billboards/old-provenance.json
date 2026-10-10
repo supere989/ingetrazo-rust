@@ -1,0 +1,6 @@
+{
+  "source_revision": "b02f618804c09bee9b4ce6017c9718ebd1cf5788",
+  "binary_sha256": "736062967f53941ce3009ec4ea414e5d3495833a6e5267d8be89d9ee9d7bb79b",
+  "source": "actual frozen MainWindow.ray_distance over saved IGZ",
+  "verdict": "FAIL root and nested billboard own meshes collide; hidden-node pruning and billboard descendant controls match. Scene.placements policy differs actual pickindex; no inference-only policy substitution."
+}

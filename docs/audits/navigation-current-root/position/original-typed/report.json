@@ -1,0 +1,273 @@
+{
+  "passed": true,
+  "source_revision": "9b02ccae833fc2cb5ebbaa4070850c9297922d67",
+  "script_sha256": "ae223084496e725c03d7bffbc0aaa8691b63b5f00bc7e54bb6f890723db28653",
+  "implementation": "original-Qt-OpenGL-llvmpipe",
+  "cancel": false,
+  "typed_height": true,
+  "typed_state": {
+    "eye_height": 2.5,
+    "value_buffer": "",
+    "measurement": "2.50 m",
+    "measurement_label": "Height offset",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      215.9915509968996
+    ],
+    "snap_kind": "none",
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 27,
+    "eye": [
+      3.7493993930529855e-32,
+      -6.123233998228043e-16,
+      10.0
+    ],
+    "forward": [
+      -3.7493993930529855e-33,
+      6.123234262925839e-17,
+      -1.0
+    ],
+    "mode": "PositionCameraTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      451,
+      408
+    ]
+  },
+  "coverage": {
+    "samples": 48,
+    "visible": 48,
+    "coverage": 1.0
+  },
+  "glyph_green": 122,
+  "glyph_state": {
+    "eye_height": 2.5,
+    "value_buffer": "",
+    "measurement": "2.50 m",
+    "measurement_label": "Height offset",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      215.9915509968996
+    ],
+    "snap_kind": "endpoint",
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 33,
+    "eye": [
+      3.7493993930529855e-32,
+      -6.123233998228043e-16,
+      10.0
+    ],
+    "forward": [
+      -3.7493993930529855e-33,
+      6.123234262925839e-17,
+      -1.0
+    ],
+    "mode": "PositionCameraTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      508,
+      216
+    ]
+  },
+  "negatives": [
+    "black-world",
+    "missing-preview",
+    "missing-endpoint-glyph"
+  ],
+  "initial": {
+    "eye_height": 1.68,
+    "value_buffer": "",
+    "measurement": "1.68 m",
+    "measurement_label": "Height offset",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      215.9915509968996
+    ],
+    "snap_kind": null,
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 2,
+    "eye": [
+      3.7493993930529855e-32,
+      -6.123233998228043e-16,
+      10.0
+    ],
+    "forward": [
+      -3.7493993930529855e-33,
+      6.123234262925839e-17,
+      -1.0
+    ],
+    "mode": "PositionCameraTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": false,
+    "pointer": null
+  },
+  "preview": {
+    "eye_height": 2.5,
+    "value_buffer": "",
+    "measurement": "2.50 m",
+    "measurement_label": "Height offset",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      215.9915509968996
+    ],
+    "snap_kind": "none",
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 50,
+    "eye": [
+      3.7493993930529855e-32,
+      -6.123233998228043e-16,
+      10.0
+    ],
+    "forward": [
+      -3.7493993930529855e-33,
+      6.123234262925839e-17,
+      -1.0
+    ],
+    "mode": "PositionCameraTool",
+    "preview": [
+      [
+        1.2202690839767456,
+        -0.6033552289009094,
+        2.5
+      ],
+      [
+        2.101574659347534,
+        -0.06101345270872116,
+        0.0
+      ]
+    ],
+    "preview_pixels": [
+      [
+        450.0,
+        407.9999988973141
+      ],
+      [
+        515.0000095367432,
+        367.9999999012798
+      ]
+    ],
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      515,
+      368
+    ]
+  },
+  "final": {
+    "eye_height": 2.5,
+    "value_buffer": "",
+    "measurement": "2.50 m",
+    "measurement_label": "Eye height",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      -72.26501804324741,
+      144.0542166263667
+    ],
+    "snap_kind": null,
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 62,
+    "eye": [
+      1.2202699184417725,
+      -0.6033546924591064,
+      2.5
+    ],
+    "forward": [
+      0.32572129368782043,
+      0.2004438191652298,
+      -0.9239739179611206
+    ],
+    "mode": "LookAroundTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      515,
+      368
+    ]
+  },
+  "command": [
+    "/tmp/ingetrazo-parity-python/bin/python",
+    "scripts/original_position_navigation_fixture.py",
+    "/tmp/ingetrazo-position-root-original-ui"
+  ],
+  "binary_sha256": null,
+  "scope": "actual XTEST pointer/Escape and visible projected preview; no whole-image glyph/AA parity or hardware claim"
+}

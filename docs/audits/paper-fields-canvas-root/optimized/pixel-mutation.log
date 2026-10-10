@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-paper-fields-root/scripts/check-paper-fields-canvas-pixels.py", line 19, in <module>
+    changed=sum(a.pixel(x,y)!=b.pixel(x,y)for x in range(left,right)for y in range(top,bottom));assert changed==0,(index,changed)
+                                                                                                       ^^^^^^^^^^
+AssertionError: (0, 1)

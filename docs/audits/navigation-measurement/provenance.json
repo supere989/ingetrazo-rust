@@ -1,0 +1,6 @@
+{
+  "parent_revision": "83077693d8d9918c18b2ee13bbccab8dac2ef34a",
+  "binary_sha256": "8f98b007aa9a979dd75e899cbfbc02b251ede67cfa876add074054c914a7f909",
+  "source": "frozen Qt 6.12.0 actual MainWindow/XTEST; native Vulkan llvmpipe",
+  "scope": "Typed height commit and dynamic measurement/status only. Original label refresh requires real pointer motion; stale-label timeout retained. No whole-image glyph or units parity claim."
+}

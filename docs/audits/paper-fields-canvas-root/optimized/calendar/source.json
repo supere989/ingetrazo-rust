@@ -1,0 +1,542 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "zones": {
+    "UTC": [
+      {
+        "timestamp": 1767225599,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767225600,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767225601,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772953199,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953200,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953201,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793512799,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512800,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512801,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1774745999,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1774746000,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1774746001,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1792889999,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1792890000,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1792890001,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1775311199,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1775311200,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1775311201,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1790431199,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1790431200,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1790431201,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1709164799,
+        "source_date": "28/02/2024"
+      },
+      {
+        "timestamp": 1709164800,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1709164801,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1767225599,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767225600,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767225601,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772927999,
+        "source_date": "07/03/2026"
+      },
+      {
+        "timestamp": 1772928000,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772928001,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793491199,
+        "source_date": "31/10/2026"
+      },
+      {
+        "timestamp": 1793491200,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793491201,
+        "source_date": "01/11/2026"
+      }
+    ],
+    "America/New_York": [
+      {
+        "timestamp": 1767225599,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767225600,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767225601,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1772953199,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953200,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953201,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793512799,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512800,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512801,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1774745999,
+        "source_date": "28/03/2026"
+      },
+      {
+        "timestamp": 1774746000,
+        "source_date": "28/03/2026"
+      },
+      {
+        "timestamp": 1774746001,
+        "source_date": "28/03/2026"
+      },
+      {
+        "timestamp": 1792889999,
+        "source_date": "24/10/2026"
+      },
+      {
+        "timestamp": 1792890000,
+        "source_date": "24/10/2026"
+      },
+      {
+        "timestamp": 1792890001,
+        "source_date": "24/10/2026"
+      },
+      {
+        "timestamp": 1775311199,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1775311200,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1775311201,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1790431199,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1790431200,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1790431201,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1709164799,
+        "source_date": "28/02/2024"
+      },
+      {
+        "timestamp": 1709164800,
+        "source_date": "28/02/2024"
+      },
+      {
+        "timestamp": 1709164801,
+        "source_date": "28/02/2024"
+      },
+      {
+        "timestamp": 1767243599,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767243600,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767243601,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772945999,
+        "source_date": "07/03/2026"
+      },
+      {
+        "timestamp": 1772946000,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772946001,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793505599,
+        "source_date": "31/10/2026"
+      },
+      {
+        "timestamp": 1793505600,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793505601,
+        "source_date": "01/11/2026"
+      }
+    ],
+    "Europe/Berlin": [
+      {
+        "timestamp": 1767225599,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767225600,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767225601,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772953199,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953200,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953201,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793512799,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512800,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512801,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1774745999,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1774746000,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1774746001,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1792889999,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1792890000,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1792890001,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1775311199,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1775311200,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1775311201,
+        "source_date": "04/04/2026"
+      },
+      {
+        "timestamp": 1790431199,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1790431200,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1790431201,
+        "source_date": "26/09/2026"
+      },
+      {
+        "timestamp": 1709164799,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1709164800,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1709164801,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1767221999,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767222000,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767222001,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772924399,
+        "source_date": "07/03/2026"
+      },
+      {
+        "timestamp": 1772924400,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772924401,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793487599,
+        "source_date": "31/10/2026"
+      },
+      {
+        "timestamp": 1793487600,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793487601,
+        "source_date": "01/11/2026"
+      }
+    ],
+    "Pacific/Auckland": [
+      {
+        "timestamp": 1767225599,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767225600,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767225601,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772953199,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953200,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772953201,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793512799,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512800,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793512801,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1774745999,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1774746000,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1774746001,
+        "source_date": "29/03/2026"
+      },
+      {
+        "timestamp": 1792889999,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1792890000,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1792890001,
+        "source_date": "25/10/2026"
+      },
+      {
+        "timestamp": 1775311199,
+        "source_date": "05/04/2026"
+      },
+      {
+        "timestamp": 1775311200,
+        "source_date": "05/04/2026"
+      },
+      {
+        "timestamp": 1775311201,
+        "source_date": "05/04/2026"
+      },
+      {
+        "timestamp": 1790431199,
+        "source_date": "27/09/2026"
+      },
+      {
+        "timestamp": 1790431200,
+        "source_date": "27/09/2026"
+      },
+      {
+        "timestamp": 1790431201,
+        "source_date": "27/09/2026"
+      },
+      {
+        "timestamp": 1709164799,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1709164800,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1709164801,
+        "source_date": "29/02/2024"
+      },
+      {
+        "timestamp": 1767178799,
+        "source_date": "31/12/2025"
+      },
+      {
+        "timestamp": 1767178800,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1767178801,
+        "source_date": "01/01/2026"
+      },
+      {
+        "timestamp": 1772881199,
+        "source_date": "07/03/2026"
+      },
+      {
+        "timestamp": 1772881200,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1772881201,
+        "source_date": "08/03/2026"
+      },
+      {
+        "timestamp": 1793444399,
+        "source_date": "31/10/2026"
+      },
+      {
+        "timestamp": 1793444400,
+        "source_date": "01/11/2026"
+      },
+      {
+        "timestamp": 1793444401,
+        "source_date": "01/11/2026"
+      }
+    ]
+  },
+  "scope": "Original composition.field_values date.today with controlled timestamps and native datetime local-date conversion; native Unix localtime_r. Windows/macOS live execution remains separate."
+}

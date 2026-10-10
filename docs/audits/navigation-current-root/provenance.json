@@ -1,0 +1,12 @@
+{
+  "source": "a72b756d90cf34cfc5a7c645d9b1b38051a6049e",
+  "workspace_library_integration_passed": 616,
+  "ignored": 2,
+  "fresh_original_collision_cases": 8,
+  "fresh_original_timer_cases": 2,
+  "scope": "combined isolated navigation; full rendered/operator/platform acceptance remains open",
+  "binaries": {
+    "navigation_collision_acceptance": "863d4e82bc9a844e892ace95840866d04f5c73091a1923ff482f01dbe17432ab",
+    "navigation_timer_acceptance": "7862cf30ad21829a14e01f03d0514f4f4f9721e8c900cfd7c574f2a31fe598f4"
+  }
+}

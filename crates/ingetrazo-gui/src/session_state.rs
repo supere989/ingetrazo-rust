@@ -8,6 +8,8 @@ use ingetrazo_formats::igz::{save_igz,load_igz};
 #[serde(default)]
 pub struct Preferences {
     pub language: Option<String>,
+    pub walk_eye_height: f64,
+    pub look_sensitivity: u8,
     pub new_document_unit: LengthUnit,
     pub autosave: bool,
     pub autosave_minutes: u32,
@@ -23,12 +25,14 @@ pub struct Preferences {
     pub extra: BTreeMap<String,serde_json::Value>,
 }
 impl Default for Preferences {
-    fn default()->Self {Self{language:None,new_document_unit:LengthUnit::Meters,autosave:true,autosave_minutes:5,undo_steps:200,
+    fn default()->Self {Self{walk_eye_height:1.68,look_sensitivity:25,language:None,new_document_unit:LengthUnit::Meters,autosave:true,autosave_minutes:5,undo_steps:200,
         visual_style:"shaded".into(),profile_width:2.,line_width:1.,shadows:false,show_toolbar:true,show_tray:true,
         recent_files:vec![],extra:BTreeMap::new()}}
 }
 impl Preferences {
     pub fn clamp(&mut self) {
+        if !self.walk_eye_height.is_finite() || !(0.05..=100.).contains(&self.walk_eye_height) { self.walk_eye_height=1.68; }
+        if !(1..=100).contains(&self.look_sensitivity) { self.look_sensitivity=25; }
         self.autosave_minutes=self.autosave_minutes.clamp(1,60);self.undo_steps=self.undo_steps.clamp(1,1000);
         self.profile_width=if self.profile_width.is_finite(){self.profile_width.clamp(1.,6.)}else{2.};
         self.line_width=if self.line_width.is_finite(){self.line_width.clamp(0.5,4.)}else{1.};

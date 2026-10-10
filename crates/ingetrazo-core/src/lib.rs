@@ -66,3 +66,7 @@ mod tile_capture_codec;
 pub mod presentation;
 
 pub mod image_plane;
+
+pub mod walkthrough;
+
+pub mod visible_ray_index;

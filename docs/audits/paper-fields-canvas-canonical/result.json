@@ -1,0 +1,7 @@
+{
+  "source": "a208bf813542ba8b9de040e04d3e3090e73083c1",
+  "passed": 586,
+  "failed": 0,
+  "ignored": 2,
+  "scope": "locked workspace library and integration tests; documentation tests/full example linking excluded"
+}
