@@ -1,5 +1,7 @@
 # Rust parity progress tracker
 
+Native ARM font review (2026-10-10, Metal review branch): actual producer `dc11af7d` now matches 16 of 18 strict PDF page comparisons after the source-derived native horizontal-metric correction, up from 9 of 18 in the preceding artifact. Independent image decoding confirms only CJK remains different: 62/0/309 pixels at 72/150/300 DPI. [Retained artifact and review](audits/coretext-native-fourth/arm-root-review.json). The 150-DPI match does not prove spacing parity. Canvas still fails its positive-presentation deadline despite completed GPU commands; no platform or release gate is promoted.
+
 Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_Angeles). Baseline Rust commit: `68368964fd5625f96ab5c705c43cdc13e402a6bd`. Original Python baseline: submodule `6be29fe437a7cd992d4e079f71720821b25216b9`, source version 0.5.7 (`ingetrazo/core/version.py`). The Rust workspace package version is 0.3.15. This compares the pinned original, not today's upstream HEAD.
 
 Latest SKP integration: native VFF import and linear definition-use counting are integrated; 85 focused formats tests pass. [Evidence](audits/skp-integration-acceptance/result.json). P21 remains Partial; legacy, nested/tagged extraction, textures and rendered import acceptance remain OPEN. The earlier 647-test workspace checkpoint predates this addition.
