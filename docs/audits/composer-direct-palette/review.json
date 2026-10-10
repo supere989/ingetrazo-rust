@@ -1,0 +1,18 @@
+{
+  "base": "359d393",
+  "status": "palette_adapter_only",
+  "checks": [
+    "originalARGB8 decodedRGB37/93/157 alpha128 preserved",
+    "terrainbandalpha0.6 replacesratherthanmultipliesexistingalpha",
+    "invalidpalettefailsbeforegeometrysubmission",
+    "existingpointerplacement/history controls pass"
+  ],
+  "source_alpha_reference": "ingetrazo/views/composer.py _paint_forma setAlphaF(0.6)",
+  "remaining": [
+    "direct shape geometry/coverage adapter",
+    "cache and production composer callback hookup",
+    "nine strict rendered shape fixtures",
+    "full authoring and export acceptance"
+  ],
+  "canonical_promotion": false
+}

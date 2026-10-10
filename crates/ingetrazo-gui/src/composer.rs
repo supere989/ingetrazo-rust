@@ -968,6 +968,22 @@ impl IngeTrazoApp {
  }
 }
 
+/// Resolve authored colors before geometry submission, preserving encoded RGB.
+/// Terrain band opacity replaces QColor alpha, matching source setAlphaF(0.6).
+pub fn precise_shape_palette(commands:&[ingetrazo_core::sheet_shape::ShapePaint])->Result<Vec<(Option<ingetrazo_render::cad2d::EncodedRgba>,Option<ingetrazo_render::cad2d::EncodedRgba>)>,String> {
+ use ingetrazo_render::cad2d::EncodedRgba;
+ fn color(value:&str,alpha:Option<f64>)->Result<EncodedRgba,String>{
+  let bytes=ingetrazo_core::sheet_color::parse_sheet_color(value)?;
+  let mut value=EncodedRgba::from_bytes(bytes,1.)?;
+  if let Some(alpha)=alpha {value.0[3]=alpha as f32;value.validate()?;}
+  Ok(value)
+ }
+ commands.iter().map(|c|Ok((
+  c.stroke.as_ref().map(|(s,_)|color(s,None)).transpose()?,
+  c.fill.as_ref().map(|(s,a)|color(s,if *a==1. {None}else{Some(*a)})).transpose()?
+ ))).collect()
+}
+
 /// Physical shape commands are shared with export; screen projection happens once here.
 pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_shape::SheetShape,zoom:f32,origin:Pos2)->Result<(),String> {
  use ingetrazo_core::sheet_shape::ShapePath;
@@ -1012,6 +1028,16 @@ pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_sha
 
 #[cfg(test)]mod shape_authoring_tests {
  use super::*;
+ #[test]fn precise_palette_preserves_bytes_and_source_alpha_replacement(){
+  use ingetrazo_core::sheet_shape::{ShapePaint,ShapePath};
+  let c=ShapePaint{path:ShapePath::Line(glam::DVec2::ZERO,glam::DVec2::X),stroke:Some(("#80255d9d".into(),0.35)),fill:Some(("#20255d9d".into(),0.6)),clip:None};
+  let p=precise_shape_palette(&[c.clone()]).unwrap();
+  assert_eq!(p[0].0.unwrap().0,[37./255.,93./255.,157./255.,128./255.]);
+  assert_eq!(p[0].1.unwrap().0,[37./255.,93./255.,157./255.,0.6]);
+  let mut invalid=c;invalid.fill=Some(("not-a-color".into(),0.6));
+  assert!(precise_shape_palette(&[invalid]).is_err());
+ }
+
  #[test]fn shape_placement_is_atomic_undoable_and_invalid_input_preserves_history(){
   let mut app=IngeTrazoApp::new();app.scene.sheets.push(ingetrazo_core::composition::Sheet::new("Shapes",PaperSize::A4,Orientation::Portrait));app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
   let before=app.scene.sheets.clone();let id=app.place_composer_shape("linea",glam::DVec2::new(2.,3.),glam::DVec2::new(8.,3.)).unwrap();
