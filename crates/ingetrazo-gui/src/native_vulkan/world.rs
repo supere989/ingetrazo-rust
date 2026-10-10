@@ -193,6 +193,14 @@ impl World {
   let parameters=self.annotation_parameters.ok_or("Annotation queries not prepared")?;
   self.annotation_visibility.as_mut().ok_or("Annotation evaluator absent")?.record(command,serial,parameters,self.samples.as_raw())
  }
+ /// Only the live World target/evaluator can supply the retained output binding.
+ /// Completion admission precedes descriptor changes in both resource owners.
+ pub(crate) fn bind_annotation_overlay(&self,renderer:&mut super::cad2d::Renderer,context:&VulkanContext,fence:vk::Fence,completed:u64)->Result<(),String>{
+  self.resources.publication_preflight(context,fence,completed,&[],&[])?;
+  let target=self.target.as_ref().ok_or("Annotation depth target absent")?;
+  admit_annotation_target(&self.annotation_depth_binding,&target.identity)?;
+  self.annotation_visibility.as_ref().ok_or("Annotation evaluator absent")?.bind_overlay(renderer,context,fence,completed)
+ }
  /// Small diagnostic query output only; never a production full-depth readback.
  pub fn readback_annotation_queries_for_probe(&mut self,context:&VulkanContext)->Result<Vec<u8>,String>{
   self.annotation_visibility.as_mut().ok_or("Annotation evaluator absent")?.readback_for_probe(context)

@@ -176,3 +176,5 @@ pub mod navigation_ray;
 
 pub mod composer_border;
 mod history_edges;
+
+mod annotation_overlay_geometry;

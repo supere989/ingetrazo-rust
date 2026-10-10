@@ -36,6 +36,7 @@ pub struct Stats {
 }
 #[derive(Clone)]
 struct Ready {
+    gates: Option<Arc<[ingetrazo_render::annotations::Gate]>>,
     id: u64,
     vertex: vk::Buffer,
     index: vk::Buffer,
@@ -48,6 +49,7 @@ struct Ready {
     opaque:bool,
 }
 struct State {
+    gates: Option<Arc<[ingetrazo_render::annotations::Gate]>>,
     geometry: Arc<Geometry>,
     batches: Arc<[Batch]>,
     premultiplied: Arc<[[f32;4]]>,
@@ -55,6 +57,8 @@ struct State {
     ready: Option<Ready>,
 }
 struct Pipeline {
+    annotations: bool,
+    visibility: Option<(vk::Buffer,u32,Arc<()>)>,
     pipeline: vk::Pipeline,
     layout: vk::PipelineLayout,
     integer:bool,
@@ -230,7 +234,13 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
         let mut bound=None;
         for r in ready { unsafe {
             if bound!=Some((r.vertex,r.index)) {device.cmd_bind_vertex_buffers(command,0,&[r.vertex],&[0]);device.cmd_bind_index_buffer(command,r.index,0,vk::IndexType::UINT32);bound=Some((r.vertex,r.index));counters.binds.fetch_add(1,Ordering::Relaxed);}
-            for (batch,rgba) in r.batches.iter().zip(r.premultiplied.iter()).filter(|(b,_)| b.count > 0) {
+            for (batch_index,(batch,rgba)) in r.batches.iter().zip(r.premultiplied.iter()).enumerate().filter(|(_, (b,_))| b.count > 0) {
+                if p.annotations{
+                    let count=p.visibility.as_ref().map(|v|v.1).ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation visibility not prepared".into()))?;
+                    let gate=r.gates.as_ref().and_then(|g|g.get(batch_index)).copied().ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation draw gate absent".into()))?;
+                    let ids=gate_ids(gate,count).map_err(egui_ash_renderer::RendererError::Init)?;
+                    device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,24,bytemuck::cast_slice(&ids));
+                }
                 device.cmd_push_constants(
                     command,
                     p.layout,
@@ -251,6 +261,22 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
         Ok(())
 }
 
+fn gate_ids(gate:ingetrazo_render::annotations::Gate,count:u32)->Result<[u32;2],String>{
+ use ingetrazo_render::annotations::Gate;
+ let ids=match gate {
+  Gate::Always=>[u32::MAX;2],
+  Gate::Point(a) if a<count=>[a,u32::MAX],
+  Gate::Both(a,b) if a<count&&b<count=>[a,b],
+  _=>return Err("Annotation query gate outside retained output".into()),
+ };
+ Ok(ids)
+}
+fn admit_gates(gates:Option<&[ingetrazo_render::annotations::Gate]>,batches:usize,count:u32)->Result<(),String>{
+ let gates=gates.ok_or("Annotation draw gates absent")?;
+ if gates.len()!=batches{return Err("Annotation gate/batch inventory mismatch".into());}
+ for gate in gates{gate_ids(*gate,count)?;}
+ Ok(())
+}
 fn prepare_palette(batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{batches.iter().map(|b|b.color.qt_premultiplied8()).collect::<Result<Vec<_>,_>>().map(Arc::from)}
 struct Cached {
     vertex: BufferId,
@@ -262,8 +288,15 @@ struct Cached {
 impl Factory{
  pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
   geometry.validate_batches(&batches)?;pose.validate()?;
-  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{geometry,premultiplied:prepare_palette(&batches)?,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
+  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,geometry,premultiplied:prepare_palette(&batches)?,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
   let callback=Arc::new(VulkanPaintCallback(inner.clone()));Ok(Handle{inner,callback})
+ }
+ pub(crate) fn annotation_handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<Handle,String>{
+  if !self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.annotations {return Err("Annotation factory requires gated pipeline".into());}
+  if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
+  let handle=self.handle(geometry,batches,pose)?;
+  handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?.gates=Some(gates);
+  Ok(handle)
  }
 }
 pub struct Renderer {
@@ -292,7 +325,15 @@ impl Renderer {
         views:&[vk::ImageView],
         integer:bool,
     ) -> Result<Self, String> {
-        let descriptor_layout=if integer{let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|{if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}e.to_string()})?}else{vk::DescriptorSetLayout::null()};
+        Self::new_mode(context,budget,pass,views,integer,false)
+    }
+    pub(crate) fn new_annotations(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView])->Result<Self,String>{
+        Self::new_mode(context,budget,pass,views,true,true)
+    }
+    fn new_mode(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView],integer:bool,annotations:bool)->Result<Self,String>{
+        let descriptor_layout=if integer{let mut bindings=vec![vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];
+        if annotations{bindings.push(vk::DescriptorSetLayoutBinding::default().binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT));}
+unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|{if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}e.to_string()})?}else{vk::DescriptorSetLayout::null()};
         let set_layouts=if integer{vec![descriptor_layout]}else{Vec::new()};
         let ranges = [vk::PushConstantRange {
             stage_flags: vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
@@ -302,7 +343,7 @@ impl Renderer {
         let layout = match unsafe {
             context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
         }{Ok(v)=>v,Err(e)=>{if integer{unsafe{context.device.destroy_descriptor_set_layout(descriptor_layout,None)}}if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}return Err(e.to_string())}};
-        let pipeline = match make_pipeline(&context.device, pass, layout,integer) {
+        let pipeline = match make_pipeline(&context.device, pass, layout,integer,annotations) {
             Ok(p) => p,
             Err(e) => {
                 unsafe { context.device.destroy_pipeline_layout(layout, None);if integer{context.device.destroy_descriptor_set_layout(descriptor_layout,None)} };
@@ -310,14 +351,14 @@ impl Renderer {
                 return Err(e.to_string());
             }
         };
-        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
+        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views,annotations){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
         Ok(Self {
             device: context.device.clone(),
             lifetime:context.lifetime.clone(),
             budget: budget.clone(),
             pressure_after_vertex: false,
             rolled_back_buffers: 0,
-            pipeline: Arc::new(Mutex::new(Pipeline { pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
+            pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             arena:Default::default(),
             cache: HashMap::new(),
@@ -330,6 +371,21 @@ impl Renderer {
             cache_hits: 0,
         })
     }
+    pub(crate) fn bind_annotation_visibility(&mut self,context:&VulkanContext,buffer:vk::Buffer,count:u32,identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<(),String>{
+        self.resources.publication_preflight(context,fence,completed,&[],&[])?;
+        if buffer==vk::Buffer::null()||count==0{return Err("Annotation visibility binding empty".into());}
+        let range=u64::from(count).checked_mul(4).filter(|&n|n<=u64::from(unsafe{context.instance.get_physical_device_properties(context.physical_device)}.limits.max_storage_buffer_range)).ok_or("Annotation visibility descriptor range exceeded")?;
+        let mut pipeline=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        if !pipeline.annotations{return Err("Ordinary CAD pipeline cannot bind annotation output".into());}
+        if pipeline.visibility.as_ref().is_some_and(|old|old.0==buffer&&old.1==count&&Arc::ptr_eq(&old.2,identity)){return Ok(());}
+        let info=[vk::DescriptorBufferInfo::default().buffer(buffer).offset(0).range(range)];
+        for set in &pipeline.descriptor_sets{
+            let writes=[vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(&info)];
+            unsafe{self.device.update_descriptor_sets(&writes,&[]);}
+        }
+        pipeline.visibility=Some((buffer,count,identity.clone()));
+        Ok(())
+    }
     pub fn descriptor_owner_weak_for_probe(&self)->DescriptorOwnerWeakForProbe{
         DescriptorOwnerWeakForProbe(Arc::downgrade(&self.pipeline))
     }
@@ -339,16 +395,16 @@ impl Renderer {
     pub(crate) fn prepare_render_pass(&self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<PreparedRenderPass,super::resize::PrepareError>{
         self.resources.check_submission()?;
         let p=self.pipeline.lock().map_err(|_|super::resize::PrepareError::Other("CAD2D pipeline poisoned".into()))?;
-        let replacement=make_pipeline(&self.device,pass,p.layout,p.integer)?;
+        let replacement=make_pipeline(&self.device,pass,p.layout,p.integer,p.annotations)?;
         let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,pool:vk::DescriptorPool::null(),sets:Vec::new()};
-        if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
+        if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views,p.annotations)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
         Ok(prepared)
     }
     pub(crate) fn commit_render_pass(&mut self,mut prepared:PreparedRenderPass)->Result<(),String>{
         let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
         let previous=std::mem::replace(&mut p.pipeline,std::mem::replace(&mut prepared.pipeline,vk::Pipeline::null()));
         let previous_pool=std::mem::replace(&mut p.descriptor_pool,std::mem::replace(&mut prepared.pool,vk::DescriptorPool::null()));
-        p.descriptor_sets=std::mem::take(&mut prepared.sets);p.active_set=None;
+        p.descriptor_sets=std::mem::take(&mut prepared.sets);p.active_set=None;p.visibility=None;
         unsafe{self.device.destroy_pipeline(previous,None);if previous_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(previous_pool,None)}};
         Ok(())
     }
@@ -368,6 +424,23 @@ impl Renderer {
         pixels_per_point:f32,
     ) -> Result<(), String> {
         self.resources.collect(fence, completed)?;
+        {
+            let pipeline=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+            if pipeline.annotations{
+                let count=pipeline.visibility.as_ref().map(|v|v.1).ok_or("Annotation visibility not prepared")?;
+                for primitive in primitives {
+                    if let egui::epaint::Primitive::Callback(callback)=&primitive.primitive {
+                        if let Some(callback)=callback.callback.downcast_ref::<VulkanPaintCallback>() {
+                            if let Some(paint)=callback.0.as_any().downcast_ref::<NativePaint>() {
+                                if !Arc::ptr_eq(&paint.pipeline,&self.pipeline){return Err("Annotation callback belongs to another pipeline".into());}
+                                let state=paint.state.lock().map_err(|_|"Annotation state poisoned")?;
+                                admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         self.arena.prepare(context,&mut self.resources,&self.budget,&self.pipeline,primitives,completed,next,fence)?;
         self.active.clear();
         self.pending.clear();
@@ -482,6 +555,7 @@ impl Renderer {
                 self.resources.mark_used(c.vertex, next)?;
                 self.resources.mark_used(c.index, next)?;
                 s.ready = Some(Ready {
+                    gates:s.gates.clone(),
                     id,
                     vertex: self.resources.buffer(c.vertex).unwrap(),
                     index: self.resources.buffer(c.index).unwrap(),
@@ -653,12 +727,13 @@ fn make_pipeline(
     pass: vk::RenderPass,
     layout: vk::PipelineLayout,
     integer:bool,
+    annotations:bool,
 ) -> Result<vk::Pipeline, super::resize::PrepareError> {
     let mut modules = Vec::new();
     let result = (|| {
         for bytes in [
             include_bytes!("shaders/cad2d.vert.spv").as_slice(),
-            if integer{include_bytes!("shaders/cad2d_integer.frag.spv").as_slice()}else{include_bytes!("shaders/cad2d.frag.spv").as_slice()},
+            if annotations{include_bytes!("shaders/annotation_overlay.frag.spv").as_slice()}else if integer{include_bytes!("shaders/cad2d_integer.frag.spv").as_slice()}else{include_bytes!("shaders/cad2d.frag.spv").as_slice()},
         ] {
             let code =
                 ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e| e.to_string())?;
@@ -759,11 +834,28 @@ fn make_pipeline(
     result
 }
 
-fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageView])->Result<(vk::DescriptorPool,Vec<vk::DescriptorSet>),super::resize::PrepareError>{
+fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageView],annotations:bool)->Result<(vk::DescriptorPool,Vec<vk::DescriptorSet>),super::resize::PrepareError>{
  if views.is_empty()||views.len()>16{return Err("CAD2D input image descriptor admission outside1..16".into());}
- let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::INPUT_ATTACHMENT,descriptor_count:views.len()as u32}];
+ let mut sizes=vec![vk::DescriptorPoolSize{ty:vk::DescriptorType::INPUT_ATTACHMENT,descriptor_count:views.len()as u32}];if annotations{sizes.push(vk::DescriptorPoolSize{ty:vk::DescriptorType::STORAGE_BUFFER,descriptor_count:views.len()as u32});}
  let pool=unsafe{device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(views.len()as u32).pool_sizes(&sizes),None)}.map_err(super::resize::PrepareError::from)?;
  let layouts=vec![layout;views.len()];let sets=match unsafe{device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&layouts))}{Ok(v)=>v,Err(e)=>{unsafe{device.destroy_descriptor_pool(pool,None)};return Err(e.into())}};
  for (set,view) in sets.iter().zip(views){let images=[vk::DescriptorImageInfo::default().image_view(*view).image_layout(vk::ImageLayout::GENERAL)];let write=[vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).image_info(&images)];unsafe{device.update_descriptor_sets(&write,&[])}}
  Ok((pool,sets))
+}
+
+
+#[cfg(test)]
+mod annotation_gate_tests {
+ use super::*;
+ use ingetrazo_render::annotations::Gate;
+ #[test]fn gates_refuse_sentinel_and_inventory_before_gpu_admission(){
+  assert_eq!(gate_ids(Gate::Always,0).unwrap(),[u32::MAX;2]);
+  assert_eq!(gate_ids(Gate::Both(0,2),3).unwrap(),[0,2]);
+  assert!(gate_ids(Gate::Point(3),3).is_err());
+  assert!(gate_ids(Gate::Point(u32::MAX),u32::MAX).is_err());
+  assert!(gate_ids(Gate::Both(0,u32::MAX),u32::MAX).is_err());
+  assert!(admit_gates(None,1,3).is_err());
+  assert!(admit_gates(Some(&[Gate::Point(0)]),2,3).is_err());
+  assert!(admit_gates(Some(&[Gate::Always,Gate::Both(0,2)]),2,3).is_ok());
+ }
 }
