@@ -38,6 +38,23 @@ use winit::{
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 800;
 
+/// UI-order slot resolved only after the current frame's GPU transaction succeeds.
+struct AnnotationSlot;
+fn annotation_slot()->egui::Shape{egui::Shape::Callback(egui::PaintCallback{rect:egui::Rect::NOTHING,callback:std::sync::Arc::new(AnnotationSlot)})}
+fn resolve_annotation_slots(shapes:&mut [egui::epaint::ClippedShape],ready:Option<&egui::Shape>){
+    fn resolve(shape:&mut egui::Shape,ready:Option<&egui::Shape>){
+        match shape {
+            egui::Shape::Callback(slot) if slot.callback.is::<AnnotationSlot>()=>{
+                let rect=slot.rect;
+                *shape=match ready{Some(egui::Shape::Callback(callback))=>{let mut callback=callback.clone();callback.rect=rect;egui::Shape::Callback(callback)},_=>egui::Shape::Noop};
+            },
+            egui::Shape::Vec(children)=>for child in children{resolve(child,ready)},
+            _=>{},
+        }
+    }
+    for shape in shapes{resolve(&mut shape.shape,ready)}
+}
+
 pub trait App {
     fn title() -> &'static str;
     fn new(app: &mut System, initial_file: Option<std::path::PathBuf>) -> Self;
@@ -150,6 +167,7 @@ pub struct System {
     annotation_cad:Option<cad2d::Renderer>,
     annotation_viewport:Option<annotation_viewport::ViewportAnnotations>,
     annotation_prepare_error:Option<String>,
+    annotation_ready_shape:Option<egui::Shape>,
     annotation_sample:Option<u32>,
     draw_serial:u64,
 
@@ -285,7 +303,7 @@ impl System {
             pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
-            world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_sample,draw_serial:0,
+            world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_ready_shape:None,annotation_sample,draw_serial:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -466,7 +484,7 @@ impl System {
         let egui::FullOutput {
             platform_output,
             textures_delta,
-            shapes,
+            mut shapes,
             pixels_per_point,
             viewport_output,
         } = self.egui_ctx.run(raw_input, |ctx| {
@@ -476,6 +494,7 @@ impl System {
         egui_app.prepare_gpu(self,false);
         if self.annotation_prepare_error.is_some(){self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
         if self.vulkan_context.lifetime.uncertain(){return;}
+        resolve_annotation_slots(&mut shapes,self.annotation_ready_shape.as_ref());
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
             let canceled=output.commands.iter().any(|c|matches!(c,egui::ViewportCommand::CancelClose));
@@ -1380,8 +1399,9 @@ impl App for crate::IngeTrazoApp {
         app
     }
     fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
+        self.native_gpu_annotation_shape=system.annotation_sample.map(|_|annotation_slot());
         if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){
-            if system.annotation_cad.is_some(){let result=system.clear_annotation_overlay();system.annotation_prepare_error=result.as_ref().err().cloned();match result{Ok(())=>self.native_gpu_annotation_shape=None,Err(error)=>self.gpu_error(&error)}}
+            if system.annotation_cad.is_some(){let result=system.clear_annotation_overlay();system.annotation_prepare_error=result.as_ref().err().cloned();match result{Ok(())=>system.annotation_ready_shape=None,Err(error)=>self.gpu_error(&error)}}
             return;
         }
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
@@ -1408,8 +1428,8 @@ impl App for crate::IngeTrazoApp {
                 let candidate=state.prepare(self,&factory,rect,system.egui_ctx.pixels_per_point()).map(|value|value.map(|value|(value.handle.clone(),value.queries.clone(),value.inverse,value.eye,value.forward)));
                 system.annotation_viewport=Some(state);
                 match candidate?{
-                    Some((handle,queries,inverse,eye,forward))=>{system.prepare_annotation_overlay(&handle,queries,inverse,eye,forward,sample)?;self.native_gpu_annotation_shape=Some(handle.shape(rect));},
-                    None=>{system.clear_annotation_overlay()?;self.native_gpu_annotation_shape=None;},
+                    Some((handle,queries,inverse,eye,forward))=>{system.prepare_annotation_overlay(&handle,queries,inverse,eye,forward,sample)?;system.annotation_ready_shape=Some(handle.shape(rect));},
+                    None=>{system.clear_annotation_overlay()?;system.annotation_ready_shape=None;},
                 }
                 Ok::<(),String>(())
             })();
@@ -1460,3 +1480,16 @@ pub mod textures;
 mod texture_average;
 
 pub mod reference_images;
+
+#[cfg(test)]mod annotation_slot_tests{
+ use super::*;
+ #[test]fn current_transaction_resolves_first_add_delete_and_replacement_at_original_ui_order(){
+  let rect=egui::Rect::from_min_size(egui::pos2(20.,30.),egui::vec2(100.,80.));
+  let slot=||{let egui::Shape::Callback(mut value)=annotation_slot()else{unreachable!()};value.rect=rect;egui::epaint::ClippedShape{clip_rect:rect,shape:egui::Shape::Callback(value)}};
+  let callback=|id:u32|egui::Shape::Callback(egui::PaintCallback{rect:egui::Rect::NOTHING,callback:std::sync::Arc::new(id)});
+  let mut shapes=vec![slot()];resolve_annotation_slots(&mut shapes,Some(&callback(1)));
+  let egui::Shape::Callback(value)=&shapes[0].shape else{panic!("first addition omitted")};assert_eq!(value.rect,rect);assert_eq!(value.callback.downcast_ref::<u32>(),Some(&1));
+  let mut shapes=vec![slot()];resolve_annotation_slots(&mut shapes,None);assert!(matches!(shapes[0].shape,egui::Shape::Noop),"collected old overlay survived deletion");
+  let mut shapes=vec![slot()];resolve_annotation_slots(&mut shapes,Some(&callback(2)));let egui::Shape::Callback(value)=&shapes[0].shape else{panic!()};assert_eq!(value.callback.downcast_ref::<u32>(),Some(&2));
+ }
+}
