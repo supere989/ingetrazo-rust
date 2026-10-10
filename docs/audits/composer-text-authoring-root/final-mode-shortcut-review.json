@@ -1,0 +1,24 @@
+{
+  "status": "retained_state_review_pass",
+  "source": "619cf16a",
+  "comparisons": [
+    {
+      "mode": "modes",
+      "phases": 8,
+      "sha256": {
+        "docs/audits/composer-text-authoring/mode-shortcut-final/modes-original/report.json": "10c51c3d924fde292ac11333da10badac1f222fa134f6854d432d3a98908b72c",
+        "docs/audits/composer-text-authoring/mode-shortcut-final/modes-native/report.json": "31274a0a855a6ece1a88a98eec236859f5cb87296b0a1a2097ecc5cc81fab478"
+      }
+    },
+    {
+      "mode": "shortcuts",
+      "phases": 22,
+      "sha256": {
+        "docs/audits/composer-text-authoring/mode-shortcut-final/shortcuts-original/report.json": "5cc91e561308b9d7d67d7a9746faa17a2bb11e8b746520640da221d3751de24f",
+        "docs/audits/composer-text-authoring/mode-shortcut-final/shortcuts-native/report.json": "9095d969f5fd3fe98768cb7b303602d1ece70ed8ab0d8e4b5a1b6e55b5da7702"
+      }
+    }
+  ],
+  "selection": "Presence only: original observer encodes any selected item as index0. Previous None-vs-selected discrepancy is absent in these retained final states.",
+  "scope": "No fresh integrated binary execution yet; typography and nonLinux runtime remain open."
+}

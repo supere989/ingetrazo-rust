@@ -1,0 +1,26 @@
+{
+  "workspace_source": "619cf16a",
+  "workspace_passed": 691,
+  "workspace_failed": 0,
+  "workspace_ignored": 2,
+  "final_source": "ead18db2",
+  "post_workspace_change": "Early empty-loop refusal, focused test1PASS; evidence-only alias contrast",
+  "fresh_merged_native_ui": [
+    {
+      "mode": "modes",
+      "phases": 8,
+      "original_report_sha256": "10c51c3d924fde292ac11333da10badac1f222fa134f6854d432d3a98908b72c",
+      "native_report_sha256": "559a20a0a44f7b46d07392879c40a1431d50394731be1adb2078391ade85c11e",
+      "binary_sha256": "a7d7b2e45539e06634ff5e0072538a2e76f68a669038aa09c29a5a1595fd3740"
+    },
+    {
+      "mode": "shortcuts",
+      "phases": 22,
+      "original_report_sha256": "5cc91e561308b9d7d67d7a9746faa17a2bb11e8b746520640da221d3751de24f",
+      "native_report_sha256": "9f19aba8403fa1c658bcaf48dc47b588f0308b4417ad2e44dd1bcc700d6bba9a",
+      "binary_sha256": "a7d7b2e45539e06634ff5e0072538a2e76f68a669038aa09c29a5a1595fd3740"
+    }
+  ],
+  "original_reports_reused": true,
+  "scope": "Exact draft/model text/history/mode/selection-presence. Editor pixels, nonLinux UI and broader release parity remain open."
+}

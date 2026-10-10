@@ -1,0 +1,10 @@
+{
+  "source_commit": "619cf16a",
+  "exit_code": 0,
+  "summaries": 35,
+  "passed": 691,
+  "failed": 0,
+  "ignored": 2,
+  "log_sha256": "afc9052d2eb1e28f5c2a2a914e1e1e7b19e4ea653afd94071bb7eaf2874ba9ec",
+  "scope": "One combined workspace run. Later isolated empty-loop admission change requires focused validation; fresh final Text UI acceptance pending."
+}
