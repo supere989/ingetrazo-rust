@@ -1,0 +1,59 @@
+{
+  "source_revision": "b88078e",
+  "production_hint_source": "3d8b4a7",
+  "source_original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "cases": [
+    {
+      "backend": "native",
+      "mode": "curve",
+      "green_hint_pixels": 124,
+      "move": [
+        0.9962495075927937,
+        0.0,
+        0.0
+      ],
+      "sha256": "afe213118f7cb333875a89ef7f0e89622722486f822bb2815f1b0a00c1aa0546"
+    },
+    {
+      "backend": "native",
+      "mode": "tiny",
+      "green_hint_pixels": 0,
+      "move": null,
+      "sha256": "afe213118f7cb333875a89ef7f0e89622722486f822bb2815f1b0a00c1aa0546"
+    },
+    {
+      "backend": "native",
+      "mode": "malformed",
+      "green_hint_pixels": 0,
+      "move": null,
+      "sha256": "afe213118f7cb333875a89ef7f0e89622722486f822bb2815f1b0a00c1aa0546"
+    },
+    {
+      "backend": "original",
+      "mode": "curve",
+      "green_hint_pixels": 112,
+      "move": [
+        1.0036288499832153,
+        0.0,
+        0.0
+      ],
+      "sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c"
+    },
+    {
+      "backend": "original",
+      "mode": "tiny",
+      "green_hint_pixels": 0,
+      "move": null,
+      "sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c"
+    },
+    {
+      "backend": "original",
+      "mode": "malformed",
+      "green_hint_pixels": 0,
+      "move": null,
+      "sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c"
+    }
+  ],
+  "scope": "Fresh actual XTEST/real250msdwell native ashVulkan llvmpipe and original Qt/OpenGL. Hint materialvisibility passes with tiny/malformed zero controls; differing pixelcounts explicitly retained, no exact visual parity. Move integerpixel error .01 only; nativeMove/Deletecenter cache validated, originalpostMove reacquisition stillunverified; generalOnFace/selfsnap/nestedcontext open."
+}
