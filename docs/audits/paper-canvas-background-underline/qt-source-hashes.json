@@ -1,0 +1,54 @@
+{
+  "qt_tag": "v6.12.0",
+  "source_base": "https://github.com/qt/qtbase/tree/v6.12.0/src/gui",
+  "files": [
+    {
+      "file": "ingetrazo-geometry-qt-raster.cpp",
+      "sha256": "f52f54817e5f94955f2064553076f0f65a721fc21650db02ba81ef09a1cc092b"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-rasterizer.cpp",
+      "sha256": "f5be4ad5d3312ecfe3793149f30bf952ceb019950c94f1c6a5c02cbb3c7a05cd"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-fontengine.cpp",
+      "sha256": "23c3d96b6d05a817f82697596bffca89d92b3cde1f8c4b8d43a71c056cece389"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-paintengine.cpp",
+      "sha256": "4d4effae2baa2a1e49db1db2d7006b32df147ce4f906d169c52fb4c55e84e552"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-textlayout.cpp",
+      "sha256": "a6b8d41c3b4f0d81777edbc84ca53037940ddf3066fa95223fb95cd56ee9c2a8"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-textengine.cpp",
+      "sha256": "e072b6ce45339b39d1f352f12d49294877bd10cc597d87d1163e0b49dc363e56"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-engineex.cpp",
+      "sha256": "2520343626e7a6343b59b86e5c25a8c9412209238d796ac249f0fd1460249828"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-painter.cpp",
+      "sha256": "429133867f8a080b8ac9e94010e1fa63657e005d4fd76494823faa84f28c4169"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-cosmetic.cpp",
+      "sha256": "99ca39ef3244af0bdedaa919b665fdf27e337eef342357dddaff7a29ea0466d7"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-rgba64.cpp",
+      "sha256": "3c487683c3e0a7e0051f5b132e792419de13431a83543a0d79ebeddc7dc6f2f2"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-rgba64.h",
+      "sha256": "4f7771007ea3187c3a739f6eca6c8f2215cbc6ac339173eef1da66a9b253db28"
+    },
+    {
+      "file": "ingetrazo-geometry-qt-drawhelper.h",
+      "sha256": "299bfba267922062d617a3a1ed87ba3c7bbbbdf74761419fd2ea6893cf8c3583"
+    }
+  ]
+}
