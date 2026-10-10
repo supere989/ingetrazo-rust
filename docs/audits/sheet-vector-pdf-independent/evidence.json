@@ -1,0 +1,50 @@
+{
+  "base": "a4a44b2",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_python": "3.13.13",
+  "sha256": {
+    "crates/ingetrazo-formats/src/sheet_pdf.rs": "8e2740ae7a1ba9cf433227f9057fba3b7b84c004af8cdb0eeb7b5f1e039f2f4a",
+    "crates/ingetrazo-formats/src/sheet_pdf_shapes.rs": "c0f1e95b1bab4889dd5b3ec529265e4565848b5865bb0a01ab713a85e68dc079",
+    "target/release/examples/sheet_pdf_allocation_probe": "ae5ce2ade7ae4a8b7f9e1ba57d53dafeaa71c791c3badf4cf340b091968d44e0",
+    "target/release/examples/sheet_shapes_pdf_probe": "1cd81433b2cca84b9bb644ae36935e9ae4b66eab6fed935ad4df9b01e9558061"
+  },
+  "before": {
+    "allocation_calls_including_realloc": 900072,
+    "bytes": 4738767,
+    "commands": 50001,
+    "encode_nanoseconds": [
+      22886287,
+      21918699,
+      22453068,
+      22426758,
+      22381463,
+      22412873,
+      22450283,
+      22297935,
+      22357447
+    ],
+    "numeric_coordinates": 300002,
+    "scope": "Release in-process vector encode only, no prepare/IO timing; instrumented allocator counts separately from repeated timing, no renderer/full application claim."
+  },
+  "after": {
+    "allocation_calls_including_realloc": 30,
+    "bytes": 4738767,
+    "commands": 50001,
+    "encode_nanoseconds": [
+      37002398,
+      30738791,
+      29630621,
+      31529913,
+      32853100,
+      35386860,
+      38394945,
+      31177129,
+      31674175
+    ],
+    "numeric_coordinates": 300002,
+    "scope": "Release in-process vector encode only, no prepare/IO timing; instrumented allocator counts separately from repeated timing, no renderer/full application claim."
+  },
+  "allocation_pdf_sha256": "6f900b072a730680c1935220234633af7e1fd100671d2e4de99d5bae0e3a14dc",
+  "byte_equal": true,
+  "source_pages": 27
+}

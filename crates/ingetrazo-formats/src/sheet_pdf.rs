@@ -29,13 +29,44 @@ pub struct Page {
 }
 // Emit finite physical coordinates without f32 narrowing. Fixed decimal PDF
 // numbers avoid exponential notation and preserve authored double precision.
-fn number(value: f64) -> String {
-    let text = format!("{value:.12}");
-    let text = text.trim_end_matches('0').trim_end_matches('.');
-    if text == "-0" {
-        "0".into()
-    } else {
-        text.into()
+pub(crate) const MAX_DRAWS: usize = 100_000;
+pub(crate) const MAX_COMMANDS: usize = 500_000;
+struct Number(f64);
+fn number(value: f64) -> Number {
+    Number(value)
+}
+impl std::fmt::Display for Number {
+    fn fmt(&self, out: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Every operand has passed bounded finite-domain admission. The largest
+        // derived transform is <4e8; 64 bytes comfortably holds fixed .12 text.
+        struct Buffer {
+            bytes: [u8; 64],
+            len: usize,
+        }
+        impl std::fmt::Write for Buffer {
+            fn write_str(&mut self, text: &str) -> std::fmt::Result {
+                let end = self.len.checked_add(text.len()).ok_or(std::fmt::Error)?;
+                if end > self.bytes.len() {
+                    return Err(std::fmt::Error);
+                }
+                self.bytes[self.len..end].copy_from_slice(text.as_bytes());
+                self.len = end;
+                Ok(())
+            }
+        }
+        let mut buffer = Buffer {
+            bytes: [0; 64],
+            len: 0,
+        };
+        std::fmt::write(&mut buffer, format_args!("{:.12}", self.0))?;
+        while buffer.len > 0 && buffer.bytes[buffer.len - 1] == b'0' {
+            buffer.len -= 1;
+        }
+        if buffer.len > 0 && buffer.bytes[buffer.len - 1] == b'.' {
+            buffer.len -= 1;
+        }
+        let text = std::str::from_utf8(&buffer.bytes[..buffer.len]).map_err(|_| std::fmt::Error)?;
+        out.write_str(if text == "-0" { "0" } else { text })
     }
 }
 fn path(content: &mut Vec<u8>, ops: &[PathOp]) {
@@ -132,7 +163,7 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
         total = total
             .checked_add(page.draws.len())
             .ok_or("PDF draw count overflow")?;
-        if total > 100_000 {
+        if total > MAX_DRAWS {
             return Err("PDF draw budget exceeded".into());
         }
         for draw in &page.draws {
@@ -140,7 +171,7 @@ pub fn encode(pages: &[Page]) -> Result<Vec<u8>, String> {
                 .checked_add(draw.path.len())
                 .and_then(|n| n.checked_add(draw.clip.as_ref().map_or(0, Vec::len)))
                 .ok_or("PDF command count overflow")?;
-            if path_commands > 500_000 {
+            if path_commands > MAX_COMMANDS {
                 return Err("PDF aggregate command budget exceeded".into());
             }
             if draw

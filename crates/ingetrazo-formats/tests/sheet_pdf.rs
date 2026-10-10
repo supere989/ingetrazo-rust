@@ -100,3 +100,108 @@ fn vector_coordinates_keep_authored_double_precision() {
     let text = String::from_utf8_lossy(&bytes);
     assert!(text.contains("1.234567890123 2.345678901234 m"));
 }
+
+#[test]
+fn preparation_admits_aggregate_paths_before_returning_large_page() {
+    use ingetrazo_core::{
+        composition::{ShapeItem, SheetItem},
+        sheet_shape::SheetShape,
+    };
+    let mut sheet = shape_sheet();
+    sheet.items.push(SheetItem::Shape(ShapeItem {
+        id: uuid::Uuid::new_v4(),
+        shape: SheetShape {
+            kind: "terreno".into(),
+            ground: "hatch".into(),
+            w_mm: 40_000.,
+            h_mm: 0.,
+            tick_step_mm: 0.5,
+            band_mm: 1.,
+            ..Default::default()
+        },
+    }));
+    assert!(ingetrazo_formats::sheet_pdf_shapes::prepare(&sheet)
+        .err()
+        .unwrap()
+        .contains("aggregate command budget"));
+}
+#[test]
+fn failed_destination_rename_leaves_directory_and_removes_temporary() {
+    let parent = std::env::temp_dir().join(format!("sheet-pdf-directory-{}", uuid::Uuid::new_v4()));
+    let destination = parent.join("existing");
+    std::fs::create_dir_all(&destination).unwrap();
+    std::fs::write(destination.join("sentinel"), b"unchanged").unwrap();
+    assert!(sheet_pdf::save(&destination, &[page()]).is_err());
+    assert_eq!(
+        std::fs::read(destination.join("sentinel")).unwrap(),
+        b"unchanged"
+    );
+    assert_eq!(std::fs::read_dir(&parent).unwrap().count(), 1);
+    std::fs::remove_dir_all(parent).unwrap();
+}
+
+#[test]
+fn numeric_serialization_preserves_legacy_boundary_bytes() {
+    fn legacy(x: f64) -> String {
+        let s = format!("{x:.12}");
+        let s = s.trim_end_matches('0').trim_end_matches('.');
+        if s == "-0" {
+            "0".into()
+        } else {
+            s.into()
+        }
+    }
+    let mut values = vec![
+        0.,
+        -0.,
+        f64::MIN_POSITIVE,
+        -f64::MIN_POSITIVE,
+        5e-13,
+        -5e-13,
+        1e-12,
+        -1e-12,
+        999999.9999999999,
+        -999999.9999999999,
+        1_000_000.,
+        -1_000_000.,
+    ];
+    for i in 0..2048 {
+        values.push((i as f64 - 1024.) * 976.123456789012);
+    }
+    let mut p = page();
+    p.draws[0].path = values.iter().map(|&x| PathOp::Move([x, -x])).collect();
+    let bytes = sheet_pdf::encode(&[p]).unwrap();
+    let text = String::from_utf8_lossy(&bytes);
+    for x in values {
+        assert!(
+            text.contains(&format!("{} {} m\n", legacy(x), legacy(-x))),
+            "{x}"
+        );
+    }
+}
+#[test]
+fn preparation_rejects_total_draws_across_individually_admitted_shapes() {
+    use ingetrazo_core::{
+        composition::{ShapeItem, SheetItem},
+        sheet_shape::SheetShape,
+    };
+    let mut sheet = shape_sheet();
+    for _ in 0..2 {
+        sheet.items.push(SheetItem::Shape(ShapeItem {
+            id: uuid::Uuid::new_v4(),
+            shape: SheetShape {
+                kind: "terreno".into(),
+                ground: "ticks".into(),
+                w_mm: 30_000.,
+                h_mm: 0.,
+                tick_step_mm: 0.5,
+                band_mm: 1.,
+                ..Default::default()
+            },
+        }));
+    }
+    assert!(ingetrazo_formats::sheet_pdf_shapes::prepare(&sheet)
+        .err()
+        .unwrap()
+        .contains("draw budget"));
+}

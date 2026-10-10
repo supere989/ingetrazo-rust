@@ -138,12 +138,31 @@ pub fn prepare(sheet: &Sheet) -> Result<Page, String> {
         return Err("PDF sheet border painter remains unavailable".into());
     }
     let mut draws = Vec::new();
+    let mut path_commands = 0usize;
     for index in sheet.visible_item_indices() {
         match &sheet.items[index] {
             SheetItem::Shape(item) => {
                 let offset = glam::DVec2::new(item.shape.x_mm, item.shape.y_mm);
-                for command in item.shape.paint_commands(100_000)? {
-                    draws.push(draw(&command, offset)?);
+                if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                    return Err("PDF draw budget exceeded".into());
+                }
+                // Preserve the source per-shape conservative estimator. Using
+                // the remaining aggregate capacity as its budget can reject a
+                // valid last shape whose estimate exceeds its actual output.
+                // Only this bounded one-shape painter is materialized at once.
+                for command in item.shape.paint_commands(crate::sheet_pdf::MAX_DRAWS)? {
+                    let next = draw(&command, offset)?;
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(next.path.len())
+                        .and_then(|n| n.checked_add(next.clip.as_ref().map_or(0, Vec::len)))
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
+                    draws.push(next);
                 }
             }
             _ => return Err("PDF painter for this sheet item remains unavailable".into()),
