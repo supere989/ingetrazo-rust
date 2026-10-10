@@ -1,0 +1,24 @@
+{
+  "workspace_counts": [
+    428,
+    0,
+    2
+  ],
+  "status": "held_pending_hard_edge_hardware_rollback",
+  "excluded": "unfinished CAD2D callback contract/pipeline",
+  "included": [
+    "encoded UI composition and source raster origin",
+    "stable user texture identity and actual layout resize",
+    "cached hard edges, source XRay and pre-raster clipping",
+    "strict NVIDIA9image/58center/14section evidence",
+    "source/native softwareGPU actualgroupgesture wirevisibility"
+  ],
+  "limitations": [
+    "generic UI alpha22/24 residual",
+    "sectionIso/hollow/seam original pixel residuals",
+    "hardedge allocation failure hardware proof pending",
+    "Metal implementation/hardware pending",
+    "full styles/textures/performance parity pending"
+  ],
+  "canonical_promotion": false
+}
