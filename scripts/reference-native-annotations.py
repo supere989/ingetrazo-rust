@@ -57,18 +57,32 @@ for name,kind,ends,selected,hidden,occluded,reject in [
     ("leader-anchor-unprojectable","leader","arrow",False,False,False,True),
     ("leader-hidden","leader","arrow",False,True,False,False),
     ("leader-empty","empty","arrow",False,False,False,False),
+    ("dim-hover","dim","arrow",False,False,False,False),
+    ("dim-mm-axis","dim","tick",False,False,False,False),
+    ("dim-feet-fractional","dim","none",False,False,False,False),
+    ("leader-hover","leader","arrow",False,False,False,False),
+    ("leader-splitlines","leader","arrow",False,False,False,False),
 ]:
     entity = Dimension(QVector3D(0,0,0),QVector3D(4,0,0),QVector3D(0,2,0),text="Length <> ") if kind=="dim" else TextLabel(QVector3D(-1 if reject else 4,0,0),QVector3D(-3 if kind=="left" else 3,2,0),"" if kind=="empty" else "First line\nSecond line")
-    view=View();view.reject_anchor=reject;view.occluded=occluded;view._hover_entity=None
+    if name=="dim-mm-axis":
+        entity.b=QVector3D(3,4,0);entity.axis="x"
+    if name=="leader-splitlines": entity.text="A\r\nB\u2028C\n"
+    view=View();view.reject_anchor=reject;view.occluded=occluded;view._hover_entity=entity if name.endswith("hover") else None
     view.scene=SimpleNamespace(dimensions=[entity] if kind=="dim" else [],text_labels=[] if kind=="dim" else [entity],dimension_style={"color":[12,65,91],"font_size":11,"ends":ends,"units":"cm","decimals":1},selection=[entity] if selected else [],entity_visible=lambda e:not hidden)
+    if name=="dim-mm-axis": view.scene.dimension_style.update(units="mm",decimals=0)
+    if name=="dim-feet-fractional": view.scene.dimension_style.update(units="ft-in-frac",decimals=2)
     image=QImage(640,400,QImage.Format_RGBA8888);image.fill(QColor("white"));painter=Painter(image);painter.setRenderHint(QPainter.Antialiasing)
     view._draw_dimensions(painter);view._draw_text_labels(painter);ops=painter.ops;painter.end()
     assert image.save(str(output/(name+".png")))
-    rows.append(dict(name=name,operations=ops,image_sha256=hashlib.sha256((output/(name+".png")).read_bytes()).hexdigest()))
+    rows.append(dict(name=name,style=view.scene.dimension_style,entity=({"a":entity.a.toTuple(),"b":entity.b.toTuple(),"offset":entity.offset.toTuple(),"axis":entity.axis,"text":entity.text} if kind=="dim" else entity.to_dict()),selected=selected,hovered=view._hover_entity is entity,hidden=hidden,controlled_occlusion=occluded,reject_negative_x_projection=reject,operations=ops,image_sha256=hashlib.sha256((output/(name+".png")).read_bytes()).hexdigest()))
 assert len(rows[0]["operations"])==52
 assert rows[4]["operations"]==[] and rows[8]["operations"]==[]
 assert not any(o["kind"]=="ellipse" for o in rows[7]["operations"])
 assert any(o["kind"]=="text" for o in rows[7]["operations"])
 assert len(rows[3]["operations"]) < len(rows[0]["operations"])
+assert all(o["pen"][:3]==[243,115,41] for o in rows[10]["operations"] if o["kind"]=="line")
+assert any(o["kind"]=="text" and "3000 mm" in o["text"] for o in rows[11]["operations"])
+assert any(o["kind"]=="text" and "'" in o["text"] for o in rows[12]["operations"])
+assert [o["text"] for o in rows[14]["operations"] if o["kind"]=="text"]==["A","A","B","B","C","C"]
 (output/"original.json").write_text(json.dumps(dict(source_pin="6be29fe437a7cd992d4e079f71720821b25216b9",viewport_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),scope="Actual source annotation methods and entities; controlled projection/occlusion, not GPU or interactive viewport acceptance",cases=rows),indent=2)+"\n")
 print(json.dumps({"cases":len(rows),"operations":[len(r["operations"]) for r in rows]}))
