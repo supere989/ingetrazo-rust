@@ -1,5 +1,5 @@
 {
-  "status": "Reviewing uncommitted agent source; not integrated",
+  "status": "Independent retained comparisons exact; source admission fixes present, performance correction pending",
   "source_worktree": "/tmp/ingetrazo-skp-native-import",
   "findings_sent_to_owner": [
     "Reject duplicate edges/faces/layers/material identities instead of silently overwriting prior records",
@@ -10,5 +10,48 @@
     "Finite transformed storage coordinates and placement validation",
     "Unsupported required texture/annotation features reject"
   ],
-  "scope": "Source review only; original/native fixture and malformed-control acceptance pending"
+  "scope": "Real fixture plus five controlled supported imports and explicit texture refusal. Full SKP features and rendered import acceptance remain open.",
+  "reviewed_source": "79b043014d0d9d6b1477d71223ac6badd9673b7d",
+  "retained_document_comparisons": [
+    {
+      "case": "SU_File",
+      "groups": 1,
+      "sha256": "e4f6d30e3efd3bdef8abed45edbb1c0745556fcbcf26ea9bef883634e83d5bbd",
+      "exact": true
+    },
+    {
+      "case": "hole-paint-layer",
+      "groups": 1,
+      "sha256": "1f544478a5ea42f285a7ec8feb8ae88a60cffde57447cb00642789422133bde7",
+      "exact": true
+    },
+    {
+      "case": "single-definition",
+      "groups": 1,
+      "sha256": "8a9056ae9ac40fb0a801e1772d8b0223989c1ebe3a4ea39b6636dd5f73374046",
+      "exact": true
+    },
+    {
+      "case": "small-two-flat",
+      "groups": 2,
+      "sha256": "beb83cdb94be4e92c349dcd5f6b963e2b6957e1fa13b25bba3e21a5dd0ced07e",
+      "exact": true
+    },
+    {
+      "case": "shared-eight",
+      "groups": 8,
+      "sha256": "97110c5d56c6c376b98fb6a6e9f76a6be254c7e9f43c02934c5f1640bbcab33a",
+      "exact": true
+    },
+    {
+      "case": "inherited-paint",
+      "groups": 1,
+      "sha256": "05db42f7a8b25cc88aef8135c814542a4ffaf47cff4d6c996b90954369d06257",
+      "exact": true
+    }
+  ],
+  "remaining_review_findings": [
+    "Replace per-instance full instance scan with precomputed definition use counts",
+    "Checker must assert frozen application pin as well as parser pin"
+  ]
 }
