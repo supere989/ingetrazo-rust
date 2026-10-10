@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/check-native-skp-modern-annotations.py", line 29, in <module>
+    a=scene(source);b=scene(native);a['imported_field_inventory']=inventory(source);b['imported_field_inventory']=inventory(native);raw=(json.dumps({'original':a,'native':b},separators=(',',':'))+'\n').encode();(out/(name+'-comparison.json.gz')).write_bytes(gzip.compress(raw,mtime=0));assert a==b,'strict whole-document mismatch retained'
+                                                                                                                                                                                                                                                                                                     ^^^^
+AssertionError: strict whole-document mismatch retained
