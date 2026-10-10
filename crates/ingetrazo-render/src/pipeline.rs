@@ -161,12 +161,10 @@ fn get_face_source_opacity(attrs: &std::collections::HashMap<String,serde_json::
         .unwrap_or(1.0)
 }
 
-fn get_face_tex_and_opacity(
+fn get_face_texture(
     attrs: &std::collections::HashMap<String, serde_json::Value>,
     scene: &Scene,
-) -> (Option<serde_json::Value>, f32) {
-    let opacity = get_face_source_opacity(attrs,scene) as f32;
-
+) -> Option<serde_json::Value> {
     let tex_val = attrs.get("texture").cloned().or_else(|| {
         attrs.get("mat").and_then(|m| m.as_str()).and_then(|mat_name| {
             scene.materials.get(mat_name).and_then(|mat| {
@@ -182,7 +180,7 @@ fn get_face_tex_and_opacity(
         })
     });
 
-    (tex_val, opacity)
+    tex_val
 }
 
 fn get_face_base_color(
@@ -340,10 +338,12 @@ fn build_mesh_buffers(
 
         let norm = mesh.face_normal(f_id);
         let shade = shade_factor(norm);
-        let (tex_val, opacity) = get_face_tex_and_opacity(&face.attrs, scene);
+        let tex_val = get_face_texture(&face.attrs, scene);
+        let source_opacity = get_face_source_opacity(&face.attrs, scene);
 
         let is_xray = style.visual_style == VisualStyle::XRay;
-        let final_opacity = if is_xray { style.xray_opacity } else { opacity };
+        let source_final_opacity = if is_xray {style.xray_opacity as f64} else {source_opacity};
+        let final_opacity=source_final_opacity as f32;
 
         let has_texture = style.show_textures && (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
 
@@ -382,13 +382,13 @@ fn build_mesh_buffers(
             ];
 
             let tris = mesh.triangulate_face(f_id);
+            if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
             for (p0, p1, p2) in tris {
                 let v0 = Vertex::from_dvec3(p0, norm, shaded_color, [0.0, 0.0]);
                 let v1 = Vertex::from_dvec3(p1, norm, shaded_color, [0.0, 0.0]);
                 let v2 = Vertex::from_dvec3(p2, norm, shaded_color, [0.0, 0.0]);
 
-                if is_xray || final_opacity < 0.999 {
-                    transparent.mark_source_opacity(if is_xray {style.xray_opacity as f64} else {get_face_source_opacity(&face.attrs,scene)});
+                if is_xray || source_final_opacity < 0.999 {
                     transparent.push_triangle(v0, v1, v2);
                 } else {
                     opaque.push_triangle(v0, v1, v2);
@@ -466,10 +466,12 @@ fn build_group_buffers(
         let local_norm = group.mesh.face_normal(f_id);
         let world_norm = world_t.transform_vector3(local_norm).normalize_or_zero();
         let shade = shade_factor(world_norm);
-        let (tex_val, opacity) = get_face_tex_and_opacity(&face.attrs, scene);
+        let tex_val = get_face_texture(&face.attrs, scene);
+        let source_opacity = get_face_source_opacity(&face.attrs, scene);
 
         let is_xray = style.visual_style == VisualStyle::XRay;
-        let final_opacity = if is_xray { style.xray_opacity } else { opacity };
+        let source_final_opacity = if is_xray {style.xray_opacity as f64} else {source_opacity};
+        let final_opacity=source_final_opacity as f32;
 
         let has_texture = style.show_textures && (style.visual_style == VisualStyle::ShadedWithTextures || is_xray) && tex_val.is_some();
 
@@ -512,6 +514,7 @@ fn build_group_buffers(
             ];
 
             let tris = group.mesh.triangulate_face(f_id);
+            if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
             for (p0, p1, p2) in tris {
                 let wp0 = world_t.transform_point3(p0);
                 let wp1 = world_t.transform_point3(p1);
@@ -521,8 +524,7 @@ fn build_group_buffers(
                 let v1 = Vertex::from_dvec3(wp1, world_norm, shaded_color, [0.0, 0.0]);
                 let v2 = Vertex::from_dvec3(wp2, world_norm, shaded_color, [0.0, 0.0]);
 
-                if is_xray || final_opacity < 0.999 {
-                    transparent.mark_source_opacity(if is_xray {style.xray_opacity as f64} else {get_face_source_opacity(&face.attrs,scene)});
+                if is_xray || source_final_opacity < 0.999 {
                     transparent.push_triangle(v0, v1, v2);
                 } else {
                     opaque.push_triangle(v0, v1, v2);

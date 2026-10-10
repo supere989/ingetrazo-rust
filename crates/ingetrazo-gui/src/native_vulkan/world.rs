@@ -347,10 +347,10 @@ impl Drop for ProbeBudgetRestore{fn drop(&mut self){self.budget.ledger.lock().un
 // Packed positions/RGB are also borrowed by the contour SSBO (stride6).
 fn pack_transparent(mesh:&ingetrazo_render::buffer::MeshRenderBuffer)->Result<(Vec<ColoredVertex>,Vec<OpacityRun>),String>{
  let mut buckets=std::collections::BTreeMap::<i32,Vec<ColoredVertex>>::new();
- let mut span=0;
+ let mut span=0;let mut previous_alpha=None;let mut key=0;
  for (triangle_index,triangle) in mesh.indices.chunks_exact(3).enumerate(){while span+1<mesh.source_opacity_runs.len()&&mesh.source_opacity_runs[span+1].0<=triangle_index*3{span+=1;}
   let alpha=mesh.source_opacity_runs.get(span).filter(|r|r.0<=triangle_index*3).map(|r|r.1).unwrap_or(mesh.vertices[triangle[0]as usize].color[3]as f64);
   if !alpha.is_finite(){return Err("Nonfinite source opacity".into());}
-  let rounded=format!("{alpha:.3}").parse::<f64>().map_err(|_|"Invalid source opacity")?;let key=(rounded*1000.).round()as i32;let bucket=buckets.entry(key).or_default();for &index in triangle {let v=&mesh.vertices[index as usize];bucket.push(ColoredVertex{position:v.position,color:[v.color[0],v.color[1],v.color[2]].map(|c|(c.clamp(0.,1.)*64.).round_ties_even()/64.)});}}
+  if previous_alpha!=Some(alpha){let rounded=format!("{alpha:.3}").parse::<f64>().map_err(|_|"Invalid source opacity")?;key=(rounded*1000.).round()as i32;previous_alpha=Some(alpha);}let bucket=buckets.entry(key).or_default();for &index in triangle {let v=&mesh.vertices[index as usize];bucket.push(ColoredVertex{position:v.position,color:[v.color[0],v.color[1],v.color[2]].map(|c|(c.clamp(0.,1.)*64.).round_ties_even()/64.)});}}
  let mut vertices=Vec::new();let mut runs=Vec::new();for (opacity,bucket)in buckets{let first=vertices.len().try_into().map_err(|_|"Too many transparent vertices")?;let count=bucket.len().try_into().map_err(|_|"Too many transparent vertices")?;runs.push(OpacityRun{first,count,opacity:opacity as f32/1000.});vertices.extend(bucket);}Ok((vertices,runs))
 }

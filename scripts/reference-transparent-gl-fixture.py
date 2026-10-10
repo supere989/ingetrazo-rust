@@ -18,7 +18,7 @@ root=Path(sys.argv[1]);root.mkdir(parents=True,exist_ok=True);rows=[]
 red=([1.,0.,0.],.5,0.);blue=([0.,0.,1.],.3,.2)
 cases={"red-half-white":([red],[1.,1.,1.]),"red-half-black":([red],[0.,0.,0.]),"opacity-bucket-order":([red,blue],[1.,1.,1.]),"opaque-front":([red,blue,([0.,1.,0.],1.,.3)],[1.,1.,1.]),"opaque-back":([red,blue,([0.,1.,0.],1.,-.3)],[1.,1.,1.]),"equal-opacity-forward":([red,([0.,0.,1.],.5,.2)],[1.,1.,1.]),"equal-opacity-reversed":([([0.,0.,1.],.5,.2),red],[1.,1.,1.]),"opacity-995":([([1.,0.,0.],.995,0.)],[1.,1.,1.]),"opacity-zero":([([1.,0.,0.],0.,0.)],[1.,1.,1.]),"section-clipped":([red,blue],[1.,1.,1.])}
 if os.environ.get("INGETRAZO_ALPHA_ROUNDING_CASES")=="1":
- cases.update({"rgb-tie-even":([([16.5/62.,32.5/62.,48.5/62.],.5,0.)],[0.,0.,0.]),"rgb-tie-odd":([([17.5/62.,33.5/62.,49.5/62.],.5,0.)],[0.,0.,0.]),"opacity-round-5005":([([1.,0.,0.],.5005,0.)],[0.,0.,0.]),"opacity-round-1255":([([1.,0.,0.],.1255,0.)],[0.,0.,0.])})
+ cases.update({"rgb-tie-even":([([16.5/62.,32.5/62.,48.5/62.],.5,0.)],[0.,0.,0.]),"rgb-tie-odd":([([17.5/62.,33.5/62.,49.5/62.],.5,0.)],[0.,0.,0.]),"opacity-round-5005":([([1.,0.,0.],.5005,0.)],[0.,0.,0.]),"opacity-round-1255":([([1.,0.,0.],.1255,0.)],[0.,0.,0.]),"opacity-threshold-f64":([([1.,0.,0.],.99899999999,0.)],[0.,0.,0.])})
 if os.environ.get("INGETRAZO_ALPHA_BACK_CASES")=="1":
  for front_op,back_op in [(0.5,0.3),(1.,0.3),(0.5,1.),(1.,1.)]:
   for reverse in [False,True]:
