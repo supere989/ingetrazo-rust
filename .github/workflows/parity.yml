@@ -16,7 +16,7 @@ jobs:
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe --example egui_draw_probe > docs/audits/metal-native-link-ci/build.log 2>&1
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
@@ -29,6 +29,12 @@ jobs:
       - name: Execute Apple framebuffer-fetch rendering or explicit capability refusal
         run: |
           target/debug/examples/cad2d_probe --allow-unsupported --output=docs/audits/metal-native-link-ci/fetch > docs/audits/metal-native-link-ci/fetch-render.log 2>&1
+      - name: Actual native Metal egui textured font and scissor draws
+        run: |
+          target/debug/examples/egui_draw_probe --output=docs/audits/metal-native-link-ci/egui-draw > docs/audits/metal-native-link-ci/egui-draw.log 2>&1
+          python3 scripts/check-metal-egui-draw.py docs/audits/metal-native-link-ci/egui-draw > docs/audits/metal-native-link-ci/egui-draw-check.json
+      - name: Actual completed and pending Metal CAD Drop ownership
+        run: cargo test --locked -p ingetrazo-metal cad_drop_controls -- --nocapture > docs/audits/metal-native-link-ci/cad-drop.log 2>&1
       - name: Reject literal old GPU byte multiplication
         run: |
           python3 - <<'PY'
