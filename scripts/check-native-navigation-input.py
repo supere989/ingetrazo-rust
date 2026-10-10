@@ -55,7 +55,7 @@ with tempfile.TemporaryDirectory() as runtime:
    rows["before_look"]=state();assert xt.XTestFakeButtonEvent(d,3,1,0);x.XFlush(d);time.sleep(.12)
    assert xt.XTestFakeRelativeMotionEvent(d,100,-40,0);x.XFlush(d);time.sleep(.15);rows["looking"]=state();assert rows["looking"]["yaw"]!=rows["before_look"]["yaw"]
    assert xt.XTestFakeButtonEvent(d,3,0,0);x.XFlush(d);time.sleep(.12);rows["look_released"]=state()
-   subprocess.run(["import","-display",display,"-window",str(window),str(out/"native-navigation.png")],check=True,timeout=10)
+   subprocess.run(["import","-display",display,"-window",str(window),"-define","png:color-type=6","-depth","8",str(out/"native-navigation.png")],check=True,timeout=10)
    assert valid_png(out/"native-navigation.png"),"missing/invalid owned-window image"
    assert all(row["undo"]==0 and row["version"]==initial["version"] and row["faces"]==2 for row in rows.values())
    report={"passed":True,"source_revision":source_revision,"script_sha256":script_sha256,"binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"rows":rows,"scope":"Actual XTEST keys/buttons/raw relative mouse and focused window on owned Xvfb/llvmpipe native Vulkan; not hardware or original rendered parity"}

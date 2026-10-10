@@ -1,0 +1,287 @@
+{
+  "passed": true,
+  "binary_sha256": "39cb190537d38eb85353c24c5cd6e7e46845b9189a2849b4ca887b671461ba92",
+  "rows": {
+    "initial": {
+      "frames": 5,
+      "eye": [
+        1.2246467991473533e-15,
+        0.0,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "walking": {
+      "frames": 59,
+      "eye": [
+        1.2055423090806546e-15,
+        0.3120000000000118,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "released": {
+      "frames": 82,
+      "eye": [
+        1.2055423090806546e-15,
+        0.3120000000000118,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "ctrl_w": {
+      "frames": 143,
+      "eye": [
+        1.2055423090806546e-15,
+        0.3120000000000118,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "rise": {
+      "frames": 189,
+      "eye": [
+        1.2055423090806546e-15,
+        0.3120000000000118,
+        1.848
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "descend": {
+      "frames": 235,
+      "eye": [
+        1.2055423090806546e-15,
+        0.3120000000000118,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "focus_lost": {
+      "frames": 260,
+      "eye": [
+        1.1981944282857704e-15,
+        0.43200000000001637,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": false,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "before_look": {
+      "frames": 338,
+      "eye": [
+        1.1981944282857704e-15,
+        0.43200000000001637,
+        1.68
+      ],
+      "forward": [
+        -6.123233995736766e-17,
+        1.0,
+        0.0
+      ],
+      "yaw": -1.5707963267948966,
+      "pitch": -0.0,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "looking": {
+      "frames": 390,
+      "eye": [
+        -6.661338147750939e-16,
+        0.43200000000001637,
+        1.6800000000000002
+      ],
+      "forward": [
+        0.0871026498240455,
+        0.995587843197948,
+        0.03489949670250097
+      ],
+      "yaw": -1.658062789394613,
+      "pitch": -0.03490658503988659,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    },
+    "look_released": {
+      "frames": 411,
+      "eye": [
+        -6.661338147750939e-16,
+        0.43200000000001637,
+        1.6800000000000002
+      ],
+      "forward": [
+        0.0871026498240455,
+        0.995587843197948,
+        0.03489949670250097
+      ],
+      "yaw": -1.658062789394613,
+      "pitch": -0.03490658503988659,
+      "mode": "Some(FirstPerson)",
+      "tool": "Select",
+      "viewport": [
+        50.0,
+        30.0,
+        1272.0,
+        769.6375122070312
+      ],
+      "undo": 0,
+      "version": 0,
+      "faces": 2,
+      "focused": true,
+      "status": "First Person \u2014 WASD move, Q/E descend/rise; Shift run, Alt through walls; drag either button to look"
+    }
+  },
+  "scope": "Actual XTEST keys/buttons/raw relative mouse and focused window on owned Xvfb/llvmpipe native Vulkan; not hardware or original rendered parity"
+}
