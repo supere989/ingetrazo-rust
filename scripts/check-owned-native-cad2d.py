@@ -63,7 +63,7 @@ with(out/"startup.log").open("w") as stream:
    x.XResizeWindow(d,w,width,height);x.XFlush(d);time.sleep(1.2)
    image=wait(lambda:capture_owned(w,width,height));assert not image.isNull()
    assert image.save(str(out/f"resize-{width}x{height}.png"))
-  close(w);assert child.wait(timeout=5)==0
+  close(w);assert child.wait(timeout=float(sys.argv[3]) if len(sys.argv)>3 else 5)==0
   text=(out/"startup.log").read_text();assert "NVIDIA GeForce RTX 5090" in text and "llvmpipe" not in text
   (out/"lifecycle.json").write_text(json.dumps({"passed":True,"owned_client_only":True,"clean_close":True,"backend":"actual NVIDIA Vulkan"}))
  finally:

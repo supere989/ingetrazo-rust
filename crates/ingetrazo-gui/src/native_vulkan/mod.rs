@@ -227,6 +227,15 @@ impl System {
         })
     }
 
+    pub fn bounded_completion_for_probe(&self)->bool{self.wait_gpu_completion()}
+
+    pub fn submitted_frames_for_probe(&self)->u64{self.draw_serial}
+
+    /// Engineering observation only: never reset/destroy these borrowed handles.
+    pub fn pending_present_fences_for_probe(&self)->Vec<vk::Fence>{
+        self.present_fences.iter().filter(|p|p.used).map(|p|p.fence).collect()
+    }
+
     pub fn enable_cad2d(&mut self)->Result<&cad2d::Renderer,String>{
         if self.cad2d.is_none(){self.cad2d=Some(cad2d::Renderer::new(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass)?);}
         Ok(self.cad2d.as_ref().unwrap())

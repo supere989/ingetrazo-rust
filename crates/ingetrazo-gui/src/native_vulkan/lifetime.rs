@@ -28,8 +28,8 @@ impl Lifetime {
   if self.uncertain(){return false;}
   let fence=match unsafe{self.device.create_fence(&vk::FenceCreateInfo::default(),None)}{Ok(f)=>f,Err(_)=>{self.quarantine();return false;}};
   let submitted=unsafe{self.device.queue_submit(self.queue,&[],fence)};
-  if submitted.is_err(){self.quarantine();return false;}
-  if self.wait(fence,WAIT_NS).is_err(){return false;}
+  if submitted.is_err(){self.quarantine();self.retain((self.device.clone(),fence));return false;}
+  if self.wait(fence,WAIT_NS).is_err(){self.retain((self.device.clone(),fence));return false;}
   unsafe{self.device.destroy_fence(fence,None)};true
  }
 }
