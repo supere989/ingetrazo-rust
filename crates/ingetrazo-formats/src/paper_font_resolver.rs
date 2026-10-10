@@ -304,6 +304,14 @@ impl Resolver {
             policy,
             font,
         };
+        // Admit both containers before removing/replacing any published entry.
+        // A refused reserve may change capacity, but never logical queue/map ownership.
+        self.requests
+            .try_reserve(1)
+            .map_err(|_| "Paper font request allocation failed")?;
+        self.order
+            .try_reserve(1)
+            .map_err(|_| "Paper font request allocation failed")?;
         // Replace an expired request only after the complete cold match/load succeeds.
         self.order.retain(|old| old != &request);
         if self.requests.len() >= 64 && !self.requests.contains_key(&request) {
@@ -311,12 +319,6 @@ impl Resolver {
                 self.requests.remove(&old);
             }
         }
-        self.requests
-            .try_reserve(1)
-            .map_err(|_| "Paper font request allocation failed")?;
-        self.order
-            .try_reserve(1)
-            .map_err(|_| "Paper font request allocation failed")?;
         self.order.push_back(request.clone());
         self.requests.insert(
             request,
@@ -329,5 +331,33 @@ impl Resolver {
         );
         self.matches = self.matches.saturating_add(1);
         Ok(found)
+    }
+}
+
+#[cfg(test)]
+mod publication_tests {
+    use super::*;
+
+    #[test]
+    fn refused_request_preserves_published_fifo_and_owners() {
+        let mut resolver = Resolver::new().unwrap();
+        let request = Request {
+            family: "DejaVu Sans".into(),
+            bold: false,
+            italic: false,
+            required_chars: vec![],
+        };
+        let held = resolver.resolve(request.clone()).unwrap();
+        let order = resolver.order.clone();
+        let stats = resolver.stats();
+        for family in ["bad\0family".to_owned(), "x".repeat(1025)] {
+            let mut invalid = request.clone();
+            invalid.family = family;
+            assert!(resolver.resolve(invalid).is_err());
+            assert_eq!(resolver.order, order);
+            assert_eq!(resolver.stats(), stats);
+            assert_eq!(resolver.requests.len(), resolver.order.len());
+            assert!(Rc::ptr_eq(&resolver.resolve(request.clone()).unwrap().font, &held.font));
+        }
     }
 }
