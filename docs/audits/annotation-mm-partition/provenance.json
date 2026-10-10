@@ -1,0 +1,6 @@
+{
+  "source_sha": "9b549a8011f27de9a6caa1aa936cadbe95bd63dd",
+  "binary_sha256": "c07abcdfbc7189e0875f753cc26825ca73262dd5472666913423591312586856",
+  "oracle_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "result": "Geometry-only0diff; text-only0diff. Original combined9pixel failure retained27069d24. QtRGBA8888 glyph alphamapBlit routes generic QRgba64; numerical attribution pending."
+}
