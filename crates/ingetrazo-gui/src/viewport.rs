@@ -107,7 +107,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     Some('z')
                 };
             }
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowDown)) && !app.active_tool.toggle_inference_lock() {
                 app.snap_engine.locked_axis = None;
                 app.snap_engine.locked_line = None;
             }

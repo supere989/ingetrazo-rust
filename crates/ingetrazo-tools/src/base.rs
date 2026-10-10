@@ -110,6 +110,8 @@ pub trait Tool: Send + Sync {
     fn snap_anchor(&self)->Option<DVec3>{self.rubber_band().map(|(a,_)|a)}
     fn snap_close(&self)->Option<DVec3>{None}
     fn lock_drawing_plane(&mut self,_normal:DVec3)->bool{false}
+    /// Consume an inferred-shape lock key without changing model geometry.
+    fn toggle_inference_lock(&mut self)->bool{false}
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }
     fn preview_mesh(&self) -> Option<&Mesh> {
         None

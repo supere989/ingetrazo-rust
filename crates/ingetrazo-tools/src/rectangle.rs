@@ -20,6 +20,7 @@ pub struct RectangleTool {
     pub from_center: bool,
     error: Option<String>,
     square_lock: bool,
+    arrow_square_lock: bool,
     plane_lock: Option<DVec3>,
 }
 
@@ -32,6 +33,7 @@ impl Default for RectangleTool {
             from_center: false,
             error: None,
             square_lock: false,
+            arrow_square_lock: false,
             plane_lock: None,
         }
     }
@@ -53,7 +55,7 @@ impl RectangleTool {
         self.start_point = None;
         self.hover_point = None;
         self.from_center = false;
-        self.plane_normal=DVec3::Z;self.square_lock=false;self.error=None;self.plane_lock=None;
+        self.plane_normal=DVec3::Z;self.square_lock=false;self.arrow_square_lock=false;self.error=None;self.plane_lock=None;
     }
 
     /// Calculate the 4 corners from start point and an opposite point.
@@ -88,7 +90,7 @@ impl RectangleTool {
 
     fn inferred_corners(&self,start:DVec3,far:DVec3)->Option<[DVec3;4]>{
         let (u,v)=drawing_axes(self.plane_normal);let du=(far-start).dot(u);let dv=(far-start).dot(v);let near_square=(du.abs()-dv.abs()).abs()<=0.04*du.abs().max(dv.abs());
-        let far=if du.abs()>1e-6&&dv.abs()>1e-6&&(self.square_lock||near_square){let side=du.abs().max(dv.abs());start+u*side.copysign(du)+v*side.copysign(dv)}else{far};self.compute_corners(start,far)
+        let far=if du.abs()>1e-6&&dv.abs()>1e-6&&(self.square_lock||self.arrow_square_lock||near_square){let side=du.abs().max(dv.abs());start+u*side.copysign(du)+v*side.copysign(dv)}else{far};self.compute_corners(start,far)
     }
 
     /// Preview the 4 corners during hover.
@@ -109,6 +111,18 @@ impl RectangleTool {
 
 impl Tool for RectangleTool {
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
+    fn toggle_inference_lock(&mut self)->bool {
+        if self.start_point.is_none(){return false;}
+        if self.arrow_square_lock{self.arrow_square_lock=false;return true;}
+        let (Some(start),Some(hover))=(self.start_point,self.hover_point) else{return false;};
+        let (u,v)=drawing_axes(self.plane_normal);let d=hover-start;
+        let a=d.dot(u).abs();let b=d.dot(v).abs();
+        if a>1e-6 && b>1e-6 && (self.square_lock||(a-b).abs()<=0.04*a.max(b)){
+            self.arrow_square_lock=true;return true;
+        }
+        false
+    }
+
     fn note_cursor_plane(&mut self,_point:DVec3,normal:DVec3){if self.start_point.is_none()&&self.plane_lock.is_none(){self.plane_normal=normal;}}
     fn snap_anchor(&self)->Option<DVec3>{self.start_point}
     fn lock_drawing_plane(&mut self,normal:DVec3)->bool{
@@ -186,7 +200,7 @@ impl Tool for RectangleTool {
             trimmed.split_whitespace().collect()
         };
 
-        if parts.len()==1&&self.square_lock{parts.push(parts[0]);}
+        if parts.len()==1&&(self.square_lock||self.arrow_square_lock){parts.push(parts[0]);}
         if parts.len() != 2 {
             return Err("Rectangle dimensions format: 'width, height'".into());
         }
@@ -224,6 +238,22 @@ impl Tool for RectangleTool {
 mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
+
+    #[test]
+    fn down_latches_only_inferred_square_without_model_mutation() {
+        let mut scene=Scene::new();let before=scene.clone();let mut tool=RectangleTool::new();
+        assert!(!tool.toggle_inference_lock());tool.start_point=Some(DVec3::ZERO);
+        let mut ctx=ToolContext::new(DVec3::new(4.,1.,0.),Ray::new(DVec3::Z,-DVec3::Z));
+        tool.on_move(&mut scene,&ctx);assert!(!tool.toggle_inference_lock());
+        ctx.world=DVec3::new(2.,1.95,0.);tool.on_move(&mut scene,&ctx);
+        assert!(tool.toggle_inference_lock());ctx.world=DVec3::new(4.,1.,0.);
+        tool.on_move(&mut scene,&ctx);assert_eq!(tool.preview_corners().unwrap()[2],DVec3::new(4.,4.,0.));
+        assert_eq!(serde_json::to_value(&scene).unwrap(),serde_json::to_value(&before).unwrap());
+        assert!(tool.toggle_inference_lock());assert_eq!(tool.preview_corners().unwrap()[2],ctx.world);
+        ctx.world=DVec3::new(2.,1.95,0.);tool.on_move(&mut scene,&ctx);assert!(tool.toggle_inference_lock());
+        tool.on_vcb_input(&mut scene,"3").unwrap();assert!((scene.mesh.face_area(0)-9.).abs()<1e-9);
+        assert!(!tool.toggle_inference_lock());
+    }
 
     #[test]fn nonprincipal_axes_project_world_x_and_square_inference_keeps_typed_sizes(){
         let normal=DVec3::new(0.3,0.4,0.866025403784).normalize();let tool=RectangleTool::with_normal(normal);let (u,v)=drawing_axes(normal);let expected=(DVec3::X-normal*normal.x).normalize();assert!(u.distance(expected)<1e-12);let corners=tool.compute_corners(DVec3::ZERO,u*2.+v*3.).unwrap();assert!(corners[1].distance(u*2.)<1e-12);assert!(corners[3].distance(v*3.)<1e-12);
