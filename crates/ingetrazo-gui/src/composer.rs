@@ -26,6 +26,7 @@ pub struct ComposerState {
     pub pdf_export_error: Option<String>,
     text_canvas:text_canvas::CanvasPainter,
     outer_border:crate::composer_border::CanvasBorder,
+    paper_canvas:crate::composer_border::CanvasPaper,
     field_index_cache: Option<((u64,u64,uuid::Uuid,usize),Result<usize,String>)>,
     field_index_computations:u64,
     field_expansions:crate::composer_text_fields::CanvasExpansions,
@@ -45,7 +46,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            pdf_export_error: None,text_canvas:Default::default(),outer_border:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            pdf_export_error: None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -192,6 +193,10 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     );
 
     if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-paper-transform"),[paper_rect.min.x,paper_rect.min.y,zoom]));}
+    let source_paper=app.composer_state.paper_canvas.paint(&painter,app.native_composer.factory.as_ref(),&app.scene.sheets[sheet_idx],zoom,paper_rect.min);
+    match source_paper{
+        Ok(true)=>{},
+        Ok(false)=>{
     // Draw Paper Shadow & Sheet
     let shadow_rect = paper_rect.translate(Vec2::new(6.0, 8.0));
     painter.rect_filled(shadow_rect, 2.0, Color32::from_black_alpha(100));
@@ -209,6 +214,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         Stroke::new(1.0, Color32::from_rgba_unmultiplied(160, 175, 200, 150)),
     );
 
+        },
+        Err(error)=>app.status_message=error,
+    }
+
+    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("paper-cold-builds"),[app.composer_state.paper_canvas.cold_builds,app.composer_state.outer_border.cold_builds]));}
     // Helpers to convert mm to screen Pos2 / Rect
     let mm_to_screen = |x_mm: f64, y_mm: f64| -> Pos2 {
         Pos2::new(

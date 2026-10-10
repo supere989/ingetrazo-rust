@@ -40,7 +40,7 @@ fn quarter_arc(out:&mut Vec<Segment>,center:[f64;2],r:f64,first:usize,count:usiz
  let ends=[[x,top],[right,y],[x,bottom],[left,y],[x,top]];let controls=[([x+r*k,top],[right,y-r*k]),([right,y+r*k],[x+r*k,bottom]),([x-r*k,bottom],[left,y+r*k]),([left,y-r*k],[x-r*k,top])];
  for i in first..first+count{let i=i%4;out.push(Segment::Cubic{control1:controls[i].0,control2:controls[i].1,to:ends[i+1]});}
 }
-fn axis_open_stroke(points:&[[f64;2]],r:f64)->Result<PathContour,String>{
+fn axis_open_stroke(points:&[[f64;2]],r:f64,round_join:bool)->Result<PathContour,String>{
  // QPointF equality is QtPrivate::fuzzyCompare, including zero operands.
  // Dash carry can produce a sub-ulp corner segment: the source stroker skips
  // it while retaining its previous coordinate for the next normal vector.
@@ -51,7 +51,7 @@ fn axis_open_stroke(points:&[[f64;2]],r:f64)->Result<PathContour,String>{
  let side=|points:&[[f64;2]],out:&mut Vec<Segment>|->Result<(),String>{
   for i in 0..points.len()-1{let(u,_,angle)=direction(points[i],points[i+1])?;let n=[u[1]*r,-u[0]*r];out.push(Segment::Line([points[i+1][0]+n[0],points[i+1][1]+n[1]]));
    if i+2<points.len(){let(v,len,nextangle)=direction(points[i+1],points[i+2])?;let next=[points[i+1][0]+v[1]*r,points[i+1][1]-v[0]*r];let cross=u[0]*v[1]-u[1]*v[0];
-    if cross<0.&&len>r{out.push(Segment::Line(points[i+1]));}else if cross!=0.{let first=match angle{0=>0,270=>1,180=>2,_=>3};quarter_arc(out,points[i+1],r,first,angle.abs_diff(nextangle)/90);}
+    if cross<0.&&len>r{out.push(Segment::Line(points[i+1]));}else if cross!=0.&&round_join{let first=match angle{0=>0,270=>1,180=>2,_=>3};quarter_arc(out,points[i+1],r,first,angle.abs_diff(nextangle)/90);}
     out.push(Segment::Line(next));
    }
   }Ok(())
@@ -66,7 +66,7 @@ fn axis_open_stroke(points:&[[f64;2]],r:f64)->Result<PathContour,String>{
 }
 // QDashStroker physical [4,2]*penWidth traversal. Parenthesized progress math
 // and partial-dash carry follow the source; no per-edge pattern restart.
-fn dashed_axis_paths(rect:[f64;4],width:f64)->Result<Vec<PathContour>,String>{
+fn dashed_axis_paths(rect:[f64;4],width:f64,round_join:bool)->Result<Vec<PathContour>,String>{
  let[x,y,w,h]=rect;if w<=0.||h<=0.||width<=0.{return Err("Invalid dashed border dimensions".into());}
  let points=[[x,y],[x+w,y],[x+w,y+h],[x,y+h],[x,y]];let pattern=[4.*width,2.*width];let(mut index,mut pos,mut offset,mut begin)=(0usize,0.,0.,0.);let mut moveto=points[0];let mut pieces=Vec::<Vec<[f64;2]>>::new();
  for pair in points.windows(2){let a=pair[0];let b=pair[1];let len=(b[0]-a[0]).abs()+(b[1]-a[1]).abs();let stop=begin+len;let mut done=pos>=stop;
@@ -75,7 +75,7 @@ fn dashed_axis_paths(rect:[f64;4],width:f64)->Result<Vec<PathContour>,String>{
    if on{if !carry||pieces.is_empty(){pieces.push(vec![moveto]);}if pieces.last().unwrap().last()!=Some(&p){pieces.last_mut().unwrap().push(p);}}moveto=p;
   }begin=stop;
  }
- pieces.into_iter().filter(|p|p.len()>1).map(|p|axis_open_stroke(&p,width/2.)).collect()
+ pieces.into_iter().filter(|p|p.len()>1).map(|p|axis_open_stroke(&p,width/2.,round_join)).collect()
 }
 /// Cold geometry only. The source paints outer stroke first, inner double second.
 pub fn source_spans(page:[f64;2],margin:f64,border:&SourcePaperBorder,density:f64,phase:[f64;2])->Result<Vec<Vec<ingetrazo_render::qt_gray::Span>>,String>{
@@ -90,7 +90,7 @@ pub fn source_spans(page:[f64;2],margin:f64,border:&SourcePaperBorder,density:f6
   if width*density<=1.{
    let map=|p:[f64;2]|[p[0]*density+phase[0],p[1]*density+phase[1]];let mut path=center;path.start=map(path.start);for s in &mut path.segments{match s{Segment::Line(to)=>*to=map(*to),Segment::Cubic{control1,control2,to}=>{*control1=map(*control1);*control2=map(*control2);*to=map(*to);}}}
    if border.style=="dashed"{ingetrazo_render::qt_cosmetic::rasterize_dashed_path(&path,true,width*density,100_000)}else{ingetrazo_render::qt_cosmetic::rasterize_path(&path,true,width*density,100_000)}
-  }else{let paths=if border.style=="dashed"{dashed_axis_paths(rect,width)?}else{solid_stroke_paths(rect,width,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,density,phase,250_000,100_000)}
+  }else{let paths=if border.style=="dashed"{dashed_axis_paths(rect,width,true)?}else{solid_stroke_paths(rect,width,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,density,phase,250_000,100_000)}
  }).collect()
 }
 #[derive(Clone,Default)]pub struct CanvasBorder{
@@ -123,3 +123,43 @@ impl CanvasBorder{
 }
 
 impl std::fmt::Debug for CanvasBorder{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("CanvasBorder").field("cold_builds",&self.cold_builds).finish()}}
+
+/// Original page stack, below all authored sheet items. Cold physical geometry only.
+pub fn source_paper_spans(page:[f64;2],margin:f64,density:f64,phase:[f64;2])->Result<Vec<(Vec<ingetrazo_render::qt_gray::Span>,EncodedRgba)>,String>{
+ if page.iter().chain([margin,density,phase[0],phase[1]].iter()).any(|v|!v.is_finite())||density<=0.||margin<0.||page.iter().any(|v|*v<=0.||*v>100_000.)||2.*margin>=page[0].min(page[1]){return Err("Invalid source paper projection".into());}
+ let raster=|rect:[f64;4]|->Result<Vec<ingetrazo_render::qt_gray::Span>,String>{
+  let bounds=[rect[0]*density+phase[0],rect[1]*density+phase[1],(rect[0]+rect[2])*density+phase[0],(rect[1]+rect[3])*density+phase[1]];if bounds.iter().any(|v|!v.is_finite()||v.abs()>1_000_000.){return Err("Source paper rectangle coordinate admission exceeded".into());}
+  let fixed=bounds.map(|v|(v*65536.)as i64);let x=bounds[0].floor()as i64;let right=bounds[2].ceil()as i64;let y=bounds[1].floor()as i64;let bottom=bounds[3].ceil()as i64;if bottom-y>100_000{return Err("Source paper rectangle height admission exceeded".into());}let mut spans=Vec::new();
+  for row in y..bottom{let py=row*65536;let h=(py+65536).min(fixed[3])-py.max(fixed[1]);let mut push=|left:i64,len:i64|{if len<=0{return;}let px=left*65536;let w=(px+65536).min(fixed[2])-px.max(fixed[0]);let coverage=((h.max(0)*w.max(0)*255)>>32)as u8;if coverage!=0{spans.push(ingetrazo_render::qt_gray::Span{x:left as i32,y:row as i32,len:len as u32,coverage});}};push(x,1);if right-x>2{push(x+1,right-x-2);}if right-x>1{push(right-1,1);}}
+  Ok(spans)
+ };
+ let map=|mut path:PathContour|{let f=|p:[f64;2]|[p[0]*density+phase[0],p[1]*density+phase[1]];path.start=f(path.start);for s in &mut path.segments{match s{Segment::Line(p)=>*p=f(*p),Segment::Cubic{control1,control2,to}=>{*control1=f(*control1);*control2=f(*control2);*to=f(*to)}}}path};
+ let thin_color=|rgba:[u8;4],width:f64|{let opacity=(256.*width*density)as u32;let alpha16=(65535*opacity.min(256))>>8;EncodedRgba::from_bytes(rgba,alpha16 as f32/65535.)};
+ let mut layers=vec![(raster([2.,2.,page[0],page[1]])?,EncodedRgba::from_bytes([0,0,0,70],1.)?),(raster([0.,0.,page[0],page[1]])?,EncodedRgba::from_bytes([255,255,255,255],1.)?)];
+ let page_rect=[0.,0.,page[0],page[1]];let guide_rect=[margin,margin,page[0]-2.*margin,page[1]-2.*margin];
+ for(rect,width,rgba,dashed)in[(page_rect,0.3,[120,128,136,255],false),(guide_rect,0.2,[190,196,202,255],true)]{
+  if width*density<=1.{let path=map(rounded_rect(rect,[0.;2]));let spans=if dashed{ingetrazo_render::qt_cosmetic::rasterize_dashed_path(&path,true,1.,100_000)?}else{ingetrazo_render::qt_cosmetic::rasterize_path(&path,true,1.,100_000)?};layers.push((spans,thin_color(rgba,width)?));}
+  else{let paths=if dashed{dashed_axis_paths(rect,width,false)?}else{let[x,y,w,h]=rect;let points=[[x,y],[x+w,y],[x+w,y+h],[x,y+h]].map(glam::DVec2::from_array);crate::composer_cad::convex_bevel_outline(&points,width/2.)?.into_iter().map(|p|PathContour{start:p[0].to_array(),segments:p.iter().skip(1).chain(p.iter().take(1)).map(|v|Segment::Line(v.to_array())).collect()}).collect()};layers.push((ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,density,phase,250_000,100_000)?,EncodedRgba::from_bytes(rgba,1.)?));}
+ }
+ Ok(layers)
+}
+fn colored_geometry(layers:Vec<(Vec<ingetrazo_render::qt_gray::Span>,EncodedRgba)>,density:f64,phase:[f64;2])->Result<(Arc<Geometry>,Arc<[Batch]>),String>{
+ let(mut vertices,mut indices,mut batches,mut draws)=(Vec::new(),Vec::new(),Vec::new(),Vec::new());
+ for(stroke,color)in layers{
+ let first=indices.len()as u32;
+  for range in ingetrazo_render::qt_cosmetic::disjoint_ranges(&stroke,100_000)?{draws.push(first+range.start as u32*6..first+range.end as u32*6);}
+  if vertices.len().checked_add(stroke.len()*4).and_then(|n|n.checked_mul(12)).and_then(|n|n.checked_add((indices.len()+stroke.len()*6)*4)).is_none_or(|n|n>8*1024*1024){return Err("Source paper geometry exceeds8MiB admission".into());}
+  for s in stroke{let base=vertices.len()as u32;for p in [[s.x as f64,s.y as f64],[s.x as f64+s.len as f64,s.y as f64],[s.x as f64+s.len as f64,s.y as f64+1.],[s.x as f64,s.y as f64+1.]]{vertices.push(Vertex{position:[((p[0]-phase[0])/density)as f32,((p[1]-phase[1])/density)as f32],coverage:f32::from(s.coverage)/255.});}indices.extend([base,base+1,base+2,base,base+2,base+3]);}
+  let end=indices.len()as u32;if end>first{batches.push(Batch{first,count:end-first,color});}
+ }
+ let geometry=Geometry::new_with_ordered_draws(vertices,indices,draws)?;geometry.validate_batches(&batches)?;Ok((geometry,batches.into()))
+}
+#[derive(Clone,Default)]pub struct CanvasPaper{numeric:Option<[u64;6]>,geometry:Option<Arc<Geometry>>,batches:Option<Arc<[Batch]>>,handle:Option<crate::composer_backend::Handle>,pub cold_builds:u64}
+impl CanvasPaper{
+ pub fn paint(&mut self,painter:&egui::Painter,factory:Option<&crate::composer_backend::Factory>,sheet:&Sheet,zoom:f32,origin:egui::Pos2)->Result<bool,String>{
+  let Some(factory)=factory else{return Ok(false);};let(w,h)=sheet.dimensions_mm();let ppp=painter.ctx().pixels_per_point();let density=f64::from(zoom)*f64::from(ppp);let phase=[(f64::from(origin.x)*f64::from(ppp)).rem_euclid(1.),(f64::from(origin.y)*f64::from(ppp)).rem_euclid(1.)];let key=[w.to_bits(),h.to_bits(),sheet.margin_mm.to_bits(),density.to_bits(),phase[0].to_bits(),phase[1].to_bits()];
+  if self.numeric!=Some(key){let(g,b)=colored_geometry(source_paper_spans([w,h],sheet.margin_mm,density,phase)?,density,phase)?;self.geometry=Some(g);self.batches=Some(b);self.numeric=Some(key);self.cold_builds+=1;}
+  let pose=Pose{scale:[zoom;2],translation:[origin.x,origin.y]};let g=self.geometry.as_ref().unwrap().clone();let b=self.batches.as_ref().unwrap().clone();if let Some(handle)=&self.handle{handle.update(g,b,pose)?;}else{self.handle=Some(factory.handle(g,b,pose)?);}painter.add(self.handle.as_ref().unwrap().shape(painter.clip_rect()));Ok(true)
+ }
+}
+impl std::fmt::Debug for CanvasPaper{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("CanvasPaper").field("cold_builds",&self.cold_builds).finish()}}
