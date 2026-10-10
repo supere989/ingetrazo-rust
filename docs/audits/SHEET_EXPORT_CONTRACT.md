@@ -20,7 +20,7 @@ PDF/atlas: independently reopen page count and MediaBox/orientation, physical ve
 
 ## Current bounded implementation
 
-`formats/sheet_dxf.rs` is distinct from 3D model DXF. `check-sheet-view-dxf.py` calls the actual original writer and Rust fixture and reopens both with ezdxf; three entities, four class layers, empty layers, signed/extreme coordinates and hidden dashes match. Nonfinite input is rejected before emitting bytes. GUI composer selection/export wiring reuses persistent `ComposerCompute` and camera/scene helpers. `cargo check -p ingetrazo-gui` passes. Actual composer geometry/UI and transactional I/O acceptance remain pending; do not promote P29 or claim release export readiness.
+`formats/sheet_dxf.rs` is distinct from 3D model DXF. `check-sheet-view-dxf.py` calls the actual original writer and Rust fixture and reopens both with ezdxf; three entities, four class layers, empty layers, signed/extreme coordinates and hidden dashes match. Nonfinite input is rejected before emitting bytes. GUI composer selection/export wiring reuses persistent `ComposerCompute` and camera/scene helpers. Canonical production geometry and transactional I/O evidence now covers the 52 cases described below; independent reader results are retained in `sheet-export-independent/` and the fresh canonical rerun in `sheet-export-canonical/`. P29 is Partial. Actual UI export gestures, wider workflows and PDF/image acceptance remain open; this is not release export readiness.
 
 PDF and image writers are still absent. This contract preserves their complete scope.
 
