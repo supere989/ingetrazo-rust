@@ -12,7 +12,7 @@ impl App for Fixture {
  fn title()->&'static str{"IngeTrazo precise CAD2D fixture"}
  fn new(system:&mut System,_:Option<std::path::PathBuf>)->Self{
   if std::env::var_os("INGETRAZO_CAD2D_PRESSURE").is_some(){system.verify_cad2d_rollback_for_probe().unwrap();}
-  let geometry=Geometry::new(vec![Vertex{position:[0.,0.],coverage:1.},Vertex{position:[80.,0.],coverage:1.},Vertex{position:[80.,80.],coverage:1.},Vertex{position:[0.,80.],coverage:1.}],vec![0,1,2,0,2,3]).unwrap();
+  let geometry=Geometry::new_with_ordered_draws(vec![Vertex{position:[0.,0.],coverage:1.},Vertex{position:[80.,0.],coverage:1.},Vertex{position:[80.,80.],coverage:1.},Vertex{position:[0.,80.],coverage:1.}],vec![0,1,2,0,2,3],vec![0..6]).unwrap();
   let rgba=std::env::var("INGETRAZO_CAD2D_RGBA").unwrap_or("37,93,157,128".into()).split(',').map(|v|v.parse::<u8>().unwrap()).collect::<Vec<_>>();let rgba:[u8;4]=rgba.try_into().unwrap();
   let batches:Arc<[Batch]>=vec![Batch{first:0,count:6,color:EncodedRgba::from_bytes(rgba,1.).unwrap()}].into();
   let paint=system.enable_cad2d().unwrap().handle(geometry.clone(),batches,Pose{translation:[20.,20.],..Default::default()}).unwrap();

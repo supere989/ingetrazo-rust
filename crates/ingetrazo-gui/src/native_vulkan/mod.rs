@@ -220,7 +220,7 @@ impl System {
     }
 
     pub fn enable_cad2d(&mut self)->Result<&cad2d::Renderer,String>{
-        if self.cad2d.is_none(){self.cad2d=Some(cad2d::Renderer::new(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass)?);}
+        if self.cad2d.is_none(){self.cad2d=Some(cad2d::Renderer::new(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass,&self.swapchain.image_views)?);}
         Ok(self.cad2d.as_ref().unwrap())
     }
 
@@ -244,7 +244,7 @@ impl System {
                     .set_render_pass(self.swapchain.render_pass)
                     .expect("Failed to rebuild renderer pipeline");
                 if let Some(cad)=&mut self.cad2d{
-                    if let Err(error)=cad.set_render_pass(self.swapchain.render_pass){egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
+                    if let Err(error)=cad.set_render_pass(self.swapchain.render_pass,&self.swapchain.image_views){egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);return;}
                 }
                 self.dirty_swapchain = false;
             } else {
@@ -342,6 +342,7 @@ impl System {
             Err(error) => panic!("Error while acquiring next image. Cause: {}", error),
         };
 
+        if let Some(cad)=&mut self.cad2d{if let Err(error)=cad.set_input_image(image_index as usize){egui_app.gpu_error(&error);return;}}
         unsafe {
             self.vulkan_context
                 .device
@@ -349,7 +350,7 @@ impl System {
                 .expect("Failed to reset fences")
         };
 
-        let wait_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT];
+        let wait_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT|if std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some(){vk::PipelineStageFlags::FRAGMENT_SHADER}else{vk::PipelineStageFlags::empty()}];
         let wait_semaphores = [self.image_available_semaphore];
         let signal_semaphores = [self.render_finished_semaphores[image_index as usize]];
 
@@ -882,6 +883,9 @@ fn create_vulkan_swapchain(
             )?
     };
 
+    let integer_cad=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+    let usage=cad_attachment_usage(capabilities.supported_usage_flags,integer_cad)?;
+    eprintln!("CAD2D attachment usage: requested={usage:?} supported={:?}",capabilities.supported_usage_flags);
     // Swapchain extent
     let extent = {
         if capabilities.current_extent.width != std::u32::MAX {
@@ -913,7 +917,7 @@ fn create_vulkan_swapchain(
             .image_color_space(format.color_space)
             .image_extent(extent)
             .image_array_layers(1)
-            .image_usage(vk::ImageUsageFlags::COLOR_ATTACHMENT);
+            .image_usage(usage);
 
         builder = if vulkan_context.graphics_q_index != vulkan_context.present_q_index {
             builder
@@ -977,15 +981,18 @@ fn create_vulkan_render_pass(
         .initial_layout(vk::ImageLayout::UNDEFINED)
         .final_layout(vk::ImageLayout::PRESENT_SRC_KHR)];
 
+    let integer_cad=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+    let attachment_layout=if integer_cad{vk::ImageLayout::GENERAL}else{vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL};
     let color_attachment_refs = [vk::AttachmentReference::default()
         .attachment(0)
-        .layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL)];
+        .layout(attachment_layout)];
+    let input_attachment_refs=if integer_cad{color_attachment_refs.to_vec()}else{Vec::new()};
 
     let subpass_descs = [vk::SubpassDescription::default()
         .pipeline_bind_point(vk::PipelineBindPoint::GRAPHICS)
-        .color_attachments(&color_attachment_refs)];
+        .color_attachments(&color_attachment_refs).input_attachments(&input_attachment_refs)];
 
-    let subpass_deps = [vk::SubpassDependency::default()
+    let mut subpass_deps = vec![vk::SubpassDependency::default()
         .src_subpass(vk::SUBPASS_EXTERNAL)
         .dst_subpass(0)
         .src_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT)
@@ -995,6 +1002,7 @@ fn create_vulkan_render_pass(
             vk::AccessFlags::COLOR_ATTACHMENT_READ | vk::AccessFlags::COLOR_ATTACHMENT_WRITE,
         )];
 
+    if integer_cad{subpass_deps.push(vk::SubpassDependency::default().src_subpass(0).dst_subpass(0).src_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT).dst_stage_mask(vk::PipelineStageFlags::FRAGMENT_SHADER).src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ).dependency_flags(vk::DependencyFlags::BY_REGION));}
     let render_pass_info = vk::RenderPassCreateInfo::default()
         .attachments(&attachment_descs)
         .subpasses(&subpass_descs)
@@ -1141,4 +1149,12 @@ fn select_encoded_surface_format(formats:&[vk::SurfaceFormatKHR])->Option<vk::Su
   assert_eq!(select_encoded_surface_format(&[srgb,unorm]),Some(unorm));assert_eq!(select_encoded_surface_format(&[srgb]),None);
   assert_eq!(select_encoded_surface_format(&[vk::SurfaceFormatKHR{format:vk::Format::UNDEFINED,..srgb}]).unwrap().format,vk::Format::B8G8R8A8_UNORM);
  }
+}
+
+fn cad_attachment_usage(supported:vk::ImageUsageFlags,integer:bool)->Result<vk::ImageUsageFlags,String>{
+ let usage=vk::ImageUsageFlags::COLOR_ATTACHMENT|if integer{vk::ImageUsageFlags::INPUT_ATTACHMENT}else{vk::ImageUsageFlags::empty()};
+ if !supported.contains(usage){return Err("Swapchain lacks INPUT_ATTACHMENT usage required for exact integer CAD2D composition".into());}Ok(usage)
+}
+#[cfg(test)]mod cad_input_usage_tests{use super::*;
+ #[test]fn unsupported_input_is_explicit_refusal(){let color=vk::ImageUsageFlags::COLOR_ATTACHMENT;assert_eq!(cad_attachment_usage(color,false).unwrap(),color);assert!(cad_attachment_usage(color,true).unwrap_err().contains("INPUT_ATTACHMENT"));assert_eq!(cad_attachment_usage(color|vk::ImageUsageFlags::INPUT_ATTACHMENT,true).unwrap(),color|vk::ImageUsageFlags::INPUT_ATTACHMENT);assert!(cad_attachment_usage(vk::ImageUsageFlags::INPUT_ATTACHMENT,true).is_err());}
 }

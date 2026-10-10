@@ -40,6 +40,7 @@ struct Ready {
     batches: Arc<[Batch]>,
     premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
+    ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,
 }
 struct State {
     geometry: Arc<Geometry>,
@@ -51,6 +52,11 @@ struct State {
 struct Pipeline {
     pipeline: vk::Pipeline,
     layout: vk::PipelineLayout,
+    integer:bool,
+    descriptor_layout:vk::DescriptorSetLayout,
+    descriptor_pool:vk::DescriptorPool,
+    descriptor_sets:Vec<vk::DescriptorSet>,
+    active_set:Option<vk::DescriptorSet>,
 }
 struct NativePaint {
     device: vk::Device,
@@ -167,6 +173,7 @@ impl VulkanPaint for NativePaint {
             );
             device.cmd_bind_vertex_buffers(command, 0, &[r.vertex], &[0]);
             device.cmd_bind_index_buffer(command, r.index, 0, vk::IndexType::UINT32);
+            if p.integer{let set=p.active_set.ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D input image not selected".into()))?;device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,p.layout,0,&[set],&[]);}
             device.cmd_push_constants(
                 command,
                 p.layout,
@@ -182,8 +189,14 @@ impl VulkanPaint for NativePaint {
                     32,
                     bytemuck::cast_slice(rgba),
                 );
-                device.cmd_draw_indexed(command, batch.count, 1, batch.first, 0, 0);
-                self.counters.draws.fetch_add(1, Ordering::Relaxed);
+                if p.integer{
+                    let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
+                    for range in ranges.iter().filter(|range|range.start>=batch.first&&range.end<=batch.first+batch.count){
+                        let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
+                        device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);
+                        device.cmd_draw_indexed(command,range.end-range.start,1,range.start,0,0);self.counters.draws.fetch_add(1,Ordering::Relaxed);
+                    }
+                }else{device.cmd_draw_indexed(command, batch.count, 1, batch.first, 0, 0);self.counters.draws.fetch_add(1, Ordering::Relaxed);}
             }
         }
         Ok(())
@@ -225,32 +238,33 @@ impl Renderer {
         context: &VulkanContext,
         budget: Arc<VulkanBudget>,
         pass: vk::RenderPass,
+        views:&[vk::ImageView],
     ) -> Result<Self, String> {
+        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+        let descriptor_layout=if integer{let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|e.to_string())?}else{vk::DescriptorSetLayout::null()};
+        let set_layouts=if integer{vec![descriptor_layout]}else{Vec::new()};
         let ranges = [vk::PushConstantRange {
             stage_flags: vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
             offset: 0,
             size: 48,
         }];
-        let layout = unsafe {
-            context.device.create_pipeline_layout(
-                &vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges),
-                None,
-            )
-        }
-        .map_err(|e| e.to_string())?;
-        let pipeline = match make_pipeline(&context.device, pass, layout) {
+        let layout = match unsafe {
+            context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
+        }{Ok(v)=>v,Err(e)=>{if integer{unsafe{context.device.destroy_descriptor_set_layout(descriptor_layout,None)}}return Err(e.to_string())}};
+        let pipeline = match make_pipeline(&context.device, pass, layout,integer) {
             Ok(p) => p,
             Err(e) => {
-                unsafe { context.device.destroy_pipeline_layout(layout, None) };
+                unsafe { context.device.destroy_pipeline_layout(layout, None);if integer{context.device.destroy_descriptor_set_layout(descriptor_layout,None)} };
                 return Err(e);
             }
         };
+        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}return Err(e)}}}else{(vk::DescriptorPool::null(),Vec::new())};
         Ok(Self {
             device: context.device.clone(),
             budget: budget.clone(),
             pressure_after_vertex: false,
             rolled_back_buffers: 0,
-            pipeline: Arc::new(Mutex::new(Pipeline { pipeline, layout })),
+            pipeline: Arc::new(Mutex::new(Pipeline { pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             cache: HashMap::new(),
             active: HashSet::new(),
@@ -262,12 +276,15 @@ impl Renderer {
             cache_hits: 0,
         })
     }
-    pub fn set_render_pass(&mut self,pass:vk::RenderPass)->Result<(),String>{
+    pub fn set_render_pass(&mut self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<(),String>{
         let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
-        let replacement=make_pipeline(&self.device,pass,p.layout)?;
-        unsafe{self.device.destroy_pipeline(p.pipeline,None)};
-        p.pipeline=replacement;Ok(())
+        let replacement=make_pipeline(&self.device,pass,p.layout,p.integer)?;
+        let inputs=if p.integer{match make_inputs(&self.device,p.descriptor_layout,views){Ok(v)=>v,Err(e)=>{unsafe{self.device.destroy_pipeline(replacement,None)};return Err(e)}}}else{(vk::DescriptorPool::null(),Vec::new())};
+        unsafe{self.device.destroy_pipeline(p.pipeline,None);if p.descriptor_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(p.descriptor_pool,None)}};
+        p.pipeline=replacement;p.descriptor_pool=inputs.0;p.descriptor_sets=inputs.1;p.active_set=None;Ok(())
     }
+    /// Called after the previous submitted frame fence, before recording this image.
+    pub fn set_input_image(&mut self,index:usize)->Result<(),String>{let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;if p.integer{p.active_set=Some(*p.descriptor_sets.get(index).ok_or("CAD2D input image index invalid")?);}Ok(())}
     pub fn factory(&self)->Factory{Factory{device:self.device.handle(),pipeline:self.pipeline.clone(),counters:self.counters.clone()}}
     pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{self.factory().handle(geometry,batches,pose)}
     /// Previous frame fence has completed. Prepare every requested buffer before
@@ -302,6 +319,11 @@ impl Renderer {
                 s.pose.validate()?;
                 if let Some(r) = &s.ready {
                     self.active.insert(r.id);
+                }
+                if self.pipeline.lock().unwrap().integer{
+                    let ranges=s.geometry.ordered_draws().ok_or("Exact integer CAD2D requires admitted source-ordered disjoint pixel geometry")?;
+                    let mut end=0;for batch in s.batches.iter().filter(|b|b.count>0){if batch.first!=end{return Err("Exact integer CAD2D palette batches must partition ordered geometry".into());}end=batch.first+batch.count;if !ranges.iter().any(|r|r.end==end){return Err("Exact integer CAD2D palette boundary splits a disjoint draw".into());}}
+                    if end as usize!=s.geometry.indices().len(){return Err("Exact integer CAD2D palette does not cover ordered geometry".into());}
                 }
                 let id = s.geometry.id();
                 self.active.insert(id);
@@ -394,6 +416,7 @@ impl Renderer {
                     batches: s.batches.clone(),
                     premultiplied:s.premultiplied.clone(),
                     pose: s.pose,
+                    ordered_draws:s.geometry.ordered_draws(),
                 });
             } else {
                 s.ready = None;
@@ -424,7 +447,7 @@ impl Renderer {
         completed: u64,
     ) -> Result<(), String> {
         use ingetrazo_render::cad2d::{EncodedRgba, Vertex};
-        let geometry = Geometry::new(
+        let geometry = Geometry::new_with_ordered_draws(
             vec![
                 Vertex {
                     position: [0., 0.],
@@ -439,7 +462,7 @@ impl Renderer {
                     coverage: 1.,
                 },
             ],
-            vec![0, 1, 2],
+            vec![0, 1, 2],vec![0..3],
         )?;
         let batches: Arc<[Batch]> = vec![Batch {
             first: 0,
@@ -465,7 +488,7 @@ impl Renderer {
         let before = self.budget.ledger.lock().unwrap().total_committed();
         let old = handle.inner.state.lock().unwrap().ready.clone().unwrap();
         let original_limit = self.budget.ledger.lock().unwrap().total_limit;
-        let replacement = Geometry::new(geometry.vertices().to_vec(), geometry.indices().to_vec())?;
+        let replacement = Geometry::new_with_ordered_draws(geometry.vertices().to_vec(), geometry.indices().to_vec(),vec![0..3])?;
         handle.update(replacement, batches.clone(), Pose::default())?;
         self.pressure_after_vertex = true;
         let result = self.prepare(
@@ -542,7 +565,9 @@ impl Drop for Renderer {
         let mut p = self.pipeline.lock().unwrap();
         unsafe {
             self.device.destroy_pipeline(p.pipeline, None);
-            self.device.destroy_pipeline_layout(p.layout, None)
+            self.device.destroy_pipeline_layout(p.layout, None);
+            if p.descriptor_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(p.descriptor_pool,None)}
+            if p.descriptor_layout!=vk::DescriptorSetLayout::null(){self.device.destroy_descriptor_set_layout(p.descriptor_layout,None)}
         }
         p.pipeline = vk::Pipeline::null();
         p.layout = vk::PipelineLayout::null();
@@ -552,12 +577,13 @@ fn make_pipeline(
     device: &Device,
     pass: vk::RenderPass,
     layout: vk::PipelineLayout,
+    integer:bool,
 ) -> Result<vk::Pipeline, String> {
     let mut modules = Vec::new();
     let result = (|| {
         for bytes in [
             include_bytes!("shaders/cad2d.vert.spv").as_slice(),
-            include_bytes!("shaders/cad2d.frag.spv").as_slice(),
+            if integer{include_bytes!("shaders/cad2d_integer.frag.spv").as_slice()}else{include_bytes!("shaders/cad2d.frag.spv").as_slice()},
         ] {
             let code =
                 ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e| e.to_string())?;
@@ -615,7 +641,7 @@ fn make_pipeline(
         let samples = vk::PipelineMultisampleStateCreateInfo::default()
             .rasterization_samples(vk::SampleCountFlags::TYPE_1);
         let attachments = [vk::PipelineColorBlendAttachmentState::default()
-            .blend_enable(true)
+            .blend_enable(!integer)
             .src_color_blend_factor(vk::BlendFactor::ONE)
             .dst_color_blend_factor(vk::BlendFactor::ONE_MINUS_SRC_ALPHA)
             .color_blend_op(vk::BlendOp::ADD)
@@ -656,4 +682,13 @@ fn make_pipeline(
         unsafe { device.destroy_shader_module(m, None) }
     }
     result
+}
+
+fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageView])->Result<(vk::DescriptorPool,Vec<vk::DescriptorSet>),String>{
+ if views.is_empty()||views.len()>16{return Err("CAD2D input image descriptor admission outside1..16".into());}
+ let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::INPUT_ATTACHMENT,descriptor_count:views.len()as u32}];
+ let pool=unsafe{device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(views.len()as u32).pool_sizes(&sizes),None)}.map_err(|e|e.to_string())?;
+ let layouts=vec![layout;views.len()];let sets=match unsafe{device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&layouts))}{Ok(v)=>v,Err(e)=>{unsafe{device.destroy_descriptor_pool(pool,None)};return Err(e.to_string())}};
+ for (set,view) in sets.iter().zip(views){let images=[vk::DescriptorImageInfo::default().image_view(*view).image_layout(vk::ImageLayout::GENERAL)];let write=[vk::WriteDescriptorSet::default().dst_set(*set).dst_binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).image_info(&images)];unsafe{device.update_descriptor_sets(&write,&[])}}
+ Ok((pool,sets))
 }

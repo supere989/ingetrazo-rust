@@ -31,7 +31,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
  let density=zoom*pixels_per_point;if !density.is_finite(){return Err("Composer CAD scale overflow".into());}
  let commands=shape.paint_commands(100_000)?;
  let palette=crate::composer::precise_shape_palette(&commands)?;
- let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();
+ let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();let mut ordered_draws=Vec::new();let mut all_span_paths=true;
  for (command_index,(command,(stroke_color,fill_color))) in commands.into_iter().zip(palette).enumerate(){
   let closed_curve=source_closed_curve(&command.path);
   let straight_outline=match &command.path {
@@ -90,6 +90,8 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
     let byte_count=vertices.len().checked_mul(12).and_then(|v|indices.len().checked_mul(4).and_then(|i|v.checked_add(i))).and_then(|old|spans.len().checked_mul(72).and_then(|new|old.checked_add(new))).ok_or("Composer span byte overflow")?;
     if byte_count>8*1024*1024{return Err("Composer exact span geometry exceeds8MiB admission".into());}
     let first=u32::try_from(indices.len()).map_err(|_|"Composer CAD index overflow")?;
+    let ranges=ingetrazo_render::qt_cosmetic::disjoint_ranges(&spans,100_000)?;
+    for range in ranges{ordered_draws.push(first+range.start as u32*6..first+range.end as u32*6);}
     for span in spans {
      let base=u32::try_from(vertices.len()).map_err(|_|"Composer CAD vertex overflow")?;
      for position in [[span.x as f64,span.y as f64],[span.x as f64+span.len as f64,span.y as f64],[span.x as f64+span.len as f64,span.y as f64+1.],[span.x as f64,span.y as f64+1.]] {
@@ -102,6 +104,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
     continue;
    }
 
+   all_span_paths=false;
    let mut shapes=vec![egui::epaint::ClippedShape{clip_rect:egui::Rect::EVERYTHING,shape:egui::epaint::PathShape{points:points.clone(),closed,fill:if fill{Color32::WHITE}else{Color32::TRANSPARENT},stroke:if fill{Stroke::NONE}else{Stroke::new(width,Color32::WHITE)}.into()}.into()}];
    // A round-capped stroke is one covered region. Separate endpoint circles
    // would blend their overlap with the segment twice for translucent paint.
@@ -124,7 +127,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    if end>first{batches.push(Batch{first,count:end-first,color});mapping.push((command_index,fill));}
   }
  }
- let geometry=Geometry::new(vertices,indices)?;geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
+ let geometry=if all_span_paths{Geometry::new_with_ordered_draws(vertices,indices,ordered_draws)?}else{Geometry::new(vertices,indices)?};geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
 }
 pub type Cubic=[DVec2;4];
 fn cubic_split(q:Cubic)->(Cubic,Cubic){let ab=(q[0]+q[1])*0.5;let bc=(q[1]+q[2])*0.5;let cd=(q[2]+q[3])*0.5;let abc=(ab+bc)*0.5;let bcd=(bc+cd)*0.5;let m=(abc+bcd)*0.5;([q[0],ab,abc,m],[m,bcd,cd,q[3]])}

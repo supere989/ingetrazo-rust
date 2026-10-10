@@ -26,15 +26,25 @@ impl Default for Pose {fn default()->Self{Self{scale:[1.;2],translation:[0.;2]}}
 impl Pose {pub fn validate(self)->Result<(),String>{if self.scale.iter().chain(&self.translation).all(|v|v.is_finite()){Ok(())}else{Err("CAD2D pose must be finite".into())}}}
 /// ID is allocated once for this immutable allocation. Changing palette/pose
 /// retains ID; changing geometry constructs a fresh ID, preventing stale cache.
-#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>}
+#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>}
 impl Geometry {
  pub fn new(vertices:Vec<Vertex>,indices:Vec<u32>)->Result<Arc<Self>,String>{
   if vertices.len()>u32::MAX as usize||indices.len()>u32::MAX as usize{return Err("CAD2D geometry exceeds index domain".into());}
   if indices.len()%3!=0||indices.iter().any(|&i|i as usize>=vertices.len()){return Err("CAD2D triangle index bounds invalid".into());}
   if vertices.iter().any(|v|!v.position.iter().all(|p|p.is_finite())||!v.coverage.is_finite()||!(0. ..=1.).contains(&v.coverage)){return Err("CAD2D vertex position/coverage invalid".into());}
   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
-  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into()}))
+  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None}))
  }
+ /// Pixel-aligned source span producer declares nonoverlapping ordered draw ranges.
+ /// Metadata partitions all indices; a caller must not use this for arbitrary
+ /// triangles or a later pose that overlaps previously disjoint source pixels.
+ pub fn new_with_ordered_draws(vertices:Vec<Vertex>,indices:Vec<u32>,ranges:Vec<std::ops::Range<u32>>)->Result<Arc<Self>,String>{
+  if ranges.len()>4096{return Err("CAD2D ordered draws exceed4096 admission".into());}
+  let mut end=0;for range in &ranges{if range.start!=end||range.end<=range.start||range.start%3!=0||range.end%3!=0{return Err("Invalid CAD2D ordered draw partition".into());}end=range.end;}
+  if end as usize!=indices.len(){return Err("CAD2D ordered draws do not cover indices".into());}
+  let mut g=Self::new(vertices,indices)?;Arc::get_mut(&mut g).unwrap().ordered_draws=Some(ranges.into());Ok(g)
+ }
+ pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
  pub fn logical_bytes(&self)->u64{self.vertices.len()as u64*std::mem::size_of::<Vertex>()as u64+self.indices.len()as u64*4}
  pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{for b in batches{b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}}Ok(())}
@@ -47,4 +57,8 @@ impl Geometry {
   assert_eq!(EncodedRgba::from_bytes([1,7,19,128],1.).unwrap().qt_premultiplied8().unwrap(),[1./255.,4./255.,10./255.,128./255.]);
  }
  #[test]fn immutable_geometry_identity_and_bounds_are_not_palette_keys(){let v=Vertex{position:[1.,2.],coverage:1.};let g=Geometry::new(vec![v;3],vec![0,1,2]).unwrap();let shared=g.clone();assert_eq!(g.id(),shared.id());let distinct=Geometry::new(vec![v;3],vec![0,1,2]).unwrap();assert_ne!(g.id(),distinct.id());let good=Batch{first:0,count:3,color:EncodedRgba::from_bytes([0,0,0,255],1.).unwrap()};g.validate_batches(&[good]).unwrap();assert!(g.validate_batches(&[Batch{first:u32::MAX,..good}]).is_err());assert!(Geometry::new(vec![v],vec![0,1,0]).is_err());assert!(Geometry::new(vec![Vertex{coverage:f32::NAN,..v}],vec![]).is_err());}
+}
+
+#[cfg(test)]mod ordering_admission{use super::*;
+ #[test]fn partition_is_contiguous_bounded_and_complete(){let v=Vertex{position:[0.,0.],coverage:1.};let vertices=vec![v;3];let indices=vec![0,1,2,0,1,2];let g=Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),vec![0..3,3..6]).unwrap();assert_eq!(&*g.ordered_draws().unwrap(),&[0..3,3..6]);for ranges in [vec![0..3],vec![0..6,3..6],vec![3..6],vec![0..4,4..6],vec![0..0,0..6]]{assert!(Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),ranges).is_err());}}
 }
