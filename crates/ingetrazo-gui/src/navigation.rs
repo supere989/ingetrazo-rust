@@ -3,6 +3,7 @@ use glam::{DVec2,DVec3};
 use ingetrazo_core::{camera::OrbitCamera,math::{Plane,Ray},screen_pick,walkthrough::{self,WalkModifiers}};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
 pub enum Mode { Position,Look,Walk }
+impl Mode { pub fn hint(self)->&'static str {match self {Self::Position=>"Position Camera — click or drag from where to stand",Self::Look=>"Look Around — drag to turn",Self::Walk=>"Walk — drag; Ctrl run, Shift rise/strafe, Alt through walls"}} }
 pub struct Navigation {
  pub mode:Option<Mode>, pub eye_height:f64,
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
@@ -26,10 +27,27 @@ impl Navigation {
  }
 }
 impl crate::IngeTrazoApp {
+ pub fn navigation_height(&mut self,text:&str)->Result<(),String>{
+  let mode=self.navigation.mode.ok_or("Camera navigation is inactive")?;
+  let height=ingetrazo_core::units::parse_length(text,self.scene.unit)?;
+  if !height.is_finite() || (mode==Mode::Position && height<=0.) {return Err("Invalid camera height".into());}
+  let eye=self.camera.eye();
+  let new_eye=if mode==Mode::Position {
+   self.navigation.base.map(|base|base+DVec3::Z*height)
+  }else{Some(DVec3::new(eye.x,eye.y,height))};
+  if let Some(new_eye)=new_eye {if !self.camera.look_from(new_eye,self.camera.forward()){return Err("Invalid camera placement".into());}}
+  if mode==Mode::Position {
+   self.document_session.preferences.walk_eye_height=height;
+   self.document_session.preferences.clamp();
+   self.navigation.eye_height=self.document_session.preferences.walk_eye_height;
+   self.persist_preferences();
+  }
+  Ok(())
+ }
  pub fn activate_navigation(&mut self,mode:Mode){
   self.set_tool(ingetrazo_tools::base::ToolType::Select);
   self.navigation.activate(mode);self.vcb_text.clear();
-  self.status_message=match mode{Mode::Position=>"Position Camera — click or drag from where to stand",Mode::Look=>"Look Around — drag to turn",Mode::Walk=>"Walk — drag; Ctrl run, Shift rise/strafe, Alt through walls"}.into();
+  self.status_message=mode.hint().into();
  }
 }
 pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response){
@@ -37,7 +55,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  let pointer=ui.input(|i|i.pointer.clone());
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();return;}
  let position=pointer.hover_pos().map(|p|DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64));
- let world=position.map(|p|{
+ let world=position.filter(|_|mode==Mode::Position).map(|p|{
   let ray=app.camera.screen_to_ray(p.x,p.y,rect.width()as f64,rect.height()as f64);
   screen_pick::hover_face(&app.scene,&ray).map(|hit|hit.0).or_else(||Plane::new(DVec3::ZERO,DVec3::Z).intersect_ray(&ray).filter(|t|*t>0.).map(|t|ray.at(t)))
  });
@@ -94,5 +112,29 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  #[test]fn cancellation_discards_gesture_and_stops_ticks(){
   let mut n=Navigation::default();n.activate(Mode::Walk);n.press=Some((DVec2::ZERO,DVec3::ZERO));n.accumulator=0.2;n.cancel();
   assert!(n.press.is_none());assert_eq!(n.accumulator,0.);assert_eq!(n.mode,Some(Mode::Walk));
+ }
+}
+
+#[cfg(test)]mod height_tests {
+ use super::*;
+ #[test]fn measurement_routes_camera_height_without_model_transaction(){
+  let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;
+  app.activate_navigation(Mode::Position);let version=app.scene.version;let undo=app.undo_stack.len();
+  app.dispatch_tool_vcb("300cm").unwrap();assert_eq!(app.navigation.eye_height,3.);
+  let base=DVec3::new(2.,3.,0.4);assert!(app.navigation.place(&mut app.camera,base,None));
+  app.activate_navigation(Mode::Look);app.dispatch_tool_vcb("2m").unwrap();
+  assert!((app.camera.eye().z-2.).abs()<1e-12);
+  let camera=app.camera.clone();assert!(app.dispatch_tool_vcb("NaN").is_err());assert_eq!(app.camera,camera);
+  assert_eq!(app.scene.version,version);assert_eq!(app.undo_stack.len(),undo);
+ }
+ #[test]fn typed_offset_survives_settings_restart(){
+  let root=std::env::temp_dir().join(format!("ingetrazo-navigation-settings-{}",uuid::Uuid::new_v4()));
+  let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;
+  app.attach_session_store(crate::session_state::SessionStore::isolated(&root));
+  app.activate_navigation(Mode::Position);app.dispatch_tool_vcb("185cm").unwrap();
+  let mut restarted=crate::IngeTrazoApp::new();restarted.system_clipboard=None;
+  restarted.attach_session_store(crate::session_state::SessionStore::isolated(&root));
+  assert_eq!(restarted.navigation.eye_height,1.85);
+  std::fs::remove_dir_all(root).unwrap();
  }
 }

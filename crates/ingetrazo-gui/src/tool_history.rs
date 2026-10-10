@@ -97,6 +97,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
+        if self.navigation.mode.is_some(){return self.navigation_height(text);}
         if self.section_name_prompt.is_some(){return Err("Finish the section naming dialog first".into());}
         let before = self.tool_snapshot();
         self.active_tool.note_history_revision(self.model_revision,false);
