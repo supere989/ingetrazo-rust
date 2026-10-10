@@ -1,0 +1,13 @@
+{
+  "source": "0d278eafb8e9f5c10c7e1a5def7e5f61e1372a91",
+  "run": 38063644531,
+  "job": 114246776705,
+  "job_name": "Native Metal framework link (macos-15)",
+  "artifact": 11673954557,
+  "effective_qnsview_color_space": "Apple Virtual colorspace",
+  "actual_surface_color_space_description": "Display",
+  "both_color_policies_exact_capture": true,
+  "presentation_passed": false,
+  "color_policy_resolves_callback_failure": false,
+  "physical_mac_claim": false
+}
