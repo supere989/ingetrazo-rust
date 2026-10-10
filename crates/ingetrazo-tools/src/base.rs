@@ -115,6 +115,8 @@ pub trait Tool: Send + Sync {
     fn lock_drawing_reference(&mut self,_reference:Option<ingetrazo_core::screen_pick::HoverReference>)->bool{false}
     /// Notify modifier transitions, including frames without pointer movement.
     fn note_control_state(&mut self,_held:bool){}
+    /// Move drags in a vertical plane facing the camera through its grab point.
+    fn prefers_vertical_drag(&self) -> bool { false }
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }
     fn preview_mesh(&self) -> Option<&Mesh> {
         None
