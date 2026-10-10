@@ -383,7 +383,7 @@ fn build_mesh_buffers(
                 let v1 = Vertex::from_dvec3(p1, norm, shaded_color, [0.0, 0.0]);
                 let v2 = Vertex::from_dvec3(p2, norm, shaded_color, [0.0, 0.0]);
 
-                if is_xray || final_opacity < 0.99 {
+                if is_xray || final_opacity < 0.999 {
                     transparent.push_triangle(v0, v1, v2);
                 } else {
                     opaque.push_triangle(v0, v1, v2);
@@ -516,7 +516,7 @@ fn build_group_buffers(
                 let v1 = Vertex::from_dvec3(wp1, world_norm, shaded_color, [0.0, 0.0]);
                 let v2 = Vertex::from_dvec3(wp2, world_norm, shaded_color, [0.0, 0.0]);
 
-                if is_xray || final_opacity < 0.99 {
+                if is_xray || final_opacity < 0.999 {
                     transparent.push_triangle(v0, v1, v2);
                 } else {
                     opaque.push_triangle(v0, v1, v2);

@@ -1,0 +1,24 @@
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-vulkan/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.74s
+     Running unittests src/lib.rs (target/debug/deps/ingetrazo_gui-44e2c3bebaf79dcb)
+
+running 7 tests
+test native_vulkan::headless::tests::strict_hardware_request_never_substitutes_software_or_other_vendor ... ok
+test native_vulkan::queues::tests::combined_and_dedicated_compute_preferred ... ok
+test native_vulkan::queues::tests::no_present_or_graphics_is_rejected ... ok
+test native_vulkan::queues::tests::sparse_split_graphics_present_preserve_real_indices ... ok
+test native_vulkan::world::contour_chunk_regression::storage_chunks_fit_actual_range_and_preserve_complete_triangles ... ok
+test native_vulkan::world::lifecycle_regression::failed_pipeline_batch_releases_every_partial_non_null_handle ... ok
+test native_vulkan::world::sample_count_regression::format_support_limits_global_msaa_without_allocating_invalid_images ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 80 filtered out; finished in 0.00s
+
