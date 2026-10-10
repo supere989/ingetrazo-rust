@@ -117,3 +117,27 @@ impl Ordered {
   assert!(ordered.parts[0].batches.windows(2).all(|b|b[0].first+b[0].count==b[1].first));
  }
 }
+
+#[cfg(target_os="macos")]
+pub(super) struct MetalObservation {
+ metal:ingetrazo_metal::NativeMetal,
+ painter:ingetrazo_metal::egui_painter::EguiPainter,
+ pool:ingetrazo_metal::compute_canvas::Pool,
+}
+#[cfg(target_os="macos")]
+impl MetalObservation {
+ pub fn new()->Result<Self,String>{let metal=ingetrazo_metal::NativeMetal::new()?;let painter=ingetrazo_metal::egui_painter::EguiPainter::new_compute(&metal)?;Ok(Self{metal,painter,pool:Default::default()})}
+ pub fn capture(&mut self,ordered:&Ordered,size:[usize;2],ppp:f32)->Result<(Vec<u8>,serde_json::Value),String>{
+  let mut primitives=Vec::new();
+  for part in &ordered.parts {
+   let egui::Shape::Callback(callback)=part.handle.shape(egui::Rect::EVERYTHING) else{return Err("Ordered callback shape absent".into());};
+   primitives.push(egui::ClippedPrimitive{clip_rect:egui::Rect::EVERYTHING,primitive:egui::epaint::Primitive::Callback(callback)});
+  }
+  let render=|owner:&mut Self|->Result<Vec<u8>,String>{let prepared=owner.painter.prepare(&owner.metal,&primitives,ppp)?;let mut submitted=owner.painter.submit_diagnostic_with_pool(&owner.metal,prepared,size[0],size[1],false,&mut owner.pool)?;submitted.wait_readback(std::time::Duration::from_secs(5))};
+  let pixels=render(self)?;let before=self.painter.compute_stats().ok_or("Compute counters absent")?;let allocations=self.pool.stats.allocations;
+  for _ in 0..3{if render(self)?!=pixels{return Err("Ordered native Metal warm pixels changed".into());}}
+  let after=self.painter.compute_stats().ok_or("Compute counters absent")?;
+  if before.deep_admissions!=after.deep_admissions||before.plan_uploads!=after.plan_uploads||before.palette_uploads!=after.palette_uploads||allocations!=self.pool.stats.allocations{return Err("Ordered native Metal warm upload/allocation changed".into());}
+  Ok((pixels,serde_json::json!({"backend":"production native Metal compute callback consumer","warm_frames":3,"deep_admissions":after.deep_admissions,"warm_deep_admissions":after.deep_admissions-before.deep_admissions,"plan_uploads":after.plan_uploads,"palette_uploads":after.palette_uploads,"canvas_allocations":self.pool.stats.allocations,"warm_unchanged":true,"presentation_claim":false,"physical_mac_claim":false})))
+ }
+}

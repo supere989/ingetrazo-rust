@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict actual production CPU Canvas tile comparison; no GPU/WSI claim."""
+"""Strict source/ordered records/actual Metal compute Canvas comparison; no WSI claim."""
 import argparse,json,pathlib,hashlib
 import numpy as np
 from PySide6.QtGui import QImage
@@ -36,7 +36,10 @@ def main():
    if row.get("ordered_warm_unchanged") is not True or row.get("ordered_handle_count",0)<=0:raise ValueError("Required ordered producer warm proof missing")
    masks=json.loads((a.native/f"{name}.masks.json").read_text())
    if not masks or any(m.get("pixel_encoding")!="premultiplied RGBA8; compare raw stored bytes without unpremultiply" for m in masks):raise ValueError("Mask byte encoding/records missing")
-   src=pixels(a.source/f"{name}.png");dst=pixels(a.native/f"{name}.native.png");compare(src,dst)
+   src=pixels(a.source/f"{name}.png");records=pixels(a.native/f"{name}.native.png");compare(src,records)
+   gpu=row.get("gpu",{})
+   if gpu.get("backend")!="production native Metal compute callback consumer" or gpu.get("warm_frames")!=3 or gpu.get("warm_unchanged") is not True or gpu.get("warm_deep_admissions")!=0:raise ValueError("Actual GPU warm proof missing")
+   dst=pixels(a.native/f"{name}.gpu.png");compare(src,dst)
    controls={}
    for kind in ("blank","one-pixel"):
     bad=dst.copy()
@@ -50,6 +53,6 @@ def main():
    if name in ("helvetica-italic","arabic") and aggregate_changed==0:raise ValueError("Retained aggregate-path negative unexpectedly exact")
    out.append(dict(name=name,passed=True,changed_pixels=0,controls=controls,aggregate_changed_pixels=aggregate_changed))
   except Exception as e:out.append(dict(name=name,passed=False,error=str(e)))
- result=dict(passed=all(x["passed"] for x in out),scope="Actual production CPU native Canvas ordered immutable span records + encoded white observation; aggregate negatives retained, not GPU/WSI/physical desktop acceptance",cases=out)
+ result=dict(passed=all(x["passed"] for x in out),scope="Actual source QPainter vs production cached ordered records and native Metal compute GPU whole-image readback; aggregate negatives retained, not WSI/physical desktop acceptance",cases=out)
  a.output.write_text(json.dumps(result,indent=2));return 0 if result["passed"] else 1
 if __name__=="__main__":raise SystemExit(main())

@@ -11,6 +11,8 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
     {
         return Err("Native font tile output must be empty".into());
     }
+    #[cfg(target_os="macos")]
+    let mut metal_observation=ordered::MetalObservation::new()?;
     let mut resources = Painter::default();
     let mut rows = Vec::new();
     let mut failed = false;
@@ -122,6 +124,12 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
             let ordered_records=ordered_cache.observe([800,300],ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[item.pos.0 as f32*3.,item.pos.1 as f32*3.]},1.)?;
             if ordered_records!=ordered{return Err("Ordered GPU records differ from actual source mask order".into());}
             image::save_buffer(root.join(format!("{name}.native.png")),&ordered_records,800,300,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
+            #[cfg(target_os="macos")]
+            let gpu= {let (pixels,stats)=metal_observation.capture(ordered_cache,[800,300],1.)?;
+                image::save_buffer(root.join(format!("{name}.gpu.png")),&pixels,800,300,image::ColorType::Rgba8).map_err(|e|e.to_string())?;
+                if pixels!=ordered_records{return Err("Actual Metal ordered output differs from source-mask record observation".into());}stats};
+            #[cfg(not(target_os="macos"))]
+            let gpu=serde_json::json!({"unsupported":true});
             let before_producer=producer.metrics();let ordered_before=cache.ordered_stats();
             let before = (
                 cache.stats(),
@@ -234,7 +242,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 );
             }
             Ok(
-                serde_json::json!({"name":name,"passed":true,"size":[800,300],"tile_size":tile_image.size,"tile_origin":[x,y],"warm_before":before,"warm_frames":3,"warm_unchanged":true,"style_control":style_control,"phase_counts":phase_counts,"ordered_before":ordered_before,"ordered_warm_unchanged":true,"ordered_handle_count":producer.metrics().handles,"ordered_updates":producer.metrics().updates}),
+                serde_json::json!({"name":name,"passed":true,"size":[800,300],"tile_size":tile_image.size,"tile_origin":[x,y],"warm_before":before,"warm_frames":3,"warm_unchanged":true,"style_control":style_control,"phase_counts":phase_counts,"ordered_before":ordered_before,"ordered_warm_unchanged":true,"ordered_handle_count":producer.metrics().handles,"ordered_updates":producer.metrics().updates,"gpu":gpu}),
             )
         })();
         match result {
