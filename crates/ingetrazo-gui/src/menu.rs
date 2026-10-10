@@ -353,7 +353,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.close_menu();
             }
             if ui.button(tr("Orient Faces")).clicked() {
-                app.reverse_faces();
+                app.orient_faces();
                 ui.close_menu();
             }
             if ui.button(tr("Heal Overlapping Faces")).clicked() {

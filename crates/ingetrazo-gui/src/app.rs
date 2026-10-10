@@ -591,38 +591,6 @@ impl IngeTrazoApp {
         self.status_message = format!("Flipped selection along axis {}", axis.to_uppercase());
     }
 
-    pub fn split_into_pieces(&mut self) {
-        self.save_undo_state();
-        let mut visited = vec![false; self.scene.mesh.faces.len()];
-        let mut pieces = 0;
-        for start_f in 0..self.scene.mesh.faces.len() {
-            if visited[start_f] {
-                continue;
-            }
-            let mut queue = std::collections::VecDeque::new();
-            queue.push_back(start_f);
-            visited[start_f] = true;
-            let mut count = 0;
-            while let Some(f_id) = queue.pop_front() {
-                count += 1;
-                for &vid in &self.scene.mesh.faces[f_id].vertices {
-                    for &e_id in &self.scene.mesh.vertices[vid].edges {
-                        for &adj_f in &self.scene.mesh.edges[e_id].faces {
-                            if adj_f < visited.len() && !visited[adj_f] {
-                                visited[adj_f] = true;
-                                queue.push_back(adj_f);
-                            }
-                        }
-                    }
-                }
-            }
-            if count > 0 {
-                pieces += 1;
-            }
-        }
-        self.status_message = format!("Identified {pieces} connected topological component(s)");
-    }
-
     pub fn tag_selection_bim(&mut self, class_name: &str, name: &str) {
         self.save_undo_state();
         let mut count = 0;

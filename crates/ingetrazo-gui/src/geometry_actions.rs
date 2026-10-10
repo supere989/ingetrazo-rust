@@ -7,6 +7,92 @@ use ingetrazo_core::{
     scene::SelectionItem,
 };
 impl IngeTrazoApp {
+    pub fn split_into_pieces(&mut self) {
+        if !self.component_edit_stack.is_empty() {
+            self.status_message = "Leave component edit before splitting pieces".into();
+            return;
+        }
+        let selected: Vec<_> = self
+            .scene
+            .selection
+            .iter()
+            .filter_map(|i| {
+                if let SelectionItem::Group(id) = i {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        if selected.len() != 1 {
+            self.status_message = "Select one group or component to split into pieces".into();
+            return;
+        }
+        let Some(group) = self.scene.groups.get(selected[0]) else {
+            self.status_message = "Invalid selected group".into();
+            return;
+        };
+        if group.billboard {
+            self.status_message = "Billboards cannot split into physical pieces".into();
+            return;
+        }
+        let result = ingetrazo_core::pieces::split_into_pieces(group);
+        match result {
+            Ok(pieces) => {
+                if pieces.is_empty() {
+                    self.status_message = "Nothing to split: already in physical pieces".into();
+                    return;
+                }
+                let count = pieces.len();
+                let mut candidate = self.scene.clone();
+                candidate.camera = self.camera.clone();
+                if let Some(definition) = group.component_definition {
+                    if let Err(error) = candidate.replace_component_definition(
+                        definition,
+                        ingetrazo_core::components::ComponentDefinition {
+                            mesh: ingetrazo_core::mesh::Mesh::new(),
+                            children: pieces,
+                        },
+                    ) {
+                        self.status_message = format!("Split into Pieces: {error}");
+                        return;
+                    }
+                } else {
+                    let group = &mut candidate.groups[selected[0]];
+                    group.mesh = ingetrazo_core::mesh::Mesh::new();
+                    group.children = pieces;
+                    candidate.bump_version();
+                }
+                if let Some(doc) = candidate.groups[selected[0]]
+                    .native_document
+                    .as_object_mut()
+                {
+                    if doc.contains_key("exploded") {
+                        doc.insert("exploded".into(), serde_json::Value::Null);
+                    }
+                }
+                self.save_undo_state();
+                self.scene = candidate;
+                self.status_message =
+                    format!("Split into {count} pieces; Explode Group sets them free");
+            }
+            Err(error) => self.status_message = format!("Split into Pieces: {error}"),
+        }
+    }
+    pub fn orient_faces(&mut self) {
+        match ingetrazo_core::heal::orient_faces(&self.scene.mesh) {
+            Ok(mesh) => {
+                if !planar::equivalent(&self.scene.mesh, &mesh) {
+                    self.save_undo_state();
+                    self.scene.mesh = mesh;
+                    self.scene.bump_version();
+                }
+                self.status_message = "Oriented face winding".into();
+            }
+            Err(error) => self.status_message = format!("Orient Faces: {error}"),
+        }
+    }
+
     pub fn heal_overlaps(&mut self) {
         match ingetrazo_core::heal::heal_faces(&self.scene.mesh, 0.5, None) {
             Ok((mesh, removed)) => {
@@ -77,6 +163,78 @@ mod tests {
             .collect();
         app.scene.mesh.add_face(ring, vec![]).unwrap()
     }
+    fn cube(mesh: &mut ingetrazo_core::mesh::Mesh, x: f64) {
+        let mut vertices = vec![];
+        for z in [0., 1.] {
+            for y in [0., 1.] {
+                for dx in [0., 1.] {
+                    vertices.push(mesh.add_vertex(DVec3::new(x + dx, y, z)));
+                }
+            }
+        }
+        for q in [
+            [0, 2, 3, 1],
+            [4, 5, 7, 6],
+            [0, 1, 5, 4],
+            [2, 6, 7, 3],
+            [0, 4, 6, 2],
+            [1, 3, 7, 5],
+        ] {
+            mesh.add_face(q.iter().map(|&i| vertices[i]).collect(), vec![]);
+        }
+    }
+    #[test]
+    fn placed_component_pieces_update_shared_definition_and_undo_once() {
+        use ingetrazo_core::{groups::Group, mesh::Mesh};
+        let mut app = IngeTrazoApp::new();
+        app.scene.mesh.clear();
+        let mut mesh = Mesh::new();
+        cube(&mut mesh, 0.);
+        cube(&mut mesh, 5.);
+        mesh.faces[0]
+            .attrs
+            .insert("color".into(), serde_json::json!([0.8, 0.1, 0.1]));
+        let mut group = Group::with_mesh("stool", mesh);
+        group.transform = glam::DMat4::from_translation(DVec3::new(3., 4., 0.))
+            * glam::DMat4::from_rotation_z(30_f64.to_radians());
+        group.layer = Some("furniture".into());
+        let original = group.clone();
+        let id = group.id;
+        app.scene.groups.push(group);
+        app.scene.make_component(id).unwrap();
+        let other = app.scene.groups[0].duplicate_instance();
+        app.scene.groups.push(other);
+        let before = app.scene.groups.clone();
+        let definitions = app.scene.component_definitions.clone();
+        app.scene.selection.insert(SelectionItem::Group(0));
+        app.split_into_pieces();
+        assert_eq!(app.undo_stack.len(), 1);
+        for group in &app.scene.groups {
+            assert_eq!(group.children.len(), 2);
+            assert!(group.mesh.faces.is_empty());
+            assert_eq!(group.transform, original.transform);
+            assert_eq!(group.name, "stool");
+            assert_eq!(group.layer, original.layer);
+            assert_eq!(
+                group
+                    .children
+                    .iter()
+                    .flat_map(|g| &g.mesh.faces)
+                    .filter(|f| f.attrs.contains_key("color"))
+                    .count(),
+                1
+            );
+        }
+        let after = app.scene.groups.clone();
+        app.undo();
+        assert_eq!(app.scene.groups, before);
+        assert_eq!(app.scene.component_definitions, definitions);
+        app.redo();
+        assert_eq!(app.scene.groups, after);
+        app.split_into_pieces();
+        assert_eq!(app.undo_stack.len(), 1);
+    }
+
     #[test]
     fn heal_menu_holes_overlap_and_undo_restores_both_faces() {
         let mut app = IngeTrazoApp::new();

@@ -188,6 +188,32 @@ pub fn heal_faces(
     }
     Ok((result, removed))
 }
+/// Orient a flat drawing consistently, or orient closed 3D components.
+pub fn orient_faces(mesh: &Mesh) -> Result<Mesh, String> {
+    planar::validate_mesh(mesh)?;
+    if mesh.faces.is_empty() {
+        return Ok(mesh.clone());
+    }
+    let mut out = mesh.clone();
+    let dominant = (0..mesh.faces.len())
+        .max_by(|&a, &b| mesh.face_area(a).total_cmp(&mesh.face_area(b)))
+        .unwrap();
+    let frame = Frame::new(&planar::rings(mesh, &mesh.faces[dominant])[0])?;
+    if mesh.vertices.iter().all(|v| frame.on_plane(v.position)) {
+        for i in 0..out.faces.len() {
+            if out.face_normal(i).dot(frame.normal) < 0. {
+                out.faces[i].vertices.reverse();
+                for h in &mut out.faces[i].holes {
+                    h.reverse();
+                }
+            }
+        }
+    } else {
+        orient_closed_components(&mut out)?;
+    }
+    Ok(out)
+}
+
 fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
     let mut orientation = vec![None; mesh.faces.len()];
     let mut components = vec![];
@@ -213,7 +239,10 @@ fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
                         closed = false;
                         continue;
                     }
-                    let g = *e.faces.iter().find(|&&g| g != f).unwrap();
+                    let Some(&g) = e.faces.iter().find(|&&g| g != f) else {
+                        closed = false;
+                        continue;
+                    };
                     let same = std::iter::once(&mesh.faces[g].vertices)
                         .chain(&mesh.faces[g].holes)
                         .any(|r| (0..r.len()).any(|i| r[i] == a && r[(i + 1) % r.len()] == b));
