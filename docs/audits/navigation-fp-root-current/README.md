@@ -1,0 +1,5 @@
+# Reviewed FirstPerson event ownership
+
+Current-main isolated integration independently regenerates nine frozen original Qt event-handler camera controls and native egui controls. Fresh root compiled old main navigation reproduces nine rejected defects; exact source restoration passes. Missing-case and truncated-vector negatives reject. Camera bound remains 2e-5; vectors are finite and exactly three coordinates. Combined locked workspace617PASS/twoignored, source d186e9eb. Logs, source protocol outputs and exact original/fixed/old binary provenance are retained.
+
+Source initiating-button ownership, release ordering and capture-segment relative-motion selection are implemented. Actual rendered worker XTEST evidence remains separately retained with bounded child cleanup and explicit RGB-rejection/RGBA-restoration history. This does not prove rendered batching during real stalls, all settings/modes, physical-device/platform input, full glyph fidelity or navigation performance. P17 remains Partial; all full-row/release gates OPEN.

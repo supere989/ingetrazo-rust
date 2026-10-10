@@ -1,0 +1,10 @@
+{
+  "production_revision": "049a9cebfc0ab7eba76cf2d89f912ad35096ee17",
+  "baseline_production_revision": "f86f6a12",
+  "final_binary_sha256": "56c22b8b2f469402e19248c889598abfa81f46d7d080ac29c10c71d425f9d76b",
+  "source_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "baseline_binary_sha256": "not captured; compiled-old output and exact source revision retained, no immutable binary claim",
+  "failed_initial_protocol": "Name substring mistakenly inserted owned raw motion; strict compiled-old mutation failed; corrected to explicit left/right relative names. Both outputs preserved.",
+  "scope": "Nine actual original viewport QMouseEvent/native egui event cases; no extra rendered/hardware claim",
+  "complexity": "Each owned capture segment scanned at most twice; borrowed event list, no Scene/event cloning"
+}

@@ -1,0 +1,215 @@
+{
+  "passed": true,
+  "source_revision": "91cdfe9baff55e7a2abda8ab7652ffaae882d907",
+  "script_sha256": "ba9f7032047300869a3ba08ed98d759d4a172cc6c7b0943d81cabf6d67ec4513",
+  "implementation": "original-Qt-GL-llvmpipe",
+  "command": [
+    "/tmp/ingetrazo-parity-python/bin/python",
+    "scripts/original_position_navigation_fixture.py",
+    "/tmp/navigation-walk-overlay-original-cancel"
+  ],
+  "binary_sha256": null,
+  "initial": {
+    "walk_anchor": null,
+    "eye_height": 1.68,
+    "value_buffer": "",
+    "measurement": "1.68 m",
+    "measurement_label": "Eye height",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      487.4070887863636
+    ],
+    "snap_kind": null,
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 2,
+    "eye": [
+      6.123233998228043e-16,
+      0.0,
+      1.6799999475479126
+    ],
+    "forward": [
+      -6.123234262925839e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "WalkTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": false,
+    "pointer": null
+  },
+  "walking": {
+    "walk_anchor": [
+      450.0,
+      408.0
+    ],
+    "eye_height": 1.68,
+    "value_buffer": "",
+    "measurement": "1.68 m",
+    "measurement_label": "Eye height",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      487.4070887863636
+    ],
+    "snap_kind": "none",
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 15,
+    "eye": [
+      6.111109780379282e-16,
+      0.019800186157226562,
+      1.6799999475479126
+    ],
+    "forward": [
+      -6.123234262925839e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "WalkTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      450,
+      348
+    ]
+  },
+  "final": {
+    "walk_anchor": null,
+    "eye_height": 1.68,
+    "value_buffer": "",
+    "measurement": "1.68 m",
+    "measurement_label": "Eye height",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      487.4070887863636
+    ],
+    "snap_kind": "none",
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 22,
+    "eye": [
+      6.074738185624182e-16,
+      0.07920074462890625,
+      1.6799999475479126
+    ],
+    "forward": [
+      -6.123234262925839e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "WalkTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      450,
+      348
+    ]
+  },
+  "settled": {
+    "walk_anchor": null,
+    "eye_height": 1.68,
+    "value_buffer": "",
+    "measurement": "1.68 m",
+    "measurement_label": "Eye height",
+    "gl_metadata": {
+      "vendor": "Mesa",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+    },
+    "endpoint_pixel": [
+      507.50844955444336,
+      487.4070887863636
+    ],
+    "snap_kind": "none",
+    "window_id": 2097159,
+    "window_title": "IngeTrazo \u2014 Untitled",
+    "frames": 31,
+    "eye": [
+      6.074738185624182e-16,
+      0.07920074462890625,
+      1.6799999475479126
+    ],
+    "forward": [
+      -6.123234262925839e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "WalkTool",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      40,
+      58,
+      680,
+      669
+    ],
+    "undo": 0,
+    "version": 1,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      450,
+      348
+    ]
+  },
+  "overlay_cross_samples": 8,
+  "negatives": [
+    "missing-cross",
+    "black-world"
+  ],
+  "cancel": true,
+  "scope": "actual real XTEST press/held-motion/wall-clock walking/release or Escape and positive crosshair; no exact timing/wholeoverlayAA/ring/hardware claim"
+}

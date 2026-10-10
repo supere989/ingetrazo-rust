@@ -1,0 +1,16 @@
+{
+  "app": {
+    "pid": 896167,
+    "terminate_timeout": false,
+    "kill_timeout": false,
+    "returncode": -15,
+    "elapsed_seconds": 0.015441794996149838
+  },
+  "server": {
+    "pid": 896163,
+    "terminate_timeout": false,
+    "kill_timeout": false,
+    "returncode": 0,
+    "elapsed_seconds": 0.003169831004925072
+  }
+}

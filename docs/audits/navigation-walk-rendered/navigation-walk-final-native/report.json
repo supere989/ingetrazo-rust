@@ -1,0 +1,209 @@
+{
+  "passed": true,
+  "source_revision": "91cdfe9baff55e7a2abda8ab7652ffaae882d907",
+  "script_sha256": "e168fea8fc9137fd7cdb0d6ad6a0d98eae9b0247c332031c5cba83a52cc16484",
+  "implementation": "native-Vulkan-llvmpipe",
+  "command": [
+    "/tmp/ingetrazo-center-ui-independent-target/debug/examples/position_navigation_native_fixture",
+    "/tmp/navigation-walk-final-native"
+  ],
+  "binary_sha256": "ee5677b7577b53794dbdb5566a1ebd33d5c864af4f41c351c1ba0d2e5ca62054",
+  "initial": {
+    "walk_anchor": null,
+    "measurement": "1.68 m",
+    "measurement_rect": [
+      1098.0,
+      780.0,
+      1176.0,
+      798.3624877929688
+    ],
+    "status": "Walk \u2014 drag; Ctrl run, Shift rise/strafe, Alt through walls",
+    "endpoint_pixel": [
+      839.6517944335938,
+      550.0675048828125
+    ],
+    "snap_kind": null,
+    "frames": 1,
+    "eye": [
+      6.123233995736766e-16,
+      0.0,
+      1.68
+    ],
+    "forward": [
+      -6.123233995736766e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "Some(Walk)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      770.0
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": false,
+    "pointer": [
+      650.0,
+      500.0
+    ]
+  },
+  "walking": {
+    "walk_anchor": [
+      751.0,
+      445.0
+    ],
+    "measurement": "1.68 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "Walk \u2014 drag; Ctrl run, Shift rise/strafe, Alt through walls",
+    "endpoint_pixel": [
+      839.5642700195312,
+      549.812744140625
+    ],
+    "snap_kind": null,
+    "frames": 36,
+    "eye": [
+      6.111109992425208e-16,
+      0.01980000000000004,
+      1.68
+    ],
+    "forward": [
+      -6.123233995736766e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "Some(Walk)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      751.0,
+      385.0
+    ]
+  },
+  "final": {
+    "walk_anchor": null,
+    "measurement": "1.68 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "Walk \u2014 drag; Ctrl run, Shift rise/strafe, Alt through walls",
+    "endpoint_pixel": [
+      839.5642700195312,
+      549.812744140625
+    ],
+    "snap_kind": null,
+    "frames": 59,
+    "eye": [
+      6.074737982490531e-16,
+      0.07920000000000016,
+      1.68
+    ],
+    "forward": [
+      -6.123233995736766e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "Some(Walk)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      751.0,
+      385.0
+    ]
+  },
+  "settled": {
+    "walk_anchor": null,
+    "measurement": "1.68 m",
+    "measurement_rect": [
+      1098.0,
+      779.637451171875,
+      1176.0,
+      797.9999389648438
+    ],
+    "status": "Walk \u2014 drag; Ctrl run, Shift rise/strafe, Alt through walls",
+    "endpoint_pixel": [
+      839.5642700195312,
+      549.812744140625
+    ],
+    "snap_kind": null,
+    "frames": 90,
+    "eye": [
+      6.074737982490531e-16,
+      0.07920000000000016,
+      1.68
+    ],
+    "forward": [
+      -6.123233995736766e-17,
+      1.0,
+      0.0
+    ],
+    "yaw": -1.5707963267948966,
+    "pitch": -0.0,
+    "mode": "Some(Walk)",
+    "preview": null,
+    "preview_pixels": null,
+    "viewport": [
+      50.0,
+      30.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "undo": 0,
+    "version": 0,
+    "faces": 0,
+    "focused": true,
+    "pointer": [
+      751.0,
+      385.0
+    ]
+  },
+  "overlay_cross_samples": {
+    "cross": 8,
+    "ring": 8,
+    "samples_each": 8
+  },
+  "negatives": [
+    "missing-cross",
+    "black-world"
+  ],
+  "cancel": false,
+  "scope": "actual real XTEST press/held-motion/wall-clock walking/release or Escape and positive crosshair; no exact timing/wholeoverlayAA/hardware claim"
+}

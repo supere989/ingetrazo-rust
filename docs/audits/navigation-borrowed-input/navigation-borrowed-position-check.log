@@ -1,0 +1,1 @@
+{"passed": true, "cases": 4, "compiled_old_rejected": 2, "missing_case_rejected": true, "camera_bound": "existing Qt/native 2e-5, unchanged", "scope": "source contexts/tool event order versus native queued egui events; rendered separately"}

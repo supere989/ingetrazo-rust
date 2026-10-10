@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "positive": [
+    {
+      "name": "navigation-walk-final-native",
+      "samples": {
+        "cross": 8,
+        "ring": 8,
+        "samples_each": 8
+      }
+    },
+    {
+      "name": "navigation-walk-final-original",
+      "samples": {
+        "cross": 8,
+        "ring": 8,
+        "samples_each": 8
+      }
+    },
+    {
+      "name": "navigation-walk-final-native-cancel",
+      "samples": {
+        "cross": 8,
+        "ring": 8,
+        "samples_each": 8
+      }
+    },
+    {
+      "name": "navigation-walk-final-original-cancel",
+      "samples": {
+        "cross": 8,
+        "ring": 8,
+        "samples_each": 8
+      }
+    }
+  ],
+  "negative": {
+    "retained_actual_old_rejected": true,
+    "error": "('missing Walk crosshair', 0)"
+  }
+}

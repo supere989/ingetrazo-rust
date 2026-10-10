@@ -1,0 +1,65 @@
+{
+  "cases": [
+    {
+      "name": "split-drag",
+      "eye": [
+        0.4142165184020996,
+        -0.41421496868133545,
+        1.679999828338623
+      ],
+      "forward": [
+        0.30855920910835266,
+        -0.15427961945533752,
+        -0.9386100769042969
+      ],
+      "mode": "LookAroundTool",
+      "undo": 0
+    },
+    {
+      "name": "move-release-one-frame",
+      "eye": [
+        0.4142165184020996,
+        -0.41421496868133545,
+        1.679999828338623
+      ],
+      "forward": [
+        0.30855920910835266,
+        -0.15427961945533752,
+        -0.9386100769042969
+      ],
+      "mode": "LookAroundTool",
+      "undo": 0
+    },
+    {
+      "name": "press-move-release-one-frame",
+      "eye": [
+        0.4142165184020996,
+        -0.41421496868133545,
+        1.679999828338623
+      ],
+      "forward": [
+        0.30855920910835266,
+        -0.15427961945533752,
+        -0.9386100769042969
+      ],
+      "mode": "LookAroundTool",
+      "undo": 0
+    },
+    {
+      "name": "six-pixel-click",
+      "eye": [
+        0.4142135977745056,
+        -0.4142131805419922,
+        1.6799999475479126
+      ],
+      "forward": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mode": "LookAroundTool",
+      "undo": 0
+    }
+  ],
+  "scope": "Actual frozen _build_ctx/Position tool handlers, same source event order; native batching is egui-only"
+}

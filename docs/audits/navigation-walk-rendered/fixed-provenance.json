@@ -1,0 +1,8 @@
+{
+  "source_revision": "d5c2700f7530654aebd4257c8cb105ab9dfbb776",
+  "frozen_original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "ee5677b7577b53794dbdb5566a1ebd33d5c864af4f41c351c1ba0d2e5ca62054",
+  "source_policy": "tools/walkthrough.py draw_overlay: dark30RGBAalpha230cross20px/width1.5; white255alpha200ring radius4/width1; sourcegeometry unchanged",
+  "scope": "4 fresh actual XTEST source/native release/Escape cases8cross+8ring samples; actualoldnative0 negative;152GUI PASS1ignored; llvmpipe Vulkan/QtGL only",
+  "open": "Full world/glyph AA/hardware/timing parity and complete navigation source workflows"
+}

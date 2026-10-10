@@ -1,3 +1,5 @@
+#[cfg(not(target_os="macos"))]
+mod native {
 use ingetrazo_gui::{IngeTrazoApp,native_vulkan::{App,System},navigation::Mode};
 use glam::DVec3;
 struct Fixture{app:IngeTrazoApp,dir:std::path::PathBuf,frames:u64}
@@ -20,4 +22,10 @@ impl App for Fixture{
   ctx.request_repaint_after(std::time::Duration::from_millis(16));
  }
 }
-fn main()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+pub fn run()->Result<(),Box<dyn std::error::Error>>{ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)}
+
+}
+#[cfg(not(target_os="macos"))]
+fn main()->Result<(),Box<dyn std::error::Error>>{native::run()}
+#[cfg(target_os="macos")]
+fn main(){eprintln!("This diagnostic uses native Vulkan and runs on Linux/Windows; macOS requires the separate Metal host.");std::process::exit(2);}

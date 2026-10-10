@@ -2,6 +2,10 @@
 """Owned XTEST native Vulkan input; does not claim original rendered parity."""
 import ctypes as C,ctypes.util,json,os,select,subprocess,sys,tempfile,time,hashlib
 from pathlib import Path
+from navigation_child_cleanup import terminate_owned
+from png_capture import valid_png
+source_revision=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
+script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 binary=Path(sys.argv[1]).resolve();out=Path(sys.argv[2]).resolve();out.mkdir(parents=True,exist_ok=True);(out/"state.json").unlink(missing_ok=True)
 def wait(fn):
  end=time.monotonic()+20
@@ -51,14 +55,15 @@ with tempfile.TemporaryDirectory() as runtime:
    rows["before_look"]=state();assert xt.XTestFakeButtonEvent(d,3,1,0);x.XFlush(d);time.sleep(.12)
    assert xt.XTestFakeRelativeMotionEvent(d,100,-40,0);x.XFlush(d);time.sleep(.15);rows["looking"]=state();assert rows["looking"]["yaw"]!=rows["before_look"]["yaw"]
    assert xt.XTestFakeButtonEvent(d,3,0,0);x.XFlush(d);time.sleep(.12);rows["look_released"]=state()
-   subprocess.run(["import","-display",display,"-window",str(window),str(out/"native-navigation.png")],check=True)
+   subprocess.run(["import","-display",display,"-window",str(window),"-define","png:color-type=6","-depth","8",str(out/"native-navigation.png")],check=True,timeout=10)
+   assert valid_png(out/"native-navigation.png"),"missing/invalid owned-window image"
    assert all(row["undo"]==0 and row["version"]==initial["version"] and row["faces"]==2 for row in rows.values())
-   report={"passed":True,"binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"rows":rows,"scope":"Actual XTEST keys/buttons/raw relative mouse and focused window on owned Xvfb/llvmpipe native Vulkan; not hardware or original rendered parity"}
+   report={"passed":True,"source_revision":source_revision,"script_sha256":script_sha256,"binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"rows":rows,"scope":"Actual XTEST keys/buttons/raw relative mouse and focused window on owned Xvfb/llvmpipe native Vulkan; not hardware or original rendered parity"}
    (out/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps({"passed":True,"observations":len(rows),"scope":report["scope"]}))
  finally:
-  if app is not None:
-   app.terminate()
-   try:app.wait(timeout=10)
-   except subprocess.TimeoutExpired:app.kill();app.wait()
+  cleanup={}
+  if app is not None:cleanup["app"]=terminate_owned(app)
   if d:x.XCloseDisplay.argtypes=[C.c_void_p];x.XCloseDisplay(d)
-  server.terminate();server.wait(timeout=10)
+  cleanup["server"]=terminate_owned(server)
+  (out/"cleanup.json").write_text(json.dumps(cleanup,indent=2)+"\n")
+  assert not any(row["kill_timeout"]for row in cleanup.values()),"owned child cleanup deadline; see cleanup.json"

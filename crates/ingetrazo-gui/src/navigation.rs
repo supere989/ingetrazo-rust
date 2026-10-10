@@ -8,11 +8,11 @@ pub struct Navigation {
  pub mode:Option<Mode>, pub eye_height:f64,
  press:Option<(DVec2,DVec3)>, last:Option<DVec2>, look_at:Option<DVec3>,
  dragged:bool, pub base:Option<DVec3>, next_tick:Option<f64>,
- held:[bool;6], mouse_captured:bool, cursor_locked_sent:bool,
+ held:[bool;6], walk_modifiers:egui::Modifiers, mouse_captured:bool, cursor_locked_sent:bool,look_button:Option<egui::PointerButton>,look_cursor:Option<DVec2>,
  bounds_center:DVec3, collision_key:Option<(u64,u64,u64)>, collision:Option<VisibleRayIndex>, collision_error:Option<String>,
 }
 impl Default for Navigation {
- fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],mouse_captured:false,cursor_locked_sent:false,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
+ fn default()->Self{Self{mode:None,eye_height:1.68,press:None,last:None,look_at:None,dragged:false,base:None,next_tick:None,held:[false;6],walk_modifiers:egui::Modifiers::NONE,mouse_captured:false,cursor_locked_sent:false,look_button:None,look_cursor:None,bounds_center:DVec3::ZERO,collision_key:None,collision:None,collision_error:None}}
 }
 impl Navigation {
  // Remember refused admission until revision changes; direct queries preserve correctness.
@@ -42,7 +42,8 @@ impl Navigation {
   if let Some(index)=movement_key(key){if !pressed||self.claims_key(key,modifiers){self.held[index]=pressed;}}
  }
  fn axes(&self)->[i8;3]{[self.held[0]as i8-self.held[1]as i8,self.held[2]as i8-self.held[3]as i8,self.held[4]as i8-self.held[5]as i8]}
- pub fn cancel(&mut self){self.held=[false;6];self.mouse_captured=false;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
+ pub fn walk_anchor(&self)->Option<DVec2>{if self.mode==Some(Mode::Walk){self.press.map(|(anchor,_)|anchor)}else{None}}
+ pub fn cancel(&mut self){self.held=[false;6];self.walk_modifiers=egui::Modifiers::NONE;self.mouse_captured=false;self.look_button=None;self.look_cursor=None;self.press=None;self.last=None;self.look_at=None;self.dragged=false;self.next_tick=None;}
  // Original Qt QTimer dispatches one fixed step after an overrun, not all
  // elapsed intervals. Keep a deadline independent of repaint frequency.
  fn tick_due(&mut self,time:f64,interval:f64)->bool{
@@ -104,10 +105,23 @@ impl crate::IngeTrazoApp {
   self.status_message=mode.hint().into();
  }
 }
-pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,response:&egui::Response)->Option<ingetrazo_core::snap::SnapResult>{
+fn position_snap(app:&mut crate::IngeTrazoApp,rect:egui::Rect,p:DVec2,time:f64)->Option<ingetrazo_core::snap::SnapResult>{
+  let ray=crate::navigation_ray::cursor_ray(&app.camera,p.x.round(),p.y.round(),rect.width()as f64,rect.height()as f64)?;
+  let hit=app.navigation.hit(&app.scene,&ray);
+  // Position has no captured start plane: source uses the ordinary first-point
+  // face/image/standard-view fallback during both click and stand-look drag.
+  let (plane_point,normal)=crate::viewport::cursor_work_plane_with_center(app,&ray,Some(app.navigation.bounds_center));
+  let candidate=crate::navigation_ray::plane_hit(&ray,plane_point,normal)?;
+  app.snap_engine.note_model_revision(app.model_revision);
+  let context=ingetrazo_core::snap_screen::ScreenSnapContext{viewport:screen_pick::PixelViewport::new(&app.camera,rect.width()as f64,rect.height()as f64),cursor:p,candidate,plane_normal:normal};
+  let result=app.snap_engine.snap_screen_with_policy(&ray,&app.scene,None,None,&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{face_under_cursor:hit.is_some(),..Default::default()});
+  app.snap_engine.note_screen_result(&result,false,time);
+  app.snap_engine.note_inference_result(&result);
+  Some(result)
+}
+pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,_response:&egui::Response)->Option<ingetrazo_core::snap::SnapResult>{
  if app.navigation_suspended(){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
  let Some(mode)=app.navigation.mode else{return None};
- let pointer=ui.input(|i|i.pointer.clone());
  if ui.input(|i|i.key_pressed(egui::Key::Escape)||!i.focused){app.navigation.cancel();app.navigation.sync_cursor(ui.ctx());return None;}
  // Pointer final state is already released when move+release share one frame.
  // Consume original event order so the last motion, and a complete short drag,
@@ -132,7 +146,7 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
  if matches!(mode,Mode::Position|Mode::Walk|Mode::FirstPerson){app.navigation.prepare_collision(&app.scene,app.model_revision);}
  if mode==Mode::FirstPerson {
   if ui.ctx().wants_keyboard_input(){app.navigation.held=[false;6];}
-  else {let events=ui.input(|i|i.events.clone());for event in events{if let egui::Event::Key{key,pressed,modifiers,..}=event{app.navigation.key_event(key,pressed,modifiers);}}}
+  else {ui.input(|i|for event in &i.events{if let egui::Event::Key{key,pressed,modifiers,..}=event{app.navigation.key_event(*key,*pressed,*modifiers);}});}
   let axes=app.navigation.axes();
   let time=ui.input(|i|i.time);
   if app.navigation.held.iter().any(|held|*held){
@@ -143,76 +157,76 @@ pub fn input(app:&mut crate::IngeTrazoApp,ui:&mut egui::Ui,rect:egui::Rect,respo
    }
    app.navigation.request_tick(ui.ctx(),time);
   }else{app.navigation.next_tick=None;}
-  let was_captured=app.navigation.mouse_captured;
-  if response.hovered()&&(pointer.button_pressed(egui::PointerButton::Primary)||pointer.button_pressed(egui::PointerButton::Secondary)){
-   app.navigation.mouse_captured=true;
+  // Own the button that began mouse-look, and consume motion before its
+  // release even when both arrive in this frame. Relative events supersede
+  // matching absolute cursor updates to avoid applying one move twice.
+  // Only relative events inside the initiating button's owned segment
+  // supersede absolute positions. Raw events before press/after release
+  // must not suppress a later, independent cursor move. Each segment is
+  // scanned at most twice, without cloning the input event list.
+  fn relative_in_segment(events:&[egui::Event],button:egui::PointerButton)->bool{
+   events.iter().take_while(|event|!matches!(event,egui::Event::PointerButton{button:b,pressed:false,..} if *b==button)).any(|event|matches!(event,egui::Event::MouseMoved(_)))
   }
-  if !pointer.primary_down()&&!pointer.secondary_down(){app.navigation.mouse_captured=false;}
-  if app.navigation.mouse_captured {
-   app.navigation.sync_cursor(ui.ctx());
-   let raw=ui.input(|i|i.events.iter().filter_map(|e|if let egui::Event::MouseMoved(d)=e{Some(*d)}else{None}).reduce(|a,b|a+b));
-   let delta=raw.unwrap_or_else(||pointer.delta());let rate=app.document_session.preferences.look_sensitivity as f64/500.;
-   if was_captured{app.camera.turn(delta.x as f64*rate,-delta.y as f64*rate);}
-  }else{app.navigation.sync_cursor(ui.ctx());}
+  let rate=app.document_session.preferences.look_sensitivity as f64/500.;
+  ui.input(|i|{
+   let mut has_relative=app.navigation.look_button.is_some_and(|button|relative_in_segment(&i.events,button));
+   for (index,event) in i.events.iter().enumerate(){
+   match event{
+    egui::Event::PointerButton{pos,button,pressed,..} if matches!(button,egui::PointerButton::Primary|egui::PointerButton::Secondary)=>{
+     if *pressed{
+      if app.navigation.look_button.is_none()&&rect.contains(*pos){app.navigation.look_button=Some(*button);app.navigation.look_cursor=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round());app.navigation.mouse_captured=true;has_relative=relative_in_segment(&i.events[index+1..],*button);}
+     }else if app.navigation.look_button==Some(*button){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
+    },
+    egui::Event::PointerMoved(pos) if app.navigation.mouse_captured=>{
+     let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();
+     if !has_relative{if let Some(last)=app.navigation.look_cursor{let d=p-last;app.camera.turn(d.x*rate,-d.y*rate);}}
+     app.navigation.look_cursor=Some(p);
+    },
+    egui::Event::MouseMoved(delta) if app.navigation.mouse_captured=>{app.camera.turn(delta.x as f64*rate,-delta.y as f64*rate);},
+    _=>{},
+   }
+   }
+  });
+  if ui.input(|i|!i.pointer.primary_down()&&!i.pointer.secondary_down()){app.navigation.look_button=None;app.navigation.look_cursor=None;app.navigation.mouse_captured=false;}
+  app.navigation.sync_cursor(ui.ctx());
   return None;
  }
- let position=pointer.hover_pos().map(|p|{let p=DVec2::new((p.x-rect.min.x)as f64,(p.y-rect.min.y)as f64);if mode==Mode::Position{p.round()}else{p}});
- let mut hovered_snap=None;
- let world=position.filter(|_|mode==Mode::Position).and_then(|p|{
-  let ray=crate::navigation_ray::cursor_ray(&app.camera,p.x.round(),p.y.round(),rect.width()as f64,rect.height()as f64)?;
-  let hit=app.navigation.hit(&app.scene,&ray);
-  // Position has no captured start plane: source uses the ordinary first-point
-  // face/image/standard-view fallback during both click and stand-look drag.
-  let (plane_point,normal)=crate::viewport::cursor_work_plane_with_center(app,&ray,Some(app.navigation.bounds_center));
-  let candidate=crate::navigation_ray::plane_hit(&ray,plane_point,normal)?;
-  app.snap_engine.note_model_revision(app.model_revision);
-  let context=ingetrazo_core::snap_screen::ScreenSnapContext{viewport:screen_pick::PixelViewport::new(&app.camera,rect.width()as f64,rect.height()as f64),cursor:p,candidate,plane_normal:normal};
-  let result=app.snap_engine.snap_screen_with_policy(&ray,&app.scene,None,None,&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{face_under_cursor:hit.is_some(),..Default::default()});
-  app.snap_engine.note_screen_result(&result,false,ui.input(|i|i.time));
-  app.snap_engine.note_inference_result(&result);
-  let point=result.point;hovered_snap=Some(result);
-  Some(point)
- });
- if response.hovered() && pointer.button_pressed(egui::PointerButton::Primary){
-  if let Some(p)=position {if mode!=Mode::Position||world.is_some(){
-   app.navigation.press=Some((p,world.unwrap_or(DVec3::ZERO)));app.navigation.last=Some(p);app.navigation.dragged=false;app.navigation.next_tick=None;
-  }}
- }
- if pointer.primary_down(){
-  if let (Some((anchor,_)),Some(p))=(app.navigation.press,position){
-   match mode{
-    Mode::Position=>{if p.distance(anchor)>6.{app.navigation.dragged=true;}if app.navigation.dragged{app.navigation.look_at=world;}},
-    Mode::Look=>{if let Some(last)=app.navigation.last{
-     let d=p-last;app.camera.turn(d.x*180./rect.width().max(1.)as f64,-d.y*90./rect.height().max(1.)as f64);
-    }app.navigation.last=Some(p);},
-    Mode::FirstPerson=>unreachable!("first-person input handled above"),
-    Mode::Walk=>{
-     let time=ui.input(|i|i.time);
-     let modifiers=ui.input(|i|WalkModifiers{run:i.modifiers.ctrl,shift:i.modifiers.shift,through_walls:i.modifiers.alt});
-     if app.navigation.tick_due(time,0.033){
-      let scene=&app.scene;let navigation=&app.navigation;
-      walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));
-     }
-     app.navigation.request_tick(ui.ctx(),time);
-    }
+ if mode==Mode::Position {
+  let time=ui.input(|i|i.time);let mut snap=None;let mut moved=false;
+  ui.input(|i|for event in &i.events{
+   match event{
+    egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed,..}=>{
+     if *pressed{if rect.contains(*pos){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();snap=position_snap(app,rect,p,time);if let Some(result)=&snap{app.navigation.press=Some((p,result.point));app.navigation.last=Some(p);app.navigation.look_at=None;app.navigation.dragged=false;app.navigation.next_tick=None;}}}
+     else{if let Some((_,base))=app.navigation.press{let look=if app.navigation.dragged{app.navigation.look_at}else{None};if app.navigation.place(&mut app.camera,base,look){app.navigation.mode=Some(Mode::Look);app.status_message=Mode::Look.hint().into();app.vcb_text.clear();}}app.navigation.cancel();break;}
+    },
+    egui::Event::PointerMoved(pos)=>{
+     moved=true;let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();snap=position_snap(app,rect,p,time);
+     if let Some((anchor,_))=app.navigation.press{if p.distance(anchor)>6.{app.navigation.dragged=true;}if app.navigation.dragged{app.navigation.look_at=snap.as_ref().map(|result|result.point);}}
+    },_=>{},
    }
+  });
+  if !moved&&app.navigation.mode==Some(Mode::Position){if let Some(pos)=ui.input(|i|i.pointer.hover_pos()){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64).round();snap=position_snap(app,rect,p,time);}}
+  return snap;
+ }
+ // Walk preserves the source click anchor and most recent hover state. A
+ // release in this frame retires the stroke before any scheduled step.
+ ui.input(|i|for event in &i.events{
+  match event{
+   egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed,modifiers}=>{
+    if *pressed{if rect.contains(*pos){let p=DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64);app.navigation.press=Some((p,DVec3::ZERO));app.navigation.last=Some(p);app.navigation.walk_modifiers=*modifiers;app.navigation.next_tick=None;}}
+    else{app.navigation.cancel();}
+   },
+   egui::Event::PointerMoved(pos) if app.navigation.press.is_some()=>{app.navigation.last=Some(DVec2::new((pos.x-rect.min.x)as f64,(pos.y-rect.min.y)as f64));app.navigation.walk_modifiers=i.modifiers;},_=>{},
   }
+ });
+ if let(Some((anchor,_)),Some(p))=(app.navigation.press,app.navigation.last){
+  let time=ui.input(|i|i.time);let current=ui.input(|i|i.modifiers);let remembered=app.navigation.walk_modifiers;
+  let modifiers=WalkModifiers{run:current.ctrl||remembered.ctrl,shift:current.shift||remembered.shift,through_walls:current.alt||remembered.alt};
+  if app.navigation.tick_due(time,0.033){let scene=&app.scene;let navigation=&app.navigation;walkthrough::step(&mut app.camera,p.x-anchor.x,anchor.y-p.y,0.033,app.navigation.eye_height,modifiers,|o,d|navigation.distance(scene,&Ray::new(o,d)));}
+  app.navigation.request_tick(ui.ctx(),time);
  }
- if pointer.button_released(egui::PointerButton::Primary){
-  if mode==Mode::Position {if let Some((_,base))=app.navigation.press{
-   let look=if app.navigation.dragged{app.navigation.look_at}else{None};
-   if app.navigation.place(&mut app.camera,base,look){app.navigation.mode=Some(Mode::Look);app.status_message=Mode::Look.hint().into();app.vcb_text.clear();}
-  }}
-  app.navigation.cancel();
- }
- if mode==Mode::Walk {if let Some((anchor,_))=app.navigation.press{
-  let center=egui::pos2(rect.min.x+anchor.x as f32,rect.min.y+anchor.y as f32);
-  let painter=ui.painter_at(rect);let stroke=egui::Stroke::new(1.5,egui::Color32::from_rgba_unmultiplied(30,30,30,230));
-  painter.line_segment([center-egui::vec2(10.,0.),center+egui::vec2(10.,0.)],stroke);
-  painter.line_segment([center-egui::vec2(0.,10.),center+egui::vec2(0.,10.)],stroke);
-  painter.circle_stroke(center,4.,egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,255,255,200)));
- }}
- hovered_snap
+
+ None
 }
 
 #[cfg(test)]mod tests {
@@ -397,4 +411,15 @@ pub(crate) fn first_point_bounds_center(scene:&ingetrazo_core::scene::Scene)->DV
   frame(&mut app,&ctx,0.02,vec![button(egui::pos2(400.,300.),true),egui::Event::PointerMoved(egui::pos2(440.,260.)),button(egui::pos2(440.,260.),false)]);assert_ne!(app.camera,original);let turned=app.camera.clone();
   frame(&mut app,&ctx,0.03,vec![egui::Event::PointerMoved(egui::pos2(500.,200.))]);assert_eq!(app.camera,turned);assert!(app.undo_stack.is_empty());assert!(app.navigation.press.is_none());
  }
+}
+
+/// Paint after the world image, so opaque GPU viewport content cannot hide the marker.
+pub fn paint_overlay(navigation:&Navigation,painter:&egui::Painter,rect:egui::Rect){
+ if navigation.mode==Some(Mode::Walk) {if let Some((anchor,_))=navigation.press{
+  let center=egui::pos2(rect.min.x+anchor.x as f32,rect.min.y+anchor.y as f32);
+  let stroke=egui::Stroke::new(1.5,egui::Color32::from_rgba_unmultiplied(30,30,30,230));
+  painter.line_segment([center-egui::vec2(10.,0.),center+egui::vec2(10.,0.)],stroke);
+  painter.line_segment([center-egui::vec2(0.,10.),center+egui::vec2(0.,10.)],stroke);
+  painter.circle_stroke(center,4.,egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,255,255,200)));
+ }}
 }

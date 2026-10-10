@@ -360,6 +360,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
     }
 
+    crate::navigation::paint_overlay(&app.navigation,&painter,rect);
+
     // 4. Render Active Tool Rubber Band (if any)
     for ((p0,p1),stroke) in app.active_tool.rubber_band_lines().into_iter().map(|line|(line,egui::Stroke::new(2.0,egui::Color32::from_rgb(255,60,60)))).chain(app.navigation.preview_line().map(|line|(line,navigation_preview_stroke))) {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();

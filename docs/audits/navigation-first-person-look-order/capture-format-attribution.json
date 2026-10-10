@@ -1,0 +1,10 @@
+{
+  "failed_capture": "navigation-fp-render-bounded-proof/native-navigation.png",
+  "actual_format": "PNG RGB8",
+  "required_format": "PNG RGBA8",
+  "correction": "Explicit ImageMagick PNG color-type 6 and depth 8; validator unchanged",
+  "fresh_observations": 10,
+  "scope": "Owned XTEST Vulkan llvmpipe, not source rendered parity or physical GPU",
+  "production_source": "f86f6a12",
+  "binary_sha256": "39cb190537d38eb85353c24c5cd6e7e46845b9189a2849b4ca887b671461ba92"
+}

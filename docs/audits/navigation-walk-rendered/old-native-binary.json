@@ -1,0 +1,7 @@
+{
+  "source_revision": "91cdfe9b with readonly walk_anchor/fixture observers only",
+  "binary_sha256": "0c601d659d0c0559dce296810d6070f5fbe29ee666936167c1aa5bdff175d0af",
+  "source_cross_samples": 8,
+  "native_cross_samples": 0,
+  "cause": "Walk painter commands issued during input before opaque native viewport world image; not wall-clock input failure"
+}

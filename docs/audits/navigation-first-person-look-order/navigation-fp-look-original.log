@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-navigation-validation/scripts/probe-python-first-person-look-events.py", line 9, in <module>
+    from tools.walkthrough import set_look_sensitivity
+ImportError: cannot import name 'set_look_sensitivity' from 'tools.walkthrough' (/tmp/ingetrazo-navigation-validation/ingetrazo/tools/walkthrough.py)

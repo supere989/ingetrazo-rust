@@ -1,0 +1,30 @@
+{
+  "source_revision": "b08cd2ae9f2029967ab2673f872798b6ea6aedba",
+  "old_source_revision": "bd4c810d",
+  "old_binary_sha256": "a938875f93e590907521a758309102cad8c84de66832bd21ee18055ed8ae856b",
+  "current_binary_sha256": {
+    "walk_event_acceptance": "8223cdd31a24d4e233121d672946720aea947362783f5e36f894305688952a86",
+    "navigation_timer_acceptance": "a3f272596cb3dd145d3f0a76465d9a102606a4d349f8ef8e51baec3e144c9510"
+  },
+  "frozen_original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "4 actual source contexts/one _tick slot vs controlled egui frames;2 old negative;3 other negatives;152 GUI PASS1ignored;prior Qt overrun2+old2 andmissing1 regression unchanged",
+  "open": "Rendered Walk live overlay, actual wall-clock blocked-frame input coalescing and full navigation parity",
+  "terminal_output_duplicates_purged": [
+    "/tmp/navigation-walk-source.log",
+    "/tmp/navigation-walk-source.json",
+    "/tmp/navigation-walk-old-build.log",
+    "/tmp/navigation-walk-old.json",
+    "/tmp/navigation-walk-old.sha256",
+    "/tmp/navigation-walk-separated-old-build.log",
+    "/tmp/navigation-walk-separated-old.json",
+    "/tmp/navigation-walk-separated-old.sha256",
+    "/tmp/navigation-walk-fixed-build.log",
+    "/tmp/navigation-walk-fixed.json",
+    "/tmp/navigation-walk-tests.log",
+    "/tmp/navigation-walk-check.log",
+    "/tmp/navigation-walk-regression-build.log",
+    "/tmp/navigation-walk-timer-regression.json",
+    "/tmp/navigation-walk-timer-regression.log"
+  ],
+  "active_handles": []
+}
