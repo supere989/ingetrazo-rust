@@ -1,0 +1,16 @@
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+Vulkan adapter 0 AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO): no suitable graphics/present queues
+Suitable Vulkan adapter 1: llvmpipe (LLVM 20.1.2, 256 bits); CPU; queues Queues { graphics: 0, present: 0, compute: Some(0) }
+
+thread 'main' (968374) panicked at crates/ingetrazo-gui/src/native_vulkan/mod.rs:73:56:
+called `Result::unwrap()` on an `Err` value: "No suitable Vulkan adapter (or override did not match)"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
