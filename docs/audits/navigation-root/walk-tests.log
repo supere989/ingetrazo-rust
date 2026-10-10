@@ -1,0 +1,20 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-navigation-root/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.99s
+     Running unittests src/lib.rs (/tmp/ingetrazo-paper-font-root-target/debug/deps/ingetrazo_core-7b507b6b1bad9b84)
+
+running 3 tests
+test walkthrough::tests::refused_step_preserves_camera ... ok
+test walkthrough::tests::shift_vertical_motion_does_not_follow_floor ... ok
+test walkthrough::tests::wall_clearance_stops_forward_motion_but_alt_passes ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 151 filtered out; finished in 0.00s
+
