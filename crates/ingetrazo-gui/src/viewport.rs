@@ -507,3 +507,31 @@ pub(crate) fn cursor_work_plane_with_center(app:&IngeTrazoApp,ray:&ingetrazo_cor
   app.active_tool.on_cancel(&mut app.scene);assert_eq!(app.active_tool.snap_anchor(),None);
  }
 }
+
+#[cfg(test)]
+mod native_overlay_dispatch_tests {
+    use super::*;
+    #[test]
+    fn production_viewport_submits_one_image_outline_per_frame() {
+        let mut app=IngeTrazoApp::new();
+        app.native_gpu_viewport_enabled=true;
+        app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);
+        app.camera.perspective=false;
+        app.camera.target=DVec3::ZERO;
+        app.camera.distance=5.;
+        app.scene.image_planes.push(ingetrazo_core::image_plane::ImagePlane::new("missing-image",DVec3::new(-0.5,-0.5,0.),DVec3::X,DVec3::Y));
+        let factory=ingetrazo_render::cad_callback::Factory::default();
+        app.native_composer.factory=Some(crate::composer_backend::Factory::MetalProducer(factory.clone()));
+        let ctx=egui::Context::default();
+        for _ in 0..2 {
+            let output=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.))),..Default::default()},|ctx|{
+                egui::CentralPanel::default().show(ctx,|ui|render_viewport(&mut app,ui));
+            });
+            let callbacks=output.shapes.iter().filter(|s|matches!(&s.shape,egui::Shape::Callback(c) if c.callback.is::<ingetrazo_render::cad_callback::Callback>())).count();
+            assert_eq!(callbacks,1,"actual viewport must enqueue each outline once");
+        }
+        assert_eq!(factory.metrics().handles,1);
+        assert_eq!(factory.metrics().unchanged,1);
+        assert_eq!(app.image_outlines.cold_builds,1);
+    }
+}

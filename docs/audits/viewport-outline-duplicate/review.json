@@ -7,6 +7,11 @@
   ],
   "correction": "Remove one duplicate submission; preserve original overlay order before previews",
   "existing_evidence_boundary": "native_vulkan_image_outline_fixture manually paints once and bypasses render_viewport; previous exact outline captures do not cover duplicate production dispatch",
-  "validation": "Exact duplicate-block assertion confirms two before and one after; production compile/render acceptance pending next coherent batch",
+  "validation": {
+    "focused_production_dispatch_test": "PASS:1callback/frame over2frames;1handle,1warmunchanged,1coldbuild",
+    "compiled_old_duplicate": "FAIL as expected:2callbacks versus required1",
+    "restored_source_sha256": "afd41bff97f9dafa01fcd0522e0943b0a6e35a4d85f3909fc165ac03d28f41cf",
+    "scope": "Actual render_viewport producer dispatch via existing neutral MetalProducer; does not claim GPU pixel acceptance"
+  },
   "other_gap": "Native GPU viewport skips CPU scene annotation rendering; annotation overlay implementation remains required"
 }
