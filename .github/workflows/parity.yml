@@ -141,6 +141,15 @@ jobs:
         run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci
       - name: Original and native saved-view PDF state against opposed live state
         run: INGETRAZO_VIEW_PDF_SAVED=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/saved-vector-view-ci
+      - name: Exact source section loops clipping and plane axes
+        run: |
+          mkdir -p docs/audits/section-numerics-ci
+          python scripts/probe-python-paper-section.py docs/audits/section-numerics-ci/source.json
+          cargo run --locked -p ingetrazo-render --example paper_section_fixture -- docs/audits/section-numerics-ci/source.json
+      - name: Original and native strict solid section PDF pages
+        run: INGETRAZO_VIEW_PDF_FILL=solid QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-solid-ci
+      - name: Original and native saved tilted cropped colored hatch PDF pages
+        run: INGETRAZO_VIEW_PDF_FILL=hatch INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 INGETRAZO_VIEW_PDF_SCALE=20 INGETRAZO_VIEW_PDF_HATCH=0.7 INGETRAZO_VIEW_PDF_FILL_COLOR="#dc9b4e" QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-heldout-hatch-ci
       - name: Actual composer PDF save dialogs and refusal preservation
         run: |
           cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
@@ -296,6 +305,9 @@ jobs:
             docs/audits/cad2d-color-ci/
             docs/audits/vector-view-ci/
             docs/audits/saved-vector-view-ci/
+            docs/audits/section-numerics-ci/
+            docs/audits/section-solid-ci/
+            docs/audits/section-heldout-hatch-ci/
             docs/audits/composer-pdf-ui/
             docs/audits/composer-pdf-ui-unsupported/
             docs/audits/center-tracking-*-ci-evidence.json
