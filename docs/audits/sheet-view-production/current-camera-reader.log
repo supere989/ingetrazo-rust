@@ -1,0 +1,79 @@
+[
+  {
+    "case": "wall_hidden",
+    "visible_segments": 4,
+    "with_hidden_segments": 7
+  },
+  {
+    "case": "section_board",
+    "visible_segments": 6,
+    "with_hidden_segments": 6
+  },
+  {
+    "case": "hollow_cap",
+    "visible_segments": 12,
+    "with_hidden_segments": 12
+  },
+  {
+    "case": "top_box",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "iso_box",
+    "visible_segments": 12,
+    "with_hidden_segments": 15
+  },
+  {
+    "case": "front_box",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "partial_rear_line",
+    "visible_segments": 6,
+    "with_hidden_segments": 7
+  },
+  {
+    "case": "open_cut_chain",
+    "visible_segments": 2,
+    "with_hidden_segments": 2
+  },
+  {
+    "case": "nested_reflected_box",
+    "visible_segments": 12,
+    "with_hidden_segments": 15
+  },
+  {
+    "case": "hidden_layer_group",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "hidden_layer_face",
+    "visible_segments": 4,
+    "with_hidden_segments": 4
+  },
+  {
+    "case": "soft_cylinder_silhouette",
+    "visible_segments": 28,
+    "with_hidden_segments": 36
+  },
+  {
+    "case": "soft_reflected_silhouette",
+    "visible_segments": 28,
+    "with_hidden_segments": 36
+  }
+]
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-sheet-export/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.15s
+Actual composer selected-view DXF 52 independent reader cases PASS

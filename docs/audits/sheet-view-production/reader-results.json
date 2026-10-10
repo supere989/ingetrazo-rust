@@ -1,18 +1,19 @@
 {
   "passed": true,
   "provenance": {
-    "rust_commit": "96a74f76a690b5a1c4a213e82fff5c955c1295d3",
+    "rust_commit": "1965966ab009f1abb9d37e7953e005bbcbcb6322",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
   },
-  "fixture_sha256": "358e83c20124efdb7e2a7b08f5c361e0ff8a3ed3476fa28fe6c085e5d598c87b",
+  "fixture_sha256": "49195592d8a6767a194f25cc8c0c05eb6fed3e072b14b5bcc626c037158ca0e5",
   "reader": "1.4.4",
   "tolerance_metres": 2e-05,
   "cases": [
     {
       "name": "front_box",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -20,6 +21,23 @@
     {
       "name": "front_box",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "front_box",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "front_box",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -27,6 +45,7 @@
     {
       "name": "hidden_layer_face",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -34,6 +53,23 @@
     {
       "name": "hidden_layer_face",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_face",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_face",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -41,6 +77,7 @@
     {
       "name": "hidden_layer_group",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -48,6 +85,23 @@
     {
       "name": "hidden_layer_group",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_group",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "hidden_layer_group",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -55,6 +109,7 @@
     {
       "name": "hollow_cap",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 12,
       "native_lines": 12
@@ -62,6 +117,23 @@
     {
       "name": "hollow_cap",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "hollow_cap",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "hollow_cap",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 12,
       "native_lines": 12
@@ -69,6 +141,7 @@
     {
       "name": "iso_box",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 12,
       "native_lines": 12
@@ -76,6 +149,23 @@
     {
       "name": "iso_box",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 15,
+      "native_lines": 15
+    },
+    {
+      "name": "iso_box",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "iso_box",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 15,
       "native_lines": 15
@@ -83,6 +173,7 @@
     {
       "name": "nested_reflected_box",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 12,
       "native_lines": 12
@@ -90,6 +181,23 @@
     {
       "name": "nested_reflected_box",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 15,
+      "native_lines": 15
+    },
+    {
+      "name": "nested_reflected_box",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 12,
+      "native_lines": 12
+    },
+    {
+      "name": "nested_reflected_box",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 15,
       "native_lines": 15
@@ -97,6 +205,7 @@
     {
       "name": "open_cut_chain",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 2,
       "native_lines": 2
@@ -104,6 +213,23 @@
     {
       "name": "open_cut_chain",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 2,
+      "native_lines": 2
+    },
+    {
+      "name": "open_cut_chain",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 2,
+      "native_lines": 2
+    },
+    {
+      "name": "open_cut_chain",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 2,
       "native_lines": 2
@@ -111,6 +237,7 @@
     {
       "name": "partial_rear_line",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 6,
       "native_lines": 6
@@ -118,6 +245,23 @@
     {
       "name": "partial_rear_line",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 7,
+      "native_lines": 7
+    },
+    {
+      "name": "partial_rear_line",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 6,
+      "native_lines": 6
+    },
+    {
+      "name": "partial_rear_line",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 7,
       "native_lines": 7
@@ -125,6 +269,7 @@
     {
       "name": "section_board",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 6,
       "native_lines": 6
@@ -132,6 +277,23 @@
     {
       "name": "section_board",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 6,
+      "native_lines": 6
+    },
+    {
+      "name": "section_board",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 6,
+      "native_lines": 6
+    },
+    {
+      "name": "section_board",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 6,
       "native_lines": 6
@@ -139,6 +301,7 @@
     {
       "name": "soft_cylinder_silhouette",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 28,
       "native_lines": 28
@@ -146,6 +309,23 @@
     {
       "name": "soft_cylinder_silhouette",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 36,
+      "native_lines": 36
+    },
+    {
+      "name": "soft_cylinder_silhouette",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 28,
+      "native_lines": 28
+    },
+    {
+      "name": "soft_cylinder_silhouette",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 36,
       "native_lines": 36
@@ -153,6 +333,7 @@
     {
       "name": "soft_reflected_silhouette",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 28,
       "native_lines": 28
@@ -160,6 +341,23 @@
     {
       "name": "soft_reflected_silhouette",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 36,
+      "native_lines": 36
+    },
+    {
+      "name": "soft_reflected_silhouette",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 28,
+      "native_lines": 28
+    },
+    {
+      "name": "soft_reflected_silhouette",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 36,
       "native_lines": 36
@@ -167,6 +365,7 @@
     {
       "name": "top_box",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -174,6 +373,23 @@
     {
       "name": "top_box",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "top_box",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "top_box",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -181,6 +397,7 @@
     {
       "name": "wall_hidden",
       "hidden": false,
+      "current": false,
       "passed": true,
       "original_lines": 4,
       "native_lines": 4
@@ -188,6 +405,23 @@
     {
       "name": "wall_hidden",
       "hidden": true,
+      "current": false,
+      "passed": true,
+      "original_lines": 7,
+      "native_lines": 7
+    },
+    {
+      "name": "wall_hidden",
+      "hidden": false,
+      "current": true,
+      "passed": true,
+      "original_lines": 4,
+      "native_lines": 4
+    },
+    {
+      "name": "wall_hidden",
+      "hidden": true,
+      "current": true,
       "passed": true,
       "original_lines": 7,
       "native_lines": 7

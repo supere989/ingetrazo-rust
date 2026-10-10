@@ -481,8 +481,11 @@ fn frame_bounds(scene:&Scene)->Option<(DVec3,DVec3)>{
 /// Resolve a frame without changing the live document or visible camera.
 pub fn camera_for_frame(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{let snapshot=frame_scene(scene,frame);frame_camera(&snapshot,frame)}
 fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{
+ frame_camera_with_base(scene,frame,&scene.camera)
+}
+fn frame_camera_with_base(scene:&Scene,frame:&ViewFrame,base:&ingetrazo_core::camera::OrbitCamera)->ingetrazo_core::camera::OrbitCamera{
  use ingetrazo_core::camera::StandardView;
- let mut camera=scene.camera.clone();let bound=frame.view_key.starts_with("scene:")&&scene.saved_views.iter().any(|v|Some(v.name.as_str())==frame.view_key.strip_prefix("scene:"));
+ let mut camera=base.clone();let bound=frame.view_key.starts_with("scene:")&&scene.saved_views.iter().any(|v|Some(v.name.as_str())==frame.view_key.strip_prefix("scene:"));
  if frame.view_key.starts_with("std:"){camera.set_standard_view(match frame.view_key.as_str(){"std:front"=>StandardView::Front,"std:right"=>StandardView::Right,"std:back"=>StandardView::Back,"std:left"=>StandardView::Left,"std:iso"=>StandardView::Iso,"std:bottom"=>StandardView::Bottom,_=>StandardView::Top});if matches!(frame.view_key.as_str(),"std:top"|"std:bottom"){camera.pitch=if frame.view_key=="std:top"{std::f64::consts::FRAC_PI_2}else{-std::f64::consts::FRAC_PI_2};camera.up=DVec3::Y;}if let Some((lo,hi))=frame_bounds(scene){camera.target=(lo+hi)/2.;}}
  if let Some(yaw)=frame.cam_yaw{camera.yaw=yaw;}if let Some(pitch)=frame.cam_pitch{camera.pitch=pitch;if pitch.abs()<89.5_f64.to_radians(){camera.up=DVec3::Z;}}if let Some(target)=frame.cam_target{camera.target=DVec3::from_array(target);}
  let right=camera.right();let up=right.cross(camera.forward());let angle=frame.rot_deg.to_radians();camera.up=up*angle.cos()-right*angle.sin();camera.aspect=(frame.rect.w/25.4*ingetrazo_core::composition::RENDER_DPI).round_ties_even().max(1.)/(frame.rect.h/25.4*ingetrazo_core::composition::RENDER_DPI).round_ties_even().max(1.);
@@ -888,7 +891,8 @@ impl IngeTrazoApp {
             _=>return Err(tr("Select a view frame to export")),
         };
         let snapshot=frame_scene(&self.scene,&frame);
-        let camera=frame_camera(&snapshot,&frame);
+        let base=if frame.view_key.starts_with("scene:"){&snapshot.camera}else{&self.camera};
+        let camera=frame_camera_with_base(&snapshot,&frame,base);
         let ink=self.composer_compute.segments(&snapshot,&camera,self.clipboard_document,self.model_revision,&frame.view_key,frame.profiles,frame.hidden_lines)?;
         let right=camera.right();let up=right.cross(camera.forward());let eye=camera.eye();
         let mut classes:[Vec<[f64;4]>;4]=Default::default();

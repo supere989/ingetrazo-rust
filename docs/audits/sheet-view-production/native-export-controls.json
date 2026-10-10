@@ -1,6 +1,7 @@
 [
   {
     "count": 4,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -8,12 +9,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213030,
-      1213032
+      1258990,
+      1258992
     ]
   },
   {
     "count": 7,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -21,155 +23,335 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213030,
-      1213032
-    ]
-  },
-  {
-    "count": 6,
-    "directory_io_failure_preserves_document": true,
-    "hidden": false,
-    "invalid_selection_preserves_destination": true,
-    "name": "section_board",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213034,
-      1213036
-    ]
-  },
-  {
-    "count": 6,
-    "directory_io_failure_preserves_document": true,
-    "hidden": true,
-    "invalid_selection_preserves_destination": true,
-    "name": "section_board",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213034,
-      1213036
-    ]
-  },
-  {
-    "count": 12,
-    "directory_io_failure_preserves_document": true,
-    "hidden": false,
-    "invalid_selection_preserves_destination": true,
-    "name": "hollow_cap",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213038,
-      1213040
-    ]
-  },
-  {
-    "count": 12,
-    "directory_io_failure_preserves_document": true,
-    "hidden": true,
-    "invalid_selection_preserves_destination": true,
-    "name": "hollow_cap",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213038,
-      1213040
+      1258990,
+      1258992
     ]
   },
   {
     "count": 4,
+    "current": true,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
-    "name": "top_box",
+    "name": "wall_hidden",
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213042,
-      1213044
-    ]
-  },
-  {
-    "count": 4,
-    "directory_io_failure_preserves_document": true,
-    "hidden": true,
-    "invalid_selection_preserves_destination": true,
-    "name": "top_box",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213042,
-      1213044
-    ]
-  },
-  {
-    "count": 12,
-    "directory_io_failure_preserves_document": true,
-    "hidden": false,
-    "invalid_selection_preserves_destination": true,
-    "name": "iso_box",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213046,
-      1213048
-    ]
-  },
-  {
-    "count": 15,
-    "directory_io_failure_preserves_document": true,
-    "hidden": true,
-    "invalid_selection_preserves_destination": true,
-    "name": "iso_box",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213046,
-      1213048
-    ]
-  },
-  {
-    "count": 4,
-    "directory_io_failure_preserves_document": true,
-    "hidden": false,
-    "invalid_selection_preserves_destination": true,
-    "name": "front_box",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213050,
-      1213052
-    ]
-  },
-  {
-    "count": 4,
-    "directory_io_failure_preserves_document": true,
-    "hidden": true,
-    "invalid_selection_preserves_destination": true,
-    "name": "front_box",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213050,
-      1213052
-    ]
-  },
-  {
-    "count": 6,
-    "directory_io_failure_preserves_document": true,
-    "hidden": false,
-    "invalid_selection_preserves_destination": true,
-    "name": "partial_rear_line",
-    "scene_unchanged": true,
-    "warm_cache_no_jobs": true,
-    "worker_pids": [
-      1213054,
-      1213056
+      1258990,
+      1258992
     ]
   },
   {
     "count": 7,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "wall_hidden",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258990,
+      1258992
+    ]
+  },
+  {
+    "count": 6,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258994,
+      1258996
+    ]
+  },
+  {
+    "count": 6,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258994,
+      1258996
+    ]
+  },
+  {
+    "count": 6,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258994,
+      1258996
+    ]
+  },
+  {
+    "count": 6,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "section_board",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258994,
+      1258996
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258998,
+      1259000
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258998,
+      1259000
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258998,
+      1259000
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hollow_cap",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1258998,
+      1259000
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259002,
+      1259004
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259002,
+      1259004
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259002,
+      1259004
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "top_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259002,
+      1259004
+    ]
+  },
+  {
+    "count": 12,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259006,
+      1259008
+    ]
+  },
+  {
+    "count": 15,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259006,
+      1259008
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259006,
+      1259008
+    ]
+  },
+  {
+    "count": 15,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "iso_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259006,
+      1259008
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259010,
+      1259012
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259010,
+      1259012
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259010,
+      1259012
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "front_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259010,
+      1259012
+    ]
+  },
+  {
+    "count": 6,
+    "current": false,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259014,
+      1259016
+    ]
+  },
+  {
+    "count": 7,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -177,12 +359,41 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213054,
-      1213056
+      1259014,
+      1259016
+    ]
+  },
+  {
+    "count": 6,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259014,
+      1259016
+    ]
+  },
+  {
+    "count": 7,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "partial_rear_line",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259014,
+      1259016
     ]
   },
   {
     "count": 2,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -190,12 +401,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213058,
-      1213060
+      1259018,
+      1259020
     ]
   },
   {
     "count": 2,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -203,12 +415,41 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213058,
-      1213060
+      1259018,
+      1259020
+    ]
+  },
+  {
+    "count": 2,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "open_cut_chain",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259018,
+      1259020
+    ]
+  },
+  {
+    "count": 2,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "open_cut_chain",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259018,
+      1259020
     ]
   },
   {
     "count": 12,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -216,12 +457,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213062,
-      1213064
+      1259022,
+      1259024
     ]
   },
   {
     "count": 15,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -229,12 +471,41 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213062,
-      1213064
+      1259022,
+      1259024
+    ]
+  },
+  {
+    "count": 12,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "nested_reflected_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259022,
+      1259024
+    ]
+  },
+  {
+    "count": 15,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "nested_reflected_box",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259022,
+      1259024
     ]
   },
   {
     "count": 4,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -242,12 +513,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213066,
-      1213068
+      1259026,
+      1259028
     ]
   },
   {
     "count": 4,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -255,12 +527,41 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213066,
-      1213068
+      1259026,
+      1259028
     ]
   },
   {
     "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_group",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259026,
+      1259028
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_group",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259026,
+      1259028
+    ]
+  },
+  {
+    "count": 4,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -268,12 +569,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213070,
-      1213072
+      1259030,
+      1259032
     ]
   },
   {
     "count": 4,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -281,12 +583,41 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213070,
-      1213072
+      1259030,
+      1259032
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_face",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259030,
+      1259032
+    ]
+  },
+  {
+    "count": 4,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "hidden_layer_face",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259030,
+      1259032
     ]
   },
   {
     "count": 28,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -294,12 +625,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213074,
-      1213076
+      1259034,
+      1259036
     ]
   },
   {
     "count": 36,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -307,12 +639,41 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213074,
-      1213076
+      1259034,
+      1259036
     ]
   },
   {
     "count": 28,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_cylinder_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259034,
+      1259036
+    ]
+  },
+  {
+    "count": 36,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_cylinder_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259034,
+      1259036
+    ]
+  },
+  {
+    "count": 28,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": false,
     "invalid_selection_preserves_destination": true,
@@ -320,12 +681,13 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213078,
-      1213080
+      1259038,
+      1259040
     ]
   },
   {
     "count": 36,
+    "current": false,
     "directory_io_failure_preserves_document": true,
     "hidden": true,
     "invalid_selection_preserves_destination": true,
@@ -333,8 +695,36 @@
     "scene_unchanged": true,
     "warm_cache_no_jobs": true,
     "worker_pids": [
-      1213078,
-      1213080
+      1259038,
+      1259040
+    ]
+  },
+  {
+    "count": 28,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": false,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_reflected_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259038,
+      1259040
+    ]
+  },
+  {
+    "count": 36,
+    "current": true,
+    "directory_io_failure_preserves_document": true,
+    "hidden": true,
+    "invalid_selection_preserves_destination": true,
+    "name": "soft_reflected_silhouette",
+    "scene_unchanged": true,
+    "warm_cache_no_jobs": true,
+    "worker_pids": [
+      1259038,
+      1259040
     ]
   }
 ]
