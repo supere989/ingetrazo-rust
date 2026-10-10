@@ -44,7 +44,12 @@ impl App for Fixture {
         app.camera.pitch = std::f64::consts::PI / 6.;
         app.camera.yaw = -std::f64::consts::FRAC_PI_2;
         app.camera.perspective = true;
-        app.set_tool(ToolType::Line);
+        if mode == "group" {
+            let mesh=std::mem::take(&mut app.scene.mesh);
+            app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("moving curve group",mesh));
+            app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));
+        }
+        app.set_tool(if mode=="group"{ToolType::Move}else{ToolType::Line});
         app.mark_document_clean();
         Self {
             app,
@@ -64,7 +69,11 @@ impl App for Fixture {
                     rect.top() as f64 + (1. - n.y) * 0.5 * rect.height() as f64,
                 ]
             };
-            let center = if self.app.scene.mesh.vertices.len() >= 24 {
+            let group_centers=self.app.scene.groups.iter().map(|g|{
+                let local=g.mesh.vertices.iter().map(|v|v.position).sum::<DVec3>()/g.mesh.vertices.len().max(1) as f64;
+                g.transform.transform_point3(local).to_array()
+            }).collect::<Vec<_>>();
+            let center = if self.mode=="group" {group_centers.first().map(|p|DVec3::from_array(*p)).unwrap_or(DVec3::new(2.,3.,1.))} else if self.app.scene.mesh.vertices.len() >= 24 {
                 self.app.scene.mesh.vertices[..24]
                     .iter()
                     .map(|v| v.position)
@@ -78,7 +87,7 @@ impl App for Fixture {
             let radius = if self.mode == "tiny" { 0.01 } else { 1.2 };
             let rim = center + DVec3::X * radius;
             let copy_probe=if self.app.active_tool.rubber_band_lines().len()>1{self.app.active_tool.snap_anchor().zip(self.app.snap_engine.current_inference()).map(|(grab,r)|project(center+r.point-grab+DVec3::Y*radius))}else{None};
-            let state = serde_json::json!({"mode":self.mode,"vertices":self.app.scene.mesh.vertices.len(),"unused_vertices":self.app.scene.mesh.vertices.iter().filter(|v|v.edges.is_empty()).count(),"copy_probe_pixel":copy_probe,"copy_center":copy_center.map(|p|p.to_array()),"curves":self.app.scene.mesh.edges.iter().map(|e|e.curve_id).collect::<Vec<_>>(),"preview_lines":self.app.active_tool.rubber_band_lines().len(),"time":ctx.input(|i|i.time),"center":center.to_array(),"rim":project(rim),"center_pixel":project(center),"move_target":project(rim+DVec3::X*std::env::var("INGETRAZO_MOVE_DISTANCE").ok().and_then(|v|v.parse::<f64>().ok()).unwrap_or(1.)),"kind":self.app.snap_engine.current_inference().map(|s|format!("{:?}",s.kind)),"inference_point":self.app.snap_engine.current_inference().map(|s|s.point.to_array()),"memory":self.app.snap_engine.encouraged_points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"edges":self.app.scene.mesh.edges.len(),"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"tool":format!("{:?}",self.app.active_tool_type),"revision":self.app.model_revision});
+            let state = serde_json::json!({"group_centers":group_centers,"group_ids":self.app.scene.groups.iter().map(|g|g.id.to_string()).collect::<Vec<_>>(),"group_count":self.app.scene.groups.len(),"mode":self.mode,"vertices":self.app.scene.mesh.vertices.len(),"unused_vertices":self.app.scene.mesh.vertices.iter().filter(|v|v.edges.is_empty()).count(),"copy_probe_pixel":copy_probe,"copy_center":copy_center.map(|p|p.to_array()),"curves":self.app.scene.mesh.edges.iter().map(|e|e.curve_id).collect::<Vec<_>>(),"preview_lines":self.app.active_tool.rubber_band_lines().len(),"time":ctx.input(|i|i.time),"center":center.to_array(),"rim":project(rim),"center_pixel":project(center),"move_target":project(rim+DVec3::X*std::env::var("INGETRAZO_MOVE_DISTANCE").ok().and_then(|v|v.parse::<f64>().ok()).unwrap_or(1.)),"kind":self.app.snap_engine.current_inference().map(|s|format!("{:?}",s.kind)),"inference_point":self.app.snap_engine.current_inference().map(|s|s.point.to_array()),"memory":self.app.snap_engine.encouraged_points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"edges":self.app.scene.mesh.edges.len()+self.app.scene.groups.iter().map(|g|g.mesh.edges.len()).sum::<usize>(),"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"tool":format!("{:?}",self.app.active_tool_type),"revision":self.app.model_revision});
             std::fs::write(
                 self.dir.join("state.tmp"),
                 serde_json::to_vec(&state).unwrap(),

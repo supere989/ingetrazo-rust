@@ -1,0 +1,6 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_failure": "Typed viewport characters did not focus native Measurements field; group commit remained valid at two groups. Corrected with actual pointer focus on existing TextEdit, no direct dispatcher invocation.",
+  "source_failure": "Standalone Viewport window had no statusBar. Move array committed then flash_status raised AttributeError before value buffer clear; next value appended to previous text. Corrected group-only host to real QMainWindow with actual statusBar. Original buffer trail and runtime traceback retained.",
+  "boundary": "Harness corrections only; actual group gesture assertions preserved. Not app behavior changes, performance or all P08 acceptance."
+}

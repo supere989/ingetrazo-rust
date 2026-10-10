@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-center-ui/scripts/check-rendered-move-group.py", line 103, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/tmp/ingetrazo-center-ui/scripts/check-rendered-move-group.py", line 88, in main
+    retyped=wait(lambda:state() if state()["group_count"]==3 else None);capture("group-array-retyped")
+  File "/tmp/ingetrazo-center-ui/scripts/check-rendered-move-group.py", line 14, in wait
+    raise AssertionError("Timed out awaiting rendered event/state")
+AssertionError: Timed out awaiting rendered event/state

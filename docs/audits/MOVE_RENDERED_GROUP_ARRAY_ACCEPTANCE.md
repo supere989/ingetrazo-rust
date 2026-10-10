@@ -1,0 +1,11 @@
+# Rendered ordinary group Move and spacing gestures
+
+Both final fresh original and native rendered runs exited 0. Start with deterministic selected ordinary placed group containing a 24-edge circle. XTEST performs real rim grab/pointer translation, observes live center delta within 0.01 world units for integer pixel quantization and zero undo, presses Ctrl to revert originals and show copy wireframe, then pointer-clicks commit. Two fresh group placement identities and one undo record result.
+
+Keyboard spacing 3x200cm lays groups at relative X offsets 0/2/4/6; 2x400cm retypes to 0/4/8 with one undo record. Native pointer focuses existing Measurements field before keyboard input; original types through operative viewport value-buffer handling in real QMainWindow/statusBar host. Ctrl+Z returns original group center and stable placement identity, one group, zero undo records. Source and native use real UI controllers; no checker calls geometry mutation or dispatcher commands.
+
+Original source pin 6be29fe437a7cd992d4e079f71720821b25216b9. Reports retain checkout, interpreter, executable and checker SHA256. Native full ash Vulkan app runs strict llvmpipe under isolated Xvfb; original Qt/OpenGL runs its actual viewport. This is bounded ordinary group gesture acceptance, not hardware GPU proof, linked-component rendered gestures or alpha/depth/performance acceptance. Controlled linked-definition and component-local dispatcher tests are separate.
+
+Retained harness failures record unfocused native Measurements input and the standalone original Viewport missing QMainWindow.statusBar. Original array operation succeeded before status display raised and skipped buffer clearing, so second entry appended. Corrected harness supplies the real host statusBar; original algorithm unchanged. Neither failure is silently converted into a product parity pass.
+
+Reproduce in isolated worktree: CARGO_TARGET_DIR=<private target> INGETRAZO_CENTER_MODE=group INGETRAZO_CENTER_RUN_SUFFIX=-spacing-final /tmp/ingetrazo-parity-python/bin/python scripts/check-rendered-move-group.py. Add INGETRAZO_CENTER_ORIGINAL=1 for original. Screenshots and runtime logs accompany both final reports. Group frozen render baseline/revision controls and pending native per-placement renderer upload optimization remain separate; no performance claim follows from this gesture.

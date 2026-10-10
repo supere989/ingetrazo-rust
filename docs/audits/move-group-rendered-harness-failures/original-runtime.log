@@ -1,0 +1,31 @@
+Error calling Python override of QOpenGLWidget::event(): Traceback (most recent call last):
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 12148, in event
+    return super().event(ev)
+           ~~~~~~~~~~~~~^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 12183, in keyPressEvent
+    if self.active_tool.on_key(self, ev.key(), ev.modifiers()):
+       ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/tools/move.py", line 278, in on_key
+    viewport.flash_status(tr("Move a copy: on"))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 5865, in flash_status
+    bar = window.statusBar() if window is not None else None
+          ^^^^^^^^^^^^^^^^
+AttributeError: Error calling Python override of QOpenGLWidget::keyPressEvent(): 'Viewport' object has no attribute 'statusBar'
+Error calling Python override of QOpenGLWidget::event(): Traceback (most recent call last):
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 12148, in event
+    return super().event(ev)
+           ~~~~~~~~~~~~~^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 12178, in keyPressEvent
+    if self._handle_value_key(ev):
+       ~~~~~~~~~~~~~~~~~~~~~~^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 12670, in _handle_value_key
+    handler(self, value[1], value[2], step=value[3])
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/tools/move.py", line 447, in on_array_value
+    viewport.flash_status(tr("{n} copies").format(n=count))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-center-ui/ingetrazo/views/viewport.py", line 5865, in flash_status
+    bar = window.statusBar() if window is not None else None
+          ^^^^^^^^^^^^^^^^
+AttributeError: Error calling Python override of QOpenGLWidget::keyPressEvent(): 'Viewport' object has no attribute 'statusBar'
