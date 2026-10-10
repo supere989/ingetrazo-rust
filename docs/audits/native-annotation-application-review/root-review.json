@@ -29,5 +29,16 @@
     "UI texture deltas retained before refusal; platform commands processed independently."
   ],
   "remaining": "Fresh merged build/replay and actual application transitions including deferred new texture retry pending. Source arrow full image remains217pixels different; font/depth policy/full-model parity open.",
-  "merge_resolution": "5d819a41 removed an unused ordered_draws local in old warm path. Kept69a27452 cold immutable-admission validation and per-frame pose validation; did not reintroduce cold partition scan into warm path."
+  "merge_resolution": "5d819a41 removed an unused ordered_draws local in old warm path. Kept69a27452 cold immutable-admission validation and per-frame pose validation; did not reintroduce cold partition scan into warm path.",
+  "actual_application_failure": {
+    "reported_by": "validation workstream",
+    "terminal_runs": [
+      73507,
+      45547
+    ],
+    "symptom": "Last deletion reports dimensions0 but100080 retained mesh bytes; Retirement serial precedes GPU buffer use.",
+    "source_mechanism": "Pre-UI annotation preparation marks buffers at next serial; post-UI deletion tries retirement at current completed serial before any candidate submission.",
+    "correction_pending": "Perform annotation mesh/query transaction only after UI membership updates; preserve resource serial checks.",
+    "acceptance": "Merged runtime acceptance remains failed/pending correction."
+  }
 }

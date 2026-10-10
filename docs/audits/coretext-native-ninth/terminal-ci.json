@@ -1,0 +1,17 @@
+{
+  "observed_utc": "2026-10-10T23:18:25.554257+00:00",
+  "source": "d74058cd4ba4873a55489416b368395a90b5257a",
+  "run": 38093876455,
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "name": "raw-texture (macos-15-intel)",
+      "conclusion": "success"
+    },
+    {
+      "name": "raw-texture (macos-15)",
+      "conclusion": "failure"
+    }
+  ],
+  "scope": "Intel workflow success, ARM presentation failure. Root ARM pixel decode separately retained; Intel independent artifact review pending."
+}
