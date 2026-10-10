@@ -1,0 +1,56 @@
+{
+  "source_sha": "5d819a41cd5bbab555ada62a2ca819e465d8409b",
+  "error": "AssertionError('Last deletion did not restore exact empty viewport')",
+  "rows": [
+    {
+      "name": "add",
+      "state": {
+        "nonce": 1,
+        "submitted_serial": 105,
+        "held_refusal": false,
+        "dimensions": 1,
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 100080,
+        "pending_textures": 0
+      },
+      "image_sha256": "ca4b071784700ee728675da6aa07434ce903de56889d34f0a5d08d7c7cc1d0a4"
+    },
+    {
+      "name": "delete",
+      "state": {
+        "nonce": 2,
+        "submitted_serial": 106,
+        "held_refusal": false,
+        "dimensions": 0,
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 100080,
+        "pending_textures": 0
+      },
+      "image_sha256": "ca4b071784700ee728675da6aa07434ce903de56889d34f0a5d08d7c7cc1d0a4"
+    }
+  ],
+  "last_state": {
+    "nonce": 2,
+    "submitted_serial": 106,
+    "held_refusal": false,
+    "dimensions": 0,
+    "viewport": [
+      50.0,
+      60.0,
+      992.0,
+      669.6375122070312
+    ],
+    "cached_bytes": 100080,
+    "pending_textures": 0
+  }
+}

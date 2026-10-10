@@ -1403,7 +1403,7 @@ impl App for crate::IngeTrazoApp {
     fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
         self.native_gpu_annotation_shape=system.annotation_sample.map(|_|annotation_slot());
         if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){
-            if system.annotation_cad.is_some(){let result=system.clear_annotation_overlay();system.annotation_prepare_error=result.as_ref().err().cloned();match result{Ok(())=>system.annotation_ready_shape=None,Err(error)=>self.gpu_error(&error)}}
+            if !_resize&&system.annotation_cad.is_some(){let result=system.clear_annotation_overlay();system.annotation_prepare_error=result.as_ref().err().cloned();match result{Ok(())=>system.annotation_ready_shape=None,Err(error)=>self.gpu_error(&error)}}
             return;
         }
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
@@ -1423,6 +1423,10 @@ impl App for crate::IngeTrazoApp {
             system.annotation_prepare_error=Some(error.clone());self.gpu_error(&error);return;
         }
         system.annotation_prepare_error=None;
+        // The first pass publishes only World layout required to collect UI.
+        // Marking mesh/query buffers for the next serial here would prevent a
+        // same-frame deletion from retiring them at the completed prior fence.
+        if _resize{return;}
         if let Some(sample)=system.annotation_sample{
             let result=(||{
                 let factory=system.annotation_factory()?;
