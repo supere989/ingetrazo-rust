@@ -22,11 +22,13 @@ jobs:
       - name: Persistent shared-buffer HLR and worker deadline controls
         run: cargo run --locked -p ingetrazo-render --example process_hlr_acceptance -- target/debug/ingetrazo-render-worker
       - name: Build direct Vulkan host and allocation probe
-        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe
+        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe
       - name: Direct Vulkan virtual-display lifecycle
         run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan docs/audits/native-vulkan-ci-host
       - name: Actual Vulkan image and staging denial rollback
         run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan_budget_probe docs/audits/native-vulkan-ci-budget
+      - name: Headless software Vulkan resource depth refusal and timeout controls
+        run: python3 scripts/check-headless-vulkan-software.py target/debug/examples/native_vulkan_headless_probe docs/audits/headless-vulkan-ci
       - name: Software-rendered virtual-display startup
         run: scripts/render-smoke.sh
       - name: Semantic document acceptance
@@ -147,6 +149,7 @@ jobs:
             docs/audits/offset-render/runtime.log
             docs/audits/native-vulkan-ci-host/*
             docs/audits/native-vulkan-ci-budget/*
+            docs/audits/headless-vulkan-ci/*
             docs/audits/native-composer-ci/*.png
             docs/audits/native-composer-ci/native.log
             docs/audits/native-composer-ci/result.json
