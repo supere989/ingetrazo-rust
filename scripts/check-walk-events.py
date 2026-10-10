@@ -7,6 +7,8 @@ def check(n):
  assert [r['name']for r in s['cases']]==names==[r['name']for r in n['cases']]
  for a,b in zip(s['cases'],n['cases']):
   assert a['undo']==b['undo']==0
+  assert all(len(r[k])==3 for r in (a,b)for k in ('eye','forward')),'camera vectors must have three coordinates'
+  assert all(math.isfinite(v)for r in (a,b)for k in ('eye','forward')for v in r[k])
   assert all(math.isfinite(y)and abs(x-y)<=1e-6 for k in ['eye','forward']for x,y in zip(a[k],b[k])),a['name']
 check(n)
 for index in [1,3]:
@@ -19,4 +21,8 @@ for name,mutate in [('missing-release',lambda m:m['cases'].pop(2)),('spurious-st
  try:check(m)
  except AssertionError:pass
  else:raise AssertionError(name)
-print(json.dumps(dict(passed=True,cases=4,compiled_old_rejected=2,other_negatives=3,bound='unchanged one-step Qt/native1e-6',scope='actual frozen tool contexts and timer-slot versus egui frames; wall-clock/rendered Walk remains required')))
+m=copy.deepcopy(n);m['cases'][0]['eye']=[]
+try:check(m)
+except AssertionError:pass
+else:raise AssertionError('truncated eye accepted')
+print(json.dumps(dict(passed=True,cases=4,compiled_old_rejected=2,other_negatives=4,bound='unchanged one-step Qt/native1e-6',scope='actual frozen tool contexts and timer-slot versus egui frames; wall-clock/rendered Walk remains required')))

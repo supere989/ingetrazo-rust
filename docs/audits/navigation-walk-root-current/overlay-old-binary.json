@@ -1,0 +1,5 @@
+{
+  "sha256": "a57d77817bc62dc2747787fc2279ad335f23f20d8762ba2486f1acaac5ed2fcf",
+  "source": "489f110b plus early-overlay patch",
+  "control": "move Walk overlay before world draw"
+}

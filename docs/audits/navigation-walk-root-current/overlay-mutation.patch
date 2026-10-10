@@ -1,0 +1,20 @@
+diff --git a/crates/ingetrazo-gui/src/viewport.rs b/crates/ingetrazo-gui/src/viewport.rs
+index 69bb313b..0bf7c5f2 100644
+--- a/crates/ingetrazo-gui/src/viewport.rs
++++ b/crates/ingetrazo-gui/src/viewport.rs
+@@ -68,6 +68,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
+     let mut navigation_preview_stroke=egui::Stroke::new(2.,egui::Color32::from_rgba_unmultiplied(242,115,41,217));
+ 
+     if app.navigation.mode.is_some() {
++        crate::navigation::paint_overlay(&app.navigation,&ui.painter_at(rect),rect);
+         if let Some(result)=crate::navigation::input(app,ui,rect,&response){
+             active_snap_glyph=SnapGlyph::from_snap_result(&result,None);
+             use ingetrazo_core::snap::SnapKind;
+@@ -352,7 +353,6 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
+         painter.circle_stroke(pos,4.,egui::Stroke::new(1.5,green));
+     }
+ 
+-    crate::navigation::paint_overlay(&app.navigation,&painter,rect);
+ 
+     // 4. Render Active Tool Rubber Band (if any)
+     for ((p0,p1),stroke) in app.active_tool.rubber_band_lines().into_iter().map(|line|(line,egui::Stroke::new(2.0,egui::Color32::from_rgb(255,60,60)))).chain(app.navigation.preview_line().map(|line|(line,navigation_preview_stroke))) {

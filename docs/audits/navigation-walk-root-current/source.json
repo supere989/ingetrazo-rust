@@ -1,0 +1,61 @@
+{
+  "cases": [
+    {
+      "name": "split-press-motion",
+      "eye": [
+        6.111109780379282e-16,
+        0.019800186157226562,
+        1.6799999475479126
+      ],
+      "forward": [
+        -6.123234262925839e-17,
+        1.0,
+        0.0
+      ],
+      "undo": 0
+    },
+    {
+      "name": "press-motion-one-frame",
+      "eye": [
+        6.111109780379282e-16,
+        0.019800186157226562,
+        1.6799999475479126
+      ],
+      "forward": [
+        -6.123234262925839e-17,
+        1.0,
+        0.0
+      ],
+      "undo": 0
+    },
+    {
+      "name": "press-motion-release-one-frame",
+      "eye": [
+        6.123233998228043e-16,
+        0.0,
+        1.6799999475479126
+      ],
+      "forward": [
+        -6.123234262925839e-17,
+        1.0,
+        0.0
+      ],
+      "undo": 0
+    },
+    {
+      "name": "hover-control-released-before-tick",
+      "eye": [
+        6.086861874077352e-16,
+        0.05939960479736328,
+        1.6799999475479126
+      ],
+      "forward": [
+        -6.123234262925839e-17,
+        1.0,
+        0.0
+      ],
+      "undo": 0
+    }
+  ],
+  "scope": "actual frozen Walk contexts/on_click/on_hover and one real _tick slot invocation; no wall-clock/render claim"
+}

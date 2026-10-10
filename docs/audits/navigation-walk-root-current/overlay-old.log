@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-navigation-walk-current/scripts/check-rendered-walk-navigation.py", line 60, in <module>
+    assert xt.XTestFakeButtonEvent(d,1,1,0);x.XFlush(d);wait(lambda:state()if state()['walk_anchor']is not None else None);move(end);walking=wait(lambda:state()if state()['eye'][1]>initial['eye'][1]+.01 else None);image=capture('walking');hits=inspect_walk(image)
+                                                                                                                                                                                                                                                    ~~~~~~~~~~~~^^^^^^^
+  File "/tmp/ingetrazo-navigation-walk-current/scripts/check-rendered-walk-navigation.py", line 59, in inspect_walk
+    def inspect_walk(image):return inspect_walk_overlay(image,baseline,rect,p)
+                                   ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-navigation-walk-current/scripts/walk_overlay_pixels.py", line 11, in inspect_walk_overlay
+    assert cross>=6,('missing Walk crosshair',cross)
+           ^^^^^^^^
+AssertionError: ('missing Walk crosshair', 0)

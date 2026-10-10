@@ -1,0 +1,1 @@
+{"passed": true, "cases": 4, "compiled_old_rejected": 2, "other_negatives": 4, "bound": "unchanged one-step Qt/native1e-6", "scope": "actual frozen tool contexts and timer-slot versus egui frames; wall-clock/rendered Walk remains required"}
