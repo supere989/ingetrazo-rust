@@ -559,6 +559,7 @@ pub(super) fn parse(bytes: &[u8], name: &str) -> Result<Payload, SkpError> {
             .filter(|b| *b > 0 && *b < (1 << 20))
             .collect::<Vec<_>>()
     };
+    drop(probe); // Base discovery must not coexist with the bounded model archive.
     let mut error = SkpError::Invalid("No viable legacy store base".into());
     for base in bases {
         match model(bytes, ver, start, count, base, name, version) {
@@ -654,7 +655,9 @@ fn model(
     }
     for id in roots {
         let Some(Slot::Object(value)) = ar.slots.get(&id) else {
-            unreachable!()
+            return Err(SkpError::Invalid(
+                "Legacy root references unresolved premodel object".into(),
+            ));
         };
         match value.as_ref() {
             Object::Face(face) => {
@@ -715,6 +718,17 @@ mod tests {
         assert_eq!(ar.decoded_bytes, before);
         ar.decoded_bytes = 256 * 1024 * 1024 - 1;
         assert!(matches!(ar.charge(2), Err(SkpError::Invalid(s)) if s.contains("aggregate")));
+    }
+    #[test]
+    fn unresolved_premodel_root_refuses_without_panicking() {
+        let mut bytes =
+            include_bytes!("../../../../docs/audits/skp-native-legacy/single_material_v17.skp")
+                .to_vec();
+        bytes[3573..3577].copy_from_slice(&1_u32.to_le_bytes());
+        bytes[3577..3579].copy_from_slice(&1_u16.to_le_bytes());
+        assert!(
+            matches!(parse(&bytes, "invalid-root"), Err(SkpError::Invalid(s)) if s.contains("unresolved premodel"))
+        );
     }
     #[test]
     fn real_empty_v17_raw_metadata_and_application_refusal() {
