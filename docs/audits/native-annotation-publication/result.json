@@ -1,0 +1,142 @@
+{
+  "source_sha": "f2d366019485706627f9899c85522c95851ac07f",
+  "binary_sha256": "bc96cb586e8da53e3dd951685dc179496135cc53138ae860f68ad8fa83c5e038",
+  "qt_version": "6.12.0",
+  "scope": "Actual controlled Vulkan palette/query/mesh publication, warm, denial, retry and deletion; no full application/font/MSAA policy parity",
+  "rows": [
+    {
+      "name": "baseline",
+      "image_sha256": "63383a417c157c415339b96f7953708bbde7d04077e55d62bad304e6e7c9e88e",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 213,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 216,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 672276
+      }
+    },
+    {
+      "name": "1-refuse",
+      "image_sha256": "63383a417c157c415339b96f7953708bbde7d04077e55d62bad304e6e7c9e88e",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 1,
+        "submitted_serial": 214,
+        "cleared": false,
+        "held_refusal": true,
+        "geometry_uploads": 1,
+        "cached_bytes": 216,
+        "rollback_buffers": 1,
+        "query_uploads": 1,
+        "committed_bytes": 672276
+      }
+    },
+    {
+      "name": "2-retry",
+      "image_sha256": "93788e6e9157f39dfc4f619ce2185354b5df5636a7a5b7a1929ae796896b34f6",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 2,
+        "submitted_serial": 245,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 2,
+        "cached_bytes": 216,
+        "rollback_buffers": 1,
+        "query_uploads": 2,
+        "committed_bytes": 672276
+      }
+    },
+    {
+      "name": "3-clear",
+      "image_sha256": "a5629d7cecc2cfc8c49e5d0e3bba3be6afa35318b8f8a5838f6d7a9e8827b09f",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 3,
+        "submitted_serial": 286,
+        "cleared": true,
+        "held_refusal": false,
+        "geometry_uploads": 2,
+        "cached_bytes": 0,
+        "rollback_buffers": 1,
+        "query_uploads": 2,
+        "committed_bytes": 672024
+      }
+    },
+    {
+      "name": "4-restore",
+      "image_sha256": "63383a417c157c415339b96f7953708bbde7d04077e55d62bad304e6e7c9e88e",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 4,
+        "submitted_serial": 319,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 3,
+        "cached_bytes": 216,
+        "rollback_buffers": 1,
+        "query_uploads": 3,
+        "committed_bytes": 672276
+      }
+    },
+    {
+      "name": "5-invalid-gate",
+      "image_sha256": "63383a417c157c415339b96f7953708bbde7d04077e55d62bad304e6e7c9e88e",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 5,
+        "submitted_serial": 320,
+        "cleared": false,
+        "held_refusal": true,
+        "geometry_uploads": 3,
+        "cached_bytes": 216,
+        "rollback_buffers": 1,
+        "query_uploads": 3,
+        "committed_bytes": 672276
+      }
+    },
+    {
+      "name": "6-clear",
+      "image_sha256": "a5629d7cecc2cfc8c49e5d0e3bba3be6afa35318b8f8a5838f6d7a9e8827b09f",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 6,
+        "submitted_serial": 360,
+        "cleared": true,
+        "held_refusal": false,
+        "geometry_uploads": 3,
+        "cached_bytes": 0,
+        "rollback_buffers": 1,
+        "query_uploads": 3,
+        "committed_bytes": 672024
+      }
+    },
+    {
+      "name": "7-restore",
+      "image_sha256": "63383a417c157c415339b96f7953708bbde7d04077e55d62bad304e6e7c9e88e",
+      "different_pixels": 0,
+      "state": {
+        "nonce": 7,
+        "submitted_serial": 393,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 4,
+        "cached_bytes": 216,
+        "rollback_buffers": 1,
+        "query_uploads": 4,
+        "committed_bytes": 672276
+      }
+    }
+  ],
+  "negative_controls": {
+    "black_rejected": true,
+    "blank_rejected": true,
+    "missing_overlapping_layer_rejected": true
+  },
+  "passed": true
+}
