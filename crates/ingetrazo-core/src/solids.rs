@@ -8,8 +8,8 @@
 //! - Watertight closed 2-manifold boundary representation.
 //! - Non-destructive material and attribution retention.
 
-use serde::{Deserialize, Serialize};
 use crate::mesh::Mesh;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum SolidOp {
@@ -36,69 +36,318 @@ impl SolidOp {
 
 /// Check if a mesh constitutes a closed manifold solid, returning (is_solid, volume).
 pub fn solid_report(mesh: &Mesh) -> (bool, Option<f64>) {
-    if !mesh.is_manifold_solid() {
+    if mesh.vertices.iter().any(|v| !v.position.is_finite())
+        || mesh.faces.iter().any(|f| {
+            f.vertices
+                .iter()
+                .chain(f.holes.iter().flatten())
+                .any(|&v| v >= mesh.vertices.len())
+        })
+        || mesh.edges.iter().any(|e| {
+            e.v0 >= mesh.vertices.len()
+                || e.v1 >= mesh.vertices.len()
+                || e.faces.iter().any(|&f| f >= mesh.faces.len())
+        })
+        || !mesh.is_manifold_solid()
+    {
         return (false, None);
     }
     let vol = mesh.volume();
     (vol.is_some(), vol)
 }
 
-/// Perform CSG boolean operation between two meshes `a` and `b`.
-pub fn perform_solid_op(op: SolidOp, a: &Mesh, b: &Mesh) -> Result<Mesh, String> {
-    let (is_a_solid, _) = solid_report(a);
-    let (is_b_solid, _) = solid_report(b);
+use crate::groups::Group;
+use crate::mesh::MeshFace;
+use glam::DMat4;
+use manifold_rust::{
+    manifold::Manifold,
+    types::{BooleanEngine, Error, MeshGL64},
+};
+use std::collections::HashSet;
 
-    if !is_a_solid || !is_b_solid {
-        return Err("Both targets must be closed manifold solids".to_string());
+struct Sources {
+    faces: Vec<MeshFace>,
+    soft_pairs: HashSet<(usize, usize)>,
+}
+
+fn kernel(mesh: &Mesh, sources: &mut Sources) -> Result<Manifold, String> {
+    if !solid_report(mesh).0 {
+        return Err("Both targets must be closed manifold solids".into());
     }
+    if mesh.vertices.iter().any(|v| !v.position.is_finite()) {
+        return Err("Solid coordinates must be finite".into());
+    }
+    let mut input = MeshGL64::default();
+    input.num_prop = 3;
+    input.vert_properties = mesh
+        .vertices
+        .iter()
+        .flat_map(|v| v.position.to_array())
+        .collect();
+    let base = sources.faces.len();
+    sources.faces.extend(mesh.faces.iter().cloned());
+    for edge in &mesh.edges {
+        if edge.soft && edge.faces.len() == 2 {
+            let a = base + edge.faces[0];
+            let b = base + edge.faces[1];
+            sources.soft_pairs.insert((a.min(b), a.max(b)));
+        }
+    }
+    let vertex_ids: std::collections::HashMap<_, _> = mesh
+        .vertices
+        .iter()
+        .enumerate()
+        .map(|(i, v)| (crate::math::PointKey::from_vec3(v.position), i))
+        .collect();
+    let mut signed_volume = 0.0;
+    for fid in 0..mesh.faces.len() {
+        let triangles = mesh.triangulate_face(fid);
+        if triangles.is_empty() {
+            return Err("Solid has an untriangulatable face".into());
+        }
+        for (a, b, c) in triangles {
+            signed_volume += a.dot(b.cross(c)) / 6.0;
+            for point in [a, b, c] {
+                let id = *vertex_ids
+                    .get(&crate::math::PointKey::from_vec3(point))
+                    .ok_or("Triangulation introduced an unknown vertex")?;
+                input.tri_verts.push(id as u64);
+            }
+            input.face_id.push((base + fid) as u64);
+        }
+    }
+    // Normalize globally reversed winding while retaining oriented cavity shells.
+    if signed_volume < 0.0 {
+        for triangle in input.tri_verts.chunks_exact_mut(3) {
+            triangle.swap(0, 2);
+        }
+    }
+    let solid = Manifold::from_mesh_gl64(&input);
+    check_status(&solid)?;
+    if solid.has_self_intersections() {
+        return Err("Solid has self-intersecting surfaces".into());
+    }
+    Ok(solid)
+}
 
+fn check_status(solid: &Manifold) -> Result<(), String> {
+    if solid.status() != Error::NoError {
+        Err(format!(
+            "Boolean kernel rejected geometry: {:?}",
+            solid.status()
+        ))
+    } else {
+        Ok(())
+    }
+}
+
+fn output(solid: &Manifold, sources: &Sources, outer_only: bool) -> Result<Mesh, String> {
+    check_status(solid)?;
+    let native = solid.get_mesh_gl64(-1);
+    let points: Vec<glam::DVec3> = native
+        .vert_properties
+        .chunks_exact(native.num_prop as usize)
+        .map(|p| glam::DVec3::new(p[0], p[1], p[2]))
+        .collect();
+    // Outer Shell discards connected shells with negative signed enclosed volume.
+    let mut parent: Vec<usize> = (0..points.len()).collect();
+    fn root(parent: &mut [usize], mut i: usize) -> usize {
+        while parent[i] != i {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        i
+    }
+    for t in native.tri_verts.chunks_exact(3) {
+        let a = root(&mut parent, t[0] as usize);
+        let b = root(&mut parent, t[1] as usize);
+        let c = root(&mut parent, t[2] as usize);
+        parent[b] = a;
+        parent[c] = a;
+    }
+    let mut shell_volume = std::collections::HashMap::<usize, f64>::new();
+    for t in native.tri_verts.chunks_exact(3) {
+        let r = root(&mut parent, t[0] as usize);
+        *shell_volume.entry(r).or_default() +=
+            points[t[0] as usize].dot(points[t[1] as usize].cross(points[t[2] as usize])) / 6.0;
+    }
     let mut result = Mesh::new();
-
-    match op {
-        SolidOp::Union | SolidOp::OuterShell => {
-            // Combine both meshes, welding coincident vertices
-            for f in &a.faces {
-                let loop_pts: Vec<glam::DVec3> = f.vertices.iter().map(|&v| a.vertices[v].position).collect();
-                let v_ids: Vec<usize> = loop_pts.into_iter().map(|p| result.add_vertex(p)).collect();
-                result.add_face(v_ids, vec![]);
-            }
-            for f in &b.faces {
-                let loop_pts: Vec<glam::DVec3> = f.vertices.iter().map(|&v| b.vertices[v].position).collect();
-                let v_ids: Vec<usize> = loop_pts.into_iter().map(|p| result.add_vertex(p)).collect();
-                result.add_face(v_ids, vec![]);
-            }
+    let mut provenance = Vec::new();
+    for (i, t) in native.tri_verts.chunks_exact(3).enumerate() {
+        if outer_only && shell_volume[&root(&mut parent, t[0] as usize)] < 0.0 {
+            continue;
         }
-        SolidOp::Subtract | SolidOp::Trim => {
-            // Cut cutter out of target
-            for f in &a.faces {
-                let loop_pts: Vec<glam::DVec3> = f.vertices.iter().map(|&v| a.vertices[v].position).collect();
-                let v_ids: Vec<usize> = loop_pts.into_iter().map(|p| result.add_vertex(p)).collect();
-                result.add_face(v_ids, vec![]);
-            }
+        let ids: Vec<_> = t
+            .iter()
+            .map(|&id| result.add_vertex(points[id as usize]))
+            .collect();
+        if ids[0] == ids[1] || ids[1] == ids[2] || ids[0] == ids[2] {
+            return Err("Boolean result is below the document welding tolerance".into());
         }
-        SolidOp::Intersect => {
-            // Preserve intersecting boundary faces
-            for f in &a.faces {
-                let loop_pts: Vec<glam::DVec3> = f.vertices.iter().map(|&v| a.vertices[v].position).collect();
-                let v_ids: Vec<usize> = loop_pts.into_iter().map(|p| result.add_vertex(p)).collect();
-                result.add_face(v_ids, vec![]);
-            }
-        }
-        SolidOp::Split => {
-            for f in &a.faces {
-                let loop_pts: Vec<glam::DVec3> = f.vertices.iter().map(|&v| a.vertices[v].position).collect();
-                let v_ids: Vec<usize> = loop_pts.into_iter().map(|p| result.add_vertex(p)).collect();
-                result.add_face(v_ids, vec![]);
-            }
-            for f in &b.faces {
-                let loop_pts: Vec<glam::DVec3> = f.vertices.iter().map(|&v| b.vertices[v].position).collect();
-                let v_ids: Vec<usize> = loop_pts.into_iter().map(|p| result.add_vertex(p)).collect();
-                result.add_face(v_ids, vec![]);
-            }
+        let fid = result
+            .add_face(ids, vec![])
+            .ok_or("Invalid boolean triangle")?;
+        let source = native.face_id[i] as usize;
+        let original = sources
+            .faces
+            .get(source)
+            .ok_or("Boolean source metadata was lost")?;
+        result.faces[fid].attrs = original.attrs.clone();
+        result.faces[fid].layer = original.layer.clone();
+        provenance.push(source);
+    }
+    for edge in &mut result.edges {
+        if edge.faces.len() == 2 {
+            let a = provenance[edge.faces[0]];
+            let b = provenance[edge.faces[1]];
+            edge.soft = a == b || sources.soft_pairs.contains(&(a.min(b), a.max(b)));
         }
     }
-
+    if !result.faces.is_empty() && !solid_report(&result).0 {
+        return Err("Boolean result cannot be represented as a closed document mesh".into());
+    }
+    if let Some(volume) = result.volume() {
+        // The document mesh welds at 0.1 mm, which can alter a valid kernel result.
+        // Reject lossy topology/geometry rather than silently accepting it.
+        let expected = if outer_only {
+            shell_volume.values().filter(|&&v| v > 0.0).sum::<f64>()
+        } else {
+            solid.volume()
+        };
+        if (volume - expected).abs() > 1e-8 * expected.max(1.0) {
+            return Err("Boolean result loses volume at the document welding tolerance".into());
+        }
+    }
     Ok(result)
+}
+
+/// Low-level arithmetic: Subtract/Trim compute A−B. Empty meshes are valid.
+/// Split requires the multi-result group API.
+pub fn perform_solid_op(op: SolidOp, a: &Mesh, b: &Mesh) -> Result<Mesh, String> {
+    if op == SolidOp::Split {
+        return Err("Split requires run_group_operation".into());
+    }
+    let mut sources = Sources {
+        faces: vec![],
+        soft_pairs: HashSet::new(),
+    };
+    let a = kernel(a, &mut sources)?;
+    let b = kernel(b, &mut sources)?;
+    let result = match op {
+        SolidOp::Union | SolidOp::OuterShell => a.union_with_engine(&b, BooleanEngine::Exact),
+        SolidOp::Subtract | SolidOp::Trim => a.difference_with_engine(&b, BooleanEngine::Exact),
+        SolidOp::Intersect => a.intersection_with_engine(&b, BooleanEngine::Exact),
+        SolidOp::Split => unreachable!(),
+    };
+    output(&result, &sources, op == SolidOp::OuterShell)
+}
+
+/// Prepared non-mutating edit; removed indices refer to the caller's input slice.
+pub struct SolidGroupResult {
+    pub removed: Vec<usize>,
+    pub created: Vec<Group>,
+}
+
+/// Group parity: first pick cuts second; Trim keeps cutter; Split yields
+/// B−A, A−B, A∩B. Geometry is baked into common world coordinates.
+pub fn run_group_operation(op: SolidOp, groups: &[Group]) -> Result<SolidGroupResult, String> {
+    if groups.len() < 2 {
+        return Err("Select at least two solids".into());
+    }
+    if matches!(op, SolidOp::Subtract | SolidOp::Trim | SolidOp::Split) && groups.len() != 2 {
+        return Err("Subtract, Trim and Split require exactly two solids".into());
+    }
+    let mut sources = Sources {
+        faces: vec![],
+        soft_pairs: HashSet::new(),
+    };
+    let mut solids = Vec::new();
+    for group in groups {
+        if !group.children.is_empty() {
+            return Err("Nested groups are not solid targets".into());
+        }
+        let determinant = group.transform.determinant();
+        if !group.transform.is_finite()
+            || !determinant.is_finite()
+            || determinant.abs() < 1e-12
+            || group.transform.x_axis.w != 0.0
+            || group.transform.y_axis.w != 0.0
+            || group.transform.z_axis.w != 0.0
+            || group.transform.w_axis.w != 1.0
+        {
+            return Err("Solid transform must be finite and invertible".into());
+        }
+        let mut world = group.mesh.clone();
+        for vertex in &mut world.vertices {
+            vertex.position = group.transform.transform_point3(vertex.position);
+        }
+        world.rebuild_spatial_index();
+        solids.push(kernel(&world, &mut sources)?);
+    }
+    let receiver = if matches!(op, SolidOp::Subtract | SolidOp::Trim) {
+        1
+    } else {
+        0
+    };
+    let pieces = match op {
+        SolidOp::Union | SolidOp::OuterShell | SolidOp::Intersect => {
+            let mut result = solids[0].clone();
+            for solid in &solids[1..] {
+                result = if op == SolidOp::Intersect {
+                    result.intersection_with_engine(solid, BooleanEngine::Exact)
+                } else {
+                    result.union_with_engine(solid, BooleanEngine::Exact)
+                };
+                check_status(&result)?;
+            }
+            vec![(result, receiver)]
+        }
+        SolidOp::Subtract | SolidOp::Trim | SolidOp::Split => {
+            let overlap = solids[0].intersection_with_engine(&solids[1], BooleanEngine::Exact);
+            check_status(&overlap)?;
+            if overlap.is_empty() {
+                return Err("Solids have no overlap".into());
+            }
+            if op == SolidOp::Split {
+                vec![
+                    (
+                        solids[1].difference_with_engine(&solids[0], BooleanEngine::Exact),
+                        1,
+                    ),
+                    (
+                        solids[0].difference_with_engine(&solids[1], BooleanEngine::Exact),
+                        0,
+                    ),
+                    (overlap, 0),
+                ]
+            } else {
+                vec![(
+                    solids[1].difference_with_engine(&solids[0], BooleanEngine::Exact),
+                    receiver,
+                )]
+            }
+        }
+    };
+    let mut created = Vec::new();
+    for (piece, owner) in pieces {
+        let mesh = output(&piece, &sources, op == SolidOp::OuterShell)?;
+        if mesh.faces.is_empty() {
+            continue;
+        }
+        let mut group = Group::with_mesh(op.name(), mesh);
+        group.transform = DMat4::IDENTITY;
+        group.layer = groups[owner].layer.clone();
+        created.push(group);
+    }
+    if created.is_empty() {
+        return Err("Operation produced no solid".into());
+    }
+    let removed = if op == SolidOp::Trim {
+        vec![1]
+    } else {
+        (0..groups.len()).collect()
+    };
+    Ok(SolidGroupResult { removed, created })
 }
 
 #[cfg(test)]
@@ -136,6 +385,136 @@ mod tests {
         assert!((vol1.unwrap() - 1.0).abs() < 1e-4);
 
         let res = perform_solid_op(SolidOp::Union, &cube1, &cube2).unwrap();
-        assert_eq!(res.faces.len(), 12);
+        assert!(res.is_manifold_solid());
+        assert!((res.volume().unwrap() - 2.0).abs() < 1e-9);
+    }
+    fn scaled_cube(offset: DVec3, scale: f64) -> Mesh {
+        let mut mesh = make_cube(DVec3::ZERO);
+        for vertex in &mut mesh.vertices {
+            vertex.position = offset + scale * vertex.position;
+        }
+        mesh.rebuild_spatial_index();
+        mesh
+    }
+
+    fn assert_volume(mesh: &Mesh, expected: f64) {
+        assert!(mesh.is_manifold_solid());
+        assert!(
+            (mesh.volume().unwrap() - expected).abs() < 1e-8,
+            "volume {:?}, expected {expected}",
+            mesh.volume()
+        );
+    }
+
+    #[test]
+    fn overlap_containment_coincident_and_empty() {
+        let a = make_cube(DVec3::ZERO);
+        let b = make_cube(DVec3::new(0.5, 0.0, 0.0));
+        for (op, vol) in [
+            (SolidOp::Union, 1.5),
+            (SolidOp::Subtract, 0.5),
+            (SolidOp::Intersect, 0.5),
+        ] {
+            assert_volume(&perform_solid_op(op, &a, &b).unwrap(), vol);
+        }
+        assert_volume(&perform_solid_op(SolidOp::Union, &a, &a).unwrap(), 1.0);
+        assert!(perform_solid_op(SolidOp::Subtract, &a, &a)
+            .unwrap()
+            .faces
+            .is_empty());
+        let disjoint = make_cube(DVec3::splat(4.0));
+        assert!(perform_solid_op(SolidOp::Intersect, &a, &disjoint)
+            .unwrap()
+            .faces
+            .is_empty());
+        let inner = scaled_cube(DVec3::splat(0.25), 0.5);
+        let hollow = perform_solid_op(SolidOp::Subtract, &a, &inner).unwrap();
+        assert_volume(&hollow, 0.875);
+        assert_volume(
+            &perform_solid_op(SolidOp::Union, &hollow, &disjoint).unwrap(),
+            1.875,
+        );
+        assert_volume(
+            &perform_solid_op(SolidOp::OuterShell, &hollow, &disjoint).unwrap(),
+            2.0,
+        );
+    }
+
+    #[test]
+    fn group_transforms_trim_split_direction_and_provenance() {
+        let mut cutter = Group::with_mesh("cutter", scaled_cube(DVec3::ZERO, 0.5));
+        cutter.transform = DMat4::from_translation(DVec3::splat(0.25));
+        cutter.layer = Some("cutter-layer".into());
+        let mut receiver = Group::with_mesh("receiver", make_cube(DVec3::ZERO));
+        receiver.layer = Some("receiver-layer".into());
+        for face in &mut cutter.mesh.faces {
+            face.attrs.insert("material".into(), "cut".into());
+        }
+        for face in &mut receiver.mesh.faces {
+            face.attrs.insert("material".into(), "outside".into());
+        }
+        let groups = [cutter, receiver];
+        let before = groups.clone();
+        let trim = run_group_operation(SolidOp::Trim, &groups).unwrap();
+        assert_eq!(trim.removed, vec![1]);
+        assert_eq!(groups, before);
+        assert_eq!(trim.created[0].layer.as_deref(), Some("receiver-layer"));
+        assert_eq!(trim.created[0].transform, DMat4::IDENTITY);
+        assert_volume(&trim.created[0].mesh, 0.875);
+        let materials: HashSet<_> = trim.created[0]
+            .mesh
+            .faces
+            .iter()
+            .map(|f| f.attrs["material"].as_str().unwrap())
+            .collect();
+        assert_eq!(materials, HashSet::from(["cut", "outside"]));
+        let split = run_group_operation(SolidOp::Split, &groups).unwrap();
+        // Contained cutter: A−B empty, remaining two pieces partition receiver.
+        assert_eq!(split.created.len(), 2);
+        assert_volume(&split.created[0].mesh, 0.875);
+        assert_volume(&split.created[1].mesh, 0.125);
+        let mut transformed = Group::with_mesh("rotated", make_cube(DVec3::ZERO));
+        transformed.transform = DMat4::from_rotation_z(std::f64::consts::PI)
+            * DMat4::from_scale(DVec3::new(2.0, 1.0, 1.0));
+        transformed.transform =
+            DMat4::from_translation(DVec3::new(2.0, 1.0, 0.0)) * transformed.transform;
+        let target = Group::with_mesh("target", make_cube(DVec3::ZERO));
+        let result = run_group_operation(SolidOp::Intersect, &[target, transformed]).unwrap();
+        assert_volume(&result.created[0].mesh, 1.0);
+    }
+
+    #[test]
+    fn rejects_invalid_inputs_without_mutation() {
+        let a = make_cube(DVec3::ZERO);
+        let mut broken = a.clone();
+        broken.faces[0].vertices[0] = usize::MAX;
+        assert!(perform_solid_op(SolidOp::Union, &a, &broken).is_err());
+        let mut reversed_face = a.clone();
+        reversed_face.faces[0].vertices.reverse();
+        assert!(perform_solid_op(SolidOp::Union, &a, &reversed_face).is_err());
+        let groups = [
+            Group::with_mesh("a", a.clone()),
+            Group::with_mesh("b", make_cube(DVec3::splat(4.0))),
+        ];
+        let before = groups.clone();
+        assert!(run_group_operation(SolidOp::Subtract, &groups).is_err());
+        assert_eq!(groups, before);
+        assert_eq!(a, make_cube(DVec3::ZERO));
+    }
+    #[test]
+    fn rotated_overlap_and_shared_face_union() {
+        let a = Group::with_mesh("axis cube", make_cube(DVec3::ZERO));
+        let mut b = a.clone();
+        b.transform = DMat4::from_translation(DVec3::splat(0.5))
+            * DMat4::from_rotation_z(std::f64::consts::FRAC_PI_4)
+            * DMat4::from_translation(DVec3::splat(-0.5));
+        let intersection = run_group_operation(SolidOp::Intersect, &[a.clone(), b]).unwrap();
+        // Independent analytic square intersection: four corner triangles removed.
+        assert_volume(&intersection.created[0].mesh, 2.0 * 2.0_f64.sqrt() - 2.0);
+        let adjacent = make_cube(DVec3::X);
+        assert_volume(
+            &perform_solid_op(SolidOp::Union, &a.mesh, &adjacent).unwrap(),
+            2.0,
+        );
     }
 }

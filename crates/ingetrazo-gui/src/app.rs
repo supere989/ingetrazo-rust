@@ -815,54 +815,33 @@ impl IngeTrazoApp {
     }
 
     pub fn perform_solid_boolean(&mut self, op: ingetrazo_core::solids::SolidOp) {
-        let mut group_indices: Vec<usize> = self.scene.selection.iter().filter_map(|item| {
-            if let SelectionItem::Group(idx) = item {
-                Some(*idx)
-            } else {
-                None
-            }
+        let mut indices: Vec<usize> = self.scene.selection.iter().filter_map(|item| {
+            if let SelectionItem::Group(idx) = item { Some(*idx) } else { None }
         }).collect();
-
-        if group_indices.len() < 2 {
-            self.status_message = ingetrazo_core::i18n::tr("Select at least 2 solid groups for boolean operation");
+        indices.sort_unstable();
+        if indices.len() < 2 || indices.iter().any(|&i| i >= self.scene.groups.len()) {
+            self.status_message = "Select at least two solid groups".into();
             return;
         }
-
-        group_indices.sort_unstable();
-        let idx0 = group_indices[0];
-        let idx1 = group_indices[1];
-
-        if idx0 >= self.scene.groups.len() || idx1 >= self.scene.groups.len() {
-            return;
-        }
-
-        self.save_undo_state();
-        let mesh_a = self.scene.groups[idx0].mesh.clone();
-        let mesh_b = self.scene.groups[idx1].mesh.clone();
-        let transform_a = self.scene.groups[idx0].transform;
-
-        match ingetrazo_core::solids::perform_solid_op(op, &mesh_a, &mesh_b) {
-            Ok(result_mesh) => {
-                let mut new_grp = ingetrazo_core::groups::Group::new(format!("{} Result", op.name()));
-                new_grp.mesh = result_mesh;
-                new_grp.transform = transform_a;
-                if idx1 > idx0 {
-                    self.scene.groups.remove(idx1);
-                    self.scene.groups.remove(idx0);
-                } else {
-                    self.scene.groups.remove(idx0);
-                    self.scene.groups.remove(idx1);
-                }
-                let new_idx = self.scene.groups.len();
-                self.scene.groups.push(new_grp);
+        let groups: Vec<_> = indices.iter().map(|&i| self.scene.groups[i].clone()).collect();
+        match ingetrazo_core::solids::run_group_operation(op, &groups) {
+            Ok(edit) => {
+                // Preparation is fallible; snapshot only a successful edit. Undo/redo
+                // restores inputs, their attributes/transforms and prior selection.
+                self.save_undo_state();
+                let mut removed: Vec<_> = edit.removed.iter().map(|&i| indices[i]).collect();
+                removed.sort_unstable();
+                let at = removed[0];
+                for &index in removed.iter().rev() { self.scene.groups.remove(index); }
                 self.scene.clear_selection();
-                self.scene.select(SelectionItem::Group(new_idx));
+                for (offset, group) in edit.created.into_iter().enumerate() {
+                    self.scene.groups.insert(at + offset, group);
+                    self.scene.select(SelectionItem::Group(at + offset));
+                }
                 self.scene.bump_version();
-                self.status_message = format!("Solid {}: operation completed", op.name());
+                self.status_message = format!("Solid {} completed", op.name());
             }
-            Err(e) => {
-                self.status_message = format!("Solid error: {}", e);
-            }
+            Err(error) => { self.status_message = format!("Solid error: {}", error); }
         }
     }
 
@@ -1439,6 +1418,52 @@ mod tests {
         app.paste_in_place();
         assert_eq!(app.scene.mesh.faces.len(), 1);
     }
+    #[test]
+    fn solid_boolean_prepares_before_undo_and_restores_inputs() {
+        fn cube() -> ingetrazo_core::mesh::Mesh {
+            let mut mesh = ingetrazo_core::mesh::Mesh::new();
+            for p in [[0.,0.,0.], [1.,0.,0.], [1.,1.,0.], [0.,1.,0.],
+                      [0.,0.,1.], [1.,0.,1.], [1.,1.,1.], [0.,1.,1.]] {
+                mesh.add_vertex(DVec3::from_array(p));
+            }
+            for face in [vec![0,3,2,1], vec![4,5,6,7], vec![0,1,5,4],
+                         vec![1,2,6,5], vec![2,3,7,6], vec![3,0,4,7]] {
+                mesh.add_face(face, vec![]);
+            }
+            mesh
+        }
+        let mut app = IngeTrazoApp::new();
+        let a = ingetrazo_core::groups::Group::with_mesh("a", cube());
+        let mut b = ingetrazo_core::groups::Group::with_mesh("b", cube());
+        b.transform = glam::DMat4::from_translation(DVec3::new(0.5, 0., 0.));
+        app.scene.groups = vec![a, b];
+        app.scene.select(SelectionItem::Group(0));
+        app.scene.select(SelectionItem::Group(1));
+        let before = app.scene.clone();
+        app.perform_solid_boolean(ingetrazo_core::solids::SolidOp::Trim);
+        assert_eq!(app.scene.groups.len(), 2);
+        assert_eq!(app.scene.groups[0], before.groups[0]);
+        assert!((app.scene.groups[1].mesh.volume().unwrap() - 0.5).abs() < 1e-8);
+        assert_eq!(app.undo_stack.len(), 1);
+        let after = app.scene.clone();
+        app.undo();
+        assert_eq!(app.scene.groups, before.groups);
+        assert_eq!(app.scene.selection, before.selection);
+        app.redo();
+        assert_eq!(app.scene.groups, after.groups);
+        assert_eq!(app.scene.selection, after.selection);
+        app.undo();
+        app.scene.groups[1].mesh.clear();
+        let invalid = app.scene.clone();
+        let undo_len = app.undo_stack.len();
+        let redo_len = app.redo_stack.len();
+        app.perform_solid_boolean(ingetrazo_core::solids::SolidOp::Union);
+        assert_eq!(app.scene.groups, invalid.groups);
+        assert_eq!(app.scene.selection, invalid.selection);
+        assert_eq!(app.undo_stack.len(), undo_len);
+        assert_eq!(app.redo_stack.len(), redo_len);
+    }
+
 }
 
 
