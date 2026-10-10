@@ -76,7 +76,7 @@ impl Allocate for Allocator {
             .extent(extent)
             .mip_levels(1)
             .array_layers(1)
-            .format(vk::Format::R8G8B8A8_SRGB)
+            .format(vk::Format::R8G8B8A8_UNORM)
             .tiling(vk::ImageTiling::OPTIMAL)
             .initial_layout(vk::ImageLayout::UNDEFINED)
             .usage(vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED)

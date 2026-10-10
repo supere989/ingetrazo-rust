@@ -12,17 +12,10 @@ layout(push_constant) uniform Matrices {
 layout(location = 0) out vec4 oColor;
 layout(location = 1) out vec2 oUV;
 
-const float GAMMA = 2.2;
-
-vec3 SRGBtoLINEAR(vec3 color) {
-    return pow(color, vec3(GAMMA));
-}
-vec4 SRGBtoLINEAR(vec4 color) {
-    return vec4(SRGBtoLINEAR(color.rgb), color.a);
-}
-
 void main() {
-    oColor = SRGBtoLINEAR(vColor);
+    // egui Color32 is premultiplied encoded RGB. Preserve it through
+    // interpolation for source-compatible QPainter composition.
+    oColor = vColor;
     oUV = vUV;
 
     gl_Position = matrices.ortho*vec4(vPosition.x, vPosition.y, 0.0, 1.0);

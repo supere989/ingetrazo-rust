@@ -821,13 +821,9 @@ fn create_vulkan_swapchain(
             )?
         };
 
-        *formats
-            .iter()
-            .find(|format| {
-                matches!(format.format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB)
-                    && format.color_space == vk::ColorSpaceKHR::SRGB_NONLINEAR
-            })
-            .unwrap_or(&formats[0])
+        select_encoded_surface_format(&formats)
+            .ok_or("Surface provides no encoded UNORM/SRGB_NONLINEAR presentation format; linear sRGB blending cannot reproduce document composition")?
+
     };
     log::debug!("Swapchain format: {format:?}");
 
@@ -1085,4 +1081,22 @@ impl VulkanContext {
         let period=unsafe{self.instance.get_physical_device_properties(self.physical_device)}.limits.timestamp_period;
         (bits!=0&&period>0.).then_some((bits,period))
     }
+}
+
+// Presentation keeps source encoded RGB blending in the attachment itself;
+// an SRGB attachment would silently perform a different linear-light blend.
+fn select_encoded_surface_format(formats:&[vk::SurfaceFormatKHR])->Option<vk::SurfaceFormatKHR>{
+ for preferred in [vk::Format::B8G8R8A8_UNORM,vk::Format::R8G8B8A8_UNORM] {
+  if let Some(format)=formats.iter().find(|f|f.format==preferred&&f.color_space==vk::ColorSpaceKHR::SRGB_NONLINEAR){return Some(*format);}
+ }
+ formats.iter().find(|f|f.format==vk::Format::UNDEFINED&&f.color_space==vk::ColorSpaceKHR::SRGB_NONLINEAR).map(|_|vk::SurfaceFormatKHR{format:vk::Format::B8G8R8A8_UNORM,color_space:vk::ColorSpaceKHR::SRGB_NONLINEAR})
+}
+#[cfg(test)]mod encoded_surface_tests {
+ use super::*;
+ #[test]fn prefers_direct_encoded_attachment_and_refuses_semantic_fallback(){
+  let srgb=vk::SurfaceFormatKHR{format:vk::Format::B8G8R8A8_SRGB,color_space:vk::ColorSpaceKHR::SRGB_NONLINEAR};
+  let unorm=vk::SurfaceFormatKHR{format:vk::Format::R8G8B8A8_UNORM,..srgb};
+  assert_eq!(select_encoded_surface_format(&[srgb,unorm]),Some(unorm));assert_eq!(select_encoded_surface_format(&[srgb]),None);
+  assert_eq!(select_encoded_surface_format(&[vk::SurfaceFormatKHR{format:vk::Format::UNDEFINED,..srgb}]).unwrap().format,vk::Format::B8G8R8A8_UNORM);
+ }
 }

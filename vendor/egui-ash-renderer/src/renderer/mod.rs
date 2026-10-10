@@ -50,7 +50,9 @@ pub struct Options {
     pub enable_depth_write: bool,
     /// Is the target framebuffer sRGB.
     ///
-    /// If not, the fragment shader converts colors to sRGB, otherwise it outputs color in linear space.
+    /// Encoded UNORM presentation preserves premultiplied egui color and encoded
+    /// blending. An sRGB target converts output to linear but blends in linear
+    /// light; the native host requires UNORM for document composition fidelity.
     pub srgb_framebuffer: bool,
 }
 
