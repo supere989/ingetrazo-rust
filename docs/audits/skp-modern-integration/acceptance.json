@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "source": "12b7518235c0f22a0b7c455ebdf95d2ff6c8c342",
+  "binary_sha256": "29779f203107366f6dd03196d6fff70b4700b906e5e91406247a6cb37a03326f",
+  "cases": [
+    {
+      "name": "Untitled",
+      "groups": 43,
+      "dimensions": 13
+    },
+    {
+      "name": "legacy_v2014_synthetic",
+      "groups": 10,
+      "dimensions": 0
+    }
+  ],
+  "scope": "Fresh integrated imported structure and explicit inventory; broader SKP/rendering parity remains open",
+  "purged_transports": [
+    {
+      "name": "Untitled-payload.json",
+      "sha256": "5e73059997aef9a96432ba779162d44acc6ca65ec33290c7f54e56a0e05c70c2",
+      "bytes": 7202915
+    },
+    {
+      "name": "Untitled.igz",
+      "sha256": "b73d9f15c5d84a7ecf4683b48a313fe4fa57c719de398628b017d53533ab8c14",
+      "bytes": 6838443
+    },
+    {
+      "name": "legacy_v2014_synthetic-payload.json",
+      "sha256": "2fed9b54ad7fbed686a806ef58995be1ba632f2a75d3dd71c2f6fed06fc95338",
+      "bytes": 22985074
+    },
+    {
+      "name": "legacy_v2014_synthetic.igz",
+      "sha256": "b79444d7c793cb032fb472532818e59ecc4842726692cf92f8c5f50b73d34a28",
+      "bytes": 1474740
+    }
+  ]
+}

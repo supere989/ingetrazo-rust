@@ -1,7 +1,8 @@
 {
   "candidate_sha256": "2c4d1bd6c5a3a2fb3dfbb6cc6b74ec0374c312ceb835940f7dd6f92835bc4929",
-  "status": "Uncommitted candidate reviewed; aggregate scanner admission correction requested",
+  "status": "Cumulative shallow parser admission adopted; fresh real-model replay passed",
   "finding": "Bytewise candidate scan may repeatedly parse overlapping nested TLV ranges. Per-call node limits do not bound total repeated parsing.",
   "required": "Cumulative checked candidate byte/node budget with overlap control, retaining valid original dimension semantics.",
-  "scope": "Source review only; real model evidence not yet integrated"
+  "scope": "Source review only; real model evidence not yet integrated",
+  "evidence": "skp-modern-integration/acceptance.json"
 }
