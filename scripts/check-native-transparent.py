@@ -7,11 +7,11 @@ native=json.loads(Path(sys.argv[2]).read_text())['cases']
 baseline=json.loads(Path(sys.argv[3]).read_text())['cases']
 base=["red-half-white","red-half-black","opacity-bucket-order","opaque-front","opaque-back","equal-opacity-forward","equal-opacity-reversed","opacity-995","opacity-zero","section-clipped"]
 rounding=["rgb-tie-even","rgb-tie-odd","opacity-round-5005","opacity-round-1255"]
-expected_names=base if len(original)==10 else base+rounding
+expected_names=base if len(original)==10 else base+rounding+([]if len(original)==14 else ["opacity-threshold-f64"])
 assert len(original)==len(native)==len(expected_names)
 assert [r["case"]for r in original]==expected_names
 assert [r["case"]for r in native]==expected_names
-assert len(baseline)in(10,14) and [r["case"]for r in baseline]==(base if len(baseline)==10 else base+rounding)
+assert len(baseline)in(10,14,15) and [r["case"]for r in baseline]==(base if len(baseline)==10 else base+rounding+([]if len(baseline)==14 else ["opacity-threshold-f64"]))
 for o,n in zip(original,native):
  assert o['case']==n['case']
  assert o['center_rgba']==n['center_rgba'],(o['case'],o['center_rgba'],n['center_rgba'])
