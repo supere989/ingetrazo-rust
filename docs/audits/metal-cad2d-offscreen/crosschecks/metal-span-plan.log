@@ -1,0 +1,20 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-cad2d/crates/ingetrazo-metal)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-cad2d-target/debug/deps/ingetrazo_metal-6109046eeed75de2)
+
+running 3 tests
+test span_plan::tests::malformed_fractional_and_excessive_refused ... ok
+test span_plan::tests::ordered_overlap_not_deduplicated ... ok
+test span_plan::tests::sparse_plan_matches_six_actual_qpainter_whole_images ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

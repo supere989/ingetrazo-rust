@@ -9,3 +9,10 @@ pub use device::*;
 mod submission;
 #[cfg(target_os = "macos")]
 pub use submission::*;
+
+#[cfg(target_os = "macos")]
+mod cad2d;
+#[cfg(target_os = "macos")]
+pub use cad2d::*;
+
+mod span_plan;

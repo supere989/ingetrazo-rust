@@ -1,0 +1,20 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Checking ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-cad2d/crates/ingetrazo-metal)
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad2d.rs:136:17
+    |
+136 |         options.setFastMathEnabled(false);
+    |                 ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: `ingetrazo-metal` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s
