@@ -10,7 +10,7 @@ use egui::{Color32, FontId, Pos2, Rect, Stroke, Vec2};
 use glam::DVec3;
 use ingetrazo_core::composition::{
     format_scale, model_height_for_frame, GraphicScaleItem, NorthArrowItem, Orientation, PaperSize,
-    RectMm, SheetItem, TitleBlock, ViewFrame,
+    RectMm, Sheet, SheetItem, TitleBlock, ViewFrame,
 };
 use ingetrazo_core::i18n::tr;
 use ingetrazo_core::scene::Scene;
@@ -89,9 +89,21 @@ impl IngeTrazoApp {
   if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){if self.composer_state.edit_before.is_none(){self.composer_state.edit_before=Some(self.scene.sheets.clone());}}
+ // Original _on_page_changed/_on_border_changed are direct document properties,
+ // outside ComposerHistory item commands. Replaying an item snapshot must not
+ // restore the older paper settings carried by that snapshot.
+ fn retain_direct_paper_properties(target:&mut Sheet,current:&Sheet){
+  target.paper_size=current.paper_size;target.orientation=current.orientation;
+  target.source_border=current.source_border.clone();target.source_border_baseline=current.source_border_baseline.clone();
+  if let Some(value)=current.native_document.get("border"){
+   if !target.native_document.is_object(){target.native_document=serde_json::json!({});}
+   target.native_document["border"]=value.clone();
+  }else if let Some(object)=target.native_document.as_object_mut(){object.remove("border");}
+ }
  pub fn finish_composer_edit(&mut self){
   self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
-  let Some(sheets)=self.composer_state.edit_before.take()else{return;};
+  let Some(mut sheets)=self.composer_state.edit_before.take()else{return;};
+  for before in &mut sheets{if let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id){Self::retain_direct_paper_properties(before,current);}}
   if sheet_model_equal(&sheets,&self.scene.sheets){return;}
   for before in sheets {if let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id){
    if sheet_model_equal(std::slice::from_ref(&before),std::slice::from_ref(current)){continue;}
@@ -102,14 +114,14 @@ impl IngeTrazoApp {
  pub fn undo_composer_edit(&mut self){self.finish_composer_edit();
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
-  if let Some(before)=history.0.pop(){history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}
+  if let Some(mut before)=history.0.pop(){Self::retain_direct_paper_properties(&mut before,&self.scene.sheets[index]);history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}
  }
  pub fn redo_composer_edit(&mut self){self.finish_composer_edit();
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
-  if let Some(after)=history.1.pop(){history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}
+  if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}
  }
- pub fn cancel_composer_edit(&mut self){self.composer_state.shape_start=None;self.composer_state.shape_tool=None;if let Some(sheets)=self.composer_state.edit_before.take(){let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
+ pub fn cancel_composer_edit(&mut self){self.composer_state.shape_start=None;self.composer_state.shape_tool=None;if let Some(mut sheets)=self.composer_state.edit_before.take(){for before in &mut sheets{if let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id){Self::retain_direct_paper_properties(before,current);}}let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
   self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
  }
 }
@@ -334,6 +346,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let saved_view_names=app.scene.saved_views.iter().map(|v|v.name.clone()).collect::<Vec<_>>();
     let geo_north = app.scene.geo_datum.as_ref().map(|d| d.north).unwrap_or(0.0);
     let mut bump_needed = false;
+    let mut direct_paper_changed = false;
     let mut fit_page_needed = false;
     let mut export_view_dxf = false;
     let mut export_pdf = false;
@@ -352,7 +365,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     .show_ui(ui, |ui| {
                         for p in &[PaperSize::A4, PaperSize::A3, PaperSize::A2, PaperSize::A1, PaperSize::Letter] {
                             if ui.selectable_value(&mut sheet.paper_size, *p, format!("{p:?}")).clicked() {
-                                bump_needed = true;
+                                direct_paper_changed = true;
                             }
                         }
                     });
@@ -367,7 +380,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                         Orientation::Landscape => Orientation::Portrait,
                         Orientation::Portrait => Orientation::Landscape,
                     };
-                    bump_needed = true;
+                    direct_paper_changed = true;
                 }
 
                 ui.separator();
@@ -383,7 +396,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                         for style in ["single","double","dashed"] {changed|=ui.selectable_value(&mut border.style,style.into(),style).changed();}
                     });
                     if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-controls"),(toggle.rect,color.rect)));}
-                    if changed && sheet.set_source_border(border).is_ok(){bump_needed=true;}
+                    if changed && sheet.set_source_border(border).is_ok(){direct_paper_changed=true;}
                 });
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
 
@@ -408,7 +421,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     bump_needed = true;
                 }
 
-                if ui.button(tr("+ North")).on_hover_text(tr("Add north arrow")).clicked() {
+                let north_button=ui.button(tr("+ North")).on_hover_text(tr("Add north arrow"));
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-add-north"),north_button.rect));}
+                if north_button.clicked() {
                     sheet.add_item(SheetItem::NorthArrow(NorthArrowItem {
                         id: uuid::Uuid::new_v4(),
                         pos: (sheet.margin_mm + 15.0, sheet.margin_mm + 15.0),
@@ -533,6 +548,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         app.composer_state.pan_offset = Vec2::ZERO;
     }
 
+    if direct_paper_changed {app.scene.bump_version();}
     if bump_needed {
         app.composer_state.edit_before.get_or_insert_with(||before_sheets.clone());
         app.scene.bump_version();
@@ -984,14 +1000,19 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
   assert_eq!(canvas_field_index(&mut app,1).unwrap(),0);assert_eq!(app.composer_state.field_index_computations,3);
  }
 
- #[test]fn dormant_border_edit_undo_redo_restores_runtime_and_metadata() {
-  let mut app=IngeTrazoApp::new();app.scene.sheets=vec![ingetrazo_core::composition::Sheet::default()];app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
-  let before=app.scene.sheets.clone();app.begin_composer_edit();
-  let mut border=app.scene.sheets[0].effective_source_border();border.color="#ffffff".into();
-  app.scene.sheets[0].set_source_border(border).unwrap();app.finish_composer_edit();
-  let after=app.scene.sheets.clone();assert!(!after[0].effective_source_border().on);
-  app.undo();assert_eq!(app.scene.sheets,before);app.redo();assert_eq!(app.scene.sheets,after);
-  assert!(app.undo_stack.is_empty());
+ #[test]fn source_direct_paper_properties_do_not_create_history_or_replay_with_items() {
+  let mut app=IngeTrazoApp::new();app.scene.sheets=vec![Sheet::default()];app.scene.sheets[0].items.clear();app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+  let id=app.scene.sheets[0].id;
+  app.begin_composer_edit();let mut border=app.scene.sheets[0].effective_source_border();border.color="#ffffff".into();app.scene.sheets[0].set_source_border(border).unwrap();app.finish_composer_edit();
+  let direct=app.scene.sheets.clone();app.undo();app.redo();assert_eq!(app.scene.sheets,direct);assert!(app.composer_state.sheet_history.get(&id).is_none());
+  app.begin_composer_edit();let item=ingetrazo_core::composition::TextItem{id:uuid::Uuid::new_v4(),pos:(20.,30.),text:"A".into(),font_size_pt:14.,bold:false};app.scene.sheets[0].items.push(SheetItem::Text(item));app.finish_composer_edit();
+  app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(33.,44.);app.finish_composer_edit();assert_eq!(app.composer_state.sheet_history[&id].0.len(),2);
+  let mut border=app.scene.sheets[0].effective_source_border();border.on=true;border.radius_mm=5.;app.scene.sheets[0].set_source_border(border.clone()).unwrap();app.scene.sheets[0].paper_size=PaperSize::A1;app.scene.sheets[0].orientation=Orientation::Portrait;
+  app.undo();assert_eq!(app.scene.sheets[0].items[0].rect().x,20.);assert_eq!(app.scene.sheets[0].effective_source_border(),border);assert_eq!(app.scene.sheets[0].paper_size,PaperSize::A1);assert_eq!(app.scene.sheets[0].orientation,Orientation::Portrait);
+  // A direct property edit preserves an already pending item Redo.
+  border.on=false;border.color="#ff0000".into();app.scene.sheets[0].set_source_border(border.clone()).unwrap();app.redo();assert_eq!(app.scene.sheets[0].items[0].rect().x,33.);assert_eq!(app.scene.sheets[0].effective_source_border(),border);
+  app.undo();app.undo();assert!(app.scene.sheets[0].items.is_empty());assert_eq!(app.scene.sheets[0].effective_source_border(),border);app.redo();app.redo();assert_eq!(app.scene.sheets[0].items[0].rect().x,33.);assert_eq!(app.scene.sheets[0].effective_source_border(),border);assert!(app.undo_stack.is_empty());
+  app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(99.,99.);border.color="#0000ff".into();app.scene.sheets[0].set_source_border(border.clone()).unwrap();app.cancel_composer_edit();assert_eq!(app.scene.sheets[0].items[0].rect().x,33.);assert_eq!(app.scene.sheets[0].effective_source_border(),border);
  }
 
  #[test]fn subpixel_paper_hatch_keeps_original_two_row_coverage(){
