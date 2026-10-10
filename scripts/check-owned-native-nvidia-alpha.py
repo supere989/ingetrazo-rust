@@ -55,7 +55,8 @@ original=json.loads((inputs/"original-alpha-results.json").read_text());rows=[]
 base=["red-half-white","red-half-black","opacity-bucket-order","opaque-front","opaque-back","equal-opacity-forward","equal-opacity-reversed","opacity-995","opacity-zero","section-clipped"]
 rounding=["rgb-tie-even","rgb-tie-odd","opacity-round-5005","opacity-round-1255"]
 names=[r["case"]for r in original["cases"]]
-assert names==base or names==base+rounding or names==base+rounding+["opacity-threshold-f64"]
+back=[f"back-{f}-{b}-{direction}" for f,b in [(0.5,0.3),(1.,0.3),(0.5,1.),(1.,1.)] for direction in ["front","reversed"]]+["back-gate-activated-front","back-gate-activated-reversed","back-order-translucent-opaque","back-order-opaque-translucent"]
+assert names in [base,base+rounding,base+rounding+["opacity-threshold-f64"],base+back]
 (out/"native-ui-results.json").write_text(json.dumps({"passed":False,"cases":[],"status":"starting"}))
 
 for row in original["cases"]:

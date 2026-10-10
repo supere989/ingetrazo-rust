@@ -1,0 +1,22 @@
+PASS 22 exact original/native RGBA, front/back runs, opaque gate, shared24B/cached geometry; retained missing-backpaint and gate/culling negative controls
+
+missing-case rejected
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-upload-churn-validation/scripts/check-native-backpaint.py", line 8, in <module>
+    assert [r["case"] for r in o]==base+back==[r["case"] for r in n]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+duplicate-case rejected
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-upload-churn-validation/scripts/check-native-backpaint.py", line 8, in <module>
+    assert [r["case"] for r in o]==base+back==[r["case"] for r in n]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+closed-gate rejected
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-upload-churn-validation/scripts/check-native-backpaint.py", line 12, in <module>
+    assert a['case']==b['case'] and a['center_rgba']==b['center_rgba'],(a['case'],a['center_rgba'],b['center_rgba'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('back-gate-activated-front', [247, 0, 0, 255], [255, 255, 255, 255])

@@ -1,0 +1,17 @@
+{
+  "source_revision": "963993cefd8730022a42ca640ed03bdbefb6eba8",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binaries": {
+    "native_vulkan_transparent_probe": "40e55ba64eff11f842d5aeccee5f1e27e4f2027a0503f1e1988019dbfa736458",
+    "native_vulkan_transparent_fixture": "eb5b359ea6e3b244b4e92f523650dca865b9ad7d1a7419b2f1a07c95ec60a7d4"
+  },
+  "strict_NVIDIA_source_GL": "NVIDIA615.71.09 GL3.3",
+  "native_Vulkan": "NVIDIA RTX5090 API1.4.351",
+  "case_count": 22,
+  "negative_controls": [
+    "retained-actual-old-binary-all22",
+    "missing-case",
+    "duplicate-case",
+    "closed-gate"
+  ]
+}
