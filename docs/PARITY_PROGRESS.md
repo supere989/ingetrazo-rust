@@ -1,5 +1,22 @@
 # Rust parity progress tracker
 
+## Current acceptance checkpoint
+
+This section distinguishes published Rust code from isolated review work. Dated entries below retain their original scope; older pending/publication wording is historical, not current status.
+
+| Area | Current evidence | Remaining acceptance |
+| --- | --- | --- |
+| Published main | `c73fe993`; combined predecessor source passed 703 workspace tests, zero failures, two ignored; later change guards the Vulkan example on macOS | Current main cloud run still active; three Apple jobs passed at observation |
+| Vulkan model rendering | Source texture decoding, average shading and failure-safe publication reviewed on RTX 5090 | All four strict full-model comparisons still differ: 78 / 351 / 4832 / 3723 pixels; annotations and remaining raster differences open |
+| Native annotations, review branch | Retained D24/MSAA4 depth evaluator passes actual RTX interior/resource controls; actual source drawing/font/DPI references retained | Complete native font provider, GPU sample-policy equivalence, visible overlay integration and full-image comparisons |
+| Scripting, review branch | Persistent Group/Mesh ownership and native vector prerequisites have scoped source comparisons | Complete editable object semantics, mutation journal/rollback, VM/native resource bounds and production scene integration |
+| Native Metal, separate review branch | `8395919a` includes reviewed Qt-compatible tracking and exact phase rounding; next native run active | Updated six Canvas / eighteen PDF comparisons, remaining Times coverage difference, ARM presentation, physical Mac acceptance |
+| Release | 10 Implemented / 27 Partial / 0 Verified across 37 areas; all five release gates open | Full Python behavioral/rendered parity and representative platform/performance evidence |
+
+Current CI observations are [retained with exact source revisions](audits/current-ci-20261010.json). Main validation: [38089335853](https://github.com/supere989/ingetrazo-rust/actions/runs/38089335853). Metal review validation: [38090288328](https://github.com/supere989/ingetrazo-rust/actions/runs/38090288328). These observations are time-specific; active jobs are not acceptance.
+
+## Dated implementation and verification evidence
+
 Native annotation depth prerequisite (2026-10-10, review branch): fresh integrated RTX 5090 execution uses D24 depth at four samples and matches visible/hidden/on-surface/background controls for every sample. Warm queries upload once; invalid sample and stale resized target refuse; final GPU ledger is zero. Six focused tests pass, including durable target identity. [Independent hardware acceptance](audits/native-annotation-depth-root/acceptance.json). Original edge-resolve policy, actual overlays and full rendered parity remain OPEN.
 
 Annotation layout reference (2026-10-10, review branch): all fifteen original-source cases now retain the actual Qt font heights and measured line advances as explicit native planner inputs. Fresh replay preserves every previous drawing operation and image hash. [Review](audits/native-annotation-source/font-metrics-review.json). Native font-provider equality, depth sample policy, direct overlay integration and complete rendered annotation parity remain OPEN.

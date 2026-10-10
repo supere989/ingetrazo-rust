@@ -1,0 +1,71 @@
+{
+  "observed_utc": "2026-10-10T22:09:29.022244+00:00",
+  "runs": [
+    {
+      "id": 38089335853,
+      "head_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+      "status": "in_progress",
+      "conclusion": null,
+      "jobs": [
+        {
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "active_steps": []
+        },
+        {
+          "name": "Native Metal framework link (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "active_steps": []
+        },
+        {
+          "name": "compilation-and-tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_steps": [
+            "Original and native saved tilted cropped colored hatch PDF pages"
+          ]
+        },
+        {
+          "name": "Native Metal framework link (macos-15-intel)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_steps": [
+            "Actual completed and pending Metal CAD Drop ownership"
+          ]
+        },
+        {
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "active_steps": []
+        }
+      ]
+    },
+    {
+      "id": 38090288328,
+      "head_sha": "8395919af1acb345154e66216003059236e276c1",
+      "status": "in_progress",
+      "conclusion": null,
+      "jobs": [
+        {
+          "name": "raw-texture (macos-15-intel)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_steps": [
+            "Build and execute bounded native raw texture fixture"
+          ]
+        },
+        {
+          "name": "raw-texture (macos-15)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_steps": [
+            "Build and execute bounded native raw texture fixture"
+          ]
+        }
+      ]
+    }
+  ]
+}
