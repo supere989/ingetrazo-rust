@@ -1,0 +1,14 @@
+{
+  "status": "Reviewing uncommitted agent source; not integrated",
+  "source_worktree": "/tmp/ingetrazo-skp-native-import",
+  "findings_sent_to_owner": [
+    "Reject duplicate edges/faces/layers/material identities instead of silently overwriting prior records",
+    "Bound actual file read, not metadata size alone, before ZIP/TLV parsing"
+  ],
+  "observed_guards": [
+    "Parse and construct candidate scene before replacement",
+    "Finite transformed storage coordinates and placement validation",
+    "Unsupported required texture/annotation features reject"
+  ],
+  "scope": "Source review only; original/native fixture and malformed-control acceptance pending"
+}
