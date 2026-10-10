@@ -20,4 +20,8 @@ for mutation in range(6):
 a=json.loads((p/'original-error.json').read_text());b=json.loads((p/'native-error.json').read_text())
 if a['document']!=b['document']:raise AssertionError('failed operation rollback differs')
 if not a.get('raw_result',{}).get('error') or not b.get('raw_error'):raise AssertionError('missing retained refusal evidence')
+assert a['document']==dict(vertices=0,edges=0,faces=0,undo=0,redo=0)
+assert a['raw_result']['error']=='SnapshotImport: list index out of range'
+assert 'IndexError' in a['raw_result']['stderr']
+assert b['raw_error']=='Source maximal-hole normal requires three positions'
 print('27 exact states; six mutations rejected; raw exception protocols intentionally unequal')
