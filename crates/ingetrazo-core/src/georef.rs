@@ -1061,8 +1061,13 @@ pub fn geopath_to_geometry(scene:&mut crate::scene::Scene,paths:&[usize])->Resul
     let mut candidate=scene.clone();let mut added=0;
     for &id in &ids {
         let path=&scene.geo_paths[id];
-        for (a,b) in path.segments(){if a.distance(b)<1e-9{continue;}let a=candidate.mesh.add_vertex(a);let b=candidate.mesh.add_vertex(b);if candidate.mesh.find_edge(a,b).is_none(){candidate.mesh.add_edge(a,b).ok_or("Path edge collapsed at document precision")?;added+=1;}}
-        let normal=crate::math::newell_vector(&path.points).normalize_or_zero();
+        let mut new_edges=vec![];
+        for (a,b) in path.segments(){if a.distance(b)<1e-9{continue;}let a=candidate.mesh.add_vertex(a);let b=candidate.mesh.add_vertex(b);if candidate.mesh.find_edge(a,b).is_none(){let edge=candidate.mesh.add_edge(a,b).ok_or("Path edge collapsed at document precision")?;new_edges.push(edge);added+=1;}}
+        candidate.mesh=crate::planar::split_edge_intersections(&candidate.mesh,&new_edges)?;
+        let mut normal=crate::math::newell_vector(&path.points).normalize_or_zero();
+        // Self-crossing closed traces can have zero signed Newell area while
+        // enclosing real arrangement cells (the two lobes of a bow-tie).
+        if normal.length_squared()<0.5&&path.points.len()>=3 {for i in 1..path.points.len()-1 {let n=(path.points[i]-path.points[0]).cross(path.points[i+1]-path.points[0]).normalize_or_zero();if n.length_squared()>0.5{normal=n;break;}}}
         let plane=if normal.length_squared()>0.5&&path.points.iter().all(|&p|(p-path.points[0]).dot(normal).abs()<1e-6){Some((path.points[0],normal))}else{
             candidate.mesh.faces.iter().enumerate().find_map(|(i,f)|{let p=candidate.mesh.vertices[f.vertices[0]].position;let n=candidate.mesh.face_normal(i);if path.points.iter().all(|&x|(x-p).dot(n).abs()<1e-6){Some((p,n))}else{None}})
         };
@@ -1088,6 +1093,17 @@ mod conversion_tests {
         let mut scene=Scene::new();scene.geo_paths.push(GeoPath::new(vec![DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y],true,"footprint"));scene.geo_paths.push(GeoPath::new(vec![DVec3::Z,DVec3::new(2.,0.,1.)],false,"line"));
         scene.select(SelectionItem::GeoPath(0));assert_eq!(geopath_to_geometry(&mut scene,&[0]).unwrap(),4);assert_eq!(scene.mesh.faces.len(),1);assert_eq!(scene.geo_paths.len(),1);assert!((scene.mesh.face_area(0)-1.).abs()<1e-9);
         let ids:Vec<_>=scene.mesh.vertices.iter().map(|v|v.uid).collect();geopath_to_geometry(&mut scene,&[0]).unwrap();assert_eq!(scene.mesh.faces.len(),1);assert_eq!(scene.mesh.edges.len(),5);assert!(ids.iter().all(|id|scene.mesh.vertices.iter().any(|v|v.uid==*id)));assert!(scene.geo_paths.is_empty());
+    }
+    #[test]fn crossing_trace_splits_both_wires_and_preserves_source_identity(){
+        let mut scene=Scene::new();let a=scene.mesh.add_vertex(-DVec3::X);let b=scene.mesh.add_vertex(DVec3::X);let edge=scene.mesh.add_edge(a,b).unwrap();scene.mesh.edges[edge].attrs.insert("source".into(),serde_json::json!("survey"));let uid=scene.mesh.vertices[a].uid;
+        scene.geo_paths.push(GeoPath::new(vec![-DVec3::Y,DVec3::Y],false,"cross"));geopath_to_geometry(&mut scene,&[0]).unwrap();
+        assert_eq!(scene.mesh.edges.len(),4);assert!(scene.mesh.faces.is_empty());assert_eq!(scene.mesh.edges.iter().filter(|e|e.attrs.get("source")==Some(&serde_json::json!("survey"))).count(),2);assert!(scene.mesh.vertices.iter().any(|v|v.uid==uid&&v.position==-DVec3::X));let center=scene.mesh.vertices.iter().position(|v|v.position.length()<1e-9).unwrap();assert_eq!(scene.mesh.edges.iter().filter(|e|e.v0==center||e.v1==center).count(),4);
+    }
+    #[test]fn projected_crossing_at_different_elevations_remains_two_wires(){
+        let mut scene=Scene::new();let a=scene.mesh.add_vertex(-DVec3::X);let b=scene.mesh.add_vertex(DVec3::X);scene.mesh.add_edge(a,b);scene.geo_paths.push(GeoPath::new(vec![-DVec3::Y+DVec3::Z,DVec3::Y+DVec3::Z],false,"overpass"));geopath_to_geometry(&mut scene,&[0]).unwrap();assert_eq!(scene.mesh.edges.len(),2);assert_eq!(scene.mesh.vertices.len(),4);assert!(scene.mesh.faces.is_empty());
+    }
+    #[test]fn zero_signed_area_bowtie_detects_two_real_cells(){
+        let mut scene=Scene::new();scene.geo_paths.push(GeoPath::new(vec![DVec3::ZERO,DVec3::new(2.,2.,0.),DVec3::new(0.,2.,0.),DVec3::new(2.,0.,0.)],true,"bowtie"));geopath_to_geometry(&mut scene,&[0]).unwrap();assert_eq!(scene.mesh.faces.len(),2);assert_eq!(scene.mesh.edges.len(),6);assert!((scene.mesh.faces.iter().enumerate().map(|(i,_)|scene.mesh.face_area(i)).sum::<f64>()-2.).abs()<1e-9);
     }
     #[test]fn multiple_planes_and_invalid_selected_paths_are_atomic(){
         let mut scene=Scene::new();for z in [0.,2.] {scene.geo_paths.push(GeoPath::new(vec![DVec3::new(0.,0.,z),DVec3::new(1.,0.,z),DVec3::new(1.,1.,z),DVec3::new(0.,1.,z)],true,"footprint"));}geopath_to_geometry(&mut scene,&[0,1]).unwrap();assert_eq!(scene.mesh.faces.len(),2);

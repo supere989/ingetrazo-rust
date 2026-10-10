@@ -622,6 +622,37 @@ mod tests {
 }
 
 /// Insert shared boundary stations in every incident face; no T-junctions.
+/// Split finite edge crossings involving the new target edges. Skew 3D lines
+/// stay separate; collinear endpoint stations and face boundaries are welded.
+/// Existing surface/curve metadata and surviving vertex identities are retained.
+/// Split actual spatial crossings involving the target edges. Existing face
+/// boundaries and loose wires retain their attributes and vertex identities.
+pub fn split_edge_intersections(mesh:&Mesh,targets:&[usize])->Result<Mesh,String>{
+    validate_mesh(mesh)?;
+    if targets.iter().any(|&i|i>=mesh.edges.len()){return Err("Invalid intersection target edge".into());}
+    if targets.is_empty(){return Ok(mesh.clone());}
+    let mut enriched=mesh.clone();let mut seen=BTreeSet::new();
+    for &i in targets {let e=&mesh.edges[i];let a=mesh.vertices[e.v0].position;let u=mesh.vertices[e.v1].position-a;let aa=u.length_squared();if aa<1e-18{continue;}
+        for (j,f) in mesh.edges.iter().enumerate(){if i==j||!seen.insert((i.min(j),i.max(j))){continue;}let c=mesh.vertices[f.v0].position;let v=mesh.vertices[f.v1].position-c;let bb=v.length_squared();if bb<1e-18{continue;}
+            let ab=u.dot(v);let delta=c-a;let denom=aa*bb-ab*ab;
+            if denom.abs()<=aa*bb*1e-12 {continue;}
+            let t=(delta.dot(u)*bb-delta.dot(v)*ab)/denom;let q=(delta.dot(u)*ab-delta.dot(v)*aa)/denom;
+            if t>=-1e-7&&t<=1.+1e-7&&q>=-1e-7&&q<=1.+1e-7 {let p=a+u*t;let r=c+v*q;if p.distance(r)<1e-6{enriched.add_vertex((p+r)*0.5);}}
+        }
+    }
+    let mut out=Mesh::new();
+    for vertex in &enriched.vertices {out.add_vertex(vertex.position);}
+    for face in &mesh.faces {let mut loops=vec![];
+        for ring in rings(mesh,face){let mut points=vec![];
+            for i in 0..ring.len(){let a=ring[i];let b=ring[(i+1)%ring.len()];let d=b-a;let len=d.length_squared();if len<1e-18{return Err("Collapsed face boundary".into());}
+                let mut stations=vec![(0.,a)];for vertex in &enriched.vertices{let p=vertex.position;let t=(p-a).dot(d)/len;if t>TOL&&t<1.-TOL&&(p-a-d*t).length()<1e-6{stations.push((t,p));}}
+                stations.sort_by(|a,b|a.0.total_cmp(&b.0));stations.dedup_by(|a,b|(a.0-b.0).abs()<TOL);points.extend(stations.into_iter().map(|(_,p)|p));
+            }loops.push(points);
+        }add_face(&mut out,&loops,face)?;
+    }
+    preserve_edges(&mut out,mesh);validate_mesh(&out)?;Ok(out)
+}
+
 /// Insert every existing vertex that lies within another face boundary edge.
 /// Retains faces, holes, paint, vertex identities and edge metadata; useful
 /// when adjoining an open drawing to newly constructed solid geometry.
