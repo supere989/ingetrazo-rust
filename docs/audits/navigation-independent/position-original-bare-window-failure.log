@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-navigation-validation/scripts/probe-python-position-first-point.py", line 38, in <module>
+    else:tool.on_release(vp)
+         ~~~~~~~~~~~~~~~^^^^
+  File "/tmp/ingetrazo-navigation-validation/ingetrazo/tools/walkthrough.py", line 246, in on_release
+    self.place(viewport, base, look_at if dragged else None)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-navigation-validation/ingetrazo/tools/walkthrough.py", line 265, in place
+    flash(tr("Eye placed {h} above the point — drag to look "
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             "around, Walk to move", h=fmt_len(eye_height())), 4000)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-navigation-validation/ingetrazo/views/viewport.py", line 5865, in flash_status
+    bar = window.statusBar() if window is not None else None
+          ^^^^^^^^^^^^^^^^
+AttributeError: 'Viewport' object has no attribute 'statusBar'

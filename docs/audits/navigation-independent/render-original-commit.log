@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-navigation-validation/scripts/check-rendered-position-navigation.py", line 45, in <module>
+    x.XFree(children);window=next(w for w,name in names if name=='IngeTrazo Position navigation proof')
+                             ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
