@@ -1,0 +1,14 @@
+{
+  "source_commit": "23bd7913483b5db81b47866c2ac8248e5d5359bb",
+  "source_candidates": [
+    "53bbca3",
+    "2039629",
+    "2afa5bd"
+  ],
+  "binary_sha256": "a26663253d07eb1d1e6f6ed097c057de4a0b7980a2b70d5fa8ef09a1503e65af",
+  "reference": "../native-ui-alpha53-baseline/original",
+  "passed": false,
+  "exact_passed": 22,
+  "failed": 2,
+  "backend": "Actual NVIDIA RTX5090 native Vulkan own client window"
+}

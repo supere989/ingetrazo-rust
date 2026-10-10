@@ -1,0 +1,12 @@
+[
+  {
+    "control": "missing-case",
+    "rejected": true,
+    "returncode": 1
+  },
+  {
+    "control": "opaque-byte",
+    "rejected": true,
+    "returncode": 1
+  }
+]
