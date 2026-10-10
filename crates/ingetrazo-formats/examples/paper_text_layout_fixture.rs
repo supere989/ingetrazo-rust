@@ -125,6 +125,7 @@ fn main() {
                     font: font.clone(),
                     scale_mm: 14. * 25.4 / 72. / 100. * 0.75,
                     italic: f["italic"].as_bool().unwrap(),
+                    bold: f["bold"].as_bool().unwrap(),
                     glyphs,
                     decorations,
                 }),

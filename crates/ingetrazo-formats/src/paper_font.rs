@@ -87,6 +87,7 @@ pub struct CachedFont {
     reverse: Vec<Option<u16>>,
     metadata: Metadata,
     italic: bool,
+    bold: bool,
     builds: Cell<u64>,
 }
 impl std::fmt::Debug for CachedFont {
@@ -158,6 +159,7 @@ impl CachedFont {
             return Err("Invalid paper font resource metrics".into());
         }
         let italic = face.is_italic();
+        let bold = face.is_bold();
         let count = face.number_of_glyphs() as usize;
         let mut reverse = Vec::new();
         reverse
@@ -191,6 +193,7 @@ impl CachedFont {
             reverse,
             metadata,
             italic,
+            bold,
             builds: Cell::new(0),
         })
     }
@@ -220,6 +223,14 @@ impl CachedFont {
             adjusted = adjusted.min(descent - thickness / 2.);
         }
         Ok([thickness, adjusted])
+    }
+    /// Source QPdf synthetic-bold second pass: shift left by half native line thickness.
+    pub fn synthetic_bold_offset_px(&self, requested: bool) -> Result<f64, String> {
+        if requested && !self.bold {
+            Ok(f64::from(self.shaper.decoration_metrics_26_6()?[0]) / 128.)
+        } else {
+            Ok(0.)
+        }
     }
     pub fn synthetic_italic_shear(&self, requested: bool) -> f64 {
         if requested && !self.italic {
