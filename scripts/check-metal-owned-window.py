@@ -76,7 +76,36 @@ def capture_failure_self_test():
             assert (output/"own-window.completed").read_text()=="completed"
     return {"passed":True,"capture_failure_controls":len(cases),"actual_child_completion":True,"native_execution_claim":False}
 
+def capture_race_self_test():
+    """Actual fast child remains live for its own mocked capture, with a bounded ack."""
+    import contextlib,io,tempfile
+    from unittest import mock
+    def png():
+        def chunk(kind,body):return struct.pack(">I",len(body))+kind+body+struct.pack(">I",zlib.crc32(kind+body))
+        return b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",8,8,8,2,0,0,0))+chunk(b"IDAT",zlib.compress((b"\0"+bytes([20,51,89])*8)*8))+chunk(b"IEND",b"")
+    with tempfile.TemporaryDirectory(prefix="metal-fast-own-capture-")as root:
+        root=pathlib.Path(root);binary=root/"probe"
+        binary.write_text("#!/usr/bin/env python3\nimport json,pathlib,sys,time\np=pathlib.Path(sys.argv[2].split('=',1)[1]);a=pathlib.Path(sys.argv[3].split('=',1)[1]);p.write_text(json.dumps({'window_id':123,'submitted':6,'completed_inflight':0,'retired':6,'displayed':6}));deadline=time.monotonic()+1\nwhile not a.is_file() and time.monotonic()<deadline:time.sleep(.01)\np.with_suffix('.completed').write_text('acknowledged' if a.is_file() else 'expired');sys.exit(0 if a.is_file() else 1)\n")
+        binary.chmod(0o700)
+        def command(args,**kwargs):
+            if '-h'in args:
+                time.sleep(.25);return subprocess.CompletedProcess(args,0,'-l window -o','')
+            pathlib.Path(args[-1]).write_bytes(png());return subprocess.CompletedProcess(args,0,b'',b'')
+        output=root/'fast'
+        with mock.patch.object(sys,'argv',[__file__,str(binary),str(output),'--source-revision=engineering-only']),mock.patch.object(sys,'platform','darwin'),mock.patch.object(subprocess,'run',side_effect=command),contextlib.redirect_stdout(io.StringIO()):
+            assert main()==0
+        report=json.loads((output/'result.json').read_text());assert report['passed']and report['capture_acknowledged']and not report.get('controlled_termination',False)
+        assert (output/'own-window.completed').read_text()=='acknowledged'
+        # Without the diagnostic ack handshake this same fast process exits after
+        # its finite deadline, refusing success; we do not infer visible pixels.
+        missing=root/'missing';identity=root/'negative.json'
+        p=subprocess.run([str(binary),'--automatic','--owned-window-id='+str(identity),'--owned-window-ack='+str(missing)],timeout=2,capture_output=True)
+        assert p.returncode==1 and identity.with_suffix('.completed').read_text()=='expired'
+    return {'passed':True,'actual_child_fast_capture_ack':True,'missing_ack_negative':True,'native_execution_claim':False}
+
 def main():
+    if sys.argv[1:]==["--capture-race-self-test"]:
+        print(json.dumps(capture_race_self_test(),indent=2));return 0
     if sys.argv[1:]==["--self-test"]:
         print(json.dumps(self_test(),indent=2));return 0
     if sys.argv[1:]==["--capture-failure-self-test"]:
@@ -85,13 +114,14 @@ def main():
     args.output.mkdir(parents=True,exist_ok=True)
     if any(args.output.iterdir()):raise ValueError("fresh diagnostic directory required")
     report={"passed":False,"presentation_passed":False,"physical_mac_claim":False,"source_revision":args.source_revision,"binary_sha256":hashlib.sha256(args.binary.read_bytes()).hexdigest()}
-    proc=None;started=time.monotonic();native_started=None;log=None
+    proc=None;started=time.monotonic();native_started=None;log=None;acknowledgment=None
     try:
         if sys.platform!="darwin":raise RuntimeError("own Cocoa capture requires actual macOS")
         # Native presentation acceptance runs independently of diagnostic
         # capture support/permissions. Start it before any capture CLI calls.
         identity=args.output/"own-window.json";log=(args.output/"presentation.log").open("wb")
-        command=[str(args.binary.resolve()),"--automatic","--owned-window-id="+str(identity.resolve())];report["presentation_command"]=command
+        acknowledgment=args.output/"capture-finished"
+        command=[str(args.binary.resolve()),"--automatic","--owned-window-id="+str(identity.resolve()),"--owned-window-ack="+str(acknowledgment.resolve())];report["presentation_command"]=command
         native_started=time.monotonic();proc=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
         capture=pathlib.Path("/usr/sbin/screencapture")
         help_result=subprocess.run([str(capture),"-h"],capture_output=True,text=True,timeout=2)
@@ -120,6 +150,11 @@ def main():
             report["timeout_command"]=error.cmd
             (args.output/"timeout.stdout").write_bytes(error.stdout or b"");(args.output/"timeout.stderr").write_bytes(error.stderr or b"")
     finally:
+        # Only finishes the diagnostic own-window hold. Positive native display,
+        # exactresize and original15s gate are independently enforced by probe.
+        if acknowledgment is not None:
+            acknowledgment.write_text("capture finished or refused\n")
+            report["capture_acknowledged"]=True
         if proc is not None:
             # A capture failure never short-circuits the independent 15-second
             # native gate. Only the existing outer cleanup bound may terminate.

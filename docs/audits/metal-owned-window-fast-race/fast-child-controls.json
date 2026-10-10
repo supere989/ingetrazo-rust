@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "actual_child_fast_capture_ack": true,
+  "missing_ack_negative": true,
+  "native_execution_claim": false
+}
