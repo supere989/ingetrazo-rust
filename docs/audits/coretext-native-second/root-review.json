@@ -1,0 +1,114 @@
+{
+  "source": "e427d9bd",
+  "run": 38084954180,
+  "artifact": 11682550622,
+  "artifact_sha256": "e8ddf52be292c4051bf49d2faf99d7e02d3a3dd9f2d24fac592f428c1d875a7e",
+  "font_comparison": {
+    "passed": false,
+    "matched": [
+      "helvetica",
+      "helvetica-bold",
+      "helvetica-italic",
+      "cjk",
+      "arabic"
+    ],
+    "cases": [
+      {
+        "name": "helvetica",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-bold",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "helvetica-italic",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "times-bold-italic",
+        "passed": false,
+        "errors": [
+          "native refusal: CoreText selected file URL for \"Times\": CoreText resource unavailable",
+          "physical face mismatch"
+        ]
+      },
+      {
+        "name": "cjk",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "name": "arabic",
+        "passed": true,
+        "errors": []
+      }
+    ],
+    "scope": "Exact Qt supplementary glyph-run physical face/native single-face match; actual Canvas pixels still pending"
+  },
+  "canvas": {
+    "passed": false,
+    "pixel_parity_claim": false,
+    "physical_mac_claim": false,
+    "binary_sha256": "281cddbdf83c426baf2727c41fea3a8cf156ac6eb6b58980b9015796f69d67ec",
+    "error": "RuntimeError('Canvas presentation deadline')",
+    "diagnostic_capture": {
+      "sha256": "e10a9c065d5dcc4f4f90fb726654b51363f43eb71cd66fec88871d66e1a88add",
+      "observation": {
+        "window_id": 24,
+        "displayed": 0,
+        "diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194)\"); extent=(1024, 653); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 653.0 } }; hidden=false; drawable_size=CGSize { width: 1024.0, height: 653.0 }; presentsWithTransaction=false; submitted=4; retired=1; displayed=0; skipped=1; frames=[submission=2 id=1 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=391.5952289166667 gpuEnd=391.61673025000005 callback_seen=false callback_time=0; submission=3 id=2 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=391.61674000000005 gpuEnd=391.61944750000004 callback_seen=false callback_time=0; submission=4 id=3 command=MTLCommandBufferStatus(4) presentedTime=0 gpuStart=391.6378006666667 gpuEnd=391.6561400416667 callback_seen=false callback_time=0]",
+        "acceptance_proof": false
+      },
+      "acceptance_proof": false
+    },
+    "exit_code": 1,
+    "host": {
+      "passed": false,
+      "choice": "canvas",
+      "phase": 0,
+      "close_events": 0,
+      "moves": 0,
+      "presses": 0,
+      "releases": 0,
+      "cancel_verified": false,
+      "modal_submission": null,
+      "displayed": 0,
+      "skipped": 9,
+      "pending": 3,
+      "error": "Bounded Cocoa lifecycle deadline phase=0 close=0 move=0 press=0 release=0 displayed=0",
+      "physical_input_claim": false,
+      "physical_mac_claim": false,
+      "canvas_cancelled": 1,
+      "canvas_last_raw": [
+        0,
+        0,
+        2,
+        14196,
+        1
+      ],
+      "canvas_submission_observations": 12,
+      "canvas_warm_frames": 11,
+      "canvas_last_stable_uploads": [
+        [
+          0,
+          0,
+          2,
+          14196,
+          1
+        ],
+        56
+      ],
+      "application_status": "",
+      "active_sheet_index": 0,
+      "sheet_count": 1
+    }
+  },
+  "visual_review": "Own-window diagnostic shows app chrome, landscape paper, margin border and two text lines; not a blank window buffer.",
+  "boundary": "A captured window buffer does not identify which submission reached display or prove drawable retirement. Positive timestamp criterion unchanged; native ARM lifecycle remains failed.",
+  "apple_contract": "https://developer.apple.com/documentation/metal/mtldrawable/presentedtime",
+  "contract_summary": "Zero presentedTime means not presented or dropped; command completion alone is not presentation proof."
+}
