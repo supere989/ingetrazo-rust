@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "platform": "native",
+      "evidence_sha256": "3d72564d6ae860b423f942c1f85810a424245d751643f347ee2b183c996b0a06",
+      "independent_png_patch_counts": [
+        24,
+        0
+      ],
+      "unused_vertices_after_undo": 0,
+      "checks": "three Ctrl rising/held/released cycles, preview history, fresh curve identity, one commit, connected Undo and explicit source registry difference"
+    },
+    {
+      "platform": "original",
+      "evidence_sha256": "11e8abaf550d77138f665c9aa99ff6a531d0640539ad647bc0eaa792fa210817",
+      "independent_png_patch_counts": [
+        11,
+        0
+      ],
+      "unused_vertices_after_undo": 24,
+      "checks": "three Ctrl rising/held/released cycles, preview history, fresh curve identity, one commit, connected Undo and explicit source registry difference"
+    }
+  ],
+  "boundary": "Independent reread of owner rendered artifacts, not a fresh root pointer execution; owner final commit packaging pending"
+}
