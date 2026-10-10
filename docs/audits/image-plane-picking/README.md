@@ -8,7 +8,7 @@ Retained failures: alias-negative misidentified unknown default aliases; selecti
 
 Replay:
 ```
-QT_QPA_PLATFORM=offscreen /tmp/ingetrazo-parity-python/bin/python scripts/probe-python-image-picking.py scripts/image-plane-pick-input.json > original.json
+QT_QPA_PLATFORM=offscreen /tmp/ingetrazo-parity-python/bin/python scripts/probe-python-image-picking.py scripts/image-plane-pick-input.json original.json
 CARGO_TARGET_DIR=/tmp/ingetrazo-document-global-contracts-target cargo run -p ingetrazo-gui --example image_plane_picking -- scripts/image-plane-pick-input.json > native.json
 python3 scripts/check-image-plane-picking.py original.json native.json
 ```
