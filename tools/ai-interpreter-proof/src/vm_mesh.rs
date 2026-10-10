@@ -155,6 +155,11 @@ pub mod editable_mesh {
         types::Constructor,
         AsObject, Py, PyObjectRef, PyPayload, PyResult, Traverse, VirtualMachine,
     };
+    // Cold engineering-only collection under the existing script fuel; never resets poison.
+    #[pyfunction]
+    fn proof_collect_gc(vm: &VirtualMachine) {
+        vm.state.gc.collect_force(2);
+    }
     #[pyattr]
     #[pyclass(name = "Vertex", traverse = "manual")]
     #[derive(Debug, PyPayload)]

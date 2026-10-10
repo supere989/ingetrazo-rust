@@ -1,0 +1,54 @@
+{
+  "cases": {
+    "positive": [
+      {
+        "runtime": "original",
+        "returncode": 0,
+        "assertion_rejection": false
+      },
+      {
+        "runtime": "native",
+        "returncode": 0,
+        "assertion_rejection": false
+      }
+    ],
+    "missing-resurrection": [
+      {
+        "runtime": "original",
+        "returncode": 1,
+        "assertion_rejection": true
+      },
+      {
+        "runtime": "native",
+        "returncode": 101,
+        "assertion_rejection": true
+      }
+    ],
+    "wrong-endpoint-identity": [
+      {
+        "runtime": "original",
+        "returncode": 1,
+        "assertion_rejection": true
+      },
+      {
+        "runtime": "native",
+        "returncode": 101,
+        "assertion_rejection": true
+      }
+    ],
+    "double-finalization": [
+      {
+        "runtime": "original",
+        "returncode": 1,
+        "assertion_rejection": true
+      },
+      {
+        "runtime": "native",
+        "returncode": 101,
+        "assertion_rejection": true
+      }
+    ]
+  },
+  "production_enabled": false,
+  "native_callback_reentry_proven": false
+}

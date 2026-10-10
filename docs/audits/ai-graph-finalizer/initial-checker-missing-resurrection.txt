@@ -1,0 +1,1 @@
+Initial checker correctly rejected omitted resurrection, but required AssertionError whereas fixture reached saved[0] and raised IndexError. Added explicit saved list length assertion before dereference; no native behavior changed.

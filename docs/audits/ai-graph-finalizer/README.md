@@ -1,0 +1,11 @@
+# Native graph finalization and resurrection prerequisite
+
+Source authority: original `6be29fe437a7cd992d4e079f71720821b25216b9`. Identical literal `scripts/fixtures/ai-graph-finalizer.py` executed by pinned original Qt/Python and freshly built RustPython native extension. One positive plus three actual executable mutation negatives, both runtimes; checker requires AssertionError for every negative.
+
+The actual Python finalizer reads all five opaque Edge fields, both endpoint references and Vertex incidence before collection clears slots. It resurrects the same Edge, verifies exact original endpoint/payload identity, then releases the last alias. Second collection invokes no repeated finalizer; real native Vertex/Edge payload Drop counters and native logical owner ledger both return zero. This is actual execution during an admitted/fuelled controller command, not a collector call while previous host poison suppresses Python. `proof_collect_gc` never arms or resets host fuel; STAGED remains installed.
+
+Pinned collector primary source `tools/ai-interpreter-proof/vendor/rustpython-vm/src/gc_state.rs`: weakref callbacks 926–935, finalizers 937–942, initial/transitive resurrection 944–980, late resurrection and retracking 1027–1096, deferred clear/drop 1103–1113. Only truly-dead unreachable payloads are cleared; getters using live-slot assertions are not exposed to tested finalizers after clear. No universal native callback/reentry guarantee is inferred.
+
+Reproduce: `CARGO_TARGET_DIR=/tmp/ingetrazo-ai-registry-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo build --manifest-path tools/ai-interpreter-proof/Cargo.toml --bin vm_graph_finalizer -j2`; then `python3 scripts/check-ai-graph-finalizer.py /tmp/ingetrazo-ai-registry-target/debug/vm_graph_finalizer`. Checker passes runtime recipe path explicitly, so the corrected length assertion is the actual executed recipe; both named builds precede that assertion-only fixture clarification.
+
+Scope remains isolated prerequisite, production disabled. Native callback reentry, total VM heap admission, generated persistent Mesh.edges graph/journal and arbitrary existing-object transactional mutation remain required open work. No rendering/runtime process wrapper introduced.
