@@ -21,7 +21,11 @@ if mode=='group':
  from core.mesh import Mesh
  from PySide6.QtGui import QMatrix4x4
  group=Group(vp.scene.mesh,name='moving curve group');group.xform=QMatrix4x4();group.component=False
- vp.scene.mesh=Mesh();vp.scene.groups.append(group);vp.scene.select([group])
+ vp.scene.mesh=Mesh();vp.scene.groups.append(group)
+ if os.environ.get('INGETRAZO_GROUP_LINKED')=='1':
+  from core.group import copy_group
+  group.component=True;vp.scene.groups.append(copy_group(group,V(10,0,0)))
+ vp.scene.select([group])
 vp.set_active_tool(MoveTool() if mode=='group' else LineTool())
 if mode=='group':
  # Group array flash_status requires the real main-window statusBar host.
@@ -51,7 +55,7 @@ def state():
  copy_center=sum(copy_vertices.values(),V())/len(copy_vertices) if copy_vertices else None
  lines=getattr(vp.active_tool,'rubber_band_lines',None)
  copy_probe=vp._world_to_pixel(current+vp.active_tool.hover_point-vp.active_tool.grab+V(0,radius,0)) if getattr(vp.active_tool,'_copy',False) and anchor is not None and vp.active_tool.hover_point is not None else None
- result=dict(buffers=buffers,value_buffer=vp._value_buffer,array_window=getattr(vp.active_tool,"_last",None) is not None,group_centers=group_centers,group_ids=[g.uid for g in vp.scene.groups],group_count=len(vp.scene.groups),mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges)+sum(len(g.mesh.edges) for g in vp.scene.groups),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
+ result=dict(group_mesh_identity=[id(g.mesh) for g in vp.scene.groups],buffers=buffers,value_buffer=vp._value_buffer,array_window=getattr(vp.active_tool,"_last",None) is not None,group_centers=group_centers,group_ids=[g.uid for g in vp.scene.groups],group_count=len(vp.scene.groups),mode=mode,vertices=len(vp.scene.mesh.vertices),unused_vertices=sum(not v.edges for v in vp.scene.mesh.vertices),copy_probe_pixel=copy_probe,copy_center=a(copy_center) if copy_center is not None else None,preview_lines=len(lines()) if callable(lines) else 0,tool=type(vp.active_tool).__name__,curves=[e.curve for e in vp.scene.mesh.edges],time=__import__('time').monotonic(),center=a(current),rim=vp._world_to_pixel(rim),center_pixel=vp._world_to_pixel(current),move_target=vp._world_to_pixel(rim+V(float(os.environ.get("INGETRAZO_MOVE_DISTANCE","1")),0,0)),kind=snap.kind.title().replace('_','') if snap else None,inference_point=a(snap.point) if snap else None,memory=[a(p)for p in vp._encouraged],edges=len(vp.scene.mesh.edges)+sum(len(g.mesh.edges) for g in vp.scene.groups),faces=len(vp.scene.mesh.faces),undo=len(vp.history.undo_stack),anchor=a(anchor) if anchor is not None else None)
  ref=vp._valid_center_ref()
  pc=vp._world_to_pixel(ref[0]) if ref is not None else None
  pointer=vp._last_mouse_pos

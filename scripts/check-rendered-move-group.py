@@ -63,6 +63,7 @@ def main():
    def ctrl_key(symbol):
     control=x.XKeysymToKeycode(d,0xffe3);event(2,control,None,1);key(symbol);event(3,control,None,2)
    assert mode=="group"
+   baseline_groups=initial["group_count"]
    capture("group-before");time.sleep(.3)
    move(initial["rim"]);click(initial["rim"]);move(initial["move_target"])
    live=wait(lambda:state() if state()["anchor"] and state()["undo"]==0 else None)
@@ -72,8 +73,8 @@ def main():
    preview=wait(lambda:state() if state()["preview_lines"]>1 else None);capture("group-copy-preview")
    assert preview["undo"]==0 and close(preview["center"],initial["center"]),preview
    click(initial["move_target"])
-   copied=wait(lambda:state() if state()["group_count"]==2 and state()["undo"]==1 else None);capture("group-copy-commit")
-   assert len(set(copied["group_ids"]))==2
+   copied=wait(lambda:state() if state()["group_count"]==baseline_groups+1 and state()["undo"]==1 else None);capture("group-copy-commit")
+   assert len(set(copied["group_ids"]))==baseline_groups+1
    def type_value(value):
     if not original:
      rr,xx,yy,w,h,border,depth=C.c_ulong(),C.c_int(),C.c_int(),C.c_uint(),C.c_uint(),C.c_uint(),C.c_uint()
@@ -82,18 +83,25 @@ def main():
     for char in value:key(ord(char))
     key(0xff0d)
    type_value("3x200cm")
-   spaced=wait(lambda:state() if state()["group_count"]==4 else None);capture("group-spaced-array")
-   assert spaced["undo"]==1 and len(set(spaced["group_ids"]))==4
-   starts=[p[0]-initial["center"][0] for p in spaced["group_centers"]]
+   spaced=wait(lambda:state() if state()["group_count"]==baseline_groups+3 else None);capture("group-spaced-array")
+   assert spaced["undo"]==1 and len(set(spaced["group_ids"]))==baseline_groups+3
+   starts=[spaced["group_centers"][0][0]-initial["center"][0]]+[p[0]-initial["center"][0] for p in spaced["group_centers"][baseline_groups:]]
    assert all(abs(a-b)<.01 for a,b in zip(starts,[0,2,4,6])),spaced
    type_value("2x400cm")
-   retyped=wait(lambda:state() if state()["group_count"]==3 else None);capture("group-array-retyped")
+   retyped=wait(lambda:state() if state()["group_count"]==baseline_groups+2 else None);capture("group-array-retyped")
    assert retyped["undo"]==1
-   starts=[p[0]-initial["center"][0] for p in retyped["group_centers"]]
+   starts=[retyped["group_centers"][0][0]-initial["center"][0]]+[p[0]-initial["center"][0] for p in retyped["group_centers"][baseline_groups:]]
    assert all(abs(a-b)<.01 for a,b in zip(starts,[0,4,8])),retyped
-   ctrl_key(0x7a);undone=wait(lambda:state() if state()["group_count"]==1 and state()["undo"]==0 else None);capture("group-array-undo")
+   ctrl_key(0x7a);undone=wait(lambda:state() if state()["group_count"]==baseline_groups and state()["undo"]==0 else None);capture("group-array-undo")
    assert undone["group_ids"]==initial["group_ids"] and close(undone["center"],initial["center"])
-   report={"passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary placed group only; linked components, alpha/depth batch performance and general P08 remain open."}
+   if os.environ.get("INGETRAZO_GROUP_LINKED")=="1":
+    for observed in [live,preview,copied,spaced,retyped,undone]:
+     assert observed["group_ids"][1]==initial["group_ids"][1] and close(observed["group_centers"][1],initial["group_centers"][1]),observed
+     if original:assert len(set(observed["group_mesh_identity"]))==1,observed
+     else:
+      assert observed["definitions"]==initial["definitions"],observed
+      assert len(set(observed["group_definitions"]))==1,observed
+   report={"linked":os.environ.get("INGETRAZO_GROUP_LINKED")=="1","passed":True,"provenance":context(),"live":live,"copy_preview":preview,"copied":copied,"spaced":spaced,"retyped":retyped,"undone":undone,"scope":"Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open."}
    if os.environ.get("INGETRAZO_MOVE_COPY")=="1":report["proof_boundary"]="Connected24-edge curve copy and actual Ctrl/live-preview/Undo gesture; source unused vertex registry retention recorded separately, not complete Scene/model parity. Positive ghost image patch and quiet negative are bounded visual controls."
    report["checker_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
    report["executable_sha256"]=hashlib.sha256((Path("scripts/original_center_ui_fixture.py") if original else native_binary).read_bytes()).hexdigest()

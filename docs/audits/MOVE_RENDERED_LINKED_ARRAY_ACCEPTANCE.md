@@ -1,0 +1,7 @@
+# Linked component rendered Move arrays
+
+Both fresh original/native real XTEST linked instance runs passed. Two deterministic sibling placements share one curve definition; only first instance is selected. Grab/motion previews first translation without undo. Ctrl restores originals and renders copy wireframe, pointer commit creates fresh third placement, Measurements/viewport keyboard 3x200cm yields three copies at offsets 2/4/6, retype 2x400cm yields two copies at offsets 4/8. Exactly one history entry remains; Undo restores original two placement identities and center.
+
+At every observed preview/copy/array/retype/Undo state the untouched sibling has the original ID and center. Native whole component registry equals its initial JSON and all placements retain the same explicit definition. Original all instances retain identical mesh object identity. Reports retain executable/checker hashes and full state; captures show actual native ash Vulkan and Qt/OpenGL viewport gestures on isolated software GPU. No renderer implementation or hardware/timing acceptance is claimed. Nested component-local editing remains separate.
+
+Reproduction: INGETRAZO_CENTER_MODE=group INGETRAZO_GROUP_LINKED=1 INGETRAZO_CENTER_RUN_SUFFIX=-linked-spacing CARGO_TARGET_DIR=<private> /tmp/ingetrazo-parity-python/bin/python scripts/check-rendered-move-group.py. INGETRAZO_CENTER_ORIGINAL=1 runs pinned original. Existing harness failures and real QMainWindow/statusBar source boundary remain retained in MOVE_RENDERED_GROUP_ARRAY_ACCEPTANCE.md.

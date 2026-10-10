@@ -1,0 +1,3708 @@
+{
+  "linked": true,
+  "passed": true,
+  "provenance": {
+    "rust_commit": "a12600b5e3bba7d55d441dd7376a152bb6fd3a9a",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "live": {
+    "anchor": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.996249507592794,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "definitions": {
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38": {
+        "children": [],
+        "mesh": {
+          "edges": [
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 0,
+              "v1": 1
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 1,
+              "v1": 2
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 2,
+              "v1": 3
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 3,
+              "v1": 4
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 4,
+              "v1": 5
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 5,
+              "v1": 6
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 6,
+              "v1": 7
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 7,
+              "v1": 8
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 8,
+              "v1": 9
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 9,
+              "v1": 10
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 10,
+              "v1": 11
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 11,
+              "v1": 12
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 12,
+              "v1": 13
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 13,
+              "v1": 14
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 14,
+              "v1": 15
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 15,
+              "v1": 16
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 16,
+              "v1": 17
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 17,
+              "v1": 18
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 18,
+              "v1": 19
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 19,
+              "v1": 20
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 20,
+              "v1": 21
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 21,
+              "v1": 22
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 22,
+              "v1": 23
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 23,
+              "v1": 0
+            }
+          ],
+          "faces": [],
+          "vertices": [
+            {
+              "edges": [
+                0,
+                23
+              ],
+              "position": [
+                3.2,
+                3.0,
+                1.0
+              ],
+              "uid": "36ad6b2d-1892-4131-9b0f-07a931e484ef"
+            },
+            {
+              "edges": [
+                0,
+                1
+              ],
+              "position": [
+                3.159110991546882,
+                3.310582854123025,
+                1.0
+              ],
+              "uid": "328f5e85-bc6e-4bf6-9e9f-4f53a9358489"
+            },
+            {
+              "edges": [
+                1,
+                2
+              ],
+              "position": [
+                3.0392304845413265,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "79316d00-b44f-4d58-b1d3-643de489949a"
+            },
+            {
+              "edges": [
+                2,
+                3
+              ],
+              "position": [
+                2.848528137423857,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "1ddd1f30-317b-4dd4-8d11-67e19c28856a"
+            },
+            {
+              "edges": [
+                3,
+                4
+              ],
+              "position": [
+                2.6,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "f0d89db5-44f5-4dbb-8d51-409e7fb892bd"
+            },
+            {
+              "edges": [
+                4,
+                5
+              ],
+              "position": [
+                2.310582854123025,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "4cef4c8c-eabd-45a2-a3e8-7a96a91e1a99"
+            },
+            {
+              "edges": [
+                5,
+                6
+              ],
+              "position": [
+                2.0,
+                4.2,
+                1.0
+              ],
+              "uid": "59d57049-0423-4e96-8067-8d88d236b0d6"
+            },
+            {
+              "edges": [
+                6,
+                7
+              ],
+              "position": [
+                1.6894171458769753,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "31bbb693-f510-400f-90a9-bbc26280182a"
+            },
+            {
+              "edges": [
+                7,
+                8
+              ],
+              "position": [
+                1.4000000000000004,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "40da4a57-d4e7-413f-854e-e4cc089cdaea"
+            },
+            {
+              "edges": [
+                8,
+                9
+              ],
+              "position": [
+                1.151471862576143,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "a3bd6a5d-8ab7-4bf2-92fe-b9020952e92d"
+            },
+            {
+              "edges": [
+                9,
+                10
+              ],
+              "position": [
+                0.9607695154586735,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "2a06d9e3-3d5e-4a05-93eb-2fbff9b7338b"
+            },
+            {
+              "edges": [
+                10,
+                11
+              ],
+              "position": [
+                0.8408890084531182,
+                3.3105828541230253,
+                1.0
+              ],
+              "uid": "93860674-3ee6-42c4-82f2-4549b62ff08d"
+            },
+            {
+              "edges": [
+                11,
+                12
+              ],
+              "position": [
+                0.8,
+                3.0,
+                1.0
+              ],
+              "uid": "a5138f91-5732-4977-918f-8f6e4ff49b9e"
+            },
+            {
+              "edges": [
+                12,
+                13
+              ],
+              "position": [
+                0.840889008453118,
+                2.689417145876975,
+                1.0
+              ],
+              "uid": "2abf29a6-d7b4-4e36-b5c3-55eeaa89c0b7"
+            },
+            {
+              "edges": [
+                13,
+                14
+              ],
+              "position": [
+                0.9607695154586735,
+                2.4000000000000004,
+                1.0
+              ],
+              "uid": "09c0c624-3f00-4503-bbc9-6fb3dc894e23"
+            },
+            {
+              "edges": [
+                14,
+                15
+              ],
+              "position": [
+                1.1514718625761424,
+                2.1514718625761433,
+                1.0
+              ],
+              "uid": "211d6a67-b0ea-44c8-b1ad-937dc868aa01"
+            },
+            {
+              "edges": [
+                15,
+                16
+              ],
+              "position": [
+                1.3999999999999995,
+                1.960769515458674,
+                1.0
+              ],
+              "uid": "b1290328-8a78-475a-8b12-b18e8a6500a8"
+            },
+            {
+              "edges": [
+                16,
+                17
+              ],
+              "position": [
+                1.6894171458769753,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "b5ebe6b6-8210-40ca-a4e0-be4e773b3d8e"
+            },
+            {
+              "edges": [
+                17,
+                18
+              ],
+              "position": [
+                1.9999999999999998,
+                1.8,
+                1.0
+              ],
+              "uid": "3ddae104-a0d4-405c-8550-32bff2a38190"
+            },
+            {
+              "edges": [
+                18,
+                19
+              ],
+              "position": [
+                2.3105828541230244,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "3a7fb4c1-b5bb-4c78-9bc4-c78584267709"
+            },
+            {
+              "edges": [
+                19,
+                20
+              ],
+              "position": [
+                2.6,
+                1.9607695154586737,
+                1.0
+              ],
+              "uid": "f88c93be-1fba-4e4f-a899-52bc52b71c04"
+            },
+            {
+              "edges": [
+                20,
+                21
+              ],
+              "position": [
+                2.8485281374238567,
+                2.151471862576143,
+                1.0
+              ],
+              "uid": "126446fb-5717-4f92-9529-99d095fd333e"
+            },
+            {
+              "edges": [
+                21,
+                22
+              ],
+              "position": [
+                3.039230484541326,
+                2.3999999999999995,
+                1.0
+              ],
+              "uid": "253fddf6-59f8-4193-a028-9624c9257de3"
+            },
+            {
+              "edges": [
+                22,
+                23
+              ],
+              "position": [
+                3.1591109915468816,
+                2.6894171458769742,
+                1.0
+              ],
+              "uid": "c01a57ab-448f-463f-8971-9936bc6db26d"
+            }
+          ]
+        }
+      }
+    },
+    "edges": 48,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.996249507592794,
+        3.0,
+        1.0
+      ],
+      [
+        12.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 2,
+    "group_definitions": [
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38"
+    ],
+    "group_ids": [
+      "0b5f2d41-86b0-414c-9199-684370181587",
+      "9f4460e1-763c-41c5-8ebb-f597203d39f5"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      949.2035415853862,
+      336.72986048918267
+    ],
+    "preview_lines": 1,
+    "revision": 2,
+    "rim": [
+      859.0342538308636,
+      336.7298604891827
+    ],
+    "time": 0.818232213,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "copy_preview": {
+    "anchor": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": [
+      741.9732297100232,
+      295.66304904503284
+    ],
+    "curves": [],
+    "definitions": {
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38": {
+        "children": [],
+        "mesh": {
+          "edges": [
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 0,
+              "v1": 1
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 1,
+              "v1": 2
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 2,
+              "v1": 3
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 3,
+              "v1": 4
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 4,
+              "v1": 5
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 5,
+              "v1": 6
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 6,
+              "v1": 7
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 7,
+              "v1": 8
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 8,
+              "v1": 9
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 9,
+              "v1": 10
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 10,
+              "v1": 11
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 11,
+              "v1": 12
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 12,
+              "v1": 13
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 13,
+              "v1": 14
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 14,
+              "v1": 15
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 15,
+              "v1": 16
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 16,
+              "v1": 17
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 17,
+              "v1": 18
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 18,
+              "v1": 19
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 19,
+              "v1": 20
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 20,
+              "v1": 21
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 21,
+              "v1": 22
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 22,
+              "v1": 23
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 23,
+              "v1": 0
+            }
+          ],
+          "faces": [],
+          "vertices": [
+            {
+              "edges": [
+                0,
+                23
+              ],
+              "position": [
+                3.2,
+                3.0,
+                1.0
+              ],
+              "uid": "36ad6b2d-1892-4131-9b0f-07a931e484ef"
+            },
+            {
+              "edges": [
+                0,
+                1
+              ],
+              "position": [
+                3.159110991546882,
+                3.310582854123025,
+                1.0
+              ],
+              "uid": "328f5e85-bc6e-4bf6-9e9f-4f53a9358489"
+            },
+            {
+              "edges": [
+                1,
+                2
+              ],
+              "position": [
+                3.0392304845413265,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "79316d00-b44f-4d58-b1d3-643de489949a"
+            },
+            {
+              "edges": [
+                2,
+                3
+              ],
+              "position": [
+                2.848528137423857,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "1ddd1f30-317b-4dd4-8d11-67e19c28856a"
+            },
+            {
+              "edges": [
+                3,
+                4
+              ],
+              "position": [
+                2.6,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "f0d89db5-44f5-4dbb-8d51-409e7fb892bd"
+            },
+            {
+              "edges": [
+                4,
+                5
+              ],
+              "position": [
+                2.310582854123025,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "4cef4c8c-eabd-45a2-a3e8-7a96a91e1a99"
+            },
+            {
+              "edges": [
+                5,
+                6
+              ],
+              "position": [
+                2.0,
+                4.2,
+                1.0
+              ],
+              "uid": "59d57049-0423-4e96-8067-8d88d236b0d6"
+            },
+            {
+              "edges": [
+                6,
+                7
+              ],
+              "position": [
+                1.6894171458769753,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "31bbb693-f510-400f-90a9-bbc26280182a"
+            },
+            {
+              "edges": [
+                7,
+                8
+              ],
+              "position": [
+                1.4000000000000004,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "40da4a57-d4e7-413f-854e-e4cc089cdaea"
+            },
+            {
+              "edges": [
+                8,
+                9
+              ],
+              "position": [
+                1.151471862576143,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "a3bd6a5d-8ab7-4bf2-92fe-b9020952e92d"
+            },
+            {
+              "edges": [
+                9,
+                10
+              ],
+              "position": [
+                0.9607695154586735,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "2a06d9e3-3d5e-4a05-93eb-2fbff9b7338b"
+            },
+            {
+              "edges": [
+                10,
+                11
+              ],
+              "position": [
+                0.8408890084531182,
+                3.3105828541230253,
+                1.0
+              ],
+              "uid": "93860674-3ee6-42c4-82f2-4549b62ff08d"
+            },
+            {
+              "edges": [
+                11,
+                12
+              ],
+              "position": [
+                0.8,
+                3.0,
+                1.0
+              ],
+              "uid": "a5138f91-5732-4977-918f-8f6e4ff49b9e"
+            },
+            {
+              "edges": [
+                12,
+                13
+              ],
+              "position": [
+                0.840889008453118,
+                2.689417145876975,
+                1.0
+              ],
+              "uid": "2abf29a6-d7b4-4e36-b5c3-55eeaa89c0b7"
+            },
+            {
+              "edges": [
+                13,
+                14
+              ],
+              "position": [
+                0.9607695154586735,
+                2.4000000000000004,
+                1.0
+              ],
+              "uid": "09c0c624-3f00-4503-bbc9-6fb3dc894e23"
+            },
+            {
+              "edges": [
+                14,
+                15
+              ],
+              "position": [
+                1.1514718625761424,
+                2.1514718625761433,
+                1.0
+              ],
+              "uid": "211d6a67-b0ea-44c8-b1ad-937dc868aa01"
+            },
+            {
+              "edges": [
+                15,
+                16
+              ],
+              "position": [
+                1.3999999999999995,
+                1.960769515458674,
+                1.0
+              ],
+              "uid": "b1290328-8a78-475a-8b12-b18e8a6500a8"
+            },
+            {
+              "edges": [
+                16,
+                17
+              ],
+              "position": [
+                1.6894171458769753,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "b5ebe6b6-8210-40ca-a4e0-be4e773b3d8e"
+            },
+            {
+              "edges": [
+                17,
+                18
+              ],
+              "position": [
+                1.9999999999999998,
+                1.8,
+                1.0
+              ],
+              "uid": "3ddae104-a0d4-405c-8550-32bff2a38190"
+            },
+            {
+              "edges": [
+                18,
+                19
+              ],
+              "position": [
+                2.3105828541230244,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "3a7fb4c1-b5bb-4c78-9bc4-c78584267709"
+            },
+            {
+              "edges": [
+                19,
+                20
+              ],
+              "position": [
+                2.6,
+                1.9607695154586737,
+                1.0
+              ],
+              "uid": "f88c93be-1fba-4e4f-a899-52bc52b71c04"
+            },
+            {
+              "edges": [
+                20,
+                21
+              ],
+              "position": [
+                2.8485281374238567,
+                2.151471862576143,
+                1.0
+              ],
+              "uid": "126446fb-5717-4f92-9529-99d095fd333e"
+            },
+            {
+              "edges": [
+                21,
+                22
+              ],
+              "position": [
+                3.039230484541326,
+                2.3999999999999995,
+                1.0
+              ],
+              "uid": "253fddf6-59f8-4193-a028-9624c9257de3"
+            },
+            {
+              "edges": [
+                22,
+                23
+              ],
+              "position": [
+                3.1591109915468816,
+                2.6894171458769742,
+                1.0
+              ],
+              "uid": "c01a57ab-448f-463f-8971-9936bc6db26d"
+            }
+          ]
+        }
+      }
+    },
+    "edges": 48,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        12.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 2,
+    "group_definitions": [
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38"
+    ],
+    "group_ids": [
+      "0b5f2d41-86b0-414c-9199-684370181587",
+      "9f4460e1-763c-41c5-8ebb-f597203d39f5"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 25,
+    "revision": 3,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 1.169025069,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "copied": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "definitions": {
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38": {
+        "children": [],
+        "mesh": {
+          "edges": [
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 0,
+              "v1": 1
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 1,
+              "v1": 2
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 2,
+              "v1": 3
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 3,
+              "v1": 4
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 4,
+              "v1": 5
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 5,
+              "v1": 6
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 6,
+              "v1": 7
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 7,
+              "v1": 8
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 8,
+              "v1": 9
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 9,
+              "v1": 10
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 10,
+              "v1": 11
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 11,
+              "v1": 12
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 12,
+              "v1": 13
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 13,
+              "v1": 14
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 14,
+              "v1": 15
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 15,
+              "v1": 16
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 16,
+              "v1": 17
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 17,
+              "v1": 18
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 18,
+              "v1": 19
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 19,
+              "v1": 20
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 20,
+              "v1": 21
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 21,
+              "v1": 22
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 22,
+              "v1": 23
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 23,
+              "v1": 0
+            }
+          ],
+          "faces": [],
+          "vertices": [
+            {
+              "edges": [
+                0,
+                23
+              ],
+              "position": [
+                3.2,
+                3.0,
+                1.0
+              ],
+              "uid": "36ad6b2d-1892-4131-9b0f-07a931e484ef"
+            },
+            {
+              "edges": [
+                0,
+                1
+              ],
+              "position": [
+                3.159110991546882,
+                3.310582854123025,
+                1.0
+              ],
+              "uid": "328f5e85-bc6e-4bf6-9e9f-4f53a9358489"
+            },
+            {
+              "edges": [
+                1,
+                2
+              ],
+              "position": [
+                3.0392304845413265,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "79316d00-b44f-4d58-b1d3-643de489949a"
+            },
+            {
+              "edges": [
+                2,
+                3
+              ],
+              "position": [
+                2.848528137423857,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "1ddd1f30-317b-4dd4-8d11-67e19c28856a"
+            },
+            {
+              "edges": [
+                3,
+                4
+              ],
+              "position": [
+                2.6,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "f0d89db5-44f5-4dbb-8d51-409e7fb892bd"
+            },
+            {
+              "edges": [
+                4,
+                5
+              ],
+              "position": [
+                2.310582854123025,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "4cef4c8c-eabd-45a2-a3e8-7a96a91e1a99"
+            },
+            {
+              "edges": [
+                5,
+                6
+              ],
+              "position": [
+                2.0,
+                4.2,
+                1.0
+              ],
+              "uid": "59d57049-0423-4e96-8067-8d88d236b0d6"
+            },
+            {
+              "edges": [
+                6,
+                7
+              ],
+              "position": [
+                1.6894171458769753,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "31bbb693-f510-400f-90a9-bbc26280182a"
+            },
+            {
+              "edges": [
+                7,
+                8
+              ],
+              "position": [
+                1.4000000000000004,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "40da4a57-d4e7-413f-854e-e4cc089cdaea"
+            },
+            {
+              "edges": [
+                8,
+                9
+              ],
+              "position": [
+                1.151471862576143,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "a3bd6a5d-8ab7-4bf2-92fe-b9020952e92d"
+            },
+            {
+              "edges": [
+                9,
+                10
+              ],
+              "position": [
+                0.9607695154586735,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "2a06d9e3-3d5e-4a05-93eb-2fbff9b7338b"
+            },
+            {
+              "edges": [
+                10,
+                11
+              ],
+              "position": [
+                0.8408890084531182,
+                3.3105828541230253,
+                1.0
+              ],
+              "uid": "93860674-3ee6-42c4-82f2-4549b62ff08d"
+            },
+            {
+              "edges": [
+                11,
+                12
+              ],
+              "position": [
+                0.8,
+                3.0,
+                1.0
+              ],
+              "uid": "a5138f91-5732-4977-918f-8f6e4ff49b9e"
+            },
+            {
+              "edges": [
+                12,
+                13
+              ],
+              "position": [
+                0.840889008453118,
+                2.689417145876975,
+                1.0
+              ],
+              "uid": "2abf29a6-d7b4-4e36-b5c3-55eeaa89c0b7"
+            },
+            {
+              "edges": [
+                13,
+                14
+              ],
+              "position": [
+                0.9607695154586735,
+                2.4000000000000004,
+                1.0
+              ],
+              "uid": "09c0c624-3f00-4503-bbc9-6fb3dc894e23"
+            },
+            {
+              "edges": [
+                14,
+                15
+              ],
+              "position": [
+                1.1514718625761424,
+                2.1514718625761433,
+                1.0
+              ],
+              "uid": "211d6a67-b0ea-44c8-b1ad-937dc868aa01"
+            },
+            {
+              "edges": [
+                15,
+                16
+              ],
+              "position": [
+                1.3999999999999995,
+                1.960769515458674,
+                1.0
+              ],
+              "uid": "b1290328-8a78-475a-8b12-b18e8a6500a8"
+            },
+            {
+              "edges": [
+                16,
+                17
+              ],
+              "position": [
+                1.6894171458769753,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "b5ebe6b6-8210-40ca-a4e0-be4e773b3d8e"
+            },
+            {
+              "edges": [
+                17,
+                18
+              ],
+              "position": [
+                1.9999999999999998,
+                1.8,
+                1.0
+              ],
+              "uid": "3ddae104-a0d4-405c-8550-32bff2a38190"
+            },
+            {
+              "edges": [
+                18,
+                19
+              ],
+              "position": [
+                2.3105828541230244,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "3a7fb4c1-b5bb-4c78-9bc4-c78584267709"
+            },
+            {
+              "edges": [
+                19,
+                20
+              ],
+              "position": [
+                2.6,
+                1.9607695154586737,
+                1.0
+              ],
+              "uid": "f88c93be-1fba-4e4f-a899-52bc52b71c04"
+            },
+            {
+              "edges": [
+                20,
+                21
+              ],
+              "position": [
+                2.8485281374238567,
+                2.151471862576143,
+                1.0
+              ],
+              "uid": "126446fb-5717-4f92-9529-99d095fd333e"
+            },
+            {
+              "edges": [
+                21,
+                22
+              ],
+              "position": [
+                3.039230484541326,
+                2.3999999999999995,
+                1.0
+              ],
+              "uid": "253fddf6-59f8-4193-a028-9624c9257de3"
+            },
+            {
+              "edges": [
+                22,
+                23
+              ],
+              "position": [
+                3.1591109915468816,
+                2.6894171458769742,
+                1.0
+              ],
+              "uid": "c01a57ab-448f-463f-8971-9936bc6db26d"
+            }
+          ]
+        }
+      }
+    },
+    "edges": 72,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        12.0,
+        3.0,
+        1.0
+      ],
+      [
+        2.996249507592794,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 3,
+    "group_definitions": [
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38"
+    ],
+    "group_ids": [
+      "0b5f2d41-86b0-414c-9199-684370181587",
+      "9f4460e1-763c-41c5-8ebb-f597203d39f5",
+      "7dbecd13-3246-4286-9934-3ad85d37eb0c"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 4,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 1.567330746,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "spaced": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "definitions": {
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38": {
+        "children": [],
+        "mesh": {
+          "edges": [
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 0,
+              "v1": 1
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 1,
+              "v1": 2
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 2,
+              "v1": 3
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 3,
+              "v1": 4
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 4,
+              "v1": 5
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 5,
+              "v1": 6
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 6,
+              "v1": 7
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 7,
+              "v1": 8
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 8,
+              "v1": 9
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 9,
+              "v1": 10
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 10,
+              "v1": 11
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 11,
+              "v1": 12
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 12,
+              "v1": 13
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 13,
+              "v1": 14
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 14,
+              "v1": 15
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 15,
+              "v1": 16
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 16,
+              "v1": 17
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 17,
+              "v1": 18
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 18,
+              "v1": 19
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 19,
+              "v1": 20
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 20,
+              "v1": 21
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 21,
+              "v1": 22
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 22,
+              "v1": 23
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 23,
+              "v1": 0
+            }
+          ],
+          "faces": [],
+          "vertices": [
+            {
+              "edges": [
+                0,
+                23
+              ],
+              "position": [
+                3.2,
+                3.0,
+                1.0
+              ],
+              "uid": "36ad6b2d-1892-4131-9b0f-07a931e484ef"
+            },
+            {
+              "edges": [
+                0,
+                1
+              ],
+              "position": [
+                3.159110991546882,
+                3.310582854123025,
+                1.0
+              ],
+              "uid": "328f5e85-bc6e-4bf6-9e9f-4f53a9358489"
+            },
+            {
+              "edges": [
+                1,
+                2
+              ],
+              "position": [
+                3.0392304845413265,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "79316d00-b44f-4d58-b1d3-643de489949a"
+            },
+            {
+              "edges": [
+                2,
+                3
+              ],
+              "position": [
+                2.848528137423857,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "1ddd1f30-317b-4dd4-8d11-67e19c28856a"
+            },
+            {
+              "edges": [
+                3,
+                4
+              ],
+              "position": [
+                2.6,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "f0d89db5-44f5-4dbb-8d51-409e7fb892bd"
+            },
+            {
+              "edges": [
+                4,
+                5
+              ],
+              "position": [
+                2.310582854123025,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "4cef4c8c-eabd-45a2-a3e8-7a96a91e1a99"
+            },
+            {
+              "edges": [
+                5,
+                6
+              ],
+              "position": [
+                2.0,
+                4.2,
+                1.0
+              ],
+              "uid": "59d57049-0423-4e96-8067-8d88d236b0d6"
+            },
+            {
+              "edges": [
+                6,
+                7
+              ],
+              "position": [
+                1.6894171458769753,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "31bbb693-f510-400f-90a9-bbc26280182a"
+            },
+            {
+              "edges": [
+                7,
+                8
+              ],
+              "position": [
+                1.4000000000000004,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "40da4a57-d4e7-413f-854e-e4cc089cdaea"
+            },
+            {
+              "edges": [
+                8,
+                9
+              ],
+              "position": [
+                1.151471862576143,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "a3bd6a5d-8ab7-4bf2-92fe-b9020952e92d"
+            },
+            {
+              "edges": [
+                9,
+                10
+              ],
+              "position": [
+                0.9607695154586735,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "2a06d9e3-3d5e-4a05-93eb-2fbff9b7338b"
+            },
+            {
+              "edges": [
+                10,
+                11
+              ],
+              "position": [
+                0.8408890084531182,
+                3.3105828541230253,
+                1.0
+              ],
+              "uid": "93860674-3ee6-42c4-82f2-4549b62ff08d"
+            },
+            {
+              "edges": [
+                11,
+                12
+              ],
+              "position": [
+                0.8,
+                3.0,
+                1.0
+              ],
+              "uid": "a5138f91-5732-4977-918f-8f6e4ff49b9e"
+            },
+            {
+              "edges": [
+                12,
+                13
+              ],
+              "position": [
+                0.840889008453118,
+                2.689417145876975,
+                1.0
+              ],
+              "uid": "2abf29a6-d7b4-4e36-b5c3-55eeaa89c0b7"
+            },
+            {
+              "edges": [
+                13,
+                14
+              ],
+              "position": [
+                0.9607695154586735,
+                2.4000000000000004,
+                1.0
+              ],
+              "uid": "09c0c624-3f00-4503-bbc9-6fb3dc894e23"
+            },
+            {
+              "edges": [
+                14,
+                15
+              ],
+              "position": [
+                1.1514718625761424,
+                2.1514718625761433,
+                1.0
+              ],
+              "uid": "211d6a67-b0ea-44c8-b1ad-937dc868aa01"
+            },
+            {
+              "edges": [
+                15,
+                16
+              ],
+              "position": [
+                1.3999999999999995,
+                1.960769515458674,
+                1.0
+              ],
+              "uid": "b1290328-8a78-475a-8b12-b18e8a6500a8"
+            },
+            {
+              "edges": [
+                16,
+                17
+              ],
+              "position": [
+                1.6894171458769753,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "b5ebe6b6-8210-40ca-a4e0-be4e773b3d8e"
+            },
+            {
+              "edges": [
+                17,
+                18
+              ],
+              "position": [
+                1.9999999999999998,
+                1.8,
+                1.0
+              ],
+              "uid": "3ddae104-a0d4-405c-8550-32bff2a38190"
+            },
+            {
+              "edges": [
+                18,
+                19
+              ],
+              "position": [
+                2.3105828541230244,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "3a7fb4c1-b5bb-4c78-9bc4-c78584267709"
+            },
+            {
+              "edges": [
+                19,
+                20
+              ],
+              "position": [
+                2.6,
+                1.9607695154586737,
+                1.0
+              ],
+              "uid": "f88c93be-1fba-4e4f-a899-52bc52b71c04"
+            },
+            {
+              "edges": [
+                20,
+                21
+              ],
+              "position": [
+                2.8485281374238567,
+                2.151471862576143,
+                1.0
+              ],
+              "uid": "126446fb-5717-4f92-9529-99d095fd333e"
+            },
+            {
+              "edges": [
+                21,
+                22
+              ],
+              "position": [
+                3.039230484541326,
+                2.3999999999999995,
+                1.0
+              ],
+              "uid": "253fddf6-59f8-4193-a028-9624c9257de3"
+            },
+            {
+              "edges": [
+                22,
+                23
+              ],
+              "position": [
+                3.1591109915468816,
+                2.6894171458769742,
+                1.0
+              ],
+              "uid": "c01a57ab-448f-463f-8971-9936bc6db26d"
+            }
+          ]
+        }
+      }
+    },
+    "edges": 120,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        12.0,
+        3.0,
+        1.0
+      ],
+      [
+        4.0,
+        3.0,
+        1.0
+      ],
+      [
+        6.0,
+        3.0,
+        1.0
+      ],
+      [
+        8.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 5,
+    "group_definitions": [
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38"
+    ],
+    "group_ids": [
+      "0b5f2d41-86b0-414c-9199-684370181587",
+      "9f4460e1-763c-41c5-8ebb-f597203d39f5",
+      "a28f9948-d461-4d7c-a6d8-70d1a9827e4a",
+      "e9142cee-f514-4a61-a282-d377c959bbf1",
+      "9b7c3d78-5fe1-41f8-bea0-162dba9f4f42"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 5,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 4.37156975,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "retyped": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "definitions": {
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38": {
+        "children": [],
+        "mesh": {
+          "edges": [
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 0,
+              "v1": 1
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 1,
+              "v1": 2
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 2,
+              "v1": 3
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 3,
+              "v1": 4
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 4,
+              "v1": 5
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 5,
+              "v1": 6
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 6,
+              "v1": 7
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 7,
+              "v1": 8
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 8,
+              "v1": 9
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 9,
+              "v1": 10
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 10,
+              "v1": 11
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 11,
+              "v1": 12
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 12,
+              "v1": 13
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 13,
+              "v1": 14
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 14,
+              "v1": 15
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 15,
+              "v1": 16
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 16,
+              "v1": 17
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 17,
+              "v1": 18
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 18,
+              "v1": 19
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 19,
+              "v1": 20
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 20,
+              "v1": 21
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 21,
+              "v1": 22
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 22,
+              "v1": 23
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 23,
+              "v1": 0
+            }
+          ],
+          "faces": [],
+          "vertices": [
+            {
+              "edges": [
+                0,
+                23
+              ],
+              "position": [
+                3.2,
+                3.0,
+                1.0
+              ],
+              "uid": "36ad6b2d-1892-4131-9b0f-07a931e484ef"
+            },
+            {
+              "edges": [
+                0,
+                1
+              ],
+              "position": [
+                3.159110991546882,
+                3.310582854123025,
+                1.0
+              ],
+              "uid": "328f5e85-bc6e-4bf6-9e9f-4f53a9358489"
+            },
+            {
+              "edges": [
+                1,
+                2
+              ],
+              "position": [
+                3.0392304845413265,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "79316d00-b44f-4d58-b1d3-643de489949a"
+            },
+            {
+              "edges": [
+                2,
+                3
+              ],
+              "position": [
+                2.848528137423857,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "1ddd1f30-317b-4dd4-8d11-67e19c28856a"
+            },
+            {
+              "edges": [
+                3,
+                4
+              ],
+              "position": [
+                2.6,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "f0d89db5-44f5-4dbb-8d51-409e7fb892bd"
+            },
+            {
+              "edges": [
+                4,
+                5
+              ],
+              "position": [
+                2.310582854123025,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "4cef4c8c-eabd-45a2-a3e8-7a96a91e1a99"
+            },
+            {
+              "edges": [
+                5,
+                6
+              ],
+              "position": [
+                2.0,
+                4.2,
+                1.0
+              ],
+              "uid": "59d57049-0423-4e96-8067-8d88d236b0d6"
+            },
+            {
+              "edges": [
+                6,
+                7
+              ],
+              "position": [
+                1.6894171458769753,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "31bbb693-f510-400f-90a9-bbc26280182a"
+            },
+            {
+              "edges": [
+                7,
+                8
+              ],
+              "position": [
+                1.4000000000000004,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "40da4a57-d4e7-413f-854e-e4cc089cdaea"
+            },
+            {
+              "edges": [
+                8,
+                9
+              ],
+              "position": [
+                1.151471862576143,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "a3bd6a5d-8ab7-4bf2-92fe-b9020952e92d"
+            },
+            {
+              "edges": [
+                9,
+                10
+              ],
+              "position": [
+                0.9607695154586735,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "2a06d9e3-3d5e-4a05-93eb-2fbff9b7338b"
+            },
+            {
+              "edges": [
+                10,
+                11
+              ],
+              "position": [
+                0.8408890084531182,
+                3.3105828541230253,
+                1.0
+              ],
+              "uid": "93860674-3ee6-42c4-82f2-4549b62ff08d"
+            },
+            {
+              "edges": [
+                11,
+                12
+              ],
+              "position": [
+                0.8,
+                3.0,
+                1.0
+              ],
+              "uid": "a5138f91-5732-4977-918f-8f6e4ff49b9e"
+            },
+            {
+              "edges": [
+                12,
+                13
+              ],
+              "position": [
+                0.840889008453118,
+                2.689417145876975,
+                1.0
+              ],
+              "uid": "2abf29a6-d7b4-4e36-b5c3-55eeaa89c0b7"
+            },
+            {
+              "edges": [
+                13,
+                14
+              ],
+              "position": [
+                0.9607695154586735,
+                2.4000000000000004,
+                1.0
+              ],
+              "uid": "09c0c624-3f00-4503-bbc9-6fb3dc894e23"
+            },
+            {
+              "edges": [
+                14,
+                15
+              ],
+              "position": [
+                1.1514718625761424,
+                2.1514718625761433,
+                1.0
+              ],
+              "uid": "211d6a67-b0ea-44c8-b1ad-937dc868aa01"
+            },
+            {
+              "edges": [
+                15,
+                16
+              ],
+              "position": [
+                1.3999999999999995,
+                1.960769515458674,
+                1.0
+              ],
+              "uid": "b1290328-8a78-475a-8b12-b18e8a6500a8"
+            },
+            {
+              "edges": [
+                16,
+                17
+              ],
+              "position": [
+                1.6894171458769753,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "b5ebe6b6-8210-40ca-a4e0-be4e773b3d8e"
+            },
+            {
+              "edges": [
+                17,
+                18
+              ],
+              "position": [
+                1.9999999999999998,
+                1.8,
+                1.0
+              ],
+              "uid": "3ddae104-a0d4-405c-8550-32bff2a38190"
+            },
+            {
+              "edges": [
+                18,
+                19
+              ],
+              "position": [
+                2.3105828541230244,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "3a7fb4c1-b5bb-4c78-9bc4-c78584267709"
+            },
+            {
+              "edges": [
+                19,
+                20
+              ],
+              "position": [
+                2.6,
+                1.9607695154586737,
+                1.0
+              ],
+              "uid": "f88c93be-1fba-4e4f-a899-52bc52b71c04"
+            },
+            {
+              "edges": [
+                20,
+                21
+              ],
+              "position": [
+                2.8485281374238567,
+                2.151471862576143,
+                1.0
+              ],
+              "uid": "126446fb-5717-4f92-9529-99d095fd333e"
+            },
+            {
+              "edges": [
+                21,
+                22
+              ],
+              "position": [
+                3.039230484541326,
+                2.3999999999999995,
+                1.0
+              ],
+              "uid": "253fddf6-59f8-4193-a028-9624c9257de3"
+            },
+            {
+              "edges": [
+                22,
+                23
+              ],
+              "position": [
+                3.1591109915468816,
+                2.6894171458769742,
+                1.0
+              ],
+              "uid": "c01a57ab-448f-463f-8971-9936bc6db26d"
+            }
+          ]
+        }
+      }
+    },
+    "edges": 96,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        12.0,
+        3.0,
+        1.0
+      ],
+      [
+        6.0,
+        3.0,
+        1.0
+      ],
+      [
+        10.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 4,
+    "group_definitions": [
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38"
+    ],
+    "group_ids": [
+      "0b5f2d41-86b0-414c-9199-684370181587",
+      "9f4460e1-763c-41c5-8ebb-f597203d39f5",
+      "d17cc0a2-b311-4a1c-8e01-f37b165012fa",
+      "67f341ad-1e38-4192-9326-9bf33563960d"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 6,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 7.178573473,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "undone": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "definitions": {
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38": {
+        "children": [],
+        "mesh": {
+          "edges": [
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 0,
+              "v1": 1
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 1,
+              "v1": 2
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 2,
+              "v1": 3
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 3,
+              "v1": 4
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 4,
+              "v1": 5
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 5,
+              "v1": 6
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 6,
+              "v1": 7
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 7,
+              "v1": 8
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 8,
+              "v1": 9
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 9,
+              "v1": 10
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 10,
+              "v1": 11
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 11,
+              "v1": 12
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 12,
+              "v1": 13
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 13,
+              "v1": 14
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 14,
+              "v1": 15
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 15,
+              "v1": 16
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 16,
+              "v1": 17
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 17,
+              "v1": 18
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 18,
+              "v1": 19
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 19,
+              "v1": 20
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 20,
+              "v1": 21
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 21,
+              "v1": 22
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 22,
+              "v1": 23
+            },
+            {
+              "attrs": {},
+              "curve_id": 71,
+              "faces": [],
+              "hidden": false,
+              "layer": null,
+              "soft": false,
+              "v0": 23,
+              "v1": 0
+            }
+          ],
+          "faces": [],
+          "vertices": [
+            {
+              "edges": [
+                0,
+                23
+              ],
+              "position": [
+                3.2,
+                3.0,
+                1.0
+              ],
+              "uid": "36ad6b2d-1892-4131-9b0f-07a931e484ef"
+            },
+            {
+              "edges": [
+                0,
+                1
+              ],
+              "position": [
+                3.159110991546882,
+                3.310582854123025,
+                1.0
+              ],
+              "uid": "328f5e85-bc6e-4bf6-9e9f-4f53a9358489"
+            },
+            {
+              "edges": [
+                1,
+                2
+              ],
+              "position": [
+                3.0392304845413265,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "79316d00-b44f-4d58-b1d3-643de489949a"
+            },
+            {
+              "edges": [
+                2,
+                3
+              ],
+              "position": [
+                2.848528137423857,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "1ddd1f30-317b-4dd4-8d11-67e19c28856a"
+            },
+            {
+              "edges": [
+                3,
+                4
+              ],
+              "position": [
+                2.6,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "f0d89db5-44f5-4dbb-8d51-409e7fb892bd"
+            },
+            {
+              "edges": [
+                4,
+                5
+              ],
+              "position": [
+                2.310582854123025,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "4cef4c8c-eabd-45a2-a3e8-7a96a91e1a99"
+            },
+            {
+              "edges": [
+                5,
+                6
+              ],
+              "position": [
+                2.0,
+                4.2,
+                1.0
+              ],
+              "uid": "59d57049-0423-4e96-8067-8d88d236b0d6"
+            },
+            {
+              "edges": [
+                6,
+                7
+              ],
+              "position": [
+                1.6894171458769753,
+                4.159110991546882,
+                1.0
+              ],
+              "uid": "31bbb693-f510-400f-90a9-bbc26280182a"
+            },
+            {
+              "edges": [
+                7,
+                8
+              ],
+              "position": [
+                1.4000000000000004,
+                4.039230484541326,
+                1.0
+              ],
+              "uid": "40da4a57-d4e7-413f-854e-e4cc089cdaea"
+            },
+            {
+              "edges": [
+                8,
+                9
+              ],
+              "position": [
+                1.151471862576143,
+                3.848528137423857,
+                1.0
+              ],
+              "uid": "a3bd6a5d-8ab7-4bf2-92fe-b9020952e92d"
+            },
+            {
+              "edges": [
+                9,
+                10
+              ],
+              "position": [
+                0.9607695154586735,
+                3.5999999999999996,
+                1.0
+              ],
+              "uid": "2a06d9e3-3d5e-4a05-93eb-2fbff9b7338b"
+            },
+            {
+              "edges": [
+                10,
+                11
+              ],
+              "position": [
+                0.8408890084531182,
+                3.3105828541230253,
+                1.0
+              ],
+              "uid": "93860674-3ee6-42c4-82f2-4549b62ff08d"
+            },
+            {
+              "edges": [
+                11,
+                12
+              ],
+              "position": [
+                0.8,
+                3.0,
+                1.0
+              ],
+              "uid": "a5138f91-5732-4977-918f-8f6e4ff49b9e"
+            },
+            {
+              "edges": [
+                12,
+                13
+              ],
+              "position": [
+                0.840889008453118,
+                2.689417145876975,
+                1.0
+              ],
+              "uid": "2abf29a6-d7b4-4e36-b5c3-55eeaa89c0b7"
+            },
+            {
+              "edges": [
+                13,
+                14
+              ],
+              "position": [
+                0.9607695154586735,
+                2.4000000000000004,
+                1.0
+              ],
+              "uid": "09c0c624-3f00-4503-bbc9-6fb3dc894e23"
+            },
+            {
+              "edges": [
+                14,
+                15
+              ],
+              "position": [
+                1.1514718625761424,
+                2.1514718625761433,
+                1.0
+              ],
+              "uid": "211d6a67-b0ea-44c8-b1ad-937dc868aa01"
+            },
+            {
+              "edges": [
+                15,
+                16
+              ],
+              "position": [
+                1.3999999999999995,
+                1.960769515458674,
+                1.0
+              ],
+              "uid": "b1290328-8a78-475a-8b12-b18e8a6500a8"
+            },
+            {
+              "edges": [
+                16,
+                17
+              ],
+              "position": [
+                1.6894171458769753,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "b5ebe6b6-8210-40ca-a4e0-be4e773b3d8e"
+            },
+            {
+              "edges": [
+                17,
+                18
+              ],
+              "position": [
+                1.9999999999999998,
+                1.8,
+                1.0
+              ],
+              "uid": "3ddae104-a0d4-405c-8550-32bff2a38190"
+            },
+            {
+              "edges": [
+                18,
+                19
+              ],
+              "position": [
+                2.3105828541230244,
+                1.840889008453118,
+                1.0
+              ],
+              "uid": "3a7fb4c1-b5bb-4c78-9bc4-c78584267709"
+            },
+            {
+              "edges": [
+                19,
+                20
+              ],
+              "position": [
+                2.6,
+                1.9607695154586737,
+                1.0
+              ],
+              "uid": "f88c93be-1fba-4e4f-a899-52bc52b71c04"
+            },
+            {
+              "edges": [
+                20,
+                21
+              ],
+              "position": [
+                2.8485281374238567,
+                2.151471862576143,
+                1.0
+              ],
+              "uid": "126446fb-5717-4f92-9529-99d095fd333e"
+            },
+            {
+              "edges": [
+                21,
+                22
+              ],
+              "position": [
+                3.039230484541326,
+                2.3999999999999995,
+                1.0
+              ],
+              "uid": "253fddf6-59f8-4193-a028-9624c9257de3"
+            },
+            {
+              "edges": [
+                22,
+                23
+              ],
+              "position": [
+                3.1591109915468816,
+                2.6894171458769742,
+                1.0
+              ],
+              "uid": "c01a57ab-448f-463f-8971-9936bc6db26d"
+            }
+          ]
+        }
+      }
+    },
+    "edges": 48,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        12.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 2,
+    "group_definitions": [
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38",
+      "52abcc03-bf17-4d0c-9473-a83fb11e6d38"
+    ],
+    "group_ids": [
+      "0b5f2d41-86b0-414c-9199-684370181587",
+      "9f4460e1-763c-41c5-8ebb-f597203d39f5"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 7,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 7.827561103,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "scope": "Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open.",
+  "checker_sha256": "50cf9739f6ef68bf86dece8dc408c76c2dd051077fb365877baaca688a3303cd",
+  "executable_sha256": "4591fc578e686024821ff332cb8184f22b5d79bcef707fd898c6322ad2f44759"
+}
