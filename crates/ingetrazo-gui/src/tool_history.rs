@@ -47,6 +47,13 @@ impl IngeTrazoApp {
         self.record_tool_commit(before);
     }
 
+    pub fn dispatch_tool_release(&mut self, context: &ToolContext, drag_distance: f64) {
+        let before = self.tool_snapshot();
+        self.active_tool.on_release(&mut self.scene, context, drag_distance);
+        self.status_message = self.active_tool.error_message().map(|e| format!("Tool error: {e}")).unwrap_or_default();
+        self.record_tool_commit(before);
+    }
+
     pub fn dispatch_tool_double_click(&mut self, context: &ToolContext) {
         let before = self.tool_snapshot();
         self.active_tool.on_double_click(&mut self.scene, context);
@@ -97,6 +104,21 @@ mod tests {
             DVec3::new(0.5, 0.5, z),
             Ray::new(DVec3::new(0.5, 0.5, 5.), -DVec3::Z),
         )
+    }
+
+    #[test]
+    fn followme_preview_cancel_and_drag_release_history_are_atomic() {
+        let mut app=app();app.scene=Scene::new();
+        let vertices=[DVec3::ZERO,DVec3::X,DVec3::new(1.,0.,1.),DVec3::Z].into_iter().map(|p|app.scene.mesh.add_vertex(p)).collect();app.scene.mesh.add_face(vertices,vec![]);
+        let a=app.scene.mesh.add_vertex(DVec3::ZERO);let b=app.scene.mesh.add_vertex(DVec3::new(0.,2.,0.));app.scene.mesh.add_edge(a,b);
+        app.active_tool=create_tool(ToolType::FollowMe);app.active_tool_type=ToolType::FollowMe;
+        let before=app.scene.mesh.clone();
+        let click=ToolContext::new(DVec3::new(0.5,0.,0.5),Ray::new(DVec3::new(0.5,-2.,0.5),DVec3::Y));
+        let hover=ToolContext::new(DVec3::new(0.,1.,0.),Ray::new(DVec3::new(0.,1.,2.),-DVec3::Z));
+        app.dispatch_tool_click(&click);app.active_tool.on_move(&mut app.scene,&hover);app.dispatch_tool_release(&hover,2.);assert_eq!(app.scene.mesh,before);assert!(app.undo_stack.is_empty());
+        app.active_tool.on_cancel(&mut app.scene);assert_eq!(app.scene.mesh,before);assert!(app.undo_stack.is_empty());
+        app.dispatch_tool_click(&click);app.active_tool.on_move(&mut app.scene,&hover);app.dispatch_tool_release(&hover,10.);assert_eq!(app.undo_stack.len(),1);let after=app.scene.mesh.clone();assert_ne!(before,after);
+        app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,after);
     }
 
     #[test]

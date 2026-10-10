@@ -251,6 +251,16 @@ pub fn sweep_profile(
     path: &[DVec3],
     closed: bool,
 ) -> Result<(), String> {
+    prepare_sweep(scene, face_id, path, closed, true)
+}
+
+fn prepare_sweep(
+    scene: &mut Scene,
+    face_id: usize,
+    path: &[DVec3],
+    closed: bool,
+    validate: bool,
+) -> Result<(), String> {
     if scene.mesh.vertices.iter().any(|v| !v.position.is_finite())
         || scene.mesh.faces.iter().any(|f| {
             f.vertices
@@ -406,6 +416,10 @@ pub fn sweep_profile(
             }
         }
     }
+    if !validate {
+        scene.mesh = sweep;
+        return Ok(());
+    }
     ingetrazo_core::solids::validate_solid_mesh(&sweep)?;
     for id in 0..sweep.edges.len() {
         let edge = &sweep.edges[id];
@@ -482,59 +496,239 @@ pub fn sweep_profile(
     Ok(())
 }
 
+/// Initial stations for a manually dragged path, including mid-edge profiles.
+pub fn manual_path_start(
+    mesh: &Mesh,
+    face: usize,
+    edge: usize,
+    toward: DVec3,
+) -> Result<(Option<DVec3>, Vec<usize>), String> {
+    let e = mesh.edges.get(edge).ok_or("Invalid path edge")?;
+    if e.v0 >= mesh.vertices.len() || e.v1 >= mesh.vertices.len() || face >= mesh.faces.len() {
+        return Err("Invalid profile/path references".into());
+    }
+    let c = mesh.face_centroid(face);
+    let n = mesh.face_normal(face);
+    let a = mesh.vertices[e.v0].position;
+    let b = mesh.vertices[e.v1].position;
+    let da = (a - c).dot(n);
+    let db = (b - c).dot(n);
+    if da * db < -1e-12 {
+        let far = if a.distance_squared(toward) < b.distance_squared(toward) {
+            e.v0
+        } else {
+            e.v1
+        };
+        Ok((Some(a + (b - a) * (da / (da - db))), vec![far]))
+    } else if da.abs() <= db.abs() {
+        Ok((None, vec![e.v0, e.v1]))
+    } else {
+        Ok((None, vec![e.v1, e.v0]))
+    }
+}
+
+/// Backtrack or bridge skipped stations by a bounded shortest-path search.
+pub fn manual_path_extend(
+    mesh: &Mesh,
+    chain: &mut Vec<usize>,
+    edge: usize,
+    skip: &HashSet<usize>,
+) -> bool {
+    use std::collections::VecDeque;
+    let Some(e) = mesh.edges.get(edge) else {
+        return false;
+    };
+    let Some(&last) = chain.last() else {
+        return false;
+    };
+    if skip.contains(&edge) {
+        return false;
+    }
+    let ids: BTreeMap<_, _> = chain.iter().enumerate().map(|(i, &v)| (v, i)).collect();
+    if last == e.v0 || last == e.v1 {
+        let other = if last == e.v0 { e.v1 } else { e.v0 };
+        if chain.len() >= 2 && other == chain[chain.len() - 2] {
+            chain.pop();
+            return true;
+        }
+        if ids.contains_key(&other) {
+            if other == chain[0] && chain.len() >= 3 {
+                chain.push(other);
+                return true;
+            }
+            return false;
+        }
+        chain.push(other);
+        return true;
+    }
+    if let (Some(&a), Some(&b)) = (ids.get(&e.v0), ids.get(&e.v1)) {
+        let len = chain.len();
+        chain.truncate(a.max(b) + 1);
+        return chain.len() != len;
+    }
+    let mut prev = BTreeMap::from([(last, None)]);
+    let mut queue = VecDeque::from([last]);
+    let mut hit = None;
+    for _ in 0..400 {
+        let Some(v) = queue.pop_front() else { break };
+        for (id, ed) in mesh.edges.iter().enumerate() {
+            if skip.contains(&id) || (ed.v0 != v && ed.v1 != v) {
+                continue;
+            }
+            let w = if ed.v0 == v { ed.v1 } else { ed.v0 };
+            if prev.contains_key(&w) || (ids.contains_key(&w) && w != last) {
+                continue;
+            }
+            prev.insert(w, Some(v));
+            if w == e.v0 || w == e.v1 {
+                hit = Some(w);
+                break;
+            }
+            queue.push_back(w);
+        }
+        if hit.is_some() {
+            break;
+        }
+    }
+    let Some(reached) = hit else { return false };
+    let mut route = vec![];
+    let mut v = reached;
+    while v != last {
+        route.push(v);
+        v = prev[&v].unwrap();
+    }
+    route.reverse();
+    chain.extend(route);
+    let other = if reached == e.v0 { e.v1 } else { e.v0 };
+    if !ids.contains_key(&other) && other != reached {
+        chain.push(other);
+    }
+    true
+}
+
+fn orient_path(mesh: &Mesh, face: usize, points: &mut Vec<DVec3>, closed: bool) {
+    let center = mesh.face_centroid(face);
+    if closed && points.len() >= 3 {
+        let start = (0..points.len())
+            .min_by(|&a, &b| {
+                points[a]
+                    .distance_squared(center)
+                    .total_cmp(&points[b].distance_squared(center))
+            })
+            .unwrap();
+        points.rotate_left(start);
+        let n = mesh.face_normal(face);
+        if (points[points.len() - 1] - points[0])
+            .normalize()
+            .dot(n)
+            .abs()
+            > (points[1] - points[0]).normalize().dot(n).abs() + 1e-9
+        {
+            points[1..].reverse();
+        }
+    } else if points.len() >= 2
+        && points[0].distance_squared(center) > points[points.len() - 1].distance_squared(center)
+    {
+        points.reverse();
+    }
+}
+
 #[derive(Default)]
 pub struct FollowMeTool {
     profile_face: Option<usize>,
-    hover_point: Option<DVec3>,
+    selected_path: Option<(Vec<DVec3>, bool)>,
+    chain: Vec<usize>,
+    start_point: Option<DVec3>,
+    closed_path: Option<Vec<DVec3>>,
+    skip: HashSet<usize>,
+    last_edge: Option<usize>,
+    preview: Option<Mesh>,
+    path_lines: Vec<(DVec3, DVec3)>,
     pub last_error: Option<String>,
 }
-
 impl FollowMeTool {
-    fn selected_path(scene: &Scene) -> Vec<usize> {
-        let mut ids: Vec<_> = scene
-            .selection
+    fn points(&self, scene: &Scene) -> (Vec<DVec3>, bool) {
+        if let Some(p) = &self.closed_path {
+            return (p.clone(), true);
+        }
+        let mut p = Vec::new();
+        if let Some(s) = self.start_point {
+            p.push(s);
+        }
+        p.extend(self.chain.iter().map(|&v| scene.mesh.vertices[v].position));
+        let closed = self.start_point.is_none()
+            && self.chain.len() >= 4
+            && self.chain.first() == self.chain.last();
+        if closed {
+            p.pop();
+        }
+        (p, closed)
+    }
+    fn update_preview(&mut self, scene: &Scene) {
+        let Some(face) = self.profile_face else {
+            return;
+        };
+        let (mut points, closed) = self.points(scene);
+        if closed {
+            orient_path(&scene.mesh, face, &mut points, true);
+        }
+        self.path_lines = points.windows(2).map(|w| (w[0], w[1])).collect();
+        if closed && points.len() >= 3 {
+            self.path_lines.push((*points.last().unwrap(), points[0]));
+        }
+        self.preview = None;
+        if points.len() < 2 {
+            return;
+        }
+        let mut temporary = Scene::new();
+        let source = &scene.mesh.faces[face];
+        let vertices = source
+            .vertices
             .iter()
-            .filter_map(|item| {
-                if let SelectionItem::Edge(id) = item {
-                    Some(*id)
-                } else {
-                    None
-                }
+            .map(|&v| temporary.mesh.add_vertex(scene.mesh.vertices[v].position))
+            .collect();
+        let holes = source
+            .holes
+            .iter()
+            .map(|ring| {
+                ring.iter()
+                    .map(|&v| temporary.mesh.add_vertex(scene.mesh.vertices[v].position))
+                    .collect()
             })
             .collect();
-        ids.sort_unstable();
-        ids
-    }
-    fn apply(&mut self, scene: &mut Scene, face: usize, edges: &[usize]) -> Result<(), String> {
-        let (mut points, closed) = order_path_edges(&scene.mesh, edges)?;
-        let center = scene.mesh.face_centroid(face);
-        if closed {
-            let start = (0..points.len())
-                .min_by(|&a, &b| {
-                    (points[a] - center)
-                        .length_squared()
-                        .total_cmp(&(points[b] - center).length_squared())
-                })
-                .unwrap();
-            points.rotate_left(start);
-            let normal = scene.mesh.face_normal(face);
-            if (points[points.len() - 1] - points[0])
-                .normalize()
-                .dot(normal)
-                .abs()
-                > (points[1] - points[0]).normalize().dot(normal).abs() + 1e-9
-            {
-                points[1..].reverse();
-            }
-        } else if (points[0] - center).length_squared()
-            > (points[points.len() - 1] - center).length_squared()
-        {
-            points.reverse();
+        temporary.mesh.add_face(vertices, holes);
+        temporary.mesh.faces[0].attrs = source.attrs.clone();
+        // Ring construction is cached per changed station; expensive kernel
+        // validation runs only on commit. The preview is never a live model.
+        if prepare_sweep(&mut temporary, 0, &points, closed, false).is_ok() {
+            self.preview = Some(temporary.mesh);
         }
-        sweep_profile(scene, face, &points, closed)
+    }
+    fn finish(&mut self, scene: &mut Scene) {
+        let Some(face) = self.profile_face else {
+            return;
+        };
+        let (mut points, closed) = self.points(scene);
+        if points.len() < 2 {
+            let selected = self.selected_path.take();
+            self.on_cancel(scene);
+            self.selected_path = selected;
+            self.last_error = Some("Touch the path edges before finishing the sweep".into());
+            return;
+        }
+        if closed {
+            orient_path(&scene.mesh, face, &mut points, true);
+        }
+        self.last_error = sweep_profile(scene, face, &points, closed).err();
+        self.profile_face = None;
+        self.chain.clear();
+        self.start_point = None;
+        self.closed_path = None;
+        self.preview = None;
+        self.path_lines.clear();
+        self.last_edge = None;
     }
 }
-
 impl Tool for FollowMeTool {
     fn error_message(&self) -> Option<&str> {
         self.last_error.as_deref()
@@ -549,55 +743,174 @@ impl Tool for FollowMeTool {
         Some("W")
     }
     fn description(&self) -> &'static str {
-        "Sweep a profile along selected connected path edges."
+        "Sweep a profile along selected or dragged path edges."
     }
     fn vcb_label(&self) -> &'static str {
-        "Select connected path edges, then profile"
+        "Pick profile; drag path; Alt picks a face perimeter"
+    }
+    fn on_activate(&mut self, scene: &mut Scene) {
+        *self = Self::default();
+        let edges: Vec<_> = scene
+            .selection
+            .iter()
+            .filter_map(|i| {
+                if let SelectionItem::Edge(id) = i {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        if !edges.is_empty() {
+            match order_path_edges(&scene.mesh, &edges) {
+                Ok(p) => self.selected_path = Some(p),
+                Err(e) => self.last_error = Some(e),
+            }
+        } else {
+            let faces: Vec<_> = scene
+                .selection
+                .iter()
+                .filter_map(|i| {
+                    if let SelectionItem::Face(id) = i {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            if faces.len() == 1 {
+                self.selected_path = Some((
+                    scene.mesh.faces[faces[0]]
+                        .vertices
+                        .iter()
+                        .map(|&v| scene.mesh.vertices[v].position)
+                        .collect(),
+                    true,
+                ));
+            }
+        }
     }
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.last_error = None;
-        let edges = Self::selected_path(scene);
-        if !edges.is_empty() {
+        if self.profile_face.is_some() {
+            self.finish(scene);
+            return;
+        }
+        let Some((face, _, _)) = pick_face(&scene.mesh, &ctx.ray) else {
+            return;
+        };
+        // Also support tools constructed before selection without activation.
+        let mut path = self.selected_path.clone();
+        if path.is_none() {
+            let edges: Vec<_> = scene
+                .selection
+                .iter()
+                .filter_map(|i| {
+                    if let SelectionItem::Edge(id) = i {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            if !edges.is_empty() {
+                match order_path_edges(&scene.mesh, &edges) {
+                    Ok(p) => path = Some(p),
+                    Err(e) => {
+                        self.last_error = Some(e);
+                        return;
+                    }
+                }
+            }
+        }
+        if let Some((mut points, closed)) = path {
+            orient_path(&scene.mesh, face, &mut points, closed);
+            self.last_error = sweep_profile(scene, face, &points, closed).err();
+            return;
+        }
+        self.profile_face = Some(face);
+        let center = scene.mesh.face_centroid(face);
+        let normal = scene.mesh.face_normal(face);
+        self.skip = scene
+            .mesh
+            .edges
+            .iter()
+            .enumerate()
+            .filter(|(_, e)| {
+                [e.v0, e.v1]
+                    .iter()
+                    .all(|&v| (scene.mesh.vertices[v].position - center).dot(normal).abs() < 1e-6)
+            })
+            .map(|(i, _)| i)
+            .collect();
+    }
+    fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        let Some(profile) = self.profile_face else {
+            return;
+        };
+        if ctx.alt_held {
             if let Some((face, _, _)) = pick_face(&scene.mesh, &ctx.ray) {
-                self.last_error = self.apply(scene, face, &edges).err();
-                self.profile_face = None;
+                if face != profile {
+                    let p: Vec<_> = scene.mesh.faces[face]
+                        .vertices
+                        .iter()
+                        .map(|&v| scene.mesh.vertices[v].position)
+                        .collect();
+                    if self.closed_path.as_ref() != Some(&p) {
+                        self.closed_path = Some(p);
+                        self.update_preview(scene);
+                    }
+                }
             }
             return;
         }
-        if self.profile_face.is_none() {
-            self.profile_face = pick_face(&scene.mesh, &ctx.ray).map(|(face, _, _)| face);
-        } else if let Some(edge) = pick_edge(&scene.mesh, &ctx.ray, 0.2) {
-            // Manual path: all connected wire edges of the clicked path.
-            let mut connected = HashSet::from([edge]);
-            loop {
-                let vertices: HashSet<_> = connected
-                    .iter()
-                    .flat_map(|&id| [scene.mesh.edges[id].v0, scene.mesh.edges[id].v1])
-                    .collect();
-                let old = connected.len();
-                for (id, e) in scene.mesh.edges.iter().enumerate() {
-                    if e.faces.is_empty() && (vertices.contains(&e.v0) || vertices.contains(&e.v1))
-                    {
-                        connected.insert(id);
-                    }
+        if self.closed_path.take().is_some() {
+            self.update_preview(scene);
+        }
+        let Some(edge) = pick_edge(&scene.mesh, &ctx.ray, 0.2) else {
+            return;
+        };
+        if self.skip.contains(&edge) || self.last_edge == Some(edge) {
+            return;
+        }
+        self.last_edge = Some(edge);
+        let changed = if self.chain.is_empty() {
+            match manual_path_start(&scene.mesh, profile, edge, ctx.world) {
+                Ok((start, chain)) => {
+                    self.start_point = start;
+                    self.chain = chain;
+                    true
                 }
-                if old == connected.len() {
-                    break;
+                Err(e) => {
+                    self.last_error = Some(e);
+                    false
                 }
             }
-            let mut ids: Vec<_> = connected.into_iter().collect();
-            ids.sort_unstable();
-            self.last_error = self.apply(scene, self.profile_face.unwrap(), &ids).err();
-            self.profile_face = None;
+        } else {
+            manual_path_extend(&scene.mesh, &mut self.chain, edge, &self.skip)
+        };
+        if changed {
+            self.update_preview(scene);
         }
     }
-    fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
-        self.hover_point = Some(ctx.world);
+    fn on_release(&mut self, scene: &mut Scene, _ctx: &ToolContext, drag_distance: f64) {
+        if drag_distance >= 6. {
+            self.finish(scene);
+        }
     }
     fn on_cancel(&mut self, _scene: &mut Scene) {
-        self.profile_face = None;
-        self.hover_point = None;
-        self.last_error = None;
+        let selected = self.selected_path.take();
+        *self = Self::default();
+        self.selected_path = selected;
+    }
+    fn on_deactivate(&mut self, scene: &mut Scene) {
+        self.on_cancel(scene);
+    }
+    fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
+        self.path_lines.clone()
+    }
+    fn preview_mesh(&self) -> Option<&Mesh> {
+        self.preview.as_ref()
     }
 }
 
@@ -633,6 +946,123 @@ mod tests {
             .attrs
             .insert("mat".into(), "stone".into());
         scene
+    }
+
+    #[test]
+    fn selected_face_perimeter_and_alt_hover_supply_closed_paths_without_mutation() {
+        use ingetrazo_core::math::Ray;
+        let mut scene = profile(1., false);
+        let ring = [
+            DVec3::ZERO,
+            DVec3::new(0., 3., 0.),
+            DVec3::new(3., 3., 0.),
+            DVec3::new(3., 0., 0.),
+        ]
+        .into_iter()
+        .map(|p| scene.mesh.add_vertex(p))
+        .collect();
+        let face = scene.mesh.add_face(ring, vec![]).unwrap();
+        let before = scene.mesh.clone();
+        let mut tool = FollowMeTool::default();
+        scene.selection.insert(SelectionItem::Face(face));
+        tool.on_activate(&mut scene);
+        assert!(tool.selected_path.as_ref().unwrap().1);
+        tool.on_cancel(&mut scene);
+        assert!(tool.selected_path.is_some());
+        scene.clear_selection();
+        tool.on_activate(&mut scene);
+        let profile_ctx = ToolContext::new(
+            DVec3::new(0.5, 0., 0.5),
+            Ray::new(DVec3::new(0.5, -2., 0.5), DVec3::Y),
+        );
+        tool.on_click(&mut scene, &profile_ctx);
+        let alt = ToolContext::with_modifiers(
+            DVec3::new(1.5, 1.5, 0.),
+            Ray::new(DVec3::new(1.5, 1.5, 4.), -DVec3::Z),
+            false,
+            false,
+            true,
+        );
+        tool.on_move(&mut scene, &alt);
+        assert_eq!(scene.mesh, before);
+        assert_eq!(tool.rubber_band_lines().len(), 4);
+        let preview = tool.preview_mesh().unwrap();
+        assert!(preview.is_manifold_solid());
+        assert!((preview.volume().unwrap() - 8.).abs() < 1e-8);
+        tool.on_cancel(&mut scene);
+        assert_eq!(scene.mesh, before);
+        assert!(tool.preview_mesh().is_none());
+    }
+
+    #[test]
+    fn manual_paths_bridge_backtrack_and_start_at_plane_crossings() {
+        let mut scene = profile(1., false);
+        let mut vertices = vec![];
+        for y in 0..=5 {
+            vertices.push(scene.mesh.add_vertex(DVec3::new(0., y as f64, 0.)));
+        }
+        let edges: Vec<_> = vertices
+            .windows(2)
+            .map(|w| scene.mesh.add_edge(w[0], w[1]).unwrap())
+            .collect();
+        let mut chain = vertices[..2].to_vec();
+        let skip = HashSet::new();
+        assert!(manual_path_extend(&scene.mesh, &mut chain, edges[4], &skip));
+        assert_eq!(chain, vertices);
+        assert!(manual_path_extend(&scene.mesh, &mut chain, edges[4], &skip));
+        assert_eq!(chain, vertices[..5]);
+        assert!(manual_path_extend(&scene.mesh, &mut chain, edges[1], &skip));
+        assert_eq!(chain, vertices[..3]);
+        let before = chain.clone();
+        assert!(!manual_path_extend(
+            &scene.mesh,
+            &mut chain,
+            edges[3],
+            &HashSet::from([edges[3]])
+        ));
+        assert_eq!(chain, before);
+        let a = scene.mesh.add_vertex(DVec3::new(0.5, -2., 0.5));
+        let b = scene.mesh.add_vertex(DVec3::new(0.5, 2., 0.5));
+        let e = scene.mesh.add_edge(a, b).unwrap();
+        let (start, chain) =
+            manual_path_start(&scene.mesh, 0, e, DVec3::new(0.5, -1., 0.5)).unwrap();
+        assert_eq!(start, Some(DVec3::new(0.5, 0., 0.5)));
+        assert_eq!(chain, vec![a]);
+    }
+
+    #[test]
+    fn manual_hover_is_immutable_release_commits_and_escape_discards_preview() {
+        use ingetrazo_core::math::Ray;
+        let mut scene = profile(1., false);
+        let a = scene.mesh.add_vertex(DVec3::ZERO);
+        let b = scene.mesh.add_vertex(DVec3::new(0., 2., 0.));
+        scene.mesh.add_edge(a, b);
+        let before = scene.mesh.clone();
+        let mut tool = FollowMeTool::default();
+        let pick = ToolContext::new(
+            DVec3::new(0.5, 0., 0.5),
+            Ray::new(DVec3::new(0.5, -2., 0.5), DVec3::Y),
+        );
+        let hover = ToolContext::new(
+            DVec3::new(0., 1., 0.),
+            Ray::new(DVec3::new(0., 1., 2.), -DVec3::Z),
+        );
+        tool.on_click(&mut scene, &pick);
+        tool.on_move(&mut scene, &hover);
+        assert_eq!(scene.mesh, before);
+        assert!(tool.preview_mesh().is_some());
+        assert_eq!(tool.rubber_band_lines().len(), 1);
+        tool.on_release(&mut scene, &hover, 2.);
+        assert_eq!(scene.mesh, before);
+        tool.on_cancel(&mut scene);
+        assert!(tool.preview_mesh().is_none());
+        assert_eq!(scene.mesh, before);
+        tool.on_click(&mut scene, &pick);
+        tool.on_move(&mut scene, &hover);
+        tool.on_release(&mut scene, &hover, 10.);
+        assert!(tool.last_error.is_none(), "{:?}", tool.last_error);
+        assert!((scene.mesh.volume().unwrap() - 2.).abs() < 1e-8);
+        assert!(tool.preview_mesh().is_none());
     }
 
     #[test]

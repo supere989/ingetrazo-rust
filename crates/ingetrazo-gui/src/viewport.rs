@@ -10,7 +10,7 @@ use glam::DVec3;
 use ingetrazo_core::math::Plane;
 use ingetrazo_render::pipeline::{build_scene_render_data, project_point, render_scene_to_egui};
 use ingetrazo_render::snap_glyph::SnapGlyph;
-use ingetrazo_tools::base::ToolContext;
+use ingetrazo_tools::base::{ToolContext, ToolType};
 
 use crate::app::IngeTrazoApp;
 
@@ -41,7 +41,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     if response.dragged() {
         let drag_delta = response.drag_delta();
         let is_middle = pointer.middle_down();
-        let is_alt_left = alt_down && pointer.primary_down();
+        let is_alt_left = alt_down && pointer.primary_down() && app.active_tool_type != ToolType::FollowMe;
 
         if is_middle || is_alt_left {
             if shift_down {
@@ -122,15 +122,31 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 alt_held: alt_down,
             };
 
-            // Send tool move
-            app.active_tool.on_move(&mut app.scene, &tool_ctx);
-
-            // Handle primary click for active tool
-            if response.double_clicked() && !alt_down {
-                app.dispatch_tool_double_click(&tool_ctx);
-            } else if response.clicked() && !alt_down {
+            let follow_me = app.active_tool_type == ToolType::FollowMe;
+            // Follow Me starts a profile on press, then observes the path during
+            // drag. Other tools retain their established release-click behavior.
+            if follow_me && pointer.button_pressed(egui::PointerButton::Primary) {
+                ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_press"), mouse_pos));
                 app.dispatch_tool_click(&tool_ctx);
             }
+            app.active_tool.on_move(&mut app.scene, &tool_ctx);
+            if follow_me { ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_context"), tool_ctx.clone())); }
+            if !follow_me && response.double_clicked() && !alt_down {
+                app.dispatch_tool_double_click(&tool_ctx);
+            } else if !follow_me && response.clicked() && !alt_down {
+                app.dispatch_tool_click(&tool_ctx);
+            }
+
+        }
+    }
+
+    // Release may occur beyond the viewport: commit the last path observed
+    // inside it, using the actual press/release displacement for jitter.
+    if app.active_tool_type == ToolType::FollowMe && pointer.button_released(egui::PointerButton::Primary) {
+        let origin=ui.ctx().data_mut(|data| data.remove_temp::<egui::Pos2>(response.id.with("followme_press")));
+        let context=ui.ctx().data(|data| data.get_temp::<ToolContext>(response.id.with("followme_context")));
+        if let (Some(origin),Some(context),Some(end))=(origin,context,pointer.hover_pos()) {
+            app.dispatch_tool_release(&context,origin.distance(end) as f64);
         }
     }
 
@@ -140,6 +156,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         app.snap_engine.locked_line = None;
         app.snap_engine.clear_encouraged();
         app.active_tool.on_cancel(&mut app.scene);
+        ui.ctx().data_mut(|data| { data.remove::<egui::Pos2>(response.id.with("followme_press")); data.remove::<ToolContext>(response.id.with("followme_context")); });
     }
 
     // 3. Render 3D Scene
@@ -177,8 +194,30 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     render_scene_to_egui(&render_data, &app.camera, &painter, rect, &app.style, &tex_map);
 
+    // Immutable sweep preview: no document versions or undo snapshots change.
+    if let Some(mesh) = app.active_tool.preview_mesh() {
+        let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
+        let mut overlay = egui::Mesh::default();
+        for id in 0..mesh.faces.len() {
+            for (a,b,c) in mesh.triangulate_face(id) {
+                if let (Some((a,_)),Some((b,_)),Some((c,_))) = (project_point(a,&view_proj,rect),project_point(b,&view_proj,rect),project_point(c,&view_proj,rect)) {
+                    let start=overlay.vertices.len() as u32;
+                    for pos in [a,b,c] {overlay.colored_vertex(pos,egui::Color32::from_rgba_unmultiplied(255,180,60,45));}
+                    overlay.add_triangle(start,start+1,start+2);
+                }
+            }
+        }
+        painter.add(egui::Shape::mesh(overlay));
+        for edge in &mesh.edges {
+            if let (Some((a,_)), Some((b,_))) = (
+                project_point(mesh.vertices[edge.v0].position, &view_proj, rect),
+                project_point(mesh.vertices[edge.v1].position, &view_proj, rect),
+            ) { painter.line_segment([a,b], egui::Stroke::new(1.,egui::Color32::from_rgba_unmultiplied(255,180,60,150))); }
+        }
+    }
+
     // 4. Render Active Tool Rubber Band (if any)
-    if let Some((p0, p1)) = app.active_tool.rubber_band() {
+    for (p0, p1) in app.active_tool.rubber_band_lines() {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
         if let (Some((s0, _)), Some((s1, _))) = (
             project_point(p0, &view_proj, rect),
