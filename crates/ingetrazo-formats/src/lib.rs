@@ -16,7 +16,7 @@ pub mod stl;
 
 pub use dae::export_dae;
 pub use dxf::{export_dxf, import_dxf, DxfError};
-pub use gltf::{export_glb, GltfError, GLTF_MAGIC};
+pub use gltf::{export_glb, export_gltf, GltfError, GLTF_MAGIC};
 pub use ifc::export_ifc;
 pub use igz::{load_igz, save_igz, save_igz_format1, save_igz_format2, scene_to_igz_document, IgzError, ZIP_MAGIC};
 pub use obj::{export_obj, import_obj, load_obj, save_obj, ObjError};
@@ -86,7 +86,12 @@ pub fn save_file(scene: &Scene, path: &Path) -> Result<(), FormatError> {
             export_dxf(scene, &mut file)?;
             Ok(())
         }
-        "glb" | "gltf" => {
+        "gltf" => {
+            let mut file = std::fs::File::create(path)?;
+            export_gltf(scene, &mut file)?;
+            Ok(())
+        }
+        "glb" => {
             let mut file = std::fs::File::create(path)?;
             export_glb(scene, &mut file)?;
             Ok(())
