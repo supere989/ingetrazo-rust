@@ -5,7 +5,13 @@ use ingetrazo_formats::paper_text_layout::LayoutFont;
 use glam::DVec2;
 use ingetrazo_render::{annotations::{Plan,Primitive,Gate},cad2d::{Geometry,Vertex,Batch,SourceSpan,EncodedRgba},qt_gray::{self,Span,PathContour,Segment}};
 use ingetrazo_formats::{annotation_font, paper_font_resolver::Request};
-pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:Arc<[Gate]>}
+/// Source operator selected before palette premultiplication; immutable with its batch.
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+pub enum Composition { SpanByte, GlyphRgba64Opaque }
+#[derive(Clone,Copy,Debug,PartialEq)]
+pub struct Draw {pub gate:Gate,pub composition:Composition,pub straight_rgba:[u8;4]}
+impl Draw {pub fn span(gate:Gate)->Self{Self{gate,composition:Composition::SpanByte,straight_rgba:[0;4]}}}
+pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:Arc<[Draw]>}
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2]}
 pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],Arc<Mesh>)>,builds:u64,limits:Limits}
@@ -117,7 +123,7 @@ impl Cache {
          spans.push(Span{x:i32::try_from(left+start as i64).map_err(|_|"Annotation glyph x outside domain")?,y:i32::try_from(top+row as i64).map_err(|_|"Annotation glyph y outside domain")?,len:u32::try_from(col-start).map_err(|_|"Annotation glyph span length overflow")?,coverage});
         }
        }
-       writer.layer(spans,*color,operation.gate)?;
+       writer.layer_with_composition(spans,*color,operation.gate,Composition::GlyphRgba64Opaque)?;
        advance=advance.checked_add(i64::from(glyph.advance[0])).ok_or("Annotation text advance overflow")?;
       }
      }
@@ -139,10 +145,11 @@ fn translate_path(path:&mut PathContour,delta:[f64;2]){
 fn transform_path(path:&PathContour,density:f64)->PathContour{
  let mut path=path.clone();let p=|p:&mut [f64;2]|{p[0]*=density;p[1]*=density;};p(&mut path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>p(to),Segment::Cubic{control1,control2,to}=>{p(control1);p(control2);p(to);}}}path
 }
-struct Writer {density:f64,limits:Limits,vertices:Vec<Vertex>,indices:Vec<u32>,rows:Vec<SourceSpan>,ranges:Vec<std::ops::Range<u32>>,batches:Vec<Batch>,gates:Vec<Gate>}
+struct Writer {density:f64,limits:Limits,vertices:Vec<Vertex>,indices:Vec<u32>,rows:Vec<SourceSpan>,ranges:Vec<std::ops::Range<u32>>,batches:Vec<Batch>,gates:Vec<Draw>}
 impl Writer {
  fn new(density:f64,limits:Limits)->Self{Self{density,limits,vertices:Vec::new(),indices:Vec::new(),rows:Vec::new(),ranges:Vec::new(),batches:Vec::new(),gates:Vec::new()}}
- fn layer(&mut self,spans:Vec<Span>,color:[u8;4],gate:Gate)->Result<(),String>{
+ fn layer(&mut self,spans:Vec<Span>,color:[u8;4],gate:Gate)->Result<(),String>{self.layer_with_composition(spans,color,gate,Composition::SpanByte)}
+ fn layer_with_composition(&mut self,spans:Vec<Span>,color:[u8;4],gate:Gate,composition:Composition)->Result<(),String>{
   if spans.is_empty(){return Ok(());}
   let count=self.rows.len().checked_add(spans.len()).filter(|&n|n<=self.limits.spans&&n<=u32::MAX as usize/6).ok_or("Annotation aggregate span admission exceeded")?;
   let ranges=ingetrazo_render::qt_cosmetic::disjoint_ranges(&spans,self.limits.spans)?;
@@ -152,7 +159,7 @@ impl Writer {
    (Some(count),std::mem::size_of::<SourceSpan>()),
    (self.ranges.len().checked_add(ranges.len()),std::mem::size_of::<std::ops::Range<u32>>()),
    (self.batches.len().checked_add(1),std::mem::size_of::<Batch>()),
-   (self.gates.len().checked_add(1),std::mem::size_of::<Gate>()),
+   (self.gates.len().checked_add(1),std::mem::size_of::<Draw>()),
   ].into_iter().try_fold(0usize,|sum,(count,size)|count.and_then(|n|n.checked_mul(size)).and_then(|n|sum.checked_add(n)));
   if retained.is_none_or(|bytes|bytes>self.limits.geometry_bytes){return Err("Annotation retained arrays admission exceeded".into());}
   self.vertices.try_reserve(spans.len()*4).map_err(|_|"Annotation vertex allocation failed")?;
@@ -171,7 +178,7 @@ impl Writer {
    }
    self.indices.extend([base,base+1,base+2,base,base+2,base+3]);
   }
-  self.batches.push(Batch{first,count:self.indices.len()as u32-first,color:EncodedRgba::from_bytes(color,1.)?});self.gates.push(gate);Ok(())
+  self.batches.push(Batch{first,count:self.indices.len()as u32-first,color:EncodedRgba::from_bytes(color,1.)?});self.gates.push(Draw{gate,composition,straight_rgba:color});Ok(())
  }
  fn finish(self)->Result<Mesh,String>{
   let geometry=Geometry::new_with_source_spans(self.vertices,self.indices,self.ranges,self.rows,1.,self.density as f32,[0.;2])?;
@@ -192,7 +199,7 @@ mod tests {
  #[test]fn immutable_plan_warm_reuses_geometry_and_density_change_invalidates(){
   let mut cache=cache();let plan=plan();let first=cache.prepare(plan.clone(),1.,96.).unwrap();let counts=cache.stats();let glyph_counts=cache.glyph_stats();
   assert!(!first.geometry.source_spans().unwrap().rows().is_empty());
-  assert_eq!(first.gates[0],Gate::Point(0));
+  assert_eq!(first.gates[0].gate,Gate::Point(0));
   for _ in 0..8{let warm=cache.prepare(plan.clone(),1.,96.).unwrap();assert!(Arc::ptr_eq(&first,&warm));assert_eq!(cache.stats(),counts);assert_eq!(cache.glyph_stats(),glyph_counts);}
   let changed=cache.prepare(plan.clone(),1.5,96.).unwrap();assert!(!Arc::ptr_eq(&first,&changed));assert_ne!(first.geometry.id(),changed.geometry.id());
  }

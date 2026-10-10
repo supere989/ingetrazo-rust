@@ -36,7 +36,7 @@ pub struct Stats {
 }
 #[derive(Clone)]
 struct Ready {
-    gates: Option<Arc<[ingetrazo_render::annotations::Gate]>>,
+    gates: Option<Arc<[crate::annotation_overlay_geometry::Draw]>>,
     id: u64,
     vertex: vk::Buffer,
     index: vk::Buffer,
@@ -50,7 +50,7 @@ struct Ready {
 }
 struct AdmittedLayout { geometry:Arc<Geometry>, batches:Arc<[Batch]>, opaque:bool }
 struct State {
-    gates: Option<Arc<[ingetrazo_render::annotations::Gate]>>,
+    gates: Option<Arc<[crate::annotation_overlay_geometry::Draw]>>,
     geometry: Arc<Geometry>,
     batches: Arc<[Batch]>,
     premultiplied: Arc<[[f32;4]]>,
@@ -135,9 +135,10 @@ impl Handle {
         if let Some(ready)=&state.ready{if !Arc::ptr_eq(&ready.premultiplied,&state.premultiplied){bytes=bytes.checked_add(ready.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD old palette byte overflow")?).ok_or("CAD retained byte overflow")?;}}
         Ok(bytes)
     }
-    pub(crate) fn update_annotation(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<(),String>{
+    pub(crate) fn update_annotation(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[crate::annotation_overlay_geometry::Draw]>)->Result<(),String>{
         geometry.validate_batches(&batches)?;pose.validate()?;
         if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
+        admit_draw_colors(&gates,&batches)?;
         let palette=prepare_palette(&geometry,&batches)?;
         let mut state=self.inner.state.lock().map_err(|_|"Annotation state poisoned")?;
         state.geometry=geometry;state.batches=batches;state.premultiplied=palette;state.pose=pose;state.gates=Some(gates);Ok(())
@@ -261,15 +262,17 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                 if p.annotations{
                     let count=p.visibility.as_ref().map(|v|v.1).ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation visibility not prepared".into()))?;
                     let gate=r.gates.as_ref().and_then(|g|g.get(batch_index)).copied().ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation draw gate absent".into()))?;
-                    let ids=gate_ids(gate,count).map_err(egui_ash_renderer::RendererError::Init)?;
+                    let ids=gate_ids(gate.gate,count).map_err(egui_ash_renderer::RendererError::Init)?;
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,24,bytemuck::cast_slice(&ids));
+                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32};
+                    device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,48,bytemuck::bytes_of(&operator));
                 }
                 device.cmd_push_constants(
                     command,
                     p.layout,
                     vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
                     32,
-                    bytemuck::cast_slice(rgba),
+                    bytemuck::cast_slice(&if p.annotations && r.gates.as_ref().unwrap()[batch_index].composition==crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque{r.gates.as_ref().unwrap()[batch_index].straight_rgba.map(|v|f32::from(v)/255.)}else{*rgba}),
                 );
                 if p.integer&&!r.opaque{
                     let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
@@ -305,10 +308,20 @@ fn gate_ids(gate:ingetrazo_render::annotations::Gate,count:u32)->Result<[u32;2],
  };
  Ok(ids)
 }
-fn admit_gates(gates:Option<&[ingetrazo_render::annotations::Gate]>,batches:usize,count:u32)->Result<(),String>{
+fn admit_gates(gates:Option<&[crate::annotation_overlay_geometry::Draw]>,batches:usize,count:u32)->Result<(),String>{
  let gates=gates.ok_or("Annotation draw gates absent")?;
  if gates.len()!=batches{return Err("Annotation gate/batch inventory mismatch".into());}
- for gate in gates{gate_ids(*gate,count)?;}
+ for draw in gates{gate_ids(draw.gate,count)?;}
+ Ok(())
+}
+fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<(),String>{
+ if draws.len()!=batches.len(){return Err("Annotation material/batch inventory mismatch".into());}
+ for (draw,batch) in draws.iter().zip(batches){
+  if draw.composition==crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque
+   &&batch.color.0!=draw.straight_rgba.map(|v|f32::from(v)/255.){
+   return Err("Annotation straight glyph palette differs from admitted batch".into());
+  }
+ }
  Ok(())
 }
 fn prepare_palette(geometry:&Geometry,batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{geometry.resolve_batch_colors(batches).map(Arc::from)}
@@ -322,7 +335,7 @@ impl VulkanPaint for AnnotationPaint{
  }
 }
 struct AnnotationAdmission {
- geometry:Arc<Geometry>,batches:Arc<[Batch]>,gates:Arc<[ingetrazo_render::annotations::Gate]>,count:u32,opaque:bool,
+ geometry:Arc<Geometry>,batches:Arc<[Batch]>,gates:Arc<[crate::annotation_overlay_geometry::Draw]>,count:u32,opaque:bool,
 }
 impl AnnotationAdmission{
  fn matches(&self,state:&State,count:u32)->bool{
@@ -353,9 +366,10 @@ impl Factory{
   let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{gates:None,premultiplied:prepare_palette(&geometry,&batches)?,geometry,batches,pose,ready:None,admission:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
   let callback=Arc::new(VulkanPaintCallback(inner.clone()));Ok(Handle{inner,callback})
  }
- pub(crate) fn annotation_handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[ingetrazo_render::annotations::Gate]>)->Result<Handle,String>{
+ pub(crate) fn annotation_handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[crate::annotation_overlay_geometry::Draw]>)->Result<Handle,String>{
   if !self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.annotations {return Err("Annotation factory requires gated pipeline".into());}
   if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
+        admit_draw_colors(&gates,&batches)?;
   let mut handle=self.handle(geometry,batches,pose)?;
   handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?.gates=Some(gates);
   handle.callback=Arc::new(VulkanPaintCallback(Arc::new(AnnotationPaint(handle.inner.clone()))));
@@ -404,7 +418,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let ranges = [vk::PushConstantRange {
             stage_flags: vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
             offset: 0,
-            size: 48,
+            size: if annotations{52}else{48},
         }];
         let layout = match unsafe {
             context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
@@ -1059,6 +1073,15 @@ mod annotation_gate_tests {
   assert_eq!(cursor,ranges.len());
   let mut indices=Vec::new();for(range,_)in calls{indices.extend(range);}assert_eq!(indices,(0..42).collect::<Vec<_>>());
  }
+ #[test]fn glyph_material_admission_retains_straight_alpha_and_refuses_palette_alias(){
+  use crate::annotation_overlay_geometry::{Draw,Composition};
+  for alpha in [0,1,127,128,230,255]{
+   let raw=[37,93,157,alpha];let batch=Batch{first:0,count:6,color:ingetrazo_render::cad2d::EncodedRgba::from_bytes(raw,1.).unwrap()};
+   let mut draw=Draw{gate:Gate::Always,composition:Composition::GlyphRgba64Opaque,straight_rgba:raw};
+   assert!(admit_draw_colors(&[draw],&[batch]).is_ok());
+   draw.straight_rgba[3]^=1;assert!(admit_draw_colors(&[draw],&[batch]).is_err());
+  }
+ }
  #[test]fn gates_refuse_sentinel_and_inventory_before_gpu_admission(){
   assert_eq!(gate_ids(Gate::Always,0).unwrap(),[u32::MAX;2]);
   assert_eq!(gate_ids(Gate::Both(0,2),3).unwrap(),[0,2]);
@@ -1066,7 +1089,7 @@ mod annotation_gate_tests {
   assert!(gate_ids(Gate::Point(u32::MAX),u32::MAX).is_err());
   assert!(gate_ids(Gate::Both(0,u32::MAX),u32::MAX).is_err());
   assert!(admit_gates(None,1,3).is_err());
-  assert!(admit_gates(Some(&[Gate::Point(0)]),2,3).is_err());
-  assert!(admit_gates(Some(&[Gate::Always,Gate::Both(0,2)]),2,3).is_ok());
+  assert!(admit_gates(Some(&[crate::annotation_overlay_geometry::Draw::span(Gate::Point(0))]),2,3).is_err());
+  assert!(admit_gates(Some(&[Gate::Always,Gate::Both(0,2)].map(crate::annotation_overlay_geometry::Draw::span)),2,3).is_ok());
  }
 }

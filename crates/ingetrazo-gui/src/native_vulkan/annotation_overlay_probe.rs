@@ -4,7 +4,7 @@
 use super::*;
 use std::sync::Arc;
 use ingetrazo_render::annotations::{Plan,Primitive,Operation,Gate};
-struct Probe{plan:Arc<Plan>,cache:crate::annotation_overlay_geometry::Cache,handle:Option<cad2d::Handle>,failure:Option<String>,range_control:bool,queries:Arc<[annotation_visibility::Query]>,pending:Option<(cad2d::Handle,Arc<[annotation_visibility::Query]>)>,control_nonce:u64,cleared:bool,hold:bool}
+struct Probe{plan:Arc<Plan>,cache:crate::annotation_overlay_geometry::Cache,handle:Option<cad2d::Handle>,failure:Option<String>,range_control:bool,byte_glyph_control:bool,queries:Arc<[annotation_visibility::Query]>,pending:Option<(cad2d::Handle,Arc<[annotation_visibility::Query]>)>,control_nonce:u64,cleared:bool,hold:bool}
 fn pair(value:&serde_json::Value)->Result<[f64;2],String>{let v=value.as_array().ok_or("Annotation point absent")?;if v.len()!=2{return Err("Annotation point inventory".into());}Ok([v[0].as_f64().ok_or("Annotation point x")?,v[1].as_f64().ok_or("Annotation point y")?])}
 fn color(value:&serde_json::Value)->Result<[u8;4],String>{let v=value.as_array().ok_or("Annotation color absent")?;if v.len()!=4{return Err("Annotation color inventory".into());}let mut result=[0;4];for(i,item)in v.iter().enumerate(){result[i]=u8::try_from(item.as_u64().ok_or("Annotation color byte")?).map_err(|_|"Annotation color range")?;}Ok(result)}
 fn source_plan(row:&serde_json::Value)->Result<Plan,String>{
@@ -29,7 +29,7 @@ fn range_mesh(density:f32,alternate:bool)->Result<Arc<crate::annotation_overlay_
  let batches:Arc<[Batch]>=(0..3).map(|i|Batch{first:i*6,count:6,color:EncodedRgba::from_bytes([0,0,0,255],1.).unwrap()}).collect::<Vec<_>>().into();
  let colors=[[60,10,20,80],[10,50,30,90],if alternate{[0,0,60,60]}else{[0,60,0,60]}].map(PremultipliedRgba8::new).into_iter().collect::<Result<Vec<_>,_>>()?;
  let geometry=Geometry::new_with_premultiplied_source_spans(vertices,indices,vec![0..12,12..18],rows.to_vec(),1.,density,[0.;2],colors,&batches)?;
- Ok(Arc::new(crate::annotation_overlay_geometry::Mesh{geometry,batches,gates:Arc::from([Gate::Always;3])}))
+ Ok(Arc::new(crate::annotation_overlay_geometry::Mesh{geometry,batches,gates:Arc::from([crate::annotation_overlay_geometry::Draw::span(Gate::Always);3])}))
 }
 impl Probe{
  fn control(&mut self,system:&mut System,factory:&cad2d::Factory)->Result<(),String>{
@@ -55,7 +55,7 @@ impl Probe{
     "invalid-gate"=>{
      let before=system.memory_budget.ledger.lock().unwrap().total_committed();let old=system.annotation_cad.as_ref().unwrap().stats();
      let mesh=range_mesh(system.egui_ctx.pixels_per_point(),true)?;
-     let handle=factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),Arc::from([Gate::Always,Gate::Point(1),Gate::Always]))?;
+     let handle=factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),Arc::from([Gate::Always,Gate::Point(1),Gate::Always].map(crate::annotation_overlay_geometry::Draw::span)))?;
      if system.prepare_annotation_overlay(&handle,self.queries.clone(),glam::Mat4::IDENTITY.to_cols_array(),[0.;3],[0.,0.,-1.],0).is_ok(){return Err("Malformed annotation gate unexpectedly published".into());}
      let now=system.annotation_cad.as_ref().unwrap().stats();if old.uploads!=now.uploads||old.cached_bytes!=now.cached_bytes||system.memory_budget.ledger.lock().unwrap().total_committed()!=before{return Err("Malformed gate changed old ready publication".into());}
      self.hold=true;
@@ -90,7 +90,7 @@ impl App for Probe{
    system.world.as_mut().unwrap().set_scene(&system.vulkan_context,&ingetrazo_core::scene::Scene::new(),&ingetrazo_core::camera::OrbitCamera::default(),&ingetrazo_render::style::StyleConfig::default(),system.fence,system.draw_serial,1)?;
    Ok::<_,String>((plan,cache,range_control))
   })();
-  match result{Ok((plan,cache,range_control))=>Self{plan,cache,handle:None,failure:None,range_control,queries:Arc::from([annotation_visibility::Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]}]),pending:None,control_nonce:0,cleared:false,hold:false},Err(error)=>panic!("Annotation fixture admission: {error}")}
+  match result{Ok((plan,cache,range_control))=>Self{plan,cache,handle:None,failure:None,range_control,byte_glyph_control:std::env::var_os("INGETRAZO_ANNOTATION_GLYPH_BYTE_CONTROL").is_some(),queries:Arc::from([annotation_visibility::Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]}]),pending:None,control_nonce:0,cleared:false,hold:false},Err(error)=>panic!("Annotation fixture admission: {error}")}
  }
  fn prepare_gpu(&mut self,system:&mut System,_:bool){
   let result=(||{
@@ -99,7 +99,7 @@ impl App for Probe{
    if self.hold{return Err("Annotation controlled replacement held after actual admission refusal".into());}
    if self.cleared{system.clear_annotation_overlay()?;return Ok(());}
    if self.plan.operations.is_empty(){system.clear_annotation_overlay()?;return Ok(());}
-   if self.handle.is_none(){let mesh=if self.range_control{range_mesh(system.egui_ctx.pixels_per_point(),false)?}else{self.cache.prepare_clipped(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.,[0,0,640,400])?};self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),mesh.gates.clone())?);}
+   if self.handle.is_none(){let mesh=if self.range_control{range_mesh(system.egui_ctx.pixels_per_point(),false)?}else{self.cache.prepare_clipped(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.,[0,0,640,400])?};let draws=if self.byte_glyph_control{mesh.gates.iter().copied().map(|mut draw|{draw.composition=crate::annotation_overlay_geometry::Composition::SpanByte;draw}).collect::<Vec<_>>().into()}else{mesh.gates.clone()};self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),draws)?);}
    system.prepare_annotation_overlay(self.handle.as_ref().unwrap(),self.queries.clone(),glam::Mat4::IDENTITY.to_cols_array(),[0.;3],[0.,0.,-1.],0)?;
    Ok::<(),String>(())
   })();self.failure=result.as_ref().err().cloned();system.annotation_prepare_error=self.failure.clone();
