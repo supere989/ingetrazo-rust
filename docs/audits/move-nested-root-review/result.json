@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "workspace_passed": 424,
+  "ignored": 2,
+  "fresh_original_nested_local_gestures": true,
+  "fresh_native_nested_local_gestures": true,
+  "boundary": "Context entry uses real public API for fixture setup; real pointer/keyboard Move Escape copy arrays retype Undo inside local context. Rendered entry/exit/shared publication and GPU performance remain open."
+}

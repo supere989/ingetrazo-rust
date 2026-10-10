@@ -261,3 +261,5 @@ Root renderedordinarygroup4bbff2a: freshoriginal+nativeXTESTPASS retained7captur
 Root adopted4b review: independent8sameGPURGB+prior58hardware acceptedstrictartifactrerun, rootfreshloader8save/reopen+3negativesPASS, fullworkspace421PASS2ignored. Wholeancestorprototype gate correction noadditionalGPUcopies/sourcePythonchanges. HistoricalnestednullFAIL retained4d. UI53alpha correctionstillisolated/unaccepted, rasterorigin203pending.
 
 Root linked/contextc51133c: actualfreshsource/nativeXTESTlinkedgesturePASS untouchedsibling/shareddefinition stable, narrow82postcancelre-fetch reviewed+regressionPASS, fullworkspace422PASS2ignored. Canonicalpromotion preserveshint_radius observations/sourcepin. Cloudf27438029685561 and16ad38029605740 verifiedLIVE; lastgreen54cae remains. Nestedlocal/perfOPEN.
+
+Root nested e356/602 review: actualfreshoriginal/native nestedlocalXTESTPASS, Esc restorescenter/anchor/history/depth thencopyarrayretypeUndoPASS; singularrefusal/rotatedscaled integritycontrolsPASS; workspace424PASS2ignored. EntryAPIsetup explicitlynotrenderedentry; Finish/Cancel/publication/perfOPEN.

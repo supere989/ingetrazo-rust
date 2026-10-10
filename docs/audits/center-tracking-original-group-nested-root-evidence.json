@@ -1,0 +1,602 @@
+{
+  "cancelled_preview": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160
+    ],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20"
+    ],
+    "group_count": 1,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131088.61672916,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      499.999987451655,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "nested_local": true,
+  "linked": false,
+  "passed": true,
+  "provenance": {
+    "rust_commit": "0c4f5bb7ad7993b6f33a5bb3bcf2a587f2314597",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "live": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160
+    ],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20"
+    ],
+    "group_count": 1,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 1,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131088.276795454,
+    "center": [
+      3.0053811073303223,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      586.6128683980772,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "copy_preview": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160
+    ],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": false,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20"
+    ],
+    "group_count": 1,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": [
+      578.0723515170545,
+      225.1565889087912
+    ],
+    "copy_center": null,
+    "preview_lines": 25,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131089.696991503,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      499.999987451655,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "copied": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160,
+      140668444142160
+    ],
+    "buffers": [],
+    "value_buffer": "",
+    "array_window": true,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ],
+      [
+        3.0053811073303223,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20",
+      "dc74e90e0b6c4cca"
+    ],
+    "group_count": 2,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131090.097504499,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      499.999987451655,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 48,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "spaced": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160,
+      140668444142160,
+      140668444142160,
+      140668444142160
+    ],
+    "buffers": [
+      "3",
+      "3x",
+      "3x2",
+      "3x20",
+      "3x200",
+      "3x200c",
+      "3x200cm"
+    ],
+    "value_buffer": "",
+    "array_window": true,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ],
+      [
+        4.0,
+        3.0,
+        1.0
+      ],
+      [
+        6.0,
+        3.0,
+        1.0
+      ],
+      [
+        8.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20",
+      "b399624ff6e34023",
+      "3d1fcb91d32a4376",
+      "d788e67a21694326"
+    ],
+    "group_count": 4,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131092.537551122,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      499.999987451655,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 96,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "retyped": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160,
+      140668444142160,
+      140668444142160
+    ],
+    "buffers": [
+      "3",
+      "3x",
+      "3x2",
+      "3x20",
+      "3x200",
+      "3x200c",
+      "3x200cm",
+      "2",
+      "2x",
+      "2x4",
+      "2x40",
+      "2x400",
+      "2x400c",
+      "2x400cm"
+    ],
+    "value_buffer": "",
+    "array_window": true,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ],
+      [
+        6.0,
+        3.0,
+        1.0
+      ],
+      [
+        10.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20",
+      "c9480e7830184df6",
+      "60fb0a2a1d6944d0"
+    ],
+    "group_count": 3,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131094.977668463,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      499.999987451655,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 72,
+    "faces": 0,
+    "undo": 1,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "undone": {
+    "context_depth": 1,
+    "group_mesh_identity": [
+      140668444142160
+    ],
+    "buffers": [
+      "3",
+      "3x",
+      "3x2",
+      "3x20",
+      "3x200",
+      "3x200c",
+      "3x200cm",
+      "2",
+      "2x",
+      "2x4",
+      "2x40",
+      "2x400",
+      "2x400c",
+      "2x400cm"
+    ],
+    "value_buffer": "",
+    "array_window": true,
+    "group_centers": [
+      [
+        1.9999998807907104,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_ids": [
+      "098231e22a754b20"
+    ],
+    "group_count": 1,
+    "mode": "group",
+    "vertices": 0,
+    "unused_vertices": 0,
+    "copy_probe_pixel": null,
+    "copy_center": null,
+    "preview_lines": 0,
+    "tool": "MoveTool",
+    "curves": [],
+    "time": 131095.616655137,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      603.379163904776,
+      264.3925219191981
+    ],
+    "center_pixel": [
+      499.999987451655,
+      264.3925219191981
+    ],
+    "move_target": [
+      689.5284211481575,
+      264.3925219191981
+    ],
+    "kind": "ThroughPoint",
+    "inference_point": [
+      4.205381393432617,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 24,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 40.0,
+      "pointer": [
+        690.0,
+        264.0
+      ],
+      "allowed": false
+    }
+  },
+  "scope": "Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary or linked placed group (linked flag explicit); shared definition unchanged and untouched sibling invariant where linked. Nested editing, alpha/depth batch performance and general P08 remain open.",
+  "checker_sha256": "af15df3f88841c9c65c5cb4b2723308ce39d41ab4b909c0708deb8f105fb84f9",
+  "executable_sha256": "b5633218a57e1193d87f80274014783430f1fa6f71cbeaea3bd859fb84057ab5"
+}
