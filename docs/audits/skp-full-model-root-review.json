@@ -1,0 +1,188 @@
+{
+  "passed": true,
+  "comparisons": [
+    {
+      "case": "gondola_v20-comparison.json.gz",
+      "corpus": "gondola",
+      "sha256": "6a19e50e3a517e70e68473da57ea12783ed3b3516952df7b5d6d82cc1098b16f"
+    },
+    {
+      "case": "hole-paint-layer-comparison.json",
+      "corpus": "vff35",
+      "sha256": "108b69ecb8e40a9d1ac1f5cc1e1f87f08c4281db7f688d94ebf78ffb0637dc21"
+    },
+    {
+      "case": "single-definition-comparison.json",
+      "corpus": "vff35",
+      "sha256": "ed3ff9103bb54706b5b7f25a99a084adb59cacb62072147775ccdd86b060c781"
+    },
+    {
+      "case": "small-two-flat-comparison.json",
+      "corpus": "vff35",
+      "sha256": "ba7be991f085997b1abc20f23d1653701b2574e807bf7bb48b2f171475b406cb"
+    },
+    {
+      "case": "inherited-paint-comparison.json",
+      "corpus": "vff35",
+      "sha256": "f2d27bbf42f4dcf949975ee2289f028e9cdb06bdafb1b2ed026ccc61a48fdf24"
+    },
+    {
+      "case": "texture-refusal-comparison.json",
+      "corpus": "vff35",
+      "sha256": "71a4ee00f6fc7119cb930304b749f20b928963481a6e54b59ff1f9bf049691db"
+    },
+    {
+      "case": "nested-single-container-comparison.json",
+      "corpus": "vff35",
+      "sha256": "3ec5d4d62e6b51e803e993754535e451b0cb768440c8a88d385981af22ac0d7c"
+    },
+    {
+      "case": "nested-reflected-scaled-comparison.json",
+      "corpus": "vff35",
+      "sha256": "e6f4b4be33e12a89ae9a1e99ad94b60a66638b929d80c90a24434959a55c124c"
+    },
+    {
+      "case": "nested-fractional-transform-comparison.json",
+      "corpus": "vff35",
+      "sha256": "ce40fea04d7ef285d73920330ebbab3ff83b827a2bde21c767bfc08fdb07f09f"
+    },
+    {
+      "case": "texture-default-hole-comparison.json",
+      "corpus": "vff35",
+      "sha256": "b6a074c9080038d9482c737bf85a4e7c369a039e4fa14c5b1e92ffe802252f96"
+    },
+    {
+      "case": "texture-sentinel-size-comparison.json",
+      "corpus": "vff35",
+      "sha256": "22c77f26bfcb8d7e41931150496d3201db36eb038caeee884b3be8f91f9cb516"
+    },
+    {
+      "case": "texture-default-size-comparison.json",
+      "corpus": "vff35",
+      "sha256": "93716421b52f3241cc70a4a8be2ff916506ec7777f5deb292c8ba492844b1a8e"
+    },
+    {
+      "case": "texture-sibling-fallback-comparison.json",
+      "corpus": "vff35",
+      "sha256": "f5b6b5772f903df045590d3456d843cf02cff309afa8019d13202dc293bfedbe"
+    },
+    {
+      "case": "texture-nested-transform-comparison.json",
+      "corpus": "vff35",
+      "sha256": "da5dd9fe327d8bb3028af6e73a649f2d586ea39a622cf03e903ee78f1a06b665"
+    },
+    {
+      "case": "texture-downward-basis-comparison.json",
+      "corpus": "vff35",
+      "sha256": "443b3252a393a3cc4e50f2ea1b0d51b9ed7e01a5f51dd8639f1249b2c656c4f7"
+    },
+    {
+      "case": "positioned-identity-comparison.json",
+      "corpus": "vff35",
+      "sha256": "1a9bccbdde043c71f95c4bf5403cca13e1d234bae9be82694abb13520dec1399"
+    },
+    {
+      "case": "positioned-rotated-comparison.json",
+      "corpus": "vff35",
+      "sha256": "371c22285cb6f389781eaa14271418551bec88da44ca940ab1d084fd6cffa94e"
+    },
+    {
+      "case": "positioned-perspective-comparison.json",
+      "corpus": "vff35",
+      "sha256": "0dfd0d66737ba16a1e86b9bbed2f2dae4eafa36bc3972aae7e5da7549befba77"
+    },
+    {
+      "case": "positioned-singular-comparison.json",
+      "corpus": "vff35",
+      "sha256": "fa6729046de97062d7ed5ad53193aeb97e9356538ed453b4bf70e60508c9d52d"
+    },
+    {
+      "case": "positioned-back-only-comparison.json",
+      "corpus": "vff35",
+      "sha256": "2fb1e3a303ee531f151b380f59faab33c900992a4052ef35eb220ea13e4da987"
+    },
+    {
+      "case": "positioned-two-sides-comparison.json",
+      "corpus": "vff35",
+      "sha256": "354d885bc2ef7a171d7497ba629be31b5a548e147b0fc6f8a00f86f8c988b503"
+    },
+    {
+      "case": "projected-eight-terrain-comparison.json",
+      "corpus": "vff35",
+      "sha256": "53ef6dde8bbc9d8505a1e22444251d5dcef3fee601d0a233308bd732ee18e407"
+    },
+    {
+      "case": "positioned-seven-terrain-comparison.json",
+      "corpus": "vff35",
+      "sha256": "33d6f315f74f8790475089fe03a0e207c14a785bf23fdacc0ee2b94b99bb2c0a"
+    },
+    {
+      "case": "texture-missing-painted-comparison.json",
+      "corpus": "vff35",
+      "sha256": "77bfe449447ed896e21c18a2357173f8117a2cf3ee8d0b113ae5dde0e2f996ed"
+    },
+    {
+      "case": "texture-missing-inherited-comparison.json",
+      "corpus": "vff35",
+      "sha256": "9bd57af310f38a34a7357ce7a06dc9a6ec5a178761ced1d0f6f5f8227cb8d247"
+    },
+    {
+      "case": "texture-empty-painted-comparison.json",
+      "corpus": "vff35",
+      "sha256": "c657b163eacfb899e204a23e9b3bfafc2052ce7dceb8796e6af8f35e6237f797"
+    },
+    {
+      "case": "SU_File-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "8c5f56f7011a16a55d90e7e5efbd408b3bf17cc682a44132a0ed07f0039af427"
+    },
+    {
+      "case": "shared-eight-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "5419216a5c806562cd76a430b4a79869a6be6c7b96f0d363f3ad402a7fc8254f"
+    },
+    {
+      "case": "nested-shared-child-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "b4b1b3884a6af10b87ac75765c1a05d0835e0edf0ce1518056061f0c08f7fcd5"
+    },
+    {
+      "case": "nested-shared-parent-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "970ca7a1f5c9ceae55f03859f25db2e0940c02de347ef998c0eb65943f160a93"
+    },
+    {
+      "case": "nested-proto-in-proto-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "558ed781772df8af3c1de3f16558eda39db76a1bcabb33cb089843b2fe01ca0a"
+    },
+    {
+      "case": "nested-tagged-flat-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "9309518ccd2fe5fd3fbe38fb9093ca14848fb18ea2ec61288804fa1df76f162a"
+    },
+    {
+      "case": "nested-tagged-shared-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "6e8cddbc3fed59beee0f2fafef9f52439dc9687ca6bbb78d254e58c17c9c2841"
+    },
+    {
+      "case": "nested-inherited-paint-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "7b69e57d6a0a0de382f3e6b4c16ceee7486542a708b07f8d6f1d72e9ec9c5300"
+    },
+    {
+      "case": "nested-equal-paint-protos-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "9317d2ad9fc9568a48cc799c150dab2b6c677514f315b90b4a2bb994af487d7b"
+    },
+    {
+      "case": "texture-shared-local-comparison.json.gz",
+      "corpus": "vff35",
+      "sha256": "cb575a400ab538cee533f6d55bc35a50cc470e675b4ee4b7ad28a31f7db920f2"
+    }
+  ],
+  "scope": "Complete retained imported group geometry/attributes/hierarchy/sharing/layers/material signatures; not every Scene field or rendered acceptance",
+  "source": "ea884d4b",
+  "wide_keys_review": "No saturating i64 conversion: exact integer keys within2^53, wider finite float-derived keys by bits; neighbor arithmetic bounded. Global CAD PointKey unchanged."
+}
