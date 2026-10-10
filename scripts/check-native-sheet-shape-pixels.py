@@ -21,8 +21,11 @@ with (out/"native.log").open("w")as log:
     if state.get("phase")==phase:break
     assert time.monotonic()<deadline;time.sleep(.05)
    time.sleep(.25);capture=out/(row["name"]+".png");subprocess.run(["import","-display",display,"-window","root",str(capture)],check=True)
+   metrics=json.loads((out/"state.json").read_text());assert metrics.get("phase")==phase and metrics.get("direct"),"Actual direct CAD path not observed"
+   assert metrics['uploads']==phase+1,"Unexpected repeated/cold geometry uploads"
+   before=metrics['uploads'];time.sleep(.15);warm=json.loads((out/"state.json").read_text());assert warm['uploads']==before and warm['cache_hits']>metrics['cache_hits'],"Warm geometry reused incorrectly"
    a=QImage(str(source/(row["name"]+".png"))).convertToFormat(QImage.Format.Format_RGBA8888);b=QImage(str(capture)).copy(0,0,600,500).convertToFormat(QImage.Format.Format_RGBA8888);assert not a.isNull()and not b.isNull()and a.size()==b.size()
-   aa,bb=bytes(a.constBits()),bytes(b.constBits());changed=sum(aa[i:i+4]!=bb[i:i+4]for i in range(0,len(aa),4));cases.append({"name":row["name"],"different_pixels":changed,"passed":changed==0})
+   aa,bb=bytes(a.constBits()),bytes(b.constBits());changed=sum(aa[i:i+4]!=bb[i:i+4]for i in range(0,len(aa),4));cases.append({"name":row["name"],"different_pixels":changed,"passed":changed==0,"gpu_uploads":warm["uploads"],"gpu_cached_bytes":warm["cached_bytes"],"warm_zero_uploads":True})
   validate_cases(cases)
   rejected=0
   for bad in [cases[:-1],cases[:-1]+[cases[0]],list(reversed(cases))]:

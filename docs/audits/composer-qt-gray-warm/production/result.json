@@ -1,0 +1,81 @@
+{
+  "mandatory_cases": 9,
+  "inventory_negative_controls": 3,
+  "passed": true,
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 1,
+      "gpu_cached_bytes": 87264,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 2,
+      "gpu_cached_bytes": 163008,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 3,
+      "gpu_cached_bytes": 253224,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 4,
+      "gpu_cached_bytes": 257040,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 5,
+      "gpu_cached_bytes": 89856,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 6,
+      "gpu_cached_bytes": 99864,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 7,
+      "gpu_cached_bytes": 155592,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 8,
+      "gpu_cached_bytes": 399456,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 0,
+      "passed": true,
+      "gpu_uploads": 9,
+      "gpu_cached_bytes": 184896,
+      "warm_zero_uploads": true
+    }
+  ],
+  "binary_sha256": "d4c8fee0484947e78c6c71403fcdddc4c8cbfdce1b5ab5d2fb567efc8b334b64",
+  "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+}

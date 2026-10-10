@@ -1,0 +1,3 @@
+Read-only actual GPU warm-cache observer
+
+Fresh productionnineimagesstill exact. Realcad2d Renderer.stats observed onecoldgeometryupload pernewshape (uploads1→9), repeatedwarmframes0newuploads/cache_hitsincrease for everycase. CachedGPUbytes observed87,264–399,456 (fence/cacheeviction canlowerretainedbytes), notwholeapplicationmemory. No perframe fullimageupload/pass; directexistingCADpass. CPUcoldscanconversion latency, physicalphase/DPI/largecases remainopen. Binaryd4c8fee0484947e78c6c71403fcdddc4c8cbfdce1b5ab5d2fb567efc8b334b64. Observer/strictGPUreuseassertions only; production8ba9c65 unchanged.
