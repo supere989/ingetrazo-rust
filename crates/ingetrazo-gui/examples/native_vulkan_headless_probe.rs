@@ -12,11 +12,29 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  if let Some(value)=args.windows(2).find(|a|a[0]=="--vendor").map(|a|&a[1]) {request.vendor_id=Some(if let Some(hex)=value.strip_prefix("0x"){u32::from_str_radix(hex,16)?}else{value.parse()?});}
  if let Some(value)=args.windows(2).find(|a|a[0]=="--device-name").map(|a|&a[1]) {request.name=Some(value.clone());}
  let output=args.windows(2).find(|a|a[0]=="--output").map(|a|std::path::PathBuf::from(&a[1])).unwrap_or_else(||"/tmp/ingetrazo-headless-depth.png".into());
- let context=VulkanContext::new_headless(&request)?;
+ let mut context=VulkanContext::new_headless(&request)?;
  let budget=Arc::new(VulkanBudget::new(&context.instance,context.physical_device)?);
  {let mut ledger=budget.ledger.lock().unwrap();ledger.total_limit=Some(128*1024*1024);}
  if args.iter().any(|a|a=="--timeout-control") {let fence=unsafe {context.device.create_fence(&vk::FenceCreateInfo::default(),None)}?;context.wait_transfer(fence)?;return Err("Unsignaled timeout control unexpectedly completed".into());}
  let mut resources=Resources::new(&context,budget.clone());
+ if args.iter().any(|a|a=="--transfer-quarantine-control") {
+  resources.upload(&context,&[1u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true)?;
+  assert_eq!(resources.stats.transfer_command_allocations,1);assert_eq!(resources.stats.transfer_fence_creations,1);
+  let charged=budget.ledger.lock().unwrap().total_committed();assert!(charged>0);
+  // The transfer has completed. An independent unsignaled fence now exercises
+  // actual Vulkan TIMEOUT and conservative unknown-completion ownership.
+  let unknown=unsafe{context.device.create_fence(&vk::FenceCreateInfo::default(),None)}?;
+  context.transfer_timeout_ns=0;context.diagnostic_fail_fast=false;
+  assert_eq!(context.wait_transfer(unknown),Err(vk::Result::TIMEOUT));assert!(resources.check_submission().is_err());
+  assert!(resources.upload(&context,&[2u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true).is_err());
+  assert_eq!(resources.stats.transfer_command_allocations,1);assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged);
+  let owners=context.lifetime.retained_owners();drop(resources);
+  assert_eq!(context.lifetime.retained_owners(),owners+3,"Quarantine must retain budget, buffers and cached transfer owner");
+  assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged,"Quarantine must not free charged resources");
+  context.lifetime.retain((context.device.clone(),unknown));
+  println!("PASS actual unsignaled-fence TIMEOUT; pooled transfer reuse refused; three resource owners retained; charged bytes{charged}; no pending GPU command asserted");return Ok(());
+ }
+
  let no_readback=resources.upload(&context,&[0u8;4],vk::BufferUsageFlags::VERTEX_BUFFER,true)?;
  let charged=budget.ledger.lock().unwrap().total_committed();
  assert!(resources.readback_buffer(&context,no_readback).unwrap_err().contains("not created for readback"));
@@ -27,9 +45,19 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
  eprintln!("PASS ordinary GPU buffer rejects undeclared readback before staging allocation");
  let expected=(0..17*1024*1024).map(|i|(i%251)as u8).collect::<Vec<_>>();let started=Instant::now();
  let buffer=resources.upload(&context,&expected,vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC,true)?;
+ assert_eq!(resources.stats.transfer_command_allocations,1,"Repeated buffer upload recreated command buffer");
+ assert_eq!(resources.stats.transfer_fence_creations,1,"Repeated buffer upload recreated transfer fence");
  let upload_ms=started.elapsed().as_secs_f64()*1000.;let started=Instant::now();let copied=resources.readback_buffer(&context,buffer)?;
  assert_eq!(copied,expected,"Actual GPU-to-host copy differs; device-local mapping is not used");
  let readback_ms=started.elapsed().as_secs_f64()*1000.;assert!(resources.stats.staging_peak<=8*1024*1024&&resources.stats.readback_staging_peak<=8*1024*1024);
+ let batch_a=(0..1024).map(|i|(i%239)as u8).collect::<Vec<_>>();
+ let batch_b=(0..4096).map(|i|(i%197)as u8).collect::<Vec<_>>();
+ let batch=resources.upload_many(&context,&[(&batch_a,vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC),(&batch_b,vk::BufferUsageFlags::INDEX_BUFFER|vk::BufferUsageFlags::TRANSFER_SRC)])?;
+ assert_eq!(resources.readback_buffer(&context,batch[0])?,batch_a);assert_eq!(resources.readback_buffer(&context,batch[1])?,batch_b);
+ assert_eq!(resources.stats.transfer_command_allocations,1,"Batch upload recreated command buffer");assert_eq!(resources.stats.transfer_fence_creations,1,"Batch upload recreated transfer fence");
+ let done=unsafe{context.device.create_fence(&vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED),None)}?;
+ for id in batch{resources.retire(id)?;}assert_eq!(resources.collect(done,0)?,2);unsafe{context.device.destroy_fence(done,None)};
+ eprintln!("PASS batched buffer exact readback shares single transfer owner");
  let device=&context.device;let fence=unsafe {device.create_fence(&vk::FenceCreateInfo::default(),None)}?;
  resources.mark_used(buffer,7)?;resources.retire(buffer)?;let charged=budget.ledger.lock().unwrap().total_committed();assert_eq!(resources.collect(fence,7)?,0);assert_eq!(budget.ledger.lock().unwrap().total_committed(),charged);
  unsafe {device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default()],fence)?;}

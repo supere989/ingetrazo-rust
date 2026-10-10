@@ -13,6 +13,13 @@ struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMem
 pub struct Resources {lifetime:Arc<super::lifetime::Lifetime>,device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats,image_staging:Option<BufferId>,image_transfer:Option<image_upload::Transfer>}
 impl Resources {
  pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {budget.bind_lifetime(context.lifetime.clone());Self {lifetime:context.lifetime.clone(),device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default(),image_staging:None,image_transfer:None}}
+ // One direct command/fence owner is reused only after each upload completes.
+ fn transfer_handles(&mut self,context:&super::VulkanContext)->Result<(vk::CommandBuffer,vk::Fence),String>{
+  self.lifetime.check()?;
+  if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+  if self.image_transfer.is_none(){self.image_transfer=Some(image_upload::Transfer::new(context)?);self.stats.transfer_command_allocations+=1;self.stats.transfer_fence_creations+=1;}
+  Ok(self.image_transfer.as_ref().unwrap().handles())
+ }
  pub fn check_submission(&self)->Result<(),String>{self.lifetime.check()}
  pub fn drain_graphics(&self)->bool{self.lifetime.drain_graphics()}
  pub(crate) fn retain_owner<T:std::any::Any+Send+Sync>(&self,owner:T){self.lifetime.retain(owner);}
@@ -88,9 +95,7 @@ impl Resources {
   self.stats.upload_calls+=inputs.len()as u64;self.stats.bytes+=total;Ok(destinations)
  }
  fn transfer_many(&mut self,context:&super::VulkanContext,destinations:&[BufferId],staging:BufferId,inputs:&[(&[u8],vk::BufferUsageFlags)])->Result<(),String>{
-  let info=vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).level(vk::CommandBufferLevel::PRIMARY).command_buffer_count(1);
-  let command=unsafe{self.device.allocate_command_buffers(&info)}.map_err(|e|e.to_string())?[0];self.stats.transfer_command_allocations+=1;
-  let fence=match unsafe{self.device.create_fence(&vk::FenceCreateInfo::default(),None)}{Ok(f)=>f,Err(e)=>{unsafe{self.device.free_command_buffers(context.command_pool,&[command])};return Err(e.to_string());}};self.stats.transfer_fence_creations+=1;
+  let (command,fence)=self.transfer_handles(context)?;
   let mut submitted=false;
   let result=(||->Result<(),String>{
    let mut input=0usize;let mut offset=0usize;
@@ -124,14 +129,10 @@ impl Resources {
    }Ok(())
   })();
   if submitted||self.lifetime.uncertain(){self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
-  unsafe{self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}result
+  result
  }
  fn transfer_chunks(&mut self,context:&super::VulkanContext,destination:BufferId,staging:BufferId,data:&[u8])->Result<(),String> {
-  let info=vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).level(vk::CommandBufferLevel::PRIMARY).command_buffer_count(1);
-  let command=unsafe {self.device.allocate_command_buffers(&info)}.map_err(|e|e.to_string())?[0];
-  self.stats.transfer_command_allocations+=1;
-  let fence=match unsafe {self.device.create_fence(&vk::FenceCreateInfo::default(),None)} {Ok(f)=>f,Err(error)=>{unsafe {self.device.free_command_buffers(context.command_pool,&[command])};return Err(error.to_string());}};
-  self.stats.transfer_fence_creations+=1;
+  let (command,fence)=self.transfer_handles(context)?;
   let mut submitted=false;
   let result=(|| {
    let mut offset=0u64;
@@ -157,7 +158,6 @@ impl Resources {
   })();
   // A failed wait must not allow a staging resource to be freed while still in use.
   if submitted||self.lifetime.uncertain() {self.lifetime.quarantine();self.lifetime.retain((context.command_pool,command,fence));return result;}
-  unsafe {self.device.destroy_fence(fence,None);self.device.free_command_buffers(context.command_pool,&[command]);}
   result
  }
  /// Actual GPU-to-host copy; works for unmappable discrete device-local memory.
