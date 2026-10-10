@@ -47,7 +47,9 @@ jobs:
       - name: Original orthographic screen snapping controls
         run: python scripts/check-python-screen-snap.py
       - name: Original perspective snapping and eye boundary controls
-        run: QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-eye-boundary.py
+        run: |
+          QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-eye-boundary.py
+          QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-heldout-depth.py
       - name: Rendered software OpenGL drawing reference gestures
         run: python scripts/check-rendered-drawing-reference.py
       - name: Rendered software OpenGL temporary Shift inference gestures
@@ -158,6 +160,7 @@ jobs:
             docs/audits/python-screen-snap-evidence.json
             docs/audits/python-perspective-screen-evidence.json
             docs/audits/python-snap-eye-boundary-evidence.json
+            docs/audits/python-snap-heldout-depth-evidence.json
             docs/audits/drawing-reference-render-evidence.json
             docs/audits/drawing-reference-render/*.png
             docs/audits/drawing-reference-render/runtime.log

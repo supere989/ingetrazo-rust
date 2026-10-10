@@ -1,6 +1,6 @@
 {
   "context": {
-    "rust_commit": "40ef985655261ea76905a5ab7a8064540538d393",
+    "rust_commit": "5a4686b7e313224ba66b4d868ed5433183a1f722",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -520,6 +520,6 @@
     "point mutation rejected",
     "missing native fixture rejected"
   ],
-  "native_sha256": "26d20cbf3c2c9ae84539847b0b7aa8d15a7599f1ffb91833e88f83f02fb77e5f",
+  "native_sha256": "394fb356f4243b4e36c57c539dd8d4eada0199621c92219fa12c82950a59226e",
   "scope": "10 orthographic source/native controls; nested uses source flattened world edge view, source occlusion analytic predicate; fresh independent rerun on merged production source; three retained negative controls; controller gesture pixels are separate"
 }
