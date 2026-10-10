@@ -325,6 +325,14 @@ fn path_model(path: &ingetrazo_core::georef::GeoPath) -> serde_json::Value {
     serde_json::json!({"points":path.points,"closed":path.closed,"name":path.name,"surface":surface})
 }
 
+fn scale_bar_width(scale_n: f64, segments: usize) -> f64 {
+    if segments == 0 || !scale_n.is_finite() || scale_n <= 0. { return 0.; }
+    let raw_m=(100. / segments as f64)*scale_n/1000.;
+    let nice=[0.1,0.2,0.25,0.5,1.,2.,2.5,5.,10.,20.,25.,50.,100.,200.,250.,500.,1000.,2000.,5000.];
+    let best=nice.into_iter().filter(|n|*n<=raw_m).last().unwrap_or(0.1);
+    best*1000./scale_n*segments as f64
+}
+
 fn sheet_item_model(item: &ingetrazo_core::composition::SheetItem) -> (uuid::Uuid, &'static str, serde_json::Value) {
     use ingetrazo_core::composition::SheetItem;
     match item {
@@ -368,7 +376,7 @@ fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value 
         if key=="cajetin" {
             if let Some(rows)=original.get("campos").and_then(|v| v.as_array()) {
                 let mut rows=rows.clone();
-                for (label,field) in [("PROYECTO","proyecto"),("AUTOR","autor"),("FECHA","fecha"),("ESCALA","escala"),("LÁMINA","lamina")] {
+                for (label,field) in [("PROYECTO","proyecto"),("AUTOR","autor"),("FECHA","fecha"),("ESCALA","escala"),("LÁMINA","lamina"),("TÍTULO","drawing_title")] {
                     if baseline.get(field)!=current.get(field) {
                         if let Some(row)=rows.iter_mut().find(|r| r.get(0).and_then(|v| v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)) {
                             row[1]=current[field].clone();
@@ -376,6 +384,12 @@ fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value 
                     }
                 }
                 value["campos"]=serde_json::json!(rows);
+            } else {
+                value["campos"]=serde_json::json!([
+                    ["PROYECTO",current["proyecto"]],["AUTOR",current["autor"]],
+                    ["FECHA",current["fecha"]],["ESCALA",current["escala"]],
+                    ["LÁMINA",current["lamina"]],["TÍTULO",current["drawing_title"]]
+                ]);
             }
             model[key]=value;
         } else { model[key].as_array_mut().unwrap().push(value); }
@@ -428,11 +442,11 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
                     }
                     f.project_name=field(v,"PROYECTO","proyecto");f.author=field(v,"AUTOR","autor");
                     f.date=field(v,"FECHA","fecha");f.scale_text=field(v,"ESCALA","escala");f.sheet_number=field(v,"LÁMINA","lamina");
-                    f.drawing_title=txt(v,"drawing_title","");SheetItem::TitleBlock(f)
+                    f.drawing_title=field(v,"TÍTULO","drawing_title");SheetItem::TitleBlock(f)
                 },
                 "texts" => SheetItem::Text(TextItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),text:txt(v,"text",""),font_size_pt:num(v,"size_pt",14.),bold:flag(v,"bold",false)}),
                 "nortes" => SheetItem::NorthArrow(NorthArrowItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),size_mm:num(v,"size_mm",18.),rot_deg:num(v,"angle_deg",0.)}),
-                _ => SheetItem::GraphicScale(GraphicScaleItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),scale_n:num(v,"scale_n",100.),length_mm:100.,divisions:v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize})
+                _ => SheetItem::GraphicScale(GraphicScaleItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),scale_n:num(v,"scale_n",100.),length_mm:scale_bar_width(num(v,"scale_n",100.),v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize),divisions:v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize})
             };
             sheet.native_items.insert(id,v.clone());
             sheet.native_item_baselines.insert(id,sheet_item_model(&item).2);
@@ -544,6 +558,17 @@ fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
                 || (!scene.native_document.is_object() && nonempty) {
                 return Err(IgzError::InvalidDocument(format!(
                     "editing {key} in an imported document requires a native schema adapter")));
+            }
+        }
+    }
+    for sheet in &scene.sheets {
+        for item in &sheet.items {
+            if let ingetrazo_core::composition::SheetItem::GraphicScale(bar)=item {
+                if bar.divisions==0 || bar.scale_n<=0. || !bar.scale_n.is_finite()
+                    || (bar.length_mm-scale_bar_width(bar.scale_n,bar.divisions)).abs()>1e-8 {
+                    return Err(IgzError::InvalidDocument(
+                        "graphic scale length cannot be represented by native segment sizing".into()));
+                }
             }
         }
     }
