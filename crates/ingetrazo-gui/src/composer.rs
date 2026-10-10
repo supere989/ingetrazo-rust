@@ -177,6 +177,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         Rect::from_min_size(p0, Vec2::new(r.w as f32 * zoom, r.h as f32 * zoom))
     };
 
+    app.native_composer.retain_items(&items);
     // Render Sheet Items
     for idx in app.scene.sheets[sheet_idx].visible_item_indices() {
         let item=&items[idx];
@@ -184,7 +185,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
         match item {
             SheetItem::Shape(shape) => {
-                if let Err(error)=paint_sheet_shape(&painter,&shape.shape,zoom,paper_rect.min) {app.status_message=error;}
+                match app.native_composer.paint(&painter,shape.id,&shape.shape,zoom,paper_rect.min){
+                    Ok(true)=>{},Ok(false)=>{if let Err(error)=paint_sheet_shape(&painter,&shape.shape,zoom,paper_rect.min){app.status_message=error;}},Err(error)=>app.status_message=error,
+                }
                 if is_selected {render_selection_box(&painter,rect_mm_to_screen(item.rect()));}
             },
             SheetItem::ViewFrame(frame) => {

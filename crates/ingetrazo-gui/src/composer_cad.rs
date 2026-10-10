@@ -78,6 +78,25 @@ impl Cache{
   Ok((self.geometry.as_ref().unwrap().clone(),self.batches.as_ref().unwrap().clone()))
  }
 }
+#[derive(Default)]pub struct NativeComposer{
+ pub factory:Option<crate::native_vulkan::cad2d::Factory>,
+ entries:std::collections::HashMap<uuid::Uuid,(Cache,Option<crate::native_vulkan::cad2d::Handle>)>,
+ active:std::collections::HashSet<uuid::Uuid>,
+}
+impl NativeComposer{
+ pub fn retain_items(&mut self,items:&[ingetrazo_core::composition::SheetItem]){
+  self.active.clear();self.active.extend(items.iter().filter_map(|i|if let ingetrazo_core::composition::SheetItem::Shape(s)=i{Some(s.id)}else{None}));
+  self.entries.retain(|id,_|self.active.contains(id));
+ }
+ pub fn paint(&mut self,painter:&egui::Painter,id:uuid::Uuid,shape:&SheetShape,zoom:f32,origin:Pos2)->Result<bool,String>{
+  let Some(factory)=&self.factory else{return Ok(false);};
+  let (cache,handle)=self.entries.entry(id).or_default();
+  let(g,b)=cache.prepare(painter.ctx(),shape,zoom,painter.ctx().pixels_per_point())?;
+  let pose=ingetrazo_render::cad2d::Pose{scale:[zoom;2],translation:[origin.x+shape.x_mm as f32*zoom,origin.y+shape.y_mm as f32*zoom]};
+  if let Some(handle)=handle{handle.update(g,b,pose)?;}else{*handle=Some(factory.handle(g,b,pose)?);}
+  painter.add(handle.as_ref().unwrap().shape(painter.clip_rect()));Ok(true)
+ }
+}
 #[cfg(test)]mod tests{
  use super::*;
  #[test]fn pose_palette_and_invalid_updates_preserve_cached_geometry(){

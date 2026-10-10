@@ -1,5 +1,5 @@
 {
-  "status": "isolated_geometry_adapter",
+  "status": "isolated_production_hook_pending_pixels",
   "test": "white-only tessellation yields independent vertex coverage and precise authored alpha uniform",
   "physical_geometry": "millimetres; tessellation densityzoom*pixelsperpoint; pose translation/zoom remain separate",
   "supported_paths": [
@@ -13,7 +13,8 @@
     "notyetproductioncomposerhooked",
     "strictnineimageparitypending",
     "expandedCADdarkcolorprecisionFAILretainedindependently",
-    "nativehandle/productioncomposerhookpending"
+    "actualnineimageadapterpixelsnotyetchecked",
+    "transientshape previewstilloldpainter"
   ],
   "canonical_promotion": false,
   "cache_controls": [
@@ -21,5 +22,11 @@
     "palette change retainsgeometryidentity withoutretessellation",
     "invalidpalette atomic retainspriorgeometryandbatches",
     "geometryorAAphysicaldensitychanges preparefreshidentity"
-  ]
+  ],
+  "gui_tests": [
+    102,
+    0,
+    1
+  ],
+  "native_hook": "hostscopedFactory createscachedHandle; productioncomposeraddsinlinecallbackinoriginalsheetorder; mapboundedcurrentSheetItems and stalehandlesretiredbyrendererfences"
 }

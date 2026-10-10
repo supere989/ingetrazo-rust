@@ -191,6 +191,15 @@ struct Cached {
     index: BufferId,
     bytes: u64,
 }
+/// Cheap host-scoped callback factory; GPU ownership stays in Renderer.
+#[derive(Clone)]pub struct Factory{device:vk::Device,pipeline:Arc<Mutex<Pipeline>>,counters:Arc<Counters>}
+impl Factory{
+ pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
+  geometry.validate_batches(&batches)?;pose.validate()?;
+  let inner=Arc::new(NativePaint{device:self.device,state:Mutex::new(State{geometry,batches,pose,ready:None}),pipeline:self.pipeline.clone(),counters:self.counters.clone()});
+  let callback=Arc::new(VulkanPaintCallback(inner.clone()));Ok(Handle{inner,callback})
+ }
+}
 pub struct Renderer {
     device: Device,
     budget: Arc<VulkanBudget>,
@@ -255,28 +264,8 @@ impl Renderer {
         unsafe{self.device.destroy_pipeline(p.pipeline,None)};
         p.pipeline=replacement;Ok(())
     }
-    pub fn handle(
-        &self,
-        geometry: Arc<Geometry>,
-        batches: Arc<[Batch]>,
-        pose: Pose,
-    ) -> Result<Handle, String> {
-        geometry.validate_batches(&batches)?;
-        pose.validate()?;
-        let inner = Arc::new(NativePaint {
-            device: self.device.handle(),
-            state: Mutex::new(State {
-                geometry,
-                batches,
-                pose,
-                ready: None,
-            }),
-            pipeline: self.pipeline.clone(),
-            counters: self.counters.clone(),
-        });
-        let callback = Arc::new(VulkanPaintCallback(inner.clone()));
-        Ok(Handle { inner, callback })
-    }
+    pub fn factory(&self)->Factory{Factory{device:self.device.handle(),pipeline:self.pipeline.clone(),counters:self.counters.clone()}}
+    pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{self.factory().handle(geometry,batches,pose)}
     /// Previous frame fence has completed. Prepare every requested buffer before
     /// installing any new drawable. On admission failure old ready states survive.
     pub fn prepare(
