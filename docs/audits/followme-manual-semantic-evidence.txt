@@ -1,0 +1,9 @@
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-tools)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running tests/followme_manual_acceptance.rs (target/debug/deps/followme_manual_acceptance-3070bac45f098758)
+
+running 1 test
+test original_manual_drag_sequence_and_plane_crossing ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
