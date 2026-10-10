@@ -1,0 +1,15 @@
+{
+  "source": "df542fdc",
+  "fresh_states": 27,
+  "focused_passed": 7,
+  "review": "Self-edge adjacency is stored once while repeated radial face incidences remain ordered and duplicated as source. Empty loops own history. Ordinary add_edge remains degenerate-refusing. Design conflict resolved retaining already-reviewed incremental spatial index statement.",
+  "remaining": "Multiple-hole filtering, arbitrary attributes, full recipe/object/Scene adapters and production interpreter remain open.",
+  "purged_target_apparent_bytes": 184909147,
+  "sha256": {
+    "native.json": "219305267ed3a69a362dbc730e42df9f2e1ef6b71384e15d4314505df5accf89",
+    "build.log": "8fc733ca1fd765dfc8f1c3b10f374ce25cd5da2b7065155390d9656494c566d7",
+    "original.json": "219305267ed3a69a362dbc730e42df9f2e1ef6b71384e15d4314505df5accf89",
+    "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "focused.log": "a2244abad382e07dc62688bc27abebbbe4b7a87160d240dcebdc2c740294d3dd"
+  }
+}
