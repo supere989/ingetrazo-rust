@@ -1,0 +1,286 @@
+{
+  "scope": "Retained actual GPU pixels; flat source neighborhood classification is diagnostic and does not establish rendering cause",
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "changed_pixels": 78,
+      "bbox": [
+        245,
+        255,
+        588,
+        420
+      ],
+      "source_flat_3x3_mismatches": 0,
+      "common_rgba_pairs": [
+        {
+          "source": [
+            51,
+            59,
+            71,
+            255
+          ],
+          "native": [
+            52,
+            59,
+            71,
+            255
+          ],
+          "pixels": 64
+        },
+        {
+          "source": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "native": [
+            185,
+            185,
+            185,
+            255
+          ],
+          "pixels": 6
+        },
+        {
+          "source": [
+            169,
+            169,
+            169,
+            255
+          ],
+          "native": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "pixels": 3
+        },
+        {
+          "source": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "native": [
+            169,
+            169,
+            169,
+            255
+          ],
+          "pixels": 2
+        },
+        {
+          "source": [
+            185,
+            185,
+            185,
+            255
+          ],
+          "native": [
+            177,
+            177,
+            177,
+            255
+          ],
+          "pixels": 1
+        },
+        {
+          "source": [
+            219,
+            219,
+            219,
+            255
+          ],
+          "native": [
+            233,
+            233,
+            233,
+            255
+          ],
+          "pixels": 1
+        },
+        {
+          "source": [
+            135,
+            75,
+            15,
+            255
+          ],
+          "native": [
+            149,
+            82,
+            15,
+            255
+          ],
+          "pixels": 1
+        }
+      ]
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "changed_pixels": 351,
+      "bbox": [
+        217,
+        238,
+        606,
+        455
+      ],
+      "source_flat_3x3_mismatches": 0,
+      "common_rgba_pairs": [
+        {
+          "source": [
+            51,
+            59,
+            71,
+            255
+          ],
+          "native": [
+            52,
+            59,
+            71,
+            255
+          ],
+          "pixels": 16
+        },
+        {
+          "source": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "native": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "pixels": 13
+        },
+        {
+          "source": [
+            159,
+            80,
+            0,
+            255
+          ],
+          "native": [
+            159,
+            100,
+            40,
+            255
+          ],
+          "pixels": 12
+        },
+        {
+          "source": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "native": [
+            247,
+            247,
+            247,
+            255
+          ],
+          "pixels": 11
+        },
+        {
+          "source": [
+            199,
+            199,
+            199,
+            255
+          ],
+          "native": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "pixels": 11
+        },
+        {
+          "source": [
+            193,
+            193,
+            193,
+            255
+          ],
+          "native": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "pixels": 9
+        },
+        {
+          "source": [
+            215,
+            215,
+            215,
+            255
+          ],
+          "native": [
+            199,
+            199,
+            199,
+            255
+          ],
+          "pixels": 9
+        },
+        {
+          "source": [
+            160,
+            160,
+            160,
+            255
+          ],
+          "native": [
+            176,
+            176,
+            176,
+            255
+          ],
+          "pixels": 9
+        },
+        {
+          "source": [
+            247,
+            247,
+            247,
+            255
+          ],
+          "native": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "pixels": 8
+        },
+        {
+          "source": [
+            209,
+            209,
+            209,
+            255
+          ],
+          "native": [
+            231,
+            231,
+            231,
+            255
+          ],
+          "pixels": 8
+        }
+      ]
+    }
+  ]
+}

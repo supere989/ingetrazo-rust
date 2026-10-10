@@ -10,5 +10,6 @@
   "native/gondola_v20-asymmetric-native-vulkan.png": "5cf2d897474e0fd2e10335a64690d6b830ae28a6c4e2f9044b53408b2c35e939",
   "native/gondola_v20-iso-native-vulkan.png": "2905243230f4a6623045d1fa8ab476657fa1eb42a86dafb27b3500874e3b4971",
   "native/native-world-results.json": "6e6fc0f00324ec289253e9c9d42b3a129ac388dd4d5246e600b15ff2f383e531",
-  "native/nvidia-egl-icd.json": "438b95ede904f30f140a828a92efd00aa3a8de11582820a93bc0b0c189676327"
+  "native/nvidia-egl-icd.json": "438b95ede904f30f140a828a92efd00aa3a8de11582820a93bc0b0c189676327",
+  "gondola-residual-analysis.json": "9e4076023de96b7133596707fa917c7fa2e6fc2f5f0ba84d0185d2728830ea41"
 }
