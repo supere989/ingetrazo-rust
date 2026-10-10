@@ -1068,6 +1068,7 @@ impl App for crate::IngeTrazoApp {
             if system.world.is_none(){system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);}
             let world=system.world.as_mut().unwrap();
             if resize {let scale=system.egui_ctx.pixels_per_point();let extent=vk::Extent2D{width:(rect.width()*scale).ceil().max(1.0) as u32,height:(rect.height()*scale).ceil().max(1.0) as u32};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);}
+            world.set_display_scale(system.egui_ctx.pixels_per_point());
             world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.model_revision)
         })();
         if let Err(error)=result {self.gpu_error(&error);}

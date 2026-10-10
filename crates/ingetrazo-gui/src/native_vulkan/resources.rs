@@ -6,12 +6,13 @@ use std::{collections::HashMap,sync::Arc};
 use super::budget::VulkanBudget;
 const UPLOAD_CHUNK:u64=8*1024*1024;
 #[derive(Clone,Copy,Debug,PartialEq,Eq,Hash)]pub struct BufferId(u64);
-struct Buffer {handle:vk::Buffer,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>}
+struct Buffer {handle:vk::Buffer,usage:vk::BufferUsageFlags,memory:vk::DeviceMemory,logical_bytes:u64,allocation_bytes:u64,properties:vk::MemoryPropertyFlags,last_use:u64,retire_after:Option<u64>}
 #[derive(Default,Debug)]pub struct UploadStats {pub bytes:u64,pub chunks:u64,pub staging_peak:u64,pub direct_mapped_bytes:u64,pub readback_bytes:u64,pub readback_staging_peak:u64}
 pub struct Resources {device:Device,budget:Arc<VulkanBudget>,properties:vk::PhysicalDeviceMemoryProperties,next:u64,buffers:HashMap<BufferId,Buffer>,pub stats:UploadStats}
 impl Resources {
  pub fn new(context:&super::VulkanContext,budget:Arc<VulkanBudget>)->Self {Self {device:context.device.clone(),budget,properties:unsafe {context.instance.get_physical_device_memory_properties(context.physical_device)},next:1,buffers:HashMap::new(),stats:Default::default()}}
  pub fn buffer(&self,id:BufferId)->Option<vk::Buffer> {self.buffers.get(&id).map(|b|b.handle)}
+ pub fn logical_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.logical_bytes)}
  pub fn allocation_bytes(&self,id:BufferId)->Option<u64> {self.buffers.get(&id).map(|b|b.allocation_bytes)}
  fn allocate(&mut self,bytes:u64,usage:vk::BufferUsageFlags,required:vk::MemoryPropertyFlags)->Result<BufferId,String> {
   if bytes==0 {return Err("Empty GPU buffer".into());}
@@ -29,7 +30,7 @@ impl Resources {
    Ok((memory,self.properties.memory_types[ty as usize].property_flags))
   })();
   let (memory,properties)=match result {Ok(memory)=>memory,Err(error)=>{unsafe {self.device.destroy_buffer(buffer,None)};return Err(error);}};
-  let id=BufferId(self.next);self.next+=1;self.buffers.insert(id,Buffer {handle:buffer,memory,logical_bytes:bytes,allocation_bytes:requirements.size,properties,last_use:0,retire_after:None});Ok(id)
+  let id=BufferId(self.next);self.next+=1;self.buffers.insert(id,Buffer {handle:buffer,usage,memory,logical_bytes:bytes,allocation_bytes:requirements.size,properties,last_use:0,retire_after:None});Ok(id)
  }
  fn destroy(&mut self,id:BufferId) {if let Some(buffer)=self.buffers.remove(&id) {unsafe {self.device.destroy_buffer(buffer.handle,None);self.device.free_memory(buffer.memory,None)};self.budget.freed(buffer.memory);}}
  fn write(&self,id:BufferId,data:&[u8])->Result<(),String> {
@@ -43,7 +44,7 @@ impl Resources {
  /// Returns only after transfer completion; no scene serialization or IPC on upload path.
  pub fn upload(&mut self,context:&super::VulkanContext,data:&[u8],usage:vk::BufferUsageFlags,force_staging:bool)->Result<BufferId,String> {
   if data.len()%4!=0{return Err("Vulkan buffer upload must be a multiple of four bytes".into());}
-  let destination=self.allocate(data.len() as u64,usage|vk::BufferUsageFlags::TRANSFER_DST|vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::DEVICE_LOCAL)?;
+  let destination=self.allocate(data.len() as u64,usage|vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::DEVICE_LOCAL)?;
   let result=(|| {
    if !force_staging&&self.buffers[&destination].properties.contains(vk::MemoryPropertyFlags::HOST_VISIBLE) {
     self.write(destination,data)?;self.stats.direct_mapped_bytes+=data.len() as u64;return Ok(());
@@ -68,8 +69,11 @@ impl Resources {
      self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
      self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
      self.device.cmd_copy_buffer(command,self.buffers[&staging].handle,self.buffers[&destination].handle,&[vk::BufferCopy {src_offset:0,dst_offset:offset,size:chunk.len() as u64}]);
-     let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(vk::AccessFlags::VERTEX_ATTRIBUTE_READ|vk::AccessFlags::INDEX_READ).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(self.buffers[&destination].handle).offset(offset).size(chunk.len() as u64);
-     self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::VERTEX_INPUT,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
+     let storage=self.buffers[&destination].usage.contains(vk::BufferUsageFlags::STORAGE_BUFFER);
+     let access=vk::AccessFlags::VERTEX_ATTRIBUTE_READ|vk::AccessFlags::INDEX_READ|if storage{vk::AccessFlags::SHADER_READ}else{vk::AccessFlags::empty()};
+     let stages=vk::PipelineStageFlags::VERTEX_INPUT|if storage{vk::PipelineStageFlags::VERTEX_SHADER}else{vk::PipelineStageFlags::empty()};
+     let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::TRANSFER_WRITE).dst_access_mask(access).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(self.buffers[&destination].handle).offset(offset).size(chunk.len() as u64);
+     self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,stages,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
      self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
      self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|e.to_string())?;submitted=true;
@@ -86,7 +90,7 @@ impl Resources {
  }
  /// Actual GPU-to-host copy; works for unmappable discrete device-local memory.
  pub fn readback_buffer(&mut self,context:&super::VulkanContext,id:BufferId)->Result<Vec<u8>,String> {
-  let source=self.buffers.get(&id).ok_or("Unknown GPU readback buffer")?;let bytes=source.logical_bytes;let handle=source.handle;
+  let source=self.buffers.get(&id).ok_or("Unknown GPU readback buffer")?;if !source.usage.contains(vk::BufferUsageFlags::TRANSFER_SRC){return Err("GPU buffer was not created for readback".into());}let bytes=source.logical_bytes;let handle=source.handle;
   self.read_chunks(context,bytes,4,|device,command,destination,offset,length|unsafe {
    let barrier=vk::BufferMemoryBarrier::default().src_access_mask(vk::AccessFlags::MEMORY_WRITE).dst_access_mask(vk::AccessFlags::TRANSFER_READ).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).buffer(handle).offset(offset).size(length);
    device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::ALL_COMMANDS,vk::PipelineStageFlags::TRANSFER,vk::DependencyFlags::empty(),&[],&[barrier],&[]);

@@ -1,0 +1,9 @@
+PASS headless strict adapter DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: Some("5090") }; actual17MiB GPUupload/readback+fence/free; productionworld depth/cache/invalidation; global128MiB limit; eachfence5s; image/out/depth.png
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: Some("5090") }; no surface/present requirement
+PASS ordinary GPU buffer rejects undeclared readback before staging allocation
+PASS17MiB actualGPUcopy/readback; upload7.700ms readback97.543ms; statsUploadStats { bytes: 17825796, chunks: 4, staging_peak: 8388608, direct_mapped_bytes: 0, readback_bytes: 17825792, readback_staging_peak: 8388608 }; fence-delayed actualfree
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+PASS native world draw1 actualGPUreadback left[247, 0, 0] right[0, 0, 247]; uploads1
+PASS native world draw2 actualGPUreadback left[0, 0, 247] right[201, 0, 0]; uploads2
+GPU allocation budget: 20480320 committed bytes; peakcommitted 26214400; peakadmitted 26214400; globalcap Some(134217728); heaps [HeapBudget { capacity: 34190917632, limit: 27352734104, live_budget: Some(27262137132), live_usage: 20905984, reserved: 0, committed: 20480320 }, HeapBudget { capacity: 99445232640, limit: 79556186112, live_budget: Some(89500709376), live_usage: 4255744, reserved: 0, committed: 0 }]

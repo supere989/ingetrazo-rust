@@ -1,0 +1,4 @@
+PASS actualRTX contour originalIGZ=/inputs/hollow.igz GPUreadback=/out/hollow.png uploads1/2calls ownerledger0
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: Some("5090") }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)

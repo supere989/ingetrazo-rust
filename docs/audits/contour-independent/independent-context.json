@@ -1,0 +1,138 @@
+{
+  "source": "8c29bd6+b9a7335 equivalentaba2242",
+  "validator": "aba22420bb131858cdbbc40aad1fdad1ff5a4de8",
+  "binary_sha256": {
+    "headless_contour_independent": "bcc4fc1e8aaf62c73c7eb94912bec68914a3bea8bbf961c46d0844741a3da530",
+    "native_vulkan_headless_probe": "3ee9ce53e70504ff813dbc167f3ffd4a02355cf8caf3d9df87e43e88fd2bc72c",
+    "native_vulkan_section_fixture": "bec72400191ca21f6b3bf9a6e187a56a8071dfdb1a11e4c65654ea4a2eb72ed8"
+  },
+  "hardware_mask_comparison": [
+    {
+      "case": "closed",
+      "original": 20164,
+      "native": 20164,
+      "xor_pixels": 0,
+      "intersection": 20164,
+      "union": 20164
+    },
+    {
+      "case": "shared-slab",
+      "original": 0,
+      "native": 0,
+      "xor_pixels": 0,
+      "intersection": 0,
+      "union": 0
+    },
+    {
+      "case": "shared-slab-reversed",
+      "original": 20164,
+      "native": 20164,
+      "xor_pixels": 0,
+      "intersection": 20164,
+      "union": 20164
+    },
+    {
+      "case": "transparent",
+      "original": 0,
+      "native": 0,
+      "xor_pixels": 0,
+      "intersection": 0,
+      "union": 0
+    },
+    {
+      "case": "duplicate",
+      "original": 20164,
+      "native": 20164,
+      "xor_pixels": 0,
+      "intersection": 20164,
+      "union": 20164
+    },
+    {
+      "case": "coplanar-backface",
+      "original": 0,
+      "native": 0,
+      "xor_pixels": 0,
+      "intersection": 0,
+      "union": 0
+    },
+    {
+      "case": "closed-iso",
+      "original": 9925,
+      "native": 9802,
+      "xor_pixels": 273,
+      "intersection": 9727,
+      "union": 10000
+    },
+    {
+      "case": "shared-slab-iso",
+      "original": 8519,
+      "native": 8281,
+      "xor_pixels": 348,
+      "intersection": 8226,
+      "union": 8574
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "original": 9925,
+      "native": 9802,
+      "xor_pixels": 273,
+      "intersection": 9727,
+      "union": 10000
+    },
+    {
+      "case": "closed-front",
+      "original": 0,
+      "native": 0,
+      "xor_pixels": 0,
+      "intersection": 0,
+      "union": 0
+    },
+    {
+      "case": "hollow",
+      "original": 14400,
+      "native": 14692,
+      "xor_pixels": 292,
+      "intersection": 14400,
+      "union": 14692
+    },
+    {
+      "case": "hollow-iso",
+      "original": 6970,
+      "native": 6814,
+      "xor_pixels": 428,
+      "intersection": 6678,
+      "union": 7106
+    },
+    {
+      "case": "transparent-hollow",
+      "original": 0,
+      "native": 0,
+      "xor_pixels": 0,
+      "intersection": 0,
+      "union": 0
+    },
+    {
+      "case": "hollow-seam",
+      "original": 15552,
+      "native": 15336,
+      "xor_pixels": 216,
+      "intersection": 15336,
+      "union": 15552
+    }
+  ],
+  "audit": [
+    "ShaderVertex stride12floats/48B equalsproductionVertex ABI; indexcount/3 triangleinstances boundedbyuploadedindices",
+    "Readonly2SSBO descriptorstage/rangedevicechecks;128Bpush withinVulkanminimum; stageduploadTRANSFER_WRITE\u2192VERTEX_SHADER SHADER_READ",
+    "Oldbuffers retiredafterlastuseserial;descriptorupdate requirescallerpreviousframefencecomplete, productionhostwaits beforeprepare_gpu",
+    "Transparentgeometry cachesseparateSSBOs; strict2crossings+worldeye/FOV/logicalheight lift mirrorssource; fulltransparentsurfacepipeline stillopen",
+    "Undeclaredbufferreadback refusesbeforestaging; actualRTXprobealsoexercisesretiredfencefree/17MiBcopy"
+  ],
+  "scope": "Software10 + hardware14 originalIGZ bounded5%positive/exactzero coverage; fullmaskresidualretained,notfullpixelparity; hardware4resourcecontrolsPASS",
+  "limits": [
+    "ExactIso contourpixels/thickness differ",
+    "Softwaresamplepositions differfromRTX; counttoleranceunchanged",
+    "SSBO maxrange rejectswholeworld; boundedchunkfallback notyetimplementedthisrevision",
+    "Hollowtests addhole-centerzero controls butnotalltouching/selfintersection",
+    "Metal/desktopRTXWSI broadpipeline remainsopen"
+  ]
+}
