@@ -71,13 +71,19 @@ try:
   p=subprocess.Popen([args.binary],env=env,stdout=log,stderr=log)
   wait(lambda:state()and state()["viewport"]and state()["submitted_serial"]>1)
   root=lib.XDefaultRootWindow(d);rr=C.c_ulong();parent=C.c_ulong();children=C.POINTER(C.c_ulong)();n=C.c_uint();assert lib.XQueryTree(d,root,C.byref(rr),C.byref(parent),C.byref(children),C.byref(n))
-  matches=[]
+  matches=[];observed=[]
+  lib.XGetWindowProperty.argtypes=[C.c_void_p,C.c_ulong,C.c_ulong,C.c_long,C.c_long,C.c_int,C.c_ulong,C.POINTER(C.c_ulong),C.POINTER(C.c_int),C.POINTER(C.c_ulong),C.POINTER(C.c_ulong),C.POINTER(C.POINTER(C.c_ubyte))]
+  pid_atom=lib.XInternAtom(d,b"_NET_WM_PID",0)
   for i in range(n.value):
    name=C.c_char_p()
    if lib.XFetchName(d,children[i],C.byref(name)):
-    if name.value==b"IngeTrazo actual application annotation probe":matches.append(children[i])
+    observed.append(name.value.decode(errors="replace"))
+    actual_type=C.c_ulong();fmt=C.c_int();items=C.c_ulong();after=C.c_ulong();data=C.POINTER(C.c_ubyte)()
+    if lib.XGetWindowProperty(d,children[i],pid_atom,0,1,0,6,C.byref(actual_type),C.byref(fmt),C.byref(items),C.byref(after),C.byref(data))==0 and data:
+     if fmt.value==32 and items.value==1 and C.cast(data,C.POINTER(C.c_ulong))[0]==p.pid:matches.append(children[i])
+     lib.XFree(data)
     lib.XFree(name)
-  lib.XFree(children);assert len(matches)==1;window=matches[0];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d);time.sleep(.3)
+  lib.XFree(children);assert len(matches)==1,f"Owned process window identity absent/ambiguous: {observed}";window=matches[0];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d);time.sleep(.3)
   def take(name):
    path=out/(name+".png");subprocess.run(["import","-display",display,"-window",str(window),str(path)],check=True,timeout=5);return read_image(path)
   def roi(image):

@@ -1,0 +1,19 @@
+{
+  "source_sha": "5d819a41cd5bbab555ada62a2ca819e465d8409b",
+  "error": "AssertionError()",
+  "rows": [],
+  "last_state": {
+    "nonce": 0,
+    "submitted_serial": 5,
+    "held_refusal": false,
+    "dimensions": 0,
+    "viewport": [
+      50.0,
+      60.0,
+      1272.0,
+      769.6375122070312
+    ],
+    "cached_bytes": 0,
+    "pending_textures": 0
+  }
+}
