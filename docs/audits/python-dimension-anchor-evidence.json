@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "13581e1829025fc8b48a8aa6f1fdfcc3c319f7dd",
+    "rust_commit": "7e9a5017415139d9300f1db9cb7b68f51f018d9a",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -104,5 +104,5 @@
       "passed": true
     }
   ],
-  "scope": "Stable anchors refreshed at GUI frame boundaries: movement/group/scale/explode/deletion with exact scene undo; original native reopen and original live vertex/group endpoint rebinding. Translated-context local dimension creation and three-level outliner actual selection/edit/rename+UID retention/undo. New axial dimensions in non-axis-aligned contexts and rendered inspector remain separate."
+  "scope": "Stable anchors refreshed at GUI frame boundaries: movement/group/scale/explode/deletion with exact scene undo; original native reopen and original live vertex/group endpoint rebinding. Translated-context local dimension creation and three-level outliner actual selection/edit/rename+UID retention/undo. Nested nonuniform/reflected world-frame measurement and rendered inspector remain separate."
 }
