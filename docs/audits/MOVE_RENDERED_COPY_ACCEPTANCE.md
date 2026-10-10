@@ -1,0 +1,13 @@
+# Rendered Move and Ctrl-copy acceptance
+
+Production candidate: `4c5da0d`. Original source: `6be29fe437a7cd992d4e079f71720821b25216b9`. Both fresh gesture runs completed with exit 0. The JSON reports retain executable/checker SHA256, scene observations, and gesture states.
+
+The real pointer first acquires the circle center through the viewport timer, cancels Line, selects the 24-edge curve and grabs its rim with Move. Pointer motion previews translation without history. Three real Ctrl press/held/release sequences toggle copy on, off and on; held/released states remain stable. Copy mode restores original geometry and draws translated wireframe. A second click commits two distinct 24-edge curves with one undo entry. Undo restores the connected original curve.
+
+Positive image patches on the ghost change 24 pixels in native and 11 in original; quiet negative patches change zero in both. Baseline capture occurs after the original rendered center acquisition, before copy; the retained early native capture failure demonstrates why the initial state publication alone cannot establish a rendered baseline. Thresholds remain positive >=5 and quiet <=3. Integer pointer coordinates produce X translation 0.9962495076 native and 1.0036286116 original for requested 1, within the explicit 0.01 world tolerance.
+
+Native runs the full ash Vulkan application on isolated llvmpipe/Xvfb. Original runs the actual Qt/OpenGL Viewport on software GL/Xvfb, with thin public tool/select/Undo shortcuts. These are rendered engineering gestures, not hardware GPU acceptance or general P08 verification. Arrays, linked groups and other copied entities require separate proofs.
+
+Original Undo leaves 48 registered vertices, 24 unused, while its connected edge count returns to 24. Native restores 24 registered vertices and no unused vertices. Full registry parity is explicitly false in the source report. An earlier observer inferred copied geometry from raw retained vertices; the retained observer script/hash, failure, frozen state and diagnosis prove the correction to live copied edge identities without altering original application behavior. This does not excuse ghost edges: connected geometry is independently counted. The source array ghost-wire discrepancy remains a separate explicit integrity correction in MOVE_PREVIEW_CONTRACT.md.
+
+Reproduction: set CARGO_TARGET_DIR to a private target, INGETRAZO_CENTER_EXPECT_HINT=1, INGETRAZO_CENTER_RUN_SUFFIX=-rendered-move-copy-live-edges, INGETRAZO_MOVE_DISTANCE=1 and INGETRAZO_MOVE_COPY=1; run `/tmp/ingetrazo-parity-python/bin/python scripts/check-native-center-tracking.py`. Add INGETRAZO_CENTER_ORIGINAL=1 for source. No geometry mutation through the checker; gestures use XTEST and observed public state.

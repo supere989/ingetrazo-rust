@@ -225,7 +225,8 @@ impl IngeTrazoApp {
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
         self.paste_preview=None;
-        self.active_tool.on_deactivate(&mut self.scene);
+        let version=self.scene.version;self.active_tool.on_deactivate(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
         self.active_tool = create_tool(tool_type);
@@ -348,6 +349,8 @@ impl IngeTrazoApp {
     pub fn undo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
+        let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}
         if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
         if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
@@ -363,6 +366,8 @@ impl IngeTrazoApp {
     pub fn redo(&mut self) {
         if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return;}
         self.finish_composer_edit();
+        let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
+        if self.scene.version!=version{self.bump_model_revision();}
         if let Some(mut next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
             self.undo_stack.push(self.scene.clone());

@@ -1,0 +1,12 @@
+{
+  "edges_after_undo": 0,
+  "active_move_anchor_retained": true,
+  "captured_targets_retained": 2,
+  "scope": "Actual original MainWindow._on_undo with standalone viewport, controlled active Move preview. No pointer/UI capture.",
+  "provenance": {
+    "rust_commit": "a4b4dc13f6630d50eec4c871830012afc08bcd36",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  }
+}

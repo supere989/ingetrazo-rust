@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "checks": [
+    "undo Mesh exact equality including topology/attrs/UV/UIDs",
+    "undo Groups exact equality",
+    "undo Selection exact equality",
+    "redo Mesh exact equality",
+    "redo Groups exact equality",
+    "stale array after Undo/Redo refuses with full Scene unchanged"
+  ],
+  "binary_sha256": "62918ad1bca314fd2d2136099c3c1af8a262b6d5d84d26cec428afb0095bee1d",
+  "boundary": "Actual IngeTrazoApp dispatch VCB/undo/redo controlled controller; no pointer-render claim"
+}

@@ -1,0 +1,237 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "eeb0774b798e0a4c55a12ea28ebc56e10b5b596e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "mode": "malformed",
+  "early": {
+    "mode": "malformed",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129045.673243685,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [],
+    "edges": 25,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 0.0,
+      "pointer": [
+        607.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "acquired": {
+    "mode": "malformed",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129045.933203666,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "Endpoint",
+    "inference_point": [
+      3.200000047683716,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        3.200000047683716,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 25,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 0.0,
+      "pointer": [
+        607.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "centered": {
+    "mode": "malformed",
+    "tool": "LineTool",
+    "curves": [
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71,
+      71
+    ],
+    "time": 129046.292946998,
+    "center": [
+      1.9999998807907104,
+      3.0,
+      1.0
+    ],
+    "rim": [
+      606.7336502342575,
+      272.97163030005703
+    ],
+    "center_pixel": [
+      499.999987451655,
+      272.97163030005703
+    ],
+    "move_target": [
+      695.6783022952529,
+      272.97163030005703
+    ],
+    "kind": "FromPoint",
+    "inference_point": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "memory": [
+      [
+        3.200000047683716,
+        3.0,
+        1.0
+      ]
+    ],
+    "edges": 25,
+    "faces": 0,
+    "undo": 0,
+    "anchor": null,
+    "center_hint_observation": {
+      "radius_px": 0.0,
+      "pointer": [
+        500.0,
+        273.0
+      ],
+      "allowed": false
+    }
+  },
+  "approach_hint_metrics": {
+    "filled_center": false,
+    "core_green": 0,
+    "outer_green": 0,
+    "core_samples": 25,
+    "majority_threshold": 13
+  },
+  "approach_green_pixels": 0,
+  "elapsed_wall_seconds": 0.3011181830079295,
+  "scope": "Actual original Qt/OpenGL Viewport with XTEST pointer and real QTimer dwell; standalone tool/select shortcuts wired to original public actions, Move/Delete original geometry/history, software GL Xvfb.",
+  "executable_sha256": "833362bb18d2667675c64b773d96894c14d48e52a6ab976f9841c0b243b56054"
+}

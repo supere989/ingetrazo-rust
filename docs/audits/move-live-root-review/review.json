@@ -1,0 +1,9 @@
+{
+  "candidate": "100ed39",
+  "command": "CARGO_TARGET_DIR=/tmp/ingetrazo-move-copy-review-target cargo test --locked --workspace",
+  "passed": 408,
+  "failed": 0,
+  "ignored": 2,
+  "retained_log_sha256": "9c0734d862496e05c1e430bf7cb3ce0924636fec62fbf84cd45bd630f5c7ad97",
+  "remaining": "Independent live/copy pointer acceptance, explicit documented array cleanup correction and source ghost-edge mismatch retained. No full P08 promotion."
+}

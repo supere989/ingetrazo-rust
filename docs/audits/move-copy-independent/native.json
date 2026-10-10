@@ -1,0 +1,113 @@
+[
+  {
+    "copied_attrs": [
+      {
+        "curve": 92
+      },
+      {
+        "curve": 92
+      }
+    ],
+    "copied_curve": 92,
+    "copied_link": true,
+    "copied_soft": [
+      true,
+      true
+    ],
+    "edges": 4,
+    "fresh_curve": true,
+    "name": "selected-curve",
+    "source_curve": 91
+  },
+  {
+    "component": false,
+    "ext": {
+      "vendor": {
+        "path": "do-not-remap"
+      }
+    },
+    "fresh_child": true,
+    "fresh_root": true,
+    "material": {
+      "color": [
+        1,
+        0,
+        0
+      ]
+    },
+    "name": "ordinary",
+    "shared_component_mesh": null,
+    "world_points": [
+      [
+        7.0,
+        3.0,
+        0.0
+      ],
+      [
+        8.0,
+        3.0,
+        0.0
+      ],
+      [
+        7.0,
+        3.0,
+        0.0
+      ],
+      [
+        7.0,
+        4.0,
+        0.0
+      ]
+    ]
+  },
+  {
+    "component": true,
+    "ext": {
+      "vendor": {
+        "path": "do-not-remap"
+      }
+    },
+    "fresh_child": true,
+    "fresh_root": true,
+    "material": {
+      "color": [
+        1,
+        0,
+        0
+      ]
+    },
+    "name": "component",
+    "shared_component_mesh": true,
+    "world_points": [
+      [
+        7.0,
+        3.0,
+        0.0
+      ],
+      [
+        8.0,
+        3.0,
+        0.0
+      ],
+      [
+        7.0,
+        3.0,
+        0.0
+      ],
+      [
+        7.0,
+        4.0,
+        0.0
+      ]
+    ]
+  },
+  {
+    "name": "control-toggle",
+    "press_states": [
+      true,
+      false,
+      true
+    ],
+    "reset_clears": true
+  }
+]

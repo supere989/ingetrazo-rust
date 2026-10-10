@@ -1,0 +1,7 @@
+{
+  "rust_production_commit": "4c5da0d",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "retained_failure": "Connected copy edges removed by original Undo, but raw registry vertices remain; old observer inferred a copy center from raw vertices24..48 and rejected actual connected geometry restoration.",
+  "correction": "Derive copied center from endpoints of live copied curve edges; retain raw total/unused vertex counts separately. Original unused registry diverges from native snapshot cleanup; complete vertex-registry parity remains false.",
+  "scope": "Observer correction and explicit source retention boundary; not permission to ignore ghost edges or mutate the original."
+}

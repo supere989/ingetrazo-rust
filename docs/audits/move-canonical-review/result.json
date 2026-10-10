@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_checkpoint": "297d7a5",
+  "workspace_passed": 408,
+  "workspace_ignored": 2,
+  "raw_log_sha256": "0d99da25c642763ffc9a71e411c564c7e63fc8ee90479b8d3d0ac18a902a4ca7",
+  "retained_log_sha256": "9e1db14fb0881e42feb2785275a7f1d9a57383a51d83a45fdb905d72fd703ff7",
+  "boundary": "Full local workspace plus separately retained fresh original/native rendered MoveCopy; broad P08/performance remains open"
+}

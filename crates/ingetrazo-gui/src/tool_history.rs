@@ -24,6 +24,7 @@ impl IngeTrazoApp {
     fn tool_snapshot(&self) -> Scene {
         let mut before = self.scene.clone();
         before.camera = self.camera.clone();
+        self.active_tool.restore_transient_model(&mut before);
         before
     }
 
@@ -35,15 +36,24 @@ impl IngeTrazoApp {
                 return Err(error);
             }
         }
-        if changed_model(&before, &self.scene) {
+        let transient_changed=before.version!=self.scene.version;
+        let committed=changed_model(&before,&self.scene);
+        if committed {
             self.bump_model_revision();
-            self.undo_stack.push(before);
+            if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
+            self.active_tool.note_history_revision(self.model_revision,true);
             self.redo_stack.clear();
             if self.undo_stack.len() > 50 {
                 self.undo_stack.remove(0);
             }
         }
+        if transient_changed&&!committed{self.bump_model_revision();}
         Ok(())
+    }
+
+    pub fn dispatch_tool_move(&mut self,context:&ToolContext){
+        let version=self.scene.version;self.active_tool.on_move(&mut self.scene,context);
+        if self.scene.version!=version{self.bump_model_revision();}
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
@@ -56,6 +66,9 @@ impl IngeTrazoApp {
             .error_message()
             .map(|error| format!("Tool error: {error}"))
             .unwrap_or_default();
+        if self.active_tool.error_message().is_some(){
+            self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();return;
+        }
         if self.record_tool_commit(before).is_ok()&&self.scene.section_planes.len()>plane_count{self.queue_section_name_prompt();}
     }
 
@@ -82,12 +95,13 @@ impl IngeTrazoApp {
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
         if self.section_name_prompt.is_some(){return Err("Finish the section naming dialog first".into());}
         let before = self.tool_snapshot();
+        self.active_tool.note_history_revision(self.model_revision,false);
         match self.active_tool.on_vcb_input(&mut self.scene, text) {
             Ok(()) => {
                 self.record_tool_commit(before)
             }
             Err(error) => {
-                self.scene = before;self.bump_model_revision();
+                self.scene = before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();
                 Err(error)
             }
         }
@@ -120,6 +134,31 @@ mod tests {
         )
     }
 
+    #[test]fn history_replacement_retires_move_targets_and_redo_preserves_original_geometry(){
+        let mut app=app();let original=app.scene.clone();app.undo_stack.push(Scene::new());app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));app.dispatch_tool_click(&context(0.));app.dispatch_tool_move(&context(1.));
+        assert_ne!(app.scene.mesh,original.mesh);app.undo();assert!(app.scene.mesh.faces.is_empty());assert!(app.active_tool.snap_anchor().is_none());
+        app.redo();assert_eq!(app.scene.mesh,original.mesh);assert!(app.active_tool.snap_anchor().is_none());
+        app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));app.dispatch_tool_click(&context(0.));app.dispatch_tool_move(&context(1.));app.redo();assert_eq!(app.scene.mesh,original.mesh);assert!(app.active_tool.snap_anchor().is_none());
+    }
+    #[test]fn move_live_preview_click_vcb_failure_cancel_and_tool_change_are_transactional(){
+        let mut app=app();app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));let before=app.scene.mesh.clone();app.dispatch_tool_click(&context(0.));
+        let revision=app.model_revision;app.dispatch_tool_move(&context(1.));assert!(app.model_revision>revision);assert!(app.undo_stack.is_empty());let preview=app.scene.mesh.clone();
+        let mut invalid=context(1.);invalid.world=DVec3::splat(f64::NAN);app.dispatch_tool_click(&invalid);assert_eq!(app.scene.mesh,preview);assert!(app.undo_stack.is_empty());assert!(app.status_message.contains("finite"));
+        assert!(app.dispatch_tool_vcb("garbage").is_err());assert_eq!(app.scene.mesh,preview);assert!(app.dispatch_tool_vcb("NaN").is_err());assert_eq!(app.scene.mesh,preview);
+        app.dispatch_tool_move(&context(1.));assert_eq!(app.scene.mesh,preview);app.dispatch_tool_click(&context(1.));assert_eq!(app.undo_stack.len(),1);let committed=app.scene.mesh.clone();app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,committed);
+        app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));app.dispatch_tool_click(&context(1.));app.dispatch_tool_move(&context(2.));assert_ne!(app.scene.mesh,committed);app.set_tool(ToolType::Line);assert_eq!(app.scene.mesh,committed);assert_eq!(app.undo_stack.len(),1);
+    }
+    #[test]fn move_array_retyping_replaces_one_undo_and_document_replacement_closes_window(){
+        let mut app=app();app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));let before=app.scene.clone();let mut first=context(0.);first.ctrl_held=true;
+        app.dispatch_tool_click(&first);app.dispatch_tool_vcb("6;0;0").unwrap();assert_eq!(app.undo_stack.len(),1);
+        for text in ["3x","/3","2x"]{app.dispatch_tool_vcb(text).unwrap();assert_eq!(app.undo_stack.len(),1);}
+        assert_eq!(app.scene.mesh.faces.len(),3);let after=app.scene.clone();app.undo();assert_eq!(app.scene.mesh,before.mesh);app.redo();assert_eq!(app.scene.mesh,after.mesh);
+        assert!(app.dispatch_tool_vcb("4x").is_err());
+        app.set_tool(ToolType::Move);app.scene.clear_selection();app.scene.select(SelectionItem::Face(0));app.dispatch_tool_click(&first);app.dispatch_tool_vcb("6;0;0").unwrap();
+        // Replacement can restore the same Scene.version; application identity
+        // must still close the source array command window.
+        let restored=app.scene.clone();app.scene=restored;app.bump_model_revision();let before=app.scene.clone();assert!(app.dispatch_tool_vcb("4x").is_err());assert_eq!(app.scene,before);
+    }
     #[test]fn nested_mirrored_component_drafting_commits_shared_definition_once(){
         use ingetrazo_core::{groups::Group,scene::SelectionItem};use glam::DMat4;
         let mut app=app();let mesh=app.scene.mesh.clone();app.scene=Scene::new();let child=Group::with_mesh("nested",mesh);let child_id=child.id;let mut parent=Group::new("outer");parent.transform=DMat4::from_translation(DVec3::new(9.,3.,2.))*DMat4::from_rotation_z(0.4)*DMat4::from_scale(DVec3::new(-2.,3.,1.));parent.children.push(child);app.scene.groups.push(parent);app.scene.make_component(child_id).unwrap();let mut copy=app.scene.groups[0].children[0].duplicate_instance();copy.transform=DMat4::from_translation(DVec3::new(3.,0.,0.));app.scene.groups[0].children.push(copy);app.scene.select(SelectionItem::Group(0));let original=app.scene.clone();
@@ -226,7 +265,7 @@ mod tests {
         assert_eq!(app.scene.mesh, before);
     }
     #[test]
-    fn transform_previews_are_inert_and_vcb_commits_undo_once() {
+    fn source_move_live_preview_and_other_transform_previews_commit_undo_once() {
         for (tool_type, input) in [
             (ToolType::Move, "1, 2, 3"),
             (ToolType::Scale, "2"),
@@ -239,10 +278,10 @@ mod tests {
             let before = app.scene.mesh.clone();
             app.dispatch_tool_click(&context(0.));
             app.active_tool.on_move(&mut app.scene, &context(1.));
-            assert_eq!(
-                app.scene.mesh, before,
-                "{tool_type:?} preview mutated model"
-            );
+            if tool_type==ToolType::Move {
+                assert!(app.scene.mesh.vertices.iter().zip(&before.vertices).all(|(v,old)|v.position==old.position+DVec3::Z));
+                assert!(app.undo_stack.is_empty(),"live preview must not create undo entries");
+            }else{assert_eq!(app.scene.mesh,before,"{tool_type:?} preview mutated model");}
             app.active_tool.on_cancel(&mut app.scene);
             assert_eq!(app.scene.mesh, before);
             assert!(app.undo_stack.is_empty());

@@ -106,6 +106,10 @@ pub trait Tool: Send + Sync {
     fn on_release(&mut self, _scene: &mut Scene, _ctx: &ToolContext, _drag_distance: f64) {}
     /// Update transient tool state before undo. True consumes undo without a document edit.
     fn prepare_undo(&mut self, _available: bool) -> bool { false }
+    /// A successful retype replaces the immediately preceding tool transaction.
+    fn take_history_replacement(&mut self)->bool{false}
+    /// Application transaction identity, independent of restored Scene.version.
+    fn note_history_revision(&mut self,_revision:u64,_committed:bool){}
     fn note_cursor_plane(&mut self,_point:DVec3,_normal:DVec3){}
     fn snap_anchor(&self)->Option<DVec3>{self.rubber_band().map(|(a,_)|a)}
     fn snap_exclusions(&self)->Option<&ingetrazo_core::snap_screen::SnapExclusions>{None}
@@ -118,6 +122,12 @@ pub trait Tool: Send + Sync {
     fn lock_drawing_reference(&mut self,_reference:Option<ingetrazo_core::screen_pick::HoverReference>)->bool{false}
     /// Notify modifier transitions, including frames without pointer movement.
     fn note_control_state(&mut self,_held:bool){}
+    fn on_control_state(&mut self,_scene:&mut Scene,held:bool){self.note_control_state(held);}
+    /// Recover the grab-time model in an already allocated undo snapshot.
+    fn restore_transient_model(&self,_scene:&mut Scene){}
+    fn restore_current_preview_model(&self,_scene:&mut Scene){}
+    /// Retire a live transform before history can replace its target entities.
+    fn end_transient_before_history(&mut self,_scene:&mut Scene){}
     /// Move drags in a vertical plane facing the camera through its grab point.
     fn prefers_vertical_drag(&self) -> bool { false }
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> { None }

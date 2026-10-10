@@ -1,0 +1,147 @@
+{
+  "passed": true,
+  "actual_png_cases": [
+    {
+      "name": "cloud-center",
+      "center": [
+        500,
+        273
+      ],
+      "sha256": "e781e15e841d4ff6a3b3801006a1d286974047c7ccdc95a74a88b71f41d24c7b",
+      "filled_center": true,
+      "core_green": 17,
+      "outer_green": 56,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "cloud-endpoint",
+      "center": [
+        500,
+        273
+      ],
+      "sha256": "68bba757abba5673b424573bd35f8b0105af12e71dd2dec10d9f4ac9a7b22a93",
+      "filled_center": false,
+      "core_green": 3,
+      "outer_green": 115,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "native-center",
+      "center": [
+        661,
+        337
+      ],
+      "sha256": "ebb30e162e8b06cfe039ac414f742f9999f1f737b046a4b23d724cb12056495d",
+      "filled_center": true,
+      "core_green": 24,
+      "outer_green": 62,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "native-tiny",
+      "center": [
+        661,
+        337
+      ],
+      "sha256": "7ef34f3ec26a16d560b0d90d6142d380e17038c27ffe37a1f7d21805655faa98",
+      "filled_center": false,
+      "core_green": 0,
+      "outer_green": 0,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "native-malformed",
+      "center": [
+        661,
+        337
+      ],
+      "sha256": "7ef34f3ec26a16d560b0d90d6142d380e17038c27ffe37a1f7d21805655faa98",
+      "filled_center": false,
+      "core_green": 0,
+      "outer_green": 0,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "source-tiny",
+      "center": [
+        500,
+        273
+      ],
+      "sha256": "a69e9c218dd57964b87e62a26a6062af5139710333810457a8c480dbf3e31f52",
+      "filled_center": false,
+      "core_green": 0,
+      "outer_green": 0,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "source-malformed",
+      "center": [
+        500,
+        273
+      ],
+      "sha256": "a8d80e65267778492d1436e7618621933d76f228fb88e6298af11d5ea3969e70",
+      "filled_center": false,
+      "core_green": 0,
+      "outer_green": 0,
+      "core_samples": 25,
+      "majority_threshold": 13
+    }
+  ],
+  "source_tiny_admission": {
+    "radius_px": 0.0,
+    "pointer": [
+      500.0,
+      273.0
+    ],
+    "allowed": false
+  },
+  "synthetic_geometry_controls": [
+    {
+      "name": "empty",
+      "filled_center": false,
+      "core_green": 0,
+      "outer_green": 0,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "thin-axis",
+      "filled_center": false,
+      "core_green": 5,
+      "outer_green": 5,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "thin-cross",
+      "filled_center": false,
+      "core_green": 9,
+      "outer_green": 9,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "endpoint-core-speck",
+      "filled_center": false,
+      "core_green": 3,
+      "outer_green": 3,
+      "core_samples": 25,
+      "majority_threshold": 13
+    },
+    {
+      "name": "opaque-fill",
+      "filled_center": true,
+      "core_green": 25,
+      "outer_green": 25,
+      "core_samples": 25,
+      "majority_threshold": 13
+    }
+  ],
+  "boundary": "Opaque radius4 center dot classification in frozen unpainted UI fixture/palette, not a universal green-ink classifier or rendering tolerance. Actual endpoint/sparse geometry may produce green ink; absence of any green is not absence of center hint."
+}

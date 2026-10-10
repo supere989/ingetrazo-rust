@@ -73,14 +73,18 @@ impl App for Fixture {
             } else {
                 DVec3::new(2., 3., 1.)
             };
+            let copy_ids=self.app.scene.mesh.edges.iter().filter(|e|e.curve_id.is_some_and(|id|id!=71)).flat_map(|e|[e.v0,e.v1]).collect::<std::collections::HashSet<_>>();
+            let copy_center=(!copy_ids.is_empty()).then(||copy_ids.iter().map(|&id|self.app.scene.mesh.vertices[id].position).sum::<DVec3>()/copy_ids.len() as f64);
             let radius = if self.mode == "tiny" { 0.01 } else { 1.2 };
             let rim = center + DVec3::X * radius;
-            let state = serde_json::json!({"mode":self.mode,"time":ctx.input(|i|i.time),"center":center.to_array(),"rim":project(rim),"center_pixel":project(center),"move_target":project(rim+DVec3::X*std::env::var("INGETRAZO_MOVE_DISTANCE").ok().and_then(|v|v.parse::<f64>().ok()).unwrap_or(1.)),"kind":self.app.snap_engine.current_inference().map(|s|format!("{:?}",s.kind)),"inference_point":self.app.snap_engine.current_inference().map(|s|s.point.to_array()),"memory":self.app.snap_engine.encouraged_points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"edges":self.app.scene.mesh.edges.len(),"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"tool":format!("{:?}",self.app.active_tool_type),"revision":self.app.model_revision});
+            let copy_probe=if self.app.active_tool.rubber_band_lines().len()>1{self.app.active_tool.snap_anchor().zip(self.app.snap_engine.current_inference()).map(|(grab,r)|project(center+r.point-grab+DVec3::Y*radius))}else{None};
+            let state = serde_json::json!({"mode":self.mode,"vertices":self.app.scene.mesh.vertices.len(),"unused_vertices":self.app.scene.mesh.vertices.iter().filter(|v|v.edges.is_empty()).count(),"copy_probe_pixel":copy_probe,"copy_center":copy_center.map(|p|p.to_array()),"curves":self.app.scene.mesh.edges.iter().map(|e|e.curve_id).collect::<Vec<_>>(),"preview_lines":self.app.active_tool.rubber_band_lines().len(),"time":ctx.input(|i|i.time),"center":center.to_array(),"rim":project(rim),"center_pixel":project(center),"move_target":project(rim+DVec3::X*std::env::var("INGETRAZO_MOVE_DISTANCE").ok().and_then(|v|v.parse::<f64>().ok()).unwrap_or(1.)),"kind":self.app.snap_engine.current_inference().map(|s|format!("{:?}",s.kind)),"inference_point":self.app.snap_engine.current_inference().map(|s|s.point.to_array()),"memory":self.app.snap_engine.encouraged_points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"edges":self.app.scene.mesh.edges.len(),"faces":self.app.scene.mesh.faces.len(),"undo":self.app.undo_stack.len(),"anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"tool":format!("{:?}",self.app.active_tool_type),"revision":self.app.model_revision});
             std::fs::write(
-                self.dir.join("state.json"),
+                self.dir.join("state.tmp"),
                 serde_json::to_vec(&state).unwrap(),
             )
             .unwrap();
+            std::fs::rename(self.dir.join("state.tmp"),self.dir.join("state.json")).unwrap();
         }
         ctx.request_repaint_after(std::time::Duration::from_millis(16));
     }
