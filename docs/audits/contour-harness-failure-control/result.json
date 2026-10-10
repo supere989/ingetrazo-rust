@@ -1,0 +1,51 @@
+{
+  "source_inputs_sha256": {},
+  "binary_sha256": "16ed3c6201c23f5f91bdfb589f2e9d6318d4984c0a423f8fdb5d2448486ed195",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "cases": [
+    {
+      "case": "closed",
+      "command": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "ingetrazo-contour-hardware-17f7795d44ec",
+        "--read-only",
+        "--network",
+        "none",
+        "--device",
+        "nvidia.com/gpu=0",
+        "--userns",
+        "keep-id:uid=1000,gid=1000",
+        "--user",
+        "1000:1000",
+        "--security-opt",
+        "label=disable",
+        "--tmpfs",
+        "/tmp:rw",
+        "-v",
+        "/usr/bin/false:/probe:ro",
+        "-v",
+        "/tmp/ingetrazo-contour-hardware/input:/inputs:ro",
+        "-v",
+        "/tmp/ingetrazo-contour-hardware/probe-failure-control:/out:rw",
+        "-e",
+        "VK_ICD_FILENAMES=/out/icd.json",
+        "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+        "/probe",
+        "/inputs/closed.igz",
+        "/out/closed.png"
+      ],
+      "exit_code": 1,
+      "match": false,
+      "elapsed": 0.3097952130046906
+    }
+  ],
+  "passed": false,
+  "scope": "ActualRTX strict hardware offscreen GPU contours from original IGZ, GPUreadback; existing5%positive/exactzero gate,not fullpixel/WSI/Metal parity",
+  "failure": {
+    "case": "closed",
+    "error": "('probe exit', 1, '', '')"
+  }
+}
