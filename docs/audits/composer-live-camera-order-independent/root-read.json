@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "comparisons": [
+    [
+      "navigated",
+      "baseline",
+      false
+    ],
+    [
+      "restored",
+      "baseline",
+      true
+    ],
+    [
+      "missing",
+      "baseline",
+      true
+    ],
+    [
+      "bound",
+      "navigated",
+      true
+    ],
+    [
+      "bound-live-change",
+      "bound",
+      true
+    ],
+    [
+      "order-behind",
+      "baseline",
+      true
+    ],
+    [
+      "order-cover",
+      "navigated",
+      true
+    ],
+    [
+      "order-tie",
+      "order-cover",
+      true
+    ],
+    [
+      "order-hidden",
+      "baseline",
+      true
+    ],
+    [
+      "border-on",
+      "baseline",
+      false
+    ]
+  ],
+  "persistent_pids": [
+    1524831,
+    1524833
+  ],
+  "artifact_sha256": "1a7961ef5b7c7057a691c8fa8410a7c76aa3fcaf540859166006a2d960645bf1",
+  "boundary": "Independent retained pixel/state reread; controlled production UI actions not pointer/menu or original full sheet equivalence"
+}

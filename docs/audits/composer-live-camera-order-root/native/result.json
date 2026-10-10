@@ -1,0 +1,570 @@
+{
+  "passed": true,
+  "states": {
+    "baseline": {
+      "jobs": 1,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "baseline",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "navigated": {
+      "jobs": 2,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "navigated",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "restored": {
+      "jobs": 2,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "restored",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "missing": {
+      "jobs": 3,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "missing",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "bound": {
+      "jobs": 4,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "bound",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "bound-live-change": {
+      "jobs": 4,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.5235987755982988,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -0.7853981633974483,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "bound-live-change",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "order-behind": {
+      "jobs": 5,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "order-behind",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "order-cover": {
+      "jobs": 5,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "order-cover",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "order-tie": {
+      "jobs": 5,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "order-tie",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "order-hidden": {
+      "jobs": 5,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "order-hidden",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    },
+    "border-on": {
+      "jobs": 5,
+      "live_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 1.5690509975429023,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      },
+      "model_revision": 0,
+      "phase": "border-on",
+      "pids": [
+        1528468,
+        1528470
+      ],
+      "stored_camera": {
+        "aspect": 1.0,
+        "distance": 4.0,
+        "fov_deg": 45.0,
+        "perspective": true,
+        "pitch": 0.0,
+        "target": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "two_point": false,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "yaw": -1.5707963267948966,
+        "zfar": 10000.0,
+        "znear": 0.1
+      }
+    }
+  },
+  "native_binary_sha256": "bfb799c971f799e945064952c7a00f8b7b3715865ddbc4194d5697e9367a6ff3",
+  "worker_sha256": "a69d5b34a678c48fbc6a45c442857eef367a88f9ccd33e3d59cf5d3554d2fa18",
+  "source": "f1f979c7194816122a1dbdd8fe4cbe2d3b84ae5f",
+  "scope": "ash software Vulkan production update_ui, controlled live/saved camera and same-category z/hidden actions; exact pixel ROI comparisons, persistent workers; no original pixel/menu gesture/all-painter claim"
+}
