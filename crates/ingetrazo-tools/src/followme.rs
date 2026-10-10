@@ -462,6 +462,9 @@ impl FollowMeTool {
 }
 
 impl Tool for FollowMeTool {
+    fn error_message(&self) -> Option<&str> {
+        self.last_error.as_deref()
+    }
     fn tool_type(&self) -> ToolType {
         ToolType::FollowMe
     }
@@ -478,6 +481,7 @@ impl Tool for FollowMeTool {
         "Select connected path edges, then profile"
     }
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        self.last_error = None;
         let edges = Self::selected_path(scene);
         if !edges.is_empty() {
             if let Some((face, _, _)) = pick_face(&scene.mesh, &ctx.ray) {

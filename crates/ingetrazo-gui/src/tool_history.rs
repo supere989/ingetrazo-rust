@@ -39,12 +39,22 @@ impl IngeTrazoApp {
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
         let before = self.tool_snapshot();
         self.active_tool.on_click(&mut self.scene, context);
+        self.status_message = self
+            .active_tool
+            .error_message()
+            .map(|error| format!("Tool error: {error}"))
+            .unwrap_or_default();
         self.record_tool_commit(before);
     }
 
     pub fn dispatch_tool_double_click(&mut self, context: &ToolContext) {
         let before = self.tool_snapshot();
         self.active_tool.on_double_click(&mut self.scene, context);
+        self.status_message = self
+            .active_tool
+            .error_message()
+            .map(|error| format!("Tool error: {error}"))
+            .unwrap_or_default();
         self.record_tool_commit(before);
     }
 
@@ -167,5 +177,30 @@ mod tests {
             app.redo();
             assert_eq!(app.scene.mesh, after);
         }
+    }
+    #[test]
+    fn failed_path_sweep_reports_error_without_document_or_history_mutation() {
+        let mut app = app();
+        app.active_tool = create_tool(ToolType::FollowMe);
+        app.active_tool_type = ToolType::FollowMe;
+        let points = [
+            DVec3::new(0., 0., 1.),
+            DVec3::new(0., 0., 2.),
+            DVec3::new(1., 0., 1.),
+            DVec3::new(-1., 0., 1.),
+        ];
+        let ids: Vec<_> = points
+            .into_iter()
+            .map(|p| app.scene.mesh.add_vertex(p))
+            .collect();
+        for target in &ids[1..] {
+            let id = app.scene.mesh.add_edge(ids[0], *target).unwrap();
+            app.scene.select(SelectionItem::Edge(id));
+        }
+        let before = app.scene.clone();
+        app.dispatch_tool_click(&context(0.));
+        assert!(app.status_message.contains("Path cannot branch"));
+        assert_eq!(app.scene, before);
+        assert!(app.undo_stack.is_empty());
     }
 }

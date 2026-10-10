@@ -73,6 +73,9 @@ impl ToolContext {
 }
 
 pub trait Tool: Send + Sync {
+    /// Actionable preparation error from the last pointer commit, if any.
+    fn error_message(&self) -> Option<&str> { None }
+
     fn tool_type(&self) -> ToolType;
     fn name(&self) -> &'static str;
     fn shortcut(&self) -> Option<&'static str> {
