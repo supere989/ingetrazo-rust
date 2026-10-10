@@ -311,8 +311,9 @@ impl GlyphStore {
         }}
         if outline.failed{return Err("Native subset outline refused".into())}
         let(points,ends)=convert(&outline.ops,100.)?;
-        let advance=u16::try_from((n.advance(id)?*2048./100.).round()as i64).map_err(|_|"Native subset advance invalid")?;
-        let lsb=points.iter().map(|p|p[0]).min().unwrap_or(0);let lsb=i16::try_from(lsb).map_err(|_|"Native subset bearing invalid")?;
+        let metrics=n.subset_horizontal_metrics(id)?;
+        let advance=u16::try_from(metrics[0] as i64).map_err(|_|"Native subset advance invalid")?;
+        let lsb=i16::try_from(metrics[1] as i64).map_err(|_|"Native subset bearing invalid")?;
         let glyph=Arc::new(SubsetGlyph{points,ends,advance,lsb});let total=self.points.checked_add(glyph.points.len()).ok_or("Native point overflow")?;
         if self.glyphs.len()<MAX_CACHED_GLYPHS&&total<=MAX_SUBSET_POINTS{self.glyphs.try_reserve(1).map_err(|_|"Native glyph cache allocation failed")?;self.glyphs.insert(id,glyph.clone());self.points=total;}
         Ok(glyph)

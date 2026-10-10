@@ -162,6 +162,10 @@ extern "C" fn path_element(info: *mut c_void, e: *const Element) {
 pub(crate) fn synthetic_italic_shear() -> f64 {
     (14f32 * 0f32.acos() / 90f32).tan() as f64
 }
+fn subset_metric(value: f64, em: f64) -> f64 {
+    (fixed_metric(fixed_metric(value) * em / 100.) * 2048. / em).round()
+}
+
 fn fixed_metric(value: f64) -> f64 {
     ((value * 64.) as i32) as f64 / 64.
 }
@@ -366,6 +370,20 @@ impl NativeFont {
         }
         Ok(a.width)
     }
+    /// Source getUnscaledGlyph quantizes at pixel size and again at the native
+    /// em size before QFontSubset rounds into its 2048-unit metric domain.
+    pub(crate) fn subset_horizontal_metrics(&self, id: u32) -> Result<[f64; 2], String> {
+        let g = u16::try_from(id).map_err(|_| "Native glyph ID invalid")?;
+        if g >= self.count { return Err("Native glyph ID invalid".into()); }
+        let rect = unsafe { CTFontGetBoundingRectsForGlyphs(self.owner.0, 0, &g, std::ptr::null_mut(), 1) };
+        let em = f64::from(ttf_parser::Face::parse(&self.bytes, 0)
+            .map_err(|_| "Native subset metadata invalid")?.units_per_em());
+        let raw = [self.advance(id)?, rect.origin.x];
+        if em <= 0. || raw.iter().any(|v| !v.is_finite() || v.abs() > 1e6) {
+            return Err("Native subset metric invalid".into());
+        }
+        Ok(raw.map(|v| subset_metric(v, em)))
+    }
     pub(crate) fn outline(&self, id: u32) -> Result<Vec<PathOp>, String> {
         let g = u16::try_from(id).map_err(|_| "Native glyph ID invalid")?;
         if g >= self.count {
@@ -517,6 +535,15 @@ impl NativeFont {
 #[cfg(test)]
 mod synthesis_metric_tests {
     use super::*;
+    #[test]
+    fn subset_uses_quantized_native_bearing_not_outline_minimum() {
+        let c_bearing = 90. * 100. / 2048.;
+        assert_eq!(subset_metric(c_bearing, 2048.), 90.);
+        assert_eq!(subset_metric(-c_bearing, 2048.), -90.);
+        assert_ne!(subset_metric(c_bearing, 2048.), 89.);
+        assert_eq!(subset_metric(100., 1000.), 2048.);
+        assert_eq!(subset_metric(0., 2048.), 0.);
+    }
     #[test]
     fn source_float_angle_and_quantization_order() {
         assert_eq!(
