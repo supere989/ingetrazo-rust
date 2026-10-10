@@ -64,6 +64,10 @@ jobs:
           python3 scripts/check-metal-owned-window.py --self-test
           python3 scripts/check-metal-owned-window.py --capture-failure-self-test
           python3 scripts/check-metal-owned-window.py target/debug/examples/presentation_probe docs/audits/metal-native-link-ci/owned-window --source-revision=${{ github.sha }} > docs/audits/metal-native-link-ci/owned-window-command.log 2>&1
+      - name: Independent native immediate-presentation diagnostic
+        if: always()
+        run: |
+          cargo run --locked -p ingetrazo-metal --example presentation_probe -- --automatic --diagnostic-no-vsync > docs/audits/metal-native-link-ci/presentation-no-vsync.log 2>&1
       - name: Actual shared application Cocoa document lifecycle
         if: always()
         run: |

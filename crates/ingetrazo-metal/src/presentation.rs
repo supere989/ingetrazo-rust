@@ -67,6 +67,16 @@ pub struct MetalPresentation {
 }
 impl MetalPresentation {
     pub fn attach(window: std::sync::Arc<Window>, metal: NativeMetal) -> Result<Self, String> {
+        Self::attach_with_display_sync(window, metal, true)
+    }
+    /// Cold native presentation selection. Default attachment keeps vsync on.
+    /// Engineering probes may compare immediate presentation without changing
+    /// callback/owner retirement rules or render contents.
+    pub fn attach_with_display_sync(
+        window: std::sync::Arc<Window>,
+        metal: NativeMetal,
+        display_sync: bool,
+    ) -> Result<Self, String> {
         let mtm = MainThreadMarker::new().ok_or("Metal window attachment requires main thread")?;
         let RawWindowHandle::AppKit(handle) =
             window.window_handle().map_err(|e| e.to_string())?.as_raw()
@@ -91,6 +101,8 @@ impl MetalPresentation {
         eprintln!("Metal presentation source color space: sRGB");
         layer.setFramebufferOnly(true);
         layer.setMaximumDrawableCount(3);
+        layer.setDisplaySyncEnabled(display_sync);
+        eprintln!("Metal native display synchronization: {display_sync}");
         // Apple bounds nextDrawable acquisition to approximately one second.
         // This is an explicit foundation latency limitation, not a fast-path claim.
         layer.setAllowsNextDrawableTimeout(true);
@@ -359,7 +371,7 @@ impl MetalPresentation {
             })
             .collect();
         format!(
-            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            "extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; displaySyncEnabled={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
             self.extent,
             self.owners._window.is_visible(),
             self.owners.layer.frame(),
@@ -367,6 +379,7 @@ impl MetalPresentation {
             self.owners.layer.isHidden(),
             self.owners.layer.drawableSize(),
             self.owners.layer.presentsWithTransaction(),
+            self.owners.layer.displaySyncEnabled(),
             self.submitted,
             self.retired,
             self.displayed,

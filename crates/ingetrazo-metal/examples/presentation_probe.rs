@@ -14,6 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         error: Option<String>,
         frames: u64,
         automatic: bool,
+        display_sync: bool,
         started: std::time::Instant,
         resized: bool,
         resized_display_baseline: u64,
@@ -39,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "Native Metal WSI: device={}; unified={}; FOUNDATION ONLY",
                     metal.info.name, metal.info.unified_memory
                 );
-                self.gpu = Some(MetalPresentation::attach(window.clone(), metal)?);
+                self.gpu = Some(MetalPresentation::attach_with_display_sync(window.clone(), metal, self.display_sync)?);
                 self.window = Some(window);
                 Ok(())
             })();
@@ -209,6 +210,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         error: None,
         frames: 0,
         automatic: std::env::args().any(|s| s == "--automatic"),
+        display_sync: !std::env::args().any(|s| s == "--diagnostic-no-vsync"),
         started: std::time::Instant::now(),
         resized: false,
         resized_display_baseline: 0,
