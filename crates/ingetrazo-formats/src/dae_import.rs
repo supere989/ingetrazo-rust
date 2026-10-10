@@ -1227,6 +1227,41 @@ mod representative_image_tests {
 mod reference_threshold_tests {
     use super::*;
     #[test]
+    fn reference_instances_preserve_names_shared_definition_and_placements() {
+        let dir = std::env::temp_dir().join(format!("dae-shared-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("shared.dae");
+        std::fs::write(
+            &path,
+            include_str!("../../../docs/audits/dae-reference-corpus/shared-library512.dae"),
+        )
+        .unwrap();
+        let scene = load_dae(&path).unwrap();
+        assert_eq!(scene.groups.len(), 2);
+        assert_eq!(scene.groups[0].name, "Instance0");
+        assert_eq!(scene.groups[1].name, "Instance1");
+        let id = scene.groups[0].component_definition.unwrap();
+        assert_eq!(scene.groups[1].component_definition, Some(id));
+        assert_eq!(scene.component_definitions.len(), 1);
+        assert_eq!(scene.groups[0].mesh.faces.len(), 1);
+        assert_eq!(scene.groups[1].mesh.faces.len(), 1);
+        assert!(
+            (scene.groups[1]
+                .transform
+                .transform_point3(glam::DVec3::ZERO)
+                - glam::DVec3::new(40., 0., 0.))
+            .length()
+                < 1e-9
+        );
+        crate::igz::save_igz(&scene, &dir.join("shared.igz")).unwrap();
+        let reopened = crate::igz::load_igz(&dir.join("shared.igz")).unwrap();
+        assert_eq!(
+            reopened.groups[0].component_definition,
+            reopened.groups[1].component_definition
+        );
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+    #[test]
     fn original_editable_threshold_and_reference_boundary_stations() {
         let dir = std::env::temp_dir().join(format!("dae-reference-{}", uuid::Uuid::new_v4()));
         std::fs::create_dir_all(&dir).unwrap();
