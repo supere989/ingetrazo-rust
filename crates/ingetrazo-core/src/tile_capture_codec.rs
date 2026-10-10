@@ -19,13 +19,14 @@ impl TileCapture{
  pub fn from_source_json(raw:&Value)->Option<Self>{
   if !truth(raw){return None;}
   let o=raw.as_object()?;
-  let text=|key:&str,default:&str|->Option<String>{Some(o.get(key).map_or(Some(default),Value::as_str)?.to_owned())};
-  let source=text("source","custom")?;
-  let (name,url_template,attribution)=match source.as_str(){
-   "osm"=>("OpenStreetMap (streets)".into(),"https://tile.openstreetmap.org/{z}/{x}/{y}.png".into(),"© OpenStreetMap contributors".into()),
-   "esri_imagery"=>("Esri World Imagery (satellite)".into(),"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}".into(),"Esri, Maxar, Earthstar Geographics, and the GIS community".into()),
-   "s2cloudless"=>("Sentinel-2 cloudless (EOX)".into(),"https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.jpg".into(),"Sentinel-2 cloudless — https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data)".into()),
-   _=>(text("name",&source)?,text("url_template","")?,text("attribution","")?)
+  // Provider recipe fields are source-owned JSON metadata, not GPU strings.
+  let source=o.get("source").cloned().unwrap_or(Value::String("custom".into()));
+  if source.is_array()||source.is_object(){return None;} // Python preset lookup requires hashable id.
+  let (name,url_template,attribution)=match source.as_str().unwrap_or(""){
+   "osm"=>(Value::from("OpenStreetMap (streets)"),Value::from("https://tile.openstreetmap.org/{z}/{x}/{y}.png"),Value::from("© OpenStreetMap contributors")),
+   "esri_imagery"=>(Value::from("Esri World Imagery (satellite)"),Value::from("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"),Value::from("Esri, Maxar, Earthstar Geographics, and the GIS community")),
+   "s2cloudless"=>(Value::from("Sentinel-2 cloudless (EOX)"),Value::from("https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.jpg"),Value::from("Sentinel-2 cloudless — https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data)")),
+   _=>(o.get("name").cloned().unwrap_or_else(||source.clone()),o.get("url_template").cloned().unwrap_or(Value::String(String::new())),o.get("attribution").cloned().unwrap_or(Value::String(String::new())))
   };
   let zoom=integer(o.get("zoom").unwrap_or(&Value::from(16)))?;
   let radius_m=float(o.get("radius_m").unwrap_or(&Value::from(1200.)))?;

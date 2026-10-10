@@ -1116,8 +1116,8 @@ mod conversion_tests {
 
 #[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub struct TileCapture{
- pub source:String,pub zoom:i64,pub radius_m:f64,pub visible:bool,pub opacity:f64,
- pub patches:Vec<Vec<f64>>,pub url_template:String,pub name:String,pub attribution:String,
+ pub source:serde_json::Value,pub zoom:i64,pub radius_m:f64,pub visible:bool,pub opacity:f64,
+ pub patches:Vec<Vec<f64>>,pub url_template:serde_json::Value,pub name:serde_json::Value,pub attribution:serde_json::Value,
 }
 impl TileCapture{
  pub fn import_reference(previous:Option<&Self>,datum:&SceneDatum,min:DVec3,max:DVec3,requested_zoom:u8,visible:bool)->Self{
