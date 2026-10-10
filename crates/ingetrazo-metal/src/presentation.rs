@@ -365,8 +365,14 @@ impl MetalPresentation {
             let RawWindowHandle::AppKit(handle) = handle.as_raw() else { return None; };
             let view = unsafe { handle.ns_view.cast::<NSView>().as_ref() };
             let window = view.window()?;
-            Some(format!("number={} visible={} active_space={} occlusion={:?}",
-                window.windowNumber(), window.isVisible(), window.isOnActiveSpace(), window.occlusionState()))
+            // Observer only: these properties do not establish presentation.
+            let screen = window.screen().map(|screen| format!(
+                "name={} backing_scale={} max_fps={} refresh_min={} refresh_max={} frame={:?}",
+                screen.localizedName(), screen.backingScaleFactor(),
+                screen.maximumFramesPerSecond(), screen.minimumRefreshInterval(),
+                screen.maximumRefreshInterval(), screen.frame()));
+            Some(format!("number={} visible={} active_space={} occlusion={:?} screen={:?}",
+                window.windowNumber(), window.isVisible(), window.isOnActiveSpace(), window.occlusionState(), screen))
         });
         let frames: Vec<_> = self
             .owners
@@ -387,7 +393,7 @@ impl MetalPresentation {
             })
             .collect();
         format!(
-            "appkit={:?}; extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
+            "appkit={:?}; extent={:?}; visible={:?}; layer_frame={:?}; bounds={:?}; hidden={}; drawable_size={:?}; presentsWithTransaction={}; displaySyncEnabled={}; device_id={}; preferred_device={:?}; submitted={}; retired={}; displayed={}; skipped={}; frames=[{}]",
             appkit,
             self.extent,
             self.owners._window.is_visible(),
@@ -396,6 +402,10 @@ impl MetalPresentation {
             self.owners.layer.isHidden(),
             self.owners.layer.drawableSize(),
             self.owners.layer.presentsWithTransaction(),
+            self.owners.layer.displaySyncEnabled(),
+            self.owners.metal.device.registryID(),
+            self.owners.layer.preferredDevice().map(|device|
+                (device.registryID(), device.name().to_string())),
             self.submitted,
             self.retired,
             self.displayed,
