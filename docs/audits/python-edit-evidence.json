@@ -5,7 +5,9 @@
     "edited persistent instance identity/name/transform",
     "unknown face/document metadata retained",
     "fresh Rust transformed group original runtime reopen",
-    "fresh Rust saved view, section plane and geographic datum original runtime interpretation"
+    "fresh Rust saved view, section plane and geographic datum original runtime interpretation",
+    "fresh geographic point/path and sheet scale/layout original runtime interpretation",
+    "edited geographic points/paths and sheet frame scale/position persistent identity interpreted by original"
   ],
-  "scope": "Synthetic geometry/group/view/section/datum fields; actual Python runtime loader, no GUI editing/render proof."
+  "scope": "Synthetic geometry/group/view/section/datum/geographic/sheet fields; actual Python runtime loader, no GUI editing/render proof."
 }
