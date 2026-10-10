@@ -1,0 +1,153 @@
+{
+  "source": "Actual QPainter.fillRect QColor on ARGB32_Premultiplied opaque black; every channel/alpha0..255 pair",
+  "qt_version": "6.12.0",
+  "pairs": 65536,
+  "sha256": "418853ec87753026005a03396b5361073ee4c6a446aeb22d6ce917e3f4f50806",
+  "qrgb32_negative_mismatches": [
+    {
+      "channel": 229,
+      "alpha": 152,
+      "actual": 137,
+      "qrgb32_shortcut": 136
+    },
+    {
+      "channel": 212,
+      "alpha": 169,
+      "actual": 141,
+      "qrgb32_shortcut": 140
+    },
+    {
+      "channel": 241,
+      "alpha": 173,
+      "actual": 164,
+      "qrgb32_shortcut": 163
+    },
+    {
+      "channel": 196,
+      "alpha": 188,
+      "actual": 145,
+      "qrgb32_shortcut": 144
+    },
+    {
+      "channel": 253,
+      "alpha": 191,
+      "actual": 190,
+      "qrgb32_shortcut": 189
+    },
+    {
+      "channel": 232,
+      "alpha": 194,
+      "actual": 177,
+      "qrgb32_shortcut": 176
+    },
+    {
+      "channel": 188,
+      "alpha": 196,
+      "actual": 145,
+      "qrgb32_shortcut": 144
+    },
+    {
+      "channel": 244,
+      "alpha": 197,
+      "actual": 189,
+      "qrgb32_shortcut": 188
+    },
+    {
+      "channel": 236,
+      "alpha": 208,
+      "actual": 193,
+      "qrgb32_shortcut": 192
+    },
+    {
+      "channel": 169,
+      "alpha": 212,
+      "actual": 141,
+      "qrgb32_shortcut": 140
+    },
+    {
+      "channel": 227,
+      "alpha": 214,
+      "actual": 191,
+      "qrgb32_shortcut": 190
+    },
+    {
+      "channel": 251,
+      "alpha": 223,
+      "actual": 220,
+      "qrgb32_shortcut": 219
+    },
+    {
+      "channel": 233,
+      "alpha": 226,
+      "actual": 207,
+      "qrgb32_shortcut": 206
+    },
+    {
+      "channel": 214,
+      "alpha": 227,
+      "actual": 191,
+      "qrgb32_shortcut": 190
+    },
+    {
+      "channel": 152,
+      "alpha": 229,
+      "actual": 137,
+      "qrgb32_shortcut": 136
+    },
+    {
+      "channel": 194,
+      "alpha": 232,
+      "actual": 177,
+      "qrgb32_shortcut": 176
+    },
+    {
+      "channel": 226,
+      "alpha": 233,
+      "actual": 207,
+      "qrgb32_shortcut": 206
+    },
+    {
+      "channel": 208,
+      "alpha": 236,
+      "actual": 193,
+      "qrgb32_shortcut": 192
+    },
+    {
+      "channel": 247,
+      "alpha": 239,
+      "actual": 232,
+      "qrgb32_shortcut": 231
+    },
+    {
+      "channel": 173,
+      "alpha": 241,
+      "actual": 164,
+      "qrgb32_shortcut": 163
+    },
+    {
+      "channel": 197,
+      "alpha": 244,
+      "actual": 189,
+      "qrgb32_shortcut": 188
+    },
+    {
+      "channel": 239,
+      "alpha": 247,
+      "actual": 232,
+      "qrgb32_shortcut": 231
+    },
+    {
+      "channel": 223,
+      "alpha": 251,
+      "actual": 220,
+      "qrgb32_shortcut": 219
+    },
+    {
+      "channel": 191,
+      "alpha": 253,
+      "actual": 190,
+      "qrgb32_shortcut": 189
+    }
+  ],
+  "qt_source": "https://github.com/qt/qtbase/blob/6.12/src/gui/painting/qrgba64.h"
+}

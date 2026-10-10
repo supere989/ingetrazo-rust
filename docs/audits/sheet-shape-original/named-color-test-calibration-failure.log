@@ -1,0 +1,32 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: `ingetrazo-core` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.94s
+     Running unittests src/lib.rs (/tmp/ingetrazo-composer-camera-target/debug/deps/ingetrazo_core-424173c7a16df2e1)
+
+running 1 test
+test sheet_color::tests::original_named_palette_and_hex_channel_order ... FAILED
+
+failures:
+
+---- sheet_color::tests::original_named_palette_and_hex_channel_order stdout ----
+
+thread 'sheet_color::tests::original_named_palette_and_hex_channel_order' (1563951) panicked at crates/ingetrazo-core/src/sheet_color.rs:202:48:
+called `Result::unwrap()` on an `Err` value: "Unsupported sheet colour: ReBeccAPurple"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    sheet_color::tests::original_named_palette_and_hex_channel_order
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p ingetrazo-core --lib`

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "actual_native_pdf_mutations": [
+    {
+      "mutation": "shifted",
+      "exit_code": 1,
+      "rejected": true
+    },
+    {
+      "mutation": "missing",
+      "exit_code": 1,
+      "rejected": true
+    }
+  ]
+}

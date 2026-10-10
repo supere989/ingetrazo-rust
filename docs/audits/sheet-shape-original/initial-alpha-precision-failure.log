@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-composer-camera-review/scripts/check-sheet-shape-commands.py", line 11, in <module>
+    for source,native in zip(a,b):equal(source['commands'],native)
+                                  ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-composer-camera-review/scripts/check-sheet-shape-commands.py", line 9, in equal
+    elif isinstance(x,list):assert len(x)==len(y);[equal(v,w)for v,w in zip(x,y)]
+                                                   ~~~~~^^^^^
+  File "/tmp/ingetrazo-composer-camera-review/scripts/check-sheet-shape-commands.py", line 8, in equal
+    elif isinstance(x,dict):assert x.keys()==y.keys();[equal(x[k],y[k])for k in x]
+                                                       ~~~~~^^^^^^^^^^^
+  File "/tmp/ingetrazo-composer-camera-review/scripts/check-sheet-shape-commands.py", line 9, in equal
+    elif isinstance(x,list):assert len(x)==len(y);[equal(v,w)for v,w in zip(x,y)]
+                                                   ~~~~~^^^^^
+  File "/tmp/ingetrazo-composer-camera-review/scripts/check-sheet-shape-commands.py", line 7, in equal
+    if isinstance(x,(float,int)) and isinstance(y,(float,int)):assert math.isclose(x,y,rel_tol=0,abs_tol=1e-9),(x,y);checks+=1
+                                                                      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (0.6000000238418579, 0.6)

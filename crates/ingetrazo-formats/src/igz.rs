@@ -389,6 +389,7 @@ fn sheet_item_model(item: &ingetrazo_core::composition::SheetItem) -> (uuid::Uui
         SheetItem::NorthArrow(f) => (f.id,"nortes",serde_json::json!({
             "x_mm":f.pos.0,"y_mm":f.pos.1,"size_mm":f.size_mm,"angle_deg":f.rot_deg
         })),
+        SheetItem::Shape(f) => (f.id,"shapes",serde_json::to_value(&f.shape).expect("finite sheet shape")),
         SheetItem::GraphicScale(f) => (f.id,"scalebars",serde_json::json!({
             "x_mm":f.pos.0,"y_mm":f.pos.1,"scale_n":f.scale_n,"segments":f.divisions
         }))
@@ -400,7 +401,7 @@ fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value 
     let mut model = serde_json::json!({
         "name":sheet.name,"paper":sheet.paper_size,
         "landscape":sheet.orientation==Orientation::Landscape,"margin_mm":sheet.margin_mm,
-        "frames":[],"texts":[],"nortes":[],"scalebars":[],"cajetin":null
+        "frames":[],"texts":[],"nortes":[],"scalebars":[],"shapes":[],"cajetin":null
     });
     for item in &sheet.items {
         let (id,key,current)=sheet_item_model(item);
@@ -437,7 +438,7 @@ fn sheet_to_json(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Valu
     let mut result=overlay(&sheet.native_document,&sheet.native_baseline,current.clone());
     // Modeled items already carry their own retained metadata; don't merge
     // stale array positions after deleting, moving or replacing an item.
-    for key in ["frames","texts","nortes","scalebars","cajetin"] {
+    for key in ["frames","texts","nortes","scalebars","shapes","cajetin"] {
         if sheet.native_baseline.get(key)!=current.get(key) { result[key]=current[key].clone(); }
     }
     result
@@ -453,7 +454,7 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
     let mut sheet=Sheet::new(txt(raw,"name","Lámina 1"),paper,
         if flag(raw,"landscape",true) {Orientation::Landscape} else {Orientation::Portrait});
     sheet.items.clear();sheet.margin_mm=num(raw,"margin_mm",10.);
-    for key in ["frames","texts","nortes","scalebars","cajetin"] {
+    for key in ["frames","texts","nortes","scalebars","shapes","cajetin"] {
         let entries:Vec<_>=if key=="cajetin" {raw.get(key).filter(|v|v.is_object()).into_iter().collect()}
             else {raw.get(key).and_then(|v|v.as_array()).map(|v|v.iter().collect()).unwrap_or_default()};
         for v in entries {
@@ -485,6 +486,7 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
                     f.date=field(v,"FECHA","fecha");f.scale_text=field(v,"ESCALA","escala");f.sheet_number=field(v,"LÁMINA","lamina");
                     f.drawing_title=field(v,"TÍTULO","drawing_title");SheetItem::TitleBlock(f)
                 },
+                "shapes" => SheetItem::Shape(ShapeItem{id,shape:serde_json::from_value(v.clone()).unwrap_or_default()}),
                 "texts" => SheetItem::Text(TextItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),text:txt(v,"text",""),font_size_pt:num(v,"size_pt",14.),bold:flag(v,"bold",false)}),
                 "nortes" => SheetItem::NorthArrow(NorthArrowItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),size_mm:num(v,"size_mm",18.),rot_deg:num(v,"angle_deg",0.)}),
                 _ => SheetItem::GraphicScale(GraphicScaleItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),scale_n:num(v,"scale_n",100.),length_mm:scale_bar_width(num(v,"scale_n",100.),v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize),divisions:v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize})
@@ -1066,4 +1068,18 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     }
 
     Ok(scene)
+}
+
+#[cfg(test)] mod sheet_shape_roundtrip_tests {
+ use super::*;
+ #[test] fn shape_edit_preserves_native_unknowns_and_other_categories() {
+  let raw=serde_json::json!({"name":"mixed","paper":"A4","landscape":false,"images":[{"opaque":71}],"shapes":[{"kind":"terreno","x_mm":20.,"y_mm":30.,"w_mm":40.,"h_mm":25.,"ground":"hatch","z":4.,"hidden":false,"vendor":{"uid":71}}]});
+  let mut sheet=read_sheet(&raw);assert_eq!(sheet_to_json(&sheet),raw);
+  let index=sheet.items.iter().position(|i|matches!(i,ingetrazo_core::composition::SheetItem::Shape(_))).unwrap();
+  sheet.items[index].set_pos(70.,80.);
+  if let ingetrazo_core::composition::SheetItem::Shape(f)=&mut sheet.items[index] {f.shape.hidden=true;}
+  assert!(!sheet.visible_item_indices().contains(&index));
+  let saved=sheet_to_json(&sheet);assert_eq!(saved["images"],raw["images"]);assert_eq!(saved["shapes"][0]["vendor"],raw["shapes"][0]["vendor"]);assert_eq!(saved["shapes"][0]["x_mm"],70.);assert_eq!(saved["shapes"][0]["hidden"],true);
+  let restored=read_sheet(&saved);assert_eq!(sheet_to_json(&restored),saved);
+ }
 }

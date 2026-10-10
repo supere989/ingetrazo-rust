@@ -1,0 +1,8 @@
+{
+  "native_commit": "0ddbb63651068d392070bc8dbc8ae4ee321968b5",
+  "frozen_original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "63714f231c0b1b028b0da9fec182dfdee3fc3de4c830570527605c35c68275b1",
+  "native_pdf_sha256": "1a48d4c8227c939b10b9568047eb2081eef41c8d878400aefcb3977f2620f2c3",
+  "original_pdf_sha256": "a7f895b692d5abe079570c1d7582a7b2ccdb8afddcf28f7c9d407994fd9685d5",
+  "scope": "27whole-page source shape comparisons; isolated formats API, no full feature acceptance"
+}

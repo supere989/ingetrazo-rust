@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-sheet-vector-export/scripts/check-composer-pdf-ui.py", line 28, in <module>
+    children=C.POINTER(C.c_ulong)();r,p,n=C.c_ulong(),C.c_ulong(),C.c_uint();x.XQueryTree(d,root,C.byref(r),C.byref(p),C.byref(children),C.byref(n));assert n.value>0
+                                                                                                                                                            ^^^^^^^^^
+AssertionError

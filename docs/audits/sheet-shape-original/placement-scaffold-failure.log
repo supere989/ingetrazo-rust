@@ -1,0 +1,1 @@
+First discovery attempt used comp.formas instead of original comp.shapes and raised AttributeError after original placement. Original source was unchanged; corrected helper uses actual composition serialized shapes. Offscreen Qt reports QOpenGLWidget unsupported; this is controller/history evidence only, not rendered acceptance.

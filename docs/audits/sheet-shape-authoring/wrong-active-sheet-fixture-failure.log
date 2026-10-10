@@ -1,0 +1,41 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-composer-camera-review/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.47s
+     Running unittests src/lib.rs (/tmp/ingetrazo-composer-camera-target/debug/deps/ingetrazo_gui-a854ae3c483f924d)
+
+running 2 tests
+test composer::shape_authoring_tests::shape_placement_is_atomic_undoable_and_invalid_input_preserves_history ... ok
+test composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item ... FAILED
+
+failures:
+
+---- composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item stdout ----
+
+thread 'composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item' (1645578) panicked at crates/ingetrazo-gui/src/composer.rs:1028:130:
+assertion failed: app.scene.sheets[0].items.is_empty()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 95 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p ingetrazo-gui --lib`

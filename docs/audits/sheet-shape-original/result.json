@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "cases": 9,
+  "leaf_checks": 390,
+  "boundary": "Actual original painter draw geometry/palette vs native physical commands; source PNG retained, native preview rasterization/clip-cap pixel equivalence and exports remain open",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_binary_sha256": "b85a55afa0dc87ef9b31e1622441b5eac492c706bb4ce01a4ae2396baadc5298",
+  "source_script_sha256": "86572205ddda5c9b8f2a162f12afd8995e98c0ac6c14841792626967cbccd904"
+}

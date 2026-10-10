@@ -1,0 +1,1 @@
+Fresh actual software Vulkan whole-image comparison after the general Qt premultiplication correction. All nine mandatory shapes remain strict failures, with three corpus negatives rejected. Constant brush color correctness does not establish stroke joins or antialias coverage. The production direct composer path is enabled. No tolerance change or parity promotion.

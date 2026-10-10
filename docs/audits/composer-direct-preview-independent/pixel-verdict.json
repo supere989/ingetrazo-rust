@@ -1,0 +1,89 @@
+{
+  "passed": true,
+  "boundary_samples": {
+    "native": {
+      "before": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "placement-preview": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "warm-preview": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "cancelled": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "undone": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "original": {
+      "before": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "placement-preview": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "warm-preview": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "cancelled": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "undone": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "negative_controls": [
+    "black-startup",
+    "missing-preview",
+    "missing-committed",
+    "stale-preview",
+    "zero-byte-png"
+  ],
+  "scope": "Rendered boundary visibility and quiet cancellation/Undo only. No whole-image AA parity."
+}

@@ -21,6 +21,9 @@ use crate::app::IngeTrazoApp;
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
 pub struct ComposerState {
+    pub pdf_export_error: Option<String>,
+    pub shape_tool:Option<String>,
+    pub shape_start:Option<glam::DVec2>,
     pub pan_offset: Vec2,
     pub zoom: f32, // pixels per mm
     pub dragging_item_idx: Option<usize>,
@@ -34,6 +37,8 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
+            pdf_export_error: None,
+            shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
             zoom: 1.5, // 1.5 px per mm by default (~400mm A3 = 600px wide)
             dragging_item_idx: None,
@@ -48,9 +53,22 @@ fn sheet_model_equal(a:&[ingetrazo_core::composition::Sheet],b:&[ingetrazo_core:
  let mut a=a.to_vec();let mut b=b.to_vec();for s in a.iter_mut().chain(b.iter_mut()){s.selected_item=None;}a==b
 }
 impl IngeTrazoApp {
+ pub fn place_composer_shape(&mut self,kind:&str,start:glam::DVec2,end:glam::DVec2)->Result<uuid::Uuid,String>{
+  let mut shape=ingetrazo_core::sheet_shape::SheetShape::from_drag(kind,start,end)?;
+  let index=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len()).ok_or("No active sheet")?;
+  let sheet=&self.scene.sheets[index];
+  let zs=sheet.items.iter().map(|item|match item {SheetItem::Shape(f)=>f.shape.z,_=>sheet.native_items.get(&item.id()).and_then(|v|v.get("z")).and_then(|v|v.as_f64()).unwrap_or(0.)}).collect::<Vec<_>>();
+  if zs.iter().any(|z|!z.is_finite()){return Err("Non-finite sheet stacking order".into());}
+  shape.z=zs.into_iter().reduce(f64::max).map_or(0.,|z|z+1.);
+  if !shape.z.is_finite(){return Err("Sheet stacking order exceeds numeric range".into());}
+  self.finish_composer_edit();self.begin_composer_edit();
+  let id=uuid::Uuid::new_v4();let sheet=&mut self.scene.sheets[index];
+  sheet.add_item(SheetItem::Shape(ingetrazo_core::composition::ShapeItem{id,shape}));
+  sheet.selected_item=Some(sheet.items.len()-1);self.finish_composer_edit();Ok(id)
+ }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){if self.composer_state.edit_before.is_none(){self.composer_state.edit_before=Some(self.scene.sheets.clone());}}
  pub fn finish_composer_edit(&mut self){
@@ -73,7 +91,7 @@ impl IngeTrazoApp {
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
   if let Some(after)=history.1.pop(){history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}
  }
- pub fn cancel_composer_edit(&mut self){if let Some(sheets)=self.composer_state.edit_before.take(){let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
+ pub fn cancel_composer_edit(&mut self){self.composer_state.shape_start=None;self.composer_state.shape_tool=None;if let Some(sheets)=self.composer_state.edit_before.take(){let changed=!sheet_model_equal(&sheets,&self.scene.sheets);self.scene.sheets=sheets;if changed{self.scene.bump_version();}}
   self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
  }
 }
@@ -161,12 +179,20 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         Rect::from_min_size(p0, Vec2::new(r.w as f32 * zoom, r.h as f32 * zoom))
     };
 
+    app.native_composer.retain_items(&items);
+    if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
     for idx in app.scene.sheets[sheet_idx].visible_item_indices() {
         let item=&items[idx];
         let is_selected = selected_item == Some(idx);
 
         match item {
+            SheetItem::Shape(shape) => {
+                match app.native_composer.paint(&painter,shape.id,&shape.shape,zoom,paper_rect.min){
+                    Ok(true)=>{},Ok(false)=>{if let Err(error)=paint_sheet_shape(&painter,&shape.shape,zoom,paper_rect.min){app.status_message=error;}},Err(error)=>app.status_message=error,
+                }
+                if is_selected {render_selection_box(&painter,rect_mm_to_screen(item.rect()));}
+            },
             SheetItem::ViewFrame(frame) => {
                 let fr = rect_mm_to_screen(frame.rect);
 
@@ -267,6 +293,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let mut bump_needed = false;
     let mut fit_page_needed = false;
     let mut export_view_dxf = false;
+    let mut export_pdf = false;
+    let mut export_all_pdf = false;
 
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
         egui::Frame::window(ui.style()).show(ui, |ui| {
@@ -302,6 +330,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 ui.separator();
 
                 // Add Items Menu
+                ui.menu_button(tr("+ Shape"),|ui|{
+                    for (kind,label) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")] {
+                        if ui.button(tr(label)).clicked(){app.composer_state.shape_tool=Some(kind.into());app.composer_state.shape_start=None;ui.close_menu();}
+                    }
+                });
                 if ui.button(tr("+ View")).on_hover_text(tr("Add 3D model viewport")).clicked() {
                     let mut vf = ViewFrame::default();
                     vf.rect = RectMm::new(sheet.margin_mm + 10.0, sheet.margin_mm + 10.0, 160.0, 110.0);
@@ -380,6 +413,15 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     export_view_dxf |= ui.button(tr("Export view as DXF…")).clicked();
                 }
 
+                let current_pdf_button=ui.button(tr("Export PDF…"));
+                let all_pdf_button=ui.button(tr("Export all sheets (PDF)…"));
+                export_pdf |=current_pdf_button.clicked();
+                export_all_pdf |=all_pdf_button.clicked();
+                // Private acceptance observation only: no replacement dialog or export path.
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some() {
+                    ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-observation"),(current_pdf_button.rect,all_pdf_button.rect,export_pdf,export_all_pdf)));
+                }
+
                 // Delete selected item
                 if let Some(sel_idx) = sheet.selected_item {
                     if ui.button(tr("Delete Item")).clicked() {
@@ -390,6 +432,32 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             });
         });
     });
+
+    if export_pdf || export_all_pdf {
+        let title=if export_all_pdf{tr("Export all sheets (PDF)…")}else{tr("Export PDF…")};
+        let default=if export_all_pdf{"laminas.pdf"}else{"lamina.pdf"};
+        if let Some(path)=crate::dialogs::pick_save_file(&title,default,"*.pdf|PDF") {
+            let result=if export_all_pdf{app.export_composer_pdf(None,&path)}else{app.export_composer_pdf(Some(sheet_idx),&path)};
+            app.status_message=match result{
+                Ok(count)=>{app.composer_state.pdf_export_error=None;format!("{}: {count} — {}",tr("Exported sheets"),path.display())},
+                Err(error)=>{app.composer_state.pdf_export_error=Some(error.clone());error}
+            };
+            if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-result"),app.status_message.clone()));}
+        }
+    }
+
+    if let Some(error)=app.composer_state.pdf_export_error.clone() {
+        egui::Window::new(tr("PDF export failed"))
+            .id(egui::Id::new("composer-pdf-export-error"))
+            .collapsible(false).resizable(false)
+            .anchor(egui::Align2::CENTER_CENTER,egui::Vec2::ZERO)
+            .show(ui.ctx(),|error_ui|{
+                error_ui.label(error);
+                let ok=error_ui.button(tr("OK"));
+                if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){error_ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-error-ok"),ok.rect));}
+                if ok.clicked(){app.composer_state.pdf_export_error=None;}
+            });
+    }
 
     if export_view_dxf {
         if let Some(path)=crate::dialogs::pick_save_file(&tr("Export view as DXF…"),"vista.dxf","*.dxf|DXF") {
@@ -412,6 +480,24 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         app.scene.bump_version();
     }
 
+    // Shape placement stays transient until a second click or a completed drag.
+    if let Some(kind)=app.composer_state.shape_tool.clone() {
+        if ui.input(|i|i.key_pressed(egui::Key::Escape)) {app.composer_state.shape_start=None;app.composer_state.shape_tool=None;}
+        else if let Some(hover)=pointer.hover_pos().filter(|p|paper_rect.contains(*p)&&!toolbar_rect.contains(*p)) {
+            let first_pass=ui.ctx().output(|o|o.num_completed_passes)==0;
+            let page=|p:Pos2|glam::DVec2::new(f64::from((p.x-paper_rect.min.x)/zoom),f64::from((p.y-paper_rect.min.y)/zoom));
+            if first_pass && response.drag_started() {if let Some(start)=pointer.press_origin(){app.composer_state.shape_start=Some(page(start));}}
+            if let Some(start)=app.composer_state.shape_start {
+                if let Ok(preview)=ingetrazo_core::sheet_shape::SheetShape::from_drag(&kind,start,page(hover)){match app.native_composer.paint_preview(&painter,&preview,zoom,paper_rect.min){Ok(true)=>{},Ok(false)=>{if let Err(error)=paint_sheet_shape(&painter,&preview,zoom,paper_rect.min){app.status_message=error;}},Err(error)=>app.status_message=error}}
+                if first_pass && (response.drag_stopped()||response.clicked()){
+                    match app.place_composer_shape(&kind,start,page(hover)){Ok(_)=>{},Err(error)=>app.status_message=error}
+                    app.composer_state.shape_start=None;
+                }
+            } else if first_pass && response.clicked(){app.composer_state.shape_start=Some(page(hover));}
+        }
+        if app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
+        return;
+    }
     // Handle Item Selection & Dragging on Canvas
     if let Some(hover_pos) = pointer.hover_pos() {
         let sheet = &mut app.scene.sheets[sheet_idx];
@@ -924,4 +1010,107 @@ impl IngeTrazoApp {
  frame.view_key="scene:missing".into();assert_eq!(frame_camera_live(&scene,&frame,&live).target,live.target);
  scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Saved",&scene,&scene.camera));frame.view_key="scene:Saved".into();let snapshot=frame_scene(&scene,&frame);assert_eq!(frame_camera_live(&snapshot,&frame,&live).target,scene.camera.target);
  }
+}
+
+/// Resolve authored colors before geometry submission, preserving encoded RGB.
+/// Terrain band opacity replaces QColor alpha, matching source setAlphaF(0.6).
+pub fn precise_shape_palette(commands:&[ingetrazo_core::sheet_shape::ShapePaint])->Result<Vec<(Option<ingetrazo_render::cad2d::EncodedRgba>,Option<ingetrazo_render::cad2d::EncodedRgba>)>,String> {
+ use ingetrazo_render::cad2d::EncodedRgba;
+ fn color(value:&str,alpha:Option<f64>)->Result<EncodedRgba,String>{
+  let bytes=ingetrazo_core::sheet_color::parse_sheet_color(value)?;
+  let mut value=EncodedRgba::from_bytes(bytes,1.)?;
+  if let Some(alpha)=alpha {value.0[3]=alpha as f32;value.validate()?;}
+  Ok(value)
+ }
+ commands.iter().map(|c|Ok((
+  c.stroke.as_ref().map(|(s,_)|color(s,None)).transpose()?,
+  c.fill.as_ref().map(|(s,a)|color(s,if *a==1. {None}else{Some(*a)})).transpose()?
+ ))).collect()
+}
+
+/// Physical shape commands are shared with export; screen projection happens once here.
+pub fn paint_sheet_shape(painter:&egui::Painter,shape:&ingetrazo_core::sheet_shape::SheetShape,zoom:f32,origin:Pos2)->Result<(),String> {
+ use ingetrazo_core::sheet_shape::ShapePath;
+ fn color(value:&str,alpha:f64)->Result<Color32,String> {
+  let rgba=ingetrazo_core::sheet_color::parse_sheet_color(value)?;
+  let opacity=if alpha==1. {rgba[3]}else {(alpha*255.).round()as u8};
+  Ok(Color32::from_rgba_unmultiplied(rgba[0],rgba[1],rgba[2],opacity))
+ }
+ let point=|p:glam::DVec2|origin+Vec2::new(((shape.x_mm+p.x)*f64::from(zoom))as f32,((shape.y_mm+p.y)*f64::from(zoom))as f32);
+ let commands=shape.paint_commands(100_000)?;
+ // Resolve all palette entries before touching the painter: a bad colour cannot half-paint an item.
+ let prepared=commands.iter().map(|c|Ok((c.stroke.as_ref().map(|(s,w)|color(s,1.).map(|v|Stroke::new(*w as f32*zoom,v))).transpose()?.unwrap_or(Stroke::NONE),c.fill.as_ref().map(|(s,a)|color(s,*a)).transpose()?.unwrap_or(Color32::TRANSPARENT)))).collect::<Result<Vec<_>,String>>()?;
+ for (command,(stroke,fill)) in commands.into_iter().zip(prepared) {
+  match command.path {
+   ShapePath::RoundedRect{size,radius}=>{
+    // QPainter strokes are centered on the physical path. egui RectShape
+    // and convex_polygon default to outside strokes, shifting the document ink.
+    let points=if radius<=0. {vec![point(glam::DVec2::ZERO),point(glam::DVec2::new(size.x,0.)),point(size),point(glam::DVec2::new(0.,size.y))]}else {
+     let mut points=Vec::with_capacity(100);
+     for (center,start) in [(glam::DVec2::new(size.x-radius,radius),-std::f64::consts::FRAC_PI_2),(size-glam::DVec2::splat(radius),0.),(glam::DVec2::new(radius,size.y-radius),std::f64::consts::FRAC_PI_2),(glam::DVec2::splat(radius),std::f64::consts::PI)] {
+      for i in 0..=24 {let angle=start+std::f64::consts::FRAC_PI_2*f64::from(i)/24.;points.push(point(center+glam::DVec2::new(angle.cos(),angle.sin())*radius));}
+     }points
+    };
+    painter.add(egui::epaint::PathShape{points,closed:true,fill,stroke:stroke.into()});
+   },
+   ShapePath::Ellipse{size}=>{let center=size/2.;let points=(0..96).map(|i|{let t=std::f64::consts::TAU*f64::from(i)/96.;point(center+glam::DVec2::new(center.x*t.cos(),center.y*t.sin()))}).collect();painter.add(egui::epaint::PathShape{points,closed:true,fill,stroke:stroke.into()});},
+   ShapePath::Polygon(points)=>{painter.add(egui::epaint::PathShape{points:points.into_iter().map(point).collect(),closed:true,fill,stroke:stroke.into()});},
+   ShapePath::Line(mut a,mut b)=>{
+    if let Some(clip)=command.clip {
+     let delta=b-a;let mut lo=0_f64;let mut hi=1_f64;
+     let area=clip.iter().zip(clip.iter().cycle().skip(1)).map(|(a,b)|a.perp_dot(*b)).sum::<f64>();let sign=area.signum();
+     for i in 0..clip.len() {let edge=clip[(i+1)%clip.len()]-clip[i];let base=sign*edge.perp_dot(a-clip[i]);let slope=sign*edge.perp_dot(delta);if slope.abs()<1e-12 {if base<0. {lo=1.;hi=0.;break;}}else {let t=-base/slope;if slope>0. {lo=lo.max(t);}else {hi=hi.min(t);}}}
+     if lo>hi {continue;}b=a+delta*hi;a+=delta*lo;
+    }
+    let points=[point(a),point(b)];painter.line_segment(points,stroke);
+    if stroke.width>0. {for p in points {painter.circle_filled(p,stroke.width/2.,stroke.color);}}
+   },
+  }
+ }
+ Ok(())
+}
+
+#[cfg(test)]mod shape_authoring_tests {
+ use super::*;
+ #[test]fn precise_palette_preserves_bytes_and_source_alpha_replacement(){
+  use ingetrazo_core::sheet_shape::{ShapePaint,ShapePath};
+  let c=ShapePaint{path:ShapePath::Line(glam::DVec2::ZERO,glam::DVec2::X),stroke:Some(("#80255d9d".into(),0.35)),fill:Some(("#20255d9d".into(),0.6)),clip:None};
+  let p=precise_shape_palette(&[c.clone()]).unwrap();
+  assert_eq!(p[0].0.unwrap().0,[37./255.,93./255.,157./255.,128./255.]);
+  assert_eq!(p[0].1.unwrap().0,[37./255.,93./255.,157./255.,0.6]);
+  let mut invalid=c;invalid.fill=Some(("not-a-color".into(),0.6));
+  assert!(precise_shape_palette(&[invalid]).is_err());
+ }
+
+ #[test]fn shape_placement_is_atomic_undoable_and_invalid_input_preserves_history(){
+  let mut app=IngeTrazoApp::new();app.scene.sheets.push(ingetrazo_core::composition::Sheet::new("Shapes",PaperSize::A4,Orientation::Portrait));app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+  let before=app.scene.sheets.clone();let id=app.place_composer_shape("linea",glam::DVec2::new(2.,3.),glam::DVec2::new(8.,3.)).unwrap();
+  let after=app.scene.sheets.clone();let item=after[0].items.last().unwrap();assert_eq!(item.id(),id);let SheetItem::Shape(item)=item else{panic!()};assert_eq!(item.shape.h_mm,0.);assert_eq!(item.shape.z,1.);
+  assert_eq!(app.composer_state.sheet_history[&after[0].id].0.len(),1);
+  assert!(app.place_composer_shape("rect",glam::DVec2::splat(f64::NAN),glam::DVec2::ONE).is_err());assert_eq!(app.scene.sheets,after);
+  app.undo_composer_edit();assert_eq!(app.scene.sheets,before);app.redo_composer_edit();assert_eq!(app.scene.sheets,after);
+  let state=app.scene.clone();app.composer_state.shape_tool=Some("rect".into());app.composer_state.shape_start=Some(glam::DVec2::ZERO);app.cancel_composer_edit();assert_eq!(app.scene,state);assert!(app.composer_state.shape_start.is_none());assert!(app.composer_state.shape_tool.is_none());
+ }
+ #[test]fn real_composer_pointer_events_preview_then_commit_one_history_item(){
+  let mut app=IngeTrazoApp::new();let mut sheet=ingetrazo_core::composition::Sheet::new("Pointer",PaperSize::A4,Orientation::Portrait);sheet.items.clear();app.scene.sheets.push(sheet);app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);app.composer_state.shape_tool=Some("rect".into());
+  app.scene.sheets.remove(0);app.scene.active_sheet_index=Some(0);app.enter_composer_sheet(0);
+  let ctx=egui::Context::default();
+  fn frame(ctx:&egui::Context,app:&mut IngeTrazoApp,events:Vec<egui::Event>){let _=ctx.run(egui::RawInput{screen_rect:Some(Rect::from_min_size(Pos2::ZERO,Vec2::new(1000.,800.))),events,..Default::default()},|ctx|{egui::CentralPanel::default().show(ctx,|ui|render_sheet_composer(app,ui,0));});}
+  fn click(p:Pos2)->Vec<egui::Event>{vec![egui::Event::PointerMoved(p),egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:true,modifiers:Default::default()},egui::Event::PointerButton{pos:p,button:egui::PointerButton::Primary,pressed:false,modifiers:Default::default()}]}
+  frame(&ctx,&mut app,vec![]);frame(&ctx,&mut app,click(Pos2::new(430.,330.)));assert!(app.composer_state.shape_start.is_some());assert!(app.scene.sheets[0].items.is_empty(),"unexpected items {:?}",app.scene.sheets[0].items);assert!(app.composer_state.sheet_history.is_empty());
+  frame(&ctx,&mut app,vec![egui::Event::PointerMoved(Pos2::new(520.,420.))]);assert!(app.scene.sheets[0].items.is_empty());
+  frame(&ctx,&mut app,click(Pos2::new(520.,420.)));assert_eq!(app.scene.sheets[0].items.len(),1);assert_eq!(app.composer_state.sheet_history[&app.scene.sheets[0].id].0.len(),1);assert!(app.composer_state.shape_start.is_none());
+  app.undo_composer_edit();assert!(app.scene.sheets[0].items.is_empty());
+ }
+
+}
+
+impl IngeTrazoApp {
+    /// Prepare every page before opening the destination. Unsupported visible
+    /// painters report an error rather than silently exporting incomplete sheets.
+    pub fn export_composer_pdf(&self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
+        let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all(sheets)?;
+        ingetrazo_formats::sheet_pdf::save(path,&pages)?;Ok(pages.len())
+    }
 }

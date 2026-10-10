@@ -256,6 +256,9 @@ pub struct GraphicScaleItem {
     pub divisions: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ShapeItem { pub id:Uuid, pub shape:crate::sheet_shape::SheetShape }
+
 /// Polymorphic item on the sheet page.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SheetItem {
@@ -264,6 +267,7 @@ pub enum SheetItem {
     Text(TextItem),
     NorthArrow(NorthArrowItem),
     GraphicScale(GraphicScaleItem),
+    Shape(ShapeItem),
 }
 
 impl SheetItem {
@@ -271,12 +275,13 @@ impl SheetItem {
         match self {
             Self::ViewFrame(item)=>item.id, Self::TitleBlock(item)=>item.id,
             Self::Text(item)=>item.id, Self::NorthArrow(item)=>item.id,
-            Self::GraphicScale(item)=>item.id,
+            Self::GraphicScale(item)=>item.id, Self::Shape(item)=>item.id,
         }
     }
 
     pub fn rect(&self) -> RectMm {
         match self {
+            SheetItem::Shape(f) => RectMm::new(f.shape.x_mm,f.shape.y_mm,f.shape.w_mm,f.shape.h_mm),
             SheetItem::ViewFrame(f) => f.rect,
             SheetItem::TitleBlock(b) => b.rect,
             SheetItem::Text(t) => RectMm::new(t.pos.0, t.pos.1, 40.0, 10.0),
@@ -287,6 +292,7 @@ impl SheetItem {
 
     pub fn set_pos(&mut self, x: f64, y: f64) {
         match self {
+            SheetItem::Shape(f) => {f.shape.x_mm=x;f.shape.y_mm=y;},
             SheetItem::ViewFrame(f) => {
                 f.rect.x = x;
                 f.rect.y = y;
@@ -340,10 +346,10 @@ impl Sheet {
     pub fn visible_item_indices(&self) -> Vec<usize> {
         let metadata=|index:usize|self.native_items.get(&self.items[index].id());
         let mut indices=(0..self.items.len()).filter(|&index|
-            !metadata(index).and_then(|value|value.get("hidden")).and_then(|value|value.as_bool()).unwrap_or(false)
+            match &self.items[index] {SheetItem::Shape(f)=>!f.shape.hidden,_=>!metadata(index).and_then(|value|value.get("hidden")).and_then(|value|value.as_bool()).unwrap_or(false)}
         ).collect::<Vec<_>>();
-        let z=|index:usize|metadata(index).and_then(|value|value.get("z")).and_then(|value|value.as_f64()).unwrap_or(0.);
-        let category=|index:usize|match &self.items[index] {SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::TitleBlock(_)=>14};
+        let z=|index:usize|if let SheetItem::Shape(f)=&self.items[index] {f.shape.z} else {metadata(index).and_then(|value|value.get("z")).and_then(|value|value.as_f64()).unwrap_or(0.)};
+        let category=|index:usize|match &self.items[index] {SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::TitleBlock(_)=>14,SheetItem::Shape(_)=>6};
         indices.sort_by(|&a,&b|z(a).partial_cmp(&z(b)).unwrap_or(std::cmp::Ordering::Equal).then_with(||category(a).cmp(&category(b))));
         indices
     }

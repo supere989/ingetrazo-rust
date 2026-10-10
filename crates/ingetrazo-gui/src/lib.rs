@@ -10,6 +10,7 @@
 pub mod app;
 pub mod blender;
 pub mod composer;
+pub mod composer_cad;
 pub mod dialogs;
 pub mod icons;
 pub mod menu;

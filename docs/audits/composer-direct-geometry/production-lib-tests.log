@@ -1,0 +1,130 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-composer-direct-cad/crates/ingetrazo-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.17s
+     Running unittests src/lib.rs (/tmp/ingetrazo-composer-direct-cad-target/debug/deps/ingetrazo_gui-a854ae3c483f924d)
+
+running 103 tests
+test blender::tests::test_blender_state_initialization ... ok
+test app::model_revision_regression::history_and_context_swaps_never_reuse_gpu_model_revision ... ok
+test blender::tests::test_resolution_presets ... ok
+test app::tests::test_cad_clipboard_and_group_operations ... ok
+test clipboard::tests::malformed_mesh_and_recursive_definitions_leave_document_and_history_unchanged ... ok
+test clipboard::tests::copy_crosses_nested_edit_frames_without_shifting_geometry_or_texture ... ok
+test clipboard::tests::foreign_clipboard_assets_preview_and_stamp_survive_roundtrip_and_undo ... ok
+test clipboard::tests::overlap_paint_matches_original_first_covering_face_priority ... ok
+test clipboard::tests::preview_cancel_and_commit_are_one_atomic_stamp ... ok
+test clipboard::tests::loose_copy_paste_preserves_holes_opaque_data_uvs_curves_and_one_history_step ... ok
+test clipboard::tests::foreign_component_material_and_asset_collisions_remap_with_shared_repeat_identity ... ok
+test clipboard::tests::system_clipboard_transfers_geometry_between_native_owners ... ignored, requires isolated X11 clipboard server
+test clipboard::tests::resource_allocator_reserves_incoming_names_and_leaves_opaque_fields ... ok
+test clipboard::tests::overlap_stamp_rebuilds_regions_on_two_planes_with_one_undo ... ok
+test component_edit::tests::cancel_and_fragment_save_preserve_document_and_history ... ok
+test composer::frame_camera_tests::frame_bounds_matches_original_edge_and_group_vertex_semantics ... ok
+test component_edit::tests::axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context ... ok
+test component_edit::tests::local_dimensions_commit_to_parent_coordinates_and_cancel_restore ... ok
+test component_edit::tests::component_edit_commits_all_instances_once_and_undo_redo_restores_registry ... ok
+test component_edit::tests::paste_retains_link_but_creates_unique_instance_uids ... ok
+test component_edit::tests::mixed_selection_component_creation_and_explosion_are_reversible ... ok
+test component_edit::tests::nested_component_edit_propagates_and_folds_into_one_outer_history_entry ... ok
+test composer::frame_camera_tests::frame_overrides_roll_scale_and_perspective_have_original_camera_semantics ... ok
+test composer::frame_camera_tests::frame_pixel_aspect_saved_lens_clamp_and_two_point_follow_original ... ok
+test composer::frame_camera_tests::hidden_face_boundaries_and_contours_are_absent_from_sheet ... ok
+test composer::frame_camera_tests::raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation ... ok
+test composer::frame_camera_tests::saved_section_view_uses_original_camera_direction_without_mutating_live_state ... ok
+test composer::frame_camera_tests::model_history_preserves_later_sheet_edits_and_switch_retires_drag ... ok
+test composer::live_composer_camera_tests::current_and_missing_saved_use_live_camera_while_bound_view_uses_snapshot ... ok
+test composer::shape_authoring_tests::precise_palette_preserves_bytes_and_source_alpha_replacement ... ok
+test composer::section_frame_tests::bound_saved_scene_cut_clips_nested_edges_without_changing_live_document ... ok
+test composer::frame_camera_tests::sheet_gestures_have_scoped_undo_and_cancel_or_selection_has_no_history ... ok
+test composer::shape_authoring_tests::shape_placement_is_atomic_undoable_and_invalid_input_preserves_history ... ok
+test app::ordered_solid_selection_tests::first_selected_group_is_cutter_even_when_scene_order_is_reversed ... ok
+test dimension_actions::tests::property_edit_delete_invalid_axis_and_undo_preserve_dimension_identity ... ok
+test gpu_memory::tests::invalid_requests_do_not_change_accounting ... ok
+test gpu_memory::tests::compressed_odd_dimensions_layers_and_tiny_mips_use_complete_blocks ... ok
+test native_vulkan::headless::tests::strict_hardware_request_never_substitutes_software_or_other_vendor ... ok
+test native_vulkan::queues::tests::combined_and_dedicated_compute_preferred ... ok
+test gpu_memory::tests::actual_aligned_requirements_rollback_and_fence_delayed_free ... ok
+test gpu_memory::tests::live_driver_usage_not_double_counted_and_external_pressure_blocks ... ok
+test app::tests::solid_boolean_prepares_before_undo_and_restores_inputs ... ok
+test geometry_actions::tests::menu_intersect_rebuild_and_failed_plane_have_single_atomic_history ... ok
+test native_vulkan::encoded_surface_tests::prefers_direct_encoded_attachment_and_refuses_semantic_fallback ... ok
+test native_vulkan::world::contour_chunk_regression::storage_chunks_fit_actual_range_and_preserve_complete_triangles ... ok
+test native_vulkan::world::lifecycle_regression::failed_pipeline_batch_releases_every_partial_non_null_handle ... ok
+test native_vulkan::queues::tests::no_present_or_graphics_is_rejected ... ok
+test native_vulkan::world::sample_count_regression::format_support_limits_global_msaa_without_allocating_invalid_images ... ok
+test gpu_memory::global_limit_regression::global_limit_includes_other_heaps_reservations_and_retired_allocations ... ok
+test outliner::tests::nested_selection_opens_correct_context_and_properties_roundtrip_with_undo ... ok
+test saved_view_actions::tests::selected_update_preserves_metadata_and_recalls_hidden_tree_section_style ... ok
+test geometry_actions::tests::orient_partition_marking_flip_and_second_pass_noop_have_one_undo ... ok
+test native_vulkan::queues::tests::sparse_split_graphics_present_preserve_real_indices ... ok
+test session_state::tests::crash_writer_helper ... ok
+test outliner::tests::cut_list_controls_apply_precision_surface_filter_and_document_units ... ok
+test section_actions::prompt_tests::placement_prompt_cancel_rename_optout_and_undo_follow_original_history ... ok
+test tests::test_app_delete_and_select_all ... ok
+test tests::test_app_camera_presets ... ok
+test tests::test_app_initialization ... ok
+test section_actions::selection_identity_tests::deleting_earlier_plane_keeps_selection_on_same_persisted_identity ... ok
+test geometry_actions::tests::heal_menu_holes_overlap_and_undo_restores_both_faces ... ok
+test geometry_actions::tests::simplify_and_path_conversion_commit_once_and_undo_exactly ... ok
+test tests::test_app_undo_redo ... ok
+test section_actions::tests::sections_in_rotated_scaled_edit_context_keep_world_plane_and_outer_undo ... ok
+test tool_history::section_group_workflow::clipped_front_group_does_not_block_rear_group_select_and_double_click ... ok
+test tool_history::tests::cancel_invalid_vcb_and_selection_do_not_create_undo_commits ... ok
+test tool_history::tests::failed_path_sweep_reports_error_without_document_or_history_mutation ... ok
+test tests::test_app_tool_switching ... ok
+test outliner::tests::all_visibility_is_one_undo_and_cut_list_and_cache_follow_changes ... ok
+test tool_history::tests::line_midchain_undo_rewinds_vcb_origin_without_consuming_prior_document_undo ... ok
+test tool_history::tests::history_replacement_retires_move_targets_and_redo_preserves_original_geometry ... ok
+test tool_history::tests::move_live_preview_click_vcb_failure_cancel_and_tool_change_are_transactional ... ok
+test viewport::move_plane_tests::move_grab_uses_camera_heading_plane_and_top_view_fallback ... ok
+test viewport::drafting_plane_tests::standard_view_uses_model_center_oblique_uses_ground_and_line_can_rise ... ok
+test tool_history::tests::freehand_preview_cancel_release_has_one_reversible_commit ... ok
+test viewport::move_plane_tests::move_second_point_yields_to_unselected_face_but_axis_and_selection_keep_grab_plane ... ok
+test geometry_actions::tests::placed_component_pieces_update_shared_definition_and_undo_once ... ok
+test tool_history::tests::click_and_vcb_pushpull_each_create_one_undo_commit ... ok
+test tool_history::tests::duplicate_line_undo_does_not_pop_unrelated_history_and_numeric_closure_stays_active ... ok
+test tool_history::tests::followme_preview_cancel_and_drag_release_history_are_atomic ... ok
+test tool_history::tests::offset_preview_failure_cancel_and_success_have_transactional_history ... ok
+test tool_history::tests::move_array_retyping_replaces_one_undo_and_document_replacement_closes_window ... ok
+test tool_history::tests::source_move_live_preview_and_other_transform_previews_commit_undo_once ... ok
+
+running 1 test
+test tool_history::tests::nested_mirrored_component_drafting_commits_shared_definition_once ... ok
+test tool_history::tests::ctrl_pushpull_vcb_preserves_slab_and_commits_one_undo ... ok
+test tool_history::tests::fillet_sizing_preview_and_invalid_radius_do_not_create_history ... ok
+test composer_cad::tests::pose_palette_and_invalid_updates_preserve_cached_geometry ... ok
+test composer_cad::tests::direct_geometry_separates_coverage_from_authored_alpha ... ok
+test section_actions::native_close_tests::native_close_cancels_naming_then_enters_unsaved_guard ... ok
+test document_session::tests::native_close_requests_offer_cancel_then_close_after_discard ... ok
+test composer::frame_camera_tests::subpixel_paper_hatch_keeps_original_two_row_coverage ... ok
+test composer::shape_authoring_tests::real_composer_pointer_events_preview_then_commit_one_history_item ... ok
+test app::document_camera_tests::visible_camera_is_saved_restored_and_reset_for_new_document ... ok
+test section_actions::color_tests::section_color_saved_view_and_isolated_restart_keep_rgb ... ok
+test session_state::tests::preferences_keep_unknown_settings_and_corrupt_source_is_never_overwritten ... ok
+test app::tests::test_group_3_colors ... ok
+test app::tests::test_load_example_pergola ... ok
+test session_state::tests::slots_do_not_collide_across_paths_or_live_windows_and_retirement_keeps_recoverable_copy ... ok
+test document_session::tests::timer_skips_gestures_cleans_and_duplicates_then_discard_keeps_recovery ... ok
+test document_session::tests::naming_modal_keeps_document_autosave_timer_and_pending_prompt ... ok
+test document_session::tests::camera_selection_do_not_dirty_and_preferences_restart_keeps_recent_files ... ok
+test session_state::tests::separate_process_crash_restart_recovers_latest_geometry_without_touching_original ... ok
+test document_session::tests::unsaved_actions_cancel_failed_save_and_successful_save_are_atomic ... ok
+
+test result: ok. 102 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s

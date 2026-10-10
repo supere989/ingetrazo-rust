@@ -1,0 +1,12 @@
+{
+  "base": "c290c3a",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "backend": "4.0.1",
+  "sha256": {
+    "crates/ingetrazo-gui/src/composer.rs": "1a386b60689118b966455f1020cf39a8e78704432432a3924cb82e307b5942aa",
+    "crates/ingetrazo-gui/examples/composer_pdf_ui_fixture.rs": "3c3726d6e474ee8c704b0a099ec97b7e24a2b8952cf61fd36f85891dbb79440a",
+    "scripts/check-composer-pdf-ui.py": "24e8d9577048cb9d0c1b7978d8303ac20c194a70a555a92ed3aea551240d6f7f",
+    "target/debug/examples/composer_pdf_ui_fixture": "2f8e08c078810256d4861f6312b841b3d3ebbde0b87edcff89a18628037c58c8"
+  },
+  "backend_initial_boundary": "kdialog and zenity absent; root later installed genuine zenity inside container; no substitute backend or host changes"
+}
