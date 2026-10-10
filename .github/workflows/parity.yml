@@ -48,6 +48,12 @@ jobs:
           python-version: "3.13"
       - name: Install pinned original runtime in CI environment
         run: python -m pip install -r docs/audits/python-runtime-freeze.txt
+      - name: Exact original Qt and production CAD color protocol
+        run: |
+          mkdir -p docs/audits/cad2d-color-ci
+          QT_QPA_PLATFORM=offscreen python scripts/reference-qt-cad2d-premultiply.py docs/audits/cad2d-color-ci/original
+          cargo run --locked -p ingetrazo-render --example cad2d_premultiply_protocol -- docs/audits/cad2d-color-ci/native.bin
+          QT_QPA_PLATFORM=offscreen python scripts/check-cad2d-premultiply.py docs/audits/cad2d-color-ci/original docs/audits/cad2d-color-ci/native.bin --output docs/audits/cad2d-color-ci/result.json
       - name: Build production native composer cache fixture
         run: cargo build --locked -p ingetrazo-gui --example composer_native_cache
       - name: Native Vulkan composer cache edit history context and recovery
@@ -187,6 +193,7 @@ jobs:
             docs/audits/sheet-export-ci/*
             docs/audits/sheet-view-dxf/*
             docs/audits/move-inference-source-evidence.json
+            docs/audits/cad2d-color-ci/
             docs/audits/center-tracking-*-ci-evidence.json
             docs/audits/center-tracking-*-ci/*.png
             docs/audits/center-tracking-*-ci/runtime.log
