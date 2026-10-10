@@ -494,6 +494,41 @@ fn style_for_frame(scene:&Scene,frame:&ViewFrame,base:&ingetrazo_render::style::
  style.show_grid=false;style
 }
 
+/// Paper hatch strokes at subpixel device widths use the original Qt
+/// major-axis coverage rule instead of egui's perceptual feathered path.
+/// Width attenuates coverage; it does not add a diagonal third pixel row.
+/// Reference: https://github.com/qt/qtbase/blob/6.12/src/gui/painting/qcosmeticstroker.cpp
+/// Actual original Qt 6.12 fixture: .72px diagonal pen covers two rows
+/// with alpha 91/92; generic egui thin ink adds a third feathered row.
+fn thin_paper_line(painter:&egui::Painter,ends:[Pos2;2],width:f32,color:Color32) {
+ let ppp=painter.ctx().pixels_per_point();let mut a=ends[0]*ppp;let mut b=ends[1]*ppp;
+ let vertical=(b.y-a.y).abs()>(b.x-a.x).abs();
+ if vertical {a=Pos2::new(a.y,a.x);b=Pos2::new(b.y,b.x);}
+ if a.x>b.x{std::mem::swap(&mut a,&mut b);}
+ let fixed=|v:f32|(v*64.)as i64;let first=fixed(a.x);let last=fixed(b.x);
+ if first==last{return;}
+ let slope=((fixed(b.y)-fixed(a.y))*65536)/(last-first);
+ let mut minor=(fixed(a.y)-32)*1024-(((first.rem_euclid(64)-32)*slope)>>6)-(slope>>1);
+ let start=first-32;let end=last+32;let mut mesh=egui::Mesh::default();
+ let opacity=(width*ppp*256.).clamp(0.,256.)as i64;
+ let clip=painter.clip_rect();
+ let clip_min=if vertical{clip.min.y}else{clip.min.x};let clip_max=if vertical{clip.max.y}else{clip.max.x};
+ let begin=start.div_euclid(64).max((clip_min*ppp).floor()as i64);
+ let finish=end.div_euclid(64).min((clip_max*ppp).ceil()as i64);
+ minor+=(begin-start.div_euclid(64))*slope;
+ for major in begin..=finish{
+  let covered=(end.min((major+1)*64)-start.max(major*64)).max(0);
+  let base=minor.div_euclid(65536);let fraction=(minor>>8).rem_euclid(256);
+  for (row,coverage)in [(base,255-fraction),(base+1,fraction)] {
+   let alpha=(((coverage*covered)>>6)*opacity>>8)as u8;if alpha==0{continue;}
+   let (x,y)=if vertical{(row,major)}else{(major,row)};
+   let rect=Rect::from_min_max(Pos2::new(x as f32/ppp,y as f32/ppp),Pos2::new((x+1)as f32/ppp,(y+1)as f32/ppp)).intersect(clip);
+   if rect.is_positive(){mesh.add_colored_rect(rect,Color32::from_rgba_unmultiplied(color.r(),color.g(),color.b(),alpha));}
+  }minor+=slope;
+ }
+ painter.add(egui::Shape::mesh(mesh));
+}
+
 fn paint_paper_cut(painter:&egui::Painter,rect:Rect,frame:&ViewFrame,scene:&Scene,matrix:&glam::DMat4) {
     if frame.cut_fill=="none" {return;}
     let color=frame.cut_fill_color.trim_start_matches('#');
@@ -526,7 +561,9 @@ fn paint_paper_cut(painter:&egui::Painter,rect:Rect,frame:&ViewFrame,scene:&Scen
         }
         intervals.sort_by(|a,b|a.0.total_cmp(&b.0));let mut merged:Vec<(f32,f32)>=vec![];
         for (a,b)in intervals {if let Some(last)=merged.last_mut(){if a<=last.1+1e-4 {last.1=last.1.max(b);continue;}}merged.push((a,b));}
-        for(a,b)in merged {painter.line_segment([rect.min+Vec2::new(a,c-a),rect.min+Vec2::new(b,c-b)],Stroke::new(width,color));}
+        for(a,b)in merged {let ends=[rect.min+Vec2::new(a,c-a),rect.min+Vec2::new(b,c-b)];
+            if width*painter.ctx().pixels_per_point()<=1. {thin_paper_line(painter,ends,width,color);}else{painter.line_segment(ends,Stroke::new(width,color));}
+        }
         c+=step;
     }
 }
@@ -760,6 +797,14 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 
 #[cfg(test)]mod frame_camera_tests{
  use super::*;
+ #[test]fn subpixel_paper_hatch_keeps_original_two_row_coverage(){
+  let ctx=egui::Context::default();ctx.begin_pass(Default::default());
+  let painter=ctx.layer_painter(egui::LayerId::background());thin_paper_line(&painter,[Pos2::new(10.,30.),Pos2::new(30.,10.)],0.72,Color32::from_rgb(255,0,255));
+  let output=ctx.end_pass();let egui::Shape::Mesh(mesh)=&output.shapes[0].shape else{panic!("subpixel hatch must emit device pixel coverage");};
+  let mut rows=std::collections::BTreeMap::new();
+  for tri in mesh.indices.chunks_exact(6){let vertices=&mesh.vertices[tri[0]as usize..tri[0]as usize+4];let x=vertices.iter().map(|v|v.pos.x).fold(f32::INFINITY,f32::min);let y=vertices.iter().map(|v|v.pos.y).fold(f32::INFINITY,f32::min);if (x-15.).abs()<1e-6{rows.insert(y as i32,vertices[0].color.a());}}
+  assert_eq!(rows.len(),2);assert_eq!(rows.values().copied().collect::<Vec<_>>(),vec![91,92]);
+ }
  #[test]fn model_history_preserves_later_sheet_edits_and_switch_retires_drag(){
   use ingetrazo_core::composition::{Sheet,PaperSize,Orientation};let mut app=IngeTrazoApp::new();app.scene.sheets.clear();
   let mut a=Sheet::new("A",PaperSize::A4,Orientation::Portrait);a.items.push(SheetItem::ViewFrame(ViewFrame::default()));let mut b=a.clone();b.id=uuid::Uuid::new_v4();b.name="B".into();app.scene.sheets=vec![a,b];
