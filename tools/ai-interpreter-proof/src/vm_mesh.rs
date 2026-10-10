@@ -8,6 +8,21 @@ use rustpython_vm::{
     Interpreter, InterpreterBuilder, PyRef, compiler::Mode, pymodule, scope::Scope,
 };
 use std::{cell::RefCell, collections::HashMap};
+// Drop removed arbitrary VM references only after releasing the membership lock.
+fn discard_tail(list: &rustpython_vm::builtins::PyListRef, keep: usize) {
+    loop {
+        let removed = {
+            let mut values = list.borrow_vec_mut();
+            if values.len() > keep {
+                values.pop()
+            } else {
+                None
+            }
+        };
+        let Some(removed) = removed else { break };
+        drop(removed);
+    }
+}
 struct Entry {
     mesh: PyRef<editable_mesh::Mesh>,
     transaction: Option<FaceTransaction>,
@@ -18,8 +33,8 @@ struct Entry {
 impl Drop for Entry {
     fn drop(&mut self) {
         if !self.published {
-            self.mesh.faces.borrow_vec_mut().truncate(self.faces);
-            self.mesh.vertices.borrow_vec_mut().truncate(self.vertices);
+            discard_tail(&self.mesh.faces, self.faces);
+            discard_tail(&self.mesh.vertices, self.vertices);
         }
     }
 }
@@ -32,12 +47,8 @@ struct Stage {
 impl Stage {
     fn rollback(&mut self) {
         for entry in self.entries.values() {
-            entry.mesh.faces.borrow_vec_mut().truncate(entry.faces);
-            entry
-                .mesh
-                .vertices
-                .borrow_vec_mut()
-                .truncate(entry.vertices);
+            discard_tail(&entry.mesh.faces, entry.faces);
+            discard_tail(&entry.mesh.vertices, entry.vertices);
         }
     }
 }
@@ -540,8 +551,10 @@ impl<'a> RootRestore<'a> {
         self.vm.host_budget_abort();
         let vertices = std::mem::take(&mut self.vertices);
         let faces = std::mem::take(&mut self.faces);
-        *self.mesh.vertices.borrow_vec_mut() = vertices;
-        *self.mesh.faces.borrow_vec_mut() = faces;
+        let old = std::mem::replace(&mut *self.mesh.vertices.borrow_vec_mut(), vertices);
+        drop(old);
+        let old = std::mem::replace(&mut *self.mesh.faces.borrow_vec_mut(), faces);
+        drop(old);
         for record in self.positions.drain(..) {
             let old = std::mem::replace(&mut *record.vertex.position.write(), record.position);
             drop(old);
@@ -712,8 +725,8 @@ impl Controller {
                 if publish.is_err() {
                     vm.host_budget_abort();
                     for e in &entries {
-                        e.mesh.faces.borrow_vec_mut().truncate(e.faces);
-                        e.mesh.vertices.borrow_vec_mut().truncate(e.vertices);
+                        discard_tail(&e.mesh.faces, e.faces);
+                        discard_tail(&e.mesh.vertices, e.vertices);
                     }
                 } else {
                     for e in &mut entries {

@@ -1,0 +1,1 @@
+{"matched_states": 4, "negative_controls": ["position", "loop_wrapper", "attrs_wrapper", "position_wrapper", "missing_state", "quota", "unwind", "production", "type"], "literal_old_identity_rejected": true, "scope": "root append and shallow field failure restoration", "full_scripting_acceptance": false}

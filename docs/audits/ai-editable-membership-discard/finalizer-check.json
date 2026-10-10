@@ -1,0 +1,1 @@
+{"finalizer_control": true, "negative_controls": ["discard_finalizer_bytecode_refused", "final_zero_with_cycle", "production_enabled"], "full_callback_safety": false, "production_enabled": false}
