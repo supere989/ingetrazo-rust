@@ -689,10 +689,15 @@ pub fn save_igz(scene: &Scene, path: &Path) -> Result<(), IgzError> {
         let _=std::fs::remove_file(&temp);
         return Err(err);
     }
+    if let Err(err)=File::open(&temp).and_then(|f|f.sync_all()) {
+        let _=std::fs::remove_file(&temp);return Err(err.into());
+    }
     if let Err(err)=std::fs::rename(&temp,path) {
         let _=std::fs::remove_file(&temp);
         return Err(err.into());
     }
+    #[cfg(unix)]
+    File::open(parent)?.sync_all()?;
     Ok(())
 }
 

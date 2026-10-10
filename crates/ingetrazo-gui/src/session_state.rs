@@ -56,8 +56,14 @@ fn atomic_json(path:&Path,value:&impl Serialize)->Result<(),String> {
     std::fs::create_dir_all(parent).map_err(|e|e.to_string())?;
     let bytes=serde_json::to_vec_pretty(value).map_err(|e|e.to_string())?;
     let temp=parent.join(format!(".state-{}.tmp",uuid::Uuid::new_v4()));
-    std::fs::write(&temp,bytes).map_err(|e|e.to_string())?;
+    {
+        use std::io::Write;
+        let mut file=std::fs::File::create(&temp).map_err(|e|e.to_string())?;
+        if let Err(e)=file.write_all(&bytes).and_then(|_|file.sync_all()) {let _=std::fs::remove_file(&temp);return Err(e.to_string());}
+    }
     if let Err(e)=std::fs::rename(&temp,path) {let _=std::fs::remove_file(temp);return Err(e.to_string());}
+    #[cfg(unix)]
+    std::fs::File::open(parent).and_then(|f|f.sync_all()).map_err(|e|e.to_string())?;
     Ok(())
 }
 fn absolute(path:&Path)->Result<PathBuf,String> {
