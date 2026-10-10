@@ -250,8 +250,6 @@ impl CachedFont {
     }
     pub fn synthetic_italic_shear(&self, requested: bool) -> f64 {
         if requested && !self.italic {
-            #[cfg(target_os="macos")]
-            if self.native.is_some() { return crate::paper_coretext_glyph::synthetic_italic_shear(); }
             0.3
         } else {
             0.
@@ -262,7 +260,10 @@ impl CachedFont {
         self.shaper.decoration_metrics_26_6()
     }
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
-        #[cfg(target_os="macos")]if let Some(n)=&self.native{return n.raster(glyph,scale,phase,self.synthetic_italic_shear(italic))}
+        #[cfg(target_os="macos")]if let Some(n)=&self.native {
+            let shear=if italic && !self.italic {crate::paper_coretext_glyph::synthetic_italic_shear()}else{0.};
+            return n.raster(glyph,scale,phase,shear)
+        }
         self.shaper.rasterize_glyph(glyph,scale,phase,self.synthetic_italic_shear(italic))
     }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
