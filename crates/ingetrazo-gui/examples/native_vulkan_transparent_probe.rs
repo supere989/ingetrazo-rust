@@ -92,7 +92,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             image::ColorType::Rgba8,
         )?;
         let offset = (300 * 800 + 400) * 4;
-        rows.push(serde_json::json!({"case":name,"center_rgba":&image[offset..offset+4],"geometry_uploads":world.uploads,"opacity_runs":world.transparent_runs(),"surface_bytes":world.transparent_surface_bytes(),"contour_metrics":format!("{:?}",world.contour_metrics())}));
+        rows.push(serde_json::json!({"case":name,"center_rgba":&image[offset..offset+4],"geometry_uploads":world.uploads,"opacity_runs":world.transparent_runs(),"paint_runs":world.paint_runs(),"ordinary_runs":world.ordinary_paint_runs(),"surface_bytes":world.transparent_surface_bytes(),"contour_metrics":format!("{:?}",world.contour_metrics())}));
         drop(world);
         assert_eq!(budget.ledger.lock().unwrap().total_committed(), 0);
     }

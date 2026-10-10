@@ -1,0 +1,29 @@
+[
+  {
+    "case": "back-ui-gate-closed",
+    "pixel": [
+      255,
+      255,
+      255
+    ],
+    "sha256": "c1a258cd48e6b262bf47f00934d4e8c3f6475dc964632b2955edf044bdd74ba0"
+  },
+  {
+    "case": "back-ui-gate-open",
+    "pixel": [
+      247,
+      0,
+      0
+    ],
+    "sha256": "c65e56869c3b7fb34e94a8b8dac9f365743dfffcdd131a68c2a13e7c94bf6a18"
+  },
+  {
+    "case": "back-ui-order",
+    "pixel": [
+      126,
+      200,
+      178
+    ],
+    "sha256": "34a8740e489279c4062721342e16d643546ed4665ddee70915968b9c7966d282"
+  }
+]

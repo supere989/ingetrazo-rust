@@ -381,6 +381,7 @@ fn build_mesh_buffers(
                 final_opacity,
             ];
 
+            let first=if is_xray||source_final_opacity<0.999{transparent.indices.len()}else{opaque.indices.len()};
             let tris = mesh.triangulate_face(f_id);
             if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
             for (p0, p1, p2) in tris {
@@ -394,6 +395,9 @@ fn build_mesh_buffers(
                     opaque.push_triangle(v0, v1, v2);
                 }
             }
+            let order=opaque.indices.len()+transparent.indices.len();
+            let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
+            record_source_back_paint(target,first,order,&face.attrs,shade);
         }
     }
 }
@@ -513,6 +517,7 @@ fn build_group_buffers(
                 final_opacity,
             ];
 
+            let first=if is_xray||source_final_opacity<0.999{transparent.indices.len()}else{opaque.indices.len()};
             let tris = group.mesh.triangulate_face(f_id);
             if (is_xray || source_final_opacity<0.999)&&!tris.is_empty(){transparent.mark_source_opacity(source_final_opacity);}
             for (p0, p1, p2) in tris {
@@ -530,6 +535,9 @@ fn build_group_buffers(
                     opaque.push_triangle(v0, v1, v2);
                 }
             }
+            let order=opaque.indices.len()+transparent.indices.len();
+            let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
+            record_source_back_paint(target,first,order,&face.attrs,shade);
         }
     }
 
@@ -1351,4 +1359,15 @@ fn render_grid_and_axes(
   assert_eq!(visible.opaque_mesh.indices.len(),3);assert!(visible.opaque_mesh.vertices.iter().all(|v|v.position[0]>=3.&&v.position[1]>=2.));assert!(visible.visible_edges.vertices.is_empty());assert!(visible.hidden_edges.vertices.is_empty());
   scene.groups[0].hidden=true;assert!(build_world_surfaces(&scene,&camera,&style).opaque_mesh.indices.is_empty());
  }
+}
+
+// Original viewport _bucket_back_face: explicit back paint only; opacity<.999
+// makes the front copy front-only. Texture-backed runs remain a separate GPU gate.
+fn record_source_back_paint(buffer:&mut MeshRenderBuffer,first:usize,order:usize,attrs:&std::collections::HashMap<String,serde_json::Value>,shade:f32){
+ let count=buffer.indices.len()-first;if count==0{return;}let Some(back)=attrs.get("back").and_then(|v|v.as_object())else{return;};
+ let opacity=back.get("opacity").and_then(|v|v.as_f64()).unwrap_or(1.);
+ let color=back.get("color").and_then(|v|v.as_array()).filter(|c|c.len()>=3);
+ let texture=back.get("texture").and_then(|v|v.get("path")).and_then(|v|v.as_str()).is_some();
+ if (color.is_some()||texture)&&opacity<0.999 {buffer.source_front_cull.push((first,count));}
+ if let Some(c)=color {let color=[0,1,2].map(|i|(c[i].as_f64().unwrap_or(0.)as f32*shade).clamp(0.,1.));buffer.source_back_paints.push(crate::buffer::SourceBackPaint{first,count,order,color,opacity});}
 }

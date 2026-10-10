@@ -66,11 +66,16 @@ impl Vertex {
     }
 }
 
+/// CPU paint metadata for a contiguous face span; never uploaded.
+#[derive(Clone, Debug, PartialEq)]
+pub struct SourceBackPaint {pub first:usize,pub count:usize,pub order:usize,pub color:[f32;3],pub opacity:f64}
 /// Mesh render buffer storing indexed triangle data.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MeshRenderBuffer {
     /// CPU-only exact opacity change spans (index offset, source f64). Never uploaded.
     pub source_opacity_runs: Vec<(usize, f64)>,
+    pub source_front_cull: Vec<(usize,usize)>,
+    pub source_back_paints: Vec<SourceBackPaint>,
     pub vertices: Vec<Vertex>,
     pub indices: Vec<u32>,
 }
@@ -79,6 +84,7 @@ impl MeshRenderBuffer {
     pub fn new() -> Self {
         Self {
             source_opacity_runs: Vec::new(),
+            source_front_cull:Vec::new(),source_back_paints:Vec::new(),
             vertices: Vec::new(),
             indices: Vec::new(),
         }
@@ -87,6 +93,7 @@ impl MeshRenderBuffer {
     pub fn with_capacity(vert_cap: usize, ind_cap: usize) -> Self {
         Self {
             source_opacity_runs: Vec::new(),
+            source_front_cull:Vec::new(),source_back_paints:Vec::new(),
             vertices: Vec::with_capacity(vert_cap),
             indices: Vec::with_capacity(ind_cap),
         }
@@ -94,6 +101,7 @@ impl MeshRenderBuffer {
 
     pub fn clear(&mut self) {
         self.source_opacity_runs.clear();
+        self.source_front_cull.clear();self.source_back_paints.clear();
         self.vertices.clear();
         self.indices.clear();
     }
@@ -136,6 +144,8 @@ impl MeshRenderBuffer {
     pub fn append(&mut self, other: &MeshRenderBuffer) {
         let base = self.vertices.len() as u32;
         let offset=self.indices.len();
+        self.source_front_cull.extend(other.source_front_cull.iter().map(|&(first,count)|(offset+first,count)));
+        self.source_back_paints.extend(other.source_back_paints.iter().cloned().map(|mut p|{p.first+=offset;p.order+=offset;p}));
         self.source_opacity_runs.extend(other.source_opacity_runs.iter().map(|&(index,alpha)|(offset+index,alpha)));
         self.vertices.extend_from_slice(&other.vertices);
         self.indices.extend(other.indices.iter().map(|&idx| base + idx));
