@@ -12,5 +12,7 @@
     "Literal recipe hash and mandatory three-sheet/six-region inventory enforced",
     "Whole-item background/glyph/decoration order validated by six independent exact regions"
   ],
-  "combined_workspace": "647 PASS, 0 FAIL, 2 ignored"
+  "combined_workspace": "647 PASS, 0 FAIL, 2 ignored",
+  "non_raw_host_compatibility": "Hosts without installed raw provider retain preexisting egui text display. Installed-provider errors remain explicit. Native Metal exact source-text upload remains OPEN.",
+  "post_647_change": "Backend capability selection requires focused GUI compilation before publication"
 }

@@ -303,9 +303,15 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{
                     let mut strings=d.get_temp::<Vec<String>>(egui::Id::new("pdf-ui-canvas-fields")).unwrap_or_default();strings.push(display.to_string());d.insert_temp(egui::Id::new("pdf-ui-canvas-fields"),strings);
                 });}
-                let painted_rect=match app.composer_state.text_canvas.paint(&painter,&app.scene.sheets[sheet_idx],txt,display,app.model_revision,app.scene.version,zoom,paper_rect.min,&mut app.composer_state.paper_text.borrow_mut()) {
+                let painted_rect=if !crate::paper_raw_texture::installed(painter.ctx()) {
+                    // Preserve the existing display on hosts whose native raw upload
+                    // path is not implemented yet; this is not exact source parity.
+                    painter.text(p,egui::Align2::LEFT_TOP,display,
+                        FontId::proportional((txt.font_size_pt as f32 * zoom * 0.4).max(10.0)),
+                        Color32::from_rgb(15,15,20))
+                } else {match app.composer_state.text_canvas.paint(&painter,&app.scene.sheets[sheet_idx],txt,display,app.model_revision,app.scene.version,zoom,paper_rect.min,&mut app.composer_state.paper_text.borrow_mut()) {
                     Ok(rect)=>rect,Err(error)=>{app.status_message=error.clone();painter.text(p,egui::Align2::LEFT_TOP,format!("Text painter: {error}"),FontId::proportional(10.),Color32::DARK_RED)},
-                };
+                }};
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|{let mut rects=d.get_temp::<Vec<egui::Rect>>(egui::Id::new("pdf-ui-canvas-text-rects")).unwrap_or_default();rects.push(painted_rect);d.insert_temp(egui::Id::new("pdf-ui-canvas-text-rects"),rects);});}
                 if is_selected {
                     let text_rect = Rect::from_min_size(p, Vec2::new(60.0 * zoom, 12.0 * zoom));

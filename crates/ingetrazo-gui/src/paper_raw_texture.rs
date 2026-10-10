@@ -7,6 +7,8 @@ use egui::{Context,TextureHandle,TextureId};
 #[derive(Default)]struct Pending{images:HashMap<TextureId,Image>,bytes:usize,published:u64,published_bytes:u64,acknowledged:u64}
 #[derive(Clone,Default)]struct Uploads(Arc<Mutex<Pending>>);
 fn key()->egui::Id{egui::Id::new("source-paper-encoded-rgba8")}
+/// Backend capability, distinct from runtime queue health.
+pub(crate)fn installed(ctx:&Context)->bool{ctx.data(|d|d.get_temp::<Uploads>(key()).is_some())}
 pub(crate)fn install(ctx:&Context){ctx.data_mut(|d|d.insert_temp(key(),Uploads::default()));}
 fn provider(ctx:&Context)->Result<Uploads,String>{ctx.data(|d|d.get_temp(key())).ok_or_else(||"Native source RGBA8 texture provider unavailable".into())}
 pub(crate)fn create(ctx:&Context,size:[usize;2],pixels:Vec<u8>)->Result<TextureHandle,String>{
