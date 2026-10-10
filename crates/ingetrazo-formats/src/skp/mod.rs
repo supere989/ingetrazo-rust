@@ -60,6 +60,8 @@ pub struct Instance {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Definition {
     #[serde(default)]
+    pub image: bool,
+    #[serde(default)]
     pub face_order: Vec<u64>,
     pub name: String,
     pub vertices: BTreeMap<u64, [f64; 3]>,
@@ -152,6 +154,10 @@ pub fn parse_skp(path: &Path) -> Result<Payload, SkpError> {
 fn point(p: [f64; 3], x: DMat4) -> DVec3 {
     let v = x.transform_point3(DVec3::from_array(p) * 0.0254);
     DVec3::new(v.x as f32 as f64, v.y as f32 as f64, v.z as f32 as f64)
+}
+// Image quads use QMatrix4x4.map(QVector3D), unlike the ordinary NumPy batch.
+fn image_point(p:[f64;3],x:DMat4)->DVec3{
+ let p=p.map(|v|(v*0.0254)as f32);let m=x.to_cols_array();DVec3::from_array(std::array::from_fn(|r|(((m[r]as f32*p[0]+m[4+r]as f32*p[1])+m[8+r]as f32*p[2])+m[12+r]as f32)as f64))
 }
 fn matrix(m: &[f64; 12]) -> DMat4 {
     DMat4::from_cols_array(&[
@@ -351,15 +357,16 @@ fn collect(
             d.unsupported.iter().cloned().collect::<Vec<_>>().join(", "),
         ));
     }
-    if d.billboard {
+    if d.billboard && !d.image {
         return Err(SkpError::Unsupported("face-camera component".into()));
     }
+    let image_bounds=if d.image {textures::image_bounds(d)?}else{None};
     let mut weld = ImportWeld::from_mesh(mesh);
     for (face_id, face) in &d.faces {
-        let flip = face.flags.material.is_none() && face.back_material.is_some();
-        let material = face.flags.material.or(face.back_material).or(inh);
+        let flip = !d.image && face.flags.material.is_none() && face.back_material.is_some();
+        let material = if d.image {face.flags.material.or(inh)} else {face.flags.material.or(face.back_material).or(inh)};
         let mut a = attrs(p, material)?;
-        if !flip {
+        if !flip && !d.image {
             let back = face.back_material.or(inh);
             if let Some(back) = back {
                 a.insert(
@@ -374,7 +381,7 @@ fn collect(
         }
         // Pinned OpenSKP Face.layer is a raw id; the frozen adapter preserves
         // that numeric value. Instance-inherited layers are resolved names.
-        let lay = if let Some(id) = face.flags.layer {
+        let lay = if d.image {None} else if let Some(id) = face.flags.layer {
             a.insert("layer".into(), serde_json::json!(id));
             None
         } else {
@@ -391,21 +398,21 @@ fn collect(
             a.insert("layer".into(), serde_json::json!(l));
         }
         let mut loops = Vec::new();
-        for lp in &face.loops {
+        for lp in face.loops.iter().take(if d.image {1} else {usize::MAX}) {
             let mut points = ring(d, lp)?;
             if flip {
                 points.reverse();
             }
             let vertices = points
                 .into_iter()
-                .map(|v| weld.vertex(mesh, point(v, x)))
+                .map(|v| weld.vertex(mesh, if d.image {image_point(v,x)}else{point(v, x)}))
                 .collect::<Vec<_>>();
             if vertices.iter().copied().collect::<HashSet<_>>().len() < 3 {
                 return Err(SkpError::Invalid("Degenerate welded face".into()));
             }
             loops.push(vertices);
         }
-        textures::bake(
+        if d.image {textures::bake_image(&mut a,d,face,&loops[0],mesh,image_bounds)?;} else {textures::bake(
             &mut a,
             face,
             d,
@@ -413,7 +420,7 @@ fn collect(
             mesh,
             flip,
             projected.contains(face_id),
-        )?;
+        )?;}
         let holes = loops.split_off(1);
         let f = mesh
             .add_face(loops.remove(0), holes)
@@ -422,7 +429,7 @@ fn collect(
         mesh.faces[f].layer = lay;
     }
     // The frozen adapter softens flagged existing boundary edges, including hidden.
-    for e in d.edges.values() {
+    for e in d.edges.values().filter(|_|!d.image) {
         if e.flags.display & 0x19 == 0 {
             continue;
         }

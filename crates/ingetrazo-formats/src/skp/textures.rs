@@ -595,3 +595,15 @@ pub(super) fn tint_legacy(
         .map_err(|_| SkpError::Invalid("Legacy tint PNG encode/admission".into()))?;
     Ok(Some(bytes.0))
 }
+
+/// The image entity samples the whole LOCAL quad once, independent of placement.
+pub(super) fn image_bounds(d:&Definition)->Result<Option<([f64;2],[f64;2])>,SkpError>{
+ let mut bounds:Option<([f64;2],[f64;2])>=None;
+ for face in d.faces.values(){if let Some(lp)=face.loops.first(){for p in ring(d,lp)?{let(lo,hi)=bounds.get_or_insert(([p[0],p[1]],[p[0],p[1]]));for k in 0..2{lo[k]=lo[k].min(p[k]);hi[k]=hi[k].max(p[k]);}}}}
+ Ok(bounds)
+}
+pub(super) fn bake_image(attrs:&mut HashMap<String,serde_json::Value>,d:&Definition,face:&Face,outer:&[usize],mesh:&Mesh,bounds:Option<([f64;2],[f64;2])>)->Result<(),SkpError>{
+ let Some(tex)=attrs.get_mut("texture")else{return Ok(());};
+ let Some((lo,hi))=bounds else{return Ok(());};let span=std::array::from_fn::<_,2,_>(|k|if hi[k]==lo[k]{1.}else{hi[k]-lo[k]});
+ let raw=ring(d,&face.loops[0])?;let uv=raw.iter().map(|p|[(p[0]-lo[0])/span[0],(p[1]-lo[1])/span[1]]).collect::<Vec<_>>();let points=outer.iter().map(|&i|mesh.vertices[i].position).collect::<Vec<_>>();if let Some(map)=fit(&points,&uv){tex["uvw"]=serde_json::json!(map);}Ok(())
+}

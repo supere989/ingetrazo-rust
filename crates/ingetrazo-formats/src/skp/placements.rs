@@ -89,7 +89,7 @@ fn subtree(
         return Err(SkpError::Invalid("Cyclic definition placement".into()));
     }
     let d = definition(p, id)?;
-    if d.billboard || !d.unsupported.is_empty() {
+    if (d.billboard && !d.image) || !d.unsupported.is_empty() {
         return Err(SkpError::Unsupported(if d.billboard {
             "face-camera definition".into()
         } else {
@@ -141,6 +141,8 @@ struct Planner<'a> {
     proto_order: Vec<Key>,
     proto_places: HashMap<Key, Vec<Place>>,
     tags: Vec<Place>,
+    images: Vec<Place>,
+    cutouts: HashMap<String, bool>,
 }
 impl Planner<'_> {
     fn collect(
@@ -175,6 +177,9 @@ impl Planner<'_> {
             depth,
             &self.projected[&key],
         )?;
+        if d.image {
+            return Ok(());
+        }
         for ins in &d.instances {
             let child = definition(self.p, ins.definition)?;
             let next = product(x, matrix(&ins.matrix));
@@ -187,6 +192,10 @@ impl Planner<'_> {
                 paint: ins.flags.material.or(paint),
                 layer: ins.flags.layer.or(layer),
             };
+            if child.image {
+                self.images.push(place);
+                continue;
+            }
             if child.billboard || child.unsupported.contains("image definition") {
                 return Err(SkpError::Unsupported(
                     "image/billboard subtree extraction".into(),
@@ -244,7 +253,10 @@ impl Planner<'_> {
             };
             let mut g = Group::with_mesh(name, mesh);
             g.layer = layer_name(self.p, place.layer)?;
-            if place.x != DMat4::IDENTITY {
+            if d.image {
+                g.billboard = mesh_image_cutout(self.p, &g.mesh, &mut self.cutouts)?;
+            }
+            if !d.image && place.x != DMat4::IDENTITY {
                 g.native_document = serde_json::json!({"axes":place.x.to_cols_array()});
             }
             scene.groups.push(g);
@@ -351,12 +363,18 @@ pub(super) fn append(p: &Payload, scene: &mut Scene) -> Result<(), SkpError> {
     }
     for (&id, &uses) in &c.uses {
         let n = c.polys[&id];
-        if uses >= 2 && !c.tagged[&id] && n >= 60 && n.saturating_mul(uses - 1) >= 400 {
+        if !definition(p, id)?.image
+            && uses >= 2
+            && !c.tagged[&id]
+            && n >= 60
+            && n.saturating_mul(uses - 1) >= 400
+        {
             ids.insert(id);
         }
     }
     for ins in &p.root.instances {
-        if c.uses[&ins.definition] == 1
+        if !definition(p, ins.definition)?.image
+            && c.uses[&ins.definition] == 1
             && !c.tagged[&ins.definition]
             && !has_proto(p, ins.definition, &ids)?
         {
@@ -370,6 +388,8 @@ pub(super) fn append(p: &Payload, scene: &mut Scene) -> Result<(), SkpError> {
         proto_order: Vec::new(),
         proto_places: HashMap::new(),
         tags: Vec::new(),
+        images: Vec::new(),
+        cutouts: HashMap::new(),
     };
     for ins in &p.root.instances {
         let place = Place {
@@ -378,7 +398,9 @@ pub(super) fn append(p: &Payload, scene: &mut Scene) -> Result<(), SkpError> {
             paint: ins.flags.material,
             layer: ins.flags.layer,
         };
-        if pl.ids.contains(&ins.definition) {
+        if definition(p, ins.definition)?.image {
+            pl.images.push(place);
+        } else if pl.ids.contains(&ins.definition) {
             pl.record(vec![place]);
         } else {
             pl.flat_group(&place, scene)?;
@@ -393,6 +415,10 @@ pub(super) fn append(p: &Payload, scene: &mut Scene) -> Result<(), SkpError> {
                 "Tagged placement admission exceeded".into(),
             ));
         }
+        pl.flat_group(&place, scene)?;
+    }
+    let images = std::mem::take(&mut pl.images);
+    for place in images {
         pl.flat_group(&place, scene)?;
     }
     let mut protos = HashMap::new();
@@ -513,4 +539,42 @@ fn canonical(value: serde_json::Value) -> serde_json::Value {
         }
         v => v,
     }
+}
+
+fn mesh_image_cutout(
+    p: &Payload,
+    mesh: &Mesh,
+    cache: &mut HashMap<String, bool>,
+) -> Result<bool, SkpError> {
+    let Some(embed) = mesh.faces.iter().find_map(|f| {
+        f.attrs
+            .get("texture")
+            .and_then(|t| t.get("embed"))
+            .and_then(|v| v.as_str())
+    }) else {
+        return Ok(false);
+    };
+    if let Some(&value) = cache.get(embed) {
+        return Ok(value);
+    }
+    let Some(tex) = p
+        .materials
+        .values()
+        .filter_map(|m| m.texture.as_ref())
+        .find(|t| t.archive_name == embed)
+    else {
+        return Ok(false);
+    };
+    let decoded = image::load_from_memory(&tex.bytes)
+        .map_err(|e| SkpError::Invalid(format!("Image cutout decode: {e}")))?
+        .to_rgba8();
+    // Qt FastTransformation samples pixel centres; test the same 32x32
+    // indices directly, avoiding a temporary resampled image allocation.
+    let value=(0u64..32).any(|y|(0u64..32).any(|x|{
+        let sx=((2*x+1)*u64::from(decoded.width())/64)as u32;
+        let sy=((2*y+1)*u64::from(decoded.height())/64)as u32;
+        decoded.get_pixel(sx,sy)[3]<32
+    }));
+    cache.insert(embed.to_owned(), value);
+    Ok(value)
 }

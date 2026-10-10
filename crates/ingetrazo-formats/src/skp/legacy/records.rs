@@ -397,6 +397,30 @@ impl Archive<'_> {
             billboard,
         })
     }
+    pub(super) fn read_image(&mut self) -> Result<Instance, SkpError> {
+        self.preamble()?;
+        let flags = self.drawbase()?;
+        let (definition, _) = self
+            .object(Some("CComponentDefinition"))?
+            .ok_or_else(|| SkpError::Invalid("Null image definition".into()))?;
+        if self.object_classes.get(&definition).map(String::as_str) != Some("CComponentDefinition")
+        {
+            return Err(SkpError::Invalid("Image definition class".into()));
+        }
+        let mut matrix = [0.; 12];
+        for v in &mut matrix {
+            *v = self.r.f64()?;
+        }
+        self.r.f64()?;
+        self.string()?;
+        self.r.raw(16)?;
+        Ok(Instance {
+            definition: definition as u64,
+            name: String::new(),
+            matrix,
+            flags,
+        })
+    }
     pub(super) fn read_instance(&mut self) -> Result<Instance, SkpError> {
         self.preamble()?;
         let flags = self.drawbase()?;

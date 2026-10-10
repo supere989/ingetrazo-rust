@@ -19,6 +19,7 @@ enum Object {
     Named(String, serde_json::Map<String, serde_json::Value>),
     Definition(records::DefinitionRecord),
     Instance(Instance),
+    Image(Instance),
     Auxiliary,
     Annotation(records::AnnotationRecord),
     Curve(Option<[f64; 14]>),
@@ -587,6 +588,7 @@ impl<'a> Archive<'a> {
             }
             "CComponentDefinition" => Object::Definition(self.read_definition()?),
             "CComponentInstance" | "CGroup" => Object::Instance(self.read_instance()?),
+            "CImage" => Object::Image(self.read_image()?),
             "CCamera" => {
                 self.r.raw(137)?;
                 self.r.u16()?;
@@ -940,12 +942,14 @@ fn model(
             }
         }
     }
+    let image_ids=ar.slots.values().filter_map(|slot|match slot {Slot::Object(o)=>match o.as_ref(){Object::Image(i)=>Some(i.definition),_=>None},_=>None}).collect::<HashSet<_>>();
     for (&id, slot) in &ar.slots {
         if let Slot::Object(object) = slot {
             if let Object::Definition(definition) = object.as_ref() {
                 let mut def = Definition {
                     name: definition.name.clone(),
                     billboard: definition.billboard,
+                    image:image_ids.contains(&(id as u64)),
                     ..Definition::default()
                 };
                 charge_output(
@@ -1068,7 +1072,7 @@ fn fill_definition(
                 }
             }
             Object::Edge(_) => add_edge(def, id as u64, slots, decoded)?,
-            Object::Instance(instance) => {
+            Object::Instance(instance) | Object::Image(instance) => {
                 charge_output(decoded, instance.name.capacity().saturating_add(512))?;
                 def.instances.push(instance.clone());
             }
