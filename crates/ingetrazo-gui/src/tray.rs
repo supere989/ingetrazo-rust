@@ -573,23 +573,31 @@ fn render_terrain_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 }
 
 fn render_ai_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
-    ui.heading(tr("AI Modeler"));
-    ui.label(egui::RichText::new(tr("Generative CAD & Geometric Synthesis")).small().color(egui::Color32::from_rgb(160, 160, 170)));
-    ui.separator();
-
-    ui.label(tr("Design Prompt:"));
-    ui.text_edit_multiline(&mut app.console_input);
-
-    ui.add_space(4.0);
-    ui.horizontal(|ui| {
-        if ui.button(tr("Generate 3D Geometry")).clicked() {
-            app.run_script("add_cube");
-            app.status_message = tr("Generated parametric 3D structure");
-        }
-        if ui.button(tr("Explain Selected Geometry")).clicked() {
-            app.status_message = format!("Selected {} entities analyzed", app.scene.selection.len());
-        }
+    use ingetrazo_core::ai::PROVIDERS;
+    ui.heading(tr("AI Assistant"));
+    let ai = &mut app.ai_session;
+    let mut provider = ai.settings.provider.clone();
+    egui::ComboBox::from_id_salt("ai_provider").selected_text(&provider).show_ui(ui, |ui| {
+        ui.selectable_value(&mut provider, "auto".into(), "Auto (by key prefix)");
+        for p in PROVIDERS { ui.selectable_value(&mut provider,p.into(),p); }
     });
+    if provider != ai.settings.provider { ai.settings.switch_provider(&provider); }
+    ui.label("API key");
+    ui.add(egui::TextEdit::singleline(&mut ai.settings.api_key).password(true));
+    ui.label("Model");
+    ui.text_edit_singleline(&mut ai.settings.model);
+    ui.label(format!("Effective: {} / {}", ai.settings.effective_provider(), ai.settings.effective_model()));
+    if ai.settings.effective_provider()=="ollama" { ui.label("Server");ui.text_edit_singleline(&mut ai.settings.local_url); }
+    ui.checkbox(&mut ai.settings.screenshots,"Send viewport screenshots");
+    ui.separator();
+    for message in &ai.messages {ui.label(format!("{}: {}",message.role,message.text));}
+    ui.text_edit_multiline(&mut ai.prompt);
+    if ui.button("Stage request locally").clicked() {
+        if let Err(error)=ai.stage_prompt() {ai.status=error;}
+    }
+    if ui.button("Clear conversation").clicked() {ai.messages.clear();ai.status.clear();}
+    ui.label(&ai.status);
+    ui.label("Provider transport, live bridge and Python recipe execution are pending.");
 }
 
 fn render_render_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {

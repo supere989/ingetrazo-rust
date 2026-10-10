@@ -70,3 +70,5 @@ pub mod image_plane;
 pub mod walkthrough;
 
 pub mod visible_ray_index;
+
+pub mod ai;
