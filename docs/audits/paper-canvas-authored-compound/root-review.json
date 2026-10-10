@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "independent_pixel_differences": {
+    "native": [
+      0,
+      0,
+      0
+    ],
+    "index-order-negative": [
+      0,
+      0,
+      420
+    ]
+  },
+  "method": "Recomputed full paper/shadow ROI from actual state, compared every pixel and verified warm counters and current source hashes",
+  "initial_review_correction": "Whole window equality included application chrome absent from source scene; review corrected to documented paper/shadow scope without changing artifacts or tolerance",
+  "scope": "Three authored Text compound paper views; full Canvas/platform acceptance remains open"
+}

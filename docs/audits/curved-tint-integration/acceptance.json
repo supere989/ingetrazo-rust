@@ -1,0 +1,11 @@
+{
+  "source": "b1960ca1091cb03d62f4792883de752abbec48c6",
+  "workspace": {
+    "passed": 675,
+    "failed": 0,
+    "ignored": 2,
+    "summaries": 29,
+    "exit_code": 0
+  },
+  "scope": "One combined locked workspace lib/tests run; fresh merged legacy texture replay pending; standalone interpreter and Metal branch excluded"
+}
