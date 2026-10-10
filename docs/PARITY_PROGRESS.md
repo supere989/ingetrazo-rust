@@ -1,6 +1,6 @@
 # Rust parity progress tracker
 
-Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_Angeles). Baseline Rust commit: `68368964fd5625f96ab5c705c43cdc13e402a6bd`. Original Python baseline: submodule `6be29fe437a7cd992d4e079f71720821b25216b9`, version 0.3.15. This compares the pinned original, not today's upstream HEAD.
+Initial audit: 2026-10-09; latest integration review: 2026-10-10 (America/Los_Angeles). Baseline Rust commit: `68368964fd5625f96ab5c705c43cdc13e402a6bd`. Original Python baseline: submodule `6be29fe437a7cd992d4e079f71720821b25216b9`, source version 0.5.7 (`ingetrazo/core/version.py`). The Rust workspace package version is 0.3.15. This compares the pinned original, not today's upstream HEAD.
 
 CI correction (2026-10-10): reviewed component acceptance fixture now follows actual original cleared-selection and advancing-revision ownership. Root fresh complete component oracle passes; historical Scene-equality failure retained in docs/audits/component-ci-history-presentation. This changes fixture expectations only and does not close full history or release CI gates.
 

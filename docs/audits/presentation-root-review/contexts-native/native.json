@@ -1,0 +1,866 @@
+{
+  "folded": {
+    "entry": {
+      "redo": 0,
+      "shadows": {
+        "darkness": 0.63,
+        "day": 19,
+        "enabled": true,
+        "hour": 13,
+        "minute": 25,
+        "month": 7,
+        "utc_offset": -5
+      },
+      "style": {
+        "back_color": null,
+        "back_edges": true,
+        "background": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "edge_color": [
+          0.123456789,
+          0.234567891,
+          0.345678912
+        ],
+        "edges": false,
+        "face_mode": "shaded",
+        "front_color": [
+          0.812345678,
+          0.723456789,
+          0.634567891
+        ],
+        "ground_color": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "name": "Authored",
+        "profiles": false,
+        "section_fill": false,
+        "section_fill_color": [
+          0.25,
+          0.35,
+          0.45
+        ],
+        "sky": false,
+        "sky_color": [
+          0.7,
+          0.8,
+          0.9
+        ]
+      },
+      "undo": 0
+    },
+    "states": [
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      },
+      {
+        "redo": 1,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 0
+      },
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      }
+    ]
+  },
+  "nested_folded": {
+    "entry": {
+      "redo": 0,
+      "shadows": {
+        "darkness": 0.63,
+        "day": 19,
+        "enabled": true,
+        "hour": 13,
+        "minute": 25,
+        "month": 7,
+        "utc_offset": -5
+      },
+      "style": {
+        "back_color": null,
+        "back_edges": true,
+        "background": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "edge_color": [
+          0.123456789,
+          0.234567891,
+          0.345678912
+        ],
+        "edges": false,
+        "face_mode": "shaded",
+        "front_color": [
+          0.812345678,
+          0.723456789,
+          0.634567891
+        ],
+        "ground_color": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "name": "Authored",
+        "profiles": false,
+        "section_fill": false,
+        "section_fill_color": [
+          0.25,
+          0.35,
+          0.45
+        ],
+        "sky": false,
+        "sky_color": [
+          0.7,
+          0.8,
+          0.9
+        ]
+      },
+      "undo": 0
+    },
+    "states": [
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      },
+      {
+        "redo": 1,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 0
+      },
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      }
+    ]
+  },
+  "nested_ordinary": {
+    "entry": {
+      "redo": 0,
+      "shadows": {
+        "darkness": 0.63,
+        "day": 19,
+        "enabled": true,
+        "hour": 13,
+        "minute": 25,
+        "month": 7,
+        "utc_offset": -5
+      },
+      "style": {
+        "back_color": null,
+        "back_edges": true,
+        "background": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "edge_color": [
+          0.123456789,
+          0.234567891,
+          0.345678912
+        ],
+        "edges": false,
+        "face_mode": "shaded",
+        "front_color": [
+          0.812345678,
+          0.723456789,
+          0.634567891
+        ],
+        "ground_color": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "name": "Authored",
+        "profiles": false,
+        "section_fill": false,
+        "section_fill_color": [
+          0.25,
+          0.35,
+          0.45
+        ],
+        "sky": false,
+        "sky_color": [
+          0.7,
+          0.8,
+          0.9
+        ]
+      },
+      "undo": 0
+    },
+    "states": [
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      },
+      {
+        "redo": 1,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 0
+      },
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      }
+    ]
+  },
+  "ordinary": {
+    "entry": {
+      "redo": 0,
+      "shadows": {
+        "darkness": 0.63,
+        "day": 19,
+        "enabled": true,
+        "hour": 13,
+        "minute": 25,
+        "month": 7,
+        "utc_offset": -5
+      },
+      "style": {
+        "back_color": null,
+        "back_edges": true,
+        "background": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "edge_color": [
+          0.123456789,
+          0.234567891,
+          0.345678912
+        ],
+        "edges": false,
+        "face_mode": "shaded",
+        "front_color": [
+          0.812345678,
+          0.723456789,
+          0.634567891
+        ],
+        "ground_color": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "name": "Authored",
+        "profiles": false,
+        "section_fill": false,
+        "section_fill_color": [
+          0.25,
+          0.35,
+          0.45
+        ],
+        "sky": false,
+        "sky_color": [
+          0.7,
+          0.8,
+          0.9
+        ]
+      },
+      "undo": 0
+    },
+    "states": [
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      },
+      {
+        "redo": 1,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 0
+      },
+      {
+        "redo": 0,
+        "shadows": {
+          "darkness": 0.63,
+          "day": 19,
+          "enabled": false,
+          "hour": 13,
+          "minute": 25,
+          "month": 7,
+          "utc_offset": -5
+        },
+        "style": {
+          "back_color": null,
+          "back_edges": false,
+          "background": [
+            0.4,
+            0.5,
+            0.6
+          ],
+          "edge_color": [
+            0.123456789,
+            0.234567891,
+            0.345678912
+          ],
+          "edges": false,
+          "face_mode": "wireframe",
+          "front_color": [
+            0.812345678,
+            0.723456789,
+            0.634567891
+          ],
+          "ground_color": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "name": "Authored",
+          "profiles": false,
+          "section_fill": false,
+          "section_fill_color": [
+            0.25,
+            0.35,
+            0.45
+          ],
+          "sky": false,
+          "sky_color": [
+            0.7,
+            0.8,
+            0.9
+          ]
+        },
+        "undo": 1
+      }
+    ]
+  }
+}

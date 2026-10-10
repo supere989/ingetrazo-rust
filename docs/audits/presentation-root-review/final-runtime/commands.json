@@ -1,0 +1,87 @@
+{
+  "source_revision": "900b71255868ff0f2ac49e97d926d4c76ad1d91d",
+  "rows": [
+    {
+      "command": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "scripts/probe-python-document-presentation.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/original"
+      ],
+      "returncode": 0,
+      "log": "command-0.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "scripts/probe-python-presentation-contexts.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/original",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/contexts-original.json"
+      ],
+      "returncode": 0,
+      "log": "command-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "document_presentation_fixture",
+        "--example",
+        "presentation_context_fixture",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-2.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-presentation-root-target/debug/examples/document_presentation_fixture",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/original",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/native"
+      ],
+      "returncode": 0,
+      "log": "command-3.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-presentation-root-target/debug/examples/presentation_context_fixture",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/original",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/contexts-native"
+      ],
+      "returncode": 0,
+      "log": "command-4.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check-document-presentation.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/original/original.json",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/native/native.json"
+      ],
+      "returncode": 0,
+      "log": "command-5.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check-presentation-contexts.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/contexts-original.json",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-runtime/contexts-native/native.json"
+      ],
+      "returncode": 0,
+      "log": "command-6.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-7.log"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "source_revision": "900b71255868ff0f2ac49e97d926d4c76ad1d91d",
+  "old_revision": "bf3e2a8962a6a2dda85090c2e4332ec1c1e2e40f",
+  "rows": [
+    {
+      "command": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "scripts/probe-python-presentation-codec.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-codec/original.json"
+      ],
+      "returncode": 0,
+      "log": "command-0.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "ingetrazo-core",
+        "--example",
+        "presentation_codec",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-1.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-presentation-root-target/debug/examples/presentation_codec",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-codec/original.json"
+      ],
+      "returncode": 0,
+      "log": "command-2.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "ingetrazo-core",
+        "--example",
+        "presentation_codec",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-3.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-codec-grammar-root-target/debug/examples/presentation_codec",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-codec/original.json"
+      ],
+      "returncode": 0,
+      "log": "command-4.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check-presentation-codec.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-codec/original.json",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-codec/native.json",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/final-codec/old-grammar.json"
+      ],
+      "returncode": 0,
+      "log": "checker.log"
+    }
+  ]
+}

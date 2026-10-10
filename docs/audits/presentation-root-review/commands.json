@@ -1,0 +1,78 @@
+{
+  "source_revision": "3f360fbd482e887b78b7583b527c59761a7c97f3",
+  "rows": [
+    {
+      "command": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "scripts/probe-python-document-presentation.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/original"
+      ],
+      "returncode": 0,
+      "log": "command-0.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "scripts/probe-python-presentation-contexts.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/original",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/contexts-original.json"
+      ],
+      "returncode": 0,
+      "log": "command-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "document_presentation_fixture",
+        "--example",
+        "presentation_context_fixture",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "command-2.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-presentation-root-target/debug/examples/document_presentation_fixture",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/original",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/native"
+      ],
+      "returncode": 0,
+      "log": "command-3.log"
+    },
+    {
+      "command": [
+        "/tmp/ingetrazo-presentation-root-target/debug/examples/presentation_context_fixture",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/original",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/contexts-native"
+      ],
+      "returncode": 0,
+      "log": "command-4.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check-document-presentation.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/original/original.json",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/native/native.json"
+      ],
+      "returncode": 0,
+      "log": "command-5.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check-presentation-contexts.py",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/contexts-original.json",
+        "/tmp/ingetrazo-presentation-root/docs/audits/presentation-root-review/contexts-native/native.json"
+      ],
+      "returncode": 0,
+      "log": "command-6.log"
+    }
+  ],
+  "full_parity_claim": false
+}
