@@ -9,7 +9,7 @@ pub struct ComponentEditSession {
     original_camera: OrbitCamera,
     pub(crate) original_undo: Vec<Scene>,
     pub(crate) original_redo: Vec<Scene>,
-    group_id: uuid::Uuid,
+    pub(crate) group_id: uuid::Uuid,
     fold_history: bool,
     private_container_mesh: Option<uuid::Uuid>,
     container_bake: Option<glam::DMat4>,
