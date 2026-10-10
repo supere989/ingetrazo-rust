@@ -32,6 +32,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let alt_down = ui.input(|i| i.modifiers.alt);
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
     // Modifier release must retire the temporary lock even outside the canvas.
+    app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
     app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor());
     let model_version=app.scene.version;
     app.active_tool.on_control_state(&mut app.scene,ui.input(|i| i.modifiers.ctrl));

@@ -1,0 +1,1641 @@
+{
+  "provenance": {
+    "rust_commit": "8ab734f6dbb206516764dc60d17f90e8850bec64",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "scope": "Original core.axes.sync/compute_snap, Viewport._project_to_lock_line/_capture_shift_lock and keyReleaseEvent with controlled orthographic pixel/ray callbacks. Source world origin remains0. Five context frames \u00d7seven locked/angular/magnetic/origin/Shift controls. Not full camera/pointer/occlusion/memory proof.",
+  "cases": [
+    {
+      "name": "identity-empty/red-lock",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "red-lock",
+      "candidate": [
+        6.0,
+        5.300000190734863,
+        0.0
+      ],
+      "start": [
+        4.0,
+        5.0,
+        0.0
+      ],
+      "axis": "x",
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          6.0,
+          5.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "identity-empty/weak-red",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "weak-red",
+      "candidate": [
+        6.0,
+        5.010000228881836,
+        0.0
+      ],
+      "start": [
+        4.0,
+        5.0,
+        0.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          6.0,
+          5.010000228881836,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "identity-empty/magnetic-red",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "magnetic-red",
+      "candidate": [
+        6.0,
+        5.010000228881836,
+        0.0
+      ],
+      "start": [
+        4.0,
+        5.0,
+        0.0
+      ],
+      "axis": null,
+      "magnetic": 3.0,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          6.0,
+          5.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "identity-empty/world-origin",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "world-origin",
+      "candidate": [
+        0.019999999552965164,
+        0.009999999776482582,
+        0.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "origin",
+        "axis": null,
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "identity-empty/context-origin",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "context-origin",
+      "candidate": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "origin",
+        "axis": null,
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "identity-empty/shift-held",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "shift-held",
+      "candidate": [
+        6.0,
+        5.5,
+        0.0
+      ],
+      "start": [
+        4.0,
+        5.0,
+        0.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          6.0,
+          5.010000228881836,
+          0.0
+        ],
+        "source_direction": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "reference",
+        "axis": null,
+        "point": [
+          6.0,
+          5.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "identity-empty/shift-released",
+      "frame": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mode": "shift-released",
+      "candidate": [
+        6.0,
+        5.5,
+        0.0
+      ],
+      "start": [
+        4.0,
+        5.0,
+        0.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          6.0,
+          5.010000228881836,
+          0.0
+        ],
+        "source_direction": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          6.0,
+          5.5,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/red-lock",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "red-lock",
+      "candidate": [
+        6.723790168762207,
+        5.057613849639893,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": "x",
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          6.841009616851807,
+          4.7814621925354,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/weak-red",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "weak-red",
+      "candidate": [
+        6.83710241317749,
+        4.7906670570373535,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          6.83710241317749,
+          4.7906670570373535,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/magnetic-red",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "magnetic-red",
+      "candidate": [
+        6.83710241317749,
+        4.7906670570373535,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": 3.0,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          6.841009616851807,
+          4.7814621925354,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/world-origin",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "world-origin",
+      "candidate": [
+        0.019999999552965164,
+        0.009999999776482582,
+        0.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "origin",
+        "axis": null,
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/context-origin",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "context-origin",
+      "candidate": [
+        1.0,
+        -1.0,
+        2.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          1.0,
+          -1.0,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/shift-held",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "shift-held",
+      "candidate": [
+        6.645644187927246,
+        5.2417144775390625,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          6.83710241317749,
+          4.7906670570373535,
+          2.0
+        ],
+        "source_direction": [
+          0.9205048680305481,
+          0.3907311260700226,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "reference",
+        "axis": null,
+        "point": [
+          6.841009616851807,
+          4.7814621925354,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "placed-empty/shift-released",
+      "frame": [
+        1.8410097360610962,
+        0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "shift-released",
+      "candidate": [
+        6.645644187927246,
+        5.2417144775390625,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          6.83710241317749,
+          4.7906670570373535,
+          2.0
+        ],
+        "source_direction": [
+          0.9205048680305481,
+          0.3907311260700226,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          6.645644187927246,
+          5.2417144775390625,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/red-lock",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "red-lock",
+      "candidate": [
+        3.0417709350585938,
+        3.4946892261505127,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": "x",
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          3.1589903831481934,
+          3.2185378074645996,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/weak-red",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "weak-red",
+      "candidate": [
+        3.155083179473877,
+        3.227742910385132,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          3.155083179473877,
+          3.227742910385132,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/magnetic-red",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "magnetic-red",
+      "candidate": [
+        3.155083179473877,
+        3.227742910385132,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": 3.0,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          3.1589903831481934,
+          3.2185378074645996,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/world-origin",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "world-origin",
+      "candidate": [
+        0.019999999552965164,
+        0.009999999776482582,
+        0.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "origin",
+        "axis": null,
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/context-origin",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "context-origin",
+      "candidate": [
+        1.0,
+        -1.0,
+        2.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          1.0,
+          -1.0,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/shift-held",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "shift-held",
+      "candidate": [
+        2.9636247158050537,
+        3.678790330886841,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          3.155083179473877,
+          3.227742910385132,
+          2.0
+        ],
+        "source_direction": [
+          -0.9205048680305481,
+          -0.3907311260700226,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "reference",
+        "axis": null,
+        "point": [
+          3.1589903831481934,
+          3.2185378074645996,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "reflected-nonempty/shift-released",
+      "frame": [
+        -1.8410097360610962,
+        -0.7814622521400452,
+        0.0,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0,
+        2.0,
+        1.0
+      ],
+      "mode": "shift-released",
+      "candidate": [
+        2.9636247158050537,
+        3.678790330886841,
+        2.0
+      ],
+      "start": [
+        5.0,
+        4.0,
+        2.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          3.155083179473877,
+          3.227742910385132,
+          2.0
+        ],
+        "source_direction": [
+          -0.9205048680305481,
+          -0.3907311260700226,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          2.9636247158050537,
+          3.678790330886841,
+          2.0
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/red-lock",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "red-lock",
+      "candidate": [
+        16.411075592041016,
+        2.6514596939086914,
+        2.697780132293701
+      ],
+      "start": [
+        14.708425521850586,
+        1.6028196811676025,
+        3.0
+      ],
+      "axis": "x",
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          16.52829360961914,
+          2.3753082752227783,
+          2.697780132293701
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/weak-red",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "weak-red",
+      "candidate": [
+        16.52438735961914,
+        2.3845133781433105,
+        2.697780132293701
+      ],
+      "start": [
+        14.708425521850586,
+        1.6028196811676025,
+        3.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          16.52438735961914,
+          2.3845133781433105,
+          2.697780132293701
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/magnetic-red",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "magnetic-red",
+      "candidate": [
+        16.52438735961914,
+        2.3845133781433105,
+        2.697780132293701
+      ],
+      "start": [
+        14.708425521850586,
+        1.6028196811676025,
+        3.0
+      ],
+      "axis": null,
+      "magnetic": 3.0,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          16.52829360961914,
+          2.3753082752227783,
+          2.697780132293701
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/world-origin",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "world-origin",
+      "candidate": [
+        0.019999999552965164,
+        0.009999999776482582,
+        0.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "origin",
+        "axis": null,
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/context-origin",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "context-origin",
+      "candidate": [
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          10.708425521850586,
+          -3.3971803188323975,
+          3.0
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/shift-held",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "shift-held",
+      "candidate": [
+        16.332929611206055,
+        2.8355607986450195,
+        2.697780132293701
+      ],
+      "start": [
+        14.708425521850586,
+        1.6028196811676025,
+        3.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          16.52438735961914,
+          2.3845133781433105,
+          2.697780132293701
+        ],
+        "source_direction": [
+          0.9099346399307251,
+          0.3862443268299103,
+          -0.1511099487543106
+        ]
+      },
+      "original": {
+        "kind": "reference",
+        "axis": null,
+        "point": [
+          16.528295516967773,
+          2.3753085136413574,
+          2.697780132293701
+        ]
+      }
+    },
+    {
+      "name": "custom-axes/shift-released",
+      "frame": [
+        1.7605664730072021,
+        0.7473161220550537,
+        -0.2923716902732849,
+        0.0,
+        -1.1721934080123901,
+        2.761514663696289,
+        0.0,
+        0.0,
+        0.5382591485977173,
+        0.22847743332386017,
+        0.9563047885894775,
+        0.0,
+        10.708425521850586,
+        -3.3971803188323975,
+        3.0,
+        1.0
+      ],
+      "mode": "shift-released",
+      "candidate": [
+        16.332929611206055,
+        2.8355607986450195,
+        2.697780132293701
+      ],
+      "start": [
+        14.708425521850586,
+        1.6028196811676025,
+        3.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          16.52438735961914,
+          2.3845133781433105,
+          2.697780132293701
+        ],
+        "source_direction": [
+          0.9099346399307251,
+          0.3862443268299103,
+          -0.1511099487543106
+        ]
+      },
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          16.332929611206055,
+          2.8355607986450195,
+          2.697780132293701
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/red-lock",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "red-lock",
+      "candidate": [
+        5.0,
+        3.299999952316284,
+        1.0
+      ],
+      "start": [
+        7.0,
+        3.0,
+        1.0
+      ],
+      "axis": "x",
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          5.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/weak-red",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "weak-red",
+      "candidate": [
+        5.0,
+        3.009999990463257,
+        1.0
+      ],
+      "start": [
+        7.0,
+        3.0,
+        1.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          5.0,
+          3.009999990463257,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/magnetic-red",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "magnetic-red",
+      "candidate": [
+        5.0,
+        3.009999990463257,
+        1.0
+      ],
+      "start": [
+        7.0,
+        3.0,
+        1.0
+      ],
+      "axis": null,
+      "magnetic": 3.0,
+      "shift_capture": null,
+      "original": {
+        "kind": "axis",
+        "axis": "x",
+        "point": [
+          5.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/world-origin",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "world-origin",
+      "candidate": [
+        0.019999999552965164,
+        0.009999999776482582,
+        0.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "origin",
+        "axis": null,
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/context-origin",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "context-origin",
+      "candidate": [
+        3.0,
+        -2.0,
+        1.0
+      ],
+      "start": null,
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": null,
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          3.0,
+          -2.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/shift-held",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "shift-held",
+      "candidate": [
+        5.0,
+        3.5,
+        1.0
+      ],
+      "start": [
+        7.0,
+        3.0,
+        1.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          5.0,
+          3.009999990463257,
+          1.0
+        ],
+        "source_direction": [
+          -1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "reference",
+        "axis": null,
+        "point": [
+          5.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "skewed-mirror/shift-released",
+      "frame": [
+        -2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.4,
+        1.5,
+        0.0,
+        3.0,
+        -2.0,
+        1.0,
+        1.0
+      ],
+      "mode": "shift-released",
+      "candidate": [
+        5.0,
+        3.5,
+        1.0
+      ],
+      "start": [
+        7.0,
+        3.0,
+        1.0
+      ],
+      "axis": null,
+      "magnetic": null,
+      "shift_capture": {
+        "kind": "axis_inference",
+        "axis": "x",
+        "point": [
+          5.0,
+          3.009999990463257,
+          1.0
+        ],
+        "source_direction": [
+          -1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "original": {
+        "kind": "none",
+        "axis": null,
+        "point": [
+          5.0,
+          3.5,
+          1.0
+        ]
+      }
+    }
+  ]
+}
