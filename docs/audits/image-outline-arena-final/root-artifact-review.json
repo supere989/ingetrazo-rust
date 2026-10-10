@@ -1,0 +1,11 @@
+{
+  "retained_images_independently_compared": true,
+  "three_qt_whole_frames_exact": true,
+  "failed_candidate_old_frame_exact": true,
+  "compiled_old_pose_frame_differs": true,
+  "warm_transfer_allocation_mapping_unchanged": true,
+  "one_chunk_bytes": 72,
+  "one_chunk_uploads": 2,
+  "runtime_repeated": false,
+  "scope": "Retained artifact review; combined source build remains pending"
+}
