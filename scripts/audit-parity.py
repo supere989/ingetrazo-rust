@@ -5,6 +5,10 @@ Run inside devbox from repository root after initializing submodules.
 """
 import json, subprocess, tempfile, zipfile
 from pathlib import Path
+REQUIRED = {"arco-yanque.igz", "banca-pergola-yanque.igz", "luminaria-solar-yanque.igz", "pileta-fuente-yanque.igz"}
+missing = REQUIRED - {p.name for p in Path("ingetrazo/examples").glob("*.igz")}
+if missing:
+    raise SystemExit("Required original fixtures missing: " + ", ".join(sorted(missing)))
 OUT = Path("docs/audits")
 OUT.mkdir(parents=True, exist_ok=True)
 def read_doc(path):

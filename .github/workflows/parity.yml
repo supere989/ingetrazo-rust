@@ -1,0 +1,24 @@
+name: Rust and semantic acceptance
+on: [push, pull_request]
+jobs:
+  compilation-and-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install native build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libwayland-dev libudev-dev libssl-dev pkg-config
+      - name: Check mandatory original fixtures
+        run: python3 -c "from pathlib import Path; names = [\"arco-yanque\", \"banca-pergola-yanque\", \"luminaria-solar-yanque\", \"pileta-fuente-yanque\"]; assert all((Path(\"ingetrazo/examples\") / (n + \".igz\")).is_file() for n in names), \"Missing original fixtures\""
+      - run: cargo test --workspace --locked
+      - run: cargo build --locked -p ingetrazo-cli
+      - name: Semantic document acceptance
+        run: python3 scripts/check-document-parity.py
+      - name: Retain semantic evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semantic-parity-evidence
+          path: docs/audits/document-semantic-evidence.json

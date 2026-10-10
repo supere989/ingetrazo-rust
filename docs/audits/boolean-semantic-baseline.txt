@@ -1,0 +1,48 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling serde_core v1.0.229
+   Compiling autocfg v1.5.1
+   Compiling libc v0.2.190
+   Compiling getrandom v0.4.3
+   Compiling serde v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling either v1.18.0
+   Compiling cfg-if v1.0.5
+   Compiling thiserror v2.0.21
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling log v0.4.34
+   Compiling itertools v0.14.0
+   Compiling num-traits v0.2.19
+   Compiling syn v3.0.6
+   Compiling approx v0.5.1
+   Compiling earcutr v0.5.0
+   Compiling uuid v1.27.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling glam v0.29.3
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-validation/crates/ingetrazo-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.06s
+     Running tests/boolean_acceptance.rs (target/debug/deps/boolean_acceptance-376f5d65fc7ec498)
+
+running 2 tests
+test oracle_rejects_old_copy_and_concatenate_placeholders ... ok
+test overlapping_boxes_have_analytic_boolean_volumes_and_closed_boundaries ... FAILED
+
+failures:
+
+---- overlapping_boxes_have_analytic_boolean_volumes_and_closed_boundaries stdout ----
+
+thread 'overlapping_boxes_have_analytic_boolean_volumes_and_closed_boundaries' (9079) panicked at crates/ingetrazo-core/tests/boolean_acceptance.rs:30:9:
+Union: expected volume 1.5, got 1.9999999999999998
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    overlapping_boxes_have_analytic_boolean_volumes_and_closed_boundaries
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p ingetrazo-core --test boolean_acceptance`
