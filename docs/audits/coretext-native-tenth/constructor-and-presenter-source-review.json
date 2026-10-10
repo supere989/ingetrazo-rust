@@ -1,0 +1,47 @@
+{
+  "constructor": {
+    "merged_source": "cd5d099b",
+    "parser": "ttf-parser0.25.1 tables/head.rs",
+    "parser_sha256": "4965d2761aff7ed22b77d5ee4ad7c63fc17be8e67691239cf4d9a4848d1a50c6",
+    "parser_units_per_em_admission": [
+      16,
+      16384
+    ],
+    "max_admitted_pixels": 4096,
+    "max_u16_advance_fixed": 1073725440,
+    "max_i16_metric_magnitude_fixed": 536870912,
+    "i32_max": 2147483647,
+    "scope": "Read actual pinned parser admission and exact integer arithmetic; casts stay within i32 for admitted FT/SFNT source. Native CT metrics separately refuse absolute values above1e6 before times64. No source change/build needed."
+  },
+  "callback_contract": {
+    "official_handler": "https://developer.apple.com/documentation/metal/mtldrawable/addpresentedhandler(_:)",
+    "official_time": "https://developer.apple.com/documentation/metal/mtldrawable/presentedtime",
+    "source_alignment": "Apple example reads actual callback drawable.presentedTime inside the handler, same as production. Time0 documents not-yet-presented or dropped frame. Keep strict positive timestamp proof and both GPU/callback retirement requirements.",
+    "runtime_boundary": "Tenth actual ARM remains0displayed/12skipped/3pending. More zero-time callback retirements than ninth is only a between-run observation, not causal proof of ownership change."
+  },
+  "retained_noncanvas_controls": [
+    {
+      "path": "docs/audits/metal897-native-result-review/arm/owned-window/result.json",
+      "source": "897079e09744729b1921dcf83cd29e7596e662de",
+      "submitted": 3,
+      "pending": 3,
+      "displayed": 0,
+      "completed_inflight": 3,
+      "scope": "Direct native clear only; actual owned screenshot contains clear pixels. This predates Canvas/font production path."
+    },
+    {
+      "path": "docs/audits/metal-combined-sdk-native-failures/hostmodal-arm-38057000113/owned-window/result.json",
+      "source": "beb2cb2aefd10479407ace2cb920e1ed81b52363",
+      "submitted": 4,
+      "skipped": 1,
+      "pending": 3,
+      "displayed": 0,
+      "completed_inflight": 3,
+      "scope": "Same direct clear presenter failure retained; do not repeat unchanged probe."
+    }
+  ],
+  "conclusion": "No evidence of font producer/compute-specific origin. Actual platform/session versus custom WSI source cause remains unresolved. No visibility/transaction/timing workaround or VM-cause claim.",
+  "new_build": false,
+  "new_capture": false,
+  "cloud_dispatch": false
+}
