@@ -184,7 +184,7 @@ mod tests {
         (c.clone(), PixelViewport::new(&c, 800., 800.))
     }
     #[test]
-    fn pixel_threshold_is_zoom_invariant_and_does_not_pick_behind_camera() {
+    fn pixel_threshold_is_zoom_invariant_and_respects_each_projection_volume() {
         for d in [2., 200.] {
             let (c, v) = view(d);
             let mut s = Scene::new();
@@ -194,7 +194,11 @@ mod tests {
             let p = v.project(DVec3::ZERO).unwrap();
             assert!(hover_edge(&s, &v, p + DVec2::Y * 7.99, 8.).is_some());
             assert!(hover_edge(&s, &v, p + DVec2::Y * 8.01, 8.).is_none());
-            assert!(v.project(c.eye() - c.forward()).is_none());
+            assert!(v.project(c.eye() - c.forward()).is_some());
+            assert!(v.project(c.eye() - c.forward() * (c.zfar * 2.)).is_none());
+            let mut perspective=c.clone();perspective.perspective=true;
+            let perspective=PixelViewport::new(&perspective,800.,800.);
+            assert!(perspective.project(c.eye()-c.forward()).is_none());
         }
     }
     #[test]
