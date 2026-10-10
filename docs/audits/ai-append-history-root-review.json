@@ -3,14 +3,19 @@
     "49c36698",
     "a1e506fe",
     "91a8b945",
-    "a24bfc1d"
+    "a24bfc1d",
+    "8774ac2e"
   ],
   "retained_history_equality": true,
   "scope": "Standalone append journal, not production app history routing",
   "held_findings": [
-    "Undo repeats retain for each appended endpoint and can be quadratic for high degree base vertex; deduplicate touched IDs.",
     "Each command copies all base UUIDs, positions and endpoints: memory scales with base size times history depth; requires shared revision identity design.",
     "Spatial index rebuild allocates after mutation; complete allocation-failure atomicity remains unproved."
   ],
-  "decision": "Retain proof; await corrections before integration."
+  "decision": "Accepted into isolated standalone proof in review branch; production integration held on baseline history memory and allocation atomicity.",
+  "resolved_findings": [
+    "Undo now collects unique touched base IDs before mutation and retains each adjacency once."
+  ],
+  "ai-weld-boundary_independent_retained_equality": true,
+  "ai-append-history_independent_retained_equality": true
 }
