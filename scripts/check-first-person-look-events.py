@@ -6,6 +6,9 @@ s=json.loads(Path(sys.argv[1]).read_text());n=json.loads(Path(sys.argv[2]).read_
 def check(s,n):
  assert [r['name']for r in s['cases']]==names and [r['name']for r in n['cases']]==names
  for a,b in zip(s['cases'],n['cases']):
+  assert len(a['eye'])==len(b['eye'])==len(a['before_eye'])==len(b['before_eye'])==3,'camera vectors must have three coordinates'
+  assert all(math.isfinite(v)for r in (a,b)for k in ('eye','before_eye')for v in r[k])
+  assert all(abs(x-y)<=2e-5 for x,y in zip(a['before_eye'],b['before_eye']))
   diffs=[abs(a[k]-b[k])for k in ['yaw','pitch']]+[abs(x-y)for x,y in zip(a['eye'],b['eye'])]
   assert all(math.isfinite(v)and v<=2e-5 for v in diffs),'existing sourceQtfloat/nativefloat64 camera bound'
   assert a['captured']==False and a['undo']==b['undo']==0
@@ -19,4 +22,8 @@ mutant=json.loads(json.dumps(n));mutant['cases'].pop()
 try:check(s,mutant)
 except AssertionError:pass
 else:raise AssertionError('missing ownership control accepted')
-print(json.dumps(dict(passed=True,named_cases=9,compiled_old_defects_rejected=9,missing_case_rejected=True,scope='actual source viewport QMouseEvent handlers/native egui events; XTEST separately, not hardware or fullnavigation parity')))
+mutant=json.loads(json.dumps(n));mutant['cases'][0]['eye']=[]
+try:check(s,mutant)
+except AssertionError:pass
+else:raise AssertionError('truncated camera vector accepted')
+print(json.dumps(dict(passed=True,named_cases=9,compiled_old_defects_rejected=9,missing_case_rejected=True,truncated_vector_rejected=True,scope='actual source viewport QMouseEvent handlers/native egui events; XTEST separately, not hardware or fullnavigation parity')))
