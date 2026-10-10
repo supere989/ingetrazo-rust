@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Merged interpreter graph lifetime (2026-10-10): fresh merged build matches freshly executed original cycle inventory, seven checker negatives reject, and actual Vertex/Edge payload counts return to zero after collection/teardown. Empty incidence-wrapper replacement matches original identity and no-history behavior. [Root execution](audits/ai-graph-cycle-root/acceptance.json). Full generated topology, callback resurrection, total heap bounds and production scripting remain OPEN.
+
 Combined font/annotation integration (2026-10-10): source `7b7ce751` passes **739 workspace library/integration tests, zero failures, 2 ignored**. [Fresh combined evidence](audits/annotation-font-combined-root/acceptance.json). Fifteen recorded annotation images separately match exactly; real viewport projection/depth, platform and release acceptance remain OPEN.
 
 Merged annotation glyph acceptance (2026-10-10): fresh source `0ed4f0eb` matches all fifteen recorded original operation images exactly, including the former nine-pixel millimetre failure. Native800x600 captures also retain white exterior outside original640x400 canvas. Three metadata/admission tests pass. [Merged evidence](audits/annotation-glyph-merged-root/acceptance.json). This is recorded-operation Vulkan replay; actual source projection/depth, RTX and full models remain OPEN.

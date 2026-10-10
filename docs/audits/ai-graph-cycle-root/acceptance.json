@@ -1,0 +1,12 @@
+{
+  "source": "b98a07a3",
+  "fresh_build_and_execution_exit": 0,
+  "exact_original_native_cycle_inventory": true,
+  "checker_negatives_rejected": 7,
+  "empty_replacement_exact_source_behavior": true,
+  "actual_final_live_vertex_edge_payloads": [
+    0,
+    0
+  ],
+  "scope": "Actual managed payload destruction, held aliases, opaque slot selfcycles, controller scope and empty-wrapper no-op behavior. Generated Mesh.edges topology, finalizer/resurrection, production integration and total heap bounds remain open."
+}

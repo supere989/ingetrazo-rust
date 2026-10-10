@@ -1,0 +1,1 @@
+{"exact_original_native": true, "rejected_mutations": ["opaque_slot_cycles_collected", "external_alias_retains_cycle", "actual_cycle_survives_without_roots_before_gc", "actual_payloads_destroyed_after_gc", "controller_drop_preserves_other_scope", "actual_final_live_payloads", "total_heap_budget_claimed"]}

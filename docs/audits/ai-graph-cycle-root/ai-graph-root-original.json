@@ -1,0 +1,20 @@
+{
+  "generated_face_vertex_edge_cycle_collected": true,
+  "opaque_slot_cycles_collected": [
+    "faces",
+    "layer",
+    "curve",
+    "soft",
+    "hidden"
+  ],
+  "external_alias_retains_cycle": true,
+  "actual_cycle_survives_without_roots_before_gc": true,
+  "actual_payloads_destroyed_after_gc": true,
+  "controller_drop_preserves_other_scope": true,
+  "actual_final_live_payloads": [
+    0,
+    0
+  ],
+  "production_enabled": false,
+  "total_heap_budget_claimed": false
+}

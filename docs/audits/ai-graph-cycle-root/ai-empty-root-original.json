@@ -1,0 +1,12 @@
+{
+  "source_accepts_empty_replacement_without_history": true,
+  "actual_replacement_identity_retained": true,
+  "history_before": [
+    1,
+    0
+  ],
+  "history_after": [
+    1,
+    0
+  ]
+}
