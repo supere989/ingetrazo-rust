@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "cases": [
+    "finish",
+    "undo0",
+    "redo0",
+    "undo1",
+    "redo1",
+    "annotation_only_history",
+    "section_retained",
+    "nested_parked_and_root"
+  ],
+  "negative_controls": [
+    "literal-old-scene-snapshot",
+    "restore-dead-anchor",
+    "discard-added-annotation",
+    "follow-temporary-edit-vertex"
+  ],
+  "scope": "Original Viewport/History command behavior versus Rust application API; no key dispatch/rendered UI, complete annotation family or Metal claim."
+}

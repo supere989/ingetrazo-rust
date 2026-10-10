@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "cases": [
+    "finish",
+    "undo0",
+    "redo0",
+    "undo1",
+    "redo1",
+    "annotation_only_history",
+    "section_retained",
+    "nested_parked_and_root"
+  ],
+  "negative_controls": [
+    "literal-old-scene-snapshot",
+    "restore-dead-anchor",
+    "discard-added-annotation",
+    "follow-temporary-edit-vertex"
+  ],
+  "scope": "Original Viewport/History command behavior versus Rust application API; no key dispatch/rendered UI, complete annotation family or Metal claim.",
+  "provenance": {
+    "rust_commit": "dbe99fc2abd071fe3eff9aceb259547a01041aa8",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  }
+}
