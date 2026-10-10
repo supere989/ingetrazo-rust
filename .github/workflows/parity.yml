@@ -52,6 +52,12 @@ jobs:
           python3 scripts/check-metal-clear-quantization.py docs/audits/metal-native-link-ci/clear-quantization > docs/audits/metal-native-link-ci/clear-quantization-check.log
       - name: Actual native CAMetalLayer presentation and requested resize
         run: target/debug/examples/presentation_probe --automatic > docs/audits/metal-native-link-ci/presentation.log 2>&1
+      - name: Actual same-runner Qt owned clear diagnostic
+        if: always()
+        run: |
+          python3 -m venv .metal-qt-reference-venv
+          .metal-qt-reference-venv/bin/python -m pip install PySide6==6.12.0
+          .metal-qt-reference-venv/bin/python scripts/reference-qt-owned-clear.py --output=docs/audits/metal-native-link-ci/qt-owned-clear > docs/audits/metal-native-link-ci/qt-owned-clear.log 2>&1
       - name: Diagnose only the owned Cocoa window
         if: always()
         run: |
