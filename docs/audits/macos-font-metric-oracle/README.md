@@ -23,3 +23,5 @@ python scripts/check-macos-paper-font-pages.py original-fonts native-font-pages 
 ## Partial diagnostics and mandatory negatives
 
 The checker retains one result for each of the six required names even when native resolution/export refuses. Available pages are still read and compared. Missing/refused cases always keep the overall result false. Each actual source page also passes blank and exactly one decoded-pixel alteration through the identical comparison function; both must refuse. Small actual QImage unit controls passed and are retained; actual macOS PDF/control execution remains pending coordinated native output.
+
+The separate check-macos-paper-font-metrics.py records all six required source/native raw metric and glyph-identity comparisons. It does not compare unkerned raw advances to shaped advances, nor pretend supplementary QTextLayout positions are operative paint_text_mm placement; both remain in diagnostics. It keeps the physical-face and strict whole-page gates separate. Actual native input with the new observations is pending; Python syntax only checked locally.
