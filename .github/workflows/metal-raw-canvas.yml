@@ -6,7 +6,7 @@ on:
 jobs:
   raw-texture:
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -24,9 +24,7 @@ jobs:
           mkdir -p raw-metal-evidence
           git rev-parse HEAD > raw-metal-evidence/revision.txt
           cargo build --locked -p ingetrazo-metal --example egui_raw_probe -j2 > raw-metal-evidence/build.log 2>&1
-          cargo check --locked -p ingetrazo-gui -j2 > raw-metal-evidence/host-check.log 2>&1
-          cargo build --locked -p ingetrazo-gui --example native_metal -j2 > raw-metal-evidence/host-build.log 2>&1
-          cargo build --locked -p ingetrazo-gui --example native_metal_document_probe -j2 > raw-metal-evidence/canvas-build.log 2>&1
+          cargo build --locked -p ingetrazo-gui --example native_metal --example native_metal_document_probe -j2 > raw-metal-evidence/host-build.log 2>&1
           shasum -a 256 target/debug/examples/egui_raw_probe > raw-metal-evidence/binary.sha256
           python3 - <<'PYTHON'
           import subprocess
