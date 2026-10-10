@@ -91,6 +91,8 @@ pub struct PlacementPreview<'a> {
 pub trait Tool: Send + Sync {
     /// Source global-only previews survive leaving a group; local targets do not.
     fn preserves_global_preview_on_context_exit(&self)->bool{false}
+    /// Called only after a context publication has passed validation.
+    fn detach_context_preview(&mut self) {}
     /// Cold metadata collection visits object identities owned by live tools.
     fn visit_image_metadata_roots(&self,_visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){}
     /// Consume the source relative image command after an actual tool commit.

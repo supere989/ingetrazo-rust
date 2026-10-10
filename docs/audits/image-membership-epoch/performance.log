@@ -1,0 +1,18 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+ --> crates/ingetrazo-tools/examples/image_move_epoch.rs:7:1192
+  |
+7 | ...et old_epoch=s.image_planes.membership_epoch();for mut pose in s.image_planes.iter_mut(){pose.opacity=0.5;}assert_ne!(s.image_plan...
+  |                                                       ----^^^^
+  |                                                       |
+  |                                                       help: remove this `mut`
+  |
+  = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
