@@ -1,0 +1,35 @@
+{
+  "source_revision": "d713a162be95642d503334349d1e66a7faa79cfa",
+  "source_commits": [
+    "d726bb0",
+    "d713a16"
+  ],
+  "workspace": {
+    "passed": 523,
+    "failed": 0,
+    "ignored": 2
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "615.71.09",
+  "actual_allocations_cancellation_checkpoints": 8,
+  "source_shapes_whole_image_exact": 9,
+  "lifecycle_strict_cases": 5,
+  "old_source_negatives": [
+    "early_swapchain_destroy",
+    "early_egui_pipeline_publication"
+  ],
+  "binary_sha256": {
+    "native_vulkan_resize_transaction_probe": "7d444823c1a5084993cc012903f4948434ae969e451c4fdc46bacbddcf25c479",
+    "native_vulkan_cad2d_fixture": "5ba32774e97848f204785ca7c80ce7b8566386fa376ebdbc16fc3729b4e3925e",
+    "sheet_shape_render_fixture": "dfeb3c9be02489af741971a376014a7c57b1e3993bb46953c4bdf62d14b1b213"
+  },
+  "boundaries": [
+    "No native driver OOM or actual creation error injection",
+    "No device loss recovery proof",
+    "No driver API global latency bound",
+    "No total implicit swapchain/pipeline VRAM ledger claim",
+    "No continued acquisition/presentation guarantee for retired old swapchain",
+    "No Vulkan validation layers available",
+    "No Metal rendering acceptance from this Vulkan proof"
+  ]
+}

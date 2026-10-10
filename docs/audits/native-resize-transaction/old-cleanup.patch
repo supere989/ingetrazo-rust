@@ -1,0 +1,12 @@
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/mod.rs b/crates/ingetrazo-gui/src/native_vulkan/mod.rs
+index 9d6e7b4..dac63aa 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/mod.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/mod.rs
+@@ -482,6 +482,7 @@ impl System {
+     fn resize_transaction_controlled(&mut self,control:&resize::Control)->Result<(),String>{
+         if !self.wait_gpu_completion(){return Err("Swapchain completion unknown; owners quarantined".into());}
+         control.checkpoint(resize::Stage::BeforeCreate)?;
++        self.swapchain.destroy(&self.vulkan_context.device); // literal old early-destroy negative
+         let mut next=self.swapchain.prepare_replacement(&self.vulkan_context,control).map_err(|e|e.to_string())?;
+         let candidate=next.value.as_ref().unwrap();
+         let mut egui_pipeline=resize::Tracked::new(self.renderer.prepare_render_pass(candidate.render_pass).map_err(|e|e.to_string())?,control,vec![(resize::Kind::EguiPipeline,1)]);
