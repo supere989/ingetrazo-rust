@@ -9,3 +9,5 @@ Actual production mutation disables discretionary hyphen measurement while retai
 No full Text/P29 claim: dynamic fields, canvas background/style/editing, platform fonts and broader Unicode remain OPEN.
 
 Fresh actual composer background export also matches all27wholepages (nine cases atthree resolutions); retained slab-shift negative controls pass. Evidence is in ../paper-bg-linebreak-root.
+
+Reviewed combined locked workspace:571passed, twoignored, zerofailed.
