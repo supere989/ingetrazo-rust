@@ -267,6 +267,14 @@ pub enum SheetItem {
 }
 
 impl SheetItem {
+    pub fn id(&self) -> Uuid {
+        match self {
+            Self::ViewFrame(item)=>item.id, Self::TitleBlock(item)=>item.id,
+            Self::Text(item)=>item.id, Self::NorthArrow(item)=>item.id,
+            Self::GraphicScale(item)=>item.id,
+        }
+    }
+
     pub fn rect(&self) -> RectMm {
         match self {
             SheetItem::ViewFrame(f) => f.rect,
@@ -327,6 +335,19 @@ impl Default for Sheet {
 }
 
 impl Sheet {
+    /// Original composer uses stable z ordering and excludes hidden items.
+    /// Retained native metadata is authoritative for these unmodeled properties.
+    pub fn visible_item_indices(&self) -> Vec<usize> {
+        let metadata=|index:usize|self.native_items.get(&self.items[index].id());
+        let mut indices=(0..self.items.len()).filter(|&index|
+            !metadata(index).and_then(|value|value.get("hidden")).and_then(|value|value.as_bool()).unwrap_or(false)
+        ).collect::<Vec<_>>();
+        let z=|index:usize|metadata(index).and_then(|value|value.get("z")).and_then(|value|value.as_f64()).unwrap_or(0.);
+        let category=|index:usize|match &self.items[index] {SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::TitleBlock(_)=>14};
+        indices.sort_by(|&a,&b|z(a).partial_cmp(&z(b)).unwrap_or(std::cmp::Ordering::Equal).then_with(||category(a).cmp(&category(b))));
+        indices
+    }
+
     pub fn new(name: impl Into<String>, paper_size: PaperSize, orientation: Orientation) -> Self {
         let mut sheet = Self {
             native_document: serde_json::Value::Null,
@@ -464,4 +485,24 @@ mod tests {
         assert_eq!(print_area.w, 400.0);
         assert_eq!(print_area.h, 277.0);
     }
+}
+
+#[cfg(test)] mod native_paint_order_tests {
+ use super::*;
+ #[test] fn equal_z_uses_original_all_items_category_order(){
+  let mut sheet=Sheet::new("Order",PaperSize::A4,Orientation::Portrait);sheet.items.clear();
+  sheet.items.push(SheetItem::NorthArrow(NorthArrowItem{id:Uuid::new_v4(),pos:(0.,0.),size_mm:10.,rot_deg:0.}));
+  sheet.items.push(SheetItem::GraphicScale(GraphicScaleItem{id:Uuid::new_v4(),pos:(0.,0.),scale_n:100.,length_mm:20.,divisions:4}));
+  sheet.items.push(SheetItem::ViewFrame(ViewFrame::default()));
+  assert_eq!(sheet.visible_item_indices(),vec![2,1,0]);
+ }
+ #[test] fn hidden_items_are_excluded_and_equal_z_keeps_document_order(){
+  let mut sheet=Sheet::new("Order",PaperSize::A4,Orientation::Portrait);sheet.items.clear();
+  for z in [2.,-1.,2.,0.] {
+   let item=SheetItem::ViewFrame(ViewFrame::default());
+   sheet.native_items.insert(item.id(),serde_json::json!({"z":z,"hidden":false}));sheet.items.push(item);
+  }
+  sheet.native_items.get_mut(&sheet.items[3].id()).unwrap()["hidden"]=serde_json::json!(true);
+  let before=sheet.clone();assert_eq!(sheet.visible_item_indices(),vec![1,0,2]);assert_eq!(sheet,before);
+ }
 }

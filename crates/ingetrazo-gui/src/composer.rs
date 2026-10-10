@@ -162,7 +162,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     };
 
     // Render Sheet Items
-    for (idx, item) in items.iter().enumerate() {
+    for idx in app.scene.sheets[sheet_idx].visible_item_indices() {
+        let item=&items[idx];
         let is_selected = selected_item == Some(idx);
 
         match item {
