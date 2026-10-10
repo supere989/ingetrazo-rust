@@ -197,6 +197,9 @@ impl CachedFont {
     pub fn shape_run(&self, text: &str, direction: Option<bool>) -> Result<Vec<Glyph>, String> {
         self.shaper.shape_run(text, direction)
     }
+    pub fn covers_character(&self, ch: char) -> bool {
+        self.shaper.covers_character(ch)
+    }
     pub fn ascent_26_6(&self) -> i32 {
         self.shaper.ascent_26_6
     }
