@@ -183,7 +183,10 @@ pub fn build_edge_buffers(
                 }
             }
             EdgeKind::Smooth => {
-                if style.show_soft_edges {
+                // Coplanarity does not hide an explicitly hard drafting edge.
+                if !edge.is_soft {
+                    visible_buf.push_line(edge.p0, edge.p1, style.edge_color, style.line_width, LineStyle::Solid);
+                } else if style.show_soft_edges {
                     let soft_color = [
                         style.edge_color[0],
                         style.edge_color[1],
@@ -259,3 +262,13 @@ pub fn build_guide_buffers(guides: &[Guide]) -> LineRenderBuffer {
     buffer
 }
 
+
+#[cfg(test)] mod hard_coplanar_tests {
+use super::*;
+#[test] fn hard_coplanar_division_remains_visible_while_soft_division_is_hidden(){
+let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(vec![ids[0],ids[1],ids[2]],vec![]);mesh.add_face(vec![ids[0],ids[2],ids[3]],vec![]);
+let mut camera=OrbitCamera::default();camera.target=DVec3::new(0.5,0.5,0.);camera.pitch=1.;
+let style=StyleConfig::default();let (hard,_)=build_edge_buffers(&mesh,&camera,&style,None);assert_eq!(hard.segments.len(),5);
+let edge=mesh.find_edge(ids[0],ids[2]).unwrap();mesh.edges[edge].soft=true;let(soft,_)=build_edge_buffers(&mesh,&camera,&style,None);assert_eq!(soft.segments.len(),4);
+}
+}
