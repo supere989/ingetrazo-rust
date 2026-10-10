@@ -1,0 +1,20 @@
+{
+  "production_source": "6d17a03 (ed79c9a+b8ce411 format support intersection)",
+  "validator": "594e3db255ce7e7bf934614072498d13e602791e",
+  "native_sha256": "cf39452f3b5817a7a48f00d31443e70c4c16217ea0ccb700e38d9bfa7b7c7cd3",
+  "backend": "ash native Vulkan llvmpipe software API1.4.318 actualTYPE4 attachments/resolve",
+  "result": "10 boundedcasesPASS exactzero and established5%positive tolerance; fullpixel equality NOT achieved",
+  "top_outline_control": {
+    "original_full": 20164,
+    "original_cut_contour_disabled": 20736,
+    "native": 20736,
+    "interpretation": "Missing nativepostfillcutoutline explains top2.84%difference; actualoriginalruntimeablation,notcamera/MSAAguess"
+  },
+  "negative_control": "FrozenactualwrongwindinghistoricalVulkanimage zero; physicalfill in sharedpartitionzero rejected",
+  "limits": [
+    "nativeGPUcutcontour absent",
+    "software adapteronly,RTXnative/Metalhardware acceptance pending",
+    "multipleplanes/instances/textures/transparency/styling broadercoverage open",
+    "Iso residualnotisolatedbytop-onlyoutlinecontrol"
+  ]
+}
