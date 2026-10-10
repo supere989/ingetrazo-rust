@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Thread-confined native glyph owner. No full collection copy and no hvgl parser.
 //! CoreText owns the selected instance; bounded SFNT tables serve HarfBuzz/PDF metadata.
-use std::{ffi::c_void, rc::Rc, sync::Arc};
+use std::{cell::Cell, ffi::c_void, rc::Rc, sync::Arc};
 type Ref = *const c_void;
 pub(crate) struct Owned(Ref);
 impl Owned {
@@ -183,6 +183,7 @@ fn raster_width(raw_width: f64, raw_height: f64, shear: f64, scale: f64) -> f64 
 }
 /// Retained native font references are thread confined by Rc, just like CachedFont.
 pub(crate) struct NativeFont {
+    raster_phase_counts: Cell<[u8;4]>,
     owner: Owned,
     pub bytes: Arc<[u8]>,
     pub count: u16,
@@ -345,6 +346,7 @@ impl NativeFont {
         }
         ttf_parser::Face::parse(&bytes, 0).map_err(|_| "Invalid extracted native SFNT metadata")?;
         Ok(Rc::new(Self {
+            raster_phase_counts: Cell::new([0;4]),
             owner,
             bytes: Arc::from(bytes),
             count,
@@ -418,6 +420,27 @@ impl NativeFont {
             return Err("Native glyph outline admission failed".into());
         }
         Ok(path.ops)
+    }
+    /// Qt probes twelve raster positions once, using the first nonempty outline.
+    /// Font engine state retains the resulting count across later glyphs/zooms.
+    pub(crate) fn raster_phase_count(&self,glyph:u32,scale:f64,shear:f64,bold_offset:f64)->Result<u8,String>{
+        let style=usize::from(shear!=0.)*2+usize::from(bold_offset!=0.);
+        let mut counts=self.raster_phase_counts.get();
+        if counts[style]!=0{return Ok(counts[style]);}
+        if self.outline(glyph)?.is_empty(){return Ok(0);}
+        let mut images:Vec<crate::paper_text::RasterGlyph>=Vec::new();
+        images.try_reserve_exact(12).map_err(|_|"Native raster phase allocation failed")?;
+        let mut bytes=0usize;
+        for i in 0..12 {
+            let phase=(i*64/12) as u8;
+            let image=self.raster(glyph,scale,[phase,0],shear,bold_offset)?;
+            if images.iter().any(|old|old.width==image.width&&old.height==image.height&&old.coverage==image.coverage){continue;}
+            bytes=bytes.checked_add(image.coverage.len()).filter(|&n|n<=16*1024*1024).ok_or("Native raster phase byte budget exceeded")?;
+            images.push(image);
+        }
+        let count=images.len()as u8;
+        if count==0{return Err("Native raster phase count invariant failed".into());}
+        counts[style]=count;self.raster_phase_counts.set(counts);Ok(count)
     }
     pub(crate) fn raster(
         &self,

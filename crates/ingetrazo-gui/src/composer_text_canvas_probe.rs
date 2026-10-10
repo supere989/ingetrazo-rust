@@ -125,6 +125,20 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                     )
                 );
             }
+            let layout = cache.layouts.get(&item.id).unwrap().draws.clone();
+            let text_run = layout.iter().find_map(|d| d.text.as_ref()).unwrap();
+            let phase_counts = text_run
+                .glyphs
+                .iter()
+                .map(|g| {
+                    text_run.font.raster_phase_count(
+                        g.glyph,
+                        text_run.scale_mm * 3.,
+                        text_run.bold,
+                        text_run.italic,
+                    )
+                })
+                .collect::<Result<Vec<_>, _>>()?;
             let mut style_control = None;
             if name == "times-bold-italic" {
                 let layout = cache.layouts.get(&item.id).unwrap().draws.clone();
@@ -185,7 +199,7 @@ pub(super) fn run(root: &Path) -> Result<(), String> {
                 );
             }
             Ok(
-                serde_json::json!({"name":name,"passed":true,"size":[800,300],"tile_size":tile_image.size,"tile_origin":[x,y],"warm_before":before,"warm_frames":3,"warm_unchanged":true,"style_control":style_control}),
+                serde_json::json!({"name":name,"passed":true,"size":[800,300],"tile_size":tile_image.size,"tile_origin":[x,y],"warm_before":before,"warm_frames":3,"warm_unchanged":true,"style_control":style_control,"phase_counts":phase_counts}),
             )
         })();
         match result {

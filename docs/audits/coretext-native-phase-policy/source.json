@@ -1,0 +1,19 @@
+{
+  "qt": "6.12.0",
+  "source_sha256": {
+    "src/gui/painting/qtextureglyphcache.cpp": "1fbef50580e3b63a06089507d0698e9f158ec2212ba186d2915ff0c768658816",
+    "src/gui/text/qfontengine.cpp": "23c3d96b6d05a817f82697596bffca89d92b3cde1f8c4b8d43a71c056cece389",
+    "src/gui/painting/qfixed_p.h": "48d3b750415c99e4d9118a9ca1d212ca15d5ca1094dcfb4a63766c2d01ad6651"
+  },
+  "phase_probe_lines": [
+    22,
+    57
+  ],
+  "phase_fraction_lines": [
+    905,
+    925
+  ],
+  "scalar_source_sha256": "af205e450e90bb0a8d6a946156558f3a48f73f4ac88067e5096fa03c998793a1",
+  "scalar_binary_sha256": "33c0fd4e8541449274fa5bbce24500b6d55e6ec8f18ff469e6a5c768be3f70a7",
+  "scope": "Extracted actual device position and arithmeticfloor scalar controls; native12-raster-count/macOS pixel replay pending"
+}

@@ -265,6 +265,15 @@ impl CachedFont {
         #[cfg(target_os="macos")] { self.native.is_some() }
         #[cfg(not(target_os="macos"))] { false }
     }
+    /// Native engine phase policy is established by bounded cold raster probes.
+    /// Zero means an empty outline and leaves engine acquisition pending.
+    pub fn raster_phase_count(&self,glyph:u32,scale:f64,bold:bool,italic:bool)->Result<u8,String>{
+        #[cfg(target_os="macos")]if let Some(n)=&self.native {
+            let shear=if italic&&!self.italic{crate::paper_coretext_glyph::synthetic_italic_shear()}else{0.};
+            return n.raster_phase_count(glyph,scale,shear,self.synthetic_bold_offset_px(bold)?)
+        }
+        let _=(glyph,scale,bold,italic);Ok(4)
+    }
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
         self.rasterize_styled_glyph(glyph,scale,phase,false,italic)
     }

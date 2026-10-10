@@ -56,7 +56,7 @@ impl CanvasPainter {
   for draw in draws.iter(){let pos=origin+Vec2::new(draw.origin_mm[0]as f32*zoom,draw.origin_mm[1]as f32*zoom);let scale=draw.text.as_ref().map_or(1.,|t|t.scale_mm)*density;let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
    let mut clip=[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2];if let Some(path)=&draw.clip{let mut min=[f64::INFINITY;2];let mut max=[f64::NEG_INFINITY;2];for op in path{if let PathOp::Move(p)|PathOp::Line(p)=op{for axis in 0..2{let value=if axis==0{f64::from(pos.x)}else{f64::from(pos.y)}*ppp+p[axis]*density;min[axis]=min[axis].min(value);max[axis]=max[axis].max(value);}}}clip=[min[0].floor()as i64,min[1].floor()as i64,max[0].ceil()as i64,max[1].ceil()as i64];}
    let Some(text)=&draw.text else{let mut rect=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in &draw.path{if let PathOp::Move(p)|PathOp::Line(p)=op{let point=[f64::from(pos.x)*ppp+p[0]*density,f64::from(pos.y)*ppp+p[1]*density];rect[0]=rect[0].min(point[0]);rect[1]=rect[1].min(point[1]);rect[2]=rect[2].max(point[0]);rect[3]=rect[3].max(point[1]);}}if let Some(sample)=rectangle_sample(rect,rgba,clip)?{include_sample(&mut samples,&mut extent,&mut working_bytes,sample)?;}continue;};
-   for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let(fx,fy,phase)=device_position((x*64.)as i64,(y*64.)as i64);let image=self.image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color)?;
+   for glyph in &text.glyphs{let x=f64::from(pos.x)*ppp+glyph.position_px[0]*scale;let y=f64::from(pos.y)*ppp+glyph.position_px[1]*scale;let count=text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?;let(fx,fy,phase)=device_position_with_count((x*64.)as i64,(y*64.)as i64,count);let image=self.image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color)?;
     working_bytes=working_bytes.checked_add(image.bytes).filter(|&n|n<=32*1024*1024).ok_or("Canvas glyph working budget exceeded")?;
     let x=fx as i64+i64::from(image.left);let y=fy as i64-i64::from(image.top);let bounds=[x.max(clip[0]),y.max(clip[1]),(x+image.width as i64).min(clip[2]),(y+image.height as i64).min(clip[3])];if bounds[0]>=bounds[2]||bounds[1]>=bounds[3]{continue;}
     extent=Some(if let Some(old)=extent{[old[0].min(bounds[0]),old[1].min(bounds[1]),old[2].max(bounds[2]),old[3].max(bounds[3])]}else{bounds});samples.push(Sample{x,y,image,clip});
@@ -84,11 +84,21 @@ impl CanvasPainter {
 
 // Qt 6.12 raster painter: horizontal four-phase FT cache; without the
 // VerticalSubpixelPositioning hint the baseline is rounded and y phase is zero.
-fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
- let phase=((x.rem_euclid(64)+1)/16)*16;
+#[cfg(test)]
+fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){device_position_with_count(x,y,4)}
+fn device_position_with_count(x:i64,y:i64,count:u8)->(f64,f64,[u8;2]){
+ let phase=if count<=1{0}else{let count=i64::from(count);((x.rem_euclid(64)+1)*count/64)*64/count};
  (x.div_euclid(64)as f64+(phase/64)as f64,(y+32).div_euclid(64)as f64,[(phase%64)as u8,0])
 }
 #[cfg(test)]mod device_position_tests{use super::*;
+ #[test]fn native_dynamic_phase_count_preserves_qfixed_fraction_and_negative_floor(){
+  assert_eq!(device_position_with_count(21,31,3),(0.,0.,[21,0]));
+  assert_eq!(device_position_with_count(14,32,12),(0.,1.,[10,0]));
+  assert_eq!(device_position_with_count(-1,-33,3),(0.,-1.,[0,0]));
+  assert_eq!(device_position_with_count(63,0,3),(1.,0.,[0,0]));
+  assert_eq!(device_position_with_count(21,31,1),(0.,0.,[0,0]));
+  assert_ne!(device_position_with_count(21,31,3),device_position(21,31));
+ }
  #[test]fn source_quarter_phases_and_rounded_baselines(){
   assert_eq!(device_position(14,31),(0.,0.,[0,0]));assert_eq!(device_position(15,32),(0.,1.,[16,0]));
   assert_eq!(device_position(63,63),(1.,1.,[0,0]));assert_eq!(device_position(-1,-33),(0.,-1.,[0,0]));
