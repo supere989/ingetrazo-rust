@@ -1,0 +1,401 @@
+{
+  "passed": true,
+  "provenance": {
+    "rust_commit": "162ad26bc015c646a76b95a176a971c599314f84",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "live": {
+    "anchor": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.996249507592794,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      750.8311085254362,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.996249507592794,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 1,
+    "group_ids": [
+      "ee590567-905f-468d-8d93-03b9cc510b03"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      949.2035415853862,
+      336.72986048918267
+    ],
+    "preview_lines": 1,
+    "revision": 2,
+    "rim": [
+      859.0342538308636,
+      336.7298604891827
+    ],
+    "time": 0.819717122,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "copy_preview": {
+    "anchor": [
+      3.2,
+      3.0,
+      1.0
+    ],
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": [
+      741.9732297100232,
+      295.66304904503284
+    ],
+    "curves": [],
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 1,
+    "group_ids": [
+      "ee590567-905f-468d-8d93-03b9cc510b03"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "FromPoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 25,
+    "revision": 3,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 1.167724111,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "copied": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "edges": 48,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        2.996249507592794,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 2,
+    "group_ids": [
+      "ee590567-905f-468d-8d93-03b9cc510b03",
+      "57d0608f-527a-45e4-842c-4f7008caf0e5"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 4,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 1.571969065,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "spaced": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "edges": 96,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        4.0,
+        3.0,
+        1.0
+      ],
+      [
+        6.0,
+        3.0,
+        1.0
+      ],
+      [
+        8.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 4,
+    "group_ids": [
+      "ee590567-905f-468d-8d93-03b9cc510b03",
+      "0eeca02b-66eb-4ad2-8dd7-b6870bb93548",
+      "cea51ba0-6740-438d-9e12-ac058076c4ac",
+      "8d3636d8-0117-4596-a106-7e435d245567"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 5,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 4.37750582,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "retyped": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "edges": 72,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ],
+      [
+        6.0,
+        3.0,
+        1.0
+      ],
+      [
+        10.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 3,
+    "group_ids": [
+      "ee590567-905f-468d-8d93-03b9cc510b03",
+      "98d75345-7493-45d8-90ad-a530d3cb92a9",
+      "c1d103ee-4646-44dd-88cb-7e75488c7aef"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 6,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 7.185316359,
+    "tool": "Move",
+    "undo": 1,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "undone": {
+    "anchor": null,
+    "center": [
+      2.0,
+      3.0,
+      1.0
+    ],
+    "center_pixel": [
+      661.0,
+      336.72986048918267
+    ],
+    "copy_center": null,
+    "copy_probe_pixel": null,
+    "curves": [],
+    "edges": 24,
+    "faces": 0,
+    "group_centers": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "group_count": 1,
+    "group_ids": [
+      "ee590567-905f-468d-8d93-03b9cc510b03"
+    ],
+    "inference_point": [
+      4.196249507592794,
+      3.0,
+      1.0
+    ],
+    "kind": "Endpoint",
+    "memory": [
+      [
+        2.0,
+        3.0,
+        1.0
+      ]
+    ],
+    "mode": "group",
+    "move_target": [
+      859.3724330599499,
+      336.7298604891827
+    ],
+    "preview_lines": 0,
+    "revision": 7,
+    "rim": [
+      769.2031453054271,
+      336.72986048918267
+    ],
+    "time": 7.837022302,
+    "tool": "Move",
+    "undo": 0,
+    "unused_vertices": 0,
+    "vertices": 0
+  },
+  "scope": "Actual rendered XTEST Move group pointer grab/preview/Ctrl copy/commit then keyboard spacing retyping and Undo. Real native ash Vulkan or original Qt/OpenGL viewport, isolated software GPU. Ordinary placed group only; linked components, alpha/depth batch performance and general P08 remain open.",
+  "checker_sha256": "15fffc1acdbfecbdb98a49c083f79bcb5b8217fd4e04d5a78b855ad5130c6540",
+  "executable_sha256": "b584ef9c889790abcfd418544636e99ea2861f38c2a6f115fdd4c806c43cb37e"
+}
