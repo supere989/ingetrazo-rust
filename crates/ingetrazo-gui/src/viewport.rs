@@ -92,21 +92,21 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             };
 
             // Arrow keys for explicit axis locks
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowRight)) && !app.active_tool.lock_drawing_plane(DVec3::X) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowRight)) && !app.active_tool.lock_drawing_plane(app.scene.drawing_axes().x) {
                 app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('x') {
                     None
                 } else {
                     Some('x')
                 };
             }
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowLeft)) && !app.active_tool.lock_drawing_plane(DVec3::Y) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowLeft)) && !app.active_tool.lock_drawing_plane(app.scene.drawing_axes().y) {
                 app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('y') {
                     None
                 } else {
                     Some('y')
                 };
             }
-            if ui.input(|i| i.key_pressed(egui::Key::ArrowUp)) && !app.active_tool.lock_drawing_plane(DVec3::Z) {
+            if ui.input(|i| i.key_pressed(egui::Key::ArrowUp)) && !app.active_tool.lock_drawing_plane(app.scene.drawing_axes().z) {
                 app.snap_engine.locked_axis = if app.snap_engine.locked_axis == Some('z') {
                     None
                 } else {
