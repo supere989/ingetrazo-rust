@@ -16,7 +16,7 @@ def main():
  subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","shift_inference_render_fixture"],check=True)
  directory=Path("docs/audits/shift-inference-render");directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
-  if p.name in ("state.json","capture.txt","before.png","preview.png","cancelled.png","committed.png","committed.igz"):p.unlink()
+  if p.name in ("state.json","capture.txt","before.png","locked.png","released.png","cancelled.png","committed.png","committed.igz"):p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-reference-x11-") as t:
   server=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1200x900x24","-nolisten","tcp"],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
   app=None
