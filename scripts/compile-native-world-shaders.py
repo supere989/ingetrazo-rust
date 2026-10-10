@@ -10,3 +10,7 @@ with tempfile.TemporaryDirectory(prefix="ingetrazo-shader-") as temporary:
  for name in ["world.vert","world.frag","contour.vert"]:
   source=root/"crates/ingetrazo-gui/src/native_vulkan/shaders"/name
   subprocess.run(["cargo","run","--quiet","--manifest-path",str(tool/"Cargo.toml"),"--",str(source),str(source)+".spv"],check=True)
+
+ # The encoded opaque viewport image uses a per-texture fragment push flag.
+ source=root/"vendor/egui-ash-renderer/src/shaders/shader.frag"
+ subprocess.run(["cargo","run","--quiet","--manifest-path",str(tool/"Cargo.toml"),"--",str(source),str(source)+".spv"],check=True)

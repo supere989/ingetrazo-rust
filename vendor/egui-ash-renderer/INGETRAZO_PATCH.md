@@ -10,3 +10,5 @@ The fork is required because upstream allocator types are private and do not exp
 
 
 Texture transfers now borrow row slices through one reusable staging allocation capped at 8 MiB. Each chunk uses a dedicated completion fence; ordinary transfers do not call queue_wait_idle. Staging and command buffers are freed only after completion (device-idle fallback on submission/wait failure). Large image creation is kept private until all chunks complete. Partial retry may repeat completed chunks, preserving the source delta. Mip streaming and compressed GPU textures remain unimplemented.
+
+Native CAD targets may register opaque encoded-color UNORM images separately from ordinary egui textures. A per-draw fragment push constant selects exact sRGB decoding on sRGB swapchains, preserving original encoded-color blending without an additional image, mutable-format view, copy or pass. Normal managed texture behavior remains unchanged. Updated fragment SPIR-V is compiled from the checked-in patched GLSL. This registration requires an opaque image and white egui tint; translucent scene faces are blended into that image before composition.
