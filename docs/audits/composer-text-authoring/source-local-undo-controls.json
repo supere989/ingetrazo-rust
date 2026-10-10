@@ -1,0 +1,291 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual original InlineTextEditor keyPressEvent and Qt document, synthetic direct-key control; genuine fullwindow simple recipe retained separately",
+  "rows": [
+    {
+      "name": "contiguous",
+      "recipe": [
+        "alpha beta"
+      ],
+      "final": "Textalpha beta",
+      "undo": [
+        "Text"
+      ],
+      "redo": [
+        "Textalpha beta"
+      ]
+    },
+    {
+      "name": "newline",
+      "recipe": [
+        "hello",
+        "Return",
+        "world"
+      ],
+      "final": "Texthello\nworld",
+      "undo": [
+        "Texthello\n",
+        "Texthello",
+        "Text"
+      ],
+      "redo": [
+        "Texthello",
+        "Texthello\n",
+        "Texthello\nworld"
+      ]
+    },
+    {
+      "name": "replacement",
+      "recipe": [
+        "Control+a",
+        "replacement"
+      ],
+      "final": "replacement",
+      "undo": [
+        "Text"
+      ],
+      "redo": [
+        "replacement"
+      ]
+    },
+    {
+      "name": "cursor-boundary",
+      "recipe": [
+        "abcd",
+        "Left",
+        "Left",
+        "X"
+      ],
+      "final": "TextabXcd",
+      "undo": [
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "TextabXcd"
+      ]
+    },
+    {
+      "name": "backspace",
+      "recipe": [
+        "abcd",
+        "Backspace",
+        "Backspace"
+      ],
+      "final": "Textab",
+      "undo": [
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "Textab"
+      ]
+    },
+    {
+      "name": "two-newlines",
+      "recipe": [
+        "a",
+        "Return",
+        "b",
+        "Return",
+        "c"
+      ],
+      "final": "Texta\nb\nc",
+      "undo": [
+        "Texta\nb\n",
+        "Texta\nb",
+        "Texta\n",
+        "Texta",
+        "Text"
+      ],
+      "redo": [
+        "Texta",
+        "Texta\n",
+        "Texta\nb",
+        "Texta\nb\n",
+        "Texta\nb\nc"
+      ]
+    },
+    {
+      "name": "redo-backspace",
+      "recipe": [
+        "abcd",
+        "Undo",
+        "Redo",
+        "Backspace"
+      ],
+      "final": "Textabc",
+      "undo": [
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "Textabc"
+      ]
+    },
+    {
+      "name": "redo-insert",
+      "recipe": [
+        "abcd",
+        "Undo",
+        "Redo",
+        "X"
+      ],
+      "final": "TextabcdX",
+      "undo": [
+        "Text"
+      ],
+      "redo": [
+        "TextabcdX"
+      ]
+    },
+    {
+      "name": "redo-cursor-insert",
+      "recipe": [
+        "abcd",
+        "Undo",
+        "Redo",
+        "Left",
+        "X"
+      ],
+      "final": "TextabcXd",
+      "undo": [
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "TextabcXd"
+      ]
+    },
+    {
+      "name": "redo-newline",
+      "recipe": [
+        "abcd",
+        "Undo",
+        "Redo",
+        "Return"
+      ],
+      "final": "Textabcd\n",
+      "undo": [
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "Textabcd\n"
+      ]
+    },
+    {
+      "name": "cursor-insert-delete",
+      "recipe": [
+        "abcd",
+        "Left",
+        "Left",
+        "X",
+        "Backspace",
+        "Backspace"
+      ],
+      "final": "Textacd",
+      "undo": [
+        "Textabcd",
+        "TextabXcd",
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "TextabXcd",
+        "Textabcd",
+        "Textacd"
+      ]
+    },
+    {
+      "name": "cursor-insert-redo-delete",
+      "recipe": [
+        "abcd",
+        "Left",
+        "Left",
+        "X",
+        "Undo",
+        "Redo",
+        "Backspace",
+        "Backspace"
+      ],
+      "final": "Textacd",
+      "undo": [
+        "Textabcd",
+        "TextabXcd",
+        "Textabcd",
+        "Text"
+      ],
+      "redo": [
+        "Textabcd",
+        "TextabXcd",
+        "Textabcd",
+        "Textacd"
+      ]
+    },
+    {
+      "name": "single-insert-delete",
+      "recipe": [
+        "X",
+        "Backspace"
+      ],
+      "final": "Text",
+      "undo": [
+        "TextX",
+        "Text"
+      ],
+      "redo": [
+        "TextX",
+        "Text"
+      ]
+    },
+    {
+      "name": "multi-insert-delete-all",
+      "recipe": [
+        "abc",
+        "Backspace",
+        "Backspace",
+        "Backspace"
+      ],
+      "final": "Text",
+      "undo": [
+        "Textabc",
+        "Text"
+      ],
+      "redo": [
+        "Textabc",
+        "Text"
+      ]
+    },
+    {
+      "name": "repeated-fragment",
+      "recipe": [
+        "aaaa",
+        "Left",
+        "Left",
+        "a",
+        "Backspace",
+        "Backspace"
+      ],
+      "final": "Textaaa",
+      "undo": [
+        "Textaaaa",
+        "Textaaaaa",
+        "Textaaaa",
+        "Text"
+      ],
+      "redo": [
+        "Textaaaa",
+        "Textaaaaa",
+        "Textaaaa",
+        "Textaaa"
+      ]
+    }
+  ]
+}

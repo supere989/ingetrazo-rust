@@ -52,7 +52,7 @@ with tempfile.TemporaryDirectory()as runtime:
    key('Return')
    for c in 'world':key(c)
    wait(lambda:state()['inline']=='hello\nworld');draft=record('draft');assert draft['texts'][0]['text']=='Text'and draft['history']==[1,0]
-   key('z',True);wait(lambda:state()['inline'] is not None and state()['inline']!='hello\nworld');local_undo=record('local-undo');assert local_undo['history']==[1,0] and local_undo['texts'][0]['text']=='Text';key('z',True,True);wait(lambda:state()['inline']=='hello\nworld');local_redo=record('local-redo');assert local_redo['history']==[1,0]
+   key('z',True);wait(lambda:state()['inline']=='hello\n');local_undo=record('local-undo');assert local_undo['history']==[1,0] and local_undo['texts'][0]['text']=='Text';key('z',True,True);wait(lambda:state()['inline']=='hello\nworld');local_redo=record('local-redo');assert local_redo['history']==[1,0]
    key('Return',True);wait(lambda:state()['inline'] is None and state()['texts'][0]['text']=='hello\nworld');committed=record('committed');assert committed['history']==[2,0]
    key('z',True);wait(lambda:state()['texts'][0]['text']=='Text');undo=record('undo');assert undo['history']==[1,1]
    key('z',True,True);wait(lambda:state()['texts'][0]['text']=='hello\nworld');redo=record('redo');assert redo['history']==[2,0]

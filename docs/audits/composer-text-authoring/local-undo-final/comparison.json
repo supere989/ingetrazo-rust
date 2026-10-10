@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "phases": 18,
+  "source_document_recipes": 15,
+  "checker_sha256": "197e62ec518efa76abced4f4b5fb0fff030b4d6758df31b992ae28efbba5898d",
+  "history_source_sha256": "6c57081bfa6654fe8d42c475540ac67dcf51af2c994afbb3c43377720e98ebae",
+  "scope": "Actual original/native pointer and document Undo/Redo, exact draft/model text/history at18 phases. No editor pixel equality. Frozen original key-handler15 recipes replayed generically by native bounded history.",
+  "ownership": "100 commands per inline session, run-length fragment provenance, released with editor. No unchanged-frame draft scan/history allocation; allocations only changed document/cursor or UndoRedo. No model snapshots for editor-local Undo.",
+  "failures": [
+    "Original/native heldout literal space keysym emitted no space; both alphabeta counterexamples retained. Corrected X11 space mapping and rejectzero keycode, no timing change.",
+    "Native initial heldout merged Backspaces across inserted x/prior text fragment; original second delete Undo restores alpha beta, native restored alpha bexta. Initial native report retained as failure, not parity acceptance."
+  ],
+  "remaining": [
+    "Complex IME/paste/delete/replacement fragment interactions and text editor typography/layout remain unverified.",
+    "Tool mode exclusivity and actual draft ownership on toolbar switch under separate followup."
+  ]
+}
