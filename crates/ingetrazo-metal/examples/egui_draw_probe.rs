@@ -23,6 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::create_dir_all(&output)?;
     for name in [
         "initial.rgba",
+        "far-finite.rgba",
         "partial.rgba",
         "expected-initial.rgba",
         "expected-partial.rgba",
@@ -146,6 +147,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         expected(false),
         "Whole textured/font/scissor GPU image"
     );
+    // A real source mesh can be finite but far outside the visible clip.
+    // Shader arithmetic is admissible, and hardware clipping must retain its
+    // target coverage rather than reject an arbitrary million-position cap.
+    let far = vec![quad(egui::Rect::from_min_max(egui::pos2(-19_782_046.,-9_891_179.),egui::pos2(19_782_046.,9_891_179.)),egui::Color32::RED,egui::TextureId::Managed(43),egui::Rect::EVERYTHING)];
+    let far_paint=painter.prepare(&metal,&far,1.)?;
+    let far_pixels=render(&painter,far_paint)?;
+    std::fs::write(output.join("far-finite.rgba"),&far_pixels)?;
+    assert_eq!(far_pixels,[255_u8,0,0,255].repeat(64*64),"Actual far finite quad target clipping");
+    assert_eq!(render(&painter,paint.clone())?,initial_pixels,"Far preparation preserves previous owner/image");
+    let mut malformed=far.clone();
+    if let egui::epaint::Primitive::Mesh(mesh)=&mut malformed[0].primitive{mesh.vertices[0].pos.x=f32::NAN;}
+    assert!(painter.prepare(&metal,&malformed,1.).is_err());
+    let mut malformed=far.clone();
+    if let egui::epaint::Primitive::Mesh(mesh)=&mut malformed[0].primitive{mesh.vertices[0].uv.x=f32::NAN;}
+    assert!(painter.prepare(&metal,&malformed,1.).is_err());
+    let mut malformed=far.clone();
+    if let egui::epaint::Primitive::Mesh(mesh)=&mut malformed[0].primitive{mesh.indices[0]=u32::MAX;}
+    assert!(painter.prepare(&metal,&malformed,1.).is_err());
+    let mut malformed=far.clone();
+    if let egui::epaint::Primitive::Mesh(mesh)=&mut malformed[0].primitive{mesh.vertices[0].pos.x=f32::MAX;}
+    assert!(painter.prepare(&metal,&malformed,1.).is_err());
+    assert_eq!(render(&painter,paint.clone())?,initial_pixels,"Every admission failure preserves previous owner/image");
+    let restored=painter.prepare(&metal,&scene(0.),1.)?;assert_eq!(render(&painter,restored)?,initial_pixels);
     let stats = painter.stats();
     for _ in 0..10 {
         let warm = painter.prepare(&metal, &scene(0.), 1.)?;
