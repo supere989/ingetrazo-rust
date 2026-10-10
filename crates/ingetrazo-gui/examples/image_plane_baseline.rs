@@ -1,0 +1,2 @@
+use ingetrazo_gui::IngeTrazoApp;
+fn main(){let args:Vec<_>=std::env::args().collect();let mut a=IngeTrazoApp::new();a.system_clipboard=None;a.open_document(std::path::Path::new(&args[1]));let model=serde_json::to_value(&a.scene).unwrap();println!("{}",serde_json::json!({"runtime_planes":model.get("image_planes"),"retained_raw_planes":a.scene.native_document.get("image_planes"),"boundary":"Production open; raw no-op retention is not modeled operative image planes"}));}

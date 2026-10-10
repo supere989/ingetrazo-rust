@@ -3,6 +3,7 @@
 import ctypes as C, os, subprocess, time
 from pathlib import Path
 import argparse
+from owned_process_cleanup import stop_owned_helper
 parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");args=parser.parse_args()
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
 x=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
@@ -51,4 +52,5 @@ with (out/"startup.log").open("w") as log:
   print("PASS: direct Vulkan production UI startup, two native swapchain resizes, clean OS close; retained captures",out)
  finally:
   if p.poll() is None: p.terminate();p.wait(timeout=5)
-  lib.XCloseDisplay(d);x.terminate();x.wait(timeout=5)
+  lib.XCloseDisplay(d)
+  stop_owned_helper(x,out/"xvfb-cleanup.json",timeout=5)

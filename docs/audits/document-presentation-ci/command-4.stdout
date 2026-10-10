@@ -1,0 +1,5 @@
+{
+  "passed": true,
+  "errors": [],
+  "boundary": "actual original Qt panel/History/save/reopen versus native app.open_document/controller/save; no rendered image or native shadow renderer claim"
+}

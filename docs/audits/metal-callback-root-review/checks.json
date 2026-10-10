@@ -1,0 +1,79 @@
+{
+  "source_revision": "f80cd8df96e52fee3ad17adb189ffd7d55ed0476",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "ingetrazo-render",
+        "cad_callback",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "check-0.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "ingetrazo-gui",
+        "--lib",
+        "composer_cad::tests",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "check-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "composer_pdf_ui_fixture",
+        "--example",
+        "composer_preview_native_fixture",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "check-2.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-gui",
+        "--lib",
+        "--features",
+        "blake3/pure",
+        "--target",
+        "aarch64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "check-3.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "ingetrazo-gui",
+        "--lib",
+        "--features",
+        "blake3/pure",
+        "--target",
+        "x86_64-apple-darwin",
+        "--offline"
+      ],
+      "returncode": 0,
+      "log": "check-4.log"
+    }
+  ],
+  "working_test_strengthening": true,
+  "native_consumption_claim": false
+}

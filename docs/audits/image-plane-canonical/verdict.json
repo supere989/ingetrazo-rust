@@ -1,0 +1,10 @@
+{
+  "source": "9e15aaca",
+  "workspace_passed": 551,
+  "ignored": 2,
+  "actual_source_native_states": 56,
+  "native_archive_original_reopens": 4,
+  "asset_sha_exact": true,
+  "presentation_runtime_passed": true,
+  "cloud_acceptance": "pending"
+}

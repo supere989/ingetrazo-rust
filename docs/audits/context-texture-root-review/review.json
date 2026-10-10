@@ -1,0 +1,9 @@
+{
+  "reviewed_source": "ac1fed6",
+  "base": "21ca9baf7ef2ddd8320b6c7a333f9e5237f9e07c",
+  "passed": 535,
+  "ignored": 2,
+  "binary_sha256": "935a364eea8902c83976704d0f6e11dd4ef49a7bd44467ec213d24541e2a7292",
+  "exact_states": 6,
+  "missing_archive_asset_negative": true
+}

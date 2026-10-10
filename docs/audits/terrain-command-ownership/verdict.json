@@ -1,0 +1,11 @@
+{
+  "exact_bounded_presentation_history": true,
+  "exact_owned_terrain_states": 6,
+  "stale_visibility_negative": true,
+  "literal_bool_only_redo_negative": true,
+  "four_payload_negatives": true,
+  "full_P15": false,
+  "native_source": "4d666db",
+  "workspace_passed": 537,
+  "ignored": 2
+}

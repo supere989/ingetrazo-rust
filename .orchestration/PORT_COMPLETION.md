@@ -6,11 +6,18 @@ Coordinator: root. Canonical checkout: /work in ingetrazo-publish base devbox, h
 
 ## Current stage
 
-Reviewed canonical code f20a7c1, defect record58fc0a1:530 workspace tests pass/twoignored; fresh current/saved orthographic View PDF78+78 wholepages exact; ordinaryshape27 retained. Native Metal actual AppleParavirtual ARMfetch+compute/Intelcompute six wholeQt images each exact; olderGPUshader negatives2304wrongpixels each rejected. RTX transactionalresize eight realallocation checkpoints+legal retired retry pass, normal trackedledger0. All37rows+five releasegates remain OPEN; docs/PARITY_PROGRESS.md is primary.
+Canonical layer correction through0ec0798:542 workspace tests pass/two ignored. Reviewed saved-view membership/object lifetime and terrain command ownership now follow retained original controls; broader history remains open. Referenced textures and guide/text/geodata publication were accepted in earlier bounded reviews. All37 rows and five release gates remain OPEN; docs/PARITY_PROGRESS.md is primary.
+
+Live CI audit on 2026-10-10: main runs38048313749,38048106337 and38047655397 completed FAILURE at Original Python shared component definition acceptance (component_editor_acceptance_fixture.rs:68 scene equality after Undo). Reviewed fixture correction1bbe4c9 now independently passes the complete component oracle: original clears selection and advances revision, while full remaining Scene equality is retained. Historical failure retained; new cloud CI remains pending. Run38048219032 failed at Xvfb display allocation in isolated clipboard acceptance. Current main run38049646908 and saved-view run38048903966 were confirmed in progress.
+
+Native Metal host remains isolated. Both actual AppleParavirtual architectures passed independently checked compressed GPU block/decode and seven mip output controls. ARM visible presentation still fails: zero displayed frames, retained unknown presentation owners. Candidate f99d171 run38049674934 was live at audit; worker retained its ARM failure artifact and continues actual Cocoa transition diagnosis. Shared document lifecycle event probe is source-ready but native execution pending; exact CAD callbacks are not yet connected to the Metal host. No full renderer or physical Mac claim.
+
+Root isolated geographic candidate4438023 merged reviewed terrain history; fresh539 workspace tests/two ignored and two actual source/native repeated capture dictionaries pass (requested16, reduced14, next small import16). Full geographic controls, map fetch/display and command ownership remain open. Font worker produced ten exact native glyph-run controls and cold build evidence; genuine PDF text integration remains pending.
+
 
 | Worker | Isolated worktree | Current ownership | State |
 |---|---|---|---|
-| document_integrity | /tmp/ingetrazo-constructor-lifetime | Native Vulkan startup owners, typed errors; unapproved annotation Undo defect recorded | Running |
+| document_integrity | /tmp/ingetrazo-shareback-policies | Embedded texture/global entity publication and full command-specific history audit | Running |
 | geometry | /tmp/ingetrazo-sheet-view-pdf | Source section solid/hatch PDF painters; default/raster/text and complete paper scope retained | Running |
 | validation | /tmp/ingetrazo-metal-host | Direct Metal egui painter/shared app/CAMetalLayer, actual GPU and WSI controls, full native renderer | Running |
 
@@ -281,3 +288,33 @@ Nativeworld integration accepted428PASS2ignored freshuniquetarget67640terminal0;
 PreciseCAD API91b5842 mergedlatestworld942; fullworkspace430PASS2ignored terminal23633,5software +5RTXcontrols10ownedcaptures checkeddevice/dimensions/alpha/order/scissor/cache/error/pressure PASS. Source49+3cef andevidence3d5/e56/649 reviewed; APIintegration only composeradapter/expandedRGBAcoverage/AA/Metal OPEN. Rootownsnextshapeadapter; renderertextures separate; geometrytransformedempty/clipboardFinish broader stillactive.
 
 LiveCIaudit:94238032137378FAIL+35938032281082FAIL samecenterhintMoveactualstep; latesttimeoutundo1script142. Validatorassignedretainedcloudartifact+freshactualXTEST diagnosis; doNOTmaskretries/tolerances. Lastgreen a67538031439871. Rootpublicfailedlogretained; currentcloudacceptancefailed explicitly.
+
+Reviewed startup ownership65951ac integrated: root fresh actual RTX eight exact inventories/refusal, strict negatives, canonical531 tests/twoignored pass. Device-loss/OOM recovery remains unproven. Metal host and paper section painters stay isolated pending terminal actual rendering checks. Full37rows/five gates retained.
+
+Public41a1 CI38045557038 completed SUCCESS across all configured jobs, freshly verified. Startup-owner ca846cc run38046222715 and isolated Metal Drop ab370eb run38046278347 are currently live; no premature cloud/nativeDrop adoption claim.
+
+Actual offscreen Metal Drop proof both architectures reviewed/integrateda2d3d1;531canonicalPASS2ignored. Isolated host530591d ARM WSI step failed bounded15s; no mainhostadoption. Root sectionfill isolated532PASS, freshsolid78exact, heldout-hatch replay31889live.
+
+Independent root section-fill review: fresh solid, savedtilteddefault hatch and heldoutscale20/color#dc9b4e/hatch0.7 each78exactpages;18exactsource controls pluscoordinate/validPDF negatives pass. Combined532PASS2ignored. Source grid300DPI failure retained bygeometry; native Metal WSIobserver0e0bb7c actualCI38046817228 live, boundedWSIfailurestillOPEN.
+
+Shareback reviewed c9cab2f:533canonicalPASS2ignored, retainedfresh8exact/fournegatives+sixoriginalanchors. Fullsource command families/resource publication remainopen. Rootgrid534workspace/defaultpageslive50346; native callbackobserveref689 CI38047180937 live.
+
+Reviewedgrid5998e02 integrated:535canonicalPASS2ignored; freshsourcecutoff+two78modes+actualPDFalpha negative retained. Metaltexture/mip candidatea610894 published isolated; nativecallbackeff689 actualzero/positive notifications observed, skipownercontractcorrection pending; no mainhostadoption. Fullfont/raster/publication/history/37rows/fivegates remainactive.
+
+Checkpoint2026-10-10: root independently retained candidate83 native replay (cd18d8f0): Intel exact requested resize and10 positive displayed frames PASS, ARM zero displayed/three unresolved owners FAIL despite explicit backing transition. Actual mips/compression PASS both. Lifecycle6e review found probe associates prior submission before current paint; correction required before native execution. Current main00bdf cloud Mac foundation jobsSUCCESS/Linux still in progress at run38050239323; isolated root X11 clipboard replay PASS while candidate83 cloud clipboard step FAILED. Full gates remain open.
+
+Reviewed layer registry correction: fresh root4cases/13states, four payload negatives and the literal old panel case reject; full component replay and canonical542PASS/twoignored. CI adds operative original/native layer ownership gate. Full parked-context global deletion, annotation assignment and rendered tray remain OPEN. Source IDs do not serialize; name-based Assign rule remains distinct from held Import/Purge objects.
+
+Reviewed parked-context deletion throughdf2cc797: fresh fourcases16states exact, three negatives plus old outside-tag reject; prior13layerstates/fournegatives remainPASS, complete component oraclePASS, canonical542workspacePASS/twoignored. Original private/shared prototype Undo differs and is preserved. CI adds original parked-context gate. Cancellation/source-reopened deletion files/rendered inputs/all attribute families remainOPEN. Style/shadow operative persistence baseline now retained by worker, typed bridge implementation ongoing. Metal lifecycle actualbothMacFAIL phase0 beforeinput; full-app clip admission investigated, no successclaim.
+
+## Reviewed callback integration checkpoint
+
+Canonical source252704fb passes543 workspace tests/twoignored. Immutable backend-neutral CAD producer ownership, invalid palette/index rollback and retained mutation negative are adopted, with existing Vulkan dispatch preserved. Metal host/callback consumers remain isolated and require actual native presentation, pixels, lifecycle and owner-retirement proof. Current authoritative evidence is docs/audits/metal-callback-root-review; all37 full feature rows and five release gates remain OPEN.
+
+Canonical3f0d8854 presentation/controller codec integration:548PASS/twoignored, fresh runtime16parser/13reopen and savedview deletion PASS. All37rows/fivegates remainOPEN. Prior main8c40 VulkanCI and isolatedMetal897 native lifecycle failures retained as unresolved; follow-up audit required.
+
+Canonical image-plane9e15aaca reviewedintegration:551PASS/twoignored, actual56states/fourasset-exactoriginalreopens/presentationregressionPASS. Productionmove-negativecaught. Cloudpending. All37rows/fivegatesstayOPEN.
+
+Canonicala5d3c3bcimageownership:555PASS2ignored;19layer3lifetime56image4archivepresentationPASS. CIearlier112alljobsSUCCESS, currentpending. All37/fivegatesOPEN.
+
+Canonical6a4ef4fontresource/directPDFwriter stage555PASS2ignored; ninecanonicalpages/textcontrols/nativefontresourcePASS; combined27exactpages, nativeARM/Intelresourcesretained. FullTextUI/layout/provider/globalbudget and37rows/fivegatesOPEN.

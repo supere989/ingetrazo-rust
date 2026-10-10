@@ -1,0 +1,9 @@
+{
+  "states": 13,
+  "cases": 4,
+  "baseline_actual_panel_case_rejected": true,
+  "workspace_passed": 542,
+  "workspace_ignored": 2,
+  "binary_sha256": "f9af1dfcd91eaf2fcbaebe8abad45da06208d87d338735792e4b62674aa1d021",
+  "full_layer_parity": false
+}

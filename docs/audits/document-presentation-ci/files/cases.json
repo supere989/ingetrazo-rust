@@ -1,0 +1,546 @@
+{
+  "provenance": {
+    "rust_commit": "a5d3c3bc02a51a3f00cb968df30786be4a4c541d",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "kind": "style",
+      "input": {},
+      "output": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": true,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "name": 17,
+        "edge_color": [
+          0.1,
+          0.2,
+          0.3,
+          0.4
+        ],
+        "front_color": [
+          ".7",
+          true,
+          0.9
+        ]
+      },
+      "output": {
+        "name": 17,
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.1,
+          0.2,
+          0.3,
+          0.4
+        ],
+        "front_color": [
+          ".7",
+          true,
+          0.9
+        ],
+        "back_color": null,
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": true,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "name": null,
+        "sky_color": "rgb",
+        "background": {
+          "red": 1,
+          "green": 2,
+          "blue": 3
+        }
+      },
+      "output": {
+        "name": null,
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          "red",
+          "green",
+          "blue"
+        ],
+        "sky": true,
+        "sky_color": [
+          "r",
+          "g",
+          "b"
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "back_color": [
+          0.1,
+          0.2,
+          0.3,
+          "invalid"
+        ]
+      },
+      "output": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": true,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "back_color": [
+          true,
+          ".2",
+          0.3,
+          0.4
+        ]
+      },
+      "output": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": [
+          1.0,
+          0.2,
+          0.3
+        ],
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": true,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "edges": [],
+        "sky": {},
+        "name": [
+          "Named"
+        ]
+      },
+      "output": {
+        "name": [
+          "Named"
+        ],
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "edge_color": null
+      },
+      "output": null,
+      "error": "TypeError"
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "day": "12.8",
+        "minute": true,
+        "darkness": true
+      },
+      "output": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 1,
+        "darkness": 1.0
+      },
+      "error": null
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "day": true,
+        "month": "  +7  ",
+        "hour": 13.9,
+        "minute": "1_2",
+        "utc_offset": " -5 "
+      },
+      "output": {
+        "enabled": false,
+        "month": 7,
+        "day": 1,
+        "hour": 13,
+        "minute": 12,
+        "darkness": 0.55,
+        "utc_offset": -5
+      },
+      "error": null
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "day": false,
+        "darkness": false,
+        "utc_offset": true
+      },
+      "output": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.0,
+        "utc_offset": 1
+      },
+      "error": null
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "utc_offset": 4294967296
+      },
+      "output": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.55,
+        "utc_offset": 4294967296
+      },
+      "error": null
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "utc_offset": "-5.5"
+      },
+      "output": null,
+      "error": "ValueError"
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "day": "+-5",
+        "utc_offset": "+-5"
+      },
+      "output": null,
+      "error": "ValueError"
+    },
+    {
+      "kind": "shadows",
+      "input": {
+        "darkness": "1__2",
+        "minute": "++12"
+      },
+      "output": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.55
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "back_color": [
+          "0_1.2",
+          ".2",
+          ".3"
+        ]
+      },
+      "output": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": [
+          1.2,
+          0.2,
+          0.3
+        ],
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": true,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "style",
+      "input": {
+        "back_color": [
+          "0._2",
+          ".2",
+          ".3"
+        ]
+      },
+      "output": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": true,
+        "profiles": true,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.9,
+          0.91,
+          0.92
+        ],
+        "sky": true,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": true,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "error": null
+    }
+  ]
+}

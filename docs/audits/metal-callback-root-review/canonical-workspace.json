@@ -1,0 +1,12 @@
+{
+  "source_revision": "252704fb9e32dde40f5d66adc305638fae28346d",
+  "command": [
+    "cargo",
+    "test",
+    "--workspace",
+    "--offline"
+  ],
+  "returncode": 0,
+  "passed": 543,
+  "ignored": 2
+}

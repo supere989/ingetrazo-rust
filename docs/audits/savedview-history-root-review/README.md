@@ -1,0 +1,4 @@
+# Independent saved-view history review
+Fresh operative original ScenesPanel/Viewport/History vs native app matches selected saved-view/path/sheet ordinary and folded state contents and command counts. Four imported-view identity/lifetime states match, including renamed/deleted importRedo and UIadd on undone branch preserving Redo/order. Historical extra-history case and four payload negatives reject.
+Full workspace: 537 passed, 2 ignored. Complete fresh JSON/logs and binary hash retained.
+Ordinary terrain visibility still fails, recorded false. Full presentation history, layers/style/shadows, rendered gestures and broader imported command ownership remain open. Runtime view identities/deltas never enter document serialization. This is a narrow source-backed correction, not blanket history state exclusion.

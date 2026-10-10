@@ -1,0 +1,2 @@
+Native Metal device Apple Paravirtual device; unified true; working set 5010800640; max buffer 3758096384; RT advertised false; BC advertised true
+Native Metal device and buffer allocation controls PASS; GPU submission, rendering and hardware parity remain unproven

@@ -1,0 +1,216 @@
+{
+  "assign_created_rename_lookup": [
+    {
+      "edge": "Renamed",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Renamed",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Renamed",
+          true,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    },
+    {
+      "edge": "Assigned",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Renamed",
+          true,
+          false
+        ],
+        [
+          "Assigned",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    }
+  ],
+  "import_deleted_held_object": [
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Renamed import",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    }
+  ],
+  "panel_state_across_model_history": [
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Layer 1",
+          false,
+          true
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Layer 1",
+          false,
+          true
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Layer 1",
+          false,
+          true
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    }
+  ],
+  "purge_held_object_visibility": [
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Unused",
+          false,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ]
+      ],
+      "redo": 0,
+      "undo": 1
+    },
+    {
+      "edge": "Layer0",
+      "layers": [
+        [
+          "Layer0",
+          true,
+          false
+        ],
+        [
+          "Unused",
+          false,
+          false
+        ]
+      ],
+      "redo": 1,
+      "undo": 0
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "cases": {
+    "direct": [
+      {
+        "asset_refs": [
+          "textures/92ba2143dc2e0ac0-checker.png"
+        ],
+        "faces": 2,
+        "live_asset_bytes": 103,
+        "phase": "finish",
+        "textured_faces": 1,
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            10.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      },
+      {
+        "asset_refs": [],
+        "faces": 1,
+        "live_asset_bytes": 103,
+        "phase": "undo",
+        "textured_faces": 0,
+        "uvw": [],
+        "vendor": []
+      },
+      {
+        "asset_refs": [
+          "textures/92ba2143dc2e0ac0-checker.png"
+        ],
+        "faces": 2,
+        "live_asset_bytes": 103,
+        "phase": "redo",
+        "textured_faces": 1,
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            10.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      }
+    ],
+    "nested": [
+      {
+        "asset_refs": [
+          "textures/92ba2143dc2e0ac0-checker.png"
+        ],
+        "faces": 2,
+        "live_asset_bytes": 103,
+        "phase": "finish",
+        "textured_faces": 1,
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            110.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      },
+      {
+        "asset_refs": [],
+        "faces": 1,
+        "live_asset_bytes": 103,
+        "phase": "undo",
+        "textured_faces": 0,
+        "uvw": [],
+        "vendor": []
+      },
+      {
+        "asset_refs": [
+          "textures/92ba2143dc2e0ac0-checker.png"
+        ],
+        "faces": 2,
+        "live_asset_bytes": 103,
+        "phase": "redo",
+        "textured_faces": 1,
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            110.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      }
+    ]
+  },
+  "preview_cancel_verified": true,
+  "system_clipboard_disabled": true
+}

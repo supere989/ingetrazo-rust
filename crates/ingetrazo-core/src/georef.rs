@@ -607,8 +607,10 @@ pub fn tiles_covering(lat_s: f64, lon_w: f64, lat_n: f64, lon_e: f64, zoom: u8) 
 
 // --- Terrain Object & Surface Mesh Generation ---
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TerrainObject {
+    #[serde(skip,default="uuid::Uuid::new_v4")]
+    pub history_id:uuid::Uuid,
     pub vertices: Vec<DVec3>,
     pub uvs: Vec<(f64, f64)>,
     pub triangles: Vec<(usize, usize, usize)>,
@@ -897,6 +899,7 @@ pub fn build_terrain_mesh<F: Fn(f64, f64) -> Option<f64>>(
     }
 
     Some(TerrainObject {
+        history_id:uuid::Uuid::new_v4(),
         vertices: verts,
         uvs,
         triangles,
@@ -1110,3 +1113,21 @@ mod conversion_tests {
         scene.geo_paths.push(GeoPath::new(vec![DVec3::ZERO,DVec3::new(f64::INFINITY,0.,0.)],false,"bad"));let mesh=scene.mesh.clone();let paths=scene.geo_paths.len();assert!(geopath_to_geometry(&mut scene,&[0]).is_err());assert_eq!(scene.mesh,mesh);assert_eq!(scene.geo_paths.len(),paths);assert!(geopath_to_geometry(&mut scene,&[99]).is_err());
     }
 }
+
+impl PartialEq for TerrainObject {fn eq(&self,other:&Self)->bool {self.vertices==other.vertices&&self.uvs==other.uvs&&self.triangles==other.triangles&&self.tile_range==other.tile_range&&self.nx==other.nx&&self.ny==other.ny&&self.bbox==other.bbox&&self.visible==other.visible}}
+
+
+/// A command holds a terrain object; later runtime rebuilds must not become
+/// that command's Redo result. Geometry is captured only for actual ownership.
+#[derive(Debug,Clone,PartialEq)]
+pub struct HeldTerrain {pub object:std::sync::Arc<TerrainObject>,pub visible:bool}
+impl HeldTerrain {pub fn capture(t:&TerrainObject)->Self{Self{object:std::sync::Arc::new(t.clone()),visible:t.visible}}pub fn instantiate(&self)->TerrainObject{let mut t=(*self.object).clone();t.visible=self.visible;t}}
+#[derive(Debug,Clone,PartialEq)]
+pub enum TerrainOwnership {Unowned,Owned{after:Option<HeldTerrain>}}
+#[derive(Debug,Clone,Default)]
+pub struct TerrainHistory(pub Option<TerrainOwnership>);
+impl TerrainHistory {
+ pub fn seal(before:&Option<TerrainObject>,after:&Option<TerrainObject>)->TerrainOwnership{if before.as_ref().map(|t|t.history_id)!=after.as_ref().map(|t|t.history_id)||before!=after{TerrainOwnership::Owned{after:after.as_ref().map(HeldTerrain::capture)}}else{TerrainOwnership::Unowned}}
+ pub fn refresh_visibility(&mut self,id:uuid::Uuid,visible:bool){if let Some(TerrainOwnership::Owned{after:Some(t)})=&mut self.0{if t.object.history_id==id{t.visible=visible;}}}
+}
+impl PartialEq for TerrainHistory {fn eq(&self,other:&Self)->bool{match(&self.0,&other.0){(None,Some(TerrainOwnership::Unowned))|(Some(TerrainOwnership::Unowned),None)=>true,(a,b)=>a==b}}}

@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "4787c0ae8891f790957f09c07d38d4d38c77de35",
+    "rust_commit": "00bdfdbd90086fc6e85d3cce92d0dec5f28a144f",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -19,6 +19,6 @@
     "--ignored",
     "--nocapture"
   ],
-  "output": "\nrunning 1 test\ntest native_clipboard_transport_rejects_foreign_text_and_malformed_payload_without_stale_cache ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running tests/clipboard_transport_acceptance.rs (target/debug/deps/clipboard_transport_acceptance-98d1aefc075168f4)\n",
+  "output": "\nrunning 1 test\ntest native_clipboard_transport_rejects_foreign_text_and_malformed_payload_without_stale_cache ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s\n\n    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on package cache\nwarning: function `visit_meshes` is never used\n   --> crates/ingetrazo-core/src/screen_pick.rs:120:15\n    |\n120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {\n    |               ^^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `ingetrazo-core` (lib) generated 1 warning\nwarning: function `scene_from_xml` is never used\n   --> crates/ingetrazo-formats/src/dae_import.rs:757:15\n    |\n757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {\n    |               ^^^^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `ingetrazo-formats` (lib) generated 1 warning\nwarning: function `build` is never used\n   --> crates/ingetrazo-gui/src/composer_cad.rs:182:4\n    |\n182 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...\n    |    ^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `ingetrazo-gui` (lib) generated 1 warning\n   Compiling ingetrazo-gui v0.3.15 (/work/crates/ingetrazo-gui)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s\n     Running tests/clipboard_transport_acceptance.rs (target/debug/deps/clipboard_transport_acceptance-c36da44f9c430d57)\n",
   "scope": "Independent owners transfer geometry; unrelated text, malformed JSON and invalid topology clear cached geometry atomically; a replacement malformed request retires the previous valid preview. Wayland, Windows/macOS and clipboard-manager persistence are unverified."
 }

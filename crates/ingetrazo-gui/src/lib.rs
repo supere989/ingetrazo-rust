@@ -11,6 +11,7 @@ pub mod app;
 pub mod blender;
 pub mod composer;
 pub mod composer_cad;
+pub mod composer_backend;
 pub mod dialogs;
 pub mod icons;
 pub mod menu;
@@ -151,3 +152,11 @@ pub mod native_vulkan;
 
 pub mod gpu_memory;
 pub mod composer_compute;
+
+mod history_views;
+mod history_layers;
+mod document_presentation;
+
+mod history_terrain;
+
+mod image_plane_actions;

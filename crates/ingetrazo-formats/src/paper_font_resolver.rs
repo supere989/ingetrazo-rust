@@ -338,6 +338,13 @@ impl Resolver {
 mod publication_tests {
     use super::*;
 
+    #[cfg(not(target_os = "linux"))]
+    #[test]
+    fn missing_native_provider_is_an_explicit_error() {
+        assert!(matches!(Resolver::new(), Err(error) if error.contains("other platform providers remain unimplemented")));
+    }
+
+    #[cfg(target_os = "linux")]
     #[test]
     fn refused_request_preserves_published_fifo_and_owners() {
         let mut resolver = Resolver::new().unwrap();

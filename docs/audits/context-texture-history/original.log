@@ -1,0 +1,126 @@
+QOpenGLWidget is not supported on this platform.
+QOpenGLWidget is not supported on this platform.
+{
+  "provenance": {
+    "rust_commit": "685ccbd4480c191586ec6fdf4fdd18dccc9c704e",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "png_sha256": "6c24048159465d8155f5775f0000327281ddf68cbe947b44f43818f52f8f907b",
+  "cases": {
+    "direct": [
+      {
+        "phase": "finish",
+        "faces": 2,
+        "textured_faces": 1,
+        "texture_hashes": [
+          "6c24048159465d8155f5775f0000327281ddf68cbe947b44f43818f52f8f907b"
+        ],
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            10.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      },
+      {
+        "phase": "undo",
+        "faces": 1,
+        "textured_faces": 0,
+        "texture_hashes": [],
+        "uvw": [],
+        "vendor": []
+      },
+      {
+        "phase": "redo",
+        "faces": 2,
+        "textured_faces": 1,
+        "texture_hashes": [
+          "6c24048159465d8155f5775f0000327281ddf68cbe947b44f43818f52f8f907b"
+        ],
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            10.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      }
+    ],
+    "nested": [
+      {
+        "phase": "finish",
+        "faces": 2,
+        "textured_faces": 1,
+        "texture_hashes": [
+          "6c24048159465d8155f5775f0000327281ddf68cbe947b44f43818f52f8f907b"
+        ],
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            110.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      },
+      {
+        "phase": "undo",
+        "faces": 1,
+        "textured_faces": 0,
+        "texture_hashes": [],
+        "uvw": [],
+        "vendor": []
+      },
+      {
+        "phase": "redo",
+        "faces": 2,
+        "textured_faces": 1,
+        "texture_hashes": [
+          "6c24048159465d8155f5775f0000327281ddf68cbe947b44f43818f52f8f907b"
+        ],
+        "uvw": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            110.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vendor": [
+          null
+        ]
+      }
+    ]
+  },
+  "scope": "Actual original clipboard encode/decode, PasteTool stamp and operative group History; no system clipboard or rendered UI mutation."
+}

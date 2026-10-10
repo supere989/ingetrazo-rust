@@ -4,7 +4,7 @@ struct Fixture{app:IngeTrazoApp,dir:std::path::PathBuf,current:usize,all:usize}
 impl App for Fixture {
  fn title()->&'static str{"IngeTrazo actual PDF button acceptance"}
  fn new(system:&mut System,_:Option<std::path::PathBuf>)->Self{
- let mut app=IngeTrazoApp::new();app.set_language("en");app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory());
+ let mut app=IngeTrazoApp::new();app.set_language("en");app.native_composer.factory=Some(system.enable_cad2d().unwrap().factory().into());
  let shapes:Vec<SheetShape>=serde_json::from_slice(&std::fs::read(std::env::var("INGETRAZO_PDF_UI_RECIPES").unwrap()).unwrap()).unwrap();
  app.scene.sheets=shapes.into_iter().map(|shape|{let mut s=Sheet::default();s.items.clear();s.items.push(SheetItem::Shape(ShapeItem{id:uuid::Uuid::new_v4(),shape}));s}).collect();if std::env::var_os("INGETRAZO_PDF_UI_UNSUPPORTED").is_some(){app.scene.sheets=vec![Sheet::default()];}app.scene.active_sheet_index=Some(0);
  Self{app,dir:std::env::var("INGETRAZO_PDF_UI_OUT").unwrap().into(),current:0,all:0}}

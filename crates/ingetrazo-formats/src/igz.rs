@@ -519,6 +519,22 @@ fn section_model(v: &ingetrazo_core::section::SectionPlane) -> serde_json::Value
     })
 }
 
+fn image_plane_to_json(scene:&Scene,p:&ingetrazo_core::image_plane::ImagePlane)->serde_json::Value{
+    let mut model=p.to_json();
+    if scene.embedded_textures.contains_key(&p.path){model["texture"]=serde_json::json!({"embed":p.path});}
+    let mut raw=overlay(&p.native_document,&p.native_baseline,model.clone());
+    for key in ["name","opacity","layer","locked"]{
+        if p.native_baseline.get(key)!=model.get(key){if let Some(value)=model.get(key){raw[key]=value.clone();}else if let Some(object)=raw.as_object_mut(){object.remove(key);}}
+    }
+    // A changed asset must not retain a stale embed that overrides its path
+    // when the original reader extracts archives. Unrelated texture metadata
+    // and no-op source representation are retained.
+    if p.native_baseline.get("texture").and_then(|t|t.get("path")).and_then(|v|v.as_str())!=Some(p.path.as_str()){
+        for key in ["path","embed"]{if let Some(value)=model["texture"].get(key){raw["texture"][key]=value.clone();}else if let Some(object)=raw["texture"].as_object_mut(){object.remove(key);}}
+    }
+    raw
+}
+
 fn scene_model(scene: &Scene) -> serde_json::Value {
     let loose = mesh_to_json(&scene.mesh);
     let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
@@ -533,6 +549,8 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     }
 
     let mut doc = loose;
+    doc["display_style"]=serde_json::to_value(&scene.display_style).unwrap();
+    doc["shadows"]=serde_json::to_value(&scene.shadows).unwrap();
     doc["groups"] = serde_json::json!(groups_json);
     doc["layers"] = serde_json::json!(layers_json);
     let mut names: Vec<_> = scene.materials.keys().collect();
@@ -554,6 +572,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
         "fov_deg": scene.camera.fov_deg,
     });
     doc["dimensions"] = serde_json::json!(scene.dimensions.iter().map(|d|{let mut live=d.clone();(live.start,live.end)=scene.dimension_points(d);overlay(&d.native_document,&d.native_baseline,dimension_model(&live))}).collect::<Vec<_>>());
+    doc["image_planes"]=serde_json::json!(scene.image_planes.iter().map(|p|image_plane_to_json(scene,p)).collect::<Vec<_>>());
     doc["guides"] = serde_json::to_value(&scene.guides).unwrap_or(serde_json::json!([]));
     doc["text_labels"] = serde_json::to_value(&scene.text_labels).unwrap_or(serde_json::json!([]));
     let unit = match scene.unit {
@@ -585,6 +604,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
 pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
+    if scene.native_baseline.get("image_planes")!=current.get("image_planes"){doc["image_planes"]=current["image_planes"].clone();}
     if scene.native_baseline.get("groups") != current.get("groups") {
         let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
         let mut shared=std::collections::HashMap::new();
@@ -773,6 +793,9 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
 
     // Standard IngeTrazo format
     let mut scene = Scene::new();
+    if let Some(planes)=s_val.get("image_planes").and_then(|v|v.as_array()){for raw in planes{scene.image_planes.push(ingetrazo_core::image_plane::ImagePlane::from_json(raw).map_err(IgzError::InvalidDocument)?);}scene.image_objects.publish(&scene.image_planes);}
+    scene.display_style=ingetrazo_core::presentation::DocumentStyle::try_from_json(&s_val["display_style"]).map_err(IgzError::InvalidDocument)?;
+    scene.shadows=ingetrazo_core::presentation::ShadowSettings::try_from_json(&s_val["shadows"]).map_err(IgzError::InvalidDocument)?;
     scene.embedded_textures = embedded_textures;
     scene.native_document = s_val.clone();
     scene.mesh = json_to_mesh(s_val);
@@ -855,6 +878,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
             let visible = l_val.get("visible").and_then(|v| v.as_bool()).unwrap_or(true);
             let locked = l_val.get("locked").and_then(|l| l.as_bool()).unwrap_or(false);
             scene.layers.push(Layer {
+                history_id:uuid::Uuid::new_v4(),
                 name,
                 visible,
                 locked,
@@ -1061,6 +1085,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         };
     }
     scene.native_document = s_val.clone();
+    if s_val.get("display_style").is_some(){scene.show_section_fill=scene.display_style.section_fill;}else{scene.display_style.section_fill=scene.show_section_fill;}
     scene.native_baseline = scene_model(&scene);
     scene.mesh.rebuild_spatial_index();
     for g in &mut scene.groups {

@@ -1,0 +1,20 @@
+[
+  {
+    "old_alive": true,
+    "live": 1,
+    "undo": 1,
+    "redo": 0
+  },
+  {
+    "old_alive": true,
+    "live": 0,
+    "undo": 0,
+    "redo": 1
+  },
+  {
+    "old_alive": false,
+    "live": 1,
+    "undo": 1,
+    "redo": 0
+  }
+]

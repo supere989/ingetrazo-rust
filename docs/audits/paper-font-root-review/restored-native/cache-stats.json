@@ -1,0 +1,69 @@
+{
+  "cold_font_loads": 5,
+  "records": [
+    {
+      "case": "latin",
+      "glyphs": 29,
+      "points": 705,
+      "subset_builds": 5,
+      "subset_bytes": 86548
+    },
+    {
+      "case": "accents",
+      "glyphs": 29,
+      "points": 705,
+      "subset_builds": 5,
+      "subset_bytes": 86548
+    },
+    {
+      "case": "bold",
+      "glyphs": 10,
+      "points": 218,
+      "subset_builds": 1,
+      "subset_bytes": 17344
+    },
+    {
+      "case": "italic",
+      "glyphs": 29,
+      "points": 705,
+      "subset_builds": 5,
+      "subset_bytes": 86548
+    },
+    {
+      "case": "serif",
+      "glyphs": 11,
+      "points": 304,
+      "subset_builds": 1,
+      "subset_bytes": 10656
+    },
+    {
+      "case": "mono",
+      "glyphs": 11,
+      "points": 208,
+      "subset_builds": 1,
+      "subset_bytes": 10120
+    },
+    {
+      "case": "combining",
+      "glyphs": 29,
+      "points": 705,
+      "subset_builds": 5,
+      "subset_bytes": 86548
+    },
+    {
+      "case": "kerns",
+      "glyphs": 29,
+      "points": 705,
+      "subset_builds": 5,
+      "subset_bytes": 86548
+    },
+    {
+      "case": "serif_bold",
+      "glyphs": 6,
+      "points": 166,
+      "subset_builds": 1,
+      "subset_bytes": 9884
+    }
+  ],
+  "scope": "Typed fonts/direct writer only, paragraph/app UI still OPEN"
+}

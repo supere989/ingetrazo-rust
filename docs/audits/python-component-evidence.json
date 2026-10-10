@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "rust_commit": "8962ce3b99b3f97f28772541504afbc95c52a9f3",
+    "rust_commit": "1bbe4c9afacf4423f0432dbad2d8e67cace3d5e6",
     "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
     "checker_python": "3.13.13",
     "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
@@ -13,11 +13,11 @@
     "Make Unique detaches even identical geometry before later shared edit",
     "instance UID and opaque attributes retained",
     "nested editor commit propagates and Python preserves shared child identity",
-    "exact controller undo/redo and cancel preserve document; fragment save blocked",
+    "source-owned mesh/placement undo/redo preserves full remaining document, cleared selection and advancing revision; cancel exact and fragment save blocked",
     "unique classic clipboard copy independent, linked component copy shared, distinct placement IDs",
     "nested world edit preserves distinct UIDs, bakes selected container placement into children, preserves sibling placements",
     "unique parent subtree resists later original shared-child edits while preserving placements and child identity",
     "unique leaf and parent reopen as ordinary Python groups"
   ],
-  "scope": "Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; fresh actual original translated/rotated/tilted-scaled WORLD controls and three rejected mutations; no rendered UI gesture proof."
+  "scope": "Shared triangle and plain group plus nested GUI controller transactions and clipboard, independently reopened by original Python; fresh actual original translated/rotated/tilted-scaled WORLD controls and six rejected affine, precision and history-presentation mutations; no rendered UI gesture proof."
 }
