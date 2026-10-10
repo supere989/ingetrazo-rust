@@ -220,7 +220,7 @@ impl System {
     }
 
     pub fn enable_cad2d(&mut self)->Result<&cad2d::Renderer,String>{
-        if self.cad2d.is_none(){self.cad2d=Some(cad2d::Renderer::new(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass,&self.swapchain.image_views)?);}
+        if self.cad2d.is_none(){self.cad2d=Some(cad2d::Renderer::new(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass,&self.swapchain.image_views,self.swapchain.integer_cad)?);}
         Ok(self.cad2d.as_ref().unwrap())
     }
 
@@ -350,7 +350,7 @@ impl System {
                 .expect("Failed to reset fences")
         };
 
-        let wait_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT|if std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some(){vk::PipelineStageFlags::FRAGMENT_SHADER}else{vk::PipelineStageFlags::empty()}];
+        let wait_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT|if self.swapchain.integer_cad{vk::PipelineStageFlags::FRAGMENT_SHADER}else{vk::PipelineStageFlags::empty()}];
         let wait_semaphores = [self.image_available_semaphore];
         let signal_semaphores = [self.render_finished_semaphores[image_index as usize]];
 
@@ -584,16 +584,18 @@ struct Swapchain {
     image_views: Vec<vk::ImageView>,
     render_pass: vk::RenderPass,
     framebuffers: Vec<vk::Framebuffer>,
+    integer_cad:bool,
 }
 
 impl Swapchain {
     fn new(vulkan_context: &VulkanContext) -> Result<Self, Box<dyn Error>> {
+        let integer_cad=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
         // Swapchain
         let (loader, khr, extent, format, images, image_views) =
-            create_vulkan_swapchain(&vulkan_context)?;
+            create_vulkan_swapchain(&vulkan_context,integer_cad)?;
 
         // Renderpass
-        let render_pass = create_vulkan_render_pass(&vulkan_context.device, format)?;
+        let render_pass = create_vulkan_render_pass(&vulkan_context.device, format,integer_cad)?;
 
         // Framebuffers
         let framebuffers =
@@ -607,7 +609,7 @@ impl Swapchain {
             srgb: matches!(format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB),
             image_views,
             render_pass,
-            framebuffers,
+            framebuffers,integer_cad,
         })
     }
 
@@ -620,10 +622,10 @@ impl Swapchain {
 
         // Swapchain
         let (loader, khr, extent, format, images, image_views) =
-            create_vulkan_swapchain(vulkan_context)?;
+            create_vulkan_swapchain(vulkan_context,self.integer_cad)?;
 
         // Renderpass
-        let render_pass = create_vulkan_render_pass(&vulkan_context.device, format)?;
+        let render_pass = create_vulkan_render_pass(&vulkan_context.device, format,self.integer_cad)?;
 
         // Framebuffers
         let framebuffers =
@@ -829,6 +831,7 @@ fn create_vulkan_device_and_graphics_and_present_qs(
 
 fn create_vulkan_swapchain(
     vulkan_context: &VulkanContext,
+    integer_cad:bool,
 ) -> Result<
     (
         swapchain::Device,
@@ -883,7 +886,6 @@ fn create_vulkan_swapchain(
             )?
     };
 
-    let integer_cad=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
     let usage=cad_attachment_usage(capabilities.supported_usage_flags,integer_cad)?;
     eprintln!("CAD2D attachment usage: requested={usage:?} supported={:?}",capabilities.supported_usage_flags);
     // Swapchain extent
@@ -971,6 +973,7 @@ fn create_vulkan_swapchain(
 fn create_vulkan_render_pass(
     device: &Device,
     format: vk::Format,
+    integer_cad:bool,
 ) -> Result<vk::RenderPass, Box<dyn Error>> {
     log::debug!("Creating vulkan render pass");
     let attachment_descs = [vk::AttachmentDescription::default()
@@ -981,7 +984,6 @@ fn create_vulkan_render_pass(
         .initial_layout(vk::ImageLayout::UNDEFINED)
         .final_layout(vk::ImageLayout::PRESENT_SRC_KHR)];
 
-    let integer_cad=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
     let attachment_layout=if integer_cad{vk::ImageLayout::GENERAL}else{vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL};
     let color_attachment_refs = [vk::AttachmentReference::default()
         .attachment(0)

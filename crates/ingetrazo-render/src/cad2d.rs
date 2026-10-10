@@ -50,7 +50,7 @@ impl Geometry {
  /// are bounded to the same million-pixel domain as the rasterizer.
  pub fn validate_ordered_pose(&self,pose:Pose,ppp:f32)->Result<(),String>{
   pose.validate()?;if !ppp.is_finite()||ppp<=0.{return Err("Invalid CAD2D physical density".into());}
-  if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
+  if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let product=v[axis]*pose.scale[axis];let sum=product+pose.translation[axis];if !product.is_finite()||!sum.is_finite()||!(sum*2.).is_finite(){return Err("CAD2D pose overflows shader f32 intermediates".into());}let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
  }
  pub fn ordered_draws(&self)->Option<Arc<[std::ops::Range<u32>]>>{self.ordered_draws.clone()}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
@@ -100,4 +100,8 @@ fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Resul
  fn quad(x:f32)->[Vertex;4]{[[x,0.],[x+2.,0.],[x+2.,1.],[x,1.]].map(|position|Vertex{position,coverage:0.5})}
  #[test]fn rejects_same_draw_overlap_but_allows_source_ordered_barriers(){let vertices=quad(0.).into_iter().chain(quad(1.)).collect::<Vec<_>>();let indices=vec![0,1,2,0,2,3,4,5,6,4,6,7];assert!(Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),vec![0..12]).unwrap_err().contains("overlapping spans"));let g=Geometry::new_with_ordered_draws(vertices,indices,vec![0..6,6..12]).unwrap();assert!(g.validate_ordered_pose(Pose{scale:[-2.,0.75],translation:[0.25,0.3]},1.25).is_ok());assert!(g.validate_ordered_pose(Pose{scale:[f32::MAX;2],..Default::default()},2.).is_err());}
  #[test]fn canonical_shared_boundaries_are_safe(){let vertices=quad(0.).into_iter().chain(quad(2.)).collect::<Vec<_>>();let indices=vec![0,1,2,0,2,3,4,5,6,4,6,7];assert!(Geometry::new_with_ordered_draws(vertices,indices,vec![0..12]).is_ok());let v=Vertex{position:[0.,0.],coverage:1.};assert!(Geometry::new_with_ordered_draws(vec![v;3],vec![0,1,2,0,1,2],vec![0..6]).is_err());}
+}
+
+#[cfg(test)]mod shader_pose_bounds{use super::*;
+ #[test]fn physical_f64_bounds_do_not_hide_shader_intermediate_overflow(){let v=Vertex{position:[f32::MAX,0.],coverage:1.};let g=Geometry::new_with_ordered_draws(vec![v;3],vec![0,1,2],vec![0..3]).unwrap();assert!(g.validate_ordered_pose(Pose{scale:[2.,1.],translation:[-f32::MAX,0.]},1e-34).unwrap_err().contains("f32 intermediates"));}
 }

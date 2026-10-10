@@ -133,13 +133,15 @@ impl VulkanPaint for NativePaint {
         }
         self.counters.callbacks.fetch_add(1, Ordering::Relaxed);
         self.counters.binds.fetch_add(1, Ordering::Relaxed);
+        let screen=[info.screen_size_px[0] as f32 / scale,info.screen_size_px[1] as f32 / scale];
+        if screen.iter().any(|v|!v.is_finite()||*v<=0.){return Err(egui_ash_renderer::RendererError::Init("CAD2D logical screen is outside finite shader domain".into()));}
         let push = [
             r.pose.scale[0],
             r.pose.scale[1],
             r.pose.translation[0],
             r.pose.translation[1],
-            info.screen_size_px[0] as f32 / scale,
-            info.screen_size_px[1] as f32 / scale,
+            screen[0],
+            screen[1],
             0.,
             0.,
         ];
@@ -239,8 +241,8 @@ impl Renderer {
         budget: Arc<VulkanBudget>,
         pass: vk::RenderPass,
         views:&[vk::ImageView],
+        integer:bool,
     ) -> Result<Self, String> {
-        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
         let descriptor_layout=if integer{let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|e.to_string())?}else{vk::DescriptorSetLayout::null()};
         let set_layouts=if integer{vec![descriptor_layout]}else{Vec::new()};
         let ranges = [vk::PushConstantRange {
