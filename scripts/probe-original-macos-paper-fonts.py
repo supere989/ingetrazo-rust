@@ -31,10 +31,12 @@ for path in sorted(set(files)):
   if path.suffix.lower() in (".ttc",".otc"):
    owner=TTCollection(path,lazy=True);fonts=owner.fonts
   else:owner=TTFont(path,lazy=True);fonts=[owner]
+  with path.open("rb") as stream:
+   file_digest=hashlib.file_digest(stream,"sha256").hexdigest()
   for index,font in enumerate(fonts):
-   # Exact raw Qt table matching prevents family/style-name substitution.
-   key=(hashlib.sha256(font.getTableData("head")).hexdigest(),hashlib.sha256(font.getTableData("name")).hexdigest())
-   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
+   # Read exact stored tables, independent of any fontTools decompilation.
+   key=tuple(hashlib.sha256(font.reader[tag]).hexdigest() for tag in ("head","name"))
+   identities.setdefault(key,[]).append({"path":str(path),"index":index,"postscript":font["name"].getDebugName(6),"sha256":file_digest})
   owner.close()
  except Exception as error:inventory_errors.append({"path":str(path),"error":repr(error)})
 rows=[]
