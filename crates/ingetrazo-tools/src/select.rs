@@ -6,7 +6,7 @@ use glam::DVec3;
 use ingetrazo_core::math::BoundingBox;
 use ingetrazo_core::scene::{Scene, SelectionItem};
 
-use crate::base::{pick_edge, pick_face, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 /// Interactive Selection tool for picking single entities, face+bounds, and connected components.
 #[derive(Debug, Default, Clone)]
@@ -233,8 +233,8 @@ impl Tool for SelectTool {
     }
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        let hit_edge = pick_edge(&scene.mesh, &ctx.ray, 0.2);
-        let hit_face = pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id);
+        let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
+        let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
 
         let item = if let Some(eid) = hit_edge {
             Some(SelectionItem::Edge(eid))
@@ -264,8 +264,8 @@ impl Tool for SelectTool {
     }
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        let hit_edge = pick_edge(&scene.mesh, &ctx.ray, 0.2);
-        let hit_face = pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id);
+        let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
+        let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
 
         if let Some(fid) = hit_face {
             let mut bounding_edges = Vec::new();
@@ -295,8 +295,8 @@ impl Tool for SelectTool {
     }
 
     fn on_triple_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        let hit_edge = pick_edge(&scene.mesh, &ctx.ray, 0.2);
-        let hit_face = pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id);
+        let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
+        let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
 
         if let Some(fid) = hit_face {
             Self::select_all_connected(scene, SelectionItem::Face(fid));

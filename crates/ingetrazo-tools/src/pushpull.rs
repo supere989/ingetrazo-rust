@@ -4,7 +4,7 @@
 use glam::DVec3;
 use ingetrazo_core::scene::Scene;
 
-use crate::base::{pick_face, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 /// Interactive Push/Pull tool for extruding faces into solids and recessing geometry.
 #[derive(Debug, Default, Clone)]
@@ -382,7 +382,7 @@ impl Tool for PushPullTool {
 
     fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         if !self.is_dragging {
-            self.hovered_face = pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id);
+            self.hovered_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
         } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
             let normal = scene.mesh.face_normal(face_id);
             self.extrusion_distance = (ctx.world - start).dot(normal);
@@ -393,7 +393,7 @@ impl Tool for PushPullTool {
         if !self.is_dragging {
             let face_pick = self
                 .hovered_face
-                .or_else(|| pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id));
+                .or_else(|| crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id));
 
             if let Some(face_id) = face_pick {
                 self.selected_face = Some(face_id);
@@ -414,7 +414,7 @@ impl Tool for PushPullTool {
         if let Some(last_d) = self.last_distance {
             let face_pick = self
                 .hovered_face
-                .or_else(|| pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id));
+                .or_else(|| crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id));
 
             if let Some(face_id) = face_pick {
                 let _ = Self::extrude_face(scene, face_id, last_d);

@@ -209,7 +209,7 @@ impl SnapEngine {
         // 2. Close Loop Snap
         if let Some(close_pt) = close_point {
             let d = (close_pt - cursor_work).length();
-            if d < best_dist {
+            if d < best_dist && scene.section_point_visible(close_pt) {
                 best_dist = d;
                 best_result = SnapResult {
                     point: close_pt,
@@ -225,7 +225,7 @@ impl SnapEngine {
         // 3. Endpoint Snaps (Mesh Vertices, Groups, GeoPoints)
         for v in &scene.mesh.vertices {
             let d = (v.position - cursor_work).length();
-            if d < best_dist {
+            if d < best_dist && scene.section_point_visible(v.position) {
                 best_dist = d;
                 best_result = SnapResult {
                     point: v.position,
@@ -241,7 +241,7 @@ impl SnapEngine {
             for v in &g.mesh.vertices {
                 let wp = g.transform.transform_point3(v.position);
                 let d = (wp - cursor_work).length();
-                if d < best_dist {
+                if d < best_dist && scene.section_point_visible(wp) {
                     best_dist = d;
                     best_result = SnapResult {
                         point: wp,
@@ -256,7 +256,7 @@ impl SnapEngine {
         }
         for gp in &scene.geo_points {
             let d = (gp.position - cursor_work).length();
-            if d < best_dist {
+            if d < best_dist && scene.section_point_visible(gp.position) {
                 best_dist = d;
                 best_result = SnapResult {
                     point: gp.position,
@@ -300,7 +300,7 @@ impl SnapEngine {
             for j in (i + 1)..edges.len() {
                 if let Some(x_pt) = line_segment_intersection_3d(edges[i].0, edges[i].1, edges[j].0, edges[j].1) {
                     let d = (x_pt - cursor_work).length();
-                    if d < best_dist {
+                    if d < best_dist && scene.section_point_visible(x_pt) {
                         best_dist = d;
                         best_result = SnapResult {
                             point: x_pt,
@@ -324,7 +324,7 @@ impl SnapEngine {
             let p1 = scene.mesh.vertices[e.v1].position;
             let mid = (p0 + p1) * 0.5;
             let d = (mid - cursor_work).length();
-            if d < best_dist {
+            if d < best_dist && scene.section_point_visible(mid) {
                 best_dist = d;
                 best_result = SnapResult {
                     point: mid,
@@ -347,7 +347,7 @@ impl SnapEngine {
                 let pts: Vec<DVec3> = f.vertices.iter().map(|&v| scene.mesh.vertices[v].position).collect();
                 if let Some(center) = fit_circle_center(&pts) {
                     let d = (center - cursor_work).length();
-                    if d < best_dist {
+                    if d < best_dist && scene.section_point_visible(center) {
                         best_dist = d;
                         best_result = SnapResult {
                             point: center,
@@ -370,7 +370,7 @@ impl SnapEngine {
             match g.kind {
                 crate::guides::GuideType::Point(pt) => {
                     let d = (pt - cursor_work).length();
-                    if d < best_dist {
+                    if d < best_dist && scene.section_point_visible(pt) {
                         best_dist = d;
                         best_result = SnapResult {
                             point: pt,
@@ -385,7 +385,7 @@ impl SnapEngine {
                 crate::guides::GuideType::InfiniteLine { point, dir } => {
                     let proj = point + dir * (cursor_work - point).dot(dir);
                     let d = (proj - cursor_work).length();
-                    if d < best_dist {
+                    if d < best_dist && scene.section_point_visible(proj) {
                         best_dist = d;
                         best_result = SnapResult {
                             point: proj,
@@ -404,7 +404,7 @@ impl SnapEngine {
                         let t = ((cursor_work - a).dot(ab) / len_sq).clamp(0.0, 1.0);
                         let proj = a + ab * t;
                         let d = (proj - cursor_work).length();
-                        if d < best_dist {
+                        if d < best_dist && scene.section_point_visible(proj) {
                             best_dist = d;
                             best_result = SnapResult {
                                 point: proj,
@@ -430,7 +430,7 @@ impl SnapEngine {
                 let t = ((cursor_work - p0).dot(ab) / len_sq).clamp(0.0, 1.0);
                 let proj = p0 + ab * t;
                 let d = (proj - cursor_work).length();
-                if d < best_dist {
+                if d < best_dist && scene.section_point_visible(proj) {
                     best_dist = d;
                     best_result = SnapResult {
                         point: proj,
@@ -497,7 +497,7 @@ impl SnapEngine {
                     if t.abs() > 0.1 {
                         let proj = enc_pt + axis_dir * t;
                         let d = (proj - cursor_work).length();
-                        if d < best_dist * 0.75 {
+                        if d < best_dist * 0.75 && scene.section_point_visible(proj) {
                             best_dist = d;
                             best_result = SnapResult {
                                 point: proj,
@@ -563,7 +563,7 @@ impl SnapEngine {
                 if t.abs() > 0.1 {
                     let proj = start + axis_dir * t;
                     let d = (proj - cursor_work).length();
-                    if d < best_dist * 0.65 {
+                    if d < best_dist * 0.65 && scene.section_point_visible(proj) {
                         best_dist = d;
                         best_result = SnapResult {
                             point: proj,
@@ -747,5 +747,6 @@ mod tests {
         assert_eq!(res.kind, SnapKind::TwoPointFromPoint);
         assert!((res.point - DVec3::new(10.0, 20.0, 0.0)).length() < 0.1);
         assert_eq!(res.guides.len(), 2);
-    }
+    }    #[test]fn section_hides_nearest_endpoint_and_reveals_next_candidate(){let mut scene=Scene::new();scene.mesh.add_vertex(DVec3::new(0.02,0.,0.));scene.mesh.add_vertex(DVec3::new(-0.2,0.,0.));scene.section_planes.push(crate::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;let mut engine=SnapEngine::new(0.5);let ray=Ray::new(DVec3::new(0.02,0.,3.),-DVec3::Z);let snapped=engine.snap(&ray,&scene,None,None);assert_eq!(snapped.kind,SnapKind::Endpoint);assert_eq!(snapped.point,DVec3::new(-0.2,0.,0.));scene.show_section_cuts=false;assert_eq!(engine.snap(&ray,&scene,None,None).point,DVec3::new(0.02,0.,0.));}
+
 }

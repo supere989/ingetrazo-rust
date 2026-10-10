@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Face partitions and selected/picked planar edge-run offsets.
-use crate::base::{pick_edge, pick_face, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 use glam::DVec3;
 use ingetrazo_core::{
     math::newell_vector,
@@ -92,7 +92,7 @@ impl OffsetTool {
             self.armed = false;
         } else if let Some(id) = self
             .hovered_face
-            .or_else(|| pick_face(&scene.mesh, &ctx.ray).map(|p| p.0))
+            .or_else(|| crate::base::pick_scene_face(scene, &ctx.ray).map(|p| p.0))
         {
             let face = &scene.mesh.faces[id];
             self.run = face
@@ -105,7 +105,7 @@ impl OffsetTool {
             self.selected_face = Some(id);
         } else if let Some(id) = self
             .hovered_edge
-            .or_else(|| pick_edge(&scene.mesh, &ctx.ray, 0.2))
+            .or_else(|| crate::base::pick_scene_edge(scene, &ctx.ray, 0.2))
         {
             self.take_run(&scene.mesh, &Self::picked_run(&scene.mesh, id)?)?;
         } else {
@@ -251,9 +251,9 @@ impl Tool for OffsetTool {
                 self.offset_distance = (ctx.world - p).dot(n);
             }
         } else if !self.armed {
-            self.hovered_face = pick_face(&scene.mesh, &ctx.ray).map(|p| p.0);
+            self.hovered_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|p| p.0);
             self.hovered_edge = if self.hovered_face.is_none() {
-                pick_edge(&scene.mesh, &ctx.ray, 0.2)
+                crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)
             } else {
                 None
             };

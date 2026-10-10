@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
 //! Follow Me: joint-plane miter sweeps and circular closed-path revolutions.
 //! Ported from the original IngeTrazo core/sweep.py construction.
-use crate::base::{pick_edge, pick_face, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 use glam::DVec3;
 use ingetrazo_core::{
     math::newell_vector,
@@ -873,7 +873,7 @@ impl Tool for FollowMeTool {
             self.finish(scene);
             return;
         }
-        let Some((face, _, _)) = pick_face(&scene.mesh, &ctx.ray) else {
+        let Some((face, _, _)) = crate::base::pick_scene_face(scene, &ctx.ray) else {
             return;
         };
         // Also support tools constructed before selection without activation.
@@ -926,7 +926,7 @@ impl Tool for FollowMeTool {
             return;
         };
         if ctx.alt_held {
-            if let Some((face, _, _)) = pick_face(&scene.mesh, &ctx.ray) {
+            if let Some((face, _, _)) = crate::base::pick_scene_face(scene, &ctx.ray) {
                 if face != profile {
                     let p: Vec<_> = scene.mesh.faces[face]
                         .vertices
@@ -944,7 +944,7 @@ impl Tool for FollowMeTool {
         if self.closed_path.take().is_some() {
             self.update_preview(scene);
         }
-        let Some(edge) = pick_edge(&scene.mesh, &ctx.ray, 0.2) else {
+        let Some(edge) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2) else {
             return;
         };
         if self.skip.contains(&edge) || self.last_edge == Some(edge) {

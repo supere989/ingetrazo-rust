@@ -7,7 +7,7 @@ use glam::DVec3;
 use ingetrazo_core::section::{next_symbol, SectionPlane};
 use ingetrazo_core::scene::Scene;
 
-use crate::base::{pick_face, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 pub struct SectionPlaneTool {
     hover_point: Option<DVec3>,
@@ -55,7 +55,7 @@ impl Tool for SectionPlaneTool {
 
     fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.hover_point = Some(ctx.world);
-        if let Some((face_id, _, _)) = pick_face(&scene.mesh, &ctx.ray) {
+        if let Some((face_id, _, _)) = crate::base::pick_scene_face(scene, &ctx.ray) {
             self.hover_normal = scene.mesh.face_normal(face_id);
         } else {
             self.hover_normal = DVec3::Z;

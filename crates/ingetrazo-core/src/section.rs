@@ -115,3 +115,9 @@ mod tests {
         assert!(sp.is_clipped(DVec3::new(0.0, 0.0, 4.0)));
     }
 }
+
+impl crate::scene::Scene{
+    pub fn active_section(&self)->Option<&SectionPlane>{if self.show_section_cuts{self.section_planes.iter().find(|plane|plane.active)}else{None}}
+    pub fn section_point_visible(&self,point:DVec3)->bool{self.active_section().is_none_or(|plane|plane.signed_distance(point)<=1e-7)}
+    pub fn section_segment(&self,a:DVec3,b:DVec3)->Option<(DVec3,DVec3)>{let Some(plane)=self.active_section()else{return Some((a,b));};let da=plane.signed_distance(a);let db=plane.signed_distance(b);if da>1e-7&&db>1e-7{return None;}if da>1e-7||db>1e-7{let p=a+(b-a)*(da/(da-db));if da>1e-7{Some((p,b))}else{Some((a,p))}}else{Some((a,b))}}
+}

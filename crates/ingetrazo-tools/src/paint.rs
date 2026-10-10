@@ -4,7 +4,7 @@
 use ingetrazo_core::materials::Material;
 use ingetrazo_core::scene::{Scene, SelectionItem};
 
-use crate::base::{pick_face, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 /// Interactive Paint tool for applying materials and colours to faces and groups.
 #[derive(Debug, Clone)]
@@ -110,7 +110,7 @@ impl Tool for PaintTool {
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.eyedropper_mode = ctx.alt_held;
 
-        let hit_face = pick_face(&scene.mesh, &ctx.ray).map(|(id, _, _)| id);
+        let hit_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
         let Some(fid) = hit_face else { return };
 
         if self.eyedropper_mode {

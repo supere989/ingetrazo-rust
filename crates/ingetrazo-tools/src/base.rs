@@ -156,6 +156,11 @@ pub fn pick_face(mesh: &Mesh, ray: &Ray) -> Option<(usize, f64, DVec3)> {
     closest
 }
 
+/// Scene-aware picking excludes the side hidden by the document cut.
+pub fn pick_scene_face(scene:&Scene,ray:&Ray)->Option<(usize,f64,DVec3)>{let mut closest=None;let mut min_t=f64::INFINITY;for id in 0..scene.mesh.faces.len(){for(a,b,c)in scene.mesh.triangulate_face(id){if let Some((t,p))=ray_triangle_intersect(ray,a,b,c){if t<min_t&&scene.section_point_visible(p){min_t=t;closest=Some((id,t,p));}}}}closest}
+pub fn pick_scene_edge(scene:&Scene,ray:&Ray,tolerance:f64)->Option<usize>{let mut closest=None;let mut min_dist=tolerance;for(id,edge)in scene.mesh.edges.iter().enumerate(){let Some((a,b))=scene.section_segment(scene.mesh.vertices[edge.v0].position,scene.mesh.vertices[edge.v1].position)else{continue;};let(dist,t)=ray_segment_distance(ray,a,b);if dist<min_dist&&t>0.{min_dist=dist;closest=Some(id);}}closest}
+pub fn pick_scene_vertex(scene:&Scene,ray:&Ray,tolerance:f64)->Option<usize>{let mut closest=None;let mut min_dist=tolerance;for(id,vertex)in scene.mesh.vertices.iter().enumerate(){let p=vertex.position;if !scene.section_point_visible(p){continue;}let t=(p-ray.origin).dot(ray.dir);let d=(p-ray.at(t)).length();if t>0.&&d<min_dist{min_dist=d;closest=Some(id);}}closest}
+
 /// Distance and projection from point `p` to segment `ab`.
 pub fn point_segment_distance(p: DVec3, a: DVec3, b: DVec3) -> (f64, DVec3) {
     let ab = b - a;
@@ -257,3 +262,6 @@ pub fn create_tool(tool_type: ToolType) -> Box<dyn Tool> {
         ToolType::SectionPlane => Box::new(crate::section::SectionPlaneTool::default()),
     }
 }
+
+#[cfg(test)]mod section_pick_tests{use super::*;use ingetrazo_core::section::SectionPlane;#[test]fn hidden_front_face_does_not_mask_visible_rear_face(){let mut scene=Scene::new();for z in[1.,-1.]{let ids=[DVec3::new(-1.,-1.,z),DVec3::new(1.,-1.,z),DVec3::new(0.,1.,z)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);}scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"A","A"));scene.show_section_cuts=true;let ray=Ray::new(DVec3::new(0.,0.,3.),-DVec3::Z);assert_eq!(pick_scene_face(&scene,&ray).unwrap().0,1);scene.show_section_cuts=false;assert_eq!(pick_scene_face(&scene,&ray).unwrap().0,0);}
+#[test]fn crossing_edge_can_only_be_picked_on_visible_portion(){let mut scene=Scene::new();let a=scene.mesh.add_vertex(DVec3::new(-1.,0.,0.));let b=scene.mesh.add_vertex(DVec3::new(1.,0.,0.));scene.mesh.add_edge(a,b);scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;assert_eq!(pick_scene_edge(&scene,&Ray::new(DVec3::new(-0.5,0.,2.),-DVec3::Z),0.1),Some(0));assert_eq!(pick_scene_edge(&scene,&Ray::new(DVec3::new(0.5,0.,2.),-DVec3::Z),0.1),None);assert_eq!(pick_scene_vertex(&scene,&Ray::new(DVec3::new(1.,0.,2.),-DVec3::Z),0.1),None);}}

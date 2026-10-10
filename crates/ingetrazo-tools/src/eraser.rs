@@ -4,7 +4,7 @@
 use std::collections::HashSet;
 use ingetrazo_core::scene::Scene;
 
-use crate::base::{pick_edge, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 /// Interactive Eraser tool for removing edges/faces and softening/smoothing edges.
 #[derive(Debug, Default, Clone)]
@@ -104,7 +104,7 @@ impl Tool for EraserTool {
             self.is_soften_mode = true;
         }
         if self.is_dragging {
-            if let Some(eid) = pick_edge(&scene.mesh, &ctx.ray, 0.25) {
+            if let Some(eid) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.25) {
                 self.marked_edges.insert(eid);
             }
         }
@@ -112,7 +112,7 @@ impl Tool for EraserTool {
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         let soften = self.is_soften_mode || ctx.ctrl_held || ctx.alt_held;
-        if let Some(eid) = pick_edge(&scene.mesh, &ctx.ray, 0.25) {
+        if let Some(eid) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.25) {
             if soften {
                 Self::soften_edge(scene, eid);
             } else {

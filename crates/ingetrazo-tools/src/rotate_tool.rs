@@ -6,7 +6,7 @@ use std::f64::consts::PI;
 use glam::{DMat4, DQuat, DVec3};
 use ingetrazo_core::scene::{Scene, SelectionItem};
 
-use crate::base::{pick_edge, pick_face, pick_vertex, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 /// Rotate tool with 3-click protractor workflow around plane normal.
 #[derive(Debug, Default, Clone)]
@@ -75,13 +75,13 @@ impl RotateTool {
                     SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) => {}
                 }
             }
-        } else if let Some(vid) = pick_vertex(&scene.mesh, &ctx.ray, 0.2) {
+        } else if let Some(vid) = crate::base::pick_scene_vertex(scene, &ctx.ray, 0.2) {
             vert_set.insert(vid);
-        } else if let Some(eid) = pick_edge(&scene.mesh, &ctx.ray, 0.2) {
+        } else if let Some(eid) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2) {
             let e = &scene.mesh.edges[eid];
             vert_set.insert(e.v0);
             vert_set.insert(e.v1);
-        } else if let Some((fid, _, _)) = pick_face(&scene.mesh, &ctx.ray) {
+        } else if let Some((fid, _, _)) = crate::base::pick_scene_face(scene, &ctx.ray) {
             for &v in &scene.mesh.faces[fid].vertices {
                 vert_set.insert(v);
             }

@@ -6,7 +6,7 @@
 use glam::DVec3;
 use ingetrazo_core::scene::Scene;
 
-use crate::base::{pick_edge, Tool, ToolContext, ToolType};
+use crate::base::{Tool, ToolContext, ToolType};
 
 use ingetrazo_core::{
     math::{newell_vector, PointKey},
@@ -926,7 +926,7 @@ impl Tool for FilletTool {
             return;
         }
         if self.edges.is_empty() {
-            let Some(edge) = pick_edge(&scene.mesh, &ctx.ray, 0.3) else {
+            let Some(edge) = crate::base::pick_scene_edge(scene, &ctx.ray, 0.3) else {
                 return;
             };
             let selected = Self::selection(scene);
@@ -963,7 +963,7 @@ impl Tool for FilletTool {
                 }
             }
         } else if self.edges.is_empty() {
-            self.hover_edge = pick_edge(&scene.mesh, &ctx.ray, 0.3);
+            self.hover_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.3);
         }
         self.replan(scene);
     }
