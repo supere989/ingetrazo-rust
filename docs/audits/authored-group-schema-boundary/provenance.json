@@ -1,0 +1,12 @@
+{
+  "passed": false,
+  "implementation_source": "77eb89c",
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_helper_sha256": "5c644a3f39f37790db4e5509b37b0e8defaa27b0b49e1b5b56d05bbf3ad60932",
+  "native_loader_sha256": "2d5a00e890d82dcc06e962fd9553d800b7480e42849347668b183ade7e7dbcc3",
+  "headless_sha256": "e77ff38784414d748989646957ee79319cc56ad58f8ee56b8d33916c76882c3b",
+  "window_sha256": "e059dd90c12c4310352066f4c37913d975aa857a548f1d28648f85476e7db03c",
+  "same_device": "NVIDIA RTX5090 driver615.71.09",
+  "immutable_image": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "boundary": "7of8 renderer controls pass, whole goal remainsFAILED; loader semantic8/save/reopen pass. ExactRGBA no tolerance."
+}

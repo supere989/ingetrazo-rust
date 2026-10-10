@@ -1,0 +1,571 @@
+{
+  "cases": [
+    {
+      "case": "authored-legacy-absent",
+      "groups": [
+        {
+          "component_flag": false,
+          "ext": {
+            "vendor_token": 71
+          },
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-opaque",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-legacy-null",
+      "groups": [
+        {
+          "component_flag": false,
+          "ext": {
+            "vendor_token": 71
+          },
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-opaque",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-legacy-null-nullxform",
+      "groups": [
+        {
+          "component_flag": false,
+          "ext": {
+            "vendor_token": 71
+          },
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-opaque",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-legacy-null-component-true",
+      "groups": [
+        {
+          "component_flag": true,
+          "ext": {
+            "vendor_token": 71
+          },
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-opaque",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-proto-zero-true",
+      "groups": [
+        {
+          "component_flag": true,
+          "ext": {
+            "vendor_token": 72
+          },
+          "is_component": true,
+          "native_xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-numeric",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-proto-zero-false",
+      "groups": [
+        {
+          "component_flag": false,
+          "ext": {
+            "vendor_token": 72
+          },
+          "is_component": false,
+          "native_xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-numeric",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-nested-numeric-adopt",
+      "groups": [
+        {
+          "component_flag": false,
+          "ext": null,
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-parent",
+          "world_points": []
+        },
+        {
+          "component_flag": true,
+          "ext": {
+            "vendor_token": 73
+          },
+          "is_component": true,
+          "native_xform": [
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "path": [
+            0,
+            0
+          ],
+          "transform": [
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-child",
+          "world_points": [
+            [
+              21.0,
+              -0.5,
+              0.0
+            ],
+            [
+              21.0,
+              0.5,
+              0.0
+            ],
+            [
+              25.0,
+              -0.5,
+              0.0
+            ],
+            [
+              25.0,
+              0.5,
+              0.0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "case": "authored-nested-null-adopt",
+      "groups": [
+        {
+          "component_flag": false,
+          "ext": null,
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-parent",
+          "world_points": []
+        },
+        {
+          "component_flag": false,
+          "ext": {
+            "vendor_token": 71
+          },
+          "is_component": false,
+          "native_xform": null,
+          "path": [
+            0,
+            0
+          ],
+          "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "uid": "audit-opaque",
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

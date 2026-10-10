@@ -1,0 +1,67 @@
+{
+  "passed": false,
+  "authored_cases": 8,
+  "native_loader_save_reopen_semantics": true,
+  "negative_controls": 3,
+  "literal_render_failures": [
+    {
+      "case": "authored-nested-null-adopt",
+      "source": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "headless": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "window": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "source_ordinary_count": 0,
+      "native_ordinary_count": 6
+    }
+  ],
+  "source_roundtrip_classic_flag_losses": [
+    {
+      "case": "authored-legacy-absent",
+      "path": [
+        0
+      ],
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "authored-legacy-null",
+      "path": [
+        0
+      ],
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "authored-legacy-null-nullxform",
+      "path": [
+        0
+      ],
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "authored-nested-null-adopt",
+      "path": [
+        0,
+        0
+      ],
+      "before": false,
+      "after": true
+    }
+  ],
+  "scope": "SameGPU authored original/native load/render, geometry/component/UID/metadata. No editing/general group claim."
+}

@@ -1,0 +1,997 @@
+{
+  "provenance": {
+    "rust_commit": "54cae64f04e54c036b7ee15be0c714a4dcaaf09b",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": [
+    {
+      "case": "authored-legacy-absent",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "1b310082bf5a519855c621624322bc721196eb172cbaa313e7a33aef63d60225",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": false,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": true,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "ordinary_faces_count": 6
+    },
+    {
+      "case": "authored-legacy-null",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "b557ce5fdae3462b5770008b9e733a27103c8317cb7f5a0793629b7928f6702b",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": false,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": true,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "ordinary_faces_count": 6
+    },
+    {
+      "case": "authored-legacy-null-nullxform",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "3f49fd095a08129ceb9f47719e8fd46d22a853bc50f10fddc90416b100051a76",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": false,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": true,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "ordinary_faces_count": 6
+    },
+    {
+      "case": "authored-legacy-null-component-true",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "8e390facab1c4f989423a5dbecf719ead323d61acda1fbb65d960e1793e46646",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": true,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": true,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "ordinary_faces_count": 6
+    },
+    {
+      "case": "authored-proto-zero-true",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "02d1e3b2f240bac4a8469650d320f0c5b5ca39c93546953165d0ad174522bd37",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-numeric",
+          "component": true,
+          "is_component": true,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 72
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-numeric",
+          "component": true,
+          "is_component": true,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 72
+          }
+        }
+      ],
+      "ordinary_faces_count": 0
+    },
+    {
+      "case": "authored-proto-zero-false",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "6ba2ed0ac554137e16800bb78e38b9747c0cff73b2672026974a3b0317225543",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-numeric",
+          "component": false,
+          "is_component": false,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 72
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-numeric",
+          "component": false,
+          "is_component": false,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 72
+          }
+        }
+      ],
+      "ordinary_faces_count": 0
+    },
+    {
+      "case": "authored-nested-numeric-adopt",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "995981b89bd1f3251e7d7a19e446faf561f3aea2b8c961da181ec8b9cd5acdd0",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-parent",
+          "component": false,
+          "is_component": false,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [],
+          "ext": null
+        },
+        {
+          "path": [
+            0,
+            0
+          ],
+          "uid": "audit-child",
+          "component": true,
+          "is_component": true,
+          "xform": [
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [
+            [
+              21.0,
+              -0.5,
+              0.0
+            ],
+            [
+              21.0,
+              0.5,
+              0.0
+            ],
+            [
+              25.0,
+              -0.5,
+              0.0
+            ],
+            [
+              25.0,
+              0.5,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 73
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-parent",
+          "component": false,
+          "is_component": false,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [],
+          "ext": null
+        },
+        {
+          "path": [
+            0,
+            0
+          ],
+          "uid": "audit-child",
+          "component": true,
+          "is_component": true,
+          "xform": [
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [
+            [
+              21.0,
+              -0.5,
+              0.0
+            ],
+            [
+              21.0,
+              0.5,
+              0.0
+            ],
+            [
+              25.0,
+              -0.5,
+              0.0
+            ],
+            [
+              25.0,
+              0.5,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 73
+          }
+        }
+      ],
+      "ordinary_faces_count": 0
+    },
+    {
+      "case": "authored-nested-null-adopt",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "gl_info": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      },
+      "background": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "native_input_sha256": "c7291c83010831fb681544de2e9c18166601fb2d6c9ee58ce483c89a2d5587d4",
+      "groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-parent",
+          "component": false,
+          "is_component": false,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [],
+          "ext": null
+        },
+        {
+          "path": [
+            0,
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": false,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "original_roundtrip_groups": [
+        {
+          "path": [
+            0
+          ],
+          "uid": "audit-parent",
+          "component": false,
+          "is_component": false,
+          "xform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_points": [],
+          "ext": null
+        },
+        {
+          "path": [
+            0,
+            0
+          ],
+          "uid": "audit-opaque",
+          "component": true,
+          "is_component": false,
+          "xform": null,
+          "world_points": [
+            [
+              9.0,
+              -1.0,
+              0.0
+            ],
+            [
+              9.0,
+              1.0,
+              0.0
+            ],
+            [
+              11.0,
+              -1.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "ext": {
+            "vendor_token": 71
+          }
+        }
+      ],
+      "ordinary_faces_count": 0
+    }
+  ],
+  "scope": "Authored schema loaded by actual original; unmodified raw document supplied to native; original roundtrip semantics checked."
+}

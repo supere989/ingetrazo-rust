@@ -1,0 +1,150 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "case": "authored-legacy-absent",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-legacy-absent.log"
+    },
+    {
+      "case": "authored-legacy-null",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-legacy-null.log"
+    },
+    {
+      "case": "authored-legacy-null-nullxform",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-legacy-null-nullxform.log"
+    },
+    {
+      "case": "authored-legacy-null-component-true",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-legacy-null-component-true.log"
+    },
+    {
+      "case": "authored-proto-zero-true",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-proto-zero-true.log"
+    },
+    {
+      "case": "authored-proto-zero-false",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-proto-zero-false.log"
+    },
+    {
+      "case": "authored-nested-numeric-adopt",
+      "center_rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true,
+      "backend_log": "authored-nested-numeric-adopt.log"
+    },
+    {
+      "case": "authored-nested-null-adopt",
+      "center_rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "owned_window_id": 119537666,
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": false,
+      "backend_log": "authored-nested-null-adopt.log"
+    }
+  ],
+  "scope": "Actual NVIDIA Vulkan swapchain plus production World and encoded egui adapter; capture strictly newly created own named client window, clean own WM close. No desktop/root image capture."
+}
