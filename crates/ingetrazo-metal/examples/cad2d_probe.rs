@@ -3,6 +3,7 @@ fn main() -> Result<(), String> {
     use ingetrazo_metal::{MetalCad2d, NativeMetal};
     use ingetrazo_render::cad2d::{Batch, EncodedRgba, Geometry, Pose, Vertex};
     use objc2_metal::MTLDevice;
+    let compute = std::env::args().any(|a| a == "--compute");
     let metal = NativeMetal::new()?;
     println!(
         "Native Metal CAD device={} unified={} Apple1={} ROG={}; virtual/physical classification is external, never inferred from architecture",
@@ -13,7 +14,7 @@ fn main() -> Result<(), String> {
             .supportsFamily(objc2_metal::MTLGPUFamily::Apple1),
         metal.device.areRasterOrderGroupsSupported()
     );
-    if !MetalCad2d::supported(&metal) {
+    if !compute && !MetalCad2d::supported(&metal) {
         assert!(MetalCad2d::new(metal, 64, 64).is_err());
         println!(
             "PASS explicit unsupported exact-framebuffer-fetch refusal; no rendered Metal image proof. Intel/AMD exact composition remains OPEN"
@@ -25,7 +26,19 @@ fn main() -> Result<(), String> {
     }
     let budget = metal.budget.clone();
     let baseline = budget.lock().unwrap().total_committed();
-    let mut renderer = MetalCad2d::new(metal, 64, 64)?;
+    let mut renderer = if compute {
+        MetalCad2d::new_ordered_spans(metal, 64, 64)?
+    } else {
+        MetalCad2d::new(metal, 64, 64)?
+    };
+    println!(
+        "Metal CAD execution backend={}",
+        if compute {
+            "exact source-ordered span compute"
+        } else {
+            "exact Apple framebuffer fetch"
+        }
+    );
     let mut vertices = Vec::new();
     for (a, b) in [(8., 56.), (16., 48.)] {
         for position in [[a, a], [b, a], [b, b], [a, b]] {
@@ -110,15 +123,23 @@ fn main() -> Result<(), String> {
         count: 6,
         color,
     }];
-    let pose = Pose {
-        scale: [0.5; 2],
-        translation: [16.; 2],
+    let pose = if compute {
+        Pose {
+            scale: [1.; 2],
+            translation: [2., -2.],
+        }
+    } else {
+        Pose {
+            scale: [0.5; 2],
+            translation: [16.; 2],
+        }
     };
     let image = renderer.render_readback(&geometry, &batch, pose, [255; 4])?;
     assert_eq!(
         &image[(24 * 64 + 24) * 4..(24 * 64 + 24) * 4 + 4],
         &[255, 0, 0, 255]
     );
+    let geometry_uploads = renderer.stats().geometry_uploads;
     let reads = renderer.stats().readback_submissions;
     for _ in 0..10 {
         let serial = renderer.render(&geometry, &batch, pose, [255; 4])?;
@@ -129,22 +150,35 @@ fn main() -> Result<(), String> {
         renderer.render_readback(&geometry, &batch, pose, [255; 4])?,
         image
     );
-    assert_eq!(renderer.stats().geometry_uploads, 1);
+    assert_eq!(renderer.stats().geometry_uploads, geometry_uploads);
     assert_eq!(renderer.stats().palette_preparations, 7);
     // Actual vertex allocation followed by index admission refusal; old cached
     // immutable geometry, previous image and accounting remain intact.
-    let replacement = Geometry::new(
-        vec![
-            Vertex {
-                position: [2., 2.],
-                coverage: 1.
-            };
-            3
-        ],
-        vec![0, 1, 2],
-    )?;
+    let replacement = if compute {
+        Geometry::new(
+            vec![[0., 0.], [4., 0.], [4., 4.], [0., 4.]]
+                .into_iter()
+                .map(|position| Vertex {
+                    position,
+                    coverage: 1.,
+                })
+                .collect(),
+            vec![0, 1, 2, 0, 2, 3],
+        )?
+    } else {
+        Geometry::new(
+            vec![
+                Vertex {
+                    position: [2., 2.],
+                    coverage: 1.
+                };
+                3
+            ],
+            vec![0, 1, 2],
+        )?
+    };
     let fresh = NativeMetal::new()?;
-    let probe = fresh.buffer(36, true)?;
+    let probe = fresh.buffer(if compute { 24 } else { 36 }, true)?;
     let vertex_charge = probe.allocation_bytes();
     drop(probe);
     let committed = budget.lock().unwrap().total_committed();
@@ -156,7 +190,7 @@ fn main() -> Result<(), String> {
         renderer.render_readback(&geometry, &batch, pose, [255; 4])?,
         image
     );
-    assert_eq!(renderer.stats().geometry_uploads, 1);
+    assert_eq!(renderer.stats().geometry_uploads, geometry_uploads);
     assert!(
         renderer
             .render_readback(

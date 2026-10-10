@@ -21,6 +21,7 @@ pub struct MetalCadStats {
     pub target_bytes: u64,
     pub palette_preparations: u64,
     pub readback_submissions: u64,
+    pub plan_uploads: u64,
 }
 #[repr(C)]
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
@@ -45,6 +46,9 @@ impl Drop for Texture {
     }
 }
 struct Cached {
+    layout: Vec<(u32, u32)>,
+    references: Option<Arc<Buffer>>,
+    tile_count: u32,
     id: u64,
     vertices: Arc<Buffer>,
     indices: Arc<Buffer>,
@@ -57,10 +61,14 @@ struct Frame {
     _indices: Arc<Buffer>,
     _target: Arc<Texture>,
     _readback: Option<Arc<Buffer>>,
+    _references: Option<Arc<Buffer>>,
+    _palette: Option<Arc<Buffer>>,
 }
 struct Inner {
     metal: NativeMetal,
-    pipeline: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
+    pipeline: Option<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
+    compute: Option<Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
+    gpu_palette: Option<Arc<Buffer>>,
     target: Arc<Texture>,
     readback: Option<Arc<Buffer>>,
     width: usize,
@@ -81,6 +89,9 @@ pub struct MetalCad2d {
 }
 impl Drop for MetalCad2d {
     fn drop(&mut self) {
+        if !self.inner.frames.is_empty() {
+            self.inner.metal.poisoned.store(true, Ordering::Release);
+        }
         if !self.unknown && self.inner.frames.is_empty() {
             unsafe { ManuallyDrop::drop(&mut self.inner) }
         }
@@ -92,10 +103,24 @@ impl MetalCad2d {
             && metal.device.areRasterOrderGroupsSupported()
     }
     pub fn new(metal: NativeMetal, width: usize, height: usize) -> Result<Self, String> {
-        objc2::rc::autoreleasepool(|_| Self::new_inner(metal, width, height))
+        objc2::rc::autoreleasepool(|_| Self::new_inner(metal, width, height, false))
     }
-    fn new_inner(metal: NativeMetal, width: usize, height: usize) -> Result<Self, String> {
-        if !Self::supported(&metal) {
+    /// Direct ordered-span compute path for IMR Intel/AMD and Apple devices.
+    /// It admits source pixel spans only, not arbitrary triangle/affine parity.
+    pub fn new_ordered_spans(
+        metal: NativeMetal,
+        width: usize,
+        height: usize,
+    ) -> Result<Self, String> {
+        objc2::rc::autoreleasepool(|_| Self::new_inner(metal, width, height, true))
+    }
+    fn new_inner(
+        metal: NativeMetal,
+        width: usize,
+        height: usize,
+        compute: bool,
+    ) -> Result<Self, String> {
+        if !compute && !Self::supported(&metal) {
             return Err(format!(
                 "Exact Metal CAD framebuffer fetch unsupported: device={}, Apple1={}, ROG={}; Intel/AMD exact native path remains OPEN",
                 metal.info.name,
@@ -108,30 +133,50 @@ impl MetalCad2d {
         }
         let options = MTLCompileOptions::new();
         options.setFastMathEnabled(false);
+        let shader = if compute {
+            include_str!("shaders/cad2d_spans.metal")
+        } else {
+            include_str!("shaders/cad2d.metal")
+        };
         let library = metal
             .device
-            .newLibraryWithSource_options_error(
-                &NSString::from_str(include_str!("shaders/cad2d.metal")),
-                Some(&options),
-            )
+            .newLibraryWithSource_options_error(&NSString::from_str(shader), Some(&options))
             .map_err(|e| format!("Metal shader compile: {e:?}"))?;
-        let vertex = library
-            .newFunctionWithName(&NSString::from_str("cad_vertex"))
-            .ok_or("Metal CAD vertex missing")?;
-        let fragment = library
-            .newFunctionWithName(&NSString::from_str("cad_fragment"))
-            .ok_or("Metal CAD fragment missing")?;
-        let descriptor = MTLRenderPipelineDescriptor::new();
-        descriptor.setVertexFunction(Some(&vertex));
-        descriptor.setFragmentFunction(Some(&fragment));
-        // Index zero is statically bounded; one encoded UNORM attachment, no sRGB.
-        let attachment = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };
-        attachment.setPixelFormat(MTLPixelFormat::RGBA8Unorm);
-        attachment.setBlendingEnabled(false);
-        let pipeline = metal
-            .device
-            .newRenderPipelineStateWithDescriptor_error(&descriptor)
-            .map_err(|e| format!("Metal CAD pipeline: {e:?}"))?;
+        let (pipeline, compute_pipeline) = if compute {
+            let function = library
+                .newFunctionWithName(&NSString::from_str("span_compute"))
+                .ok_or("Metal compute function missing")?;
+            let pipeline = metal
+                .device
+                .newComputePipelineStateWithFunction_error(&function)
+                .map_err(|e| format!("Metal compute pipeline: {e:?}"))?;
+            if pipeline.maxTotalThreadsPerThreadgroup() < 64 {
+                return Err("Metal compute cannot admit8x8 tile group".into());
+            }
+            (None, Some(pipeline))
+        } else {
+            let vertex = library
+                .newFunctionWithName(&NSString::from_str("cad_vertex"))
+                .ok_or("Metal CAD vertex missing")?;
+            let fragment = library
+                .newFunctionWithName(&NSString::from_str("cad_fragment"))
+                .ok_or("Metal CAD fragment missing")?;
+            let descriptor = MTLRenderPipelineDescriptor::new();
+            descriptor.setVertexFunction(Some(&vertex));
+            descriptor.setFragmentFunction(Some(&fragment));
+            let attachment = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };
+            attachment.setPixelFormat(MTLPixelFormat::RGBA8Unorm);
+            attachment.setBlendingEnabled(false);
+            (
+                Some(
+                    metal
+                        .device
+                        .newRenderPipelineStateWithDescriptor_error(&descriptor)
+                        .map_err(|e| format!("Metal CAD pipeline: {e:?}"))?,
+                ),
+                None,
+            )
+        };
         let row = (width.checked_mul(4).ok_or("Target byte overflow")? + 255) & !255;
         let target = Arc::new(Self::target(&metal, width, height)?);
         let stats = MetalCadStats {
@@ -142,6 +187,8 @@ impl MetalCad2d {
             inner: ManuallyDrop::new(Inner {
                 metal,
                 pipeline,
+                compute: compute_pipeline,
+                gpu_palette: None,
                 target,
                 readback: None,
                 width,
@@ -173,7 +220,7 @@ impl MetalCad2d {
             )
         };
         descriptor.setStorageMode(MTLStorageMode::Private);
-        descriptor.setUsage(MTLTextureUsage::RenderTarget);
+        descriptor.setUsage(MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderWrite);
         let Some(raw) = metal.device.newTextureWithDescriptor(&descriptor) else {
             metal.budget.lock().unwrap().cancel(ticket)?;
             return Err("Metal target allocation failed".into());
@@ -204,6 +251,18 @@ impl MetalCad2d {
     /// Cold immutable geometry uploaded once. Prepared replacement is published
     /// only when both allocations and writes succeed; failed admission keeps old.
     pub fn prepare(&mut self, geometry: &Arc<Geometry>) -> Result<(), String> {
+        if self.inner.compute.is_some() {
+            let color = ingetrazo_render::cad2d::EncodedRgba::from_bytes([255; 4], 1.)?;
+            return self.prepare_spans(
+                geometry,
+                &[Batch {
+                    first: 0,
+                    count: geometry.indices().len() as u32,
+                    color,
+                }],
+            );
+        }
+
         if self.unknown || self.inner.metal.poisoned.load(Ordering::Acquire) {
             return Err("Metal CAD completion unknown; admission refused".into());
         }
@@ -234,6 +293,9 @@ impl MetalCad2d {
             .buffer(geometry.indices().len() * 4, true)?;
         indices.write(bytemuck::cast_slice(geometry.indices()))?;
         self.inner.cached = Some(Cached {
+            layout: Vec::new(),
+            references: None,
+            tile_count: 0,
             id: geometry.id(),
             vertices: Arc::new(vertices),
             indices: Arc::new(indices),
@@ -241,6 +303,47 @@ impl MetalCad2d {
         });
         self.inner.stats.geometry_uploads += 1;
         self.inner.stats.geometry_bytes = geometry.logical_bytes();
+        Ok(())
+    }
+    fn upload_bytes(&self, bytes: &[u8]) -> Result<Arc<Buffer>, String> {
+        let mut buffer = self.inner.metal.buffer(bytes.len(), true)?;
+        buffer.write(bytes)?;
+        Ok(Arc::new(buffer))
+    }
+    fn prepare_spans(&mut self, geometry: &Arc<Geometry>, batches: &[Batch]) -> Result<(), String> {
+        if self.unknown || self.inner.metal.poisoned.load(Ordering::Acquire) {
+            return Err("Metal compute completion unknown".into());
+        }
+        let layout: Vec<_> = batches.iter().map(|b| (b.first, b.count)).collect();
+        if self
+            .inner
+            .cached
+            .as_ref()
+            .is_some_and(|c| c.id == geometry.id() && c.layout == layout)
+        {
+            self.inner.stats.warm_hits += 1;
+            return Ok(());
+        }
+        let plan = crate::span_plan::compile(geometry, batches)?;
+        let bounds = self.geometry_bounds(geometry)?;
+        let vertices = self.upload_bytes(bytemuck::cast_slice(&plan.spans))?;
+        let indices = self.upload_bytes(bytemuck::cast_slice(&plan.tiles))?;
+        let references = self.upload_bytes(bytemuck::cast_slice(&plan.references))?;
+        let bytes = (plan.spans.len() * std::mem::size_of::<crate::span_plan::Span>()
+            + plan.tiles.len() * std::mem::size_of::<crate::span_plan::Tile>()
+            + plan.references.len() * 4) as u64;
+        self.inner.cached = Some(Cached {
+            id: geometry.id(),
+            bounds,
+            layout,
+            vertices,
+            indices,
+            references: Some(references),
+            tile_count: plan.tiles.len() as u32,
+        });
+        self.inner.stats.plan_uploads += 1;
+        self.inner.stats.geometry_uploads += 1;
+        self.inner.stats.geometry_bytes = bytes;
         Ok(())
     }
     fn geometry_bounds(&self, geometry: &Arc<Geometry>) -> Result<[[f32; 2]; 2], String> {
@@ -388,7 +491,37 @@ impl MetalCad2d {
                     .buffer(self.inner.row * self.inner.height, true)?,
             ));
         }
-        self.prepare(geometry)?;
+        if self.inner.compute.is_some() {
+            if pose.scale != [1.; 2]
+                || pose
+                    .translation
+                    .iter()
+                    .any(|v| v.fract() != 0. || v.abs() > 1e6)
+            {
+                return Err("Metal span compute requires integral translation and unit scale; rerasterize phase geometry otherwise".into());
+            }
+        }
+        let gpu_palette = if self.inner.compute.is_some() {
+            if let Some(ref colors) = colors {
+                let values: Vec<[u32; 4]> = colors
+                    .iter()
+                    .map(|c| c.map(|v| (v * 255.).round() as u32))
+                    .collect();
+                Some(self.upload_bytes(bytemuck::cast_slice(&values))?)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        if self.inner.compute.is_some() {
+            self.prepare_spans(geometry, batches)?;
+        } else {
+            self.prepare(geometry)?;
+        }
+        if let Some(palette) = gpu_palette {
+            self.inner.gpu_palette = Some(palette);
+        }
         if let Some(colors) = colors {
             self.inner.palette = batches.to_vec();
             self.inner.colors = colors;
@@ -400,54 +533,112 @@ impl MetalCad2d {
             .queue
             .commandBuffer()
             .ok_or("Metal CAD command creation failed")?;
-        let pass = MTLRenderPassDescriptor::new();
-        let attachment = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
-        attachment.setTexture(Some(&self.inner.target.raw));
-        attachment.setLoadAction(MTLLoadAction::Clear);
-        attachment.setStoreAction(MTLStoreAction::Store);
-        attachment.setClearColor(MTLClearColor {
-            red: clear[0] as f64 / 255.,
-            green: clear[1] as f64 / 255.,
-            blue: clear[2] as f64 / 255.,
-            alpha: clear[3] as f64 / 255.,
-        });
-        let encoder = command
-            .renderCommandEncoderWithDescriptor(&pass)
-            .ok_or("Metal CAD render encoder failed")?;
-        encoder.setRenderPipelineState(&self.inner.pipeline);
-        let cached = self.inner.cached.as_ref().unwrap();
-        unsafe {
-            encoder.setVertexBuffer_offset_atIndex(Some(&cached.vertices.raw), 0, 0);
-        }
-        for (index, batch) in batches.iter().enumerate() {
-            let push = Push {
-                scale: pose.scale,
-                translation: pose.translation,
-                screen: [self.inner.width as f32, self.inner.height as f32],
-                pad: [0.; 2],
-                rgba: self.inner.colors[index],
+        if let Some(ref pipeline) = self.inner.compute {
+            #[repr(C)]
+            #[derive(Clone, Copy)]
+            struct ComputePush {
+                translation: [i32; 2],
+                size: [u32; 2],
+                clear: [u32; 4],
+                tile_count: u32,
+                pad: [u32; 3],
+            }
+            let cached = self.inner.cached.as_ref().unwrap();
+            let push = ComputePush {
+                translation: pose.translation.map(|v| v as i32),
+                size: [self.inner.width as u32, self.inner.height as u32],
+                clear: clear.map(|v| v as u32),
+                tile_count: cached.tile_count,
+                pad: [0; 3],
             };
+            let encoder = command
+                .computeCommandEncoder()
+                .ok_or("Metal span compute encoder failed")?;
+            encoder.setComputePipelineState(pipeline);
             unsafe {
-                encoder.setVertexBytes_length_atIndex(
-                    std::ptr::NonNull::from(&push).cast(),
-                    std::mem::size_of::<Push>(),
-                    1,
+                encoder.setBuffer_offset_atIndex(Some(&cached.vertices.raw), 0, 0);
+                encoder.setBuffer_offset_atIndex(Some(&cached.indices.raw), 0, 1);
+                encoder.setBuffer_offset_atIndex(
+                    Some(&cached.references.as_ref().unwrap().raw),
+                    0,
+                    2,
                 );
-                encoder.setFragmentBytes_length_atIndex(
-                    std::ptr::NonNull::from(&push).cast(),
-                    std::mem::size_of::<Push>(),
-                    1,
+                encoder.setBuffer_offset_atIndex(
+                    Some(&self.inner.gpu_palette.as_ref().unwrap().raw),
+                    0,
+                    3,
                 );
-                encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
-                    MTLPrimitiveType::Triangle,
-                    batch.count as usize,
-                    MTLIndexType::UInt32,
-                    &cached.indices.raw,
-                    batch.first as usize * 4,
+                encoder.setBytes_length_atIndex(
+                    std::ptr::NonNull::from(&push).cast(),
+                    std::mem::size_of::<ComputePush>(),
+                    4,
+                );
+                encoder.setTexture_atIndex(Some(&self.inner.target.raw), 0);
+                encoder.dispatchThreadgroups_threadsPerThreadgroup(
+                    MTLSize {
+                        width: self.inner.width.div_ceil(8),
+                        height: self.inner.height.div_ceil(8),
+                        depth: 1,
+                    },
+                    MTLSize {
+                        width: 8,
+                        height: 8,
+                        depth: 1,
+                    },
                 );
             }
+            encoder.endEncoding();
+        } else {
+            let pass = MTLRenderPassDescriptor::new();
+            let attachment = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
+            attachment.setTexture(Some(&self.inner.target.raw));
+            attachment.setLoadAction(MTLLoadAction::Clear);
+            attachment.setStoreAction(MTLStoreAction::Store);
+            attachment.setClearColor(MTLClearColor {
+                red: clear[0] as f64 / 255.,
+                green: clear[1] as f64 / 255.,
+                blue: clear[2] as f64 / 255.,
+                alpha: clear[3] as f64 / 255.,
+            });
+            let encoder = command
+                .renderCommandEncoderWithDescriptor(&pass)
+                .ok_or("Metal CAD render encoder failed")?;
+            encoder.setRenderPipelineState(self.inner.pipeline.as_ref().unwrap());
+            let cached = self.inner.cached.as_ref().unwrap();
+            unsafe {
+                encoder.setVertexBuffer_offset_atIndex(Some(&cached.vertices.raw), 0, 0);
+            }
+            for (index, batch) in batches.iter().enumerate() {
+                let push = Push {
+                    scale: pose.scale,
+                    translation: pose.translation,
+                    screen: [self.inner.width as f32, self.inner.height as f32],
+                    pad: [0.; 2],
+                    rgba: self.inner.colors[index],
+                };
+                unsafe {
+                    encoder.setVertexBytes_length_atIndex(
+                        std::ptr::NonNull::from(&push).cast(),
+                        std::mem::size_of::<Push>(),
+                        1,
+                    );
+                    encoder.setFragmentBytes_length_atIndex(
+                        std::ptr::NonNull::from(&push).cast(),
+                        std::mem::size_of::<Push>(),
+                        1,
+                    );
+                    encoder
+                        .drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
+                            MTLPrimitiveType::Triangle,
+                            batch.count as usize,
+                            MTLIndexType::UInt32,
+                            &cached.indices.raw,
+                            batch.first as usize * 4,
+                        );
+                }
+            }
+            encoder.endEncoding();
         }
-        encoder.endEncoding();
         if readback {
             let blit = command
                 .blitCommandEncoder()
@@ -463,6 +654,8 @@ impl MetalCad2d {
         let frame = Frame {
             command,
             serial,
+            _references: cached.references.clone(),
+            _palette: self.inner.gpu_palette.clone(),
             _vertices: cached.vertices.clone(),
             _indices: cached.indices.clone(),
             _target: self.inner.target.clone(),
