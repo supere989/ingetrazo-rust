@@ -7,6 +7,8 @@
 //! - STL (.stl): Stereolithography 3D print format
 
 mod exchange;
+pub mod skp;
+pub use skp::{load_skp,SkpError};
 pub mod dae;
 mod dae_import;
 pub mod dxf;
@@ -38,6 +40,8 @@ use ingetrazo_core::scene::Scene;
 
 #[derive(thiserror::Error, Debug)]
 pub enum FormatError {
+    #[error("SKP format error: {0}")]
+    Skp(#[from] SkpError),
     #[error("COLLADA format error: {0}")]
     Dae(#[from] DaeError),
     #[error("IGZ format error: {0}")]
@@ -66,6 +70,7 @@ pub fn load_file(path: &Path) -> Result<Scene, FormatError> {
 
     match ext.as_str() {
         "igz" => Ok(load_igz(path)?),
+        "skp" => Ok(load_skp(path)?),
         "dae" => Ok(load_dae(path)?),
         "gltf" | "glb" => Ok(load_gltf(path)?),
         "obj" => Ok(load_obj(path)?),
