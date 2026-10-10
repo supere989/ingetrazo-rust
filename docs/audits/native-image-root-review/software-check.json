@@ -1,0 +1,85 @@
+{
+  "cases": [
+    {
+      "case": "image-quadrants",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-alpha",
+      "samples_exact": true,
+      "warm_zero": true
+    },
+    {
+      "case": "image-cutout",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-opacity-0999",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-opacity-below",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-reversed",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-wireframe",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-hidden-line",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-xray",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-hidden-layer",
+      "samples_exact": true,
+      "warm_zero": true
+    },
+    {
+      "case": "image-overlap",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-opaque-behind",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-faded-behind",
+      "samples_exact": true,
+      "warm_zero": true
+    },
+    {
+      "case": "image-threshold-behind",
+      "samples_exact": false,
+      "warm_zero": true
+    },
+    {
+      "case": "image-below-threshold-behind",
+      "samples_exact": true,
+      "warm_zero": true
+    },
+    {
+      "case": "image-coplanar-trace",
+      "samples_exact": true,
+      "warm_zero": true
+    }
+  ],
+  "scope": "Independent software native replay against stored actual NVIDIA originals; sampledpixels only, not hardware acceptance/wholeimage parity"
+}

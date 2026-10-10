@@ -8,27 +8,28 @@ use std::collections::{HashMap,HashSet};
 #[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize}
 struct Pool{device:Device,handle:vk::DescriptorPool}
 impl Drop for Pool{fn drop(&mut self){unsafe{self.device.destroy_descriptor_pool(self.handle,None)}}}
-pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,images:Vec<PreparedTexture>,pub contours:Vec<(BufferId,u32,u32)>}
+pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,images:Vec<PreparedTexture>,references:Option<super::reference_images::Candidate>,pub contours:Vec<(BufferId,u32,u32)>}
 #[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64}
-pub struct Textures{probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;8],pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
+pub struct Textures{references:super::reference_images::ReferenceImages,image_key:Option<(u64,u64)>,probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;8],pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
 impl Textures{
  pub fn new(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags,budget:std::sync::Arc<super::budget::VulkanBudget>)->Result<Self,String>{
-  let device=context.device.clone();let mut result=Self{probe_pressure:false,budget,device,layout:vk::PipelineLayout::null(),descriptor_layout:vk::DescriptorSetLayout::null(),pipelines:[vk::Pipeline::null();8],pool:None,buffers:vec![],draws:vec![],cache:TextureCache::default(),stats:Stats::default()};
+  let device=context.device.clone();let mut result=Self{references:super::reference_images::ReferenceImages::new(context,render_pass,samples)?,image_key:None,probe_pressure:false,budget,device,layout:vk::PipelineLayout::null(),descriptor_layout:vk::DescriptorSetLayout::null(),pipelines:[vk::Pipeline::null();8],pool:None,buffers:vec![],draws:vec![],cache:TextureCache::default(),stats:Stats::default()};
   let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];
   result.descriptor_layout=unsafe{result.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|e.to_string())?;
   result.layout=unsafe{result.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().set_layouts(&[result.descriptor_layout]).push_constant_ranges(&[vk::PushConstantRange::default().stage_flags(vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT).offset(0).size(128)]),None)}.map_err(|e|e.to_string())?;
   for index in 0..8{result.pipelines[index]=pipeline(&result.device,render_pass,result.layout,samples,index)?;}Ok(result)
  }
- pub fn prepare(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,fence:vk::Fence,completed:u64,storage_limit:u64)->Result<Candidate,String>{
+ pub fn prepare(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64)->Result<Candidate,String>{
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Texture replacement requires completed draw fence".into());}
-  let mut candidate=Candidate{pool:None,buffers:vec![],draws:vec![],images:vec![],contours:vec![]};
+  let mut candidate=Candidate{pool:None,buffers:vec![],draws:vec![],images:vec![],references:None,contours:vec![]};
   let prepare=(||->Result<(),String>{
+   {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?);}
    if buffers.is_empty(){return Ok(());}
    let count=u32::try_from(buffers.len()).map_err(|_|"Too many texture descriptors")?;
    let pool=unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:count}]),None)}.map_err(|e|e.to_string())?;
    candidate.pool=Some(Pool{device:self.device.clone(),handle:pool});
    let mut paths=buffers.iter().collect::<Vec<_>>();paths.sort_by_key(|(_,b)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
-   let mut images=HashMap::<AssetId,(vk::ImageView,vk::Sampler,bool)>::new();
+   let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
    for(path,buffer)in paths{
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
     let file;let encoded=if let Some(bytes)=assets.get(path){bytes.as_slice()}else{file=std::fs::read(path).map_err(|e|format!("Texture {path}: {e}"))?;file.as_slice()};
@@ -49,12 +50,13 @@ impl Textures{
   if let Err(error)=prepare{self.abort(resources,candidate,fence,completed)?;return Err(error);}self.stats.builds+=1;Ok(candidate)
  }
  pub fn abort(&mut self,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64)->Result<(),String>{drop(candidate.pool.take());for buffer in candidate.buffers{resources.retire(buffer)?;}resources.collect(fence,completed)?;self.stats.rollbacks+=1;Ok(())}
- pub fn publish(&mut self,context:&VulkanContext,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64)->Result<(),String>{
+ pub fn publish(&mut self,context:&VulkanContext,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64,scene:&ingetrazo_core::scene::Scene)->Result<(),String>{
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{self.abort(resources,candidate,fence,completed)?;return Err("Texture publication requires completed draw fence".into());}
   for image in candidate.images.drain(..){self.cache.publish(image)?;}
+  if let Some(references)=candidate.references.take(){self.references.publish(&mut self.cache,references,scene.image_planes.publication_revision())?;self.image_key=Some((scene.image_planes.membership_epoch(),scene.view_version));}
   drop(self.pool.take());for buffer in self.buffers.drain(..){resources.retire(buffer)?;}resources.collect(fence,completed)?;
   self.pool=candidate.pool.take();self.buffers=candidate.buffers;self.draws=candidate.draws;
-  let active=self.draws.iter().map(|d|d.asset).collect::<HashSet<_>>();self.cache.collect_unused(context,&active,fence,completed)?;Ok(())
+  let active=self.draws.iter().map(|d|d.asset).chain(self.references.assets()).collect::<HashSet<_>>();self.cache.collect_unused(context,&active,fence,completed)?;Ok(())
  }
  /// No allocation, geometry traversal, hashing, decoding, or transfer on draw.
  pub fn record(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool)->Result<(),String>{
@@ -68,6 +70,15 @@ impl Textures{
    unsafe{self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.pipelines[index]);self.device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,self.layout,0,&[draw.set],&[]);self.device.cmd_bind_vertex_buffers(command,0,&[buffer],&[0]);self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);self.device.cmd_draw(command,draw.count,1,draw.first,0);}self.stats.draws+=1;
   }Ok(())
  }
+ pub fn refresh_images(&mut self,context:&VulkanContext,resources:&mut Resources,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64)->Result<(),String>{
+  let key=(scene.image_planes.membership_epoch(),scene.view_version);
+  if self.image_key==Some(key){return self.references.refresh_pose(scene);}
+  let candidate=self.references.prepare(context,resources,&mut self.cache,scene,fence)?;
+  self.references.publish(&mut self.cache,candidate,scene.image_planes.publication_revision())?;
+  self.image_key=Some(key);let active=self.draws.iter().map(|d|d.asset).chain(self.references.assets()).collect::<HashSet<_>>();self.cache.collect_unused(context,&active,fence,completed)?;Ok(())
+ }
+ pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16])->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp)}
+ pub fn image_stats(&self)->super::reference_images::Stats{self.references.stats}
  pub fn set_pressure_for_probe(&mut self,enabled:bool){self.probe_pressure=enabled;}
  pub fn cache_stats(&self)->&super::texture_cache::TextureStats{&self.cache.stats}
  pub fn buffers(&self)->&[BufferId]{&self.buffers}
