@@ -360,6 +360,52 @@ fn exhaustive_hidden_ink_reference(lines:Vec<VectorSegment>,camera:&OrbitCamera,
 // Original hlr._merge_collinear joins only world-collinear, end-to-end ink
 // of the same class. Projected coincident lines at different depths stay distinct.
 fn merge_collinear(lines: Vec<VectorSegment>, tolerance: f64) -> Vec<VectorSegment> {
+    // Conservative endpoint broad phase; final predicates and source order stay exact.
+    let indexed = tolerance.is_finite() && tolerance >= 0. && lines.iter().all(|l| l.a.is_finite() && l.b.is_finite());
+    let mut endpoints = if indexed { lines.iter().enumerate().flat_map(|(i,l)| [(l.a.x,i),(l.b.x,i)]).collect::<Vec<_>>() } else { vec![] };
+    endpoints.sort_by(|a,b| a.0.total_cmp(&b.0));
+    let mut used = vec![false; lines.len()];
+    let mut result = Vec::new();
+    for (i, line) in lines.iter().enumerate() {
+        if used[i] { continue; }
+        used[i] = true;
+        let direction = (line.b-line.a).normalize_or_zero();
+        let mut ends = [line.a, line.b];
+        for end in 0..2 {
+            let forward = if end == 0 { -direction } else { direction };
+            loop {
+                let mut next = None;
+                let candidates = if indexed {
+                    let x = ends[end].x;
+                    let pad = (x.abs() + tolerance).max(1.) * f64::EPSILON * 8.;
+                    let low = x - tolerance - pad; let high = x + tolerance + pad;
+                    let begin = endpoints.partition_point(|p| p.0 < low);
+                    let finish = endpoints.partition_point(|p| p.0 <= high);
+                    let mut ids = endpoints[begin..finish].iter().map(|p|p.1).collect::<Vec<_>>();
+                    ids.sort_unstable(); ids.dedup(); ids
+                } else { (0..lines.len()).collect() };
+                for j in candidates {
+                    let candidate = &lines[j];
+                    if used[j] || candidate.kind != line.kind { continue; }
+                    for (start, other) in [(candidate.a,candidate.b),(candidate.b,candidate.a)] {
+                        let delta = other-start;
+                        if (start-ends[end]).abs().max_element() <= tolerance
+                            && forward.cross(delta.normalize_or_zero()).length_squared() <= 1e-14
+                            && forward.dot(delta) > 0. {
+                            next = Some((j,other)); break;
+                        }
+                    }
+                    if next.is_some() { break; }
+                }
+                match next { Some((j,p)) => { used[j]=true; ends[end]=p; }, None => break }
+            }
+        }
+        result.push(VectorSegment {a:ends[0],b:ends[1],kind:line.kind});
+    }
+    result
+}
+#[cfg(test)]
+fn exhaustive_merge_reference(lines: Vec<VectorSegment>, tolerance: f64) -> Vec<VectorSegment> {
     let mut used = vec![false; lines.len()];
     let mut result = Vec::new();
     for (i, line) in lines.iter().enumerate() {
@@ -534,6 +580,25 @@ fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn indexed_merge_preserves_source_order_and_exact_endpoints() {
+        for scale in [1e-4,1.,1e4] { for offset in [0.,1e6] {
+            let mut lines=vec![];
+            for i in 0..160 { for kind in [LineKind::Edge,LineKind::Hidden,LineKind::Profile] {
+                let a=DVec3::new(offset+i as f64*scale,scale,0.);
+                let b=a+DVec3::X*scale;
+                lines.push(VectorSegment{a,b,kind});
+                if i%7==0 {lines.push(VectorSegment{a:b,b:a,kind});}
+            }}
+            lines.reverse();lines.push(VectorSegment{a:DVec3::ZERO,b:DVec3::ZERO,kind:LineKind::Edge});
+            for tolerance in [0.,scale*1e-5,scale*0.1] {
+                let old=exhaustive_merge_reference(lines.clone(),tolerance);
+                let new=merge_collinear(lines.clone(),tolerance);
+                assert_eq!(old.len(),new.len());
+                for (a,b) in old.iter().zip(new) { assert_eq!(a.a,b.a);assert_eq!(a.b,b.b);assert_eq!(a.kind,b.kind); }
+            }
+        }}
+    }
     #[test]
     fn cached_hidden_projections_preserve_growing_result_order_bit_exactly(){
         let mut camera=OrbitCamera::default();
