@@ -45,3 +45,5 @@ Milestone4CI38013336872 FAILED renderedblackcapture afterfixed5sec; test/buildpa
 Resource/systemclipboard integratedc71e261; fullworkspacePASS plus actualisolatedXvfb twoownertransferPASS. Reviewrequested stale/malformedpayload validation, successstatus and component/resourcecollision remapping beforepublication. DAEisolated geometry+sceneassembly two meaningful transform/instance/stride/reflection/unit/cycle/invalidindex fixturesPASS; stillnotwiredloader pending materials/UV/coplanarfusion/components/georef. CI38013592441 verifiedlive.
 
 Partsindependent91a2c58 integrated d652a09. Original ft/in formatting corrected(noquote-space,max6decimals); rerun leaves repeated-eigenvalue PCAextent mismatch only. Retainedbaseline untouched, notCIcompletiongate. Offsetsourcef91e02a readyreview; independentcases underway.
+
+Offsetca21984 integrated; fullworkspacePASS;9 original orderedregion/chain cases and2negativecontrols PASS canonical3427942. CI38013592441 nowpassedrenderstartup, installingoriginalruntime (verifiedlive). Clipboardcollisionremapffd3b40 andoverlapadapterpendingreview.
