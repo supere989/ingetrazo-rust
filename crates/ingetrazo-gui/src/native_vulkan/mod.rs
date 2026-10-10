@@ -238,6 +238,8 @@ impl System {
     }
 
     pub fn draw<A: App>(&mut self, egui_app: &mut A, window: &Window) {
+        // A poisoned device is never retried from repeated repaint events.
+        if self.vulkan_context.lifetime.uncertain(){return;}
         // If swapchain must be recreated wait for windows to not be minimized anymore
         if self.dirty_swapchain {
             let PhysicalSize { width, height } = window.inner_size();
