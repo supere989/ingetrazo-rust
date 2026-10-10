@@ -1,5 +1,9 @@
-# Open annotation shareback Undo parity defect
+# Recorded annotation shareback Undo parity defect
 
 This is a parity defect, not an approved behavior divergence. Source6be original Viewport.begin_group_edit -> MoveVerticesCommand -> AddDimensionCommand -> end_one_group_edit folds inner commands into ReshareInstanceCommand. Native source5399749 uses the same translated context and fresh world dimension endpoints but Finish folds full Scene snapshots. Original Undo restores local mesh endpoint1 and leaves BOTH annotations. Rust Undo restores the pre-edit Scene and leaves ONE annotation. Redo yields endpoint4 and TWO annotations on both. Actual original counts2/2 and native exact original-scene assertion (one annotation) are retained in the two fixture/probe sources and immutable final logs.
 
 Intended followup: model leaf-shareback Undo must mirror original mesh/prototype/placement ownership restoration while preserving source annotation entities that are not restored by ReshareInstanceCommand. Audit other non-mesh inner commands first and preserve original command-specific behavior; do not assume every Scene field can be globally excluded from Undo. Add explicit original/native dimension count, endpoint/offset/text/UID, anchor survival/fallback and repeated Undo/Redo checks before a reviewed production change. Nested ordinary command chronology and original container bake outside history must remain intact. No fix is implemented here, no user-approved divergence exists, and the current atomic Rust policy must not close full P15/history parity.
+
+## Reviewed correction
+
+Source a1ffc5d+dbe99fc, independently integrated c9cab2f, corrects this narrow defect with prototype/placement-only restoration and source vertex-identity anchor lifetimes. Fresh eight original/native command cases, four rejecting negatives, six actual original IGZ reopen controls and533 canonical tests pass. [Root proof](../shareback-root-review/README.md). The preceding observation and intended followup are retained historical evidence; broader history, annotation families and rendered UI remain open.
