@@ -1,0 +1,304 @@
+{
+  "passed": true,
+  "negative_controls": [
+    {
+      "case": "lost-partial-update",
+      "detected": true
+    },
+    {
+      "case": "lost-untouched-texel",
+      "detected": true
+    }
+  ],
+  "samples": [
+    {
+      "image": "startup.png",
+      "pixel": [
+        30,
+        120
+      ],
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "actual_rgb": [
+        255,
+        0,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        90,
+        120
+      ],
+      "expected_rgb": [
+        0,
+        255,
+        0
+      ],
+      "actual_rgb": [
+        0,
+        255,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        30,
+        180
+      ],
+      "expected_rgb": [
+        0,
+        0,
+        255
+      ],
+      "actual_rgb": [
+        0,
+        0,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        90,
+        180
+      ],
+      "expected_rgb": [
+        255,
+        255,
+        255
+      ],
+      "actual_rgb": [
+        255,
+        255,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        45,
+        135
+      ],
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "actual_rgb": [
+        255,
+        0,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        75,
+        135
+      ],
+      "expected_rgb": [
+        0,
+        255,
+        0
+      ],
+      "actual_rgb": [
+        0,
+        255,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        45,
+        165
+      ],
+      "expected_rgb": [
+        0,
+        0,
+        255
+      ],
+      "actual_rgb": [
+        0,
+        0,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "startup.png",
+      "pixel": [
+        75,
+        165
+      ],
+      "expected_rgb": [
+        255,
+        255,
+        255
+      ],
+      "actual_rgb": [
+        255,
+        255,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        30,
+        120
+      ],
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "actual_rgb": [
+        255,
+        0,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        90,
+        120
+      ],
+      "expected_rgb": [
+        255,
+        255,
+        0
+      ],
+      "actual_rgb": [
+        255,
+        255,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        30,
+        180
+      ],
+      "expected_rgb": [
+        0,
+        0,
+        255
+      ],
+      "actual_rgb": [
+        0,
+        0,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        90,
+        180
+      ],
+      "expected_rgb": [
+        255,
+        255,
+        255
+      ],
+      "actual_rgb": [
+        255,
+        255,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        45,
+        135
+      ],
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "actual_rgb": [
+        255,
+        0,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        75,
+        135
+      ],
+      "expected_rgb": [
+        255,
+        255,
+        0
+      ],
+      "actual_rgb": [
+        255,
+        255,
+        0
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        45,
+        165
+      ],
+      "expected_rgb": [
+        0,
+        0,
+        255
+      ],
+      "actual_rgb": [
+        0,
+        0,
+        255
+      ],
+      "match": true
+    },
+    {
+      "image": "partial-texture.png",
+      "pixel": [
+        75,
+        165
+      ],
+      "expected_rgb": [
+        255,
+        255,
+        255
+      ],
+      "actual_rgb": [
+        255,
+        255,
+        255
+      ],
+      "match": true
+    }
+  ],
+  "scope": "Actual ash Vulkan UI nearest magnification and1pixel partial upload,3unchangedtexels retained, initial/updated80pximage. LinuxXvfbllvmpipe; minification,wrap,compressedmips,CAD3Dtextures,Metalhardware notproved."
+}

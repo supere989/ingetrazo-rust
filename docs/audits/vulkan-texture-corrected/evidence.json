@@ -1,0 +1,9 @@
+{
+  "source": "57041640b1d6243649128f05652942b40be550cb",
+  "binary_sha256": "14b03b3af3173f65888f8b187f5fa9886d00ca9dfc69be095b52e635fe3f664e",
+  "passed": true,
+  "mode": "save",
+  "destination_changed": true,
+  "adapter_diagnostics": "vulkan: No DRI3 support detected - required for presentation\nNote: you can probably enable DRI3 in your Xorg config\nvulkan: No DRI3 support detected - required for presentation\nNote: you can probably enable DRI3 in your Xorg config\nvulkan: No DRI3 support detected - required for presentation\nNote: you can probably enable DRI3 in your Xorg config\nvulkan: No DRI3 support detected - required for presentation\nNote: you can probably enable DRI3 in your Xorg config\nvulkan: No DRI3 support detected - required for presentation\nNote: you can probably enable DRI3 in your Xorg config\nVulkan adapter 0 AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO): no suitable graphics/present queues\nSuitable Vulkan adapter 1: llvmpipe (LLVM 20.1.2, 256 bits); CPU; queues Queues { graphics: 0, present: 0, compute: Some(0) }\nNative Vulkan adapter: \"llvmpipe (LLVM 20.1.2, 256 bits)\"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true\nVulkan heap 0: 132593643520 bytes; DEVICE_LOCAL\nGPU allocation budget: 1169336 committed bytes; heaps [HeapBudget { capacity: 132593643520, limit: 106074914816, live_budget: Some(119334279168), live_usage: 47697330176, reserved: 0, committed: 1169336 }]\n",
+  "scope": "Actual ash host OS close, production modal clicks, two resizes and save/discard destination integrity. Xvfb/llvmpipe Linux only; no Metal hardware or hardware ray-tracing proof."
+}
