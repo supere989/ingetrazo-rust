@@ -1,0 +1,16 @@
+{
+  "source_revision": "48979d3",
+  "upstream_adapter_source": "e397a64",
+  "world_binary_sha256": "11465083d83303c2b2da310b7ec598de6543ed506fc506d03032a1b296e8a712",
+  "source_original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "hardware": "NVIDIA RTX5090 strictdiscrete CDI gpu0 imagea6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "alpha_original_cases": 10,
+  "alpha_native_matching": 2,
+  "alpha_default_exit": 1,
+  "alpha_overall_passed": false,
+  "managed_texture_and_section_backend": "native ash Vulkan llvmpipe/Xvfb actualproductionwindow startup/twoswapchainresizes/OSclose",
+  "managed_texture_pixels": "exact red/green/blue/yellow partialupdated bands, oldfullimageadmissionfailureretained",
+  "section_cases": 10,
+  "section_bounded_gate_passed": true,
+  "scope": "Headless RTX World renders do not execute egui encoded adapter. Actual adapter/managed texture composition proven only native software WSI; original transparency eightfailures retained pendingnextsource. No fullparity or hardwareWSI/Metalclaim."
+}

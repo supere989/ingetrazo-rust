@@ -1,0 +1,168 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "case": "equal-opacity-forward",
+      "original": [
+        125,
+        63,
+        187,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": false
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "original": [
+        187,
+        63,
+        125,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": false
+    },
+    {
+      "case": "opacity-995",
+      "original": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "native": [
+        247,
+        0,
+        0,
+        254
+      ],
+      "passed": false
+    },
+    {
+      "case": "opacity-bucket-order",
+      "original": [
+        213,
+        89,
+        126,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": false
+    },
+    {
+      "case": "opacity-zero",
+      "original": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": true
+    },
+    {
+      "case": "opaque-back",
+      "original": [
+        124,
+        86,
+        37,
+        255
+      ],
+      "native": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "passed": false
+    },
+    {
+      "case": "opaque-front",
+      "original": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "native": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "passed": true
+    },
+    {
+      "case": "red-half-black",
+      "original": [
+        124,
+        0,
+        0,
+        255
+      ],
+      "native": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "passed": false
+    },
+    {
+      "case": "red-half-white",
+      "original": [
+        251,
+        127,
+        127,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": false
+    },
+    {
+      "case": "section-clipped",
+      "original": [
+        251,
+        127,
+        127,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "passed": false
+    }
+  ],
+  "scope": "Ten original colored untextured front-surface center pixels. Texture/backside/instancing and general alpha remain open.",
+  "negative_controls_passed": true,
+  "retained_known_open": true
+}

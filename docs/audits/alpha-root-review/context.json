@@ -1,0 +1,6 @@
+{
+  "source": "9c0c26a",
+  "tests_passed": 392,
+  "tests_ignored": 2,
+  "scope": "Root reviewed alpha/batch merge, 24-byte shared transparent geometry, resource retirement and depth/blend/draw ordering. Hardware seven one-byte alpha failures unresolved; no canonical promotion."
+}

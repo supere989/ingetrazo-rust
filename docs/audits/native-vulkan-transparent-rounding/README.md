@@ -1,0 +1,5 @@
+# Source rounding correction
+
+Actual original Qt fixtures exposed RGB even ties: original [32,64,96] vs previous native [34,66,98]. Rust now uses ties-even for cached quantized RGB. Original .5005 opacity rounds to .5 while the previous f32 conversion selected .501; .1255 rounds to .126 while previous native selected .125. Explicit source f64 opacity is retained as CPU-only change spans in MeshRenderBuffer, then rounded with fixed decimal ties-even conversion before creating native run buckets. GPU buffer size stays24B and spans are not uploaded. Fourteen original cases now match software native pixels and opacity runs; previous failures are retained. The original opaque buffer prefix is normalized from run offsets.
+
+This proves these actual explicit-attribute tie controls. Arbitrary f64 RGB values still pass through existing f32 vertex color conversion; material opacity stored as f32, transformed normal shade ties and full back/texture semantics remain separate precision/acceptance gates. RTX fixed-function UNORM blending has retained one-byte deviations from software Qt reference and is not promoted by this software result.

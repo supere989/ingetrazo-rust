@@ -1,0 +1,3 @@
+# Exact source classification and cached decimal buckets
+
+Original explicit opacity .99899999999 is less than .999, so it is translucent, then its draw bucket rounds to .999. Converting to f32 first rounds it to .999 and incorrectly classifies it opaque. Production classification now compares original f64, while GPU alpha remains f32 as original uniforms. Fifteen actual original Qt cases and software Vulkan pixels/buckets pass. Sparse source spans mark once per face, source opacity is parsed once per face, and decimal format/parse is performed only on an opacity change; triangle loops reuse the bucket key. No GPU vertex/metadata size change.

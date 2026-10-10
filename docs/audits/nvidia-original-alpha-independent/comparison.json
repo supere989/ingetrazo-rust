@@ -1,0 +1,248 @@
+{
+  "passed": true,
+  "source_revision": "28f7f3a",
+  "native_source": "19216f7 +9c1510b",
+  "cases": [
+    {
+      "case": "red-half-white",
+      "source": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "native": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "red-half-black",
+      "source": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "native": [
+        123,
+        0,
+        0,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "opacity-bucket-order",
+      "source": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "native": [
+        213,
+        90,
+        127,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "opaque-front",
+      "source": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "native": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "opaque-back",
+      "source": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "native": [
+        123,
+        87,
+        37,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "equal-opacity-forward",
+      "source": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "native": [
+        126,
+        64,
+        187,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "equal-opacity-reversed",
+      "source": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "native": [
+        187,
+        64,
+        126,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "opacity-995",
+      "source": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "native": [
+        247,
+        1,
+        1,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "opacity-zero",
+      "source": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "native": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    },
+    {
+      "case": "section-clipped",
+      "source": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "native": [
+        251,
+        128,
+        128,
+        255
+      ],
+      "matched": true,
+      "original_gpu": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09",
+        "software": false,
+        "platform": "xcb",
+        "fallback": ""
+      }
+    }
+  ],
+  "scope": "Original immutable Qt viewport on actual NVIDIA via own hostXwayland proof windows, framebuffer-only capture. Native strictRTX headless World rendering. Both ten exact RGBA. Prior cross-driver Mesa reference7onebyte failures retained separately, no tolerancechange. Hardware nativeeguiadapter presentation notyetproven bythisheadlessWorld."
+}

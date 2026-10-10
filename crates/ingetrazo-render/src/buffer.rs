@@ -69,6 +69,8 @@ impl Vertex {
 /// Mesh render buffer storing indexed triangle data.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MeshRenderBuffer {
+    /// CPU-only exact opacity change spans (index offset, source f64). Never uploaded.
+    pub source_opacity_runs: Vec<(usize, f64)>,
     pub vertices: Vec<Vertex>,
     pub indices: Vec<u32>,
 }
@@ -76,6 +78,7 @@ pub struct MeshRenderBuffer {
 impl MeshRenderBuffer {
     pub fn new() -> Self {
         Self {
+            source_opacity_runs: Vec::new(),
             vertices: Vec::new(),
             indices: Vec::new(),
         }
@@ -83,12 +86,14 @@ impl MeshRenderBuffer {
 
     pub fn with_capacity(vert_cap: usize, ind_cap: usize) -> Self {
         Self {
+            source_opacity_runs: Vec::new(),
             vertices: Vec::with_capacity(vert_cap),
             indices: Vec::with_capacity(ind_cap),
         }
     }
 
     pub fn clear(&mut self) {
+        self.source_opacity_runs.clear();
         self.vertices.clear();
         self.indices.clear();
     }
@@ -99,6 +104,10 @@ impl MeshRenderBuffer {
 
     pub fn triangle_count(&self) -> usize {
         self.indices.len() / 3
+    }
+
+    pub fn mark_source_opacity(&mut self, opacity: f64) {
+        if self.source_opacity_runs.last().map(|r|r.1)!=Some(opacity) {self.source_opacity_runs.push((self.indices.len(),opacity));}
     }
 
     /// Add a single triangle.
@@ -126,6 +135,8 @@ impl MeshRenderBuffer {
     /// Append another mesh buffer with offset indices.
     pub fn append(&mut self, other: &MeshRenderBuffer) {
         let base = self.vertices.len() as u32;
+        let offset=self.indices.len();
+        self.source_opacity_runs.extend(other.source_opacity_runs.iter().map(|&(index,alpha)|(offset+index,alpha)));
         self.vertices.extend_from_slice(&other.vertices);
         self.indices.extend(other.indices.iter().map(|&idx| base + idx));
     }
