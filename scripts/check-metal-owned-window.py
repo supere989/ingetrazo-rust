@@ -53,25 +53,52 @@ def self_test():
             controls+=1
     return {"passed":True,"negative_controls":controls,"native_execution_claim":False}
 
+def capture_failure_self_test():
+    """Real bounded child completion despite simulated diagnostic refusal."""
+    import contextlib, io, tempfile
+    from unittest import mock
+    with tempfile.TemporaryDirectory(prefix="metal-capture-refusal-") as root:
+        root=pathlib.Path(root);binary=root/"probe"
+        binary.write_text("#!/usr/bin/env python3\nimport json,pathlib,sys,time\np=pathlib.Path(sys.argv[2].split('=',1)[1]);p.write_text(json.dumps({'window_id':123,'submitted':1,'completed_inflight':1}))\ntime.sleep(.15)\np.with_suffix('.completed').write_text('completed')\n")
+        binary.chmod(0o700)
+        cases=[
+            ("unsupported-help",[subprocess.CompletedProcess([],0,"","")]),
+            ("permission-refusal",[subprocess.CompletedProcess([],0,"-l window -o", ""),subprocess.CompletedProcess([],1,b"",b"permission refused")]),
+            ("capture-timeout",[subprocess.CompletedProcess([],0,"-l window -o", ""),subprocess.TimeoutExpired(["screencapture"],2,output=b"partial",stderr=b"denied")]),
+        ]
+        for name,results in cases:
+            output=root/name
+            with mock.patch.object(sys,"argv",[__file__,str(binary),str(output),"--source-revision=diagnostic-only"]),mock.patch.object(sys,"platform","darwin"),mock.patch.object(subprocess,"run",side_effect=results),contextlib.redirect_stdout(io.StringIO()):
+                assert main()==1
+            result=json.loads((output/"result.json").read_text())
+            assert result["presentation_passed"] and result["presentation_returncode"]==0
+            assert not result["passed"] and not result.get("controlled_termination",False)
+            assert (output/"own-window.completed").read_text()=="completed"
+    return {"passed":True,"capture_failure_controls":len(cases),"actual_child_completion":True,"native_execution_claim":False}
+
 def main():
     if sys.argv[1:]==["--self-test"]:
         print(json.dumps(self_test(),indent=2));return 0
+    if sys.argv[1:]==["--capture-failure-self-test"]:
+        print(json.dumps(capture_failure_self_test(),indent=2));return 0
     parser=argparse.ArgumentParser();parser.add_argument("binary",type=pathlib.Path);parser.add_argument("output",type=pathlib.Path);parser.add_argument("--source-revision",required=True);args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
     if any(args.output.iterdir()):raise ValueError("fresh diagnostic directory required")
     report={"passed":False,"presentation_passed":False,"physical_mac_claim":False,"source_revision":args.source_revision,"binary_sha256":hashlib.sha256(args.binary.read_bytes()).hexdigest()}
-    proc=None;started=time.monotonic();log=None
+    proc=None;started=time.monotonic();native_started=None;log=None
     try:
         if sys.platform!="darwin":raise RuntimeError("own Cocoa capture requires actual macOS")
+        # Native presentation acceptance runs independently of diagnostic
+        # capture support/permissions. Start it before any capture CLI calls.
+        identity=args.output/"own-window.json";log=(args.output/"presentation.log").open("wb")
+        command=[str(args.binary.resolve()),"--automatic","--owned-window-id="+str(identity.resolve())];report["presentation_command"]=command
+        native_started=time.monotonic();proc=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
         capture=pathlib.Path("/usr/sbin/screencapture")
         help_result=subprocess.run([str(capture),"-h"],capture_output=True,text=True,timeout=2)
         help_text=help_result.stdout+help_result.stderr;(args.output/"screencapture-help.txt").write_text(help_text)
         if "-l" not in help_text or "window" not in help_text.lower() or "-o" not in help_text:raise RuntimeError("actual screencapture CLI lacks own-window/shadow controls")
-        identity=args.output/"own-window.json";log=(args.output/"presentation.log").open("wb")
-        command=[str(args.binary.resolve()),"--automatic","--owned-window-id="+str(identity.resolve())];report["presentation_command"]=command
-        proc=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
         snapshot=None
-        while time.monotonic()-started<8 and proc.poll() is None:
+        while time.monotonic()-native_started<8 and proc.poll() is None:
             if identity.is_file():
                 try:
                     candidate=json.loads(identity.read_text())
@@ -87,9 +114,6 @@ def main():
         (args.output/"capture.stdout").write_bytes(result.stdout);(args.output/"capture.stderr").write_bytes(result.stderr)
         if result.returncode:raise RuntimeError("own-window capture permission/unsupported refusal")
         report["capture"]=rgb_png(image);report["image_sha256"]=hashlib.sha256(image.read_bytes()).hexdigest()
-        proc.wait(timeout=max(.1,17-(time.monotonic()-started)));report["presentation_returncode"]=proc.returncode
-        report["presentation_passed"]=proc.returncode==0
-        report["passed"]=report["presentation_passed"] and report["capture"]["visible_clear"]
     except Exception as error:
         report["error"]=repr(error)
         if isinstance(error,subprocess.TimeoutExpired):
@@ -97,6 +121,13 @@ def main():
             (args.output/"timeout.stdout").write_bytes(error.stdout or b"");(args.output/"timeout.stderr").write_bytes(error.stderr or b"")
     finally:
         if proc is not None:
+            # A capture failure never short-circuits the independent 15-second
+            # native gate. Only the existing outer cleanup bound may terminate.
+            try:
+                proc.wait(timeout=max(.1,17-(time.monotonic()-native_started)))
+                report["presentation_passed"]=proc.returncode==0
+            except subprocess.TimeoutExpired as error:
+                report["presentation_wait_error"]=repr(error)
             if proc.poll() is None:
                 proc.terminate()
                 try:proc.wait(timeout=1)
@@ -107,6 +138,7 @@ def main():
                 report["controlled_termination"]=True
             report["presentation_returncode"]=proc.returncode
         if log:log.close()
+        report["passed"]=report["presentation_passed"] and report.get("capture",{}).get("visible_clear",False)
         report["elapsed_seconds"]=time.monotonic()-started
         (args.output/"result.json").write_text(json.dumps(report,indent=2)+"\n")
     print(json.dumps(report,indent=2));return 0 if report["passed"] else 1
