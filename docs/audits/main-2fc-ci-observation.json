@@ -1,0 +1,63 @@
+{
+  "source": "2fc09994c2458cc1ed27534858f522f4d6f81731",
+  "run": 38084665961,
+  "complete": false,
+  "jobs": [
+    {
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "id": 114308575900,
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "name": "Native Metal framework link (macos-15-intel)",
+      "id": 114308576018,
+      "status": "in_progress",
+      "conclusion": null,
+      "active": [
+        {
+          "name": "Build combined native macOS GUI with Apple SDK",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 5
+        }
+      ]
+    },
+    {
+      "name": "Native Metal framework link (macos-15)",
+      "id": 114308576059,
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "id": 114308576068,
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "name": "compilation-and-tests",
+      "id": 114308576418,
+      "status": "in_progress",
+      "conclusion": null,
+      "active": [
+        {
+          "name": "Semantic document acceptance",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 19
+        }
+      ],
+      "offset": {
+        "name": "Native rendered Offset viewport gestures",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      }
+    }
+  ],
+  "scope": "Published Offset capture correction passes cloud workflow; complete Linux and Intel SDK jobs still pending. Does not close release or rendered parity gates."
+}
