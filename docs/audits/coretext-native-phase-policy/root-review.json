@@ -1,0 +1,16 @@
+{
+  "reviewed_source": "9980773c037274f63b54f903c59f3072680b1bbe",
+  "published_native_replay_source": "7e48fe1060d84ccf2cdeb4512727767d7af734f0",
+  "source_files_sha256": {
+    "qtextureglyphcache.cpp": "1fbef50580e3b63a06089507d0698e9f158ec2212ba186d2915ff0c768658816",
+    "qfontengine.cpp": "23c3d96b6d05a817f82697596bffca89d92b3cde1f8c4b8d43a71c056cece389",
+    "qfontengine_coretext.mm": "a11cdd716adbb09ad01e1e58bc02219aeaa37370073f613b8fd69a6798aa1a2e"
+  },
+  "review": [
+    "Qt samples twelve QFixed fractions and compares image contents, without bearings",
+    "Qt retains the acquired count on the font engine across glyph cache transforms",
+    "Rust retains style-specific counts and caps cold sample storage; no native replay pass asserted"
+  ],
+  "native_replay": "pending",
+  "release_gate_promoted": false
+}
