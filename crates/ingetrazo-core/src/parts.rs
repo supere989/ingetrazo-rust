@@ -52,7 +52,12 @@ pub fn cut_list(rows:&[PartSummary],precision_mm:f64,by_material:bool)->Vec<CutL
     }
     for line in &mut lines{line.names.sort_by(|a,b|natural_compare(a,b));}lines.sort_by(|a,b|{for i in 0..3{let cmp=(b.size[i]*1e6).round_ties_even().total_cmp(&(a.size[i]*1e6).round_ties_even());if cmp!=std::cmp::Ordering::Equal{return cmp;}}natural_compare(&a.names[0],&b.names[0])});lines
 }
-pub fn cut_list_text(lines:&[CutListLine])->String{let mut text="Qty\tParts\tMaterial\tL (mm)\tW (mm)\tT (mm)".to_owned();for line in lines{text.push_str(&format!("\n{}\t{}\t{}\t{:.0}\t{:.0}\t{:.0}",line.quantity,line.names.join(", "),line.materials.iter().filter(|s|!s.is_empty()).cloned().collect::<Vec<_>>().join(", "),line.size[0]*1000.,line.size[1]*1000.,line.size[2]*1000.));}text}
+pub fn is_surface(size:[f64;3])->bool{size[2]<0.0005}
+pub fn cut_list_text_with(lines:&[CutListLine],format:impl Fn(f64)->String)->String{
+    let mut text="Qty\tParts\tMaterial\tLength\tWidth\tThickness\n".to_owned();
+    for line in lines{text.push_str(&format!("{}\t{}\t{}\t{}\t{}\t{}\n",line.quantity,line.names.join(", "),line.materials.iter().filter(|s|!s.is_empty()).cloned().collect::<Vec<_>>().join(", "),format(line.size[0]),format(line.size[1]),if is_surface(line.size){"surface".into()}else{format(line.size[2])}));}text
+}
+pub fn cut_list_text(lines:&[CutListLine])->String{cut_list_text_with(lines,|length|format!("{:.0}",length*1000.))}
 #[cfg(test)]mod tests{use super::*;
     fn box_points(size:DVec3)->Vec<DVec3>{let mut p=vec![];for x in[0.,1.]{for y in[0.,1.]{for z in[0.,1.]{p.push(size*DVec3::new(x,y,z));}}}p}
     #[test]fn nested_material_matches_original_root_fallback_and_explicit_face_override(){
