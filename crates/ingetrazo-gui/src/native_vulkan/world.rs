@@ -279,7 +279,7 @@ impl World {
      self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(cap).unwrap()],&[0]);self.device.cmd_draw(command,6,1,0,0);self.resources.mark_used(cap,serial)?;
     }
    }
-   // Source blended pass order: front color, front texture, back color, back texture.
+   // Original viewport.py1800-1845: both color sides precede both texture sides.
    for back in [false,true]{
     if material {if let Some(vertices)=self.transparent_vertices {
      self.push_face_style(command,0,1.);
@@ -288,8 +288,9 @@ impl World {
      for run in self.opacity_runs.iter().filter(|r|r.kind!=3&&(r.kind==2)==back){self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,match run.kind{1=>self.paint_pipelines[1],2=>self.paint_pipelines[2],_=>self.transparent_pipeline});self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,84,bytemuck::bytes_of(&run.opacity));self.device.cmd_draw(command,run.count,1,run.first,0);}
      self.resources.mark_used(vertices,serial)?;
     }}
-    if self.texture_enabled{self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,if back{super::textures::Phase::TransparentBack}else{super::textures::Phase::TransparentFront},&self.mvp,&self.clip,self.clip_enabled,target.extent.height)?;}
+
    }
+   if self.texture_enabled{for phase in [super::textures::Phase::TransparentFront,super::textures::Phase::TransparentBack]{self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,phase,&self.mvp,&self.clip,self.clip_enabled,target.extent.height)?;}}
    if self.show_edges||wire {if let Some(vertices)=self.edge_vertices {
     if xray {
      // Source _xray_face_depth excludes colored transparent/front-only glass.
