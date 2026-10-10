@@ -359,7 +359,7 @@ impl PaperFont {
         unsafe{
             let geometry=self.data.as_ref().geometry.as_ref().ok_or("Canvas glyph requires native font geometry")?;
             let face=geometry.face.raw();if glyph>=(*face).num_glyphs as u32{return Err("Canvas glyph index outside font".into());}
-            let mut matrix=ft::FT_Matrix{xx:(scale*65536.).round()as _,xy:(scale*italic_shear*65536.).round()as _,yx:0,yy:(scale*65536.).round()as _};
+            let mut matrix=ft::FT_Matrix{xx:(scale*65536.)as _,xy:(scale*italic_shear*65536.)as _,yx:0,yy:(scale*65536.)as _};
             let mut delta=ft::FT_Vector{x:phase[0]as _,y:-(phase[1]as ft::FT_Pos)};
             ft::FT_Set_Transform(face,&mut matrix,&mut delta);let _restore=RestoreFaceTransform(face);
             // Qt 6.12 loadGlyphFor disables hinting for scaled nonrotation glyphs.

@@ -34,7 +34,7 @@ impl CanvasPainter {
  fn retire_layout(&mut self,id:uuid::Uuid){if let Some(layout)=self.layouts.remove(&id){self.layout_bytes-=layout.bytes;for (key,_)in layout.fonts{if let Some(entry)=self.font_refs.get_mut(&key){entry.0-=1;if entry.0==0{let (_,bytes)=self.font_refs.remove(&key).unwrap();self.font_bytes-=bytes;}}}}}
 
  fn image(&mut self,ctx:&egui::Context,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<GlyphImage,String>{
-  let key=GlyphKey{font:font.key(),glyph,scale:(scale*65536.).round()as i64,phase,italic};
+  let key=GlyphKey{font:font.key(),glyph,scale:(scale*65536.)as i64,phase,italic};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
   let bitmap=font.rasterize_glyph(glyph,scale,phase,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
   if bytes>16*1024*1024{return Err("Canvas glyph texture budget exceeded".into());}
@@ -73,5 +73,17 @@ fn device_position(x:i64,y:i64)->(f64,f64,[u8;2]){
   assert_eq!(device_position(14,31),(0.,0.,[0,0]));assert_eq!(device_position(15,32),(0.,1.,[16,0]));
   assert_eq!(device_position(63,63),(1.,1.,[0,0]));assert_eq!(device_position(-1,-33),(0.,-1.,[0,0]));
   assert_eq!(device_position(-64,-32),(-1.,0.,[0,0]));
+ }
+}
+
+#[cfg(all(test,target_os="linux"))]mod layout_admission_tests{use super::*;
+ #[test]fn warm_layout_and_refusal_keep_retained_font_identity(){
+  let sheet=Sheet::default();let item=TextItem{id:uuid::Uuid::new_v4(),pos:(20.,30.),text:"hello".into(),font_size_pt:14.,bold:false};
+  let mut resources=Painter::default();let mut cache=CanvasPainter::default();let first=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();
+  let counts=(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len());
+  let warm=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&warm));assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));
+  let huge="X".repeat(20*1024);assert!(cache.prepare(&sheet,&item,&huge,1,1,&mut resources).is_err());assert_eq!(counts,(cache.layout_builds,cache.font_bytes,cache.layout_bytes,cache.font_refs.len()));assert_eq!(cache.layout_order.iter().filter(|&&id|id==item.id).count(),1);
+  let restored=cache.prepare(&sheet,&item,&item.text,1,1,&mut resources).unwrap();assert!(Arc::ptr_eq(&first,&restored));
+  cache.retire_layout(item.id);assert_eq!((cache.layout_bytes,cache.font_bytes,cache.font_refs.len()),(0,0,0));
  }
 }
