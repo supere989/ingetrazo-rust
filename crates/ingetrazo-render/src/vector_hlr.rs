@@ -140,6 +140,18 @@ fn cap_triangles(
     segments: &[(DVec3, DVec3)],
     plane: &ingetrazo_core::section::SectionPlane,
 ) -> Vec<[DVec3; 3]> {
+    // Original paper caps use even-odd rings, independent of skin winding.
+    // Coincident triangle chords describe one boundary, rather than two rings.
+    let mut unique: Vec<(DVec3, DVec3)> = vec![];
+    for &(a, b) in segments {
+        if !unique.iter().any(|&(x, y)| {
+            ((a - x).length() < 1e-7 && (b - y).length() < 1e-7)
+                || ((a - y).length() < 1e-7 && (b - x).length() < 1e-7)
+        }) {
+            unique.push((a, b));
+        }
+    }
+    let segments = &unique[..];
     let mut wire = Mesh::new();
     for &(a, b) in segments {
         let a = wire.add_vertex(a);
@@ -159,7 +171,7 @@ fn cap_triangles(
         let p = (a + b + c) / 3.;
         let px = p.dot(u);
         let py = p.dot(v);
-        let mut winding = 0;
+        let mut winding: i32 = 0;
         for &(a, b) in segments {
             let ax = a.dot(u);
             let ay = a.dot(v);
@@ -172,7 +184,7 @@ fn cap_triangles(
                 }
             }
         }
-        if winding != 0 {
+        if winding.abs() % 2 != 0 {
             result.extend(triangles.into_iter().map(|(a, b, c)| [a, b, c]));
         }
     }
@@ -222,7 +234,7 @@ pub fn parallel_visible_segments(scene: &Scene, camera: &OrbitCamera) -> Vec<Vec
         .map(|p| p.z)
         .fold(f64::NEG_INFINITY, f64::max);
     let epsilon = if min.is_finite() {
-        ((max - min) * 1e-4).max(1e-9)
+        (if max > min { max - min } else { 1. } * 1e-4).max(1e-9)
     } else {
         1e-9
     };
@@ -342,6 +354,59 @@ mod tests {
             .map(|s| (s.b - s.a).length())
             .sum::<f64>();
         assert!((cut_length - 8.).abs() < 1e-7);
+    }
+    #[test]
+    fn paper_section_hollow_rings_follow_even_odd_without_reversed_winding() {
+        let mut scene = Scene::new();
+        for size in [2., 1.] {
+            let ids = [
+                (-1., -1., -1.),
+                (1., -1., -1.),
+                (1., 1., -1.),
+                (-1., 1., -1.),
+                (-1., -1., 1.),
+                (1., -1., 1.),
+                (1., 1., 1.),
+                (-1., 1., 1.),
+            ]
+            .map(|(x, y, z)| scene.mesh.add_vertex(DVec3::new(x, y, z) * size));
+            for ring in [
+                [0, 3, 2, 1],
+                [4, 5, 6, 7],
+                [0, 1, 5, 4],
+                [1, 2, 6, 5],
+                [2, 3, 7, 6],
+                [3, 0, 4, 7],
+            ] {
+                scene.mesh.add_face(ring.map(|i| ids[i]).to_vec(), vec![]);
+            }
+        }
+        let a = scene.mesh.add_vertex(DVec3::new(-1.5, 0., 0.));
+        let b = scene.mesh.add_vertex(DVec3::new(1.5, 0., 0.));
+        scene.mesh.add_edge(a, b);
+        scene
+            .section_planes
+            .push(ingetrazo_core::section::SectionPlane::new(
+                DVec3::new(0., 0., 0.5),
+                DVec3::Z,
+                "Cut",
+                "A",
+            ));
+        scene.show_section_cuts = true;
+        let mut camera = OrbitCamera::default();
+        camera.pitch = std::f64::consts::FRAC_PI_2;
+        camera.up = DVec3::Y;
+        camera.perspective = false;
+        let lines = parallel_visible_segments(&scene, &camera);
+        let length = lines
+            .iter()
+            .filter(|s| s.a.z.abs() < 1e-9 && s.b.z.abs() < 1e-9)
+            .map(|s| (s.b - s.a).length())
+            .sum::<f64>();
+        assert!(
+            (length - 2.).abs() < 1e-7,
+            "inner ring must leave a see-through hole independent of orientation: {length}"
+        );
     }
     #[test]
     fn face_hole_does_not_occlude_line_through_void() {
