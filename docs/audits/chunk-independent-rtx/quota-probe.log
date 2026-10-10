@@ -1,0 +1,9 @@
+Headless adapter0: NVIDIA GeForce RTX 5090; vendor0x10de; DISCRETE_GPU; API1.4.351; driver0x99d1c240; maxImage2D32768; graphicsSome(0)
+Selected headless adapter NVIDIA GeForce RTX 5090; strict request DeviceRequest { vendor_id: Some(4318), require_discrete: true, name: None }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial1: 0.016608ms
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial2: 0.015328ms
+Actual full World GPUdraw timestamp serial3: 0.014240ms
+Actual full World GPUdraw timestamp serial4: 0.011488ms
+Error: "Quota sweep succeeded before exercising partial chunk rollback"

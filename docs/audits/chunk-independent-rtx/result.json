@@ -1,0 +1,38 @@
+{
+  "source_revision": "d6638de",
+  "source_binary_sha256": "2b061d2eab3cde4f1bf6aab15ae9fc3c0850b1cc5d193932e78830503ee735e4",
+  "diagnostic_binary_sha256": "77edb5cf68e1688d0c9c8d2c460a7707e29cb230cc7f646fcc382954d12d14ff",
+  "diagnostic_patch": "quota sweep increment256 ->16; log headroom/result/metrics; no production changes",
+  "container_image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "device": "NVIDIA GeForce RTX 5090",
+  "vendor": "0x10de",
+  "api": "1.4.351",
+  "driver": "0x99d1c240",
+  "device_request": "strict NVIDIA discrete GPU, no software fallback, CDI gpu=0",
+  "msaa": "TYPE_4",
+  "reference_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "reference_artifact_commit": "15ee39a",
+  "corpus": {
+    "passed": true,
+    "cases": 14,
+    "comparison": "normal vs forced36-byte storage chunks exact entire RGBA image",
+    "real_gpu_draws": 28,
+    "final_owner_ledger_zero": true
+  },
+  "quota": {
+    "passed": false,
+    "exit_code": 1,
+    "normal_vs72byte_image_equal": true,
+    "diagnostic": "all failures before prepared chunks through9200 bytes; success at9216 bytes; partial rollback NOT exercised",
+    "failed_prepared_chunks": 0,
+    "rollbacks": 0,
+    "source_explanation": "Discrete GPU upload transient staging peak for first vertex buffer (2x4608 bytes) exceeds persistent geometry plus tiny contour chunks. Static total cap cannot permit that peak and later deny a partial chunk. Pressure-after-N actual ledger admission remains to be tested."
+  },
+  "overall_passed": false,
+  "scope": "No general original pixel parity, rollback acceptance, RT/Metal/performance claim",
+  "missing_corpus_negative": {
+    "exit_code": 1,
+    "expected_error": "Missing mandatory original corpus case original/closed-front.igz",
+    "helper_source": "ef6f843"
+  }
+}

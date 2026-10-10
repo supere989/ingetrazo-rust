@@ -1,0 +1,24 @@
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-formats` (lib) generated 1 warning
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-vulkan/crates/ingetrazo-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.18s
+     Running `target/debug/examples/native_vulkan_contour_chunks_probe --software-fixture --output /tmp/ingetrazo-vulkan-proof/chunks-hollow-pressure.png`
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial1: 17.134283ms
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Actual full World GPUdraw timestamp serial2: 2.106016ms
+Actual full World GPUdraw timestamp serial3: 1.049551ms
+Actual full World GPUdraw timestamp serial4: 1.142868ms
+Actual full World GPUdraw timestamp serial5: 0.885922ms
+Actual full World GPUdraw timestamp serial6: 0.722795ms
+PASS actual GPU hollow normal/chunked exact image equality; cold ContourMetrics { additional_position_bytes: 1152, batches: 16, cold_build_ms: 0.289887, compact_preprocess_ms: 0.003945999999999998, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0 }; warm100average0.000667ms; uniform cache, actualpartialquota rollback oldimage, opacity invalidation; final ContourMetrics { additional_position_bytes: 1152, batches: 16, cold_build_ms: 0.313011, compact_preprocess_ms: 0.002753999999999999, warm_cache_ms: 0.033914, cache_hits: 102, failed_prepared_chunks: 2, rollbacks: 1 }

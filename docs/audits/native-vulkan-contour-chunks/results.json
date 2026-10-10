@@ -1,0 +1,100 @@
+{
+  "source_base": "8c29bd6",
+  "original_corpus_commit": "15ee39af2b5f4dd362f3559db1a09bf38fb2cb9f",
+  "shader_sha256": "2f6e507dc3d5e6299c01a4e4345f9dc2660fcc8a70fea1976aaf61efb3d6a7a0",
+  "cases": [
+    {
+      "case": "closed-front",
+      "input_sha256": "502710a645aae638b18b5d3271b17bc30a3161a4b4d1e66df894e677c592f3a8",
+      "output_sha256": "948a3cc48c789a738852457da37a87c0a61bb395546f6445353c30a4247bf7db",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "closed-iso",
+      "input_sha256": "43a72ff28742bffad31a37c08f2d9d097f214da637cf20a34f00fbecd517eee7",
+      "output_sha256": "ee0373a72c2f42f1bfe709fe8206ed58c056273d48842fbc15cf44a9a45bb38f",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "closed",
+      "input_sha256": "f402cf5c4f529116a3396ef8f8b7cc380f03f6571fe0e056b2ab54563a792cb5",
+      "output_sha256": "e62bfa0ce46c8335323c48bf711239f3b5251eb44f1433ab35ed9bd9b9de23cb",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "coplanar-backface",
+      "input_sha256": "e4929ef1cfb57a812421ffaf7d446d7b39bd73de7a3284c0ea677fea1d2eec09",
+      "output_sha256": "90bddd8eecc7b0dd1eb73978e2a30681fddad45fc356b3f668a6afad3ac59451",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "duplicate",
+      "input_sha256": "51466ae7f49a76888ee1bddbe23793d738f47f6df5ea3934aa34f395880126d6",
+      "output_sha256": "e62bfa0ce46c8335323c48bf711239f3b5251eb44f1433ab35ed9bd9b9de23cb",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "shared-slab-iso",
+      "input_sha256": "c9866e8b33d7235076316a57f9e3181fce442d37f94176566adb4f5b272712c5",
+      "output_sha256": "f9a7164b8ebe7e4aeb2ff935ebf79cecb172c2d09c0d7450d5bafe72b8dfab1d",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "shared-slab-reversed-iso",
+      "input_sha256": "48791acaa60220329c21b52e4f7ff022471977ce9ae1a74adac5ce4ef0421ba2",
+      "output_sha256": "ee0373a72c2f42f1bfe709fe8206ed58c056273d48842fbc15cf44a9a45bb38f",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "shared-slab-reversed",
+      "input_sha256": "bfc6ee624f5ce3d692e440895357a2e38a19b223101d173e076523617e9dbd0f",
+      "output_sha256": "e62bfa0ce46c8335323c48bf711239f3b5251eb44f1433ab35ed9bd9b9de23cb",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "shared-slab",
+      "input_sha256": "48be37ce8791091e29b9ecc9384ea37a3f60850f5585d7dbde98ed6b4d9ffc62",
+      "output_sha256": "9ef18adf285a5ca6ac33750a8a303f4c85f3a719e44647e84b72c1e699245fb2",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "transparent",
+      "input_sha256": "f7602f1abc9b033e0f98902c0d7e5b4b2f56a50e70172cf6813e4ced7c3659fe",
+      "output_sha256": "1d8c04bf63db60216414e815f4da0f00cac85fe2849e24965a2f77bd4b304a71",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "hollow-iso",
+      "input_sha256": "40c068912aeff7ee51ac0f9a43f82147cdb13f295d93b99dc50672c0569faeab",
+      "output_sha256": "4328217c3fd830ee3f8732f44784a8b1a9e0c3bc95a7e9154e13581639ae164c",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "hollow-seam",
+      "input_sha256": "14b14fb81d81e2ebe566a43f04f31d5f8d7510439920e98f6c92f79dcd16ae33",
+      "output_sha256": "fa56db6a33f1af1be80d42b18811fcd08f79bcf872f19a50fa2bcb3abdc107e9",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "hollow",
+      "input_sha256": "b3ae12d72ff8b0fdbf59279e2f955fff289bd1e02875f7b134311a10a130cd9e",
+      "output_sha256": "408103eef1eb3619e85a5c3802a0348580b4f73a68409e9f3b5a488c9156cde2",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    },
+    {
+      "case": "transparent-hollow",
+      "input_sha256": "d227e66a3778f862dba5eff8106c08279c7ca43f38f18712ca5b3c0f1d9cc728",
+      "output_sha256": "ca9a5702e9c7b6d48e6da0c90fcd082ce7cee0c96975fa866e634997a0264d62",
+      "normal_vs_forced_36byte_whole_image_equal": true
+    }
+  ],
+  "controls": [
+    "actual partial GPU allocation quota denial after five compact chunks preserves prior complete image, including changed cut-plane rollback",
+    "old charged allocation bytes unchanged after failed preparation",
+    "camera/edge color/plane changes do not upload geometry",
+    "opacity change reclassifies and uploads geometry once",
+    "final explicit allocation ledger zero",
+    "headless 17MiB upload/readback+depth/cache/invalidation regression passes"
+  ],
+  "scope": "Software Vulkan actual GPU commands. Full-image equality is between normal and chunked source paths, not original exact pixel parity; original Iso/thickness residuals remain retained by independent validator. Small cold/warm/timestamp fixture measurements, not general throughput benchmarks."
+}

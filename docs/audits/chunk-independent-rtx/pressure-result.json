@@ -1,0 +1,25 @@
+{
+  "source_revision": "46daf94",
+  "upstream_source_revision": "66b3238",
+  "binary_sha256": "0be484f97d43859a2c9f46aef01b87cdf7e588728cebe1d3b5af19258c931891",
+  "device": "NVIDIA GeForce RTX5090",
+  "image_id": "a6597584287dfce8099218b3231240c1a939d73a573eeb260933f0d2b9b7070c",
+  "actual_gpu": true,
+  "msaa": "TYPE_4",
+  "passed": true,
+  "normal_vs72_byte_whole_image_equal": true,
+  "partial_admission_failure": {
+    "probe_scope": "Explicit pressure lowers realgloballedgerlimit aftertwo successfullypreparedchunks; actualthirdreserve denied. Scopeguard restores128MiB limit. Not actualdriver OOM.",
+    "failed_prepared_chunks": 2,
+    "rollbacks": 1,
+    "old_geometry_plane_cap_image_unchanged": true,
+    "allocation_accounting_unchanged": true
+  },
+  "warm_repeated_calls": 100,
+  "cache_hits": 102,
+  "opacity_change_invalidation_passed": true,
+  "final_ledger_zero": true,
+  "corpus_cases": 14,
+  "normal_vs36_byte_whole_image_equal": true,
+  "scope": "Bounded chunk equality/cleanup/cache. Existing original contour Iso/hollow/thickness residuals remain open. No throughput, generalOOM, RT, Metal claim."
+}
