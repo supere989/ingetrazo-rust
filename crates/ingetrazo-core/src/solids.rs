@@ -67,6 +67,7 @@ use std::collections::HashSet;
 
 struct Sources {
     faces: Vec<MeshFace>,
+    edges: Vec<(glam::DVec3, glam::DVec3, crate::mesh::MeshEdge)>,
     soft_pairs: HashSet<(usize, usize)>,
 }
 
@@ -87,6 +88,18 @@ fn kernel(mesh: &Mesh, sources: &mut Sources) -> Result<Manifold, String> {
     let base = sources.faces.len();
     sources.faces.extend(mesh.faces.iter().cloned());
     for edge in &mesh.edges {
+        if !edge.attrs.is_empty()
+            || edge.soft
+            || edge.curve_id.is_some()
+            || edge.layer.is_some()
+            || edge.hidden
+        {
+            sources.edges.push((
+                mesh.vertices[edge.v0].position,
+                mesh.vertices[edge.v1].position,
+                edge.clone(),
+            ));
+        }
         if edge.soft && edge.faces.len() == 2 {
             let a = base + edge.faces[0];
             let b = base + edge.faces[1];
@@ -196,11 +209,38 @@ fn output(solid: &Manifold, sources: &Sources, outer_only: bool) -> Result<Mesh,
         result.faces[fid].layer = original.layer.clone();
         provenance.push(source);
     }
+    let (fused, fused_sources) = fuse_source_faces(&result, &provenance)?;
+    result = fused;
+    provenance = fused_sources;
     for edge in &mut result.edges {
         if edge.faces.len() == 2 {
             let a = provenance[edge.faces[0]];
             let b = provenance[edge.faces[1]];
             edge.soft = a == b || sources.soft_pairs.contains(&(a.min(b), a.max(b)));
+        }
+    }
+    // Surviving portions of original edges retain curve/layer/extension metadata.
+    for edge in &mut result.edges {
+        let p = result.vertices[edge.v0].position;
+        let q = result.vertices[edge.v1].position;
+        for (a, b, original) in &sources.edges {
+            let direction = *b - *a;
+            let length2 = direction.length_squared();
+            if length2 <= 1e-20 {
+                continue;
+            }
+            let on_segment = |point: glam::DVec3| {
+                let t = (point - *a).dot(direction) / length2;
+                (-1e-9..=1.0 + 1e-9).contains(&t) && (point - (*a + t * direction)).length() <= 1e-8
+            };
+            if on_segment(p) && on_segment(q) {
+                edge.attrs = original.attrs.clone();
+                edge.curve_id = original.curve_id;
+                edge.layer = original.layer.clone();
+                edge.hidden = original.hidden;
+                edge.soft |= original.soft;
+                break;
+            }
         }
     }
     if !result.faces.is_empty() && !solid_report(&result).0 {
@@ -221,6 +261,141 @@ fn output(solid: &Manifold, sources: &Sources, outer_only: bool) -> Result<Mesh,
     Ok(result)
 }
 
+/// Remove triangulation seams within each source face. Preserve every boundary
+/// subdivision vertex so adjoining source faces remain topologically conforming.
+fn fuse_source_faces(mesh: &Mesh, provenance: &[usize]) -> Result<(Mesh, Vec<usize>), String> {
+    use std::collections::{BTreeMap, HashMap};
+    let mut groups = BTreeMap::<usize, Vec<usize>>::new();
+    for (face, &source) in provenance.iter().enumerate() {
+        groups.entry(source).or_default().push(face);
+    }
+    let mut result = Mesh::new();
+    let mut sources = Vec::new();
+    for (source, faces) in groups {
+        let mut boundary = HashMap::<(usize, usize), bool>::new();
+        for &fid in &faces {
+            let ring = &mesh.faces[fid].vertices;
+            for i in 0..ring.len() {
+                let edge = (ring[i], ring[(i + 1) % ring.len()]);
+                if boundary.remove(&(edge.1, edge.0)).is_none() {
+                    boundary.insert(edge, true);
+                }
+            }
+        }
+        let mut outgoing = BTreeMap::<usize, Vec<usize>>::new();
+        for &(a, b) in boundary.keys() {
+            outgoing.entry(a).or_default().push(b);
+        }
+        // Point-connected regions or pinched boundaries need separate triangles;
+        // preserving them is safer than guessing an ambiguous polygon topology.
+        if outgoing.values().any(|v| v.len() != 1) {
+            for &fid in &faces {
+                let ids = mesh.faces[fid]
+                    .vertices
+                    .iter()
+                    .map(|&v| result.add_vertex(mesh.vertices[v].position))
+                    .collect();
+                let id = result.add_face(ids, vec![]).ok_or("Invalid boolean face")?;
+                result.faces[id].attrs = mesh.faces[fid].attrs.clone();
+                result.faces[id].layer = mesh.faces[fid].layer.clone();
+                sources.push(source);
+            }
+            continue;
+        }
+        let mut rings = Vec::<Vec<usize>>::new();
+        while let Some((&start, _)) = outgoing.iter().next() {
+            let mut ring = vec![start];
+            let mut vertex = start;
+            loop {
+                let next = outgoing
+                    .remove(&vertex)
+                    .ok_or("Unclosed boolean face boundary")?[0];
+                if next == start {
+                    break;
+                }
+                ring.push(next);
+                if ring.len() > boundary.len() {
+                    return Err("Invalid boolean face boundary".into());
+                }
+                vertex = next;
+            }
+            rings.push(ring);
+        }
+        let normal = mesh.face_normal(faces[0]);
+        let mut outer = Vec::new();
+        let mut holes = Vec::new();
+        for ring in rings {
+            let positions: Vec<_> = ring.iter().map(|&v| mesh.vertices[v].position).collect();
+            if crate::math::newell_vector(&positions).dot(normal) > 0.0 {
+                outer.push(ring);
+            } else {
+                holes.push(ring);
+            }
+        }
+        if outer.is_empty() {
+            return Err("Boolean face has no outer boundary".into());
+        }
+        // Project along the largest normal component for containment tests.
+        let axis = if normal.x.abs() >= normal.y.abs() && normal.x.abs() >= normal.z.abs() {
+            0
+        } else if normal.y.abs() >= normal.z.abs() {
+            1
+        } else {
+            2
+        };
+        let project = |p: glam::DVec3| match axis {
+            0 => (p.y, p.z),
+            1 => (p.x, p.z),
+            _ => (p.x, p.y),
+        };
+        let contains = |ring: &[usize], point: usize| {
+            let (x, y) = project(mesh.vertices[point].position);
+            let mut inside = false;
+            for i in 0..ring.len() {
+                let (x0, y0) = project(mesh.vertices[ring[i]].position);
+                let (x1, y1) = project(mesh.vertices[ring[(i + 1) % ring.len()]].position);
+                if (y0 > y) != (y1 > y) && x < (x1 - x0) * (y - y0) / (y1 - y0) + x0 {
+                    inside = !inside;
+                }
+            }
+            inside
+        };
+        for ring in outer {
+            let mut belonging = Vec::new();
+            holes.retain(|hole| {
+                if contains(&ring, hole[0]) {
+                    belonging.push(hole.clone());
+                    false
+                } else {
+                    true
+                }
+            });
+            let ids = ring
+                .iter()
+                .map(|&v| result.add_vertex(mesh.vertices[v].position))
+                .collect();
+            let hole_ids = belonging
+                .iter()
+                .map(|h| {
+                    h.iter()
+                        .map(|&v| result.add_vertex(mesh.vertices[v].position))
+                        .collect()
+                })
+                .collect();
+            let id = result
+                .add_face(ids, hole_ids)
+                .ok_or("Invalid fused boolean face")?;
+            result.faces[id].attrs = mesh.faces[faces[0]].attrs.clone();
+            result.faces[id].layer = mesh.faces[faces[0]].layer.clone();
+            sources.push(source);
+        }
+        if !holes.is_empty() {
+            return Err("Boolean hole has no containing face".into());
+        }
+    }
+    Ok((result, sources))
+}
+
 /// Low-level arithmetic: Subtract/Trim compute A−B. Empty meshes are valid.
 /// Split requires the multi-result group API.
 pub fn perform_solid_op(op: SolidOp, a: &Mesh, b: &Mesh) -> Result<Mesh, String> {
@@ -229,6 +404,7 @@ pub fn perform_solid_op(op: SolidOp, a: &Mesh, b: &Mesh) -> Result<Mesh, String>
     }
     let mut sources = Sources {
         faces: vec![],
+        edges: vec![],
         soft_pairs: HashSet::new(),
     };
     let a = kernel(a, &mut sources)?;
@@ -259,6 +435,7 @@ pub fn run_group_operation(op: SolidOp, groups: &[Group]) -> Result<SolidGroupRe
     }
     let mut sources = Sources {
         faces: vec![],
+        edges: vec![],
         soft_pairs: HashSet::new(),
     };
     let mut solids = Vec::new();
@@ -280,6 +457,35 @@ pub fn run_group_operation(op: SolidOp, groups: &[Group]) -> Result<SolidGroupRe
         let mut world = group.mesh.clone();
         for vertex in &mut world.vertices {
             vertex.position = group.transform.transform_point3(vertex.position);
+        }
+        // Match Python effective_attrs: explicit face color/texture wins;
+        // otherwise bake the container paint before losing the input group.
+        if let Some(paint) = group
+            .native_document
+            .get("material")
+            .and_then(|v| v.as_object())
+        {
+            if !paint.is_empty() {
+                for face in &mut world.faces {
+                    let own = ["color", "texture"]
+                        .iter()
+                        .any(|key| face.attrs.get(*key).is_some_and(|v| !v.is_null()));
+                    if !own {
+                        for key in ["color", "texture", "opacity", "mat"] {
+                            if let Some(value) = paint.get(key).filter(|v| !v.is_null()) {
+                                face.attrs.insert(key.into(), value.clone());
+                            }
+                        }
+                        if !face
+                            .attrs
+                            .get("back")
+                            .is_some_and(|v| v == &serde_json::Value::Bool(true))
+                        {
+                            face.attrs.insert("back".into(), true.into());
+                        }
+                    }
+                }
+            }
         }
         world.rebuild_spatial_index();
         solids.push(kernel(&world, &mut sources)?);
@@ -515,6 +721,31 @@ mod tests {
         assert_volume(
             &perform_solid_op(SolidOp::Union, &a.mesh, &adjacent).unwrap(),
             2.0,
+        );
+    }
+    #[test]
+    fn container_paint_is_baked_but_explicit_face_paint_wins() {
+        let mut a = Group::with_mesh("painted", make_cube(DVec3::ZERO));
+        a.native_document = serde_json::json!({"material": {"color": [1, 0, 0], "mat": "red"}});
+        a.mesh.faces[0]
+            .attrs
+            .insert("color".into(), serde_json::json!([0, 0, 1]));
+        let b = Group::with_mesh("disjoint", make_cube(DVec3::splat(3.0)));
+        let result = run_group_operation(SolidOp::Union, &[a, b]).unwrap();
+        let faces = &result.created[0].mesh.faces;
+        assert_eq!(
+            faces
+                .iter()
+                .filter(|f| f.attrs.get("mat") == Some(&"red".into()))
+                .count(),
+            5
+        );
+        assert_eq!(
+            faces
+                .iter()
+                .filter(|f| f.attrs.get("color") == Some(&serde_json::json!([0, 0, 1])))
+                .count(),
+            1
         );
     }
 }

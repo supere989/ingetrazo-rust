@@ -15,6 +15,7 @@ pub mod icons;
 pub mod menu;
 pub mod statusbar;
 pub mod toolbar;
+mod tool_history;
 pub mod tray;
 pub mod viewport;
 

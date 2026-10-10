@@ -126,8 +126,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             app.active_tool.on_move(&mut app.scene, &tool_ctx);
 
             // Handle primary click for active tool
-            if response.clicked() && !alt_down {
-                app.active_tool.on_click(&mut app.scene, &tool_ctx);
+            if response.double_clicked() && !alt_down {
+                app.dispatch_tool_double_click(&tool_ctx);
+            } else if response.clicked() && !alt_down {
+                app.dispatch_tool_click(&tool_ctx);
             }
         }
     }

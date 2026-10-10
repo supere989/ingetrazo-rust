@@ -30,62 +30,316 @@ impl PushPullTool {
         self.is_dragging = false;
     }
 
-    /// Perform extrusion of a face by signed distance along its normal.
+    /// Prepare the whole extrusion before changing the scene. A free face
+    /// becomes a closed prism; a bordered surface loses its old base. Closed
+    /// solids use union/difference so inward pushes remove material and outward
+    /// pushes remove the former cap/internal partitions.
     pub fn extrude_face(scene: &mut Scene, face_id: usize, distance: f64) -> Result<(), String> {
-        if face_id >= scene.mesh.faces.len() {
-            return Err("Invalid face ID".into());
+        use ingetrazo_core::{
+            math::newell_vector,
+            mesh::{Mesh, MeshFace},
+            solids::{perform_solid_op, solid_report, SolidOp},
+        };
+        let mesh = &scene.mesh;
+        let face = mesh.faces.get(face_id).ok_or("Invalid face ID")?;
+        if mesh.vertices.iter().any(|v| !v.position.is_finite())
+            || mesh.faces.iter().any(|f| {
+                f.vertices
+                    .iter()
+                    .chain(f.holes.iter().flatten())
+                    .any(|&v| v >= mesh.vertices.len())
+            })
+            || mesh.edges.iter().any(|e| {
+                e.v0 >= mesh.vertices.len()
+                    || e.v1 >= mesh.vertices.len()
+                    || e.faces.iter().any(|&f| f >= mesh.faces.len())
+            })
+        {
+            return Err("Document mesh has invalid references or coordinates".into());
+        }
+        if !distance.is_finite() {
+            return Err("Distance must be finite".into());
+        }
+        if face.vertices.len() < 3
+            || face.holes.iter().any(|h| h.len() < 3)
+            || face
+                .vertices
+                .iter()
+                .chain(face.holes.iter().flatten())
+                .any(|&v| v >= mesh.vertices.len() || !mesh.vertices[v].position.is_finite())
+        {
+            return Err("Invalid face boundary".into());
         }
         if distance.abs() < 1e-6 {
-            return Ok(()); // no-op
+            return Ok(());
         }
-
-        let normal = scene.mesh.face_normal(face_id);
-        let trans = normal * distance;
-        let base_verts = scene.mesh.faces[face_id].vertices.clone();
-        let n = base_verts.len();
-        if n < 3 {
-            return Err("Face has fewer than 3 vertices".into());
+        let normal = mesh.face_normal(face_id);
+        let origin = mesh.vertices[face.vertices[0]].position;
+        if face
+            .vertices
+            .iter()
+            .chain(face.holes.iter().flatten())
+            .any(|&v| (mesh.vertices[v].position - origin).dot(normal).abs() > 1e-7)
+        {
+            return Err("Push/Pull requires a planar face".into());
         }
-
-        // Add cap vertices
-        let mut cap_verts = Vec::with_capacity(n);
-        for &bv in &base_verts {
-            let pos = scene.mesh.vertices[bv].position + trans;
-            let cv = scene.mesh.add_vertex(pos);
-            cap_verts.push(cv);
+        let outer: Vec<_> = face
+            .vertices
+            .iter()
+            .map(|&v| mesh.vertices[v].position)
+            .collect();
+        if newell_vector(&outer).length_squared() < 1e-16 {
+            return Err("Push/Pull requires a nondegenerate face".into());
         }
-
-        // Add side quad faces
-        for i in 0..n {
-            let next_i = (i + 1) % n;
-            let v0 = base_verts[i];
-            let v1 = base_verts[next_i];
-            let c1 = cap_verts[next_i];
-            let c0 = cap_verts[i];
-
-            if distance > 0.0 {
-                scene.mesh.add_face(vec![v0, v1, c1, c0], vec![]);
-            } else {
-                scene.mesh.add_face(vec![v0, c0, c1, v1], vec![]);
+        let mut rings = vec![outer];
+        for hole in &face.holes {
+            let mut positions: Vec<_> = hole.iter().map(|&v| mesh.vertices[v].position).collect();
+            // Outer and hole loops must have opposite winding.
+            if newell_vector(&positions).dot(normal) > 0.0 {
+                positions.reverse();
+            }
+            rings.push(positions);
+        }
+        let translation = normal * distance;
+        fn add_polygon(
+            mesh: &mut Mesh,
+            outer: &[DVec3],
+            holes: &[Vec<DVec3>],
+            source: &MeshFace,
+        ) -> Result<(), String> {
+            let ids: Vec<_> = outer.iter().map(|&p| mesh.add_vertex(p)).collect();
+            let hole_ids: Vec<Vec<_>> = holes
+                .iter()
+                .map(|h| h.iter().map(|&p| mesh.add_vertex(p)).collect())
+                .collect();
+            if ids
+                .iter()
+                .copied()
+                .collect::<std::collections::HashSet<_>>()
+                .len()
+                != ids.len()
+                || hole_ids.iter().any(|h| {
+                    h.iter()
+                        .copied()
+                        .collect::<std::collections::HashSet<_>>()
+                        .len()
+                        != h.len()
+                })
+            {
+                return Err("Extrusion is below the document welding tolerance".into());
+            }
+            let id = mesh
+                .add_face(ids, hole_ids)
+                .ok_or("Invalid extrusion face")?;
+            mesh.faces[id].attrs = source.attrs.clone();
+            mesh.faces[id].layer = source.layer.clone();
+            Ok(())
+        }
+        let shifted: Vec<Vec<_>> = rings
+            .iter()
+            .map(|r| r.iter().map(|&p| p + translation).collect())
+            .collect();
+        let mut prism = Mesh::new();
+        let mut bottom = rings.clone();
+        let mut top = shifted.clone();
+        if distance > 0.0 {
+            for ring in &mut bottom {
+                ring.reverse();
+            }
+        } else {
+            for ring in &mut top {
+                ring.reverse();
             }
         }
-
-        // Add top cap face
-        if distance > 0.0 {
-            scene.mesh.add_face(cap_verts, vec![]);
+        add_polygon(&mut prism, &bottom[0], &bottom[1..], face)?;
+        add_polygon(&mut prism, &top[0], &top[1..], face)?;
+        for (base, cap) in rings.iter().zip(&shifted) {
+            for i in 0..base.len() {
+                let j = (i + 1) % base.len();
+                let mut wall = vec![base[i], base[j], cap[j], cap[i]];
+                if distance < 0.0 {
+                    wall.reverse();
+                }
+                add_polygon(&mut prism, &wall, &[], face)?;
+            }
+        }
+        if !solid_report(&prism).0 {
+            return Err("Extrusion did not form a closed prism".into());
+        }
+        // Treat the selected connected face component independently so loose
+        // construction edges or another object cannot disable the solid guard.
+        // Derive connectivity from authoritative face rings, not cached edge
+        // incidence (public face holes may have been added by an editing tool).
+        let mut adjacent = std::collections::HashMap::<(usize, usize), Vec<usize>>::new();
+        for (fid, original) in mesh.faces.iter().enumerate() {
+            for ring in std::iter::once(&original.vertices).chain(&original.holes) {
+                for i in 0..ring.len() {
+                    let a = ring[i];
+                    let b = ring[(i + 1) % ring.len()];
+                    adjacent.entry((a.min(b), a.max(b))).or_default().push(fid);
+                }
+            }
+        }
+        let mut component_faces = std::collections::HashSet::from([face_id]);
+        let mut pending = vec![face_id];
+        while let Some(fid) = pending.pop() {
+            let original = &mesh.faces[fid];
+            for ring in std::iter::once(&original.vertices).chain(&original.holes) {
+                for i in 0..ring.len() {
+                    let a = ring[i];
+                    let b = ring[(i + 1) % ring.len()];
+                    for &neighbor in &adjacent[&(a.min(b), a.max(b))] {
+                        if component_faces.insert(neighbor) {
+                            pending.push(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+        let mut component = Mesh::new();
+        for (fid, original) in mesh.faces.iter().enumerate() {
+            if !component_faces.contains(&fid) {
+                continue;
+            }
+            let points: Vec<_> = original
+                .vertices
+                .iter()
+                .map(|&v| mesh.vertices[v].position)
+                .collect();
+            let holes: Vec<Vec<_>> = original
+                .holes
+                .iter()
+                .map(|h| h.iter().map(|&v| mesh.vertices[v].position).collect())
+                .collect();
+            add_polygon(&mut component, &points, &holes, original)?;
+        }
+        let was_solid = solid_report(&component).0;
+        let mut candidate = if was_solid {
+            let anchor = component.vertices[0].position;
+            let signed_volume: f64 = (0..component.faces.len())
+                .flat_map(|fid| component.triangulate_face(fid))
+                .map(|(a, b, c)| (a - anchor).dot((b - anchor).cross(c - anchor)) / 6.0)
+                .sum();
+            // Direction is physical, independent of globally reversed input winding.
+            let op = if distance * signed_volume > 0.0 {
+                SolidOp::Union
+            } else {
+                SolidOp::Subtract
+            };
+            let mut result = perform_solid_op(op, &component, &prism)?;
+            if result.faces.is_empty() {
+                return Err("Push/Pull would remove the whole solid".into());
+            }
+            for (fid, original) in mesh.faces.iter().enumerate() {
+                if component_faces.contains(&fid) {
+                    continue;
+                }
+                let points: Vec<_> = original
+                    .vertices
+                    .iter()
+                    .map(|&v| mesh.vertices[v].position)
+                    .collect();
+                let holes: Vec<Vec<_>> = original
+                    .holes
+                    .iter()
+                    .map(|h| h.iter().map(|&v| mesh.vertices[v].position).collect())
+                    .collect();
+                add_polygon(&mut result, &points, &holes, original)?;
+            }
+            result
         } else {
-            let mut rev_cap = cap_verts;
-            rev_cap.reverse();
-            scene.mesh.add_face(rev_cap, vec![]);
+            // An embedded sheet face is consumed in either direction. All
+            // unrelated faces and loose edges remain part of the document.
+            let attached = std::iter::once(&face.vertices)
+                .chain(&face.holes)
+                .any(|ring| {
+                    (0..ring.len()).any(|i| {
+                        let a = ring[i];
+                        let b = ring[(i + 1) % ring.len()];
+                        adjacent[&(a.min(b), a.max(b))].len() > 1
+                    })
+                });
+            let mut result = Mesh::new();
+            for (id, original) in mesh.faces.iter().enumerate() {
+                if id == face_id {
+                    continue;
+                }
+                let points: Vec<_> = original
+                    .vertices
+                    .iter()
+                    .map(|&v| mesh.vertices[v].position)
+                    .collect();
+                let holes: Vec<Vec<_>> = original
+                    .holes
+                    .iter()
+                    .map(|h| h.iter().map(|&v| mesh.vertices[v].position).collect())
+                    .collect();
+                add_polygon(&mut result, &points, &holes, original)?;
+            }
+            if attached {
+                add_polygon(&mut result, &shifted[0], &shifted[1..], face)?;
+                for (base, cap) in rings.iter().zip(&shifted) {
+                    for i in 0..base.len() {
+                        let j = (i + 1) % base.len();
+                        add_polygon(&mut result, &[base[i], base[j], cap[j], cap[i]], &[], face)?;
+                    }
+                }
+            } else {
+                for original in &prism.faces {
+                    let points: Vec<_> = original
+                        .vertices
+                        .iter()
+                        .map(|&v| prism.vertices[v].position)
+                        .collect();
+                    let holes: Vec<Vec<_>> = original
+                        .holes
+                        .iter()
+                        .map(|h| h.iter().map(|&v| prism.vertices[v].position).collect())
+                        .collect();
+                    add_polygon(&mut result, &points, &holes, original)?;
+                }
+            }
+            result
+        };
+        // Reattach original wire edges and preserve metadata wherever an original
+        // edge survives. This also covers the kernel-generated solid branch.
+        for edge in &mesh.edges {
+            if !edge.faces.is_empty()
+                && edge.attrs.is_empty()
+                && !edge.soft
+                && edge.curve_id.is_none()
+                && edge.layer.is_none()
+                && !edge.hidden
+            {
+                continue;
+            }
+            let a = mesh.vertices[edge.v0].position;
+            let b = mesh.vertices[edge.v1].position;
+            let va = candidate.vertices.iter().position(|v| v.position == a);
+            let vb = candidate.vertices.iter().position(|v| v.position == b);
+            let id = if edge.faces.is_empty() {
+                let va = candidate.add_vertex(a);
+                let vb = candidate.add_vertex(b);
+                candidate.add_edge(va, vb)
+            } else {
+                va.zip(vb).and_then(|(a, b)| candidate.find_edge(a, b))
+            };
+            if let Some(id) = id {
+                candidate.edges[id].attrs = edge.attrs.clone();
+                candidate.edges[id].soft = edge.soft;
+                candidate.edges[id].curve_id = edge.curve_id;
+                candidate.edges[id].layer = edge.layer.clone();
+                candidate.edges[id].hidden = edge.hidden;
+            }
         }
-
-        // If the original base face was oriented upwards, reverse its vertex winding
-        // so its normal points outward from the newly formed solid
-        if distance > 0.0 {
-            let base_face = &mut scene.mesh.faces[face_id];
-            base_face.vertices.reverse();
+        for vertex in &mesh.vertices {
+            if vertex.edges.is_empty() {
+                candidate.add_vertex(vertex.position);
+            }
         }
-
+        // No partial mutation or version bump escapes a failed preparation.
+        scene.mesh = candidate;
+        scene.clear_selection();
         scene.bump_version();
         Ok(())
     }
@@ -147,8 +401,9 @@ impl Tool for PushPullTool {
             }
         } else if let Some(face_id) = self.selected_face {
             let dist = self.extrusion_distance;
-            let _ = Self::extrude_face(scene, face_id, dist);
-            self.last_distance = Some(dist);
+            if Self::extrude_face(scene, face_id, dist).is_ok() {
+                self.last_distance = Some(dist);
+            }
             self.reset();
         }
     }
@@ -169,7 +424,10 @@ impl Tool for PushPullTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let dist: f64 = text.trim().parse().map_err(|e| format!("Invalid distance: {e}"))?;
+        let dist: f64 = text
+            .trim()
+            .parse()
+            .map_err(|e| format!("Invalid distance: {e}"))?;
 
         if let Some(face_id) = self.selected_face {
             Self::extrude_face(scene, face_id, dist)?;
@@ -248,5 +506,46 @@ mod tests {
         assert!(scene.mesh.is_manifold_solid());
         let vol = scene.mesh.volume().unwrap();
         assert!((vol - 2.5).abs() < 1e-3);
+    }
+    #[test]
+    fn repeated_cap_pushes_keep_whole_polygon_and_metadata() {
+        let mut scene = make_test_square_scene();
+        scene.mesh.faces[0]
+            .attrs
+            .insert("mat".into(), "stone".into());
+        PushPullTool::extrude_face(&mut scene, 0, 2.0).unwrap();
+        for (distance, expected) in [(1.0, 3.0), (-0.5, 2.5)] {
+            let top = (0..scene.mesh.faces.len())
+                .max_by(|&a, &b| {
+                    scene
+                        .mesh
+                        .face_centroid(a)
+                        .z
+                        .total_cmp(&scene.mesh.face_centroid(b).z)
+                })
+                .unwrap();
+            assert_eq!(scene.mesh.faces[top].vertices.len(), 4);
+            PushPullTool::extrude_face(&mut scene, top, distance).unwrap();
+            assert!((scene.mesh.volume().unwrap() - expected).abs() < 1e-8);
+            assert!(scene
+                .mesh
+                .faces
+                .iter()
+                .all(|f| f.attrs.get("mat") == Some(&"stone".into())));
+        }
+    }
+
+    #[test]
+    fn invalid_or_sub_weld_extrusion_is_atomic() {
+        let mut scene = make_test_square_scene();
+        for distance in [0.00002, f64::NAN, f64::INFINITY] {
+            let before = scene.clone();
+            assert!(PushPullTool::extrude_face(&mut scene, 0, distance).is_err());
+            assert_eq!(scene, before);
+        }
+        scene.mesh.vertices[0].position.z = 0.01;
+        let before = scene.clone();
+        assert!(PushPullTool::extrude_face(&mut scene, 0, 1.0).is_err());
+        assert_eq!(scene, before);
     }
 }
