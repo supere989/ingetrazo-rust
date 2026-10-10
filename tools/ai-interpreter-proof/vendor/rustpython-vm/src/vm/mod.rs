@@ -3572,6 +3572,8 @@ impl VirtualMachine {
         if self.host_poison.get() || self.host_fuel.get().is_some() { return Err("Host execution requires journal discard/reset"); }
         self.host_fuel.set(Some(fuel)); Ok(())
     }
+    /// Abort before dropping staged Python payloads; host reset requires completed discard.
+    pub fn host_budget_abort(&self) { self.host_poison.set(true); self.host_fuel.set(Some(0)); }
     pub fn host_budget_poisoned(&self) -> bool { self.host_poison.get() }
     pub fn host_budget_active(&self) -> bool { self.host_fuel.get().is_some() }
     /// Host obligation: discard staged document mutations before this reset.

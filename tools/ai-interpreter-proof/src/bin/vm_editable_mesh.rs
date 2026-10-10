@@ -33,6 +33,13 @@ fn main() {
     assert!(c.execute("held.attrs[(1,2)]=('wrong',)\nheld.attrs['added']=7\nheld.loop.reverse()\nheld.loop[0].position.setX(12)\nshared.append('nested')\nm.faces.clear()\nm.vertices.clear()\nraise ValueError('field rollback')").is_err());
     c.assert_script("assert held.attrs[(1,2)][0]=='kept' and held.attrs[(1,2)][1] is shared\nassert held.attrs['vendor']=={'opaque':[1,2]}\nassert 'added' not in held.attrs\nassert shared==['nested']\nassert held.loop is not before_loop and held.attrs is not before_attrs\nassert held.loop[0].position is not before_position\nassert held.normal()==QVector3D(0,0,1)\nassert len(m.faces)==2 and len(m.vertices)==4\nassert m.faces is faces and m.vertices is vertices");
     states.push(c.observe("field-abort"));
+    c.assert_script("finalizer_events=[]\nclass Reenter:\n def __del__(self):\n  finalizer_events.append('entered')\n  try:\n   m.add_face([QVector3D(20,0,0),QVector3D(21,0,0),QVector3D(20,1,0)])\n  except BaseException:\n   finalizer_events.append('caught')");
+    assert!(
+        c.execute("held.attrs['reentry']=Reenter()\nraise ValueError('finalizer discard')")
+            .is_err()
+    );
+    c.assert_script("assert finalizer_events==[]\nassert 'reentry' not in held.attrs");
+    assert_eq!(c.native_counts("m"), (4, 5, 2));
     let limit = c.budget().snapshot().total();
     c.budget().set_limit(Some(limit));
     assert!(c.execute("never_ran=True").is_err());
@@ -74,6 +81,6 @@ fn main() {
     assert_eq!(budget.snapshot().total(), 0);
     println!(
         "{}",
-        serde_json::json!({"states":states,"persistent_mesh_lists":true,"real_face_vertex_identity":true,"source_welded_vertex_reuse":true,"detached_face_valid_after_abort":true,"native_projection":true,"face_live_geometry_reads":true,"two_mesh_publication":true,"second_owner_pressure_retains_both":true,"private_scope_edit_survives_error":true,"final_zero_with_cycle":true,"shallow_existing_field_rollback":true,"preparation_refusal_session_recovers":true,"unwind_restores_fields_and_retires_session":true,"general_existing_object_rollback":false,"undo_redo_controller":false,"production_enabled":false})
+        serde_json::json!({"states":states,"persistent_mesh_lists":true,"real_face_vertex_identity":true,"source_welded_vertex_reuse":true,"detached_face_valid_after_abort":true,"native_projection":true,"face_live_geometry_reads":true,"two_mesh_publication":true,"second_owner_pressure_retains_both":true,"private_scope_edit_survives_error":true,"final_zero_with_cycle":true,"shallow_existing_field_rollback":true,"discard_finalizer_bytecode_refused":true,"preparation_refusal_session_recovers":true,"unwind_restores_fields_and_retires_session":true,"general_existing_object_rollback":false,"undo_redo_controller":false,"production_enabled":false})
     );
 }

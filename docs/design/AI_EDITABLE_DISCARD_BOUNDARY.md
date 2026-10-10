@@ -1,0 +1,9 @@
+# Editable VM discard boundary prerequisite
+
+Production execution remains disabled. The source-compatible root restoration batch preserves shallow source snapshots and replacement wrapper identities; this is not whole-document atomic rollback.
+
+The isolated VM host abort hook poisons execution and sets fuel to zero without resetting. Root restoration invokes it before releasing replaced arbitrary payloads. Field locks are released before destruction; the transaction guard poisons before discarding staging on unwind. Controller teardown also poisons an already-active VM. Only the host resets after journal discard. This is a minimal additional hook in the already pinned proof-only VM, not a production dependency change.
+
+Root loop preparation preflights checked outer/hole member slots, including the vector containing hole lists, before native allocations. Actual capacity slack is reconciled before execution. VM list/dictionary/vector object allocation and allocator slack are not physically constrained by the logical budget. Full native callbacks, compiler/builtin costs and hostile-finalizer coverage remain open.
+
+Next writable publication requires preparing topology from actual persistent Vertex/Face identities, not coercing mutated faces into append commands. Coordinate mutation must preserve shared Vector aliases; membership/loop edits must prepare edge/radial/index replacement before semantic publication. The command must park and restore actual wrapper handles according to SnapshotImport rather than reconstructing them from JSON. Failed preparation must preserve history/Redo and original native projection. Efficient mutation observers are required to replace the current O(root VM references) pre-execution snapshot before production; the baseline is an explicit bounded prerequisite.

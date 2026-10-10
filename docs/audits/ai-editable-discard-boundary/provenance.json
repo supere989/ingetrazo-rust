@@ -1,0 +1,7 @@
+{
+  "base": "ecc6b927",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "399082a06fa8c4b0edd273efdaadee6e94eda13afa4dacc1d0f6f6035e768503",
+  "command": "cargo run --manifest-path tools/ai-interpreter-proof/Cargo.toml --bin vm_editable_mesh -j2",
+  "production_enabled": false
+}

@@ -42,9 +42,10 @@ impl Stage {
     }
 }
 thread_local! {static STAGED:RefCell<Option<Stage>>=const{RefCell::new(None)};}
-struct Guard;
-impl Drop for Guard {
+struct Guard<'a>(&'a rustpython_vm::VirtualMachine);
+impl Drop for Guard<'_> {
     fn drop(&mut self) {
+        self.0.host_budget_abort();
         STAGED.with(|s| {
             if let Some(mut stage) = s.borrow_mut().take() {
                 stage.rollback();
@@ -381,7 +382,8 @@ struct FaceRestore {
     holes: rustpython_vm::builtins::PyListRef,
     attrs: rustpython_vm::PyObjectRef,
 }
-struct RootRestore {
+struct RootRestore<'a> {
+    vm: &'a rustpython_vm::VirtualMachine,
     mesh: PyRef<editable_mesh::Mesh>,
     vertices: Vec<rustpython_vm::PyObjectRef>,
     faces: Vec<rustpython_vm::PyObjectRef>,
@@ -390,11 +392,11 @@ struct RootRestore {
     _charge: Lease,
     armed: bool,
 }
-impl RootRestore {
+impl<'a> RootRestore<'a> {
     fn prepare(
         mesh: PyRef<editable_mesh::Mesh>,
         budget: &OwnerBudget,
-        vm: &rustpython_vm::VirtualMachine,
+        vm: &'a rustpython_vm::VirtualMachine,
     ) -> Result<Self, String> {
         use rustpython_vm::{PyPayload, builtins::PyDict};
         fn copy(
@@ -453,22 +455,41 @@ impl RootRestore {
                 .clone()
                 .downcast::<editable_mesh::Face>()
                 .map_err(|_| "Root face list requires Face")?;
-            let outer = copy(&face.r#loop.read())?;
+            let outer_len = face.r#loop.read().borrow_vec().len();
+            let source_holes = face.hole_loops.read().clone();
+            let source_holes = source_holes.borrow_vec();
+            let mut slots = outer_len
+                .checked_add(source_holes.len())
+                .ok_or("Loop extent overflow")?;
+            for h in source_holes.iter() {
+                let h = h
+                    .downcast_ref::<rustpython_vm::builtins::PyList>()
+                    .ok_or("Hole requires list")?;
+                slots = slots
+                    .checked_add(h.borrow_vec().len())
+                    .ok_or("Hole extent overflow")?;
+            }
+            // Logical member-slot admission precedes every native vector allocation.
             bytes = bytes
                 .checked_add(
-                    outer
-                        .capacity()
+                    slots
                         .checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
                         .ok_or("Loop byte overflow")?,
                 )
                 .ok_or("Loop byte overflow")?;
             charge.resize(bytes)?;
-            let source_holes = face.hole_loops.read().clone();
-            let source_holes = source_holes.borrow_vec();
+            let outer = copy(&face.r#loop.read())?;
+            let mut extra = outer
+                .capacity()
+                .checked_sub(outer_len)
+                .ok_or("Loop capacity mismatch")?;
             let mut holes = Vec::new();
             holes
                 .try_reserve_exact(source_holes.len())
                 .map_err(|_| "Hole restoration slots refused")?;
+            extra = extra
+                .checked_add(holes.capacity() - source_holes.len())
+                .ok_or("Hole capacity overflow")?;
             for h in source_holes.iter() {
                 let h = h
                     .downcast_ref::<rustpython_vm::builtins::PyList>()
@@ -477,17 +498,21 @@ impl RootRestore {
                 let mut ring = Vec::new();
                 ring.try_reserve_exact(h.len())
                     .map_err(|_| "Hole restoration members refused")?;
+                extra = extra
+                    .checked_add(ring.capacity() - h.len())
+                    .ok_or("Hole capacity overflow")?;
                 ring.extend(h.iter().cloned());
-                bytes = bytes
-                    .checked_add(
-                        ring.capacity()
-                            .checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
-                            .ok_or("Hole byte overflow")?,
-                    )
-                    .ok_or("Hole byte overflow")?;
-                charge.resize(bytes)?;
                 holes.push(vm.ctx.new_list(ring).into());
             }
+            // Allocator slack is reconciled before execution, not claimed physically capped.
+            bytes = bytes
+                .checked_add(
+                    extra
+                        .checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>())
+                        .ok_or("Loop capacity overflow")?,
+                )
+                .ok_or("Loop capacity overflow")?;
+            charge.resize(bytes)?;
             let old = face.attrs.read().clone();
             let old = old
                 .downcast::<PyDict>()
@@ -501,6 +526,7 @@ impl RootRestore {
             });
         }
         Ok(Self {
+            vm,
             mesh,
             vertices,
             faces,
@@ -511,17 +537,22 @@ impl RootRestore {
         })
     }
     fn apply(&mut self) {
+        self.vm.host_budget_abort();
         let vertices = std::mem::take(&mut self.vertices);
         let faces = std::mem::take(&mut self.faces);
         *self.mesh.vertices.borrow_vec_mut() = vertices;
         *self.mesh.faces.borrow_vec_mut() = faces;
         for record in self.positions.drain(..) {
-            *record.vertex.position.write() = record.position;
+            let old = std::mem::replace(&mut *record.vertex.position.write(), record.position);
+            drop(old);
         }
         for record in self.face_fields.drain(..) {
-            *record.face.r#loop.write() = record.outer;
-            *record.face.hole_loops.write() = record.holes;
-            *record.face.attrs.write() = record.attrs;
+            let old = std::mem::replace(&mut *record.face.r#loop.write(), record.outer);
+            drop(old);
+            let old = std::mem::replace(&mut *record.face.hole_loops.write(), record.holes);
+            drop(old);
+            let old = std::mem::replace(&mut *record.face.attrs.write(), record.attrs);
+            drop(old);
         }
         self.armed = false;
     }
@@ -532,7 +563,7 @@ impl RootRestore {
         self.armed = false;
     }
 }
-impl Drop for RootRestore {
+impl Drop for RootRestore<'_> {
     fn drop(&mut self) {
         if self.armed {
             self.apply();
@@ -614,7 +645,7 @@ impl Controller {
         self.last_prepared = 0;
         let result = self.interpreter.enter(|vm| {
             STAGED.with(|s| *s.borrow_mut() = Some(stage));
-            let _guard = Guard;
+            let _guard = Guard(vm);
             vm.host_budget_arm(100000)
                 .map_err(|_| "VM fuel admission refused")?;
             let baseline = match self.scope.globals.get_item("mesh", vm) {
@@ -634,9 +665,11 @@ impl Controller {
             let mut stage = STAGED.with(|s| s.borrow_mut().take().unwrap());
             let result = if let Err(error) = executed {
                 vm.print_exception(&error);
+                vm.host_budget_abort();
                 stage.rollback();
                 Err("Python execution refused".into())
             } else if vm.host_budget_poisoned() || stage.failed {
+                vm.host_budget_abort();
                 stage.rollback();
                 Err("Staged mutation refused".into())
             } else {
@@ -677,6 +710,7 @@ impl Controller {
                     Ok::<_, String>(!entries.is_empty())
                 })();
                 if publish.is_err() {
+                    vm.host_budget_abort();
                     for e in &entries {
                         e.mesh.faces.borrow_vec_mut().truncate(e.faces);
                         e.mesh.vertices.borrow_vec_mut().truncate(e.vertices);
@@ -734,10 +768,7 @@ impl Controller {
 impl Drop for Controller {
     fn drop(&mut self) {
         self.interpreter.enter(|vm| {
-            if !vm.host_budget_active() {
-                let _ = vm.host_budget_arm(0);
-            }
-            let _ = vm.host_budget_tick();
+            vm.host_budget_abort();
             self.scope.globals.clear();
             vm.state.gc.collect_force(2);
         });
