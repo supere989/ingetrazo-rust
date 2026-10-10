@@ -171,7 +171,7 @@ impl MoveTool {
         if scene.image_planes.get(preferred).is_some_and(|p|p.id==image.id){Some(preferred)}else{scene.image_planes.iter().position(|p|p.id==image.id)}
     }
     fn restore_positions(&self,scene:&mut Scene){
-        for (id,image) in &self.original_images{if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().origin=image.origin;}}
+        for (id,image) in &self.original_images{if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().set_origin(image.origin);}}
         if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point;}}
@@ -187,7 +187,7 @@ impl MoveTool {
             let index=self.image_indices.get(&image.id.as_u128()).copied();
             let current=index.map(|i|scene.image_planes[i].origin).unwrap_or(*origin);
             *origin=(current.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();
-            if let Some(index)=index{*preferred=index;scene.image_planes.pose_mut(index).unwrap().origin=*origin;}else{scene.image_objects.set_held_origin(image,*origin);}
+            if let Some(index)=index{*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}else{scene.image_objects.set_held_origin(image,*origin);}
         }
         self.preview_delta=delta;scene.bump_version();self.preview_version=scene.version;
     }
@@ -201,7 +201,7 @@ impl MoveTool {
             self.restore_positions(scene);
             for (((preferred,image),(_,origin)),current) in self.original_images.iter_mut().zip(&mut self.preview_images).zip(image_origins){
                 *origin=current;
-                if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes.pose_mut(index).unwrap().origin=current;}else{scene.image_objects.set_held_origin(image,current);}
+                if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(current);}else{scene.image_objects.set_held_origin(image,current);}
             }
             self.preview_delta=DVec3::ZERO;scene.bump_version();self.preview_version=scene.version;}
     }
@@ -290,14 +290,14 @@ impl Tool for MoveTool {
 
     fn restore_transient_model(&self,scene:&mut Scene){if self.start_point.is_some(){
         let origins=self.original_images.iter().filter_map(|(id,image)|Self::image_index(scene,*id,image).map(|index|(index,(scene.image_planes[index].origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
-        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes.pose_mut(id).unwrap().origin=origin;}scene.version=self.original_version;
+        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes.pose_mut(id).unwrap().set_origin(origin);}scene.version=self.original_version;
     }}
     fn end_transient_before_history(&mut self,scene:&mut Scene){if self.start_point.is_some(){self.on_cancel(scene);}}
     fn restore_current_preview_model(&self,scene:&mut Scene){
         if self.start_point.is_none(){return;}
         scene.version=self.preview_version;
         // The exact accumulated float32 pose cannot be reconstructed from its inverse.
-        for((id,image),(_,origin))in self.original_images.iter().zip(&self.preview_images){if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().origin=*origin;}}
+        for((id,image),(_,origin))in self.original_images.iter().zip(&self.preview_images){if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}}
         if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+self.preview_delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(self.preview_delta)*transform;}}
         for &(id,point) in &self.original_planes{if let Some(p)=scene.section_planes.get_mut(id){p.point=point+self.preview_delta;}}
