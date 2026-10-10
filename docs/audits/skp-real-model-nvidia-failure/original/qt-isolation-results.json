@@ -1,0 +1,238 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "model": "gondola_v20",
+      "camera": {
+        "target": [
+          48.07872009277344,
+          5.732326507568359,
+          1.5701091289520264
+        ],
+        "distance": 10.354882521905513,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "igz_sha256": "591fc28eee6acba386d8ab952366c4b3f3651555310dd526b6a43ae9b64f8cd4",
+      "gl_contexts": [
+        {
+          "label": "source",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        },
+        {
+          "label": "native-igz",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        }
+      ],
+      "different_pixels": 0,
+      "source_ink_pixels": 51549,
+      "exact": true,
+      "source_image_sha256": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7",
+      "native_igz_image_sha256": "4e917857fd2897d6b2bbe896368063da5a73d450b4320fcafe6b48d9b88b99a7"
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "model": "gondola_v20",
+      "camera": {
+        "target": [
+          48.07872009277344,
+          5.732326507568359,
+          1.5701091289520264
+        ],
+        "distance": 10.354882521905513,
+        "yaw": 0.4886921905584123,
+        "pitch": 0.4188790204786391,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "181f5ee604aa0fc115eed42240571099a65817bf4e49ef39f87577554d319d92",
+      "igz_sha256": "591fc28eee6acba386d8ab952366c4b3f3651555310dd526b6a43ae9b64f8cd4",
+      "gl_contexts": [
+        {
+          "label": "source",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        },
+        {
+          "label": "native-igz",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        }
+      ],
+      "different_pixels": 16,
+      "source_ink_pixels": 56791,
+      "exact": false,
+      "source_image_sha256": "1c1c0c8a65d869e3a23828660fccd1a3e2627266cd3b5875dfd7c9a534cb18e9",
+      "native_igz_image_sha256": "bf1ccc79b99084f6d6124981cec6c5d9e3342b08e65bbfa84c4252caedead5bd"
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "model": "capilla_quiroz_v17",
+      "camera": {
+        "target": [
+          5.813098430633545,
+          2.8220772743225098,
+          1.5564720630645752
+        ],
+        "distance": 43.65325497694099,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e",
+      "igz_sha256": "530c63625ac45deb0fcbfdb77fef0ab356a0f53e492b2084fd63b6211cb6f379",
+      "gl_contexts": [
+        {
+          "label": "source",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        },
+        {
+          "label": "native-igz",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        }
+      ],
+      "different_pixels": 0,
+      "source_ink_pixels": 11190,
+      "exact": true,
+      "source_image_sha256": "dc2faa7707f709c5b7f5e91abb25ef3959504a9e45f5d076d05df4de3f04e995",
+      "native_igz_image_sha256": "dc2faa7707f709c5b7f5e91abb25ef3959504a9e45f5d076d05df4de3f04e995"
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "model": "capilla_quiroz_v17",
+      "camera": {
+        "target": [
+          5.813098430633545,
+          2.8220772743225098,
+          1.5564720630645752
+        ],
+        "distance": 43.65325497694099,
+        "yaw": 0.4886921905584123,
+        "pitch": 0.4188790204786391,
+        "fov_deg": 45.0,
+        "perspective": false,
+        "width": 800,
+        "height": 600,
+        "background": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "edges": true,
+        "profiles": false,
+        "face_mode": "shaded",
+        "textures": false
+      },
+      "input_sha256": "5974c5f416ae32aaf12093b2808bdeff662efed7ee85565bab3caf7ddbd9f98e",
+      "igz_sha256": "530c63625ac45deb0fcbfdb77fef0ab356a0f53e492b2084fd63b6211cb6f379",
+      "gl_contexts": [
+        {
+          "label": "source",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        },
+        {
+          "label": "native-igz",
+          "gl": {
+            "vendor": "NVIDIA Corporation",
+            "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+            "version": "3.3.0 NVIDIA 615.71.09",
+            "software": false,
+            "platform": "xcb",
+            "fallback": ""
+          }
+        }
+      ],
+      "different_pixels": 0,
+      "source_ink_pixels": 9907,
+      "exact": true,
+      "source_image_sha256": "a6863f7a01a010cbda45d0323b09c38b802c24c5a483230759f6c7dc0a04098a",
+      "native_igz_image_sha256": "a6863f7a01a010cbda45d0323b09c38b802c24c5a483230759f6c7dc0a04098a"
+    }
+  ],
+  "scope": "Qt renderer import isolation only; native Vulkan stage required"
+}
