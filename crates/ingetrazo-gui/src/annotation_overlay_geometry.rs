@@ -1,6 +1,6 @@
 //! Ordered physical annotation spans. Coverage is immutable cached geometry;
 //! retained GPU depth gates remain separate from this CPU producer.
-use std::{sync::Arc,collections::HashMap};
+use std::{sync::Arc,collections::{HashMap,VecDeque}};
 use ingetrazo_formats::paper_text_layout::LayoutFont;
 use glam::DVec2;
 use ingetrazo_render::{annotations::{Plan,Primitive,Gate},cad2d::{Geometry,Vertex,Batch,SourceSpan,EncodedRgba},qt_gray::{self,Span,PathContour,Segment}};
@@ -8,12 +8,15 @@ use ingetrazo_formats::{annotation_font, paper_font_resolver::Request};
 pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:Arc<[Gate]>}
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2]}
-pub struct Cache {glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,Arc<Mesh>)>,builds:u64,limits:Limits}
+pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
- pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
+ pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
  pub fn stats(&self)->(u64,(usize,usize,u64)){(self.builds,self.fonts.stats())}
  pub fn prepare(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64)->Result<Arc<Mesh>,String>{
+  let density=f64::from(density);
+  if !density.is_finite()||density<=0.||density>40.||!font_dpi.is_finite()||font_dpi<=0.{return Err("Annotation physical/font density outside admission".into());}
+  if let Some((old,d,dpi,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits(){return Ok(mesh.clone());}}
   if plan.queries.len()>u32::MAX as usize||plan.queries.iter().flatten().any(|v|!v.is_finite()){
    return Err("Annotation plan query admission exceeded".into());
   }
@@ -22,20 +25,39 @@ impl Cache {
    Gate::Always=>{},Gate::Point(a) if a<count=>{},Gate::Both(a,b) if a<count&&b<count=>{},
    _=>return Err("Annotation plan references absent query".into()),
   }}
-  let density=f64::from(density);
-  if !density.is_finite()||density<=0.||density>40.||!font_dpi.is_finite()||font_dpi<=0.{return Err("Annotation physical/font density outside admission".into());}
-  if let Some((old,d,dpi,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits(){return Ok(mesh.clone());}}
   let mesh=Arc::new(self.build(&plan,density,font_dpi)?);
   self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),mesh.clone()));self.builds+=1;Ok(mesh)
  }
  fn glyph(&mut self,face:&ingetrazo_formats::annotation_font::Face,glyph:u32,density:f64,phase:[u8;2])->Result<Arc<ingetrazo_formats::paper_text::RasterGlyph>,String>{
   let key=GlyphKey{font:face.key(),pixels:face.pixels(),glyph,density:density.to_bits(),phase};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
-  if self.glyphs.len()>=self.limits.glyphs{return Err("Annotation glyph count admission exceeded".into());}
   self.glyphs.try_reserve(1).map_err(|_|"Annotation glyph cache allocation failed")?;
+  self.glyph_order.try_reserve(1).map_err(|_|"Annotation glyph order allocation failed")?;
+  // One bounded cold raster candidate (the provider separately caps each mask)
+  // is admitted before eviction. Failed candidates never evict existing masks.
   let image=face.rasterize(glyph,density,phase)?;
-  let next=self.glyph_bytes.checked_add(image.coverage.len()).filter(|&n|n<=self.limits.glyph_bytes).ok_or("Annotation retained glyph bytes exceeded")?;
-  let image=Arc::new(image);self.glyphs.insert(key,image.clone());self.glyph_bytes=next;self.glyph_builds+=1;Ok(image)
+  let bytes=image.coverage.len();
+  if bytes>self.limits.glyph_bytes{return Err("Annotation retained glyph bytes exceeded".into());}
+  let mut remaining_bytes=self.glyph_bytes.checked_add(bytes).ok_or("Annotation glyph byte overflow")?;
+  let mut remaining_count=self.glyphs.len().checked_add(1).ok_or("Annotation glyph count overflow")?;
+  let mut removals=Vec::new();removals.try_reserve_exact(self.glyph_order.len()).map_err(|_|"Annotation glyph eviction admission failed")?;
+  for key in &self.glyph_order{
+   if remaining_count<=self.limits.glyphs&&remaining_bytes<=self.limits.glyph_bytes{break;}
+   if let Some(old)=self.glyphs.get(key).filter(|old|Arc::strong_count(old)==1){
+    remaining_bytes-=old.coverage.len();remaining_count-=1;removals.push(*key);
+   }
+  }
+  if remaining_count>self.limits.glyphs||remaining_bytes>self.limits.glyph_bytes{
+   return Err("Annotation live glyph ownership exceeds admission".into());
+  }
+  let image=Arc::new(image);
+  for key in removals{
+   let old=self.glyphs.remove(&key).expect("admitted cache-only glyph eviction");
+   self.glyph_bytes-=old.coverage.len();
+  }
+  self.glyph_order.retain(|key|self.glyphs.contains_key(key));
+  self.glyphs.insert(key,image.clone());self.glyph_order.push_back(key);
+  self.glyph_bytes=remaining_bytes;self.glyph_builds+=1;Ok(image)
  }
  fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64)->Result<Mesh,String>{
   let mut writer=Writer::new(density,self.limits);
@@ -107,8 +129,16 @@ impl Writer {
  fn layer(&mut self,spans:Vec<Span>,color:[u8;4],gate:Gate)->Result<(),String>{
   if spans.is_empty(){return Ok(());}
   let count=self.rows.len().checked_add(spans.len()).filter(|&n|n<=self.limits.spans&&n<=u32::MAX as usize/6).ok_or("Annotation aggregate span admission exceeded")?;
-  if count.checked_mul(72).is_none_or(|n|n>self.limits.geometry_bytes){return Err("Annotation geometry byte admission exceeded".into());}
   let ranges=ingetrazo_render::qt_cosmetic::disjoint_ranges(&spans,self.limits.spans)?;
+  let retained=[
+   (count.checked_mul(4),std::mem::size_of::<Vertex>()),
+   (count.checked_mul(6),std::mem::size_of::<u32>()),
+   (Some(count),std::mem::size_of::<SourceSpan>()),
+   (self.ranges.len().checked_add(ranges.len()),std::mem::size_of::<std::ops::Range<u32>>()),
+   (self.batches.len().checked_add(1),std::mem::size_of::<Batch>()),
+   (self.gates.len().checked_add(1),std::mem::size_of::<Gate>()),
+  ].into_iter().try_fold(0usize,|sum,(count,size)|count.and_then(|n|n.checked_mul(size)).and_then(|n|sum.checked_add(n)));
+  if retained.is_none_or(|bytes|bytes>self.limits.geometry_bytes){return Err("Annotation retained arrays admission exceeded".into());}
   self.vertices.try_reserve(spans.len()*4).map_err(|_|"Annotation vertex allocation failed")?;
   self.indices.try_reserve(spans.len()*6).map_err(|_|"Annotation index allocation failed")?;
   self.rows.try_reserve(spans.len()).map_err(|_|"Annotation row allocation failed")?;
@@ -154,11 +184,29 @@ mod tests {
   let mut cache=cache();cache.limits.glyphs=1;
   let initial=plan();let first=cache.prepare(initial.clone(),1.,96.).unwrap();
   let old_glyphs=cache.glyph_stats();assert_eq!(old_glyphs.0,1);
+  let retained_mask=cache.glyphs.values().next().unwrap().clone();
   let next=Arc::new(Plan{queries:vec![],operations:vec![Operation{
    primitive:Primitive::Text{position:[45.,35.],text:"B".into(),size_pt:11,color:[45,55,75,255]},gate:Gate::Always}]});
   assert!(cache.prepare(next,1.,96.).is_err());
   assert_eq!(cache.glyph_stats(),old_glyphs);
   assert!(Arc::ptr_eq(&first,&cache.prepare(initial,1.,96.).unwrap()));
+  drop(retained_mask);
+ }
+ #[test]fn glyph_phase_churn_evicts_cache_only_masks_and_keeps_warm_mesh(){
+  let mut cache=cache();cache.limits.glyphs=2;let plan=plan();
+  for density in [1.,1.25,1.5,1.75,2.,2.25,2.5]{
+   let mesh=cache.prepare(plan.clone(),density,96.).unwrap();
+   assert!(cache.glyph_stats().0<=2);assert!(cache.glyph_order.len()<=2);
+   let before=cache.glyph_stats();
+   assert!(Arc::ptr_eq(&mesh,&cache.prepare(plan.clone(),density,96.).unwrap()));
+   assert_eq!(cache.glyph_stats(),before);
+  }
+  assert!(cache.glyph_stats().2>2);
+ }
+ #[test]fn retained_metadata_is_in_geometry_admission(){
+  let mut writer=Writer::new(1.,Limits{cells:10,spans:10,geometry_bytes:72,glyphs:1,glyph_bytes:1});
+  assert!(writer.layer(vec![Span{x:0,y:0,len:1,coverage:255}],[0,0,0,255],Gate::Always).is_err());
+  assert!(writer.vertices.is_empty()&&writer.rows.is_empty());
  }
  #[test]fn malformed_candidate_keeps_last_ready_mesh(){
   let mut cache=cache();let plan=plan();let first=cache.prepare(plan.clone(),1.,96.).unwrap();let counts=cache.stats();
