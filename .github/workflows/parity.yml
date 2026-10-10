@@ -50,6 +50,10 @@ jobs:
         run: python scripts/check-rendered-shift-inference.py
       - name: Original OpenGL section stencil controls
         run: python scripts/check-original-section-gl.py
+      - name: Build native Vulkan section fixture
+        run: cargo build --locked -p ingetrazo-gui --example native_vulkan_section_fixture
+      - name: Native Vulkan ten-case stencil comparison and lifecycle
+        run: python scripts/check-native-vulkan-stencil-suite.py target/debug/examples/native_vulkan_section_fixture docs/audits/native-stencil-ci
       - name: Native rendered section stencil comparison
         run: python scripts/check-rendered-section.py
       - name: Original Python runtime document reopen
@@ -153,3 +157,7 @@ jobs:
             docs/audits/shift-inference-render-evidence.json
             docs/audits/shift-inference-render/*.png
             docs/audits/shift-inference-render/runtime.log
+            docs/audits/native-stencil-ci/comparison.json
+            docs/audits/native-stencil-ci/provenance.json
+            docs/audits/native-stencil-ci/*/*.png
+            docs/audits/native-stencil-ci/*/startup.log
