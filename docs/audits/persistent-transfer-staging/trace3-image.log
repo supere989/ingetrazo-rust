@@ -1,0 +1,15 @@
+Headless adapter0: AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO); vendor0x1002; INTEGRATED_GPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Headless adapter1: llvmpipe (LLVM 20.1.2, 256 bits); vendor0x10005; CPU; API1.4.318; driver0x6402008; maxImage2D16384; graphicsSome(0)
+Selected headless adapter llvmpipe (LLVM 20.1.2, 256 bits); strict request DeviceRequest { vendor_id: None, require_discrete: false, name: Some("llvmpipe") }; no surface/present requirement
+TRACE staging allocate begin
+TRACE staging allocate end
+TRACE staging map begin
+TRACE staging map end
+TRACE image entry
+TRACE image queries complete
+TRACE image create complete
+TRACE image reserve begin
+TRACE image reserve complete allocate begin
+TRACE image allocation complete bind begin
+TRACE image bind complete
+TRACE image view begin

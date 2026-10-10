@@ -1,0 +1,96 @@
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/resources.rs b/crates/ingetrazo-gui/src/native_vulkan/resources.rs
+index 19d8c0ca..b976146a 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/resources.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/resources.rs
+@@ -26,11 +26,11 @@ impl Resources {
+   if !Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Upload context differs from resource owner".into());}
+   if capacity==0||capacity>UPLOAD_CHUNK{return Err("Invalid bounded staging capacity".into());}
+   if self.image_staging.and_then(|id|self.logical_bytes(id)).is_none_or(|n|n<capacity){
+-   if let Some(old)=self.image_staging.take(){self.destroy(old);}
+-   let id=self.allocate(capacity,vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::HOST_VISIBLE)?;
++   if let Some(old)=self.image_staging.take(){eprintln!("TRACE staging destroy begin");self.destroy(old);eprintln!("TRACE staging destroy end");}
++   eprintln!("TRACE staging allocate begin");let id=self.allocate(capacity,vk::BufferUsageFlags::TRANSFER_SRC,vk::MemoryPropertyFlags::HOST_VISIBLE)?;eprintln!("TRACE staging allocate end");
+    let b=&self.buffers[&id];
+-   let mapped=match unsafe{self.device.map_memory(b.memory,0,b.allocation_bytes,vk::MemoryMapFlags::empty())}{Ok(p)=>p,Err(e)=>{self.destroy(id);return Err(e.to_string());}};
+-   self.buffers.get_mut(&id).unwrap().persistent_map=Some(mapped as usize);
++   eprintln!("TRACE staging map begin");let mapped=match unsafe{self.device.map_memory(b.memory,0,b.allocation_bytes,vk::MemoryMapFlags::empty())}{Ok(p)=>p,Err(e)=>{self.destroy(id);return Err(e.to_string());}};
++   eprintln!("TRACE staging map end");self.buffers.get_mut(&id).unwrap().persistent_map=Some(mapped as usize);
+    self.stats.upload_staging_maps+=1;
+    self.stats.staging_allocations+=1;
+    self.stats.staging_peak=self.stats.staging_peak.max(self.buffers[&id].allocation_bytes);
+diff --git a/crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs b/crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs
+index da07b80b..90bf41d4 100644
+--- a/crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs
++++ b/crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs
+@@ -358,6 +358,7 @@ impl TextureImage {
+         mips: bool,
+         diagnostic_readback: bool,
+     ) -> Result<Self, String> {
++        eprintln!("TRACE image entry");
+         use egui_ash_renderer::MemoryObserver;
+         let layout = ingetrazo_render::texture_layout::Layout::full(
+             ingetrazo_render::texture_layout::Format::Rgba8,
+@@ -408,6 +409,7 @@ impl TextureImage {
+         ) {
+             return Err("RGBA texture requires actual linear sampling support".into());
+         }
++        eprintln!("TRACE image queries complete");
+         let device = context.device.clone();
+         let budget = resources.budget.clone();
+         let image = unsafe {
+@@ -429,6 +431,7 @@ impl TextureImage {
+             )
+         }
+         .map_err(|e| e.to_string())?;
++        eprintln!("TRACE image create complete");
+         let req = unsafe { device.get_image_memory_requirements(image) };
+         if req.size > props.max_resource_size {
+             unsafe {device.destroy_image(image,None)};
+@@ -446,12 +449,14 @@ impl TextureImage {
+                             .contains(vk::MemoryPropertyFlags::DEVICE_LOCAL)
+                 })
+                 .ok_or("No device-local sampled image memory")?;
++            eprintln!("TRACE image reserve begin");
+             let ticket = budget
+                 .reserve(
+                     resources.properties.memory_types[ty as usize].heap_index,
+                     req.size,
+                 )
+                 .map_err(|e| e.to_string())?;
++            eprintln!("TRACE image reserve complete allocate begin");
+             let allocated = match unsafe {
+                 device.allocate_memory(
+                     &vk::MemoryAllocateInfo::default()
+@@ -466,13 +471,16 @@ impl TextureImage {
+                     return Err(e.to_string());
+                 }
+             };
++            eprintln!("TRACE image allocation complete bind begin");
+             if let Err(e) = unsafe { device.bind_image_memory(image, allocated, 0) } {
+                 unsafe { device.free_memory(allocated, None) };
+                 budget.cancel(ticket);
+                 return Err(e.to_string());
+             }
++            eprintln!("TRACE image bind complete");
+             budget.commit(ticket, allocated);
+             memory = Some(allocated);
++            eprintln!("TRACE image view begin");
+             view = unsafe {
+                 device.create_image_view(
+                     &vk::ImageViewCreateInfo::default()
+@@ -489,6 +497,7 @@ impl TextureImage {
+                 )
+             }
+             .map_err(|e| e.to_string())?;
++            eprintln!("TRACE image view end sampler begin");
+             sampler = unsafe {
+                 device.create_sampler(
+                     &vk::SamplerCreateInfo::default()
+@@ -504,6 +513,7 @@ impl TextureImage {
+                 )
+             }
+             .map_err(|e| e.to_string())?;
++            eprintln!("TRACE image sampler end upload begin");
+             resources.upload_rgba8_image(context, image, extent, data, levels)
+         })();
+         if let Err(e) = result {

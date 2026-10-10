@@ -1,0 +1,8 @@
+{
+  "sha256": "c27dd638bc904b6971b8f33461c634f4ec2d8f0bba86c702bf8fe31f57fbdeea",
+  "base": "f2c58ed5",
+  "instrumentation": "software-timeout-trace.patch",
+  "exit": 124,
+  "timeout_seconds": 12,
+  "last_checkpoint": "TRACE image view begin"
+}
