@@ -1,0 +1,21 @@
+{
+  "zip_hash_verified": true,
+  "report_hashes_verified": true,
+  "controls": {
+    "custom_presenter_control": {
+      "submitted": 10,
+      "displayed": 0,
+      "skipped": 7,
+      "pending": 3,
+      "queue_device": 4294967706
+    },
+    "metalkit_presenter_control": {
+      "submitted": 7,
+      "displayed": 0,
+      "skipped": 4,
+      "pending": 3,
+      "queue_device": 4294967706
+    }
+  },
+  "conclusion": "Both actual presenters lack positive callbacks on same ARM runner/device; cause remains unresolved. No gate promoted."
+}
