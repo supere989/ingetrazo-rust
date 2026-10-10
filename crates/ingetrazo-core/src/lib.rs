@@ -72,3 +72,4 @@ pub mod walkthrough;
 pub mod visible_ray_index;
 
 pub mod ai;
+pub mod ai_protocol;
