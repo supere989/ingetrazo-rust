@@ -233,6 +233,12 @@ jobs:
         run: python scripts/check-python-pieces.py
       - name: Original runtime nested world dimension measurement
         run: python scripts/check-python-dimension-world.py
+      - name: Original terrain runtime visibility and owned command footprint
+        run: |
+          mkdir -p docs/audits/terrain-membership-ci
+          python scripts/probe-python-presentation-history.py docs/audits/terrain-membership-ci/original.json
+          cargo run --locked -p ingetrazo-gui --example presentation_history_fixture -- docs/audits/terrain-membership-ci/native
+          python scripts/check-terrain-command-ownership.py docs/audits/terrain-membership-ci/original.json docs/audits/terrain-membership-ci/native/native.json docs/audits/saved-view-command-ownership/native.json docs/audits/terrain-command-ownership/bool-only-negative.json
       - name: Original saved-view command membership and object lifetime
         run: |
           mkdir -p docs/audits/savedview-membership-ci
@@ -337,6 +343,7 @@ jobs:
             docs/audits/grid-source-ci/
             docs/audits/grid-default-ci/
             docs/audits/grid-heldout-ci/
+            docs/audits/terrain-membership-ci/
             docs/audits/savedview-membership-ci/
             docs/audits/context-globals-ci/
             docs/audits/context-textures-ci/

@@ -154,3 +154,5 @@ pub mod gpu_memory;
 pub mod composer_compute;
 
 mod history_views;
+
+mod history_terrain;

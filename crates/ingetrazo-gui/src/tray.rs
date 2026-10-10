@@ -544,6 +544,7 @@ fn render_bim_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
 fn render_terrain_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     ui.heading(tr("Terrain & Survey"));
+    if let Some(terrain)=&app.scene.terrain{let mut visible=terrain.visible;if ui.checkbox(&mut visible,tr("Show terrain")).changed(){app.set_terrain_visibility(visible);}}
     ui.separator();
 
     ui.label(format!("• {}: 0", tr("Survey points loaded")));

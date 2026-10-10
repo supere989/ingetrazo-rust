@@ -46,6 +46,8 @@ pub struct Scene {
     pub history_shareback: Option<uuid::Uuid>,
     #[serde(skip)]
     pub history_views: crate::saved_views::ViewHistory,
+    #[serde(skip)]
+    pub history_terrain:crate::georef::TerrainHistory,
     #[serde(default)]
     pub component_definitions: HashMap<uuid::Uuid, crate::components::ComponentDefinition>,
     /// Authoritative shared Mesh prototypes; placement topology is independent.
@@ -104,7 +106,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            history_shareback:None,history_views:Default::default(),
+            history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

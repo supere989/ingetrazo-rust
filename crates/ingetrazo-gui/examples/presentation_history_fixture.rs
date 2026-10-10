@@ -30,6 +30,7 @@ fn main() {
         sheet.name = "Sheet".into();
         a.scene.sheets.push(sheet);
         a.scene.terrain = Some(TerrainObject {
+            history_id: uuid::Uuid::new_v4(),
             vertices: vec![DVec3::ZERO, DVec3::X, DVec3::Y],
             uvs: vec![(0., 0.), (1., 0.), (0., 1.)],
             triangles: vec![(0, 1, 2)],
@@ -63,7 +64,7 @@ fn main() {
         a.camera.distance = 33.;
         a.update_selected_saved_view();
         a.scene.sheets[0].name = "Edited sheet".into();
-        a.scene.terrain.as_mut().unwrap().visible = false;
+        a.set_terrain_visibility(false);
         let before = a.undo_stack.len();
         a.finish_component_edit();
         assert!(a.component_edit_stack.is_empty());
@@ -111,6 +112,51 @@ fn main() {
     rows.insert(
         "import_object_lifetime".into(),
         serde_json::json!({"states":states,"redo_retained_after_ui_add":branch}),
+    );
+    let terrain = |z: f64| TerrainObject {
+        history_id: uuid::Uuid::new_v4(),
+        vertices: vec![
+            DVec3::new(0., 0., z),
+            DVec3::new(1., 0., z),
+            DVec3::new(0., 1., z),
+        ],
+        uvs: vec![(0., 0.), (1., 0.), (0., 1.)],
+        triangles: vec![(0, 1, 2)],
+        tile_range: (0, 0, 1, 1, 0),
+        nx: 0,
+        ny: 0,
+        bbox: (0., 0., 0., 0.),
+        visible: true,
+    };
+    let mut a = IngeTrazoApp::new();
+    a.scene = Scene::new();
+    a.scene.terrain = Some(terrain(1.));
+    a.save_undo_state();
+    a.scene.terrain = None;
+    a.scene.bump_version();
+    let ts = |a: &IngeTrazoApp| {
+        a.scene
+            .terrain
+            .as_ref()
+            .map(|t| serde_json::json!([t.vertices[0].z, t.visible]))
+    };
+    let mut states = vec![ts(&a)];
+    a.publish_runtime_terrain(Some(terrain(9.)));
+    a.set_terrain_visibility(false);
+    states.push(ts(&a));
+    a.undo();
+    states.push(ts(&a));
+    a.redo();
+    states.push(ts(&a));
+    a.publish_runtime_terrain(Some(terrain(5.)));
+    a.set_terrain_visibility(false);
+    a.undo();
+    states.push(ts(&a));
+    a.redo();
+    states.push(ts(&a));
+    rows.insert(
+        "terrain_owner_runtime_rebuild".into(),
+        serde_json::json!(states),
     );
     std::fs::write(
         out.join("native.json"),
