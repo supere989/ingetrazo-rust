@@ -1,13 +1,18 @@
 {
   "passed": true,
   "cases": 41,
-  "negative_sections_rejected": [
-    "compact",
-    "thoughts",
-    "requests",
-    "detect",
-    "vision",
-    "code"
+  "negative_controls_rejected": [
+    "mutated-requests",
+    "mutated-detect",
+    "mutated-vision",
+    "mutated-code",
+    "mutated-compact",
+    "mutated-thoughts",
+    "duplicate-provider-inventory",
+    "empty-native-corpus",
+    "empty-original-corpus",
+    "missing-section",
+    "changed-model"
   ],
   "scope": "Offline pinned source provider wire; no network/executor/MCP behavior"
 }
