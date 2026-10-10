@@ -10,7 +10,7 @@ pub fn run(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<serde_json::
  let commands=unsafe{device.allocate_command_buffers(&vk::CommandBufferAllocateInfo::default().command_pool(context.command_pool).command_buffer_count(1))}.map_err(|e|e.to_string())?;
  let command=commands[0];
  let mut pipelines=Vec::new();
- let result=(||{
+ let result:Result<Vec<serde_json::Value>,String>=(||{
   for sample in 0..4{pipelines.push(make_pipeline_with_mask(device,world.render_pass,world.layout,WorldPass::Surface,world.samples,false,Some(&[1<<sample]))?);}
   let mut scene=ingetrazo_core::scene::Scene::new();
   let ids=[[-10.,-10.,0.],[10.,-10.,0.],[10.,10.,0.],[-10.,10.,0.]].map(|p|scene.mesh.add_vertex(glam::DVec3::from_array(p)));
