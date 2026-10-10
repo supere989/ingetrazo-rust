@@ -22,6 +22,7 @@ struct Cached {
 }
 #[derive(Default, Clone, Copy, Debug)]
 pub struct Stats {
+    pub deep_admissions:u64,
     pub uploads: u64,
     pub warm_hits: u64,
     pub palette_preparations: u64,
@@ -62,7 +63,6 @@ impl Painter {
         if snapshot.batches.len() > 4096 {
             return Err("Metal CAD palette exceeds4096 batch admission".into());
         }
-        snapshot.geometry.validate_batches(&snapshot.batches)?;
         snapshot
             .geometry
             .validate_ordered_pose(snapshot.pose, density)?;
@@ -83,6 +83,7 @@ impl Painter {
         validate_pose(bounds, &snapshot, density)?;
         let palette_key = (snapshot.geometry.palette_cache_identity(), Arc::as_ptr(&snapshot.batches) as *const Batch as usize);
         let palette_changed = !self.palette.contains_key(&palette_key);
+        if cached.is_none() || palette_changed { self.stats.deep_admissions+=1; snapshot.geometry.validate_batches(&snapshot.batches)?; }
         let colors: Arc<[[f32; 4]]> = if let Some((_, colors)) = self.palette.get(&palette_key) {
             colors.clone()
         } else {

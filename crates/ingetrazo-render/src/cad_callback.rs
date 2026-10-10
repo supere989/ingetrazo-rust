@@ -33,6 +33,10 @@ pub struct Metrics {
     pub snapshots: u64,
 }
 impl Factory {
+    /// Retained callbacks keep this owner alive, so a cached factory identity
+    /// cannot be recycled while any tile can still reference its handles.
+    pub fn cache_identity(&self)->usize { Arc::as_ptr(&self.counters) as usize }
+
     pub fn handle(
         &self,
         geometry: Arc<Geometry>,

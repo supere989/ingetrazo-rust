@@ -22,6 +22,12 @@ impl From<crate::native_vulkan::cad2d::Factory> for Factory {
     }
 }
 impl Factory {
+    pub fn cache_identity(&self)->(u8,usize){match self{
+        #[cfg(any(target_os="linux",target_os="windows"))]
+        Self::Vulkan(factory)=>(1,factory.cache_identity()),
+        Self::MetalProducer(factory)=>(2,factory.cache_identity()),
+    }}
+
     pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{match self{
         #[cfg(any(target_os="linux",target_os="windows"))]
         Self::Vulkan(factory)=>factory.retained_cpu_bytes_bound(palette_len),
