@@ -7,6 +7,7 @@
 //! selection highlights, inference snap glyphs, and viewport projection.
 
 pub mod buffer;
+pub mod annotations;
 pub mod hlr;
 pub mod pipeline;
 pub mod selection;
