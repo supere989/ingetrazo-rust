@@ -130,7 +130,7 @@ impl App for ApplicationProbe{
    match row["action"].as_str().unwrap(){
     "add"=>{self.app.save_undo_state();self.app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(glam::DVec3::new(-1.,0.,0.),glam::DVec3::new(1.,0.,0.),glam::DVec3::Y));self.app.scene.bump_version();},
     "delete"=>{assert!(self.app.remove_dimension(0));},
-    "refuse"=>{assert!(self.app.edit_dimension(0,Some("replacement <>".into()),None,None));self.pressure=true;self.texture=Some(ctx.load_texture("refused-new-managed-image",egui::ColorImage::new([2,2],vec![egui::Color32::RED;4]),egui::TextureOptions::NEAREST));},
+    "refuse"=>{assert!(self.app.edit_dimension(0,Some("replacement <>".into()),None,None));self.pressure=true;self.texture=Some(ctx.load_texture("refused-new-managed-image",egui::ColorImage::new([2,2],egui::Color32::RED),egui::TextureOptions::NEAREST));},
     "retry"=>self.held=false,
     _=>panic!("Unknown actual app control"),
    };self.app.mark_document_clean();self.nonce=nonce;

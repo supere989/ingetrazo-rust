@@ -1488,7 +1488,7 @@ pub mod reference_images;
 
  #[test]fn refused_frame_keeps_new_font_and_texture_updates_for_retry(){
   let mut pending=std::collections::VecDeque::new();let mut free=None;
-  let delta=||egui::epaint::ImageDelta::full(egui::ColorImage::new([1,1],vec![egui::Color32::RED]),egui::TextureOptions::NEAREST);
+  let delta=||egui::epaint::ImageDelta::full(egui::ColorImage::new([1,1],egui::Color32::RED),egui::TextureOptions::NEAREST);
   retain_frame_texture_deltas(&mut pending,&mut free,vec![(egui::TextureId::Managed(0),delta()),(egui::TextureId::Managed(7),delta())],&[egui::TextureId::Managed(9)]);
   // No GPU submission occurs. A second ctx.run cannot recreate the lost full atlas.
   retain_frame_texture_deltas(&mut pending,&mut free,vec![],&[egui::TextureId::Managed(10)]);
