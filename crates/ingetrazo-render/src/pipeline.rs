@@ -397,7 +397,7 @@ fn build_mesh_buffers(
             if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         } else {
             let base_color = get_face_base_color(&face.attrs, scene, style);
-            let shaded_color = if native_texture_sides && tex_val.is_none() {
+            let shaded_color = if native_texture_sides && tex_val.is_none() && !is_xray && source_final_opacity>=0.999 && !matches!(style.visual_style,VisualStyle::HiddenLine|VisualStyle::Monochrome) {
                 native_ordinary_shaded_color(&face.attrs,base_color,shade,final_opacity)
             } else {[
                 (base_color[0] * shade).clamp(0.0, 1.0),
@@ -562,7 +562,7 @@ fn build_group_buffers(
             if native_texture_sides {append_source_back_texture(textured_meshes,&attrs,if source_placement {local_norm}else{world_norm},shade,face_order,&tris,world_t,source_placement,reflected);}
         } else {
             let base_color = get_face_base_color(&attrs, scene, style);
-            let shaded_color = if native_texture_sides && tex_val.is_none() {
+            let shaded_color = if native_texture_sides && tex_val.is_none() && !is_xray && source_final_opacity>=0.999 && !matches!(style.visual_style,VisualStyle::HiddenLine|VisualStyle::Monochrome) {
                 native_ordinary_shaded_color(&attrs,base_color,shade,final_opacity)
             } else {[
                 (base_color[0] * shade).clamp(0.0, 1.0),
@@ -1612,6 +1612,22 @@ fn append_source_back_texture(buffers:&mut crate::buffer::TextureBuffers,attrs:&
 
 #[cfg(test)] mod source_ordinary_color_law_tests {
  use super::*;
+ #[test] fn actual_buffer_style_and_transparent_admission() {
+  let mut scene=Scene::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|scene.mesh.add_vertex(p));
+  let face=scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();
+  scene.mesh.faces[face].attrs.insert("color".into(),serde_json::json!([0.6,38./255.,0.]));
+  let mut style=StyleConfig::default();style.visual_style=VisualStyle::ShadedWithTextures;
+  let draw=|scene:&Scene,style:&StyleConfig|build_world_surfaces(scene,&OrbitCamera::default(),style);
+  let shaded=draw(&scene,&style);let shade=shade_factor(DVec3::Z);
+  assert_eq!(shaded.opaque_mesh.vertices[0].color,native_ordinary_shaded_color(&scene.mesh.faces[face].attrs,[0.6,38./255.,0.,1.],shade,1.));
+  for mode in [VisualStyle::Monochrome,VisualStyle::HiddenLine] {
+   style.visual_style=mode;style.front_color=[0.2,0.4,0.8,1.];
+   let painted=draw(&scene,&style);let mut unpainted=scene.clone();unpainted.mesh.faces[face].attrs.remove("color");
+   assert_eq!(painted.opaque_mesh.vertices[0].color,draw(&unpainted,&style).opaque_mesh.vertices[0].color);
+  }
+  style.visual_style=VisualStyle::ShadedWithTextures;scene.mesh.faces[face].attrs.insert("opacity".into(),serde_json::json!(0.5));
+  let transparent=draw(&scene,&style);assert_eq!(transparent.transparent_mesh.vertices[0].color,[0.6*shade,(38./255.)*shade,0.,0.5]);
+ }
  #[test] fn actual_gondola_source_run_colors_and_half_ties() {
   let mut attrs=std::collections::HashMap::new();
   attrs.insert("color".into(),serde_json::json!([0.6,38./255.,0.]));
