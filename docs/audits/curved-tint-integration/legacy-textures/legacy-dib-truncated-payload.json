@@ -1,0 +1,220 @@
+{
+  "name": "legacy-dib-truncated",
+  "version": "{17.0.1}",
+  "root": {
+    "face_order": [
+      16
+    ],
+    "name": "",
+    "vertices": {
+      "24": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "25": [
+        10.0,
+        0.0,
+        0.0
+      ],
+      "28": [
+        10.0,
+        10.0,
+        0.0
+      ],
+      "31": [
+        0.0,
+        10.0,
+        0.0
+      ]
+    },
+    "edges": {
+      "22": {
+        "vertices": [
+          24,
+          25
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "27": {
+        "vertices": [
+          25,
+          28
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "30": {
+        "vertices": [
+          28,
+          31
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      },
+      "33": {
+        "vertices": [
+          31,
+          24
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": null
+        },
+        "curve": null
+      }
+    },
+    "faces": {
+      "16": {
+        "uv_transform": null,
+        "uv_transform_back": null,
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "loops": [
+          [
+            [
+              22,
+              true
+            ],
+            [
+              27,
+              true
+            ],
+            [
+              30,
+              true
+            ],
+            [
+              33,
+              true
+            ]
+          ]
+        ],
+        "flags": {
+          "hidden": false,
+          "display": 6,
+          "layer": null,
+          "material": 10
+        },
+        "back_material": null
+      }
+    },
+    "instances": [],
+    "billboard": false,
+    "unsupported": []
+  },
+  "definitions": {},
+  "layers": {
+    "14": {
+      "name": "Layer0",
+      "visible": true
+    }
+  },
+  "material_names": {
+    "10": "RedMat"
+  },
+  "materials": {
+    "RedMat": {
+      "color": [
+        0.0784313725490196,
+        0.1568627450980392,
+        0.23529411764705882,
+        0.75
+      ],
+      "texture": {
+        "archive_name": "legacy-dib-12.png",
+        "bytes": [
+          137,
+          80,
+          78,
+          71,
+          13,
+          10,
+          26,
+          10,
+          0,
+          0,
+          0,
+          13,
+          73,
+          72,
+          68,
+          82,
+          0,
+          0,
+          0,
+          16,
+          0,
+          0,
+          0,
+          16,
+          8,
+          6,
+          0,
+          0,
+          0,
+          31,
+          243,
+          255,
+          97,
+          0,
+          0,
+          0,
+          9,
+          112,
+          72,
+          89,
+          115,
+          0,
+          0,
+          15,
+          97,
+          0,
+          0,
+          15,
+          97,
+          1,
+          168,
+          63,
+          167,
+          105,
+          0,
+          0,
+          0,
+          29,
+          73,
+          68,
+          65,
+          84,
+          56,
+          141
+        ],
+        "width": 24.0,
+        "height": 12.0
+      }
+    }
+  },
+  "back_color": null,
+  "unsupported": []
+}

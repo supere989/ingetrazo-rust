@@ -7,5 +7,12 @@
     "summaries": 29,
     "exit_code": 0
   },
-  "scope": "One combined locked workspace lib/tests run; fresh merged legacy texture replay pending; standalone interpreter and Metal branch excluded"
+  "scope": "One combined workspace run plus fresh merged-source legacy texture replay; standalone interpreter and Metal branch excluded",
+  "fresh_legacy_texture_replay": {
+    "passed": true,
+    "cases": 23,
+    "source": "5c9eb0b0a4bdc57a3282e711592111723c0ee771",
+    "binary_sha256": "29d3f406c95014f3a073a6d52b15b1bac631ac5d9bca7a79600d06b1b3160a38",
+    "integrity_correction": "actual source admits truncated null image; native refuses before publication"
+  }
 }
