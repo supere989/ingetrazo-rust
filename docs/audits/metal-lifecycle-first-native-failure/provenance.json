@@ -1,0 +1,18 @@
+{
+  "run_id": 38050590186,
+  "source": "05a7d2d16626b999d87305f1f0ea1a7a80008443",
+  "artifacts": [
+    {
+      "arch": "arm",
+      "artifact_id": 11668704547,
+      "zip_sha256": "4f086a0ae9a3a7c55ff0577f58c178af541a939b6cafc739083661e08163c8b2",
+      "verdict": "FAIL before input: phase0; painting admission rejected; no submissions"
+    },
+    {
+      "arch": "intel",
+      "artifact_id": 11669187628,
+      "zip_sha256": "8e1459d8aae0570c0c4109c81ba18a64c13c5b92c99e1558be2d8caf5a25dab1",
+      "verdict": "FAIL before input: phase0; painting admission rejected; no submissions"
+    }
+  ]
+}

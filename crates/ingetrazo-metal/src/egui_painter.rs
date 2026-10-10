@@ -179,26 +179,13 @@ impl PreparedPaint {
             return Ok(());
         };
         let logical = shader_logical_size(mesh.bounds, self.density, extent)?;
-        // Reject actual f32 scissor multiplication overflow before encoding.
-        for draw in &self.draws {
-            for point in [draw.clip.min, draw.clip.max] {
-                if !(point * self.density).is_finite() {
-                    return Err("Metal scissor arithmetic overflow".into());
-                }
-            }
-        }
         encoder.setRenderPipelineState(&self.pipeline);
         unsafe {
             encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
             encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&logical).cast(), 8, 1);
         }
         for draw in &self.draws {
-            let min = draw.clip.min * self.density;
-            let max = draw.clip.max * self.density;
-            let x = min.x.round().clamp(0., extent.0 as f32) as usize;
-            let y = min.y.round().clamp(0., extent.1 as f32) as usize;
-            let right = max.x.round().clamp(x as f32, extent.0 as f32) as usize;
-            let bottom = max.y.round().clamp(y as f32, extent.1 as f32) as usize;
+            let [x, y, right, bottom] = clipped_scissor(draw.clip, self.density, extent)?;
             if right == x || bottom == y {
                 continue;
             }
@@ -779,9 +766,9 @@ impl EguiPainter {
                         || v.pos.x.abs() > 1e6
                         || v.pos.y.abs() > 1e6
                 })
-                || !primitive.clip_rect.is_finite()
+                || !valid_clip(primitive.clip_rect)
             {
-                return Err("Invalid egui mesh geometry/clip".into());
+                return Err(format!("Invalid egui mesh geometry/clip: vertices={} indices={} valid_indices={} clip={:?} first_invalid_vertex={:?}", mesh.vertices.len(), mesh.indices.len(), mesh.is_valid(), primitive.clip_rect, mesh.vertices.iter().position(|v| !v.pos.is_finite() || !v.uv.is_finite() || v.pos.x.abs() > 1e6 || v.pos.y.abs() > 1e6)));
             }
             let base = count;
             count = count
@@ -826,11 +813,7 @@ impl EguiPainter {
             shader_logical_size(bounds, density, (1, 1))?;
             shader_logical_size(bounds, density, (16384, 16384))?;
             for draw in &draws {
-                for point in [draw.clip.min, draw.clip.max] {
-                    if !(point * density).is_finite() {
-                        return Err("Metal scissor arithmetic overflow".into());
-                    }
-                }
+                clipped_scissor(draw.clip, density, (16384, 16384))?;
             }
         }
         let mesh = if indices.is_empty() {
@@ -866,6 +849,25 @@ impl EguiPainter {
             density,
         }))
     }
+}
+// egui legitimately uses Rect::EVERYTHING for unbounded painter clips.
+// NaN is malformed, but infinities become finite only after intersecting with
+// the actual physical render target. Never multiply an unbounded clip first.
+fn valid_clip(clip: egui::Rect) -> bool {
+    [clip.min.x, clip.min.y, clip.max.x, clip.max.y].iter().all(|x| !x.is_nan())
+}
+fn clipped_scissor(clip: egui::Rect, density: f32, extent: (u32, u32)) -> Result<[usize; 4], String> {
+    if !valid_clip(clip) || !density.is_finite() || density <= 0. || extent.0 == 0 || extent.1 == 0 {
+        return Err("Invalid Metal scissor domain".into());
+    }
+    let edge = |value: f32, limit: u32| -> usize {
+        // f64 preserves the target intersection even for extreme finite f32
+        // density. The only eventual integer conversion is target-bounded.
+        (f64::from(value) * f64::from(density)).round().clamp(0., f64::from(limit)) as usize
+    };
+    let x = edge(clip.min.x, extent.0);
+    let y = edge(clip.min.y, extent.1);
+    Ok([x, y, edge(clip.max.x, extent.0).max(x), edge(clip.max.y, extent.1).max(y)])
 }
 fn shader_logical_size(
     bounds: [[f32; 2]; 2],
@@ -1080,6 +1082,16 @@ fn encoded_pixel(c: egui::Color32, font: bool) -> [u8; 4] {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn unbounded_clip_is_target_bounded_without_weakening_geometry() {
+        use super::*;
+        assert!(!egui::Rect::EVERYTHING.is_finite()); // retained old refusal
+        assert_eq!(clipped_scissor(egui::Rect::EVERYTHING, 2., (800, 600)).unwrap(), [0,0,800,600]);
+        assert_eq!(clipped_scissor(egui::Rect::from_min_max(egui::pos2(-20., 5.), egui::pos2(500., 500.)), 2., (800,600)).unwrap(), [0,10,800,600]);
+        assert!(clipped_scissor(egui::Rect::from_min_max(egui::pos2(f32::NAN, 0.), egui::pos2(5.,5.)), 1., (800,600)).is_err());
+        assert_eq!(clipped_scissor(egui::Rect::NOTHING, 1., (800,600)).unwrap(), [800,600,800,600]);
+    }
+
     use super::*;
     #[test]
     fn retained_cpu_admission_and_last_owner_release() {
