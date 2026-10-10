@@ -17,6 +17,94 @@ pub(crate) fn restore(current: &Scene, target: &mut Scene) -> Option<LayerDelta>
     }
     delta.map(|d| d.inverse())
 }
+// Source traverses the document's actual placements, not hidden edit prototypes.
+// A parked private prototype remains untouched unless a visible sibling owns
+// that shared mesh. Reshare captures that current prototype at command creation.
+fn reassign_deleted_layer(
+    scene: &mut Scene,
+    name: &str,
+    excluded: &std::collections::HashSet<uuid::Uuid>,
+) -> std::collections::HashSet<uuid::Uuid> {
+    fn mesh(m: &mut ingetrazo_core::mesh::Mesh, name: &str) {
+        for f in &mut m.faces {
+            if f.layer
+                .as_deref()
+                .or_else(|| f.attrs.get("layer").and_then(|v| v.as_str()))
+                == Some(name)
+            {
+                f.layer = None;
+                f.attrs.remove("layer");
+            }
+        }
+        for e in &mut m.edges {
+            if e.layer.as_deref() == Some(name) {
+                e.layer = None;
+            }
+        }
+    }
+    fn groups(
+        gs: &mut [ingetrazo_core::groups::Group],
+        name: &str,
+        excluded: &std::collections::HashSet<uuid::Uuid>,
+        tokens: &mut std::collections::HashSet<uuid::Uuid>,
+    ) {
+        for g in gs {
+            if g.layer.as_deref() == Some(name) {
+                g.layer = None;
+            }
+            if !excluded.contains(&g.id) {
+                mesh(&mut g.mesh, name);
+                if let Some(id) = g.mesh_share {
+                    tokens.insert(id);
+                }
+            }
+            groups(&mut g.children, name, excluded, tokens);
+        }
+    }
+    fn aliases(
+        gs: &mut [ingetrazo_core::groups::Group],
+        name: &str,
+        tokens: &std::collections::HashSet<uuid::Uuid>,
+    ) {
+        for g in gs {
+            if g.mesh_share.is_some_and(|id| tokens.contains(&id)) {
+                mesh(&mut g.mesh, name);
+            }
+            aliases(&mut g.children, name, tokens);
+        }
+    }
+    let mut tokens = std::collections::HashSet::new();
+    mesh(&mut scene.mesh, name);
+    groups(&mut scene.groups, name, excluded, &mut tokens);
+    aliases(&mut scene.groups, name, &tokens);
+    for (id, m) in &mut scene.mesh_shares {
+        if tokens.contains(id) {
+            mesh(m, name);
+        }
+    }
+    for d in scene.component_definitions.values_mut() {
+        if d.mesh_share.is_some_and(|id| tokens.contains(&id)) {
+            mesh(&mut d.mesh, name);
+        }
+        aliases(&mut d.children, name, &tokens);
+    }
+    for d in &mut scene.dimensions {
+        if d.layer.as_deref() == Some(name) {
+            d.layer = None;
+        }
+    }
+    for t in &mut scene.text_labels {
+        if t.layer.as_deref() == Some(name) {
+            t.layer = None;
+        }
+    }
+    for p in &mut scene.section_planes {
+        if p.native_document.get("layer").and_then(|v| v.as_str()) == Some(name) {
+            p.native_document.as_object_mut().unwrap().remove("layer");
+        }
+    }
+    tokens
+}
 impl IngeTrazoApp {
     pub(crate) fn seal_layer_history(&mut self) {
         if let Some(before) = self.undo_stack.last_mut() {
@@ -212,54 +300,46 @@ impl IngeTrazoApp {
             return false;
         }
         self.seal_layer_history();
-        fn mesh(m: &mut ingetrazo_core::mesh::Mesh, name: &str) {
-            for f in &mut m.faces {
-                if f.layer
-                    .as_deref()
-                    .or_else(|| f.attrs.get("layer").and_then(|v| v.as_str()))
-                    == Some(name)
-                {
-                    f.layer = None;
-                    f.attrs.remove("layer");
+        reassign_deleted_layer(&mut self.scene, &name, &Default::default());
+        let excluded: std::collections::HashSet<_> = self
+            .component_edit_stack
+            .iter()
+            .map(|s| s.group_id)
+            .collect();
+        let mut changed_prototypes = std::collections::HashMap::new();
+        for session in &mut self.component_edit_stack {
+            let tokens = reassign_deleted_layer(&mut session.original_scene, &name, &excluded);
+            reassign_deleted_layer(&mut session.cancel_scene, &name, &excluded);
+            for id in tokens {
+                if let Some(mesh) = session.original_scene.mesh_shares.get(&id) {
+                    changed_prototypes.insert(id, mesh.clone());
                 }
             }
-            for e in &mut m.edges {
-                if e.layer.as_deref() == Some(name) {
-                    e.layer = None;
+            session.original_scene.layers.retain(|l| l.name != name);
+            session.cancel_scene.layers.retain(|l| l.name != name);
+        }
+        fn update_aliases(
+            groups: &mut [ingetrazo_core::groups::Group],
+            id: uuid::Uuid,
+            mesh: &ingetrazo_core::mesh::Mesh,
+        ) {
+            for group in groups {
+                if group.mesh_share == Some(id) {
+                    group.mesh = mesh.clone();
                 }
+                update_aliases(&mut group.children, id, mesh);
             }
         }
-        fn groups(gs: &mut [ingetrazo_core::groups::Group], name: &str) {
-            for g in gs {
-                if g.layer.as_deref() == Some(name) {
-                    g.layer = None;
+        for (id, mesh) in changed_prototypes {
+            if let Some(old) = self.scene.mesh_shares.get_mut(&id) {
+                *old = mesh.clone();
+            }
+            update_aliases(&mut self.scene.groups, id, &mesh);
+            for definition in self.scene.component_definitions.values_mut() {
+                if definition.mesh_share == Some(id) {
+                    definition.mesh = mesh.clone();
                 }
-                mesh(&mut g.mesh, name);
-                groups(&mut g.children, name);
-            }
-        }
-        mesh(&mut self.scene.mesh, &name);
-        groups(&mut self.scene.groups, &name);
-        for m in self.scene.mesh_shares.values_mut() {
-            mesh(m, &name);
-        }
-        for d in self.scene.component_definitions.values_mut() {
-            mesh(&mut d.mesh, &name);
-            groups(&mut d.children, &name);
-        }
-        for d in &mut self.scene.dimensions {
-            if d.layer.as_deref() == Some(&name) {
-                d.layer = None;
-            }
-        }
-        for t in &mut self.scene.text_labels {
-            if t.layer.as_deref() == Some(&name) {
-                t.layer = None;
-            }
-        }
-        for p in &mut self.scene.section_planes {
-            if p.native_document.get("layer").and_then(|v| v.as_str()) == Some(&name) {
-                p.native_document.as_object_mut().unwrap().remove("layer");
+                update_aliases(&mut definition.children, id, &mesh);
             }
         }
         self.scene.layers.remove(index);
