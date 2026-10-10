@@ -2,7 +2,7 @@
 """Frozen actual original nested container WORLD entry, inverse shareback and Undo."""
 import os,sys,json
 from pathlib import Path
-os.environ.setdefault("QT_QPA_PLATFORM","offscreen");sys.path.insert(0,"/work/ingetrazo")
+os.environ.setdefault("QT_QPA_PLATFORM","offscreen");sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"ingetrazo"))
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QVector3D as V,QMatrix4x4 as M
 from views.viewport import Viewport
