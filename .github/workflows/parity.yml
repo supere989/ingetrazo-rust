@@ -16,13 +16,19 @@ jobs:
       - name: Link native device probe against Apple frameworks
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-native-link-ci/build.log 2>&1
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
         run: target/debug/examples/device_probe > docs/audits/metal-native-link-ci/device-and-allocation.log 2>&1
       - name: Execute native Metal GPU submission and retirement probe
         run: target/debug/examples/submission_probe > docs/audits/metal-native-link-ci/gpu-submission.log 2>&1
+      - name: Execute strict source-ordered Metal compute rendering
+        run: |
+          target/debug/examples/cad2d_probe --compute --output=docs/audits/metal-native-link-ci/compute > docs/audits/metal-native-link-ci/compute-render.log 2>&1
+      - name: Execute Apple framebuffer-fetch rendering or explicit capability refusal
+        run: |
+          target/debug/examples/cad2d_probe --allow-unsupported --output=docs/audits/metal-native-link-ci/fetch > docs/audits/metal-native-link-ci/fetch-render.log 2>&1
       - name: Retain native linking evidence
         if: always()
         uses: actions/upload-artifact@v4

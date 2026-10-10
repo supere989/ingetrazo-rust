@@ -1,5 +1,6 @@
 //! Opt-in direct native Metal CAD2D. Exact framebuffer blending is admitted
-//! only on Apple tiled families with raster-order groups; IMR remains OPEN.
+//! on Apple tiled families with raster-order groups. Intel/AMD use a separate
+//! exact source-ordered span compute path; general IMR triangles remain OPEN.
 use crate::{Buffer, NativeMetal};
 use ingetrazo_core::gpu_memory::MemoryBudget;
 use ingetrazo_render::cad2d::{Batch, Geometry, Pose};
@@ -315,12 +316,13 @@ impl MetalCad2d {
         if self.unknown || self.inner.metal.poisoned.load(Ordering::Acquire) {
             return Err("Metal compute completion unknown".into());
         }
-        let layout: Vec<_> = batches.iter().map(|b| (b.first, b.count)).collect();
         if self
             .inner
             .cached
             .as_ref()
-            .is_some_and(|c| c.id == geometry.id() && c.layout == layout)
+            .is_some_and(|c| c.id == geometry.id()
+                && c.layout.len() == batches.len()
+                && c.layout.iter().zip(batches).all(|(a,b)| *a == (b.first,b.count)))
         {
             self.inner.stats.warm_hits += 1;
             return Ok(());
@@ -336,7 +338,7 @@ impl MetalCad2d {
         self.inner.cached = Some(Cached {
             id: geometry.id(),
             bounds,
-            layout,
+            layout: batches.iter().map(|b| (b.first,b.count)).collect(),
             vertices,
             indices,
             references: Some(references),
