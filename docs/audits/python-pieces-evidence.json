@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "rust_commit": "4eeb1d9e2b8d7749ff0af15b9010fc7a458e4c16",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 1,
+  "cases": [
+    {
+      "case": "touching",
+      "physical_pieces": 3,
+      "original_names_world_faces_edges_colors_equal": true
+    },
+    {
+      "case": "fragments",
+      "physical_pieces": 1,
+      "original_names_world_faces_edges_colors_equal": true
+    },
+    {
+      "case": "names",
+      "physical_pieces": 4,
+      "original_names_world_faces_edges_colors_equal": true
+    },
+    {
+      "case": "patches",
+      "physical_pieces": 2,
+      "original_names_world_faces_edges_colors_equal": true
+    }
+  ],
+  "scope": "Actual GUI split, exact undo/redo, second split no-op; original physical pieces for welded touching boards, cross-child fragments, inherited names and surface patch attribution, rotated translated placement. Native original face/edge world geometry and associated paint compare; arbitrary imported fragmentation remains open."
+}
