@@ -1,0 +1,22 @@
+{
+  "source": "2035ee3a70c14ba4884617961cc14ac415d85165",
+  "backend": "ash Vulkan llvmpipe software API1.4.318",
+  "checks": [
+    "world fragment depth vs fresh CPU centroid control",
+    "48MiB texture under8MiB staging headroom exact4RGB samples and partial preservation",
+    "17MiB 3chunk every-byte mapped transfer, actual unsignaled/signaled fence retirement",
+    "actual image allocation/binding then injected view-creation failure rollback",
+    "each fixture startup,2swapchainresizes,cleanOSclose"
+  ],
+  "limits": [
+    "software Vulkan only",
+    "mapped every-byte verification uses unified-memory adapter",
+    "image-view failure is injected callback, not real driver OOM",
+    "world textures/transparent/edges/stencil fill and native Metal hardware remain open"
+  ],
+  "binaries": {
+    "native_vulkan_world_fixture": "675f2c43aa19ca33fbd7a68ac16832395508583ddb33ea1d963dcf683c334d44",
+    "native_vulkan_resources_probe": "2f4b40020b1b45fd39becb5222ecaaad0eb6d32184c2cd2f6b857b4d71f769fa",
+    "native_vulkan_texture_chunks_probe": "6fc8fcfe82092c9dce5a95c2122bdeb826bfde048a3065bf8346f35af73eb2a0"
+  }
+}
