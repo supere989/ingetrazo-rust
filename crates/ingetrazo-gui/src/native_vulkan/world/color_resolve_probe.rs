@@ -2,6 +2,13 @@
 //! No production policy or render path is changed by this diagnostic.
 use super::*;
 pub fn run(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<serde_json::Value,String>{
+ let mut reds=vec![[33,33,33,107],[33,33,33,105],[50,50,51,51],[51,51,52,52],[100,100,101,101]];
+ for base in [0u8,33]{for extra in 0..16{for slot in 0..4{let mut values=[base;4];values[slot]+=extra;reds.push(values);}}}
+ let cases:Vec<_>=reds.into_iter().map(|v|v.map(|r|[r,0,0,255])).collect();
+ run_cases(context,budget,&cases)
+}
+pub fn run_cases(context:&VulkanContext,budget:Arc<VulkanBudget>,cases:&[[[u8;4];4]])->Result<serde_json::Value,String>{
+ if cases.is_empty() || cases.len()>4096{return Err("Diagnostic cases outside admission".into());}
  let mut world=World::new(context,budget.clone())?;
  world.resize_offscreen(context,vk::Extent2D{width:8,height:8})?;
  if world.samples!=vk::SampleCountFlags::TYPE_4{return Err("Probe requires actual four-sample target".into());}
@@ -18,10 +25,8 @@ pub fn run(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<serde_json::
   let mut camera=ingetrazo_core::camera::OrbitCamera::default();camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);camera.target=glam::DVec3::ZERO;camera.distance=4.;camera.perspective=false;camera.aspect=1.;
   world.set_scene(context,&scene,&camera,&ingetrazo_render::style::StyleConfig::default(),fence,0,1)?;
   let vertices=world.vertices.ok_or("Missing diagnostic quad vertices")?;let indices=world.indices.ok_or("Missing diagnostic quad indices")?;
-  let mut cases=vec![[33,33,33,107],[33,33,33,105],[50,50,51,51],[51,51,52,52],[100,100,101,101]];
-  for base in [0u8,33]{for extra in 0..16{for slot in 0..4{let mut values=[base;4];values[slot]+=extra;cases.push(values);}}}
   let mut rows=Vec::new();
-  for (case,values) in cases.into_iter().enumerate(){
+  for (case,values) in cases.iter().enumerate(){
    let serial=case as u64+1;
    let target=world.target.as_ref().unwrap();let area=vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent};
    let clears=[vk::ClearValue{color:vk::ClearColorValue{float32:[0.,0.,0.,1.]}},vk::ClearValue::default(),vk::ClearValue{depth_stencil:vk::ClearDepthStencilValue{depth:1.,stencil:0}}];
@@ -33,14 +38,14 @@ pub fn run(context:&VulkanContext,budget:Arc<VulkanBudget>)->Result<serde_json::
     let mut push=[0u8;128];push[..64].copy_from_slice(bytemuck::cast_slice(&world.mvp));push[84..88].copy_from_slice(&1f32.to_ne_bytes());push[88..92].copy_from_slice(&1u32.to_ne_bytes());
     device.cmd_push_constants(command,world.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);
     device.cmd_bind_vertex_buffers(command,0,&[world.resources.buffer(vertices).unwrap()],&[0]);device.cmd_bind_index_buffer(command,world.resources.buffer(indices).unwrap(),0,vk::IndexType::UINT32);
-    for (sample,red) in values.iter().enumerate(){let color=[*red as f32/255.,0.,0.,1.];device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,pipelines[sample]);device.cmd_push_constants(command,world.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&color));device.cmd_draw_indexed(command,world.count,1,0,0,0);}
+    for (sample,rgba) in values.iter().enumerate(){let color=rgba.map(|v|v as f32/255.);device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,pipelines[sample]);device.cmd_push_constants(command,world.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&color));device.cmd_draw_indexed(command,world.count,1,0,0,0);}
     device.cmd_end_render_pass(command);device.end_command_buffer(command).map_err(|e|e.to_string())?;
    }
    world.resources.mark_used(vertices,serial)?;world.resources.mark_used(indices,serial)?;
    unsafe{device.reset_fences(&[fence]).map_err(|e|e.to_string())?;device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&commands)],fence).map_err(|e|e.to_string())?;}
    context.wait_transfer(fence).map_err(|e|e.to_string())?;
    let rgba=world.readback(context)?;let first=&rgba[..4];if !rgba.chunks_exact(4).all(|p|p==first){return Err("Controlled sample color not uniform across target".into());}
-   rows.push(serde_json::json!({"sample_red_bytes":values,"resolved_rgba":first}));
+   rows.push(serde_json::json!({"sample_red_bytes":values.map(|v|v[0]),"sample_rgba_bytes":values,"resolved_rgba":first}));
   }
   Ok(rows)
  })();
