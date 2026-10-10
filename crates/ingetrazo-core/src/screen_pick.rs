@@ -62,7 +62,7 @@ impl PixelViewport {
             return None;
         }
         let clip = self.matrix * point.extend(1.);
-        if !clip.is_finite() || clip.w <= 0. {
+        if !clip.is_finite() || clip.w <= if depth_clip {1e-12} else {0.} {
             return None;
         }
         let p = clip.truncate() / clip.w;
@@ -372,6 +372,12 @@ mod tests {
 #[cfg(test)]
 mod snap_projection_boundary_tests {
     use super::*;
+    #[test]
+    fn ordinary_projection_retains_tiny_positive_w_rejection() {
+        let viewport=PixelViewport{matrix:DMat4::from_diagonal(glam::DVec4::splat(1e-13)),width:1000.,height:700.};
+        assert!(viewport.project(DVec3::ZERO).is_none());
+        assert_eq!(viewport.project_for_snapping(DVec3::ZERO),Some(DVec2::new(500.,350.)));
+    }
     use crate::snap::{SnapEngine,SnapKind};
     use crate::snap_screen::ScreenSnapContext;
     #[test]
