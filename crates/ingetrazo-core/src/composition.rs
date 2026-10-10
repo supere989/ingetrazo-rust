@@ -280,6 +280,14 @@ impl SheetItem {
 /// Master Sheet container (Composición).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Sheet {
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
+    #[serde(default)]
+    pub native_items: std::collections::HashMap<Uuid, serde_json::Value>,
+    #[serde(default)]
+    pub native_item_baselines: std::collections::HashMap<Uuid, serde_json::Value>,
     pub id: Uuid,
     pub name: String,
     pub paper_size: PaperSize,
@@ -298,6 +306,10 @@ impl Default for Sheet {
 impl Sheet {
     pub fn new(name: impl Into<String>, paper_size: PaperSize, orientation: Orientation) -> Self {
         let mut sheet = Self {
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
+            native_items: std::collections::HashMap::new(),
+            native_item_baselines: std::collections::HashMap::new(),
             id: Uuid::new_v4(),
             name: name.into(),
             paper_size,

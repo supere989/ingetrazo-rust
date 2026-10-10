@@ -123,17 +123,41 @@ fn native_camera_section_and_datum_edits_use_original_schema() {
 }
 
 #[test]
-fn unsupported_composer_edits_fail_before_touching_destination() {
+fn original_composer_edits_preserve_unsupported_items_and_title_rows() {
+    use ingetrazo_core::composition::{SheetItem,PaperSize,Orientation};
     let src=temp("composer-source.igz"); let dst=temp("composer-save.igz");
-    write_plain(&native(),&src); std::fs::write(&dst,b"retain existing document").unwrap();
-    let mut scene=load_igz(&src).unwrap();
-    scene.sheets.push(ingetrazo_core::composition::Sheet::default());
-    let err=save_igz(&scene,&dst).unwrap_err();
-    assert!(err.to_string().contains("native schema adapter"));
-    assert_eq!(std::fs::read(&dst).unwrap(),b"retain existing document");
-    std::fs::remove_file(src).unwrap(); std::fs::remove_file(dst).unwrap();
+    let doc=json!({"edges":[],"faces":[],"compositions":[{
+        "name":"original","paper":"A4","landscape":true,"margin_mm":10.,"opaque":71,
+        "frames":[{"x_mm":15.,"y_mm":16.,"w_mm":80.,"h_mm":90.,"scale_n":40.,"view_key":"std:top","uid":"0123456789abcdef0123456789abcdef","paper_bg":true,"unknown":72}],
+        "texts":[{"x_mm":20.,"text":"original","italic":true,"unknown":73}],
+        "images":[{"path":"retain-image","unknown":74}],
+        "cajetin":{"proyecto":"legacy","campos":[["PROYECTO","project"],["CUSTOM","keep"]],"line_color":"#abc"}
+    }]});
+    write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();
+    assert_eq!(scene.sheets.len(),1);
+    let sheet=&mut scene.sheets[0];assert_eq!(sheet.items.len(),3);
+    sheet.name="renamed".into();sheet.paper_size=PaperSize::A3;sheet.orientation=Orientation::Portrait;
+    for item in &mut sheet.items {
+        match item {
+            SheetItem::ViewFrame(frame)=>{frame.rect.x=25.;frame.scale_n=50.;},
+            SheetItem::Text(text)=>{text.text="changed".into();},
+            SheetItem::TitleBlock(title)=>{assert_eq!(title.project_name,"project");title.project_name="new project".into();},
+            _=>{}
+        }
+    }
+    save_igz(&scene,&dst).unwrap();let out=scene_to_igz_document(&scene);
+    let sheet=&out["compositions"][0];
+    assert_eq!(sheet["name"],"renamed");assert_eq!(sheet["paper"],"A3");assert_eq!(sheet["landscape"],false);
+    assert_eq!(sheet["opaque"],71);assert_eq!(sheet["frames"][0]["unknown"],72);
+    assert_eq!(sheet["frames"][0]["uid"],doc["compositions"][0]["frames"][0]["uid"]);
+    assert_eq!(sheet["texts"][0]["unknown"],73);assert_eq!(sheet["texts"][0]["text"],"changed");
+    assert_eq!(sheet["images"],doc["compositions"][0]["images"]);
+    assert_eq!(sheet["cajetin"]["campos"][0][1],"new project");assert_eq!(sheet["cajetin"]["campos"][1][1],"keep");
+    let reopened=load_igz(&dst).unwrap();assert_eq!(reopened.sheets[0].items.len(),3);
+    scene.sheets[0].items.retain(|v|!matches!(v,SheetItem::Text(_)));
+    assert_eq!(scene_to_igz_document(&scene)["compositions"][0]["texts"].as_array().unwrap().len(),0);
+    std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
-
 
 #[test]
 fn replacement_face_does_not_inherit_deleted_face_metadata() {
@@ -164,4 +188,18 @@ fn survey_points_and_paths_preserve_metadata_through_rename_reorder_and_edit() {
     let reopened=load_igz(&dst).unwrap();
     assert_eq!(reopened.geo_points[1].position.z,9.);assert_eq!(reopened.geo_paths[0].points[1].z,5.);
     std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}
+
+
+#[test]
+fn fresh_rust_sheet_saves_in_python_composition_schema() {
+    use ingetrazo_core::{scene::Scene,composition::Sheet};
+    let dst=temp("fresh-sheet.igz");let mut scene=Scene::new();scene.sheets.push(Sheet::default());
+    save_igz(&scene,&dst).unwrap();let out=scene_to_igz_document(&scene);
+    assert_eq!(out["compositions"][0]["paper"],"A3");
+    assert!(out["compositions"][0]["frames"][0].get("x_mm").is_some());
+    assert_eq!(out["compositions"][0]["frames"][0]["style"],"vectorial");
+    assert!(out["compositions"][0]["cajetin"].get("proyecto").is_some());
+    assert_eq!(load_igz(&dst).unwrap().sheets[0].items.len(),2);
+    std::fs::remove_file(dst).unwrap();
 }

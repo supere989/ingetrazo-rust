@@ -325,6 +325,123 @@ fn path_model(path: &ingetrazo_core::georef::GeoPath) -> serde_json::Value {
     serde_json::json!({"points":path.points,"closed":path.closed,"name":path.name,"surface":surface})
 }
 
+fn sheet_item_model(item: &ingetrazo_core::composition::SheetItem) -> (uuid::Uuid, &'static str, serde_json::Value) {
+    use ingetrazo_core::composition::SheetItem;
+    match item {
+        SheetItem::ViewFrame(f) => (f.id,"frames",serde_json::json!({
+            "x_mm":f.rect.x,"y_mm":f.rect.y,"w_mm":f.rect.w,"h_mm":f.rect.h,
+            "scale_n":f.scale_n,"view_key":f.view_key,"style":match f.style.as_str() {"technical"=>"vectorial","wireframe"=>"lineas",s=>s},
+            "show_title":f.show_title,"title_text":f.title_text,"border":f.border,
+            "perspective":f.perspective,"rot_deg":f.rot_deg,"annotations":f.annotations,
+            "section_marks":f.section_marks,"uid":f.id.simple().to_string()
+        })),
+        SheetItem::TitleBlock(f) => (f.id,"cajetin",serde_json::json!({
+            "x_mm":f.rect.x,"y_mm":f.rect.y,"w_mm":f.rect.w,"h_mm":f.rect.h,
+            "proyecto":f.project_name,"autor":f.author,"fecha":f.date,
+            "lamina":f.sheet_number,"escala":f.scale_text,"drawing_title":f.drawing_title
+        })),
+        SheetItem::Text(f) => (f.id,"texts",serde_json::json!({
+            "x_mm":f.pos.0,"y_mm":f.pos.1,"text":f.text,"size_pt":f.font_size_pt,"bold":f.bold
+        })),
+        SheetItem::NorthArrow(f) => (f.id,"nortes",serde_json::json!({
+            "x_mm":f.pos.0,"y_mm":f.pos.1,"size_mm":f.size_mm,"angle_deg":f.rot_deg
+        })),
+        SheetItem::GraphicScale(f) => (f.id,"scalebars",serde_json::json!({
+            "x_mm":f.pos.0,"y_mm":f.pos.1,"scale_n":f.scale_n,"segments":f.divisions
+        }))
+    }
+}
+
+fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value {
+    use ingetrazo_core::composition::Orientation;
+    let mut model = serde_json::json!({
+        "name":sheet.name,"paper":sheet.paper_size,
+        "landscape":sheet.orientation==Orientation::Landscape,"margin_mm":sheet.margin_mm,
+        "frames":[],"texts":[],"nortes":[],"scalebars":[],"cajetin":null
+    });
+    for item in &sheet.items {
+        let (id,key,current)=sheet_item_model(item);
+        let empty=serde_json::Value::Null;
+        let original=sheet.native_items.get(&id).unwrap_or(&empty);
+        let baseline=sheet.native_item_baselines.get(&id).unwrap_or(&empty);
+        let mut value=overlay(original,baseline,current.clone());
+        if key=="cajetin" {
+            if let Some(rows)=original.get("campos").and_then(|v| v.as_array()) {
+                let mut rows=rows.clone();
+                for (label,field) in [("PROYECTO","proyecto"),("AUTOR","autor"),("FECHA","fecha"),("ESCALA","escala"),("LÁMINA","lamina")] {
+                    if baseline.get(field)!=current.get(field) {
+                        if let Some(row)=rows.iter_mut().find(|r| r.get(0).and_then(|v| v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)) {
+                            row[1]=current[field].clone();
+                        } else { rows.push(serde_json::json!([label,current[field]])); }
+                    }
+                }
+                value["campos"]=serde_json::json!(rows);
+            }
+            model[key]=value;
+        } else { model[key].as_array_mut().unwrap().push(value); }
+    }
+    model
+}
+
+fn sheet_to_json(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value {
+    let current=sheet_model(sheet);
+    let mut result=overlay(&sheet.native_document,&sheet.native_baseline,current.clone());
+    // Modeled items already carry their own retained metadata; don't merge
+    // stale array positions after deleting, moving or replacing an item.
+    for key in ["frames","texts","nortes","scalebars","cajetin"] {
+        if sheet.native_baseline.get(key)!=current.get(key) { result[key]=current[key].clone(); }
+    }
+    result
+}
+
+fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
+    use ingetrazo_core::composition::*;
+    fn num(v:&serde_json::Value,k:&str,d:f64)->f64 { v.get(k).and_then(|v|v.as_f64()).unwrap_or(d) }
+    fn txt(v:&serde_json::Value,k:&str,d:&str)->String { v.get(k).and_then(|v|v.as_str()).unwrap_or(d).into() }
+    fn flag(v:&serde_json::Value,k:&str,d:bool)->bool { v.get(k).and_then(|v|v.as_bool()).unwrap_or(d) }
+    fn rect(v:&serde_json::Value,d:RectMm)->RectMm {RectMm::new(num(v,"x_mm",d.x),num(v,"y_mm",d.y),num(v,"w_mm",d.w),num(v,"h_mm",d.h))}
+    let paper=raw.get("paper").and_then(|v|serde_json::from_value(v.clone()).ok()).unwrap_or(PaperSize::A4);
+    let mut sheet=Sheet::new(txt(raw,"name","Lámina 1"),paper,
+        if flag(raw,"landscape",true) {Orientation::Landscape} else {Orientation::Portrait});
+    sheet.items.clear();sheet.margin_mm=num(raw,"margin_mm",10.);
+    for key in ["frames","texts","nortes","scalebars","cajetin"] {
+        let entries:Vec<_>=if key=="cajetin" {raw.get(key).filter(|v|v.is_object()).into_iter().collect()}
+            else {raw.get(key).and_then(|v|v.as_array()).map(|v|v.iter().collect()).unwrap_or_default()};
+        for v in entries {
+            let id=v.get("uid").and_then(|v|v.as_str()).and_then(|s|uuid::Uuid::parse_str(s).ok()).unwrap_or_else(uuid::Uuid::new_v4);
+            let item=match key {
+                "frames" => {
+                    let mut f=ViewFrame::default();f.id=id;f.rect=rect(v,RectMm::new(20.,20.,170.,170.));
+                    f.scale_n=num(v,"scale_n",100.);f.view_key=txt(v,"view_key","__current__");
+                    f.style=txt(v,"style","sombreado");f.show_title=flag(v,"show_title",false);
+                    f.title_text=txt(v,"title_text","");f.border=flag(v,"border",false);
+                    f.perspective=flag(v,"perspective",false);f.rot_deg=num(v,"rot_deg",0.);
+                    f.annotations=flag(v,"annotations",false);f.section_marks=flag(v,"section_marks",false);
+                    SheetItem::ViewFrame(f)
+                },
+                "cajetin" => {
+                    let mut f=TitleBlock::default();f.id=id;f.rect=rect(v,RectMm::new(0.,0.,180.,33.));
+                    fn field(v:&serde_json::Value,label:&str,key:&str)->String {
+                        v.get("campos").and_then(|v|v.as_array()).and_then(|rows|rows.iter().find(|r|
+                            r.get(0).and_then(|v|v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)))
+                            .and_then(|r|r.get(1)).and_then(|v|v.as_str()).unwrap_or_else(||v.get(key).and_then(|v|v.as_str()).unwrap_or("")).into()
+                    }
+                    f.project_name=field(v,"PROYECTO","proyecto");f.author=field(v,"AUTOR","autor");
+                    f.date=field(v,"FECHA","fecha");f.scale_text=field(v,"ESCALA","escala");f.sheet_number=field(v,"LÁMINA","lamina");
+                    f.drawing_title=txt(v,"drawing_title","");SheetItem::TitleBlock(f)
+                },
+                "texts" => SheetItem::Text(TextItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),text:txt(v,"text",""),font_size_pt:num(v,"size_pt",14.),bold:flag(v,"bold",false)}),
+                "nortes" => SheetItem::NorthArrow(NorthArrowItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),size_mm:num(v,"size_mm",18.),rot_deg:num(v,"angle_deg",0.)}),
+                _ => SheetItem::GraphicScale(GraphicScaleItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),scale_n:num(v,"scale_n",100.),length_mm:100.,divisions:v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize})
+            };
+            sheet.native_items.insert(id,v.clone());
+            sheet.native_item_baselines.insert(id,sheet_item_model(&item).2);
+            sheet.items.push(item);
+        }
+    }
+    sheet.native_document=raw.clone();sheet.native_baseline=sheet_model(&sheet);sheet
+}
+
 fn scene_model(scene: &Scene) -> serde_json::Value {
     let loose = mesh_to_json(&scene.mesh);
     let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
@@ -388,7 +505,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     doc["geo_paths"] = serde_json::json!(scene.geo_paths.iter().map(|p|
         overlay(&p.native_document,&p.native_baseline,path_model(p))).collect::<Vec<_>>());
     doc["terrain"] = serde_json::json!(scene.terrain);
-    doc["compositions"] = serde_json::json!(scene.sheets);
+    doc["compositions"] = serde_json::json!(scene.sheets.iter().map(sheet_to_json).collect::<Vec<_>>());
     doc["active_sheet_index"] = serde_json::json!(scene.active_sheet_index);
     doc
 }
@@ -410,7 +527,7 @@ fn validate_native_save(scene: &Scene) -> Result<(), IgzError> {
     // original records for no-op saves; refuse edits instead of writing a file
     // the Python reader silently misinterprets.
     {
-        for key in ["compositions", "terrain"] {
+        for key in ["terrain"] {
             let value = current.get(key).unwrap();
             let nonempty = !value.is_null() && value.as_array().map(|a| !a.is_empty()).unwrap_or(true);
             if (scene.native_document.is_object() && scene.native_baseline.get(key) != Some(value))
@@ -770,7 +887,9 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         }
     }
     load_field!(terrain, "terrain");
-    load_field!(sheets, "compositions");
+    if let Some(sheets)=s_val.get("compositions").and_then(|v|v.as_array()) {
+        scene.sheets=sheets.iter().map(read_sheet).collect();
+    }
     load_field!(active_sheet_index, "active_sheet_index");
     if let Some(v) = s_val.get("georef").and_then(|v| v.get("datum")) {
         if let (Some(lat),Some(lon)) = (v.get("lat").and_then(|v| v.as_f64()),v.get("lon").and_then(|v| v.as_f64())) {
