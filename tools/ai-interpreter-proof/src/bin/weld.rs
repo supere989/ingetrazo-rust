@@ -1,3 +1,5 @@
+#[path="../owner_registry.rs"]mod owner_registry;
+#[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"] mod journal;
 use glam::DVec3;use ingetrazo_core::mesh::Mesh;
 fn main(){let cases:serde_json::Value=serde_json::from_str(include_str!("../../weld-cases.json")).unwrap();let mut results=vec![];

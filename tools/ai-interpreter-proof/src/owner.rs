@@ -1,21 +1,24 @@
 //! Private append owner: state tokens replace per-command base snapshots.
 use crate::journal::{MeshJournal,validate_base};
 use crate::owner_budget::{OwnerBudget,Lease,Kind};
+use crate::owner_registry::Registry;
 use ingetrazo_core::mesh::{Mesh,MeshVertex,MeshEdge,PreparedSpatialIndex};
 use glam::DVec3;use uuid::Uuid;use std::collections::{HashMap,HashSet};
 pub struct Transaction{document:Uuid,state:Uuid,journal:MeshJournal,charge:Lease,admission_failed:bool}
-impl Transaction{pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(),String>{
+impl Transaction{pub fn registry_lookup_calls(&self)->usize{self.journal.registry.as_ref().unwrap().lookup_calls()} pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(),String>{
  if self.admission_failed{return Err("Transaction shared admission previously refused".into());}
- let next=staging_bound(self.journal.base_vertices,self.journal.base_edges,self.journal.added_vertices.len().checked_add(2).ok_or("Staging extent overflow")?,self.journal.added_edges.len().checked_add(1).ok_or("Staging extent overflow")?)?;
+ let next=staging_bound(0,0,self.journal.added_vertices.len().checked_add(2).ok_or("Staging extent overflow")?,self.journal.added_edges.len().checked_add(1).ok_or("Staging extent overflow")?)?;
  if let Err(error)=self.charge.resize(next){self.admission_failed=true;return Err(error);}
  let result=self.journal.add_edge(a,b).map(|_|());
- self.charge.resize(staging_bound(self.journal.base_vertices,self.journal.base_edges,self.journal.added_vertices.len(),self.journal.added_edges.len())?)?;result
+ self.charge.resize(staging_bound(0,0,self.journal.added_vertices.len(),self.journal.added_edges.len())?)?;result
 }}
 struct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize,charge:Lease}
-pub struct JournalOwner{mesh:Mesh,document:Uuid,state:Uuid,version:u64,undo:Vec<Delta>,redo:Vec<Delta>,index_entry_limit:Option<usize>,history_byte_limit:Option<usize>,undo_bytes:usize,redo_bytes:usize,append_vertex_limit:Option<usize>,append_edge_limit:Option<usize>,budget:OwnerBudget}
+pub struct JournalOwner{mesh:Mesh,document:Uuid,state:Uuid,version:u64,undo:Vec<Delta>,redo:Vec<Delta>,index_entry_limit:Option<usize>,history_byte_limit:Option<usize>,undo_bytes:usize,redo_bytes:usize,append_vertex_limit:Option<usize>,append_edge_limit:Option<usize>,budget:OwnerBudget,registry:Registry}
 impl JournalOwner{
  pub fn new(mesh:Mesh)->Result<Self,String>{Self::new_with_budget(mesh,OwnerBudget::new(None))}
- pub fn new_with_budget(mut mesh:Mesh,budget:OwnerBudget)->Result<Self,String>{let _preparation=budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;validate_base(&mesh)?;let positions=positions(&mesh.vertices,0)?;let index=Mesh::prepare_spatial_index(&positions).map_err(str::to_owned)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;Ok(Self{mesh,document:Uuid::new_v4(),state:Uuid::new_v4(),version:0,undo:vec![],redo:vec![],index_entry_limit:None,history_byte_limit:None,undo_bytes:0,redo_bytes:0,append_vertex_limit:None,append_edge_limit:None,budget:budget.clone()})}
+ pub fn new_with_budget(mut mesh:Mesh,budget:OwnerBudget)->Result<Self,String>{let _preparation=budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;validate_base(&mesh)?;let positions=positions(&mesh.vertices,0)?;let index=Mesh::prepare_spatial_index(&positions).map_err(str::to_owned)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;let document=Uuid::new_v4();let state=Uuid::new_v4();let registry=Registry::new(&mesh,budget.clone(),document,state,0)?;Ok(Self{mesh,document,state,version:0,undo:vec![],redo:vec![],index_entry_limit:None,history_byte_limit:None,undo_bytes:0,redo_bytes:0,append_vertex_limit:None,append_edge_limit:None,budget:budget.clone(),registry})}
+ pub fn registry_metrics(&self)->crate::owner_registry::Metrics{self.registry.metrics()}
+ pub fn registry_identity(&self)->usize{self.registry.identity()}
  pub fn budget(&self)->OwnerBudget{self.budget.clone()}
  pub fn mesh(&self)->&Mesh{&self.mesh}
  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
@@ -27,9 +30,9 @@ impl JournalOwner{
  pub fn history_payload_bytes(&self)->(usize,usize){(self.undo_bytes,self.redo_bytes)}
  pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.append_vertex_limit=vertices;self.append_edge_limit=edges;}
  pub fn begin(&self)->Transaction{self.try_begin().expect("legacy proof owner preparation")}
- pub fn try_begin(&self)->Result<Transaction,String>{let charge=self.budget.reserve(Kind::Staging,staging_bound(self.mesh.vertices.len(),self.mesh.edges.len(),0,0)?)?;let mut journal=MeshJournal::try_begin(&self.mesh,self.version)?;journal.set_append_limits(self.append_vertex_limit,self.append_edge_limit);Ok(Transaction{document:self.document,state:self.state,journal,charge,admission_failed:false})}
+ pub fn try_begin(&self)->Result<Transaction,String>{let charge=self.budget.reserve(Kind::Staging,staging_bound(0,0,0,0)?)?;let mut journal=MeshJournal::from_registry(self.registry.view(),self.version)?;journal.set_append_limits(self.append_vertex_limit,self.append_edge_limit);Ok(Transaction{document:self.document,state:self.state,journal,charge,admission_failed:false})}
  fn index(&self,positions:&[DVec3])->Result<PreparedSpatialIndex,String>{if self.index_entry_limit.is_some_and(|n|positions.len()>n){return Err("Prepared-index entry admission denied".into());}Mesh::prepare_spatial_index(positions).map_err(str::to_owned)}
- pub fn replace(&mut self,mut mesh:Mesh)->Result<(),String>{let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;validate_base(&mesh)?;let positions=positions(&mesh.vertices,0)?;let index=self.index(&positions)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;self.mesh=mesh;self.document=Uuid::new_v4();self.state=Uuid::new_v4();self.version=next_version;self.undo.clear();self.redo.clear();self.undo_bytes=0;self.redo_bytes=0;Ok(())}
+ pub fn replace(&mut self,mut mesh:Mesh)->Result<(),String>{let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;validate_base(&mesh)?;let positions=positions(&mesh.vertices,0)?;let index=self.index(&positions)?;mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;let document=Uuid::new_v4();let state=Uuid::new_v4();let registry=Registry::new(&mesh,self.budget.clone(),document,state,next_version)?;self.registry.invalidate();self.registry=registry;self.mesh=mesh;self.document=document;self.state=state;self.version=next_version;self.undo.clear();self.redo.clear();self.undo_bytes=0;self.redo_bytes=0;Ok(())}
  pub fn commit(&mut self,t:Transaction)->Result<bool,String>{
   if t.document!=self.document||t.state!=self.state||t.journal.base_version!=self.version{return Err("Stale owner transaction".into());}
   if t.admission_failed{return Err("Transaction shared staging admission failed".into());}
@@ -56,21 +59,24 @@ impl JournalOwner{
   let delta=Delta{before:self.state,after,base_vertices,base_edges,vertices:retained_vertices,edges:retained_edges,bytes,charge:history_charge};
   self.undo.try_reserve(1).map_err(|_|"History admission refused")?;self.mesh.vertices.try_reserve(vertices.len()).map_err(|_|"Vertex admission refused")?;self.mesh.edges.try_reserve(edges.len()).map_err(|_|"Edge admission refused")?;
   for (&id,ids) in &additions{if id<base_vertices{self.mesh.vertices[id].edges.try_reserve(ids.len()).map_err(|_|"Live adjacency admission refused")?;}}
+  let registry_change=self.registry.prepare_append(&vertices,&edges)?;
   self.mesh.vertices.extend(vertices);self.mesh.edges.extend(edges);for (id,ids) in additions{if id<base_vertices{self.mesh.vertices[id].edges.extend(ids);}}
   // Exact prepared positions plus exclusive private owner make this swap
   // infallible after publication; install performs no allocation.
-  self.mesh.install_prepared_spatial_index(index).expect("private prepared append positions");self.state=after;self.version=next_version;self.redo.clear();self.redo_bytes=0;self.undo_bytes=projected;self.undo.push(delta);Ok(true)
+  self.mesh.install_prepared_spatial_index(index).expect("private prepared append positions");self.state=after;self.version=next_version;registry_change.apply(after,next_version).expect("private prepared registry append");self.redo.clear();self.redo_bytes=0;self.undo_bytes=projected;self.undo.push(delta);Ok(true)
  }
  pub fn undo(&mut self)->Result<bool,String>{let Some(d)=self.undo.last()else{return Ok(false)};if self.state!=d.after{return Err("Stale undo state".into());}
   let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(d.base_vertices,d.base_edges.checked_add(d.edges.len()).ok_or("Edge extent overflow")?)?)?;let positions=positions(&self.mesh.vertices[..d.base_vertices],0)?;let index=self.index(&positions)?;self.redo.try_reserve(1).map_err(|_|"Redo history admission refused")?;
   let mut touched=HashSet::new();touched.try_reserve(d.edges.len().checked_mul(2).ok_or("Touched extent overflow")?).map_err(|_|"Touched endpoint admission refused")?;for e in &d.edges{for id in [e.v0,e.v1]{if id<d.base_vertices{touched.insert(id);}}}
-  let d=self.undo.pop().unwrap();self.mesh.edges.truncate(d.base_edges);self.mesh.vertices.truncate(d.base_vertices);for id in touched{self.mesh.vertices[id].edges.retain(|&e|e<d.base_edges);}self.mesh.install_prepared_spatial_index(index).expect("private prepared undo positions");self.state=d.before;self.version=next_version;self.undo_bytes-=d.bytes;self.redo_bytes+=d.bytes;self.redo.push(d);Ok(true)
+  let registry_change=self.registry.prepare_truncate(d.base_vertices,d.base_edges,&d.vertices,&d.edges)?;
+  let d=self.undo.pop().unwrap();self.mesh.edges.truncate(d.base_edges);self.mesh.vertices.truncate(d.base_vertices);for id in touched{self.mesh.vertices[id].edges.retain(|&e|e<d.base_edges);}self.mesh.install_prepared_spatial_index(index).expect("private prepared undo positions");self.state=d.before;self.version=next_version;registry_change.apply(d.before,next_version).expect("private prepared registry undo");self.undo_bytes-=d.bytes;self.redo_bytes+=d.bytes;self.redo.push(d);Ok(true)
  }
  pub fn redo(&mut self)->Result<bool,String>{let Some(d)=self.redo.last()else{return Ok(false)};if self.state!=d.before{return Err("Stale redo state".into());}
   let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;let total=self.mesh.vertices.len().checked_add(d.vertices.len()).ok_or("Vertex extent overflow")?;let _preparation=self.budget.reserve(Kind::Preparation,preparation_bound(total,d.base_edges.checked_add(d.edges.len()).ok_or("Edge extent overflow")?)?)?;let mut positions=positions(&self.mesh.vertices,d.vertices.len())?;positions.extend(d.vertices.iter().map(|v|v.position));let index=self.index(&positions)?;
   let vertices=copy_vertices(&d.vertices)?;let edges=copy_append_edges(&d.edges)?;let mut additions=HashMap::<usize,Vec<usize>>::new();additions.try_reserve(edges.len().checked_mul(2).ok_or("Adjacency extent overflow")?).map_err(|_|"Redo adjacency map refused")?;for (offset,e) in edges.iter().enumerate(){for id in [e.v0,e.v1]{if id<d.base_vertices{let ids=additions.entry(id).or_default();ids.try_reserve(1).map_err(|_|"Redo prepared adjacency refused")?;ids.push(d.base_edges.checked_add(offset).ok_or("Redo edge extent overflow")?);}}}
   self.undo.try_reserve(1).map_err(|_|"Undo history admission refused")?;self.mesh.vertices.try_reserve(vertices.len()).map_err(|_|"Redo vertex admission refused")?;self.mesh.edges.try_reserve(edges.len()).map_err(|_|"Redo edge admission refused")?;for (&id,ids) in &additions{self.mesh.vertices[id].edges.try_reserve(ids.len()).map_err(|_|"Redo adjacency admission refused")?;}
-  let d=self.redo.pop().unwrap();self.mesh.vertices.extend(vertices);self.mesh.edges.extend(edges);for (id,ids) in additions{self.mesh.vertices[id].edges.extend(ids);}self.mesh.install_prepared_spatial_index(index).expect("private prepared redo positions");self.state=d.after;self.version=next_version;self.redo_bytes-=d.bytes;self.undo_bytes+=d.bytes;self.undo.push(d);Ok(true)
+  let registry_change=self.registry.prepare_append(&vertices,&edges)?;
+  let d=self.redo.pop().unwrap();self.mesh.vertices.extend(vertices);self.mesh.edges.extend(edges);for (id,ids) in additions{self.mesh.vertices[id].edges.extend(ids);}self.mesh.install_prepared_spatial_index(index).expect("private prepared redo positions");self.state=d.after;self.version=next_version;registry_change.apply(d.after,next_version).expect("private prepared registry redo");self.redo_bytes-=d.bytes;self.undo_bytes+=d.bytes;self.undo.push(d);Ok(true)
  }
 }
 // Explicit conservative payload slots, not allocator internals or VM memory.
@@ -114,6 +120,28 @@ fn delta_bytes(vertices:&Vec<MeshVertex>,edges:&Vec<MeshEdge>)->Result<usize,Str
  for v in vertices{bytes=bytes.checked_add(v.edges.capacity().checked_mul(std::mem::size_of::<usize>()).ok_or("Delta adjacency byte extent overflow")?).ok_or("Delta byte extent overflow")?;}Ok(bytes)
 }
 #[cfg(test)]mod tests{use super::*;
+ #[test]fn persistent_registry_stale_before_lookup_and_failed_prepare_preserves_view(){
+ let mut o=JournalOwner::new(Mesh::new()).unwrap();
+ for action in 0..4{let mut held=o.try_begin().unwrap();match action{0=>{let mut t=o.try_begin().unwrap();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.commit(t).unwrap();},1=>{o.undo().unwrap();},2=>{o.redo().unwrap();},_=>{o.replace(Mesh::new()).unwrap();}}
+ let calls=held.registry_lookup_calls();assert!(held.add_edge(DVec3::Y,DVec3::Z).unwrap_err().contains("Stale source registry"));assert_eq!(held.registry_lookup_calls(),calls);}
+ let mut earlier=o.try_begin().unwrap();let mut candidate=o.try_begin().unwrap();candidate.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.set_index_entry_limit(Some(0));assert!(o.commit(candidate).is_err());assert_eq!(o.history_counts(),(0,0));earlier.add_edge(DVec3::Y,DVec3::Z).unwrap();o.set_index_entry_limit(None);assert!(o.commit(earlier).unwrap());
+ }
+ #[test]fn persistent_registry_duplicate_vertex_last_wins_after_undo(){
+ let mut m=Mesh::new();m.vertices.push(MeshVertex::new(DVec3::ZERO));m.vertices.push(MeshVertex::new(DVec3::ZERO));let mut o=JournalOwner::new(m).unwrap();
+ for endpoint in [DVec3::X,DVec3::Y]{let mut t=o.try_begin().unwrap();t.add_edge(DVec3::ZERO,endpoint).unwrap();o.commit(t).unwrap();assert_eq!(o.mesh().edges[0].v0,1);o.undo().unwrap();assert_eq!(o.mesh().vertices.len(),2);}
+ assert_eq!(o.registry_metrics().cold_vertex_rows,2);
+ }
+ #[test]fn persistent_registry_lifetime_stale_views_and_duplicate_base_edge_ids(){
+  let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X);mesh.add_edge(a,b);let mut duplicate=MeshEdge::new(a,b);duplicate.layer=Some("opaque".into());mesh.vertices[a].edges.push(1);mesh.vertices[b].edges.push(1);mesh.edges.push(duplicate);
+  let mut o=JournalOwner::new(mesh).unwrap();let budget=o.budget();let mut t=o.try_begin().unwrap();t.add_edge(DVec3::Y,DVec3::Z).unwrap();o.commit(t).unwrap();assert_eq!(o.mesh().edges[2].v0,2);assert_eq!(o.mesh().edges[2].v1,3);o.undo().unwrap();o.redo().unwrap();let mut duplicate=o.try_begin().unwrap();duplicate.add_edge(DVec3::ZERO,DVec3::X).unwrap();assert!(!o.commit(duplicate).unwrap());
+  let held=o.try_begin().unwrap();let mut stale=o.try_begin().unwrap();let retained=budget.snapshot().registry;assert!(retained>0);o.replace(Mesh::new()).unwrap();assert_eq!(budget.snapshot().registry,retained);assert!(stale.add_edge(DVec3::ZERO,DVec3::X).unwrap_err().contains("Stale source registry"));assert!(o.commit(stale).is_err());drop(held);assert_eq!(budget.snapshot().registry,0);
+ }
+ #[test]fn persistent_registry_begin_no_base_scan_and_overlay_lookup_order(){
+  let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);let mut o=JournalOwner::new(mesh).unwrap();let identity=o.registry_identity();let scans=o.registry_metrics().cold_vertex_rows;
+  for _ in 0..100{let t=o.try_begin().unwrap();drop(t);}assert_eq!(o.registry_metrics().cold_vertex_rows,scans);assert_eq!(o.registry_identity(),identity);
+  let mut t=o.try_begin().unwrap();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();t.add_edge(DVec3::X,DVec3::Y).unwrap();o.commit(t).unwrap();assert_eq!(o.mesh().vertices.len(),3);assert_eq!(o.mesh().edges[1].v0,1);assert_eq!(o.mesh().edges[1].v1,2);assert_eq!(o.registry_metrics().publication_rows,4);o.undo().unwrap();assert_eq!(o.mesh().vertices.len(),1);o.redo().unwrap();let mut repeat=o.try_begin().unwrap();repeat.add_edge(DVec3::X,DVec3::Y).unwrap();assert!(!o.commit(repeat).unwrap());assert_eq!(o.registry_identity(),identity);
+ }
+
  #[test]fn shared_budget_two_owners_and_existing_redo_survive_refused_commit(){
   let budget=OwnerBudget::new(None);let mut a=JournalOwner::new_with_budget(Mesh::new(),budget.clone()).unwrap();let mut b=JournalOwner::new_with_budget(Mesh::new(),budget.clone()).unwrap();
   for o in [&mut a,&mut b]{let mut t=o.try_begin().unwrap();t.add_edge(DVec3::ZERO,DVec3::X).unwrap();o.commit(t).unwrap();}

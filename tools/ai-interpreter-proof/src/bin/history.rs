@@ -1,3 +1,5 @@
+#[path="../owner_registry.rs"]mod owner_registry;
+#[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"] mod journal;
 use journal::{MeshJournal,AppendUndo};use ingetrazo_core::scene::Scene;use glam::DVec3;
 fn record(s:&Scene,u:&[AppendUndo],r:&[AppendUndo],name:&str,out:&mut Vec<serde_json::Value>){out.push(serde_json::json!({"name":name,"vertices":s.mesh.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":s.mesh.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"undo":u.len(),"redo":r.len()}));}

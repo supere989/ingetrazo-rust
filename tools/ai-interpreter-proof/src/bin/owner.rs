@@ -1,3 +1,4 @@
+#[path="../owner_registry.rs"]mod owner_registry;
 #[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"]mod journal;#[path="../owner.rs"]mod owner;
 use std::alloc::{GlobalAlloc,Layout,System};use std::sync::atomic::{AtomicUsize,Ordering};use glam::DVec3;use ingetrazo_core::mesh::{Mesh,MeshVertex};

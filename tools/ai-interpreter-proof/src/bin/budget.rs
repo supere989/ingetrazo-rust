@@ -1,3 +1,5 @@
+#[path="../owner_registry.rs"]mod owner_registry;
+#[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"] mod journal;
 #[path="../session.rs"] mod session;
 use rustpython_vm::{InterpreterBuilder,compiler::Mode,pymodule};

@@ -1,3 +1,4 @@
+#[path="../owner_registry.rs"]mod owner_registry;
 #[path="../owner_budget.rs"]mod owner_budget;
 #[path="../journal.rs"]mod journal;#[path="../owner.rs"]mod owner;#[path="../session.rs"]mod session;#[path="../controller.rs"]mod controller;
 use ingetrazo_core::mesh::Mesh;

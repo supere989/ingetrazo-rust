@@ -1,3 +1,5 @@
+#[path="../owner_registry.rs"]mod owner_registry;
+#[path="../owner_budget.rs"]mod owner_budget;
 use std::cell::RefCell;
 use ingetrazo_core::scene::Scene;
 use glam::DVec3;

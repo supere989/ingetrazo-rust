@@ -4,8 +4,9 @@ use ingetrazo_core::{mesh::{Mesh,MeshVertex,MeshEdge}};
 use std::collections::{HashMap,HashSet};
 use num_bigint::BigInt;
 use num_traits::FromPrimitive;
-#[derive(Clone,Eq,PartialEq,Hash)] struct SourceKey([BigInt;3]);
-impl SourceKey{fn new(p:DVec3)->Self{Self(p.to_array().map(|x|BigInt::from_f64((x*10000.).round_ties_even()).expect("finite Qt coordinate")))}}
+use crate::owner_registry::View;
+#[derive(Clone,Eq,PartialEq,Hash)] pub(crate) struct SourceKey(pub(crate) [BigInt;3]);
+impl SourceKey{pub(crate) fn new(p:DVec3)->Self{Self(p.to_array().map(|x|BigInt::from_f64((x*10000.).round_ties_even()).expect("finite Qt coordinate")))}}
 pub struct MeshJournal {
  pub base_version:u64,
  pub base_vertices:usize,
@@ -16,7 +17,7 @@ pub struct MeshJournal {
  pub added_vertices:Vec<DVec3>,
  pub added_edges:Vec<(usize,usize)>,
  pub admission_failed:bool,
- vertex_limit:Option<usize>,edge_limit:Option<usize>,
+ vertex_limit:Option<usize>,edge_limit:Option<usize>,pub(crate) registry:Option<View>,
 }
 impl MeshJournal {
  pub fn begin(mesh:&Mesh,version:u64)->Self{Self::try_begin(mesh,version).expect("legacy proof journal preparation")}
@@ -26,11 +27,15 @@ impl MeshJournal {
   let mut edges=HashMap::new();edges.try_reserve(mesh.edges.len()).map_err(|_|"Source edge lookup admission refused")?;
   for (id,e) in mesh.edges.iter().enumerate(){edges.insert(ordered(e.v0,e.v1),(id,e.v0,e.v1));}
   let mut base_positions=Vec::new();base_positions.try_reserve_exact(mesh.vertices.len()).map_err(|_|"Source positions admission refused")?;base_positions.extend(mesh.vertices.iter().map(|v|v.position));
-  Ok(Self{base_version:version,base_vertices:mesh.vertices.len(),base_edges:mesh.edges.len(),vertices,edges,base_positions,added_vertices:vec![],added_edges:vec![],admission_failed:false,vertex_limit:None,edge_limit:None})
+  Ok(Self{base_version:version,base_vertices:mesh.vertices.len(),base_edges:mesh.edges.len(),vertices,edges,base_positions,added_vertices:vec![],added_edges:vec![],admission_failed:false,vertex_limit:None,edge_limit:None,registry:None})
  }
+ pub(crate) fn from_registry(view:View,version:u64)->Result<Self,String>{view.check()?;let (base_vertices,base_edges)=view.extents();Ok(Self{base_version:version,base_vertices,base_edges,vertices:HashMap::new(),edges:HashMap::new(),base_positions:vec![],added_vertices:vec![],added_edges:vec![],admission_failed:false,vertex_limit:None,edge_limit:None,registry:Some(view)})}
+ fn lookup_vertex(&self,key:&SourceKey)->Option<usize>{self.vertices.get(key).copied().or_else(||self.registry.as_ref().and_then(|r|r.vertex(key)))}
+ fn lookup_edge(&self,key:&(usize,usize))->Option<(usize,usize,usize)>{self.edges.get(key).copied().or_else(||self.registry.as_ref().and_then(|r|r.edge(key)))}
  pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.vertex_limit=vertices;self.edge_limit=edges;}
  fn admission<T>(&mut self,result:Result<T,String>)->Result<T,String>{if result.is_err(){self.admission_failed=true;}result}
  pub fn add_edge(&mut self,a:DVec3,b:DVec3)->Result<(usize,DVec3,DVec3),String>{
+  if let Some(registry)=&self.registry{registry.check()?;}
   if self.admission_failed{return Err("Transaction staging previously refused".into());}
   let a=a.as_vec3().as_dvec3();let b=b.as_vec3().as_dvec3();
   if !a.is_finite()||!b.is_finite(){return Err("Nonfinite endpoint".into());}
@@ -38,18 +43,18 @@ impl MeshJournal {
   let v0=self.vertex(ka,a)?;let v1=self.vertex(kb,b)?;
   if v0==v1{return Err("degenerate edge: endpoints weld to one vertex".into());}
   let key=ordered(v0,v1);
-  let endpoints=if let Some(&existing)=self.edges.get(&key){existing}else{let preparation=(||{if self.edge_limit.is_some_and(|n|self.added_edges.len()>=n){return Err("Append edge staging admission denied".into());}self.edges.try_reserve(1).map_err(|_|"Append edge lookup admission refused")?;self.added_edges.try_reserve(1).map_err(|_|"Append edge staging allocation refused")?;self.base_edges.checked_add(self.added_edges.len()).ok_or_else(||"Append edge extent overflow".into())})();let id=self.admission(preparation)?;self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
+  let endpoints=if let Some(existing)=self.lookup_edge(&key){existing}else{let preparation=(||{if self.edge_limit.is_some_and(|n|self.added_edges.len()>=n){return Err("Append edge staging admission denied".into());}self.edges.try_reserve(1).map_err(|_|"Append edge lookup admission refused")?;self.added_edges.try_reserve(1).map_err(|_|"Append edge staging allocation refused")?;self.base_edges.checked_add(self.added_edges.len()).ok_or_else(||"Append edge extent overflow".into())})();let id=self.admission(preparation)?;self.edges.insert(key,(id,v0,v1));self.added_edges.push((v0,v1));(id,v0,v1)};
   Ok((endpoints.0,self.position(endpoints.1),self.position(endpoints.2)))
  }
- fn position(&self,id:usize)->DVec3{if id<self.base_vertices{self.base_positions[id]}else{self.added_vertices[id-self.base_vertices]}}
+ fn position(&self,id:usize)->DVec3{if id<self.base_vertices{match &self.registry{Some(r)=>r.position(id),None=>self.base_positions[id]}}else{self.added_vertices[id-self.base_vertices]}}
  fn vertex(&mut self,key:SourceKey,p:DVec3)->Result<usize,String> {
-  if let Some(&id)=self.vertices.get(&key){return Ok(id);}
+  if let Some(id)=self.lookup_vertex(&key){return Ok(id);}
   // Original registry probes neighbouring cells in dx/dy/dz order,
   // with Qt float32 subtraction and squared-length, strictly below step².
   for dx in -1..=1{for dy in -1..=1{for dz in -1..=1{
    if dx==0&&dy==0&&dz==0{continue;}
    let neighbour=SourceKey([&key.0[0]+dx,&key.0[1]+dy,&key.0[2]+dz]);
-   if let Some(&id)=self.vertices.get(&neighbour){
+   if let Some(id)=self.lookup_vertex(&neighbour){
     let d=self.position(id).as_vec3()-p.as_vec3();
     if (d.length_squared() as f64)<1e-8{return Ok(id);}
    }
@@ -60,6 +65,7 @@ impl MeshJournal {
  /// This proof supports only appended unpainted edges: richer writes are refused.
  pub fn publish(self,mesh:&mut Mesh,version:u64)->Result<bool,String>{Ok(self.publish_owned(mesh,version)?.is_some())}
  pub fn publish_owned(self,mesh:&mut Mesh,version:u64)->Result<Option<AppendUndo>,String>{
+  if self.registry.is_some(){return Err("Registry journal requires private owner publication".into());}
   if self.admission_failed{return Err("Transaction staging admission failed".into());}
   if version!=self.base_version||mesh.vertices.len()!=self.base_vertices||mesh.edges.len()!=self.base_edges{return Err("Stale transaction base".into());}
   // Public vertex arrays can have duplicate keys or a stale private spatial
