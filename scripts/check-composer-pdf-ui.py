@@ -30,6 +30,13 @@ with tempfile.TemporaryDirectory() as runtime:
    x.XQueryTree(d,root,C.byref(r),C.byref(p),C.byref(children),C.byref(n));return n.value>0
   wait(mapped_windows)
   x.XGetGeometry.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(C.c_ulong),C.POINTER(C.c_int),C.POINTER(C.c_int),C.POINTER(C.c_uint),C.POINTER(C.c_uint),C.POINTER(C.c_uint),C.POINTER(C.c_uint)]
+  class Attributes(C.Structure):
+   _fields_=[(name,C.c_int) for name in ['x','y','width','height','border_width','depth']]+[('visual',C.c_void_p),('root',C.c_ulong)]+[(name,C.c_int) for name in ['window_class','bit_gravity','win_gravity','backing_store']]+[('backing_planes',C.c_ulong),('backing_pixel',C.c_ulong),('save_under',C.c_int),('colormap',C.c_ulong),('map_installed',C.c_int),('map_state',C.c_int),('all_event_masks',C.c_long),('your_event_mask',C.c_long),('do_not_propagate_mask',C.c_long),('override_redirect',C.c_int),('screen',C.c_void_p)]
+  x.XGetWindowAttributes.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(Attributes)]
+  x.XGetTransientForHint.argtypes=[C.c_void_p,C.c_ulong,C.POINTER(C.c_ulong)]
+  def mapped_confirmation(wid,parent):
+   attrs=Attributes();owner=C.c_ulong()
+   return bool(x.XGetWindowAttributes(d,wid,C.byref(attrs)) and attrs.map_state==2 and not attrs.override_redirect and x.XGetTransientForHint(d,wid,C.byref(owner)) and owner.value==parent)
   def area(wid):
    rr,xx,yy,w,h,border,depth=C.c_ulong(),C.c_int(),C.c_int(),C.c_uint(),C.c_uint(),C.c_uint(),C.c_uint();x.XGetGeometry(d,wid,C.byref(rr),C.byref(xx),C.byref(yy),C.byref(w),C.byref(h),C.byref(border),C.byref(depth));return w.value*h.value
   initial_windows={children[i] for i in range(n.value)};window=max(initial_windows,key=area)
@@ -58,7 +65,7 @@ with tempfile.TemporaryDirectory() as runtime:
    key(0xff0d)
    if unsupported:
     def overwrite_confirmation():
-     cs=C.POINTER(C.c_ulong)();nn=C.c_uint();x.XQueryTree(d,root,C.byref(r),C.byref(p),C.byref(cs),C.byref(nn));return next((cs[i] for i in range(nn.value) if cs[i] not in initial_windows and cs[i]!=dialog_window and area(cs[i])>10000),None)
+     cs=C.POINTER(C.c_ulong)();nn=C.c_uint();x.XQueryTree(d,root,C.byref(r),C.byref(p),C.byref(cs),C.byref(nn));return next((cs[i] for i in range(nn.value) if cs[i] not in initial_windows and cs[i]!=dialog_window and area(cs[i])>10000 and mapped_confirmation(cs[i],dialog_window)),None)
     confirm=wait(overwrite_confirmation)
     subprocess.run(['import','-display',display,'-window',str(confirm),str(out/(label+'-overwrite-dialog.png'))],check=True)
     x.XSetInputFocus(d,confirm,1,0);key(ord('r'),0xffe9)
