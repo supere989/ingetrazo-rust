@@ -703,6 +703,7 @@ mod tests {
     #[test]
     fn rejects_invalid_inputs_without_mutation() {
         let a = make_cube(DVec3::ZERO);
+        let original = a.clone();
         let mut broken = a.clone();
         broken.faces[0].vertices[0] = usize::MAX;
         assert!(perform_solid_op(SolidOp::Union, &a, &broken).is_err());
@@ -716,7 +717,7 @@ mod tests {
         let before = groups.clone();
         assert!(run_group_operation(SolidOp::Subtract, &groups).is_err());
         assert_eq!(groups, before);
-        assert_eq!(a, make_cube(DVec3::ZERO));
+        assert_eq!(a, original);
     }
     #[test]
     fn rotated_overlap_and_shared_face_union() {
