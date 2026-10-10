@@ -1,0 +1,96 @@
+{
+  "cases": [
+    {
+      "name": "gondola_v20-iso",
+      "geometry_uploads": 1,
+      "warm_uploads": 0,
+      "warm_frames": 3,
+      "replacement_control": null,
+      "cold_texture_stats": {
+        "geometry_uploads": 0,
+        "hashes": 0,
+        "sampled_decodes": 0,
+        "sampled_uploads": 0,
+        "average_decodes": 0,
+        "average_hits": 0,
+        "average_entries": 0
+      },
+      "hard_edge_bytes": 313656,
+      "dimensions": 0,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    },
+    {
+      "name": "gondola_v20-asymmetric",
+      "geometry_uploads": 1,
+      "warm_uploads": 0,
+      "warm_frames": 3,
+      "replacement_control": null,
+      "cold_texture_stats": {
+        "geometry_uploads": 0,
+        "hashes": 0,
+        "sampled_decodes": 0,
+        "sampled_uploads": 0,
+        "average_decodes": 0,
+        "average_hits": 0,
+        "average_entries": 0
+      },
+      "hard_edge_bytes": 313656,
+      "dimensions": 0,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    },
+    {
+      "name": "capilla_quiroz_v17-iso",
+      "geometry_uploads": 2,
+      "warm_uploads": 0,
+      "warm_frames": 3,
+      "replacement_control": {
+        "error": "The image format could not be determined",
+        "old_frame_exact": true,
+        "old_entries_preserved": true,
+        "retry_exact": true
+      },
+      "cold_texture_stats": {
+        "geometry_uploads": 3,
+        "hashes": 3,
+        "sampled_decodes": 0,
+        "sampled_uploads": 0,
+        "average_decodes": 3,
+        "average_hits": 0,
+        "average_entries": 3
+      },
+      "hard_edge_bytes": 11928,
+      "dimensions": 26,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    },
+    {
+      "name": "capilla_quiroz_v17-asymmetric",
+      "geometry_uploads": 2,
+      "warm_uploads": 0,
+      "warm_frames": 3,
+      "replacement_control": {
+        "error": "The image format could not be determined",
+        "old_frame_exact": true,
+        "old_entries_preserved": true,
+        "retry_exact": true
+      },
+      "cold_texture_stats": {
+        "geometry_uploads": 3,
+        "hashes": 3,
+        "sampled_decodes": 0,
+        "sampled_uploads": 0,
+        "average_decodes": 3,
+        "average_hits": 0,
+        "average_entries": 3
+      },
+      "hard_edge_bytes": 11928,
+      "dimensions": 26,
+      "text_labels": 0,
+      "scope": "production native World; annotation overlays not rendered"
+    }
+  ],
+  "ledger_final": 0,
+  "scope": "complete imported scene input, World-only drawing; strict pixels checked separately"
+}

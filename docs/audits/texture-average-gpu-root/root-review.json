@@ -1,0 +1,31 @@
+{
+  "source": "aaffaa05",
+  "binary_sha256": "9230b73579c15708c6fd173df68d545333011b32e36929970356c87c0bde2c51",
+  "actual_device": "NVIDIA GeForce RTX 5090",
+  "native_execution_pass": true,
+  "strict_full_images_pass": false,
+  "changed_pixels": [
+    78,
+    351,
+    4832,
+    3723
+  ],
+  "previous_changed_pixels": [
+    78,
+    351,
+    5088,
+    3754
+  ],
+  "warm_frames_each": 3,
+  "shaded_surface_sampled_decodes_uploads": 0,
+  "chapel_distinct_average_entries_each": 3,
+  "malformed_replacement_and_retry_exact_views": 2,
+  "ledger_final": 0,
+  "remaining": [
+    "full image parity",
+    "native annotations",
+    "style-switch and broad publication rollback",
+    "representative performance and platform coverage"
+  ],
+  "transport_exit_note": "Exit1 preserves retained original import-isolation16pixel failure; actual native process exit0. Strict full native images independently fail."
+}
