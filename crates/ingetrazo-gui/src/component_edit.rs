@@ -56,6 +56,9 @@ impl IngeTrazoApp {
             self.status_message="Cannot edit a singular group placement".into();return;
         }
         self.set_tool(ToolType::Select);
+        // Retiring Move may restore its transient placement. Capture the edit
+        // from the restored entity, not the validated live-preview clone.
+        let Some(group)=self.scene.groups.iter().find(|item|item.id==group.id).cloned() else {return;};
         self.scene.refresh_dimensions();
         let mut session=ComponentEditSession{
             original_scene:self.scene.clone(),original_camera:self.camera.clone(),

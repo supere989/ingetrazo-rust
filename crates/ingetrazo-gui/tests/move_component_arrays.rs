@@ -49,3 +49,11 @@ fn crossing_and_exact_overlap_arrays_match_retained_original_segments(){
   app.redo();assert_eq!(app.scene.mesh,after.mesh);assert_eq!(segments(&app.scene.mesh),baseline["cases"][index]["redo_segments"]);
  }
 }
+#[test]
+fn entering_edit_context_retires_live_group_preview_before_camera_frame_capture(){
+ let mut app=IngeTrazoApp::new();let mut g=Group::with_mesh("target",mesh());g.transform=DMat4::from_translation(DVec3::X*2.);app.scene.groups.push(g);app.scene.select(SelectionItem::Group(0));
+ let frame=app.scene.groups[0].transform;let target=app.camera.target;
+ app.active_tool=Box::new(MoveTool::new());app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_move(&context(DVec3::Y*3.));assert_eq!(app.scene.groups[0].transform,DMat4::from_translation(DVec3::Y*3.)*frame);
+ app.begin_component_edit();assert_eq!(app.camera.target,frame.inverse().transform_point3(target),"context capture must follow live preview cancellation");assert_eq!(app.scene.dimension_frame,frame);
+ app.cancel_component_edit();assert_eq!(app.scene.groups[0].transform,frame);assert_eq!(app.camera.target,target);
+}
