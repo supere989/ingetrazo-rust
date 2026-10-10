@@ -40,6 +40,7 @@ for i in range(n):j=(i+1)%n;s.mesh.add_face([bottom[i],bottom[j],top[j],top[i]])
 for e in s.mesh.edges:
  if abs(e.a.z()-e.b.z())>2:e.soft=True
 cases.append(("soft_cylinder_silhouette",s,"std:iso"))
+s2=Scene();g=Group(s.mesh,"ReflectedSoft");g.xform=QMatrix4x4();g.xform.translate(7,11,2);g.xform.rotate(27,QVector3D(0,0,1));g.xform.scale(-2,3,.5);s2.groups=[g];cases.append(("soft_reflected_silhouette",s2,"std:iso"))
 summary=[]
 for name,scene,key in cases:
  frame=MarcoVista(view_key=key,scale_n=100.,w_mm=100.,h_mm=100.);camera=OrbitCamera();apply_frame_camera(camera,frame,scene=scene)
