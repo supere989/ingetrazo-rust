@@ -1104,3 +1104,65 @@ mod representative_image_tests {
         );
     }
 }
+
+#[cfg(test)]
+mod reference_threshold_tests {
+    use super::*;
+    #[test]
+    fn original_editable_threshold_and_reference_boundary_stations() {
+        let dir = std::env::temp_dir().join(format!("dae-reference-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&dir).unwrap();
+        for (name, xml, editable, area, edges) in [
+            (
+                "threshold400",
+                include_str!("../../../docs/audits/dae-reference-corpus/threshold400.dae"),
+                true,
+                200.,
+                60,
+            ),
+            (
+                "threshold401",
+                include_str!("../../../docs/audits/dae-reference-corpus/threshold401.dae"),
+                false,
+                200.5,
+                63,
+            ),
+            (
+                "bare512",
+                include_str!("../../../docs/audits/dae-reference-corpus/bare512.dae"),
+                false,
+                256.,
+                64,
+            ),
+        ] {
+            let path = dir.join(format!("{name}.dae"));
+            std::fs::write(&path, xml).unwrap();
+            let scene = load_dae(&path).unwrap();
+            let mesh = if editable {
+                assert!(scene.groups.is_empty());
+                &scene.mesh
+            } else {
+                assert!(scene.mesh.faces.is_empty());
+                assert_eq!(scene.groups.len(), 1);
+                if name == "bare512" {
+                    assert_eq!(scene.groups[0].name, name);
+                }
+                &scene.groups[0].mesh
+            };
+            assert!(
+                (mesh
+                    .faces
+                    .iter()
+                    .enumerate()
+                    .map(|(i, _)| mesh.face_area(i))
+                    .sum::<f64>()
+                    - area)
+                    .abs()
+                    < 1e-8
+            );
+            assert_eq!(mesh.faces.len(), if name == "threshold401" { 2 } else { 1 });
+            assert_eq!(mesh.edges.len(), edges);
+        }
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+}
