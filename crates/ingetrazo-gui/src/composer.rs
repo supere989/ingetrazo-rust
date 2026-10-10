@@ -430,22 +430,29 @@ fn render_model_projection(
 
     use ingetrazo_render::vector_hlr::LineKind;
     let vector=matches!(frame.style.as_str(),"technical"|"vectorial")&&!frame.perspective;
-    let segments=if vector {
+    let mut segments=if vector {
         ingetrazo_render::vector_hlr::parallel_segments(scene,&camera,frame.profiles,frame.hidden_lines)
             .into_iter().map(|s|(s.a,s.b,s.kind)).collect::<Vec<_>>()
     } else {section_projected_edges(scene).into_iter().map(|(a,b)|(a,b,LineKind::Edge)).collect()};
+    // Thin hidden ink first, heavy cut ink last, as original _paint_hlr_lines_mm.
+    segments.sort_by_key(|s|match s.2{LineKind::Hidden=>0,LineKind::Edge=>1,LineKind::Profile=>2,LineKind::Cut=>3});
     let paper_pixel=frame_rect.width()/frame.rect.w as f32;
     for(p0,p1,kind)in segments {
         if let(Some((s0,_)),Some((s1,_)))=(project_point(p0,&view_proj,frame_rect),project_point(p1,&view_proj,frame_rect)) {
             let pen=match kind {LineKind::Cut=>frame.pen_cut_mm,LineKind::Profile=>frame.pen_profile_mm,_=>frame.pen_edge_mm};
-            let stroke=Stroke::new((pen.max(0.05) as f32)*paper_pixel,Color32::BLACK);
+            let default=match kind {LineKind::Cut=>0.5,LineKind::Profile=>0.35,_=>0.18};
+            let pen=if pen==0. {default}else{pen};
+            let stroke=Stroke::new((pen.max(0.05) as f32)*paper_pixel,Color32::from_rgb(30,36,44));
             if kind==LineKind::Hidden {
                 // Original dashed ink is 1.5 mm dash / 0.8 mm gap in paper units.
                 let length=s0.distance(s1); let dash=1.5*paper_pixel;let period=2.3*paper_pixel;
                 if period>0. {let direction=(s1-s0)/length.max(1e-6);let mut t=0.;while t<length {
                     painter.line_segment([s0+direction*t,s0+direction*(t+dash).min(length)],stroke);t+=period;
                 }}
-            }else{painter.line_segment([s0,s1],stroke);}
+            }else{painter.line_segment([s0,s1],stroke);
+                // QPainter solid ink has RoundCap; hidden strokes stay flat.
+                painter.circle_filled(s0,stroke.width/2.,stroke.color);painter.circle_filled(s1,stroke.width/2.,stroke.color);
+            }
         }
     }
 
