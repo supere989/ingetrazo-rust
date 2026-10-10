@@ -183,3 +183,5 @@ ActualdisposableNVIDIA CDI enumerationfailedERROR_INCOMPATIBLE_DRIVER:loadercann
 NVIDIAhardwareenumerationROOTverifiedPASSdisposableCDI0dev-basea659image withrohostlibEGL.so.1+libGLdispatch.so.0 mounts; onlyRTX5090vendor0x10deDISCRETEAPI1.4.351driver615.71.09. CausemissingdynamicEGLdependency, notGPUunsupported; oldfailure retained. Nohostinstall/config/sessionchange. Discoveryonly; nativeheadlessupload/readback/depth/RTthroughput stillopen. Rendererowner informed.
 
 Freshcanonical323da4b screenoriginal10/10+wrongkind/shifted/missingcontrolsPASS; HLRoriginal26PASS (canonicalindexedmerge+snapping combined). Retainednewsource/binaryprovenance. Screenshotchecker readis_file-only race identified, validatorfixpending. CI38022319204 activelyOriginalLineRectangleFreehandgate; no terminalclaim.
+
+Cloud38022319204 completedSUCCESS onpublished86732e4. RootfreshcanonicalreferencegesturePASS. CIexactscreen10/reference/Shift gates added withexplicitsoftwareGLbackendlabels+artifacts. YAMLparser/actionlintnotavailable; reviewedindent/diffcheckPASS, noinstallation. Capture-racefixpendingpublication.

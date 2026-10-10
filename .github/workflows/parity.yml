@@ -42,6 +42,12 @@ jobs:
         run: cargo build --locked -p ingetrazo-gui --example composer_native_cache
       - name: Native Vulkan composer cache edit history context and recovery
         run: python scripts/check-native-composer-cache.py target/debug/examples/composer_native_cache target/debug/ingetrazo-render-worker docs/audits/native-composer-ci
+      - name: Original orthographic screen snapping controls
+        run: python scripts/check-python-screen-snap.py
+      - name: Rendered software OpenGL drawing reference gestures
+        run: python scripts/check-rendered-drawing-reference.py
+      - name: Rendered software OpenGL temporary Shift inference gestures
+        run: python scripts/check-rendered-shift-inference.py
       - name: Original OpenGL section stencil controls
         run: python scripts/check-original-section-gl.py
       - name: Native rendered section stencil comparison
@@ -140,3 +146,10 @@ jobs:
             docs/audits/native-composer-ci/*.png
             docs/audits/native-composer-ci/native.log
             docs/audits/native-composer-ci/result.json
+            docs/audits/python-screen-snap-evidence.json
+            docs/audits/drawing-reference-render-evidence.json
+            docs/audits/drawing-reference-render/*.png
+            docs/audits/drawing-reference-render/runtime.log
+            docs/audits/shift-inference-render-evidence.json
+            docs/audits/shift-inference-render/*.png
+            docs/audits/shift-inference-render/runtime.log
