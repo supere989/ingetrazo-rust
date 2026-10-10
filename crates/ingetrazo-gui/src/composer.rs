@@ -370,11 +370,16 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 }
 
 fn frame_scene<'a>(scene:&'a Scene,frame:&ViewFrame)->std::borrow::Cow<'a,Scene>{if let Some(name)=frame.view_key.strip_prefix("scene:"){if let Some(view)=scene.saved_views.iter().find(|view|view.name==name){let mut snapshot=scene.clone();let mut camera=scene.camera.clone();view.apply_scene(&mut snapshot,&mut camera);return std::borrow::Cow::Owned(snapshot);}}std::borrow::Cow::Borrowed(scene)}
-fn section_projected_edges(scene:&Scene)->Vec<(DVec3,DVec3)>{fn mesh(mesh:&ingetrazo_core::mesh::Mesh,transform:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){for edge in &mesh.edges{if edge.hidden||!scene.is_layer_visible(edge.layer.as_deref()){continue;}let a=transform.transform_point3(mesh.vertices[edge.v0].position);let b=transform.transform_point3(mesh.vertices[edge.v1].position);if let Some(segment)=scene.section_segment(a,b){edges.push(segment);}}
-        if let Some(plane)=scene.active_section(){for id in 0..mesh.faces.len(){let face=&mesh.faces[id];if face.attrs.get("hidden").and_then(|v|v.as_bool())==Some(true)||!scene.is_layer_visible(face.layer.as_deref()){continue;}for(a,b,c)in mesh.triangulate_face(id){let points=[a,b,c].map(|p|transform.transform_point3(p));let d=points.map(|p|plane.signed_distance(p));if d.iter().all(|d|d.abs()<1e-7){continue;}let mut hits=vec![];for i in 0..3{let j=(i+1)%3;if d[i].abs()<1e-7{hits.push(points[i]);}if d[i]*d[j]< -1e-14{hits.push(points[i]+(points[j]-points[i])*(d[i]/(d[i]-d[j])));}}let mut unique=vec![];for p in hits{if !unique.iter().any(|other:&DVec3|(*other-p).length()<1e-7){unique.push(p);}}if unique.len()==2{edges.push((unique[0],unique[1]));}}}}
+fn section_projected_edges(scene:&Scene)->Vec<(DVec3,DVec3)>{fn mesh(mesh:&ingetrazo_core::mesh::Mesh,transform:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){for (id,edge) in mesh.edges.iter().enumerate(){if !scene.mesh_edge_visible(mesh,id){continue;}let a=transform.transform_point3(mesh.vertices[edge.v0].position);let b=transform.transform_point3(mesh.vertices[edge.v1].position);if let Some(segment)=scene.section_segment(a,b){edges.push(segment);}}
+        if let Some(plane)=scene.active_section(){for id in 0..mesh.faces.len(){if !scene.mesh_face_visible(mesh,id){continue;}for(a,b,c)in mesh.triangulate_face(id){let points=[a,b,c].map(|p|transform.transform_point3(p));let d=points.map(|p|plane.signed_distance(p));if d.iter().all(|d|d.abs()<1e-7){continue;}let mut hits=vec![];for i in 0..3{let j=(i+1)%3;if d[i].abs()<1e-7{hits.push(points[i]);}if d[i]*d[j]< -1e-14{hits.push(points[i]+(points[j]-points[i])*(d[i]/(d[i]-d[j])));}}let mut unique=vec![];for p in hits{if !unique.iter().any(|other:&DVec3|(*other-p).length()<1e-7){unique.push(p);}}if unique.len()==2{edges.push((unique[0],unique[1]));}}}}
     }fn groups(groups:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;mesh(&group.mesh,transform,scene,edges);children(&group.children,transform,scene,edges);}}fn children(children:&[ingetrazo_core::groups::Group],parent:glam::DMat4,scene:&Scene,edges:&mut Vec<(DVec3,DVec3)>){groups(children,parent,scene,edges)}let mut edges=vec![];mesh(&scene.mesh,glam::DMat4::IDENTITY,scene,&mut edges);groups(&scene.groups,glam::DMat4::IDENTITY,scene,&mut edges);edges}
 
 /// Projects and renders the 3D model inside the ViewFrame at exact scale 1:N.
+fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{
+ use ingetrazo_core::camera::{OrbitCamera,StandardView};
+ if frame.view_key=="__current__"||frame.view_key.starts_with("scene:"){return scene.camera.clone();}
+ let mut camera=OrbitCamera::default();camera.target=DVec3::ZERO;camera.distance=100.;camera.set_standard_view(match frame.view_key.as_str(){"std:front"=>StandardView::Front,"std:right"=>StandardView::Right,"std:back"=>StandardView::Back,"std:left"=>StandardView::Left,"std:iso"=>StandardView::Iso,_=>StandardView::Top});camera
+}
 fn render_model_projection(
     scene: &Scene,
     painter: &egui::Painter,
@@ -384,28 +389,7 @@ fn render_model_projection(
     let painter = painter.with_clip_rect(frame_rect);
     let snapshot=frame_scene(scene,frame);let scene=snapshot.as_ref();
 
-    let (yaw, pitch) = match frame.view_key.as_str() {
-        "__current__" => (scene.camera.yaw,scene.camera.pitch),
-        "std:top" => (0.0, 89.9_f64.to_radians()),
-        "std:front" => (0.0, 0.0),
-        "std:right" => (90.0_f64.to_radians(), 0.0),
-        "std:back" => (180.0_f64.to_radians(), 0.0),
-        "std:left" => (-90.0_f64.to_radians(), 0.0),
-        "std:iso" => (45.0_f64.to_radians(), 35.264_f64.to_radians()),
-        key if key.starts_with("scene:")=>(scene.camera.yaw,scene.camera.pitch),
-        _ => (0.0, 89.9_f64.to_radians()),
-    };
-
-    // Calculate camera target and ortho projection matrix
-    let scene_center = if frame.view_key=="__current__"||frame.view_key.starts_with("scene:"){scene.camera.target}else{DVec3::ZERO};
-    let view_dir = DVec3::new(
-        pitch.cos() * yaw.sin(),
-        pitch.cos() * yaw.cos(),
-        pitch.sin(),
-    );
-    let camera_pos = scene_center + view_dir * 100.0;
-    let up = if pitch.cos().abs() < 1e-4 { DVec3::Y } else { DVec3::Z };
-    let view_mat = glam::DMat4::look_at_rh(camera_pos, scene_center, up);
+    let view_mat=frame_camera(scene,frame).view_matrix();
 
     // Sacred scale equation: model_height_m = frame.rect.h * scale_n / 1000
     let model_h_m = model_height_for_frame(frame.rect.h, frame.scale_n);
@@ -583,3 +567,14 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
 }
 
 #[cfg(test)]mod section_frame_tests{use super::*;use ingetrazo_core::{groups::Group,mesh::Mesh,saved_views::SavedView,section::SectionPlane};#[test]fn bound_saved_scene_cut_clips_nested_edges_without_changing_live_document(){let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::new(-2.,0.,0.));let b=mesh.add_vertex(DVec3::new(2.,0.,0.));mesh.add_edge(a,b);let mut child=Group::with_mesh("child",mesh);child.transform=glam::DMat4::from_translation(DVec3::X);let mut parent=Group::new("parent");parent.children.push(child);let mut scene=Scene::new();scene.groups.push(parent);scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::X,"Cut","A"));scene.show_section_cuts=true;let view=SavedView::capture_scene("Section",&scene,&scene.camera);scene.saved_views.push(view);scene.section_planes[0].active=false;let original=scene.clone();let mut frame=ViewFrame::default();frame.view_key="scene:Section".into();let snapshot=frame_scene(&scene,&frame);let edges=section_projected_edges(&snapshot);assert_eq!(edges.len(),1);assert_eq!(edges[0],(DVec3::new(-1.,0.,0.),DVec3::ZERO));assert_eq!(scene,original);assert_eq!(section_projected_edges(&scene)[0].1,DVec3::new(3.,0.,0.));}}
+
+#[cfg(test)]mod frame_camera_tests{
+ use super::*;
+ #[test]fn hidden_face_boundaries_and_contours_are_absent_from_sheet(){
+  let mut scene=Scene::new();let ids=[DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(-1.,1.,0.)].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.section_planes.push(ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"Cut","A"));scene.show_section_cuts=true;assert!(!section_projected_edges(&scene).is_empty());scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));assert!(section_projected_edges(&scene).is_empty());
+ }
+ #[test]fn saved_section_view_uses_original_camera_direction_without_mutating_live_state(){
+  let mut scene=Scene::new();scene.camera.yaw=-1.1;scene.camera.pitch=0.42;scene.camera.target=DVec3::new(4.,5.,6.);scene.saved_views.push(ingetrazo_core::saved_views::SavedView::capture_scene("Cut",&scene,&scene.camera));let captured=scene.camera.clone();scene.camera.yaw=0.3;let original=scene.clone();let mut frame=ViewFrame::default();frame.view_key="scene:Cut".into();let snapshot=frame_scene(&scene,&frame);assert_eq!(frame_camera(&snapshot,&frame).view_matrix(),captured.view_matrix());assert_eq!(scene,original);
+  frame.view_key="std:front".into();assert!(frame_camera(&scene,&frame).eye().y<0.);frame.view_key="std:right".into();assert!(frame_camera(&scene,&frame).eye().x>0.);
+ }
+}
