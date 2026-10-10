@@ -1,0 +1,24 @@
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+Vulkan adapter 0 AMD Ryzen 9 9950X3D2 16-Core Processor (RADV RAPHAEL_MENDOCINO): no suitable graphics/present queues
+Suitable Vulkan adapter 1: llvmpipe (LLVM 20.1.2, 256 bits); CPU; queues Queues { graphics: 0, present: 0, compute: Some(0) }
+Native Vulkan adapter: "llvmpipe (LLVM 20.1.2, 256 bits)"; API 1.4.318; max texture 16384; BC support true; memory-budget extension true; acceleration-structure extension true; ray-tracing-pipeline extension true
+Vulkan heap 0: 132593643520 bytes; DEVICE_LOCAL
+Native present-fence negotiation: extension=true feature=true enabled=true
+CAD2D attachment usage: requested=COLOR_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT | ATTACHMENT_FEEDBACK_LOOP_EXT
+Native world MSAA: TYPE_4 (original default4; unsupported fallback remains explicit)
+Native world edge pre-raster clip: shaderClipDistance=true; unsupported/forced fallback is direct GPU endpoint clipping
+Contour metrics: ContourMetrics { additional_position_bytes: 0, batches: 1, cold_build_ms: 0.21282199999999998, compact_preprocess_ms: 0.0, warm_cache_ms: 0.0, cache_hits: 0, failed_prepared_chunks: 0, rollbacks: 0, edge_buffer_uploads: 1, failed_prepared_edge_bytes: 0 }
+CAD2D attachment usage: requested=COLOR_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT | ATTACHMENT_FEEDBACK_LOOP_EXT
+CAD2D attachment usage: requested=COLOR_ATTACHMENT supported=TRANSFER_SRC | TRANSFER_DST | SAMPLED | STORAGE | COLOR_ATTACHMENT | INPUT_ATTACHMENT | ATTACHMENT_FEEDBACK_LOOP_EXT
+GPU allocation budget: 28347400 committed bytes; peakcommitted 54670600; peakadmitted 54670600; globalcap None; heaps [HeapBudget { capacity: 132593643520, limit: 106074914816, live_budget: Some(119334279168), live_usage: 47396421632, reserved: 0, committed: 28347400 }]
+Native world GPU surface uploads: 1
+Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0

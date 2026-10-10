@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "dpi": 300,
+  "cases": [
+    {
+      "case": "fallback_bold",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_cjk_rtl",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_latin_cjk",
+      "changed_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "mixed_scripts",
+      "changed_pixels": 0,
+      "passed": true
+    }
+  ],
+  "scope": "4 native font/layout pages vs actual original paint_text_mm helper, not application/UI/fullP29; failed cases mandatory"
+}

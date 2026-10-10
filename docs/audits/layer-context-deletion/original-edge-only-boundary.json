@@ -1,0 +1,178 @@
+{
+  "provenance": {
+    "rust_commit": "a126dcd65abc971cbc9cb913e8ff4c51aca5133a",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "single": [
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Tagged",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Tagged",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Tagged",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      }
+    ],
+    "linked": [
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      }
+    ],
+    "nested_single": [
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Tagged",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Tagged",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Tagged",
+        "sibling": null,
+        "undo": 0,
+        "redo": 0
+      }
+    ],
+    "nested_linked": [
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      },
+      {
+        "layers": [
+          "Layer 0"
+        ],
+        "outside": "Layer 0",
+        "inside": "Layer 0",
+        "sibling": "Layer 0",
+        "undo": 0,
+        "redo": 0
+      }
+    ]
+  }
+}

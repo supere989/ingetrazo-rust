@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "exact_cases": 9,
+  "glyph_draws": 117,
+  "negative": "one em coordinate rejected",
+  "native_sha256": "4ab8bd282fdd1394a5085ac5e474bbc36506f8b58549130c6898bdf6fecdeeef",
+  "observations_sha256": "88c30c47150dc50145204e01a7a8dbc98f21ae97724e11554a0da17933f485cc",
+  "scope": "Actual original rebuilt glyph points/rings vs experimental native conversion, no embedded-PDF/font-layout/UI closure"
+}

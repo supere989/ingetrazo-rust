@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-image-planes-root/scripts/check-image-plane-ownership.py", line 6, in <module>
+    assert set(source)=={"ordinary","folded","nested_ordinary","nested_folded"} and native==source,"operative image planes/context/history mismatch"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: operative image planes/context/history mismatch

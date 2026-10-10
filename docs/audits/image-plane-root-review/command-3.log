@@ -1,0 +1,102 @@
+{
+  "passed": true,
+  "cases": {
+    "ordinary": [
+      {
+        "texture": {
+          "path": "scan.png"
+        },
+        "origin": [
+          8.0,
+          9.0,
+          10.0
+        ],
+        "u": [
+          2.0,
+          0.0,
+          0.0
+        ],
+        "v": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "aspect": 0.5,
+        "name": "New"
+      }
+    ],
+    "folded": [
+      {
+        "texture": {
+          "path": "scan.png"
+        },
+        "origin": [
+          8.0,
+          9.0,
+          10.0
+        ],
+        "u": [
+          2.0,
+          0.0,
+          0.0
+        ],
+        "v": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "aspect": 0.5,
+        "name": "New"
+      }
+    ],
+    "nested_ordinary": [
+      {
+        "texture": {
+          "path": "scan.png"
+        },
+        "origin": [
+          8.0,
+          9.0,
+          10.0
+        ],
+        "u": [
+          2.0,
+          0.0,
+          0.0
+        ],
+        "v": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "aspect": 0.5,
+        "name": "New"
+      }
+    ],
+    "nested_folded": [
+      {
+        "texture": {
+          "path": "scan.png"
+        },
+        "origin": [
+          8.0,
+          9.0,
+          10.0
+        ],
+        "u": [
+          2.0,
+          0.0,
+          0.0
+        ],
+        "v": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "aspect": 0.5,
+        "name": "New"
+      }
+    ]
+  },
+  "embedded_assets": "every reopened scan SHA256 equals literal original bytes"
+}

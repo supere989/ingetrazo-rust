@@ -94,7 +94,7 @@ impl SavedView {
 
     /// Preserve raw identity/extension metadata when refreshing a view.
     pub fn capture_scene(name:impl Into<String>,scene:&crate::scene::Scene,camera:&OrbitCamera)->Self {
-        let mut view=Self::capture(name,camera,&scene.layers);view.two_point=camera.two_point;
+        let mut view=Self::capture(name,camera,&scene.layers);view.two_point=camera.two_point;view.style=Some(serde_json::to_value(&scene.display_style).unwrap());view.shadows=Some(serde_json::to_value(&scene.shadows).unwrap());
         fn hidden(groups:&[crate::groups::Group],ids:&mut Vec<String>){for group in groups{if group.hidden{ids.push(group.native_uid());}hidden(&group.children,ids);}}
         let mut ids=vec![];hidden(&scene.groups,&mut ids);view.hidden_objects=Some(ids);
         let active=scene.section_planes.iter().find(|s|s.active).map(|s|s.native_uid());
@@ -103,6 +103,8 @@ impl SavedView {
     }
     pub fn apply_scene(&self,scene:&mut crate::scene::Scene,camera:&mut OrbitCamera) {
         self.apply(camera,&mut scene.layers);
+        if let Some(style)=&self.style{scene.display_style=crate::presentation::DocumentStyle::from_json(style);scene.show_section_fill=scene.display_style.section_fill;}
+        if let Some(shadows)=&self.shadows{scene.shadows=crate::presentation::ShadowSettings::from_json(shadows);}
         if let Some(ids)=&self.hidden_objects {
             fn apply(groups:&mut [crate::groups::Group],ids:&[String]){for group in groups{let id=group.native_uid();group.hidden=ids.contains(&id);apply(&mut group.children,ids);}}
             apply(&mut scene.groups,ids);

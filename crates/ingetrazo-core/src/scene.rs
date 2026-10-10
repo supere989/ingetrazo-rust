@@ -27,10 +27,18 @@ pub enum SelectionItem {
     GeoPoint(usize),
     GeoPath(usize),
     SectionPlane(usize),
+    ImagePlane(usize),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Scene {
+    #[serde(default)]pub image_planes:Vec<crate::image_plane::ImagePlane>,
+    #[serde(skip)]pub image_objects:crate::image_plane::ImageObjects,
+    #[serde(skip)]pub history_images:crate::image_plane::ImageHistory,
+    #[serde(default)]
+    pub display_style:crate::presentation::DocumentStyle,
+    #[serde(default)]
+    pub shadows:crate::presentation::ShadowSettings,
     #[serde(skip)]
     pub dimension_frame:glam::DMat4,
     /// Original world-space context frame; runtime only, independent of the
@@ -105,10 +113,11 @@ impl Scene {
         layers.push(Layer::default());
 
         Self {
+            image_planes:vec![],image_objects:Default::default(),history_images:Default::default(),
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

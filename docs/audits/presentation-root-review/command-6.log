@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "cases": 4,
+  "states": 16,
+  "negative_controls": [
+    "style",
+    "shadows",
+    "undo",
+    "redo",
+    "empty"
+  ],
+  "boundary": "operative source panels/history versus production app context; no rendered style/shadow proof"
+}

@@ -1229,7 +1229,7 @@ impl App for crate::IngeTrazoApp {
     fn title() -> &'static str { "IngeTrazo (native Vulkan)" }
     fn new(system: &mut System, initial_file: Option<std::path::PathBuf>) -> Self {
         let mut app=Self::new();
-        match system.enable_cad2d(){Ok(renderer)=>app.native_composer.factory=Some(renderer.factory()),Err(error)=>app.gpu_error(&error)}
+        match system.enable_cad2d(){Ok(renderer)=>app.native_composer.factory=Some(renderer.factory().into()),Err(error)=>app.gpu_error(&error)}
         app.native_gpu_viewport_enabled=std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some();
         app.system_clipboard=arboard::Clipboard::new().ok();
         app.attach_session_store(crate::session_state::SessionStore::user_default());

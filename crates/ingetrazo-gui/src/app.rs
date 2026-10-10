@@ -217,6 +217,7 @@ impl IngeTrazoApp {
             ));
         }
 
+        app.apply_document_presentation();
         app.mark_document_clean();
         app
     }
@@ -254,7 +255,7 @@ impl IngeTrazoApp {
         }
         self.save_undo_state();
         self.retire_current_recovery();
-        self.scene = Scene::new();self.bump_model_revision();
+        self.scene = Scene::new();self.apply_document_presentation();self.bump_model_revision();
         self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
         self.camera = self.scene.camera.clone();
@@ -280,7 +281,7 @@ impl IngeTrazoApp {
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
-                self.scene = loaded_scene;self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
+                self.scene = loaded_scene;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();
@@ -317,6 +318,7 @@ impl IngeTrazoApp {
         if self.document_session.pending.is_some() && path.extension().and_then(|e|e.to_str()).map(|e|!e.eq_ignore_ascii_case("igz")).unwrap_or(true) {
             self.status_message="Save an .igz document before continuing".into();self.document_session.confirm_unsaved=true;return;
         }
+        self.sync_document_presentation();
         let mut document = self.scene.clone();
         document.camera = self.camera.clone();
         match save_file(&document, path) {
@@ -340,15 +342,19 @@ impl IngeTrazoApp {
     }
 
     pub fn save_undo_state(&mut self) {
-        self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();
+        self.sync_document_presentation();
+        self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();self.seal_image_history();
         self.bump_model_revision();
         self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
         self.undo_stack.push(self.scene.clone());
+        let mut reclaim_images = !self.redo_stack.is_empty();
         self.redo_stack.clear();
         if self.undo_stack.len() > self.document_session.preferences.undo_steps {
             self.undo_stack.remove(0);
+            reclaim_images = true;
         }
+        if reclaim_images { self.collect_image_metadata(); }
     }
 
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
@@ -356,11 +362,12 @@ impl IngeTrazoApp {
     }
     pub(crate) fn bump_model_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {
+        self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return;}
         self.finish_composer_edit();
         if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return;}
         if self.refuse_component_history_step(false){return;}
-        self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();
+        self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();self.seal_image_history();
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
         if self.component_history_step(false).is_some(){return;}
@@ -374,12 +381,13 @@ impl IngeTrazoApp {
                 }
                 return;
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);self.redo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
             // Source map capture is a runtime panel publication; model commands
             // do not own it. Transfer the current capture through older history.
             prev.tile_layer=self.scene.tile_layer.take();
+            crate::document_presentation::preserve(&self.scene,&mut prev);
             self.scene = prev;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
@@ -387,6 +395,7 @@ impl IngeTrazoApp {
     }
 
     pub fn redo(&mut self) {
+        self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return;}
         self.finish_composer_edit();
         if self.refuse_component_history_step(true){return;}
@@ -403,9 +412,10 @@ impl IngeTrazoApp {
                 }
                 return;
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);self.undo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
+            crate::document_presentation::preserve(&self.scene,&mut next);
             self.scene = next;self.bump_model_revision();
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
@@ -549,7 +559,7 @@ impl IngeTrazoApp {
         let before=self.scene.clone();
         let name=format!("{} {}",ingetrazo_core::i18n::tr("Group"),self.scene.groups.len()+1);
         match self.scene.group_selection(name) {
-            Ok(_)=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Created group");},
+            Ok(_)=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Created group");},
             Err(err)=>self.status_message=err,
         }
     }
@@ -557,7 +567,7 @@ impl IngeTrazoApp {
     pub fn explode_group(&mut self) {
         let before=self.scene.clone();
         match self.scene.explode_selected_groups() {
-            Ok(())=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Exploded group");},
+            Ok(())=>{self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);self.undo_stack.push(before);self.redo_stack.clear();self.status_message=ingetrazo_core::i18n::tr("Exploded group");},
             Err(err)=>self.status_message=err,
         }
     }
@@ -944,6 +954,7 @@ impl IngeTrazoApp {
 impl IngeTrazoApp {
     /// Backend-independent application UI and document lifecycle.
     pub fn update_ui(&mut self, ctx: &egui::Context) {
+        self.sync_document_presentation();
         self.begin_document_frame(ctx);
         if self.section_name_prompt.is_some(){
             egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.max_rect();let data=ingetrazo_render::pipeline::build_scene_render_data(&self.scene,&self.camera,&self.style,None);let textures=self.textures.iter().map(|(name,texture)|(name.clone(),texture.id())).collect();ingetrazo_render::pipeline::render_scene_to_egui(&data,&self.camera,ui.painter(),rect,&self.style,&textures);});
@@ -1066,6 +1077,7 @@ impl IngeTrazoApp {
         render_dialogs(self, ctx);
         crate::section_actions::render_section_name_prompt(self,ctx);
         crate::blender::render_blender_dialog(self, ctx);
+        self.sync_document_presentation();
     }
 }
 

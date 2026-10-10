@@ -304,3 +304,17 @@ Reviewedgrid5998e02 integrated:535canonicalPASS2ignored; freshsourcecutoff+two78
 Checkpoint2026-10-10: root independently retained candidate83 native replay (cd18d8f0): Intel exact requested resize and10 positive displayed frames PASS, ARM zero displayed/three unresolved owners FAIL despite explicit backing transition. Actual mips/compression PASS both. Lifecycle6e review found probe associates prior submission before current paint; correction required before native execution. Current main00bdf cloud Mac foundation jobsSUCCESS/Linux still in progress at run38050239323; isolated root X11 clipboard replay PASS while candidate83 cloud clipboard step FAILED. Full gates remain open.
 
 Reviewed layer registry correction: fresh root4cases/13states, four payload negatives and the literal old panel case reject; full component replay and canonical542PASS/twoignored. CI adds operative original/native layer ownership gate. Full parked-context global deletion, annotation assignment and rendered tray remain OPEN. Source IDs do not serialize; name-based Assign rule remains distinct from held Import/Purge objects.
+
+Reviewed parked-context deletion throughdf2cc797: fresh fourcases16states exact, three negatives plus old outside-tag reject; prior13layerstates/fournegatives remainPASS, complete component oraclePASS, canonical542workspacePASS/twoignored. Original private/shared prototype Undo differs and is preserved. CI adds original parked-context gate. Cancellation/source-reopened deletion files/rendered inputs/all attribute families remainOPEN. Style/shadow operative persistence baseline now retained by worker, typed bridge implementation ongoing. Metal lifecycle actualbothMacFAIL phase0 beforeinput; full-app clip admission investigated, no successclaim.
+
+## Reviewed callback integration checkpoint
+
+Canonical source252704fb passes543 workspace tests/twoignored. Immutable backend-neutral CAD producer ownership, invalid palette/index rollback and retained mutation negative are adopted, with existing Vulkan dispatch preserved. Metal host/callback consumers remain isolated and require actual native presentation, pixels, lifecycle and owner-retirement proof. Current authoritative evidence is docs/audits/metal-callback-root-review; all37 full feature rows and five release gates remain OPEN.
+
+Canonical3f0d8854 presentation/controller codec integration:548PASS/twoignored, fresh runtime16parser/13reopen and savedview deletion PASS. All37rows/fivegates remainOPEN. Prior main8c40 VulkanCI and isolatedMetal897 native lifecycle failures retained as unresolved; follow-up audit required.
+
+Canonical image-plane9e15aaca reviewedintegration:551PASS/twoignored, actual56states/fourasset-exactoriginalreopens/presentationregressionPASS. Productionmove-negativecaught. Cloudpending. All37rows/fivegatesstayOPEN.
+
+Canonicala5d3c3bcimageownership:555PASS2ignored;19layer3lifetime56image4archivepresentationPASS. CIearlier112alljobsSUCCESS, currentpending. All37/fivegatesOPEN.
+
+Canonical6a4ef4fontresource/directPDFwriter stage555PASS2ignored; ninecanonicalpages/textcontrols/nativefontresourcePASS; combined27exactpages, nativeARM/Intelresourcesretained. FullTextUI/layout/provider/globalbudget and37rows/fivegatesOPEN.

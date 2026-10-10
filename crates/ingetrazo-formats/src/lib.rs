@@ -217,3 +217,11 @@ mod tests {
 pub mod sheet_pdf;
 
 pub mod sheet_pdf_shapes;
+
+pub mod paper_text;
+
+mod paper_font_subset;
+pub mod paper_font;
+pub mod paper_font_resolver;
+
+pub mod paper_text_layout;

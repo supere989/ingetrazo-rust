@@ -1,0 +1,79 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "edges": [
+      {
+        "a": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "faces": [],
+    "dimension_style": {
+      "decimals": 2,
+      "units": "m",
+      "font_size": 9,
+      "color": [
+        45,
+        55,
+        75
+      ],
+      "norma": "iso",
+      "base_step_mm": 8.0,
+      "ends": "arrow"
+    },
+    "display_style": {
+      "name": "Authored",
+      "face_mode": "shaded",
+      "edges": false,
+      "profiles": false,
+      "back_edges": true,
+      "edge_color": [
+        0.123456789,
+        0.234567891,
+        0.345678912
+      ],
+      "front_color": [
+        0.812345678,
+        0.723456789,
+        0.634567891
+      ],
+      "back_color": null,
+      "background": [
+        0.4,
+        0.5,
+        0.6
+      ],
+      "sky": false,
+      "sky_color": [
+        0.7,
+        0.8,
+        0.9
+      ],
+      "ground_color": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "section_fill": false,
+      "section_fill_color": [
+        0.25,
+        0.35,
+        0.45
+      ]
+    },
+    "shadows": {
+      "day": false,
+      "darkness": false,
+      "utc_offset": true
+    }
+  }
+}

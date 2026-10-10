@@ -1,0 +1,7 @@
+{
+  "run": 38054187788,
+  "artifact": 11670068849,
+  "source": "aa02b8a1",
+  "archive_sha256": "7062ddeed92c4e33b8bf1e7c7854f79e3ee8cee69aaba2283fca2bfab40fbb5d",
+  "scope": "actual native bundled font FFI cache/subset lifecycle; no platform rendered Text parity"
+}

@@ -34,6 +34,7 @@ impl SelectTool {
 
         // Seed queue from start item
         match start_item {
+            SelectionItem::ImagePlane(id)=>{scene.select(SelectionItem::ImagePlane(id));return;}
             SelectionItem::SectionPlane(id)=>{scene.select(SelectionItem::SectionPlane(id));return;}
             SelectionItem::Vertex(vid) => {
                 queue.push_back(vid);

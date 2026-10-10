@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "cases": 4,
+  "states": 16,
+  "negatives": 3,
+  "scope": "entry local layers/mesh/history plus full finished Undo/Redo state; parked outside/sibling not observed during native entry; no rendered input proof"
+}
