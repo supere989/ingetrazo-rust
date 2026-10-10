@@ -1,0 +1,37 @@
+{
+  "provenance": {
+    "rust_commit": "10231f3aa12b36670cd65330d4824fd2f0f942ba",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "negative_controls_detected": 3,
+  "cases": [
+    {
+      "case": "r02-s8",
+      "radius": 0.2,
+      "segments": 8,
+      "original_volume": 1.9824289020188646,
+      "rust_volume": 1.9824289000964426,
+      "symmetric_difference_volume": 4.67103354032155e-09
+    },
+    {
+      "case": "r01-s3",
+      "radius": 0.1,
+      "segments": 3,
+      "original_volume": 1.9949999991452365,
+      "rust_volume": 1.9949999993872012,
+      "symmetric_difference_volume": 2.419647815443682e-10
+    },
+    {
+      "case": "r03-s16",
+      "radius": 0.3,
+      "segments": 16,
+      "original_volume": 1.9611446783981306,
+      "rust_volume": 1.9611446827219292,
+      "symmetric_difference_volume": 4.6174733915227235e-09
+    }
+  ],
+  "scope": "One convex box edge with three radii/segment counts. Independent original/native manifold shape oracle. Multi-edge rims, concave edges, spherical joins and interactive acceptance remain open."
+}
