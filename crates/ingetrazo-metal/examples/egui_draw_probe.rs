@@ -11,6 +11,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         sync::Arc,
         time::{Duration, Instant},
     };
+    struct ReleaseGate(objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn MTLSharedEvent>>);
+    impl Drop for ReleaseGate { fn drop(&mut self) { self.0.setSignaledValue(1); } }
     let output = std::env::args()
         .find_map(|arg| arg.strip_prefix("--output=").map(PathBuf::from))
         .unwrap_or_else(|| PathBuf::from("metal-egui-draw-proof"));
@@ -221,6 +223,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Completed Drop without explicit collection must free owners"
     );
     let mut blocked = painter.submit_diagnostic(&metal, revised.clone(), 64, 64, true)?;
+    let _gate_cleanup = ReleaseGate(blocked.probe_gate().unwrap());
     let charged = metal.budget.lock().unwrap().total_committed();
     assert!(charged > known_baseline);
     assert!(blocked.wait_readback(Duration::from_millis(50)).is_err());
@@ -248,6 +251,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let p = pending_painter.prepare(&pending_metal, &scene(0.), 1.)?;
     let blocked = pending_painter.submit_diagnostic(&pending_metal, p, 64, 64, true)?;
     let gate = blocked.probe_gate().unwrap();
+    let _pending_gate_cleanup = ReleaseGate(gate.clone());
     assert!(!blocked.completed());
     let held = pending_metal.budget.lock().unwrap().total_committed();
     drop(blocked);
