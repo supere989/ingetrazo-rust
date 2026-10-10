@@ -1,0 +1,16 @@
+{
+  "production": "d2a287e",
+  "main_base": "65951ac",
+  "workspace": {
+    "pass": 534,
+    "ignored": 2,
+    "failed": 0
+  },
+  "default_grid_0.7_with_hatch": 78,
+  "heldout_grid_0.3317_saved_tilted_solid": 78,
+  "actual_original_painter_cutoff_controls": 6,
+  "strict_pixel_tolerance": 0,
+  "policy_negatives": "generic serialization, missing device DPI, nonempty stroke refuse and preserve sentinel",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Physical graticule vector PDF painter; no full Text/raster/title/UI claim"
+}
